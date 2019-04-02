@@ -2,183 +2,145 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94388C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22E3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF6E2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3622084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SvMeaJm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfDBDN5 (ORCPT
+        id S1729008AbfDBDP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:13:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:9985 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbfDBDN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:13:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 20:13:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
-   d="scan'208";a="127836350"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.107]) ([10.239.13.107])
-  by orsmga007.jf.intel.com with ESMTP; 01 Apr 2019 20:13:54 -0700
-Subject: Re: [LKP] [btrfs] 70d28b0e4f:
- BUG:kernel_reboot-without-warning_in_early-boot_stage,
- last_printk:Probing_EDD(edd=off_to_disable)...ok
-To:     dsterba@suse.cz, Nikolay Borisov <nborisov@suse.com>,
-        Qu Wenruo <wqu@suse.de>, lkp@01.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Yoon Jungyeon <jungyeon@gatech.edu>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190401132427.GC9217@shao2-debian>
- <f3cef716-a1e3-2e84-0133-9a9c3fad2a74@suse.com>
- <7a6c000e-c523-382a-d13c-790809260e4e@intel.com>
- <5b82b026-bdd7-f781-e661-f1afdc9cb97b@suse.de>
- <23823210-1951-0492-1755-6263ccf388fa@intel.com>
- <20190401154044.GX29086@suse.cz>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <d1f57263-277a-d696-2fc2-51c62af6844f@intel.com>
-Date:   Tue, 2 Apr 2019 11:14:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 1 Apr 2019 23:15:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43572 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDBDP4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 23:15:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c8so5583641pfd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UfqouMuuuw5kB5uax34hd187WToaCCDig9yHbtHk8h8=;
+        b=SvMeaJm+HYw2SIOAyPrLNXS/+twXqfvbVnHmqwr+QlZbwPg9yVwUVBMySsKXuISufW
+         sAhlLx3TDbjcAF/GrsoK11AeZc/vVFcUGdqnFUyHiwLLMWEnDWv8Mdvg5kGETBcVYslD
+         XL8aPJ4HnjcRsiCQmNjmhR2rV+ZdPLEwnN/ivpzI4MBLhNfHh/ENtFK8G4LVwySoYT+O
+         xDY0BJpQNqpGHqHnKKgiT/Z+flmXW4sm5ihSeNd/95KmmFimqyUcHkeYP/i3AznpCwGL
+         XYmfEyGT+v+m0c4iMnIaVqPLm4CdJvrvyODCasez/GzxGHyRpJI9ajw8HEDGzYroMi8S
+         +FDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UfqouMuuuw5kB5uax34hd187WToaCCDig9yHbtHk8h8=;
+        b=KQT712yL92Tx2+S8ofWPYyREtAMrBBQWuvfqc9Ih/CbEj4DOvl9WdagGJf6Hv5xTmR
+         k4xoS2HAHQjzTWBkARjG30drXnw9YbbMGK7pUhSt6IXZmJwINQoOJadPopf9d4eXTQI2
+         i36hgSRrWTpKdBcLlFRVXF5WgPC63J3K0y/8hJoFiMioKfGYjxB86zzBievQSDh4MuiK
+         qiwAR70XNzZ5FC1JBLhJ0reRITVhw3Ij4acz8+JrpGNLju0nNHWCdGU10sQqh3unUQrJ
+         lUFp4Lif77cSKU+OZXMvGV3HJSuP3IYpqgWGz1yiJuv1WMrql39aE+Kauw6EcY6wDEKh
+         Tofw==
+X-Gm-Message-State: APjAAAVnmV9l/Y2XBqmGbrbTavot2IbXt4ZQxMI6L3SPuQmpYiSHLIIu
+        N07VzAum/oil1tAh+0p3LWj/Kg==
+X-Google-Smtp-Source: APXvYqzhcGRBuJ2xFYHCKtoxyvJW3yxgtZzY/MGJUcK1gO4QaM8uU/wqQxOzUwGmbgs2Vq+ASjIUTw==
+X-Received: by 2002:a62:1b03:: with SMTP id b3mr62214651pfb.150.1554174955943;
+        Mon, 01 Apr 2019 20:15:55 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id d69sm26081915pfg.26.2019.04.01.20.15.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Apr 2019 20:15:54 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 04:15:48 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 7/9] mfd: axp20x: add USB power supply mfd cell to
+ AXP813
+Message-ID: <20190402031548.GF4187@dell>
+References: <20190321084850.20769-1-wens@kernel.org>
+ <20190321084850.20769-8-wens@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190401154044.GX29086@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20190321084850.20769-8-wens@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 21 Mar 2019, Chen-Yu Tsai wrote:
 
-On 4/1/19 11:40 PM, David Sterba wrote:
-> On Mon, Apr 01, 2019 at 11:02:37PM +0800,  Chen, Rong A  wrote:
->> On 4/1/2019 10:29 PM, Qu Wenruo wrote:
->>> On 2019/4/1 下午10:02,  Chen, Rong A  wrote:
->>>> On 4/1/2019 9:28 PM, Nikolay Borisov wrote:
->>>>> On 1.04.19 г. 16:24 ч., kernel test robot wrote:
->>>>>> FYI, we noticed the following commit (built with gcc-7):
->>>>>>
->>>>>> commit: 70d28b0e4f8ed2d38571e7b1f9bec7f321a53102 ("btrfs:
->>>>>> tree-checker: Verify dev item")
->>>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->>>>>>
->>>>>> in testcase: trinity
->>>>>> with following parameters:
->>>>>>
->>>>>>       runtime: 300s
->>>>>>
->>>>>> test-description: Trinity is a linux system call fuzz tester.
->>>>>> test-url: http://codemonkey.org.uk/projects/trinity/
->>>>>>
->>>>>>
->>>>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp
->>>>>> 2 -m 2G
->>>>>>
->>>>>> caused below changes (please refer to attached dmesg/kmsg for entire
->>>>>> log/backtrace):
->>>>>>
->>>>>>
->>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
->>>>>>
->>>>>> |
->>>>>> | 36b9d2bc69 | 70d28b0e4f |
->>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
->>>>>>
->>>>>> |
->>>>>> boot_successes
->>>>>> | 14         | 0          |
->>>>>> |
->>>>>> boot_failures
->>>>>> | 2          | 14         |
->>>>>> |
->>>>>> IP-Config:Auto-configuration_of_network_failed
->>>>>> | 2          |            |
->>>>>> |
->>>>>> BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
->>>>>> | 0          | 14         |
->>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> early console in setup code
->>>>>> Probing EDD (edd=off to disable)... ok
->>>>>> BUG: kernel reboot-without-warning in early-boot stage, last printk:
->>>>>> Probing EDD (edd=off to disable)... ok
->>>>>> Linux version 5.0.0-rc8-00196-g70d28b0 #1
->>>>>> Command line: ip=::::vm-snb-quantal-x86_64-1415::dhcp root=/dev/ram0
->>>>>> user=lkp
->>>>>> job=/lkp/jobs/scheduled/vm-snb-quantal-x86_64-1415/trinity-300s-quantal-core-x86_64-2018-11-09.cgz-70d28b0-20190330-29362-1y6g0qb-2.yaml
->>>>>> ARCH=x86_64 kconfig=x86_64-randconfig-s5-03231928
->>>>>> branch=linux-devel/devel-hourly-2019032317
->>>>>> commit=70d28b0e4f8ed2d38571e7b1f9bec7f321a53102
->>>>>> BOOT_IMAGE=/pkg/linux/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/vmlinuz-5.0.0-rc8-00196-g70d28b0
->>>>>> max_uptime=1500
->>>>>> RESULT_ROOT=/result/trinity/300s/vm-snb-quantal-x86_64/quantal-core-x86_64-2018-11-09.cgz/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/8
->>>>>> LKP_SERVER=inn debug apic=debug sysrq_always_enabled
->>>>>> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
->>>>>> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic
->>>>>> load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8
->>>>>> systemd.log_level=err ignore_loglevel console=tty0
->>>>>> earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw
->>>>>> rcuperf.shutdown=0
->>>>>>
->>>>> Can this report be made useful by actually including output from serial
->>>>> console? For example possible bug-ons or whatnot? dmesg.xz just contains
->>>>> qemu's command line + some metadata about the test and :
->>>>>
->>>>> "BUG: kernel reboot-without-warning in early-boot stage, last printk:
->>>>> Probing EDD (edd=off to disable)... ok"
->>>>>
->>>>> At least a stack trace would have been useful.
->>>>>
->>>>> <snip>
->>>> Hi,
->>>>
->>>> We usually use the tool ("bin/lkp qemu -k <bzImage> job-script") to
->>>> reproduce it.  It seems no stack trace in the result:
->>> So there is no regression at that commit right?
->>>
->>> Just some false alert?
->>
->> Hi,
->>
->> I think there's a regression, it stopped in the early-boot stage .
-> Can you please provide any logs that would point at btrfs? If the module
-> is loaded or built-in started, there's a line about that. Besides that
-> it's preceded by messages from other subsystems' initialization.
+> From: Quentin Schulz <quentin.schulz@bootlin.com>
+> 
+> The AXP813 has a VBUS power input. Now that the axp20x_usb_power driver
+> supports this variant, we can add an mfd cell for it to use it.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> [wens@csie.org: add commit message]
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
+This patch looks orthogonal.
 
-Hi,
+Unless anyone screams, I'm going to apply it.
 
-CONFIG_BTRFS_FS and CONFIG_BTRFS_FS_REF_VERIFY is enabled in the kconfig.
-I disabled them for the experiment, and the new kernel is bootable. I 
-don't have more logs to prove it.
+> ---
+> 
+> Changes since v1:
+>   - Made axp803_usb_power_supply_resources[] constant
+>   - Added Lee's acked-by
+> ---
+>  drivers/mfd/axp20x.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 3c97f2c0fdfe..902f9f27e748 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -198,6 +198,12 @@ static const struct resource axp22x_usb_power_supply_resources[] = {
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+>  };
+>  
+> +/* AXP803 and AXP813/AXP818 share the same interrupts */
+> +static const struct resource axp803_usb_power_supply_resources[] = {
+> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_PLUGIN, "VBUS_PLUGIN"),
+> +	DEFINE_RES_IRQ_NAMED(AXP803_IRQ_VBUS_REMOVAL, "VBUS_REMOVAL"),
+> +};
+> +
+>  static const struct resource axp22x_pek_resources[] = {
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_RIS_EDGE, "PEK_DBR"),
+>  	DEFINE_RES_IRQ_NAMED(AXP22X_IRQ_PEK_FAL_EDGE, "PEK_DBF"),
+> @@ -793,6 +799,11 @@ static const struct mfd_cell axp813_cells[] = {
+>  		.of_compatible	= "x-powers,axp813-ac-power-supply",
+>  		.num_resources	= ARRAY_SIZE(axp20x_ac_power_supply_resources),
+>  		.resources	= axp20x_ac_power_supply_resources,
+> +	}, {
+> +		.name		= "axp20x-usb-power-supply",
+> +		.num_resources	= ARRAY_SIZE(axp803_usb_power_supply_resources),
+> +		.resources	= axp803_usb_power_supply_resources,
+> +		.of_compatible	= "x-powers,axp813-usb-power-supply",
+>  	},
+>  };
+>  
 
-$ grep BTRFS config-5.0.0-rc8-00196-g70d28b0
-CONFIG_BTRFS_FS=y
-# CONFIG_BTRFS_FS_POSIX_ACL is not set
-# CONFIG_BTRFS_FS_CHECK_INTEGRITY is not set
-# CONFIG_BTRFS_FS_RUN_SANITY_TESTS is not set
-# CONFIG_BTRFS_DEBUG is not set
-# CONFIG_BTRFS_ASSERT is not set
-CONFIG_BTRFS_FS_REF_VERIFY=y
-
-
-Best Regards,
-Rong Chen
-
-
-> _______________________________________________
-> LKP mailing list
-> LKP@lists.01.org
-> https://lists.01.org/mailman/listinfo/lkp
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
