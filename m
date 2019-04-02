@@ -2,367 +2,150 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEF8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD251C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E72F2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A0020856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vnXCDsW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbfDBNog (ORCPT
+        id S1732043AbfDBNol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:44:36 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46640 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732020AbfDBNoc (ORCPT
+        Tue, 2 Apr 2019 09:44:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47290 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732020AbfDBNoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:44:32 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z17so14956283qts.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 06:44:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0r7+hilVNe/4I9eRawoq2Pmsfnnh22/Qwd1p/sUOy+I=;
-        b=c1abwNoQOazpuov/YpPo/9bCAuKG0rvITc4lQYp5/haVOj/GYUtqbuLIGhUkdb3XtV
-         7buvYDDzg9yW10H8JY4u6ITBkQp0ggAfG5KYrllEerAKiUGzc8SPR/kpIyDHmvjqVHQs
-         n5Bu4gEZIGdgSzFSwE8Vcl4MRdPiAsCFNxqsTzqD3J2sTPzMuPWdMBT5DqlnmnqW76ll
-         1SmAI/ylHenj+3eMxyKka9KkQFXtq6dWfbnNePGno2rcDQAywv0xGjYWgVw7wivFWkFI
-         wl7xQ0cx18ETuch3hePXOQ/RosbTQxAvpBiQkAcIc8vJ+/ovwbuOA+vkAF9e2f1/dUTw
-         7oPg==
-X-Gm-Message-State: APjAAAVGnP1CBV5iYm3D0ABnGFw7pnX9kUfYW9MeQ4RC3a3NWtLwfRJa
-        FFUimGphbeazZd5kctPks8U3uezgbe9VO1rjjBXTgg==
-X-Google-Smtp-Source: APXvYqwHmB9CNRIeAGnOawIGFMWvgpGLpdMxas8z3IDa9JuHvIvjjPw/tf75z3cseF2iduxCgx/IA5jMQ9Wnv/RPuF4=
-X-Received: by 2002:ac8:30bc:: with SMTP id v57mr10650050qta.26.1554212671134;
- Tue, 02 Apr 2019 06:44:31 -0700 (PDT)
+        Tue, 2 Apr 2019 09:44:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x32DiNCo112585;
+        Tue, 2 Apr 2019 08:44:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554212663;
+        bh=J6pYEexdvRmWufpZJ5S9lvcoxxQlJJ7TaS/1TPiMFiU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vnXCDsW3JM7T+lRb8aLTiRs4DpH9mp/xy2ys2dRtl4vyqb6jrTFqJ23AZ1amjBonL
+         Cupu8iYo4Th2r8YA8kBikZXNnDNRsdlscUBGYoit9MX02VOm7WQ05SaKNZsHA7f8cR
+         /cFySFT6eB0OtmGIq3vVd1zcZ1AN+oxJ7F6kpRvU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x32DiNpb080079
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Apr 2019 08:44:23 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Apr
+ 2019 08:44:23 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 2 Apr 2019 08:44:23 -0500
+Received: from [172.22.72.122] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x32DiMD4061012;
+        Tue, 2 Apr 2019 08:44:22 -0500
+Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
+To:     Brian Masney <masneyb@onstation.org>
+CC:     <lee.jones@linaro.org>, <daniel.thompson@linaro.org>,
+        <jingoohan1@gmail.com>, <robh+dt@kernel.org>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>, <jonathan@marek.ca>
+References: <20190401103034.21062-1-masneyb@onstation.org>
+ <20190401103034.21062-3-masneyb@onstation.org>
+ <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
+ <20190402132440.GA10359@basecamp>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c88d954a-ce37-35dc-414b-df28d6095d89@ti.com>
+Date:   Tue, 2 Apr 2019 08:44:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190328155151.577687-1-benjamin.tissoires@redhat.com> <CAKdAkRRwKS+wzXjh=gyOQtSEiMwWhArZVc_cwecJsEZ=MGRa8w@mail.gmail.com>
-In-Reply-To: <CAKdAkRRwKS+wzXjh=gyOQtSEiMwWhArZVc_cwecJsEZ=MGRa8w@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 2 Apr 2019 15:44:19 +0200
-Message-ID: <CAO-hwJK2yusO2f+oFnUcNGuxo6e_+7F6Cjqmcsuimy4zrm-Jww@mail.gmail.com>
-Subject: Re: [PATCH] HID: force setting drvdata to NULL when removing the driver
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jason Gerecke <killertofu@gmail.com>,
-        Ping Cheng <pinglinux@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190402132440.GA10359@basecamp>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Brian
 
-On Fri, Mar 29, 2019 at 11:26 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Benjamin,
->
-> On Thu, Mar 28, 2019 at 8:52 AM Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
-> >
-> > Or when the probe failed.
-> >
-> > This is a common pattern in the HID drivers to reset the drvdata. Some
-> > do it properly, some do it only in case of failure.
-> > Anyway, it's never a good thing to have breadcrumbs, so force a clean
-> > state when removing or when probe is failing.
->
-> Just a data point: driver core already clears drvdata, so as long as
-> dev_get/set_drvdata() is the same as hid_get/set_drvdata() no special
-> handling is needed in HID core.
+On 4/2/19 8:24 AM, Brian Masney wrote:
+> On Tue, Apr 02, 2019 at 07:56:55AM -0500, Dan Murphy wrote:
+>> This would connect control bank B to control bank A.  Or just use a flag to denote to connect them
+>> and not use led-sources.  But led-sources is the property of choice.
+>>
+>> led@0 {
+>> 	reg = <0>;
+>> 	led-sources = < 0 1 >;
+>> 	label = "main-lcd";
+>> 	default-brightness = <200>;
+>> 	max-brightness = <255>;
+>> };
+> 
+> OK, I see. I wondered how we could do that in device tree.
+> 
+>>> +    properties:
+>>> +      label:
+>>> +        description: |
+>>> +          The label for this LED. If omitted, the label is taken from the node
+>>> +          name (excluding the unit address). It has to uniquely identify a
+>>> +          device, i.e. no other LED class device can be assigned the same label.
+>>> +
+>>> +      led-sources:
+>>> +        description: |
+>>> +          List of device current outputs the LED is connected to.
+>>> +        allOf:
+>>> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+>>> +          - minItems: 1
+>>> +            maxItems: 2
+>>> +            items:
+>>> +              minimum: 0
+>>> +              maximum: 1
+>>> +
+>>
+>> label and led-sources are already defined in the common.txt no need to redefine them here.
+> 
+> If I'm going to use the new-style bindings, then I'll need to convert
+> common.txt over to use the new format as well so that the automated
+> schema validations will work. I'm willing to do that work if there is
+> interest from the LED / backlight maintainers. The main issue is that
+> there are 62 references to the file common.txt in the directory
+> Documentation/devicetree/bindings/leds/. Would the maintainers prefer:
+> 
+> - Once common.txt is converted to common.yaml, make common.txt only
+>   have a line stating that the common bindings were moved into
+>   common.yaml. We can remove this file once all of the other bindings
+>   are converted to the new-style format.
+> 
+> - Update all references to common.txt to common.yaml. (1 patch or 62
+>   patches?)
+> 
+> - Or, just go with the older-style binding format for now.
+> 
+> Thanks Dan for your other comments. They make sense and I'll incorporate
+> those changes into my next version.
+> 
 
-You are correct (as always ;-P). I'll drop the hid-core changes and
-send a v2 ASAP.
+That is up to the maintainers.
 
-Cheers,
-Benjamin
+Also one other comment I noticed when reviewing the code that there is no definition to
+which child led properties are optional and which are required?
 
->
-> Thanks.
->
-> --
-> Dmitry
->
-> On Thu, Mar 28, 2019 at 8:52 AM Benjamin Tissoires
-> <benjamin.tissoires@redhat.com> wrote:
-> >
-> > Or when the probe failed.
-> >
-> > This is a common pattern in the HID drivers to reset the drvdata. Some
-> > do it properly, some do it only in case of failure.
-> > Anyway, it's never a good thing to have breadcrumbs, so force a clean
-> > state when removing or when probe is failing.
-> >
-> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > ---
-> >  drivers/hid/hid-core.c           |  2 ++
-> >  drivers/hid/hid-cougar.c         |  6 ++----
-> >  drivers/hid/hid-gfrm.c           |  7 -------
-> >  drivers/hid/hid-lenovo.c         |  2 --
-> >  drivers/hid/hid-logitech-dj.c    |  2 --
-> >  drivers/hid/hid-logitech-hidpp.c |  8 +++-----
-> >  drivers/hid/hid-picolcd_core.c   |  7 +------
-> >  drivers/hid/hid-sensor-hub.c     |  1 -
-> >  drivers/hid/wacom_sys.c          | 18 +++++-------------
-> >  9 files changed, 13 insertions(+), 40 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > index b5a8af8daa74..011e49da4d63 100644
-> > --- a/drivers/hid/hid-core.c
-> > +++ b/drivers/hid/hid-core.c
-> > @@ -2203,6 +2203,7 @@ static int hid_device_probe(struct device *dev)
-> >                 if (ret) {
-> >                         hid_close_report(hdev);
-> >                         hdev->driver = NULL;
-> > +                       hid_set_drvdata(hdev, NULL);
-> >                 }
-> >         }
-> >  unlock:
-> > @@ -2231,6 +2232,7 @@ static int hid_device_remove(struct device *dev)
-> >                 else /* default remove */
-> >                         hid_hw_stop(hdev);
-> >                 hid_close_report(hdev);
-> > +               hid_set_drvdata(hdev, NULL);
-> >                 hdev->driver = NULL;
-> >         }
-> >
-> > diff --git a/drivers/hid/hid-cougar.c b/drivers/hid/hid-cougar.c
-> > index e0bb7b34f3a4..4ff3bc1d25e2 100644
-> > --- a/drivers/hid/hid-cougar.c
-> > +++ b/drivers/hid/hid-cougar.c
-> > @@ -207,7 +207,7 @@ static int cougar_probe(struct hid_device *hdev,
-> >         error = hid_parse(hdev);
-> >         if (error) {
-> >                 hid_err(hdev, "parse failed\n");
-> > -               goto fail;
-> > +               return error;
-> >         }
-> >
-> >         if (hdev->collection->usage == COUGAR_VENDOR_USAGE) {
-> > @@ -219,7 +219,7 @@ static int cougar_probe(struct hid_device *hdev,
-> >         error = hid_hw_start(hdev, connect_mask);
-> >         if (error) {
-> >                 hid_err(hdev, "hw start failed\n");
-> > -               goto fail;
-> > +               return error;
-> >         }
-> >
-> >         error = cougar_bind_shared_data(hdev, cougar);
-> > @@ -249,8 +249,6 @@ static int cougar_probe(struct hid_device *hdev,
-> >
-> >  fail_stop_and_cleanup:
-> >         hid_hw_stop(hdev);
-> > -fail:
-> > -       hid_set_drvdata(hdev, NULL);
-> >         return error;
-> >  }
-> >
-> > diff --git a/drivers/hid/hid-gfrm.c b/drivers/hid/hid-gfrm.c
-> > index cf477f8c8f4c..1a20997e7750 100644
-> > --- a/drivers/hid/hid-gfrm.c
-> > +++ b/drivers/hid/hid-gfrm.c
-> > @@ -127,12 +127,6 @@ static int gfrm_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> >         return ret;
-> >  }
-> >
-> > -static void gfrm_remove(struct hid_device *hdev)
-> > -{
-> > -       hid_hw_stop(hdev);
-> > -       hid_set_drvdata(hdev, NULL);
-> > -}
-> > -
-> >  static const struct hid_device_id gfrm_devices[] = {
-> >         { HID_BLUETOOTH_DEVICE(0x58, 0x2000),
-> >                 .driver_data = GFRM100 },
-> > @@ -146,7 +140,6 @@ static struct hid_driver gfrm_driver = {
-> >         .name = "gfrm",
-> >         .id_table = gfrm_devices,
-> >         .probe = gfrm_probe,
-> > -       .remove = gfrm_remove,
-> >         .input_mapping = gfrm_input_mapping,
-> >         .raw_event = gfrm_raw_event,
-> >         .input_configured = gfrm_input_configured,
-> > diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-> > index eacc76d2ab96..cde9d22bb3ec 100644
-> > --- a/drivers/hid/hid-lenovo.c
-> > +++ b/drivers/hid/hid-lenovo.c
-> > @@ -869,8 +869,6 @@ static void lenovo_remove_tpkbd(struct hid_device *hdev)
-> >
-> >         led_classdev_unregister(&data_pointer->led_micmute);
-> >         led_classdev_unregister(&data_pointer->led_mute);
-> > -
-> > -       hid_set_drvdata(hdev, NULL);
-> >  }
-> >
-> >  static void lenovo_remove_cptkbd(struct hid_device *hdev)
-> > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-> > index 826fa1e1c8d9..a75101293755 100644
-> > --- a/drivers/hid/hid-logitech-dj.c
-> > +++ b/drivers/hid/hid-logitech-dj.c
-> > @@ -1094,7 +1094,6 @@ static int logi_dj_probe(struct hid_device *hdev,
-> >  hid_parse_fail:
-> >         kfifo_free(&djrcv_dev->notif_fifo);
-> >         kfree(djrcv_dev);
-> > -       hid_set_drvdata(hdev, NULL);
-> >         return retval;
-> >
-> >  }
-> > @@ -1145,7 +1144,6 @@ static void logi_dj_remove(struct hid_device *hdev)
-> >
-> >         kfifo_free(&djrcv_dev->notif_fifo);
-> >         kfree(djrcv_dev);
-> > -       hid_set_drvdata(hdev, NULL);
-> >  }
-> >
-> >  static const struct hid_device_id logi_dj_receivers[] = {
-> > diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-> > index 199cc256e9d9..b950a44157a2 100644
-> > --- a/drivers/hid/hid-logitech-hidpp.c
-> > +++ b/drivers/hid/hid-logitech-hidpp.c
-> > @@ -3237,15 +3237,15 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> >         if (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP) {
-> >                 ret = wtp_allocate(hdev, id);
-> >                 if (ret)
-> > -                       goto allocate_fail;
-> > +                       return ret;
-> >         } else if (hidpp->quirks & HIDPP_QUIRK_CLASS_M560) {
-> >                 ret = m560_allocate(hdev);
-> >                 if (ret)
-> > -                       goto allocate_fail;
-> > +                       return ret;
-> >         } else if (hidpp->quirks & HIDPP_QUIRK_CLASS_K400) {
-> >                 ret = k400_allocate(hdev);
-> >                 if (ret)
-> > -                       goto allocate_fail;
-> > +                       return ret;
-> >         }
-> >
-> >         INIT_WORK(&hidpp->work, delayed_work_cb);
-> > @@ -3343,8 +3343,6 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> >         sysfs_remove_group(&hdev->dev.kobj, &ps_attribute_group);
-> >         cancel_work_sync(&hidpp->work);
-> >         mutex_destroy(&hidpp->send_mutex);
-> > -allocate_fail:
-> > -       hid_set_drvdata(hdev, NULL);
-> >         return ret;
-> >  }
-> >
-> > diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-picolcd_core.c
-> > index c1b29a9eb41a..a5d30f267a7b 100644
-> > --- a/drivers/hid/hid-picolcd_core.c
-> > +++ b/drivers/hid/hid-picolcd_core.c
-> > @@ -550,8 +550,7 @@ static int picolcd_probe(struct hid_device *hdev,
-> >         data = kzalloc(sizeof(struct picolcd_data), GFP_KERNEL);
-> >         if (data == NULL) {
-> >                 hid_err(hdev, "can't allocate space for Minibox PicoLCD device data\n");
-> > -               error = -ENOMEM;
-> > -               goto err_no_cleanup;
-> > +               return -ENOMEM;
-> >         }
-> >
-> >         spin_lock_init(&data->lock);
-> > @@ -613,9 +612,6 @@ static int picolcd_probe(struct hid_device *hdev,
-> >         hid_hw_stop(hdev);
-> >  err_cleanup_data:
-> >         kfree(data);
-> > -err_no_cleanup:
-> > -       hid_set_drvdata(hdev, NULL);
-> > -
-> >         return error;
-> >  }
-> >
-> > @@ -651,7 +647,6 @@ static void picolcd_remove(struct hid_device *hdev)
-> >         picolcd_exit_cir(data);
-> >         picolcd_exit_keys(data);
-> >
-> > -       hid_set_drvdata(hdev, NULL);
-> >         mutex_destroy(&data->mutex);
-> >         /* Finally, clean up the picolcd data itself */
-> >         kfree(data);
-> > diff --git a/drivers/hid/hid-sensor-hub.c b/drivers/hid/hid-sensor-hub.c
-> > index 4256fdc5cd6d..a3db5d8b382d 100644
-> > --- a/drivers/hid/hid-sensor-hub.c
-> > +++ b/drivers/hid/hid-sensor-hub.c
-> > @@ -755,7 +755,6 @@ static void sensor_hub_remove(struct hid_device *hdev)
-> >         }
-> >         spin_unlock_irqrestore(&data->lock, flags);
-> >         mfd_remove_devices(&hdev->dev);
-> > -       hid_set_drvdata(hdev, NULL);
-> >         mutex_destroy(&data->mutex);
-> >  }
-> >
-> > diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
-> > index a8633b1437b2..c2fb614bff44 100644
-> > --- a/drivers/hid/wacom_sys.c
-> > +++ b/drivers/hid/wacom_sys.c
-> > @@ -2716,14 +2716,12 @@ static int wacom_probe(struct hid_device *hdev,
-> >         wacom_wac->features = *((struct wacom_features *)id->driver_data);
-> >         features = &wacom_wac->features;
-> >
-> > -       if (features->check_for_hid_type && features->hid_type != hdev->type) {
-> > -               error = -ENODEV;
-> > -               goto fail;
-> > -       }
-> > +       if (features->check_for_hid_type && features->hid_type != hdev->type)
-> > +               return -ENODEV;
-> >
-> >         error = kfifo_alloc(&wacom_wac->pen_fifo, WACOM_PKGLEN_MAX, GFP_KERNEL);
-> >         if (error)
-> > -               goto fail;
-> > +               return error;
-> >
-> >         wacom_wac->hid_data.inputmode = -1;
-> >         wacom_wac->mode_report = -1;
-> > @@ -2741,12 +2739,12 @@ static int wacom_probe(struct hid_device *hdev,
-> >         error = hid_parse(hdev);
-> >         if (error) {
-> >                 hid_err(hdev, "parse failed\n");
-> > -               goto fail;
-> > +               return error;
-> >         }
-> >
-> >         error = wacom_parse_and_register(wacom, false);
-> >         if (error)
-> > -               goto fail;
-> > +               return error;
-> >
-> >         if (hdev->bus == BUS_BLUETOOTH) {
-> >                 error = device_create_file(&hdev->dev, &dev_attr_speed);
-> > @@ -2757,10 +2755,6 @@ static int wacom_probe(struct hid_device *hdev,
-> >         }
-> >
-> >         return 0;
-> > -
-> > -fail:
-> > -       hid_set_drvdata(hdev, NULL);
-> > -       return error;
-> >  }
-> >
-> >  static void wacom_remove(struct hid_device *hdev)
-> > @@ -2789,8 +2783,6 @@ static void wacom_remove(struct hid_device *hdev)
-> >                 wacom_release_resources(wacom);
-> >
-> >         kfifo_free(&wacom_wac->pen_fifo);
-> > -
-> > -       hid_set_drvdata(hdev, NULL);
-> >  }
-> >
-> >  #ifdef CONFIG_PM
-> > --
-> > 2.19.2
-> >
->
->
-> --
-> Dmitry
+Dan
+
+> Brian
+> 
+
+
+-- 
+------------------
+Dan Murphy
