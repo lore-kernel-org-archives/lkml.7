@@ -2,89 +2,75 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6C1C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8D1C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5CC20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A970C2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfDBVFv (ORCPT
+        id S1726574AbfDBVGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:05:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61983 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfDBVFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:05:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 14:05:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,302,1549958400"; 
-   d="scan'208";a="147488993"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.149]) ([10.7.153.149])
-  by orsmga002.jf.intel.com with ESMTP; 02 Apr 2019 14:05:49 -0700
-Subject: Re: [PATCH 3/5] media: dt-bindings: aspeed-video: Add missing
- memory-region property
-To:     Eddie James <eajames@linux.ibm.com>, linux-media@vger.kernel.org
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, mturquette@baylibre.com,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org,
-        mchehab@kernel.org, linux-clk@vger.kernel.org
-References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
- <1554229504-5661-4-git-send-email-eajames@linux.ibm.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <c715fe6d-d443-c9b4-0a58-29941e0ed539@linux.intel.com>
-Date:   Tue, 2 Apr 2019 14:05:49 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 2 Apr 2019 17:06:33 -0400
+Received: from mailoutvs42.siol.net ([185.57.226.233]:37258 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725822AbfDBVGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 17:06:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 24B81521A96;
+        Tue,  2 Apr 2019 23:06:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id wmGqwf2fL-Ec; Tue,  2 Apr 2019 23:06:29 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id C4A76521A7A;
+        Tue,  2 Apr 2019 23:06:29 +0200 (CEST)
+Received: from localhost.localdomain (cpe-86-58-52-202.static.triera.net [86.58.52.202])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Zimbra) with ESMTPSA id DFFD7521A96;
+        Tue,  2 Apr 2019 23:06:28 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     maxime.ripard@bootlin.com, wens@csie.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jernej.skrabec@siol.net
+Subject: [PATCH 0/3] clk: sunxi-ng: H6 related clock fixes
+Date:   Tue,  2 Apr 2019 23:06:20 +0200
+Message-Id: <20190402210623.14988-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1554229504-5661-4-git-send-email-eajames@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eddie,
+During linux-next testing on Allwinner H6, I found several issues with
+clock driver. This patch series fixes them.
 
-On 4/2/2019 11:25 AM, Eddie James wrote:
-> Missed documenting this property in the initial commit.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->   Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
-> index 78b464a..346c2d3 100644
-> --- a/Documentation/devicetree/bindings/media/aspeed-video.txt
-> +++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
-> @@ -14,6 +14,11 @@ Required properties:
->   			the VE
->    - interrupts:		the interrupt associated with the VE on this platform
->   
-> +Optional properties:
-> + - memory-region:
-> +	phandle to a memory region to allocate from, as defined in
-> +	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> +
->   Example:
->   
->   video-engine@1e700000 {
-> @@ -23,4 +28,5 @@ video-engine@1e700000 {
->       clock-names = "vclk", "eclk";
->       resets = <&syscon ASPEED_RESET_VIDEO>;
->       interrupts = <7>;
-> +    memory-region = <&video_engine_memory>
+Patch 1 fixes masking of unused factors in nkmp clocks.
+Patch 2 fixes H6 hdmi-cec clock.
+Patch 3 allows video and vpu related clocks to set parent rate.
 
-nit: a semicolon at the end of the line.
+Please take a look.
 
->   };
-> 
+Best regards,
+Jernej
+
+Jernej Skrabec (3):
+  clk: sunxi-ng: nkmp: Avoid GENMASK(-1, 0)
+  clk: sunxi-ng: h6: Preset hdmi-cec clock parent
+  clk: sunxi-ng: h6: Allow video & vpu clocks to change parent rate
+
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 17 ++++++++++++++---
+ drivers/clk/sunxi-ng/ccu_nkmp.c      | 18 +++++++++++++-----
+ 2 files changed, 27 insertions(+), 8 deletions(-)
+
+--=20
+2.21.0
+
