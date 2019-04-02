@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E9CC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D1FC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891EC2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A092084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfYkhCBp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INw0CMrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfDBPpb (ORCPT
+        id S1730853AbfDBPpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:45:31 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:47037 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730732AbfDBPp2 (ORCPT
+        Tue, 2 Apr 2019 11:45:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43427 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730741AbfDBPpa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:45:28 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y6so6463477pll.13;
-        Tue, 02 Apr 2019 08:45:28 -0700 (PDT)
+        Tue, 2 Apr 2019 11:45:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z9so6758959pgu.10;
+        Tue, 02 Apr 2019 08:45:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RuAdNiK4G8Qqo5TwmjxGhbMJlztb3V/aCnDWI43Lc58=;
-        b=FfYkhCBpQGCeVxjzVByhi5fptKvA9UQBYui7XVjgEji4EZZ2pMkpMF5mK+8LTMD6p3
-         xYZ0I1VdoG2cnkQOfYNm5vYZye7eJuPtRDkKfv/Z3Hk5aKa0zhC7gjruAOjuDukaMWJR
-         pwcAlqiI+pgjwIGZYs9ZXOYkQOw4VCRVRgywzrBAoxFug8BLZTx8DjuGB83be5ZzLre2
-         DlTcFa8/IkCB62YnLeKuZxO8UbdUFe8PGkYrNzmTS2DIVj5mrE6y05b5rI97oZB8bxd8
-         8dQHk2Tq2k0HcADTml/cR4hv4zvO7zOPjB8AfqHb9LwOzIY7GltuYYRhTItTO62z0BjQ
-         J8GA==
+        bh=FFFTfhLy6qm86XkOlWp4trauKJ3kmEOKlYTBp1fQxws=;
+        b=INw0CMrzVrJK43sbFU90adMOEfRQdJ7SSyQMJT085qwwHrmKvQRCo1bnsTQ7SxApFB
+         UjYDfxvmAOK8OSTxYuUupWlMdUiKMr1KFfPVDB0GaImbqWdnyD3F2dLRymS4Vart/kQS
+         LdfBbrOSO6VnHM7Ayq49MzS7UC9bf6ZmoBlvBnLmVMrPqW0k/B8+gsVq+JwkvEGYa+KP
+         OZXPJ2NWj8Y6FWc6SPskYqw/UUxWLEwlzjs08rxzCDKko7Gvpe+AtKwTy8riUUUy3j53
+         3i4p9E0Uc3PMZBVNmnDewsNdwel/HqHULnjxmcXx5rb93mwL08NEmMAHzCowRMSphvCj
+         /AXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=RuAdNiK4G8Qqo5TwmjxGhbMJlztb3V/aCnDWI43Lc58=;
-        b=PGcrpJ1Jisr91Je/8JnBRqAKKtvS/Q8f9XVmXmAmd9Zb6RNMLYx2CkpULrWB+wj3ci
-         45A+a+ZkIEbiADYsOoOkFaL7JSgDqiqeMqzZSeNm2kDWN+gpn1RvVNRVM0FFsuBC9/jp
-         c571RIUWBqYV3P+z0S6Tt68U6jzlwGDc1ODgwPAo9s4G9jnYhkJZCpexzCsg2lux9BpS
-         2c4UeO+a7LO5rxuUSZmN633Mblmyp+slCyxX0NLHIxEJTxB+6KWRNSDzyekcfXBJ4kfD
-         BIOAh14IsoInJ0MTf9U1bg1VcHQaREKMeCQHwY4Sf7VlzE/gv7RksPZIHTIRKKIg4VGB
-         hTLQ==
-X-Gm-Message-State: APjAAAVr4JQXSemVkfN8Gjn2CRVvhVco/X1E/blLz7Gkm/t1tm1tkUQf
-        M7ZF+dVCrZOUh1g/ZB2fzNk=
-X-Google-Smtp-Source: APXvYqxL2WQoiuUb2u0kWYvuuHaiaeLwgdlNbbtuyuLRR1bAUifCiuQRsBKTRhJVlap733oG/OmyZg==
-X-Received: by 2002:a17:902:2927:: with SMTP id g36mr43162839plb.57.1554219927729;
-        Tue, 02 Apr 2019 08:45:27 -0700 (PDT)
+        bh=FFFTfhLy6qm86XkOlWp4trauKJ3kmEOKlYTBp1fQxws=;
+        b=tdjozL/qTAmmnQ5BuShDcuweegpHHASoDzpb/pPVjGldRB5XB7Tog0DeG3o1iRsKHn
+         wMoniYaw+ZlLYHVUho9XF9R49TFVYS1SWlptONVdipewbSNQ2ENCGzE/H4xIPP/5Ib8R
+         g/YPJJ1NvVEv1XxKXbSzne20LlR8klqikdoCXlcy2hhsA9YWvSeH6yvsHEuuu5lwVxK/
+         VKt/7cYCQrRLDUsOGuBzp0BfT8BMlAijGrCNxQq64G1dM7qPNbJk7eANVJPUFkAFBgYb
+         rOLw6J2QeFTikZQqSJkh96a84YhWgiGRqmPqVxYwiz/Sk6drtIgFn6Onn6WzYm8YqZ6R
+         XuLQ==
+X-Gm-Message-State: APjAAAXR0YRVeuZUZesCuJGt94Ja93X7KTdFveAYymHbBrK4zgEEZhvU
+        M/Zpx6Dj8CZ6mQZ6otEiiPs=
+X-Google-Smtp-Source: APXvYqxEgsK3I3Otq75CIGSEIel6eEaHkxfxeAj6w3Ia6+3PNLwlv5E4uR0MSw6wtkFtWDoWbETZjA==
+X-Received: by 2002:a63:e70c:: with SMTP id b12mr67787121pgi.399.1554219929754;
+        Tue, 02 Apr 2019 08:45:29 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id o76sm39421316pfa.156.2019.04.02.08.45.26
+        by smtp.gmail.com with ESMTPSA id s5sm15986916pgv.8.2019.04.02.08.45.28
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 08:45:27 -0700 (PDT)
+        Tue, 02 Apr 2019 08:45:29 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v2 3/5] nvmem: sunxi-sid: convert to SPDX license tags
-Date:   Tue,  2 Apr 2019 11:45:12 -0400
-Message-Id: <20190402154514.11284-4-tiny.windzz@gmail.com>
+Subject: [PATCH v2 4/5] nvmem: sunxi-sid: add new reg_read func
+Date:   Tue,  2 Apr 2019 11:45:13 -0400
+Message-Id: <20190402154514.11284-5-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190402154514.11284-1-tiny.windzz@gmail.com>
 References: <20190402154514.11284-1-tiny.windzz@gmail.com>
@@ -72,38 +71,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Updates license to use SPDX-License-Identifier.
+Because there was an endianness issue. It seems that reg_read
+function which the nvmem the driver currently exposes is wrong.
+So add the new read function, the new function is used when the
+native_endian flag is set.
 
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/nvmem/sunxi_sid.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/nvmem/sunxi_sid.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 570a2e354f30..54620d72ddb9 100644
+index 54620d72ddb9..5b8a42f686cd 100644
 --- a/drivers/nvmem/sunxi_sid.c
 +++ b/drivers/nvmem/sunxi_sid.c
-@@ -1,18 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Allwinner sunXi SoCs Security ID support.
-  *
-  * Copyright (c) 2013 Oliver Schinagl <oliver@schinagl.nl>
-  * Copyright (C) 2014 Maxime Ripard <maxime.ripard@free-electrons.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+@@ -37,6 +37,7 @@ struct sunxi_sid_cfg {
+ 	u32	value_offset;
+ 	u32	size;
+ 	bool	need_register_readout;
++	bool	native_endian;
+ };
  
- #include <linux/device.h>
+ struct sunxi_sid {
+@@ -75,6 +76,31 @@ static int sunxi_sid_read(void *context, unsigned int offset,
+ 	return 0;
+ }
+ 
++static u8 sunxi_sid_read_byte_native(const struct sunxi_sid *sid,
++			      const unsigned int offset)
++{
++	u32 sid_key;
++
++	sid_key = ioread32(sid->base + round_down(offset, 4));
++	sid_key >>= (offset % 4) * 8;
++
++	return sid_key;
++}
++
++static int sunxi_sid_read_native(void *context, unsigned int offset,
++			  void *val, size_t bytes)
++{
++	struct sunxi_sid *sid = context;
++	u8 *buf = val;
++
++	offset += sid->value_offset;
++
++	while (bytes--)
++		*buf++ = sunxi_sid_read_byte_native(sid, offset++);
++
++	return 0;
++}
++
+ static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
+ 				      const unsigned int offset,
+ 				      u32 *out)
+@@ -169,9 +195,12 @@ static int sunxi_sid_probe(struct platform_device *pdev)
+ 	econfig.dev = dev;
+ 	if (cfg->need_register_readout)
+ 		econfig.reg_read = sun8i_sid_read_by_reg;
++	else if (cfg->native_endian)
++		econfig.reg_read = sunxi_sid_read_native;
+ 	else
+ 		econfig.reg_read = sunxi_sid_read;
+ 	econfig.priv = sid;
++
+ 	nvmem = devm_nvmem_register(dev, &econfig);
+ 	if (IS_ERR(nvmem))
+ 		return PTR_ERR(nvmem);
 -- 
 2.17.0
 
