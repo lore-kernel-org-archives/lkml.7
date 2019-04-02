@@ -2,106 +2,136 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A607C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8138AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201F02084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4421420700
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:47:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ixlTkYu5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NRCuIUie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbfDBEmn (ORCPT
+        id S1726442AbfDBErN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:42:43 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37079 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfDBEmm (ORCPT
+        Tue, 2 Apr 2019 00:47:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35462 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfDBErN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:42:42 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e6so1526733pgc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 21:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=vNybugLJ1syLLEj5KhGmwpf3GcnIHGr8LT9ikdK8UC0=;
-        b=ixlTkYu54L05CWEPJNPWVwpVfX7wS1IYidw9SqN5NQccYgrrO4r98yG1D14bN5q4cX
-         z+t6da4DXEG/V2wR/kSTdz4va6MuvJ+vd5E1DJN8VQqY8iDxIOwUhZir5kwCB91Xzbch
-         KgyMQz2+w6FXNS32pCoefOgh81g1ZpBtmMBpXkqJOEPxbURAsFnROGuAXLdjbvxpsPpY
-         rLQjPnjL40UZ22c7QgAha37L4dB6DY5CtL4hSmleQgmI0Gj+SG49GZDb6xteh8HzFd39
-         V1/RrYN1555u72yFOtEALYfeHsjfAnq5a/Do7gtFWulQbPlQw9cqXutVYRQwYqOACu4y
-         h/kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vNybugLJ1syLLEj5KhGmwpf3GcnIHGr8LT9ikdK8UC0=;
-        b=ZDwOlssxYrr2WEjKk2TDCKW0nzZYMjoXkJCY81WKzxGiA7DhF8/Y0BKuCHCVWPXzMj
-         hRLYT3cyubEnM6DH5hyeAOeaJlceLIkZm0R53at3spX0xEgqM2fhhzApTqmNljiXjBuz
-         INqpM9dEO7vt1l6keumBBxjF+5QfajNBNGAQdN22HRvg+QbXI0rOKh3NOZA53ti2tHNA
-         kVEc2mPMJZeN+KFBFns1pcDdqzJ16ercb36yx5GlrEQ7Ry3ZdoptpgthouxsdOp7lLXS
-         OlWULvTNddeH5S8RJF3Mp6/6L3FQQ/bKPuDTo3RbzKCwaAbTmpcN5mio3lUFtNl3vuQD
-         c3ng==
-X-Gm-Message-State: APjAAAXh8LmzgZu/nh+ndDLRIFS4GtnUknsPCkoIgy9kkVoAhUkQ8lRD
-        +9FgA72AbP/wS4eBxOMR+6ibIg==
-X-Google-Smtp-Source: APXvYqxVGbCb4xTICQnSMT55PM/u1hnp31xgbW5A6zIe070KJMy64ELVGGQ5yJOeYz+xw0rDsRH/QA==
-X-Received: by 2002:aa7:8019:: with SMTP id j25mr67250575pfi.77.1554180161589;
-        Mon, 01 Apr 2019 21:42:41 -0700 (PDT)
-Received: from localhost (c-67-161-37-193.hsd1.ca.comcast.net. [67.161.37.193])
-        by smtp.googlemail.com with ESMTPSA id u62sm21665696pfa.124.2019.04.01.21.42.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 21:42:40 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] arm64: meson-gxm: Add support for the Mali T820 GPU
-In-Reply-To: <ed3ca736-0d2d-0a69-2e14-a9ed29f0cd13@baylibre.com>
-References: <20190315135655.28359-1-narmstrong@baylibre.com> <ed3ca736-0d2d-0a69-2e14-a9ed29f0cd13@baylibre.com>
-Date:   Mon, 01 Apr 2019 21:42:40 -0700
-Message-ID: <7hbm1puif3.fsf@baylibre.com>
+        Tue, 2 Apr 2019 00:47:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aMPPfj5JnNOQrKOZmzKYJq4pNGTHYuLUKAkg9cwvBis=; b=NRCuIUie73WIwB+IKHA2kfPsR
+        1eEMLtiJ3mtAnHhDZQsGtDIBPSMouSt0UyL1OroZVOZAIqEfcyfcEZPzolQxhgwsNoYw0ww6HPC5+
+        DwIVi5CXoyDsMzHcqwvY2isfTCbbTLyCMVCItkXkL+IGN3IqN3e6o19k5PMYkji4x//9XR8dlnqoz
+        As9BU9+ORPZkUFrxRbkIFXqAYL2y1/279CRlF+O73Ub7YK4mfvfs086c6ZEOlGeBtikouVur8eF6k
+        7CNBabBO54kv6KMQFeBLDg/4djZb+HQYLBdr1oJjYMuN7nfb0L1AdxMPBy7sXemTqF6rNjvqrj3Ez
+        NXTBQRcxg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBBKJ-00007H-9Z; Tue, 02 Apr 2019 04:47:11 +0000
+Subject: Re: [PATCH v3] gcov: fix when CONFIG_MODULES is not set
+To:     trong@android.com, oberpar@linux.ibm.com, akpm@linux-foundation.org
+Cc:     ndesaulniers@google.com, ghackmann@android.com, linux-mm@kvack.org,
+        kbuild-all@01.org, lkp@intel.com, linux-kernel@vger.kernel.org
+References: <20190402030956.48166-1-trong@android.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ef2492c2-2b30-b431-3aaa-33b619a2e1d3@infradead.org>
+Date:   Mon, 1 Apr 2019 21:47:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190402030956.48166-1-trong@android.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On 4/1/19 8:09 PM, trong@android.com wrote:
+> From: Tri Vo <trong@android.com>
+> 
+> Fixes: 8c3d220cb6b5 ("gcov: clang support")
+> 
+> Cc: Greg Hackmann <ghackmann@android.com>
+> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Cc: linux-mm@kvack.org
+> Cc: kbuild-all@01.org
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Tri Vo <trong@android.com>
 
-> On 15/03/2019 14:56, Neil Armstrong wrote:
->> This patchset adds :
->> - Optional reset properties in the midgard bindings
->> - Mali T820 Node in Amlogic Meson GXM DTSI
->> 
->> Changes since v1:
->> - Updated midgard DT wording following the recently submitted 
->>   bifrost bindings
->> 
->> Christian Hewitt (1):
->>   arm64: dts: meson-gxm: Add Mali-T820 node
->> 
->> Neil Armstrong (1):
->>   dt-bindings: gpu: mali-midgard: Add resets property
->> 
->>  .../bindings/gpu/arm,mali-midgard.txt         | 14 ++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi    | 27 +++++++++++++++++++
->>  2 files changed, 41 insertions(+)
->> 
->
-> Kevin, can you take both in your tree now the bindings are reviewed ?
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Yes.
+Thanks.
 
-Queud for v5.2 (branch: v5.2/dt64)
+> ---
+>  kernel/gcov/clang.c   | 4 ++++
+>  kernel/gcov/gcc_3_4.c | 4 ++++
+>  kernel/gcov/gcc_4_7.c | 4 ++++
+>  3 files changed, 12 insertions(+)
+> 
+> diff --git a/kernel/gcov/clang.c b/kernel/gcov/clang.c
+> index 125c50397ba2..cfb9ce5e0fed 100644
+> --- a/kernel/gcov/clang.c
+> +++ b/kernel/gcov/clang.c
+> @@ -223,7 +223,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+>   */
+>  bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+>  {
+> +#ifdef CONFIG_MODULES
+>  	return within_module((unsigned long)info->filename, mod);
+> +#else
+> +	return false;
+> +#endif
+>  }
+>  
+>  /* Symbolic links to be created for each profiling data file. */
+> diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
+> index 801ee4b0b969..8fc30f178351 100644
+> --- a/kernel/gcov/gcc_3_4.c
+> +++ b/kernel/gcov/gcc_3_4.c
+> @@ -146,7 +146,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+>   */
+>  bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+>  {
+> +#ifdef CONFIG_MODULES
+>  	return within_module((unsigned long)info, mod);
+> +#else
+> +	return false;
+> +#endif
+>  }
+>  
+>  /* Symbolic links to be created for each profiling data file. */
+> diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
+> index ec37563674d6..0b6886d4a4dd 100644
+> --- a/kernel/gcov/gcc_4_7.c
+> +++ b/kernel/gcov/gcc_4_7.c
+> @@ -159,7 +159,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+>   */
+>  bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+>  {
+> +#ifdef CONFIG_MODULES
+>  	return within_module((unsigned long)info, mod);
+> +#else
+> +	return false;
+> +#endif
+>  }
+>  
+>  /* Symbolic links to be created for each profiling data file. */
+> 
 
-Thanks,
 
-Kevin
-
-
-
+-- 
+~Randy
