@@ -2,173 +2,99 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4B1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090A6C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1921920857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wMgAjtca"
+	by mail.kernel.org (Postfix) with ESMTP id D411620857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbfDBLCf (ORCPT
+        id S1729940AbfDBLDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:02:35 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40473 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfDBLCf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:02:35 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q66so11151469ljq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 04:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uWIyKqYUGN66w/VP6In43gZmFcqXvLWlLTGWY51dQes=;
-        b=wMgAjtcayNeNUTT5hqQTQE9k5DD7qWjpeOmkTMKugiYX5CXoLA6EqBE38PmlLQs7q6
-         nMSklk0dskw+Cs0iwkXoMZaNx6grzNM3LvTtBW/p4Tg2HhjqpcwTiYhvpOtCkM80AyDv
-         lwB2+Nw7QkrithGdIvH7bb3EV7EZurBuBV9ii2jWXLsw6QeN/qmcWj5mduturUchC3w3
-         UZ38bmKhODp/K4mPAzG1uWnVhlWehx3+mbHJwEXvTPgVmM0IyAF2ICw07oklA+OAxGvn
-         6dKkMlEMeKhcN0UMv+RNV13hz9jo3U1ioGg1qC1uPWsuOVfKAw0TOaQBF1f8TbixH2j5
-         XDbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uWIyKqYUGN66w/VP6In43gZmFcqXvLWlLTGWY51dQes=;
-        b=RKRz/0oClXJN2gzIEoq6vlLxjs1Pa3tOKamFSmmRlkEMRpJJhZC1aqIUQ/beYi39Mv
-         ab7XI5N2Sseh42R/A7n7NQrcFuI5cQqQE6/cpspk53CqZxv6jCKCZiuOD9M11tT7XN5q
-         4bzBePuRQE9+xpJRUk9hTegEXkrP4bS4BsXc6/lcgZY3bZLRhDAwRfnUIZEl8u5BkU0P
-         ajtfU13UP/xrggShOKGddgNt6b/8zcC3qtLCW6CXmJJB7d8Iby0sbylpgtkbj3VYOh6d
-         g/N46zi1XEIl9UMZcC1Zgen4nsIcmGA5zJ8W+ch+zkg3x+SDjCdfaliU8bjA8Zn6FjIj
-         9DFg==
-X-Gm-Message-State: APjAAAUzMZ74uKCzOYy+QnMLNIQ7kF9JVsB4nYzElhnmrD+AM/QsBISX
-        An1X2WSOBwOdshRjzlTFTF20CQoyHzWRZJXjhwJPaQ==
-X-Google-Smtp-Source: APXvYqylHZGiY1j6A+ME59u3JfX7TMmK6z0RCWkU6Lbp8JnDorjrDNQ23Y9zZlIaTisid6vj2qr3S8awE/RVXaWrdD4=
-X-Received: by 2002:a2e:978c:: with SMTP id y12mr40897552lji.70.1554202953506;
- Tue, 02 Apr 2019 04:02:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190401170044.243719205@linuxfoundation.org>
-In-Reply-To: <20190401170044.243719205@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 2 Apr 2019 16:32:21 +0530
-Message-ID: <CA+G9fYtSyRcGFX+HD7+aQD2GgW_Y1JNaRsOce4Hhnv2hxjRfPA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/134] 4.19.33-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
+        Tue, 2 Apr 2019 07:03:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45951 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725889AbfDBLDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:03:35 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7E07B308213C;
+        Tue,  2 Apr 2019 11:03:34 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-117-189.ams2.redhat.com [10.36.117.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2F1301001DD8;
+        Tue,  2 Apr 2019 11:03:25 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Oleg Nesterov <oleg@redhat.com>,
+        Nagarathnam Muthusamy <nagarathnam.muthusamy@oracle.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v2 0/5] pid: add pidfd_open()
+References: <CAHk-=whcA0kAWGqet9oJdyttjhP7J4PcU2Ly=n_Qyo6rMJNxRg@mail.gmail.com>
+        <CAKOZuevv_QgvzmusA+yey76vo4hn9bEVwud2RumuOr0K4++15A@mail.gmail.com>
+        <CAHk-=wj0o8BiUrYiM5ZcTS6JxBh1M60O36Ms8-EqLQ139=1L4g@mail.gmail.com>
+        <20190330171215.3yrfxwodstmgzmxy@brauner.io>
+        <CAHk-=whF6gnRVbJaArZna4e=tejfrzmNQtRbWjnuSSKpBn+jQg@mail.gmail.com>
+        <132107F4-F56B-4D6E-9E00-A6F7C092E6BD@amacapital.net>
+        <CAHk-=wiaLtH41Mc5qAjOeCWavPqV0DhS581KYa0QBt8uraTK1Q@mail.gmail.com>
+        <20190331211041.vht7dnqg4e4bilr2@brauner.io>
+        <CAHk-=wi3AE1-iRQ_7LOeSMNAMrGxRdC=gTjD30duVw4XRchcNQ@mail.gmail.com>
+        <18C7FCB9-2CBA-4237-94BB-9C4395A2106B@amacapital.net>
+        <20190401114059.7gdsvcqyoz2o5bbz@yavin>
+        <CAHk-=wgKqBQznZdTQaM6yQ+_5dcz-+q8=2sbQsAoDh55hQTLMA@mail.gmail.com>
+        <CAKOZuev4Q4CY0-2rUpTujSKMVJ9L9Exv=_divFC0G0_OaQHaGw@mail.gmail.com>
+        <CAGLj2rF85hZLAR79oEA1dQARadw1OHr8bxqCLbvO6g9B6ou2Qw@mail.gmail.com>
+        <CAKOZuetovU9NawSjUfGTAwXVfnmKC9GFtmS8FxAE5Hjmzq0HHA@mail.gmail.com>
+        <CAHk-=wjgENV0pT8=MjB1UVBeWCrECCNXv15AKKX7Kfg7Eak7qw@mail.gmail.com>
+        <CAKOZuet2QCoW1XMpTAzXS868PhF-gh14czFn4gwE4A=oX=Yr8w@mail.gmail.com>
+Date:   Tue, 02 Apr 2019 13:03:24 +0200
+In-Reply-To: <CAKOZuet2QCoW1XMpTAzXS868PhF-gh14czFn4gwE4A=oX=Yr8w@mail.gmail.com>
+        (Daniel Colascione's message of "Mon, 1 Apr 2019 09:45:22 -0700")
+Message-ID: <878swsr7nn.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 02 Apr 2019 11:03:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 at 22:44, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.33 release.
-> There are 134 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed Apr  3 16:59:23 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.33-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+* Daniel Colascione:
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> But doesn't the CSIGNAL approach still require that libraries somehow
+> coordinate which non-SIGCHLD signal they use? (Signal coordination a
+> separate problem, unfortunately.)
 
-Summary
-------------------------------------------------------------------------
+There's already an allocation mechanism for realtime signals in glibc,
+via __libc_allocate_rtsig.  I don't know what it is about: It's clearly
+intended as an external interface, yet there isn't a declaration in any
+installed header file.  ALSA has some optional code to use it, but I
+don't think distributions compile ALSA in that way; it always uses SIGIO.
 
-kernel: 4.19.33-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 01a3983fac4e760561475e7fa8908721c63be26b
-git describe: v4.19.32-135-g01a3983fac4e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.32-135-g01a3983fac4e
-
-
-No regressions (compared to build v4.19.32)
-
-
-No fixes (compared to build v4.19.32)
-
-Ran 20417 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+Florian
