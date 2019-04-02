@@ -2,181 +2,133 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3766AC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CABC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07712084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="xvsDQN7i"
+	by mail.kernel.org (Postfix) with ESMTP id 34FB620883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554201313;
+	bh=VkbNACm/8od0be0SyULl7JcTxUCS+//sRbl2F+o4Iog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TPsdNmr/wCffROCJKzuEqUlc7AtnQwwOs86igQfu9rHYXKH3nocpdd85ZjvZkzSrI
+	 fnOl0kNvgKJdmqEJ8A8In4YCOL6gWW/uVOJIH2ijRE8J0REQqO6w6gVLAR1pZzwDFI
+	 Z/e/gS6ejOK0U5y4xGW004SgkWHTajKJCWU8cdsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbfDBKdp (ORCPT
+        id S1729142AbfDBKfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:33:45 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.4]:6283 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730342AbfDBKdn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:33:43 -0400
-Received: from [46.226.52.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-a.eu-west-1.aws.symcld.net id B3/8D-04122-38A33AC5; Tue, 02 Apr 2019 10:33:39 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRWlGSWpSXmKPExsWSoc9orttstTj
-  G4NpjEYv2d8vYLebOnsRo8ezWXiaLy7vmsFlsffmOyeLY6itsFn3n3C1WnpjF7MDhMW9NtcfE
-  s7oehw53MHo8W7iexePkqScsHp83yQWwRbFm5iXlVySwZuxoXcdYcJO/oqfpOXMD41ueLkYuD
-  haB9cwSKw62soE4QgITmCQWr5/IDuHcY5S4uO4eUxcjJwebgKHEvDfvGbsYOThEBCIkem6Ggd
-  QwC7xlkri65wsbSI2wgL7ElM33wepFBAwk7hy6DjZIRGAyo8S53n9gRSwCKhK7zy0BK+IViJV
-  Y/2k3E8S2S8wSy2/3MoMkOAX0JF7N/swOYjMKyEp8aVwNFmcWEJe49WQ+WLOEgIDEkj3nmSFs
-  UYmXj/+xQtTHS7Tvf8sOEdeROHv9CSOErSSx7MYsVghbVuLS/G6ouK/Epb6pYEdICFxklFj/b
-  REbREJLYmrTd6gGKYkTF49C2TkSK5pXQB0hI/H09y4WiOaPrBJPL09kAUkICSRLfJh7FuoKOY
-  lVvQ+hii4wS9w93cIK8Y6OxILdn9gmMGrOQvLdLCQpCFtbYtnC18yzwEEmKHFy5hOWBYwsqxg
-  tkooy0zNKchMzc3QNDQx0DQ2NdA0tjXWNjE30Eqt0E/VSS3XLU4tLdA31EsuL9Yorc5NzUvTy
-  Uks2MQKTWkrBwVc7GHetSD/EKMnBpCTKu0ZrcYwQX1J+SmVGYnFGfFFpTmrxIUYZDg4lCV49S
-  6CcYFFqempFWmYOML3CpCU4eJREeG+BpHmLCxJzizPTIVKnGHU5Dix6OJdZiCUvPy9VSpxXFq
-  RIAKQoozQPbgQs1V9ilJUS5mVkYGAQ4ilILcrNLEGVf8UozsGoJMzLDTKFJzOvBG7TK6AjmIC
-  OsCidD3JESSJCSqqBsdk74N/5yZFnnaKdor6d5dr1ID9h0fc/8dcSXMqPa+rLrlVRzZ7MlP7r
-  qHFLyYX9/V3PuNl+XnJRMb14qKTpaci8DVKVmzUz//Efn1N7/WlWjbLfu4Yv/z+1Ploalbgwl
-  u2ZTMutoCOvdSRWvuw8d+Tkh7c77ky1KZb0XKjmltLq5aWv9tRnihJLcUaioRZzUXEiAOESho
-  /wAwAA
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-10.tower-268.messagelabs.com!1554201218!4442828!1
-X-Originating-IP: [104.47.1.55]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 27918 invoked from network); 2 Apr 2019 10:33:39 -0000
-Received: from mail-ve1eur01lp2055.outbound.protection.outlook.com (HELO EUR01-VE1-obe.outbound.protection.outlook.com) (104.47.1.55)
-  by server-10.tower-268.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 2 Apr 2019 10:33:39 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6w4DOgBTU7i+GdJuJQeRad1CE2lvqKySW+C9JUjZcV8=;
- b=xvsDQN7iV0Jn10uxr6NOASb67rlG3SBTxXJUA0sH5JlCKn8lzBWo+Jm/Vl70Kk4tbqjCvvmFqZrwDASIOnicOW0OL+PbMf0F0lLKGNnV/qRGgFTogr9+v2wOvzsJs3jcQ56Gxu6iQz4SJurZRy5U7tz7JOnRYBdgizZ0IpIoS68=
-Received: from DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM (20.177.121.154) by
- DB7PR10MB2060.EURPRD10.PROD.OUTLOOK.COM (52.134.102.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Tue, 2 Apr 2019 10:33:37 +0000
-Received: from DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::1dc3:973e:6ed6:a60b]) by DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::1dc3:973e:6ed6:a60b%5]) with mapi id 15.20.1750.021; Tue, 2 Apr 2019
- 10:33:37 +0000
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH 1/2] rtc: da9063: set range
-Thread-Topic: [PATCH 1/2] rtc: da9063: set range
-Thread-Index: AQHU388srtB02IcKs0uFchLWhDDC3qYnDdiAgAAE+gCAAAkNIIAANSwAgAAK4ICAAAUwgIAAGJUAgAACcwCAAAnyAIAAMsQAgAALXICAAN89gIAAC1WAgAAE04CAAAEDQA==
-Date:   Tue, 2 Apr 2019 10:33:37 +0000
-Message-ID: <DB7PR10MB2348398516E5744F4CF8C18BFE560@DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM>
-References: <CAMuHMdVsp86n_1+c6NZpCG1MwcAzEH7rgaESHfYESb5YcLk6zw@mail.gmail.com>
- <20190401132109.GA4570@kunai>
- <CAMuHMdV79HAn8jpodQcripAViCqBh3rFGZ39oEiSiP8nC+UyTA@mail.gmail.com>
- <20190401150741.vwqzzngnma4jvkid@ninjato> <20190401151628.GK3430@piout.net>
- <20190401155204.GA5964@kunai> <20190401185346.GP3430@piout.net>
- <20190401193424.sqnapthocznhjqok@ninjato> <20190402085325.GT3430@piout.net>
- <20190402093359.GB2960@kunai> <20190402095115.GW3430@piout.net>
-In-Reply-To: <20190402095115.GW3430@piout.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d886baf5-a221-43b9-83d5-08d6b756aa67
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR10MB2060;
-x-ms-traffictypediagnostic: DB7PR10MB2060:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB7PR10MB20600D9B088817C5615B8039F5560@DB7PR10MB2060.EURPRD10.PROD.OUTLOOK.COM>
-x-forefront-prvs: 0995196AA2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(346002)(376002)(136003)(396003)(189003)(199004)(68736007)(55016002)(33656002)(76176011)(186003)(26005)(7696005)(66066001)(6506007)(97736004)(14454004)(71190400001)(8676002)(71200400001)(81156014)(81166006)(86362001)(966005)(305945005)(229853002)(478600001)(53936002)(6246003)(14444005)(74316002)(446003)(11346002)(99286004)(102836004)(486006)(476003)(6436002)(6306002)(8936002)(4326008)(3846002)(6116002)(110136005)(7736002)(256004)(54906003)(2906002)(5660300002)(52536014)(93886005)(316002)(105586002)(25786009)(106356001)(9686003)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR10MB2060;H:DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IF0FcfVmycob5noONLebUWYx3n4qDoh6a/sidDOKHJj+bRzN8OuVna7Xr+zBiR/6NEcy1fV5vxxq96Lk0bxqhsWvilUZ1q2fwj36xKJUnxirNkTACAt/zzZvkD/WVXUt6bf+Dz8P0Ifev45RH/mOx657UI2VBjCniv+H9lzP4a/MR1gZE/ZPgp9dX6dr9xXhHHe1sx9Av1y1n7HA8/5zGJ0PlN51YVpwQTMZ99C+SKORajRh7MzhzsfKkIwFC4tCBbEiC43ooVHLG2XEwqaEnBrujocYQ1gUsmlk6AYc8KQOAh2BDw4PUEd+IcToNx8mWOugrSr5Oh1gT9uDOxedqSEXVAyJsMcfjO1B6169GXmoNPYmKPa/Fg5l2e4pK++7RfegS9Z47NjS/iTYqwchZsgQc7LHAt+1/Y4ZstgnhKY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 2 Apr 2019 06:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726705AbfDBKfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:35:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DB272084C;
+        Tue,  2 Apr 2019 10:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554201309;
+        bh=VkbNACm/8od0be0SyULl7JcTxUCS+//sRbl2F+o4Iog=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ycdDV7k8M8Y14E0mQ3iNCIPeUgG/S+/kLIJZ0N/a8lvLVi3632jrAzzeTHZD1C4K0
+         O2ugQj3umNpssjD9/xyRYNSqPg3LGzdOTBvxzCvp6ZSkASRB7akXcmyby+A9MZLsKQ
+         OrLh1w4pW/Rkt5E3RbKjsNqFP0NzA5u+GnNDtBG4=
+Date:   Tue, 2 Apr 2019 12:35:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jari Ruusu <jari.ruusu@gmail.com>
+Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: ext3 file system livelock and file system corruption, 4.9.166
+ stable kernel
+Message-ID: <20190402103507.GA15511@kroah.com>
+References: <CACMCwJ+qLHV+cjQC2kAnLQP6qVz1bJ75V8BqQBV5HE1edRC-AQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d886baf5-a221-43b9-83d5-08d6b756aa67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2019 10:33:37.2264
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR10MB2060
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACMCwJ+qLHV+cjQC2kAnLQP6qVz1bJ75V8BqQBV5HE1edRC-AQ@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-> > >  drivers/rtc/rtc-da9063.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/drivers/rtc/rtc-da9063.c b/drivers/rtc/rtc-da9063.c
-> > > index 1b792bcea3c7..53e690b0f3a2 100644
-> > > --- a/drivers/rtc/rtc-da9063.c
-> > > +++ b/drivers/rtc/rtc-da9063.c
-> > > @@ -475,6 +475,9 @@ static int da9063_rtc_probe(struct platform_devic=
-e *pdev)
-> > >  	da9063_data_to_tm(data, &rtc->alarm_time, rtc);
-> > >  	rtc->rtc_sync =3D false;
-> > >
-> > > +	if (config->rtc_data_start !=3D RTC_SEC)
-> > > +		rtc->rtc_dev->uie_unsupported =3D 1;
-> > > +
+On Tue, Apr 02, 2019 at 01:08:45PM +0300, Jari Ruusu wrote:
+> To trigger this ext4 file system bug, you need a sparse file with
+> correct sparse pattern on old-school ext3 file system. I tried
+> more simpler ways to trigger this but those attempts did not
+> trigger the bug. I have provided compressed sparse file that
+> reliably triggers the bug. Size of compressed sparse file 1667256
+> bytes. Size of uncompressed sparse file 7369850880 bytes.
+> Following commands will demo the problem.
+> 
+>   wget http://www.elisanet.fi/jariruusu/123/sparse-demo.data.xz
+>   xz -d sparse-demo.data.xz
+>   mkfs -t ext3 -b 4096 -e remount-ro -O "^dir_index" /dev/sdc1
+>   mount -t ext3 /dev/sdc1 /mnt
+>   cp -v --sparse=always sparse-demo.data /mnt/aa
+>   cp -v --sparse=always sparse-demo.data /mnt/bb
+>   umount /mnt
+>   mount -t ext3 /dev/sdc1 /mnt
+>   cp -v --sparse=always /mnt/bb /mnt/aa
+> 
+> That last cp command reliably triggers the bug that livelocks and
+> after reset you have file system corruption to deal with. Deeply
+> unfunny.
+> 
+> The bug is caused by
+> "ext4: brelse all indirect buffer in ext4_ind_remove_space()"
+> upstream commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217, from
+> <yi.zhang@huawei.com>, who provided a follow-up patch
+> "ext4: cleanup bh release code in ext4_ind_remove_space()"
+> upstream commit 5e86bdda41534e17621d5a071b294943cae4376e. The
+> problem with that follow-up patch is that it is almost criminally
+> mislabeled. It should have said "fixes ext3 livelock and file
+> system corrupting bug" or something like that, so that Greg KH &
+> Co would have understood that it must be backported to stable
+> kernels too. Now the bug appears to be in all/most stable kernels
+> already.
+> 
+> Below is the buggy patch that causes the problem. Look at those
+> new while loops. Once the while condition is true once, it is
+> ALWAYS true, so it livelocks.
+> 
+> > --- a/fs/ext4/indirect.c
+> > +++ b/fs/ext4/indirect.c
+> > @@ -1385,10 +1385,14 @@ end_range:
+> >  					   partial->p + 1,
+> >  					   partial2->p,
+> >  					   (chain+n-1) - partial);
+> > -			BUFFER_TRACE(partial->bh, "call brelse");
+> > -			brelse(partial->bh);
+> > -			BUFFER_TRACE(partial2->bh, "call brelse");
+> > -			brelse(partial2->bh);
+> > +			while (partial > chain) {
+> > +				BUFFER_TRACE(partial->bh, "call brelse");
+> > +				brelse(partial->bh);
+> > +			}
+> > +			while (partial2 > chain2) {
+> > +				BUFFER_TRACE(partial2->bh, "call brelse");
+> > +				brelse(partial2->bh);
+> > +			}
+> >  			return 0;
+> >  		}
 > >
-> > I think we should have a comment here, like:
-> > /* FIXME: Make use of the TICK interrupt once the RTC core supports it =
-*/
+> 
+> Greg & Co,
+> Please revert that above patch from stable kernels or backport the
+> follow-up patch that fixes the problem.
 
-Is this TICK interrupt suggestion to use the DA9063 TICK interrupt to simul=
-ate
-a second granularity in the AD alarm?
+So you need 5e86bdda4153 ("ext4: cleanup bh release code in
+ext4_ind_remove_space()") applied to all of the stable and LTS kernels
+at the moment (as that patch only showed up in 5.1-rc1)?
 
-If I remember correctly, the original DA9063 patch set which was for AD sil=
-icon
-only, and which was sent to LKML before I took over looking at DA9063, used=
- the
-DA9063 1-second TICK interrupt to count-down the seconds from the nearest
-minute in order to simulate second resolution on the RTC alarm for AD.
+If so, I need an ack from the ext4 developers/maintainer to do so.
 
-... yes. Here it is. The original patch was from Krystian Garbaciak and tri=
-ed to
-support RTC alarms on the AD silicon to a second resolution by counting dow=
-n
-the DA9063 TICK interrupt:
+thanks,
 
-https://marc.info/?l=3Dlm-sensors&m=3D134613501230005&w=3D2
-
-However, I dropped that patch completely and wrote a new RTC device driver
-because it didn't work in my tests.
-
-The problem was: the TICK interrupt was indistinguishable from the ALARM
-interrupt for a wake event and when I tested AD silicon to wake up an Andro=
-id
-device from suspend or power-off using the RTC IRQ, the device woke up on t=
-he
-ALARM minute (0 seconds), discovered it was not the correct time and immedi=
-ately
-went back to sleep. Then it woke-up and returned back to sleep every TICK I=
-RQ
-second until the correct alarm time was reached (up to 59 times!). At which=
- point
-it woke up properly.
-
-Regards,
-Steve
+greg k-h
