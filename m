@@ -2,368 +2,176 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856DFC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE924C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4981A20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC6420883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:37:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EwAUSHDA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbfDBMgq (ORCPT
+        id S1730834AbfDBMho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:36:46 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46677 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730463AbfDBMgS (ORCPT
+        Tue, 2 Apr 2019 08:37:44 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:36236 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDBMhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:36:18 -0400
-X-UUID: 74d24dde02d545d395b0bfff40751c36-20190402
-X-UUID: 74d24dde02d545d395b0bfff40751c36-20190402
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 845878652; Tue, 02 Apr 2019 20:36:10 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 2 Apr 2019 20:36:08 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 2 Apr 2019 20:36:07 +0800
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <qii.wang@mediatek.com>, <xinping.qian@mediatek.com>,
-        <liguo.zhang@mediatek.com>, <robh@kernel.org>
-Subject: [PATCH RESEND v6 1/6] i2c: mediatek: Add offsets array for new i2c registers
-Date:   Tue, 2 Apr 2019 20:35:55 +0800
-Message-ID: <1554208560-14817-2-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
-References: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
+        Tue, 2 Apr 2019 08:37:43 -0400
+Received: by mail-ua1-f67.google.com with SMTP id e15so4291902uam.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 05:37:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5d2HkYnQ9HlSZJOwpry0TKtdG4vndyCo899X4by8jSM=;
+        b=EwAUSHDAk/+svQS8T1z+ibKHkHgMOyxL8oxOSdQ+7ZlveHeVlhItFGY5xpqt8kMGgM
+         MzA6mvBgNOsfEV2Mm5X0zs44VuWEyVrQ0HcnSVttv989e/KuqmLnY7uVhEauBV9H8dWd
+         Jq35CcAd/8E2ND0jFm1o7OFEzxQSsJr9HynY+XirLNN53p7hvpIz4SJkv/Y2KqW8MeDd
+         Xx6zSpP7ZlYbFCpbLRRh5GJUDSm4vzfPDnDg6jECwuW4SMcioJPECA8Z3ougtmtqrd8f
+         E0kGa+777vTAOkyMMSdOL4jy+mYW8g+Fn9TjbM8/od8LmIOgWZOgdDfSjUUSd55tOHZt
+         lsQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5d2HkYnQ9HlSZJOwpry0TKtdG4vndyCo899X4by8jSM=;
+        b=EGdTLg84xaKKxIEiRjCc90ePpYBe2EytwqUYU/+hntA6OOjWZxhfOsq7QIJYw25NUK
+         fF9QnZUeBJ73wIMcILXXkE3FqL3FCzC9qWEISDMGSyfNln7iMUjIPbczbfBI7wnAomgd
+         l95ft3TEdVIvyy891aGD85ep/mgcIUoaImq2IT/nEQt4jMyy6wJO1ld3xmglMkKlu7Z4
+         58KW8uSd50OcpC5bZuhKuTXaidaPefHeLi8DjkpW6aakcwJ7SlpNE7Tz+9p89eXQ2LTJ
+         yd2Gz7q0bmghhRD6yyHyLm1zn1lr1T52h2GB2dkGnGQ9bxCa8codFK3utOmUPmwSZh+t
+         dD/g==
+X-Gm-Message-State: APjAAAXjb9oJeg3pzoOESBHG9IH1ji6KzZHq4WtGdSVwLzC6ix0/yVML
+        cf7AX7WaO61YvlXRDpErA6ifTgLa2f53N/CjEXG8sg==
+X-Google-Smtp-Source: APXvYqw+1jJsTGGHuM8ZOKpVCA7j8TNEbir8JwSmF/rPkj8v12XI4En6wg+zqeM3iMi5u+Rf+GKUjCELZhSw/6FQ42M=
+X-Received: by 2002:ab0:1d82:: with SMTP id l2mr4258995uak.120.1554208661967;
+ Tue, 02 Apr 2019 05:37:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 15069EB10384B0D3488932EE6C5853B027940711E9C803EE382F49BCAAA1A9AA2000:8
-X-MTK:  N
+References: <20190402112813.193378-1-glider@google.com> <4c6a1e592fd345618ef7b7d5bee592da@AcuMS.aculab.com>
+ <CAG_fn=XA3e+2+DdAN4_Yvw_yBeokVcnW5Cb5-Q0Hs5DbhVxzHw@mail.gmail.com>
+In-Reply-To: <CAG_fn=XA3e+2+DdAN4_Yvw_yBeokVcnW5Cb5-Q0Hs5DbhVxzHw@mail.gmail.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Tue, 2 Apr 2019 14:37:30 +0200
+Message-ID: <CAG_fn=UiWCEHUaA71nozUbY7G8g7ZH0ni8Lut=hKVr_rNNC3pw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/asm: fix assembly constraints in bitops
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>,
+        "jyknight@google.com" <jyknight@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New i2c registers would have different offsets, so we use different
-offsets array to distinguish different i2c registers version.
+On Tue, Apr 2, 2019 at 2:35 PM Alexander Potapenko <glider@google.com> wrot=
+e:
+>
+> On Tue, Apr 2, 2019 at 1:44 PM David Laight <David.Laight@aculab.com> wro=
+te:
+> >
+> > From: Alexander Potapenko
+> > > Sent: 02 April 2019 12:28
+> > >
+> > > 1. Use memory clobber in bitops that touch arbitrary memory
+> > >
+> > > Certain bit operations that read/write bits take a base pointer and a=
+n
+> > > arbitrarily large offset to address the bit relative to that base.
+> >
+> > Although x86_64 can use a signed 64bit bit number, looking at arm and a=
+rm64
+> > they use 'int nr' throughout as do the generic functions.
+> > Maybe x86 ought to be consistent here.
+> > I doubt negative bit numbers are expected to work?
+> I don't have a strong opinion on this, but the corresponding Intel
+> instructions do accept 64-bit operands.
+>
+> > Did you try telling gcc that a big buffer (250MB is the limit for 32bit=
+)
+> > from the pointer might be changed?
+> Yes, I did, see
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966993.html
+> This still isn't a silver bullet, e.g. I saw an example where touching
+> a function parameter cast to a big buffer in the assembly resulted in
+> clobbering a global.
+> Moreover, one can imagine a situation where such a trick may be harmful, =
+e.g.:
+>
+> void foo(int size) {
+>   struct arr {
+>     long val[1U<<28];
+>   };
+>   long *bitmap =3D malloc(size);
+>   asm("#do something" : "+m"(*(struct arr*)bitmap);
+>   if (size < 1024)
+>     process(bitmap[size]);
+(let it be bitmap[size-2] so that we don't overflow the buffer)
+> }
+>
+> If a (smart enough) compiler knows that malloc(size) returns a pointer
+> to |size| bytes in memory, it may assume that |size| is at least
+> 1U<<28 (because otherwise it's incorrect to treat |bitmap| as a
+> pointer to a big array) and delete the size check.
+> This is of course a synthetic example, but not a completely impossible on=
+e.
+>
+> > That ought to be softer than a full 'memory' clobber as it should
+> > only affect memory that could be accessed through the pointer.
+> >
+> > ....
+> > > -#define BITOP_ADDR(x) "+m" (*(volatile long *) (x))
+> > > +#define RLONG_ADDR(x) "m" (*(volatile long *) (x))
+> > > +#define WBYTE_ADDR(x) "+m" (*(volatile char *) (x))
+> > >
+> > > -#define ADDR                         BITOP_ADDR(addr)
+> > > +#define ADDR                         RLONG_ADDR(addr)
+> >
+> > Is it worth just killing ADDR ?
+> > (as a different patch)
+> Agreed.
+> >         David
+> >
+> > -
+> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, M=
+K1 1PT, UK
+> > Registration No: 1397386 (Wales)
+>
+>
+>
+> --
+> Alexander Potapenko
+> Software Engineer
+>
+> Google Germany GmbH
+> Erika-Mann-Stra=C3=9Fe, 33
+> 80636 M=C3=BCnchen
+>
+> Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+> Registergericht und -nummer: Hamburg, HRB 86891
+> Sitz der Gesellschaft: Hamburg
 
-Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- drivers/i2c/busses/i2c-mt65xx.c |  163 +++++++++++++++++++++++++--------------
- 1 file changed, 104 insertions(+), 59 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 684d651..be36018 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -106,34 +106,62 @@ enum mtk_trans_op {
- };
- 
- enum I2C_REGS_OFFSET {
--	OFFSET_DATA_PORT = 0x0,
--	OFFSET_SLAVE_ADDR = 0x04,
--	OFFSET_INTR_MASK = 0x08,
--	OFFSET_INTR_STAT = 0x0c,
--	OFFSET_CONTROL = 0x10,
--	OFFSET_TRANSFER_LEN = 0x14,
--	OFFSET_TRANSAC_LEN = 0x18,
--	OFFSET_DELAY_LEN = 0x1c,
--	OFFSET_TIMING = 0x20,
--	OFFSET_START = 0x24,
--	OFFSET_EXT_CONF = 0x28,
--	OFFSET_FIFO_STAT = 0x30,
--	OFFSET_FIFO_THRESH = 0x34,
--	OFFSET_FIFO_ADDR_CLR = 0x38,
--	OFFSET_IO_CONFIG = 0x40,
--	OFFSET_RSV_DEBUG = 0x44,
--	OFFSET_HS = 0x48,
--	OFFSET_SOFTRESET = 0x50,
--	OFFSET_DCM_EN = 0x54,
--	OFFSET_PATH_DIR = 0x60,
--	OFFSET_DEBUGSTAT = 0x64,
--	OFFSET_DEBUGCTRL = 0x68,
--	OFFSET_TRANSFER_LEN_AUX = 0x6c,
--	OFFSET_CLOCK_DIV = 0x70,
-+	OFFSET_DATA_PORT,
-+	OFFSET_SLAVE_ADDR,
-+	OFFSET_INTR_MASK,
-+	OFFSET_INTR_STAT,
-+	OFFSET_CONTROL,
-+	OFFSET_TRANSFER_LEN,
-+	OFFSET_TRANSAC_LEN,
-+	OFFSET_DELAY_LEN,
-+	OFFSET_TIMING,
-+	OFFSET_START,
-+	OFFSET_EXT_CONF,
-+	OFFSET_FIFO_STAT,
-+	OFFSET_FIFO_THRESH,
-+	OFFSET_FIFO_ADDR_CLR,
-+	OFFSET_IO_CONFIG,
-+	OFFSET_RSV_DEBUG,
-+	OFFSET_HS,
-+	OFFSET_SOFTRESET,
-+	OFFSET_DCM_EN,
-+	OFFSET_PATH_DIR,
-+	OFFSET_DEBUGSTAT,
-+	OFFSET_DEBUGCTRL,
-+	OFFSET_TRANSFER_LEN_AUX,
-+	OFFSET_CLOCK_DIV,
-+};
-+
-+static const u16 mt_i2c_regs_v1[] = {
-+	[OFFSET_DATA_PORT] = 0x0,
-+	[OFFSET_SLAVE_ADDR] = 0x4,
-+	[OFFSET_INTR_MASK] = 0x8,
-+	[OFFSET_INTR_STAT] = 0xc,
-+	[OFFSET_CONTROL] = 0x10,
-+	[OFFSET_TRANSFER_LEN] = 0x14,
-+	[OFFSET_TRANSAC_LEN] = 0x18,
-+	[OFFSET_DELAY_LEN] = 0x1c,
-+	[OFFSET_TIMING] = 0x20,
-+	[OFFSET_START] = 0x24,
-+	[OFFSET_EXT_CONF] = 0x28,
-+	[OFFSET_FIFO_STAT] = 0x30,
-+	[OFFSET_FIFO_THRESH] = 0x34,
-+	[OFFSET_FIFO_ADDR_CLR] = 0x38,
-+	[OFFSET_IO_CONFIG] = 0x40,
-+	[OFFSET_RSV_DEBUG] = 0x44,
-+	[OFFSET_HS] = 0x48,
-+	[OFFSET_SOFTRESET] = 0x50,
-+	[OFFSET_DCM_EN] = 0x54,
-+	[OFFSET_PATH_DIR] = 0x60,
-+	[OFFSET_DEBUGSTAT] = 0x64,
-+	[OFFSET_DEBUGCTRL] = 0x68,
-+	[OFFSET_TRANSFER_LEN_AUX] = 0x6c,
-+	[OFFSET_CLOCK_DIV] = 0x70,
- };
- 
- struct mtk_i2c_compatible {
- 	const struct i2c_adapter_quirks *quirks;
-+	const u16 *regs;
- 	unsigned char pmic_i2c: 1;
- 	unsigned char dcm: 1;
- 	unsigned char auto_restart: 1;
-@@ -181,6 +209,7 @@ struct mtk_i2c {
- };
- 
- static const struct mtk_i2c_compatible mt2712_compat = {
-+	.regs = mt_i2c_regs_v1,
- 	.pmic_i2c = 0,
- 	.dcm = 1,
- 	.auto_restart = 1,
-@@ -191,6 +220,7 @@ struct mtk_i2c {
- 
- static const struct mtk_i2c_compatible mt6577_compat = {
- 	.quirks = &mt6577_i2c_quirks,
-+	.regs = mt_i2c_regs_v1,
- 	.pmic_i2c = 0,
- 	.dcm = 1,
- 	.auto_restart = 0,
-@@ -201,6 +231,7 @@ struct mtk_i2c {
- 
- static const struct mtk_i2c_compatible mt6589_compat = {
- 	.quirks = &mt6577_i2c_quirks,
-+	.regs = mt_i2c_regs_v1,
- 	.pmic_i2c = 1,
- 	.dcm = 0,
- 	.auto_restart = 0,
-@@ -211,6 +242,7 @@ struct mtk_i2c {
- 
- static const struct mtk_i2c_compatible mt7622_compat = {
- 	.quirks = &mt7622_i2c_quirks,
-+	.regs = mt_i2c_regs_v1,
- 	.pmic_i2c = 0,
- 	.dcm = 1,
- 	.auto_restart = 1,
-@@ -220,6 +252,7 @@ struct mtk_i2c {
- };
- 
- static const struct mtk_i2c_compatible mt8173_compat = {
-+	.regs = mt_i2c_regs_v1,
- 	.pmic_i2c = 0,
- 	.dcm = 1,
- 	.auto_restart = 1,
-@@ -238,6 +271,17 @@ struct mtk_i2c {
- };
- MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
- 
-+static u16 mtk_i2c_readw(struct mtk_i2c *i2c, enum I2C_REGS_OFFSET reg)
-+{
-+	return readw(i2c->base + i2c->dev_comp->regs[reg]);
-+}
-+
-+static void mtk_i2c_writew(struct mtk_i2c *i2c, u16 val,
-+			   enum I2C_REGS_OFFSET reg)
-+{
-+	writew(val, i2c->base + i2c->dev_comp->regs[reg]);
-+}
-+
- static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
- {
- 	int ret;
-@@ -278,31 +322,31 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
- {
- 	u16 control_reg;
- 
--	writew(I2C_SOFT_RST, i2c->base + OFFSET_SOFTRESET);
-+	mtk_i2c_writew(i2c, I2C_SOFT_RST, OFFSET_SOFTRESET);
- 
- 	/* Set ioconfig */
- 	if (i2c->use_push_pull)
--		writew(I2C_IO_CONFIG_PUSH_PULL, i2c->base + OFFSET_IO_CONFIG);
-+		mtk_i2c_writew(i2c, I2C_IO_CONFIG_PUSH_PULL, OFFSET_IO_CONFIG);
- 	else
--		writew(I2C_IO_CONFIG_OPEN_DRAIN, i2c->base + OFFSET_IO_CONFIG);
-+		mtk_i2c_writew(i2c, I2C_IO_CONFIG_OPEN_DRAIN, OFFSET_IO_CONFIG);
- 
- 	if (i2c->dev_comp->dcm)
--		writew(I2C_DCM_DISABLE, i2c->base + OFFSET_DCM_EN);
-+		mtk_i2c_writew(i2c, I2C_DCM_DISABLE, OFFSET_DCM_EN);
- 
- 	if (i2c->dev_comp->timing_adjust)
--		writew(I2C_DEFAULT_CLK_DIV - 1, i2c->base + OFFSET_CLOCK_DIV);
-+		mtk_i2c_writew(i2c, I2C_DEFAULT_CLK_DIV - 1, OFFSET_CLOCK_DIV);
- 
--	writew(i2c->timing_reg, i2c->base + OFFSET_TIMING);
--	writew(i2c->high_speed_reg, i2c->base + OFFSET_HS);
-+	mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
-+	mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
- 
- 	/* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
- 	if (i2c->have_pmic)
--		writew(I2C_CONTROL_WRAPPER, i2c->base + OFFSET_PATH_DIR);
-+		mtk_i2c_writew(i2c, I2C_CONTROL_WRAPPER, OFFSET_PATH_DIR);
- 
- 	control_reg = I2C_CONTROL_ACKERR_DET_EN |
- 		      I2C_CONTROL_CLK_EXT_EN | I2C_CONTROL_DMA_EN;
--	writew(control_reg, i2c->base + OFFSET_CONTROL);
--	writew(I2C_DELAY_LEN, i2c->base + OFFSET_DELAY_LEN);
-+	mtk_i2c_writew(i2c, control_reg, OFFSET_CONTROL);
-+	mtk_i2c_writew(i2c, I2C_DELAY_LEN, OFFSET_DELAY_LEN);
- 
- 	writel(I2C_DMA_HARD_RST, i2c->pdmabase + OFFSET_RST);
- 	udelay(50);
-@@ -454,7 +498,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 
- 	reinit_completion(&i2c->msg_complete);
- 
--	control_reg = readw(i2c->base + OFFSET_CONTROL) &
-+	control_reg = mtk_i2c_readw(i2c, OFFSET_CONTROL) &
- 			~(I2C_CONTROL_DIR_CHANGE | I2C_CONTROL_RS);
- 	if ((i2c->speed_hz > MAX_FS_MODE_SPEED) || (left_num >= 1))
- 		control_reg |= I2C_CONTROL_RS;
-@@ -462,40 +506,41 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	if (i2c->op == I2C_MASTER_WRRD)
- 		control_reg |= I2C_CONTROL_DIR_CHANGE | I2C_CONTROL_RS;
- 
--	writew(control_reg, i2c->base + OFFSET_CONTROL);
-+	mtk_i2c_writew(i2c, control_reg, OFFSET_CONTROL);
- 
- 	/* set start condition */
- 	if (i2c->speed_hz <= I2C_DEFAULT_SPEED)
--		writew(I2C_ST_START_CON, i2c->base + OFFSET_EXT_CONF);
-+		mtk_i2c_writew(i2c, I2C_ST_START_CON, OFFSET_EXT_CONF);
- 	else
--		writew(I2C_FS_START_CON, i2c->base + OFFSET_EXT_CONF);
-+		mtk_i2c_writew(i2c, I2C_FS_START_CON, OFFSET_EXT_CONF);
- 
- 	addr_reg = i2c_8bit_addr_from_msg(msgs);
--	writew(addr_reg, i2c->base + OFFSET_SLAVE_ADDR);
-+	mtk_i2c_writew(i2c, addr_reg, OFFSET_SLAVE_ADDR);
- 
- 	/* Clear interrupt status */
--	writew(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
--	       I2C_TRANSAC_COMP, i2c->base + OFFSET_INTR_STAT);
--	writew(I2C_FIFO_ADDR_CLR, i2c->base + OFFSET_FIFO_ADDR_CLR);
-+	mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-+	       I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
-+
-+	mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
- 
- 	/* Enable interrupt */
--	writew(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
--	       I2C_TRANSAC_COMP, i2c->base + OFFSET_INTR_MASK);
-+	mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-+	       I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
- 
- 	/* Set transfer and transaction len */
- 	if (i2c->op == I2C_MASTER_WRRD) {
- 		if (i2c->dev_comp->aux_len_reg) {
--			writew(msgs->len, i2c->base + OFFSET_TRANSFER_LEN);
--			writew((msgs + 1)->len, i2c->base +
--			       OFFSET_TRANSFER_LEN_AUX);
-+			mtk_i2c_writew(i2c, msgs->len, OFFSET_TRANSFER_LEN);
-+			mtk_i2c_writew(i2c, (msgs + 1)->len,
-+					    OFFSET_TRANSFER_LEN_AUX);
- 		} else {
--			writew(msgs->len | ((msgs + 1)->len) << 8,
--			       i2c->base + OFFSET_TRANSFER_LEN);
-+			mtk_i2c_writew(i2c, msgs->len | ((msgs + 1)->len) << 8,
-+					    OFFSET_TRANSFER_LEN);
- 		}
--		writew(I2C_WRRD_TRANAC_VALUE, i2c->base + OFFSET_TRANSAC_LEN);
-+		mtk_i2c_writew(i2c, I2C_WRRD_TRANAC_VALUE, OFFSET_TRANSAC_LEN);
- 	} else {
--		writew(msgs->len, i2c->base + OFFSET_TRANSFER_LEN);
--		writew(num, i2c->base + OFFSET_TRANSAC_LEN);
-+		mtk_i2c_writew(i2c, msgs->len, OFFSET_TRANSFER_LEN);
-+		mtk_i2c_writew(i2c, num, OFFSET_TRANSAC_LEN);
- 	}
- 
- 	/* Prepare buffer data to start transfer */
-@@ -607,14 +652,14 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 		if (left_num >= 1)
- 			start_reg |= I2C_RS_MUL_CNFG;
- 	}
--	writew(start_reg, i2c->base + OFFSET_START);
-+	mtk_i2c_writew(i2c, start_reg, OFFSET_START);
- 
- 	ret = wait_for_completion_timeout(&i2c->msg_complete,
- 					  i2c->adap.timeout);
- 
- 	/* Clear interrupt mask */
--	writew(~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
--	       I2C_TRANSAC_COMP), i2c->base + OFFSET_INTR_MASK);
-+	mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-+	       I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
- 
- 	if (i2c->op == I2C_MASTER_WR) {
- 		dma_unmap_single(i2c->dev, wpaddr,
-@@ -724,8 +769,8 @@ static irqreturn_t mtk_i2c_irq(int irqno, void *dev_id)
- 	if (i2c->auto_restart)
- 		restart_flag = I2C_RS_TRANSFER;
- 
--	intr_stat = readw(i2c->base + OFFSET_INTR_STAT);
--	writew(intr_stat, i2c->base + OFFSET_INTR_STAT);
-+	intr_stat = mtk_i2c_readw(i2c, OFFSET_INTR_STAT);
-+	mtk_i2c_writew(i2c, intr_stat, OFFSET_INTR_STAT);
- 
- 	/*
- 	 * when occurs ack error, i2c controller generate two interrupts
-@@ -737,8 +782,8 @@ static irqreturn_t mtk_i2c_irq(int irqno, void *dev_id)
- 	if (i2c->ignore_restart_irq && (i2c->irq_stat & restart_flag)) {
- 		i2c->ignore_restart_irq = false;
- 		i2c->irq_stat = 0;
--		writew(I2C_RS_MUL_CNFG | I2C_RS_MUL_TRIG | I2C_TRANSAC_START,
--		       i2c->base + OFFSET_START);
-+		mtk_i2c_writew(i2c, I2C_RS_MUL_CNFG | I2C_RS_MUL_TRIG |
-+				    I2C_TRANSAC_START, OFFSET_START);
- 	} else {
- 		if (i2c->irq_stat & (I2C_TRANSAC_COMP | restart_flag))
- 			complete(&i2c->msg_complete);
--- 
-1.7.9.5
 
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
