@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7952C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B685C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763CA20856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7475620856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732320AbfDBNsd (ORCPT
+        id S1732309AbfDBNsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:48:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42900 "EHLO
+        Tue, 2 Apr 2019 09:48:32 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42860 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731201AbfDBNkC (ORCPT
+        by vger.kernel.org with ESMTP id S1731174AbfDBNkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:02 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdw-0002nY-3w; Tue, 02 Apr 2019 14:40:00 +0100
+        id 1hBJdv-0002n1-8n; Tue, 02 Apr 2019 14:39:59 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdv-0004sq-7Y; Tue, 02 Apr 2019 14:39:59 +0100
+        id 1hBJdu-0004s2-7l; Tue, 02 Apr 2019 14:39:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+        "=?UTF-8?Q?Rafa=C5=82=20?= =?UTF-8?Q?Mi=C5=82ecki?=" 
+        <zajec5@gmail.com>, "Larry Finger" <Larry.Finger@lwfinger.net>,
+        "Priit Laes" <plaes@plaes.org>, "Kalle Valo" <kvalo@codeaurora.org>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.180082728@decadent.org.uk>
+Message-ID: <lsq.1554212307.610285593@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 30/99] ALSA: emux: Fix potential Spectre v1
- vulnerabilities
+Subject: [PATCH 3.16 20/99] b43: Fix error in cordic routine
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,67 +56,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 4aea96f4237cea0c51a8bc87c0db31f0f932f1f0 upstream.
+commit 8ea3819c0bbef57a51d8abe579e211033e861677 upstream.
 
-info.mode and info.port are indirectly controlled by user-space,
-hence leading to a potential exploitation of the Spectre variant 1
-vulnerability.
+The cordic routine for calculating sines and cosines that was added in
+commit 6f98e62a9f1b ("b43: update cordic code to match current specs")
+contains an error whereby a quantity declared u32 can in fact go negative.
 
-These issues were detected with the help of Smatch:
+This problem was detected by Priit Laes who is switching b43 to use the
+routine in the library functions of the kernel.
 
-sound/synth/emux/emux_hwdep.c:72 snd_emux_hwdep_misc_mode() warn: potential spectre issue 'emu->portptrs[i]->ctrls' [w] (local cap)
-sound/synth/emux/emux_hwdep.c:75 snd_emux_hwdep_misc_mode() warn: potential spectre issue 'emu->portptrs' [w] (local cap)
-sound/synth/emux/emux_hwdep.c:75 snd_emux_hwdep_misc_mode() warn: potential spectre issue 'emu->portptrs[info.port]->ctrls' [w] (local cap)
-
-Fix this by sanitizing both info.mode and info.port before using them
-to index emu->portptrs[i]->ctrls, emu->portptrs[info.port]->ctrls and
-emu->portptrs.
-
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
-
-[1] https://marc.info/?l=linux-kernel&m=152449131114778&w=2
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-[bwh: Backported to 3.16: adjust context]
+Fixes: 986504540306 ("b43: make cordic common (LP-PHY and N-PHY need it)")
+Reported-by: Priit Laes <plaes@plaes.org>
+Cc: Rafał Miłecki <zajec5@gmail.com>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Priit Laes <plaes@plaes.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/synth/emux/emux_hwdep.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/wireless/b43/phy_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/synth/emux/emux_hwdep.c
-+++ b/sound/synth/emux/emux_hwdep.c
-@@ -22,9 +22,9 @@
- #include <sound/core.h>
- #include <sound/hwdep.h>
- #include <asm/uaccess.h>
-+#include <linux/nospec.h>
- #include "emux_voice.h"
+--- a/drivers/net/wireless/b43/phy_common.c
++++ b/drivers/net/wireless/b43/phy_common.c
+@@ -596,7 +596,7 @@ struct b43_c32 b43_cordic(int theta)
+ 	u8 i;
+ 	s32 tmp;
+ 	s8 signx = 1;
+-	u32 angle = 0;
++	s32 angle = 0;
+ 	struct b43_c32 ret = { .i = 39797, .q = 0, };
  
--
- #define TMP_CLIENT_ID	0x1001
- 
- /*
-@@ -66,13 +66,16 @@ snd_emux_hwdep_misc_mode(struct snd_emux
- 		return -EFAULT;
- 	if (info.mode < 0 || info.mode >= EMUX_MD_END)
- 		return -EINVAL;
-+	info.mode = array_index_nospec(info.mode, EMUX_MD_END);
- 
- 	if (info.port < 0) {
- 		for (i = 0; i < emu->num_ports; i++)
- 			emu->portptrs[i]->ctrls[info.mode] = info.value;
- 	} else {
--		if (info.port < emu->num_ports)
-+		if (info.port < emu->num_ports) {
-+			info.port = array_index_nospec(info.port, emu->num_ports);
- 			emu->portptrs[info.port]->ctrls[info.mode] = info.value;
-+		}
- 	}
- 	return 0;
- }
+ 	while (theta > (180 << 16))
 
