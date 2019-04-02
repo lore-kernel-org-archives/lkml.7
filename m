@@ -2,143 +2,183 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E419C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94388C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B29820880
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="g3m1Y2Sc"
+	by mail.kernel.org (Postfix) with ESMTP id 5DF6E2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfDBDKY (ORCPT
+        id S1728973AbfDBDN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:10:24 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44416 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbfDBDKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:10:24 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g12so5484889pll.11
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hp60OTE4ke8iP5Aud+CmanJ0ZyIKgseuIbzLLPcisQY=;
-        b=g3m1Y2ScyzDAURubjhsTnVSDieFyBlqPSM2LC7CUatm8gRlzI4Z4XQ8e+sauoBVcMy
-         /Si0ZgUXDkb0dPj3vSxlgc5r0s2q7Upfik19UZen265H5YZZ42iiEK9QbuX7YonIPVGD
-         d0/tPGVBnFEdWBuZzWmyAl7nqsH30axLzN9a/pDbloDEH6lC9LU9a4jIP9tdhzmsciY5
-         S3tIIQOc4z1gsawWCFsfc9AkK7pkcFlCQf4Z5R8i1IFoxZ3IVzHzOFybLqrgNgncMa7W
-         Yh4ifra9SolAtD3ZfW1fVy94mG7zhGcdjiK400DReloJN9yY0S5qFzHvofEschSfANPf
-         kDSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hp60OTE4ke8iP5Aud+CmanJ0ZyIKgseuIbzLLPcisQY=;
-        b=D5ujoxlQj6GNcBMRblKduPLcOndkhU1v8uR7ntjT53kA89N8wl/D20NYm8GhR/HOGF
-         xzlY32AsfK21LZYwHZ/+4l0mpOP2lQaH+6MYb0qHE4neSIGMm3ptI3cVbGOlICnPNPu2
-         HslEXUD9xxvDtUrNyuRne8fzRJc43KZxx20spwxH/M0HNUyf3M7HxVYqoH0pIcqsLgf8
-         VYQZhyyTMm6wc4fmnSqtflvRilEHmKFwZEcZOKwg5U+8C2VOuXBsubcRzgIbaZRVdjiM
-         AVbc9XD56fsQDzveD2uekvZe0cjhs6teEkl/dlLqUVHRUaf5eBjW3gCb2usN1D9JKBGK
-         S1mg==
-X-Gm-Message-State: APjAAAXVB5U+Y4BB04HP9u3BP9C7/3QuCrCP2fDjxgpVPWgk/iZZimGB
-        siYN6wESULfQgY1Q0T7A1W1f3A==
-X-Google-Smtp-Source: APXvYqyBVin/OFPJ5V12iXbP2gcs5Osv/4t27BzE77qH7pR8fgo4gJrG7KlV5JQtMOT9MiQxqhVPIg==
-X-Received: by 2002:a17:902:2c83:: with SMTP id n3mr69465358plb.281.1554174623140;
-        Mon, 01 Apr 2019 20:10:23 -0700 (PDT)
-Received: from trong-glaptop.imgcgcw.net ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id c17sm16168464pfd.76.2019.04.01.20.10.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 20:10:22 -0700 (PDT)
-From:   trong@android.com
-To:     oberpar@linux.ibm.com, akpm@linux-foundation.org
-Cc:     ndesaulniers@google.com, ghackmann@android.com, linux-mm@kvack.org,
-        kbuild-all@01.org, rdunlap@infradead.org, lkp@intel.com,
-        linux-kernel@vger.kernel.org, Tri Vo <trong@android.com>
-Subject: [PATCH v3] gcov: fix when CONFIG_MODULES is not set
-Date:   Tue,  2 Apr 2019 10:09:56 +0700
-Message-Id: <20190402030956.48166-1-trong@android.com>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        Mon, 1 Apr 2019 23:13:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:9985 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbfDBDN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 23:13:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 20:13:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
+   d="scan'208";a="127836350"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.107]) ([10.239.13.107])
+  by orsmga007.jf.intel.com with ESMTP; 01 Apr 2019 20:13:54 -0700
+Subject: Re: [LKP] [btrfs] 70d28b0e4f:
+ BUG:kernel_reboot-without-warning_in_early-boot_stage,
+ last_printk:Probing_EDD(edd=off_to_disable)...ok
+To:     dsterba@suse.cz, Nikolay Borisov <nborisov@suse.com>,
+        Qu Wenruo <wqu@suse.de>, lkp@01.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Yoon Jungyeon <jungyeon@gatech.edu>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190401132427.GC9217@shao2-debian>
+ <f3cef716-a1e3-2e84-0133-9a9c3fad2a74@suse.com>
+ <7a6c000e-c523-382a-d13c-790809260e4e@intel.com>
+ <5b82b026-bdd7-f781-e661-f1afdc9cb97b@suse.de>
+ <23823210-1951-0492-1755-6263ccf388fa@intel.com>
+ <20190401154044.GX29086@suse.cz>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <d1f57263-277a-d696-2fc2-51c62af6844f@intel.com>
+Date:   Tue, 2 Apr 2019 11:14:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190401154044.GX29086@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tri Vo <trong@android.com>
 
-Fixes: 8c3d220cb6b5 ("gcov: clang support")
+On 4/1/19 11:40 PM, David Sterba wrote:
+> On Mon, Apr 01, 2019 at 11:02:37PM +0800,  Chen, Rong A  wrote:
+>> On 4/1/2019 10:29 PM, Qu Wenruo wrote:
+>>> On 2019/4/1 下午10:02,  Chen, Rong A  wrote:
+>>>> On 4/1/2019 9:28 PM, Nikolay Borisov wrote:
+>>>>> On 1.04.19 г. 16:24 ч., kernel test robot wrote:
+>>>>>> FYI, we noticed the following commit (built with gcc-7):
+>>>>>>
+>>>>>> commit: 70d28b0e4f8ed2d38571e7b1f9bec7f321a53102 ("btrfs:
+>>>>>> tree-checker: Verify dev item")
+>>>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>>>>>
+>>>>>> in testcase: trinity
+>>>>>> with following parameters:
+>>>>>>
+>>>>>>       runtime: 300s
+>>>>>>
+>>>>>> test-description: Trinity is a linux system call fuzz tester.
+>>>>>> test-url: http://codemonkey.org.uk/projects/trinity/
+>>>>>>
+>>>>>>
+>>>>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp
+>>>>>> 2 -m 2G
+>>>>>>
+>>>>>> caused below changes (please refer to attached dmesg/kmsg for entire
+>>>>>> log/backtrace):
+>>>>>>
+>>>>>>
+>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>
+>>>>>> |
+>>>>>> | 36b9d2bc69 | 70d28b0e4f |
+>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>
+>>>>>> |
+>>>>>> boot_successes
+>>>>>> | 14         | 0          |
+>>>>>> |
+>>>>>> boot_failures
+>>>>>> | 2          | 14         |
+>>>>>> |
+>>>>>> IP-Config:Auto-configuration_of_network_failed
+>>>>>> | 2          |            |
+>>>>>> |
+>>>>>> BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+>>>>>> | 0          | 14         |
+>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> early console in setup code
+>>>>>> Probing EDD (edd=off to disable)... ok
+>>>>>> BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>>>>> Probing EDD (edd=off to disable)... ok
+>>>>>> Linux version 5.0.0-rc8-00196-g70d28b0 #1
+>>>>>> Command line: ip=::::vm-snb-quantal-x86_64-1415::dhcp root=/dev/ram0
+>>>>>> user=lkp
+>>>>>> job=/lkp/jobs/scheduled/vm-snb-quantal-x86_64-1415/trinity-300s-quantal-core-x86_64-2018-11-09.cgz-70d28b0-20190330-29362-1y6g0qb-2.yaml
+>>>>>> ARCH=x86_64 kconfig=x86_64-randconfig-s5-03231928
+>>>>>> branch=linux-devel/devel-hourly-2019032317
+>>>>>> commit=70d28b0e4f8ed2d38571e7b1f9bec7f321a53102
+>>>>>> BOOT_IMAGE=/pkg/linux/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/vmlinuz-5.0.0-rc8-00196-g70d28b0
+>>>>>> max_uptime=1500
+>>>>>> RESULT_ROOT=/result/trinity/300s/vm-snb-quantal-x86_64/quantal-core-x86_64-2018-11-09.cgz/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/8
+>>>>>> LKP_SERVER=inn debug apic=debug sysrq_always_enabled
+>>>>>> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
+>>>>>> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic
+>>>>>> load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8
+>>>>>> systemd.log_level=err ignore_loglevel console=tty0
+>>>>>> earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw
+>>>>>> rcuperf.shutdown=0
+>>>>>>
+>>>>> Can this report be made useful by actually including output from serial
+>>>>> console? For example possible bug-ons or whatnot? dmesg.xz just contains
+>>>>> qemu's command line + some metadata about the test and :
+>>>>>
+>>>>> "BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>>>> Probing EDD (edd=off to disable)... ok"
+>>>>>
+>>>>> At least a stack trace would have been useful.
+>>>>>
+>>>>> <snip>
+>>>> Hi,
+>>>>
+>>>> We usually use the tool ("bin/lkp qemu -k <bzImage> job-script") to
+>>>> reproduce it.  It seems no stack trace in the result:
+>>> So there is no regression at that commit right?
+>>>
+>>> Just some false alert?
+>>
+>> Hi,
+>>
+>> I think there's a regression, it stopped in the early-boot stage .
+> Can you please provide any logs that would point at btrfs? If the module
+> is loaded or built-in started, there's a line about that. Besides that
+> it's preceded by messages from other subsystems' initialization.
 
-Cc: Greg Hackmann <ghackmann@android.com>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: linux-mm@kvack.org
-Cc: kbuild-all@01.org
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Tri Vo <trong@android.com>
----
- kernel/gcov/clang.c   | 4 ++++
- kernel/gcov/gcc_3_4.c | 4 ++++
- kernel/gcov/gcc_4_7.c | 4 ++++
- 3 files changed, 12 insertions(+)
 
-diff --git a/kernel/gcov/clang.c b/kernel/gcov/clang.c
-index 125c50397ba2..cfb9ce5e0fed 100644
---- a/kernel/gcov/clang.c
-+++ b/kernel/gcov/clang.c
-@@ -223,7 +223,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
-  */
- bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
- {
-+#ifdef CONFIG_MODULES
- 	return within_module((unsigned long)info->filename, mod);
-+#else
-+	return false;
-+#endif
- }
- 
- /* Symbolic links to be created for each profiling data file. */
-diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
-index 801ee4b0b969..8fc30f178351 100644
---- a/kernel/gcov/gcc_3_4.c
-+++ b/kernel/gcov/gcc_3_4.c
-@@ -146,7 +146,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
-  */
- bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
- {
-+#ifdef CONFIG_MODULES
- 	return within_module((unsigned long)info, mod);
-+#else
-+	return false;
-+#endif
- }
- 
- /* Symbolic links to be created for each profiling data file. */
-diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
-index ec37563674d6..0b6886d4a4dd 100644
---- a/kernel/gcov/gcc_4_7.c
-+++ b/kernel/gcov/gcc_4_7.c
-@@ -159,7 +159,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
-  */
- bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
- {
-+#ifdef CONFIG_MODULES
- 	return within_module((unsigned long)info, mod);
-+#else
-+	return false;
-+#endif
- }
- 
- /* Symbolic links to be created for each profiling data file. */
--- 
-2.21.0.392.gf8f6787159e-goog
+Hi,
 
+CONFIG_BTRFS_FS and CONFIG_BTRFS_FS_REF_VERIFY is enabled in the kconfig.
+I disabled them for the experiment, and the new kernel is bootable. I 
+don't have more logs to prove it.
+
+$ grep BTRFS config-5.0.0-rc8-00196-g70d28b0
+CONFIG_BTRFS_FS=y
+# CONFIG_BTRFS_FS_POSIX_ACL is not set
+# CONFIG_BTRFS_FS_CHECK_INTEGRITY is not set
+# CONFIG_BTRFS_FS_RUN_SANITY_TESTS is not set
+# CONFIG_BTRFS_DEBUG is not set
+# CONFIG_BTRFS_ASSERT is not set
+CONFIG_BTRFS_FS_REF_VERIFY=y
+
+
+Best Regards,
+Rong Chen
+
+
+> _______________________________________________
+> LKP mailing list
+> LKP@lists.01.org
+> https://lists.01.org/mailman/listinfo/lkp
