@@ -2,110 +2,119 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEB4C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225E0C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB8B2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:32:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554240755;
-	bh=YCs9ALT43RrMOyhVj/RVmlUky/kNqSo6pLF4Sn7oRXI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hL12KJhC2HUJdGtZFIweeqHKcNaIctthWznIosja/ojCuZZukV310OEG06abKI+sO
-	 TIkGaYX9CHaekEO9EfJvYpnXpnzNfo35RdHW6dAJZauMcdBrtle84oobM0wBtKQR4V
-	 6pY8+YQEbQ6J/SEDwv5zcKF3HRT6JDrGQSJAvT+4=
+	by mail.kernel.org (Postfix) with ESMTP id DCA0720830
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:33:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1YmP6KQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfDBVcd (ORCPT
+        id S1726636AbfDBVdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:32:33 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:47992 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfDBVcd (ORCPT
+        Tue, 2 Apr 2019 17:33:22 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33054 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfDBVdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:32:33 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id E45E3D88;
-        Tue,  2 Apr 2019 21:32:31 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 14:32:30 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Greg Thelen <gthelen@google.com>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] writeback: use exact memcg dirty counts
-Message-Id: <20190402143230.3ea53a7d599b2d78c39b77b0@linux-foundation.org>
-In-Reply-To: <20190401182044.GA3694@cmpxchg.org>
-References: <20190329174609.164344-1-gthelen@google.com>
-        <20190401182044.GA3694@cmpxchg.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 2 Apr 2019 17:33:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=pxXvuXnfM56qlzMiNlWVyG/CkRRcaj6fqDPZd0RAYPM=; b=1YmP6KQeQHWx3SMdOj0LydaEUq
+        98pncAxzrBL6cChcEnJS0zBUelDTSqmeJIIveA/TmqW58oqUPKFwvOiFY6Luh1HSRpqdhN0A0GfTJ
+        CC3DGehioMc43QhPaP0+XWTELZaQQpT431tVFstw6p21lYPdmEXTgPiXttegGcl3AwKz8PD9pfAtw
+        rvJrYNZw4L8SC00H2zj3mpTsc5tNEAhaXtceFgxBc5hCc3wKgzg0vtNGYaD/icrGJg88Ycw+eLqmM
+        19alfjQCMg8rSnzMsX/P//vbNaiJhMvLqQRKYKUwpQav4YWtVtAUqRVDVBlC5NJZl4mzcGzsVg9xx
+        KdIWd4sg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBR1w-0005Rd-UD; Tue, 02 Apr 2019 21:33:17 +0000
+Subject: Re: [PATCH v3 2/7] kselftest: Add test runner creation script
+To:     Kees Cook <keescook@chromium.org>,
+        "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190306214226.14598-1-tobin@kernel.org>
+ <20190306214226.14598-3-tobin@kernel.org>
+ <CAGXu5j+=O3C6z7H5j93Z4mQkpS3f0ea_7T+LRQEnRCZCoKX8zw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <32a2dca5-d3cd-e7d3-e73b-406d897ae174@infradead.org>
+Date:   Tue, 2 Apr 2019 14:33:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <CAGXu5j+=O3C6z7H5j93Z4mQkpS3f0ea_7T+LRQEnRCZCoKX8zw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 14:20:44 -0400 Johannes Weiner <hannes@cmpxchg.org> wrote:
+Hi,
 
-> On Fri, Mar 29, 2019 at 10:46:09AM -0700, Greg Thelen wrote:
-> > @@ -3907,10 +3923,10 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
-> >  	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
-> >  	struct mem_cgroup *parent;
-> >  
-> > -	*pdirty = memcg_page_state(memcg, NR_FILE_DIRTY);
-> > +	*pdirty = memcg_exact_page_state(memcg, NR_FILE_DIRTY);
-> >  
-> >  	/* this should eventually include NR_UNSTABLE_NFS */
-> > -	*pwriteback = memcg_page_state(memcg, NR_WRITEBACK);
-> > +	*pwriteback = memcg_exact_page_state(memcg, NR_WRITEBACK);
-> >  	*pfilepages = mem_cgroup_nr_lru_pages(memcg, (1 << LRU_INACTIVE_FILE) |
-> >  						     (1 << LRU_ACTIVE_FILE));
-> 
-> Andrew,
-> 
-> just a head-up: -mm has that LRU stat cleanup series queued ("mm:
-> memcontrol: clean up the LRU counts tracking") that changes the
-> mem_cgroup_nr_lru_pages() call here to two memcg_page_state().
-> 
-> I'm assuming Greg's fix here will get merged before the cleanup. When
-> it gets picked up, it'll conflict with "mm: memcontrol: push down
-> mem_cgroup_nr_lru_pages()".
-> 
-> "mm: memcontrol: push down mem_cgroup_nr_lru_pages()" will need to be
-> changed to use memcg_exact_page_state() calls instead of the plain
-> memcg_page_state() for *pfilepages.
-> 
+nits/typos below:
 
-Thanks.  Like this?
+On 4/2/19 2:27 PM, Kees Cook wrote:
+> On Wed, Mar 6, 2019 at 1:43 PM Tobin C. Harding <tobin@kernel.org> wrote:
+>>
+>>
+>> Add test runner creation script.
+>>
+>> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+>> ---
+>>  tools/testing/selftests/kselftest_module.sh | 75 +++++++++++++++++++++
+>>  1 file changed, 75 insertions(+)
+>>  create mode 100755 tools/testing/selftests/kselftest_module.sh
+>>
+>> diff --git a/tools/testing/selftests/kselftest_module.sh b/tools/testing/selftests/kselftest_module.sh
+>> new file mode 100755
+>> index 000000000000..b5d446738614
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/kselftest_module.sh
+>> @@ -0,0 +1,75 @@
+>> +#!/bin/sh
+>> +# SPDX-License-Identifier: GPL-2.0+
+>> +
+>> +#
+>> +# Runs an individual test module.  kselftest expects a separate
+>> +# executable for each test.  So test should each have an individial
 
-void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
-			 unsigned long *pheadroom, unsigned long *pdirty,
-			 unsigned long *pwriteback)
-{
-	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
-	struct mem_cgroup *parent;
+                                                             individual
 
-	*pdirty = memcg_exact_page_state(memcg, NR_FILE_DIRTY);
+>> +# script that can call this script.
+>> +#
+>> +
+>> +# Individual test scrits should define these:
 
-	/* this should eventually include NR_UNSTABLE_NFS */
-	*pwriteback = memcg_exact_page_state(memcg, NR_WRITEBACK);
-	*pfilepages = memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
-			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
-	*pheadroom = PAGE_COUNTER_MAX;
+                      scripts
 
-	while ((parent = parent_mem_cgroup(memcg))) {
-		unsigned long ceiling = min(memcg->memory.max, memcg->high);
-		unsigned long used = page_counter_read(&memcg->memory);
+>> +module=""                      # filename (without the .ko).
+>> +desc=""                                # Output prefix.
 
-		*pheadroom = min(*pheadroom, ceiling - min(ceiling, used));
-		memcg = parent;
-	}
-}
 
+cheers.
+-- 
+~Randy
