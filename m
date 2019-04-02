@@ -2,118 +2,103 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB44C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50239C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B0520840
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2602084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554186600;
+	bh=3cdCwFG0qB3EXDXlA1qQ+fiqjqIrsqWKYpZKPFmq3NY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qu+UX+eMjQ90AVa8cI+GddavMHHEjPMth6eNXiXAwO2DcdWpkbnBZGE1v+FcXXOyA
+	 Niz4jwmsJ8pnnnyznSg5JkaFMCFXBHLhgo6RMlwKDwJ16cFbvFXjNGOC5uQF2/1B7p
+	 rkak9FbhkVZRHxpgy2UTC9Ii9ZBNYhtTYIFLe0SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbfDBG0M (ORCPT
+        id S1728786AbfDBG36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 02:26:12 -0400
-Received: from mx.socionext.com ([202.248.49.38]:39671 "EHLO mx.socionext.com"
+        Tue, 2 Apr 2019 02:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfDBG0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 02:26:10 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 02 Apr 2019 15:26:08 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 6356F6117D;
-        Tue,  2 Apr 2019 15:26:08 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 2 Apr 2019 15:26:08 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 0F6C41A04E0;
-        Tue,  2 Apr 2019 15:26:08 +0900 (JST)
-Received: from [127.0.0.1] (unknown [10.213.234.213])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id D340C120487;
-        Tue,  2 Apr 2019 15:26:07 +0900 (JST)
-Cc:     kanematsu.shinji@socionext.com, jic23@kernel.org,
-        mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org,
-        orito.takao@socionext.com, sugaya.taichi@socionext.com,
-        kasai.kazuhiro@socionext.com
-Subject: Re: [PATCH 1/2] dt-bindings: iio: counter: Add Milbeaut Updown
- Counter
-To:     Rob Herring <robh@kernel.org>
-References: <1553581989-13525-1-git-send-email-kanematsu.shinji@socionext.com>
- <20190331015228.GA27625@bogus>
-From:   =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?= 
-        <kanematsu.shinji@socionext.com>
-Message-ID: <976d5e2a-4bb8-3314-453b-921d06ba8ec6@socionext.com>
-Date:   Tue, 2 Apr 2019 15:26:07 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.2
+        id S1725778AbfDBG36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 02:29:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97FA1206B7;
+        Tue,  2 Apr 2019 06:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554186597;
+        bh=3cdCwFG0qB3EXDXlA1qQ+fiqjqIrsqWKYpZKPFmq3NY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VRsMnf/qtqWRAr5kYLGAXOVw4JvfRl80f2zA0bV529qaUA9njPwps85sDunN+Qf+k
+         wBk6V45E/Ry70g8L1H05dZ0Rzo0AZsdp/NGn33VghiFPJWA/5+nbxmtawL8J+mzwj7
+         g8OUlsSxJQ9HufqSnPLcuuDJVwjrAHVu88Lw137A=
+Date:   Tue, 2 Apr 2019 08:29:50 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kimberly Brown <kimbrownkd@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] kobject: Add default group support to kobj_type
+ and replace subsystem uses
+Message-ID: <20190402062950.GA7218@kroah.com>
+References: <20190322201440.GA30814@ubu-Virtual-Machine>
+ <cover.1554151487.git.kimbrownkd@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190331015228.GA27625@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1554151487.git.kimbrownkd@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-Thank you for your review.
-
-On 2019/03/31 15:42, Rob Herring wrote:
-> On Tue, Mar 26, 2019 at 03:33:09PM +0900, Shinji Kanematsu wrote:
->> Add documentation for Milbeaut Updown Counter device
->> quadrature encoder and counter binding.
->>
->> Signed-off-by: Shinji Kanematsu <kanematsu.shinji@socionext.com>
->> ---
->>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   | 22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->> new file mode 100644
->> index 0000000..6771567
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
->> @@ -0,0 +1,22 @@
->> +SOCIONEXT Milbeaut Updown counter
->> +
->> +Required properties:
->> +- compatible:       Must be "socionext,milbeaut-updown-counter".
->> +- reg:              Offset and length of the device's register set.
->> +- clocks:           Phandle to the clock used by the Updown counter module.
->> +- clock-names:      Must be "mux".
->> +- interrupts:       SPI number of the device's set.
->> +- cms_type:         connected_device
->> +                     1: updown button  (updown counter mode)
->> +                     2: rotary encoder (phase difference counter mode)
+On Mon, Apr 01, 2019 at 10:51:10PM -0400, Kimberly Brown wrote:
+> This patchset adds support for default attribute groups to kobj_type.
+> Also, the uses of kobj_type's default_attrs field are replaced with
+> default_groups in the following subsystems:
+>  - samples
+>  - block
+>  - net
+>  - irq
+>  - padata
+>  - cpufreq
+>  - livepatch
 > 
-> We should have a common property for describing what's attached.
-> IIRC, just had a similar binding recently.
+> The subsystem maintainers and lists will be copied on the subsystem
+> patches.
 > 
-
-OK, I search the similar binding.
-
-Thank you,
-Kanematsu
-
->> +
->> +Example:
->> +
->> +	updown0: updown@1e002000 {
->> +		compatible = "socionext,milbeaut-updown-counter";
->> +		reg = <0x1e002000 0x20>;
->> +		clocks = <&clk 4>;
->> +		clock-names = "mux";
->> +		interrupts = <0 104 0x4>;
->> +		cms_type = <1>;
->> +	};
->> -- 
->> 1.9.1
->>
+> The uses of kobj_type's default_attrs field in the other subsystems will
+> be replaced in future patchsets.
 > 
+> Changes in v2:
+>  - Patch 1 is not changed.
+>  - Patches 2-8 are new.
 
+Thanks so much for doing this.
+
+As all of the different subsystems depend on the first patch, I'll be
+glad to merge them all through my driver-core tree, or apply the first
+one and wait a release cycle so that the others can go through the
+individual subsystem's tree, depending on what the subsystem maintainer
+is comfortable with.
+
+thanks,
+
+greg k-h
