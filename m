@@ -2,102 +2,145 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0413DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAF2C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE60A20840
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oWVpe5z1"
+	by mail.kernel.org (Postfix) with ESMTP id D1AB920840
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfDBGWQ (ORCPT
+        id S1728874AbfDBGW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 02:22:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37961 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfDBGWQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 02:22:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id j26so6010939pgl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 23:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5orAWKFfsaS6pht84D63trK5FZ+vOC66globn0/gaJc=;
-        b=oWVpe5z1b1ktYsdQAHT+cNsI9fuLhic9r/Z4qZa7KR2SLmvStsPkBdQaPXS1OlVqpV
-         GubtxAiNrDqXkUyvb7IlABVjARi0RYvF2Dnywik62G8HSCk3s4AcHKEKUW/ogiQbMKKp
-         V1bTbdN+VqRFGweYpA8alPu0t/talUx9jKHsddVLg+HVvocT8nErT9g39RM3UqB+FCNd
-         DQkyj3pLQwS2UcNgCdrdOYHG416PAdZHEkJOn5Kr0pRFqJB/qrrgYeo+ez0YA1AvCrh6
-         Ufb3hNmqNVPYP4AXkM/T0mbs2gLuLFHFrU50aF8ImVdVY9qTEOUj4RGgnpeD5cnDazAk
-         GyYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5orAWKFfsaS6pht84D63trK5FZ+vOC66globn0/gaJc=;
-        b=pjTvWFMklabdcLxfgqUViyLlTLOaFzkdkzKQOmJiLEKmu0rRYCJLPDF/EGfAWwCBCj
-         4PHmhAy/QPe+72OUqb0oPPxLTUMFCW3uAf2+29095JqS1fEFVQu5hRgYIy/DlOHuRrYU
-         neyZHO8XY20hyDw3oxsspLpDa3JLoph+78PbUTfPF50hpEqCfFjuhfWi5nQdIb+kDwEB
-         t+8i8/AMqiBpBDt91n7KqOuAKTec86dT5ODp5JVicZgEd0YYUuGztuIhQsAstmvUXLUT
-         LtGQTkTNBQ8RLWVz5McjQ76ADsfw2W5sJWxyzlSIU2sFpPLVjy03qCGJ3HVeH7OMO0/U
-         w7jg==
-X-Gm-Message-State: APjAAAUpcZOwnWVbJBtmlrWOMGdqfKDPojEwx0pBk4BwL3DOcHj5Zzh/
-        Ho8ExcUJtk18C+8KVkRgfIQ7Mw==
-X-Google-Smtp-Source: APXvYqyt7pO+wSy1Wptr7MF41ta+X9qdtx2kwKbGJtmTVqbdOVOk3JCp7vX0WoEcwuebjd2nwVPIkQ==
-X-Received: by 2002:a62:5ec2:: with SMTP id s185mr753843pfb.16.1554186135316;
-        Mon, 01 Apr 2019 23:22:15 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id k14sm7926027pfb.125.2019.04.01.23.22.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 23:22:14 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 07:22:09 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Morris Ku <saumah@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, morris_ku@sunix.com
-Subject: Re: [PATCH 2/4] Add support for SUNIX Multi-I/O board
-Message-ID: <20190402062209.GV4187@dell>
-References: <20190319120756.3740-1-saumah@gmail.com>
+        Tue, 2 Apr 2019 02:22:26 -0400
+Received: from mx.socionext.com ([202.248.49.38]:39568 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfDBGW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 02:22:26 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 02 Apr 2019 15:22:24 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 14C9A6117D;
+        Tue,  2 Apr 2019 15:22:24 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 2 Apr 2019 15:22:24 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id E92C840221;
+        Tue,  2 Apr 2019 15:22:23 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.234.213])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id B6C66120487;
+        Tue,  2 Apr 2019 15:22:23 +0900 (JST)
+Cc:     kanematsu.shinji@socionext.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org,
+        orito.takao@socionext.com, sugaya.taichi@socionext.com,
+        kasai.kazuhiro@socionext.com
+Subject: Re: [PATCH 0/2] Add Updown Counter support for Milbeaut M10V SoC
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <1553581954-13487-1-git-send-email-kanematsu.shinji@socionext.com>
+ <20190330183603.55886d4f@archlinux> <20190331020932.GA4108@icarus>
+From:   =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?= 
+        <kanematsu.shinji@socionext.com>
+Message-ID: <bddfd8ca-c82a-68f8-ba05-45ce6df9bd4f@socionext.com>
+Date:   Tue, 2 Apr 2019 15:22:22 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190319120756.3740-1-saumah@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190331020932.GA4108@icarus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019, Morris Ku wrote:
+Hi William,
 
-> Driver for SUNIX Multi-I/O card.
-> Based on driver/char/serial.c by Linus Torvalds, Theodore Ts'o.
+On 2019/03/31 11:09, William Breathitt Gray wrote:
+> On Sat, Mar 30, 2019 at 06:36:03PM +0000, Jonathan Cameron wrote:
+>> On Tue, 26 Mar 2019 15:32:34 +0900
+>> Shinji Kanematsu <kanematsu.shinji@socionext.com> wrote:
+>>
+>>> This is a series of patch which adds Updown Counter support on
+>>> Milbeaut M10V SoC.
+>>>
+>>> The Updown Counter counts input pulse signal from external quadrature encoder.
+>>> It also has input pulse signal counter function.
+>> Hi Shinji,
+>>
+>> Are you aware of the counter subsystem that has been proposed (and
+>> as far as I am concerned is ready to be merged)?
+>>
+>> https://patchwork.kernel.org/project/linux-iio/list/?series=147
+>> (I think that's the latest version posted)..
+>> William, perhaps you could give an update?
+>>
+>> (bad luck, you are getting popular ;)
+>>
+>> I'll take a quick review as it stands, as some issues may carry over.
+>> I appreciate that it's always unfortunate to try to upstream stuff at the
+>> same time as a new framework is being developed / upstreamed, but I don't
+>> intend to take any additional counter drivers into IIO.  We just
+>> end up having to maintain old interfaces in more and more drivers.
+>>
+>> Thanks,
+>>
+>> Jonathan
 > 
-> SUNIX serial card designed with SUNIX UART controller and
-> compatible with 16C950 UART specification.
+> Shinji,
+> 
+> If you reimplement this driver to use the new Generic Counter API, I can
+> pick it up and include it with my next patchset submission. Please base
+> your patches ontop of the "generic_counter_v10" branch from my personal
+> repository:
+> 
+> https://gitlab.com/vilhelmgray/iio/commits/generic_counter_v10
+> 
+> Documentation can be found at:
+> 
+> 	Documentation/driver-api/generic-counter.rst
+> 	Documentation/ABI/testing/sysfs-bus-counter
+> 
+> Look at the existing drivers inside the drivers/counter directory to
+> serve as references:
+> 
+> 	drivers/counter/ftm-quaddec.c
+> 	drivers/counter/stm32-timer-cnt.c
+> 
+> If you have any troubles or difficulties with the API, send me a message
+> and I will be happy to help. :-)
+> 
 
-Serial drivers should live in drivers/tty/serial.
+Thank you for your information.
+I read and understand the new Generic Counter API.
 
-Please move it there.
+Thank you,
+Kanematsu
 
-> Signed-off-by: Morris Ku <saumah@gmail.com>
-> ---
->  mfd/sunix/snx_main.c   | 1671 +++++++++++++++++++
->  mfd/sunix/snx_serial.c | 3513 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 5184 insertions(+)
->  create mode 100644 mfd/sunix/snx_main.c
->  create mode 100644 mfd/sunix/snx_serial.c
+> Thank you,
+> 
+> William Breathitt Gray
+> 
+>>
+>>>
+>>> Shinji Kanematsu (2):
+>>>    dt-bindings: iio: counter: Add Milbeaut Updown Counter
+>>>    iio: counter: Add support for Milbeaut Updown Counter
+>>>
+>>>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   |  22 ++
+>>>   drivers/iio/counter/Kconfig                        |  12 +
+>>>   drivers/iio/counter/Makefile                       |   1 +
+>>>   drivers/iio/counter/milbeaut-updown.h              |  38 ++
+>>>   drivers/iio/counter/milbeaut-updown_cnt.c          | 385 +++++++++++++++++++++
+>>>   5 files changed, 458 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
+>>>   create mode 100644 drivers/iio/counter/milbeaut-updown.h
+>>>   create mode 100644 drivers/iio/counter/milbeaut-updown_cnt.c
+>>>
+>>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
