@@ -2,181 +2,90 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B28C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49448C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630A72075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1C52075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:22:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fwtcZix7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbfDBFUb (ORCPT
+        id S1729031AbfDBFWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 01:20:31 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:28661 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726761AbfDBFUb (ORCPT
+        Tue, 2 Apr 2019 01:22:14 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:42894 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726705AbfDBFWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 01:20:31 -0400
-X-IronPort-AV: E=Sophos;i="5.60,298,1549900800"; 
-   d="scan'208";a="58270610"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 02 Apr 2019 13:20:28 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id B9AFA4CD7B94;
-        Tue,  2 Apr 2019 13:20:26 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.56) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Tue, 2 Apr 2019 13:20:30 +0800
-Date:   Tue, 2 Apr 2019 14:19:26 +0800
-From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-CC:     <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
-Message-ID: <20190402061926.GA1555@localhost.localdomain>
-References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
+        Tue, 2 Apr 2019 01:22:13 -0400
+Received: by mail-yw1-f68.google.com with SMTP id e76so4143292ywa.9
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 22:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XOGIs9WNerTGX7LDKLjBk1DE37QWrZaAIzrr8nImeqI=;
+        b=fwtcZix7hnHZLir+w1X9DesyTlez9ZBELiZ7FdJipU28UqjyyjsVd5E7Hfp23XoZ66
+         Hh7zAQB69HkB8SfIcNeCLm+EIQ1dDVkjmXw0e3OsL9Pgtb4oanh31jNR4LPVkNwVpkCv
+         pX6vRVnN+/XvVjLRXAzf+4D0pRA+UAEKHAy0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XOGIs9WNerTGX7LDKLjBk1DE37QWrZaAIzrr8nImeqI=;
+        b=eGNoHpyXtZJtE1ieP7+pNLWUu67ydwUXTRrcjr0NwTBzO/f0NU+prD+hAqeNzOs2MN
+         CWRSehcrsWYOpIcqHq/m6sfhnOWicsaSdZiqcWqVrpe1QtzSCNwfMrviBTwD0jeHRxyM
+         Wt4xu3+08gEPYzSZyL4yYdG2OO4/vV/wbmpL9WuAvfPqBOjUH8THAYhIQhSsN9qDxppq
+         0rRHG+AjV6SESq2dsOG7GY9QR6rHxaoodQ/riNmJFEuJBTWivpHoA3Mes3Dr2NhJcXcV
+         eg7vLJTauzq32D+TqKi8z45WchVfPoIYinqg+QSMDsKcEnqLqSNHKxPnLV+cinfz+Fb8
+         lz8A==
+X-Gm-Message-State: APjAAAU12utO59VL6Aa8GHggWbMAsxwIRo4UV7OTJYXMO1dH5pJA1FRc
+        zvb18h17b2CZ0hCjwFp9YAOiLWtE/7u0tKvCv8hroA==
+X-Google-Smtp-Source: APXvYqyLPwuHtbgmNczJoUnjhJnwnlm7UeOpLsczZDxr5rc4NMJuVF/25XQzgEEKC335r5jRQo1ASYYQM3He8nb6E8k=
+X-Received: by 2002:a81:1e51:: with SMTP id e78mr57867540ywe.302.1554182533047;
+ Mon, 01 Apr 2019 22:22:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.167.225.56]
-X-yoursite-MailScanner-ID: B9AFA4CD7B94.AE62B
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
+References: <20190402050756.20507-1-jmaxwell37@gmail.com>
+In-Reply-To: <20190402050756.20507-1-jmaxwell37@gmail.com>
+From:   Michael Chan <michael.chan@broadcom.com>
+Date:   Mon, 1 Apr 2019 22:22:01 -0700
+Message-ID: <CACKFLi=kJ3FLuXFchVQ2mf0K09E7y5iVJNBTPsFZiv3Zaafitw@mail.gmail.com>
+Subject: Re: [net-next] tg3: allow ethtool -p to work for NICs in down state
+To:     Jon Maxwell <jmaxwell37@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Siva Reddy Kallam <siva.kallam@broadcom.com>,
+        "prashant.sreedharan@broadcom.com" <prashant@broadcom.com>,
+        "michael.chan@broadcom.com" <mchan@broadcom.com>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, jmaxwell@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 12:10:46PM +0800, Pingfan Liu wrote:
->crashkernel=x@y or or =range1:size1[,range2:size2,...]@offset option may
-or or?
->fail to reserve the required memory region if KASLR puts kernel into the
->region. To avoid this uncertainty, asking KASLR to skip the required
->region.
+On Mon, Apr 1, 2019 at 10:09 PM Jon Maxwell <jmaxwell37@gmail.com> wrote:
 >
->Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
->Cc: Thomas Gleixner <tglx@linutronix.de>
->Cc: Ingo Molnar <mingo@redhat.com>
->Cc: Borislav Petkov <bp@alien8.de>
->Cc: "H. Peter Anvin" <hpa@zytor.com>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Will Deacon <will.deacon@arm.com>
->Cc: Nicolas Pitre <nico@linaro.org>
->Cc: Pingfan Liu <kernelfans@gmail.com>
->Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
->Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
->Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->Cc: linux-kernel@vger.kernel.org
->---
-[...]
->+
->+/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
-
-Before review, I want to say more about the background.
-It's very hard to review the code for someone who is not so familiar
-with kdump, so could you please explain more ahout
-the uasge of crashkernel=range1:size1[,range2:size2,...]@offset.
-And also there are so many jobs who are parsing string. So I really
-need your help to understand the PATCH.
-
->+static void mem_avoid_specified_crashkernel_region(char *option)
->+{
->+	unsigned long long crash_size, crash_base = 0;
->+	char	*first_colon, *first_space, *cur = option;
-Is there a tab after char?
->+
->+	first_colon = strchr(option, ':');
->+	first_space = strchr(option, ' ');
->+	/* if contain ":" */
->+	if (first_colon && (!first_space || first_colon < first_space)) {
->+		int i;
->+		u64 total_sz = 0;
->+		struct boot_e820_entry *entry;
->+
->+		for (i = 0; i < boot_params->e820_entries; i++) {
->+			entry = &boot_params->e820_table[i];
->+			/* Skip non-RAM entries. */
->+			if (entry->type != E820_TYPE_RAM)
->+				continue;
->+			total_sz += entry->size;
-I wonder whether it's needed to consider the memory ranges here.
-I think it's OK to only record the regions should to be avoid.
-I remeber I ever talked with Baoquan about the similiar problems.
-@Baoquan, I am not sure if I misunderstand something.
-
-Thanks,
-Chao Fan
->+		}
->+		handle_crashkernel_mem(option, total_sz, &crash_size,
->+			&crash_base);
->+	} else {
->+		crash_size = memparse(option, &cur);
->+		if (option == cur)
->+			return;
->+		while (*cur && *cur != ' ' && *cur != '@')
->+			cur++;
->+		if (*cur == '@') {
->+			option = cur + 1;
->+			crash_base = memparse(option, &cur);
->+		}
->+	}
->+	if (crash_base) {
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
->+	} else {
->+		/*
->+ 		 * Clearing mem_avoid if no offset is given. This is consistent
->+ 		 * with kernel, which uses the last crashkernel= option.
->+		 */
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
->+		mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
->+	}
->+}
-> 
-> static void handle_mem_options(void)
-> {
->@@ -248,7 +358,7 @@ static void handle_mem_options(void)
-> 	u64 mem_size;
-> 
-> 	if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
->-		!strstr(args, "hugepages"))
->+		!strstr(args, "hugepages") && !strstr(args, "crashkernel="))
-> 		return;
-> 
-> 	tmp_cmdline = malloc(len + 1);
->@@ -284,6 +394,8 @@ static void handle_mem_options(void)
-> 				goto out;
-> 
-> 			mem_limit = mem_size;
->+		} else if (strstr(param, "crashkernel")) {
->+			mem_avoid_specified_crashkernel_region(val);
-> 		}
-> 	}
-> 
->@@ -412,7 +524,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
-> 
-> 	/* We don't need to set a mapping for setup_data. */
-> 
->-	/* Mark the memmap regions we need to avoid */
->+	/* Mark the regions we need to avoid */
-> 	handle_mem_options();
-> 
-> 	/* Enumerate the immovable memory regions */
->-- 
->2.7.4
+> Make tg3 behave like other drivers and let "ethtool -p" identify the
+> NIC even when it's in the DOWN state. Before this patch it would get an
+> error as follows if the NIC was down:
 >
+> # ip link set down dev em4
+> # ethtool -p em4
+> Cannot identify NIC: Resource temporarily unavailable
 >
+> With this patch ethtool identify works regardless of whether the NIC is up
+> or down as it does for other drivers.
 >
+> Signed-off-by: Jon Maxwell <jmaxwell37@gmail.com>
 
+Acked-by: Michael Chan <michael.chan@broadcom.com>
 
+We used to power down the chip in tg3_close() and that's why we cannot
+do ethtool -p after close.  We don't do that any more so this is fine.
+Thanks.
