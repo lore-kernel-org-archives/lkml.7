@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C46C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905AAC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125522133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65FF520856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfDBNnZ (ORCPT
+        id S1731943AbfDBNng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:43:25 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43636 "EHLO
+        Tue, 2 Apr 2019 09:43:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43620 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731514AbfDBNkL (ORCPT
+        by vger.kernel.org with ESMTP id S1731513AbfDBNkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:11 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdw-0002nV-3v; Tue, 02 Apr 2019 14:40:00 +0100
+        id 1hBJdu-0002mf-UK; Tue, 02 Apr 2019 14:39:59 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdv-0004sl-4c; Tue, 02 Apr 2019 14:39:59 +0100
+        id 1hBJdu-0004rU-15; Tue, 02 Apr 2019 14:39:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,21 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sasha Levin" <sashal@kernel.org>,
-        "Waiman Long" <longman@redhat.com>, tj@kernel.org,
-        "Sasha Levin" <sasha.levin@oracle.com>,
-        "Johannes Berg" <johannes@sipsolutions.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>, johannes.berg@intel.com,
-        "Ingo Molnar" <mingo@kernel.org>
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "Jiri Olsa" <jolsa@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.443334155@decadent.org.uk>
+Message-ID: <lsq.1554212307.705589594@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 29/99] tools/lib/lockdep: Rename "trywlock" into
- "trywrlock"
+Subject: [PATCH 3.16 13/99] perf pmu: Suppress potential format-truncation
+ warning
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -63,60 +59,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-commit 7f3c7952d111ac93573fb86f4d5aeff527a07fcc upstream.
+commit 11a64a05dc649815670b1be9fe63d205cb076401 upstream.
 
-This patch avoids that the following compiler warning is reported while
-compiling the lockdep unit tests:
+Depending on which functions are inlined in util/pmu.c, the snprintf()
+calls in perf_pmu__parse_{scale,unit,per_pkg,snapshot}() might trigger a
+warning:
 
-include/liblockdep/rwlock.h: In function 'liblockdep_pthread_rwlock_trywlock':
-include/liblockdep/rwlock.h:66:9: warning: implicit declaration of function 'pthread_rwlock_trywlock'; did you mean 'pthread_rwlock_trywrlock'? [-Wimplicit-function-declaration]
-  return pthread_rwlock_trywlock(&lock->rwlock) == 0 ? 1 : 0;
-         ^~~~~~~~~~~~~~~~~~~~~~~
-         pthread_rwlock_trywrlock
+  util/pmu.c: In function 'pmu_aliases':
+  util/pmu.c:178:31: error: '%s' directive output may be truncated writing up to 255 bytes into a region of size between 0 and 4095 [-Werror=format-truncation=]
+    snprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
+                               ^~
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+I found this when trying to build perf from Linux 3.16 with gcc 8.
+However I can reproduce the problem in mainline if I force
+__perf_pmu__new_alias() to be inlined.
+
+Suppress this by using scnprintf() as has been done elsewhere in perf.
+
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sasha.levin@oracle.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
-Cc: johannes.berg@intel.com
-Cc: tj@kernel.org
-Fixes: 5a52c9b480e0 ("liblockdep: Add public headers for pthread_rwlock_t implementation")
-Link: https://lkml.kernel.org/r/20181207011148.251812-6-bvanassche@acm.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: http://lkml.kernel.org/r/20181111184524.fux4taownc6ndbx6@decadent.org.uk
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[bwh: Dropped the parts that don't apply to 3.16]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/lib/lockdep/include/liblockdep/rwlock.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/pmu.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/tools/lib/lockdep/include/liblockdep/rwlock.h
-+++ b/tools/lib/lockdep/include/liblockdep/rwlock.h
-@@ -59,10 +59,10 @@ static inline int liblockdep_pthread_rwl
- 	return pthread_rwlock_tryrdlock(&lock->rwlock) == 0 ? 1 : 0;
- }
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -107,7 +107,7 @@ static int perf_pmu__parse_scale(struct
+ 	char path[PATH_MAX];
+ 	const char *lc;
  
--static inline int liblockdep_pthread_rwlock_trywlock(liblockdep_pthread_rwlock_t *lock)
-+static inline int liblockdep_pthread_rwlock_trywrlock(liblockdep_pthread_rwlock_t *lock)
- {
- 	lock_acquire(&lock->dep_map, 0, 1, 0, 1, NULL, (unsigned long)_RET_IP_);
--	return pthread_rwlock_trywlock(&lock->rwlock) == 0 ? 1 : 0;
-+	return pthread_rwlock_trywrlock(&lock->rwlock) == 0 ? 1 : 0;
- }
+-	snprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
++	scnprintf(path, PATH_MAX, "%s/%s.scale", dir, name);
  
- static inline int liblockdep_rwlock_destroy(liblockdep_pthread_rwlock_t *lock)
-@@ -78,7 +78,7 @@ static inline int liblockdep_rwlock_dest
- #define pthread_rwlock_unlock		liblockdep_pthread_rwlock_unlock
- #define pthread_rwlock_wrlock		liblockdep_pthread_rwlock_wrlock
- #define pthread_rwlock_tryrdlock	liblockdep_pthread_rwlock_tryrdlock
--#define pthread_rwlock_trywlock		liblockdep_pthread_rwlock_trywlock
-+#define pthread_rwlock_trywrlock	liblockdep_pthread_rwlock_trywrlock
- #define pthread_rwlock_destroy		liblockdep_rwlock_destroy
+ 	fd = open(path, O_RDONLY);
+ 	if (fd == -1)
+@@ -150,7 +150,7 @@ static int perf_pmu__parse_unit(struct p
+ 	ssize_t sret;
+ 	int fd;
  
- #endif
+-	snprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
++	scnprintf(path, PATH_MAX, "%s/%s.unit", dir, name);
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd == -1)
 
