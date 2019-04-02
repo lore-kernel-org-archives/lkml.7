@@ -2,106 +2,95 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB56C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122CDC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 396E12070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C8620883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HKCIiuHs"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bbUsrk+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfDBIum (ORCPT
+        id S1728928AbfDBIwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 04:50:42 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53294 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDBIum (ORCPT
+        Tue, 2 Apr 2019 04:52:20 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:11792 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfDBIwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 04:50:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oGd98FSkanS45RkiiD+xRdL3np6AH/9BCAwdx11DOGI=; b=HKCIiuHsWau00I3FhYUeh3Wb4
-        0bFZ8qPhn03uc3Um5+/36yJK6IhF22rdPoXqWfzLtQAVAfxRuTNJ3JTU1bGViqeauy4I/ivXEiHFi
-        fR0CWGA0NOKU79LsvtbQEONcJ12Riy1RvUB/tN2ePuO+AvaF77z+yKM6jCBen+LCD5CR0kHiU04l5
-        JocpyHZuXoilRFHPxMR7c7wxfoGfh+EMrZ8NsF9+iAMV0GPmeVXVtWGLca8CzQ+icyse+2bfOEkTo
-        mQDtJtTcHAnDqjDsBFfIAoPDolTCm+e0SzrT6+IexBSRGwOvXR542xd6ItxU6lAOn0G/M7Z6LYE24
-        M07hnTC+A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hBF7r-0000Up-N8; Tue, 02 Apr 2019 08:50:35 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 761742026AEF9; Tue,  2 Apr 2019 10:50:34 +0200 (CEST)
-Date:   Tue, 2 Apr 2019 10:50:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kimberly Brown <kimbrownkd@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] cpufreq: schedutil: Replace default_attrs field
- with groups
-Message-ID: <20190402085034.GK12232@hirez.programming.kicks-ass.net>
-References: <20190322201440.GA30814@ubu-Virtual-Machine>
- <cover.1554151487.git.kimbrownkd@gmail.com>
- <18a50bab72e6bd326250b2bd5b5a4b414351815d.1554151487.git.kimbrownkd@gmail.com>
+        Tue, 2 Apr 2019 04:52:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ca322b90000>; Tue, 02 Apr 2019 01:52:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 02 Apr 2019 01:52:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 02 Apr 2019 01:52:19 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Apr
+ 2019 08:52:17 +0000
+Subject: Re: [PATCH] ASoC: soc-core: Fix probe deferral following prelink
+ failure
+To:     Mark Brown <broonie@kernel.org>
+CC:     Liam Girdwood <lgirdwood@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>,
+        Curtis Malainey <cujomalainey@google.com>,
+        <linux-tegra@vger.kernel.org>
+References: <1551706274-22571-1-git-send-email-jonathanh@nvidia.com>
+ <4eb94b41-7e16-7b39-5c14-a7d180ce67df@nvidia.com>
+ <20190402043509.GQ2059@sirena.org.uk>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <2d8a0569-b821-c0c0-af39-d3863d17f47f@nvidia.com>
+Date:   Tue, 2 Apr 2019 09:52:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18a50bab72e6bd326250b2bd5b5a4b414351815d.1554151487.git.kimbrownkd@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190402043509.GQ2059@sirena.org.uk>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554195129; bh=gJiNKrWVDymlhkssr/cNXnvrB70P9R6U4j/NwK6ka0M=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bbUsrk+dI3z5adO66+g/8/2Kr/xZwSIO14dPGPNJS1Jzpx3PnHDSQY+Thtrfin0ZY
+         67xz6Uznauu6MgV9Nf/mpTW9gCsbEJVVYat1IJ/pBtetke2DIA9w3erppyk8JOo0Kh
+         q2VHpwizWpd1BRxlcRf+Zx6gHyJ1RBFX93tV6HC/A6YpaWzI/21gmZK0iU1Gc0bYdx
+         M5u5r9d5HERf6K2f9NK3YS7xBXisLGewXzlGkkfjbhUZtm08x4MDWRKs2d00IwsEU6
+         6sY5MqlMTHox6IfhH1pTgePDJnEZ8gtsdjyQ+EXxeARGOJrjdpM01Q8kV/yxbyU77Y
+         lrWgTvxOJccLw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 10:51:53PM -0400, Kimberly Brown wrote:
-> The kobj_type default_attrs field is being replaced by the
-> default_groups field. Replace sugov_tunables_ktype's default_attrs field
-> with default groups. Change "sugov_attributes" to "sugov_attrs" and use
-> the ATTRIBUTE_GROUPS macro to create sugov_groups.
-> 
-> This patch was tested by setting the scaling governor to schedutil and
-> verifying that the sysfs files for the attributes in the default groups
-> were created.
-> 
-> Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Please route the patch as is most convenient.
-
-> ---
->  kernel/sched/cpufreq_schedutil.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+On 02/04/2019 05:35, Mark Brown wrote:
+> On Mon, Apr 01, 2019 at 01:22:09PM +0100, Jon Hunter wrote:
 > 
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index 5c41ea367422..148b60c8993d 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -598,13 +598,14 @@ rate_limit_us_store(struct gov_attr_set *attr_set, const char *buf, size_t count
->  
->  static struct governor_attr rate_limit_us = __ATTR_RW(rate_limit_us);
->  
-> -static struct attribute *sugov_attributes[] = {
-> +static struct attribute *sugov_attrs[] = {
->  	&rate_limit_us.attr,
->  	NULL
->  };
-> +ATTRIBUTE_GROUPS(sugov);
->  
->  static struct kobj_type sugov_tunables_ktype = {
-> -	.default_attrs = sugov_attributes,
-> +	.default_groups = sugov_groups,
->  	.sysfs_ops = &governor_sysfs_ops,
->  };
->  
-> -- 
-> 2.17.1
+>> FYI, I am seeing that the deferral of soundcards failing with v5.1-rc3
+>> because the above has not been merged yet. Just wanted to let you know
+>> in case this one was not marked for v5.1.
 > 
+> I don't have this patch at all AFAICT.
+
+That's odd. It is definitely in -next and I did receive an 'applied'
+email from you [0]. So looks like something went wrong here. Can we get
+this into v5.1?
+
+Cheers
+Jon
+
+[0] https://lkml.org/lkml/2019/3/4/637
+
+
+-- 
+nvpublic
