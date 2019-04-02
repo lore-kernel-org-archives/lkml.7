@@ -2,100 +2,251 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB36C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9A3C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470E620883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84F5208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfDBKi1 (ORCPT
+        id S1729580AbfDBKkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:38:27 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:60205 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfDBKi1 (ORCPT
+        Tue, 2 Apr 2019 06:40:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39691 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729030AbfDBKkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:38:27 -0400
-Received: from [192.168.178.52] ([109.104.50.84]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Ml76o-1gWffI0vBU-00lVkw; Tue, 02 Apr 2019 12:38:00 +0200
-Subject: Re: [PATCH 06/16] staging: vc04_services: remove remaining redundant
- license text
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        Aymen Qader <qader.aymen@gmail.com>,
-        =?UTF-8?Q?Tobias_B=c3=bcttner?= <tobias.buettner@fau.de>,
-        Dominic Braun <inf.braun@fau.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>,
-        Phil Elwell <phil@raspberrypi.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
- <20190402103203.14959-7-gregkh@linuxfoundation.org>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <a84e7740-cd9e-2d2e-fb6e-560776527e1e@i2se.com>
-Date:   Tue, 2 Apr 2019 12:37:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 2 Apr 2019 06:40:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x32Ae6A31349978
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 2 Apr 2019 03:40:06 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x32Ae6ia1349974;
+        Tue, 2 Apr 2019 03:40:06 -0700
+Date:   Tue, 2 Apr 2019 03:40:06 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
+Message-ID: <tip-de7b77e5bb9451417ca57f1b6501da654587c048@git.kernel.org>
+Cc:     aarcange@redhat.com, hpa@zytor.com, tglx@linutronix.de,
+        jpoimboe@redhat.com, mingo@kernel.org, jikos@kernel.org,
+        peterz@infradead.org, linux-kernel@vger.kernel.org,
+        longman@redhat.com
+Reply-To: jikos@kernel.org, peterz@infradead.org, mingo@kernel.org,
+          jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
+          longman@redhat.com, aarcange@redhat.com, tglx@linutronix.de,
+          hpa@zytor.com
+In-Reply-To: <469c2b98055f2c41e75748e06447d592a64080c9.1553635520.git.jpoimboe@redhat.com>
+References: <469c2b98055f2c41e75748e06447d592a64080c9.1553635520.git.jpoimboe@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:smp/hotplug] cpu/hotplug: Create SMT sysfs interface for all
+ arches
+Git-Commit-ID: de7b77e5bb9451417ca57f1b6501da654587c048
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190402103203.14959-7-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:zdaMQH5uR6awRWVrSaA69WpUWHItqkjbrCx7PQ3ehpgdngni77v
- +1bT6ktliaco/HHHVl5mMguBA7Xv7nG4hSWOTXT98oR0TgRAEsZsHDl51iRKvI158+lpSzu
- PS10qYdubA7mMRlBAPlO7rzMu2MM1RcctFpYTT3g0iaJ7CX8F0FOkKxauOhRjK0nIlQiVaK
- f7F+ibcleh6yLHEEt7X6A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4Ftd9ThS86M=:Vfa2M0oxHJZOAAOUyzMcTF
- YcvHUvhk+3TRJfwvzZwxyIVRmHUSGeFNt5jV80B7pry67Hvs5snc5zdl9Pvde0nSKawtrcQhs
- 0tWBX6T+zwVs/X92ksW3fXlX+WFFYB3qzUTn4Q6j1O2zM27Ceb3Wd4lgcyuERnHoVhZT7odxR
- /Yu8w7H6gSzs9qGM/xY05JalqvO+KLjvAgtgf/vXc5lWgHidcEwhzhbqhixdcewG3Em1sbbXz
- Ya/kugvV95Xd3ljVq4Skj3HxvlkVOp8nakY5KhlmnLMVEAg0kYytjm1oUFR4CD8cLA+cZb+69
- j4FbLX0RvG8kB1eo/tlp5cE3pMsQxw3i9WR60jHIYYTz2W8gjvDkM5ENVGg0K7tTKIZETuvHO
- C4HCCURNbhOAYn9ooaEm7YTcLuqJBDAtuGYKe6iIvDhtZYiowdY2hj5dRMWFCfoghsG6/F5LC
- t0Nq0OSYjFteatIhdvYAgsduJflLcB9WBI3nDzcJKj7QKgduFZhjIUDqLil1phrvbzXUJJmzs
- ofpz5dNz8fP/eOgSWxDB0G5kihKH56T1o/qrsMOPDI1SQ2zdzhIwe6jy3htRWbsClw4VE12WL
- obXw8aJrwGxZoQ4fHCb/iNrnCR3R3EGHlY7wixkD5ds4+8RAfLIfEPklqMmxcRrABuUOepEti
- MhN0OriF1WfCDV/9s2Fx1ZB0AVvdUhLqpWZWsuXrBhGvKMuGKv44Stbe69uJs4EhrlpVeAtve
- vzUXbpGeOVtNcDmOmLcl/o7mpFsgkbE3MQBO9qMnhPMpHoczqiIpmA/R3KU=
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 02.04.19 um 12:31 schrieb Greg Kroah-Hartman:
-> Now that the SPDX tag is in all vc04_services files, that identifies the
-> license in a specific and legally-defined manner.  So the extra GPL and
-> BSD text wording can be removed as it is no longer needed at all.
->
-> This is done on a quest to remove the 700+ different ways that files in
-> the kernel describe the license text.
->
-> No copyright headers or other non-license-description text was removed.
->
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Stefan Wahren <stefan.wahren@i2se.com>
-> Cc: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-> Cc: Aymen Qader <qader.aymen@gmail.com>
-> Cc: "Tobias Büttner" <tobias.buettner@fau.de>
-> Cc: Dominic Braun <inf.braun@fau.de>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>
-> Cc: Phil Elwell <phil@raspberrypi.org>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Commit-ID:  de7b77e5bb9451417ca57f1b6501da654587c048
+Gitweb:     https://git.kernel.org/tip/de7b77e5bb9451417ca57f1b6501da654587c048
+Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate: Wed, 27 Mar 2019 07:00:29 -0500
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Tue, 2 Apr 2019 12:36:56 +0200
 
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+cpu/hotplug: Create SMT sysfs interface for all arches
 
-Thanks
+Make the /sys/devices/system/cpu/smt/* files available on all arches, so
+user space has a consistent way to detect whether SMT is enabled.
 
-Stefan
+The 'control' file now shows 'notimplemented' for architectures which
+don't yet have CONFIG_HOTPLUG_SMT.
 
+[ tglx: Make notimplemented a real state ]
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Kosina <jikos@kernel.org>
+Link: https://lkml.kernel.org/r/469c2b98055f2c41e75748e06447d592a64080c9.1553635520.git.jpoimboe@redhat.com
+
+---
+ Documentation/ABI/testing/sysfs-devices-system-cpu | 10 ++--
+ include/linux/cpu.h                                |  3 +-
+ kernel/cpu.c                                       | 64 +++++++++++++---------
+ 3 files changed, 47 insertions(+), 30 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+index 9605dbd4b5b5..5eea46fefcb2 100644
+--- a/Documentation/ABI/testing/sysfs-devices-system-cpu
++++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+@@ -511,10 +511,12 @@ Description:	Control Symetric Multi Threading (SMT)
+ 		control: Read/write interface to control SMT. Possible
+ 			 values:
+ 
+-			 "on"		SMT is enabled
+-			 "off"		SMT is disabled
+-			 "forceoff"	SMT is force disabled. Cannot be changed.
+-			 "notsupported" SMT is not supported by the CPU
++			 "on"		  SMT is enabled
++			 "off"		  SMT is disabled
++			 "forceoff"	  SMT is force disabled. Cannot be changed.
++			 "notsupported"   SMT is not supported by the CPU
++			 "notimplemented" SMT runtime toggling is not
++					  implemented for the architecture
+ 
+ 			 If control status is "forceoff" or "notsupported" writes
+ 			 are rejected.
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 5041357d0297..ae99dde02320 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -175,6 +175,7 @@ enum cpuhp_smt_control {
+ 	CPU_SMT_DISABLED,
+ 	CPU_SMT_FORCE_DISABLED,
+ 	CPU_SMT_NOT_SUPPORTED,
++	CPU_SMT_NOT_IMPLEMENTED,
+ };
+ 
+ #if defined(CONFIG_SMP) && defined(CONFIG_HOTPLUG_SMT)
+@@ -182,7 +183,7 @@ extern enum cpuhp_smt_control cpu_smt_control;
+ extern void cpu_smt_disable(bool force);
+ extern void cpu_smt_check_topology(void);
+ #else
+-# define cpu_smt_control		(CPU_SMT_ENABLED)
++# define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
+ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
+ #endif
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 6754f3ecfd94..b8bf3f93e39b 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2033,19 +2033,6 @@ static const struct attribute_group cpuhp_cpu_root_attr_group = {
+ 
+ #ifdef CONFIG_HOTPLUG_SMT
+ 
+-static const char *smt_states[] = {
+-	[CPU_SMT_ENABLED]		= "on",
+-	[CPU_SMT_DISABLED]		= "off",
+-	[CPU_SMT_FORCE_DISABLED]	= "forceoff",
+-	[CPU_SMT_NOT_SUPPORTED]		= "notsupported",
+-};
+-
+-static ssize_t
+-show_smt_control(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	return snprintf(buf, PAGE_SIZE - 2, "%s\n", smt_states[cpu_smt_control]);
+-}
+-
+ static void cpuhp_offline_cpu_device(unsigned int cpu)
+ {
+ 	struct device *dev = get_cpu_device(cpu);
+@@ -2116,9 +2103,10 @@ static int cpuhp_smt_enable(void)
+ 	return ret;
+ }
+ 
++
+ static ssize_t
+-store_smt_control(struct device *dev, struct device_attribute *attr,
+-		  const char *buf, size_t count)
++__store_smt_control(struct device *dev, struct device_attribute *attr,
++		    const char *buf, size_t count)
+ {
+ 	int ctrlval, ret;
+ 
+@@ -2156,14 +2144,44 @@ store_smt_control(struct device *dev, struct device_attribute *attr,
+ 	unlock_device_hotplug();
+ 	return ret ? ret : count;
+ }
++
++#else /* !CONFIG_HOTPLUG_SMT */
++static ssize_t
++__store_smt_control(struct device *dev, struct device_attribute *attr,
++		    const char *buf, size_t count)
++{
++	return -ENODEV;
++}
++#endif /* CONFIG_HOTPLUG_SMT */
++
++static const char *smt_states[] = {
++	[CPU_SMT_ENABLED]		= "on",
++	[CPU_SMT_DISABLED]		= "off",
++	[CPU_SMT_FORCE_DISABLED]	= "forceoff",
++	[CPU_SMT_NOT_SUPPORTED]		= "notsupported",
++	[CPU_SMT_NOT_IMPLEMENTED]	= "notimplemented",
++};
++
++static ssize_t
++show_smt_control(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	const char *state = smt_states[cpu_smt_control];
++
++	return snprintf(buf, PAGE_SIZE - 2, "%s\n", state);
++}
++
++static ssize_t
++store_smt_control(struct device *dev, struct device_attribute *attr,
++		  const char *buf, size_t count)
++{
++	return __store_smt_control(dev, attr, buf, count);
++}
+ static DEVICE_ATTR(control, 0644, show_smt_control, store_smt_control);
+ 
+ static ssize_t
+ show_smt_active(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+-	bool active = topology_max_smt_threads() > 1;
+-
+-	return snprintf(buf, PAGE_SIZE - 2, "%d\n", active);
++	return snprintf(buf, PAGE_SIZE - 2, "%d\n", sched_smt_active());
+ }
+ static DEVICE_ATTR(active, 0444, show_smt_active, NULL);
+ 
+@@ -2179,21 +2197,17 @@ static const struct attribute_group cpuhp_smt_attr_group = {
+ 	NULL
+ };
+ 
+-static int __init cpu_smt_state_init(void)
++static int __init cpu_smt_sysfs_init(void)
+ {
+ 	return sysfs_create_group(&cpu_subsys.dev_root->kobj,
+ 				  &cpuhp_smt_attr_group);
+ }
+ 
+-#else
+-static inline int cpu_smt_state_init(void) { return 0; }
+-#endif
+-
+ static int __init cpuhp_sysfs_init(void)
+ {
+ 	int cpu, ret;
+ 
+-	ret = cpu_smt_state_init();
++	ret = cpu_smt_sysfs_init();
+ 	if (ret)
+ 		return ret;
+ 
+@@ -2214,7 +2228,7 @@ static int __init cpuhp_sysfs_init(void)
+ 	return 0;
+ }
+ device_initcall(cpuhp_sysfs_init);
+-#endif
++#endif /* CONFIG_SYSFS && CONFIG_HOTPLUG_CPU */
+ 
+ /*
+  * cpu_bit_bitmap[] is a special, "compressed" data structure that
