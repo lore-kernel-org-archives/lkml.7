@@ -2,188 +2,86 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,TRACKER_ID autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5B3C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89104C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7F22075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjsqeKDe"
+	by mail.kernel.org (Postfix) with ESMTP id 5124A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbfDBI7u (ORCPT
+        id S1729729AbfDBJAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 04:59:50 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42880 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbfDBI7u (ORCPT
+        Tue, 2 Apr 2019 05:00:12 -0400
+Received: from smtprelay0215.hostedemail.com ([216.40.44.215]:43937 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729162AbfDBJAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 04:59:50 -0400
-Received: by mail-io1-f66.google.com with SMTP id c4so10227577ioh.9;
-        Tue, 02 Apr 2019 01:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VS4HDk7UIBBwogBeMspGyfkAQhYGbx8dMY7OzLwxPWg=;
-        b=WjsqeKDelFGLdRjeABF+Qrtz9rYLKORiwGBMMtLymx/eb1EO0cURukXWVdGKsngAeY
-         XNCXm2Wml/YpeHJPu57m5nsNAskdVVGcbfTkJQw7i4yMwQ/G1cLk84p4NJo5LVFlOJsh
-         5Aj7T2WjvviXjApqlK4ogwaslS3jzEMBc5krzHvGEZaR1/M0s+OrzzfCRO+ZPa85cDde
-         N1d4HJeUdQBZsMdb2Y2kE1JpF4rT9EQlcQJEmcKeTwm9USSQinH/KZ0Kd5IO4YkFSELK
-         xQA26QzgeRoSeL08L0IvWWLXjp1p6F2pvE4QJwtcvtnYsIx8k0eI8RZWVmB9GipUJzo9
-         xawg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VS4HDk7UIBBwogBeMspGyfkAQhYGbx8dMY7OzLwxPWg=;
-        b=hqGipsRmlBgoUkWJUaX7xBVYI4JjQ2Iu7RrCbZC+1cwiKf0OjhRksXwf4ibos/shhY
-         6Um7CQAuE9ILgX2nbty6c5+4/PuLtgCeFtZ88bpPzaZlgh6fXaoXcg0kDZiJLR8QDPUI
-         5HKdnZATGIGz1Ue7MibM2zAcRmmGeOI/mDiYDR/4nVYqjaycq1i9d5d0GVJRJGOmIRy2
-         5QZ59tVA3yA7v5oc3CPcrDs920G8oRB5sCRTwwT88pVm3YyUmk3YsODQgOOih5M7VNng
-         xvD4Rx/Da6RqEhjFGxWvLOSa0YYFZTV2VqaKZbJKYPJ3d3oIKW6DgdJKABlWAOOon2j3
-         VmVg==
-X-Gm-Message-State: APjAAAXM4vyjjcp7zYgfKL3NKKwcaomfNk77v9QcZj49mpj3wSZWtD2i
-        MH21haY55zTfUOPX14rgSUdFxtVYL6qAcHKSiY0=
-X-Google-Smtp-Source: APXvYqwRU954oR0D173H/sWqIiqsiwDnOsR1T58QCuV4YCkSPY2wB6/46DmgCwvYwLb8QFXfTXioa67z+J3hBjwfebQ=
-X-Received: by 2002:a6b:660e:: with SMTP id a14mr45429200ioc.136.1554195588912;
- Tue, 02 Apr 2019 01:59:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190402105006.48f93e53@canb.auug.org.au> <CAKGbVbvj9cZnJuey_ra7U+xm-JhoB17bpTgcXKiKaHWbjB9Sxw@mail.gmail.com>
- <20190402075744.GC2665@phenom.ffwll.local>
-In-Reply-To: <20190402075744.GC2665@phenom.ffwll.local>
-From:   Qiang Yu <yuq825@gmail.com>
-Date:   Tue, 2 Apr 2019 16:59:37 +0800
-Message-ID: <CAKGbVbsn9BpbMZCshxzj=d38wHpBhBo7wrZDQnC01hB30B9-mA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-To:     Qiang Yu <yuq825@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Anholt <eric@anholt.net>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Apr 2019 05:00:12 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 1F86D8368EF5;
+        Tue,  2 Apr 2019 09:00:10 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: road75_58642180c7c51
+X-Filterd-Recvd-Size: 2107
+Received: from XPS-9350.home (unknown [47.151.153.53])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  2 Apr 2019 09:00:07 +0000 (UTC)
+Message-ID: <a3d975a7a8e378c5a831d7ae6a98da1af9557c05.camel@perches.com>
+Subject: Re: [PATCH 4.4 034/131] lib/int_sqrt: optimize small argument
+From:   Joe Perches <joe@perches.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Anshul Garg <aksgarg1989@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        David Miller <davem@davemloft.net>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Davidson <md@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 02 Apr 2019 02:00:06 -0700
+In-Reply-To: <20190402065958.GA21380@kroah.com>
+References: <20190401170051.645954551@linuxfoundation.org>
+         <20190401170055.035782875@linuxfoundation.org>
+         <d153fa8079c3e49e1ad35a54c400298ba51184e3.camel@perches.com>
+         <20190402065958.GA21380@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 3:57 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Tue, Apr 02, 2019 at 01:55:03PM +0800, Qiang Yu wrote:
-> > Thanks, patch is:
-> > Reviewed-by: Qiang Yu <yuq825@gmail.com>
->
-> Good time to get started with committing patches? In general it's kinda
-> confusing if the maintainer r-bs a patch, but doesn't say whether/when/how
-> it gets merged. Big chance the patch will get lost in limbo and fall
-> through cracks.
+On Tue, 2019-04-02 at 08:59 +0200, Greg Kroah-Hartman wrote:
+> On Mon, Apr 01, 2019 at 10:42:52AM -0700, Joe Perches wrote:
+> > On Mon, 2019-04-01 at 19:01 +0200, Greg Kroah-Hartman wrote:
+> > > 4.4-stable review patch.  If anyone has any objections, please let me know.
+> > 
+> > If this is to be ported just for an optimization
+> > (which I think is dubious as it's not a bug fix),
+> 
+> Yes, it was requested to be backported because of that.
+> 
+> > why not port the __fls optimization too?
+> > 
+> > __fls has a bigger effect on performance.
+> 
+> What commit are you referring to?
 
-Thanks for the remind, this patch should only be applied to drm-misc-next
-branch when 5.1-rcx branch gets merged to drm-misc-next for the new
-xa_alloc API. So I expect the guy who do the 5.1-rcx merge should apply
-this patch. Who will do the merge?
+f8ae107eef209bff29a5816bc1aad40d5cd69a80
 
-Regards,
-Qiang
+> thanks,
+> 
+> greg k-h
 
->
-> >
-> > Regards,
-> > Qiang
-> >
-> > On Tue, Apr 2, 2019 at 7:50 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > After merging the drm-misc tree, today's linux-next build (x86_64
-> > > allmodconfig) failed like this:
-> > >
-> > > In file included from include/linux/kernel.h:7,
-> > >                  from include/asm-generic/bug.h:18,
-> > >                  from arch/x86/include/asm/bug.h:83,
-> > >                  from include/linux/bug.h:5,
-> > >                  from include/linux/mmdebug.h:5,
-> > >                  from include/linux/gfp.h:5,
-> > >                  from include/linux/slab.h:15,
-> > >                  from drivers/gpu/drm/lima/lima_ctx.c:4:
-> > > drivers/gpu/drm/lima/lima_ctx.c: In function 'lima_ctx_create':
-> > > include/linux/limits.h:13:18: warning: passing argument 3 of 'xa_alloc' makes pointer from integer without a cast [-Wint-conversion]
-> > >  #define UINT_MAX (~0U)
-> > >                   ^~~~~
-> > > drivers/gpu/drm/lima/lima_ctx.c:26:36: note: in expansion of macro 'UINT_MAX'
-> > >   err = xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
-> > >                                     ^~~~~~~~
-> > > In file included from include/linux/radix-tree.h:31,
-> > >                  from include/linux/idr.h:15,
-> > >                  from include/drm/drm_device.h:7,
-> > >                  from drivers/gpu/drm/lima/lima_device.h:7,
-> > >                  from drivers/gpu/drm/lima/lima_ctx.c:6:
-> > > include/linux/xarray.h:817:9: note: expected 'void *' but argument is of type 'unsigned int'
-> > >    void *entry, struct xa_limit limit, gfp_t gfp)
-> > >    ~~~~~~^~~~~
-> > > drivers/gpu/drm/lima/lima_ctx.c:26:46: error: incompatible type for argument 4 of 'xa_alloc'
-> > >   err = xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
-> > >                                               ^~~
-> > > In file included from include/linux/radix-tree.h:31,
-> > >                  from include/linux/idr.h:15,
-> > >                  from include/drm/drm_device.h:7,
-> > >                  from drivers/gpu/drm/lima/lima_device.h:7,
-> > >                  from drivers/gpu/drm/lima/lima_ctx.c:6:
-> > > include/linux/xarray.h:817:32: note: expected 'struct xa_limit' but argument is of type 'struct lima_ctx *'
-> > >    void *entry, struct xa_limit limit, gfp_t gfp)
-> > >                 ~~~~~~~~~~~~~~~~^~~~~
-> > >
-> > > Caused by commit
-> > >
-> > >   a1d2a6339961 ("drm/lima: driver for ARM Mali4xx GPUs")
-> > >
-> > > interacting with commit
-> > >
-> > >   a3e4d3f97ec8 ("XArray: Redesign xa_alloc API")
-> > >
-> > > from Linus' tree (v5.1-rc1).
-> > >
-> > > I have applied the following patch for today.  It could be applied as
-> > > part of a merge of v5.1-rc1 into drm-misc.
-> > >
-> > > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Date: Tue, 2 Apr 2019 10:45:32 +1100
-> > > Subject: [PATCH] drm/lima: update for xa_alloc API change
-> > >
-> > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > ---
-> > >  drivers/gpu/drm/lima/lima_ctx.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/lima/lima_ctx.c b/drivers/gpu/drm/lima/lima_ctx.c
-> > > index c8d12f7c6894..bafa00d74cc5 100644
-> > > --- a/drivers/gpu/drm/lima/lima_ctx.c
-> > > +++ b/drivers/gpu/drm/lima/lima_ctx.c
-> > > @@ -23,7 +23,7 @@ int lima_ctx_create(struct lima_device *dev, struct lima_ctx_mgr *mgr, u32 *id)
-> > >                         goto err_out0;
-> > >         }
-> > >
-> > > -       err = xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
-> > > +       err = xa_alloc(&mgr->handles, id, ctx, XA_LIMIT(*id, UINT_MAX), GFP_KERNEL);
-> > >         if (err < 0)
-> > >                 goto err_out0;
-> > >
-> > > --
-> > > 2.20.1
-> > >
-> > > --
-> > > Cheers,
-> > > Stephen Rothwell
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
