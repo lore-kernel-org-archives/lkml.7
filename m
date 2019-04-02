@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93868C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F1EC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B8E2148E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D1720883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554201156;
-	bh=GSkMsgGU710I4XQ+DpwfsgjvR5ZyVDUuIC6WRIyK9kQ=;
+	s=default; t=1554201160;
+	bh=gwpeR4uRptMkZpXpV8aGF7Vp9dLklxkS1rrZlnkJ3r4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DEpsCrSdFSG6t5xnhg95QCMOaMfn+m60qjEYzQ7BOYtBZtcqSwy74ojRqKOymIzke
-	 JFCvsIEBFeri8FmTF5jV1Si3nFQgWZXJW/KrNcwCXNl0KISiftYCkK0H3PnhFI8wJu
-	 im9nwsJQ+HkE3faFaJl36xWURPlXthHkL7Lx5eC4=
+	b=i5UH9zG0jPwrB58qSdZTLzjUfbHaC0EqjKuPrmkhXJx73C3yYl0UwCouKRjlfveG2
+	 wXbp1g5lJG4D3uimTv4FXP4uvy+8ZLTMDU7XoNPtJx0uN2HKM3YlaIRfmlbqrBjg/Z
+	 HZ4nB7E2TYkPoFM1YjTV8cyzZVuhK2HQrjKfpfC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfDBKce (ORCPT
+        id S1730408AbfDBKci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:32:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35792 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 06:32:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbfDBKcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:32:32 -0400
+        id S1730382AbfDBKcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:32:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1BE0208E4;
-        Tue,  2 Apr 2019 10:32:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4082147A;
+        Tue,  2 Apr 2019 10:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554201151;
-        bh=GSkMsgGU710I4XQ+DpwfsgjvR5ZyVDUuIC6WRIyK9kQ=;
+        s=default; t=1554201153;
+        bh=gwpeR4uRptMkZpXpV8aGF7Vp9dLklxkS1rrZlnkJ3r4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D7VMbSqatb+AiBCnFo3S30xGH8izlnMcfrjP1MnNN7AU1eCnZnZHcao0rGvuqLYHP
-         DPQntZi+NGof1iOHboZx4GBxI1awXbB98YZLKEVvCSz3KfETiE+9i47eEKYn0+Tzq2
-         q8X41DpreeJKwLAZmx2+2Tb+H8XfAx+pJhibMF4w=
+        b=r1C0ZBIsol8q9vGY57e9CiotGJ/qqvtGvHLGlnZ0RdZZngVg2wiINqUdw0sr+z6F0
+         WZGkY5/asCczuyjPK5cZq+oyTOCF5yAYwyvJdaPUWSoxiYYX/ayVpXkHAoAYVDLOs8
+         l1g1MyzS6uVyzWa1vlBi3hvJrmFgtGDA6zRO93Y0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     devel@driverdev.osuosl.org
 Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         linux-media@vger.kernel.org
-Subject: [PATCH 14/16] staging: media: soc_camera: add proper SPDX identifiers on files that did not have them.
-Date:   Tue,  2 Apr 2019 12:32:01 +0200
-Message-Id: <20190402103203.14959-15-gregkh@linuxfoundation.org>
+Subject: [PATCH 15/16] staging: media: imx: add proper SPDX identifiers on files that did not have them.
+Date:   Tue,  2 Apr 2019 12:32:02 +0200
+Message-Id: <20190402103203.14959-16-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190402103203.14959-1-gregkh@linuxfoundation.org>
 References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
@@ -64,173 +64,300 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were a few files for the soc_camera drivers that did not have SPDX
+There were a few files for the imx media drivers that did not have SPDX
 identifiers on them, so fix that up.  At the same time, remove the "free
 form" text that specified the license of the file, as that is impossible
 for any tool to properly parse.
 
+Cc: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Sascha Hauer <s.hauer@pengutronix.de>
 Cc: Fabio Estevam <festevam@gmail.com>
 Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Cc: linux-media@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/media/soc_camera/imx074.c       | 6 +-----
- drivers/staging/media/soc_camera/mt9t031.c      | 6 +-----
- drivers/staging/media/soc_camera/soc_camera.c   | 6 +-----
- drivers/staging/media/soc_camera/soc_mediabus.c | 6 +-----
- drivers/staging/media/soc_camera/soc_mt9v022.c  | 6 +-----
- drivers/staging/media/soc_camera/soc_ov5642.c   | 6 +-----
- drivers/staging/media/soc_camera/soc_ov9740.c   | 6 +-----
- 7 files changed, 7 insertions(+), 35 deletions(-)
+ drivers/staging/media/imx/imx-ic-common.c         | 6 +-----
+ drivers/staging/media/imx/imx-ic-prp.c            | 6 +-----
+ drivers/staging/media/imx/imx-ic-prpencvf.c       | 6 +-----
+ drivers/staging/media/imx/imx-ic.h                | 6 +-----
+ drivers/staging/media/imx/imx-media-capture.c     | 6 +-----
+ drivers/staging/media/imx/imx-media-csi.c         | 6 +-----
+ drivers/staging/media/imx/imx-media-dev.c         | 6 +-----
+ drivers/staging/media/imx/imx-media-fim.c         | 6 +-----
+ drivers/staging/media/imx/imx-media-internal-sd.c | 6 +-----
+ drivers/staging/media/imx/imx-media-of.c          | 6 +-----
+ drivers/staging/media/imx/imx-media-utils.c       | 6 +-----
+ drivers/staging/media/imx/imx-media-vdic.c        | 6 +-----
+ drivers/staging/media/imx/imx-media.h             | 6 +-----
+ drivers/staging/media/imx/imx6-mipi-csi2.c        | 6 +-----
+ 14 files changed, 14 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/staging/media/soc_camera/imx074.c b/drivers/staging/media/soc_camera/imx074.c
-index 1676c166dc83..d907aa62f898 100644
---- a/drivers/staging/media/soc_camera/imx074.c
-+++ b/drivers/staging/media/soc_camera/imx074.c
-@@ -1,15 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/staging/media/imx/imx-ic-common.c b/drivers/staging/media/imx/imx-ic-common.c
+index 765919487a73..7e2455097315 100644
+--- a/drivers/staging/media/imx/imx-ic-common.c
++++ b/drivers/staging/media/imx/imx-ic-common.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
  /*
-  * Driver for IMX074 CMOS Image Sensor from Sony
+  * V4L2 Image Converter Subdev for Freescale i.MX5/6 SOC
   *
-  * Copyright (C) 2010, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-  *
-  * Partially inspired by the IMX074 driver from the Android / MSM tree
+  * Copyright (c) 2014-2016 Mentor Graphics Inc.
 - *
 - * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
   */
--
- #include <linux/delay.h>
- #include <linux/i2c.h>
- #include <linux/v4l2-mediabus.h>
-diff --git a/drivers/staging/media/soc_camera/mt9t031.c b/drivers/staging/media/soc_camera/mt9t031.c
-index 4ff179302b4f..615ae9df2c57 100644
---- a/drivers/staging/media/soc_camera/mt9t031.c
-+++ b/drivers/staging/media/soc_camera/mt9t031.c
-@@ -1,13 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Driver for MT9T031 CMOS Image Sensor from Micron
-  *
-  * Copyright (C) 2008, Guennadi Liakhovetski, DENX Software Engineering <lg@denx.de>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
--
- #include <linux/device.h>
- #include <linux/i2c.h>
- #include <linux/log2.h>
-diff --git a/drivers/staging/media/soc_camera/soc_camera.c b/drivers/staging/media/soc_camera/soc_camera.c
-index 1ab86a7499b9..a6232dcd59bc 100644
---- a/drivers/staging/media/soc_camera/soc_camera.c
-+++ b/drivers/staging/media/soc_camera/soc_camera.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * camera image capture (abstract) bus driver
-  *
-@@ -10,12 +11,7 @@
-  * SoCs. Later it should also be used for i.MX31 SoCs from Freescale.
-  * It can handle multiple cameras and / or multiple buses, which can
-  * be used, e.g., in stereo-vision applications.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
--
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
-diff --git a/drivers/staging/media/soc_camera/soc_mediabus.c b/drivers/staging/media/soc_camera/soc_mediabus.c
-index be74008ec0ca..2aa646c89c1f 100644
---- a/drivers/staging/media/soc_camera/soc_mediabus.c
-+++ b/drivers/staging/media/soc_camera/soc_mediabus.c
-@@ -1,13 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * soc-camera media bus helper routines
-  *
-  * Copyright (C) 2009, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
--
- #include <linux/kernel.h>
  #include <linux/module.h>
- 
-diff --git a/drivers/staging/media/soc_camera/soc_mt9v022.c b/drivers/staging/media/soc_camera/soc_mt9v022.c
-index 6d922b17ea94..e7e0d3d29499 100644
---- a/drivers/staging/media/soc_camera/soc_mt9v022.c
-+++ b/drivers/staging/media/soc_camera/soc_mt9v022.c
-@@ -1,13 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Driver for MT9V022 CMOS Image Sensor from Micron
-  *
-  * Copyright (C) 2008, Guennadi Liakhovetski <kernel@pengutronix.de>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
--
- #include <linux/videodev2.h>
- #include <linux/slab.h>
- #include <linux/i2c.h>
-diff --git a/drivers/staging/media/soc_camera/soc_ov5642.c b/drivers/staging/media/soc_camera/soc_ov5642.c
-index 0931898c79dd..94696d7baf83 100644
---- a/drivers/staging/media/soc_camera/soc_ov5642.c
-+++ b/drivers/staging/media/soc_camera/soc_ov5642.c
+ #include <linux/platform_device.h>
+diff --git a/drivers/staging/media/imx/imx-ic-prp.c b/drivers/staging/media/imx/imx-ic-prp.c
+index 3d43cdcb4bb9..10ffe00f1a54 100644
+--- a/drivers/staging/media/imx/imx-ic-prp.c
++++ b/drivers/staging/media/imx/imx-ic-prp.c
 @@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0+
  /*
-  * Driver for OV5642 CMOS Image Sensor from Omnivision
+  * V4L2 Capture IC Preprocess Subdev for Freescale i.MX5/6 SOC
   *
-@@ -8,12 +9,7 @@
+@@ -6,11 +7,6 @@
+  * for resizing, colorspace conversion, and rotation.
   *
-  * Based on Omnivision OV7670 Camera Driver
-  * Copyright (C) 2006-7 Jonathan Corbet <corbet@lwn.net>
+  * Copyright (c) 2012-2017 Mentor Graphics Inc.
 - *
 - * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
   */
--
- #include <linux/bitops.h>
  #include <linux/delay.h>
- #include <linux/i2c.h>
-diff --git a/drivers/staging/media/soc_camera/soc_ov9740.c b/drivers/staging/media/soc_camera/soc_ov9740.c
-index a07d3145d1b4..7c765595d85f 100644
---- a/drivers/staging/media/soc_camera/soc_ov9740.c
-+++ b/drivers/staging/media/soc_camera/soc_ov9740.c
-@@ -1,15 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
+index 5c8e6ad8c025..1ba4a5154fb5 100644
+--- a/drivers/staging/media/imx/imx-ic-prpencvf.c
++++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0+
  /*
-  * OmniVision OV9740 Camera Driver
+  * V4L2 Capture IC Preprocess Subdev for Freescale i.MX5/6 SOC
   *
-  * Copyright (C) 2011 NVIDIA Corporation
+@@ -6,11 +7,6 @@
+  * for resizing, colorspace conversion, and rotation.
   *
-  * Based on ov9640 camera driver.
+  * Copyright (c) 2012-2017 Mentor Graphics Inc.
 - *
 - * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
   */
--
- #include <linux/init.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/media/imx/imx-ic.h b/drivers/staging/media/imx/imx-ic.h
+index 6b2267bda8ab..0dbcf2a7ab5f 100644
+--- a/drivers/staging/media/imx/imx-ic.h
++++ b/drivers/staging/media/imx/imx-ic.h
+@@ -1,12 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * V4L2 Image Converter Subdev for Freescale i.MX5/6 SOC
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #ifndef _IMX_IC_H
+ #define _IMX_IC_H
+diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
+index facce18975d8..b7ce9d439279 100644
+--- a/drivers/staging/media/imx/imx-media-capture.c
++++ b/drivers/staging/media/imx/imx-media-capture.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Video Capture Subdev for Freescale i.MX5/6 SOC
+  *
+  * Copyright (c) 2012-2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/delay.h>
+ #include <linux/fs.h>
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 3b7517348666..edc0e9a2a90d 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -1,13 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * V4L2 Capture CSI Subdev for Freescale i.MX5/6 SOC
+  *
+  * Copyright (c) 2014-2017 Mentor Graphics Inc.
+  * Copyright (C) 2017 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/delay.h>
+ #include <linux/gcd.h>
+diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+index 28a3d23aad5b..bd4ddea488f1 100644
+--- a/drivers/staging/media/imx/imx-media-dev.c
++++ b/drivers/staging/media/imx/imx-media-dev.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * V4L2 Media Controller Driver for Freescale i.MX5/6 SOC
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/delay.h>
+ #include <linux/fs.h>
+diff --git a/drivers/staging/media/imx/imx-media-fim.c b/drivers/staging/media/imx/imx-media-fim.c
+index 8cf773eef9da..2ab64bc30f5c 100644
+--- a/drivers/staging/media/imx/imx-media-fim.c
++++ b/drivers/staging/media/imx/imx-media-fim.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Frame Interval Monitor.
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/delay.h>
+ #include <linux/irq.h>
+diff --git a/drivers/staging/media/imx/imx-media-internal-sd.c b/drivers/staging/media/imx/imx-media-internal-sd.c
+index 5e10d95e5529..c547280a309e 100644
+--- a/drivers/staging/media/imx/imx-media-internal-sd.c
++++ b/drivers/staging/media/imx/imx-media-internal-sd.c
+@@ -1,14 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Media driver for Freescale i.MX5/6 SOC
+  *
+  * Adds the internal subdevices and the media links between them.
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/platform_device.h>
+ #include "imx-media.h"
+diff --git a/drivers/staging/media/imx/imx-media-of.c b/drivers/staging/media/imx/imx-media-of.c
+index 03446335ac03..09580d83c685 100644
+--- a/drivers/staging/media/imx/imx-media-of.c
++++ b/drivers/staging/media/imx/imx-media-of.c
+@@ -1,14 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * Media driver for Freescale i.MX5/6 SOC
+  *
+  * Open Firmware parsing.
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/of_platform.h>
+ #include <media/v4l2-ctrls.h>
+diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+index 1c63a2765a81..b41842dba5ec 100644
+--- a/drivers/staging/media/imx/imx-media-utils.c
++++ b/drivers/staging/media/imx/imx-media-utils.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * V4L2 Media Controller Driver for Freescale i.MX5/6 SOC
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
  #include <linux/module.h>
- #include <linux/i2c.h>
+ #include "imx-media.h"
+diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
+index 2808662e2597..3f4b5e9080d4 100644
+--- a/drivers/staging/media/imx/imx-media-vdic.c
++++ b/drivers/staging/media/imx/imx-media-vdic.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * V4L2 Deinterlacer Subdev for Freescale i.MX5/6 SOC
+  *
+  * Copyright (c) 2017 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
+index ae964c8d5be1..1f7501d527fb 100644
+--- a/drivers/staging/media/imx/imx-media.h
++++ b/drivers/staging/media/imx/imx-media.h
+@@ -1,12 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * V4L2 Media Controller Driver for Freescale i.MX5/6 SOC
+  *
+  * Copyright (c) 2016 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #ifndef _IMX_MEDIA_H
+ #define _IMX_MEDIA_H
+diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
+index 2c5e3dd58cea..f29e28df36ed 100644
+--- a/drivers/staging/media/imx/imx6-mipi-csi2.c
++++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * MIPI CSI-2 Receiver Subdev for Freescale i.MX6 SOC.
+  *
+  * Copyright (c) 2012-2017 Mentor Graphics Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+  */
+ #include <linux/clk.h>
+ #include <linux/interrupt.h>
 -- 
 2.21.0
 
