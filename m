@@ -2,131 +2,90 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15FBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C6C206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:08:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OAUZ2sHS"
+	by mail.kernel.org (Postfix) with ESMTP id 2B246206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfDBHIP (ORCPT
+        id S1729179AbfDBHIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 03:08:15 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35092 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDBHIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 03:08:15 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t21so5888837pfe.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 00:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qXdOng57Us4aguv2Yx9/59Kkgyz35IfaRWj2lo9R3fY=;
-        b=OAUZ2sHSqOlXZcLPmLB5Iz9GTxV0MCB6PDgyQDA6N/05wjgw69xmenfteKNsFQ26L2
-         xFIPv4gZJ1bdXiHO8dGGmRFkE57WwzvzJm+HRF5vYsxy3dGJyRlhNX0gJP5XquCs4/Ea
-         ULsUvkNd8skOiwmWXRGjwPYvnvBW7ZrXp5B39Bl8L6pLaUmvsv5RJXOJN00tddejs/lN
-         nWoM5nRbtNSEp6GCAGUV6gY90OY34EdfI8A4+ShjTKujjT1qyP0+I46xlv8L+kZ+hSsp
-         hGrOsNfIbk8nup78V4ZuJorS3WgSn3XnM+r/ImBBray5nlKeQM7GDmTmTOnkX/063mIX
-         pH7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qXdOng57Us4aguv2Yx9/59Kkgyz35IfaRWj2lo9R3fY=;
-        b=T1CGaBSbfkYcmslUeCpqCMeB11hud29E0ORa2ZbFTq0bKdsAuMNHOMRHLm212DfnXL
-         a7ikMsxmg18YFoh0/v401UIlZs/FsIZwAj8iLmFdGIXKtfjwxCd5J72ErRwVUSihNEmZ
-         ckOnZnkVX8V+f0a8pw9x5rineadclzx3ApSePgunPsiXBnVBfP9ZRGmY2mQxE506R2Ta
-         Oz8D7O+aNwnWMEATs7/y3CO0y8ERkU11SfMwFIaQ9eQflb/zoVUWwfaPrlwddMIe/CKn
-         Tmf/G0OfOJD9ha986RUo1szLmfaFgo0UVq1r7Ttv89hqLA6hqPTg9IqB1CyFxzODG4U9
-         GEBQ==
-X-Gm-Message-State: APjAAAVicRFuEEErYH2cq8OuWXUYPNSY9r0sgv6myXBIMWUUKTuhWjwo
-        fTWmGHjDsTBv7E/0wStglq56pg==
-X-Google-Smtp-Source: APXvYqwtRYh0OVVPOtc0VmTgvJGHCrqKJLSticiLu3G1yyLuK+xLr7OvlyYhMbh+T6IZWZgSHNiBKQ==
-X-Received: by 2002:a62:1ac3:: with SMTP id a186mr66172780pfa.48.1554188894723;
-        Tue, 02 Apr 2019 00:08:14 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id l184sm21786938pfc.98.2019.04.02.00.08.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 00:08:13 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 08:08:09 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     Kangjie Lu <kjlu@umn.edu>, pakki001@umn.edu,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: fix a potential NULL pointer dereference
-Message-ID: <20190402070809.GE4187@dell>
-References: <20190309080456.8579-1-kjlu@umn.edu>
- <C71F9E7E-5EF8-4AE5-92D4-4596D25B1D9B@umn.edu>
- <20190325075608.GY4731@dell>
- <be967424-090f-d388-4530-47a9a817db1f@codeaurora.org>
+        Tue, 2 Apr 2019 03:08:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43190 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfDBHIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 03:08:16 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 10F79309267E;
+        Tue,  2 Apr 2019 07:08:15 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-38.ams2.redhat.com [10.36.116.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B02211001DDA;
+        Tue,  2 Apr 2019 07:08:06 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Carlos O'Donell <codonell@redhat.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, carlos <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup and thread creation (v7)
+References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
+        <20190212194253.1951-2-mathieu.desnoyers@efficios.com>
+        <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
+        <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
+        <87lg0tosfz.fsf@concordia.ellerman.id.au>
+Date:   Tue, 02 Apr 2019 09:08:04 +0200
+In-Reply-To: <87lg0tosfz.fsf@concordia.ellerman.id.au> (Michael Ellerman's
+        message of "Tue, 02 Apr 2019 17:02:40 +1100")
+Message-ID: <87pnq4zxyj.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be967424-090f-d388-4530-47a9a817db1f@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 02 Apr 2019 07:08:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019, Mukesh Ojha wrote:
+* Michael Ellerman:
 
-> On 3/25/2019 1:26 PM, Lee Jones wrote:
-> > On Fri, 22 Mar 2019, Kangjie Lu wrote:
-> > 
-> > > Hi Lee Jones,
-> > > 
-> > > Can you review this patch?
-> > Don't poke.
-> > 
-> > I have a very long list of reviews on my TODO.  Poking only surfaces
-> > your patch to the top of my Inbox, and since I review patches in
-> > reverse chronological order, it puts the review to the back of the
-> > queue.
-> > 
-> > > > On Mar 9, 2019, at 2:04 AM, Kangjie Lu <kjlu@umn.edu> wrote:
-> > > > 
-> > > > In case devm_kzalloc fails, the fix does NULL check and returns
-> > > > -ENOMEM upon failure so as to avoid NULL pointer dereference.
-> > > > 
-> > > > Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-> > > > ---
-> > > > drivers/mfd/sm501.c | 3 +++
-> > > > 1 file changed, 3 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
-> > > > index a530972c5a7e..e0173bf4b0dc 100644
-> > > > --- a/drivers/mfd/sm501.c
-> > > > +++ b/drivers/mfd/sm501.c
-> > > > @@ -1145,6 +1145,9 @@ static int sm501_register_gpio_i2c_instance(struct sm501_devdata *sm,
-> > > > 	lookup = devm_kzalloc(&pdev->dev,
-> > > > 			      sizeof(*lookup) + 3 * sizeof(struct gpiod_lookup),
-> > > > 			      GFP_KERNEL);
-> > > > +	if (!lookup)
-> > > > +		return -ENOMEM;
-> 
-> Seems you are using quite old codebase.
-> This patch is already there ..
-> 
-> https://elixir.bootlin.com/linux/v5.1-rc2/source/drivers/mfd/sm501.c#L1147
-> 
-> commit ae7b8eda27b3( mfd: sm501: Fix potential NULL pointer dereference )
+> I'm a bit vague on what we're trying to do here.
+>
+> But it seems like you want some sort of "eye catcher" prior to the branch?
+>
+> That value is a valid instruction on current CPUs (rlwimi.
+> r5,r24,6,1,9), and even if it wasn't it could become one in future.
+>
+> If you change it to 0x8053530 that is both a valid instruction and is a
+> nop (conditional trap immediate but with no conditions set).
 
-Confirmed.  Dropping this one.
+I think we need something that is very unlikely to appear in the
+instruction stream.  It's just a marker.  The instruction will never be
+executed, and it does not have to be a trap, either (I believe that a
+standard trap instruction would be a bad choice).
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Florian
