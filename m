@@ -2,114 +2,104 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C61C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31DBC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B00920882
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AA320882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbfDBMR7 (ORCPT
+        id S1730833AbfDBMS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:17:59 -0400
-Received: from mailproxy03.manitu.net ([217.11.48.67]:43976 "EHLO
-        mailproxy03.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfDBMR6 (ORCPT
+        Tue, 2 Apr 2019 08:18:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53273 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfDBMS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:17:58 -0400
-Received: from [192.168.178.20] (aftr-185-17-207-219.dynamic.mnet-online.de [185.17.207.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wg@grandegger.com)
-        by mailproxy03.manitu.net (Postfix) with ESMTPSA id C91EDD40028;
-        Tue,  2 Apr 2019 14:23:54 +0200 (CEST)
-Subject: Re: [PATCH v11 1/5] can: m_can: Create a m_can platform framework
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        Tue, 2 Apr 2019 08:18:28 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q16so3133238wmj.3;
+        Tue, 02 Apr 2019 05:18:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m0Yhf7dLwYQMZuyIsm9m43WayyXUoQ3uc+OIUwK7dbk=;
+        b=RdJqhpL+iitoRk4N8hVlc/TvISqG3GFegUUM+atjhkqHmi+FgnE5wcCoLP64+to9Rk
+         ziZLyJE2KA38huIXxHGxiQBGKGE9CHyKLlhiTF9F9gu9rqM7O+U7L7r76ybcy6939DMt
+         FwEQeBagKMWZmFA77qeVw2kcHnzSh1cXHXKt/sX700UPHcr9XS1H8W9OBTGBLVHYEYfg
+         rR0tsQs6VHCf+9sSfZf8R8+Sfuq0HM7qaBa6+8ak6WZsY13VD0/0sLzQRnwDzPl5Kjyb
+         DH+ufmiNuOhpxEp4Q0kwrgejOe2ijP+cTk77sKFWXo5THZPbFSx2sQijsY2f5Zr620rj
+         0/hw==
+X-Gm-Message-State: APjAAAV/95OQcyPZ4bR7G47FKzlQ0ITViw+qwB65Tkv2Br/gu2IGIGCZ
+        gleTzepjmiVZGyVwMJekpExrP7CFGPo=
+X-Google-Smtp-Source: APXvYqyqFujw4wovWdVjUtN+36ti0++nf85+9MErPq7N1QB3eYmj7XzfpK/2lTgmdD4sBFSVBlhPvA==
+X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr3425970wmk.108.1554207506462;
+        Tue, 02 Apr 2019 05:18:26 -0700 (PDT)
+Received: from localhost ([90.85.130.193])
+        by smtp.gmail.com with ESMTPSA id 61sm46715482wre.50.2019.04.02.05.18.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 05:18:25 -0700 (PDT)
+From:   Christina Quast <cquast@hanoverdisplays.com>
+Cc:     trivial@kernel.org, Christina Quast <cquast@hanoverdisplays.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        alsa-devel@alsa-project.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190319172651.10012-1-dmurphy@ti.com>
- <3ce79402-00f1-d7e6-955e-1ad7eb00d0de@ti.com>
-From:   Wolfgang Grandegger <wg@grandegger.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
- mQINBFtEb5MBEAC5aRjs5jLwjbOaEE6rczZSqck7B3iGK8ldrV8HGSjxb1MAf4VbvDWrzXfA
- phEgX3e54AnYhnKcf6BA3J9TlSDdUAW7r/ijOFl+TehMz7holgjhlDK41acJ/klwXJotIqby
- bWqFgFw6o7b8hfbVzPi8Pz/+WOIKaDOb1Keb989mn253RF1yFakgvoQfCyAeVcnO5kcByW17
- zbTEHsSduYi0Zir26Oedb2Vtas4SovrEXVh4e2dRdbEbHlI8po3Ih117CuGIPAe2RSfZKY88
- 8c9m+WsJKtrIDIMY+f5kcHG5mib++u1oTg7wjfFgTr925g2WjzT63YRibW8Vazot9yXquMo2
- HYQStmnN9MuAkL/jslnxhGKNwTzpXv6FD2g/9hcLfSjaaCwGzj2j2ucJglJnO1n+ibVB14l2
- JLVe+IKJaE1gvm2v9HPsE+o1P4O8I9iCiAbQ6BGUszHADOg7r8CeTQ+AOCypfEZ5l1Hwa3gw
- V+TtqyCU70U9LA0AKaDZ02vf0hFRWeXV/ErFq878GOXbbVMZu8G5aO0EcCBC75/KQnyi0WEl
- KVIcyTyxKel/Ext7vUFIkiA16JNWRpS85YDfe9CoEZcZK+nUU268j6Bp5a7MYaF/dZaLT+Du
- hLA82ry8IkPQvyV5yV+B0PwDM/w7de8zIzMy9YBXU8KGGDmgYQARAQABtCdXb2xmZ2FuZyBH
- cmFuZGVnZ2VyIDx3Z0BncmFuZGVnZ2VyLmNvbT6JAj8EEwECACkFAltEb5MCGyMFCQlmAYAH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRDwuz7LbZzIUhvED/4vTUqS0c/V5a4hc5Md
- u/8qkF7qg011tM0lXrZZxMQ8NrjdFuDhUefZ1q59QbLFU9da9D/CRVJUSx6BnY9jkR6lIm9l
- OGqS9ZlzubGXJCZhv1ONWPwY/i1RXTtauhRy+nkcyJk2Bzs5PWq1i4hWXpX//GfGUbCt+2bX
- 2+9bmHSPFtZ/MpIigS1E8RehIzlzqC/NCJspY8H0HKtLR6kpanRBYCuYSlBom/1LEP2MmXhh
- 9LgjQINp+jZJwnBj5L5JaUn/sg2WO+IiN6IphzyS2TvrlRhkhPJv5EOf0QmYzDgz5eU/h35x
- aCclLSJ0Go83GO0bXFGCzN86VreRgLRGTa7/x9VW05LiBdlsuLpG23IHM5f6p0WpYgE+jdri
- TrMued/DquQEcw/xNXpa3n9zTghLcWgcqGIdK3AE3yPjQBR3N6WoT4VOXnZjg6pyNHQ3W4qj
- LQgzJ3Tq2gPMhRLFcLXyk6V3rQ0ffn4LCXkFYVIBGAN8hHMOFeV6NESkUcEil6V4oOsLLGuJ
- XreFjAl1Cz3vIaVgzZEfub1z60DDM71lIr+UvWXLeMyKiSMWiJBPL3LUoUWmzpafaTJakDWm
- CEXa871Jlw7sy99MGVhiVG74JHjtPE6ontM1dKCP1+yT53TeGp1o/3Hj3sUielfDr5nV/kT6
- p5zmgQN/1bJgV/3sKrkCDQRbRG+TARAA37mw9iosCWO5OtCrbvgJJwzOR3XrijVKi9KTNzDO
- NT2iy7teKP4+C+9why6iZhoJbBrTo56mbmI2nvfyOthxCa8nT14js8q0EgSMiyxXVeRvzEIQ
- sYcG4zgbGjwJ94Vrr5tMCFn5B6cYKJffTGmfY0D3b2V4GqaCGxVs3lWcQJeKl/raL8lp4YWz
- AI0jVx104W7rUbCTDvcSVfPqwM+9A6xaP4b1jwyYwGHgOTq6SeimRrGgM+UNtWqMU3+vUelG
- 8gKDyfIIo4IrceeHss5OuRREQZq5vNuzkeIY6faYWv65KT+IQ6EyC9UEGkMdcStfEsZO53Qq
- buA7Kha6lVViDM3vjGS+fnNq/od53dosWeWQ4O8M7Z6nxgp+EOPuJf041eKmIrcaRiXb+027
- x4D0Kwv/xVsFa6cC2lkITWahENFIXwKOZ3imr2ZCtVF61qnm/GQ5P27JQKXMbPOM6wm0EjJ1
- 9t2EkSpgVHI0Cd0ldxD4eaGNwpeHJ5WGGzZrOE7PCcRziJX0qO/FpLjTQ6scf+bPACgduY71
- AwXyA24mg7F2vK+Vth+Yp7MlgwYBMUy6D140jrkWrcRxKYfW1BgcKpbG/dh5DhUAvoOzFD7i
- zHrGK5FhzqJDBwKk7n9jGohf/MJWs2UKai/u4ogZBhhD5JPR8GG6VzO4snWisFLFuAEAEQEA
- AYkCJQQYAQIADwUCW0RvkwIbDAUJCWYBgAAKCRDwuz7LbZzIUkA3D/wJOvcQ7rTeoRiamOIB
- kD4n2Jsv8Vti/XfM0DTmhfnWL4y96VzSzNfl+EHAwXE4161qnXxTHnFK1hq7QklNdDiGW3iH
- nKZUyHUTnlUlCocv8jWtlqrpH0XVtF12JET65mE14Hga6BQ4ECXwU2GcP3202A55EzMj31b/
- 59GD3CDIJy7bjQi+pIRuA9ZQRsFas7Od7AWO/nFns2wJ6AJkjXdCUCZ4iOuf82gLK9olDSmd
- H73Epc6l3jca62L2Lzei405LQSsfOZ06uH2aGPUJX4odUlEF6arm2j+9Q8Vyi4CJ316f2kAa
- sl7LhAwZtaj8hjl/PUWfd5w47dUBDUZjIRYcdM2TTU3Spgvg3zqXUzur5+r0jkUl2naeiSB1
- vwjfIwnPqZOVr9FAXuLbAdUyCCC0ohGLrq5Nsc1A02rxpQHRxTSm2FOdn2jYvuD7JUgkhmUh
- /TXb8aL6A4hfX7oV4tGq7nSmDOCmgWRmAHAGp85fVq2iylCxZ1kKi8EYCSa28eQzetukFbAx
- JwmcrUSaCOK+jpHlNY0PkghSIzAE/7Se+c37unJ39xJLkrgehLYmUF7cBeNWhfchu4fAJosM
- 5mXohGkBKcd5YYmF13imYtAG5/VSmBm/0CFNGFO49MVTNGXGBznrPrWwtPZNwjJdi7JrvEbm
- 8QEfHnPzgykCs2DOOQ==
-Message-ID: <c05a6a22-c162-518d-683a-18731bd67e38@grandegger.com>
-Date:   Tue, 2 Apr 2019 14:17:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+Subject: [PATCH] ALSA: doc: my_chip has no element ioport
+Date:   Tue,  2 Apr 2019 14:16:48 +0200
+Message-Id: <20190402121649.26536-1-cquast@hanoverdisplays.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <3ce79402-00f1-d7e6-955e-1ad7eb00d0de@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
+chip->ioport is dereferenced in two places, but the struct is
+defined as follows:
 
-Am 02.04.19 um 14:03 schrieb Dan Murphy:
-> Wolfgang
-> 
-> On 3/19/19 12:26 PM, Dan Murphy wrote:
->> Create a m_can platform framework that peripheral
->> devices can register to and use common code and register sets.
->> The peripheral devices may provide read/write and configuration
->> support of the IP.
->>
->> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
-> 
-> Wondering if this will be going into 5.1 PR?
+struct mychip {
+	struct snd_card *card;
+	struct pci_dev *pci;
 
-it's Marc who is doing the upstreaming ... and maybe a final review as well.
+	unsigned long port;
+	int irq;
+};
 
-Wolfgang.
+Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+---
+ Documentation/sound/kernel-api/writing-an-alsa-driver.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/sound/kernel-api/writing-an-alsa-driver.rst b/Documentation/sound/kernel-api/writing-an-alsa-driver.rst
+index 6b154dbb02cc..132f5eb9b530 100644
+--- a/Documentation/sound/kernel-api/writing-an-alsa-driver.rst
++++ b/Documentation/sound/kernel-api/writing-an-alsa-driver.rst
+@@ -324,7 +324,7 @@ to details explained in the following section.
+               strcpy(card->driver, "My Chip");
+               strcpy(card->shortname, "My Own Chip 123");
+               sprintf(card->longname, "%s at 0x%lx irq %i",
+-                      card->shortname, chip->ioport, chip->irq);
++                      card->shortname, chip->port, chip->irq);
+ 
+               /* (5) */
+               .... /* implemented later */
+@@ -437,7 +437,7 @@ Since each component can be properly freed, the single
+   strcpy(card->driver, "My Chip");
+   strcpy(card->shortname, "My Own Chip 123");
+   sprintf(card->longname, "%s at 0x%lx irq %i",
+-          card->shortname, chip->ioport, chip->irq);
++          card->shortname, chip->port, chip->irq);
+ 
+ The driver field holds the minimal ID string of the chip. This is used
+ by alsa-lib's configurator, so keep it simple but unique. Even the
+-- 
+2.20.1
+
