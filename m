@@ -2,96 +2,156 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0B5C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFB1C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65E382064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49AED20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UP/AHzRz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1Db4i7+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfDBVD6 (ORCPT
+        id S1726495AbfDBVFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:03:58 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46566 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfDBVD6 (ORCPT
+        Tue, 2 Apr 2019 17:05:21 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60642 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfDBVFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:03:58 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s24so13340294otk.13;
-        Tue, 02 Apr 2019 14:03:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W8wBbaXXqf5NZlfcrqpb5dNxJRGhM1Moj/A1hNeK+Gs=;
-        b=UP/AHzRztmqkCEuzUprtXykRnSQotDhprx5z1jQVr8ZB0iprN9u3hUcW4Kv1qicNhQ
-         03fobEOGUz15L5fupJiuj621XKM+NqoZ0PhVMDNkFZJp0CqMVwmx9xwBpurv1+qH1K17
-         Md9tpallpU1s91TZ0YU/Luvf8QuAm2PHVtkzl+ljdU8UnElcUPzJnkdlTrHf7VYj7ui+
-         6RELkiUm/MDy/DFNfnoLDVQjui/EljE7hSDVcCb8ekNn8KcZxPGKYckN7nNFwTDn/IPM
-         9q9rvGuHE6RvTiRDaPfr7qRsgdsPPN3JmnsVhj+BtjutVec1rVHn9rMwj4Af0QEJ4Pkc
-         2adA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W8wBbaXXqf5NZlfcrqpb5dNxJRGhM1Moj/A1hNeK+Gs=;
-        b=sZu2EfD3YIU8HvL3en5sscqrvuy26t9LvXdCD/okOfdpjpObJanFRpwV9PLyebGblV
-         394hywDWCB/dbhmaFQnCXvN/+0XCUwxkCG9wwmEGpV7iIc7Q3bvEKDs7nPuu0cJrq6b2
-         TTUYQQORUSvFsdJmZMh7V9TwwurCdAw6PdIf364ShJgJrBl7Cbi6xKU2zfnM7cdy8w+R
-         wOnnLx5uRAcD4mopii0iyR7yUgVJog8End1v3Ga7UkxfsLeieDCQNFRP0kqv12nHn9j0
-         AjTKtKmt1FDRt5I1GKIt0Vp4YyAGfQSEmJq4E6VkGG/muRs8NFJhP51qc/WridXnmEIG
-         MhWQ==
-X-Gm-Message-State: APjAAAWGuuTiOpojFDAsVR0tzNsSj7npMKIuM6qwIZ3DjsI1zAx0X0Cp
-        JaEugZoJxhO7sh0HPzgl4/FIDT9wzPOhuBJnw8knCw==
-X-Google-Smtp-Source: APXvYqxfgysZHLd+KNTzPm5Wm8kRT4mvtuhnsjAiHR58SOo97YDI9eCeHMVpR7VOU4XoRC0ssBDLiT0kHaaT4WOobd8=
-X-Received: by 2002:a05:6830:2042:: with SMTP id f2mr43363011otp.89.1554239037125;
- Tue, 02 Apr 2019 14:03:57 -0700 (PDT)
+        Tue, 2 Apr 2019 17:05:21 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32Kd3or163977;
+        Tue, 2 Apr 2019 20:44:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=fAYAxmDQUAFF/V4uXClSMnViHRm6i0GISHNgrEn8/T0=;
+ b=1Db4i7+5QTdvuvzmOABCOx/rKduKmOFCPGRVprrFpS4dMFTzLojfS7ykp8TBYOzgp6zY
+ 8P35z5ZLaWeBPaHuenEidBxoo2DL5tmyrNWrdyFhv4XeDZAq5KtPCKKdaA2NY1HjuW0b
+ UuvnV3+uYld/y+6agytQUQm2fU3HwT7sOULBUeaR5XyYYSJrmn85pitVdxeCDkBtHkan
+ Eejglhyb4LcN/RILi+Mo3LVfwShqb//q1rCvklXxwVJuxd0TCmDsWlN0sCjdC000J1cN
+ BT8XsWnEWY+bD0/jjXtxx7WlF8eSrJlpiSlwZhHMb1njCz6VzdqdcpH6zqpx3ASn5w7L 6w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2rj0dnm0cb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:44:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32KfgSY004926;
+        Tue, 2 Apr 2019 20:42:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2rm8f4qkf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:42:30 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x32KgN95019599;
+        Tue, 2 Apr 2019 20:42:28 GMT
+Received: from localhost.localdomain (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Apr 2019 13:42:23 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     akpm@linux-foundation.org
+Cc:     daniel.m.jordan@oracle.com, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/6] powerpc/mmu: drop mmap_sem now that locked_vm is atomic
+Date:   Tue,  2 Apr 2019 16:41:57 -0400
+Message-Id: <20190402204158.27582-6-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-References: <20190322051759.15007-1-tomli@tomli.me> <20190322051759.15007-6-tomli@tomli.me>
- <20190331185428.mpqbaq32cmm7izfv@debian> <20190401172959.GD15736@localhost.localdomain>
-In-Reply-To: <20190401172959.GD15736@localhost.localdomain>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Tue, 2 Apr 2019 22:03:21 +0100
-Message-ID: <CADVatmMgZJ-SFBzA5g7wXPRwgcWS0HqkHYbQNJDDTCj5zhy93w@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] Documentation: fb: sm712fb: add information mainly
- about 2D.
-To:     Tom Li <tomli@tomli.me>
-Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        LFBDEV <linux-fbdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=29 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904020138
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=29 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904020138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 6:30 PM Tom Li <tomli@tomli.me> wrote:
->
-> On Sun, Mar 31, 2019 at 07:54:28PM +0100, Sudip Mukherjee wrote:
-> > On Fri, Mar 22, 2019 at 01:17:57PM +0800, Yifeng Li wrote:
-> > > +video controllers. This series of video controller is a legacy from ~1998,
-> > > +and was used on many classic, "prehistoric" laptops from 1998-2004, such as
-> > > +IBM Thinkpad S30 and 240X. It was also used on some servers, industrial
-> > > +computers, x86 and non-x86 embedded devices where only basic graphics was
-> > > +needed.
-<snip>
->
-> BTW, most Loongson 3A notebooks don't use SM712. I don't know that there are
-> Loongson 3A notebooks that are still using SM712 graphics chip, do you have one?
-> Could you tell me its model number?
+With locked_vm now an atomic, there is no need to take mmap_sem as
+writer.  Delete and refactor accordingly.
 
-No, I donot have them. I only have SM712 based PCI card which I
-purchased from Silicon Motion.
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: <linux-mm@kvack.org>
+Cc: <linuxppc-dev@lists.ozlabs.org>
+Cc: <linux-kernel@vger.kernel.org>
+---
+ arch/powerpc/mm/mmu_context_iommu.c | 27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
 
-
+diff --git a/arch/powerpc/mm/mmu_context_iommu.c b/arch/powerpc/mm/mmu_context_iommu.c
+index 8038ac24a312..a4ef22b67c07 100644
+--- a/arch/powerpc/mm/mmu_context_iommu.c
++++ b/arch/powerpc/mm/mmu_context_iommu.c
+@@ -54,34 +54,29 @@ struct mm_iommu_table_group_mem_t {
+ static long mm_iommu_adjust_locked_vm(struct mm_struct *mm,
+ 		unsigned long npages, bool incr)
+ {
+-	long ret = 0, locked, lock_limit;
++	long ret = 0;
++	unsigned long lock_limit;
+ 	s64 locked_vm;
+ 
+ 	if (!npages)
+ 		return 0;
+ 
+-	down_write(&mm->mmap_sem);
+-	locked_vm = atomic64_read(&mm->locked_vm);
+ 	if (incr) {
+-		locked = locked_vm + npages;
+ 		lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+-		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
++		locked_vm = atomic64_add_return(npages, &mm->locked_vm);
++		if (locked_vm > lock_limit && !capable(CAP_IPC_LOCK)) {
+ 			ret = -ENOMEM;
+-		else
+-			atomic64_add(npages, &mm->locked_vm);
++			atomic64_sub(npages, &mm->locked_vm);
++		}
+ 	} else {
+-		if (WARN_ON_ONCE(npages > locked_vm))
+-			npages = locked_vm;
+-		atomic64_sub(npages, &mm->locked_vm);
++		locked_vm = atomic64_sub_return(npages, &mm->locked_vm);
++		WARN_ON_ONCE(locked_vm < 0);
+ 	}
+ 
+-	pr_debug("[%d] RLIMIT_MEMLOCK HASH64 %c%ld %ld/%ld\n",
+-			current ? current->pid : 0,
+-			incr ? '+' : '-',
+-			npages << PAGE_SHIFT,
+-			atomic64_read(&mm->locked_vm) << PAGE_SHIFT,
++	pr_debug("[%d] RLIMIT_MEMLOCK HASH64 %c%lu %lld/%lu\n",
++			current ? current->pid : 0, incr ? '+' : '-',
++			npages << PAGE_SHIFT, locked_vm << PAGE_SHIFT,
+ 			rlimit(RLIMIT_MEMLOCK));
+-	up_write(&mm->mmap_sem);
+ 
+ 	return ret;
+ }
 -- 
-Regards
-Sudip
+2.21.0
+
