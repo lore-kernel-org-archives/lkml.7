@@ -2,267 +2,230 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6867DC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24275C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3216F20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554180119;
-	bh=o1orBNUqoGT7WvWBxrx3ZCt01taJOdMi0vlXBNLVaK0=;
-	h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:List-ID:
-	 From;
-	b=gm+SLhJYfGb7fu9viAMr4Rh9kOmsZljzQ32FIKa5xQ983WxYc9c1BiBK1UnKfRKtK
-	 Y0tXSHFLwfkCp16MVmV3alziVKY7Ik4dpgBr2rx7zJBfOst0pJxrgsNcP3Xd0HkmJ9
-	 KcerXF9/J6/3Vn5SR0F8ooZgxRlMffhltIRMOII0=
+	by mail.kernel.org (Postfix) with ESMTP id D971920663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZdX0ePXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfDBEl5 (ORCPT
+        id S1728846AbfDBEmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfDBEl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:41:57 -0400
-Received: from [10.71.11.124] (unknown [147.50.13.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2923020651;
-        Tue,  2 Apr 2019 04:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554180115;
-        bh=o1orBNUqoGT7WvWBxrx3ZCt01taJOdMi0vlXBNLVaK0=;
-        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
-        b=WEMg0dC//yB+cp8/4WUjxPSS5J3HENn2UgtRliVWYlr9jEu6neCLQvvWztKPLDO35
-         RuIAFXHzVWEJU2KDdlDHYGYFYD0Bc58DltGuxi4M3c8FoL+kmFVC8u8YZNJYfeOUtN
-         RkhBunrD+xKHn8OgbZmBUDt03tRM1nirLWky7GX8=
-Subject: Re: [PATCH 2/6] kbuild: allow Kbuild to start from any directory
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-References: <1553947458-8311-1-git-send-email-yamada.masahiro@socionext.com>
- <1553947458-8311-2-git-send-email-yamada.masahiro@socionext.com>
-Reply-To: kbingham@kernel.org
-From:   Kieran Bingham <kbingham@kernel.org>
-Openpgp: preference=signencrypt
-Newsgroups: gmane.linux.kernel,gmane.linux.kbuild.devel
-Message-ID: <ad958d87-1e1e-2790-2f7e-380d4d9d67da@kernel.org>
-Date:   Tue, 2 Apr 2019 11:41:38 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 2 Apr 2019 00:42:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35695 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfDBEmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 00:42:39 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p19so5607771plo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 21:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jrZxOoGR5+E7t8CZrtMnMrWXE9MAJyKnN9flh2ng0cw=;
+        b=ZdX0ePXxh1vk4f9gC2hqX56FfI76bZx+/mcrwAFr45ax5EG+VSjwgsX4oR3mA7qTdJ
+         2YPnsXWXqxAnkeucSdGLfl+tHoVQuJt4hSCbJVHcxUiYcN6pa5IDBQ1CKm2h9dPqvqfp
+         9eEUYCjwfcgQLuWqWuFHNlyqP4O/dr/71pHIK9xYbQDsg+TliRhWPpEUIayefYuH2ri8
+         KwNR1rt5z7WO0YN3xfCwIVKApgVR/HjYnV5vYtfpeHHZLl32YUs2OXdyW/2YaSCA8bS5
+         cXLI2r3x6UoYEVKRKAUqm2ekDIzMcPJI+jLCf8RwfiW0NXrfO9Lk02afl0RFS9SRscgX
+         2KZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jrZxOoGR5+E7t8CZrtMnMrWXE9MAJyKnN9flh2ng0cw=;
+        b=g0OIPfDf7yq0z0GVnzrLEIzUVQmKa/WYjdoFgFroL+gCUWbR9GYBxGUo05Yz7HfWHy
+         FsrrRgRQb+j32TAV92XMC6Myacv3BFpaYA2kVl+hoO8S7QwW+gFIHokK7uqi8QX6bqMa
+         xkSKNPVg6CUfqRqNXunRHfJoMj7hOXgvvgIE4Y2bltwHfqeuE7PITMzsEZXKeryy86VM
+         R9Ph0Mn4y2W+MXWGXOIONF3jldEB6Bz57S3Hc1IXU2fVk9Y9k8TeAH8oNcN51t31TPJ/
+         RHbxB5AVwjihG3YAkCm/ijIxGOs6sIk/jKfT4QpOF0iix111Py66r8rcY/uw0eBfoYkh
+         67bw==
+X-Gm-Message-State: APjAAAVYtsGJBuoOLQswFo+P/ktnvhXffm2H2KipJqG/SCN2xA9EQgQk
+        J4RgjQSlX4c2SmXIfoWBmJFCTrbts3R3GlXTneLdJ8BjruipMA==
+X-Google-Smtp-Source: APXvYqzyqOmkdiUk8+/hHoSrNsSlmntnm2ejaOdjiEks9KifxURO9vWTTwsY3dKCVMLyBjRP8dRQzN0BkAVoNtLGUws=
+X-Received: by 2002:a17:902:12f:: with SMTP id 44mr68622321plb.208.1554180157635;
+ Mon, 01 Apr 2019 21:42:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1553947458-8311-2-git-send-email-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
+ <20190329125258.2c6fe0cb@gandalf.local.home> <CAMmhGqKPw1sxB_Qc+Z-MXZue+wtAQsQDDgUvjs4JQTVY8bR65g@mail.gmail.com>
+ <20190401222056.3da6e7a7@oasis.local.home>
+In-Reply-To: <20190401222056.3da6e7a7@oasis.local.home>
+From:   Jason Behmer <jbehmer@google.com>
+Date:   Mon, 1 Apr 2019 21:42:26 -0700
+Message-ID: <CAMmhGqL0tvxW_ucJUFKYqRrMRTTfUfRGpm1BnXiEvqFntSXSjQ@mail.gmail.com>
+Subject: Re: Nested events with zero deltas, can use absolute timestamps instead?
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+On Mon, Apr 1, 2019 at 7:21 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Mon, 1 Apr 2019 15:54:20 -0700
+> Jason Behmer <jbehmer@google.com> wrote:
+>
+> > The concurrency model is still a little bit unclear to me as I'm new
+> > to this codebase.  So I'm having some trouble reasoning about what
+> > operations are safe at one point on the ring buffer.    It seems like
+> > we can't be preempted in general, just interrupts?  And the events for
+> > the events emitted by interrupts will be fully processed before
+> > getting back to the event pointed at by the commit pointer?  If this
+> > is true I think the approach below (and prototyped in the attached
+> > patch against head) might work and would love feedback.  If not, this
+> > problem is way harder.
+> >
+> > We detect nested events by checking our event pointer against the
+> > commit pointer.  This is safe because we reserve our event space
+> > atomically in the buffer, leading to an ordering of events we can
+> > depend on.  But to add a TIME_STAMP event we need to reserve more
+> > space before we even have an event pointer, so we need to know
+> > something about the ordering of events before we've actually
+> > atomically reserved ours.  We could check if the write pointer is set
+> > to the commit pointer, and if it isn't we know we're a nested event.
+> > But, someone could update the write pointer and/or commit pointer
+> > between the time we check it and the time we atomically reserve our
+> > space in the buffer.  However, I think maybe this is ok.
+> >
+> > If we see that the write pointer is not equal to the commit pointer,
+> > then we're in an interrupt, and the only thing that could update the
+> > commit pointer is the original event emitting code that was
+> > interrupted, which can't run again until we're finished.  And the only
+> > thing that can update the write pointer is further interrupts of us,
+> > which will advance the write pointer further away from commit, leaving
+> > our decision to allocate a TIME_STAMP event as valid.
+> >
+> > If we see that the write pointer is equal to the commit pointer, then
+> > anything that interrupts us before we move the write pointer will see
+> > that same state and will need to, before returning to us, commit their
+> > event and set commit to their new write pointer, which will make our
+> > decision valid once again.
+> >
+> > There's a lot of assumptions in there that I'd love to be checked on
+> > as I'm new to this code base.  For example I haven't read the read
+> > path at all and have no idea if it interacts with this at all.
+>
+> I think you pretty much got the idea correct. The issue is what to put
+> into the extra timestamp value. As the time we record the timestamp
+> compared to the time we allocate the space for the timestamp is not
+> atomic. And we can't have time go backwards :-(
+>
+>                 |                                  |
+> commit  --->    +----------------------------------+
+>                 | TS offset from previous event    |  (A)
+>                 +----------------------------------+
+>                 | outer event data                 |
+> <interrupt>     +----------------------------------+
+>                 | extended TS                      |  (B)
+>                 +----------------------------------+
+>                 | interrupt event data             |
+>                 +----------------------------------+
+>  head   --->    |                                  |
+>
+>
+>         TS = rdstc();
+>         A = reserve_ring_buffer
+>         *A = TS
+>
+> interrupt:
+>         TS = rdtsc();
+>         B = reserve_ring_buffer
+>         *B = TS
+>
+>
+> What's important is what we store in A and B
+>
+>         TS = rdtsc();
+>                 <interrupt> --->
+>                                         TS = rdstc()
+>                                         (this is first commit!)
+>                                         A = reserver_ring_buffer
+>                                         *A = TS
+>                                         (finish commit)
+>                 <----
+>         A = reserver_ring_buffer
+>         *A = TS
+>
+> You can see how the recording of the timestamp and writing it gets
+> complex. Also it gets more complex when we use deltas and not direct writes.
+>
+> Now we may be able to handle this if we take the timestamp before doing
+> anything, and if it's nested, take it again (which should guarantee
+> that it's after the previous timestamp)
+>
+> Now of course the question is, how do we update the write stamp that we
+> will use to compute new "deltas"? Or we just use absolute timestamps to
+> the end of the page, and start over again, when we start a new page
+> that isn't nested.
+>
+> But see where the complexity comes from?
+>
+> -- Steve
 
-Thank you for the patches,
+Ah, yes, I was too focused on the first problem of if we could even
+reserve the space due to concurrency restrictions.
 
-I like the direction this series is taking.
+First, I had assumed there weren't restrictions on timestamps needing
+to not go backwards between consecutive events in the buffers, as it
+seems the current implementation of absolute timestamps should have
+this issue.  It also seems incredibly difficult to solve.  Even with
+your suggestion of taking the timestamp a second time if you're nested
+- can't you end up with multiple layers of nesting?  So how do you
+make sure that the third level nested event has a timestamp after the
+second level nested event?  It seems like maybe there's some very
+complicated way you can make this work given that it seems like your
+stack depth here is limited here to One of each of normal, nmi,
+softirq, and hardirq at a time (is that right?).
 
-Small spelling error spotted below...
-But as I've now gone through all of it I'll offer
+And second, I forgot entirely about updating the write stamp.  It
+looks like my prototype patch as written will still just update the
+write stamp to the outer event's timestamp, whereas really logically
+we'd like to set it to the last thing in the buffer when we commit.
+It looks like rb_set_commit_to_write already leapfrogs write_stamp to
+the next page timestamp every time it commits a full page.  Ideally
+we'd be able to also do this when we get to the tail page and update
+commit to its write index.  Because, I think, nothing will be diffing
+off of write_stamp until we set commit to be back to write.  But of
+course within a page we have no clue what the timestamp of the event
+previous to the write pointer is.
 
-Reviewed-by: Kieran Bingham <kbingham@kernel.org>
+And with ordering problems, you can't even just try the brute force
+approach of having all of the nested events update write_stamp on
+commit if their ts is larger than the current write_stamp (although
+even if you did want to do that it seems like you'd have to do some
+more complicate atomic access to write stamp as you would no longer
+have the nice property of it only being updated by one piece of code
+at a time).
 
-
-On 30/03/2019 12:04, Masahiro Yamada wrote:
-> Kbuild always runs in the top of the output directory.
-> 
-> If Make starts in the source directory with O=, it relocates the
-> working directory to the location specified by O=.
-> 
-> Also, users can start build from the output directory by using the
-> Makefile generated by scripts/mkmakefile.
-> 
-> With a little more effort, Kbuild will be able to start from any
-> directory path.
-> 
-> This commit allows to specify the source directory by using
-> the -f option.
-> 
-> For example, you can do:
-> 
->   $ cd path/to/output/dir
->   $ make -f path/to/source/dir/Makefile
-> 
-> Or, for the equivalent behavior, you can do:
-> 
->   $ make O=path/to/output/dir -f path/to/source/dir/Makefile
-> 
-> KBUILD_SRC is now deprecated.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  Makefile | 87 +++++++++++++++++++++++++++++++++++++---------------------------
->  1 file changed, 50 insertions(+), 37 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index 9cbd367..1b2a70e 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -96,56 +96,65 @@ endif
->  
->  export quiet Q KBUILD_VERBOSE
->  
-> -# kbuild supports saving output files in a separate directory.
-> -# To locate output files in a separate directory two syntaxes are supported.
-> -# In both cases the working directory must be the root of the kernel src.
-> +# Kbuild will save output files in the current working directory.
-> +# This does not need to match to the root of the kernel source tree.
-> +#
-> +# For example, you can do this:
-> +#
-> +#  cd /dir/to/store/output/files; make -f /dir/to/kernel/source/Makefile
-> +#
-> +# If you want to save output files in a different location, there are
-> +# two syntaxes to specify it.
-> +#
->  # 1) O=
->  # Use "make O=dir/to/store/output/files/"
->  #
->  # 2) Set KBUILD_OUTPUT
-> -# Set the environment variable KBUILD_OUTPUT to point to the directory
-> -# where the output files shall be placed.
-> -# export KBUILD_OUTPUT=dir/to/store/output/files/
-> -# make
-> +# Set the environment variable KBUILD_OUTPUT to point to the output directory.
-> +# export KBUILD_OUTPUT=dir/to/store/output/files/; make
->  #
->  # The O= assignment takes precedence over the KBUILD_OUTPUT environment
->  # variable.
->  
-> -# KBUILD_SRC is not intended to be used by the regular user (for now),
-> -# it is set on invocation of make with KBUILD_OUTPUT or O= specified.
-> -
-> -# OK, Make called in directory where kernel src resides
-> -# Do we want to locate output files in a separate directory?
-> +# Do we want to change the working directory?
->  ifeq ("$(origin O)", "command line")
->    KBUILD_OUTPUT := $(O)
->  endif
->  
-> -ifneq ($(words $(subst :, ,$(CURDIR))), 1)
-> -  $(error main directory cannot contain spaces nor colons)
-> +ifneq ($(KBUILD_OUTPUT),)
-> +# Make's built-in functions such as $(abspath ...), $(realpath ...) cannot
-> +# expand a shell special character '~'. We use a bit tredious way to handle it.
-
-very minor, but I noticed while looking through the series ^^
-
-s/bit tredious/somewhat tedious/
-
-
-
-> +abs_objtree := $(shell mkdir -p $(KBUILD_OUTPUT) && cd $(KBUILD_OUTPUT) && pwd)
-> +$(if $(abs_objtree),, \
-> +     $(error failed to create output directory "$(KBUILD_OUTPUT)"))
-> +
-> +# $(realpath ...) resolves symlinks
-> +abs_objtree := $(realpath $(abs_objtree))
-> +else
-> +abs_objtree := $(CURDIR)
-> +endif # ifneq ($(KBUILD_OUTPUT),)
-> +
-> +ifeq ($(abs_objtree),$(CURDIR))
-> +# Suppress "Entering directory ..." unless we are changing the work directory.
-> +MAKEFLAGS += --no-print-directory
-> +else
-> +need-sub-make := 1
->  endif
->  
-> -ifneq ($(KBUILD_OUTPUT),)
-> -# check that the output directory actually exists
-> -saved-output := $(KBUILD_OUTPUT)
-> -KBUILD_OUTPUT := $(shell mkdir -p $(KBUILD_OUTPUT) && cd $(KBUILD_OUTPUT) \
-> -								&& pwd)
-> -$(if $(KBUILD_OUTPUT),, \
-> -     $(error failed to create output directory "$(saved-output)"))
-> +abs_srctree := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
-> +
-> +ifneq ($(words $(subst :, ,$(abs_srctree))), 1)
-> +$(error source directory cannot contain spaces or colons)
-> +endif
->  
-> +ifneq ($(abs_srctree),$(abs_objtree))
->  # Look for make include files relative to root of kernel src
->  #
->  # This does not become effective immediately because MAKEFLAGS is re-parsed
-> -# once after the Makefile is read.  It is OK since we are going to invoke
-> -# 'sub-make' below.
-> -MAKEFLAGS += --include-dir=$(CURDIR)
-> -
-> +# once after the Makefile is read. We need to invoke sub-make.
-> +MAKEFLAGS += --include-dir=$(abs_srctree)
->  need-sub-make := 1
-> -else
-> -
-> -# Do not print "Entering directory ..." at all for in-tree build.
-> -MAKEFLAGS += --no-print-directory
-> -
-> -endif # ifneq ($(KBUILD_OUTPUT),)
-> +endif
->  
->  ifneq ($(filter 3.%,$(MAKE_VERSION)),)
->  # 'MAKEFLAGS += -rR' does not immediately become effective for GNU Make 3.x
-> @@ -155,6 +164,7 @@ need-sub-make := 1
->  $(lastword $(MAKEFILE_LIST)): ;
->  endif
->  
-> +export abs_srctree abs_objtree
->  export sub_make_done := 1
->  
->  ifeq ($(need-sub-make),1)
-> @@ -166,9 +176,7 @@ $(filter-out _all sub-make $(lastword $(MAKEFILE_LIST)), $(MAKECMDGOALS)) _all:
->  
->  # Invoke a second make in the output directory, passing relevant variables
->  sub-make:
-> -	$(Q)$(MAKE) \
-> -	$(if $(KBUILD_OUTPUT),-C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR)) \
-> -	-f $(CURDIR)/Makefile $(MAKECMDGOALS)
-> +	$(Q)$(MAKE) -C $(abs_objtree) -f $(abs_srctree)/Makefile $(MAKECMDGOALS)
->  
->  endif # need-sub-make
->  endif # sub_make_done
-> @@ -213,16 +221,21 @@ ifeq ("$(origin M)", "command line")
->    KBUILD_EXTMOD := $(M)
->  endif
->  
-> -ifeq ($(KBUILD_SRC),)
-> +ifeq ($(abs_srctree),$(abs_objtree))
->          # building in the source tree
->          srctree := .
->  else
-> -        ifeq ($(KBUILD_SRC)/,$(dir $(CURDIR)))
-> +        ifeq ($(abs_srctree)/,$(dir $(abs_objtree)))
->                  # building in a subdirectory of the source tree
->                  srctree := ..
->          else
-> -                srctree := $(KBUILD_SRC)
-> +                srctree := $(abs_srctree)
->          endif
-> +
-> +	# TODO:
-> +	# KBUILD_SRC is only used to distinguish in-tree/out-of-tree build.
-> +	# Replace it with $(srctree) or something.
-> +	KBUILD_SRC := $(abs_srctree)
->  endif
->  
->  export KBUILD_CHECKSRC KBUILD_EXTMOD KBUILD_SRC
-> 
+As for using absolute timestamps for the rest of the page, it seems
+like in many use cases that would end up being functionally very
+similar (with a far more complex implementation) to just turning on
+absolute timestamps for everything.  This of course depends entirely
+on the trace points you're gathering, but some common ones, like
+sched_* seem to get called fairly often from an interrupt context even
+on an idle system.
 
 
--- 
---
-Kieran
+Also, I was actually going to send out a patch to try to make the
+timestamp_mode file writable, as an easy short-term fix for getting
+absolute time stamps.  However, it looks like the current hook to turn
+it on is doing some ref counting on enabling/disabling some histogram
+listeners.  Combining that with a user-writable config file seems a
+little tricky in terms of semantics, which do we want to take
+priority?  It seems like a user changing a config an accidentally
+clobbering the histogram listeners isn't great, but neither is giving
+back a user cryptic errors when they try to write the file and
+histogram listeners are configured.  Any thoughts on what to do there
+and how to implement it?
+
+Thanks,
+Jason
