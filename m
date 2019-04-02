@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0733EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90824C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55FD2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5172082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfDBUEa (ORCPT
+        id S1726723AbfDBUEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 16:04:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55778 "EHLO mx1.redhat.com"
+        Tue, 2 Apr 2019 16:04:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47924 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfDBUE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 16:04:29 -0400
+        id S1725857AbfDBUEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 16:04:32 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 79B9E308338F;
-        Tue,  2 Apr 2019 20:04:28 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 053DB87623;
+        Tue,  2 Apr 2019 20:04:32 +0000 (UTC)
 Received: from localhost.default (ovpn-116-31.phx2.redhat.com [10.3.116.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 400C56014D;
-        Tue,  2 Apr 2019 20:04:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2F5A6014A;
+        Tue,  2 Apr 2019 20:04:28 +0000 (UTC)
 From:   Daniel Bristot de Oliveira <bristot@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
@@ -44,22 +44,21 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
         Romulo Silva de Oliveira <romulo.deoliveira@ufsc.br>,
         Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: [RFC PATCH 5/7] trace: Use early task context tracking if available
-Date:   Tue,  2 Apr 2019 22:03:57 +0200
-Message-Id: <15e6b5ccf2e395bd8f5885c5d1c23f85937a2f18.1554234787.git.bristot@redhat.com>
+Subject: [RFC PATCH 6/7] events: Create an trace_get_context_bit()
+Date:   Tue,  2 Apr 2019 22:03:58 +0200
+Message-Id: <9ba2b066d99fa8825d5e1f78b97a893a37457393.1554234787.git.bristot@redhat.com>
 In-Reply-To: <cover.1554234787.git.bristot@redhat.com>
 References: <cover.1554234787.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 02 Apr 2019 20:04:28 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 02 Apr 2019 20:04:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the early task context tracking to detect the current context,
-if the arch supports it.
+Create a specific function to get the current task context.
 
 Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
@@ -80,40 +79,60 @@ Cc: Clark Williams <williams@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org
 ---
- kernel/trace/trace.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/events/internal.h | 37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 09318748fab8..62ba4bd0e436 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -632,7 +632,18 @@ enum {
- 	TRACE_CTX_NORMAL,
- 	TRACE_CTX_MAX
- };
-+#ifdef ARCH_HAS_TASK_CONTEXT
-+static __always_inline int trace_get_context_bit(void)
-+{
-+	unsigned long tc = this_cpu_read(task_context);
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index 79c47076700a..241a2318bfdc 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -202,18 +202,37 @@ arch_perf_out_copy_user(void *dst, const void *src, unsigned long n)
  
-+	if (tc)
-+		return tc & TASK_CTX_NMI ? TRACE_CTX_NMI :
-+			tc & TASK_CTX_IRQ ? TRACE_CTX_IRQ : TRACE_CTX_SOFTIRQ;
-+	else
+ DEFINE_OUTPUT_COPY(__output_copy_user, arch_perf_out_copy_user)
+ 
+-static inline int get_recursion_context(int *recursion)
++/*
++ * Used for which event context the event is in.
++ *  NMI     = 0
++ *  IRQ     = 1
++ *  SOFTIRQ = 2
++ *  NORMAL  = 3
++ *
++ * See trace_recursive_lock() comment for more details.
++ */
++enum {
++	TRACE_CTX_NMI,
++	TRACE_CTX_IRQ,
++	TRACE_CTX_SOFTIRQ,
++	TRACE_CTX_NORMAL,
++	TRACE_CTX_MAX
++};
++
++static __always_inline int trace_get_context_bit(void)
+ {
+-	int rctx;
++	unsigned long pc = preempt_count();
+ 
+-	if (unlikely(in_nmi()))
+-		rctx = 3;
+-	else if (in_irq())
+-		rctx = 2;
+-	else if (in_softirq())
+-		rctx = 1;
++	if (pc & (NMI_MASK | HARDIRQ_MASK | SOFTIRQ_OFFSET))
++		return pc & NMI_MASK ? TRACE_CTX_NMI :
++			pc & HARDIRQ_MASK ? TRACE_CTX_IRQ : TRACE_CTX_SOFTIRQ;
+ 	else
+-		rctx = 0;
 +		return TRACE_CTX_NORMAL;
 +}
-+#else /* ARCH_HAS_TASK_CONTEXT */
- static __always_inline int trace_get_context_bit(void)
- {
- 	unsigned long pc = preempt_count();
-@@ -643,6 +654,7 @@ static __always_inline int trace_get_context_bit(void)
- 	else
- 		return TRACE_CTX_NORMAL;
- }
-+#endif /* ARCH_HAS_TASK_CONTEXT */
++
++static inline int get_recursion_context(int *recursion)
++{
++	int rctx = trace_get_context_bit();
  
- static __always_inline int trace_test_and_set_recursion(int start, int max)
- {
+ 	if (recursion[rctx])
+ 		return -1;
 -- 
 2.20.1
 
