@@ -2,139 +2,106 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80114C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBC0C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BEC207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:09:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wJz91kZe"
+	by mail.kernel.org (Postfix) with ESMTP id 4DD22207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554196214;
+	bh=RCLI6jvyLpySCZZYO8g+bGv43T2N8g5KVkec6dBhgT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eunLQeIKGijPItIMt94Dn6POPfH2/Tww8RJz7puO63q5H+/CYCsN+uADQFM8WfOER
+	 ah82rva5vRVxL+gVd9M2QYQqOUYpBwUDFJMSsuv6pcgyD5cXg1IFvZnPUgLYH7vVom
+	 vkDVV55DxzCAGosM1ObVxT0j8KcqqkvjScjxizQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfDBJJP (ORCPT
+        id S1729830AbfDBJKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:09:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:34703 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729848AbfDBJIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:08:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44YNfs2hmvz9v0Zn;
-        Tue,  2 Apr 2019 11:08:37 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=wJz91kZe; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id HnmsqkcSq8j7; Tue,  2 Apr 2019 11:08:37 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44YNfs1VDWz9v0Zh;
-        Tue,  2 Apr 2019 11:08:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1554196117; bh=7w5C2YrN3MdzgkpgW+H6BlOOu0kSi9B/PGq/t78Pl0w=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=wJz91kZe5ygoE2Ee6o0f23svpTgOfHi1Zn3jFGjxX/j5ob/VoePZQ5JOCAa2TuMaV
-         B2g6tsmN31Kzxnqy3SNi6qDN/X6YNnw+lsMtJZx5GYX2Y6/8zxZBukiKWUXihyB3xF
-         XSlUwcmzK9k3qP/dUBSkhkRLw59OEDlKaOeLaEfc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 387BE8B8C5;
-        Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id MSNxiReW1ySx; Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0C1458B8C3;
-        Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E1685661D9; Tue,  2 Apr 2019 09:08:37 +0000 (UTC)
-Message-Id: <a65e145d464451885f8d2570f7fca1e433155c13.1554195798.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1554195798.git.christophe.leroy@c-s.fr>
-References: <cover.1554195798.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 3/9] drivers: of: use cmdline building function
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, danielwa@cisco.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arch@vger.kernel.org
-Date:   Tue,  2 Apr 2019 09:08:37 +0000 (UTC)
+        Tue, 2 Apr 2019 05:10:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49222 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbfDBJKN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 05:10:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PQtR22IfGnpW+4UD8rHmpQlgcjqz35SLOcrjDxw9uB0=; b=ogJNGOM02Dyx7WFRUUxxL78PO
+        Op7JXiRheKKf4vNXPhChJnnzTcUG1r/rkgiiyp8c9lW0o4GWSt1mMksmvA1yLvjDDghsvKytlYQtu
+        CzfotaPeYqIIb09qX9uIespYhjGLAueSApZx6mGLi3gTPIQQ6susw3QPT/tjQU0y9T05E=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hBFQm-0006lO-Sc; Tue, 02 Apr 2019 09:10:09 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id EB5F2440082; Tue,  2 Apr 2019 10:10:05 +0100 (BST)
+Date:   Tue, 2 Apr 2019 16:10:05 +0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [RFC PATCH 0/4] spi: spi-fsl-spi: try to make cpu-mode transfers
+ faster
+Message-ID: <20190402091005.GC2059@sirena.org.uk>
+References: <20190327143040.16013-1-rasmus.villemoes@prevas.dk>
+ <20190401073450.GG2059@sirena.org.uk>
+ <ce9e8ca8-6db7-1be8-5ea3-c098b1c1c813@prevas.dk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="U58U7wle/RT11wuz"
+Content-Disposition: inline
+In-Reply-To: <ce9e8ca8-6db7-1be8-5ea3-c098b1c1c813@prevas.dk>
+X-Cookie: Use extra care when cleaning on stairs.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses the new cmdline building function to
-concatenate the of provided cmdline with built-in parts
-based on compile-time options.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- drivers/of/fdt.c        | 23 ++++-------------------
- include/linux/cmdline.h |  2 +-
- 2 files changed, 5 insertions(+), 20 deletions(-)
+--U58U7wle/RT11wuz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 4734223ab702..c6d941785b37 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -24,6 +24,7 @@
- #include <linux/debugfs.h>
- #include <linux/serial_core.h>
- #include <linux/sysfs.h>
-+#include <linux/cmdline.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #include <asm/page.h>
-@@ -1090,26 +1091,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	/* Retrieve command line */
- 	p = of_get_flat_dt_prop(node, "bootargs", &l);
--	if (p != NULL && l > 0)
--		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
-+	if (l <= 0)
-+		p = NULL;
- 
--	/*
--	 * CONFIG_CMDLINE is meant to be a default in case nothing else
--	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
--	 * is set in which case we override whatever was found earlier.
--	 */
--#ifdef CONFIG_CMDLINE
--#if defined(CONFIG_CMDLINE_EXTEND)
--	strlcat(data, " ", COMMAND_LINE_SIZE);
--	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#elif defined(CONFIG_CMDLINE_FORCE)
--	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#else
--	/* No arguments from boot loader, use kernel's  cmdl*/
--	if (!((char *)data)[0])
--		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#endif
--#endif /* CONFIG_CMDLINE */
-+	cmdline_build(data, p, COMMAND_LINE_SIZE);
- 
- 	pr_debug("Command line is: %s\n", (char*)data);
- 
-diff --git a/include/linux/cmdline.h b/include/linux/cmdline.h
-index 8610ddf813ff..afcc00d7628d 100644
---- a/include/linux/cmdline.h
-+++ b/include/linux/cmdline.h
-@@ -10,7 +10,7 @@
-  * @src: The starting string or NULL if there isn't one. Must not equal dest.
-  * @length: the length of dest buffer.
-  */
--static __always_inline void cmdline_build(char *dest, char *src, size_t length)
-+static __always_inline void cmdline_build(char *dest, const char *src, size_t length)
- {
- 	if (length <= 0)
- 		return;
--- 
-2.13.3
+On Tue, Apr 02, 2019 at 08:43:51AM +0000, Rasmus Villemoes wrote:
 
+> Thanks! There's one other option I can think of: don't do the interrupts
+> at all, but just busy-wait for the completion of each word transfer (in
+> a cpu_relax() loop). That could be guarded by something like
+> 1000000*bits_per_word < hz (roughly, the word transfer takes less than 1
+> us). At least on -rt, having the interrupt thread scheduled in and out
+> again easily takes more than 1us of cpu time, and AFAIU we'd still be
+> preemptible throughout - and/or one can throw in a cond_resched() every
+> nnn words. But this might be a bit -rt specific, and the 1us threshold
+> is rather arbitrary.
+
+Yeah, that's definitely worth exploring as a mitigation but obviously
+with things like flash I/O that gets a bit rude.  Hopefully what's there
+at the minute turns out to be robust enough.
+
+--U58U7wle/RT11wuz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyjJu0ACgkQJNaLcl1U
+h9AQpwf+OuW45aY1671qbCW3I/2+1Z2PuTbheg08DkMzK9IQ6qmkz9Web828TcQk
+Wh+mr066jfLo2rf2NL3Ed2/zu4Y1GPn4wtqblsg1Jl2UsRGk+V4Eb27iaj6szvU2
+GenjVXF7zia3xVVw5ISh5IKVnko+rRZnatuusPffejsXoRrtiG5gN3W9EJH6+oK3
+b6BIPgQBqS0/de54NjVFthmd5X24fGwRfi2DkMwtN/W1k2Y8/bTQwTY+z5lepLRU
+pM83mhetp3X1jZAt4KwjGlKmE4ATaU3Q8bDwOwTCyhyRMxDtUkts7pcyf1uez/rh
+X3OwafCkR2xlVNqfRPt/mepvxntvLg==
+=dmgT
+-----END PGP SIGNATURE-----
+
+--U58U7wle/RT11wuz--
