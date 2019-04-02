@@ -2,76 +2,93 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD6C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CF6C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447E120857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554233205;
-	bh=r3X5FTDxb4GyNp3973uKtlsfjvGrHNyxS5BiOhIUKhc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pvcXGJzeIJ5ULWzStRoFHDkEH0L2dA1rsMiD+qZ6mLWEegG06v6sNVr/x4HJok/2d
-	 ze0mvf+KOnNf8oIPsX/1qPMv1sCVmaThWrPal3CEzoKt13J+l/efmWqC3bBVaEoaVk
-	 4Na3/yY4UleXR+faY3z7ckZMejFqGtmCdR33iUs8=
+	by mail.kernel.org (Postfix) with ESMTP id E67EE2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbfDBT0o (ORCPT
+        id S1730970AbfDBT3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:26:44 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:42220 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbfDBT0n (ORCPT
+        Tue, 2 Apr 2019 15:29:38 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:37771 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfDBT3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:26:43 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 1689CEA2;
-        Tue,  2 Apr 2019 19:26:42 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 12:26:41 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>,
-        <rong.a.chen@intel.com>
-Subject: Re: [RESEND PATCH 0/3] improve vmap allocation
-Message-Id: <20190402122641.d4c8b7cbc6409ad14c13f3aa@linux-foundation.org>
-In-Reply-To: <20190402162531.10888-1-urezki@gmail.com>
-References: <20190402162531.10888-1-urezki@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Tue, 2 Apr 2019 15:29:38 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hBP6E-0006sp-Mt; Tue, 02 Apr 2019 21:29:34 +0200
+Date:   Tue, 2 Apr 2019 21:29:34 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@amacapital.net>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
+In-Reply-To: <alpine.DEB.2.21.1904022027170.1812@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1904022127210.1812@nanos.tec.linutronix.de>
+References: <20190331214020.836098943@linutronix.de> <20190331215136.039902969@linutronix.de> <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de> <20190402154329.scp7i7uqevubgwrz@treble> <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
+ <7789E14E-C623-4DB7-B076-76B931957C9C@amacapital.net> <alpine.DEB.2.21.1904022027170.1812@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  2 Apr 2019 18:25:28 +0200 "Uladzislau Rezki (Sony)" <urezki@gmail.com> wrote:
+On Tue, 2 Apr 2019, Thomas Gleixner wrote:
+> On Tue, 2 Apr 2019, Andy Lutomirski wrote:
+> > > On Apr 2, 2019, at 9:48 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > 
+> > >> On Tue, 2 Apr 2019, Josh Poimboeuf wrote:
+> > >>> On Tue, Apr 02, 2019 at 12:19:46PM +0200, Thomas Gleixner wrote:
+> > >>> +/*
+> > >>> + * Array of exception stack page descriptors. If the stack is larger than
+> > >>> + * PAGE_SIZE, all pages covering a particular stack will have the same
+> > >>> + * info.
+> > >>> + */
+> > >>> +static const struct estack_pages estack_pages[ESTACK_PAGES] ____cacheline_aligned = {
+> > >>> +    [CONDRANGE(DF)]        = ESTACK_PAGE(DOUBLEFAULT_IST, DF),
+> > >>> +    [CONDRANGE(NMI)]    = ESTACK_PAGE(NMI_IST, NMI),
+> > >>> +    [PAGERANGE(DB)]        = ESTACK_PAGE(DEBUG_IST, DB),
+> > >>> +    [CONDRANGE(MCE)]    = ESTACK_PAGE(MCE_IST, MCE),
+> > >> 
+> > >> It would be nice if the *_IST macro naming aligned with the struct
+> > >> cea_exception_stacks field naming.  Then you could just do, e.g.
+> > >> ESTACKPAGE(DF).
+> > > 
+> > > Yes, lemme fix that up.
+> > > 
+> > >> Also it's a bit unfortunate that some of the stack size knowledge is
+> > >> hard-coded here, i.e #DB always being > 1 page and non-#DB being
+> > >> sometimes 1 page.
+> > > 
+> > > The problem is that there is no way to make this macro maze conditional on
+> > > sizeof(). But my macro foo is rusty.
+> > 
+> > How about a much better fix: make the DB stack be the same size as all
+> > the others and just have 4 of them (DB0, DB1, DB2, and DB3.  After all,
+> > overflowing from one debug stack into another is just as much of a bug as
+> > overflowing into a different IST stack.
+> 
+> That makes sense.
 
-> Changes in v3
-> -------------
-> - simplify the __get_va_next_sibling() and __find_va_links() functions;
-> - remove "unlikely". Place the WARN_ON_ONCE directly to the "if" condition;
-> - replace inline to __always_inline;
-> - move the debug code to separate patches;
+Except that we just have two not four.
 
-Does v3 address the report from kernel test robot
-<rong.a.chen@intel.com>, Subject "[mm/vmalloc.c] 7ae76449bd:
-kernel_BUG_at_lib/list_debug.c".
+It needs some tweaking of the ist_shift stuff in entry_64.S but that's not
+rocket science. Famous last words....
 
-For some reason I cannot find that email in my linux-kernel folder and
-nor does google find it and
-http://lkml.kernel.org/r/20190401132655.GD9217@shao2-debian doesn't
-work.  Message-ID 20190401132655.GD9217@shao2-debian doesn't seem to
-have got through the list server.  Ditto linux-mm.
+Thanks,
 
+	tglx
