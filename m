@@ -2,83 +2,97 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB56C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EBBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047AB2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09F7B2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554179726;
+	bh=zEaKNPMHSOay4bkJUft3m/yZCIaTzJ8Nx2sBbvZyJZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=140oRWCYXfPMggzkHen+lJotmKkw9rTpcnOO7oaUt8Ysd5lcFc9zaXHI8H6M9y8yo
+	 +5cYW7R59g0ots182lEjbIcFyjl0V/pvrvLC0CoU0ihYeF6nVjRzYsBUUws9ipNCTw
+	 6qeioxp+rS3bBYCuh5WEeY5sw9vEWpvNqz4cRWQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfDBEeS (ORCPT
+        id S1727041AbfDBEfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:34:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57220 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfDBEeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:34:18 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C34785528;
-        Tue,  2 Apr 2019 04:34:18 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 106B52A19F;
-        Tue,  2 Apr 2019 04:34:14 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 22:34:13 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eric.auger@redhat.com, cohuck@redhat.com
-Subject: Re: [PATCH] vfio/type1: Limit DMA mappings per container
-Message-ID: <20190401223413.3783af5f@x1.home>
-In-Reply-To: <20190402024115.GA11008@xz-x1>
-References: <155414977872.12780.13728555131525362206.stgit@gimli.home>
-        <20190402024115.GA11008@xz-x1>
-Organization: Red Hat
+        Tue, 2 Apr 2019 00:35:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39186 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDBEfY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 00:35:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zEaKNPMHSOay4bkJUft3m/yZCIaTzJ8Nx2sBbvZyJZ4=; b=hNOibDv8WNtAo0k93NrzGU3bw
+        WzJiyN84r4Nqqoh8RpBpV0Tn0QsqRJs5FRGMMZhHEvPCCMRvXj0wbMzjCoBzwXs8ULN3kW/TwDWKl
+        DmQjC7M9yM5b8WAXPFs/fUGiAy+EEt7tzw9On7baSu9S51yUZBxrytVQ/a2eFsQzDMrYk=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hBB8j-0005jU-4I; Tue, 02 Apr 2019 04:35:13 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id BEA99440082; Tue,  2 Apr 2019 05:35:09 +0100 (BST)
+Date:   Tue, 2 Apr 2019 11:35:09 +0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org,
+        Curtis Malainey <cujomalainey@google.com>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] ASoC: soc-core: Fix probe deferral following prelink
+ failure
+Message-ID: <20190402043509.GQ2059@sirena.org.uk>
+References: <1551706274-22571-1-git-send-email-jonathanh@nvidia.com>
+ <4eb94b41-7e16-7b39-5c14-a7d180ce67df@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 02 Apr 2019 04:34:18 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rUztinBX/EQDJOOk"
+Content-Disposition: inline
+In-Reply-To: <4eb94b41-7e16-7b39-5c14-a7d180ce67df@nvidia.com>
+X-Cookie: Use extra care when cleaning on stairs.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019 10:41:15 +0800
-Peter Xu <peterx@redhat.com> wrote:
 
-> On Mon, Apr 01, 2019 at 02:16:52PM -0600, Alex Williamson wrote:
-> 
-> [...]
-> 
-> > @@ -1081,8 +1088,14 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
-> >  		goto out_unlock;
-> >  	}
-> >  
-> > +	if (!atomic_add_unless(&iommu->dma_avail, -1, 0)) {
-> > +		ret = -ENOSPC;
-> > +		goto out_unlock;
-> > +	}
-> > +
-> >  	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
-> >  	if (!dma) {
-> > +		atomic_inc(&iommu->dma_avail);  
-> 
-> This should be the only special path to revert the change.  Not sure
-> whether this can be avoided by simply using atomic_read() or even
-> READ_ONCE() (I feel like we don't need atomic ops with dma_avail
-> because we've had the mutex but it of course it doesn't hurt...) to
-> replace atomic_add_unless() above to check against zero then we do
-> +1/-1 in vfio_[un]link_dma() only.  But AFAICT this patch is correct.
+--rUztinBX/EQDJOOk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for the review, you're right, we're only twiddling this atomic
-while holding the iommu->lock mutex, so it appears unnecessary.  Since
-we're within the mutex, I think we don't even need a READ_ONCE.  We can
-simple test it before alloc and decrement after.  Am I missing something
-that would specifically require READ_ONCE within our mutex critical
-section?  Thanks,
+On Mon, Apr 01, 2019 at 01:22:09PM +0100, Jon Hunter wrote:
 
-Alex
+> FYI, I am seeing that the deferral of soundcards failing with v5.1-rc3
+> because the above has not been merged yet. Just wanted to let you know
+> in case this one was not marked for v5.1.
+
+I don't have this patch at all AFAICT.
+
+--rUztinBX/EQDJOOk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyi5noACgkQJNaLcl1U
+h9CexAf/eATHuzU+lN7Fozhx+OPt6qbOXgrnTNzEDfg/ztwUxwpP+qjxGaHamdc8
+/p9OWg+WxH5Fv0SxBqyR6dNQOwcGf1nf9Ps4MhxWIJxbQvZqRziuQ6yyowC/X8yj
+7eAPfUB/yOQ1BpYCQe7eVB+BuJsjq2do6I8DgRuWN3gXm9QUqS2fHipkH13sVNPN
+TnRXQRKGN++BwG6GKUOAG+Z11dmyEHK7WXiLyMVoL4CQ9x5kENZsbVDmMsrSgtOp
+HgMkDFbzopCSWPhoUpvLbBONbKzJGgw2XtThg7xWEkz3rUz0Jtwrb8afGbvusf2g
+uBIYtkXI1nVf/gX/dpoixJjq3Ub56w==
+=xAaC
+-----END PGP SIGNATURE-----
+
+--rUztinBX/EQDJOOk--
