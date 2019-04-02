@@ -2,122 +2,167 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041F7C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33752C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE29A20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F7E20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:52:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fdwz4X7/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xBffgtoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfDBVv7 (ORCPT
+        id S1726671AbfDBVwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:51:59 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:36852 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDBVv7 (ORCPT
+        Tue, 2 Apr 2019 17:52:30 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46546 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDBVwa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:51:59 -0400
-Received: by mail-vk1-f196.google.com with SMTP id w140so854441vkd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9yzVmBkiITAmoECrhE2RijUJjm9Zk5WVxSbdkQtzOTc=;
-        b=Fdwz4X7/m3SaIOqpiO8lhwd6sq4e1mrO7U+WDN85inRTB8woKcUo0JaEDKMDnibTVK
-         VPY7QB10GVyet4U5GlAuyG37pi6K9b29sIbUAJsYSmkie3AVXqhbeImhCt/Rz5CKp76A
-         Ka+uxsO1uWowcgnkx8LFatMO0sHYj89o+x9xc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9yzVmBkiITAmoECrhE2RijUJjm9Zk5WVxSbdkQtzOTc=;
-        b=MgBBrq8wxDesr92EiDdLxuAkqk6RiMGtFRS0SdwuUkmuKemUflZlBAYECztEQBZpxo
-         I5RfYzIl+9Uy7TgDxIrnQ7AlDsP89Jn1w4SROm5AIZmpl6bS7266ntInnmLlXylj9zbt
-         tFl7ip8Nwur/EYADXqGNH49sB7oy1wGDmLk3XnLSzBQ3wURJi7Ojq6BKjlmO8Iom1DWj
-         CSPVAIXmxuiYwRRpGHQWcGAwqa1u7yrRsudRyDP5ZGSEjERsTvI8M8W484VeeZaP9wtm
-         kYOygKMk7clZ2ElfwYDARkNk/KAc3tJCLMd2kl0zn/+BrnUyt4zhXAKBQZEli/7Jnae6
-         qoTw==
-X-Gm-Message-State: APjAAAUTZZ4UwKC0R3p68ftZjBFQ1h32fSiHYkculDetvrFQHToRC7MP
-        YwsAlVAwJwdffWhm0vYnsEhMXkOwOpo=
-X-Google-Smtp-Source: APXvYqw8PHaV7yQKgWiDsOkBzOcnKQTbGZXhm1Xs4vKVxd1i4b5ceLK8vPWBbCuI9T597Q3hCOZL1g==
-X-Received: by 2002:a1f:9b55:: with SMTP id d82mr23133669vke.9.1554241917185;
-        Tue, 02 Apr 2019 14:51:57 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id m23sm21248946vsl.24.2019.04.02.14.51.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 14:51:54 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id f88so4908828uaf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:51:54 -0700 (PDT)
-X-Received: by 2002:ab0:60cd:: with SMTP id g13mr106176uam.85.1554241913793;
- Tue, 02 Apr 2019 14:51:53 -0700 (PDT)
+        Tue, 2 Apr 2019 17:52:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32Kd3X1163998;
+        Tue, 2 Apr 2019 20:42:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=sUcjXY3uzftbRPA/qx9LGu6+ef2CXjVd6ceZM9+b18U=;
+ b=xBffgtojFULgQywk6dg++phJ4dRh6ZFh7wsyFjoG1MnC+TBYtmtYjJElPMLapMw7cm8c
+ VErNSijyy6Pj+8n4yE9yB/x8mMPgiR2/kTuoakitYDqe98KORwjyj0/R2IX7F7kwJfuS
+ 35MlOD9NugPRLgKZF+gPHWJCVtOk/RiUVaDNeVrsrVRH3bJCwL/Oa8L7vMS1F5iukMRh
+ EoCVrL95xhmbuHu7GtL70vFi58jRPIMVnNuSTNy8PI6N34JZS3qvld0+RTBNxhy9t/AR
+ loky0Zi2Y94RsT48wmNjpC2uJc3HpzEyMRCi3pu1G0E5UgmKcN0G/stq5GDGiP6E6oxt IQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2rj0dnkywp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:42:26 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32KfI3M103083;
+        Tue, 2 Apr 2019 20:42:25 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2rm9mhp3nq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:42:25 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x32KgPpX030145;
+        Tue, 2 Apr 2019 20:42:25 GMT
+Received: from localhost.localdomain (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Apr 2019 13:42:25 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     akpm@linux-foundation.org
+Cc:     daniel.m.jordan@oracle.com, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@ozlabs.org>, linux-mm@kvack.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 6/6] kvm/book3s: drop mmap_sem now that locked_vm is atomic
+Date:   Tue,  2 Apr 2019 16:41:58 -0400
+Message-Id: <20190402204158.27582-7-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-References: <20190306214226.14598-1-tobin@kernel.org> <20190306214226.14598-4-tobin@kernel.org>
- <CAGXu5jJHKS=cghJDRwhTAEXg2yEOKjxGxKinDWHv3X4fZ5oxfQ@mail.gmail.com>
-In-Reply-To: <CAGXu5jJHKS=cghJDRwhTAEXg2yEOKjxGxKinDWHv3X4fZ5oxfQ@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 2 Apr 2019 14:51:41 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jL46pxXg8S_ywKmhc0A92qZSgTSH+96YXvuex5tqW20JA@mail.gmail.com>
-Message-ID: <CAGXu5jL46pxXg8S_ywKmhc0A92qZSgTSH+96YXvuex5tqW20JA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] kselftest/lib: Use new shell runner to define tests
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=29 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904020138
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=29 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904020138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 2:45 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Mar 6, 2019 at 1:43 PM Tobin C. Harding <tobin@kernel.org> wrote:
-> > [...]
-> > diff --git a/tools/testing/selftests/lib/prime_numbers.sh b/tools/testing/selftests/lib/prime_numbers.sh
-> > index 78e7483c8d60..6f782386d897 100755
-> > --- a/tools/testing/selftests/lib/prime_numbers.sh
-> > +++ b/tools/testing/selftests/lib/prime_numbers.sh
-> > @@ -2,18 +2,17 @@
-> > [...]
-> > -if /sbin/modprobe -q prime_numbers selftest=65536; then
->
-> Here it is! This conversion loses the "selftest=..." argument to modprobe.
->
-> And I think all of these files could be reduced to a single script
-> that did something like:
->
-> . $path/kselftest_module.sh
->
-> run "strscpy" test_strscpy
-> run "bitmap" test_bitmap
-> run "prime numbers" prime_numbers selftest=65536
->
-> and kselftest_module.sh could define a "trap {...} EXIT" to perform
-> the reporting of everything that got run.
+With locked_vm now an atomic, there is no need to take mmap_sem as
+writer.  Delete and refactor accordingly.
 
-Though I guess if we want separate scripts per module, ignore me on
-this part. :)
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: <linux-mm@kvack.org>
+Cc: <kvm-ppc@vger.kernel.org>
+Cc: <linuxppc-dev@lists.ozlabs.org>
+Cc: <linux-kernel@vger.kernel.org>
+---
+ arch/powerpc/kvm/book3s_64_vio.c | 34 +++++++++++---------------------
+ 1 file changed, 12 insertions(+), 22 deletions(-)
 
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index e7fdb6d10eeb..8e034c3a5d25 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -56,7 +56,7 @@ static unsigned long kvmppc_stt_pages(unsigned long tce_pages)
+ 	return tce_pages + ALIGN(stt_bytes, PAGE_SIZE) / PAGE_SIZE;
+ }
+ 
+-static long kvmppc_account_memlimit(unsigned long stt_pages, bool inc)
++static long kvmppc_account_memlimit(unsigned long pages, bool inc)
+ {
+ 	long ret = 0;
+ 	s64 locked_vm;
+@@ -64,33 +64,23 @@ static long kvmppc_account_memlimit(unsigned long stt_pages, bool inc)
+ 	if (!current || !current->mm)
+ 		return ret; /* process exited */
+ 
+-	down_write(&current->mm->mmap_sem);
+-
+-	locked_vm = atomic64_read(&current->mm->locked_vm);
+ 	if (inc) {
+-		unsigned long locked, lock_limit;
++		unsigned long lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+ 
+-		locked = locked_vm + stt_pages;
+-		lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+-		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
++		locked_vm = atomic64_add_return(pages, &current->mm->locked_vm);
++		if (locked_vm > lock_limit && !capable(CAP_IPC_LOCK)) {
+ 			ret = -ENOMEM;
+-		else
+-			atomic64_add(stt_pages, &current->mm->locked_vm);
++			atomic64_sub(pages, &current->mm->locked_vm);
++		}
+ 	} else {
+-		if (WARN_ON_ONCE(stt_pages > locked_vm))
+-			stt_pages = locked_vm;
+-
+-		atomic64_sub(stt_pages, &current->mm->locked_vm);
++		locked_vm = atomic64_sub_return(pages, &current->mm->locked_vm);
++		WARN_ON_ONCE(locked_vm < 0);
+ 	}
+ 
+-	pr_debug("[%d] RLIMIT_MEMLOCK KVM %c%ld %ld/%ld%s\n", current->pid,
+-			inc ? '+' : '-',
+-			stt_pages << PAGE_SHIFT,
+-			atomic64_read(&current->mm->locked_vm) << PAGE_SHIFT,
+-			rlimit(RLIMIT_MEMLOCK),
+-			ret ? " - exceeded" : "");
+-
+-	up_write(&current->mm->mmap_sem);
++	pr_debug("[%d] RLIMIT_MEMLOCK KVM %c%lu %lld/%lu%s\n", current->pid,
++			inc ? '+' : '-', pages << PAGE_SHIFT,
++			locked_vm << PAGE_SHIFT,
++			rlimit(RLIMIT_MEMLOCK), ret ? " - exceeded" : "");
+ 
+ 	return ret;
+ }
 -- 
-Kees Cook
+2.21.0
+
