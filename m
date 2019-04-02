@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0F1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FBAC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E264D20856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1E620856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbfDBKwx (ORCPT
+        id S1729957AbfDBKw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:52:53 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2103 "EHLO huawei.com"
+        Tue, 2 Apr 2019 06:52:57 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2471 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725889AbfDBKww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:52:52 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [10.3.20.212])
-        by Forcepoint Email with ESMTP id 7ED5F9FBA59368738391;
-        Tue,  2 Apr 2019 18:52:50 +0800 (CST)
+        id S1725959AbfDBKwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:52:53 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [10.3.20.209])
+        by Forcepoint Email with ESMTP id 3E3C2508C2F4E9B30B49;
+        Tue,  2 Apr 2019 18:52:51 +0800 (CST)
 Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
  id 14.3.408.0; Tue, 2 Apr 2019 18:52:50 +0800
 Received: from szvp000201624.huawei.com (10.120.216.130) by
  dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
@@ -34,10 +34,12 @@ To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
         <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
         Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 1/5] f2fs: clean up codes with op_is_write()
-Date:   Tue, 2 Apr 2019 18:52:18 +0800
-Message-ID: <20190402105222.28374-1-yuchao0@huawei.com>
+Subject: [PATCH 2/5] f2fs: fix potential recursive call when enabling data_flush
+Date:   Tue, 2 Apr 2019 18:52:19 +0800
+Message-ID: <20190402105222.28374-2-yuchao0@huawei.com>
 X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190402105222.28374-1-yuchao0@huawei.com>
+References: <20190402105222.28374-1-yuchao0@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.120.216.130]
@@ -48,112 +50,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses generic function op_is_write() to instead private defined
-macro is_read_io() for cleanup.
+As Hagbard Celine reported:
 
+Hi, this is a long standing bug that I've hit before on older kernels,
+but I was not able to get the syslog saved because of the nature of
+the bug. This time I had booted form a pen-drive, and was able to save
+the log to it's efi-partition.
+What i did to trigger it was to create a partition and format it f2fs,
+then mount it with options:
+"rw,relatime,lazytime,background_gc=on,disable_ext_identify,discard,heap,user_xattr,inline_xattr,acl,inline_data,inline_dentry,flush_merge,data_flush,extent_cache,mode=adaptive,active_logs=6,whint_mode=fs-based,alloc_mode=default,fsync_mode=strict".
+Then I unpacked a big .tar.xz to the partition (I used a
+gentoo-stage3-tarball as I was in process of installing Gentoo).
+
+Same options just without data_flush gives no problems.
+
+Mar 20 20:54:01 usbgentoo kernel: FAT-fs (nvme0n1p4): Volume was not
+properly unmounted. Some data may be corrupt. Please run fsck.
+Mar 20 21:05:23 usbgentoo kernel: kworker/dying (1588) used greatest
+stack depth: 12064 bytes left
+Mar 20 21:06:40 usbgentoo kernel: BUG: stack guard page was hit at
+00000000a4b0733c (stack is 0000000056016422..0000000096e7463f)
+Mar 20 21:06:40 usbgentoo kernel: kernel stack overflow
+
+......
+
+Mar 20 21:06:40 usbgentoo kernel: Call Trace:
+Mar 20 21:06:40 usbgentoo kernel:  read_node_page+0x71/0xf0
+Mar 20 21:06:40 usbgentoo kernel:  ? xas_load+0x8/0x50
+Mar 20 21:06:40 usbgentoo kernel:  __get_node_page+0x73/0x2a0
+Mar 20 21:06:40 usbgentoo kernel:  f2fs_get_dnode_of_data+0x34e/0x580
+Mar 20 21:06:40 usbgentoo kernel:  f2fs_write_inline_data+0x5e/0x2a0
+Mar 20 21:06:40 usbgentoo kernel:  __write_data_page+0x421/0x690
+Mar 20 21:06:40 usbgentoo kernel:  f2fs_write_cache_pages+0x1cf/0x460
+Mar 20 21:06:40 usbgentoo kernel:  f2fs_write_data_pages+0x2b3/0x2e0
+Mar 20 21:06:40 usbgentoo kernel:  ? f2fs_inode_chksum_verify+0x1d/0xc0
+Mar 20 21:06:40 usbgentoo kernel:  ? read_node_page+0x71/0xf0
+Mar 20 21:06:40 usbgentoo kernel:  do_writepages+0x3c/0xd0
+Mar 20 21:06:40 usbgentoo kernel:  __filemap_fdatawrite_range+0x7c/0xb0
+Mar 20 21:06:40 usbgentoo kernel:  f2fs_sync_dirty_inodes+0xf2/0x200
+Mar 20 21:06:40 usbgentoo kernel:  f2fs_balance_fs_bg+0x2a3/0x2c0
+Mar 20 21:06:40 usbgentoo kernel:  ? f2fs_inode_dirtied+0x21/0xc0
+Mar 20 21:06:40 usbgentoo kernel:  f2fs_balance_fs+0xd6/0x2b0
+Mar 20 21:06:40 usbgentoo kernel:  __write_data_page+0x4fb/0x690
+
+......
+
+Mar 20 21:06:40 usbgentoo kernel:  __writeback_single_inode+0x2a1/0x340
+Mar 20 21:06:40 usbgentoo kernel:  ? soft_cursor+0x1b4/0x220
+Mar 20 21:06:40 usbgentoo kernel:  writeback_sb_inodes+0x1d5/0x3e0
+Mar 20 21:06:40 usbgentoo kernel:  __writeback_inodes_wb+0x58/0xa0
+Mar 20 21:06:40 usbgentoo kernel:  wb_writeback+0x250/0x2e0
+Mar 20 21:06:40 usbgentoo kernel:  ? 0xffffffff8c000000
+Mar 20 21:06:40 usbgentoo kernel:  ? cpumask_next+0x16/0x20
+Mar 20 21:06:40 usbgentoo kernel:  wb_workfn+0x2f6/0x3b0
+Mar 20 21:06:40 usbgentoo kernel:  ? __switch_to_asm+0x40/0x70
+Mar 20 21:06:40 usbgentoo kernel:  process_one_work+0x1f5/0x3f0
+Mar 20 21:06:40 usbgentoo kernel:  worker_thread+0x28/0x3c0
+Mar 20 21:06:40 usbgentoo kernel:  ? rescuer_thread+0x330/0x330
+Mar 20 21:06:40 usbgentoo kernel:  kthread+0x10e/0x130
+Mar 20 21:06:40 usbgentoo kernel:  ? kthread_create_on_node+0x60/0x60
+Mar 20 21:06:40 usbgentoo kernel:  ret_from_fork+0x35/0x40
+
+The root cause is that we run into an infinite recursive calling in
+between f2fs_balance_fs_bg and writepage() as described below:
+
+- f2fs_write_data_pages		--- A
+ - __write_data_page
+  - f2fs_balance_fs
+   - f2fs_balance_fs_bg		--- B
+    - f2fs_sync_dirty_inodes
+     - filemap_fdatawrite
+      - f2fs_write_data_pages	--- A
+...
+          - f2fs_balance_fs_bg	--- B
+...
+
+In order to fix this issue, let's detect such condition in __write_data_page()
+and just skip calling f2fs_balance_fs() recursively.
+
+Reported-by: Hagbard Celine <hagbardcelin@gmail.com>
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
- fs/f2fs/data.c | 25 +++++++++++++------------
- fs/f2fs/f2fs.h |  3 +--
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ fs/f2fs/checkpoint.c | 6 ++----
+ fs/f2fs/data.c       | 3 ++-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a98e1b02279e..935ebdb9cf47 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1009,13 +1009,11 @@ int f2fs_sync_dirty_inodes(struct f2fs_sb_info *sbi, enum inode_type type)
+ 	if (inode) {
+ 		unsigned long cur_ino = inode->i_ino;
+ 
+-		if (is_dir)
+-			F2FS_I(inode)->cp_task = current;
++		F2FS_I(inode)->cp_task = current;
+ 
+ 		filemap_fdatawrite(inode->i_mapping);
+ 
+-		if (is_dir)
+-			F2FS_I(inode)->cp_task = NULL;
++		F2FS_I(inode)->cp_task = NULL;
+ 
+ 		iput(inode);
+ 		/* We need to give cpu to another writers. */
 diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index d87dfa5aa112..22beda1a0c3c 100644
+index 22beda1a0c3c..15bc9a34481d 100644
 --- a/fs/f2fs/data.c
 +++ b/fs/f2fs/data.c
-@@ -287,7 +287,7 @@ static struct bio *__bio_alloc(struct f2fs_sb_info *sbi, block_t blk_addr,
- static inline void __submit_bio(struct f2fs_sb_info *sbi,
- 				struct bio *bio, enum page_type type)
- {
--	if (!is_read_io(bio_op(bio))) {
-+	if (op_is_write(bio_op(bio))) {
- 		unsigned int start;
- 
- 		if (type != DATA && type != NODE)
-@@ -324,10 +324,11 @@ static inline void __submit_bio(struct f2fs_sb_info *sbi,
- 			set_sbi_flag(sbi, SBI_NEED_CP);
- 	}
- submit_io:
--	if (is_read_io(bio_op(bio)))
--		trace_f2fs_submit_read_bio(sbi->sb, type, bio);
--	else
-+	if (op_is_write(bio_op(bio)))
- 		trace_f2fs_submit_write_bio(sbi->sb, type, bio);
-+	else
-+		trace_f2fs_submit_read_bio(sbi->sb, type, bio);
-+
- 	submit_bio(bio);
- }
- 
-@@ -340,10 +341,10 @@ static void __submit_merged_bio(struct f2fs_bio_info *io)
- 
- 	bio_set_op_attrs(io->bio, fio->op, fio->op_flags);
- 
--	if (is_read_io(fio->op))
--		trace_f2fs_prepare_read_bio(io->sbi->sb, fio->type, io->bio);
--	else
-+	if (op_is_write(fio->op))
- 		trace_f2fs_prepare_write_bio(io->sbi->sb, fio->type, io->bio);
-+	else
-+		trace_f2fs_prepare_read_bio(io->sbi->sb, fio->type, io->bio);
- 
- 	__submit_bio(io->sbi, io->bio, fio->type);
- 	io->bio = NULL;
-@@ -464,20 +465,20 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
- 
- 	/* Allocate a new bio */
- 	bio = __bio_alloc(fio->sbi, fio->new_blkaddr, fio->io_wbc,
--				1, is_read_io(fio->op), fio->type, fio->temp);
-+				1, !op_is_write(fio->op), fio->type, fio->temp);
- 
- 	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
- 		bio_put(bio);
- 		return -EFAULT;
+@@ -2039,7 +2039,8 @@ static int __write_data_page(struct page *page, bool *submitted,
  	}
  
--	if (fio->io_wbc && !is_read_io(fio->op))
-+	if (fio->io_wbc && op_is_write(fio->op))
- 		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
+ 	unlock_page(page);
+-	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode))
++	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode) &&
++					!F2FS_I(inode)->cp_task)
+ 		f2fs_balance_fs(sbi, need_balance_fs);
  
- 	bio_set_op_attrs(bio, fio->op, fio->op_flags);
- 
--	inc_page_count(fio->sbi, is_read_io(fio->op) ?
--			__read_io_type(page): WB_DATA_TYPE(fio->page));
-+	inc_page_count(fio->sbi, op_is_write(fio->op) ?
-+			WB_DATA_TYPE(fio->page) : __read_io_type(page));
- 
- 	__submit_bio(fio->sbi, bio, fio->type);
- 	return 0;
-@@ -490,7 +491,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- 	struct f2fs_bio_info *io = sbi->write_io[btype] + fio->temp;
- 	struct page *bio_page;
- 
--	f2fs_bug_on(sbi, is_read_io(fio->op));
-+	f2fs_bug_on(sbi, !op_is_write(fio->op));
- 
- 	down_write(&io->io_rwsem);
- next:
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5bc7b99fb9c1..24e7f0e6aab7 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1048,7 +1048,6 @@ struct f2fs_io_info {
- 	unsigned char version;		/* version of the node */
- };
- 
--#define is_read_io(rw) ((rw) == READ)
- struct f2fs_bio_info {
- 	struct f2fs_sb_info *sbi;	/* f2fs superblock */
- 	struct bio *bio;		/* bios to merge */
-@@ -2813,7 +2812,7 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
- #define __is_large_section(sbi)		((sbi)->segs_per_sec > 1)
- 
- #define __is_meta_io(fio) (PAGE_TYPE_OF_BIO((fio)->type) == META &&	\
--				(!is_read_io((fio)->op) || (fio)->is_meta))
-+				(op_is_write((fio)->op) || (fio)->is_meta))
- 
- bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type);
+ 	if (unlikely(f2fs_cp_error(sbi))) {
 -- 
 2.18.0.rc1
 
