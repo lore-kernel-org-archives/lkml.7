@@ -2,104 +2,98 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246A8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BE4C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99ED2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39042084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AJO3IU5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbfDBPxK (ORCPT
+        id S1730820AbfDBPxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:53:10 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53534 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfDBPxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:53:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD894374;
-        Tue,  2 Apr 2019 08:53:09 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3793F3F721;
-        Tue,  2 Apr 2019 08:53:09 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 16:53:07 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH] kvm: arm: Skip stage2 huge mappings for unaligned ipa
- backed by THP
-Message-ID: <20190402155307.GE53702@e119886-lin.cambridge.arm.com>
-References: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
+        Tue, 2 Apr 2019 11:53:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40393 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfDBPxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 11:53:24 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so17291921wre.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 08:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o+zmX98tXbi+xY0zAH0xz9iVxstlsGr5BVN7FYTplPg=;
+        b=AJO3IU5H8LYqrmSculMBB1AmkO3SfwVlMi2lm/9y1gbOsZOy3miNngzfZVXCfQo+e0
+         8OKYNV2Na5WEjJVUwYbYX0NEkg8aSPgtLXItehpIej4WM1Ex+jn4RcIiQ3E+bDeH9lHd
+         5orCz04DjsDM6IzfJY3lG9IvBMJKIoJVIAllU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o+zmX98tXbi+xY0zAH0xz9iVxstlsGr5BVN7FYTplPg=;
+        b=KHBSIhwX7lf1GrHFjy06zG4O8i2TDLRM3K1k4/FYrmy4i37jGmu2xHPYQwAb9a6Fhw
+         AhYEU3aiMAsQ99wErw9228+TyUNUBzc8q3FoYnmCdX6LWGlKNgjSt4btODSW8rojjVeP
+         B7Bx6WzYChQbHLtNfEICcgTZIIPK/bWWAw7Y1MopRkspXmSLYmv+v3L7gfjKA23WPvUl
+         RTV8iPU1yGEsRabL5thgqwuJjMkdDugqtyCItBSRQ+uiHlz+/pGrxTGKNcJf1HZ4SxJ3
+         R5UtjdzIEykv7Kg5XYVIt4vfvQnsak9/hV93hDND2ReGzeVyLhemKMWoQhAa7rk8a1xB
+         tO1A==
+X-Gm-Message-State: APjAAAVQFi+mL7nZ4iNKPuB1EuZNZQOX1CBy5O3mFPGH0Zlc8VPEmDro
+        cwhd0v5VM6a7rKBkR1Uwjusi9riq83mxtYoPoVQShg==
+X-Google-Smtp-Source: APXvYqxr6zRW3AOWeMwfJart5dDelVrMdQlBUAWF10IE4Dseut77e+Xyf6eruHcHipsxtXad3I2x5GYEm9NcjrpcdDw=
+X-Received: by 2002:adf:eb84:: with SMTP id t4mr48722512wrn.100.1554220402591;
+ Tue, 02 Apr 2019 08:53:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+References: <20190401205519.34023-1-fletcherw@chromium.org>
+ <20190401205519.34023-2-fletcherw@chromium.org> <20190402050637.GW2059@sirena.org.uk>
+In-Reply-To: <20190402050637.GW2059@sirena.org.uk>
+From:   Fletcher Woodruff <fletcherw@chromium.org>
+Date:   Tue, 2 Apr 2019 09:52:56 -0600
+Message-ID: <CAN-6NYYPL=W66vnnqbXK+LBFbuSnpqL8iv+h_x4G67PWFsMoKA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: rt5677: make ACPI property names match _DSD
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Bard Liao <bardliao@realtek.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        alsa-devel@alsa-project.org, Ross Zwisler <zwisler@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 12:06:16PM +0100, Suzuki K Poulose wrote:
-> With commit a80868f398554842b14, we no longer ensure that the
-> THP page is properly aligned in the guest IPA. Skip the stage2
-> huge mapping for unaligned IPA backed by transparent hugepages.
-> 
-> Fixes: a80868f398554842b14 ("KVM: arm/arm64: Enforce PTE mappings at stage2 when needed")
-> Reported-by: Eric Auger <eric.auger@redhat.com>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Cc: Chirstoffer Dall <christoffer.dall@arm.com>
-> Cc: Zenghui Yu <yuzenghui@huawei.com>
-> Cc: Zheng Xiang <zhengxiang9@huawei.com>
-> Tested-by: Eric Auger <eric.auger@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  virt/kvm/arm/mmu.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index 27c9583..4a22f5b 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1412,7 +1412,9 @@ static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
->  		 * page accordingly.
->  		 */
->  		mask = PTRS_PER_PMD - 1;
-> -		VM_BUG_ON((gfn & mask) != (pfn & mask));
-> +		/* Skip memslots with unaligned IPA and user address */
-> +		if ((gfn & mask) != (pfn & mask))
-> +			return false;
->  		if (pfn & mask) {
->  			*ipap &= PMD_MASK;
->  			kvm_release_pfn_clean(pfn);
-> -- 
-> 2.7.4
+On Mon, Apr 1, 2019 at 11:06 PM Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Apr 01, 2019 at 02:55:19PM -0600, Fletcher Woodruff wrote:
+> > The rt5677 driver is using the wrong property names to read from ACPI.
+> > Update the property names to match those from _DSD, so that the correct
+> > GPIO pin numbers are read and that plug-detection works.
+>
+> > With this patch, plugging and unplugging the headphone jack switches
+> > between headphones and speakers automatically.
+>
+> What makes you say that these properties are wrong?  Are you sure that
+> this isn't just some other systems using different ACPI properties given
+> the poor standardization for ACPI?  Your new ones look like they're DT
+> properties pulled into ACPI while the existing ones look more idiomatic
+> for ACPI.
 
-I was able to reproduce this issue on v5.1-rc3 on a SoftIron Overdrive 1000
-(AMD Seattle (Rev.B1)) with defconfig+ARM64_64K_PAGES with:
+The code to read those properties was originally added by commit 89128534f,
+specifically to support the device I am trying to fix, the Chromebook
+Pixel 2015.
+Admittedly, it's possible some other device came along and matched these
+property names since then, but I'm inclined to think we might be the only ones.
 
-qemu-system-aarch64 -cpu host -machine type=virt,accel=kvm -nographic -smp 4
--m 4096 -kernel /boot/vmlinuz-4.9.0-7-arm64 --append "console=ttyAMA0
-default_hugepagesz=2M hugepages=256"
+> It'd be fine to add your new DT style properties but this
+> might break existing systems.
 
-The 'default_hugepagesz=2M hugepages=256' had no effect on the reproducibility,
-however the guest only intermittently failed to boot. Applying the above
-patch fixed this and the guest boots every time.
-
-Tested-by: Andrew Murray <andrew.murray@arm.com>
-
-Thanks,
-
-Andrew Murray
-
-> 
-> _______________________________________________
-> kvmarm mailing list
-> kvmarm@lists.cs.columbia.edu
-> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
+That said, I agree it would be safer to use the idiomatic ACPI names, and then
+fall back to the DT style names if the idiomatic names fail. Does that sound
+reasonable?
