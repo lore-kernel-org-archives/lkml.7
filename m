@@ -2,164 +2,173 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF97C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD36C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AD52082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:45:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUSx16IW"
+	by mail.kernel.org (Postfix) with ESMTP id B433B2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554227194;
+	bh=WZOzWzhEzi6avNIJ7pQz8BqsN4+8jbHqtbuHBjnCngk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fXEHjpDcp4VtAF9+MpP6T+vCnFaTmfBbiflns6BSmMj0OY8lxCfwXH6t6t2dNnAu5
+	 ZM8VMU1QZmt6aSxSgXJjnj2IZU3Pz0Jqbzm0VrkI+8sxJQ4uCQru6bwmUV1FHEHLoV
+	 KokmONmNnt2WfJZfNETr/ZUw1ny8chKz5PLCTLWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731789AbfDBRp4 (ORCPT
+        id S1731806AbfDBRqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 13:45:56 -0400
-Received: from mail-it1-f171.google.com ([209.85.166.171]:54376 "EHLO
-        mail-it1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbfDBRp4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 13:45:56 -0400
-Received: by mail-it1-f171.google.com with SMTP id a190so5088926ite.4;
-        Tue, 02 Apr 2019 10:45:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v5t/Y4J0o1SK+hPA+fwYsPBbjhkFvdldj8PMZh7RPww=;
-        b=YUSx16IWi0/OQfL04ZDUpWfehULQqBrVTYISDNcZJ7e5LsS4DL8qHHYsRvhp9FziCe
-         SA3nLjhz2BrlaVkpKwn7MW/XfnMBHvP+jwmxBvydQF14ePa0gKtS637eds6jdUeVU3X7
-         SzHkAfnzicMmvFDS1owUbcpkYduYOFkld/8y0RE+QRqtM/F7WaSvFJQO3W1xBCbVbNpO
-         8WNuUqmlkOmWqLH2cceT5Kgc/WYkoGlVAxAHRgCYLRaEh2I+yAXTmbUsum2Rygzx21C1
-         tkfunpB0jHPRE6DPQLLqjgdY6fmSA7zgbDnN3v6ZMlIFwjzqUxTgSlUPRNGHDAtzs3GM
-         nO+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v5t/Y4J0o1SK+hPA+fwYsPBbjhkFvdldj8PMZh7RPww=;
-        b=HdzD1R/hgOfUiWRHLCdIidZB7C4dDRNRw4JjkIibYiLTapJ7k/6LxQut+EBjLEFaNI
-         193X85dUbMbIeLslpylzxpClV53xA4gbxiXAfHtchfGNOSju+hG92FojJcY4O61q7Z5L
-         gC+ChB73b7WRPg7LtX9xLYG4VGSDpcfSI6uxKZ5Om/0/fMn0D7/Kop8FoGSSvITresye
-         KJrBlENfdHb6q14XWJDSTm7kmRuJRG1aAtfmaDE07OMLQl9D9K1LgdWYKyIUIVR3qYCp
-         wINm7nPgA/mzPNi67GdxpC0Pyaw4BKuJnhjojORhbuBfrb3maFp5Bvk9F5UdYPcEzUd4
-         8XNg==
-X-Gm-Message-State: APjAAAUhteJ9qXzWf6bcQ3kS4EY4ZYJAsgbtq0Ejioc9umISlHJrEN8a
-        5qAEEBDn/CgZwubZrNIg3Ysu5WgqGhtHtC7HdCk=
-X-Google-Smtp-Source: APXvYqxlZVPpn8RzULpJBTdsc+/NqRS35BYQf4K2iWoFL2TO4wJzqNHWJnFX2NMFPWr9UIN1fMiHi9lKco9sNZgeN7o=
-X-Received: by 2002:a24:7c52:: with SMTP id a79mr5627493itd.51.1554227154886;
- Tue, 02 Apr 2019 10:45:54 -0700 (PDT)
+        Tue, 2 Apr 2019 13:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730256AbfDBRqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 13:46:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67C502082C;
+        Tue,  2 Apr 2019 17:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554227191;
+        bh=WZOzWzhEzi6avNIJ7pQz8BqsN4+8jbHqtbuHBjnCngk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HblCLl9NhPdy+M0FQNLI9CPZ3s3PVmYcqU8K4jAbSXOUfDVRgvm9w2LIlFj0rFTQM
+         zZIoGeu8IYiKeZmhExH296VyTAz2lxT5gL0LGBai65/UZkLpvXQaHeUr6AAi8mQny5
+         RXeBXgMyVfjbYUAf8T6jzFdwVdcomXfc4l03ET5g=
+Date:   Tue, 2 Apr 2019 19:46:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Kimberly Brown <kimbrownkd@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/8] block: Replace all ktype default_attrs with groups
+Message-ID: <20190402174629.GA23882@kroah.com>
+References: <20190322201440.GA30814@ubu-Virtual-Machine>
+ <cover.1554151487.git.kimbrownkd@gmail.com>
+ <e3b82e2105d1e2b4d6313d862172007e0f4477e2.1554151487.git.kimbrownkd@gmail.com>
+ <1554220958.118779.145.camel@acm.org>
 MIME-Version: 1.0
-References: <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
- <20190329125034-mutt-send-email-mst@kernel.org> <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
- <20190401073007-mutt-send-email-mst@kernel.org> <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
- <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com> <20190401104608-mutt-send-email-mst@kernel.org>
- <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
- <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com> <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
- <20190402112115-mutt-send-email-mst@kernel.org> <3dd76ce6-c138-b019-3a43-0bb0b793690a@redhat.com>
- <CAKgT0Uc78NYnva4T+G5uas_iSnE_YHGz+S5rkBckCvhNPV96gw@mail.gmail.com> <6b0a3610-0e7b-08dc-8b5f-707062f87bea@redhat.com>
-In-Reply-To: <6b0a3610-0e7b-08dc-8b5f-707062f87bea@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 2 Apr 2019 10:45:43 -0700
-Message-ID: <CAKgT0UdHA66z1j=3H06AfgtiF4ThFdXwQ6i8p1MszdL2bRHeZQ@mail.gmail.com>
-Subject: Re: On guest free page hinting and OOM
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554220958.118779.145.camel@acm.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 10:09 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 02.04.19 18:18, Alexander Duyck wrote:
-> > n Tue, Apr 2, 2019 at 8:57 AM David Hildenbrand <david@redhat.com> wrote:
-> >>
-> >> On 02.04.19 17:25, Michael S. Tsirkin wrote:
-> >>> On Tue, Apr 02, 2019 at 08:04:00AM -0700, Alexander Duyck wrote:
-> >>>> Basically what we would be doing is providing a means for
-> >>>> incrementally transitioning the buddy memory into the idle/offline
-> >>>> state to reduce guest memory overhead. It would require one function
-> >>>> that would walk the free page lists and pluck out pages that don't
-> >>>> have the "Offline" page type set,
-> >>>
-> >>> I think we will need an interface that gets
-> >>> an offline page and returns the next online free page.
-> >>>
-> >>> If we restart the list walk each time we can't guarantee progress.
-> >>
-> >> Yes, and essentially we are scanning all the time for chunks vs. we get
-> >> notified which chunks are possible hinting candidates. Totally different
-> >> design.
-> >
-> > The problem as I see it is that we can miss notifications if we become
-> > too backlogged, and that will lead to us having to fall back to
-> > scanning anyway. So instead of trying to implement both why don't we
-> > just focus on the scanning approach. Otherwise the only other option
-> > is to hold up the guest and make it wait until the hint processing has
-> > completed and at that point we are back to what is essentially just a
-> > synchronous solution with batching anyway.
-> >
->
-> In general I am not a fan of "there might be a problem, let's try
-> something completely different". Expect the unexpected. At this point, I
-> prefer to think about easy solutions to eventual problems. not
-> completely new designs. As I said, we've been there already.
+On Tue, Apr 02, 2019 at 09:02:38AM -0700, Bart Van Assche wrote:
+> On Mon, 2019-04-01 at 22:51 -0400, Kimberly Brown wrote:
+> > The kobj_type default_attrs field is being replaced by the
+> > default_groups field. Replace all of the ktype default_attrs fields in
+> > the block subsystem with default_groups and use the ATTRIBUTE_GROUPS
+> > macro to create the default groups.
+> > 
+> > Remove default_ctx_attrs[] because it doesn't contain any attributes.
+> > 
+> > This patch was tested by verifying that the sysfs files for the
+> > attributes in the default groups were created.
+> > 
+> > Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
+> > ---
+> >  block/blk-integrity.c | 3 ++-
+> >  block/blk-mq-sysfs.c  | 8 ++------
+> >  block/blk-sysfs.c     | 3 ++-
+> >  3 files changed, 6 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/block/blk-integrity.c b/block/blk-integrity.c
+> > index d1ab089e0919..85864c71e858 100644
+> > --- a/block/blk-integrity.c
+> > +++ b/block/blk-integrity.c
+> > @@ -365,6 +365,7 @@ static struct attribute *integrity_attrs[] = {
+> >  	&integrity_device_entry.attr,
+> >  	NULL,
+> >  };
+> > +ATTRIBUTE_GROUPS(integrity);
+> >  
+> >  static const struct sysfs_ops integrity_ops = {
+> >  	.show	= &integrity_attr_show,
+> > @@ -372,7 +373,7 @@ static const struct sysfs_ops integrity_ops = {
+> >  };
+> >  
+> >  static struct kobj_type integrity_ktype = {
+> > -	.default_attrs	= integrity_attrs,
+> > +	.default_groups = integrity_groups,
+> >  	.sysfs_ops	= &integrity_ops,
+> >  };
+> >  
+> > diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
+> > index 3f9c3f4ac44c..5315e538b3b1 100644
+> > --- a/block/blk-mq-sysfs.c
+> > +++ b/block/blk-mq-sysfs.c
+> > @@ -173,10 +173,6 @@ static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_hw_ctx *hctx, char *page)
+> >  	return ret;
+> >  }
+> >  
+> > -static struct attribute *default_ctx_attrs[] = {
+> > -	NULL,
+> > -};
+> > -
+> >  static struct blk_mq_hw_ctx_sysfs_entry blk_mq_hw_sysfs_nr_tags = {
+> >  	.attr = {.name = "nr_tags", .mode = 0444 },
+> >  	.show = blk_mq_hw_sysfs_nr_tags_show,
+> > @@ -196,6 +192,7 @@ static struct attribute *default_hw_ctx_attrs[] = {
+> >  	&blk_mq_hw_sysfs_cpus.attr,
+> >  	NULL,
+> >  };
+> > +ATTRIBUTE_GROUPS(default_hw_ctx);
+> >  
+> >  static const struct sysfs_ops blk_mq_sysfs_ops = {
+> >  	.show	= blk_mq_sysfs_show,
+> > @@ -214,13 +211,12 @@ static struct kobj_type blk_mq_ktype = {
+> >  
+> >  static struct kobj_type blk_mq_ctx_ktype = {
+> >  	.sysfs_ops	= &blk_mq_sysfs_ops,
+> > -	.default_attrs	= default_ctx_attrs,
+> >  	.release	= blk_mq_ctx_sysfs_release,
+> >  };
+> >  
+> >  static struct kobj_type blk_mq_hw_ktype = {
+> >  	.sysfs_ops	= &blk_mq_hw_sysfs_ops,
+> > -	.default_attrs	= default_hw_ctx_attrs,
+> > +	.default_groups = default_hw_ctx_groups,
+> >  	.release	= blk_mq_hw_sysfs_release,
+> >  };
+> >  
+> > diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> > index 422327089e0f..7a95a1eb27e1 100644
+> > --- a/block/blk-sysfs.c
+> > +++ b/block/blk-sysfs.c
+> > @@ -769,6 +769,7 @@ static struct attribute *default_attrs[] = {
+> >  #endif
+> >  	NULL,
+> >  };
+> > +ATTRIBUTE_GROUPS(default);
+> >  
+> >  #define to_queue(atr) container_of((atr), struct queue_sysfs_entry, attr)
+> >  
+> > @@ -890,7 +891,7 @@ static const struct sysfs_ops queue_sysfs_ops = {
+> >  
+> >  struct kobj_type blk_queue_ktype = {
+> >  	.sysfs_ops	= &queue_sysfs_ops,
+> > -	.default_attrs	= default_attrs,
+> > +	.default_groups = default_groups,
+> >  	.release	= blk_release_queue,
+> >  };
+> 
+> I think this should have been four patches instead of one.
 
-The solution as we have is not "easy". There are a number of race
-conditions contained within the code and it doesn't practically scale
-when you consider we are introducing multiple threads in both the
-isolation and returning of pages to/from the buddy allocator that will
-have to function within the zone lock.
+4?  I could maybe see 3, how would you make 4 patches out of this?
 
-> Related to "falling behind" with hinting. If this is indeed possible
-> (and I'd like to know under which conditions), I wonder at which point
-> we no longer care about missed hints. If our guest as a lot of MM
-> activity, could be that is good that we are dropping hints, because our
-> guest is so busy, it will reuse pages soon again.
+> Anyway:
+> 
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
-This is making a LOT of assumptions. There are a few scenarios that
-can hold up hinting on the host side. One of the limitations of
-madvise is that we have to take the mm read semaphore. So if something
-is sitting on the write semaphore all of the hints will be blocked
-until it is released.
+Thanks for the review, I'll queue this up in a few days.
 
-> One important point is - I think - that free page hinting does not have
-> to fit all possible setups. In certain environments it just makes sense
-> to disable it. Or live with it not giving you "all the hints". E.g.
-> databases that eat up all free memory either way. The other extreme
-> would be a simple webserver that is mostly idle.
-
-My concern is we are introducing massive buffer bloat in the mm
-subsystem and it still has the potential for stalling VCPUs if we
-don't have room in the VQs. We went through this back in the day with
-networking. Adding more buffers is not the solution. The solution is
-to have a way to gracefully recover and keep our hinting latency and
-buffer bloat to a minimum.
-
-> We are losing hitning of quite free memory already due to the MAX_ORDER
-> - X discussion. Dropping a couple of other hints shouldn't really hurt.
-> The question is, are there scenarios where we can completely screw up.
-
-My concern is that it can hurt a ton. In my mind the target for a
-feature like this is a guest that has something like an application
-that will fire up a few times a day eat up a massive amount of memory,
-and then free it all when it is done. Now if that application is
-freeing a massive block of memory and for whatever reason the QEMU
-thread that is translating our hint requests to madvise calls cannot
-keep up then we are going to spend the next several hours with that
-memory still assigned to an idle guest.
+greg k-h
