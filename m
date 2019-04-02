@@ -2,80 +2,65 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC826C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5577C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8819720857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C185820856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbfDBLrR (ORCPT
+        id S1730771AbfDBLry convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:47:17 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48501 "EHLO mga17.intel.com"
+        Tue, 2 Apr 2019 07:47:54 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:39696 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbfDBLrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:47:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 04:47:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,300,1549958400"; 
-   d="scan'208";a="132274834"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 02 Apr 2019 04:47:11 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hBHsl-0006cA-3S; Tue, 02 Apr 2019 19:47:11 +0800
-Date:   Tue, 2 Apr 2019 19:46:18 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     kbuild-all@01.org, alsa-devel@alsa-project.org,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH asoc] ASoC: tlv320aic31xx: aic31xx_set_jack() can be
- static
-Message-ID: <20190402114618.GA8728@lkp-wsm-ep1>
-References: <201904021912.ym8zWPD9%lkp@intel.com>
+        id S1729568AbfDBLry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:47:54 -0400
+Received: from we0289.dip.tu-dresden.de ([141.76.177.33] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hBHtL-0002Vj-Ee; Tue, 02 Apr 2019 13:47:47 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: rockchip: add shutdown function to poweroff VOP and HDMI TX
+Date:   Tue, 02 Apr 2019 13:47:46 +0200
+Message-ID: <81811367.CzZtJVt0pY@phil>
+In-Reply-To: <CA+z=w3W+OYgxwejgfbNLJzFP28seh5ij62imuCDAY9XP_V39fQ@mail.gmail.com>
+References: <20190308183718.21409-1-jbx6244@gmail.com> <CA+z=w3W+OYgxwejgfbNLJzFP28seh5ij62imuCDAY9XP_V39fQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201904021912.ym8zWPD9%lkp@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Johan,
 
-Fixes: ebf3326cd969 ("ASoC: tlv320aic31xx: Add headphone/headset detection")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- tlv320aic31xx.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Am Montag, 11. März 2019, 19:14:27 CEST schrieb Johan Jonker:
+> Hi,
+> 
+> Just found out that this was patched and reverted before.(lol)
+> The revert was 3 months ago for RK3399 boards, but other processors
+> like RK3066 are left without shutdown now.
+> 
+> What's the status for a fix?
+> Keep using the old patch for now?
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index fa47bfc..9b37e98 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -1264,8 +1264,8 @@ static int aic31xx_set_bias_level(struct snd_soc_component *component,
- 	return 0;
- }
- 
--int aic31xx_set_jack(struct snd_soc_component *component,
--		     struct snd_soc_jack *jack, void *data)
-+static int aic31xx_set_jack(struct snd_soc_component *component,
-+			    struct snd_soc_jack *jack, void *data)
- {
- 	struct aic31xx_priv *aic31xx = snd_soc_component_get_drvdata(component);
- 
+I've just resurrected the patch from Vicente, calling the atomic_shutdown
+helper. Sadly I forgot to Cc you there, but you can for example find it at
+
+https://patchwork.freedesktop.org/patch/295946/
+
+
+Heiko
+
+
