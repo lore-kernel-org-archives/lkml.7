@@ -2,189 +2,135 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6196C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9819DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84EC22070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F562070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="DawyLHQB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTqR6OtN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfDBCrP (ORCPT
+        id S1728838AbfDBCvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 22:47:15 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:47108 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbfDBCrP (ORCPT
+        Mon, 1 Apr 2019 22:51:16 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:56295 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfDBCvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 22:47:15 -0400
-Date:   Mon, 1 Apr 2019 19:47:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 139DE640155
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1554173234;
-        bh=sFSPmqNJecgUh6xdYD3D3mfo9LAis43LWnqFsA/0EgM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DawyLHQBgDleTTlrFuaHW8+b4nRIozpPHIWvU+Pw9b1Ir6NJaPVyewbI/bP5a2z6J
-         0g5TtPRaOUZiT+pqp+PY0P6hpqv7CiNk4tKqi8Fck61+Ycb9y2TpQn02dMvt7ZQtZq
-         PaAaMGifo3DAzc5jZDCmjHwF4qv0Ra4zaqWOu+gXH2u+J5mWH/mysDGesgXTnSpnsj
-         +6vmh4FKMHQDDodS5+KVK3j1qG29+2YQKF8PQmAKKpqZBlivxV4PPWOQLTEqc2gN/F
-         haOcUpk5C9g8YK9qPwyQpX6mJdVJyyewuaMXEQpf4qBk2igFwWAZurNJJrTOVptFPF
-         flId1i/kObu+g==
-From:   "Life is hard, and then you die" <ronald@innovation.ch>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] driver core: add dev_print_hex_dump() logging
- function.
-Message-ID: <20190402024714.GA14213@innovation.ch>
-References: <20190327014807.7472-1-ronald@innovation.ch>
- <20190327014807.7472-4-ronald@innovation.ch>
- <20190327023757.GB20766@kroah.com>
- <20190328002817.GF24753@innovation.ch>
- <20190328052917.GB18668@kroah.com>
- <20190328102755.GA26446@innovation.ch>
- <20190328112952.GA2232@kroah.com>
+        Mon, 1 Apr 2019 22:51:15 -0400
+Received: by mail-it1-f193.google.com with SMTP id z126so2637979itd.5;
+        Mon, 01 Apr 2019 19:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Qzcc4/2F2anEBs0yxcfDa0SSDpIJUqbgduaUlMcApaA=;
+        b=bTqR6OtN2mOSNfb5+HBdYwCKeL0xq0V6F3o9nchI9U7ZxmMyh1pGmdGG7BkYPZCywH
+         j5MWGwrSZ5RmieURRbKklpZAd42B7F8w8/nRoJxUIGsaNn5xEI84TBJgoPAfX4R1iYVx
+         gCZFgqcPmdF4Ay05FmekZ5fyf08VBOSYIO90L3RgAw7+emCLLMDzXvUZWEAiUAbAuoFQ
+         c16O5THjgmbBbx9drTgXsHABVEIPGkrPOroWCJ4Qq4sMhFE6rnm3wvFX0rBT7UVKzrRd
+         LvNnV69rGFvRZvPnyfbbP9K+JS1kcvFsJi1pEwrj44f2TSbk9ALfFSa1LCy2X/hBGeZX
+         B3rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Qzcc4/2F2anEBs0yxcfDa0SSDpIJUqbgduaUlMcApaA=;
+        b=ZtVrtX1GrvCX+l634SjZgyg5oiBsFL/BoC/0fUUJxwHHL7gAIB91UB6XLB9XcTqDbu
+         OqbXg0pgkVl7U4z/bw+ygKbTYFnCGlfxjVUBoFlUkgZuXAOpT9E1vp2yqM5m71sNzbbj
+         GH+3BnqgY5N7BIaE5x/0Zt/ixewgKcadjtptzEHNbbCWjTdDqG1sHsIw76kY6riKj4Ux
+         csNEljdp0Se1dSDdWP2/vtKTBT82utEYISjNqrUeafuFE8jTQtpMCAGUSDda5FfrI+LR
+         wWQRdv9m1SgaEdI6bDGfs5l7wpVl25qEKqx4NkP8Hax4qmcV8KE+KcfA+9fXpBsC0cQJ
+         m2Pg==
+X-Gm-Message-State: APjAAAUkB1Mm+OTqPWfjv13mHuqCuFKKRDKtbJPXNeMjdRX73g+8OQxL
+        m+jXd1JWdf1usl/up8C88Qel/JQka88=
+X-Google-Smtp-Source: APXvYqyy4JxLbEVaNCVlbec2CoT/m2KHC4KW/XadAZ3gTDH2paZ8NcB4b9jmYwFVFGUm8Hi7bHXBjA==
+X-Received: by 2002:a24:3ac8:: with SMTP id m191mr2218104itm.74.1554173473916;
+        Mon, 01 Apr 2019 19:51:13 -0700 (PDT)
+Received: from ubu (2600-6c48-437f-c81d-984d-b4e8-0abe-7e26.dhcp6.chtrptr.net. [2600:6c48:437f:c81d:984d:b4e8:abe:7e26])
+        by smtp.gmail.com with ESMTPSA id o11sm6435986itb.33.2019.04.01.19.51.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Apr 2019 19:51:13 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 22:51:10 -0400
+From:   Kimberly Brown <kimbrownkd@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] kobject: Add default group support to kobj_type and
+ replace subsystem uses
+Message-ID: <cover.1554151487.git.kimbrownkd@gmail.com>
+References: <20190322201440.GA30814@ubu-Virtual-Machine>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190328112952.GA2232@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190322201440.GA30814@ubu-Virtual-Machine>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset adds support for default attribute groups to kobj_type.
+Also, the uses of kobj_type's default_attrs field are replaced with
+default_groups in the following subsystems:
+ - samples
+ - block
+ - net
+ - irq
+ - padata
+ - cpufreq
+ - livepatch
 
-On Thu, Mar 28, 2019 at 12:29:52PM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Mar 28, 2019 at 03:27:55AM -0700, Life is hard, and then you die wrote:
-> > 
-> > On Thu, Mar 28, 2019 at 06:29:17AM +0100, Greg Kroah-Hartman wrote:
-> > > On Wed, Mar 27, 2019 at 05:28:17PM -0700, Life is hard, and then you die wrote:
-> > > > 
-> > > > On Wed, Mar 27, 2019 at 11:37:57AM +0900, Greg Kroah-Hartman wrote:
-> > > > > On Tue, Mar 26, 2019 at 06:48:06PM -0700, Ronald Tschalär wrote:
-> > > > > > This is the dev_xxx() analog to print_hex_dump(), using dev_printk()
-> > > > > > instead of straight printk() to match other dev_xxx() logging functions.
-> > > > > > ---
-> > > > > >  drivers/base/core.c    | 43 ++++++++++++++++++++++++++++++++++++++++++
-> > > > > >  include/linux/device.h | 15 +++++++++++++++
-> > > > > >  2 files changed, 58 insertions(+)
-[snip]
-> > > > > Anyway, no, please do not do this.  Please do not dump large hex values
-> > > > > like this to the kernel log, it does not help anyone.
-> > > > > 
-> > > > > You can do this while debugging, sure, but not for "real" kernel code.
-> > > > 
-> > > > As used by this driver, it is definitely called for debugging only and
-> > > > must be explicitly enabled via a module param. But having the ability
-> > > > for folks to easily generate and print out debugging info has proven
-> > > > quite valuable.
-> > > 
-> > > We have dynamic debugging, no need for module parameters at all.  This
-> > > isn't the 1990's anymore :)
-> > 
-> > I am aware of dynamic debugging, but there are several issues with it
-> > from the perspective of the logging I'm doing here (I mentioned these
-> > in response to an earlier review already):
-> > 
-> >   1. Dynamic debugging can't be enabled at a function or line level on
-> >      the kernel command line, so this means that to debug issues
-> >      during boot you have to enable everything, which can be way too
-> >      verbose
-> 
-> You can, and should enable it at a function or line level by writing to
-> the proper kernel file in debugfs.
-> 
-> You have read Documentation/admin-guide/dynamic-debug-howto.rst, right?
+The subsystem maintainers and lists will be copied on the subsystem
+patches.
 
-Yes, and I've played with the parameters quite a bit.
+The uses of kobj_type's default_attrs field in the other subsystems will
+be replaced in future patchsets.
 
-> No need to do anything on the command line, that's so old-school :)
-
-Sorry if I'm being unduly dense, but then how to enable debugging
-during early boot? The only other alternative I see is modifying the
-initrd, and asking folks to do that is noticeably more complicated
-than having them add something to the command line in grub. So from my
-perspective I find kernel params far from old-school :-)
-
-> >   2. The expressions to enable the individual logging statements are
-> >      quite brittle (in particular the line-based ones) since they
-> >      (may) change any time the code is changed - having stable
-> >      commands to give to users and put in documentation (e.g.
-> >      "echo 0x200 > /sys/module/applespi/parameters/debug") is
-> >      quite valuable.
-> > 
-> >      One way to work around this would be to put every single logging
-> >      statement in a function of its own, thereby ensuring a stable
-> >      name is associated with each one.
-> 
-> Again, read the documentation, this works today as-is.
-
-I have read it (we're talking about the dynamic debug docs here), but
-I just don't see how it addresses this in any way.
-
-> >   3. In at least two places we log different types of packets in the
-> >      same lines of code (protected by a "if (log_mask & PKT_TYPE)") -
-> >      dynamic-debug would only allow enabling or disabling logging of
-> >      all packets. This could be worked around by creating a separate
-> >      (but essentially duplicate) logging function for each packet type
-> >      and some lookup table to call the appropriate one. Not very
-> >      pretty IMO, though.
-> 
-> True, but you can use tracepoints as well, that would probably be much
-> easier when you are logging data streams.  You can also use an ebpf
-> program with the tracepoints to log just what you need/want to when you
-> want to as well.
-
-Thanks for the hint, I hadn't paid much attention to tracepoints till
-now. They do solve most of these issues I've mentioned here, though.
-So I've actually gone and implemented the tracing as tracepoints now.
-Two issues I noticed though:
-
- 1. since filters can't be enabled on the command line (and yes, we
-    seem to disagree on the usefulness of the command line) it means
-    I had to essentially create tracepoints for every trace+filter
-    combo I may want to enable (in my case it's just one field, so I
-    ended up with 8 tracepoints instead of 1). Not a big deal in my
-    case, but could get ugly.
-
- 2. in cases where there is relevant log output too, folks have to be
-    told to provide both trace and dmesg output, the outputs have to
-    merged back together again. Though I note that with the use of the
-    tp_printk kernel param this inconvenience goes away again (but
-    we're back to logging the traces in the kernel log :-) ).
-
-> >   4. In a couple places we log both the sent command and the received
-> >      response, with the log-mask determining for which types of
-> >      packets to do this. With a log mask there is one bit to set to
-> >      get both logged; with dynamic debugging you'd have to enable the
-> >      writing and receiving parts separately (not a huge deal, but yet
-> >      one place where things are a bit more complicated than
-> >      necessary).
-> > 
-> > Except for the first, none of these are insurmountable, but together
-> > they don't make dynamic debugging very attractive for this sort of
-> > logging.
-> 
-> Look into it some more, we have all of this covered today, no need for
-> just a single driver to do something fancy on its own :)
-
-The tracepoints do indeed cover this too.
+Changes in v2:
+ - Patch 1 is not changed.
+ - Patches 2-8 are new.
 
 
-  Cheers,
+Kimberly Brown (8):
+  kobject: Add support for default attribute groups to kobj_type
+  samples/kobject: Replace foo_ktype's default_attrs field with groups
+  block: Replace all ktype default_attrs with groups
+  net-sysfs: Replace ktype default_attrs field with groups
+  irqdesc: Replace irq_kobj_type's default_attrs field with groups
+  padata: Replace padata_attr_type default_attrs field with groups
+  cpufreq: schedutil: Replace default_attrs field with groups
+  livepatch: Replace klp_ktype_patch's default_attrs with groups
 
-  Ronald
+ block/blk-integrity.c            |  3 ++-
+ block/blk-mq-sysfs.c             |  8 ++------
+ block/blk-sysfs.c                |  3 ++-
+ include/linux/kobject.h          |  3 ++-
+ kernel/irq/irqdesc.c             |  3 ++-
+ kernel/livepatch/core.c          |  3 ++-
+ kernel/padata.c                  |  3 ++-
+ kernel/sched/cpufreq_schedutil.c |  5 +++--
+ lib/kobject.c                    | 14 ++++++++++++++
+ net/core/net-sysfs.c             |  6 ++++--
+ samples/kobject/kset-example.c   |  3 ++-
+ 11 files changed, 37 insertions(+), 17 deletions(-)
+
+-- 
+2.17.1
 
