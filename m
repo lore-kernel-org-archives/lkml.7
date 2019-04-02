@@ -2,206 +2,120 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11134C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5488C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF7F2064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC242064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L+dRcCXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730565AbfDBQWS (ORCPT
+        id S1730568AbfDBQXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:22:18 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45059 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbfDBQWR (ORCPT
+        Tue, 2 Apr 2019 12:23:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46343 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729063AbfDBQXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:22:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id e24so6613838pfi.12;
-        Tue, 02 Apr 2019 09:22:17 -0700 (PDT)
+        Tue, 2 Apr 2019 12:23:45 -0400
+Received: by mail-io1-f66.google.com with SMTP id b9so11396106iot.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 09:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EAxC9Btkr7Gk8wWX2nBvviXnB1sBwtVZsT+WRzFCc20=;
+        b=L+dRcCXPQHAApHqKjVBo00b0gDHceC/G9rpgCNBr9+ivQ+CpRtjjZxEM07Hc9Pv9QL
+         NSHg86NUD/GAesbwtEPqjgsrrBwmiSe2gV36rslwRfbQFDiJzzaID1MmDHPmbe63rucy
+         lVlpkZ9mPAHV3FrT427pbvdM7r8incVufXw11vObjorIguXLM/P7rfFrHNnKudaziD8v
+         lWIZht05nqI/s3JIMtzRVMEvTVNvU7jqE5+sNY5GByDbCtlqe0opuxu9nha/EbDAeWyA
+         3+Ro23tipZAjsIkKR9PiNDrLC9UkLLAsKoGpAWoiH3cVHpiSpPfR8u/MCipGfYltoei1
+         Le1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cXgXpfbiz+qIWAuV3P59qt2WcKXpvm1l23OgBryhJqo=;
-        b=l4/QyVn0ZCm5wpas+T0ehUmS3QdGJg7uf7rINx31aJHGYyhdhaPeqF7QYmpkjaXNFn
-         gL1ksBi3JoE9WNyjcR0KkJuQwkKln2d8kVECIqK5dfhFKgWcE0frSAo3YKVhEWwPBjcH
-         gD7U92+4q4z84QTEkkbD+WVf8GqQg1FLQmRbBRpiu+MF+KbKKuXiH+A5e+lh67N3ALVK
-         fJcGkuJm4cMMT6WYvjTvAo0ofc/HJe4JbnXqA1MjweXouf4OBt60hDiGKzYDMuQL8bo3
-         wDlS2J1GJ29SksZd/ORY/MmF2EP9vHskFoqno3j8Hba7m/JsHNy0AM8XDvI40w19qXDY
-         hedQ==
-X-Gm-Message-State: APjAAAWxr0FDg6ROLrW/hkFDUCcS7wnKSCOl2FUorPjxp3+LE3bf4XcL
-        zdt/XHvN2RVHP5fWrgDtWrUG1aVu1KMY3oEXZL8=
-X-Google-Smtp-Source: APXvYqw5pJzl9VQ1P7TpcygALP28NV5hpu6LNhFaE9aK9LwxuHH8p2+lD0KMhciVVQKyeA2M+zP9Skxpipgon9HWxTU=
-X-Received: by 2002:a63:ad4b:: with SMTP id y11mr54177770pgo.405.1554222136425;
- Tue, 02 Apr 2019 09:22:16 -0700 (PDT)
+        bh=EAxC9Btkr7Gk8wWX2nBvviXnB1sBwtVZsT+WRzFCc20=;
+        b=mbiwatG7Fb23Xkp5KAJikgMNFepF0Qh68+ByKx0hmc9GZbWdn5aPxeyRbRrIxw83W+
+         YobHDPdBXB7LEyp0Vv/kO+UYGCiMLT1JuU41FgaZkVwnyjqMuCl0hVLk1IVhWnIQcxWy
+         jjrb+Zzv3kjbAH18kdFIv7eRKHhgHIZqZgpz/e8uQSI4aWwx3dZXr0Cenc+d8pwXlKYa
+         2bCyRObXanUiUfqAq82p/L8CpXIqv6094iIIC8CC9mW/OH08AtOuxDsHnGcwn0DD4eYJ
+         AE1VlIsrD0YPNIaWPXkIJPbbadbgkR5c1Kt/nbRIN5GCBc3k6QcsX0FVataUcWwKU47f
+         HfjQ==
+X-Gm-Message-State: APjAAAXEmXBvFCTW9MTCwwJ2c2NrVmd1m3uhKjFUGbPO5Cst17G3TSTA
+        wVEhiuoq6Oc2KjlgmdGF5pCt/YtA+AQKbwLrzblg0g==
+X-Google-Smtp-Source: APXvYqwWo1p15B4zgVrZ5YmdWvJVNWIJFU6HZjQ04W7M/XaksZHzLSmh+u2qUzIw1Pu255Rj/KD2S+JGbQidUzoZ+PU=
+X-Received: by 2002:a6b:3b07:: with SMTP id i7mr34570392ioa.230.1554222224152;
+ Tue, 02 Apr 2019 09:23:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190402094246epcas1p1f43795d840b4c3a1f7efddc0523b2c89@epcas1p1.samsung.com>
- <1554198011-24342-1-git-send-email-pankaj.dubey@samsung.com> <0d3e8992-06e1-57e4-edd5-ba230caaa189@arm.com>
-In-Reply-To: <0d3e8992-06e1-57e4-edd5-ba230caaa189@arm.com>
-From:   Pankaj Dubey <pankaj.dubey@samsung.com>
-Date:   Tue, 2 Apr 2019 21:52:28 +0530
-Message-ID: <CAGcde9F1h31FQ7qLUdFTvZ_1vt67956=5r-Do6qU3Q0vSVe6=g@mail.gmail.com>
-Subject: Re: [PATCH] usb: xhci: inherit dma_mask from bus if set correctly
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, mgautam@codeaurora.org,
-        felipe.balbi@linux.intel.com, Sriram Dash <sriram.dash@samsung.com>
+References: <1552304759-5394-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+In-Reply-To: <1552304759-5394-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 2 Apr 2019 18:23:32 +0200
+Message-ID: <CAKv+Gu-tFpvKm4PSyxNkXHFSStfVCqOzdWCZjFTXiosZhoVKXg@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: xilinx-nwl: Fix Multi MSI data programming
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019 at 15:34, Robin Murphy <robin.murphy@arm.com> wrote:
+On Mon, 11 Mar 2019 at 12:46, Bharat Kumar Gogada
+<bharat.kumar.gogada@xilinx.com> wrote:
 >
-> On 02/04/2019 10:40, Pankaj Dubey wrote:
-> > From: Sriram Dash <sriram.dash@samsung.com>
-> >
-> > The xhci forcefully converts the dma_mask to either 64 or 32 and the
-> > dma-mask set by the bus is somewhat ignored. If the platform  sets the
-> > correct dma_mask, then respect that.
+> The current Multi MSI data programming fails if multiple end points
+> requesting MSI and multi MSI are connected with switch, i.e the current
+> multi MSI data being given is not considering the number of vectors
+> being requested in case of multi MSI.
+> Due to this if multiple end points are connected and requesting MSI
+> and multi MSI combination, the multi MSI data is ending up using
+> wrong MSI data, which might be used by different device.
 >
-> It's expected for dma_mask to be larger than bus_dma_mask if the latter
-> is set - conceptually, the device mask represents what the device is
-> inherently capable of, while the bus mask represents external
-> interconnect restrictions which individual drivers should not have to
-> care about. The DMA API backend should take care of combining the two to
-> find the intersection.
-
-Thanks for the review.
-
-We are dealing here with the xhci platform which inherits the dma mask
-of the parent, which is from a controller device.
-
-When the controller dma mask is set by the platform in DT, what we
-observe is, its not getting inherited properly and the xhci bus is
-forcing the dma address to be either 32 bit or 64 bit.
-
-In "drivers/usb/host/xhci-plat.c" we have dma_mask setting as below:
-
- /* Try to set 64-bit DMA first */
-if (WARN_ON(!sysdev->dma_mask))
-     /* Platform did not initialize dma_mask */
-     ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
-else
-     ret = dma_set_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
-
-So even if the controller device has set the dma_mask as per it's
-configuration in DT, xhci-plat.c will override it here in else part.
-
-Next it goes to "drivers/usb/host/xhci.c" file, here we have code as:
-
-/* Set dma_mask and coherent_dma_mask to 64-bits,
- * if xHC supports 64-bit addressing */
-if (HCC_64BIT_ADDR(xhci->hcc_params) &&
-                !dma_set_mask(dev, DMA_BIT_MASK(64))) {
-        xhci_dbg(xhci, "Enabling 64-bit DMA addresses.\n");
-        dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-} else {
-        /*
-         * This is to avoid error in cases where a 32-bit USB
-         * controller is used on a 64-bit capable system.
-         */
-        retval = dma_set_mask(dev, DMA_BIT_MASK(32));
-        if (retval)
-                return retval;
-        xhci_dbg(xhci, "Enabling 32-bit DMA addresses.\n");
-        dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-}
-
-So xhci will force the dma_mask to either DMA_BIT_MASK(32) or
-DMA_BIT_MASK(64), what if my device needs other than 32 bit or 64 bit
-dma_mask.
-
-The bus_dma_mask was introduced for a case when the bus from a
-device's dma interface may carry fewer address bits. But apparently,
-it is the only mask which retains the original dma addressing from the
-parent. So basically what we observe is currently there is no way we
-can pass dma_mask greater than 32-bit, from DT via dev->dma_mask or
-dev->coherent_dma_mask due to below logic in
-
-from "drivers/of/platform.c" we have
-static struct platform_device *of_platform_device_create_pdata(
-                                        struct device_node *np,
-                                        const char *bus_id,
-                                        void *platform_data,
-                                        struct device *parent)
-{
-      struct platform_device *dev;
-      ...
-      dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-      if (!dev->dev.dma_mask)
-             dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-  ...
-}
-
-and then in of_dma_configure function in "drivers/of/device.c" we have..
-
-mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1); //This mask
-computation is going fine and gets mask greater than 32-bit if defined
-in DT
-dev->coherent_dma_mask &= mask;  // Here the higher bit [63:32] will
-get truncated as coherent_dma_mask is initialized to DMA_BIT_MASK(32)
-in platform.c
-
-*dev->dma_mask &= mask; //Same here higher bits will get truncated
-/* ...but only set bus mask if we found valid dma-ranges earlier */
-if (!ret)
-dev->bus_dma_mask = mask; //Only bus_dma_mask can carry the original
-mask as specified in platform DT.
-
-To minimise the impact on existing code, we reused the bus_dma_mask
-for finding the dma addressing bits.
-
-Or other way we may need to initialise dma_mask/coherent_dma_mask as
-DMA_BIT_MASK(64) in "drivers/of/platform.c" and let all devices set
-dma_mask via DT using "dma-ranges" property or respective platform
-driver.
-
-> Are you seeing an actual problem here, and if so
-> on which platform? (If the bus mask is set at all then it wouldn't seem
-> to be the DT PCI issue that I'm still trying to fix).
+> Fix Multi MSI data programming with required alignment by
+> using number of vectors being requested.
 >
-
-
-We are facing this issue in one of the Samsung's upcoming SoC where we
-need dma_mask greater than 32-bit.
-
-Thanks,
-Pankaj
-> Robin.
+> Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
+> Host Controller")
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+> V2:
+>  - Added more description of fix
+> ---
+>  drivers/pci/controller/pcie-xilinx-nwl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
-> > ---
-> >   drivers/usb/host/xhci.c | 10 ++++++++++
-> >   1 file changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> > index 005e659..55cf89e 100644
-> > --- a/drivers/usb/host/xhci.c
-> > +++ b/drivers/usb/host/xhci.c
-> > @@ -5119,6 +5119,16 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
-> >               dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> >       }
-> >
-> > +     /*
-> > +      * A platform may require coherent masks other than 64/32 bit, and we
-> > +      * should respect that. If the firmware has already requested for a
-> > +      * dma-range, we inherit the dma_mask presuming the platform knows
-> > +      * what it is doing.
-> > +      */
-> > +
-> > +     if (dev->bus_dma_mask)
-> > +             dma_set_mask_and_coherent(dev, dev->bus_dma_mask);
-> > +
-> >       xhci_dbg(xhci, "Calling HCD init\n");
-> >       /* Initialize HCD and host controller data structures. */
-> >       retval = xhci_init(hcd);
-> >
+> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> index 81538d7..36669c5 100644
+> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> @@ -484,7 +484,7 @@ static int nwl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>
+>         mutex_lock(&msi->lock);
+>         bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> -                                        nr_irqs, 0);
+> +                                        nr_irqs, nr_irqs - 1);
+
+Are you sure nr_irqs is guaranteed to be a power of 2?
+
+>         if (bit >= INT_PCI_MSI_NR) {
+>                 mutex_unlock(&msi->lock);
+>                 return -ENOSPC;
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
