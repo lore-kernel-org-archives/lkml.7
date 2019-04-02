@@ -2,137 +2,110 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3969C3E8A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE94C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2D82064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04FA204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:18:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqHi3KXr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHnsUCSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbfDBQRV (ORCPT
+        id S1730479AbfDBQSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:17:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33118 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729063AbfDBQRV (ORCPT
+        Tue, 2 Apr 2019 12:18:32 -0400
+Received: from mail-it1-f180.google.com ([209.85.166.180]:36813 "EHLO
+        mail-it1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729063AbfDBQSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:17:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k19so144005pgh.0;
-        Tue, 02 Apr 2019 09:17:20 -0700 (PDT)
+        Tue, 2 Apr 2019 12:18:32 -0400
+Received: by mail-it1-f180.google.com with SMTP id y10so6254527itc.1;
+        Tue, 02 Apr 2019 09:18:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JbfDVSihwTx21ysjcpNCAdgycCvIFZGZ/Q4z4v790s0=;
-        b=HqHi3KXr+FXHd4AqTz1ou1EFpoK3fZUF2eztfS2BBqq/LlDPQ48vdtCQTwYGN43QiL
-         H5zNFG+pjs+3KnACZcR4Mr4/yGKxX5yqlHViGHd7eG6wvy74YS8uVi6RtpRVJjoTS69P
-         VmAZI4o/dQAn95e/vqqCZKj6C9qiTQ/Y0xdryj+Ji0lUpM0zfTs+SxmG8jl21kKI6PU3
-         e4WPzkQoypjPEA+o34ASEEcziOaQBKM9FcITcDdVdo997nHiPQ8jMjVqxq3rNYzXXvs/
-         2vlsPRzXeDy8nXfQhtzfd8f96hpbvL+uR1Gm77WsRLPtjMQFnKd6H1d9+uDkiaWoMj+7
-         cWrg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Re+RFOGNndaiMDA2vDzD5LwdmPcg3nxlGPP85IpTjik=;
+        b=PHnsUCSY/qiykMhJ4pa9KK5JKO3Ze7zSHPJ79uUnDsBRGMw6hIDkR7+DcjMXQQYjPH
+         nB7e1TsSudWHd8n1C4IYRhdkyNIXY5kUqyJ6zgVVQpaAmkoJV18cekhQhcPTXFFMnPTi
+         t5dsHs3ikGRI5XwwZjWY4/kWN0GeLjJTzxCnOg51/Kkaop8NVvCmUixCZ538zIy9bRG7
+         tcNmaT1ItOUct5VDhqjIS2/Z60StmPMOWOlROAXsP30qkFUeLdj3GIXCEQChdDb6EmcA
+         9/2ta9d+qH7zKSOyNPXCZNc9lgyEcf6nOdr2EOgrYEJGPnN9Fkx3mDVDH3c2JUwzAqP7
+         KY0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JbfDVSihwTx21ysjcpNCAdgycCvIFZGZ/Q4z4v790s0=;
-        b=GbuuBNEw8bH0zM8DiHQysRljQ6p1YZscsuV+AXX87jN+WAlWUAzDMuHnM9u4rgV6AE
-         3SpaKDlxKPqQzLDxgJj3SYNpvZEA4EgwvGpT576nyuRTQFYsc5JPtux4odmHzvV6GS8u
-         a145BSR2DaMmzImtdsHA4h1Yj7Mi1yLNtlNroq/4f9s6A/IJ6KGNd4M91FFYjDggyR4D
-         tyAo5ZaMc9JPoJg/m4xfyJFZAYpVy56S9ueqWAopfUVejEee5lwU7P96bg7TkEvRJI1Q
-         X+aDHpZ0orSfhTf9jLkAHmOp5p8ILv2/mHEF7yDfgWCj/YiWa0NQjhAIW5skuFdj7xdg
-         uxfQ==
-X-Gm-Message-State: APjAAAU2+BrviAb6u9ydmcm0QWQdLWZ+gFCmCcZvbpHupTi1uZp+g9Dh
-        K79eAUtIbh1CaibMKGF7U6E=
-X-Google-Smtp-Source: APXvYqzBPmWUn8xkWl5jCa/CxzGFeOEfjylG8P8xS/YVegMfkHlqp/y8C6vW1V1oLe4qgab0OnSsbw==
-X-Received: by 2002:a62:5ec2:: with SMTP id s185mr3423780pfb.16.1554221839526;
-        Tue, 02 Apr 2019 09:17:19 -0700 (PDT)
-Received: from vostro (173-228-88-115.dsl.dynamic.fusionbroadband.com. [173.228.88.115])
-        by smtp.gmail.com with ESMTPSA id o67sm16832118pga.55.2019.04.02.09.17.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 09:17:18 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 09:17:10 -0700
-From:   Nikitas Angelinas <nikitas.angelinas@gmail.com>
-To:     Mukesh Ojha <mojha@codeaurora.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>, LKP <lkp@01.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: b050de0f98 ("fs/binfmt_elf.c: free PT_INTERP filename ASAP"):
- BUG: KASAN: null-ptr-deref in allow_write_access
-Message-ID: <20190402161710.GA4152@vostro>
-References: <5ca377a6.5zcN4o4WezY4tfcr%lkp@intel.com>
- <86f16af9-961f-5057-6596-c95c0316f7da@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Re+RFOGNndaiMDA2vDzD5LwdmPcg3nxlGPP85IpTjik=;
+        b=WucyT7YJvvoWrlCcnGaWT5QqTR04l7YaulzdxdTNvAZ9H3NEq0rRYigCMfWweRH0Kh
+         anJg+H/rSLJzACKp20zetuUCOVi9iVz5uZtvrP2r2bKms5IRjX09oshz5os3wfrUk4p5
+         YxqBkoKEeDxYvBNiKbPIrflisXF4ir7TjTgvotB6M0DjiJsM+WLqbV3SD3GLdwI/fxpA
+         dWxwPJCTo1huoD/AOwKBh8iJ0YS6cA+Mu0oUVJeP6zGBk2aRxyMDJPVn1T3lx3zkCltQ
+         w++sTRs77qnCbiVDEWpWsxtQOtPQaRiMHg4NsAVRq9zdDOQvwQjYWNtB+ABx09EuM+Rz
+         aXLw==
+X-Gm-Message-State: APjAAAXI6vI2JzglatDxI6eWWDugIYXslSO3N9ZIMxKHPXFaNAQQ0ika
+        cp/H/tHAvSgmisx7pUyhhI9RXsA2UvHGXtQxWgU=
+X-Google-Smtp-Source: APXvYqy3Rrz4CRj+wlX1B/s3NmvOSbnBxyJoOkkdOzK2bOS6mXJEXcERmnbqRdRmUCESfRrIxxTPqIyWF9egxW07qxY=
+X-Received: by 2002:a02:c6d8:: with SMTP id r24mr5372138jan.93.1554221911086;
+ Tue, 02 Apr 2019 09:18:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86f16af9-961f-5057-6596-c95c0316f7da@codeaurora.org>
-User-Agent: Mutt/1.7.0 (2016-08-17)
+References: <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
+ <20190329125034-mutt-send-email-mst@kernel.org> <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
+ <20190401073007-mutt-send-email-mst@kernel.org> <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
+ <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com> <20190401104608-mutt-send-email-mst@kernel.org>
+ <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
+ <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com> <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
+ <20190402112115-mutt-send-email-mst@kernel.org> <3dd76ce6-c138-b019-3a43-0bb0b793690a@redhat.com>
+In-Reply-To: <3dd76ce6-c138-b019-3a43-0bb0b793690a@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 2 Apr 2019 09:18:19 -0700
+Message-ID: <CAKgT0Uc78NYnva4T+G5uas_iSnE_YHGz+S5rkBckCvhNPV96gw@mail.gmail.com>
+Subject: Re: On guest free page hinting and OOM
+To:     David Hildenbrand <david@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 08:53:42PM +0530, Mukesh Ojha wrote:
-> I think, this may fix the problem.
-> 
-> https://patchwork.kernel.org/patch/10878501/
-> 
-> 
-> Thanks,
-> Mukesh
-> 
-> On 4/2/2019 8:24 PM, kernel test robot wrote:
-> > Greetings,
-> > 
-> > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> > 
-> > commit b050de0f986606011986698de504c0dbc12c40dc
-> > Author:     Alexey Dobriyan <adobriyan@gmail.com>
-> > AuthorDate: Fri Mar 29 10:02:05 2019 +1100
-> > Commit:     Stephen Rothwell <sfr@canb.auug.org.au>
-> > CommitDate: Sat Mar 30 16:09:51 2019 +1100
-> > 
-> >      fs/binfmt_elf.c: free PT_INTERP filename ASAP
-> >      There is no reason for PT_INTERP filename to linger till the end of
-> >      the whole loading process.
-> >      Link: http://lkml.kernel.org/r/20190314204953.GD18143@avx2
-> >      Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> >      Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-> >      Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> >      Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > 
-> > 46238614d8  fs/binfmt_elf.c: make scope of "pos" variable smaller
-> > b050de0f98  fs/binfmt_elf.c: free PT_INTERP filename ASAP
-> > 05d08e2995  Add linux-next specific files for 20190402
-<snip>
-> > 
-> > ---
-> > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > https://lists.01.org/pipermail/lkp                          Intel Corporation
-> 
+n Tue, Apr 2, 2019 at 8:57 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 02.04.19 17:25, Michael S. Tsirkin wrote:
+> > On Tue, Apr 02, 2019 at 08:04:00AM -0700, Alexander Duyck wrote:
+> >> Basically what we would be doing is providing a means for
+> >> incrementally transitioning the buddy memory into the idle/offline
+> >> state to reduce guest memory overhead. It would require one function
+> >> that would walk the free page lists and pluck out pages that don't
+> >> have the "Offline" page type set,
+> >
+> > I think we will need an interface that gets
+> > an offline page and returns the next online free page.
+> >
+> > If we restart the list walk each time we can't guarantee progress.
+>
+> Yes, and essentially we are scanning all the time for chunks vs. we get
+> notified which chunks are possible hinting candidates. Totally different
+> design.
 
-Hi,
-
-Yes, it should.
-
-Andrew seems to have added the patch to the -mm tree.
-
-
-P.S. Apologies to individual recipients for the double-posting. I am resending
-this as the previous mail was rejected from linux-kernel and linux-fsdevel due
-to HTML content.
-
-
-
-Cheers,
-Nikitas
+The problem as I see it is that we can miss notifications if we become
+too backlogged, and that will lead to us having to fall back to
+scanning anyway. So instead of trying to implement both why don't we
+just focus on the scanning approach. Otherwise the only other option
+is to hold up the guest and make it wait until the hint processing has
+completed and at that point we are back to what is essentially just a
+synchronous solution with batching anyway.
