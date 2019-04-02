@@ -2,161 +2,100 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F9EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB36C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D07208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:38:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GrI76u0y"
+	by mail.kernel.org (Postfix) with ESMTP id 470E620883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbfDBKiF (ORCPT
+        id S1729559AbfDBKi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:38:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37464 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfDBKiE (ORCPT
+        Tue, 2 Apr 2019 06:38:27 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:60205 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfDBKi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:38:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hTmOEIK+bdjwk1/fRX0roH9PANmf8xxXsis2dR2ZomE=; b=GrI76u0yKlSd8L7tyAFAW9Hgt
-        OBE+LC2fk0ssiS65MVz37zo/bRLTQ07y+DDdsohneYKecJOrlCRTsqWlgP35rapaN8zsAmjcZ91kP
-        3nLZc/dxWAzD5KLKdXfHOgVTErQ5vdL0lh57qSoKSVRW97bpHVeQg6cEQLQRjGkphCjbDnDXxNOF1
-        wficRIeNgDVi6omphPkFG62FTz3xOBmEcB0YlXmM+ZSkqwuSjjEkRiExaYW3hcR7aRDDh3KoHvfWm
-        6OTUBIkcPCCwFfp+suDCyMBDBM2bOKxiGB/U9dqos6itg77amnXhDGdgIPmZYVH+78P/TyRiuf62c
-        ffly+0zmQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hBGng-0004Dc-Qi; Tue, 02 Apr 2019 10:37:52 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E00BB203CBE11; Tue,  2 Apr 2019 12:37:50 +0200 (CEST)
-Date:   Tue, 2 Apr 2019 12:37:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alex Kogan <alex.kogan@oracle.com>
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com, tytso@mit.edu
-Subject: Re: [PATCH v2 4/5] locking/qspinlock: Introduce starvation avoidance
- into CNA
-Message-ID: <20190402103750.GN11158@hirez.programming.kicks-ass.net>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-5-alex.kogan@oracle.com>
+        Tue, 2 Apr 2019 06:38:27 -0400
+Received: from [192.168.178.52] ([109.104.50.84]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Ml76o-1gWffI0vBU-00lVkw; Tue, 02 Apr 2019 12:38:00 +0200
+Subject: Re: [PATCH 06/16] staging: vc04_services: remove remaining redundant
+ license text
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Aymen Qader <qader.aymen@gmail.com>,
+        =?UTF-8?Q?Tobias_B=c3=bcttner?= <tobias.buettner@fau.de>,
+        Dominic Braun <inf.braun@fau.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
+ <20190402103203.14959-7-gregkh@linuxfoundation.org>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <a84e7740-cd9e-2d2e-fb6e-560776527e1e@i2se.com>
+Date:   Tue, 2 Apr 2019 12:37:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329152006.110370-5-alex.kogan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190402103203.14959-7-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:zdaMQH5uR6awRWVrSaA69WpUWHItqkjbrCx7PQ3ehpgdngni77v
+ +1bT6ktliaco/HHHVl5mMguBA7Xv7nG4hSWOTXT98oR0TgRAEsZsHDl51iRKvI158+lpSzu
+ PS10qYdubA7mMRlBAPlO7rzMu2MM1RcctFpYTT3g0iaJ7CX8F0FOkKxauOhRjK0nIlQiVaK
+ f7F+ibcleh6yLHEEt7X6A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4Ftd9ThS86M=:Vfa2M0oxHJZOAAOUyzMcTF
+ YcvHUvhk+3TRJfwvzZwxyIVRmHUSGeFNt5jV80B7pry67Hvs5snc5zdl9Pvde0nSKawtrcQhs
+ 0tWBX6T+zwVs/X92ksW3fXlX+WFFYB3qzUTn4Q6j1O2zM27Ceb3Wd4lgcyuERnHoVhZT7odxR
+ /Yu8w7H6gSzs9qGM/xY05JalqvO+KLjvAgtgf/vXc5lWgHidcEwhzhbqhixdcewG3Em1sbbXz
+ Ya/kugvV95Xd3ljVq4Skj3HxvlkVOp8nakY5KhlmnLMVEAg0kYytjm1oUFR4CD8cLA+cZb+69
+ j4FbLX0RvG8kB1eo/tlp5cE3pMsQxw3i9WR60jHIYYTz2W8gjvDkM5ENVGg0K7tTKIZETuvHO
+ C4HCCURNbhOAYn9ooaEm7YTcLuqJBDAtuGYKe6iIvDhtZYiowdY2hj5dRMWFCfoghsG6/F5LC
+ t0Nq0OSYjFteatIhdvYAgsduJflLcB9WBI3nDzcJKj7QKgduFZhjIUDqLil1phrvbzXUJJmzs
+ ofpz5dNz8fP/eOgSWxDB0G5kihKH56T1o/qrsMOPDI1SQ2zdzhIwe6jy3htRWbsClw4VE12WL
+ obXw8aJrwGxZoQ4fHCb/iNrnCR3R3EGHlY7wixkD5ds4+8RAfLIfEPklqMmxcRrABuUOepEti
+ MhN0OriF1WfCDV/9s2Fx1ZB0AVvdUhLqpWZWsuXrBhGvKMuGKv44Stbe69uJs4EhrlpVeAtve
+ vzUXbpGeOVtNcDmOmLcl/o7mpFsgkbE3MQBO9qMnhPMpHoczqiIpmA/R3KU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 11:20:05AM -0400, Alex Kogan wrote:
-> @@ -25,6 +29,18 @@
->  
->  #define MCS_NODE(ptr) ((struct mcs_spinlock *)(ptr))
->  
-> +/* Per-CPU pseudo-random number seed */
-> +static DEFINE_PER_CPU(u32, seed);
-> +
-> +/*
-> + * Controls the probability for intra-node lock hand-off. It can be
-> + * tuned and depend, e.g., on the number of CPUs per node. For now,
-> + * choose a value that provides reasonable long-term fairness without
-> + * sacrificing performance compared to a version that does not have any
-> + * fairness guarantees.
-> + */
-> +#define INTRA_NODE_HANDOFF_PROB_ARG 0x10000
-> +
->  static inline __pure int decode_numa_node(u32 node_and_count)
->  {
->  	int node = (node_and_count >> _Q_NODE_OFFSET) - 1;
-> @@ -102,6 +118,35 @@ static struct mcs_spinlock *find_successor(struct mcs_spinlock *me)
->  	return NULL;
->  }
->  
-> +/*
-> + * xorshift function for generating pseudo-random numbers:
-> + * https://en.wikipedia.org/wiki/Xorshift
+Am 02.04.19 um 12:31 schrieb Greg Kroah-Hartman:
+> Now that the SPDX tag is in all vc04_services files, that identifies the
+> license in a specific and legally-defined manner.  So the extra GPL and
+> BSD text wording can be removed as it is no longer needed at all.
+>
+> This is done on a quest to remove the 700+ different ways that files in
+> the kernel describe the license text.
+>
+> No copyright headers or other non-license-description text was removed.
+>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> Cc: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+> Cc: Aymen Qader <qader.aymen@gmail.com>
+> Cc: "Tobias Büttner" <tobias.buettner@fau.de>
+> Cc: Dominic Braun <inf.braun@fau.de>
+> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Cc: Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>
+> Cc: Phil Elwell <phil@raspberrypi.org>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cute; so clearly you've read that page, but then you provide us a
-variant that isn't actually listed there.
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Your naming is also non-standard in that it does not relay the period.
-The type seems to suggest 32bit, so the name should then have been:
+Thanks
 
-  xorshift32()
-
-Now, where did you get those parameters from; is this a proper
-xorshift32 ?
-
-> + */
-> +static inline u32 xor_random(void)
-> +{
-> +	u32 v;
-> +
-> +	v = this_cpu_read(seed);
-> +	if (v == 0)
-> +		get_random_bytes(&v, sizeof(u32));
-
-Given xorshift is a LFSR subset, the above case will only ever happen
-_once_ and it seems like bad form to stick it here instead of in a init
-function.
-
-Also, does it really matter, can't we simply initialize the variable
-with a !0 value and call it a day?
-
-As to that variable, seed is clearly a misnomer, the wiki page you
-reference calls it state, which might be a little ambiguous, xs_state
-otoh should work just fine.
-
-> +	v ^= v << 6;
-> +	v ^= v >> 21;
-> +	v ^= v << 7;
-> +	this_cpu_write(seed, v);
-> +
-> +	return v;
-> +}
-
-Now, you've read that page and you know there's 'trivial' improvements
-on the pure xorshift, why not pick one of those? xorwow seems cheap
-enough, or that xorshift128plus() one.
-
-> +
-> +/*
-> + * Return false with probability 1 / @range.
-> + * @range must be a power of 2.
-> + */
-> +static bool probably(unsigned int range)
-> +{
-> +	return xor_random() & (range - 1);
-> +}
-
-Uhh, you sure that's what it does? The only way for that to return false
-is when all @range bits are 0, which happens once (2^32/range)-1 times,
-or am I mistaken?
-
-Also, linux/random.h includes next_pseudo_random32(), should we be using
-that? Arguably that's more expensive on a number of platforms due to the
-multiplication. Also, we actually have xorshift32 already in tree in
-lib/test_hash.c.
-
-The advantage of next_psuedo_random32() is that it doesn't have that 0
-identify that pure LFSRs suffer from and it has 0 state.  Now at a
-glance, the xorwow/xorshift128plus variants don't seem to suffer that 0
-identify, so that's good, but they still have fairly large state. It
-also seems unfortunate to litter the tree with custom PRNGs. Ted?
-
+Stefan
 
