@@ -2,150 +2,150 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A57EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80F5C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2250E2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B2520856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KoIpFKea";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="KM4UwECm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iaEu1ZvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfDBJSF (ORCPT
+        id S1729055AbfDBJTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:18:05 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:63071 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfDBJSF (ORCPT
+        Tue, 2 Apr 2019 05:19:08 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46001 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfDBJTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:18:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1554196684; x=1585732684;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=er82yyelYx5INU3biE0ev4LdDRvdqMtPW+ooZPUYTbs=;
-  b=KoIpFKeaveu3CojWtjqPlPgzoaAj06iifYoj1h21XoWGI9zmkiMpOFzG
-   5XLfYn54QJp6y9e6tRfJ32Dmmodv2qlgQv7iUC9Oc60Q5vKWhnbzeJCmz
-   s/ipFMYOY4g7A6FRcABP5VDXNziVfEaSTFOZznDHcMHhp+HOAQYDk9x5I
-   oeK61cc5ODlx2Jj4P/YY2OEf52pKcBW8cR1Z2Ab4x0wTFFcgSMun/WmMb
-   GkQwMj3RA70gd4NJ6aJqbLv7zJnwiVxCsIAIJEQIUkV2oL9Wejnj1k266
-   yi+SyZw9o5Z0vt8CMppdsK+nJufscMiLLtHwDRpOPWY+oFWzdlj+h2YZ/
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,300,1549900800"; 
-   d="scan'208";a="109852023"
-Received: from mail-sn1nam01lp2052.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.52])
-  by ob1.hgst.iphmx.com with ESMTP; 02 Apr 2019 17:18:03 +0800
+        Tue, 2 Apr 2019 05:19:07 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y6so10856165ljd.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 02:19:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NKvSGmdeV/OzV0Wo/Ed2Jb8cfQfXuUxoDRNBRVlVtR8=;
- b=KM4UwECmszZiMSQcEfJJbpHtXZNhzJ670RFQhkNuhijZaXB7LgyYLqke1lR3AiCMHaAnagJVFlDIsjID/QgutM5IHPMVcAKTDUA1LW9KxZeeZaTujeT0CWkROtpGnMLrCck/8bU1FMyrYGFK3JoyjmlMk8BD9+d3NzvOf1oNb6E=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5487.namprd04.prod.outlook.com (20.178.245.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Tue, 2 Apr 2019 09:18:02 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::ad2f:3a0f:2de1:6fb2%5]) with mapi id 15.20.1750.014; Tue, 2 Apr 2019
- 09:18:02 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v2] RISC-V: Fix Maximum Physical Memory 2GiB option for 64bit
- systems
-Thread-Topic: [PATCH v2] RISC-V: Fix Maximum Physical Memory 2GiB option for
- 64bit systems
-Thread-Index: AQHU6TT4TjtgcLh+40eL12JN1QVv8Q==
-Date:   Tue, 2 Apr 2019 09:18:02 +0000
-Message-ID: <20190402091741.11298-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0009.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::22) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [129.253.179.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ae0f543-1060-4a41-c0c4-08d6b74c1afa
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR04MB5487;
-x-ms-traffictypediagnostic: MN2PR04MB5487:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <MN2PR04MB548772187CE6B5546A92D8498D560@MN2PR04MB5487.namprd04.prod.outlook.com>
-x-forefront-prvs: 0995196AA2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(39860400002)(376002)(346002)(199004)(189003)(476003)(14454004)(44832011)(36756003)(305945005)(81166006)(256004)(5660300002)(186003)(99286004)(486006)(66066001)(2616005)(71190400001)(6436002)(102836004)(8936002)(81156014)(2906002)(386003)(52116002)(8676002)(2171002)(1076003)(26005)(25786009)(97736004)(54906003)(50226002)(6486002)(6506007)(86362001)(71200400001)(7736002)(106356001)(3846002)(316002)(6116002)(105586002)(6512007)(110136005)(53936002)(68736007)(478600001)(72206003)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5487;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: x35QSxNy4cd3FkdzKagBqBUCRHLSbwkOmNS6BoK0D2WMPDv0O4mI8E1YkmGAiQNYc8mgV0HbfNXbylP5jZtI73ZEJRlzyBO6GfyjA5VM0kW+4MO9qJsZj8FAORArAoQ7AalhKbR6CWBoLpF3uwjgDcAK2bbGMj6b0mi7DkcrIyMydlrRJUXqjsywHeXN2DiiI73nwD1KHNMB1mOlwam02UTTbjTRUcR/oE0AlgANsYQwcYoaVbv2WGLGwM0WC6AEluitCgjOuiLPuN5RUwDKO7KDfWS4I+4k1MKYYcyf+Uqv0NnkWC09Vl3xZmn0UkppfxnLDJTNZZZQUGZVL0mrthlT22f9yrdz8Xn0mAJgLJHcBAbLi7mjjaG2FSX0VxOe1VJvlMZ6toduzRO+CRLJ8jVmssV6ArfhkpX215iGeMs=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=savQo5tfN+y45IL1LSRmkM0pmYjRsdkEuwf8ptUdZY4=;
+        b=iaEu1ZvE7i+aceOKthhQa0wG7pJ1PrfGYDtQuOrb88tEELV+yUJ3wP6a+J/dxCJXME
+         hMGXODlxFPg05q96NazwqlLEW9lQHQWLy++oZdizqu0eY7/OyckXnxk2fQaXaGpO6AbS
+         +0PJXtlLcIRc0biHtRDT7o7WXzdI+DvreDHNsZpeDldYeHmtVGc5R4VEO03unCCS5Dig
+         O3BPYQdef+tcAAY+AYBbvFNrdsOJBwp3MNYpuvOgnlcBc6Xw4Xpai1T4KJDr0rjrrIVG
+         RjvJAiB2/nMa+/CoS0Zli3dQyWaQ4aPiebrSKRv2g1p+tgVdpwLcUMC7b8Lm7Ukz/N+k
+         F/Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=savQo5tfN+y45IL1LSRmkM0pmYjRsdkEuwf8ptUdZY4=;
+        b=r0SGER0b6yp7A2cqL1SOx6SmvK+BCpSimKzcwpjzJI2v5E86KvtvDCXMuuf5+CT17Z
+         zP8FenJeWkOV2Jjgc8gct1PNk2LH4Y8/N6G2P12VczpiGf2cv+1k2T2/y+s83DVxwTig
+         P/0gi4dvtSOeFyUk1845G7HpS88NkiapPZCqTnI/OwURhFOwJ/38F1ICdSC+/KtqGM38
+         8Nc93P3Fyl0q0A4xngdF2gghdnBOGRD+AEUsbClSOdWUzpR9LiRleAdZ8g0unNrb88qe
+         /b5Y6gg0Qe6zE8ldXJwoDYGUVnAK3NasqUo+9mN1QN2R+XCyyOQ1AMoI8T1t15yLHPbV
+         VtLQ==
+X-Gm-Message-State: APjAAAVcJRpX8B5cj1mMRYv1KC6+KdVvlkgAZO+G8HvNHkkYuLnFhp00
+        GrdA8MCWMp8yGzxo5TJDn4w7PYGLIDysZr7YTG9pVg==
+X-Google-Smtp-Source: APXvYqyXmxbb7LdXRf28JxrEktA/coioA9BJXfYztWmnUpHCcGCupbQgKpB+sSfZB1SxugdWFY9VxLuTyZxq3TZf69k=
+X-Received: by 2002:a2e:808e:: with SMTP id i14mr20135284ljg.103.1554196745108;
+ Tue, 02 Apr 2019 02:19:05 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ae0f543-1060-4a41-c0c4-08d6b74c1afa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2019 09:18:02.1725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5487
+References: <1552330521-4276-1-git-send-email-info@metux.net>
+ <1552330521-4276-29-git-send-email-info@metux.net> <CACRpkdYa+oaw-P9aYL6KApvetVBZLt7USVV3kx7xZ4R7U=Hfew@mail.gmail.com>
+ <CAMz4ku+L_iAGB4HrBuS8w5AQus1AZgKpbWbABbHwzDPWj9-rqg@mail.gmail.com>
+In-Reply-To: <CAMz4ku+L_iAGB4HrBuS8w5AQus1AZgKpbWbABbHwzDPWj9-rqg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 2 Apr 2019 16:18:53 +0700
+Message-ID: <CACRpkdZMpZMHR22USj_m+_j6=nKCsZbJ6FumSO0EtYvw0OsH3A@mail.gmail.com>
+Subject: Re: [PATCH 29/42] drivers: gpio: sprd: use devm_platform_ioremap_resource()
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Maximum Physical Memory 2GiB option for 64bit systems is currently
-broken because kernel hangs at boot-time when this option is enabled
-and the underlying system has more than 2GiB memory.
+On Tue, Apr 2, 2019 at 4:10 PM Baolin Wang <baolin.wang@linaro.org> wrote:
+> On Tue, 2 Apr 2019 at 17:04, Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > On Tue, Mar 12, 2019 at 1:57 AM Enrico Weigelt, metux IT consult
+> > <info@metux.net> wrote:
+> >
+> > > Use the new helper that wraps the calls to platform_get_resource()
+> > > and devm_ioremap_resource() together.
+> > >
+> > > Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> >
+> > Patch applied with Baolin's ACK.
+>
+> This patch had some problems which I've pointed out and I did not ack
+> this patch. Please do not apply it now until fixing the problem.
 
-This issue can be easily reproduced on SiFive Unleashed board where
-we have 8GiB of memory.
+Sorry, it's the gmail threading that confuse the different patches.
 
-This patch fixes above issue by removing unusable memory region in
-setup_bootmem().
+The patch I actually applied is for gpio-sprd.c and looks like this:
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
----
-Changes since v1:
-- Use memblock_remove() instead of memblock_reserve()
----
- arch/riscv/mm/init.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+commit 851f66daeab961328507dcce0980cd7e4ff5f9ae (HEAD -> devel)
+Author: Enrico Weigelt, metux IT consult <info@metux.net>
+Date:   Mon Mar 11 19:55:08 2019 +0100
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 5fd8c922e1c2..b5038a121005 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -121,6 +121,14 @@ void __init setup_bootmem(void)
- 			 */
- 			memblock_reserve(reg->base, vmlinux_end - reg->base);
- 			mem_size =3D min(reg->size, (phys_addr_t)-PAGE_OFFSET);
-+
-+			/*
-+			 * Remove memblock from the end of usable area to the
-+			 * end of region
-+			 */
-+			if ((reg->base + mem_size) < end)
-+				memblock_remove(reg->base + mem_size,
-+						end - reg->base - mem_size);
- 		}
- 	}
- 	BUG_ON(mem_size =3D=3D 0);
---
-2.17.1
+    drivers: gpio: sprd: use devm_platform_ioremap_resource()
+
+    Use the new helper that wraps the calls to platform_get_resource()
+    and devm_ioremap_resource() together.
+
+    Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+    Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+index 55072d2b367f..f5c8b3a351d5 100644
+--- a/drivers/gpio/gpio-sprd.c
++++ b/drivers/gpio/gpio-sprd.c
+@@ -219,7 +219,6 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+ {
+        struct gpio_irq_chip *irq;
+        struct sprd_gpio *sprd_gpio;
+-       struct resource *res;
+        int ret;
+
+        sprd_gpio = devm_kzalloc(&pdev->dev, sizeof(*sprd_gpio), GFP_KERNEL);
+@@ -232,8 +231,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+                return sprd_gpio->irq;
+        }
+
+-       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-       sprd_gpio->base = devm_ioremap_resource(&pdev->dev, res);
++       sprd_gpio->base = devm_platform_ioremap_resource(pdev, 0);
+        if (IS_ERR(sprd_gpio->base))
+                return PTR_ERR(sprd_gpio->base);
+
+Yours,
+Linus Walleij
