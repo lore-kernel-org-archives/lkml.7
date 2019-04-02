@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31203C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E76C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A52C2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3122146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfDBNkv (ORCPT
+        id S1731780AbfDBNku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:40:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43930 "EHLO
+        Tue, 2 Apr 2019 09:40:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43806 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731309AbfDBNkR (ORCPT
+        by vger.kernel.org with ESMTP id S1731552AbfDBNkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:40:17 -0400
+        Tue, 2 Apr 2019 09:40:14 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdu-0002mk-WB; Tue, 02 Apr 2019 14:39:59 +0100
+        id 1hBJe6-0002oa-Re; Tue, 02 Apr 2019 14:40:11 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdu-0004rZ-2J; Tue, 02 Apr 2019 14:39:58 +0100
+        id 1hBJdw-0004v1-Sg; Tue, 02 Apr 2019 14:40:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,23 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sergey Senozhatsky" <sergey.senozhatsky@gmail.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Daniel Wang" <wonderfly@google.com>,
-        "Jiri Slaby" <jslaby@suse.com>, "Petr Mladek" <pmladek@suse.com>,
-        "Sergey Senozhatsky" <sergey.senozhatsky.work@gmail.com>,
-        "Peter Feiner" <pfeiner@google.com>,
-        "Alan Cox" <gnomes@lxorguk.ukuu.org.uk>,
-        linux-serial@vger.kernel.org,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>
+        "Jia-Ju Bai" <baijiaju1990@gmail.com>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.529644269@decadent.org.uk>
+Message-ID: <lsq.1554212307.701494916@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 14/99] panic: avoid deadlocks in re-entrant console
- drivers
+Subject: [PATCH 3.16 57/99] usb: r8a66597: Fix a possible concurrency
+ use-after-free bug in r8a66597_endpoint_disable()
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -65,110 +56,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-commit c7c3f05e341a9a2bd1a92993d4f996cfd6e7348e upstream.
+commit c85400f886e3d41e69966470879f635a2b50084c upstream.
 
-=46romprintk()/serial console point of view panic() is special, because
-it may force CPU to re-enter printk() or/and serial console driver.
-Therefore, some of serial consoles drivers are re-entrant. E.g. 8250:
+The function r8a66597_endpoint_disable() and r8a66597_urb_enqueue() may
+be concurrently executed.
+The two functions both access a possible shared variable "hep->hcpriv".
 
-serial8250_console_write()
-{
-	if (port->sysrq)
-		locked = 0;
-	else if (oops_in_progress)
-		locked = spin_trylock_irqsave(&port->lock, flags);
-	else
-		spin_lock_irqsave(&port->lock, flags);
-	...
-}
+This shared variable is freed by r8a66597_endpoint_disable() via the
+call path:
+r8a66597_endpoint_disable
+  kfree(hep->hcpriv) (line 1995 in Linux-4.19)
 
-panic() does set oops_in_progress via bust_spinlocks(1), so in theory
-we should be able to re-enter serial console driver from panic():
+This variable is read by r8a66597_urb_enqueue() via the call path:
+r8a66597_urb_enqueue
+  spin_lock_irqsave(&r8a66597->lock)
+  init_pipe_info
+    enable_r8a66597_pipe
+      pipe = hep->hcpriv (line 802 in Linux-4.19)
 
-	CPU0
-	<NMI>
-	uart_console_write()
-	serial8250_console_write()		// if (oops_in_progress)
-						//    spin_trylock_irqsave()
-	call_console_drivers()
-	console_unlock()
-	console_flush_on_panic()
-	bust_spinlocks(1)			// oops_in_progress++
-	panic()
-	<NMI/>
-	spin_lock_irqsave(&port->lock, flags)   // spin_lock_irqsave()
-	serial8250_console_write()
-	call_console_drivers()
-	console_unlock()
-	printk()
-	...
+The read operation is protected by a spinlock, but the free operation
+is not protected by this spinlock, thus a concurrency use-after-free bug
+may occur.
 
-However, this does not happen and we deadlock in serial console on
-port->lock spinlock. And the problem is that console_flush_on_panic()
-called after bust_spinlocks(0):
+To fix this bug, the spin-lock and spin-unlock function calls in
+r8a66597_endpoint_disable() are moved to protect the free operation.
 
-void panic(const char *fmt, ...)
-{
-	bust_spinlocks(1);
-	...
-	bust_spinlocks(0);
-	console_flush_on_panic();
-	...
-}
-
-bust_spinlocks(0) decrements oops_in_progress, so oops_in_progress
-can go back to zero. Thus even re-entrant console drivers will simply
-spin on port->lock spinlock. Given that port->lock may already be
-locked either by a stopped CPU, or by the very same CPU we execute
-panic() on (for instance, NMI panic() on printing CPU) the system
-deadlocks and does not reboot.
-
-Fix this by removing bust_spinlocks(0), so oops_in_progress is always
-set in panic() now and, thus, re-entrant console drivers will trylock
-the port->lock instead of spinning on it forever, when we call them
-from console_flush_on_panic().
-
-Link: http://lkml.kernel.org/r/20181025101036.6823-1-sergey.senozhatsky@gmail.com
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Daniel Wang <wonderfly@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: Peter Feiner <pfeiner@google.com>
-Cc: linux-serial@vger.kernel.org
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/panic.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/usb/host/r8a66597-hcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -13,6 +13,7 @@
- #include <linux/kmsg_dump.h>
- #include <linux/kallsyms.h>
- #include <linux/notifier.h>
-+#include <linux/vt_kern.h>
- #include <linux/module.h>
- #include <linux/random.h>
- #include <linux/ftrace.h>
-@@ -178,7 +179,10 @@ void panic(const char *fmt, ...)
- 	 */
- 	crash_kexec(NULL);
+--- a/drivers/usb/host/r8a66597-hcd.c
++++ b/drivers/usb/host/r8a66597-hcd.c
+@@ -1990,6 +1990,8 @@ static int r8a66597_urb_dequeue(struct u
  
--	bust_spinlocks(0);
-+#ifdef CONFIG_VT
-+	unblank_screen();
-+#endif
-+	console_unblank();
+ static void r8a66597_endpoint_disable(struct usb_hcd *hcd,
+ 				      struct usb_host_endpoint *hep)
++__acquires(r8a66597->lock)
++__releases(r8a66597->lock)
+ {
+ 	struct r8a66597 *r8a66597 = hcd_to_r8a66597(hcd);
+ 	struct r8a66597_pipe *pipe = (struct r8a66597_pipe *)hep->hcpriv;
+@@ -2002,13 +2004,14 @@ static void r8a66597_endpoint_disable(st
+ 		return;
+ 	pipenum = pipe->info.pipenum;
  
- 	/*
- 	 * We may have ended up stopping the CPU holding the lock (in
++	spin_lock_irqsave(&r8a66597->lock, flags);
+ 	if (pipenum == 0) {
+ 		kfree(hep->hcpriv);
+ 		hep->hcpriv = NULL;
++		spin_unlock_irqrestore(&r8a66597->lock, flags);
+ 		return;
+ 	}
+ 
+-	spin_lock_irqsave(&r8a66597->lock, flags);
+ 	pipe_stop(r8a66597, pipe);
+ 	pipe_irq_disable(r8a66597, pipenum);
+ 	disable_irq_empty(r8a66597, pipenum);
 
