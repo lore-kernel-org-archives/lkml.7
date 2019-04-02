@@ -2,201 +2,165 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAAFC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162A8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765CF20882
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5C920857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbfDBO3T (ORCPT
+        id S1731336AbfDBO3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:29:19 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:55506 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfDBO3S (ORCPT
+        Tue, 2 Apr 2019 10:29:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50286 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729468AbfDBO3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:29:18 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hBKPT-0005ya-LZ; Tue, 02 Apr 2019 10:29:10 -0400
-Date:   Tue, 2 Apr 2019 10:28:39 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
-        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
-        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com
-Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
- network namespaces
-Message-ID: <20190402142839.GC17593@hmswarspite.think-freely.org>
-References: <cover.1552665316.git.rgb@redhat.com>
- <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
- <CAHC9VhQpk6cFZckQH+LQmQmirVzLm_GH57ZD3-76y-59G=DocQ@mail.gmail.com>
- <20190402113150.GA17593@hmswarspite.think-freely.org>
- <CAHC9VhRW86NamkX9FcsHEYg_DJehCCAnANUqB8+gv=dxpBkd6w@mail.gmail.com>
+        Tue, 2 Apr 2019 10:29:40 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x32ETbQ3003195
+        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 10:29:38 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rm8ymtcu2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 10:29:38 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 2 Apr 2019 15:29:36 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 2 Apr 2019 15:29:30 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x32ETTPj13893658
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Apr 2019 14:29:29 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0936B205F;
+        Tue,  2 Apr 2019 14:29:29 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DBD9B2067;
+        Tue,  2 Apr 2019 14:29:29 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Apr 2019 14:29:29 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 95A0C16C2A5D; Tue,  2 Apr 2019 07:29:34 -0700 (PDT)
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Tejun Heo <tj@kernel.org>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Subject: [PATCH RFC tip/core/rcu 3/4] drivers/gpu/drm/amd: Dynamically allocate kfd_processes_srcu
+Date:   Tue,  2 Apr 2019 07:29:32 -0700
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190402142816.GA13084@linux.ibm.com>
+References: <20190402142816.GA13084@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhRW86NamkX9FcsHEYg_DJehCCAnANUqB8+gv=dxpBkd6w@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19040214-2213-0000-0000-0000036F7013
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010860; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01183284; UDB=6.00619477; IPR=6.00964032;
+ MB=3.00026260; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-02 14:29:36
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040214-2214-0000-0000-00005DE07E5C
+Message-Id: <20190402142933.14547-3-paulmck@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=737 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904020098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 09:31:49AM -0400, Paul Moore wrote:
-> On Tue, Apr 2, 2019 at 7:32 AM Neil Horman <nhorman@tuxdriver.com> wrote:
-> > On Mon, Apr 01, 2019 at 10:50:03AM -0400, Paul Moore wrote:
-> > > On Fri, Mar 15, 2019 at 2:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > Audit events could happen in a network namespace outside of a task
-> > > > context due to packets received from the net that trigger an auditing
-> > > > rule prior to being associated with a running task.  The network
-> > > > namespace could be in use by multiple containers by association to the
-> > > > tasks in that network namespace.  We still want a way to attribute
-> > > > these events to any potential containers.  Keep a list per network
-> > > > namespace to track these audit container identifiiers.
-> > > >
-> > > > Add/increment the audit container identifier on:
-> > > > - initial setting of the audit container identifier via /proc
-> > > > - clone/fork call that inherits an audit container identifier
-> > > > - unshare call that inherits an audit container identifier
-> > > > - setns call that inherits an audit container identifier
-> > > > Delete/decrement the audit container identifier on:
-> > > > - an inherited audit container identifier dropped when child set
-> > > > - process exit
-> > > > - unshare call that drops a net namespace
-> > > > - setns call that drops a net namespace
-> > > >
-> > > > See: https://github.com/linux-audit/audit-kernel/issues/92
-> > > > See: https://github.com/linux-audit/audit-testsuite/issues/64
-> > > > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
-> > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > ---
-> > > >  include/linux/audit.h | 19 ++++++++++++
-> > > >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
-> > > >  kernel/nsproxy.c      |  4 +++
-> > > >  3 files changed, 106 insertions(+), 3 deletions(-)
-> > >
-> > > ...
-> > >
-> > > > diff --git a/kernel/audit.c b/kernel/audit.c
-> > > > index cf448599ef34..7fa3194f5342 100644
-> > > > --- a/kernel/audit.c
-> > > > +++ b/kernel/audit.c
-> > > > @@ -72,6 +72,7 @@
-> > > >  #include <linux/freezer.h>
-> > > >  #include <linux/pid_namespace.h>
-> > > >  #include <net/netns/generic.h>
-> > > > +#include <net/net_namespace.h>
-> > > >
-> > > >  #include "audit.h"
-> > > >
-> > > > @@ -99,9 +100,13 @@
-> > > >  /**
-> > > >   * struct audit_net - audit private network namespace data
-> > > >   * @sk: communication socket
-> > > > + * @contid_list: audit container identifier list
-> > > > + * @contid_list_lock audit container identifier list lock
-> > > >   */
-> > > >  struct audit_net {
-> > > >         struct sock *sk;
-> > > > +       struct list_head contid_list;
-> > > > +       spinlock_t contid_list_lock;
-> > > >  };
-> > > >
-> > > >  /**
-> > > > @@ -275,8 +280,11 @@ struct audit_task_info init_struct_audit = {
-> > > >  void audit_free(struct task_struct *tsk)
-> > > >  {
-> > > >         struct audit_task_info *info = tsk->audit;
-> > > > +       struct nsproxy *ns = tsk->nsproxy;
-> > > >
-> > > >         audit_free_syscall(tsk);
-> > > > +       if (ns)
-> > > > +               audit_netns_contid_del(ns->net_ns, audit_get_contid(tsk));
-> > > >         /* Freeing the audit_task_info struct must be performed after
-> > > >          * audit_log_exit() due to need for loginuid and sessionid.
-> > > >          */
-> > > > @@ -376,6 +384,73 @@ static struct sock *audit_get_sk(const struct net *net)
-> > > >         return aunet->sk;
-> > > >  }
-> > > >
-> > > > +void audit_netns_contid_add(struct net *net, u64 contid)
-> > > > +{
-> > > > +       struct audit_net *aunet = net_generic(net, audit_net_id);
-> > > > +       struct list_head *contid_list = &aunet->contid_list;
-> > > > +       struct audit_contid *cont;
-> > > > +
-> > > > +       if (!audit_contid_valid(contid))
-> > > > +               return;
-> > > > +       if (!aunet)
-> > > > +               return;
-> > >
-> > > We should move the contid_list assignment below this check, or decide
-> > > that aunet is always going to valid (?) and get rid of this check
-> > > completely.
-> > >
-> > I'm not sure why that would be needed.  Finding the net_id list is an operation
-> > of a map relating net namespaces to lists, not contids to lists.  We could do
-> > it, sure, but since they're unrelated operations, I don't think we experience
-> > any slowdowns from doing it this way.
-> 
-> In the first line of the function, when aunet is declared, it is also
-> assigned a value using net_generic():
-> 
->   struct audit_net *aunet = net_generic(net, audit_net_id);
-> 
-> Later in the function there is check to see if aunet is NULL, yet on
-> the second line of the function (before the NULL check), there is this
-> line of code:
-> 
->   struct list_head *contid_list = &aunet->contid_list;
-> 
-> ... which could result in the dereference of a NULL pointer if aunet
-> is NULL.  My suggestion was either to move this assignment below the
-> aunet-NULL check or decide that aunet was always going to be valid
-> (e.g. non-NULL) and do away with the aunet-NULL check completely.
-> Richard has since replied that the aunet-NULL check has been
-> demonstrated to be necessary so the proper thing to do would be to
-> move the assignment.  I believe that is what Richard is planning on
-> doing.
-> 
-oh, I'm sorry, you're right, I was looking at the contid tests not the list
-tests.
+Having DEFINE_SRCU() or DEFINE_STATIC_SRCU() in a loadable module
+requires that the size of the reserved region be increased, which is
+not something we really want to be doing.  This commit therefore removes
+the DEFINE_STATIC_SRCU() from drivers/gpu/drm/amd/amdkfd/kfd_process.c in
+favor of defining kfd_processes_srcu as a simple srcu_struct, initializing
+it in amdgpu_amdkfd_init(), and cleaning it up in amdgpu_amdkfd_fini().
 
-Neil
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Tested-by: kbuild test robot <lkp@intel.com>
+Cc: Oded Gabbay <oded.gabbay@gmail.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: <dri-devel@lists.freedesktop.org>
+Cc: <amd-gfx@lists.freedesktop.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c | 5 +++++
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c   | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-> > > > +       if (cont) {
-> > > > +               INIT_LIST_HEAD(&cont->list);
-> > >
-> > > Unless there is some guidance that INIT_LIST_HEAD() should be used
-> > > regardless, you shouldn't need to call this here since list_add_rcu()
-> > > will take care of any list.h related initialization.
-> >
-> > There is a corner case that needs it.  list_add_rcu has a check that gets
-> > called, __list_add_valid.  Its a noop in the regular case, but if
-> > CONFIG_DEBUG_LIST is defined, its a check to ensure that the next and prev
-> > pointers getting passed in aren't set to detectable corrupt values.  If we pass
-> > in garbage, we can get transient false positives on that check, so we need to
-> > set the list pointers to known good values before hand, either by using kzalloc,
-> > or INIT_LIST_HEAD, as has been done here.  Given that we expressly set every
-> > field of this structure, I think this is the right approach, as it uses the list
-> > macro to expressly set the list values to their proper state.
-> 
-> Good to know, thanks.
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
-> 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
+index fe1d7368c1e6..eadb20dee867 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
+@@ -28,6 +28,8 @@
+ #include <linux/module.h>
+ #include <linux/dma-buf.h>
+ 
++extern struct srcu_struct kfd_processes_srcu;
++
+ static const unsigned int compute_vmid_bitmap = 0xFF00;
+ 
+ /* Total memory size in system memory and all GPU VRAM. Used to
+@@ -40,6 +42,8 @@ int amdgpu_amdkfd_init(void)
+ 	struct sysinfo si;
+ 	int ret;
+ 
++	ret = init_srcu_struct(&kfd_processes_srcu);
++	WARN_ON(ret);
+ 	si_meminfo(&si);
+ 	amdgpu_amdkfd_total_mem_size = si.totalram - si.totalhigh;
+ 	amdgpu_amdkfd_total_mem_size *= si.mem_unit;
+@@ -57,6 +61,7 @@ int amdgpu_amdkfd_init(void)
+ void amdgpu_amdkfd_fini(void)
+ {
+ 	kgd2kfd_exit();
++	cleanup_srcu_struct(&kfd_processes_srcu);
+ }
+ 
+ void amdgpu_amdkfd_device_probe(struct amdgpu_device *adev)
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+index 4bdae78bab8e..98b694068b8a 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -47,7 +47,7 @@ struct mm_struct;
+ DEFINE_HASHTABLE(kfd_processes_table, KFD_PROCESS_TABLE_SIZE);
+ static DEFINE_MUTEX(kfd_processes_mutex);
+ 
+-DEFINE_SRCU(kfd_processes_srcu);
++struct srcu_struct kfd_processes_srcu;
+ 
+ /* For process termination handling */
+ static struct workqueue_struct *kfd_process_wq;
+-- 
+2.17.1
+
