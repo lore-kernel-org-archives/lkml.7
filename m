@@ -2,87 +2,114 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD99FC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C2CC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D9C2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC062084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554232915;
+	bh=mUJl9GjIhaTcalhVS05kGWKKcfEf8ElNfTEsbhSNwf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GYJaHKc/oa3/eH0wdwgfo+SmE4pbwXYr89wKX17etahsI45gzU/C6Qj+cyxQoSuz2
+	 lHGzMNxOs8q4qSj3HqgymDMWkZedLUQeVQBlvIPCCSh5srijhtfUUQbL2DKtBYy4iy
+	 iVh+AUf8WHLk0WOAzpyrdtwli/JWUkIyAeDS275w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbfDBTVi (ORCPT
+        id S1730730AbfDBTVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:21:38 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:37758 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfDBTVi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:21:38 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hBOyU-0006lf-Rf; Tue, 02 Apr 2019 21:21:34 +0200
-Date:   Tue, 2 Apr 2019 21:21:34 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
-In-Reply-To: <4db4323f-3416-54a8-27e3-c491827a2fbd@rasmusvillemoes.dk>
-Message-ID: <alpine.DEB.2.21.1904022109250.1812@nanos.tec.linutronix.de>
-References: <20190331214020.836098943@linutronix.de> <20190331215136.039902969@linutronix.de> <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de> <20190402154329.scp7i7uqevubgwrz@treble> <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
- <4db4323f-3416-54a8-27e3-c491827a2fbd@rasmusvillemoes.dk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 2 Apr 2019 15:21:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbfDBTVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 15:21:53 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA37F2082C;
+        Tue,  2 Apr 2019 19:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554232912;
+        bh=mUJl9GjIhaTcalhVS05kGWKKcfEf8ElNfTEsbhSNwf8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N5P9FGFDbpYMpH0GL+c0OZBKn1SUopqqVSdewo44BeykQt+Xfim3gkd/68GSCicA4
+         LHrMrlSZ5+U4Adrd580pEILaiU6UxooXfuC6ntkvxHfLTWTa/EhToOFuLUMPfBEJzg
+         qqUdZmQu3iipUTjblYjs7YV7uBrj7aIhZYn+wRq4=
+Date:   Tue, 2 Apr 2019 14:21:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, mark.rutland@arm.com,
+        heiko@sntech.de, hayashi.kunihiko@socionext.com,
+        maxime.ripard@bootlin.com, catalin.marinas@arm.com,
+        spujar@nvidia.com, will.deacon@arm.com, kthota@nvidia.com,
+        mperttunen@nvidia.com, linux-tegra@vger.kernel.org,
+        jonathanh@nvidia.com, stefan.wahren@i2se.com,
+        lorenzo.pieralisi@arm.com, krzk@kernel.org, kishon@ti.com,
+        tiwai@suse.de, jagan@amarulasolutions.com,
+        linux-pci@vger.kernel.org, andy.gross@linaro.org,
+        shawn.lin@rock-chips.com, devicetree@vger.kernel.org,
+        mmaddireddy@nvidia.com, marc.w.gonzalez@free.fr,
+        liviu.dudau@arm.com, yue.wang@amlogic.com,
+        enric.balletbo@collabora.com, robh+dt@kernel.org,
+        horms+renesas@verge.net.au, bjorn.andersson@linaro.org,
+        ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        xiaowei.bao@nxp.com, gustavo.pimentel@synopsys.com,
+        linux-kernel@vger.kernel.org, skomatineni@nvidia.com,
+        jingoohan1@gmail.com, olof@lixom.net, tpiepho@impinj.com,
+        l.stach@pengutronix.de
+Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+Message-ID: <20190402192150.GF141706@google.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
+ <20190328131508.GB5518@ulmo>
+ <e5a12742-2dfa-e8c8-2a29-24838f4fa939@nvidia.com>
+ <20190401150740.GB4874@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401150740.GB4874@ulmo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019, Rasmus Villemoes wrote:
+On Mon, Apr 01, 2019 at 05:07:40PM +0200, Thierry Reding wrote:
+> On Mon, Apr 01, 2019 at 03:31:54PM +0530, Vidya Sagar wrote:
+> > On 3/28/2019 6:45 PM, Thierry Reding wrote:
+> > > On Tue, Mar 26, 2019 at 08:43:22PM +0530, Vidya Sagar wrote:
+> > > > Add support for Tegra194 PCIe controllers. These controllers are based
+> > > > on Synopsys DesignWare core IP.
 
-> On 02/04/2019 17.48, Thomas Gleixner wrote:
-> > On Tue, 2 Apr 2019, Josh Poimboeuf wrote:
-> >> On Tue, Apr 02, 2019 at 12:19:46PM +0200, Thomas Gleixner wrote:
-> >>> +/*
-> >>> + * Array of exception stack page descriptors. If the stack is larger than
-> >>> + * PAGE_SIZE, all pages covering a particular stack will have the same
-> >>> + * info.
-> >>> + */
-> >>> +static const struct estack_pages estack_pages[ESTACK_PAGES] ____cacheline_aligned = {
-> >>> +	[CONDRANGE(DF)]		= ESTACK_PAGE(DOUBLEFAULT_IST, DF),
-> >>> +	[CONDRANGE(NMI)]	= ESTACK_PAGE(NMI_IST, NMI),
-> >>> +	[PAGERANGE(DB)]		= ESTACK_PAGE(DEBUG_IST, DB),
-> >>> +	[CONDRANGE(MCE)]	= ESTACK_PAGE(MCE_IST, MCE),
-> >>
-> >> It would be nice if the *_IST macro naming aligned with the struct
-> >> cea_exception_stacks field naming.  Then you could just do, e.g.
-> >> ESTACKPAGE(DF).
-> > 
-> > Yes, lemme fix that up.
-> > 
-> >> Also it's a bit unfortunate that some of the stack size knowledge is
-> >> hard-coded here, i.e #DB always being > 1 page and non-#DB being
-> >> sometimes 1 page.
-> > 
-> > The problem is that there is no way to make this macro maze conditional on
-> > sizeof(). But my macro foo is rusty.
+> > > > +- nvidia,disable-aspm-states : controls advertisement of ASPM states
+> > > > +    bit-0 to '1' : disables advertisement of ASPM-L0s
+> > > > +    bit-1 to '1' : disables advertisement of ASPM-L1. This also disables
+> > > > +                 advertisement of ASPM-L1.1 and ASPM-L1.2
+> > > > +    bit-2 to '1' : disables advertisement of ASPM-L1.1
+> > > > +    bit-3 to '1' : disables advertisement of ASPM-L1.2
+> > > 
+> > > These seem more like configuration options rather than hardware
+> > > description.
+> > Yes. Since the platforms like Jetson-Xavier based on T194 are going to go in
+> > open market, we are providing these configuration options and hence they are
+> > optional
 > 
-> Eh, but why do you need the CONDRANGE thing at all? [5 ... 5] is a
-> perfectly fine designator, equivalent to [5]. So you can just use
-> PAGERANGE in all cases, no?
+> Under what circumstances would we want to disable certain ASPM states?
+> My understanding is that PCI device drivers can already disable
+> individual ASPM states if they don't support them, so why would we ever
+> want to disable advertisement of certain ASPM states?
 
-Indeed. I tried that before and at some point GCC barfed, but probably due
-to some other slipup. The macro expansion error messages are soo helpful...
+The PCI core (not individual device drivers) configures ASPM, and if both
+ends of the link implement the spec correctly, there is nothing the device
+driver needs to do.
 
-Thanks,
+There *are* a few drivers that fiddle with ASPM-related things.  I think
+this is because either the core isn't doing things correctly and we haven't
+bothered to fix the root cause, or the device itself is broken and we need
+to disable something the hardware claims to support.
 
-	tglx
-
+Bjorn
