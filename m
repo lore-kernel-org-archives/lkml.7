@@ -2,32 +2,32 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A90C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2172C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9215920856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23EB20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfDBNoy (ORCPT
+        id S1732052AbfDBNox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:44:54 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43418 "EHLO
+        Tue, 2 Apr 2019 09:44:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43446 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731470AbfDBNkI (ORCPT
+        by vger.kernel.org with ESMTP id S1731476AbfDBNkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:08 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe0-0002oJ-J5; Tue, 02 Apr 2019 14:40:04 +0100
+        id 1hBJe0-0002oY-H3; Tue, 02 Apr 2019 14:40:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdx-0004wl-JY; Tue, 02 Apr 2019 14:40:01 +0100
+        id 1hBJdx-0004wv-M8; Tue, 02 Apr 2019 14:40:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steve French" <stfrench@microsoft.com>,
-        "Georgy A Bystrenin" <gkot@altlinux.org>,
-        "Pavel Shilovsky" <pshilov@microsoft.com>
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Dmitry Monakhov" <dmonakhov@openvz.org>
 Date:   Tue, 02 Apr 2019 14:38:28 +0100
-Message-ID: <lsq.1554212308.363964607@decadent.org.uk>
+Message-ID: <lsq.1554212308.191495262@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 78/99] CIFS: Fix error mapping for SMB2_LOCK command
- which caused OFD lock problem
+Subject: [PATCH 3.16 80/99] ext4: ext4_inline_data_fiemap should respect
+ callers argument
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,49 +56,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Georgy A Bystrenin <gkot@altlinux.org>
+From: Dmitry Monakhov <dmonakhov@openvz.org>
 
-commit 9a596f5b39593414c0ec80f71b94a226286f084e upstream.
+commit d952d69e268f833c85c0bafee9f67f9dba85044b upstream.
 
-While resolving a bug with locks on samba shares found a strange behavior.
-When a file locked by one node and we trying to lock it from another node
-it fail with errno 5 (EIO) but in that case errno must be set to
-(EACCES | EAGAIN).
-This isn't happening when we try to lock file second time on same node.
-In this case it returns EACCES as expected.
-Also this issue not reproduces when we use SMB1 protocol (vers=1.0 in
-mount options).
+Currently ext4_inline_data_fiemap ignores requested arguments (start
+and len) which may lead endless loop if start != 0.  Also fix incorrect
+extent length determination.
 
-Further investigation showed that the mapping from status_to_posix_error
-is different for SMB1 and SMB2+ implementations.
-For SMB1 mapping is [NT_STATUS_LOCK_NOT_GRANTED to ERRlock]
-(See fs/cifs/netmisc.c line 66)
-but for SMB2+ mapping is [STATUS_LOCK_NOT_GRANTED to -EIO]
-(see fs/cifs/smb2maperror.c line 383)
-
-Quick changes in SMB2+ mapping from EIO to EACCES has fixed issue.
-
-BUG: https://bugzilla.kernel.org/show_bug.cgi?id=201971
-
-Signed-off-by: Georgy A Bystrenin <gkot@altlinux.org>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Dmitry Monakhov <dmonakhov@openvz.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/smb2maperror.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ext4/ext4.h    |  2 +-
+ fs/ext4/extents.c |  3 ++-
+ fs/ext4/inline.c  | 19 +++++++++++++------
+ 3 files changed, 16 insertions(+), 8 deletions(-)
 
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -377,8 +377,8 @@ static const struct status_to_posix_erro
- 	{STATUS_NONEXISTENT_EA_ENTRY, -EIO, "STATUS_NONEXISTENT_EA_ENTRY"},
- 	{STATUS_NO_EAS_ON_FILE, -ENODATA, "STATUS_NO_EAS_ON_FILE"},
- 	{STATUS_EA_CORRUPT_ERROR, -EIO, "STATUS_EA_CORRUPT_ERROR"},
--	{STATUS_FILE_LOCK_CONFLICT, -EIO, "STATUS_FILE_LOCK_CONFLICT"},
--	{STATUS_LOCK_NOT_GRANTED, -EIO, "STATUS_LOCK_NOT_GRANTED"},
-+	{STATUS_FILE_LOCK_CONFLICT, -EACCES, "STATUS_FILE_LOCK_CONFLICT"},
-+	{STATUS_LOCK_NOT_GRANTED, -EACCES, "STATUS_LOCK_NOT_GRANTED"},
- 	{STATUS_DELETE_PENDING, -ENOENT, "STATUS_DELETE_PENDING"},
- 	{STATUS_CTL_FILE_NOT_SUPPORTED, -ENOSYS,
- 	"STATUS_CTL_FILE_NOT_SUPPORTED"},
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2712,7 +2712,7 @@ extern struct buffer_head *ext4_get_firs
+ 					int *retval);
+ extern int ext4_inline_data_fiemap(struct inode *inode,
+ 				   struct fiemap_extent_info *fieinfo,
+-				   int *has_inline);
++				   int *has_inline, __u64 start, __u64 len);
+ extern void ext4_inline_data_truncate(struct inode *inode, int *has_inline);
+ 
+ extern int ext4_convert_inline_data(struct inode *inode);
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -5153,7 +5153,8 @@ int ext4_fiemap(struct inode *inode, str
+ 	if (ext4_has_inline_data(inode)) {
+ 		int has_inline = 1;
+ 
+-		error = ext4_inline_data_fiemap(inode, fieinfo, &has_inline);
++		error = ext4_inline_data_fiemap(inode, fieinfo, &has_inline,
++						start, len);
+ 
+ 		if (has_inline)
+ 			return error;
+--- a/fs/ext4/inline.c
++++ b/fs/ext4/inline.c
+@@ -1816,11 +1816,12 @@ int ext4_destroy_inline_data(handle_t *h
+ 
+ int ext4_inline_data_fiemap(struct inode *inode,
+ 			    struct fiemap_extent_info *fieinfo,
+-			    int *has_inline)
++			    int *has_inline, __u64 start, __u64 len)
+ {
+ 	__u64 physical = 0;
+-	__u64 length;
+-	__u32 flags = FIEMAP_EXTENT_DATA_INLINE | FIEMAP_EXTENT_LAST;
++	__u64 inline_len;
++	__u32 flags = FIEMAP_EXTENT_DATA_INLINE | FIEMAP_EXTENT_NOT_ALIGNED |
++		FIEMAP_EXTENT_LAST;
+ 	int error = 0;
+ 	struct ext4_iloc iloc;
+ 
+@@ -1829,6 +1830,13 @@ int ext4_inline_data_fiemap(struct inode
+ 		*has_inline = 0;
+ 		goto out;
+ 	}
++	inline_len = min_t(size_t, ext4_get_inline_size(inode),
++			   i_size_read(inode));
++	if (start >= inline_len)
++		goto out;
++	if (start + len < inline_len)
++		inline_len = start + len;
++	inline_len -= start;
+ 
+ 	error = ext4_get_inode_loc(inode, &iloc);
+ 	if (error)
+@@ -1837,11 +1845,10 @@ int ext4_inline_data_fiemap(struct inode
+ 	physical = (__u64)iloc.bh->b_blocknr << inode->i_sb->s_blocksize_bits;
+ 	physical += (char *)ext4_raw_inode(&iloc) - iloc.bh->b_data;
+ 	physical += offsetof(struct ext4_inode, i_block);
+-	length = i_size_read(inode);
+ 
+ 	if (physical)
+-		error = fiemap_fill_next_extent(fieinfo, 0, physical,
+-						length, flags);
++		error = fiemap_fill_next_extent(fieinfo, start, physical,
++						inline_len, flags);
+ 	brelse(iloc.bh);
+ out:
+ 	up_read(&EXT4_I(inode)->xattr_sem);
 
