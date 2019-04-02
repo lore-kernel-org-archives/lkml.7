@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF7FC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C4C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9802133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF50D20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbfDBNmk (ORCPT
+        id S1731894AbfDBNnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:42:40 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43716 "EHLO
+        Tue, 2 Apr 2019 09:43:05 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43666 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731542AbfDBNkM (ORCPT
+        by vger.kernel.org with ESMTP id S1731519AbfDBNkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:12 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe4-0002oJ-6Y; Tue, 02 Apr 2019 14:40:08 +0100
+        id 1hBJe4-0002os-6Z; Tue, 02 Apr 2019 14:40:08 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdx-0004xZ-U6; Tue, 02 Apr 2019 14:40:01 +0100
+        id 1hBJdx-0004xd-Uq; Tue, 02 Apr 2019 14:40:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,20 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Naoya Horiguchi" <n-horiguchi@ah.jp.nec.com>,
-        "Jerome Glisse" <jglisse@redhat.com>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
+        "Anshuman Khandual" <anshuman.khandual@arm.com>,
+        "Miroslav Benes" <mbenes@suse.cz>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
         "Michal Hocko" <mhocko@suse.com>
 Date:   Tue, 02 Apr 2019 14:38:28 +0100
-Message-ID: <lsq.1554212308.495820026@decadent.org.uk>
+Message-ID: <lsq.1554212308.203934992@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 88/99] mm: migration: fix migration of huge PMD
- shared pages
+Subject: [PATCH 3.16 89/99] mm, memory_hotplug: do not clear numa_node
+ association after hot_remove
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,253 +58,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+From: Michal Hocko <mhocko@suse.com>
 
-commit 017b1660df89f5fb4bfe66c34e35f7d2031100c7 upstream.
+commit 46a3679b8190101e4ebdfe252ef79e6150a4f2ac upstream.
 
-The page migration code employs try_to_unmap() to try and unmap the source
-page.  This is accomplished by using rmap_walk to find all vmas where the
-page is mapped.  This search stops when page mapcount is zero.  For shared
-PMD huge pages, the page map count is always 1 no matter the number of
-mappings.  Shared mappings are tracked via the reference count of the PMD
-page.  Therefore, try_to_unmap stops prematurely and does not completely
-unmap all mappings of the source page.
+Per-cpu numa_node provides a default node for each possible cpu.  The
+association gets initialized during the boot when the architecture
+specific code explores cpu->NUMA affinity.  When the whole NUMA node is
+removed though we are clearing this association
 
-This problem can result is data corruption as writes to the original
-source page can happen after contents of the page are copied to the target
-page.  Hence, data is lost.
+try_offline_node
+  check_and_unmap_cpu_on_node
+    unmap_cpu_on_node
+      numa_clear_node
+        numa_set_node(cpu, NUMA_NO_NODE)
 
-This problem was originally seen as DB corruption of shared global areas
-after a huge page was soft offlined due to ECC memory errors.  DB
-developers noticed they could reproduce the issue by (hotplug) offlining
-memory used to back huge pages.  A simple testcase can reproduce the
-problem by creating a shared PMD mapping (note that this must be at least
-PUD_SIZE in size and PUD_SIZE aligned (1GB on x86)), and using
-migrate_pages() to migrate process pages between nodes while continually
-writing to the huge pages being migrated.
+This means that whoever calls cpu_to_node for a cpu associated with such a
+node will get NUMA_NO_NODE.  This is problematic for two reasons.  First
+it is fragile because __alloc_pages_node would simply blow up on an
+out-of-bound access.  We have encountered this when loading kvm module
 
-To fix, have the try_to_unmap_one routine check for huge PMD sharing by
-calling huge_pmd_unshare for hugetlbfs huge pages.  If it is a shared
-mapping it will be 'unshared' which removes the page table entry and drops
-the reference on the PMD page.  After this, flush caches and TLB.
+  BUG: unable to handle kernel paging request at 00000000000021c0
+  IP: __alloc_pages_nodemask+0x93/0xb70
+  PGD 800000ffe853e067 PUD 7336bbc067 PMD 0
+  Oops: 0000 [#1] SMP
+  [...]
+  CPU: 88 PID: 1223749 Comm: modprobe Tainted: G        W          4.4.156-94.64-default #1
+  RIP: __alloc_pages_nodemask+0x93/0xb70
+  RSP: 0018:ffff887354493b40  EFLAGS: 00010202
+  RAX: 00000000000021c0 RBX: 0000000000000000 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000002 RDI: 00000000014000c0
+  RBP: 00000000014000c0 R08: ffffffffffffffff R09: 0000000000000000
+  R10: ffff88fffc89e790 R11: 0000000000014000 R12: 0000000000000101
+  R13: ffffffffa0772cd4 R14: ffffffffa0769ac0 R15: 0000000000000000
+  FS:  00007fdf2f2f1700(0000) GS:ffff88fffc880000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00000000000021c0 CR3: 00000077205ee000 CR4: 0000000000360670
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+    alloc_vmcs_cpu+0x3d/0x90 [kvm_intel]
+    hardware_setup+0x781/0x849 [kvm_intel]
+    kvm_arch_hardware_setup+0x28/0x190 [kvm]
+    kvm_init+0x7c/0x2d0 [kvm]
+    vmx_init+0x1e/0x32c [kvm_intel]
+    do_one_initcall+0xca/0x1f0
+    do_init_module+0x5a/0x1d7
+    load_module+0x1393/0x1c90
+    SYSC_finit_module+0x70/0xa0
+    entry_SYSCALL_64_fastpath+0x1e/0xb7
+  DWARF2 unwinder stuck at entry_SYSCALL_64_fastpath+0x1e/0xb7
 
-mmu notifiers are called before locking page tables, but we can not be
-sure of PMD sharing until page tables are locked.  Therefore, check for
-the possibility of PMD sharing before locking so that notifiers can
-prepare for the worst possible case.
+on an older kernel but the code is basically the same in the current Linus
+tree as well.  alloc_vmcs_cpu could use alloc_pages_nodemask which would
+recognize NUMA_NO_NODE and use alloc_pages_node which would translate it
+to numa_mem_id but that is wrong as well because it would use a cpu
+affinity of the local CPU which might be quite far from the original node.
+It is also reasonable to expect that cpu_to_node will provide a sane
+value and there might be many more callers like that.
 
-Link: http://lkml.kernel.org/r/20180823205917.16297-2-mike.kravetz@oracle.com
-[mike.kravetz@oracle.com: make _range_in_vma() a static inline]
-  Link: http://lkml.kernel.org/r/6063f215-a5c8-2f0c-465a-2c515ddc952d@oracle.com
-Fixes: 39dde65c9940 ("shared page table for hugetlb page")
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
+The second problem is that __register_one_node relies on cpu_to_node to
+properly associate cpus back to the node when it is onlined.  We do not
+want to lose that link as there is no arch independent way to get it from
+the early boot time AFAICS.
+
+Drop the whole check_and_unmap_cpu_on_node machinery and keep the
+association to fix both issues.  The NODE_DATA(nid) is not deallocated so
+it will stay in place and if anybody wants to allocate from that node then
+a fallback node will be used.
+
+Thanks to Vlastimil Babka for his live system debugging skills that helped
+debugging the issue.
+
+Link: http://lkml.kernel.org/r/20181108100413.966-1-mhocko@kernel.org
+Fixes: e13fe8695c57 ("cpu-hotplug,memory-hotplug: clear cpu_to_node() when offlining the node")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Debugged-by: Vlastimil Babka <vbabka@suse.cz>
+Reported-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported from 4.4 to 3.16: adjust context]
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/hugetlb.h | 14 +++++++++++
- include/linux/mm.h      |  6 +++++
- mm/hugetlb.c            | 37 +++++++++++++++++++++++++--
- mm/rmap.c               | 56 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 2 deletions(-)
+ mm/memory_hotplug.c | 30 +-----------------------------
+ 1 file changed, 1 insertion(+), 29 deletions(-)
 
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -97,6 +97,8 @@ pte_t *huge_pte_alloc(struct mm_struct *
- 			unsigned long addr, unsigned long sz);
- pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr);
- int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep);
-+void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
-+				unsigned long *start, unsigned long *end);
- struct page *follow_huge_addr(struct mm_struct *mm, unsigned long address,
- 			      int write);
- struct page *follow_huge_pmd(struct mm_struct *mm, unsigned long address,
-@@ -124,6 +126,18 @@ static inline unsigned long hugetlb_tota
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1880,34 +1880,6 @@ static int check_cpu_on_node(pg_data_t *
  	return 0;
  }
  
-+static inline int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr,
-+						pte_t *ptep)
-+{
-+	return 0;
-+}
-+
-+static inline void adjust_range_if_pmd_sharing_possible(
-+				struct vm_area_struct *vma,
-+				unsigned long *start, unsigned long *end)
-+{
-+}
-+
- #define follow_hugetlb_page(m,v,p,vs,a,b,i,w)	({ BUG(); 0; })
- #define follow_huge_addr(mm, addr, write)	ERR_PTR(-EINVAL)
- #define copy_hugetlb_page_range(src, dst, vma)	({ BUG(); 0; })
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1947,6 +1947,12 @@ static inline struct vm_area_struct *fin
- 	return vma;
- }
+-static void unmap_cpu_on_node(pg_data_t *pgdat)
+-{
+-#ifdef CONFIG_ACPI_NUMA
+-	int cpu;
+-
+-	for_each_possible_cpu(cpu)
+-		if (cpu_to_node(cpu) == pgdat->node_id)
+-			numa_clear_node(cpu);
+-#endif
+-}
+-
+-static int check_and_unmap_cpu_on_node(pg_data_t *pgdat)
+-{
+-	int ret;
+-
+-	ret = check_cpu_on_node(pgdat);
+-	if (ret)
+-		return ret;
+-
+-	/*
+-	 * the node will be offlined when we come here, so we can clear
+-	 * the cpu_to_node() now.
+-	 */
+-
+-	unmap_cpu_on_node(pgdat);
+-	return 0;
+-}
+-
+ /**
+  * try_offline_node
+  *
+@@ -1941,7 +1913,7 @@ void try_offline_node(int nid)
+ 		return;
+ 	}
  
-+static inline bool range_in_vma(struct vm_area_struct *vma,
-+				unsigned long start, unsigned long end)
-+{
-+	return (vma && vma->vm_start <= start && end <= vma->vm_end);
-+}
-+
- #ifdef CONFIG_MMU
- pgprot_t vm_get_page_prot(unsigned long vm_flags);
- #else
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3657,13 +3657,41 @@ static int vma_shareable(struct vm_area_
+-	if (check_and_unmap_cpu_on_node(pgdat))
++	if (check_cpu_on_node(pgdat))
+ 		return;
+ 
  	/*
- 	 * check on proper vm_flags and page table alignment
- 	 */
--	if (vma->vm_flags & VM_MAYSHARE &&
--	    vma->vm_start <= base && end <= vma->vm_end)
-+	if (vma->vm_flags & VM_MAYSHARE && range_in_vma(vma, base, end))
- 		return 1;
- 	return 0;
- }
- 
- /*
-+ * Determine if start,end range within vma could be mapped by shared pmd.
-+ * If yes, adjust start and end to cover range associated with possible
-+ * shared pmd mappings.
-+ */
-+void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
-+				unsigned long *start, unsigned long *end)
-+{
-+	unsigned long check_addr = *start;
-+
-+	if (!(vma->vm_flags & VM_MAYSHARE))
-+		return;
-+
-+	for (check_addr = *start; check_addr < *end; check_addr += PUD_SIZE) {
-+		unsigned long a_start = check_addr & PUD_MASK;
-+		unsigned long a_end = a_start + PUD_SIZE;
-+
-+		/*
-+		 * If sharing is possible, adjust start/end if necessary.
-+		 */
-+		if (range_in_vma(vma, a_start, a_end)) {
-+			if (a_start < *start)
-+				*start = a_start;
-+			if (a_end > *end)
-+				*end = a_end;
-+		}
-+	}
-+}
-+
-+/*
-  * Search for a shareable pmd page for hugetlb. In any case calls pmd_alloc()
-  * and returns the corresponding pte. While this is not necessary for the
-  * !shared pmd case because we can allocate the pmd later as well, it makes the
-@@ -3751,6 +3779,11 @@ pte_t *huge_pmd_share(struct mm_struct *
- {
- 	return NULL;
- }
-+
-+void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
-+				unsigned long *start, unsigned long *end)
-+{
-+}
- #define want_pmd_share()	(0)
- #endif /* CONFIG_ARCH_WANT_HUGE_PMD_SHARE */
- 
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1195,12 +1195,41 @@ static int try_to_unmap_one(struct page
- 	pte_t pteval;
- 	spinlock_t *ptl;
- 	int ret = SWAP_AGAIN;
-+	unsigned long sh_address;
-+	bool pmd_sharing_possible = false;
-+	unsigned long spmd_start, spmd_end;
- 	enum ttu_flags flags = (enum ttu_flags)arg;
- 
- 	/* munlock has nothing to gain from examining un-locked vmas */
- 	if ((flags & TTU_MUNLOCK) && !(vma->vm_flags & VM_LOCKED))
- 		goto out;
- 
-+	/*
-+	 * Only use the range_start/end mmu notifiers if huge pmd sharing
-+	 * is possible.  In the normal case, mmu_notifier_invalidate_page
-+	 * is sufficient as we only unmap a page.  However, if we unshare
-+	 * a pmd, we will unmap a PUD_SIZE range.
-+	 */
-+	if (PageHuge(page)) {
-+		spmd_start = address;
-+		spmd_end = spmd_start + vma_mmu_pagesize(vma);
-+
-+		/*
-+		 * Check if pmd sharing is possible.  If possible, we could
-+		 * unmap a PUD_SIZE range.  spmd_start/spmd_end will be
-+		 * modified if sharing is possible.
-+		 */
-+		adjust_range_if_pmd_sharing_possible(vma, &spmd_start,
-+								&spmd_end);
-+		if (spmd_end - spmd_start != vma_mmu_pagesize(vma)) {
-+			sh_address = address;
-+
-+			pmd_sharing_possible = true;
-+			mmu_notifier_invalidate_range_start(vma->vm_mm,
-+							spmd_start, spmd_end);
-+		}
-+	}
-+
- 	pte = page_check_address(page, mm, address, &ptl, 0);
- 	if (!pte)
- 		goto out;
-@@ -1227,6 +1256,30 @@ static int try_to_unmap_one(struct page
- 		}
-   	}
- 
-+	/*
-+	 * Call huge_pmd_unshare to potentially unshare a huge pmd.  Pass
-+	 * sh_address as it will be modified if unsharing is successful.
-+	 */
-+	if (PageHuge(page) && huge_pmd_unshare(mm, &sh_address, pte)) {
-+		/*
-+		 * huge_pmd_unshare unmapped an entire PMD page.  There is
-+		 * no way of knowing exactly which PMDs may be cached for
-+		 * this mm, so flush them all.  spmd_start/spmd_end cover
-+		 * this PUD_SIZE range.
-+		 */
-+		flush_cache_range(vma, spmd_start, spmd_end);
-+		flush_tlb_range(vma, spmd_start, spmd_end);
-+
-+		/*
-+		 * The ref count of the PMD page was dropped which is part
-+		 * of the way map counting is done for shared PMDs.  When
-+		 * there is no other sharing, huge_pmd_unshare returns false
-+		 * and we will unmap the actual page and drop map count
-+		 * to zero.
-+		 */
-+		goto out_unmap;
-+	}
-+
- 	/* Nuke the page table entry. */
- 	flush_cache_page(vma, address, page_to_pfn(page));
- 	pteval = ptep_clear_flush(vma, address, pte);
-@@ -1309,6 +1362,9 @@ out_unmap:
- 	if (ret != SWAP_FAIL && ret != SWAP_MLOCK && !(flags & TTU_MUNLOCK))
- 		mmu_notifier_invalidate_page(mm, address);
- out:
-+	if (pmd_sharing_possible)
-+		mmu_notifier_invalidate_range_end(vma->vm_mm,
-+							spmd_start, spmd_end);
- 	return ret;
- }
- 
 
