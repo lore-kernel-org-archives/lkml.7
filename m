@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A58C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92A4C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB4B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80CAF2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731687AbfDBNkf (ORCPT
+        id S1731638AbfDBNk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:40:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43518 "EHLO
+        Tue, 2 Apr 2019 09:40:27 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43352 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731494AbfDBNkJ (ORCPT
+        by vger.kernel.org with ESMTP id S1731460AbfDBNkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:40:09 -0400
+        Tue, 2 Apr 2019 09:40:07 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe3-0002no-Br; Tue, 02 Apr 2019 14:40:07 +0100
+        id 1hBJe0-0002oa-I1; Tue, 02 Apr 2019 14:40:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdy-0004yR-8h; Tue, 02 Apr 2019 14:40:02 +0100
+        id 1hBJdx-0004wA-BH; Tue, 02 Apr 2019 14:40:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,12 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Pavel Shilovsky" <pshilov@microsoft.com>
+        "Jeff Kirsher" <jeffrey.t.kirsher@intel.com>,
+        "Aaron Brown" <aaron.f.brown@intel.com>,
+        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
 Date:   Tue, 02 Apr 2019 14:38:28 +0100
-Message-ID: <lsq.1554212308.272064347@decadent.org.uk>
+Message-ID: <lsq.1554212308.424329625@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 99/99] CIFS: Enable encryption during session setup phase
+Subject: [PATCH 3.16 71/99] igb: Fix an issue that PME is not enabled
+ during runtime suspend
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -54,88 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit cabfb3680f78981d26c078a26e5c748531257ebb upstream.
+commit 1fb3a7a75e2efcc83ef21f2434069cddd6fae6f5 upstream.
 
-In order to allow encryption on SMB connection we need to exchange
-a session key and generate encryption and decryption keys.
+I210 ethernet card doesn't wakeup when a cable gets plugged. It's
+because its PME is not set.
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-[bwh: Backported to 3.16:
- - SMB2_sess_establish_session() has not been split out from SMB2_sess_setup()
-   and there is additional cleanup to do on error, so keep the
-   'goto keygen_exit'
- - Adjust context]
+Since commit 42eca2302146 ("PCI: Don't touch card regs after runtime
+suspend D3"), if the PCI state is saved, pci_pm_runtime_suspend() stops
+calling pci_finish_runtime_suspend(), which enables the PCI PME.
+
+To fix the issue, let's not to save PCI states when it's runtime
+suspend, to let the PCI subsystem enables PME.
+
+Fixes: 42eca2302146 ("PCI: Don't touch card regs after runtime suspend D3")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/sess.c    | 22 ++++++++++------------
- fs/cifs/smb2pdu.c | 12 ++----------
- 2 files changed, 12 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/fs/cifs/sess.c
-+++ b/fs/cifs/sess.c
-@@ -343,13 +343,12 @@ void build_ntlmssp_negotiate_blob(unsign
- 	/* BB is NTLMV2 session security format easier to use here? */
- 	flags = NTLMSSP_NEGOTIATE_56 |	NTLMSSP_REQUEST_TARGET |
- 		NTLMSSP_NEGOTIATE_128 | NTLMSSP_NEGOTIATE_UNICODE |
--		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC;
--	if (ses->server->sign) {
-+		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC |
-+		NTLMSSP_NEGOTIATE_SEAL;
-+	if (ses->server->sign)
- 		flags |= NTLMSSP_NEGOTIATE_SIGN;
--		if (!ses->server->session_estab ||
--				ses->ntlmssp->sesskey_per_smbsess)
--			flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
--	}
-+	if (!ses->server->session_estab || ses->ntlmssp->sesskey_per_smbsess)
-+		flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -7419,9 +7419,11 @@ static int __igb_shutdown(struct pci_dev
+ 	igb_clear_interrupt_scheme(adapter);
  
- 	sec_blob->NegotiateFlags = cpu_to_le32(flags);
+ #ifdef CONFIG_PM
+-	retval = pci_save_state(pdev);
+-	if (retval)
+-		return retval;
++	if (!runtime) {
++		retval = pci_save_state(pdev);
++		if (retval)
++			return retval;
++	}
+ #endif
  
-@@ -412,13 +411,12 @@ int build_ntlmssp_auth_blob(unsigned cha
- 	flags = NTLMSSP_NEGOTIATE_56 |
- 		NTLMSSP_REQUEST_TARGET | NTLMSSP_NEGOTIATE_TARGET_INFO |
- 		NTLMSSP_NEGOTIATE_128 | NTLMSSP_NEGOTIATE_UNICODE |
--		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC;
--	if (ses->server->sign) {
-+		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC |
-+		NTLMSSP_NEGOTIATE_SEAL;
-+	if (ses->server->sign)
- 		flags |= NTLMSSP_NEGOTIATE_SIGN;
--		if (!ses->server->session_estab ||
--				ses->ntlmssp->sesskey_per_smbsess)
--			flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
--	}
-+	if (!ses->server->session_estab || ses->ntlmssp->sesskey_per_smbsess)
-+		flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
- 
- 	tmp = *pbuffer + sizeof(AUTHENTICATE_MESSAGE);
- 	sec_blob->NegotiateFlags = cpu_to_le32(flags);
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -764,10 +764,8 @@ ssetup_exit:
- 
- 	if (!rc) {
- 		mutex_lock(&server->srv_mutex);
--		if (server->sign && server->ops->generate_signingkey) {
-+		if (server->ops->generate_signingkey) {
- 			rc = server->ops->generate_signingkey(ses);
--			kfree(ses->auth_key.response);
--			ses->auth_key.response = NULL;
- 			if (rc) {
- 				cifs_dbg(FYI,
- 					"SMB3 session key generation failed\n");
-@@ -789,10 +787,6 @@ ssetup_exit:
- 	}
- 
- keygen_exit:
--	if (!server->sign) {
--		kfree(ses->auth_key.response);
--		ses->auth_key.response = NULL;
--	}
- 	kfree(ses->ntlmssp);
- 
- 	return rc;
+ 	status = rd32(E1000_STATUS);
 
