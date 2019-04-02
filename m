@@ -2,215 +2,215 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B912C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE910C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040B4207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F79F207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:08:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GvSbSDnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbfDBJHK (ORCPT
+        id S1729833AbfDBJIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:07:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44336 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726790AbfDBJHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:07:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 93E16AC4C;
-        Tue,  2 Apr 2019 09:07:07 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id ECC501E42C7; Tue,  2 Apr 2019 11:07:06 +0200 (CEST)
-Date:   Tue, 2 Apr 2019 11:07:06 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-nvme@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, axboe@fb.com, prakash.v@samsung.com,
-        anshul@samsung.com, joshiiitr@gmail.com
-Subject: Re: [PATCH v3 7/7] fs/ext4,jbd2: add support for passing write-hint
- with journal
-Message-ID: <20190402090706.GD12133@quack2.suse.cz>
-References: <1553846032-4451-1-git-send-email-joshi.k@samsung.com>
- <CGME20190329075800epcas2p4731f10eabf7d70dc7096117d161b05a3@epcas2p4.samsung.com>
- <1553846032-4451-8-git-send-email-joshi.k@samsung.com>
- <4B0B5E8B-3B30-4CF6-AA9D-D1294542D65D@dilger.ca>
+        Tue, 2 Apr 2019 05:08:13 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45639 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbfDBJIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 05:08:12 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m16so10898417edd.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 02:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oFHg+lBSloBl+YYC+znOHViFwx8OkjOVExLdtTv/B4Y=;
+        b=GvSbSDnYgg75G0JtiVzcZ814iXjbx6lgqrqqTbAw4hfA67acHcJvJ9cIer5TAsqjSa
+         2WYlUnvWtupsZGJu4zstTfVh8/8+e8fhjtwU3iLwUEyMZPtQtWS55BgmzuBjB7p/rtV3
+         heRwAKzBWsu/Ll8HwS+R1Vi6LE//VVJ8O2YPg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=oFHg+lBSloBl+YYC+znOHViFwx8OkjOVExLdtTv/B4Y=;
+        b=pUCTyByNgOJJ8kOYgn0NzSrjnUlY2JztZ/50qWqKqssZjHYuAmo2W8ypyZ3jx+pX6J
+         +2OvDv6jVBmloMTfrf+acDzhRreBgij2nqOEspOSHJ/nykv/u2uUVGdusFFeVD03VpY2
+         H0B+46/dFYSCTTgmyLG5x6Zb4/Vr4ExkjdF31ZuMk//tTHL9Dz7yNBvJUpEQjCUEZuxm
+         EvENwsL7n42gph/0WrxlnzpnGefcxjYrM5n8nbAhL3lfESRtxAnejmU3G3X3DG97Mzou
+         0iRL9P6sWc4V0ZFbfBdduRuaA87ETfXGKyywwDdKHPBPLwFx3FnS9IS4Rka6JdGuRJkX
+         fpUA==
+X-Gm-Message-State: APjAAAW7Xb5TqTnR4/epfBkXpHE0CyMpdH9aVpGmYQHe7cWbqZgSlvUH
+        vjCTcUkVUMWRHHXUGFrnSRZYJw==
+X-Google-Smtp-Source: APXvYqym1Y6j3Ck8d0OwCVnjq0Vi3Kq4giFvM6w9hiZ6Ucc1tQmDvHrldFf03sbgyDsyonBmXWGeVw==
+X-Received: by 2002:a50:a5e5:: with SMTP id b34mr34827444edc.260.1554196090542;
+        Tue, 02 Apr 2019 02:08:10 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id m47sm3932483edm.7.2019.04.02.02.08.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 02:08:09 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 11:08:07 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Qiang Yu <yuq825@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20190402090807.GI2665@phenom.ffwll.local>
+Mail-Followup-To: Qiang Yu <yuq825@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>, Matthew Wilcox <willy@infradead.org>
+References: <20190402105006.48f93e53@canb.auug.org.au>
+ <CAKGbVbvj9cZnJuey_ra7U+xm-JhoB17bpTgcXKiKaHWbjB9Sxw@mail.gmail.com>
+ <20190402075744.GC2665@phenom.ffwll.local>
+ <CAKGbVbsn9BpbMZCshxzj=d38wHpBhBo7wrZDQnC01hB30B9-mA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4B0B5E8B-3B30-4CF6-AA9D-D1294542D65D@dilger.ca>
+In-Reply-To: <CAKGbVbsn9BpbMZCshxzj=d38wHpBhBo7wrZDQnC01hB30B9-mA@mail.gmail.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 30-03-19 11:49:54, Andreas Dilger wrote:
-> On Mar 29, 2019, at 1:53 AM, Kanchan Joshi <joshi.k@samsung.com> wrote:
-> > 
-> > For NAND based SSDs, mixing of data with different life-time reduces
-> > efficiency of internal garbage-collection. During FS operations, series
-> > of journal updates will follow/precede series of data/meta updates, causing
-> > intermixing inside SSD. By passing a write-hint with journal, its write
-> > can be isolated from other data/meta writes, leading to endurance/performance
-> > benefit on SSD.
-> > 
-> > This patch introduces "j_writehint" member in JBD2 journal, using which
-> > Ext4 specifies write-hint (as SHORT) for journal
+On Tue, Apr 02, 2019 at 04:59:37PM +0800, Qiang Yu wrote:
+> On Tue, Apr 2, 2019 at 3:57 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Tue, Apr 02, 2019 at 01:55:03PM +0800, Qiang Yu wrote:
+> > > Thanks, patch is:
+> > > Reviewed-by: Qiang Yu <yuq825@gmail.com>
+> >
+> > Good time to get started with committing patches? In general it's kinda
+> > confusing if the maintainer r-bs a patch, but doesn't say whether/when/how
+> > it gets merged. Big chance the patch will get lost in limbo and fall
+> > through cracks.
 > 
-> The comment here says the "WRITE_LIFE_SHORT" hint is used for the journal,
-> but the code uses WRITE_LIFE_KERN_MIN.  However, it seems that "MIN" will
-> be mapped to "NONE" if it exceeds the number of streams available in the
-> underlying device.  It would be better to use "SHORT" if there are not
-> enough streams available.
-> 
-> It should call blk_queue_stream_limits() to see if there are extra stream
-> IDs available, and fall back to WRITE_LIFE_SHORT if not.
+> Thanks for the remind, this patch should only be applied to drm-misc-next
+> branch when 5.1-rcx branch gets merged to drm-misc-next for the new
+> xa_alloc API. So I expect the guy who do the 5.1-rcx merge should apply
+> this patch. Who will do the merge?
 
-I disagree. I'd first keep the behavior implemented in this patch to keep
-things simple. Later if we decide more smarts are needed when SSDs don't
-have enough hints available, we can always add them. But this patch either
-keeps the current behavior (i.e., no hint) or improves the situation by
-providing a special hint. So it is a clear win. I'm not so convinced using
-WRITE_LIFE_SHORT is always a win when userspace's idea of "short" is
-different from the kernel's idea of "short"...
+Oh right, I was kinda not yet awake :-)
 
-								Honza
+Yeah Dave/me and drm-misc maintainers will resolve this when drm-misc
+lands in drm-next. Might then need a backmerge in drm-misc to roll
+forward.
+-Daniel
+
 > 
-> Cheers, Andreas
+> Regards,
+> Qiang
 > 
-> > Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> > ---
-> > fs/ext4/ext4_jbd2.h  |  1 +
-> > fs/ext4/super.c      |  2 ++
-> > fs/jbd2/commit.c     | 11 +++++++----
-> > fs/jbd2/journal.c    |  3 ++-
-> > fs/jbd2/revoke.c     |  3 ++-
-> > include/linux/jbd2.h |  8 ++++++++
-> > 6 files changed, 22 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> > index 15b6dd7..b589ca4 100644
-> > --- a/fs/ext4/ext4_jbd2.h
-> > +++ b/fs/ext4/ext4_jbd2.h
-> > @@ -16,6 +16,7 @@
-> > #include <linux/jbd2.h>
-> > #include "ext4.h"
-> > 
-> > +#define EXT4_JOURNAL_WRITE_HINT (WRITE_LIFE_KERN_MIN)
-> > #define EXT4_JOURNAL(inode)	(EXT4_SB((inode)->i_sb)->s_journal)
-> > 
-> > /* Define the number of blocks we need to account to a transaction to
-> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> > index fb12d3c..9c2c73e 100644
-> > --- a/fs/ext4/super.c
-> > +++ b/fs/ext4/super.c
-> > @@ -4289,6 +4289,8 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
-> > 
-> > 	set_task_ioprio(sbi->s_journal->j_task, journal_ioprio);
-> > 
-> > +	sbi->s_journal->j_writehint = EXT4_JOURNAL_WRITE_HINT;
-> > +
-> > 	sbi->s_journal->j_commit_callback = ext4_journal_commit_callback;
-> > 
-> > no_journal:
-> > diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-> > index 2eb55c3..6da4c28 100644
-> > --- a/fs/jbd2/commit.c
-> > +++ b/fs/jbd2/commit.c
-> > @@ -153,10 +153,12 @@ static int journal_submit_commit_record(journal_t *journal,
-> > 
-> > 	if (journal->j_flags & JBD2_BARRIER &&
-> > 	    !jbd2_has_feature_async_commit(journal))
-> > -		ret = submit_bh(REQ_OP_WRITE,
-> > -			REQ_SYNC | REQ_PREFLUSH | REQ_FUA, bh);
-> > +		ret = submit_bh_write_hint(REQ_OP_WRITE,
-> > +			REQ_SYNC | REQ_PREFLUSH | REQ_FUA, bh,
-> > +			journal->j_writehint);
-> > 	else
-> > -		ret = submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
-> > +		ret = submit_bh_write_hint(REQ_OP_WRITE, REQ_SYNC, bh,
-> > +			journal->j_writehint);
-> > 
-> > 	*cbh = bh;
-> > 	return ret;
-> > @@ -711,7 +713,8 @@ void jbd2_journal_commit_transaction(journal_t *journal)
-> > 				clear_buffer_dirty(bh);
-> > 				set_buffer_uptodate(bh);
-> > 				bh->b_end_io = journal_end_buffer_io_sync;
-> > -				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
-> > +				submit_bh_write_hint(REQ_OP_WRITE, REQ_SYNC,
-> > +						bh, journal->j_writehint);
-> > 			}
-> > 			cond_resched();
-> > 			stats.run.rs_blocks_logged += bufs;
-> > diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> > index 8ef6b6d..804dc2c 100644
-> > --- a/fs/jbd2/journal.c
-> > +++ b/fs/jbd2/journal.c
-> > @@ -1384,7 +1384,8 @@ static int jbd2_write_superblock(journal_t *journal, int write_flags)
-> > 	jbd2_superblock_csum_set(journal, sb);
-> > 	get_bh(bh);
-> > 	bh->b_end_io = end_buffer_write_sync;
-> > -	ret = submit_bh(REQ_OP_WRITE, write_flags, bh);
-> > +	ret = submit_bh_write_hint(REQ_OP_WRITE, write_flags, bh,
-> > +				journal->j_writehint);
-> > 	wait_on_buffer(bh);
-> > 	if (buffer_write_io_error(bh)) {
-> > 		clear_buffer_write_io_error(bh);
-> > diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
-> > index a1143e5..376b1d8 100644
-> > --- a/fs/jbd2/revoke.c
-> > +++ b/fs/jbd2/revoke.c
-> > @@ -642,7 +642,8 @@ static void flush_descriptor(journal_t *journal,
-> > 	set_buffer_jwrite(descriptor);
-> > 	BUFFER_TRACE(descriptor, "write");
-> > 	set_buffer_dirty(descriptor);
-> > -	write_dirty_buffer(descriptor, REQ_SYNC);
-> > +	write_dirty_buffer_with_hint(descriptor, REQ_SYNC,
-> > +				journal->j_writehint);
-> > }
-> > #endif
-> > 
-> > diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-> > index 0f919d5..918f21e 100644
-> > --- a/include/linux/jbd2.h
-> > +++ b/include/linux/jbd2.h
-> > @@ -1139,6 +1139,14 @@ struct journal_s
-> > 	 */
-> > 	__u32 j_csum_seed;
-> > 
-> > +	/**
-> > +	 * @j_writehint:
-> > +	 *
-> > +	 * write-hint for journal (set by FS).
-> > +	 */
-> > +	enum rw_hint	j_writehint;
-> > +
-> > +
-> > #ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > 	/**
-> > 	 * @j_trans_commit_map:
+> >
+> > >
+> > > Regards,
+> > > Qiang
+> > >
+> > > On Tue, Apr 2, 2019 at 7:50 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > >
+> > > > Hi all,
+> > > >
+> > > > After merging the drm-misc tree, today's linux-next build (x86_64
+> > > > allmodconfig) failed like this:
+> > > >
+> > > > In file included from include/linux/kernel.h:7,
+> > > >                  from include/asm-generic/bug.h:18,
+> > > >                  from arch/x86/include/asm/bug.h:83,
+> > > >                  from include/linux/bug.h:5,
+> > > >                  from include/linux/mmdebug.h:5,
+> > > >                  from include/linux/gfp.h:5,
+> > > >                  from include/linux/slab.h:15,
+> > > >                  from drivers/gpu/drm/lima/lima_ctx.c:4:
+> > > > drivers/gpu/drm/lima/lima_ctx.c: In function 'lima_ctx_create':
+> > > > include/linux/limits.h:13:18: warning: passing argument 3 of 'xa_alloc' makes pointer from integer without a cast [-Wint-conversion]
+> > > >  #define UINT_MAX (~0U)
+> > > >                   ^~~~~
+> > > > drivers/gpu/drm/lima/lima_ctx.c:26:36: note: in expansion of macro 'UINT_MAX'
+> > > >   err = xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
+> > > >                                     ^~~~~~~~
+> > > > In file included from include/linux/radix-tree.h:31,
+> > > >                  from include/linux/idr.h:15,
+> > > >                  from include/drm/drm_device.h:7,
+> > > >                  from drivers/gpu/drm/lima/lima_device.h:7,
+> > > >                  from drivers/gpu/drm/lima/lima_ctx.c:6:
+> > > > include/linux/xarray.h:817:9: note: expected 'void *' but argument is of type 'unsigned int'
+> > > >    void *entry, struct xa_limit limit, gfp_t gfp)
+> > > >    ~~~~~~^~~~~
+> > > > drivers/gpu/drm/lima/lima_ctx.c:26:46: error: incompatible type for argument 4 of 'xa_alloc'
+> > > >   err = xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
+> > > >                                               ^~~
+> > > > In file included from include/linux/radix-tree.h:31,
+> > > >                  from include/linux/idr.h:15,
+> > > >                  from include/drm/drm_device.h:7,
+> > > >                  from drivers/gpu/drm/lima/lima_device.h:7,
+> > > >                  from drivers/gpu/drm/lima/lima_ctx.c:6:
+> > > > include/linux/xarray.h:817:32: note: expected 'struct xa_limit' but argument is of type 'struct lima_ctx *'
+> > > >    void *entry, struct xa_limit limit, gfp_t gfp)
+> > > >                 ~~~~~~~~~~~~~~~~^~~~~
+> > > >
+> > > > Caused by commit
+> > > >
+> > > >   a1d2a6339961 ("drm/lima: driver for ARM Mali4xx GPUs")
+> > > >
+> > > > interacting with commit
+> > > >
+> > > >   a3e4d3f97ec8 ("XArray: Redesign xa_alloc API")
+> > > >
+> > > > from Linus' tree (v5.1-rc1).
+> > > >
+> > > > I have applied the following patch for today.  It could be applied as
+> > > > part of a merge of v5.1-rc1 into drm-misc.
+> > > >
+> > > > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > Date: Tue, 2 Apr 2019 10:45:32 +1100
+> > > > Subject: [PATCH] drm/lima: update for xa_alloc API change
+> > > >
+> > > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > ---
+> > > >  drivers/gpu/drm/lima/lima_ctx.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/lima/lima_ctx.c b/drivers/gpu/drm/lima/lima_ctx.c
+> > > > index c8d12f7c6894..bafa00d74cc5 100644
+> > > > --- a/drivers/gpu/drm/lima/lima_ctx.c
+> > > > +++ b/drivers/gpu/drm/lima/lima_ctx.c
+> > > > @@ -23,7 +23,7 @@ int lima_ctx_create(struct lima_device *dev, struct lima_ctx_mgr *mgr, u32 *id)
+> > > >                         goto err_out0;
+> > > >         }
+> > > >
+> > > > -       err = xa_alloc(&mgr->handles, id, UINT_MAX, ctx, GFP_KERNEL);
+> > > > +       err = xa_alloc(&mgr->handles, id, ctx, XA_LIMIT(*id, UINT_MAX), GFP_KERNEL);
+> > > >         if (err < 0)
+> > > >                 goto err_out0;
+> > > >
+> > > > --
+> > > > 2.20.1
+> > > >
+> > > > --
+> > > > Cheers,
+> > > > Stephen Rothwell
+> >
 > > --
-> > 2.7.4
-> > 
-> 
-> 
-> Cheers, Andreas
-> 
-> 
-> 
-> 
-> 
-
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
