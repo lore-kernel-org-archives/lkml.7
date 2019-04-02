@@ -2,161 +2,128 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25964C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABDBC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00EDF2133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17502146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5qU6jv/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732123AbfDBOkD (ORCPT
+        id S1732137AbfDBOkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:40:03 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:38259 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729541AbfDBOkD (ORCPT
+        Tue, 2 Apr 2019 10:40:07 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46880 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729541AbfDBOkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:40:03 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id B431760028;
-        Tue,  2 Apr 2019 14:39:56 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 16:39:56 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula@amarulasolutions.com,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v8 02/15] drm/sun4i: tcon: Compute DCLK dividers based on
- format, lanes
-Message-ID: <20190402143956.xu2yuyfditx5pbvw@flea>
-References: <20190311133637.18334-1-jagan@amarulasolutions.com>
- <20190311133637.18334-3-jagan@amarulasolutions.com>
- <20190311153847.oz6ruqmptaq2befn@flea>
- <CAMty3ZChz=s7gdQyX9KnsAp1t5FrpouXGK74-r0SKJ89yJN67Q@mail.gmail.com>
- <20190319105307.omowzyhqu33e3pzy@flea>
- <CAMty3ZCjTLLw+zAfPKD3qZx_o9yti4MD0XL0Ve7VG1_6ToJ=pg@mail.gmail.com>
+        Tue, 2 Apr 2019 10:40:06 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z17so15205827qts.13;
+        Tue, 02 Apr 2019 07:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LYC+RxtQwxH16TNk/fXaRpRGuPwPLr8g5GZ5yFg0rBw=;
+        b=A5qU6jv/8+aiYuIyfUCQAByQ201Llx9m2PYw1oUWZROERdanRIk4kw9N3bGVdxYP5I
+         YAPHldO7nuE69j8mg7F3A0tJjN/pxwK1ZQkcBm1EqeihHiLteiiSLjYqvOcmsWTtl5ni
+         s+avOEo/cnCcdN52oYgmQHsO3Tv2sT6GDRkmJyFnkWXFc3QrW2G4mogPjrHRmEj6xDE1
+         QFiHlZ2OyW+xbV14cqdrl8h8UNeAfMaCf9v6fsfVD7PLGIWsSOu78JwAD9sOhH6af9zp
+         J7DggDT+D+Z8bDiMu/HYSgK6igF4Sf7/eMcB3bPqqO6ueKmbdPlRqc842ocn2ZbwCJJ4
+         aGgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LYC+RxtQwxH16TNk/fXaRpRGuPwPLr8g5GZ5yFg0rBw=;
+        b=HV4pIPjrpT2sEjJUTMG4j8bc2TlhRU8BfgvVGjI4iXeHtG1U10vUEY+fuvun64kr5i
+         oZQUu1RF8hS7jDZ8XAK3Tl+JC8wCRTvwAL2hDX2azMwDUEpKQfC5ObFx/hqmjdyBk+bq
+         NBMthWzBs8c8/SbvCk9Zte2i9rwHlyI+zGB8Zr4C1eiaBXkNJh9OhcKZqSgw9FcIJaDE
+         pMOzYtEfQXEz6AhH2fnlH49TtlmM4+PTwsmYByGYOwiU8MdPdHEGjuLj6Ntb+i7ufbkm
+         JnovtPs8dQGvkthElwZ/AU3z8C9PIjBryQ/3Qi5uoembQo6dvIoX1FMUhb+5dIx+F8YM
+         37/g==
+X-Gm-Message-State: APjAAAXg0gaq6Yxe+4vmgYqPyyFV9uMQjtGyG8xH3rgbftt8cks2v3Gi
+        t+4gupDl8pU5yHgAxkapfu4=
+X-Google-Smtp-Source: APXvYqyoI5aAgR6ke0kibHcIu/438gT7QDatqIz4MBC6eQfXL+WNucZj/rijYaUL5XMvOFVHUeBgMQ==
+X-Received: by 2002:a0c:9861:: with SMTP id e30mr59479340qvd.52.1554216005591;
+        Tue, 02 Apr 2019 07:40:05 -0700 (PDT)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id t69sm6679961qke.38.2019.04.02.07.40.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 02 Apr 2019 07:40:04 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 11:40:00 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Mukesh Ojha <mojha@codeaurora.org>, lars@metafoo.de,
+        Michael.Hennerich@analog.com, stefan.popa@analog.com,
+        jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH 2/4] staging: iio: ad9832: add SPDX identifier
+Message-ID: <20190402144000.pjtygmqi4pxn2p5j@smtp.gmail.com>
+References: <20190401143724.mcn73jhdtq3zp3nk@smtp.gmail.com>
+ <ac167cc8-4236-2e15-d5f2-fa222d95da49@codeaurora.org>
+ <20190401171355.GA19716@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bq55zguk5gxjx22z"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZCjTLLw+zAfPKD3qZx_o9yti4MD0XL0Ve7VG1_6ToJ=pg@mail.gmail.com>
+In-Reply-To: <20190401171355.GA19716@kroah.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/01, Greg KH wrote:
+> On Mon, Apr 01, 2019 at 08:36:50PM +0530, Mukesh Ojha wrote:
+> > 
+> > On 4/1/2019 8:07 PM, Marcelo Schmitt wrote:
+> > > Add SPDX identifier of GPL-2.0 for the ad9832 driver.
+> > > 
+> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > > ---
+> > >   drivers/staging/iio/frequency/ad9832.c | 3 +--
+> > >   1 file changed, 1 insertion(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+> > > index 50a583020072..d8d4a7936275 100644
+> > > --- a/drivers/staging/iio/frequency/ad9832.c
+> > > +++ b/drivers/staging/iio/frequency/ad9832.c
+> > > @@ -1,9 +1,8 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > 
+> > FYI
+> > 
+> > Use C notations here as per https://lkml.org/lkml/2019/2/13/570.
+> > 
+> > <https://lkml.org/lkml/2019/2/13/570>
 
---bq55zguk5gxjx22z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+OK, I'll check it out.
 
-On Thu, Mar 21, 2019 at 07:40:32PM +0530, Jagan Teki wrote:
-> On Tue, Mar 19, 2019 at 4:23 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Mon, Mar 11, 2019 at 09:36:27PM +0530, Jagan Teki wrote:
-> > > On Mon, Mar 11, 2019 at 9:08 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Mon, Mar 11, 2019 at 07:06:24PM +0530, Jagan Teki wrote:
-> > > > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
-> > > > > MIPI clock topology in Allwinner DSI controller.
-> > > > >
-> > > > > TCON dotclock driver is computing the desired DCLK divider based on
-> > > > > panel pixel clock along with input DCLK min, max divider values from
-> > > > > tcon driver and that would eventually set the pll-mipi clock rate.
-> > > > >
-> > > > > The current code allows the TCON clock divider to have a default 4
-> > > > > for min, max ranges that would fail to compute the desired pll-mipi
-> > > > > rate while supporting new panels.
-> > > > >
-> > > > > So, add the computation logic 'format/lanes' to dclk min and max dividers
-> > > > > and instead of default 4. This computation logic align with Allwinner A64
-> > > > > BSP, hoping that would work even for A33.
-> > > >
-> > > > Last time we discussed this, we found out that this wasn't the case,
-> > > > even in the BSP.
-> > >
-> > > This was the case for BSP to compute pll-mipi not for TCON_DSI clock
-> > > register, SUN4I_TCON0_DCLK_REG, which marked the divider 4 by default.
-> > >
-> > > > What compelling evidence have you found that makes you say otherwise?
-> > >
-> > > divider 4 isn't worked, this I would mentioned before as well.
-> >
-> > Maybe you mentionned it before, but it's nowhere to be found in your
-> > commit log.
->
-> I have added it in 3rd paragraph in commit message, may be you missed
-> it or you may look for different text.
->
-> "The current code allows the TCON clock divider to have a default 4
-> for min, max ranges that would fail to compute the desired pll-mipi
-> rate while supporting new panels."
+> > 
+> > Once you fix it then you can take mine
+> > Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> 
+> Did you read the documentation about how to put a proper SPDX line in
+> the kernel documentation?  For .c files, you have to use "//", not "/* */"
+> 
+> Please read:
+> 	Documentation/process/license-rules.rst
+> and see the section "Style" for all of the details.
 
-And you're still not explaining *why* that is an issue, and what makes
-you think that your solution is the right one.
+Thanks, I'll read it to understand the details.
 
-Seriously, I feel like this discussion is going in circles. I've been
-asking for that since your very first version.
+> 
+> thanks,
+> 
+> greg k-h
 
-> > > Tested this on 4 different panels, and below are the desired divider values
-> > > and pll-mipi clock rate with respect to pixel clock frequency.
-> > >
-> > > - 55MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-> > >   is 6 with the output parent clock rate of 330MHz.
-> > > - 30MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-> > >   is 6 with parent clock rate of 180MHz.
-> > > - 27.5Mhz pixel clock with 2-lane pane, and the desired DSI clock divider
-> > >   is 12 with the output parent clock rate of 330MHz.
-> > > - 147MHz pixel clock with 4-lane panel, and the desired DSI clock divider
-> > >   is 6 with the output parent clock rate of 882MHz.
-> > >
-> > > BSP trying to use this format/lane to compute dsi divider that in-turn
-> > > using pll-mipi set_rate but TCON0_DCLK_REG keep constant 4.
-> >
-> > Feel free to reply to
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
->
-> Yes, I have replied at that time itself, please check.
->
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629673.html
->
-> Here I have taken the pixel clock to 30Mhz for example in Bananapi
-> panel, and the above gist the pixel is 148Mhz from another panel.
+Thanks for the advises,
 
-Again, without providing any reference, just making vague statements.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---bq55zguk5gxjx22z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKN0OwAKCRDj7w1vZxhR
-xVZbAP96ZzoBDc0Pt7lVSk9TviBgP7GCQGg3+WuSAYt9gqUgzgEAlxzjZ38oRP0f
-FML4gjhqwD8TrJt2HZ3R2m0zWQrMLAM=
-=qO40
------END PGP SIGNATURE-----
-
---bq55zguk5gxjx22z--
+Marcelo
