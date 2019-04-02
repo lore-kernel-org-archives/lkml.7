@@ -2,132 +2,106 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD54C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C71FC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D2C2133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1AA2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:39:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WFWJkXSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbfDBNi7 (ORCPT
+        id S1731128AbfDBNjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:38:59 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51388 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728817AbfDBNi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:38:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63DA416A3;
-        Tue,  2 Apr 2019 06:38:58 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93ACE3F721;
-        Tue,  2 Apr 2019 06:38:56 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 14:38:51 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Ray Jui <ray.jui@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abhishek Shah <abhishek.shah@broadcom.com>
-Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
- I/O region
-Message-ID: <20190402133851.GA26122@e107981-ln.cambridge.arm.com>
-References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
- <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com>
- <20190329173515.GA10367@e107981-ln.cambridge.arm.com>
- <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
- <20190401164416.GA8616@e107981-ln.cambridge.arm.com>
- <e7d3e5a1-db5c-8438-f10f-81b87aba0e03@broadcom.com>
- <CABe79T7uLo+68P0Yr7jpgn1+4H01qhoPRjX05gszin3FXkBZ5w@mail.gmail.com>
- <20190402102639.GB22708@e107981-ln.cambridge.arm.com>
- <CABe79T5O-1EWVrR1vZ27LWuxTBqN4_x37bkpfKxfm1ZB+oDUvA@mail.gmail.com>
+        Tue, 2 Apr 2019 09:39:35 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60370 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbfDBNjf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 09:39:35 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x32DdXb5023880;
+        Tue, 2 Apr 2019 08:39:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554212373;
+        bh=kZb+FRtQrpTzAAWRWYzh7F2xIyNGLDG3X72MTEx9bFo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WFWJkXSCdwk96Tk1TbksEliw3zpZozc5RTLE9AzbjF3QottFOP5YL2PPTbilKc2FA
+         pE3D2dS1jbK01VmaScFhaC8OrR/DBn8HFuDr+52SVmpFEcct19rB20l9GwiiVV5b24
+         PPDJqanP32jAOHUxfOC4hXoN2tfVSrj5+5yN/KQQ=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x32DdXpU073655
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Apr 2019 08:39:33 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Apr
+ 2019 08:39:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 2 Apr 2019 08:39:30 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x32DdTIu069972;
+        Tue, 2 Apr 2019 08:39:29 -0500
+Subject: Re: [RFC PATCH 0/4] bus: ti-sysc: Add generic enable/disable & PRUSS
+To:     <tony@atomide.com>
+CC:     <nsekhar@ti.com>, <s-anna@ti.com>, <linux-kernel@vger.kernel.org>
+References: <20190402133752.6912-1-rogerq@ti.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <c720c3c3-c793-f2b1-57d3-2105bcbb73a0@ti.com>
+Date:   Tue, 2 Apr 2019 16:39:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABe79T5O-1EWVrR1vZ27LWuxTBqN4_x37bkpfKxfm1ZB+oDUvA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190402133752.6912-1-rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 04:16:13PM +0530, Srinath Mannam wrote:
-
-[...]
-
-> > Ok - I start to understand. What does it mean in HW terms that your
-> > 32bit AXI address region size is 32MB ? Please explain to me in details.
-> >
-> In our PCIe controller HW, AXI address from 0x42000000 to 0x44000000
-> of 32MB size and .
-> AXI address from 0x400000000 to 0x480000000 of 2GB size are provided
-> to map ob address.
-> First IO region is inside 32bit address and second IO region is
-> outside 32bit address.
-> This code change is to map first IO region(0x42000000 to 0x44000000).
+On 02/04/2019 16:37, Roger Quadros wrote:
+> Hi Tony,
 > 
-> > IIUC you are using an OARR0 of 128MB in size to map a 32MB address
-> > region, that's what I understand this patch does (and the lowest index
-> > corresponds to the smallest possible size - it is far from clear by
-> > looking at the patch).
-> Yes, lowest index corresponds to smallest possible size (128MB).
-> In our controller we have multiple windows like OARR0, OARR1, OARR2,
-> OARR3 all supports multiple sizes from 128MB to 1024MB.
-> These details are given at the top of this driver file, as shown
-> below. all windows supports 128MB size still we must use OARR0 window
-> to configure first IO region(0x42000000 to 0x44000000).
+> Non legacy modules will rely on generic enable/disable functions.
 > 
-> static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
->         {
->                 /* OARR0/OMAP0 */
->                 .window_sizes = { 128, 256 },
->                 .nr_sizes = 2,
->         },
->         {
->                 /* OARR1/OMAP1 */
->                 .window_sizes = { 128, 256 },
->                 .nr_sizes = 2,
->         },
->         {
->                 /* OARR2/OMAP2 */
->                 .window_sizes = { 128, 256, 512, 1024 },
->                 .nr_sizes = 4,
->         },
->         {
->                 /* OARR3/OMAP3 */
->                 .window_sizes = { 128, 256, 512, 1024 },
->                 .nr_sizes = 4,
->         },
-> };
+> I had to disable usb_otg_ss3 and 4 on am57xx idk to be able to boot.
+> It is explicitly stated in TRM to not use USB3 and 4 on AM57xx, and
+> I haven't seen any dra7 based board using them so let's keep it disabled.
+> 
+> Handle the PRU-ICSS type as it needs some special handling especially
+> during suspend/resume.
 
-Ok so this patch allows mapping an AXI I/O window that is smaller
-than OARR possible sizes, why it was not done from the beginning
-I really do not know.
+I forgot to mention that this must be applied on top of
+https://lkml.org/lkml/2019/3/25/1180
 
-Now explain this to me please:
+> 
+> cheers,
+> -roger
+> 
+> Roger Quadros (4):
+>   ARM: dts: dra7: Keep usb_otg_ss3 and usb_otg_ss4 disabled
+>   bus: ti-sysc: Add generic enable/disable functions
+>   bus: ti-sysc: Add support for PRU-ICSS type
+>   bus: ti-sysc: Ensure PRU-ICSS doesn't break suspend/resume
+> 
+>  .../devicetree/bindings/bus/ti-sysc.txt       |   1 +
+>  arch/arm/boot/dts/dra7-l4.dtsi                |   2 +
+>  drivers/bus/ti-sysc.c                         | 171 ++++++++++++++++++
+>  include/linux/platform_data/ti-sysc.h         |   7 +-
+>  4 files changed, 180 insertions(+), 1 deletion(-)
+> 
 
-> This patch add outbound window configuration to map below 32-bit I/O range
-> with corresponding PCI memory, which helps to access I/O region in ARM
-> 32-bit and one to one mapping of I/O region to PCI memory.
->
-> Ex:
-> 1. ranges DT property given for current driver is,
->     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
->     I/O region address is 0x400000000
-> 2. ranges DT property can be given after this patch,
->     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
->     I/O region address is 0x42000000
+-- 
+cheers,
+-roger
 
-Why 1:1 AXI<->PCI address mapping is not possible in (1), how does the
-current code works on 32-bit systems and what's the benefit your change
-is bringing.
-
-Thanks,
-Lorenzo
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
