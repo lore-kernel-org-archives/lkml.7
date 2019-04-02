@@ -2,127 +2,137 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA75C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C93C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8344920657
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8897920830
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:14:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="OwHPeheD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732381AbfDBPKc (ORCPT
+        id S1732403AbfDBPOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:10:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40888 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729532AbfDBPKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:10:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3927AEFE;
-        Tue,  2 Apr 2019 15:10:29 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 7CA6A1E3FD4; Tue,  2 Apr 2019 17:10:29 +0200 (CEST)
-Date:   Tue, 2 Apr 2019 17:10:29 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jari Ruusu <jari.ruusu@gmail.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: ext3 file system livelock and file system corruption, 4.9.166
- stable kernel
-Message-ID: <20190402151029.GA25668@quack2.suse.cz>
-References: <CACMCwJ+qLHV+cjQC2kAnLQP6qVz1bJ75V8BqQBV5HE1edRC-AQ@mail.gmail.com>
- <20190402103507.GA15511@kroah.com>
+        Tue, 2 Apr 2019 11:14:43 -0400
+Received: from mail.efficios.com ([167.114.142.138]:42680 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731137AbfDBPOm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 11:14:42 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 650DE18290E;
+        Tue,  2 Apr 2019 11:14:41 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 2kavt2b2mTVw; Tue,  2 Apr 2019 11:14:40 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id CFAE5182900;
+        Tue,  2 Apr 2019 11:14:40 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com CFAE5182900
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1554218080;
+        bh=1MCSN9CVZtVSVTEWu0xUJTDuc1sZZRfU9bzK+6KHh9Y=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=OwHPeheDSRuWaVxY2QcMo306MSlw59oShsUbtzfRVhIg+KYfh3Pr0LSNakCvZ5Woz
+         8HC96vERYH2Z7M2EmHZ/VCKWll3ukNXIgR/bj7v5eLVv+pQeNjua8X3rcT5H8ooW7N
+         V24IjNZg7Zm3YdqF5X6qtx3RzEPwX/JaBRjH0rULK0QQLktO9A4awLZMlWhTVlF8za
+         TH03qSLY8X0FjrpId+hBIRznVVzNHcNUTxYHkfvFktMzI9lX7vBpHSqqd0+4dNFRtR
+         pLEtHqIm748+p4DacmDtCze12D0BxQjoDgqyNf3fDdR3eo7JL/JfYl1URZutYF3ZVF
+         cVkrhM6HbC/UA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 11iw0LvriLyU; Tue,  2 Apr 2019 11:14:40 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id ACED81828F6;
+        Tue,  2 Apr 2019 11:14:40 -0400 (EDT)
+Date:   Tue, 2 Apr 2019 11:14:40 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     paulmck <paulmck@linux.ibm.com>
+Cc:     rcu@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        linux-nvdimm@lists.01.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org
+Message-ID: <886051277.1395.1554218080591.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190402142816.GA13084@linux.ibm.com>
+References: <20190402142816.GA13084@linux.ibm.com>
+Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402103507.GA15511@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.11_GA_3780 (ZimbraWebClient - FF65 (Linux)/8.8.11_GA_3787)
+Thread-Topic: Forbid static SRCU use in modules
+Thread-Index: oUG6FxPVmetxKAO3+cEe0XvMdbo6Fg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 02-04-19 12:35:07, Greg Kroah-Hartman wrote:
-> On Tue, Apr 02, 2019 at 01:08:45PM +0300, Jari Ruusu wrote:
-> > To trigger this ext4 file system bug, you need a sparse file with
-> > correct sparse pattern on old-school ext3 file system. I tried
-> > more simpler ways to trigger this but those attempts did not
-> > trigger the bug. I have provided compressed sparse file that
-> > reliably triggers the bug. Size of compressed sparse file 1667256
-> > bytes. Size of uncompressed sparse file 7369850880 bytes.
-> > Following commands will demo the problem.
-> > 
-> >   wget http://www.elisanet.fi/jariruusu/123/sparse-demo.data.xz
-> >   xz -d sparse-demo.data.xz
-> >   mkfs -t ext3 -b 4096 -e remount-ro -O "^dir_index" /dev/sdc1
-> >   mount -t ext3 /dev/sdc1 /mnt
-> >   cp -v --sparse=always sparse-demo.data /mnt/aa
-> >   cp -v --sparse=always sparse-demo.data /mnt/bb
-> >   umount /mnt
-> >   mount -t ext3 /dev/sdc1 /mnt
-> >   cp -v --sparse=always /mnt/bb /mnt/aa
-> > 
-> > That last cp command reliably triggers the bug that livelocks and
-> > after reset you have file system corruption to deal with. Deeply
-> > unfunny.
-> > 
-> > The bug is caused by
-> > "ext4: brelse all indirect buffer in ext4_ind_remove_space()"
-> > upstream commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217, from
-> > <yi.zhang@huawei.com>, who provided a follow-up patch
-> > "ext4: cleanup bh release code in ext4_ind_remove_space()"
-> > upstream commit 5e86bdda41534e17621d5a071b294943cae4376e. The
-> > problem with that follow-up patch is that it is almost criminally
-> > mislabeled. It should have said "fixes ext3 livelock and file
-> > system corrupting bug" or something like that, so that Greg KH &
-> > Co would have understood that it must be backported to stable
-> > kernels too. Now the bug appears to be in all/most stable kernels
-> > already.
-> > 
-> > Below is the buggy patch that causes the problem. Look at those
-> > new while loops. Once the while condition is true once, it is
-> > ALWAYS true, so it livelocks.
-> > 
-> > > --- a/fs/ext4/indirect.c
-> > > +++ b/fs/ext4/indirect.c
-> > > @@ -1385,10 +1385,14 @@ end_range:
-> > >  					   partial->p + 1,
-> > >  					   partial2->p,
-> > >  					   (chain+n-1) - partial);
-> > > -			BUFFER_TRACE(partial->bh, "call brelse");
-> > > -			brelse(partial->bh);
-> > > -			BUFFER_TRACE(partial2->bh, "call brelse");
-> > > -			brelse(partial2->bh);
-> > > +			while (partial > chain) {
-> > > +				BUFFER_TRACE(partial->bh, "call brelse");
-> > > +				brelse(partial->bh);
-> > > +			}
-> > > +			while (partial2 > chain2) {
-> > > +				BUFFER_TRACE(partial2->bh, "call brelse");
-> > > +				brelse(partial2->bh);
-> > > +			}
-> > >  			return 0;
-> > >  		}
-> > >
-> > 
-> > Greg & Co,
-> > Please revert that above patch from stable kernels or backport the
-> > follow-up patch that fixes the problem.
-> 
-> So you need 5e86bdda4153 ("ext4: cleanup bh release code in
-> ext4_ind_remove_space()") applied to all of the stable and LTS kernels
-> at the moment (as that patch only showed up in 5.1-rc1)?
-> 
-> If so, I need an ack from the ext4 developers/maintainer to do so.
+----- On Apr 2, 2019, at 10:28 AM, paulmck paulmck@linux.ibm.com wrote:
 
-Ack from me, and sorry for missing this brown paper bag bug during
-review...
+> Hello!
+> 
+> This series prohibits use of DEFINE_SRCU() and DEFINE_STATIC_SRCU()
+> by loadable modules.  The reason for this prohibition is the fact
+> that using these two macros within modules requires that the size of
+> the reserved region be increased, which is not something we want to
+> be doing all that often.  Instead, loadable modules should define an
+> srcu_struct and invoke init_srcu_struct() from their module_init function
+> and cleanup_srcu_struct() from their module_exit function.  Note that
+> modules using call_srcu() will also need to invoke srcu_barrier() from
+> their module_exit function.
 
-								Honza
+This arbitrary API limitation seems weird.
+
+Isn't there a way to allow modules to use DEFINE_SRCU and DEFINE_STATIC_SRCU
+while implementing them with dynamic allocation under the hood ?
+
+Thanks,
+
+Mathieu
+
+
+> 
+> This series consist of the following:
+> 
+> 1.	Dynamically allocate dax_srcu.
+> 
+> 2.	Dynamically allocate drm_unplug_srcu.
+> 
+> 3.	Dynamically allocate kfd_processes_srcu.
+> 
+> These build and have been subjected to 0day testing, but might also need
+> testing by someone having the requisite hardware.
+> 
+>							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> drivers/dax/super.c                        |   10 +++++-
+> drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c |    5 +++
+> drivers/gpu/drm/amd/amdkfd/kfd_process.c   |    2 -
+> drivers/gpu/drm/drm_drv.c                  |    8 ++++
+> include/linux/srcutree.h                   |   19 +++++++++--
+> kernel/rcu/rcuperf.c                       |   40 +++++++++++++++++++-----
+> kernel/rcu/rcutorture.c                    |   48 +++++++++++++++++++++--------
+>  7 files changed, 105 insertions(+), 27 deletions(-)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
