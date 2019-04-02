@@ -2,118 +2,227 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92284C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6751EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF57207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HBsxJQ3I"
+	by mail.kernel.org (Postfix) with ESMTP id 2BB70207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfDBD1F (ORCPT
+        id S1729068AbfDBDaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:27:05 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37223 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbfDBD1F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:27:05 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v14so1733602wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BnimVsuh2+zTcP1tvzKSWjLIuouXSxQGtqJWn1IMvlE=;
-        b=HBsxJQ3IOkAVlxQdckN67dW0kBgftaw5jCT2f4AqShdD6yg6pNV54K726jN8rBVltG
-         yWBB7JEYLCNY+wEZdujSoGBQpY9u5LhOMfL2mL+uYddUkFZ+DOxwgMmXgZK/lOOsIg25
-         7oiyTQMY4FyO+Z/x77oHAjXQR+1Gke/h4J7bXjuJUxJjZlvKmK4CQM4vzvfahtl04nvR
-         dT1faoJlOswS7cX5HzjG4uJZGtwU+zbP/uSUg9qZA9ODHkNXQIFC7soNHfYEhOSlg/Ea
-         zJQQq2GaV6hz/HH9gUh5pyRbxGAiU7GPgzgPfhNtOVX79sO9zqsFXeqiVTvDbwiRqtHU
-         j2Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BnimVsuh2+zTcP1tvzKSWjLIuouXSxQGtqJWn1IMvlE=;
-        b=MvBsB+/KUs5Bb5X6NLvV/eKsKSvlHboddX6ZWJPBYc2IjPtKX20JL4AXhfl/shHa5/
-         M835pSeOmGtQT1FmapDIDa5LR/K7IwuBjLmgZQrz4ChqrEi2PpNgP4jpLNMhxTsoUQhv
-         YQzXskCi4m7yLDRt6GuV+nPk0DNkX4Yn2H4Iv7LAq1NAjLw6MpoaAfyD4dn8OLXnSygE
-         5T/eIzspvPHgT/Nhky2Km3wuPCGuDTkXbYKmxuI8eFeT+e5lINRQC6gULNYSbAsuvckE
-         x32ZH/ebzWxJePP+BZiHcBmGqYJwLya74yZ779beK94RY4CgKIOan9oWUap39eYpjyGU
-         CvQg==
-X-Gm-Message-State: APjAAAWmZ+joZ9GJvyv35qSVHhfLGfNWlMQCI6PfW5xxbK4r4vwcznFF
-        OCX12+CZOuIWC38yFWmMu0X4fdPOhomN/V6IEERWmg==
-X-Google-Smtp-Source: APXvYqy2SGlKu6BHRKH4ka9ltdx8HojhriXfjeNIzwfVvrq3nZqXtQUEPC28HgsOI0JQkVLr6BCFu8e4bFxzW78XZUw=
-X-Received: by 2002:a1c:4d12:: with SMTP id o18mr1666963wmh.81.1554175624052;
- Mon, 01 Apr 2019 20:27:04 -0700 (PDT)
+        Mon, 1 Apr 2019 23:30:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56232 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726501AbfDBDaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 23:30:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EC6FCAC69;
+        Tue,  2 Apr 2019 03:30:20 +0000 (UTC)
+Subject: Re: [LKP] [btrfs] 70d28b0e4f:
+ BUG:kernel_reboot-without-warning_in_early-boot_stage,
+ last_printk:Probing_EDD(edd=off_to_disable)...ok
+To:     Rong Chen <rong.a.chen@intel.com>, dsterba@suse.cz,
+        Nikolay Borisov <nborisov@suse.com>, lkp@01.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Yoon Jungyeon <jungyeon@gatech.edu>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190401132427.GC9217@shao2-debian>
+ <f3cef716-a1e3-2e84-0133-9a9c3fad2a74@suse.com>
+ <7a6c000e-c523-382a-d13c-790809260e4e@intel.com>
+ <5b82b026-bdd7-f781-e661-f1afdc9cb97b@suse.de>
+ <23823210-1951-0492-1755-6263ccf388fa@intel.com>
+ <20190401154044.GX29086@suse.cz>
+ <d1f57263-277a-d696-2fc2-51c62af6844f@intel.com>
+From:   Qu Wenruo <wqu@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wqu@suse.de; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0F1F1IFdlbnJ1byA8d3F1QHN1c2UuZGU+iQFUBBMBCAA+AhsDBQsJCAcCBhUICQoLAgQW
+ AgMBAh4BAheAFiEELd9y5aWlW6idqkLhwj2R86El/qgFAlnVgp0FCQlmAm4ACgkQwj2R86El
+ /qilmgf/cUq9kFQo577ku5gc6rFpVg68ublBwjYpwjw0b//xo+Wo1wm+RRbUGs+djSZAqw12
+ D4F3r0mBTI7abUCNWAbFkYZSAIFVi0DMkjypIVS7PSaEt04rM9VBTToE+YqU6WENeJ57R2p2
+ +hI0wZrBwxObdsdaOtxWtsp3bmhIbdqxSKrtXuRawy4KnQYcLuGzOce9okdlbAE0W3KHm1gQ
+ oNAe6FX8nC9qo14m8LqEbThYH+qj4iCMlN8HIfbSx4F3e7nHZ+UAMW+E/lnMRkIB9Df+JyVd
+ /NlXzIjZAggcWsqpx6D4wyAuexKWkiGQeUeArUNihAwXjmyqWPGmjVyIh+oC6LkBDQRZ1YGv
+ AQgAqlPrYeBLMv3PAZ75YhQIwH6c4SNcB++hQ9TCT5gIQNw51+SQzkXIGgmzxMIS49cZcE4K
+ Xk/kHw5hieQeQZa60BWVRNXwoRI4ib8okgDuMkD5Kz1WEyO149+BZ7HD4/yK0VFJGuvDJR8T
+ 7RZwB69uVSLjkuNZZmCmDcDzS0c/SJOg5nkxt1iTtgUETb1wNKV6yR9XzRkrEW/qShChyrS9
+ fNN8e9c0MQsC4fsyz9Ylx1TOY/IF/c6rqYoEEfwnpdlz0uOM1nA1vK+wdKtXluCa79MdfaeD
+ /dt76Kp/o6CAKLLcjU1Iwnkq1HSrYfY3HZWpvV9g84gPwxwxX0uXquHxLwARAQABiQE8BBgB
+ CAAmFiEELd9y5aWlW6idqkLhwj2R86El/qgFAlnVga8CGwwFCQPCZwAACgkQwj2R86El/qgN
+ 8Qf+M0vM2Idwm5txZZSs+/kSgcPxEwYmxUinnUJGyc0ZWYQXPl0cBetZon9El0naijGzNWvf
+ HxIPB+ZFehk6Otgc78p1a3/xck/s1myFRLrmbbTJNoFiyL25ljcq0J8z5Zp4yuABL2RiLdaZ
+ Pt/jfwjBHwGR+QKp6dD2qMrUWf9b7TFzYDMZXzZ2/eoIgtyjEelNBPrIgOFe24iKMjaGjd97
+ fJuRcBMHdhUAxvXQF1oRtd83JvYJ5OtwTd8MgkEfl+fo7HwWkuHbzc70L4fFKv2BowqFdaHy
+ mId1ijGPGr46tuZ5a4cw/zbaPYx6fJ4sK9tSv/6V1QPNUdqml6hm6pfs6A==
+Message-ID: <9a3650ed-b456-a29d-20ae-16de384146ef@suse.de>
+Date:   Tue, 2 Apr 2019 11:30:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-References: <1553059940-127038-1-git-send-email-fei.yang@intel.com>
- <CALAqxLUW9XCq0WqTzpYGZ7B_4CVdsXY6t_dyuwhnOTJ7HajrwQ@mail.gmail.com> <CALAqxLUwB4vYiCM1Yi2CizMu-FvEoBB-eNqwaTFi2b=gnvCCZQ@mail.gmail.com>
-In-Reply-To: <CALAqxLUwB4vYiCM1Yi2CizMu-FvEoBB-eNqwaTFi2b=gnvCCZQ@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 2 Apr 2019 10:26:51 +0700
-Message-ID: <CALAqxLXE2Be_a3utjDP2+0mCfHeEypw_PqJPwkoyDM-F2F=jBA@mail.gmail.com>
-Subject: Re: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
-To:     "Yang, Fei" <fei.yang@intel.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, andrzej.p@collabora.com,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, Josh Gao <jmgao@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Shen Jing <jingx.shen@intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d1f57263-277a-d696-2fc2-51c62af6844f@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 20, 2019 at 11:21 AM John Stultz <john.stultz@linaro.org> wrote:
-> On Wed, Mar 20, 2019 at 9:40 AM John Stultz <john.stultz@linaro.org> wrote:
-> > On Tue, Mar 19, 2019 at 10:32 PM <fei.yang@intel.com> wrote:
-> > Elsewhere it seems the ffs driver takes effort to drop any locks
-> > before calling usb_ep_dequeue(), so this seems like that should be
-> > addressed, but it also seems like recent change to the dwc3 driver has
-> > been made to avoid sleeping in that path (see fec9095bdef4 ("usb:
-> > dwc3: gadget: remove wait_end_transfer")), which may be why I'm not
-> > seeing the problem with mainline (and your patch here, of coarse).
-> > But that also doesn't clarify if its still a potential issue w/
-> > non-dwc3 platforms.
->
-> Felipe: Given Alan's point, does it make sense to mark the commits
-> that remove the possible sleep from wait_event_lock_irq() in
-> dwc3_gadget_ep_dequeue()  for -stable?
->
-> Against 4.19.30, the following set manages to cherry-pick cleanly:
-> git cherry-pick 1a22ec643580626f439c8583edafdcc73798f2fb
-> git cherry-pick 09fe1f8d7e2f461275b1cdd832f2cfa5e9be346d
-> git cherry-pick c3acd59014148470dc58519870fbc779785b4bf7
-> git cherry-pick 7746a8dfb3f9c91b3a0b63a1d5c2664410e6498d
-> git cherry-pick d5443bbf5fc8f8389cce146b1fc2987cdd229d12
-> git cherry-pick d4f1afe5e896c18ae01099a85dab5e1a198bd2a8
-> git cherry-pick fec9095bdef4e7c988adb603d0d4f92ee735d4a1
-> # To get things building, revert modified -stable fix
-> git revert 25ad17d
-> #pick actual upstream fix replacing the previous
-> git cherry-pick bd6742249b9ca918565e4e3abaa06665e587f4b5
->
-> (Though I'm always a bit hesitant with -stable backports on subsystems
-> I don't know well. So I'm not sure if this set is fully correct.)
->
-> This set seems to avoid the crash on reboot I was seeing.
->
-> And of course, I'm sure getting that set backported to 4.14 and 4.9
-> (and maybe even 4.4, I need to check) will be less clean.
 
-Also,  I just wanted to follow up on this as well. Does the above set
-of cherry-picks look ok to others for 4.19-stable?  Does anyone have
-suggestions on how they'd like to see backports to 4.14, 4.9 and 4.4?
 
-thanks
--john
+On 2019/4/2 上午11:14, Rong Chen wrote:
+> 
+> On 4/1/19 11:40 PM, David Sterba wrote:
+>> On Mon, Apr 01, 2019 at 11:02:37PM +0800,  Chen, Rong A  wrote:
+>>> On 4/1/2019 10:29 PM, Qu Wenruo wrote:
+>>>> On 2019/4/1 下午10:02,  Chen, Rong A  wrote:
+>>>>> On 4/1/2019 9:28 PM, Nikolay Borisov wrote:
+>>>>>> On 1.04.19 г. 16:24 ч., kernel test robot wrote:
+>>>>>>> FYI, we noticed the following commit (built with gcc-7):
+>>>>>>>
+>>>>>>> commit: 70d28b0e4f8ed2d38571e7b1f9bec7f321a53102 ("btrfs:
+>>>>>>> tree-checker: Verify dev item")
+>>>>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
+>>>>>>> master
+>>>>>>>
+>>>>>>> in testcase: trinity
+>>>>>>> with following parameters:
+>>>>>>>
+>>>>>>>       runtime: 300s
+>>>>>>>
+>>>>>>> test-description: Trinity is a linux system call fuzz tester.
+>>>>>>> test-url: http://codemonkey.org.uk/projects/trinity/
+>>>>>>>
+>>>>>>>
+>>>>>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge
+>>>>>>> -smp
+>>>>>>> 2 -m 2G
+>>>>>>>
+>>>>>>> caused below changes (please refer to attached dmesg/kmsg for entire
+>>>>>>> log/backtrace):
+>>>>>>>
+>>>>>>>
+>>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>>
+>>>>>>>
+>>>>>>> |
+>>>>>>> | 36b9d2bc69 | 70d28b0e4f |
+>>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>>
+>>>>>>>
+>>>>>>> |
+>>>>>>> boot_successes
+>>>>>>> | 14         | 0          |
+>>>>>>> |
+>>>>>>> boot_failures
+>>>>>>> | 2          | 14         |
+>>>>>>> |
+>>>>>>> IP-Config:Auto-configuration_of_network_failed
+>>>>>>> | 2          |            |
+>>>>>>> |
+>>>>>>> BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+>>>>>>>
+>>>>>>> | 0          | 14         |
+>>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> early console in setup code
+>>>>>>> Probing EDD (edd=off to disable)... ok
+>>>>>>> BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>>>>>> Probing EDD (edd=off to disable)... ok
+>>>>>>> Linux version 5.0.0-rc8-00196-g70d28b0 #1
+>>>>>>> Command line: ip=::::vm-snb-quantal-x86_64-1415::dhcp root=/dev/ram0
+>>>>>>> user=lkp
+>>>>>>> job=/lkp/jobs/scheduled/vm-snb-quantal-x86_64-1415/trinity-300s-quantal-core-x86_64-2018-11-09.cgz-70d28b0-20190330-29362-1y6g0qb-2.yaml
+>>>>>>>
+>>>>>>> ARCH=x86_64 kconfig=x86_64-randconfig-s5-03231928
+>>>>>>> branch=linux-devel/devel-hourly-2019032317
+>>>>>>> commit=70d28b0e4f8ed2d38571e7b1f9bec7f321a53102
+>>>>>>> BOOT_IMAGE=/pkg/linux/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/vmlinuz-5.0.0-rc8-00196-g70d28b0
+>>>>>>>
+>>>>>>> max_uptime=1500
+>>>>>>> RESULT_ROOT=/result/trinity/300s/vm-snb-quantal-x86_64/quantal-core-x86_64-2018-11-09.cgz/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/8
+>>>>>>>
+>>>>>>> LKP_SERVER=inn debug apic=debug sysrq_always_enabled
+>>>>>>> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
+>>>>>>> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic
+>>>>>>> load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8
+>>>>>>> systemd.log_level=err ignore_loglevel console=tty0
+>>>>>>> earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw
+>>>>>>> rcuperf.shutdown=0
+>>>>>>>
+>>>>>> Can this report be made useful by actually including output from
+>>>>>> serial
+>>>>>> console? For example possible bug-ons or whatnot? dmesg.xz just
+>>>>>> contains
+>>>>>> qemu's command line + some metadata about the test and :
+>>>>>>
+>>>>>> "BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>>>>> Probing EDD (edd=off to disable)... ok"
+>>>>>>
+>>>>>> At least a stack trace would have been useful.
+>>>>>>
+>>>>>> <snip>
+>>>>> Hi,
+>>>>>
+>>>>> We usually use the tool ("bin/lkp qemu -k <bzImage> job-script") to
+>>>>> reproduce it.  It seems no stack trace in the result:
+>>>> So there is no regression at that commit right?
+>>>>
+>>>> Just some false alert?
+>>>
+>>> Hi,
+>>>
+>>> I think there's a regression, it stopped in the early-boot stage .
+>> Can you please provide any logs that would point at btrfs? If the module
+>> is loaded or built-in started, there's a line about that. Besides that
+>> it's preceded by messages from other subsystems' initialization.
+> 
+> 
+> Hi,
+> 
+> CONFIG_BTRFS_FS and CONFIG_BTRFS_FS_REF_VERIFY is enabled in the kconfig.
+> I disabled them for the experiment, and the new kernel is bootable. I
+> don't have more logs to prove it.
+> 
+> $ grep BTRFS config-5.0.0-rc8-00196-g70d28b0
+> CONFIG_BTRFS_FS=y
+> # CONFIG_BTRFS_FS_POSIX_ACL is not set
+> # CONFIG_BTRFS_FS_CHECK_INTEGRITY is not set
+> # CONFIG_BTRFS_FS_RUN_SANITY_TESTS is not set
+> # CONFIG_BTRFS_DEBUG is not set
+> # CONFIG_BTRFS_ASSERT is not set
+> CONFIG_BTRFS_FS_REF_VERIFY=y
+
+That's strange, ref verify part is pretty far from the tree checker code.
+
+Would you please try to compile btrfs as module and then insert the
+module to get some valid kernel messages?
+
+Thanks,
+Qu
+
+> 
+> 
+> Best Regards,
+> Rong Chen
+> 
+> 
+>> _______________________________________________
+>> LKP mailing list
+>> LKP@lists.01.org
+>> https://lists.01.org/mailman/listinfo/lkp
