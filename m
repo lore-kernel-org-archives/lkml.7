@@ -2,145 +2,257 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2B8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28FCC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325FC2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAB52084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3dhzuKoW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NhCqjev2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbfDBWTk (ORCPT
+        id S1726292AbfDBW0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 18:19:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40758 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDBWTk (ORCPT
+        Tue, 2 Apr 2019 18:26:14 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32789 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfDBW0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 18:19:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32Kd3B7163968;
-        Tue, 2 Apr 2019 20:42:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2018-07-02; bh=80amkJDfmO8rQR51MIz8k/sRGV6h3aL7PZ9G0VgPgaI=;
- b=3dhzuKoWxKS942ub9epZAEYv9lHvjtSKguDUksCdLymSkrm4017tbZP/McvSHb7vgphg
- HG1QB1Mh/DUs2M5kG4NtQfn/NpSXSuW/JfOB9deJC8CuMJJ6BXSKb4Dc9r/dk4bYPbkq
- P/R8IH1neNmPTMdwZ4cjHRaRJeCuYXwP8IRNDyEQHjd6RFituOicmQsVLgc6AzvOXMZ2
- 073tkjOQNg/UWN0G0z2uEi3ss0M9iEeF0pZfTmw0omvIW/7BX9PB9k1EJnV7GNRcOyGz
- bftpAc2WL/XOoenSSKb/on4FvPH4QftOeOijD0L4mkW56CTL89av5zBJx06UQWAi81s4 +A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2rj0dnkyvd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Apr 2019 20:42:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32KfG0w064769;
-        Tue, 2 Apr 2019 20:42:12 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2rm8f4yjxx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Apr 2019 20:42:12 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x32Kg9r8029935;
-        Tue, 2 Apr 2019 20:42:09 GMT
-Received: from localhost.localdomain (/73.60.114.248)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Apr 2019 13:42:09 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     akpm@linux-foundation.org
-Cc:     daniel.m.jordan@oracle.com, Alan Tull <atull@kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
+        Tue, 2 Apr 2019 18:26:13 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i19so7077120pfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 15:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=elmvZmEkYTC6U+keL4nYfg5GaFomehZ93h8XSMMJlD4=;
+        b=NhCqjev2U2aNHIElbzNZrW02GIEhnuZGFN18Hy4rHpvvJHaeiMbzWo4CNclkhuq1jF
+         50l2gT5hz1NUqmfRW3+iAisSxf+VDyQh1IJJJ57IwX2GGtuUbvWu8ghpkJaJWZHNUyu1
+         gSnAAUnKVlt4VvlXIhYUmKeIi/yM6gE+JptJs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=elmvZmEkYTC6U+keL4nYfg5GaFomehZ93h8XSMMJlD4=;
+        b=WtxAyDvDgglOGJq8fQGlBumO2fsodLAUuizs76DTvCvfiWTkqCR4EhF4FE07W51f86
+         azy7kzVriCZEyTshLHecI0zWPTlXh+VnMGEhwPvf9/ULdkDJ3T/zH4QDzzmvwlBlvLEt
+         dejvTLZRKGsnheb5EBAsREKrjeb60IN8O0zmrob6X0t2e8OQ8edsqOy1FwZk1rTMgPrc
+         pXjnlXS+BZnprlDUBmffBX0clusl78nvy2X3C9uBtA5KJFswa08OfD4WcER9ZXWOYMOQ
+         Q+Dh0QqS6BKmSv+5Y93K9i7nEVarPVPjSryr4rvUtkXiHb8J61accUZvtFbKLNzT3tqd
+         BXTw==
+X-Gm-Message-State: APjAAAVaI4DVY4cBrNz3SjzJSFXeUcwNm9dlzSD32Rkp8dI709SlIDyt
+        t7Sy+bE1s4UF5bDUvmTSlwuNnA==
+X-Google-Smtp-Source: APXvYqzQr7CEn3E+xqPJELWcw9r4GvSfz6BuX6LJXgsXtIS/tHsuUP1fNvL+LKZ6oabnP0xP59Uk2A==
+X-Received: by 2002:a63:2f44:: with SMTP id v65mr68442585pgv.141.1554243972854;
+        Tue, 02 Apr 2019 15:26:12 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id r24sm1775549pfd.120.2019.04.02.15.26.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 15:26:11 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 15:26:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] convert locked_vm from unsigned long to atomic64_t
-Date:   Tue,  2 Apr 2019 16:41:52 -0400
-Message-Id: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.21.0
+Subject: [PATCH v3.1] selftests: Clean up module testing shell script
+Message-ID: <20190402222610.GA15100@beast>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904020138
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904020138
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This adjusts kselftest_module.sh to take an option "args" argument for
+modprobe arguments, removes bash-isms (since some system's /bin/sh may
+not be bash), and refactors the lib/ scripts into a shorter calling
+convention.
 
-From patch 1:
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+This is my suggested clean-up for the module testing script for the
+strscpy_pad() series...
+---
+ tools/testing/selftests/kselftest_module.sh  | 24 ++++++++++++--------
+ tools/testing/selftests/lib/bitmap.sh        | 17 +-------------
+ tools/testing/selftests/lib/prime_numbers.sh | 17 ++------------
+ tools/testing/selftests/lib/printf.sh        | 16 +------------
+ tools/testing/selftests/lib/strscpy.sh       | 17 ++------------
+ 5 files changed, 20 insertions(+), 71 deletions(-)
 
-  Taking and dropping mmap_sem to modify a single counter, locked_vm, is
-  overkill when the counter could be synchronized separately.
-  
-  Make mmap_sem a little less coarse by changing locked_vm to an atomic,
-  the 64-bit variety to avoid issues with overflow on 32-bit systems.
-
-This is a more conservative alternative to [1] with no user-visible
-effects.  Thanks to Alexey Kardashevskiy for pointing out the racy
-atomics and to Alex Williamson, Christoph Lameter, Ira Weiny, and Jason
-Gunthorpe for their comments on [1].
-
-Davidlohr Bueso recently did a similar conversion for pinned_vm[2].
-
-Testing
- 1. passes LTP mlock[all], munlock[all], fork, mmap, and mremap tests in an
-    x86 kvm guest
- 2. a VFIO-enabled x86 kvm guest shows the same VmLck in
-    /proc/pid/status before and after this change
- 3. cross-compiles on powerpc
-
-The series is based on v5.1-rc3.  Please consider for 5.2.
-
-Daniel
-
-[1] https://lore.kernel.org/linux-mm/20190211224437.25267-1-daniel.m.jordan@oracle.com/
-[2] https://lore.kernel.org/linux-mm/20190206175920.31082-1-dave@stgolabs.net/
-
-Daniel Jordan (6):
-  mm: change locked_vm's type from unsigned long to atomic64_t
-  vfio/type1: drop mmap_sem now that locked_vm is atomic
-  vfio/spapr_tce: drop mmap_sem now that locked_vm is atomic
-  fpga/dlf/afu: drop mmap_sem now that locked_vm is atomic
-  powerpc/mmu: drop mmap_sem now that locked_vm is atomic
-  kvm/book3s: drop mmap_sem now that locked_vm is atomic
-
- arch/powerpc/kvm/book3s_64_vio.c    | 34 ++++++++++--------------
- arch/powerpc/mm/mmu_context_iommu.c | 28 +++++++++-----------
- drivers/fpga/dfl-afu-dma-region.c   | 40 ++++++++++++-----------------
- drivers/vfio/vfio_iommu_spapr_tce.c | 37 ++++++++++++--------------
- drivers/vfio/vfio_iommu_type1.c     | 31 +++++++++-------------
- fs/proc/task_mmu.c                  |  2 +-
- include/linux/mm_types.h            |  2 +-
- kernel/fork.c                       |  2 +-
- mm/debug.c                          |  5 ++--
- mm/mlock.c                          |  4 +--
- mm/mmap.c                           | 18 ++++++-------
- mm/mremap.c                         |  6 ++---
- 12 files changed, 89 insertions(+), 120 deletions(-)
-
-
-base-commit: 79a3aaa7b82e3106be97842dedfd8429248896e6
+diff --git a/tools/testing/selftests/kselftest_module.sh b/tools/testing/selftests/kselftest_module.sh
+index b5d446738614..20a897d21fde 100755
+--- a/tools/testing/selftests/kselftest_module.sh
++++ b/tools/testing/selftests/kselftest_module.sh
+@@ -2,19 +2,20 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ 
+ #
+-# Runs an individual test module.  kselftest expects a separate
+-# executable for each test.  So test should each have an individial
++# Runs an individual test module. kselftest expects a separate
++# executable for each test. So test should each have an individial
+ # script that can call this script.
+ #
+ 
+ # Individual test scrits should define these:
+ module=""			# filename (without the .ko).
+ desc=""				# Output prefix.
++args=""				# modprobe arguments
+ 
+ modprobe="/sbin/modprobe"
+ 
+ main() {
+-    parse_args $@
++    parse_args "$@"
+     assert_root
+     assert_have_module
+     run_module
+@@ -23,17 +24,20 @@ main() {
+ parse_args() {
+     script=${0##*/}
+ 
+-    if [[ ! $# -eq 2 ]]; then
+-	echo "Usage: $script <module_name> <description> [FAIL]"
++    if [ $# -lt 2 ]; then
++	echo "Usage: $script <description> <module_name> [FAIL]"
+ 	exit 1
+     fi
+ 
+-    module=$1
+-    desc=$2
++    desc="$1"
++    shift || true
++    module="$1"
++    shift || true
++    args="$@"
+ }
+ 
+ assert_root() {
+-    if [[ $EUID -ne 0 ]]; then
++    if [ ! -w /dev ]; then
+ 	skip "please run as root"
+     fi
+ }
+@@ -45,7 +49,7 @@ assert_have_module() {
+ }
+ 
+ run_module() {
+-    if $modprobe -q $module; then
++    if $modprobe -q $module $args; then
+ 	$modprobe -q -r $module
+ 	say "ok"
+     else
+@@ -72,4 +76,4 @@ skip() {
+ #
+ # Main script
+ #
+-main $@
++main "$@"
+diff --git a/tools/testing/selftests/lib/bitmap.sh b/tools/testing/selftests/lib/bitmap.sh
+index ed4180ea0021..5511dddc5c2d 100755
+--- a/tools/testing/selftests/lib/bitmap.sh
++++ b/tools/testing/selftests/lib/bitmap.sh
+@@ -1,18 +1,3 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+-
+-module=test_bitmap
+-description="bitmap"
+-
+-#
+-# Shouldn't need to edit anything below here.
+-#
+-
+-file="kselftest_module.sh"
+-path="../$file"
+-if [[ ! $KBUILD_SRC == "" ]]; then
+-    path="${KBUILD_SRC}/tools/testing/selftests/$file"
+-fi
+-
+-$path $module $description
+-
++$(dirname $0)/../kselftest_module.sh "bitmap" test_bitmap
+diff --git a/tools/testing/selftests/lib/prime_numbers.sh b/tools/testing/selftests/lib/prime_numbers.sh
+index 6f782386d897..2b6be0308a6d 100755
+--- a/tools/testing/selftests/lib/prime_numbers.sh
++++ b/tools/testing/selftests/lib/prime_numbers.sh
+@@ -1,18 +1,5 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # Checks fast/slow prime_number generation for inconsistencies
+-
+-module=prime_numbers
+-description="prime_numbers"
+-
+-#
+-# Shouldn't need to edit anything below here.
+-#
+-
+-file="kselftest_module.sh"
+-path="../$file"
+-if [[ ! $KBUILD_SRC == "" ]]; then
+-    path="${KBUILD_SRC}/tools/testing/selftests/$file"
+-fi
+-
+-$path $module $description
++$(dirname $0)/../kselftest_module.sh "prime numbers" prime_numbers \
++					selftest=65536
+diff --git a/tools/testing/selftests/lib/printf.sh b/tools/testing/selftests/lib/printf.sh
+index 89717915d028..2ffa61da0296 100755
+--- a/tools/testing/selftests/lib/printf.sh
++++ b/tools/testing/selftests/lib/printf.sh
+@@ -1,18 +1,4 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # Tests the printf infrastructure using test_printf kernel module.
+-
+-module=test_printf
+-description="printf"
+-
+-#
+-# Shouldn't need to edit anything below here.
+-#
+-
+-file="kselftest_module.sh"
+-path="../$file"
+-if [[ ! $KBUILD_SRC == "" ]]; then
+-    path="${KBUILD_SRC}/tools/testing/selftests/$file"
+-fi
+-
+-$path $module $description
++$(dirname $0)/../kselftest_module.sh "printf" test_printf
+diff --git a/tools/testing/selftests/lib/strscpy.sh b/tools/testing/selftests/lib/strscpy.sh
+index f3ba4b90e602..1f26dac74896 100755
+--- a/tools/testing/selftests/lib/strscpy.sh
++++ b/tools/testing/selftests/lib/strscpy.sh
+@@ -1,17 +1,4 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0+
+-
+-module=test_strscpy
+-description="strscpy"
+-
+-#
+-# Shouldn't need to edit anything below here.
+-#
+-
+-file="kselftest_module.sh"
+-path="../$file"
+-if [[ ! $KBUILD_SRC == "" ]]; then
+-    path="${KBUILD_SRC}/tools/testing/selftests/$file"
+-fi
+-
+-$path $module $description
++# Test corner cases of the strscpy()-family of functions.
++$(dirname $0)/../kselftest_module.sh "strscpy" test_strscpy
 -- 
-2.21.0
+2.17.1
 
+
+-- 
+Kees Cook
