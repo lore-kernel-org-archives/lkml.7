@@ -3,177 +3,200 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264CAC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC974C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E362082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2DE2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730378AbfDBTN5 convert rfc822-to-8bit (ORCPT
+        id S1730453AbfDBTOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:13:57 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48151 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfDBTN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:13:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 12:13:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,301,1549958400"; 
-   d="scan'208";a="333143377"
-Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Apr 2019 12:13:56 -0700
-Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
- fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 2 Apr 2019 12:13:56 -0700
-Received: from lcsmsx152.ger.corp.intel.com (10.186.165.231) by
- FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 2 Apr 2019 12:13:55 -0700
-Received: from hasmsx108.ger.corp.intel.com ([169.254.9.237]) by
- LCSMSX152.ger.corp.intel.com ([10.186.165.231]) with mapi id 14.03.0415.000;
- Tue, 2 Apr 2019 22:13:52 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     Jason Gunthorpe <jgg@ziepe.ca>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Phil Baker <baker1tex@gmail.com>,
-        Craig Robson <craig@zhatt.com>,
-        Laura Abbott <labbott@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-Subject: RE: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
-Thread-Topic: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
-Thread-Index: AQHU6L4DTy7PYCgxuEOQPC9C1rGO2qYnxnWAgAEbdYCAAFcTkA==
-Date:   Tue, 2 Apr 2019 19:13:52 +0000
-Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B9DAE2759@hasmsx108.ger.corp.intel.com>
-References: <20190401190607.GA23795@beast>
- <20190401234625.GA29016@linux.intel.com>
- <20190402164057.GA4544@linux.intel.com>
-In-Reply-To: <20190402164057.GA4544@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.249.91.79]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 2 Apr 2019 15:14:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55830 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729966AbfDBTOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 15:14:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CA7680D;
+        Tue,  2 Apr 2019 12:14:31 -0700 (PDT)
+Received: from [192.168.100.242] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1A773F68F;
+        Tue,  2 Apr 2019 12:14:30 -0700 (PDT)
+Subject: Re: [PATCH 3/4] arm_pmu: acpi: spe: Add initial MADT/SPE probing
+To:     John Garry <john.garry@huawei.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net,
+        lenb@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com,
+        james.morse@arm.com, lorenzo.pieralisi@arm.com, linuxarm@huawei.com
+References: <20190326223938.5365-1-jeremy.linton@arm.com>
+ <20190326223938.5365-4-jeremy.linton@arm.com>
+ <2b53e957-6d36-fdfe-20e4-1664108c07ef@huawei.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <b9081589-9c18-d298-e109-ca1d98627456@arm.com>
+Date:   Tue, 2 Apr 2019 14:14:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <2b53e957-6d36-fdfe-20e4-1664108c07ef@huawei.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+First thanks for taking a look at this, second sorry about the delay...
 
-> On Tue, Apr 02, 2019 at 02:46:25AM +0300, Jarkko Sakkinen wrote:
-> > On Mon, Apr 01, 2019 at 12:06:07PM -0700, Kees Cook wrote:
-> > > A "get random" may fail with a TPM error, but those codes were
-> > > returned as-is to the caller, which assumed the result was the
-> > > number of bytes that had been written to the target buffer, which
-> > > could lead to a kernel heap memory exposure and over-read.
-> > >
-> > > This fixes tpm1_get_random() to mask positive TPM errors into -EIO,
-> > > as before.
-> > >
-> > > [   18.092103] tpm tpm0: A TPM error (379) occurred attempting get
-> random
-> > > [   18.092106] usercopy: Kernel memory exposure attempt detected from
-> SLUB object 'kmalloc-64' (offset 0, size 379)!
-> > >
-> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
-> > > Reported-by: Phil Baker <baker1tex@gmail.com>
-> > > Reported-by: Craig Robson <craig@zhatt.com>
-> > > Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using
-> > > tpm_buf structure")
-> > > Cc: Laura Abbott <labbott@redhat.com>
-> > > Cc: Tomas Winkler <tomas.winkler@intel.com>
-> > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > v3: fix never-succeed, limit checks to tpm cmd return (James, Jason)
-> > > v2: also fix tpm2 implementation (Jason Gunthorpe)
-> > > ---
-> > >  drivers/char/tpm/tpm1-cmd.c | 7 +++++--
-> > > drivers/char/tpm/tpm2-cmd.c | 7 +++++--
-> > >  2 files changed, 10 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/char/tpm/tpm1-cmd.c
-> > > b/drivers/char/tpm/tpm1-cmd.c index 85dcf2654d11..faacbe1ffa1a
-> > > 100644
-> > > --- a/drivers/char/tpm/tpm1-cmd.c
-> > > +++ b/drivers/char/tpm/tpm1-cmd.c
-> > > @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
-> > >   *
-> > >   * Return:
-> > >   * *  number of bytes read
-> > > - * * -errno or a TPM return code otherwise
-> > > + * * -errno (positive TPM return codes are masked to -EIO)
-> > >   */
-> > >  int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
-> > > @@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chip, u8
-> > > *dest, size_t max)
-> > >
-> > >  		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
-> > >  				      "attempting get random");
-> > > -		if (rc)
-> > > +		if (rc) {
-> > > +			if (rc > 0)
-> > > +				rc = -EIO;
-> > >  			goto out;
-> > > +		}
-> > >
-> > >  		out = (struct tpm1_get_random_out
-> *)&buf.data[TPM_HEADER_SIZE];
-> > >
-> > > diff --git a/drivers/char/tpm/tpm2-cmd.c
-> > > b/drivers/char/tpm/tpm2-cmd.c index e74c5b7b64bf..8ffa6af61580
-> > > 100644
-> > > --- a/drivers/char/tpm/tpm2-cmd.c
-> > > +++ b/drivers/char/tpm/tpm2-cmd.c
-> > > @@ -301,7 +301,7 @@ struct tpm2_get_random_out {
-> > >   *
-> > >   * Return:
-> > >   *   size of the buffer on success,
-> > > - *   -errno otherwise
-> > > + *   -errno otherwise ((positive TPM return codes are masked to -EIO)
-> > >   */
-> > >  int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
-> > > @@ -328,8 +328,11 @@ int tpm2_get_random(struct tpm_chip *chip, u8
-> *dest, size_t max)
-> > >  				       offsetof(struct tpm2_get_random_out,
-> > >  						buffer),
-> > >  				       "attempting get random");
-> > > -		if (err)
-> > > +		if (err) {
-> > > +			if (err > 0)
-> > > +				err = -EIO;
-> > >  			goto out;
-> > > +		}
-> > >
-> > >  		out = (struct tpm2_get_random_out *)
-> > >  			&buf.data[TPM_HEADER_SIZE];
-> > > --
-> > > 2.17.1
-> > >
-> > >
-> > > --
-> > > Kees Cook
-> >
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On 3/28/19 7:40 AM, John Garry wrote:
+> On 26/03/2019 22:39, Jeremy Linton wrote:
+>> ACPI 6.3 adds additional fields to the MADT GICC
+>> structure to describe SPE PPI's. We pick these out
+>> of the cached reference to the madt_gicc structure
+>> similarly to the core PMU code. We then create a platform
+>> device referring to the IRQ and let the user/module loader
+>> decide whether to load the SPE driver.
+>>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>  arch/arm64/include/asm/acpi.h |  3 ++
+>>  drivers/perf/arm_pmu_acpi.c   | 69 +++++++++++++++++++++++++++++++++++
+>>  2 files changed, 72 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/acpi.h 
+>> b/arch/arm64/include/asm/acpi.h
+>> index 7628efbe6c12..d10399b9f998 100644
+>> --- a/arch/arm64/include/asm/acpi.h
+>> +++ b/arch/arm64/include/asm/acpi.h
+>> @@ -41,6 +41,9 @@
+>>      (!(entry) || (entry)->header.length < ACPI_MADT_GICC_MIN_LENGTH || \
+>>      (unsigned long)(entry) + (entry)->header.length > (end))
+>>
+>> +#define ACPI_MADT_GICC_SPE  (ACPI_OFFSET(struct 
+>> acpi_madt_generic_interrupt, \
+>> +    spe_interrupt) + sizeof(u16))
+>> +
+>>  /* Basic configuration for ACPI */
+>>  #ifdef    CONFIG_ACPI
+>>  pgprot_t __acpi_get_mem_attribute(phys_addr_t addr);
+>> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+>> index 0f197516d708..a2418108eab2 100644
+>> --- a/drivers/perf/arm_pmu_acpi.c
+>> +++ b/drivers/perf/arm_pmu_acpi.c
+>> @@ -74,6 +74,73 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+>>      acpi_unregister_gsi(gsi);
+>>  }
+>>
+>> +static struct resource spe_resources[] = {
+>> +    {
+>> +        /* irq */
+>> +        .flags          = IORESOURCE_IRQ,
+>> +    }
+>> +};
+>> +
+>> +static struct platform_device spe_dev = {
+>> +    .name = "arm,spe-v1",
+>> +    .id = -1,
+>> +    .resource = spe_resources,
+>> +    .num_resources = ARRAY_SIZE(spe_resources)
+>> +};
+>> +
+>> +/*
+>> + * For lack of a better place,
 > 
-> Applied to my master branch. Jason, Tomas, do you want me to add reviewed-
-> by's?
-Sure, it fixes my patch.
+> It seems that the kernel Image size can now increase due to this part of 
+> SPE support even if ARM_SPE_PMU config is disabled.
 
-> /Jarkko
+That is true, but it should be fairly small.
+
+> 
+> And I don't even think that ARM_SPE_PMU depends on ARM_PMU (which 
+> ARM_PMU_ACPI depends on).
+
+Well I don't think we want the generic SPE_PMU dependent on ACPI. So 
+this chunk of code could be wrapped in a SPE_PMU_ACPI block, and made 
+dependent on PMU_ACPI. OTOH, It seems a little trivial for that, and 
+maybe just tweaking the PMU_ACPI documentation to mention that it also 
+enables ACPI/SPE is a better plan.
+
+Opinions?
+
+
+> 
+> Thanks,
+> John
+> 
+> hook the normal PMU MADT walk
+>> + * and create a SPE device if we detect a recent MADT with
+>> + * a homogeneous PPI mapping.
+>> + */
+>> +static int arm_spe_acpi_parse_irqs(void)
+>> +{
+>> +    int cpu, ret, irq;
+>> +    int hetid;
+>> +    u16 gsi = 0;
+>> +    bool first = true;
+>> +
+>> +    struct acpi_madt_generic_interrupt *gicc;
+>> +
+>> +    /*
+>> +     * sanity check all the GICC tables for the same interrupt number
+>> +     * for now we only support homogeneous ACPI/SPE machines.
+>> +     */
+>> +    for_each_possible_cpu(cpu) {
+>> +        gicc = acpi_cpu_get_madt_gicc(cpu);
+>> +
+>> +        if (gicc->header.length < ACPI_MADT_GICC_SPE)
+>> +            return -ENODEV;
+>> +        if (first) {
+>> +            gsi = gicc->spe_interrupt;
+>> +            if (!gsi)
+>> +                return -ENODEV;
+>> +            hetid = find_acpi_cpu_topology_hetero_id(cpu);
+>> +            first = false;
+>> +        } else if ((gsi != gicc->spe_interrupt) ||
+>> +               (hetid != find_acpi_cpu_topology_hetero_id(cpu))) {
+>> +            pr_warn("ACPI: SPE must be homogeneous\n");
+>> +            return -EINVAL;
+>> +        }
+>> +    }
+>> +
+>> +    irq = acpi_register_gsi(NULL, gsi, ACPI_LEVEL_SENSITIVE,
+>> +                ACPI_ACTIVE_HIGH);
+>> +    if (irq < 0) {
+>> +        pr_warn("ACPI: SPE Unable to register interrupt: %d\n", gsi);
+>> +        return irq;
+>> +    }
+>> +
+>> +    spe_resources[0].start = irq;
+>> +    ret = platform_device_register(&spe_dev);
+>> +    if (ret < 0) {
+>> +        pr_warn("ACPI: SPE: Unable to register device\n");
+>> +        acpi_unregister_gsi(gsi);
+>> +    }
+>> +
+>> +    return ret;
+>> +}
+>> +
+>>  static int arm_pmu_acpi_parse_irqs(void)
+>>  {
+>>      int irq, cpu, irq_cpu, err;
+>> @@ -279,6 +346,8 @@ static int arm_pmu_acpi_init(void)
+>>      if (acpi_disabled)
+>>          return 0;
+>>
+>> +    arm_spe_acpi_parse_irqs(); /* failures are expected */
+>> +
+>>      ret = arm_pmu_acpi_parse_irqs();
+>>      if (ret)
+>>          return ret;
+>>
+> 
+> 
+
