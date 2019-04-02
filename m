@@ -2,41 +2,42 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD990C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BE9C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86B22075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D074C2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbfDBTrz (ORCPT
+        id S1731409AbfDBTsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:47:55 -0400
+        Tue, 2 Apr 2019 15:48:00 -0400
 Received: from mga05.intel.com ([192.55.52.43]:54561 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731295AbfDBTrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:47:52 -0400
+        id S1731378AbfDBTry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 15:47:54 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 12:47:51 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 12:47:54 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,301,1549958400"; 
-   d="scan'208";a="130892988"
+   d="scan'208";a="130893000"
 Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
-  by orsmga008.jf.intel.com with ESMTP; 02 Apr 2019 12:47:51 -0700
+  by orsmga008.jf.intel.com with ESMTP; 02 Apr 2019 12:47:54 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V5 10/12] perf/x86/intel/rapl: Add Icelake support
-Date:   Tue,  2 Apr 2019 12:45:07 -0700
-Message-Id: <20190402194509.2832-11-kan.liang@linux.intel.com>
+Subject: [PATCH V5 12/12] perf/x86/intel/uncore: Add Intel Icelake uncore support
+Date:   Tue,  2 Apr 2019 12:45:09 -0700
+Message-Id: <20190402194509.2832-13-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190402194509.2832-1-kan.liang@linux.intel.com>
 References: <20190402194509.2832-1-kan.liang@linux.intel.com>
@@ -47,27 +48,194 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Icelake support the same RAPL counters as Skylake.
+Add Intel Icelake uncore support,
+ - The init code is based on Skylake
+ - Add new pci id for IMC
+ - New MSR address for CBOX
+ - Get CBOX# from CNL_UNC_CBO_CONFIG MSR directly
+ - Create a new PMU for fixed clocktick counter
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 No changes since V4.
 
- arch/x86/events/intel/rapl.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/events/intel/uncore.c     |  6 ++
+ arch/x86/events/intel/uncore.h     |  1 +
+ arch/x86/events/intel/uncore_snb.c | 91 ++++++++++++++++++++++++++++++
+ 3 files changed, 98 insertions(+)
 
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 94dc564146ca..37ebf6fc5415 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -775,6 +775,8 @@ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X, hsw_rapl_init),
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 9fe64c01a2e5..fc40a1473058 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1367,6 +1367,11 @@ static const struct intel_uncore_init_fun skx_uncore_init __initconst = {
+ 	.pci_init = skx_uncore_pci_init,
+ };
  
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS, hsw_rapl_init),
++static const struct intel_uncore_init_fun icl_uncore_init __initconst = {
++	.cpu_init = icl_uncore_cpu_init,
++	.pci_init = skl_uncore_pci_init,
++};
 +
-+	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,  skl_rapl_init),
+ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM_EP,	  nhm_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM,	  nhm_uncore_init),
+@@ -1393,6 +1398,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,      skx_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
  	{},
+ };
+ 
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 853a49a8ccf6..79eb2e21e4f0 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -512,6 +512,7 @@ int skl_uncore_pci_init(void);
+ void snb_uncore_cpu_init(void);
+ void nhm_uncore_cpu_init(void);
+ void skl_uncore_cpu_init(void);
++void icl_uncore_cpu_init(void);
+ int snb_pci2phy_map_init(int devid);
+ 
+ /* uncore_snbep.c */
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index 13493f43b247..f8431819b3e1 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -34,6 +34,8 @@
+ #define PCI_DEVICE_ID_INTEL_CFL_4S_S_IMC	0x3e33
+ #define PCI_DEVICE_ID_INTEL_CFL_6S_S_IMC	0x3eca
+ #define PCI_DEVICE_ID_INTEL_CFL_8S_S_IMC	0x3e32
++#define PCI_DEVICE_ID_INTEL_ICL_U_IMC		0x8a02
++#define PCI_DEVICE_ID_INTEL_ICL_U2_IMC		0x8a12
+ 
+ /* SNB event control */
+ #define SNB_UNC_CTL_EV_SEL_MASK			0x000000ff
+@@ -93,6 +95,12 @@
+ #define SKL_UNC_PERF_GLOBAL_CTL			0xe01
+ #define SKL_UNC_GLOBAL_CTL_CORE_ALL		((1 << 5) - 1)
+ 
++/* ICL Cbo register */
++#define ICL_UNC_CBO_CONFIG			0x396
++#define ICL_UNC_NUM_CBO_MASK			0xf
++#define ICL_UNC_CBO_0_PER_CTR0			0x702
++#define ICL_UNC_CBO_MSR_OFFSET			0x8
++
+ DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
+ DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
+ DEFINE_UNCORE_FORMAT_ATTR(edge, edge, "config:18");
+@@ -280,6 +288,70 @@ void skl_uncore_cpu_init(void)
+ 	snb_uncore_arb.ops = &skl_uncore_msr_ops;
+ }
+ 
++static struct intel_uncore_type icl_uncore_cbox = {
++	.name		= "cbox",
++	.num_counters   = 4,
++	.perf_ctr_bits	= 44,
++	.perf_ctr	= ICL_UNC_CBO_0_PER_CTR0,
++	.event_ctl	= SNB_UNC_CBO_0_PERFEVTSEL0,
++	.event_mask	= SNB_UNC_RAW_EVENT_MASK,
++	.msr_offset	= ICL_UNC_CBO_MSR_OFFSET,
++	.ops		= &skl_uncore_msr_ops,
++	.format_group	= &snb_uncore_format_group,
++};
++
++static struct uncore_event_desc icl_uncore_events[] = {
++	INTEL_UNCORE_EVENT_DESC(clockticks, "event=0xff"),
++	{ /* end: all zeroes */ },
++};
++
++static struct attribute *icl_uncore_clock_formats_attr[] = {
++	&format_attr_event.attr,
++	NULL,
++};
++
++static struct attribute_group icl_uncore_clock_format_group = {
++	.name = "format",
++	.attrs = icl_uncore_clock_formats_attr,
++};
++
++static struct intel_uncore_type icl_uncore_clockbox = {
++	.name		= "clock",
++	.num_counters	= 1,
++	.num_boxes	= 1,
++	.fixed_ctr_bits	= 48,
++	.fixed_ctr	= SNB_UNC_FIXED_CTR,
++	.fixed_ctl	= SNB_UNC_FIXED_CTR_CTRL,
++	.single_fixed	= 1,
++	.event_mask	= SNB_UNC_CTL_EV_SEL_MASK,
++	.format_group	= &icl_uncore_clock_format_group,
++	.ops		= &skl_uncore_msr_ops,
++	.event_descs	= icl_uncore_events,
++};
++
++static struct intel_uncore_type *icl_msr_uncores[] = {
++	&icl_uncore_cbox,
++	&snb_uncore_arb,
++	&icl_uncore_clockbox,
++	NULL,
++};
++
++static int icl_get_cbox_num(void)
++{
++	u64 num_boxes;
++
++	rdmsrl(ICL_UNC_CBO_CONFIG, num_boxes);
++
++	return num_boxes & ICL_UNC_NUM_CBO_MASK;
++}
++
++void icl_uncore_cpu_init(void)
++{
++	uncore_msr_uncores = icl_msr_uncores;
++	icl_uncore_cbox.num_boxes = icl_get_cbox_num();
++	snb_uncore_arb.ops = &skl_uncore_msr_ops;
++}
++
+ enum {
+ 	SNB_PCI_UNCORE_IMC,
+ };
+@@ -668,6 +740,18 @@ static const struct pci_device_id skl_uncore_pci_ids[] = {
+ 	{ /* end: all zeroes */ },
+ };
+ 
++static const struct pci_device_id icl_uncore_pci_ids[] = {
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICL_U_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICL_U2_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* end: all zeroes */ },
++};
++
+ static struct pci_driver snb_uncore_pci_driver = {
+ 	.name		= "snb_uncore",
+ 	.id_table	= snb_uncore_pci_ids,
+@@ -693,6 +777,11 @@ static struct pci_driver skl_uncore_pci_driver = {
+ 	.id_table	= skl_uncore_pci_ids,
+ };
+ 
++static struct pci_driver icl_uncore_pci_driver = {
++	.name		= "icl_uncore",
++	.id_table	= icl_uncore_pci_ids,
++};
++
+ struct imc_uncore_pci_dev {
+ 	__u32 pci_id;
+ 	struct pci_driver *driver;
+@@ -732,6 +821,8 @@ static const struct imc_uncore_pci_dev desktop_imc_pci_ids[] = {
+ 	IMC_DEV(CFL_4S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 4 Cores Server */
+ 	IMC_DEV(CFL_6S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 6 Cores Server */
+ 	IMC_DEV(CFL_8S_S_IMC, &skl_uncore_pci_driver),  /* 8th Gen Core S 8 Cores Server */
++	IMC_DEV(ICL_U_IMC, &icl_uncore_pci_driver),	/* 10th Gen Core Mobile */
++	IMC_DEV(ICL_U2_IMC, &icl_uncore_pci_driver),	/* 10th Gen Core Mobile */
+ 	{  /* end marker */ }
  };
  
 -- 
