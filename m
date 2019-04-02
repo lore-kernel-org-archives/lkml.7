@@ -2,99 +2,93 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F3CC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225B9C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B464220674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:10:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCr7EYKj"
+	by mail.kernel.org (Postfix) with ESMTP id EAB192084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbfDBVKI (ORCPT
+        id S1726527AbfDBVKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:10:08 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37887 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfDBVKH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:10:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c16so13467358otn.4;
-        Tue, 02 Apr 2019 14:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zCyTj2OzEYxfgPEXh5Y+jLx3kRgC4d6hz4HgkugezE8=;
-        b=oCr7EYKjjOchgjcVqD1naZGpEQCD95nJKZ124PNrvNj5GyyMjLktZQkNuXrEZlzJk5
-         AEKQScZM3uTTNi3QOV8y49Gtb5zlM+q3HFwyOhMN1ZVDPbHXCe5PcAh+J52tQqYAq8zz
-         oaxfdBQByd+4rVBPRua7D8gqsRLvUbU37ZqNdB9OywowWeDVHO5Fbi/rhAlbbE3gHQZe
-         bzBX+wu/7sowdwrMuaFah4x6hIUsTZ8jy5wzS/YawI6PiGYZt0U+ZLMpb7gSflR5gG3u
-         x9zENvyzslGTYJ0BPDFqoMjI+EaS+1EWlTou0asSxzGRzSYwrvIxzlJceolmkVU7q+JF
-         ldLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zCyTj2OzEYxfgPEXh5Y+jLx3kRgC4d6hz4HgkugezE8=;
-        b=lNkWD3+BJlzQ9sE/l1mtnIQKWC4LOGNHBu2XO+LCBBRZs0liNgvgEVeNpsveAV+ZSO
-         E5n3FLl6gDRbeXxTqVgyP+RSnFWbNXZtX45KriM+voHFxrR//PFNdc4sOcR8N9v5gsL7
-         69CbErelG99htphvqWDP0dfU+6+NuJ5MmSHMvpvdHyzKD62sgfIi2POZvEQGwRenIT0e
-         tXTmPbnioEAOJtgkHc4tCJI3TkMcpInjH0IUQ0wDWShRWcL0dGGMlAKPibugj09QQXP6
-         iKeLLJjsxmH70mmd6KqPHjBINmZSADVgoMRDxTfQGaVMBErbP9m70Y0ogRr8FDawtIj+
-         7oCw==
-X-Gm-Message-State: APjAAAWiTXUFM2aWGJmOf43AdXlTAJGHZOWYawmwlC4ggCVK9WQW99aa
-        3UhANOPEfgEsqSuNWpl6S79Kw3ARLHznB16jbKQ=
-X-Google-Smtp-Source: APXvYqx/nkGdiaZm/LJ0rgPZVMA9/qE7toyw3R3ccT8e0t/4QXwN1H3o+O34FWm/aDS2SxoCF5XVSj9sMGIVhsSX1pw=
-X-Received: by 2002:a05:6830:2042:: with SMTP id f2mr43384812otp.89.1554239407020;
- Tue, 02 Apr 2019 14:10:07 -0700 (PDT)
+        Tue, 2 Apr 2019 17:10:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45692 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725822AbfDBVKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 17:10:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BADAEAFF1;
+        Tue,  2 Apr 2019 21:10:40 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Date:   Wed, 03 Apr 2019 08:10:32 +1100
+Cc:     "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 3/4] rhashtable: use bit_spin_locks to protect hash bucket.
+In-Reply-To: <87470518ac3f4ab28918917401b9313b@AcuMS.aculab.com>
+References: <155416000985.9540.14182958463813560577.stgit@noble.brown> <155416006521.9540.5662092375167065834.stgit@noble.brown> <87470518ac3f4ab28918917401b9313b@AcuMS.aculab.com>
+Message-ID: <87o95o15br.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20190322051759.15007-1-tomli@tomli.me> <20190322051759.15007-8-tomli@tomli.me>
- <20190331190801.hxl57om56jskku5s@debian> <20190401174103.GF15736@localhost.localdomain>
-In-Reply-To: <20190401174103.GF15736@localhost.localdomain>
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Tue, 2 Apr 2019 22:09:31 +0100
-Message-ID: <CADVatmPtQAfSC=UkYWHKUx98JK=PMcSZB29ULeQKTBLD9iPnkw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7] MAINTAINERS: sm712fb: list myself as one maintainer.
-To:     Tom Li <tomli@tomli.me>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        LFBDEV <linux-fbdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 6:41 PM Tom Li <tomli@tomli.me> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 02 2019, David Laight wrote:
+
+> From: NeilBrown
+>> Sent: 02 April 2019 00:08
+>>=20
+>> This patch changes rhashtables to use a bit_spin_lock on BIT(1) of the
+>> bucket pointer to lock the hash chain for that bucket.
+> ...
+>> To enhance type checking, a new struct is introduced to represent the
+>>   pointer plus lock-bit
+>> that is stored in the bucket-table.  This is "struct rhash_lock_head"
+>> and is empty.  A pointer to this needs to be cast to either an
+>> unsigned lock, or a "struct rhash_head *" to be useful.
+>> Variables of this type are most often called "bkt".
 >
-> On Sun, Mar 31, 2019 at 08:08:01PM +0100, Sudip Mukherjee wrote:
-> > Technically I donot have any problem with this, you seem to know more
-> > about SM712 than I know. But Teddy Wang is also an existing maintainer
-> > and I think there should be an ack from him before this is accepted.
->
-> Okay, I'll write a personal mail to Teddy. I think it could be a separate
-> patch to allow more time for communication, but the problem is that, if
-> the MAINTAINERS and the new changes are not merged at the same time, users
-> who have problems may unable to see my name and E-mail address for reporting
-> problems.
+> Did you try using a union of the pointer and an 'unsigned long' ?
+> Should remove a lot of the casts.
 
-git will not forget that you have done the changes. :)
-So anyone who has a problem only needs to do a "git blame" to see who
-has done it and the user will get your name and email to contact you.
-If that is the only reason you think your name is added as a
-maintainer then I guess that is not a valid concern and then in that
-case I am not seeing any need to add your name in maintainer.
+It might, but I'm not sure it is what we want.
+The value is not an unsigned long OR a pointer, it is both blended
+together.  So it really isn't a union.
+We *want* it to require casts to access, so that it is clear that
+something unusual is happening, and care is needed.
 
-Bartlomiej can you advise please.
+Thanks,
+NeilBrown
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Regards
-Sudip
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlyjz8gACgkQOeye3VZi
+gbkAlQ//eaU5fojN0BZ6unudrklu89WQ6d4MmfliwLbZpahNujvHkwAJHO/6y20R
+zVWJbijnfv3XO1GSax1ACanUCEo6kePhmaKCX11hCnrRf74tWUakBKMBj0+67xQJ
+TPJAaGrv1s7Ul6gnhI76clDiwzkBfA4AKbY/k2NyRfeNWksHbBHdX//Wl8JkjHms
+HtmuZcLxSo/UPgcZBldMyT05FTm1axOvlzWU9d0HveXtImcN3tP3WZoq0TS69iIw
+Z4QRRhEFReTJIQftJisL4lM8cu7PANE1VEHIjZctizzNb2Unxl/2jypaOhRMpVsu
+peZ89Nk7ZHd57Jz7aKyQoiA6rieESUWVbF5VtrppqbkJFIzF8n7bu0Rk0WisE5Co
+Y+GihfSrpXQn6csKIjATP296nyji51tjzVMHIZZNJ3preTXAFCNAIC9GM3FGTKvL
+9rpbBm1dWqfXwRWp7ur7rTE959cQg1YVKQjiGn/1AtlVORVe55UwRkJcL4bkU6R/
+t9kb12KI7sgIYZbTdtXD6LOakXMV9q4XxPWN9uBw9YOW8J4aYnZC0/eQdmHayLWS
+Cnrwl1wUeB9b5fZuNIRwxoSOtzpK9XD/d2qPRc1EShxnUKgoY84X8tnvWrvQVsZ0
+cY40Lk/vLflIyPvmSSmwnxMgPh3IN6U/OQtg3bYPjiaDcUio/Ig=
+=PXwp
+-----END PGP SIGNATURE-----
+--=-=-=--
