@@ -2,226 +2,110 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D65C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D70C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166032075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178072075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vdTvKoBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731094AbfDBSPe (ORCPT
+        id S1730289AbfDBSRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 14:15:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41876 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730756AbfDBSP1 (ORCPT
+        Tue, 2 Apr 2019 14:17:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55037 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfDBSRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 14:15:27 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x32IAC69110751
-        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 14:15:26 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmauueutk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:15:26 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <cclaudio@linux.ibm.com>;
-        Tue, 2 Apr 2019 19:15:25 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 2 Apr 2019 19:15:21 +0100
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x32IFKfR18677974
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Apr 2019 18:15:20 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 695CB112065;
-        Tue,  2 Apr 2019 18:15:20 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D979112061;
-        Tue,  2 Apr 2019 18:15:18 +0000 (GMT)
-Received: from rino.br.ibm.com (unknown [9.18.235.111])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Apr 2019 18:15:18 +0000 (GMT)
-From:   Claudio Carvalho <cclaudio@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH 4/4] powerpc: Add support to initialize ima policy rules
-Date:   Tue,  2 Apr 2019 15:15:05 -0300
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190402181505.25037-1-cclaudio@linux.ibm.com>
-References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+        Tue, 2 Apr 2019 14:17:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c1so4452451wml.4;
+        Tue, 02 Apr 2019 11:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6GtD7/c+XLFabRb4HcT0EFttSXo2eDZN72QYdwoD9zk=;
+        b=vdTvKoBveTKHOMcvV1qtSQjSGn56TWpUXhYILsIY4qeI5HHFbt5BlJ2BoKZLe1OTjg
+         eS36cUxNFsq9N5W8AoBGjG61Pkyc4o5h79Lvmju4SgR8ANgk7Vqm0iaolEIPscv/tA8p
+         FJUVqGcpO+AUulYDHEi5kdK8Lz2T14NwBSMMckDV3Eiyfou1vo2+ep542PYz9SyQjaMJ
+         TodZOqWz1l3XNHpY5FZcZA1Zcr+q71aeS/xRsgLc98ysp1xWt6MeWdESx41bz47mL/bg
+         9KxWeRgCQFruWFIPLuYpUOurllBDRHWL0azJF1/+Fu88kwffpJaqqO4rAOR/scBjfIei
+         ehWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6GtD7/c+XLFabRb4HcT0EFttSXo2eDZN72QYdwoD9zk=;
+        b=KyRewmZrlNhJQ/eeaUMAIhVkhy8gjPeoQWtWxj+B8DsLUaHrIwyonsdAku8D61/bpk
+         Eh6btaum0KzuCnHtBmWni7Iu7hY27DQ5qF1xvaBeYhhIGi8a9ylfJOlj3DIWeMI8tv7A
+         /1oRsUdE51YIEtfQRp8zB7rrUXskVX+jzZNdjFkLippkx85App+5iaWO92s323heqUZG
+         B5QFRRJip/Y/1jMgjmdPijGoxQHIqv0NhMMmxdCc4mnMaeqCBo3l57HxvU0EAp9sQ1Ln
+         LmCp2YyUGfpdTXw5YXeJQLK6W/yZ8Co+n0IOE64B1+1sEevE5V9PxGVImuQG+kvtPcVT
+         qZ/A==
+X-Gm-Message-State: APjAAAV4+tL5mxe4iljHqFmvXN7RonRqAgA7tOwnhw6eGSeyjsEn8Ga3
+        YH/k2hdCeJhh232IqOI3Dgc=
+X-Google-Smtp-Source: APXvYqzWwQki6UWxmkQO4gIb6E13FGWEK2Ko5bMFJ6ct9hj17iFUw5KmBon330Gxp8CoVDhp1Eb4sw==
+X-Received: by 2002:a1c:23cc:: with SMTP id j195mr4391096wmj.74.1554229049417;
+        Tue, 02 Apr 2019 11:17:29 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8be1:dd00:e07d:a1a:1bc0:370? (p200300EA8BE1DD00E07D0A1A1BC00370.dip0.t-ipconnect.de. [2003:ea:8be1:dd00:e07d:a1a:1bc0:370])
+        by smtp.googlemail.com with ESMTPSA id 61sm48681969wre.50.2019.04.02.11.17.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 11:17:27 -0700 (PDT)
+Subject: Re: [PATCH net-next v4 1/2] net: phy: marvell10g: implement
+ suspend/resume callbacks
+To:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
+        linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
+        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
+References: <20190402131029.26880-1-antoine.tenart@bootlin.com>
+ <20190402131029.26880-2-antoine.tenart@bootlin.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <762a34e2-e89b-9a96-938f-5c85709c8760@gmail.com>
+Date:   Tue, 2 Apr 2019 20:17:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19040218-0064-0000-0000-000003C58181
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010862; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01183360; UDB=6.00619523; IPR=6.00964108;
- MB=3.00026264; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-02 18:15:24
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040218-0065-0000-0000-00003CECEC9A
-Message-Id: <20190402181505.25037-5-cclaudio@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904020121
+In-Reply-To: <20190402131029.26880-2-antoine.tenart@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nayna Jain <nayna@linux.ibm.com>
+On 02.04.2019 15:10, Antoine Tenart wrote:
+> This patch adds the suspend/resume callbacks for Marvell 10G PHYs. The
+> three PCS (base-t, base-r and 1000base-x) are set in low power (the PCS
+> are powered down) when the PHY isn't used.
+> 
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> ---
+>  drivers/net/phy/marvell10g.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
+> index 80678919641d..9ee033c8a12b 100644
+> --- a/drivers/net/phy/marvell10g.c
+> +++ b/drivers/net/phy/marvell10g.c
+> @@ -51,6 +51,8 @@ enum {
+>  	MV_AN_STAT1000		= 0x8001, /* 1000base-T status register */
+>  
+>  	/* Vendor2 MMD registers */
+> +	MV_V2_PORT_CTRL		= 0xf001,
+> +	MV_V2_PORT_CTRL_PWRDOWN = 0x0800,
 
-PowerNV secure boot relies on the kernel IMA security subsystem to
-perform the OS kernel image signature verification. Since each secure
-boot mode has different IMA policy requirements, dynamic definition of
-the policy rules based on the runtime secure boot mode of the system is
-required. On systems that support secure boot, but have it disabled,
-only measurement policy rules of the kernel image and modules are
-defined.
+If this driver is touched again I think it would be good to change all
+such constants to BIT() and GENMASK(), ideally combined with the macros
+from bitfields.h. This makes it much easier to check the code against the
+datasheet. Apart from that:
 
-This patch defines the arch-specific implementation to retrieve the
-secure boot mode of the system and accordingly configures the IMA policy
-rules.
-
-This patch will provide arch-specific IMA policies if PPC_SECURE_BOOT
-config is enabled.
-
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/Kconfig           | 12 ++++++++
- arch/powerpc/kernel/Makefile   |  1 +
- arch/powerpc/kernel/ima_arch.c | 54 ++++++++++++++++++++++++++++++++++
- include/linux/ima.h            |  3 +-
- 4 files changed, 69 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/kernel/ima_arch.c
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2d0be82c3061..e0ba9a9114b3 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -901,6 +901,18 @@ config PPC_MEM_KEYS
- 
- 	  If unsure, say y.
- 
-+config PPC_SECURE_BOOT
-+	prompt "Enable PowerPC Secure Boot"
-+	bool
-+	default n
-+	depends on IMA
-+	depends on IMA_ARCH_POLICY
-+	help
-+	  Linux on POWER with firmware secure boot enabled needs to define
-+	  security policies to extend secure boot to the OS.
-+	  This config allows user to enable OS Secure Boot on PowerPC systems
-+	  that have firmware secure boot support.
-+
- endmenu
- 
- config ISA_DMA_API
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index cddadccf551d..0f08ed7dfd1b 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -119,6 +119,7 @@ ifdef CONFIG_IMA
- obj-y				+= ima_kexec.o
- endif
- endif
-+obj-$(CONFIG_IMA)		+= ima_arch.o
- 
- obj-$(CONFIG_AUDIT)		+= audit.o
- obj64-$(CONFIG_AUDIT)		+= compat_audit.o
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-new file mode 100644
-index 000000000000..871b321656fb
---- /dev/null
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain <nayna@linux.ibm.com>
-+ *
-+ * ima_arch.c
-+ *      - initialize ima policies for PowerPC Secure Boot
-+ */
-+
-+#include <linux/ima.h>
-+#include <asm/secboot.h>
-+
-+bool arch_ima_get_secureboot(void)
-+{
-+	bool sb_mode;
-+
-+	sb_mode = get_powerpc_sb_mode();
-+	if (sb_mode)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+/*
-+ * File signature verification is not needed, include only measurements
-+ */
-+static const char *const default_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK",
-+	"measure func=MODULE_CHECK",
-+	NULL
-+};
-+
-+/* Both file signature verification and measurements are needed */
-+static const char *const sb_arch_rules[] = {
-+	"measure func=KEXEC_KERNEL_CHECK",
-+	"measure func=MODULE_CHECK",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig",
-+#if !IS_ENABLED(CONFIG_MODULE_SIG)
-+	"appraise func=MODULE_CHECK appraise_type=imasig",
-+#endif
-+	NULL
-+};
-+
-+/*
-+ * On PowerPC, file measurements are to be added to the IMA measurement list
-+ * irrespective of the secure boot state of the system. Signature verification
-+ * is conditionally enabled based on the secure boot state.
-+ */
-+const char *const *arch_get_ima_policy(void)
-+{
-+	if (IS_ENABLED(CONFIG_IMA_ARCH_POLICY) && arch_ima_get_secureboot())
-+		return sb_arch_rules;
-+	return default_arch_rules;
-+}
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index dc12fbcf484c..32f46d69ebd7 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -31,7 +31,8 @@ extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_add_kexec_buffer(struct kimage *image);
- #endif
- 
--#if defined(CONFIG_X86) && defined(CONFIG_EFI)
-+#if defined(CONFIG_X86) && defined(CONFIG_EFI) \
-+			|| defined(CONFIG_PPC_SECURE_BOOT)
- extern bool arch_ima_get_secureboot(void);
- extern const char * const *arch_get_ima_policy(void);
- #else
--- 
-2.20.1
-
+Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
