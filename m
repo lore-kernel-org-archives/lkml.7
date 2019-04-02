@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D24AC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB37C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB862146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8F62070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbfDBNka (ORCPT
+        id S1731662AbfDBNkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:40:30 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43320 "EHLO
+        Tue, 2 Apr 2019 09:40:31 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43370 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731458AbfDBNkH (ORCPT
+        by vger.kernel.org with ESMTP id S1731462AbfDBNkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:40:07 -0400
+        Tue, 2 Apr 2019 09:40:08 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe0-0002o0-Bz; Tue, 02 Apr 2019 14:40:04 +0100
+        id 1hBJe0-0002oP-Il; Tue, 02 Apr 2019 14:40:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdx-0004wb-Gn; Tue, 02 Apr 2019 14:40:01 +0100
+        id 1hBJdx-0004wG-C2; Tue, 02 Apr 2019 14:40:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>
+        "Breno Leitao" <leitao@debian.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>
 Date:   Tue, 02 Apr 2019 14:38:28 +0100
-Message-ID: <lsq.1554212308.942752903@decadent.org.uk>
+Message-ID: <lsq.1554212308.638403049@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 76/99] KVM: x86: Use jmp to invoke kvm_spurious_fault()
- from .fixup
+Subject: [PATCH 3.16 72/99] powerpc/tm: Set MSR[TS] just prior to recheckpoint
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,133 +55,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Breno Leitao <leitao@debian.org>
 
-commit e81434995081fd7efb755fd75576b35dbb0850b1 upstream.
+commit e1c3743e1a20647c53b719dbf28b48f45d23f2cd upstream.
 
-____kvm_handle_fault_on_reboot() provides a generic exception fixup
-handler that is used to cleanly handle faults on VMX/SVM instructions
-during reboot (or at least try to).  If there isn't a reboot in
-progress, ____kvm_handle_fault_on_reboot() treats any exception as
-fatal to KVM and invokes kvm_spurious_fault(), which in turn generates
-a BUG() to get a stack trace and die.
+On a signal handler return, the user could set a context with MSR[TS] bits
+set, and these bits would be copied to task regs->msr.
 
-When it was originally added by commit 4ecac3fd6dc2 ("KVM: Handle
-virtualization instruction #UD faults during reboot"), the "call" to
-kvm_spurious_fault() was handcoded as PUSH+JMP, where the PUSH'd value
-is the RIP of the faulting instructing.
+At restore_tm_sigcontexts(), after current task regs->msr[TS] bits are set,
+several __get_user() are called and then a recheckpoint is executed.
 
-The PUSH+JMP trickery is necessary because the exception fixup handler
-code lies outside of its associated function, e.g. right after the
-function.  An actual CALL from the .fixup code would show a slightly
-bogus stack trace, e.g. an extra "random" function would be inserted
-into the trace, as the return RIP on the stack would point to no known
-function (and the unwinder will likely try to guess who owns the RIP).
+This is a problem since a page fault (in kernel space) could happen when
+calling __get_user(). If it happens, the process MSR[TS] bits were
+already set, but recheckpoint was not executed, and SPRs are still invalid.
 
-Unfortunately, the JMP was replaced with a CALL when the macro was
-reworked to not spin indefinitely during reboot (commit b7c4145ba2eb
-"KVM: Don't spin on virt instruction faults during reboot").  This
-causes the aforementioned behavior where a bogus function is inserted
-into the stack trace, e.g. my builds like to blame free_kvm_area().
+The page fault can cause the current process to be de-scheduled, with
+MSR[TS] active and without tm_recheckpoint() being called.  More
+importantly, without TEXASR[FS] bit set also.
 
-Revert the CALL back to a JMP.  The changelog for commit b7c4145ba2eb
-("KVM: Don't spin on virt instruction faults during reboot") contains
-nothing that indicates the switch to CALL was deliberate.  This is
-backed up by the fact that the PUSH <insn RIP> was left intact.
+Since TEXASR might not have the FS bit set, and when the process is
+scheduled back, it will try to reclaim, which will be aborted because of
+the CPU is not in the suspended state, and, then, recheckpoint. This
+recheckpoint will restore thread->texasr into TEXASR SPR, which might be
+zero, hitting a BUG_ON().
 
-Note that an alternative to the PUSH+JMP magic would be to JMP back
-to the "real" code and CALL from there, but that would require adding
-a JMP in the non-faulting path to avoid calling kvm_spurious_fault()
-and would add no value, i.e. the stack trace would be the same.
+	kernel BUG at /build/linux-sf3Co9/linux-4.9.30/arch/powerpc/kernel/tm.S:434!
+	cpu 0xb: Vector: 700 (Program Check) at [c00000041f1576d0]
+	    pc: c000000000054550: restore_gprs+0xb0/0x180
+	    lr: 0000000000000000
+	    sp: c00000041f157950
+	   msr: 8000000100021033
+	  current = 0xc00000041f143000
+	  paca    = 0xc00000000fb86300	 softe: 0	 irq_happened: 0x01
+	    pid   = 1021, comm = kworker/11:1
+	kernel BUG at /build/linux-sf3Co9/linux-4.9.30/arch/powerpc/kernel/tm.S:434!
+	Linux version 4.9.0-3-powerpc64le (debian-kernel@lists.debian.org) (gcc version 6.3.0 20170516 (Debian 6.3.0-18) ) #1 SMP Debian 4.9.30-2+deb9u2 (2017-06-26)
+	enter ? for help
+	[c00000041f157b30] c00000000001bc3c tm_recheckpoint.part.11+0x6c/0xa0
+	[c00000041f157b70] c00000000001d184 __switch_to+0x1e4/0x4c0
+	[c00000041f157bd0] c00000000082eeb8 __schedule+0x2f8/0x990
+	[c00000041f157cb0] c00000000082f598 schedule+0x48/0xc0
+	[c00000041f157ce0] c0000000000f0d28 worker_thread+0x148/0x610
+	[c00000041f157d80] c0000000000f96b0 kthread+0x120/0x140
+	[c00000041f157e30] c00000000000c0e0 ret_from_kernel_thread+0x5c/0x7c
 
-Using CALL:
+This patch simply delays the MSR[TS] set, so, if there is any page fault in
+the __get_user() section, it does not have regs->msr[TS] set, since the TM
+structures are still invalid, thus avoiding doing TM operations for
+in-kernel exceptions and possible process reschedule.
 
-------------[ cut here ]------------
-kernel BUG at /home/sean/go/src/kernel.org/linux/arch/x86/kvm/x86.c:356!
-invalid opcode: 0000 [#1] SMP
-CPU: 4 PID: 1057 Comm: qemu-system-x86 Not tainted 4.20.0-rc6+ #75
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-RIP: 0010:kvm_spurious_fault+0x5/0x10 [kvm]
-Code: <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
-RSP: 0018:ffffc900004bbcc8 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffffffffff
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff888273fd8000 R08: 00000000000003e8 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000784 R12: ffffc90000371fb0
-R13: 0000000000000000 R14: 000000026d763cf4 R15: ffff888273fd8000
-FS:  00007f3d69691700(0000) GS:ffff888277800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055f89bc56fe0 CR3: 0000000271a5a001 CR4: 0000000000362ee0
-Call Trace:
- free_kvm_area+0x1044/0x43ea [kvm_intel]
- ? vmx_vcpu_run+0x156/0x630 [kvm_intel]
- ? kvm_arch_vcpu_ioctl_run+0x447/0x1a40 [kvm]
- ? kvm_vcpu_ioctl+0x368/0x5c0 [kvm]
- ? kvm_vcpu_ioctl+0x368/0x5c0 [kvm]
- ? __set_task_blocked+0x38/0x90
- ? __set_current_blocked+0x50/0x60
- ? __fpu__restore_sig+0x97/0x490
- ? do_vfs_ioctl+0xa1/0x620
- ? __x64_sys_futex+0x89/0x180
- ? ksys_ioctl+0x66/0x70
- ? __x64_sys_ioctl+0x16/0x20
- ? do_syscall_64+0x4f/0x100
- ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Modules linked in: vhost_net vhost tap kvm_intel kvm irqbypass bridge stp llc
----[ end trace 9775b14b123b1713 ]---
+With this patch, the MSR[TS] will only be set just before recheckpointing
+and setting TEXASR[FS] = 1, thus avoiding an interrupt with TM registers in
+invalid state.
 
-Using JMP:
+Other than that, if CONFIG_PREEMPT is set, there might be a preemption just
+after setting MSR[TS] and before tm_recheckpoint(), thus, this block must
+be atomic from a preemption perspective, thus, calling
+preempt_disable/enable() on this code.
 
-------------[ cut here ]------------
-kernel BUG at /home/sean/go/src/kernel.org/linux/arch/x86/kvm/x86.c:356!
-invalid opcode: 0000 [#1] SMP
-CPU: 6 PID: 1067 Comm: qemu-system-x86 Not tainted 4.20.0-rc6+ #75
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-RIP: 0010:kvm_spurious_fault+0x5/0x10 [kvm]
-Code: <0f> 0b 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 55 49 89 fd 41
-RSP: 0018:ffffc90000497cd0 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffffffffff
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff88827058bd40 R08: 00000000000003e8 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000784 R12: ffffc90000369fb0
-R13: 0000000000000000 R14: 00000003c8fc6642 R15: ffff88827058bd40
-FS:  00007f3d7219e700(0000) GS:ffff888277900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f3d64001000 CR3: 0000000271c6b004 CR4: 0000000000362ee0
-Call Trace:
- vmx_vcpu_run+0x156/0x630 [kvm_intel]
- ? kvm_arch_vcpu_ioctl_run+0x447/0x1a40 [kvm]
- ? kvm_vcpu_ioctl+0x368/0x5c0 [kvm]
- ? kvm_vcpu_ioctl+0x368/0x5c0 [kvm]
- ? __set_task_blocked+0x38/0x90
- ? __set_current_blocked+0x50/0x60
- ? __fpu__restore_sig+0x97/0x490
- ? do_vfs_ioctl+0xa1/0x620
- ? __x64_sys_futex+0x89/0x180
- ? ksys_ioctl+0x66/0x70
- ? __x64_sys_ioctl+0x16/0x20
- ? do_syscall_64+0x4f/0x100
- ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Modules linked in: vhost_net vhost tap kvm_intel kvm irqbypass bridge stp llc
----[ end trace f9daedb85ab3ddba ]---
+It is not possible to move tm_recheckpoint to happen earlier, because it is
+required to get the checkpointed registers from userspace, with
+__get_user(), thus, the only way to avoid this undesired behavior is
+delaying the MSR[TS] set.
 
-Fixes: b7c4145ba2eb ("KVM: Don't spin on virt instruction faults during reboot")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+The 32-bits signal handler seems to be safe this current issue, but, it
+might be exposed to the preemption issue, thus, disabling preemption in
+this chunk of code.
+
+Changes from v2:
+ * Run the critical section with preempt_disable.
+
+Fixes: 87b4e5393af7 ("powerpc/tm: Fix return of active 64bit signals")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[bwh: Backported to 3.16:
+ - We don't forceably enable TM here; don't change that, and drop the
+   comment about it
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/kvm_host.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1041,7 +1041,7 @@ asmlinkage void kvm_spurious_fault(void)
- 	"cmpb $0, kvm_rebooting \n\t"	      \
- 	"jne 668b \n\t"      		      \
- 	__ASM_SIZE(push) " $666b \n\t"	      \
--	"call kvm_spurious_fault \n\t"	      \
-+	"jmp kvm_spurious_fault \n\t"	      \
- 	".popsection \n\t" \
- 	_ASM_EXTABLE(666b, 667b)
+--- a/arch/powerpc/kernel/signal_32.c
++++ b/arch/powerpc/kernel/signal_32.c
+@@ -882,7 +882,23 @@ static long restore_tm_user_regs(struct
+ 	/* If TM bits are set to the reserved value, it's an invalid context */
+ 	if (MSR_TM_RESV(msr_hi))
+ 		return 1;
+-	/* Pull in the MSR TM bits from the user context */
++
++	/*
++	 * Disabling preemption, since it is unsafe to be preempted
++	 * with MSR[TS] set without recheckpointing.
++	 */
++	preempt_disable();
++
++	/*
++	 * CAUTION:
++	 * After regs->MSR[TS] being updated, make sure that get_user(),
++	 * put_user() or similar functions are *not* called. These
++	 * functions can generate page faults which will cause the process
++	 * to be de-scheduled with MSR[TS] set but without calling
++	 * tm_recheckpoint(). This can cause a bug.
++	 *
++	 * Pull in the MSR TM bits from the user context
++	 */
+ 	regs->msr = (regs->msr & ~MSR_TS_MASK) | (msr_hi & MSR_TS_MASK);
+ 	/* Now, recheckpoint.  This loads up all of the checkpointed (older)
+ 	 * registers, including FP and V[S]Rs.  After recheckpointing, the
+@@ -906,6 +922,8 @@ static long restore_tm_user_regs(struct
+ 	}
+ #endif
  
++	preempt_enable();
++
+ 	return 0;
+ }
+ #endif
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -431,9 +431,6 @@ static long restore_tm_sigcontexts(struc
+ 	if (MSR_TM_RESV(msr))
+ 		return -EINVAL;
+ 
+-	/* pull in MSR TM from user context */
+-	regs->msr = (regs->msr & ~MSR_TS_MASK) | (msr & MSR_TS_MASK);
+-
+ 	/* pull in MSR LE from user context */
+ 	regs->msr = (regs->msr & ~MSR_LE) | (msr & MSR_LE);
+ 
+@@ -532,6 +529,25 @@ static long restore_tm_sigcontexts(struc
+ 	tm_enable();
+ 	/* Make sure the transaction is marked as failed */
+ 	current->thread.tm_texasr |= TEXASR_FS;
++
++	/*
++	 * Disabling preemption, since it is unsafe to be preempted
++	 * with MSR[TS] set without recheckpointing.
++	 */
++	preempt_disable();
++
++	/* pull in MSR TM from user context */
++	regs->msr = (regs->msr & ~MSR_TS_MASK) | (msr & MSR_TS_MASK);
++
++	/*
++	 * CAUTION:
++	 * After regs->MSR[TS] being updated, make sure that get_user(),
++	 * put_user() or similar functions are *not* called. These
++	 * functions can generate page faults which will cause the process
++	 * to be de-scheduled with MSR[TS] set but without calling
++	 * tm_recheckpoint(). This can cause a bug.
++	 */
++
+ 	/* This loads the checkpointed FP/VEC state, if used */
+ 	tm_recheckpoint(&current->thread, msr);
+ 
+@@ -547,6 +563,8 @@ static long restore_tm_sigcontexts(struc
+ 	}
+ #endif
+ 
++	preempt_enable();
++
+ 	return err;
+ }
+ #endif
 
