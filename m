@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24FCC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A58C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CEE2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB4B2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731696AbfDBNki (ORCPT
+        id S1731687AbfDBNkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:40:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43592 "EHLO
+        Tue, 2 Apr 2019 09:40:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43518 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728817AbfDBNkL (ORCPT
+        by vger.kernel.org with ESMTP id S1731494AbfDBNkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:40:11 -0400
+        Tue, 2 Apr 2019 09:40:09 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe3-0002oa-U4; Tue, 02 Apr 2019 14:40:08 +0100
+        id 1hBJe3-0002no-Br; Tue, 02 Apr 2019 14:40:07 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdy-0004xx-48; Tue, 02 Apr 2019 14:40:02 +0100
+        id 1hBJdy-0004yR-8h; Tue, 02 Apr 2019 14:40:02 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Tyrel Datwyler" <tyreld@linux.vnet.ibm.com>
+        "Pavel Shilovsky" <pshilov@microsoft.com>
 Date:   Tue, 02 Apr 2019 14:38:28 +0100
-Message-ID: <lsq.1554212308.24849891@decadent.org.uk>
+Message-ID: <lsq.1554212308.272064347@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 93/99] ibmveth: fix DMA unmap error in
- ibmveth_xmit_start error path
+Subject: [PATCH 3.16 99/99] CIFS: Enable encryption during session setup phase
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,59 +54,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 756af9c642329d54f048bac2a62f829b391f6944 upstream.
+commit cabfb3680f78981d26c078a26e5c748531257ebb upstream.
 
-Commit 33a48ab105a7 ("ibmveth: Fix DMA unmap error") fixed an issue in the
-normal code path of ibmveth_xmit_start() that was originally introduced by
-Commit 6e8ab30ec677 ("ibmveth: Add scatter-gather support"). This original
-fix missed the error path where dma_unmap_page is wrongly called on the
-header portion in descs[0] which was mapped with dma_map_single. As a
-result a failure to DMA map any of the frags results in a dmesg warning
-when CONFIG_DMA_API_DEBUG is enabled.
+In order to allow encryption on SMB connection we need to exchange
+a session key and generate encryption and decryption keys.
 
-------------[ cut here ]------------
-DMA-API: ibmveth 30000002: device driver frees DMA memory with wrong function
-  [device address=0x000000000a430000] [size=172 bytes] [mapped as page] [unmapped as single]
-WARNING: CPU: 1 PID: 8426 at kernel/dma/debug.c:1085 check_unmap+0x4fc/0xe10
-...
-<snip>
-...
-DMA-API: Mapped at:
-ibmveth_start_xmit+0x30c/0xb60
-dev_hard_start_xmit+0x100/0x450
-sch_direct_xmit+0x224/0x490
-__qdisc_run+0x20c/0x980
-__dev_queue_xmit+0x1bc/0xf20
-
-This fixes the API misuse by unampping descs[0] with dma_unmap_single.
-
-Fixes: 6e8ab30ec677 ("ibmveth: Add scatter-gather support")
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+[bwh: Backported to 3.16:
+ - SMB2_sess_establish_session() has not been split out from SMB2_sess_setup()
+   and there is additional cleanup to do on error, so keep the
+   'goto keygen_exit'
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/ibm/ibmveth.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/cifs/sess.c    | 22 ++++++++++------------
+ fs/cifs/smb2pdu.c | 12 ++----------
+ 2 files changed, 12 insertions(+), 22 deletions(-)
 
---- a/drivers/net/ethernet/ibm/ibmveth.c
-+++ b/drivers/net/ethernet/ibm/ibmveth.c
-@@ -1059,11 +1059,15 @@ out:
+--- a/fs/cifs/sess.c
++++ b/fs/cifs/sess.c
+@@ -343,13 +343,12 @@ void build_ntlmssp_negotiate_blob(unsign
+ 	/* BB is NTLMV2 session security format easier to use here? */
+ 	flags = NTLMSSP_NEGOTIATE_56 |	NTLMSSP_REQUEST_TARGET |
+ 		NTLMSSP_NEGOTIATE_128 | NTLMSSP_NEGOTIATE_UNICODE |
+-		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC;
+-	if (ses->server->sign) {
++		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC |
++		NTLMSSP_NEGOTIATE_SEAL;
++	if (ses->server->sign)
+ 		flags |= NTLMSSP_NEGOTIATE_SIGN;
+-		if (!ses->server->session_estab ||
+-				ses->ntlmssp->sesskey_per_smbsess)
+-			flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
+-	}
++	if (!ses->server->session_estab || ses->ntlmssp->sesskey_per_smbsess)
++		flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
  
- map_failed_frags:
- 	last = i+1;
--	for (i = 0; i < last; i++)
-+	for (i = 1; i < last; i++)
- 		dma_unmap_page(&adapter->vdev->dev, descs[i].fields.address,
- 			       descs[i].fields.flags_len & IBMVETH_BUF_LEN_MASK,
- 			       DMA_TO_DEVICE);
+ 	sec_blob->NegotiateFlags = cpu_to_le32(flags);
  
-+	dma_unmap_single(&adapter->vdev->dev,
-+			 descs[0].fields.address,
-+			 descs[0].fields.flags_len & IBMVETH_BUF_LEN_MASK,
-+			 DMA_TO_DEVICE);
- map_failed:
- 	if (!firmware_has_feature(FW_FEATURE_CMO))
- 		netdev_err(netdev, "tx: unable to map xmit buffer\n");
+@@ -412,13 +411,12 @@ int build_ntlmssp_auth_blob(unsigned cha
+ 	flags = NTLMSSP_NEGOTIATE_56 |
+ 		NTLMSSP_REQUEST_TARGET | NTLMSSP_NEGOTIATE_TARGET_INFO |
+ 		NTLMSSP_NEGOTIATE_128 | NTLMSSP_NEGOTIATE_UNICODE |
+-		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC;
+-	if (ses->server->sign) {
++		NTLMSSP_NEGOTIATE_NTLM | NTLMSSP_NEGOTIATE_EXTENDED_SEC |
++		NTLMSSP_NEGOTIATE_SEAL;
++	if (ses->server->sign)
+ 		flags |= NTLMSSP_NEGOTIATE_SIGN;
+-		if (!ses->server->session_estab ||
+-				ses->ntlmssp->sesskey_per_smbsess)
+-			flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
+-	}
++	if (!ses->server->session_estab || ses->ntlmssp->sesskey_per_smbsess)
++		flags |= NTLMSSP_NEGOTIATE_KEY_XCH;
+ 
+ 	tmp = *pbuffer + sizeof(AUTHENTICATE_MESSAGE);
+ 	sec_blob->NegotiateFlags = cpu_to_le32(flags);
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -764,10 +764,8 @@ ssetup_exit:
+ 
+ 	if (!rc) {
+ 		mutex_lock(&server->srv_mutex);
+-		if (server->sign && server->ops->generate_signingkey) {
++		if (server->ops->generate_signingkey) {
+ 			rc = server->ops->generate_signingkey(ses);
+-			kfree(ses->auth_key.response);
+-			ses->auth_key.response = NULL;
+ 			if (rc) {
+ 				cifs_dbg(FYI,
+ 					"SMB3 session key generation failed\n");
+@@ -789,10 +787,6 @@ ssetup_exit:
+ 	}
+ 
+ keygen_exit:
+-	if (!server->sign) {
+-		kfree(ses->auth_key.response);
+-		ses->auth_key.response = NULL;
+-	}
+ 	kfree(ses->ntlmssp);
+ 
+ 	return rc;
 
