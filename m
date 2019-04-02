@@ -2,107 +2,80 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80C1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587C8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3AA02075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="inHx/lN3"
+	by mail.kernel.org (Postfix) with ESMTP id 327002075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbfDBJDP (ORCPT
+        id S1729837AbfDBJDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:03:15 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12285 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfDBJDO (ORCPT
+        Tue, 2 Apr 2019 05:03:19 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34175 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfDBJDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:03:14 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca325550001>; Tue, 02 Apr 2019 02:03:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 02 Apr 2019 02:03:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 02 Apr 2019 02:03:13 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Apr
- 2019 09:03:11 +0000
-Subject: Re: [PATCH 4.9 00/56] 4.9.167-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190401170103.398401360@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d3d8058a-db60-537d-2953-7952ef6519ea@nvidia.com>
-Date:   Tue, 2 Apr 2019 10:03:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 2 Apr 2019 05:03:15 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hBFK2-0000OV-4I; Tue, 02 Apr 2019 11:03:10 +0200
+Date:   Tue, 2 Apr 2019 11:03:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH ghak10 v6 2/2] ntp: Audit NTP parameters adjustment
+In-Reply-To: <CAFqZXNvQioPGUiU0q5R4nQLW7pQDsViNH-DR=SF4Fec+-CwksA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904021100410.1676@nanos.tec.linutronix.de>
+References: <20190307123254.348-1-omosnace@redhat.com> <20190307123254.348-3-omosnace@redhat.com> <alpine.DEB.2.21.1903280039530.1789@nanos.tec.linutronix.de> <CAFqZXNvQioPGUiU0q5R4nQLW7pQDsViNH-DR=SF4Fec+-CwksA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554195797; bh=iSTzpsKcXYOqQekYENoyPxYZ6kk0SUzyuFjur6ZEYuo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=inHx/lN36PEN2JHddduQUtPVBcd2hM/3NKOSZtV41CuEqmT2AFVmBbVK2bUVEDO6X
-         OPuIlvDzBoyENvrWcUrfP5yJ4F7IAcNWsXB62eafg2Ow7Z3nBMZstsl+OhuBFR8Q6A
-         u8DivlOk4hFrfX9OhvHjZNkqxFnQBU9OWYNssqyx+9CyspmSCVj8YIW4ENO8L0RpO/
-         QKOfH7vGMTVkmPKLYGkcu+nUyFcxRP43lATgPpv7wWsPdTPGv4vBxgZVDHtRwMMMN7
-         tDRvpmSZ0lQZmlj7HVCHL6ThZk/EISSzOGgKyvcwAd7jCniFQXDssETz4AYIzLk55P
-         DOyV6lR775dyg==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 01/04/2019 18:02, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.167 release.
-> There are 56 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, 1 Apr 2019, Ondrej Mosnacek wrote:
+> On Thu, Mar 28, 2019 at 1:02 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Thu, 7 Mar 2019, Ondrej Mosnacek wrote:
+> > >                       /* adjtime() is independent from ntp_adjtime() */
+> > >                       time_adjust = txc->offset;
+> > >                       ntp_update_frequency();
+> > > +
+> > > +                     audit_ntp_adjust("adjust", save_adjust, txc->offset);
+> > >               }
+> > >               txc->offset = save_adjust;
+> > >       } else {
+> >
+> > Not going to happen. We are not reshuffling all that code just to
+> > accomodate random audit log invocations in a critical section plus having a
+> > gazillion of GFP_ATOMIC allocation in the critical section just because.
 > 
-> Responses should be made by Wed Apr  3 17:00:20 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.167-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> OK, seems I underestimated the consequences of putting the logging
+> calls directly in there. While I was offline over the weekend I
+> already came up with a cleaner version that collects the changes in a
+> structure and does the logging outside of the critical section. I
+> currently does a few unnecessary writes into memory under
+> CONFIG_AUDIT=n, but if that is an issue I can boost the abstraction or
+> just add some #ifdefs to avoid that.
 
-All tests are passing for Tegra ...
+No ifdefs please. Aside of that, why do you need all those details of the
+ntp internals in the first place? The changelog does not give me an answer
+to that.
 
-Test results for stable-v4.9:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    22 tests:	22 pass, 0 fail
+Thanks,
 
-Linux version:	4.9.167-rc1-g68d6c32
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+	tglx
