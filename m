@@ -2,172 +2,78 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69276C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59107C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325E6205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G6wf19Qw"
+	by mail.kernel.org (Postfix) with ESMTP id 2BA0B208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbfDBLFZ (ORCPT
+        id S1730366AbfDBLGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:05:25 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33331 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730220AbfDBLFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:05:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f23so11177047ljc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 04:05:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=L4nz6P79EazF4QGJMsEwzyd6R0TDkYs1FDXUSQwoBy0=;
-        b=G6wf19QwB+/ESnO+pScyymKm2R2eIKfl1ai5jmIWvfS2LnGmmjIu19l8/arZenGQpx
-         eajNES0KflOpUNb09/+LonXpT4Q12ORadWQnDtj77Sbt613V/1nGedJKLLVSiLbhgHx0
-         vAldb1B7epGsZ5BwHj01b3wb1nFyoT+La9QT2mXR0dCRL5QxI4qffOOtAqrx+FJyglNl
-         BzH7MaETVA7XsjTb9x4iBApJgx3HqSjSJZjJCPjAEM94RPXiRRsM1m3D8CbW3sre0wja
-         /vkD1NxQobzIhfe6+ZjXfclm3kbCV90RWDcjs/a5ft64uP0k4A458TXasH7tuDq1qqCf
-         JFAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=L4nz6P79EazF4QGJMsEwzyd6R0TDkYs1FDXUSQwoBy0=;
-        b=RmSXBIa0xC3SrsIITvZ7lxxf9ZCBS6xrbhFigcvlp8ZsJAebTLGsiQtIEMOt8jYD1R
-         gdzczdSsffkP1nFoFcpDSJ+aKulWkndW5UJekvLWMXPm10zTV3Y3oLxUV6Ec6x8j2Wnx
-         UVi4C+OVvoMY45GnTKvde6J1OADEqP1J/jRlIDaegmuGj3PsQMBakYi0xkTi5O6XFUDV
-         WCxIvkI5ufty+jkJhT1hNqGBEADmOCZ1WJCVKnwyo9ggr3HD5R1D2SDRVMxvw4JZJDqM
-         0j2C4S7tRFENXhyK6dJeCI4PbOxIFLmWtZGPr8g185EsFODzABcwXpeS3y5VtOlh1zht
-         6Hpw==
-X-Gm-Message-State: APjAAAUQuWIn/Fe1COwsQa9uB8nlfYOmBcu5ax0FUn5Ly2q5k/QgcFZC
-        Fg8/fw7TtY/MIERb+fG3AAxak7dQ4o8d7EHyfauklQ==
-X-Google-Smtp-Source: APXvYqzIMECJt+B3TeO6Fg3cuOQ7Lg5qI96D7RHpvv4kHtP7Aj/DuS76i87QzYM0ZHdqo/yCyNKjjaEgr1tTxfM1UTk=
-X-Received: by 2002:a2e:91cb:: with SMTP id u11mr34402414ljg.64.1554203123266;
- Tue, 02 Apr 2019 04:05:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190401170048.449559024@linuxfoundation.org>
-In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 2 Apr 2019 16:35:11 +0530
-Message-ID: <CA+G9fYvC80nexMB0EHhvyNWs1=3LUUkqEtS12rVF=cAQLHcfUw@mail.gmail.com>
-Subject: Re: [PATCH 5.0 000/146] 5.0.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 2 Apr 2019 07:06:34 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48892 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728748AbfDBLGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:06:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 484C01688;
+        Tue,  2 Apr 2019 04:06:33 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 71DAE3F59C;
+        Tue,  2 Apr 2019 04:06:31 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, eric.auger@redhat.com,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Chirstoffer Dall <christoffer.dall@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Zheng Xiang <zhengxiang9@huawei.com>
+Subject: [PATCH] kvm: arm: Skip stage2 huge mappings for unaligned ipa backed by THP
+Date:   Tue,  2 Apr 2019 12:06:16 +0100
+Message-Id: <1554203176-3958-1-git-send-email-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 at 22:34, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.0.6 release.
-> There are 146 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed Apr  3 16:59:21 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.0.6-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.0.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+With commit a80868f398554842b14, we no longer ensure that the
+THP page is properly aligned in the guest IPA. Skip the stage2
+huge mapping for unaligned IPA backed by transparent hugepages.
 
+Fixes: a80868f398554842b14 ("KVM: arm/arm64: Enforce PTE mappings at stage2 when needed")
+Reported-by: Eric Auger <eric.auger@redhat.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Chirstoffer Dall <christoffer.dall@arm.com>
+Cc: Zenghui Yu <yuzenghui@huawei.com>
+Cc: Zheng Xiang <zhengxiang9@huawei.com>
+Tested-by: Eric Auger <eric.auger@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ virt/kvm/arm/mmu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 27c9583..4a22f5b 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1412,7 +1412,9 @@ static bool transparent_hugepage_adjust(kvm_pfn_t *pfnp, phys_addr_t *ipap)
+ 		 * page accordingly.
+ 		 */
+ 		mask = PTRS_PER_PMD - 1;
+-		VM_BUG_ON((gfn & mask) != (pfn & mask));
++		/* Skip memslots with unaligned IPA and user address */
++		if ((gfn & mask) != (pfn & mask))
++			return false;
+ 		if (pfn & mask) {
+ 			*ipap &= PMD_MASK;
+ 			kvm_release_pfn_clean(pfn);
+-- 
+2.7.4
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.0.6-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.0.y
-git commit: 7505a898604161f421b3c512483a469199c61089
-git describe: v5.0.5-147-g7505a8986041
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/bui=
-ld/v5.0.5-147-g7505a8986041
-
-
-No regressions (compared to build v5.0.5)
-
-
-No fixes (compared to build v5.0.5)
-
-Ran 16660 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
