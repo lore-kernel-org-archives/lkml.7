@@ -2,183 +2,274 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753F4C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC72C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D522204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="z8ICpJZz"
+	by mail.kernel.org (Postfix) with ESMTP id 350D420857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbfDBOYA (ORCPT
+        id S1729489AbfDBO1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:24:00 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:20905 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfDBOX7 (ORCPT
+        Tue, 2 Apr 2019 10:27:08 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:56887 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfDBO1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:23:59 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x32ENpxI012919;
-        Tue, 2 Apr 2019 23:23:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x32ENpxI012919
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554215032;
-        bh=bbAhzq6SiFMsQqCZLGw2iTj/W+HyNnE00Wii2xbClRc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z8ICpJZzG6mJrWabuMJrPwhM8n1hHBrhfJPK++qkYUZMev83iaJIocR/JuSTn9zqh
-         0b8moUfC5x93gEzKbGrkxyMrQUEfnHbUcytsq45SvArghWxMYBwMu8h14c2KQyiJQ6
-         JYcQ8Nnj0IZOlLqycGHdfHNR3pYDXphWOSZZmkiXjkNTUbgBMYD/Snu0Wub9prytrN
-         LbcjhyBWPTfX04pNdoc50RW0x6izZjr1cFeKhmfJP9QZ2p+jKu8xbmxnjXaOtTmmkY
-         NQui8ZUMH1dfaxo8H8NofEys0PUSaU3bsuNHuIRTwv8Fb7sQhGrNEOPf1JQlESXTmb
-         ENmhxHZiRzjug==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id b8so4416483uaq.7;
-        Tue, 02 Apr 2019 07:23:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAUajaBNzJhEB/42MRWai1Y7+0T5TVKsPUrdm4AFAGOfUEI78oPN
-        FV+GVp/y+DzXyYK3iYjvGhsb+AQ4gfxQI5jnXAE=
-X-Google-Smtp-Source: APXvYqytaA1SamhYLAFxemuW+bjtZBvoAr6+RH0vwwU4G/XxoYkbsq3vRkQuwisx7K8Mt1rGuJaWdLLkN5ajleQ1HBw=
-X-Received: by 2002:ab0:65c7:: with SMTP id n7mr21056318uaq.3.1554215030462;
- Tue, 02 Apr 2019 07:23:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <1553947458-8311-1-git-send-email-yamada.masahiro@socionext.com>
- <1553947458-8311-2-git-send-email-yamada.masahiro@socionext.com> <ad958d87-1e1e-2790-2f7e-380d4d9d67da@kernel.org>
-In-Reply-To: <ad958d87-1e1e-2790-2f7e-380d4d9d67da@kernel.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 2 Apr 2019 23:23:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASXGWD02KJfZ0=me_Brp-E6T30huzuNMSzd3dGwrjTxzQ@mail.gmail.com>
-Message-ID: <CAK7LNASXGWD02KJfZ0=me_Brp-E6T30huzuNMSzd3dGwrjTxzQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] kbuild: allow Kbuild to start from any directory
-To:     Kieran Bingham <kbingham@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Tue, 2 Apr 2019 10:27:08 -0400
+X-Originating-IP: 90.88.30.125
+Received: from aptenodytes (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 10C29240019;
+        Tue,  2 Apr 2019 14:27:05 +0000 (UTC)
+Message-ID: <9314dc73441b0d731321774be1a12003333eb2f5.camel@bootlin.com>
+Subject: Re: [PATCH v2 2/2] drm/vc4: Disable V3D interactions if the v3d
+ component didn't probe.
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Date:   Tue, 02 Apr 2019 16:27:05 +0200
+In-Reply-To: <20190401183559.3823-2-eric@anholt.net>
+References: <20190401183559.3823-1-eric@anholt.net>
+         <20190401183559.3823-2-eric@anholt.net>
+Organization: Bootlin
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
+Hi,
 
+On Mon, 2019-04-01 at 11:35 -0700, Eric Anholt wrote:
+> One might want to use the VC4 display stack without using Mesa.
+> Similar to the debugfs fixes for not having all of the possible
+> display bits enabled, make sure you can't oops in vc4 if v3d isn't
+> enabled.
+> 
+> v2: Fix matching against other v3d variants (review by Paul), don't
+>     forget to set irq_enabled so that the vblank uapi works
 
-On Tue, Apr 2, 2019 at 1:41 PM Kieran Bingham <kbingham@kernel.org> wrote:
->
-> Hi Yamada-san,
->
-> Thank you for the patches,
->
-> I like the direction this series is taking.
->
-> Small spelling error spotted below...
-> But as I've now gone through all of it I'll offer
->
-> Reviewed-by: Kieran Bingham <kbingham@kernel.org>
->
->
-> On 30/03/2019 12:04, Masahiro Yamada wrote:
-> > Kbuild always runs in the top of the output directory.
-> >
-> > If Make starts in the source directory with O=, it relocates the
-> > working directory to the location specified by O=.
-> >
-> > Also, users can start build from the output directory by using the
-> > Makefile generated by scripts/mkmakefile.
-> >
-> > With a little more effort, Kbuild will be able to start from any
-> > directory path.
-> >
-> > This commit allows to specify the source directory by using
-> > the -f option.
-> >
-> > For example, you can do:
-> >
-> >   $ cd path/to/output/dir
-> >   $ make -f path/to/source/dir/Makefile
-> >
-> > Or, for the equivalent behavior, you can do:
-> >
-> >   $ make O=path/to/output/dir -f path/to/source/dir/Makefile
-> >
-> > KBUILD_SRC is now deprecated.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  Makefile | 87 +++++++++++++++++++++++++++++++++++++---------------------------
-> >  1 file changed, 50 insertions(+), 37 deletions(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 9cbd367..1b2a70e 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -96,56 +96,65 @@ endif
-> >
-> >  export quiet Q KBUILD_VERBOSE
-> >
-> > -# kbuild supports saving output files in a separate directory.
-> > -# To locate output files in a separate directory two syntaxes are supported.
-> > -# In both cases the working directory must be the root of the kernel src.
-> > +# Kbuild will save output files in the current working directory.
-> > +# This does not need to match to the root of the kernel source tree.
-> > +#
-> > +# For example, you can do this:
-> > +#
-> > +#  cd /dir/to/store/output/files; make -f /dir/to/kernel/source/Makefile
-> > +#
-> > +# If you want to save output files in a different location, there are
-> > +# two syntaxes to specify it.
-> > +#
-> >  # 1) O=
-> >  # Use "make O=dir/to/store/output/files/"
-> >  #
-> >  # 2) Set KBUILD_OUTPUT
-> > -# Set the environment variable KBUILD_OUTPUT to point to the directory
-> > -# where the output files shall be placed.
-> > -# export KBUILD_OUTPUT=dir/to/store/output/files/
-> > -# make
-> > +# Set the environment variable KBUILD_OUTPUT to point to the output directory.
-> > +# export KBUILD_OUTPUT=dir/to/store/output/files/; make
-> >  #
-> >  # The O= assignment takes precedence over the KBUILD_OUTPUT environment
-> >  # variable.
-> >
-> > -# KBUILD_SRC is not intended to be used by the regular user (for now),
-> > -# it is set on invocation of make with KBUILD_OUTPUT or O= specified.
-> > -
-> > -# OK, Make called in directory where kernel src resides
-> > -# Do we want to locate output files in a separate directory?
-> > +# Do we want to change the working directory?
-> >  ifeq ("$(origin O)", "command line")
-> >    KBUILD_OUTPUT := $(O)
-> >  endif
-> >
-> > -ifneq ($(words $(subst :, ,$(CURDIR))), 1)
-> > -  $(error main directory cannot contain spaces nor colons)
-> > +ifneq ($(KBUILD_OUTPUT),)
-> > +# Make's built-in functions such as $(abspath ...), $(realpath ...) cannot
-> > +# expand a shell special character '~'. We use a bit tredious way to handle it.
->
-> very minor, but I noticed while looking through the series ^^
->
-> s/bit tredious/somewhat tedious/
+Looks good to me!
 
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-Oops, 'tredious' is a typo.
+Cheers,
 
-As a non-native, I do not understand the difference
-between 'a bit' and 'somewhat', but I will apply it.
+Paul
 
-Thanks.
-
-
-
-
-
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>  drivers/gpu/drm/vc4/vc4_drv.c     | 10 ++++++++++
+>  drivers/gpu/drm/vc4/vc4_drv.h     |  1 +
+>  drivers/gpu/drm/vc4/vc4_gem.c     | 10 ++++++++++
+>  drivers/gpu/drm/vc4/vc4_irq.c     |  9 +++++++++
+>  drivers/gpu/drm/vc4/vc4_kms.c     |  1 +
+>  drivers/gpu/drm/vc4/vc4_perfmon.c | 18 ++++++++++++++++++
+>  drivers/gpu/drm/vc4/vc4_v3d.c     |  2 +-
+>  7 files changed, 50 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+> index 3d6fccea5080..d840b52b9805 100644
+> --- a/drivers/gpu/drm/vc4/vc4_drv.c
+> +++ b/drivers/gpu/drm/vc4/vc4_drv.c
+> @@ -72,6 +72,9 @@ static int vc4_get_param_ioctl(struct drm_device *dev, void *data,
+>  	if (args->pad != 0)
+>  		return -EINVAL;
+>  
+> +	if (!vc4->v3d)
+> +		return -EINVAL;
+> +
+>  	switch (args->param) {
+>  	case DRM_VC4_PARAM_V3D_IDENT0:
+>  		ret = vc4_v3d_pm_get(vc4);
+> @@ -248,6 +251,7 @@ static int vc4_drm_bind(struct device *dev)
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct drm_device *drm;
+>  	struct vc4_dev *vc4;
+> +	struct device_node *node;
+>  	int ret = 0;
+>  
+>  	dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> @@ -256,6 +260,12 @@ static int vc4_drm_bind(struct device *dev)
+>  	if (!vc4)
+>  		return -ENOMEM;
+>  
+> +	/* If VC4 V3D is missing, don't advertise render nodes. */
+> +	node = of_find_matching_node_and_match(NULL, vc4_v3d_dt_match, NULL);
+> +	if (!node || !of_device_is_available(node))
+> +		vc4_drm_driver.driver_features &= ~DRIVER_RENDER;
+> +	of_node_put(node);
+> +
+>  	drm = drm_dev_alloc(&vc4_drm_driver, dev);
+>  	if (IS_ERR(drm))
+>  		return PTR_ERR(drm);
+> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+> index be85656024fa..e61734af059b 100644
+> --- a/drivers/gpu/drm/vc4/vc4_drv.h
+> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
+> @@ -831,6 +831,7 @@ void vc4_plane_async_set_fb(struct drm_plane *plane,
+>  
+>  /* vc4_v3d.c */
+>  extern struct platform_driver vc4_v3d_driver;
+> +extern const struct of_device_id vc4_v3d_dt_match[];
+>  int vc4_v3d_get_bin_slot(struct vc4_dev *vc4);
+>  int vc4_v3d_pm_get(struct vc4_dev *vc4);
+>  void vc4_v3d_pm_put(struct vc4_dev *vc4);
+> diff --git a/drivers/gpu/drm/vc4/vc4_gem.c b/drivers/gpu/drm/vc4/vc4_gem.c
+> index 5e9496d477bf..4544a478f106 100644
+> --- a/drivers/gpu/drm/vc4/vc4_gem.c
+> +++ b/drivers/gpu/drm/vc4/vc4_gem.c
+> @@ -74,6 +74,11 @@ vc4_get_hang_state_ioctl(struct drm_device *dev, void *data,
+>  	u32 i;
+>  	int ret = 0;
+>  
+> +	if (!vc4->v3d) {
+> +		DRM_DEBUG("VC4_GET_HANG_STATE with no VC4 V3D probed\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	spin_lock_irqsave(&vc4->job_lock, irqflags);
+>  	kernel_state = vc4->hang_state;
+>  	if (!kernel_state) {
+> @@ -1119,6 +1124,11 @@ vc4_submit_cl_ioctl(struct drm_device *dev, void *data,
+>  	struct dma_fence *in_fence;
+>  	int ret = 0;
+>  
+> +	if (!vc4->v3d) {
+> +		DRM_DEBUG("VC4_SUBMIT_CL with no VC4 V3D probed\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	if ((args->flags & ~(VC4_SUBMIT_CL_USE_CLEAR_COLOR |
+>  			     VC4_SUBMIT_CL_FIXED_RCL_ORDER |
+>  			     VC4_SUBMIT_CL_RCL_ORDER_INCREASING_X |
+> diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
+> index 4cd2ccfe15f4..ffd0a4388752 100644
+> --- a/drivers/gpu/drm/vc4/vc4_irq.c
+> +++ b/drivers/gpu/drm/vc4/vc4_irq.c
+> @@ -229,6 +229,9 @@ vc4_irq_preinstall(struct drm_device *dev)
+>  {
+>  	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>  
+> +	if (!vc4->v3d)
+> +		return;
+> +
+>  	init_waitqueue_head(&vc4->job_wait_queue);
+>  	INIT_WORK(&vc4->overflow_mem_work, vc4_overflow_mem_work);
+>  
+> @@ -243,6 +246,9 @@ vc4_irq_postinstall(struct drm_device *dev)
+>  {
+>  	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>  
+> +	if (!vc4->v3d)
+> +		return 0;
+> +
+>  	/* Enable both the render done and out of memory interrupts. */
+>  	V3D_WRITE(V3D_INTENA, V3D_DRIVER_IRQS);
+>  
+> @@ -254,6 +260,9 @@ vc4_irq_uninstall(struct drm_device *dev)
+>  {
+>  	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>  
+> +	if (!vc4->v3d)
+> +		return;
+> +
+>  	/* Disable sending interrupts for our driver's IRQs. */
+>  	V3D_WRITE(V3D_INTDIS, V3D_DRIVER_IRQS);
+>  
+> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
+> index 5160cad25fce..295dacc8bcb9 100644
+> --- a/drivers/gpu/drm/vc4/vc4_kms.c
+> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
+> @@ -525,6 +525,7 @@ int vc4_kms_load(struct drm_device *dev)
+>  	/* Set support for vblank irq fast disable, before drm_vblank_init() */
+>  	dev->vblank_disable_immediate = true;
+>  
+> +	dev->irq_enabled = true;
+>  	ret = drm_vblank_init(dev, dev->mode_config.num_crtc);
+>  	if (ret < 0) {
+>  		dev_err(dev->dev, "failed to initialize vblank\n");
+> diff --git a/drivers/gpu/drm/vc4/vc4_perfmon.c b/drivers/gpu/drm/vc4/vc4_perfmon.c
+> index 495150415020..6562d3d30b20 100644
+> --- a/drivers/gpu/drm/vc4/vc4_perfmon.c
+> +++ b/drivers/gpu/drm/vc4/vc4_perfmon.c
+> @@ -100,12 +100,18 @@ void vc4_perfmon_close_file(struct vc4_file *vc4file)
+>  int vc4_perfmon_create_ioctl(struct drm_device *dev, void *data,
+>  			     struct drm_file *file_priv)
+>  {
+> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>  	struct vc4_file *vc4file = file_priv->driver_priv;
+>  	struct drm_vc4_perfmon_create *req = data;
+>  	struct vc4_perfmon *perfmon;
+>  	unsigned int i;
+>  	int ret;
+>  
+> +	if (!vc4->v3d) {
+> +		DRM_DEBUG("Creating perfmon no VC4 V3D probed\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	/* Number of monitored counters cannot exceed HW limits. */
+>  	if (req->ncounters > DRM_VC4_MAX_PERF_COUNTERS ||
+>  	    !req->ncounters)
+> @@ -146,10 +152,16 @@ int vc4_perfmon_create_ioctl(struct drm_device *dev, void *data,
+>  int vc4_perfmon_destroy_ioctl(struct drm_device *dev, void *data,
+>  			      struct drm_file *file_priv)
+>  {
+> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>  	struct vc4_file *vc4file = file_priv->driver_priv;
+>  	struct drm_vc4_perfmon_destroy *req = data;
+>  	struct vc4_perfmon *perfmon;
+>  
+> +	if (!vc4->v3d) {
+> +		DRM_DEBUG("Destroying perfmon no VC4 V3D probed\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	mutex_lock(&vc4file->perfmon.lock);
+>  	perfmon = idr_remove(&vc4file->perfmon.idr, req->id);
+>  	mutex_unlock(&vc4file->perfmon.lock);
+> @@ -164,11 +176,17 @@ int vc4_perfmon_destroy_ioctl(struct drm_device *dev, void *data,
+>  int vc4_perfmon_get_values_ioctl(struct drm_device *dev, void *data,
+>  				 struct drm_file *file_priv)
+>  {
+> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>  	struct vc4_file *vc4file = file_priv->driver_priv;
+>  	struct drm_vc4_perfmon_get_values *req = data;
+>  	struct vc4_perfmon *perfmon;
+>  	int ret;
+>  
+> +	if (!vc4->v3d) {
+> +		DRM_DEBUG("Getting perfmon no VC4 V3D probed\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	mutex_lock(&vc4file->perfmon.lock);
+>  	perfmon = idr_find(&vc4file->perfmon.idr, req->id);
+>  	vc4_perfmon_get(perfmon);
+> diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
+> index 36e6c7086ecf..a4b6859e3af6 100644
+> --- a/drivers/gpu/drm/vc4/vc4_v3d.c
+> +++ b/drivers/gpu/drm/vc4/vc4_v3d.c
+> @@ -474,7 +474,7 @@ static int vc4_v3d_dev_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id vc4_v3d_dt_match[] = {
+> +const struct of_device_id vc4_v3d_dt_match[] = {
+>  	{ .compatible = "brcm,bcm2835-v3d" },
+>  	{ .compatible = "brcm,cygnus-v3d" },
+>  	{ .compatible = "brcm,vc4-v3d" },
 -- 
-Best Regards
-Masahiro Yamada
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
