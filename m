@@ -2,159 +2,398 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AF4C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45D5C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983BF20856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9270E20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732274AbfDBNuK (ORCPT
+        id S1731863AbfDBNwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:50:10 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60762 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731136AbfDBNuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:50:10 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 06:50:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,300,1549958400"; 
-   d="scan'208";a="158031336"
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.107])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2019 06:50:05 -0700
-Date:   Tue, 2 Apr 2019 21:50:30 +0800
-From:   Rong Chen <rong.a.chen@intel.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2019.03.20b 54/83]
- drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:50:1: error: type
- defaults to 'int' in declaration of 'DEFINE_SRCU'
-Message-ID: <20190402135030.GD20952@shao2-debian>
-References: <201903250225.RRMwkT3f%lkp@intel.com>
- <20190327195726.GF4102@linux.ibm.com>
- <cad8bc52-a3ab-0d4e-bb13-c436510f684b@intel.com>
- <20190402130424.GU4102@linux.ibm.com>
+        Tue, 2 Apr 2019 09:52:14 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40726 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbfDBNwN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 09:52:13 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h22so11732222edw.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 06:52:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wgVxhMuliGELYnhWc0D7hh9JvJKfN4sMqwptooVYsbo=;
+        b=E1xgF6hCuerBbs00XSIwWZEM8mRtrXr2ZResvcR19raBGcAGgpizL9lfGAUJM4NvTN
+         9+O1Ka7tcsndRklqiMNZE2bbC8lNrpueh3np70EwhAMs7peZ1N2o6/KGGKl+r+/e6wnE
+         QmvWPoqWA+m8Z+qRIjLbzBCEgoRCzqsEX6Otoc+Zjuy1df1xU1k1SuGI+KO4TRWUdaqv
+         mbUR60SGgxhaU6P+odH55JfuaSnvAjyKahWcUAjaNdT7hlsMOJi2bHAHm+mH5WlFSXFd
+         TYc7Jr/k52yFNqJ4SlyNAiJcZTXYAVLti6mBVKn80KOwCn1AN8Mc34M3qDeUgGwuN3hr
+         EQ4Q==
+X-Gm-Message-State: APjAAAU+9sBddWMQLMG/Sqeaa+6okBsf9LkIplWtdiU0tOGMGUpqrgcr
+        a65dZcJHtxWXikyEebKQchzwco3Twd8=
+X-Google-Smtp-Source: APXvYqykLeh2ltO2LolR6NKDgYYuno+apOhd7FVrjbmuCliVu0TusiNh1G+Cv7zcQYpElLxL1X4TPw==
+X-Received: by 2002:a50:9271:: with SMTP id j46mr18235002eda.149.1554213130901;
+        Tue, 02 Apr 2019 06:52:10 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id d10sm2443594ejh.66.2019.04.02.06.52.09
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 06:52:10 -0700 (PDT)
+Subject: Re: [PATCH] HID: force setting drvdata to NULL when removing the
+ driver
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons@linux-vserver.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jason Gerecke <killertofu@gmail.com>,
+        Ping Cheng <pinglinux@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20190328155151.577687-1-benjamin.tissoires@redhat.com>
+ <CAKdAkRRwKS+wzXjh=gyOQtSEiMwWhArZVc_cwecJsEZ=MGRa8w@mail.gmail.com>
+ <CAO-hwJK2yusO2f+oFnUcNGuxo6e_+7F6Cjqmcsuimy4zrm-Jww@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a31a6f95-924a-4930-e4df-5576abc694fb@redhat.com>
+Date:   Tue, 2 Apr 2019 15:52:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190402130424.GU4102@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAO-hwJK2yusO2f+oFnUcNGuxo6e_+7F6Cjqmcsuimy4zrm-Jww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 06:04:24AM -0700, Paul E. McKenney wrote:
-> On Tue, Apr 02, 2019 at 08:32:45AM +0800, Rong Chen wrote:
-> > 
-> > On 3/28/19 3:57 AM, Paul E. McKenney wrote:
-> > >On Mon, Mar 25, 2019 at 02:34:27AM +0800, kbuild test robot wrote:
-> > >>tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.03.20b
-> > >>head:   6d4434b4b4df791620743178e1419de882b44c7b
-> > >>commit: eb89abcb30733e3a2343dda23cb6d81cc17c60b3 [54/83] rcu: Forbid DEFINE{,_STATIC}_SRCU() from modules
-> > >>config: x86_64-randconfig-b0-03250021 (attached as .config)
-> > >>compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
-> > >>reproduce:
-> > >>         git checkout eb89abcb30733e3a2343dda23cb6d81cc17c60b3
-> > >>         # save the attached .config to linux build tree
-> > >>         make ARCH=x86_64
-> > >>
-> > >>All errors (new ones prefixed by >>):
-> > >>
-> > >>    drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:50:1: warning: data definition has no type or storage class
-> > >>     DEFINE_SRCU(kfd_processes_srcu);
-> > >>     ^~~~~~~~~~~
-> > >>>>drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:50:1: error: type defaults to 'int' in declaration of 'DEFINE_SRCU' [-Werror=implicit-int]
-> > >>    drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:50:1: warning: parameter names (without types) in function declaration
-> > >>    cc1: some warnings being treated as errors
-> > >I don't have that hardware, but does the following help?  (It at least
-> > >builds for me, but your mileage may vary.)
-> > 
-> > Yes, the patch works for kbuild robot.
-> 
-> Thank you very much!  May I add your Tested-by?
+Hi,
 
-Sure, please feel free to add it.
+On 02-04-19 15:44, Benjamin Tissoires wrote:
+> Hi Dmitry,
+> 
+> On Fri, Mar 29, 2019 at 11:26 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>>
+>> Hi Benjamin,
+>>
+>> On Thu, Mar 28, 2019 at 8:52 AM Benjamin Tissoires
+>> <benjamin.tissoires@redhat.com> wrote:
+>>>
+>>> Or when the probe failed.
+>>>
+>>> This is a common pattern in the HID drivers to reset the drvdata. Some
+>>> do it properly, some do it only in case of failure.
+>>> Anyway, it's never a good thing to have breadcrumbs, so force a clean
+>>> state when removing or when probe is failing.
+>>
+>> Just a data point: driver core already clears drvdata, so as long as
+>> dev_get/set_drvdata() is the same as hid_get/set_drvdata() no special
+>> handling is needed in HID core.
+> 
+> You are correct (as always ;-P). I'll drop the hid-core changes and
+> send a v2 ASAP.
 
-Thanks,
-Rong Chen
+I was just looking at the same thing. I should have known about this
+since I wrote the patch to make the core clear drvdata. I should have
+mentioned that, but I was assuming that the hid code was special somehow,
+however now I see it just uses a regular device_add, so indeed the core
+changes are not necessary.
 
+Given the large hid-logitech-*.c patch-set it might be easier for
+Jiri if you split out the hid-logitech-*.c changes into a separate
+patch, then he can keep that on his logitech branch (just a thought).
+
+Regards,
+
+Hans
+
+
+>
+> Cheers,
+> Benjamin
 > 
-> 							Thanx, Paul
-> 
-> > Thanks,
-> > Rong Chen
-> > 
-> > 
-> > >
-> > >------------------------------------------------------------------------
-> > >
-> > >commit b30be5a76070402912437fa23b43de11cb1973f4
-> > >Author: Paul E. McKenney <paulmck@linux.ibm.com>
-> > >Date:   Wed Mar 27 12:53:36 2019 -0700
-> > >
-> > >     drivers/gpu/drm/amd: Dynamically allocate kfd_processes_srcu
-> > >     Having DEFINE_SRCU() or DEFINE_STATIC_SRCU() in a loadable module
-> > >     requires that the size of the reserved region be increased, which is
-> > >     not something we really want to be doing.  This commit therefore removes
-> > >     the DEFINE_STATIC_SRCU() from drivers/gpu/drm/amd/amdkfd/kfd_process.c in
-> > >     favor of defining kfd_processes_srcu as a simple srcu_struct, initializing
-> > >     it in amdgpu_amdkfd_init(), and cleaning it up in amdgpu_amdkfd_fini().
-> > >     Reported-by: kbuild test robot <lkp@intel.com>
-> > >     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> > >     Cc: Oded Gabbay <oded.gabbay@gmail.com>
-> > >     Cc: Alex Deucher <alexander.deucher@amd.com>
-> > >     Cc: "Christian König" <christian.koenig@amd.com
-> > >     Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-> > >     Cc: David Airlie <airlied@linux.ie>
-> > >     Cc: Daniel Vetter <daniel@ffwll.ch>
-> > >
-> > >diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
-> > >index fe1d7368c1e6..eadb20dee867 100644
-> > >--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
-> > >+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c
-> > >@@ -28,6 +28,8 @@
-> > >  #include <linux/module.h>
-> > >  #include <linux/dma-buf.h>
-> > >+extern struct srcu_struct kfd_processes_srcu;
-> > >+
-> > >  static const unsigned int compute_vmid_bitmap = 0xFF00;
-> > >  /* Total memory size in system memory and all GPU VRAM. Used to
-> > >@@ -40,6 +42,8 @@ int amdgpu_amdkfd_init(void)
-> > >  	struct sysinfo si;
-> > >  	int ret;
-> > >+	ret = init_srcu_struct(&kfd_processes_srcu);
-> > >+	WARN_ON(ret);
-> > >  	si_meminfo(&si);
-> > >  	amdgpu_amdkfd_total_mem_size = si.totalram - si.totalhigh;
-> > >  	amdgpu_amdkfd_total_mem_size *= si.mem_unit;
-> > >@@ -57,6 +61,7 @@ int amdgpu_amdkfd_init(void)
-> > >  void amdgpu_amdkfd_fini(void)
-> > >  {
-> > >  	kgd2kfd_exit();
-> > >+	cleanup_srcu_struct(&kfd_processes_srcu);
-> > >  }
-> > >  void amdgpu_amdkfd_device_probe(struct amdgpu_device *adev)
-> > >diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-> > >index 4bdae78bab8e..98b694068b8a 100644
-> > >--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-> > >+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-> > >@@ -47,7 +47,7 @@ struct mm_struct;
-> > >  DEFINE_HASHTABLE(kfd_processes_table, KFD_PROCESS_TABLE_SIZE);
-> > >  static DEFINE_MUTEX(kfd_processes_mutex);
-> > >-DEFINE_SRCU(kfd_processes_srcu);
-> > >+struct srcu_struct kfd_processes_srcu;
-> > >  /* For process termination handling */
-> > >  static struct workqueue_struct *kfd_process_wq;
-> > >
-> > 
-> 
+>>
+>> Thanks.
+>>
+>> --
+>> Dmitry
+>>
+>> On Thu, Mar 28, 2019 at 8:52 AM Benjamin Tissoires
+>> <benjamin.tissoires@redhat.com> wrote:
+>>>
+>>> Or when the probe failed.
+>>>
+>>> This is a common pattern in the HID drivers to reset the drvdata. Some
+>>> do it properly, some do it only in case of failure.
+>>> Anyway, it's never a good thing to have breadcrumbs, so force a clean
+>>> state when removing or when probe is failing.
+>>>
+>>> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>> ---
+>>>   drivers/hid/hid-core.c           |  2 ++
+>>>   drivers/hid/hid-cougar.c         |  6 ++----
+>>>   drivers/hid/hid-gfrm.c           |  7 -------
+>>>   drivers/hid/hid-lenovo.c         |  2 --
+>>>   drivers/hid/hid-logitech-dj.c    |  2 --
+>>>   drivers/hid/hid-logitech-hidpp.c |  8 +++-----
+>>>   drivers/hid/hid-picolcd_core.c   |  7 +------
+>>>   drivers/hid/hid-sensor-hub.c     |  1 -
+>>>   drivers/hid/wacom_sys.c          | 18 +++++-------------
+>>>   9 files changed, 13 insertions(+), 40 deletions(-)
+>>>
+>>> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+>>> index b5a8af8daa74..011e49da4d63 100644
+>>> --- a/drivers/hid/hid-core.c
+>>> +++ b/drivers/hid/hid-core.c
+>>> @@ -2203,6 +2203,7 @@ static int hid_device_probe(struct device *dev)
+>>>                  if (ret) {
+>>>                          hid_close_report(hdev);
+>>>                          hdev->driver = NULL;
+>>> +                       hid_set_drvdata(hdev, NULL);
+>>>                  }
+>>>          }
+>>>   unlock:
+>>> @@ -2231,6 +2232,7 @@ static int hid_device_remove(struct device *dev)
+>>>                  else /* default remove */
+>>>                          hid_hw_stop(hdev);
+>>>                  hid_close_report(hdev);
+>>> +               hid_set_drvdata(hdev, NULL);
+>>>                  hdev->driver = NULL;
+>>>          }
+>>>
+>>> diff --git a/drivers/hid/hid-cougar.c b/drivers/hid/hid-cougar.c
+>>> index e0bb7b34f3a4..4ff3bc1d25e2 100644
+>>> --- a/drivers/hid/hid-cougar.c
+>>> +++ b/drivers/hid/hid-cougar.c
+>>> @@ -207,7 +207,7 @@ static int cougar_probe(struct hid_device *hdev,
+>>>          error = hid_parse(hdev);
+>>>          if (error) {
+>>>                  hid_err(hdev, "parse failed\n");
+>>> -               goto fail;
+>>> +               return error;
+>>>          }
+>>>
+>>>          if (hdev->collection->usage == COUGAR_VENDOR_USAGE) {
+>>> @@ -219,7 +219,7 @@ static int cougar_probe(struct hid_device *hdev,
+>>>          error = hid_hw_start(hdev, connect_mask);
+>>>          if (error) {
+>>>                  hid_err(hdev, "hw start failed\n");
+>>> -               goto fail;
+>>> +               return error;
+>>>          }
+>>>
+>>>          error = cougar_bind_shared_data(hdev, cougar);
+>>> @@ -249,8 +249,6 @@ static int cougar_probe(struct hid_device *hdev,
+>>>
+>>>   fail_stop_and_cleanup:
+>>>          hid_hw_stop(hdev);
+>>> -fail:
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>          return error;
+>>>   }
+>>>
+>>> diff --git a/drivers/hid/hid-gfrm.c b/drivers/hid/hid-gfrm.c
+>>> index cf477f8c8f4c..1a20997e7750 100644
+>>> --- a/drivers/hid/hid-gfrm.c
+>>> +++ b/drivers/hid/hid-gfrm.c
+>>> @@ -127,12 +127,6 @@ static int gfrm_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>>>          return ret;
+>>>   }
+>>>
+>>> -static void gfrm_remove(struct hid_device *hdev)
+>>> -{
+>>> -       hid_hw_stop(hdev);
+>>> -       hid_set_drvdata(hdev, NULL);
+>>> -}
+>>> -
+>>>   static const struct hid_device_id gfrm_devices[] = {
+>>>          { HID_BLUETOOTH_DEVICE(0x58, 0x2000),
+>>>                  .driver_data = GFRM100 },
+>>> @@ -146,7 +140,6 @@ static struct hid_driver gfrm_driver = {
+>>>          .name = "gfrm",
+>>>          .id_table = gfrm_devices,
+>>>          .probe = gfrm_probe,
+>>> -       .remove = gfrm_remove,
+>>>          .input_mapping = gfrm_input_mapping,
+>>>          .raw_event = gfrm_raw_event,
+>>>          .input_configured = gfrm_input_configured,
+>>> diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+>>> index eacc76d2ab96..cde9d22bb3ec 100644
+>>> --- a/drivers/hid/hid-lenovo.c
+>>> +++ b/drivers/hid/hid-lenovo.c
+>>> @@ -869,8 +869,6 @@ static void lenovo_remove_tpkbd(struct hid_device *hdev)
+>>>
+>>>          led_classdev_unregister(&data_pointer->led_micmute);
+>>>          led_classdev_unregister(&data_pointer->led_mute);
+>>> -
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>   }
+>>>
+>>>   static void lenovo_remove_cptkbd(struct hid_device *hdev)
+>>> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+>>> index 826fa1e1c8d9..a75101293755 100644
+>>> --- a/drivers/hid/hid-logitech-dj.c
+>>> +++ b/drivers/hid/hid-logitech-dj.c
+>>> @@ -1094,7 +1094,6 @@ static int logi_dj_probe(struct hid_device *hdev,
+>>>   hid_parse_fail:
+>>>          kfifo_free(&djrcv_dev->notif_fifo);
+>>>          kfree(djrcv_dev);
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>          return retval;
+>>>
+>>>   }
+>>> @@ -1145,7 +1144,6 @@ static void logi_dj_remove(struct hid_device *hdev)
+>>>
+>>>          kfifo_free(&djrcv_dev->notif_fifo);
+>>>          kfree(djrcv_dev);
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>   }
+>>>
+>>>   static const struct hid_device_id logi_dj_receivers[] = {
+>>> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+>>> index 199cc256e9d9..b950a44157a2 100644
+>>> --- a/drivers/hid/hid-logitech-hidpp.c
+>>> +++ b/drivers/hid/hid-logitech-hidpp.c
+>>> @@ -3237,15 +3237,15 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>>>          if (hidpp->quirks & HIDPP_QUIRK_CLASS_WTP) {
+>>>                  ret = wtp_allocate(hdev, id);
+>>>                  if (ret)
+>>> -                       goto allocate_fail;
+>>> +                       return ret;
+>>>          } else if (hidpp->quirks & HIDPP_QUIRK_CLASS_M560) {
+>>>                  ret = m560_allocate(hdev);
+>>>                  if (ret)
+>>> -                       goto allocate_fail;
+>>> +                       return ret;
+>>>          } else if (hidpp->quirks & HIDPP_QUIRK_CLASS_K400) {
+>>>                  ret = k400_allocate(hdev);
+>>>                  if (ret)
+>>> -                       goto allocate_fail;
+>>> +                       return ret;
+>>>          }
+>>>
+>>>          INIT_WORK(&hidpp->work, delayed_work_cb);
+>>> @@ -3343,8 +3343,6 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
+>>>          sysfs_remove_group(&hdev->dev.kobj, &ps_attribute_group);
+>>>          cancel_work_sync(&hidpp->work);
+>>>          mutex_destroy(&hidpp->send_mutex);
+>>> -allocate_fail:
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>          return ret;
+>>>   }
+>>>
+>>> diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-picolcd_core.c
+>>> index c1b29a9eb41a..a5d30f267a7b 100644
+>>> --- a/drivers/hid/hid-picolcd_core.c
+>>> +++ b/drivers/hid/hid-picolcd_core.c
+>>> @@ -550,8 +550,7 @@ static int picolcd_probe(struct hid_device *hdev,
+>>>          data = kzalloc(sizeof(struct picolcd_data), GFP_KERNEL);
+>>>          if (data == NULL) {
+>>>                  hid_err(hdev, "can't allocate space for Minibox PicoLCD device data\n");
+>>> -               error = -ENOMEM;
+>>> -               goto err_no_cleanup;
+>>> +               return -ENOMEM;
+>>>          }
+>>>
+>>>          spin_lock_init(&data->lock);
+>>> @@ -613,9 +612,6 @@ static int picolcd_probe(struct hid_device *hdev,
+>>>          hid_hw_stop(hdev);
+>>>   err_cleanup_data:
+>>>          kfree(data);
+>>> -err_no_cleanup:
+>>> -       hid_set_drvdata(hdev, NULL);
+>>> -
+>>>          return error;
+>>>   }
+>>>
+>>> @@ -651,7 +647,6 @@ static void picolcd_remove(struct hid_device *hdev)
+>>>          picolcd_exit_cir(data);
+>>>          picolcd_exit_keys(data);
+>>>
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>          mutex_destroy(&data->mutex);
+>>>          /* Finally, clean up the picolcd data itself */
+>>>          kfree(data);
+>>> diff --git a/drivers/hid/hid-sensor-hub.c b/drivers/hid/hid-sensor-hub.c
+>>> index 4256fdc5cd6d..a3db5d8b382d 100644
+>>> --- a/drivers/hid/hid-sensor-hub.c
+>>> +++ b/drivers/hid/hid-sensor-hub.c
+>>> @@ -755,7 +755,6 @@ static void sensor_hub_remove(struct hid_device *hdev)
+>>>          }
+>>>          spin_unlock_irqrestore(&data->lock, flags);
+>>>          mfd_remove_devices(&hdev->dev);
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>          mutex_destroy(&data->mutex);
+>>>   }
+>>>
+>>> diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+>>> index a8633b1437b2..c2fb614bff44 100644
+>>> --- a/drivers/hid/wacom_sys.c
+>>> +++ b/drivers/hid/wacom_sys.c
+>>> @@ -2716,14 +2716,12 @@ static int wacom_probe(struct hid_device *hdev,
+>>>          wacom_wac->features = *((struct wacom_features *)id->driver_data);
+>>>          features = &wacom_wac->features;
+>>>
+>>> -       if (features->check_for_hid_type && features->hid_type != hdev->type) {
+>>> -               error = -ENODEV;
+>>> -               goto fail;
+>>> -       }
+>>> +       if (features->check_for_hid_type && features->hid_type != hdev->type)
+>>> +               return -ENODEV;
+>>>
+>>>          error = kfifo_alloc(&wacom_wac->pen_fifo, WACOM_PKGLEN_MAX, GFP_KERNEL);
+>>>          if (error)
+>>> -               goto fail;
+>>> +               return error;
+>>>
+>>>          wacom_wac->hid_data.inputmode = -1;
+>>>          wacom_wac->mode_report = -1;
+>>> @@ -2741,12 +2739,12 @@ static int wacom_probe(struct hid_device *hdev,
+>>>          error = hid_parse(hdev);
+>>>          if (error) {
+>>>                  hid_err(hdev, "parse failed\n");
+>>> -               goto fail;
+>>> +               return error;
+>>>          }
+>>>
+>>>          error = wacom_parse_and_register(wacom, false);
+>>>          if (error)
+>>> -               goto fail;
+>>> +               return error;
+>>>
+>>>          if (hdev->bus == BUS_BLUETOOTH) {
+>>>                  error = device_create_file(&hdev->dev, &dev_attr_speed);
+>>> @@ -2757,10 +2755,6 @@ static int wacom_probe(struct hid_device *hdev,
+>>>          }
+>>>
+>>>          return 0;
+>>> -
+>>> -fail:
+>>> -       hid_set_drvdata(hdev, NULL);
+>>> -       return error;
+>>>   }
+>>>
+>>>   static void wacom_remove(struct hid_device *hdev)
+>>> @@ -2789,8 +2783,6 @@ static void wacom_remove(struct hid_device *hdev)
+>>>                  wacom_release_resources(wacom);
+>>>
+>>>          kfifo_free(&wacom_wac->pen_fifo);
+>>> -
+>>> -       hid_set_drvdata(hdev, NULL);
+>>>   }
+>>>
+>>>   #ifdef CONFIG_PM
+>>> --
+>>> 2.19.2
+>>>
+>>
+>>
+>> --
+>> Dmitry
