@@ -2,104 +2,142 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31DBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DE0C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AA320882
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0B620882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbfDBMS2 (ORCPT
+        id S1730055AbfDBMUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:18:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53273 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfDBMS2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:18:28 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q16so3133238wmj.3;
-        Tue, 02 Apr 2019 05:18:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m0Yhf7dLwYQMZuyIsm9m43WayyXUoQ3uc+OIUwK7dbk=;
-        b=RdJqhpL+iitoRk4N8hVlc/TvISqG3GFegUUM+atjhkqHmi+FgnE5wcCoLP64+to9Rk
-         ziZLyJE2KA38huIXxHGxiQBGKGE9CHyKLlhiTF9F9gu9rqM7O+U7L7r76ybcy6939DMt
-         FwEQeBagKMWZmFA77qeVw2kcHnzSh1cXHXKt/sX700UPHcr9XS1H8W9OBTGBLVHYEYfg
-         rR0tsQs6VHCf+9sSfZf8R8+Sfuq0HM7qaBa6+8ak6WZsY13VD0/0sLzQRnwDzPl5Kjyb
-         DH+ufmiNuOhpxEp4Q0kwrgejOe2ijP+cTk77sKFWXo5THZPbFSx2sQijsY2f5Zr620rj
-         0/hw==
-X-Gm-Message-State: APjAAAV/95OQcyPZ4bR7G47FKzlQ0ITViw+qwB65Tkv2Br/gu2IGIGCZ
-        gleTzepjmiVZGyVwMJekpExrP7CFGPo=
-X-Google-Smtp-Source: APXvYqyqFujw4wovWdVjUtN+36ti0++nf85+9MErPq7N1QB3eYmj7XzfpK/2lTgmdD4sBFSVBlhPvA==
-X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr3425970wmk.108.1554207506462;
-        Tue, 02 Apr 2019 05:18:26 -0700 (PDT)
-Received: from localhost ([90.85.130.193])
-        by smtp.gmail.com with ESMTPSA id 61sm46715482wre.50.2019.04.02.05.18.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 05:18:25 -0700 (PDT)
-From:   Christina Quast <cquast@hanoverdisplays.com>
-Cc:     trivial@kernel.org, Christina Quast <cquast@hanoverdisplays.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        alsa-devel@alsa-project.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: doc: my_chip has no element ioport
-Date:   Tue,  2 Apr 2019 14:16:48 +0200
-Message-Id: <20190402121649.26536-1-cquast@hanoverdisplays.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 2 Apr 2019 08:20:07 -0400
+Received: from mga01.intel.com ([192.55.52.88]:64005 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbfDBMUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 08:20:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 05:20:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,300,1549958400"; 
+   d="scan'208";a="332997269"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga006.fm.intel.com with ESMTP; 02 Apr 2019 05:20:02 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hBIOX-0008Cs-10; Tue, 02 Apr 2019 15:20:01 +0300
+Date:   Tue, 2 Apr 2019 15:20:01 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: Add support for Merrifield Basin Cove PMIC
+Message-ID: <20190402122001.GM9224@smile.fi.intel.com>
+References: <20190318095316.69278-1-andriy.shevchenko@linux.intel.com>
+ <20190402051211.GR4187@dell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402051211.GR4187@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-chip->ioport is dereferenced in two places, but the struct is
-defined as follows:
+On Tue, Apr 02, 2019 at 06:12:11AM +0100, Lee Jones wrote:
+> On Mon, 18 Mar 2019, Andy Shevchenko wrote:
+> 
+> > Add an mfd driver for Intel Merrifield Basin Cove PMIC.
+> 
+> Nit: s/mfd/MFD/
 
-struct mychip {
-	struct snd_card *card;
-	struct pci_dev *pci;
+Noted. And changed for v2.
 
-	unsigned long port;
-	int irq;
-};
+> > +static const struct mfd_cell bcove_dev[] = {
+> > +	{
+> > +		.name = "mrfld_bcove_pwrbtn",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[0],
+> > +	}, {
+> > +		.name = "mrfld_bcove_tmu",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[1],
+> > +	}, {
+> > +		.name = "mrfld_bcove_thermal",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[2],
+> > +	}, {
+> > +		.name = "mrfld_bcove_bcu",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[3],
+> > +	}, {
+> > +		.name = "mrfld_bcove_adc",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[4],
+> > +	}, {
+> > +		.name = "mrfld_bcove_charger",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[5],
+> > +	}, {
+> > +		.name = "mrfld_bcove_extcon",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[5],
+> > +	}, {
+> > +		.name = "mrfld_bcove_gpio",
+> > +		.num_resources = 1,
+> > +		.resources = &irq_level2_resources[6],
+> > +	},
+> > +	{	.name = "mrfld_bcove_region", },
+> > +};
 
-Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
----
- Documentation/sound/kernel-api/writing-an-alsa-driver.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > +static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
+> 
+> Prefixing these with regmap is pretty confusing, since this it not
+> part of the Regmap API.  Better to provide them with local names
+> instead.
+> 
+>   bcove_ipc_byte_reg_read()
 
-diff --git a/Documentation/sound/kernel-api/writing-an-alsa-driver.rst b/Documentation/sound/kernel-api/writing-an-alsa-driver.rst
-index 6b154dbb02cc..132f5eb9b530 100644
---- a/Documentation/sound/kernel-api/writing-an-alsa-driver.rst
-+++ b/Documentation/sound/kernel-api/writing-an-alsa-driver.rst
-@@ -324,7 +324,7 @@ to details explained in the following section.
-               strcpy(card->driver, "My Chip");
-               strcpy(card->shortname, "My Own Chip 123");
-               sprintf(card->longname, "%s at 0x%lx irq %i",
--                      card->shortname, chip->ioport, chip->irq);
-+                      card->shortname, chip->port, chip->irq);
- 
-               /* (5) */
-               .... /* implemented later */
-@@ -437,7 +437,7 @@ Since each component can be properly freed, the single
-   strcpy(card->driver, "My Chip");
-   strcpy(card->shortname, "My Own Chip 123");
-   sprintf(card->longname, "%s at 0x%lx irq %i",
--          card->shortname, chip->ioport, chip->irq);
-+          card->shortname, chip->port, chip->irq);
- 
- The driver field holds the minimal ID string of the chip. This is used
- by alsa-lib's configurator, so keep it simple but unique. Even the
+Good point. And changed for v2.
+
+> > +	for (i = 0; i < ARRAY_SIZE(irq_level2_resources); i++) {
+> > +		ret = platform_get_irq(pdev, i);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +
+> > +		irq_level2_resources[i].start = ret;
+> > +		irq_level2_resources[i].end = ret;
+> > +	}
+> 
+> Although succinct, dragging values from one platform device into
+> another doesn't sound that neat.
+
+So, how to split resources given in one _physical_ multi-functional device to
+several of them?  Isn't it what MFD framework for?
+
+Any other approach here? I'm all ears!
+
+> Also, since the ordering of the
+> devices is critical in this implementation, it also comes across as
+> fragile.
+
+How fragile? In ACPI we don't have IRQ labeling scheme. Index is used for that.
+
+> Any reason why ACPI can't register all of the child devices, or for
+> the child devices to obtain their IRQ directly from the tables?
+
+And how are we supposed to enumerated them taking into consideration single
+ACPI ID given?
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
