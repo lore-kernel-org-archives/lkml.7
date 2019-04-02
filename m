@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3240EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED55C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B26321473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A2F20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731309AbfDBNmD (ORCPT
+        id S1731584AbfDBNmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:42:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43784 "EHLO
+        Tue, 2 Apr 2019 09:42:09 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43786 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731547AbfDBNkN (ORCPT
+        by vger.kernel.org with ESMTP id S1731283AbfDBNkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:13 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe6-0002oY-Rj; Tue, 02 Apr 2019 14:40:11 +0100
+        id 1hBJe6-0002o0-Sl; Tue, 02 Apr 2019 14:40:11 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdw-0004v7-TO; Tue, 02 Apr 2019 14:40:00 +0100
+        id 1hBJdw-0004ur-RD; Tue, 02 Apr 2019 14:40:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Christian Borntraeger" <borntraeger@de.ibm.com>,
-        "Frank Haverkamp" <haver@linux.vnet.ibm.com>
+        "Julien Thierry" <julien.thierry@arm.com>,
+        "Christoffer Dall" <christoffer.dall@arm.com>,
+        "Marc Zyngier" <marc.zyngier@arm.com>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.618691394@decadent.org.uk>
+Message-ID: <lsq.1554212307.588124430@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 58/99] genwqe: Fix size check
+Subject: [PATCH 3.16 55/99] KVM: arm/arm64: Fix VMID alloc race by
+ reverting to lock-less
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,63 +57,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Christoffer Dall <christoffer.dall@arm.com>
 
-commit fdd669684655c07dacbdb0d753fd13833de69a33 upstream.
+commit fb544d1ca65a89f7a3895f7531221ceeed74ada7 upstream.
 
-Calling the test program genwqe_cksum with the default buffer size of
-2MB triggers the following kernel warning on s390:
+We recently addressed a VMID generation race by introducing a read/write
+lock around accesses and updates to the vmid generation values.
 
-WARNING: CPU: 30 PID: 9311 at mm/page_alloc.c:3189 __alloc_pages_nodemask+0x45c/0xbe0
-CPU: 30 PID: 9311 Comm: genwqe_cksum Kdump: loaded Not tainted 3.10.0-957.el7.s390x #1
-task: 00000005e5d13980 ti: 00000005e7c6c000 task.ti: 00000005e7c6c000
-Krnl PSW : 0704c00180000000 00000000002780ac (__alloc_pages_nodemask+0x45c/0xbe0)
-           R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 EA:3
-Krnl GPRS: 00000000002932b8 0000000000b73d7c 0000000000000010 0000000000000009
-           0000000000000041 00000005e7c6f9b8 0000000000000001 00000000000080d0
-           0000000000000000 0000000000b70500 0000000000000001 0000000000000000
-           0000000000b70528 00000000007682c0 0000000000277df2 00000005e7c6f9a0
-Krnl Code: 000000000027809e: de7195001000	ed	1280(114,%r9),0(%r1)
-	   00000000002780a4: a774fead		brc	7,277dfe
-	  #00000000002780a8: a7f40001		brc	15,2780aa
-	  >00000000002780ac: 92011000		mvi	0(%r1),1
-	   00000000002780b0: a7f4fea7		brc	15,277dfe
-	   00000000002780b4: 9101c6b6		tm	1718(%r12),1
-	   00000000002780b8: a784ff3a		brc	8,277f2c
-	   00000000002780bc: a7f4fe2e		brc	15,277d18
-Call Trace:
-([<0000000000277df2>] __alloc_pages_nodemask+0x1a2/0xbe0)
- [<000000000013afae>] s390_dma_alloc+0xfe/0x310
- [<000003ff8065f362>] __genwqe_alloc_consistent+0xfa/0x148 [genwqe_card]
- [<000003ff80658f7a>] genwqe_mmap+0xca/0x248 [genwqe_card]
- [<00000000002b2712>] mmap_region+0x4e2/0x778
- [<00000000002b2c54>] do_mmap+0x2ac/0x3e0
- [<0000000000292d7e>] vm_mmap_pgoff+0xd6/0x118
- [<00000000002b081c>] SyS_mmap_pgoff+0xdc/0x268
- [<00000000002b0a34>] SyS_old_mmap+0x8c/0xb0
- [<000000000074e518>] sysc_tracego+0x14/0x1e
- [<000003ffacf87dc6>] 0x3ffacf87dc6
+However, kvm_arch_vcpu_ioctl_run() also calls need_new_vmid_gen() but
+does so without taking the read lock.
 
-turns out the check in __genwqe_alloc_consistent uses "> MAX_ORDER"
-while the mm code uses ">= MAX_ORDER". Fix genwqe.
+As far as I can tell, this can lead to the same kind of race:
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Frank Haverkamp <haver@linux.vnet.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  VM 0, VCPU 0			VM 0, VCPU 1
+  ------------			------------
+  update_vttbr (vmid 254)
+  				update_vttbr (vmid 1) // roll over
+				read_lock(kvm_vmid_lock);
+				force_vm_exit()
+  local_irq_disable
+  need_new_vmid_gen == false //because vmid gen matches
+
+  enter_guest (vmid 254)
+  				kvm_arch.vttbr = <PGD>:<VMID 1>
+				read_unlock(kvm_vmid_lock);
+
+  				enter_guest (vmid 1)
+
+Which results in running two VCPUs in the same VM with different VMIDs
+and (even worse) other VCPUs from other VMs could now allocate clashing
+VMID 254 from the new generation as long as VCPU 0 is not exiting.
+
+Attempt to solve this by making sure vttbr is updated before another CPU
+can observe the updated VMID generation.
+
+Fixes: f0cf47d939d0 "KVM: arm/arm64: Close VMID generation race"
+Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+[bwh: Backported to 3.16:
+ - Use ACCESS_ONCE() instead of {READ,WRITE}_ONCE()
+ - Adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/misc/genwqe/card_utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kvm/arm.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
---- a/drivers/misc/genwqe/card_utils.c
-+++ b/drivers/misc/genwqe/card_utils.c
-@@ -206,7 +206,7 @@ u32 genwqe_crc32(u8 *buff, size_t len, u
- void *__genwqe_alloc_consistent(struct genwqe_dev *cd, size_t size,
- 			       dma_addr_t *dma_handle)
- {
--	if (get_order(size) > MAX_ORDER)
-+	if (get_order(size) >= MAX_ORDER)
- 		return NULL;
+--- a/arch/arm/kvm/arm.c
++++ b/arch/arm/kvm/arm.c
+@@ -59,7 +59,7 @@ static DEFINE_PER_CPU(struct kvm_vcpu *,
+ /* The VMID used in the VTTBR */
+ static atomic64_t kvm_vmid_gen = ATOMIC64_INIT(1);
+ static u8 kvm_next_vmid;
+-static DEFINE_RWLOCK(kvm_vmid_lock);
++static DEFINE_SPINLOCK(kvm_vmid_lock);
  
- 	return pci_alloc_consistent(cd->pci_dev, size, dma_handle);
+ static bool vgic_present;
+ 
+@@ -376,7 +376,9 @@ void force_vm_exit(const cpumask_t *mask
+  */
+ static bool need_new_vmid_gen(struct kvm *kvm)
+ {
+-	return unlikely(kvm->arch.vmid_gen != atomic64_read(&kvm_vmid_gen));
++	u64 current_vmid_gen = atomic64_read(&kvm_vmid_gen);
++	smp_rmb(); /* Orders read of kvm_vmid_gen and kvm->arch.vmid */
++	return unlikely(ACCESS_ONCE(kvm->arch.vmid_gen) != current_vmid_gen);
+ }
+ 
+ /**
+@@ -391,16 +393,11 @@ static void update_vttbr(struct kvm *kvm
+ {
+ 	phys_addr_t pgd_phys;
+ 	u64 vmid;
+-	bool new_gen;
+ 
+-	read_lock(&kvm_vmid_lock);
+-	new_gen = need_new_vmid_gen(kvm);
+-	read_unlock(&kvm_vmid_lock);
+-
+-	if (!new_gen)
++	if (!need_new_vmid_gen(kvm))
+ 		return;
+ 
+-	write_lock(&kvm_vmid_lock);
++	spin_lock(&kvm_vmid_lock);
+ 
+ 	/*
+ 	 * We need to re-check the vmid_gen here to ensure that if another vcpu
+@@ -408,7 +405,7 @@ static void update_vttbr(struct kvm *kvm
+ 	 * use the same vmid.
+ 	 */
+ 	if (!need_new_vmid_gen(kvm)) {
+-		write_unlock(&kvm_vmid_lock);
++		spin_unlock(&kvm_vmid_lock);
+ 		return;
+ 	}
+ 
+@@ -431,7 +428,6 @@ static void update_vttbr(struct kvm *kvm
+ 		kvm_call_hyp(__kvm_flush_vm_context);
+ 	}
+ 
+-	kvm->arch.vmid_gen = atomic64_read(&kvm_vmid_gen);
+ 	kvm->arch.vmid = kvm_next_vmid;
+ 	kvm_next_vmid++;
+ 
+@@ -441,7 +437,10 @@ static void update_vttbr(struct kvm *kvm
+ 	vmid = ((u64)(kvm->arch.vmid) << VTTBR_VMID_SHIFT) & VTTBR_VMID_MASK;
+ 	kvm->arch.vttbr = pgd_phys | vmid;
+ 
+-	write_unlock(&kvm_vmid_lock);
++	smp_wmb();
++	ACCESS_ONCE(kvm->arch.vmid_gen) = atomic64_read(&kvm_vmid_gen);
++
++	spin_unlock(&kvm_vmid_lock);
+ }
+ 
+ static int kvm_vcpu_first_run_init(struct kvm_vcpu *vcpu)
 
