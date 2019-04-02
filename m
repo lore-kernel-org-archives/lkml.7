@@ -2,36 +2,36 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E56C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9694BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E3020883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B42F214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbfDBMgU (ORCPT
+        id S1731111AbfDBMg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:36:20 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53362 "EHLO
+        Tue, 2 Apr 2019 08:36:27 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:24657 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730456AbfDBMgR (ORCPT
+        with ESMTP id S1727065AbfDBMgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:36:17 -0400
-X-UUID: 0abdcd6b405d4f8aa2bd212ef5536e7e-20190402
-X-UUID: 0abdcd6b405d4f8aa2bd212ef5536e7e-20190402
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        Tue, 2 Apr 2019 08:36:25 -0400
+X-UUID: ec5e9f2b2771459d949803cbe852a7da-20190402
+X-UUID: ec5e9f2b2771459d949803cbe852a7da-20190402
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
         (envelope-from <qii.wang@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1604574743; Tue, 02 Apr 2019 20:36:08 +0800
+        with ESMTP id 1418319423; Tue, 02 Apr 2019 20:36:11 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 2 Apr 2019 20:36:07 +0800
+ 15.0.1395.4; Tue, 2 Apr 2019 20:36:10 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 2 Apr 2019 20:36:06 +0800
+ Transport; Tue, 2 Apr 2019 20:36:10 +0800
 From:   Qii Wang <qii.wang@mediatek.com>
 To:     <wsa@the-dreams.de>
 CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -41,10 +41,12 @@ CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
         <qii.wang@mediatek.com>, <xinping.qian@mediatek.com>,
         <liguo.zhang@mediatek.com>, <robh@kernel.org>
-Subject: [PATCH RESEND v6 0/6] add i2c support for mt8183
-Date:   Tue, 2 Apr 2019 20:35:54 +0800
-Message-ID: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
+Subject: [PATCH RESEND v6 4/6] i2c: mediatek: Add i2c and apdma sync in i2c driver
+Date:   Tue, 2 Apr 2019 20:35:58 +0800
+Message-ID: <1554208560-14817-5-git-send-email-qii.wang@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
+References: <1554208560-14817-1-git-send-email-qii.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -53,45 +55,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series are based on 5.1-rc1 and the patch
-https://patchwork.kernel.org/patch/10856987/(for dts)
-We provide six patches to support mt8183 IC.
+When i2c and apdma use different source clocks, we should enable
+synchronization between them.
 
-Main changes compared to v5:
---add i2c controller nodes in mt8183.dtsi
---add a note that old i2c controllers also have I2C_ARB_LOST bit
---add a flag(ltiming_adjust) to avoid unnecessary settings
---add Reviewed-by from Rob Herring, Nicolas and Matthias
+Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+---
+ drivers/i2c/busses/i2c-mt65xx.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Main changes compared to v4:
---modify the commit of arb clock dt-binding
---split a patch(3/3) into three(3/5 4/5 5/5)
-
-Main changes compared to v3:
---remove the patches which have been applied to for-next
---remove i2c fallback for i3c controller 
-
-Main changes compared to v2:
---update commit message
---add Reviewed-by from Rob Herring, Nicolas and Sean
-
-Main changes compared to v1:
---remove useless dt-binding for mt7629
---split a patch into two(2/6 3/6)
---muti-user feature was dropped
-
-Qii Wang (6):
-  i2c: mediatek: Add offsets array for new i2c registers
-  dt-bindings: i2c: Add Mediatek MT8183 i2c binding
-  i2c: mediatek: Add arb clock in i2c driver
-  i2c: mediatek: Add i2c and apdma sync in i2c driver
-  i2c: mediatek: Add i2c support for MediaTek MT8183
-  dts: arm64: mt8183: Add I2C nodes
-
- Documentation/devicetree/bindings/i2c/i2c-mtk.txt |    4 +-
- arch/arm64/boot/dts/mediatek/mt8183.dtsi          |  192 ++++++++++++++++
- drivers/i2c/busses/i2c-mt65xx.c                   |  255 ++++++++++++++++-----
- 3 files changed, 389 insertions(+), 62 deletions(-)
-
+diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+index 1a7235e..6137ad7 100644
+--- a/drivers/i2c/busses/i2c-mt65xx.c
++++ b/drivers/i2c/busses/i2c-mt65xx.c
+@@ -77,6 +77,8 @@
+ #define I2C_CONTROL_DIR_CHANGE          (0x1 << 4)
+ #define I2C_CONTROL_ACKERR_DET_EN       (0x1 << 5)
+ #define I2C_CONTROL_TRANSFER_LEN_CHANGE (0x1 << 6)
++#define I2C_CONTROL_DMAACK_EN           (0x1 << 8)
++#define I2C_CONTROL_ASYNC_MODE          (0x1 << 9)
+ #define I2C_CONTROL_WRAPPER             (0x1 << 0)
+ 
+ #define I2C_DRV_NAME		"i2c-mt65xx"
+@@ -169,6 +171,7 @@ struct mtk_i2c_compatible {
+ 	unsigned char aux_len_reg: 1;
+ 	unsigned char support_33bits: 1;
+ 	unsigned char timing_adjust: 1;
++	unsigned char dma_sync: 1;
+ };
+ 
+ struct mtk_i2c {
+@@ -218,6 +221,7 @@ struct mtk_i2c {
+ 	.aux_len_reg = 1,
+ 	.support_33bits = 1,
+ 	.timing_adjust = 1,
++	.dma_sync = 0,
+ };
+ 
+ static const struct mtk_i2c_compatible mt6577_compat = {
+@@ -229,6 +233,7 @@ struct mtk_i2c {
+ 	.aux_len_reg = 0,
+ 	.support_33bits = 0,
+ 	.timing_adjust = 0,
++	.dma_sync = 0,
+ };
+ 
+ static const struct mtk_i2c_compatible mt6589_compat = {
+@@ -240,6 +245,7 @@ struct mtk_i2c {
+ 	.aux_len_reg = 0,
+ 	.support_33bits = 0,
+ 	.timing_adjust = 0,
++	.dma_sync = 0,
+ };
+ 
+ static const struct mtk_i2c_compatible mt7622_compat = {
+@@ -251,6 +257,7 @@ struct mtk_i2c {
+ 	.aux_len_reg = 1,
+ 	.support_33bits = 0,
+ 	.timing_adjust = 0,
++	.dma_sync = 0,
+ };
+ 
+ static const struct mtk_i2c_compatible mt8173_compat = {
+@@ -261,6 +268,7 @@ struct mtk_i2c {
+ 	.aux_len_reg = 1,
+ 	.support_33bits = 1,
+ 	.timing_adjust = 0,
++	.dma_sync = 0,
+ };
+ 
+ static const struct of_device_id mtk_i2c_of_match[] = {
+@@ -360,6 +368,9 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
+ 
+ 	control_reg = I2C_CONTROL_ACKERR_DET_EN |
+ 		      I2C_CONTROL_CLK_EXT_EN | I2C_CONTROL_DMA_EN;
++	if (i2c->dev_comp->dma_sync)
++		control_reg |= I2C_CONTROL_DMAACK_EN | I2C_CONTROL_ASYNC_MODE;
++
+ 	mtk_i2c_writew(i2c, control_reg, OFFSET_CONTROL);
+ 	mtk_i2c_writew(i2c, I2C_DELAY_LEN, OFFSET_DELAY_LEN);
+ 
 -- 
 1.7.9.5
+
