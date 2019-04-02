@@ -2,161 +2,189 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8635C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6196C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4A12070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EC22070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:47:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="DawyLHQB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbfDBCoO (ORCPT
+        id S1728669AbfDBCrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 22:44:14 -0400
-Received: from mga11.intel.com ([192.55.52.93]:33455 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbfDBCoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 22:44:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 19:44:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
-   d="scan'208";a="287896110"
-Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
-  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2019 19:44:10 -0700
-Date:   Tue, 2 Apr 2019 10:47:17 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
+        Mon, 1 Apr 2019 22:47:15 -0400
+Received: from chill.innovation.ch ([216.218.245.220]:47108 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfDBCrP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 22:47:15 -0400
+Date:   Mon, 1 Apr 2019 19:47:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 139DE640155
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1554173234;
+        bh=sFSPmqNJecgUh6xdYD3D3mfo9LAis43LWnqFsA/0EgM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DawyLHQBgDleTTlrFuaHW8+b4nRIozpPHIWvU+Pw9b1Ir6NJaPVyewbI/bP5a2z6J
+         0g5TtPRaOUZiT+pqp+PY0P6hpqv7CiNk4tKqi8Fck61+Ycb9y2TpQn02dMvt7ZQtZq
+         PaAaMGifo3DAzc5jZDCmjHwF4qv0Ra4zaqWOu+gXH2u+J5mWH/mysDGesgXTnSpnsj
+         +6vmh4FKMHQDDodS5+KVK3j1qG29+2YQKF8PQmAKKpqZBlivxV4PPWOQLTEqc2gN/F
+         haOcUpk5C9g8YK9qPwyQpX6mJdVJyyewuaMXEQpf4qBk2igFwWAZurNJJrTOVptFPF
+         flId1i/kObu+g==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH 1/2] printk: Add an option to flush all messages on panic
-Message-ID: <20190402024717.az4bjtmfd7yhyaom@shbuild888>
-References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
- <0020b526-ad88-309a-8dce-1c852f0ebb31@codeaurora.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] driver core: add dev_print_hex_dump() logging
+ function.
+Message-ID: <20190402024714.GA14213@innovation.ch>
+References: <20190327014807.7472-1-ronald@innovation.ch>
+ <20190327014807.7472-4-ronald@innovation.ch>
+ <20190327023757.GB20766@kroah.com>
+ <20190328002817.GF24753@innovation.ch>
+ <20190328052917.GB18668@kroah.com>
+ <20190328102755.GA26446@innovation.ch>
+ <20190328112952.GA2232@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <0020b526-ad88-309a-8dce-1c852f0ebb31@codeaurora.org>
-User-Agent: NeoMutt/20170609 (1.8.3)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190328112952.GA2232@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mukesh,
 
-On Mon, Apr 01, 2019 at 05:20:33PM +0530, Mukesh Ojha wrote:
-> 
-> On 4/1/2019 4:18 PM, Feng Tang wrote:
-> > Current console_flush_on_panic() will only dump the new messages
-> > in buffer, and users may need an opportunity to check all the
-> > messages on panic which could help debugging, as user may haven't
-> > seen the log before panic due to loglevel settings.
+On Thu, Mar 28, 2019 at 12:29:52PM +0100, Greg Kroah-Hartman wrote:
+> On Thu, Mar 28, 2019 at 03:27:55AM -0700, Life is hard, and then you die wrote:
 > > 
-> > Add a flag for console_flush_on_panic() to chose whether to
-> > dump all messages.
+> > On Thu, Mar 28, 2019 at 06:29:17AM +0100, Greg Kroah-Hartman wrote:
+> > > On Wed, Mar 27, 2019 at 05:28:17PM -0700, Life is hard, and then you die wrote:
+> > > > 
+> > > > On Wed, Mar 27, 2019 at 11:37:57AM +0900, Greg Kroah-Hartman wrote:
+> > > > > On Tue, Mar 26, 2019 at 06:48:06PM -0700, Ronald Tschalär wrote:
+> > > > > > This is the dev_xxx() analog to print_hex_dump(), using dev_printk()
+> > > > > > instead of straight printk() to match other dev_xxx() logging functions.
+> > > > > > ---
+> > > > > >  drivers/base/core.c    | 43 ++++++++++++++++++++++++++++++++++++++++++
+> > > > > >  include/linux/device.h | 15 +++++++++++++++
+> > > > > >  2 files changed, 58 insertions(+)
+[snip]
+> > > > > Anyway, no, please do not do this.  Please do not dump large hex values
+> > > > > like this to the kernel log, it does not help anyone.
+> > > > > 
+> > > > > You can do this while debugging, sure, but not for "real" kernel code.
+> > > > 
+> > > > As used by this driver, it is definitely called for debugging only and
+> > > > must be explicitly enabled via a module param. But having the ability
+> > > > for folks to easily generate and print out debugging info has proven
+> > > > quite valuable.
+> > > 
+> > > We have dynamic debugging, no need for module parameters at all.  This
+> > > isn't the 1990's anymore :)
 > > 
-> > Signed-off-by: Feng Tang <feng.tang@intel.com>
-> 
-> 
-> Looks good to me.
-
-Thanks for the review.
-
-> 
-> 
-> But, Will it not be good if put it under a config and not change the
-> prototype, as it is a debug feature?
-
-My understanding is the console_flush_on_panic() is also a debug
-feature too :), and my 2/2 patch will has a bitmask (either controlled
-by kernel cmdline or sysctl) to turn on this.
-
-Thanks,
-Feng
-
-
-> 
-> Thanks,
-> Mukesh
-> 
-> > ---
-> >   arch/powerpc/kernel/traps.c | 2 +-
-> >   include/linux/console.h     | 2 +-
-> >   kernel/panic.c              | 2 +-
-> >   kernel/printk/printk.c      | 9 ++++++++-
-> >   4 files changed, 11 insertions(+), 4 deletions(-)
+> > I am aware of dynamic debugging, but there are several issues with it
+> > from the perspective of the logging I'm doing here (I mentioned these
+> > in response to an earlier review already):
 > > 
-> > diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> > index 1fd45a8..58d9580 100644
-> > --- a/arch/powerpc/kernel/traps.c
-> > +++ b/arch/powerpc/kernel/traps.c
-> > @@ -179,7 +179,7 @@ extern void panic_flush_kmsg_end(void)
-> >   	kmsg_dump(KMSG_DUMP_PANIC);
-> >   	bust_spinlocks(0);
-> >   	debug_locks_off();
-> > -	console_flush_on_panic();
-> > +	console_flush_on_panic(false);
-> >   }
-> >   static unsigned long oops_begin(struct pt_regs *regs)
-> > diff --git a/include/linux/console.h b/include/linux/console.h
-> > index ec9bdb3..825ecf5 100644
-> > --- a/include/linux/console.h
-> > +++ b/include/linux/console.h
-> > @@ -175,7 +175,7 @@ extern int console_trylock(void);
-> >   extern void console_unlock(void);
-> >   extern void console_conditional_schedule(void);
-> >   extern void console_unblank(void);
-> > -extern void console_flush_on_panic(void);
-> > +extern void console_flush_on_panic(bool flush_all);
-> >   extern struct tty_driver *console_device(int *);
-> >   extern void console_stop(struct console *);
-> >   extern void console_start(struct console *);
-> > diff --git a/kernel/panic.c b/kernel/panic.c
-> > index 0ae0d73..fb77e01 100644
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -277,7 +277,7 @@ void panic(const char *fmt, ...)
-> >   	 * panic() is not being callled from OOPS.
-> >   	 */
-> >   	debug_locks_off();
-> > -	console_flush_on_panic();
-> > +	console_flush_on_panic(false);
-> >   	panic_print_sys_info();
-> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> > index 02ca827..8ff099b 100644
-> > --- a/kernel/printk/printk.c
-> > +++ b/kernel/printk/printk.c
-> > @@ -2525,10 +2525,11 @@ void console_unblank(void)
-> >   /**
-> >    * console_flush_on_panic - flush console content on panic
-> > + * @flush_all:	whether to print all messages in buffer
-> >    *
-> >    * Immediately output all pending messages no matter what.
-> >    */
-> > -void console_flush_on_panic(void)
-> > +void console_flush_on_panic(bool flush_all)
-> >   {
-> >   	/*
-> >   	 * If someone else is holding the console lock, trylock will fail
-> > @@ -2539,6 +2540,12 @@ void console_flush_on_panic(void)
-> >   	 */
-> >   	console_trylock();
-> >   	console_may_schedule = 0;
-> > +
-> > +	/* User may want to see all the printk messages on panic */
-> > +	if (flush_all) {
-> > +		console_seq = log_first_seq;
-> > +		console_idx = log_first_idx;
-> > +	}
-> >   	console_unlock();
-> >   }
+> >   1. Dynamic debugging can't be enabled at a function or line level on
+> >      the kernel command line, so this means that to debug issues
+> >      during boot you have to enable everything, which can be way too
+> >      verbose
+> 
+> You can, and should enable it at a function or line level by writing to
+> the proper kernel file in debugfs.
+> 
+> You have read Documentation/admin-guide/dynamic-debug-howto.rst, right?
+
+Yes, and I've played with the parameters quite a bit.
+
+> No need to do anything on the command line, that's so old-school :)
+
+Sorry if I'm being unduly dense, but then how to enable debugging
+during early boot? The only other alternative I see is modifying the
+initrd, and asking folks to do that is noticeably more complicated
+than having them add something to the command line in grub. So from my
+perspective I find kernel params far from old-school :-)
+
+> >   2. The expressions to enable the individual logging statements are
+> >      quite brittle (in particular the line-based ones) since they
+> >      (may) change any time the code is changed - having stable
+> >      commands to give to users and put in documentation (e.g.
+> >      "echo 0x200 > /sys/module/applespi/parameters/debug") is
+> >      quite valuable.
+> > 
+> >      One way to work around this would be to put every single logging
+> >      statement in a function of its own, thereby ensuring a stable
+> >      name is associated with each one.
+> 
+> Again, read the documentation, this works today as-is.
+
+I have read it (we're talking about the dynamic debug docs here), but
+I just don't see how it addresses this in any way.
+
+> >   3. In at least two places we log different types of packets in the
+> >      same lines of code (protected by a "if (log_mask & PKT_TYPE)") -
+> >      dynamic-debug would only allow enabling or disabling logging of
+> >      all packets. This could be worked around by creating a separate
+> >      (but essentially duplicate) logging function for each packet type
+> >      and some lookup table to call the appropriate one. Not very
+> >      pretty IMO, though.
+> 
+> True, but you can use tracepoints as well, that would probably be much
+> easier when you are logging data streams.  You can also use an ebpf
+> program with the tracepoints to log just what you need/want to when you
+> want to as well.
+
+Thanks for the hint, I hadn't paid much attention to tracepoints till
+now. They do solve most of these issues I've mentioned here, though.
+So I've actually gone and implemented the tracing as tracepoints now.
+Two issues I noticed though:
+
+ 1. since filters can't be enabled on the command line (and yes, we
+    seem to disagree on the usefulness of the command line) it means
+    I had to essentially create tracepoints for every trace+filter
+    combo I may want to enable (in my case it's just one field, so I
+    ended up with 8 tracepoints instead of 1). Not a big deal in my
+    case, but could get ugly.
+
+ 2. in cases where there is relevant log output too, folks have to be
+    told to provide both trace and dmesg output, the outputs have to
+    merged back together again. Though I note that with the use of the
+    tp_printk kernel param this inconvenience goes away again (but
+    we're back to logging the traces in the kernel log :-) ).
+
+> >   4. In a couple places we log both the sent command and the received
+> >      response, with the log-mask determining for which types of
+> >      packets to do this. With a log mask there is one bit to set to
+> >      get both logged; with dynamic debugging you'd have to enable the
+> >      writing and receiving parts separately (not a huge deal, but yet
+> >      one place where things are a bit more complicated than
+> >      necessary).
+> > 
+> > Except for the first, none of these are insurmountable, but together
+> > they don't make dynamic debugging very attractive for this sort of
+> > logging.
+> 
+> Look into it some more, we have all of this covered today, no need for
+> just a single driver to do something fancy on its own :)
+
+The tracepoints do indeed cover this too.
+
+
+  Cheers,
+
+  Ronald
+
