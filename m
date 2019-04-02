@@ -2,103 +2,83 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8FAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB56C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9202120643
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554179137;
-	bh=+vSgYABV/ew6RMpnSop/p2u+RbTsJ6Oli3qTtLNorrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mRQqBzFglzI08I/zNCcB00tLKt5J1MSazCRarIucZwfmJfzIOf/E1JhcVBd9LGAX1
-	 M4tI0QZRCfuFrfSja+YWXjYuGHaTNPGVt/p2ms6kBAZVMWC/2lBMkNOOJHw3cOhl2g
-	 feSQlP1kT9Cz3CfhrlF0y8uRNiVDQIkzUUz3hg7A=
+	by mail.kernel.org (Postfix) with ESMTP id 047AB2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfDBEZg (ORCPT
+        id S1726694AbfDBEeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:25:36 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50944 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfDBEZf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:25:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KwXc7XHefa4E4ENOaLDa8Tie/RfoRX9wV6MkrGF00Go=; b=fwG2wuP38r33B8bq2KcmH88i0
-        waPmyxaRL06YBE+HI2PD5iMiZOU5Xz7ogCViD7g0aR/ANroBcY8bYZIwaty5lNMR44wsCKUuRmOyP
-        DkeH1H5E4hsBg5oByJomfS9iJhqxnKdEwfcLHw+YrQvuqZiW9EjVNM2s8r21YweOaac4A=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBAzK-0005hZ-0k; Tue, 02 Apr 2019 04:25:30 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BE1F5440082; Mon,  1 Apr 2019 10:17:53 +0100 (BST)
-Date:   Mon, 1 Apr 2019 16:17:53 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Randolph =?iso-8859-1?Q?Maa=DFen?= <gaireg@gaireg.de>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] spi: tegra20-slink: change chip select action order
-Message-ID: <20190401091753.GP2059@sirena.org.uk>
-References: <20190329174411.13832-1-gaireg@gaireg.de>
+        Tue, 2 Apr 2019 00:34:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57220 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfDBEeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 00:34:18 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6C34785528;
+        Tue,  2 Apr 2019 04:34:18 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 106B52A19F;
+        Tue,  2 Apr 2019 04:34:14 +0000 (UTC)
+Date:   Mon, 1 Apr 2019 22:34:13 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eric.auger@redhat.com, cohuck@redhat.com
+Subject: Re: [PATCH] vfio/type1: Limit DMA mappings per container
+Message-ID: <20190401223413.3783af5f@x1.home>
+In-Reply-To: <20190402024115.GA11008@xz-x1>
+References: <155414977872.12780.13728555131525362206.stgit@gimli.home>
+        <20190402024115.GA11008@xz-x1>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QKpLca3blcvhMJ0W"
-Content-Disposition: inline
-In-Reply-To: <20190329174411.13832-1-gaireg@gaireg.de>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 02 Apr 2019 04:34:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2 Apr 2019 10:41:15 +0800
+Peter Xu <peterx@redhat.com> wrote:
 
---QKpLca3blcvhMJ0W
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Mon, Apr 01, 2019 at 02:16:52PM -0600, Alex Williamson wrote:
+> 
+> [...]
+> 
+> > @@ -1081,8 +1088,14 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
+> >  		goto out_unlock;
+> >  	}
+> >  
+> > +	if (!atomic_add_unless(&iommu->dma_avail, -1, 0)) {
+> > +		ret = -ENOSPC;
+> > +		goto out_unlock;
+> > +	}
+> > +
+> >  	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
+> >  	if (!dma) {
+> > +		atomic_inc(&iommu->dma_avail);  
+> 
+> This should be the only special path to revert the change.  Not sure
+> whether this can be avoided by simply using atomic_read() or even
+> READ_ONCE() (I feel like we don't need atomic ops with dma_avail
+> because we've had the mutex but it of course it doesn't hurt...) to
+> replace atomic_add_unless() above to check against zero then we do
+> +1/-1 in vfio_[un]link_dma() only.  But AFAICT this patch is correct.
 
-On Fri, Mar 29, 2019 at 06:44:11PM +0100, Randolph Maa=DFen wrote:
-> To transfer via SPI the tegra20-slink driver first sets the command
-> register, which contains the chip select value, and after that the
-> command2 register, which contains the chip select line. This leads to a
-> small spike in the chip selct 0 line between the set of the value and
-> the selection of the chip select line.
+Thanks for the review, you're right, we're only twiddling this atomic
+while holding the iommu->lock mutex, so it appears unnecessary.  Since
+we're within the mutex, I think we don't even need a READ_ONCE.  We can
+simple test it before alloc and decrement after.  Am I missing something
+that would specifically require READ_ONCE within our mutex critical
+section?  Thanks,
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
-
---QKpLca3blcvhMJ0W
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyh1z4ACgkQJNaLcl1U
-h9BDYgf/YxJE2IHgyTgkto9LXOZqZugnVydpvQUWbP2oMfH2WkmNmnGlkfheNMCX
-CG7QiiEJ1ynANmzUkhSa7TZ6dVYDKc2Jrd58Bth540GSOhL9ceRsueaHtcH/glYs
-qDuha+hrPYhrQT3x9YcgS1lr6fzTO62aypzjX0cc/CcNcPzURQL9FOuMHtFyElG3
-SVHWVIBJnrMGac4te496gGdZe2oXBOv5QN9jcViRvRGQSYCJX2NJpyfpQmWj9sbZ
-H3d1N1gfc53ailiOM9JVKmjTQgOR8r9XADjukWUw/NUwDyJw7RgAcWEj3VGo7Sen
-6pEk4fP6z+P8lYmEX1OD3zTnNz9Bcw==
-=406+
------END PGP SIGNATURE-----
-
---QKpLca3blcvhMJ0W--
+Alex
