@@ -2,90 +2,77 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F99CC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEE7C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C602075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:18:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="GwcNpY4h"
+	by mail.kernel.org (Postfix) with ESMTP id 43E0F2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554240134;
+	bh=KC6MHSot9P/wc1EbQ8B05h05KHQOkZfOi9okVVBBapM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WmqYSNFDqAtTOetLMW4VT1DE5TYQJSpV2mkfvwHgWq3Jz74MBRrnwaSqTBT/hjmuz
+	 FQwNyVjM6huT22CCJp0kOAYwWjpPzKSSy6qR7Wohw0hGUH7c7pW2C28TiHGgF7yfHS
+	 Q+rceZ7aiTOFiJCG+aL3nTzDRCjtjOS//ljM0P4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfDBVSy (ORCPT
+        id S1726206AbfDBVWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:18:54 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:42490 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfDBVSy (ORCPT
+        Tue, 2 Apr 2019 17:22:13 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:47692 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfDBVWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:18:54 -0400
-Received: by mail-yb1-f196.google.com with SMTP id x84so2940499ybg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4fczxbybzOS+xXNu+Sbb6XyvMGrUo9head3Dw/Kumxw=;
-        b=GwcNpY4hgB0cZqJleZoLMgbMadRlRvC6VtmChihSWjY4W/kaunkihTqQmpmoS1YoLD
-         BzYo/6a1AHwtZBtDWT/SQK+fSNEgeL3YGNf0Od9S8T73xbAHpWiFPNToOqe+eqFXZcUO
-         FkZs4sfOBNpVQDSHhQrLFivW2LfCondKbnP81yo2JxZsLhYkJ5ORch690Sptj+XktHvq
-         QO04WZ/rN0xRHpmEBeFe8y3Y/8adS52oZNSseOtqri6l0SUzZNc2y0cHE2pR2Y/ngBTG
-         qOnZn4VbdBAFsIshwGOQtmwhNMpwbNeeBMH3We1PXBVwuXkTWyCNMr1lmfgpJ8xvJxEf
-         mE5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4fczxbybzOS+xXNu+Sbb6XyvMGrUo9head3Dw/Kumxw=;
-        b=eApokX+BrI8z+K3d/p/yC80yxpp8Dmntio2ECgkeS+gTH+xDAsyUodycZTO2uQ7NyE
-         7xyEFAa9Y+0LCY2F3njU/eKvyLHfjYlNhN4BCInp7X9mbAf8/Rk6BUCvTJKhnEkPBvYL
-         yImr3+VILxByO9usTd3BoUH5RXZ3uxJYam4/XNaWEvAR1woRPvs/c73O3xCZvjllg4+X
-         zPEnQxNXGwZHOdPcUAvYmKrdIFklEsikT+2KXrW4SnkNDRGK1R/+W/7S4y1MOZ3or+2u
-         JTWYAD4lQ7azVcaO1rCIhYAOQbCPHG0naI8Zr3Wf6vps4uIZAgBSJTV/2gF2yFPwASwR
-         K9Qw==
-X-Gm-Message-State: APjAAAWAoiICk2tlj9wFSniTcGEw0/uT1CvKhEtxfYJY4YBtgYIqeqpb
-        A1muvQPKGxM5j8ObWsqc2ko9wA==
-X-Google-Smtp-Source: APXvYqz756ApciuBlxiY9nRcFafoOD5oKomuZNFIW8mTGGnd/8k3MqHMZ15UlGA9x49Ks18BmEIWMw==
-X-Received: by 2002:a25:7102:: with SMTP id m2mr20704482ybc.383.1554239907982;
-        Tue, 02 Apr 2019 14:18:27 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:200::2:99bf])
-        by smtp.gmail.com with ESMTPSA id x13sm10058927ywx.63.2019.04.02.14.18.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 14:18:27 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 17:18:26 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
+        Tue, 2 Apr 2019 17:22:12 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 311E2E7C;
+        Tue,  2 Apr 2019 21:22:11 +0000 (UTC)
+Date:   Tue, 2 Apr 2019 14:22:10 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
 To:     Waiman Long <longman@redhat.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] psi: Clarify the units used in pressure files
-Message-ID: <20190402211825.GA16779@cmpxchg.org>
-References: <20190402193810.3450-1-longman@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402193810.3450-1-longman@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Cc:     "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
+        Manfred Spraul <manfred@colorfullife.com>
+Subject: Re: [RESEND PATCH 2/3] ipc: Conserve sequence numbers in
+ ipcmni_extend mode
+Message-Id: <20190402142210.ba29c7dfc10d5a315a1c39dd@linux-foundation.org>
+In-Reply-To: <20190329204930.21620-2-longman@redhat.com>
+References: <20190329204930.21620-1-longman@redhat.com>
+        <20190329204930.21620-2-longman@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 03:38:10PM -0400, Waiman Long wrote:
-> The output of the PSI files show a bunch of numbers with no unit.
-> The psi.txt documentation file also does not indicate what units
-> are used.  One can only find out by looking at the source code. The
-> units are percentage for the averages and useconds for the total.
-> Make the information easier to find by documenting the units in psi.txt.
+On Fri, 29 Mar 2019 16:49:29 -0400 Waiman Long <longman@redhat.com> wrote:
+
+> From: Manfred Spraul <manfred@colorfullife.com>
 > 
-> Signed-off-by: Waiman Long <longman@redhat.com>
+> Rewrite, based on the patch from Waiman Long:
+> 
+> ...
+>
+> Suggested-by: Matthew Wilcox <willy@infradead.org>
+> Original-patch-from: Waiman Long <longman@redhat.com>
+> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+> Acked-by: Waiman Long <longman@redhat.com>
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+I added your Signed-off-by: to this.  Because you contributed and
+because you were on the patch delivery path (either of these require a
+SOB).
 
-Thanks Waiman!
+And I removed the Original-patch-from line.  The changelog already says
+that and Original-patch-from isn't a standard changelog tag.
