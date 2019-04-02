@@ -2,150 +2,221 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5AEC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BD4C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2F020856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QT6jpJCa"
+	by mail.kernel.org (Postfix) with ESMTP id A4C2A20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbfDBLcK (ORCPT
+        id S1730578AbfDBLcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:32:10 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44065 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730516AbfDBLcJ (ORCPT
+        Tue, 2 Apr 2019 07:32:42 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:53279 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729925AbfDBLcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:32:09 -0400
-Received: by mail-vs1-f68.google.com with SMTP id j184so7533105vsd.11
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 04:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zUjXHBpjHSxq+1LD4/mMegqIsw7rgr06JRKbCdsX+lk=;
-        b=QT6jpJCaH1Ddd0JkqGvNiSjfSvzz4HbCdiXPoYN2+Yim5Df9TndLnrB05wmajX4kRt
-         U3t9NmrREsnEYS+iGSLNaXuIbaLaDBcmSttg6Kw+PdjySyyp8mr0wut274zQbPQmEoaq
-         vVsOzqvPY4tDrnz9eU8ufYL1fCKK2vAJnicIz6sxt73qeCZyEIWLXd+YQXF5AHwAN+Qd
-         luj6rLNwpj6hcYHIbwu0wqXBhjmVGL+/bP1E4NHXRpSvlR195TF65hT2B909PcLK32lS
-         LlbpYNZ9hHqpzPKO98DVXxXRsEN14uBYdk51BT/0AExWzKyRlIJNt8N7N4/Ks6owXKLG
-         xnuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zUjXHBpjHSxq+1LD4/mMegqIsw7rgr06JRKbCdsX+lk=;
-        b=gLu7EnCUkSW4oYOCU1vqPT5yWv45FqQiXZYkiLpE2db9lRYH+AQz4leljBC7DUJv/T
-         jwFkT+Bz1nRNiJd4Dhl/QbUeCDTJRCLTBihRuvV0KrJB3t/crBDG25TksiqW2ppeurLu
-         R2Qvempd5E2OuuwGLfb7x7vJpkJs1muhVDupXLuAa2T0+3RzMf6+rx5AYhiPNTCjZAfr
-         ff/+YEWfIbbBgdPZw/Ek/JVFgO20DVCGpplU8rytc0xxgQzrnGAOh8TgHLE0eLz7upqI
-         +j1vn3LRd5ePrHPoAOu7d+728qqvNb6/oo2A/MwdctR056QI0pvYUsM+xHxAy++ZT5O/
-         snEA==
-X-Gm-Message-State: APjAAAXfP9js1h+DHoehfM/HEWf/RHSO5AwCFR46aUOY2T/Kk6atKW0L
-        TOm6Yf5Nry7+n0Jt8SzAXcFhpZjMIx45WQyqwRhY2w==
-X-Google-Smtp-Source: APXvYqyLqMCn8QY+l4A0NQFRjN1y1rxK1zcQsEJ6CArG53UDHRIKvG5bjjXTrLjNTY4msx0L8RhYGAQV8BxI0fjEk+I=
-X-Received: by 2002:a67:ba03:: with SMTP id l3mr32723043vsn.96.1554204728590;
- Tue, 02 Apr 2019 04:32:08 -0700 (PDT)
+        Tue, 2 Apr 2019 07:32:42 -0400
+Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hBHeN-0004RZ-CU; Tue, 02 Apr 2019 07:32:32 -0400
+Date:   Tue, 2 Apr 2019 07:31:50 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        sgrubb@redhat.com, omosnace@redhat.com, dhowells@redhat.com,
+        simo@redhat.com, Eric Paris <eparis@parisplace.org>,
+        Serge Hallyn <serge@hallyn.com>, ebiederm@xmission.com
+Subject: Re: [PATCH ghak90 V5 09/10] audit: add support for containerid to
+ network namespaces
+Message-ID: <20190402113150.GA17593@hmswarspite.think-freely.org>
+References: <cover.1552665316.git.rgb@redhat.com>
+ <27473c84a274c64871cfa8e3636deaf05603c978.1552665316.git.rgb@redhat.com>
+ <CAHC9VhQpk6cFZckQH+LQmQmirVzLm_GH57ZD3-76y-59G=DocQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190401162408.249668-1-glider@google.com> <20190402072659.GH12232@hirez.programming.kicks-ass.net>
- <CAG_fn=UJD=j1nNpq9qp9tr8J2ru4KaoPofk71XJjUW0=qcVTSA@mail.gmail.com>
-In-Reply-To: <CAG_fn=UJD=j1nNpq9qp9tr8J2ru4KaoPofk71XJjUW0=qcVTSA@mail.gmail.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Tue, 2 Apr 2019 13:31:57 +0200
-Message-ID: <CAG_fn=VAjx4iM8zdQnLY-nbbb09PEcwfzk3zbEWoCYxtjrnE-g@mail.gmail.com>
-Subject: Re: [PATCH] x86/asm: use memory clobber in bitops that touch
- arbitrary memory
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Paul McKenney <paulmck@linux.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        James Y Knight <jyknight@google.com>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhQpk6cFZckQH+LQmQmirVzLm_GH57ZD3-76y-59G=DocQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 10:59 AM Alexander Potapenko <glider@google.com> wro=
-te:
->
-> On Tue, Apr 2, 2019 at 9:27 AM Peter Zijlstra <peterz@infradead.org> wrot=
-e:
+On Mon, Apr 01, 2019 at 10:50:03AM -0400, Paul Moore wrote:
+> On Fri, Mar 15, 2019 at 2:35 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > Audit events could happen in a network namespace outside of a task
+> > context due to packets received from the net that trigger an auditing
+> > rule prior to being associated with a running task.  The network
+> > namespace could be in use by multiple containers by association to the
+> > tasks in that network namespace.  We still want a way to attribute
+> > these events to any potential containers.  Keep a list per network
+> > namespace to track these audit container identifiiers.
 > >
+> > Add/increment the audit container identifier on:
+> > - initial setting of the audit container identifier via /proc
+> > - clone/fork call that inherits an audit container identifier
+> > - unshare call that inherits an audit container identifier
+> > - setns call that inherits an audit container identifier
+> > Delete/decrement the audit container identifier on:
+> > - an inherited audit container identifier dropped when child set
+> > - process exit
+> > - unshare call that drops a net namespace
+> > - setns call that drops a net namespace
 > >
+> > See: https://github.com/linux-audit/audit-kernel/issues/92
+> > See: https://github.com/linux-audit/audit-testsuite/issues/64
+> > See: https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Container-ID
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  include/linux/audit.h | 19 ++++++++++++
+> >  kernel/audit.c        | 86 +++++++++++++++++++++++++++++++++++++++++++++++++--
+> >  kernel/nsproxy.c      |  4 +++
+> >  3 files changed, 106 insertions(+), 3 deletions(-)
+> 
+> ...
+> 
+> > diff --git a/kernel/audit.c b/kernel/audit.c
+> > index cf448599ef34..7fa3194f5342 100644
+> > --- a/kernel/audit.c
+> > +++ b/kernel/audit.c
+> > @@ -72,6 +72,7 @@
+> >  #include <linux/freezer.h>
+> >  #include <linux/pid_namespace.h>
+> >  #include <net/netns/generic.h>
+> > +#include <net/net_namespace.h>
 > >
-> > On Mon, Apr 01, 2019 at 06:24:08PM +0200, Alexander Potapenko wrote:
-> > > diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bit=
-ops.h
-> > > index d153d570bb04..20e4950827d9 100644
-> > > --- a/arch/x86/include/asm/bitops.h
-> > > +++ b/arch/x86/include/asm/bitops.h
-> > > @@ -111,7 +111,7 @@ clear_bit(long nr, volatile unsigned long *addr)
-> > >       } else {
-> > >               asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
-> > >                       : BITOP_ADDR(addr)
-> > > -                     : "Ir" (nr));
-> > > +                     : "Ir" (nr) : "memory");
-> > >       }
-> > >  }
+> >  #include "audit.h"
 > >
-> > clear_bit() doesn't have a return value, so why are we now still using
-> > "+m" output ?
-> You're right, "m" should suffice. I'll update the patch.
-> By the way, now that we've added the memory barriers we can probably
-> remove the barrier() call from __clear_bit_unlock() and update the
-> comment accordingly.
-> For clear_bit() the memory barrier is missing on the IS_IMMEDIATE(nr)
-> path, so this one should be kept as is.
->
-> > AFAICT the only reason we did that was to clobber the variable, which
-> > you've (afaiu correctly) argued to be incorrect.
+> > @@ -99,9 +100,13 @@
+> >  /**
+> >   * struct audit_net - audit private network namespace data
+> >   * @sk: communication socket
+> > + * @contid_list: audit container identifier list
+> > + * @contid_list_lock audit container identifier list lock
+> >   */
+> >  struct audit_net {
+> >         struct sock *sk;
+> > +       struct list_head contid_list;
+> > +       spinlock_t contid_list_lock;
+> >  };
 > >
-> > So whould we not write this as:
+> >  /**
+> > @@ -275,8 +280,11 @@ struct audit_task_info init_struct_audit = {
+> >  void audit_free(struct task_struct *tsk)
+> >  {
+> >         struct audit_task_info *info = tsk->audit;
+> > +       struct nsproxy *ns = tsk->nsproxy;
 > >
-> >         asm volatile (LOCK_PREFIX __ASM_SIZE(btr) " %[nr], %[addr]"
-> >                 : : [addr] "m" (*addr), [nr] "Ir" (nr)
-> >                 : "memory");
-Updated the patch.
-I took the liberty of not adding the symbolic names to reduce the diff.
-If you think that's necessary I can do that in a separate patch.
-> > ?
+> >         audit_free_syscall(tsk);
+> > +       if (ns)
+> > +               audit_netns_contid_del(ns->net_ns, audit_get_contid(tsk));
+> >         /* Freeing the audit_task_info struct must be performed after
+> >          * audit_log_exit() due to need for loginuid and sessionid.
+> >          */
+> > @@ -376,6 +384,73 @@ static struct sock *audit_get_sk(const struct net *net)
+> >         return aunet->sk;
+> >  }
 > >
-> > And the very same for _all_ other sites touched in this patch.
->
->
->
-> --
-> Alexander Potapenko
-> Software Engineer
->
-> Google Germany GmbH
-> Erika-Mann-Stra=C3=9Fe, 33
-> 80636 M=C3=BCnchen
->
-> Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-> Registergericht und -nummer: Hamburg, HRB 86891
-> Sitz der Gesellschaft: Hamburg
+> > +void audit_netns_contid_add(struct net *net, u64 contid)
+> > +{
+> > +       struct audit_net *aunet = net_generic(net, audit_net_id);
+> > +       struct list_head *contid_list = &aunet->contid_list;
+> > +       struct audit_contid *cont;
+> > +
+> > +       if (!audit_contid_valid(contid))
+> > +               return;
+> > +       if (!aunet)
+> > +               return;
+> 
+> We should move the contid_list assignment below this check, or decide
+> that aunet is always going to valid (?) and get rid of this check
+> completely.
+> 
+I'm not sure why that would be needed.  Finding the net_id list is an operation
+of a map relating net namespaces to lists, not contids to lists.  We could do
+it, sure, but since they're unrelated operations, I don't think we experience
+any slowdowns from doing it this way.
 
+> > +       spin_lock(&aunet->contid_list_lock);
+> > +       if (!list_empty(contid_list))
+> 
+> We don't need the list_empty() check here do we?  I think we can just
+> call list_for_each_entry_rcu(), yes?
+> 
+This is true, the list_empty check is redundant, and the for loop will fall
+through if the list is empty.
 
+> > +               list_for_each_entry_rcu(cont, contid_list, list)
+> > +                       if (cont->id == contid) {
+> > +                               refcount_inc(&cont->refcount);
+> > +                               goto out;
+> > +                       }
+> > +       cont = kmalloc(sizeof(struct audit_contid), GFP_ATOMIC);
+> 
+> If you had to guess, what do you think is going to be more common:
+> bumping the refcount of an existing entry in the list, or adding a new
+> entry?  I'm asking because I always get a little nervous when doing
+> allocations while holding a spinlock.  Yes, you are doing it with
+> GFP_ATOMIC, but it still seems like something to try and avoid if this
+> is going to approach 50%.  However, if the new entry is rare then the
+> extra work of always doing the allocation before taking the lock and
+> then freeing it afterwards might be a bad tradeoff.
+> 
+I think this is another way of asking, will multiple processes exist in the same
+network namespace?  That is to say, will we expect a process to create a net
+namespace, and then have other processes enter that namespace (thereby
+triggering multiple calls to audit_netns_contid_add with the same net pointer
+and cont id).  Given that the kubernetes notion of a pod is almost by definition
+multiple containers sharing a network namespace, I think the answer is that we
+will be strongly biased towards the refcount_inc case, rather than the kmalloc
+case.  I could be wrong, but I think this is likely already in the optimized
+order.
 
---=20
-Alexander Potapenko
-Software Engineer
+> My gut feeling says we might do about as many allocations as refcount
+> bumps, but I could be thinking about this wrong.
+> 
+> Moving the allocation outside the spinlock might also open the door to
+> doing this as GFP_KERNEL, which is a good thing, but I haven't looked
+> at the callers to see if that is possible (it may not be).  That's an
+> exercise left to the patch author (if he hasn't done that already).
+> 
+> > +       if (cont) {
+> > +               INIT_LIST_HEAD(&cont->list);
+> 
+> Unless there is some guidance that INIT_LIST_HEAD() should be used
+> regardless, you shouldn't need to call this here since list_add_rcu()
+> will take care of any list.h related initialization.
+> 
+There is a corner case that needs it.  list_add_rcu has a check that gets
+called, __list_add_valid.  Its a noop in the regular case, but if
+CONFIG_DEBUG_LIST is defined, its a check to ensure that the next and prev
+pointers getting passed in aren't set to detectable corrupt values.  If we pass
+in garbage, we can get transient false positives on that check, so we need to
+set the list pointers to known good values before hand, either by using kzalloc,
+or INIT_LIST_HEAD, as has been done here.  Given that we expressly set every
+field of this structure, I think this is the right approach, as it uses the list
+macro to expressly set the list values to their proper state.
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+> > +               cont->id = contid;
+> > +               refcount_set(&cont->refcount, 1);
+> > +               list_add_rcu(&cont->list, contid_list);
+> > +       }
+> > +out:
+> > +       spin_unlock(&aunet->contid_list_lock);
+> > +}
+> 
+> -- 
+> paul moore
+> www.paul-moore.com
+> 
