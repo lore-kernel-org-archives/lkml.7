@@ -2,168 +2,114 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC2C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC6BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726962075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:52:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQsqFjGt"
+	by mail.kernel.org (Postfix) with ESMTP id D76902075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfDBTwF (ORCPT
+        id S1726097AbfDBT4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:52:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33744 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDBTwE (ORCPT
+        Tue, 2 Apr 2019 15:56:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42849 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfDBT4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:52:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f23so12727674ljc.0;
-        Tue, 02 Apr 2019 12:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pH7CqM4oqzCN5Nfo/q+PTTWA7L0TFPPJXU4HaaJK0hs=;
-        b=lQsqFjGt4LPh5AlJSzwIy87yWCeWXluceVJ72r4dlu+boieSfuL8NQa5yVfIQYr2dZ
-         2Kol/RJJLGfoxqqxg2HdQKyLF9AhAK+RRw096Q3ibrTlUYB5Cq1OtkV06gmQEIwbbmV0
-         vh6J/zU3N+42mdEzuG2iKKiND026Y3sRIQU5hkdliDZDUQ9yW41RqZKyYzIN+rijsDJ2
-         rqWAmoSSHlHfrKMXJC0zbNR7gld9hNR6QEV6NoOBnAYPMIol0oShI5yUdbtyFsDIGthG
-         h3ikGk4VhybAzsdzYyaUTiVS2d+T6TPai0NAMJF9PlK4jzcdmP+F8fO3wL6aIiydheEi
-         kBkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pH7CqM4oqzCN5Nfo/q+PTTWA7L0TFPPJXU4HaaJK0hs=;
-        b=leb0ZLgAd8nqlJFQNTSuaPXIe+OZFRG5Cto7TVrThMfh3JSCXcXOr8ZvP8OBZu1dgm
-         JY3R36SCAXhGeDwD2dYC6EJ1V236EZGppANmPsyuokQ6aTZeDTmnupAPPt/7qeVN7jmW
-         Y06d20eoSU6D4NI3XQiflK/qTfx7GkxwlnrKwAREFhB1zAFZO92re1SN1pho0ydxWDod
-         RfI3suGVgt6LXCBLKu8pgezhbtkYcGB7AemSZbgsZC+wFx4hIuQ57dSuTPaIMMM3wB/r
-         NUFEl6oszUnkLm59KfJTBjBmBxof2v/5ldeQM0nOObDkbNFHtEiTDlHsrwL2aa+tQKiv
-         8wrw==
-X-Gm-Message-State: APjAAAVhrRltzzzSa1uZRlbjgLNET9aYco5vMtHOMXS5wxX1tUFloAV/
-        PEBhpT5gFBClncFcS8+XKR0=
-X-Google-Smtp-Source: APXvYqwlywEU0L1GLNxItFEGdjmJcWGIGnviGfLb68Zs8hFZSO6ijTYA3GkZxBsZd7a5vEcusxKIzw==
-X-Received: by 2002:a2e:5bcc:: with SMTP id m73mr39469887lje.100.1554234722329;
-        Tue, 02 Apr 2019 12:52:02 -0700 (PDT)
-Received: from [192.168.1.19] (ckb186.neoplus.adsl.tpnet.pl. [83.31.77.186])
-        by smtp.gmail.com with ESMTPSA id c15sm2638302lfi.14.2019.04.02.12.52.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 12:52:01 -0700 (PDT)
-Subject: Re: [RFC PATCH 2/5] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc:     robh+dt@kernel.org, marek.behun@nic.cz,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
-References: <20190401173400.14238-1-dmurphy@ti.com>
- <20190401173400.14238-3-dmurphy@ti.com> <20190401212921.GB14681@amd>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <75627633-57ed-4bd2-5802-132b39ba0f7d@gmail.com>
-Date:   Tue, 2 Apr 2019 21:51:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 2 Apr 2019 15:56:04 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hBPVj-0001u8-BA; Tue, 02 Apr 2019 21:55:55 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hBPVi-0000q0-Cx; Tue, 02 Apr 2019 21:55:54 +0200
+Date:   Tue, 2 Apr 2019 21:55:54 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bichao.zheng@amlogic.com
+Subject: Re: [PATCH 1/2] pwm: meson: consider 128 a valid pre-divider
+Message-ID: <20190402195554.5efbtjr6bswoigzt@pengutronix.de>
+References: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
+ <20190401181817.11999-2-martin.blumenstingl@googlemail.com>
+ <20190401183847.7xhlgff63cvlzz2h@pengutronix.de>
+ <CAFBinCDac9189=+UVLPLqdmJsJvudys_L0GE=Zf0FRkOWsruuw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190401212921.GB14681@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFBinCDac9189=+UVLPLqdmJsJvudys_L0GE=Zf0FRkOWsruuw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/19 11:29 PM, Pavel Machek wrote:
-> Hi!
+On Tue, Apr 02, 2019 at 09:22:55PM +0200, Martin Blumenstingl wrote:
+> Hello Uwe,
 > 
+> On Mon, Apr 1, 2019 at 8:38 PM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > Hello Martin,
+> >
+> > On Mon, Apr 01, 2019 at 08:18:16PM +0200, Martin Blumenstingl wrote:
+> > > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> > > index f6e738ad7bd9..4b708c1fcb1d 100644
+> > > --- a/drivers/pwm/pwm-meson.c
+> > > +++ b/drivers/pwm/pwm-meson.c
+> > > @@ -188,7 +188,7 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+> > >       do_div(fin_ps, fin_freq);
+> > >
+> > >       /* Calc pre_div with the period */
+> > > -     for (pre_div = 0; pre_div < MISC_CLK_DIV_MASK; pre_div++) {
+> > > +     for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
+> > >               cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
+> > >                                           fin_ps * (pre_div + 1));
+> > >               dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
+> >
+> > You could even calculate pre_div without the loop.
+> >
+> > Something like:
+> >
+> >         u64 pre_div = (u64)period * rate;
+> >         do_div_round_up(pre_div, NSEC_PER_SEC * 0xffff);
+> >         pre_div--;
+> >
+> > (I didn't check rounding and maybe its off by one and ...) This would
+> > also get rid of the strange 1000 that is currently used in the
+> > calculation without a real benefit (unless I missed something).
+> personally I prefer using this simple patch applied first as it is
+> easy to review and (due to the Fixes tag) may get backported to stable
+> kernels.
+> I'm not saying I don't like your suggestion, I propose to postpone
+> implementing this cleanup. I need to have a closer look at the
+> calculation because three values are derived from the input clock rate
+> (pre_div, cnt, duty_cnt) and I don't want to mess up the cases that
+> are already working as of today.
 > 
->>   .../bindings/leds/leds-class-multicolor.txt   | 140 ++++++++++++++++++
->>   1 file changed, 140 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->> new file mode 100644
->> index 000000000000..4b1a26104c79
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->> @@ -0,0 +1,140 @@
->> +* Multicolor LED properties
->> +
->> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
->> +can be grouped together and also provide a modeling mechanism so that the
->> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
->> +
->> +The nodes and properties defined in this document are unique to the multicolor
->> +LED class.  Common LED nodes and properties are inherited from the common.txt
->> +within this documentation directory.
->> +
->> +Required LED Child properties:
->> +	- color : This is the color ID of the LED.  Definitions can be found
->> +		  in include/linux/leds/common.txt
->> +
->> +Optional LED Child properties:
->> +	- available-brightness-models : This is the phandle to the brightness-model
->> +					node(s) that this LED cluster can support.
->> +
->> +Required Brightness model properties
->> +	- led-brightness-model : This flag alerts the device driver and class
->> +				 code that this node is a brightness model node
->> +				 and to process the properties differently.
->> +
->> +Required Brightness model child properties
->> +	- model_name : This is the name of the model presented to the user.  This
->> +		       should be a color that the LED cluster can produce for
->> +		       the device it is attached to.
->> +	- layout : This is the LED layout for the levels.  This layout will
->> +		   determine the color order of the levels.  The layout and
->> +		   level-x properties array should be the same size.
->> +	- level-x : These are the values for the LEDs to produce the color that
->> +		    is defined.  These values are placed in the array according
->> +		    to the layout property.
-> 
->> +led-controller@30 {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	compatible = "ti,lp5024";
->> +	reg = <0x29>;
->> +
->> +	lp5024_model_yellow: brightness-models {
->> +		led-brightness-model;
->> +		model@0 {
->> +			model_name = "yellow";
->> +			layout = <LED_COLOR_ID_RED
->> +				  LED_COLOR_ID_GREEN
->> +				  LED_COLOR_ID_BLUE>;
->> +			level-1 = <255 227 40>;
->> +			level-2 = <255 240 136>;
->> +			level-3 = <255 247 196>;
->> +		};
->> +	};
-> 
-> I don't think this works. RGB LED can show millions of colors. Do you
-> propose to have millions of entries in dts?
+> Please let me know what you think.
 
-Pavel, you know very well what is going on here and what is the
-background of this design. I suppose you've just entered your trolling
-mode - you lately admitted that it sometimes happens :-) [0]
+That's also ok for me. In this case take my
 
-This aims at solving the problem with multi color LED support in
-a backward compatible way, which is especially important in relation
-to existing triggers.
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-This is our attempt of addressing that problem in a color space
-agnostic way. It was inspired by out-of-tree approach presented
-by Vesa few months ago.
-
-[0] https://www.spinics.net/lists/linux-leds/msg11388.html
+Best regards
+Uwe
 
 -- 
-Best regards,
-Jacek Anaszewski
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
