@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8CCC10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66139C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C7B21473
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC8720883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731022AbfDBMke (ORCPT
+        id S1731069AbfDBMkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:40:34 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:45641 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbfDBMkc (ORCPT
+        Tue, 2 Apr 2019 08:40:36 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:36753 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730850AbfDBMkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:40:32 -0400
+        Tue, 2 Apr 2019 08:40:35 -0400
 X-Originating-IP: 109.213.83.19
 Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 9E33E1BF212;
-        Tue,  2 Apr 2019 12:40:29 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 28D4A20007;
+        Tue,  2 Apr 2019 12:40:31 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -33,9 +33,9 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 06/10] clk: at91: usb: Add sam9x60 support
-Date:   Tue,  2 Apr 2019 14:40:12 +0200
-Message-Id: <20190402124016.20558-7-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 07/10] clk: at91: master: Add sam9x60 support
+Date:   Tue,  2 Apr 2019 14:40:13 +0200
+Message-Id: <20190402124016.20558-8-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190402124016.20558-1-alexandre.belloni@bootlin.com>
 References: <20190402124016.20558-1-alexandre.belloni@bootlin.com>
@@ -46,111 +46,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sam9x60 USB clock supports four different parents, ensure they can be
-selected.
+The sam9x60 cpu clock is located at a different offset but is otherwise
+similar to the master clock.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/clk-usb.c | 33 +++++++++++++++++++++++++++------
- drivers/clk/at91/pmc.h     |  3 +++
- 2 files changed, 30 insertions(+), 6 deletions(-)
+ drivers/clk/at91/clk-master.c | 8 +++++---
+ drivers/clk/at91/pmc.h        | 1 +
+ include/linux/clk/at91_pmc.h  | 2 ++
+ 3 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-usb.c b/drivers/clk/at91/clk-usb.c
-index 79ee1c760f2a..ebc37ee33518 100644
---- a/drivers/clk/at91/clk-usb.c
-+++ b/drivers/clk/at91/clk-usb.c
-@@ -23,9 +23,13 @@
- #define RM9200_USB_DIV_SHIFT	28
- #define RM9200_USB_DIV_TAB_SIZE	4
- 
-+#define SAM9X5_USBS_MASK	GENMASK(0, 0)
-+#define SAM9X60_USBS_MASK	GENMASK(1, 0)
-+
- struct at91sam9x5_clk_usb {
- 	struct clk_hw hw;
+diff --git a/drivers/clk/at91/clk-master.c b/drivers/clk/at91/clk-master.c
+index eb53b4a8fab6..12b5bf4cc7bb 100644
+--- a/drivers/clk/at91/clk-master.c
++++ b/drivers/clk/at91/clk-master.c
+@@ -29,6 +29,7 @@ struct clk_master {
  	struct regmap *regmap;
-+	u32 usbs_mask;
+ 	const struct clk_master_layout *layout;
+ 	const struct clk_master_characteristics *characteristics;
++	u32 mckr;
  };
  
- #define to_at91sam9x5_clk_usb(hw) \
-@@ -111,8 +115,7 @@ static int at91sam9x5_clk_usb_set_parent(struct clk_hw *hw, u8 index)
- 	if (index > 1)
- 		return -EINVAL;
+ static inline bool clk_master_ready(struct regmap *regmap)
+@@ -69,7 +70,7 @@ static unsigned long clk_master_recalc_rate(struct clk_hw *hw,
+ 						master->characteristics;
+ 	unsigned int mckr;
  
--	regmap_update_bits(usb->regmap, AT91_PMC_USB, AT91_PMC_USBS,
--			   index ? AT91_PMC_USBS : 0);
-+	regmap_update_bits(usb->regmap, AT91_PMC_USB, usb->usbs_mask, index);
+-	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
++	regmap_read(master->regmap, master->layout->offset, &mckr);
+ 	mckr &= layout->mask;
  
- 	return 0;
+ 	pres = (mckr >> layout->pres_shift) & MASTER_PRES_MASK;
+@@ -95,7 +96,7 @@ static u8 clk_master_get_parent(struct clk_hw *hw)
+ 	struct clk_master *master = to_clk_master(hw);
+ 	unsigned int mckr;
+ 
+-	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
++	regmap_read(master->regmap, master->layout->offset, &mckr);
+ 
+ 	return mckr & AT91_PMC_CSS;
  }
-@@ -124,7 +127,7 @@ static u8 at91sam9x5_clk_usb_get_parent(struct clk_hw *hw)
- 
- 	regmap_read(usb->regmap, AT91_PMC_USB, &usbr);
- 
--	return usbr & AT91_PMC_USBS;
-+	return usbr & usb->usbs_mask;
- }
- 
- static int at91sam9x5_clk_usb_set_rate(struct clk_hw *hw, unsigned long rate,
-@@ -190,9 +193,10 @@ static const struct clk_ops at91sam9n12_usb_ops = {
- 	.set_rate = at91sam9x5_clk_usb_set_rate,
- };
- 
--struct clk_hw * __init
--at91sam9x5_clk_register_usb(struct regmap *regmap, const char *name,
--			    const char **parent_names, u8 num_parents)
-+static struct clk_hw * __init
-+_at91sam9x5_clk_register_usb(struct regmap *regmap, const char *name,
-+			     const char **parent_names, u8 num_parents,
-+			     u32 usbs_mask)
- {
- 	struct at91sam9x5_clk_usb *usb;
- 	struct clk_hw *hw;
-@@ -212,6 +216,7 @@ at91sam9x5_clk_register_usb(struct regmap *regmap, const char *name,
- 
- 	usb->hw.init = &init;
- 	usb->regmap = regmap;
-+	usb->usbs_mask = SAM9X5_USBS_MASK;
- 
- 	hw = &usb->hw;
- 	ret = clk_hw_register(NULL, &usb->hw);
-@@ -223,6 +228,22 @@ at91sam9x5_clk_register_usb(struct regmap *regmap, const char *name,
+@@ -147,13 +148,14 @@ at91_clk_register_master(struct regmap *regmap,
  	return hw;
  }
  
-+struct clk_hw * __init
-+at91sam9x5_clk_register_usb(struct regmap *regmap, const char *name,
-+			    const char **parent_names, u8 num_parents)
-+{
-+	return _at91sam9x5_clk_register_usb(regmap, name, parent_names,
-+					    num_parents, SAM9X5_USBS_MASK);
-+}
-+
-+struct clk_hw * __init
-+sam9x60_clk_register_usb(struct regmap *regmap, const char *name,
-+			 const char **parent_names, u8 num_parents)
-+{
-+	return _at91sam9x5_clk_register_usb(regmap, name, parent_names,
-+					    num_parents, SAM9X60_USBS_MASK);
-+}
-+
- struct clk_hw * __init
- at91sam9n12_clk_register_usb(struct regmap *regmap, const char *name,
- 			     const char *parent_name)
+-
+ const struct clk_master_layout at91rm9200_master_layout = {
+ 	.mask = 0x31F,
+ 	.pres_shift = 2,
++	.offset = AT91_PMC_MCKR,
+ };
+ 
+ const struct clk_master_layout at91sam9x5_master_layout = {
+ 	.mask = 0x373,
+ 	.pres_shift = 4,
++	.offset = AT91_PMC_MCKR,
+ };
 diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 4027306b904c..44345e4ab1c9 100644
+index 44345e4ab1c9..4a30c20f17f1 100644
 --- a/drivers/clk/at91/pmc.h
 +++ b/drivers/clk/at91/pmc.h
-@@ -194,6 +194,9 @@ struct clk_hw * __init
- at91sam9n12_clk_register_usb(struct regmap *regmap, const char *name,
- 			     const char *parent_name);
- struct clk_hw * __init
-+sam9x60_clk_register_usb(struct regmap *regmap, const char *name,
-+			 const char **parent_names, u8 num_parents);
-+struct clk_hw * __init
- at91rm9200_clk_register_usb(struct regmap *regmap, const char *name,
- 			    const char *parent_name, const u32 *divisors);
+@@ -38,6 +38,7 @@ struct clk_range {
+ #define CLK_RANGE(MIN, MAX) {.min = MIN, .max = MAX,}
  
+ struct clk_master_layout {
++	u32 offset;
+ 	u32 mask;
+ 	u8 pres_shift;
+ };
+diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
+index 31f00ebf1315..0c53f26ae3d3 100644
+--- a/include/linux/clk/at91_pmc.h
++++ b/include/linux/clk/at91_pmc.h
+@@ -74,6 +74,8 @@
+ #define			AT91_PMC_USBDIV_4		(2 << 28)
+ #define		AT91_PMC_USB96M		(1     << 28)		/* Divider by 2 Enable (PLLB only) */
+ 
++#define AT91_PMC_CPU_CKR	0x28			/* CPU Clock Register */
++
+ #define	AT91_PMC_MCKR		0x30			/* Master Clock Register */
+ #define		AT91_PMC_CSS		(3 <<  0)		/* Master Clock Selection */
+ #define			AT91_PMC_CSS_SLOW		(0 << 0)
 -- 
 2.20.1
 
