@@ -6,34 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B50CC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A07C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8ED206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE43206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfDBMk1 (ORCPT
+        id S1730932AbfDBMkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:40:27 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38275 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbfDBMkY (ORCPT
+        Tue, 2 Apr 2019 08:40:31 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:40967 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbfDBMk3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:40:24 -0400
+        Tue, 2 Apr 2019 08:40:29 -0400
+X-Originating-IP: 109.213.83.19
 Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 9668520000C;
-        Tue,  2 Apr 2019 12:40:20 +0000 (UTC)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 97B3A1BF203;
+        Tue,  2 Apr 2019 12:40:25 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         Claudiu Beznea <claudiu.beznea@microchip.com>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/10] clk: at91: sckc: add support to specify registers bit offsets
-Date:   Tue,  2 Apr 2019 14:40:07 +0200
-Message-Id: <20190402124016.20558-2-alexandre.belloni@bootlin.com>
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 04/10] clk: at91: allow configuring peripheral PCR layout
+Date:   Tue,  2 Apr 2019 14:40:10 +0200
+Message-Id: <20190402124016.20558-5-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190402124016.20558-1-alexandre.belloni@bootlin.com>
 References: <20190402124016.20558-1-alexandre.belloni@bootlin.com>
@@ -44,362 +46,312 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+The PCR register actually changed layout for each SoC. By chance, this
+didn't have impact on sama5d[2-4] support but since sama5d3, PID is seven
+bits wide and sama5d4 and sama5d2 don't have DIV.
 
-Different IPs uses different offsets in registers for the same
-functionality, thus adapt the driver to support this.
+For the DT backward compatibility, keep the layout as is.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/sckc.c | 112 +++++++++++++++++++++++++++-------------
- 1 file changed, 77 insertions(+), 35 deletions(-)
+ drivers/clk/at91/at91sam9x5.c     |  9 ++++++
+ drivers/clk/at91/clk-peripheral.c | 46 ++++++++++++++++---------------
+ drivers/clk/at91/dt-compat.c      |  9 ++++++
+ drivers/clk/at91/pmc.h            | 12 ++++++++
+ drivers/clk/at91/sama5d2.c        |  9 ++++++
+ drivers/clk/at91/sama5d4.c        |  8 ++++++
+ include/linux/clk/at91_pmc.h      |  3 --
+ 7 files changed, 71 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-index ab6ecefc49ad..b7163d3a2269 100644
---- a/drivers/clk/at91/sckc.c
-+++ b/drivers/clk/at91/sckc.c
-@@ -22,15 +22,25 @@
- #define SLOWCK_SW_TIME_USEC	((SLOWCK_SW_CYCLES * USEC_PER_SEC) / \
- 				 SLOW_CLOCK_FREQ)
+diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
+index 3487e03d4bc6..f5cfcbd85f10 100644
+--- a/drivers/clk/at91/at91sam9x5.c
++++ b/drivers/clk/at91/at91sam9x5.c
+@@ -49,6 +49,13 @@ static const struct {
+ 	{ .n = "pck1",  .p = "prog1",    .id = 9 },
+ };
  
--#define	AT91_SCKC_CR			0x00
--#define		AT91_SCKC_RCEN		(1 << 0)
--#define		AT91_SCKC_OSC32EN	(1 << 1)
--#define		AT91_SCKC_OSC32BYP	(1 << 2)
--#define		AT91_SCKC_OSCSEL	(1 << 3)
-+#define	AT91_SCKC_CR		0x00
-+#define		AT91_SCKC_RCEN(off)	(1 << (off)->cr_rcen)
-+#define		AT91_SCKC_OSC32EN(off)	(1 << (off)->cr_osc32en)
-+#define		AT91_SCKC_OSC32BYP(off)	(1 << (off)->cr_osc32byp)
-+#define		AT91_SCKC_OSCSEL(off)	(1 << (off)->cr_oscsel)
-+
-+#define AT91_SCKC_OFFSET_INVALID        (32)
-+
-+struct clk_slow_offsets {
-+	u8 cr_rcen;
-+	u8 cr_osc32en;
-+	u8 cr_osc32byp;
-+	u8 cr_oscsel;
++static const struct clk_pcr_layout at91sam9x5_pcr_layout = {
++	.offset = 0x10c,
++	.cmd = BIT(12),
++	.pid_mask = GENMASK(5, 0),
++	.div_mask = GENMASK(17, 16),
 +};
++
+ struct pck {
+ 	char *n;
+ 	u8 id;
+@@ -242,6 +249,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
  
- struct clk_slow_osc {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_offsets *offsets;
- 	unsigned long startup_usec;
+ 	for (i = 0; i < ARRAY_SIZE(at91sam9x5_periphck); i++) {
+ 		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 &at91sam9x5_pcr_layout,
+ 							 at91sam9x5_periphck[i].n,
+ 							 "masterck",
+ 							 at91sam9x5_periphck[i].id,
+@@ -254,6 +262,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
+ 
+ 	for (i = 0; extra_pcks[i].id; i++) {
+ 		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 &at91sam9x5_pcr_layout,
+ 							 extra_pcks[i].n,
+ 							 "masterck",
+ 							 extra_pcks[i].id,
+diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
+index 65c1defa78e4..6b7748b9588a 100644
+--- a/drivers/clk/at91/clk-peripheral.c
++++ b/drivers/clk/at91/clk-peripheral.c
+@@ -8,6 +8,7 @@
+  *
+  */
+ 
++#include <linux/bitops.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+ #include <linux/clk/at91_pmc.h>
+@@ -23,9 +24,6 @@ DEFINE_SPINLOCK(pmc_pcr_lock);
+ #define PERIPHERAL_ID_MAX	31
+ #define PERIPHERAL_MASK(id)	(1 << ((id) & PERIPHERAL_ID_MAX))
+ 
+-#define PERIPHERAL_RSHIFT_MASK	0x3
+-#define PERIPHERAL_RSHIFT(val)	(((val) >> 16) & PERIPHERAL_RSHIFT_MASK)
+-
+ #define PERIPHERAL_MAX_SHIFT	3
+ 
+ struct clk_peripheral {
+@@ -43,6 +41,7 @@ struct clk_sam9x5_peripheral {
+ 	spinlock_t *lock;
+ 	u32 id;
+ 	u32 div;
++	const struct clk_pcr_layout *layout;
+ 	bool auto_div;
  };
  
-@@ -39,6 +49,7 @@ struct clk_slow_osc {
- struct clk_sama5d4_slow_osc {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_offsets *offsets;
- 	unsigned long startup_usec;
- 	bool prepared;
- };
-@@ -48,6 +59,7 @@ struct clk_sama5d4_slow_osc {
- struct clk_slow_rc_osc {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_offsets *offsets;
- 	unsigned long frequency;
- 	unsigned long accuracy;
- 	unsigned long startup_usec;
-@@ -58,6 +70,7 @@ struct clk_slow_rc_osc {
- struct clk_sam9x5_slow {
- 	struct clk_hw hw;
- 	void __iomem *sckcr;
-+	const struct clk_slow_offsets *offsets;
- 	u8 parent;
- };
- 
-@@ -69,10 +82,11 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
- 	void __iomem *sckcr = osc->sckcr;
- 	u32 tmp = readl(sckcr);
- 
--	if (tmp & (AT91_SCKC_OSC32BYP | AT91_SCKC_OSC32EN))
-+	if (tmp & (AT91_SCKC_OSC32BYP(osc->offsets) |
-+		   AT91_SCKC_OSC32EN(osc->offsets)))
+@@ -169,13 +168,13 @@ static int clk_sam9x5_peripheral_enable(struct clk_hw *hw)
  		return 0;
  
--	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
-+	writel(tmp | AT91_SCKC_OSC32EN(osc->offsets), sckcr);
+ 	spin_lock_irqsave(periph->lock, flags);
+-	regmap_write(periph->regmap, AT91_PMC_PCR,
+-		     (periph->id & AT91_PMC_PCR_PID_MASK));
+-	regmap_update_bits(periph->regmap, AT91_PMC_PCR,
+-			   AT91_PMC_PCR_DIV_MASK | AT91_PMC_PCR_CMD |
++	regmap_write(periph->regmap, periph->layout->offset,
++		     (periph->id & periph->layout->pid_mask));
++	regmap_update_bits(periph->regmap, periph->layout->offset,
++			   periph->layout->div_mask | periph->layout->cmd |
+ 			   AT91_PMC_PCR_EN,
+-			   AT91_PMC_PCR_DIV(periph->div) |
+-			   AT91_PMC_PCR_CMD |
++			   field_prep(periph->layout->div_mask, periph->div) |
++			   periph->layout->cmd |
+ 			   AT91_PMC_PCR_EN);
+ 	spin_unlock_irqrestore(periph->lock, flags);
  
- 	usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
-@@ -85,10 +99,10 @@ static void clk_slow_osc_unprepare(struct clk_hw *hw)
- 	void __iomem *sckcr = osc->sckcr;
- 	u32 tmp = readl(sckcr);
- 
--	if (tmp & AT91_SCKC_OSC32BYP)
-+	if (tmp & AT91_SCKC_OSC32BYP(osc->offsets))
+@@ -191,11 +190,11 @@ static void clk_sam9x5_peripheral_disable(struct clk_hw *hw)
  		return;
  
--	writel(tmp & ~AT91_SCKC_OSC32EN, sckcr);
-+	writel(tmp & ~AT91_SCKC_OSC32EN(osc->offsets), sckcr);
+ 	spin_lock_irqsave(periph->lock, flags);
+-	regmap_write(periph->regmap, AT91_PMC_PCR,
+-		     (periph->id & AT91_PMC_PCR_PID_MASK));
+-	regmap_update_bits(periph->regmap, AT91_PMC_PCR,
+-			   AT91_PMC_PCR_EN | AT91_PMC_PCR_CMD,
+-			   AT91_PMC_PCR_CMD);
++	regmap_write(periph->regmap, periph->layout->offset,
++		     (periph->id & periph->layout->pid_mask));
++	regmap_update_bits(periph->regmap, periph->layout->offset,
++			   AT91_PMC_PCR_EN | periph->layout->cmd,
++			   periph->layout->cmd);
+ 	spin_unlock_irqrestore(periph->lock, flags);
  }
  
- static int clk_slow_osc_is_prepared(struct clk_hw *hw)
-@@ -97,10 +111,10 @@ static int clk_slow_osc_is_prepared(struct clk_hw *hw)
- 	void __iomem *sckcr = osc->sckcr;
- 	u32 tmp = readl(sckcr);
- 
--	if (tmp & AT91_SCKC_OSC32BYP)
-+	if (tmp & AT91_SCKC_OSC32BYP(osc->offsets))
+@@ -209,9 +208,9 @@ static int clk_sam9x5_peripheral_is_enabled(struct clk_hw *hw)
  		return 1;
  
--	return !!(tmp & AT91_SCKC_OSC32EN);
-+	return !!(tmp & AT91_SCKC_OSC32EN(osc->offsets));
- }
+ 	spin_lock_irqsave(periph->lock, flags);
+-	regmap_write(periph->regmap, AT91_PMC_PCR,
+-		     (periph->id & AT91_PMC_PCR_PID_MASK));
+-	regmap_read(periph->regmap, AT91_PMC_PCR, &status);
++	regmap_write(periph->regmap, periph->layout->offset,
++		     (periph->id & periph->layout->pid_mask));
++	regmap_read(periph->regmap, periph->layout->offset, &status);
+ 	spin_unlock_irqrestore(periph->lock, flags);
  
- static const struct clk_ops slow_osc_ops = {
-@@ -114,7 +128,8 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
- 			   const char *name,
- 			   const char *parent_name,
- 			   unsigned long startup,
--			   bool bypass)
-+			   bool bypass,
-+			   const struct clk_slow_offsets *offsets)
+ 	return status & AT91_PMC_PCR_EN ? 1 : 0;
+@@ -229,13 +228,13 @@ clk_sam9x5_peripheral_recalc_rate(struct clk_hw *hw,
+ 		return parent_rate;
+ 
+ 	spin_lock_irqsave(periph->lock, flags);
+-	regmap_write(periph->regmap, AT91_PMC_PCR,
+-		     (periph->id & AT91_PMC_PCR_PID_MASK));
+-	regmap_read(periph->regmap, AT91_PMC_PCR, &status);
++	regmap_write(periph->regmap, periph->layout->offset,
++		     (periph->id & periph->layout->pid_mask));
++	regmap_read(periph->regmap, periph->layout->offset, &status);
+ 	spin_unlock_irqrestore(periph->lock, flags);
+ 
+ 	if (status & AT91_PMC_PCR_EN) {
+-		periph->div = PERIPHERAL_RSHIFT(status);
++		periph->div = field_get(periph->layout->div_mask, status);
+ 		periph->auto_div = false;
+ 	} else {
+ 		clk_sam9x5_peripheral_autodiv(periph);
+@@ -328,6 +327,7 @@ static const struct clk_ops sam9x5_peripheral_ops = {
+ 
+ struct clk_hw * __init
+ at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
++				    const struct clk_pcr_layout *layout,
+ 				    const char *name, const char *parent_name,
+ 				    u32 id, const struct clk_range *range)
  {
- 	struct clk_slow_osc *osc;
- 	struct clk_hw *hw;
-@@ -137,9 +152,11 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
- 	osc->hw.init = &init;
- 	osc->sckcr = sckcr;
- 	osc->startup_usec = startup;
-+	osc->offsets = offsets;
+@@ -354,7 +354,9 @@ at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
+ 	periph->div = 0;
+ 	periph->regmap = regmap;
+ 	periph->lock = lock;
+-	periph->auto_div = true;
++	if (layout->div_mask)
++		periph->auto_div = true;
++	periph->layout = layout;
+ 	periph->range = *range;
  
- 	if (bypass)
--		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN) | AT91_SCKC_OSC32BYP,
-+		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN(osc->offsets)) |
-+					AT91_SCKC_OSC32BYP(osc->offsets),
- 		       sckcr);
+ 	hw = &periph->hw;
+diff --git a/drivers/clk/at91/dt-compat.c b/drivers/clk/at91/dt-compat.c
+index b95bb4e2a927..aa09072f36db 100644
+--- a/drivers/clk/at91/dt-compat.c
++++ b/drivers/clk/at91/dt-compat.c
+@@ -93,6 +93,14 @@ CLK_OF_DECLARE(of_sama5d2_clk_audio_pll_pmc_setup,
+ 	       of_sama5d2_clk_audio_pll_pmc_setup);
+ #endif /* CONFIG_HAVE_AT91_AUDIO_PLL */
  
- 	hw = &osc->hw;
-@@ -153,7 +170,8 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
- }
- 
- static void __init
--of_at91sam9x5_clk_slow_osc_setup(struct device_node *np, void __iomem *sckcr)
-+of_at91sam9x5_clk_slow_osc_setup(struct device_node *np, void __iomem *sckcr,
-+				 const struct clk_slow_offsets *offsets)
- {
- 	struct clk_hw *hw;
- 	const char *parent_name;
-@@ -167,7 +185,7 @@ of_at91sam9x5_clk_slow_osc_setup(struct device_node *np, void __iomem *sckcr)
- 	bypass = of_property_read_bool(np, "atmel,osc-bypass");
- 
- 	hw = at91_clk_register_slow_osc(sckcr, name, parent_name, startup,
--					 bypass);
-+					bypass, offsets);
- 	if (IS_ERR(hw))
- 		return;
- 
-@@ -195,7 +213,7 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
- 	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
- 	void __iomem *sckcr = osc->sckcr;
- 
--	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
-+	writel(readl(sckcr) | AT91_SCKC_RCEN(osc->offsets), sckcr);
- 
- 	usleep_range(osc->startup_usec, osc->startup_usec + 1);
- 
-@@ -207,14 +225,14 @@ static void clk_slow_rc_osc_unprepare(struct clk_hw *hw)
- 	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
- 	void __iomem *sckcr = osc->sckcr;
- 
--	writel(readl(sckcr) & ~AT91_SCKC_RCEN, sckcr);
-+	writel(readl(sckcr) & ~AT91_SCKC_RCEN(osc->offsets), sckcr);
- }
- 
- static int clk_slow_rc_osc_is_prepared(struct clk_hw *hw)
- {
- 	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
- 
--	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN);
-+	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN(osc->offsets));
- }
- 
- static const struct clk_ops slow_rc_osc_ops = {
-@@ -230,7 +248,8 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
- 			      const char *name,
- 			      unsigned long frequency,
- 			      unsigned long accuracy,
--			      unsigned long startup)
-+			      unsigned long startup,
-+			      const struct clk_slow_offsets *offsets)
- {
- 	struct clk_slow_rc_osc *osc;
- 	struct clk_hw *hw;
-@@ -252,6 +271,7 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
- 
- 	osc->hw.init = &init;
- 	osc->sckcr = sckcr;
-+	osc->offsets = offsets;
- 	osc->frequency = frequency;
- 	osc->accuracy = accuracy;
- 	osc->startup_usec = startup;
-@@ -267,7 +287,8 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
- }
- 
- static void __init
--of_at91sam9x5_clk_slow_rc_osc_setup(struct device_node *np, void __iomem *sckcr)
-+of_at91sam9x5_clk_slow_rc_osc_setup(struct device_node *np, void __iomem *sckcr,
-+				    const struct clk_slow_offsets *offsets)
- {
- 	struct clk_hw *hw;
- 	u32 frequency = 0;
-@@ -281,7 +302,7 @@ of_at91sam9x5_clk_slow_rc_osc_setup(struct device_node *np, void __iomem *sckcr)
- 	of_property_read_u32(np, "atmel,startup-time-usec", &startup);
- 
- 	hw = at91_clk_register_slow_rc_osc(sckcr, name, frequency, accuracy,
--					    startup);
-+					   startup, offsets);
- 	if (IS_ERR(hw))
- 		return;
- 
-@@ -299,14 +320,14 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
- 
- 	tmp = readl(sckcr);
- 
--	if ((!index && !(tmp & AT91_SCKC_OSCSEL)) ||
--	    (index && (tmp & AT91_SCKC_OSCSEL)))
-+	if ((!index && !(tmp & AT91_SCKC_OSCSEL(slowck->offsets))) ||
-+	    (index && (tmp & AT91_SCKC_OSCSEL(slowck->offsets))))
- 		return 0;
- 
- 	if (index)
--		tmp |= AT91_SCKC_OSCSEL;
-+		tmp |= AT91_SCKC_OSCSEL(slowck->offsets);
- 	else
--		tmp &= ~AT91_SCKC_OSCSEL;
-+		tmp &= ~AT91_SCKC_OSCSEL(slowck->offsets);
- 
- 	writel(tmp, sckcr);
- 
-@@ -319,7 +340,7 @@ static u8 clk_sam9x5_slow_get_parent(struct clk_hw *hw)
- {
- 	struct clk_sam9x5_slow *slowck = to_clk_sam9x5_slow(hw);
- 
--	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL);
-+	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL(slowck->offsets));
- }
- 
- static const struct clk_ops sam9x5_slow_ops = {
-@@ -331,7 +352,8 @@ static struct clk_hw * __init
- at91_clk_register_sam9x5_slow(void __iomem *sckcr,
- 			      const char *name,
- 			      const char **parent_names,
--			      int num_parents)
-+			      int num_parents,
-+			      const struct clk_slow_offsets *offsets)
- {
- 	struct clk_sam9x5_slow *slowck;
- 	struct clk_hw *hw;
-@@ -353,7 +375,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
- 
- 	slowck->hw.init = &init;
- 	slowck->sckcr = sckcr;
--	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL);
-+	slowck->offsets = offsets;
-+	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL(slowck->offsets));
- 
- 	hw = &slowck->hw;
- 	ret = clk_hw_register(NULL, &slowck->hw);
-@@ -366,7 +389,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
- }
- 
- static void __init
--of_at91sam9x5_clk_slow_setup(struct device_node *np, void __iomem *sckcr)
-+of_at91sam9x5_clk_slow_setup(struct device_node *np, void __iomem *sckcr,
-+			     const struct clk_slow_offsets *offsets)
- {
- 	struct clk_hw *hw;
- 	const char *parent_names[2];
-@@ -382,7 +406,7 @@ of_at91sam9x5_clk_slow_setup(struct device_node *np, void __iomem *sckcr)
- 	of_property_read_string(np, "clock-output-names", &name);
- 
- 	hw = at91_clk_register_sam9x5_slow(sckcr, name, parent_names,
--					    num_parents);
-+					   num_parents, offsets);
- 	if (IS_ERR(hw))
- 		return;
- 
-@@ -406,10 +430,18 @@ static const struct of_device_id sckc_clk_ids[] __initconst = {
- 	{ /*sentinel*/ }
- };
- 
-+static const struct clk_slow_offsets at91sam9x5_offsets = {
-+	.cr_rcen = 0,
-+	.cr_osc32en = 1,
-+	.cr_osc32byp = 2,
-+	.cr_oscsel = 3,
++static const struct clk_pcr_layout dt_pcr_layout = {
++	.offset = 0x10c,
++	.cmd = BIT(12),
++	.pid_mask = GENMASK(5, 0),
++	.div_mask = GENMASK(17, 16),
++	.gckcss_mask = GENMASK(10, 8),
 +};
 +
- static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
- {
- 	struct device_node *childnp;
--	void (*clk_setup)(struct device_node *, void __iomem *);
-+	void (*clk_setup)(struct device_node *np, void __iomem *io,
-+			  const struct clk_slow_offsets *offsets);
- 	const struct of_device_id *clk_id;
- 	void __iomem *regbase = of_iomap(np, 0);
+ #ifdef CONFIG_HAVE_AT91_GENERATED_CLK
+ #define GENERATED_SOURCE_MAX	6
  
-@@ -421,7 +453,7 @@ static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
- 		if (!clk_id)
- 			continue;
- 		clk_setup = clk_id->data;
--		clk_setup(childnp, regbase);
-+		clk_setup(childnp, regbase, &at91sam9x5_offsets);
- 	}
- }
- CLK_OF_DECLARE(at91sam9x5_clk_sckc, "atmel,at91sam9x5-sckc",
-@@ -438,7 +470,7 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
- 	 * Assume that if it has already been selected (for example by the
- 	 * bootloader), enough time has aready passed.
- 	 */
--	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL)) {
-+	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL(osc->offsets))) {
- 		osc->prepared = true;
- 		return 0;
- 	}
-@@ -461,6 +493,13 @@ static const struct clk_ops sama5d4_slow_osc_ops = {
- 	.is_prepared = clk_sama5d4_slow_osc_is_prepared,
- };
+@@ -448,6 +456,7 @@ of_at91_clk_periph_setup(struct device_node *np, u8 type)
  
-+static const struct clk_slow_offsets at91sama5d4_offsets = {
-+	.cr_rcen = AT91_SCKC_OFFSET_INVALID,
-+	.cr_osc32en = AT91_SCKC_OFFSET_INVALID,
-+	.cr_osc32byp = AT91_SCKC_OFFSET_INVALID,
-+	.cr_oscsel = 3,
+ 			hw = at91_clk_register_sam9x5_peripheral(regmap,
+ 								 &pmc_pcr_lock,
++								 &dt_pcr_layout,
+ 								 name,
+ 								 parent_name,
+ 								 id, &range);
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 672a79bda88c..616c04588093 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -80,6 +80,17 @@ extern const struct clk_programmable_layout at91rm9200_programmable_layout;
+ extern const struct clk_programmable_layout at91sam9g45_programmable_layout;
+ extern const struct clk_programmable_layout at91sam9x5_programmable_layout;
+ 
++struct clk_pcr_layout {
++	u32 offset;
++	u32 cmd;
++	u32 div_mask;
++	u32 gckcss_mask;
++	u32 pid_mask;
 +};
 +
- static void __init of_sama5d4_sckc_setup(struct device_node *np)
- {
- 	void __iomem *regbase = of_iomap(np, 0);
-@@ -498,9 +537,11 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
- 	osc->hw.init = &init;
- 	osc->sckcr = regbase;
- 	osc->startup_usec = 1200000;
-+	osc->offsets = &at91sama5d4_offsets;
++#define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
++#define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
++
+ #define ndck(a, s) (a[s - 1].id + 1)
+ #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
+ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+@@ -143,6 +154,7 @@ at91_clk_register_peripheral(struct regmap *regmap, const char *name,
+ 			     const char *parent_name, u32 id);
+ struct clk_hw * __init
+ at91_clk_register_sam9x5_peripheral(struct regmap *regmap, spinlock_t *lock,
++				    const struct clk_pcr_layout *layout,
+ 				    const char *name, const char *parent_name,
+ 				    u32 id, const struct clk_range *range);
  
- 	if (bypass)
--		writel((readl(regbase) | AT91_SCKC_OSC32BYP), regbase);
-+		writel((readl(regbase) | AT91_SCKC_OSC32BYP(osc->offsets)),
-+		       regbase);
+diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
+index 1f70cb164b06..9d128bd60fee 100644
+--- a/drivers/clk/at91/sama5d2.c
++++ b/drivers/clk/at91/sama5d2.c
+@@ -28,6 +28,13 @@ static const struct clk_pll_characteristics plla_characteristics = {
+ 	.out = plla_out,
+ };
  
- 	hw = &osc->hw;
- 	ret = clk_hw_register(NULL, &osc->hw);
-@@ -509,7 +550,8 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
- 		return;
- 	}
++static const struct clk_pcr_layout sama5d2_pcr_layout = {
++	.offset = 0x10c,
++	.cmd = BIT(12),
++	.gckcss_mask = GENMASK(10, 8),
++	.pid_mask = GENMASK(6, 0),
++};
++
+ static const struct {
+ 	char *n;
+ 	char *p;
+@@ -266,6 +273,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
  
--	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
-+	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
-+					   &at91sama5d4_offsets);
- 	if (IS_ERR(hw))
- 		return;
+ 	for (i = 0; i < ARRAY_SIZE(sama5d2_periphck); i++) {
+ 		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 &sama5d2_pcr_layout,
+ 							 sama5d2_periphck[i].n,
+ 							 "masterck",
+ 							 sama5d2_periphck[i].id,
+@@ -278,6 +286,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
  
+ 	for (i = 0; i < ARRAY_SIZE(sama5d2_periph32ck); i++) {
+ 		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 &sama5d2_pcr_layout,
+ 							 sama5d2_periph32ck[i].n,
+ 							 "h32mxck",
+ 							 sama5d2_periph32ck[i].id,
+diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
+index b645a9d59cdb..840edca77821 100644
+--- a/drivers/clk/at91/sama5d4.c
++++ b/drivers/clk/at91/sama5d4.c
+@@ -28,6 +28,12 @@ static const struct clk_pll_characteristics plla_characteristics = {
+ 	.out = plla_out,
+ };
+ 
++static const struct clk_pcr_layout sama5d4_pcr_layout = {
++	.offset = 0x10c,
++	.cmd = BIT(12),
++	.pid_mask = GENMASK(6, 0),
++};
++
+ static const struct {
+ 	char *n;
+ 	char *p;
+@@ -232,6 +238,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sama5d4_periphck); i++) {
+ 		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 &sama5d4_pcr_layout,
+ 							 sama5d4_periphck[i].n,
+ 							 "masterck",
+ 							 sama5d4_periphck[i].id,
+@@ -244,6 +251,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sama5d4_periph32ck); i++) {
+ 		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
++							 &sama5d4_pcr_layout,
+ 							 sama5d4_periph32ck[i].n,
+ 							 "h32mxck",
+ 							 sama5d4_periph32ck[i].id,
+diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
+index 931ab05f771d..b97b8dcbffe6 100644
+--- a/include/linux/clk/at91_pmc.h
++++ b/include/linux/clk/at91_pmc.h
+@@ -191,9 +191,6 @@
+ #define		AT91_PMC_PCR_GCKCSS_MASK	(0x7  << AT91_PMC_PCR_GCKCSS_OFFSET)
+ #define		AT91_PMC_PCR_GCKCSS(n)		((n)  << AT91_PMC_PCR_GCKCSS_OFFSET)	/* GCK Clock Source Selection */
+ #define		AT91_PMC_PCR_CMD		(0x1  <<  12)				/* Command (read=0, write=1) */
+-#define		AT91_PMC_PCR_DIV_OFFSET		16
+-#define		AT91_PMC_PCR_DIV_MASK		(0x3  << AT91_PMC_PCR_DIV_OFFSET)
+-#define		AT91_PMC_PCR_DIV(n)		((n)  << AT91_PMC_PCR_DIV_OFFSET)	/* Divisor Value */
+ #define		AT91_PMC_PCR_GCKDIV_OFFSET	20
+ #define		AT91_PMC_PCR_GCKDIV_MASK	(0xff  << AT91_PMC_PCR_GCKDIV_OFFSET)
+ #define		AT91_PMC_PCR_GCKDIV(n)		((n)  << AT91_PMC_PCR_GCKDIV_OFFSET)	/* Generated Clock Divisor Value */
 -- 
 2.20.1
 
