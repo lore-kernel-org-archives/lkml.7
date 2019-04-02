@@ -2,123 +2,90 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4A3C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2C5C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADD9205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEAA205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gLbx2NKr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oL4k6qj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbfDBRHF (ORCPT
+        id S1731438AbfDBRHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 13:07:05 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48062 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDBRHE (ORCPT
+        Tue, 2 Apr 2019 13:07:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34587 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDBRHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 13:07:04 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x32H6rgo047282;
-        Tue, 2 Apr 2019 12:06:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554224813;
-        bh=+/7po9A1i8sjerZ4j8FxSaGiLq6wV0jePtVrKCjce7o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gLbx2NKrdqs8grWX7M2lDjxEf2cX0TdMVNPcP+Y67bxUsrX1yegcCKRQUhNwkKqeO
-         gxnDFa07y9M0mm9y1BtVhNaEkvaDpbgBMi+iFRXVIUqJEPudhbysi0qX03U91rxP8W
-         EMI0ceO94iQY7RskqH/rEyG4192lCV4+wuE8yDnE=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x32H6rSU115636
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 2 Apr 2019 12:06:53 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Apr
- 2019 12:06:52 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 2 Apr 2019 12:06:52 -0500
-Received: from [172.22.126.131] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x32H6qN8120656;
-        Tue, 2 Apr 2019 12:06:52 -0500
-Subject: Re: [RFC PATCH 2/5] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Marek Behun <marek.behun@nic.cz>
-CC:     Pavel Machek <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <jacek.anaszewski@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>,
-        =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
-References: <20190401173400.14238-1-dmurphy@ti.com>
- <20190401173400.14238-3-dmurphy@ti.com> <20190401212921.GB14681@amd>
- <f8655180-0c3a-7292-3a49-57d997473992@ti.com>
- <20190402181712.3eccdb4b@nic.cz>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c6abe495-d7fe-a784-0b9b-1c690b01e008@ti.com>
-Date:   Tue, 2 Apr 2019 12:06:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190402181712.3eccdb4b@nic.cz>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 2 Apr 2019 13:07:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r186so2866859wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 10:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QBNq7le2jZSJyRpdM1cgMwf2lNrxN2g3bFYOjN6Y2GA=;
+        b=oL4k6qj0MZG50uCLAgKHJ3LVwuV+WDBZKc34PpubG1Eu0SYhIKV4MAHHiXZC/tDkWv
+         pKQ4eZKe1yGWCbNocC6dWnDHlRMBoWr9cj1aBWyJ5c8yDcNjvjS2fd/67dujhDDM7yse
+         Doo/1m47JR9fIs21mBFKOTgckJrp8MMNOqgXfxU8IWo1QOXIdtsGaMVbqqOvB38g1LvK
+         az2q3c0ZoBfm/FhWvbPtSaD5CeDAqwGNBrpwjAfb+xRfNVTV+P4oIuj6Unqzv33+SHDq
+         GPxO6bTHiT6mB0hN2Bxtj5PEIUe4jAEQ5Uo4gLyOoyNZulWPEbqoWpAZNmBpe15fdnMn
+         TNJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QBNq7le2jZSJyRpdM1cgMwf2lNrxN2g3bFYOjN6Y2GA=;
+        b=DltGFfONmLdUOA4zKxZWBrgIlDzlJlSzOSNsWwzkeRDlqcetOjlVkKwmWx5BWGK5yG
+         H8ksrqK2kHwvPWjLvItnWFjY6WwS8AGIZOXKbLO8Bqg2fMJjSfZrl10THovLIpU+mPCm
+         QtNr0jUyd7eN6VnuNVKldpxYIIL9/LBXbvx3fZvDiXXTNVKeCI6XSUXWzdZ0OibLdnAX
+         qwwGAmnzb1yVMLU0ZecYrOhuKWcgY4FrmbxU9g2YNS5O32mPN5MjJ/Z4MNXWtH07ZGIX
+         CCBMtYTwiZypgnFyL0KiyWhbMdAzHgCmtT6yceEqoKLbmxn0dgbHFFZ1wP/ar76MlGVT
+         vHkw==
+X-Gm-Message-State: APjAAAW1nJRqcp4AXp7lLY3TEuL9FiDwOOu31PYOPgBkZAhsJcvK9Zze
+        xXuRHcZufKMKUVStANYMwtPeHNW+
+X-Google-Smtp-Source: APXvYqyMxCLLp7aPYKt9NXVq6dLhe1YQ1QVsf58FhrZEN/PB+Mo2NLaBjjN0NKSfcSTZ2PYZPCxAOg==
+X-Received: by 2002:a1c:9942:: with SMTP id b63mr4085566wme.116.1554224831727;
+        Tue, 02 Apr 2019 10:07:11 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id e9sm22098922wrp.35.2019.04.02.10.07.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 10:07:11 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH v2 1/3] habanalabs: remove extra semicolon
+Date:   Tue,  2 Apr 2019 20:07:07 +0300
+Message-Id: <20190402170709.29562-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marek
+This patch removes an extra ; after the closing brackets of a while loop.
 
-On 4/2/19 11:17 AM, Marek Behun wrote:
-> On Tue, 2 Apr 2019 06:40:53 -0500
-> Dan Murphy <dmurphy@ti.com> wrote:
-> 
->> I have had off line conversations with Jacek about this brightness model node.
->>
->> Your concern was actually one of my concerns as well.  Not only millions of entries but also having a huge
->> DT binary.
->>
->> We wanted to RFC this to get feedback.  And this is why I have not added any support for this in the framework code.
->>
->> Dan
->>
-> 
-> What if we just stuck to color spaces and defined channel curves in the
-> device tree?
-> 
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Vesa did a good summary of the current MC framework implementations that are being proposed
-The thread also documents Pavel's requirements
-
-https://lore.kernel.org/patchwork/patch/1037147/
-
-And here is the series with a single brightness file and passing in multiple integers.
-I did not document this code as I was pretty certain it was not the way to go.
-
-https://patches.linaro.org/project/linux-leds/list/?series=18022
-
-Dan
-
-> The curve could then be defined via an array of integer pairs, which
-> would be interpreted as points via which the curve passes and the curve
-> would be approximated by linear segemts...
-> 
->   led@0 {
->     colorspace = <COLOR_SPACE_ID_RGB>;
->     red-curve = <0 0>, <255 255>;
->     green-curve = <0 0>, <255 128>;
->     blue-curve = <0 0>, <255 128>;
->   };
-> 
-
-
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index e3797f582436..6cbfd560721e 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -1044,7 +1044,7 @@ void hl_device_fini(struct hl_device *hdev)
+ 			WARN(1, "Failed to remove device because reset function did not finish\n");
+ 			return;
+ 		}
+-	};
++	}
+ 
+ 	/* Mark device as disabled */
+ 	hdev->disabled = true;
 -- 
-------------------
-Dan Murphy
+2.17.1
+
