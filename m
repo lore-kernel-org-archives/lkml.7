@@ -2,112 +2,151 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D779DC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9492DC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82AA2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BAA22070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfDBQlB (ORCPT
+        id S1729600AbfDBQlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:41:01 -0400
-Received: from relay.sw.ru ([185.231.240.75]:33920 "EHLO relay.sw.ru"
+        Tue, 2 Apr 2019 12:41:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:22953 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbfDBQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:41:00 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hBMT1-0002O3-Kz; Tue, 02 Apr 2019 19:40:55 +0300
-Subject: Re: [PATCH] ubsan: Avoid unnecessary 128-bit shifts
-To:     George Spelvin <lkml@sdf.org>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-References: <201904010857.x318v8J4007902@sdf.org>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <93362dd2-2b9d-d958-7488-4fa7dd48534a@virtuozzo.com>
-Date:   Tue, 2 Apr 2019 19:41:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726206AbfDBQlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:41:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 09:41:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,301,1549958400"; 
+   d="scan'208";a="147416815"
+Received: from schneic-mobl.ger.corp.intel.com (HELO localhost) ([10.249.254.238])
+  by orsmga002.jf.intel.com with ESMTP; 02 Apr 2019 09:40:58 -0700
+Date:   Tue, 2 Apr 2019 19:40:57 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
+Message-ID: <20190402164057.GA4544@linux.intel.com>
+References: <20190401190607.GA23795@beast>
+ <20190401234625.GA29016@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <201904010857.x318v8J4007902@sdf.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401234625.GA29016@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 02, 2019 at 02:46:25AM +0300, Jarkko Sakkinen wrote:
+> On Mon, Apr 01, 2019 at 12:06:07PM -0700, Kees Cook wrote:
+> > A "get random" may fail with a TPM error, but those codes were returned
+> > as-is to the caller, which assumed the result was the number of bytes
+> > that had been written to the target buffer, which could lead to a kernel
+> > heap memory exposure and over-read.
+> > 
+> > This fixes tpm1_get_random() to mask positive TPM errors into -EIO, as
+> > before.
+> > 
+> > [   18.092103] tpm tpm0: A TPM error (379) occurred attempting get random
+> > [   18.092106] usercopy: Kernel memory exposure attempt detected from SLUB object 'kmalloc-64' (offset 0, size 379)!
+> > 
+> > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
+> > Reported-by: Phil Baker <baker1tex@gmail.com>
+> > Reported-by: Craig Robson <craig@zhatt.com>
+> > Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using tpm_buf structure")
+> > Cc: Laura Abbott <labbott@redhat.com>
+> > Cc: Tomas Winkler <tomas.winkler@intel.com>
+> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v3: fix never-succeed, limit checks to tpm cmd return (James, Jason)
+> > v2: also fix tpm2 implementation (Jason Gunthorpe)
+> > ---
+> >  drivers/char/tpm/tpm1-cmd.c | 7 +++++--
+> >  drivers/char/tpm/tpm2-cmd.c | 7 +++++--
+> >  2 files changed, 10 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+> > index 85dcf2654d11..faacbe1ffa1a 100644
+> > --- a/drivers/char/tpm/tpm1-cmd.c
+> > +++ b/drivers/char/tpm/tpm1-cmd.c
+> > @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+> >   *
+> >   * Return:
+> >   * *  number of bytes read
+> > - * * -errno or a TPM return code otherwise
+> > + * * -errno (positive TPM return codes are masked to -EIO)
+> >   */
+> >  int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+> >  {
+> > @@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+> >  
+> >  		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
+> >  				      "attempting get random");
+> > -		if (rc)
+> > +		if (rc) {
+> > +			if (rc > 0)
+> > +				rc = -EIO;
+> >  			goto out;
+> > +		}
+> >  
+> >  		out = (struct tpm1_get_random_out *)&buf.data[TPM_HEADER_SIZE];
+> >  
+> > diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> > index e74c5b7b64bf..8ffa6af61580 100644
+> > --- a/drivers/char/tpm/tpm2-cmd.c
+> > +++ b/drivers/char/tpm/tpm2-cmd.c
+> > @@ -301,7 +301,7 @@ struct tpm2_get_random_out {
+> >   *
+> >   * Return:
+> >   *   size of the buffer on success,
+> > - *   -errno otherwise
+> > + *   -errno otherwise ((positive TPM return codes are masked to -EIO)
+> >   */
+> >  int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+> >  {
+> > @@ -328,8 +328,11 @@ int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+> >  				       offsetof(struct tpm2_get_random_out,
+> >  						buffer),
+> >  				       "attempting get random");
+> > -		if (err)
+> > +		if (err) {
+> > +			if (err > 0)
+> > +				err = -EIO;
+> >  			goto out;
+> > +		}
+> >  
+> >  		out = (struct tpm2_get_random_out *)
+> >  			&buf.data[TPM_HEADER_SIZE];
+> > -- 
+> > 2.17.1
+> > 
+> > 
+> > -- 
+> > Kees Cook
+> 
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
+Applied to my master branch. Jason, Tomas, do you want me to add
+reviewed-by's?
 
-On 4/1/19 11:57 AM, George Spelvin wrote:
-> Double-word sign-extending shifts by a variable amount are a
-> non-trivial amount of code and complexity.  Doing signed long shifts
-> before the cast to (s_max) greatly simplifies the object code.
-> 
-> (Yes, I know "signed" is redundant.  It's there for emphasis.)
-> 
-> The complex issue raised by this patch is that allows s390 (at
-> least) to enable CONFIG_ARCH_SUPPORTS_INT128.
-> 
-> If you enable that option, s_max becomes 128 bits, and gcc compiles
-> the pre-patch code with a call to __ashrti3.  (And, on some gcc
-> versions, __ashlti3.)  Which isn't implemented, ergo link error.
-> 
-> Enabling that option allows 64-bit widening multiplies which
-> greatly simplify a lot of timestamp scaling code in the kernel,
-> so it's desirable.
-> 
-> But how to get there?
-> 
-> One option is to implement __ashrti3 on the platforms that need it.
-> But I'm inclined to *not* do so, because it's inefficient, rare,
-> and avoidable.  This patch fixes the sole instance in the entire
-> kernel, which will make that implementation dead code, and I think
-> its absence will encourage Don't Do That, Then going forward.
-> 
-> But if we don't implement it, we've created an awkward dependency
-> between patches in different subsystems, and that needs handling.
-> 
-> Option 1: Submit this for 5.2 and turn on INT128 for s390 in 5.3.
-> Option 2: Let the arches cherry-pick this patch pre-5.2.
-> 
-> My preference is for option 2, but that requires permission from
-> ubsan's owner.  Andrey?
-> 
-
-Fine by me:
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com> 
-
-> Signed-off-by: George Spelvin <lkml@sdf.org>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: linux-s390@vger.kernel.org
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> ---
->  lib/ubsan.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index e4162f59a81c..43ce177a5ca7 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -89,8 +89,8 @@ static bool is_inline_int(struct type_descriptor *type)
->  static s_max get_signed_val(struct type_descriptor *type, unsigned long val)
->  {
->  	if (is_inline_int(type)) {
-> -		unsigned extra_bits = sizeof(s_max)*8 - type_bit_width(type);
-> -		return ((s_max)val) << extra_bits >> extra_bits;
-> +		unsigned extra_bits = sizeof(val)*8 - type_bit_width(type);
-> +		return (s_max)((signed long)val << extra_bits >> extra_bits);
-
-Cast to s_max is redundant.                      
-
->  	}
->  
->  	if (type_bit_width(type) == 64)
-> 
+/Jarkko
