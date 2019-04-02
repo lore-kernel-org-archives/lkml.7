@@ -2,110 +2,143 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9AAC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C91DC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471A82082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0025F2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:33:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ZjnJYxOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfDBP2h (ORCPT
+        id S1729819AbfDBPdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:28:37 -0400
-Received: from semf04.mfg.siteprotect.com ([64.26.60.167]:56868 "EHLO
-        semf04.mfg.siteprotect.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726685AbfDBP2h (ORCPT
+        Tue, 2 Apr 2019 11:33:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46261 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfDBPdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:28:37 -0400
-X-Greylist: delayed 2045 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Apr 2019 11:28:37 EDT
-Received: from smtpauth01.mfg.siteprotect.com ([64.26.60.150])
-        by semf04.mfg.siteprotect.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <vince@deater.net>)
-        id 1hBKnh-0006h6-Rp; Tue, 02 Apr 2019 10:54:17 -0400
-Received: from pianoman.cluster.toy (unknown [100.16.227.202])
-        (Authenticated sender: vince@deater.net)
-        by smtpauth01.mfg.siteprotect.com (Postfix) with ESMTPSA id 44YXKB5fBDz162BwM;
-        Tue,  2 Apr 2019 10:53:50 -0400 (EDT)
-Date:   Tue, 2 Apr 2019 10:53:38 -0400 (EDT)
-From:   Vince Weaver <vince@deater.net>
-X-X-Sender: vince@pianoman.cluster.toy
-To:     Cyrill Gorcunov <gorcunov@gmail.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC PATCH v3 0/3] x86/perf/amd: AMD PMC counters and NMI
- latency
-In-Reply-To: <20190402132200.GA23501@uranus>
-Message-ID: <alpine.DEB.2.21.1904021050090.15645@pianoman.cluster.toy>
-References: <155415519143.24457.2706922532995302758.stgit@tlendack-t1.amdoffice.net> <20190402130302.GL12232@hirez.programming.kicks-ass.net> <20190402132200.GA23501@uranus>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 2 Apr 2019 11:33:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t17so4192009wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 08:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CEZv4uzh5Ly4ogK+JYDKMFnRY/k24/YL82pMRtEDad4=;
+        b=ZjnJYxOpzUpKL2uXYVNwkROSA4h3dFZn/BTY0FO/0niv9YAVTOKGzpKjBwIvs/VzJ1
+         Sor09hYni9aWarL7X0Btv7hb7cYJNpPSwzKBAaVEa2DEBMYyax7nrGHD0vidNAByj6XZ
+         UZw4po0+l819XI31TSGyQARA9wldzEsrNPdDbkR2RG80YGq3LDI29MryzNWlPdC3s5Zn
+         pO1aVwAkQj1lnCePy7pm05xHUcu6I3f6/2PPkQIrAqRemRJpsa334cexLFRyiH/QO6Rx
+         fdeZl9TdkeE9NHxSfDsGi1aqG1JaVHVtWkF+nNB1iYt0ejIoJl8N7P2ZahtdoE8RLNLv
+         nvlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CEZv4uzh5Ly4ogK+JYDKMFnRY/k24/YL82pMRtEDad4=;
+        b=c25bWlUwb1Gp1SkKS8vQWYGyJP62lDj1gPKAtBhVN/DC78Lk7yxBTGgHmcGe1irlFU
+         7/xvqWEMWKCneSjmtFo6D9LeuH9QkjRnMxn4z7SvNobj/omH/16qR//bw/6Rj1CM/wB3
+         Qn1f/omSIN4cS3ErJue0kOB+nXfyfVmRlQ8QO4KS73KimEpDyOyL5hKzTD6nL2K/2jUY
+         lp1TwdeQZoh8ISvguDxJMBEDpsH42DzDHD69e9iIqmj+Z0p42jzwSk/Ss1CE4+WNEBu3
+         1GArKkD6vDAE3Eb23jmiYuoeupr48+zldAyvjt7VCWeYrcf6ZnKIANsBbZM02wF1YeYW
+         lRBg==
+X-Gm-Message-State: APjAAAVXxsr4CPRUUL5CXUa3bD1UhQCZYbhpf3pL58uQ78cPYQ0YNSb5
+        EoyGbR6CJhP3aghV4m3kMBLeDCRTYoeg5Q==
+X-Google-Smtp-Source: APXvYqx055+2aOiMBHpSQ+8A5YRpEyHowsa10Ez6PVl0Lp1y6jCTZHHFite4a70KiIv0UgQMkhDZXA==
+X-Received: by 2002:adf:b6a3:: with SMTP id j35mr45963497wre.25.1554219200784;
+        Tue, 02 Apr 2019 08:33:20 -0700 (PDT)
+Received: from localhost.localdomain ([185.197.132.10])
+        by smtp.gmail.com with ESMTPSA id s2sm14400335wmc.7.2019.04.02.08.33.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 08:33:20 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     jannh@google.com, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org
+Cc:     Christian Brauner <christian@brauner.io>
+Subject: [GIT PULL] pidfd fixes for v5.1-rc3
+Date:   Tue,  2 Apr 2019 17:33:07 +0200
+Message-Id: <20190402153307.18672-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Authentication-Results: mfg.siteprotect.com; auth=pass smtp.auth=vince@deater.net smtp.mailfrom=<vince@deater.net>
-X-Originating-IP: 64.26.60.150
-X-portal.siteprotect.com-Domain: mfg.outbound
-X-portal.siteprotect.com-Username: 64.26.60.150/31
-Authentication-Results: mfg.siteprotect.com; auth=pass smtp.auth=64.26.60.150/31@mfg.outbound
-X-portal.siteprotect.com-Outgoing-Class: ham
-X-portal.siteprotect.com-Outgoing-Evidence: Combined (0.21)
-X-Recommended-Action: accept
-X-Filter-ID: EX5BVjFpneJeBchSMxfU5uVLfX9KsQzQ8XdKn7ZAcWp602E9L7XzfQH6nu9C/Fh9KJzpNe6xgvOx
- q3u0UDjvO80kiOOXohirsWhwY064v2npeso7Ho1FT6opA0QnLMBdpVMzexAGJZ2+mPn7fP4I3bGQ
- T8H3NmQhNu2O3z+K3mZwnXeuRadH9eS/0qlAQIeNVTCxY3GOeQ66b90JBslLPIYZZS/DUBLA5nGN
- 6cIn1z9sSeI2joq9+ZZE6ghVOZbTTcd1LQTPB4kZ4onMihMMZ7yZgsqocyZY4jxjE3qUu/6r1AV5
- UTHwbtCAXgD9KinxOsXa9bPF5P+TU1Hkgqx+i85wXGAwCBBM9Wuz7xpUTUsouBFVfnbvOnQHVZOr
- UVdzPmpotkU9W6DwXKJZEzKGAWFx656NU5IkTRH0Up7qB8Lzno4t3kssqrr3QsvSu8BVGE1lcStX
- Kcni7YkebcsPef+Bu4/uGdQrw1B0vCxVYoig1tMG8QVeXDZzT/jhEuU0P3dyVpD6b6jIZhxNG0yA
- pgS8oWDbSKQ3tXcknJwLqWmW2UPE+vsQVOjHQoB8kKI5VBlSQp3tVGVu81giwHSvsh/iSK71nlwT
- kZ/FUjBxvQvLVJD2VTUQ+kGxg2Pv3GfZNme3cik5CexJz1ox3HYe0QjaC0seZkfC0iy+spcexjk7
- SHzg1GyOaFo+K3vVD2LSW+n8Hj6CJNEWfIqe3AMrex08L8pZyQFEYMQabfOl4IqgLgoO+53/F59y
- H4idlSUpteH5C3/pSoxYOXdzgcqBafjL6IM/NPtmtMb38N+gNB/lgTl6fJxyntEfhZCKje4ZwyYO
- nmpuMeHRjSmbB6RrUkSyszVtUeslVn8uY5bzuQsgr/U0flMcy2Vi/IcBgY4amwfEOQVUNYnWQ300
- Dp6cJDE37L8A/sfCSfmp70N6CAkwoGPe+nvh19VPEW3k7miLRGgHloEW8jEP1L/Rx27Xzz69xZ5Y
- e0WAUxsN5HA7UNtNfZRkU/qlxUHc6GOTsYb1GisIGxUJr7hu9AMHjQD/EXDMIS0tLJXIAOtcIzBo
- I6meQp3k9SVx0LF1z2PwQHAv6PNCU/yT9rVFGLmNNL3pin9QfQfyieJWOKWrOSedp3uDSq3Q+WKe
- 0YMArNQQ+c/cjrZXLGyv7MvlzLexb6aw2QRJ2i4lIocCm92ve//7+ElEMKkVAsdKzMH3lcQE8m4M
- ZuM7jUXIESohoO51xWmU8XetsAn+dGLdW9wFnbfnLqlYLystwlXwpaZB/1+bghnKhieaPV2+qeEY
- bMldDm0nFNF8d4YLM/kll0Q7WT6bKEPylIuYEMGLGYbBbBR3JTh3+HGJA0RGaAhm/MWtyZJn3DMa
- IL48SHdwBur7C9FrSAVwMG9k36g/7bjS2E6qjwtRGvsY2hs/S+9Z3xB10KGOcqjxugQ/FndyXRUg
- v2aA0ZQ=
-X-Report-Abuse-To: spam@semfq01.mfg.siteprotect.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019, Cyrill Gorcunov wrote:
-> On Tue, Apr 02, 2019 at 03:03:02PM +0200, Peter Zijlstra wrote:
-> > I have vague memories of the P4 thing crashing with Vince's perf_fuzzer,
-> > but maybe I'm wrong.
-> 
-> No, you're correct. p4 was crashing many times before we manage to make
-> it more-less stable. The main problem though that to find working p4 box
-> is really a problem.
+Hi Linus,
 
-I do have some a functioning p4 system I can test on.
-I can easily run the fuzzer and report crashes, but I only have limited 
-time/skills to actually fix the problems it turns up.
+This should be an uncontroversial fix for pidfd_send_signal() by Jann to
+better align it's behavior with other signal sending functions:
 
-One nice thing is that as of Linux 5.0 *finally* the fuzzer can run 
-indefinitely on most modern Intel chips without crashing (still triggers a 
-few warnings).  So finally we have the ability to tell when a new crash is 
-a regression and potentially can bisect it.  Although obviously this 
-doesn't necessarily apply to the p4.
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
 
-I do think the number of people trying to run perf on a p4 is probably 
-pretty small these days.
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
 
-Vince
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/pidfd-fixes-v5.1-rc3
+
+for you to fetch changes up to 556a888a14afe27164191955618990fb3ccc9aad:
+
+  signal: don't silently convert SI_USER signals to non-current pidfd (2019-04-01 23:03:18 +0200)
+
+In one of the early versions of the patchset it was suggested to not
+unconditionally error out when a signal with SI_USER is sent to a
+non-current task (cf. [1]). Instead, pidfd_send_signal() currently silently
+changes this to a regular kill signal. While this is technically fine, the
+semantics are weird since the kernel just silently converts a user's request
+behind their back and also no other signal sending function allows to do
+this. It gets more hairy when we introduce sending signals to a specific
+thread soon.
+So let's align pidfd_send_signal() with all the other signal sending
+functions and error out when SI_USER signals are sent to a non-current
+task.
+
+Please consider pulling this fix!
+Thanks!
+Christian
+
+/* References */
+[1]: https://lore.kernel.org/lkml/87zhtjn8ck.fsf@xmission.com/
+
+----------------------------------------------------------------
+pidfd fixes for v5.1-rc3
+
+----------------------------------------------------------------
+Jann Horn (1):
+      signal: don't silently convert SI_USER signals to non-current pidfd
+
+ kernel/signal.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index b7953934aa99..f98448cf2def 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -3605,16 +3605,11 @@ SYSCALL_DEFINE4(pidfd_send_signal, int, pidfd, int, sig,
+ 		if (unlikely(sig != kinfo.si_signo))
+ 			goto err;
+ 
++		/* Only allow sending arbitrary signals to yourself. */
++		ret = -EPERM;
+ 		if ((task_pid(current) != pid) &&
+-		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL)) {
+-			/* Only allow sending arbitrary signals to yourself. */
+-			ret = -EPERM;
+-			if (kinfo.si_code != SI_USER)
+-				goto err;
+-
+-			/* Turn this into a regular kill signal. */
+-			prepare_kill_siginfo(sig, &kinfo);
+-		}
++		    (kinfo.si_code >= 0 || kinfo.si_code == SI_TKILL))
++			goto err;
+ 	} else {
+ 		prepare_kill_siginfo(sig, &kinfo);
+ 	}
