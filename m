@@ -2,386 +2,90 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2ACC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BD2C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562D82082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F2A2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731869AbfDBRrM (ORCPT
+        id S1730805AbfDBRxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 13:47:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52072 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731825AbfDBRrF (ORCPT
+        Tue, 2 Apr 2019 13:53:17 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34431 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730220AbfDBRxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 13:47:05 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x32HiJXg104202
-        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 13:47:03 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rmbpejh32-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 13:47:03 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <walling@linux.ibm.com>;
-        Tue, 2 Apr 2019 18:47:02 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 2 Apr 2019 18:46:59 +0100
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x32Hkvxp20316296
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Apr 2019 17:46:57 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A6C5112063;
-        Tue,  2 Apr 2019 17:46:57 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80641112065;
-        Tue,  2 Apr 2019 17:46:57 +0000 (GMT)
-Received: from T470p.pok.ibm.com (unknown [9.56.58.47])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Apr 2019 17:46:57 +0000 (GMT)
-From:   Collin Walling <walling@linux.ibm.com>
-To:     pbonzini@redhat.com, david@redhat.com, cohuck@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc:     schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com
-Subject: [PATCH v3 2/2] s390/kvm: diagnose 318 handling
-Date:   Tue,  2 Apr 2019 13:46:36 -0400
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190402174636.15175-1-walling@linux.ibm.com>
-References: <20190402174636.15175-1-walling@linux.ibm.com>
+        Tue, 2 Apr 2019 13:53:17 -0400
+Received: by mail-qt1-f196.google.com with SMTP id k2so16339350qtm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 10:53:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OLJXHlhYI15g5py0OlU6OBcth4eT+AVlpGiVwqABwyM=;
+        b=DFNmja42yMbdP8JPbeLau7M999bZ5Z5wpgDer33+SghDLfeCOe/xROXijtYLsUoQAf
+         UQn7PH+TVPrYBu0bVEfK5BH2PDbrjjZ+Y5p/MnmvN/z+rs0y7N9/RnZlC5EYttSpXPKe
+         HAjow7qXKoUHBgr+gtDVpO+RACuMlanXGZfmLJ7cc7x6Prh01rRDxQpYfQQceG8LjfO8
+         aGGtuBHJREsSmmryJ1QytvWcGem2vUbEwIlWY4V2wOQInQ5c10Qg5w+70+XdNA9td0Fg
+         R9BupsZ+enBUJ1OZgvmTQz95nVL2nox85DdjIA7fJZsz6iMKx+8Sq/9AI+62eEsS2XZo
+         FxhQ==
+X-Gm-Message-State: APjAAAVQDltw1Kj1Hux+XMSMMLe7qHzgA7eBtLTrCGd4SNI5hfYLY7/D
+        NDF7CHUrjwucIA2ZFiEWM9DvVQ==
+X-Google-Smtp-Source: APXvYqwBiZji2CbrWAPhiXLkuH2SxquqiO4kBtgNqdomsId+YeuaIw+i15Rp6ZVpaVK2OIU9Uu9l2g==
+X-Received: by 2002:a0c:b2d6:: with SMTP id d22mr58846546qvf.39.1554227596333;
+        Tue, 02 Apr 2019 10:53:16 -0700 (PDT)
+Received: from redhat.com ([66.187.232.66])
+        by smtp.gmail.com with ESMTPSA id y197sm7267625qkb.23.2019.04.02.10.53.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 10:53:15 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 13:53:12 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: Re: On guest free page hinting and OOM
+Message-ID: <20190402134722-mutt-send-email-mst@kernel.org>
+References: <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com>
+ <20190401104608-mutt-send-email-mst@kernel.org>
+ <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
+ <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com>
+ <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
+ <20190402112115-mutt-send-email-mst@kernel.org>
+ <3dd76ce6-c138-b019-3a43-0bb0b793690a@redhat.com>
+ <CAKgT0Uc78NYnva4T+G5uas_iSnE_YHGz+S5rkBckCvhNPV96gw@mail.gmail.com>
+ <6b0a3610-0e7b-08dc-8b5f-707062f87bea@redhat.com>
+ <CAKgT0UdHA66z1j=3H06AfgtiF4ThFdXwQ6i8p1MszdL2bRHeZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19040217-0064-0000-0000-000003C57F0C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010862; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01183350; UDB=6.00619517; IPR=6.00964099;
- MB=3.00026263; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-02 17:47:01
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040217-0065-0000-0000-00003CECDBEE
-Message-Id: <20190402174636.15175-3-walling@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904020118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UdHA66z1j=3H06AfgtiF4ThFdXwQ6i8p1MszdL2bRHeZQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DIAGNOSE 0x318 (diag318) is a privileged s390x instruction that must
-be intercepted by SIE and handled via KVM. Let's introduce some
-functions to communicate between userspace and KVM via ioctls. These
-will be used to get/set the diag318 related information (also known
-as the "Control Program Code" or "CPC"), as well as check the system
-if KVM supports handling this instruction.
+On Tue, Apr 02, 2019 at 10:45:43AM -0700, Alexander Duyck wrote:
+> We went through this back in the day with
+> networking. Adding more buffers is not the solution. The solution is
+> to have a way to gracefully recover and keep our hinting latency and
+> buffer bloat to a minimum.
 
-This information can help with diagnosing the OS the VM is running
-in (Linux, z/VM, etc) if the OS calls this instruction.
+That's an interesting approach, I think that things that end up working
+well are NAPI (asychronous notifications), limited batching, XDP (big
+aligned buffers) and BQL (accounting). Is that your perspective too?
 
-The get/set functions are introduced primarily for VM migration and
-reset, though no harm could be done to the system if a userspace
-program decides to alter this data (this is highly discouraged).
-
-The Control Program Name Code (CPNC) is stored in the SIE block and
-a copy is retained in each VCPU. The Control Program Version Code
-(CPVC) retains a copy in each VCPU as well.
-
-At this time, the CPVC is not reported as its format is yet to be
-defined.
-
-Note that the CPNC is set in the SIE block iff the host hardware
-supports it.
-
-Signed-off-by: Collin Walling <walling@linux.ibm.com>
----
- Documentation/virtual/kvm/devices/vm.txt | 14 ++++
- arch/s390/include/asm/kvm_host.h         |  7 +-
- arch/s390/include/uapi/asm/kvm.h         |  4 ++
- arch/s390/kvm/diag.c                     | 17 +++++
- arch/s390/kvm/kvm-s390.c                 | 83 ++++++++++++++++++++++++
- arch/s390/kvm/kvm-s390.h                 |  1 +
- arch/s390/kvm/vsie.c                     |  2 +
- 7 files changed, 126 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/virtual/kvm/devices/vm.txt b/Documentation/virtual/kvm/devices/vm.txt
-index 95ca68d663a4..9a8d9346c5d7 100644
---- a/Documentation/virtual/kvm/devices/vm.txt
-+++ b/Documentation/virtual/kvm/devices/vm.txt
-@@ -267,3 +267,17 @@ Parameters: address of a buffer in user space to store the data (u64) to;
- 	    if it is enabled
- Returns:    -EFAULT if the given address is not accessible from kernel space
- 	    0 in case of success.
-+
-+6. GROUP: KVM_S390_VM_MISC
-+Architectures: s390
-+
-+6.1. KVM_S390_VM_MISC_CPC (r/w)
-+
-+Allows userspace to access the "Control Program Code" which consists of a
-+1-byte "Control Program Name Code" and a 7-byte "Control Program Version Code".
-+This information is initialized during IPL and must be preserved during
-+migration.
-+
-+Parameters: address of a buffer in user space to store the data (u64) to
-+Returns:    -EFAULT if the given address is not accessible from kernel space
-+	     0 in case of success.
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index c47e22bba87f..d2f30426b8d6 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -228,8 +228,9 @@ struct kvm_s390_sie_block {
- 	__u8    ecb3;			/* 0x0063 */
- 	__u32	scaol;			/* 0x0064 */
- 	__u8	reserved68;		/* 0x0068 */
--	__u8    epdx;			/* 0x0069 */
--	__u8    reserved6a[2];		/* 0x006a */
-+	__u8	epdx;			/* 0x0069 */
-+	__u8	cpnc;			/* 0x006a */
-+	__u8	reserved6b;		/* 0x006b */
- 	__u32	todpr;			/* 0x006c */
- #define GISA_FORMAT1 0x00000001
- 	__u32	gd;			/* 0x0070 */
-@@ -391,6 +392,7 @@ struct kvm_vcpu_stat {
- 	u64 diagnose_9c;
- 	u64 diagnose_258;
- 	u64 diagnose_308;
-+	u64 diagnose_318;
- 	u64 diagnose_500;
- 	u64 diagnose_other;
- };
-@@ -866,6 +868,7 @@ struct kvm_arch{
- 	DECLARE_BITMAP(cpu_feat, KVM_S390_VM_CPU_FEAT_NR_BITS);
- 	DECLARE_BITMAP(idle_mask, KVM_MAX_VCPUS);
- 	struct kvm_s390_gisa_interrupt gisa_int;
-+	union diag318_info diag318_info;
- };
- 
- #define KVM_HVA_ERR_BAD		(-1UL)
-diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
-index 16511d97e8dc..3d3d2a5611d1 100644
---- a/arch/s390/include/uapi/asm/kvm.h
-+++ b/arch/s390/include/uapi/asm/kvm.h
-@@ -74,6 +74,7 @@ struct kvm_s390_io_adapter_req {
- #define KVM_S390_VM_CRYPTO		2
- #define KVM_S390_VM_CPU_MODEL		3
- #define KVM_S390_VM_MIGRATION		4
-+#define KVM_S390_VM_MISC		5
- 
- /* kvm attributes for mem_ctrl */
- #define KVM_S390_VM_MEM_ENABLE_CMMA	0
-@@ -168,6 +169,9 @@ struct kvm_s390_vm_cpu_subfunc {
- #define KVM_S390_VM_MIGRATION_START	1
- #define KVM_S390_VM_MIGRATION_STATUS	2
- 
-+/* kvm attributes for KVM_S390_VM_MISC */
-+#define KVM_S390_VM_MISC_CPC		0
-+
- /* for KVM_GET_REGS and KVM_SET_REGS */
- struct kvm_regs {
- 	/* general purpose regs for s390 */
-diff --git a/arch/s390/kvm/diag.c b/arch/s390/kvm/diag.c
-index 45634b3d2e0a..9762e6ad9ab0 100644
---- a/arch/s390/kvm/diag.c
-+++ b/arch/s390/kvm/diag.c
-@@ -235,6 +235,21 @@ static int __diag_virtio_hypercall(struct kvm_vcpu *vcpu)
- 	return ret < 0 ? ret : 0;
- }
- 
-+static int __diag_set_control_prog_name(struct kvm_vcpu *vcpu)
-+{
-+	unsigned int reg = (vcpu->arch.sie_block->ipa & 0xf0) >> 4;
-+	u64 cpc = vcpu->run->s.regs.gprs[reg];
-+
-+	vcpu->stat.diagnose_318++;
-+	kvm_s390_set_cpc(vcpu->kvm, cpc);
-+
-+	VCPU_EVENT(vcpu, 3, "diag 0x318 cpnc: 0x%x cpvc: 0x%llx",
-+		   vcpu->kvm->arch.diag318_info.cpnc,
-+		   (u64)vcpu->kvm->arch.diag318_info.cpvc);
-+
-+	return 0;
-+}
-+
- int kvm_s390_handle_diag(struct kvm_vcpu *vcpu)
- {
- 	int code = kvm_s390_get_base_disp_rs(vcpu, NULL) & 0xffff;
-@@ -254,6 +269,8 @@ int kvm_s390_handle_diag(struct kvm_vcpu *vcpu)
- 		return __diag_page_ref_service(vcpu);
- 	case 0x308:
- 		return __diag_ipl_functions(vcpu);
-+	case 0x318:
-+		return __diag_set_control_prog_name(vcpu);
- 	case 0x500:
- 		return __diag_virtio_hypercall(vcpu);
- 	default:
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 4638303ba6a8..910af1813706 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -156,6 +156,7 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
- 	{ "instruction_diag_9c", VCPU_STAT(diagnose_9c) },
- 	{ "instruction_diag_258", VCPU_STAT(diagnose_258) },
- 	{ "instruction_diag_308", VCPU_STAT(diagnose_308) },
-+	{ "instruction_diag_318", VCPU_STAT(diagnose_318) },
- 	{ "instruction_diag_500", VCPU_STAT(diagnose_500) },
- 	{ "instruction_diag_other", VCPU_STAT(diagnose_other) },
- 	{ NULL }
-@@ -1190,6 +1191,70 @@ static int kvm_s390_get_tod(struct kvm *kvm, struct kvm_device_attr *attr)
- 	return ret;
- }
- 
-+void kvm_s390_set_cpc(struct kvm *kvm, u64 cpc)
-+{
-+	struct kvm_vcpu *vcpu;
-+	int i;
-+
-+	mutex_lock(&kvm->lock);
-+	kvm->arch.diag318_info.val = cpc;
-+
-+	VM_EVENT(kvm, 3, "SET: CPNC: 0x%x CPVC: 0x%llx",
-+		 kvm->arch.diag318_info.cpnc, (u64)kvm->arch.diag318_info.cpvc);
-+
-+	if (sclp.has_diag318) {
-+		kvm_for_each_vcpu(i, vcpu, kvm) {
-+			vcpu->arch.sie_block->cpnc = kvm->arch.diag318_info.cpnc;
-+		}
-+	}
-+	mutex_unlock(&kvm->lock);
-+}
-+
-+static int kvm_s390_set_misc(struct kvm *kvm, struct kvm_device_attr *attr)
-+{
-+	int ret;
-+	u64 cpc;
-+
-+	switch (attr->attr) {
-+	case KVM_S390_VM_MISC_CPC:
-+		ret = -EFAULT;
-+		if (get_user(cpc, (u64 __user *)attr->addr))
-+			break;
-+		kvm_s390_set_cpc(kvm, cpc);
-+		ret = 0;
-+		break;
-+	default:
-+		ret = -ENXIO;
-+		break;
-+	}
-+	return ret;
-+}
-+
-+static int kvm_s390_get_cpc(struct kvm *kvm, struct kvm_device_attr *attr)
-+{
-+	if (put_user(kvm->arch.diag318_info.val, (u64 __user *)attr->addr))
-+		return -EFAULT;
-+
-+	VM_EVENT(kvm, 3, "QUERY: CPNC: 0x%x, CPVC: 0x%llx",
-+		 kvm->arch.diag318_info.cpnc, (u64)kvm->arch.diag318_info.cpvc);
-+	return 0;
-+}
-+
-+static int kvm_s390_get_misc(struct kvm *kvm, struct kvm_device_attr *attr)
-+{
-+	int ret;
-+
-+	switch (attr->attr) {
-+	case KVM_S390_VM_MISC_CPC:
-+		ret = kvm_s390_get_cpc(kvm, attr);
-+		break;
-+	default:
-+		ret = -ENXIO;
-+		break;
-+	}
-+	return ret;
-+}
-+
- static int kvm_s390_set_processor(struct kvm *kvm, struct kvm_device_attr *attr)
- {
- 	struct kvm_s390_vm_cpu_processor *proc;
-@@ -1597,6 +1662,9 @@ static int kvm_s390_vm_set_attr(struct kvm *kvm, struct kvm_device_attr *attr)
- 	case KVM_S390_VM_MIGRATION:
- 		ret = kvm_s390_vm_set_migration(kvm, attr);
- 		break;
-+	case KVM_S390_VM_MISC:
-+		ret = kvm_s390_set_misc(kvm, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-@@ -1622,6 +1690,9 @@ static int kvm_s390_vm_get_attr(struct kvm *kvm, struct kvm_device_attr *attr)
- 	case KVM_S390_VM_MIGRATION:
- 		ret = kvm_s390_vm_get_migration(kvm, attr);
- 		break;
-+	case KVM_S390_VM_MISC:
-+		ret = kvm_s390_get_misc(kvm, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-@@ -1695,6 +1766,16 @@ static int kvm_s390_vm_has_attr(struct kvm *kvm, struct kvm_device_attr *attr)
- 	case KVM_S390_VM_MIGRATION:
- 		ret = 0;
- 		break;
-+	case KVM_S390_VM_MISC:
-+		switch (attr->attr) {
-+		case KVM_S390_VM_MISC_CPC:
-+			ret = 0;
-+			break;
-+		default:
-+			ret = -ENXIO;
-+			break;
-+		}
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-@@ -2815,6 +2896,8 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
- 		vcpu->arch.sie_block->ictl |= ICTL_OPEREXC;
- 	/* make vcpu_load load the right gmap on the first trigger */
- 	vcpu->arch.enabled_gmap = vcpu->arch.gmap;
-+	if (sclp.has_diag318)
-+		vcpu->arch.sie_block->cpnc = vcpu->kvm->arch.diag318_info.cpnc;
- }
- 
- static void kvm_s390_vcpu_crypto_setup(struct kvm_vcpu *vcpu)
-diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
-index 6d9448dbd052..35fb642f6e7f 100644
---- a/arch/s390/kvm/kvm-s390.h
-+++ b/arch/s390/kvm/kvm-s390.h
-@@ -281,6 +281,7 @@ int kvm_s390_handle_sigp(struct kvm_vcpu *vcpu);
- int kvm_s390_handle_sigp_pei(struct kvm_vcpu *vcpu);
- 
- /* implemented in kvm-s390.c */
-+void kvm_s390_set_cpc(struct kvm *kvm, u64 cpc);
- void kvm_s390_set_tod_clock(struct kvm *kvm,
- 			    const struct kvm_s390_vm_tod_clock *gtod);
- long kvm_arch_fault_in_page(struct kvm_vcpu *vcpu, gpa_t gpa, int writable);
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index d62fa148558b..3e94102822f9 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -543,6 +543,8 @@ static int shadow_scb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 		scb_s->ecd |= scb_o->ecd & ECD_ETOKENF;
- 
- 	scb_s->hpid = HPID_VSIE;
-+	if (sclp.has_diag318)
-+		scb_s->cpnc = scb_o->cpnc;
- 
- 	prepare_ibc(vcpu, vsie_page);
- 	rc = shadow_crycb(vcpu, vsie_page);
 -- 
-2.20.1
-
+MST
