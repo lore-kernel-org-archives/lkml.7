@@ -2,118 +2,160 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42222C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73996C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108E020883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3062920883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:47:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Pa5Sdu+c"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RvtPBpLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbfDBMp5 (ORCPT
+        id S1730255AbfDBMrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:45:57 -0400
-Received: from mail-eopbgr80087.outbound.protection.outlook.com ([40.107.8.87]:24078
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729165AbfDBMp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:45:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1v23ZKkQHRk5YODMuye+vtoJV99Ye4sWjvxHGNvkmRk=;
- b=Pa5Sdu+cxk+SQZZAfg3kCVswrurkqm0kL8PDu8s9AbN/5Pe8hg6QYMExygrEWc5VXwpS2I/D0RoWA2l3WbHvgEtFulN31+Eq9mF1UwF5gK+b7jW+oXzgIesWhOw60Fgg2T252zy0oWuKR5iWp4LVHQ9vVZPrp8NOEQYb3B3amCA=
-Received: from AM6PR04MB5016.eurprd04.prod.outlook.com (20.177.34.88) by
- AM6PR04MB6405.eurprd04.prod.outlook.com (20.179.244.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Tue, 2 Apr 2019 12:45:53 +0000
-Received: from AM6PR04MB5016.eurprd04.prod.outlook.com
- ([fe80::b953:a9de:d0bf:7159]) by AM6PR04MB5016.eurprd04.prod.outlook.com
- ([fe80::b953:a9de:d0bf:7159%4]) with mapi id 15.20.1750.017; Tue, 2 Apr 2019
- 12:45:53 +0000
-From:   Clark Wang <xiaoning.wang@nxp.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] spi: lpspi: add missing complete in abort func at dma mode
-Thread-Topic: [PATCH] spi: lpspi: add missing complete in abort func at dma
- mode
-Thread-Index: AQHU6VIBRlYUz7qkm0iTks1lZ+egJA==
-Date:   Tue, 2 Apr 2019 12:45:53 +0000
-Message-ID: <20190402124609.22157-1-xiaoning.wang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SG2PR02CA0006.apcprd02.prod.outlook.com
- (2603:1096:3:17::18) To AM6PR04MB5016.eurprd04.prod.outlook.com
- (2603:10a6:20b:9::24)
-x-mailer: git-send-email 2.17.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaoning.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9574e3b8-7359-4148-a2d1-08d6b769242c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR04MB6405;
-x-ms-traffictypediagnostic: AM6PR04MB6405:
-x-microsoft-antispam-prvs: <AM6PR04MB64054B90A282E695414D5D7FF3560@AM6PR04MB6405.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0995196AA2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(396003)(366004)(376002)(189003)(199004)(53936002)(1076003)(102836004)(2351001)(3846002)(2501003)(71190400001)(6116002)(26005)(6506007)(386003)(2906002)(54906003)(81166006)(8936002)(1730700003)(5640700003)(6512007)(68736007)(478600001)(36756003)(6486002)(81156014)(52116002)(99286004)(50226002)(4326008)(8676002)(316002)(14454004)(25786009)(14444005)(256004)(6436002)(86362001)(71200400001)(106356001)(5660300002)(66066001)(4744005)(105586002)(6916009)(186003)(486006)(2616005)(305945005)(476003)(7736002)(97736004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6405;H:AM6PR04MB5016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9uBgXwuHq+pkMm90XLIM7g7tNyMwdf1J3G4pELS9P6xHsUjUK+/lacI6k/MTsSlqoKS/lsfYOz1OllPvEQlDPdG9KwHG4WkBR7LTLPm+v7tiCviL+/8VI5WOzGeav/AT2M6qcBQgkcpaycns6hYmtxMiyJsNQXTEgbNT80Rrykh6t9jwRzZiDj2Lz46RR+zs5YMvoJ5wSR+a/7oZCAdK1sF/NrnzgkUAI8L3fD2KQ9riMIXh5EAWiePH9Fo766/yB24d1F+OhqHmLQHHjFps3Pa4uZ8lcEYlxI4ypmN8cQG8M4YTT4Rh1Mb55EFHRtOqFtGxorr/sNmaHUJt0+1UTbILQAXrAmpebi3RG+JKPxVWl9XUn7QSFM36v1YGwreZuAQsafBwOqE38bFa2IKkmexdpx28wFcCsoc37PzRpJw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 2 Apr 2019 08:47:47 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38312 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbfDBMrr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 08:47:47 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 10so6343271pfo.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 05:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u3PSOHs4we7+LgIG6ZQZir4Fy57VqCCMcbhzYXQWknQ=;
+        b=RvtPBpLvPglDtwnPF4yXUeK5oDlzVoAw9Ac/QiLLKSGbikn9e6229p73Q0tOoviq2D
+         BavSCer7Dzqe0/C31mrVK/886gbUDYWuPnxHOlht2sOu/e62noERB05hR+v+Bbj+JICn
+         Lb7g/8TOjfYKi5cKqi9tDj/4Gjl0w7oFGi+cz1GXwEAzmc5l0cphMO74o+wu5S8JjZik
+         7AqeS2RJ0S+0J5+xNSxMiTjPOKYRkB2DaefRCT/WCl4ZMTNyy1aYXf9qwji/GQQh7uA6
+         a4SkVWVDmZ28lLA5h47JmaNF3G6jNLy7QP3Ylvcw6DiwtS/xNNeagblhaZ/cgn7jvFfX
+         OA/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u3PSOHs4we7+LgIG6ZQZir4Fy57VqCCMcbhzYXQWknQ=;
+        b=ShlM67LGfjqp5N9CFgaT5mTBdcCdYEsFUeo+zQ8iqOUiaU5eRXDZLZXU2onsQbVvR5
+         Qn3OdwcHXKBNLFaMb1SZfnRwWfdVlrfTpFQIP7RXejMufEWaasht0iV8qq7i8AkMCmz6
+         wCTGQHP8pmF03o7KP/Df3r6vFw+94fSXkoTsUbwItIxXkL0zY7SwQrzUW15PZP75NGhz
+         z88TfABfzSbDW8Cxc7A6h5TLicyn6c87kXbNbUk0lySJOm2/imc7hL/sW9JG/u7qdpHS
+         ZPA3Xn9uNVD+PhrOCKkbLZ02COeaGjADHTE7FYzy0k8sloE+m2WbSzQxMjb+tKAtJEVp
+         RcTA==
+X-Gm-Message-State: APjAAAW6dngLLW3aba95kJgyo/bLG4mKhP4vp/unfdbGYKIXJ0HrqDcd
+        yK4nRKTw9FT6jr/p+iZfMSFDhmHwrOJ0Py+YlVNOvA==
+X-Google-Smtp-Source: APXvYqwSO12tw5fRix4o6PstoDzeaM5ZQf6IJ2XlmsbVCqK/ZDPoD7HrCoDXID/J7Vmm+PM48eFxdwxASU4WIrz1GI4=
+X-Received: by 2002:a65:6496:: with SMTP id e22mr52163844pgv.249.1554209265963;
+ Tue, 02 Apr 2019 05:47:45 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9574e3b8-7359-4148-a2d1-08d6b769242c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2019 12:45:53.0421
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6405
+References: <cover.1553093420.git.andreyknvl@google.com> <44ad2d0c55dbad449edac23ae46d151a04102a1d.1553093421.git.andreyknvl@google.com>
+ <20190322114357.GC13384@arrakis.emea.arm.com> <CAAeHK+xE-ywfpVHRhBJVGiqOe0+BYW9awUa10ZP4P6Ggc8nxMg@mail.gmail.com>
+ <20190328141934.38960af0@gandalf.local.home> <20190329103039.GA44339@arrakis.emea.arm.com>
+In-Reply-To: <20190329103039.GA44339@arrakis.emea.arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 2 Apr 2019 14:47:34 +0200
+Message-ID: <CAAeHK+xe-zWn8WpCxUxBB2tXL8oiLkshkPi1J3Ly87mACaA4-A@mail.gmail.com>
+Subject: Re: [PATCH v13 04/20] mm, arm64: untag user pointers passed to memory syscalls
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing complete operations for dma_completion to fix the
-problem of blocking at the wait_for_completion_interruptible()
-function when use spi_slave_abort().
+On Fri, Mar 29, 2019 at 11:30 AM Catalin Marinas
+<catalin.marinas@arm.com> wrote:
+>
+> (I trimmed down the cc list a bit since it's always bouncing)
+>
+> On Thu, Mar 28, 2019 at 02:19:34PM -0400, Steven Rostedt wrote:
+> > On Thu, 28 Mar 2019 19:10:07 +0100
+> > Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+> > > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > > > > ---
+> > > > >  ipc/shm.c      | 2 ++
+> > > > >  mm/madvise.c   | 2 ++
+> > > > >  mm/mempolicy.c | 5 +++++
+> > > > >  mm/migrate.c   | 1 +
+> > > > >  mm/mincore.c   | 2 ++
+> > > > >  mm/mlock.c     | 5 +++++
+> > > > >  mm/mmap.c      | 7 +++++++
+> > > > >  mm/mprotect.c  | 1 +
+> > > > >  mm/mremap.c    | 2 ++
+> > > > >  mm/msync.c     | 2 ++
+> > > > >  10 files changed, 29 insertions(+)
+> > > >
+> > > > I wonder whether it's better to keep these as wrappers in the arm64
+> > > > code.
+> > >
+> > > I don't think I understand what you propose, could you elaborate?
+> >
+> > I believe Catalin is saying that instead of placing things like:
+> >
+> > @@ -1593,6 +1593,7 @@ SYSCALL_DEFINE3(shmat, int, shmid, char __user *, shmaddr, int, shmflg)
+> >       unsigned long ret;
+> >       long err;
+> >
+> > +     shmaddr = untagged_addr(shmaddr);
+> >
+> > To instead have the shmaddr set to the untagged_addr() before calling
+> > the system call, and passing the untagged addr to the system call, as
+> > that goes through the arm64 architecture specific code first.
+>
+> Indeed. For example, we already have a SYSCALL_DEFINE6(mmap, ...) in
+> arch/arm64/kernel/sys.c, just add the untagging there. We could do
+> something similar for the other syscalls. I don't mind doing this in the
+> generic code but if it's only needed for arm64, I'd rather keep the
+> generic changes to a minimum.
 
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
----
- drivers/spi/spi-fsl-lpspi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Do I understand correctly, that I'll need to add ksys_ wrappers for
+each of the memory syscalls, and then redefine them in
+arch/arm64/kernel/sys.c with arm64_ prefix, like it is done for the
+personality syscall right now? This will require generic changes as
+well.
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 0252cae0b35b..33b6a8affd55 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -482,7 +482,13 @@ static int fsl_lpspi_slave_abort(struct spi_controller=
- *controller)
- 				spi_controller_get_devdata(controller);
-=20
- 	fsl_lpspi->slave_aborted =3D true;
--	complete(&fsl_lpspi->xfer_done);
-+	if (!fsl_lpspi->usedma)
-+		complete(&fsl_lpspi->xfer_done);
-+	else {
-+		complete(&fsl_lpspi->dma_tx_completion);
-+		complete(&fsl_lpspi->dma_rx_completion);
-+	}
-+
- 	return 0;
- }
-=20
---=20
-2.17.1
-
+>
+> (I had a hack overriding __SC_CAST to do this automatically for pointer
+> arguments but this wouldn't work on mmap() and friends as the argument
+> is unsigned long)
+>
+> --
+> Catalin
