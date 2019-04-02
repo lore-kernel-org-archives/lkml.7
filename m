@@ -2,141 +2,186 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B099C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE317C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F292070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 867E920882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbfDBGiw convert rfc822-to-8bit (ORCPT
+        id S1729206AbfDBGko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 02:38:52 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:56999 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728359AbfDBGiw (ORCPT
+        Tue, 2 Apr 2019 02:40:44 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:59715 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728768AbfDBGko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 02:38:52 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x326cYVH007114, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtitcas11.realtek.com.tw[172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x326cYVH007114
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 2 Apr 2019 14:38:34 +0800
-Received: from RTITMBSVM07.realtek.com.tw ([fe80::a512:a803:bf1e:b23]) by
- RTITCAS11.realtek.com.tw ([fe80::7c6d:ced5:c4ff:8297%15]) with mapi id
- 14.03.0399.000; Tue, 2 Apr 2019 14:38:34 +0800
-From:   Kailang <kailang@realtek.com>
-To:     Takashi Iwai <tiwai@suse.de>,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Daniel Drake <drake@endlessm.com>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
-Thread-Topic: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer
- TravelMate B114-21 with ALC233
-Thread-Index: AQHU6Dqw5knd0/Ath0C1mp5SHHcFl6YnBJOAgAFn61A=
-Date:   Tue, 2 Apr 2019 06:38:32 +0000
-Message-ID: <6FAB7C47BCF00940BB0999A99BE3547A18DBAFAD@RTITMBSVM07.realtek.com.tw>
-References: <20190401032503.2821-1-jian-hong@endlessm.com>
- <s5hmul9lkke.wl-tiwai@suse.de>
-In-Reply-To: <s5hmul9lkke.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.105.152]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Tue, 2 Apr 2019 02:40:44 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0743722|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.375491-0.016038-0.608471;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03308;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.EFvbW3d_1554187239;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EFvbW3d_1554187239)
+          by smtp.aliyun-inc.com(10.147.40.26);
+          Tue, 02 Apr 2019 14:40:39 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mao Han <han_mao@c-sky.com>, Guo Ren <guoren@kernel.org>
+Subject: [PATCH v2 1/2] csky: Add support for perf registers sampling
+Date:   Tue,  2 Apr 2019 14:35:41 +0800
+Message-Id: <20c1eb16f0a4fa59ea8479cc5bff54871413ac86.1554186270.git.han_mao@c-sky.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1554186270.git.han_mao@c-sky.com>
+References: <cover.1554186270.git.han_mao@c-sky.com>
+In-Reply-To: <cover.1554186270.git.han_mao@c-sky.com>
+References: <cover.1554186270.git.han_mao@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Takashi,
+This patch implements the perf registers sampling and validation API
+for csky arch. The valid registers and their register ID are defined in
+perf_regs.h. Perf tool can backtrace in userspace with unwind library
+and the registers/user stack dump support.
 
-This COEF value was modified by me.
+CC: Guo Ren <guoren@kernel.org>
 
-BR,
-Kailang
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+---
+ arch/csky/Kconfig                      |  2 ++
+ arch/csky/include/uapi/asm/perf_regs.h | 48 ++++++++++++++++++++++++++++++++++
+ arch/csky/kernel/Makefile              |  1 +
+ arch/csky/kernel/perf_regs.c           | 40 ++++++++++++++++++++++++++++
+ 4 files changed, 91 insertions(+)
+ create mode 100644 arch/csky/include/uapi/asm/perf_regs.h
+ create mode 100644 arch/csky/kernel/perf_regs.c
 
------Original Message-----
-From: Takashi Iwai <tiwai@suse.de> 
-Sent: Tuesday, April 2, 2019 1:09 AM
-To: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: alsa-devel@alsa-project.org; Daniel Drake <drake@endlessm.com>; linux@endlessm.com; Kailang <kailang@realtek.com>; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index c4974cf..8e45c7a 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -38,6 +38,8 @@ config CSKY
+ 	select HAVE_KERNEL_LZO
+ 	select HAVE_KERNEL_LZMA
+ 	select HAVE_PERF_EVENTS
++	select HAVE_PERF_REGS
++	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_DMA_API_DEBUG
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_SYSCALL_TRACEPOINTS
+diff --git a/arch/csky/include/uapi/asm/perf_regs.h b/arch/csky/include/uapi/asm/perf_regs.h
+new file mode 100644
+index 0000000..337d8fa
+--- /dev/null
++++ b/arch/csky/include/uapi/asm/perf_regs.h
+@@ -0,0 +1,48 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
++
++#ifndef _ASM_CSKY_PERF_REGS_H
++#define _ASM_CSKY_PERF_REGS_H
++
++enum perf_event_csky_regs {
++	PERF_REG_CSKY_TLS,
++	PERF_REG_CSKY_LR,
++	PERF_REG_CSKY_PC,
++	PERF_REG_CSKY_SR,
++	PERF_REG_CSKY_SP,
++	PERF_REG_CSKY_ORIG_A0,
++	PERF_REG_CSKY_R0,
++	PERF_REG_CSKY_R1,
++	PERF_REG_CSKY_R2,
++	PERF_REG_CSKY_R3,
++	PERF_REG_CSKY_R4,
++	PERF_REG_CSKY_R5,
++	PERF_REG_CSKY_R6,
++	PERF_REG_CSKY_R7,
++	PERF_REG_CSKY_R8,
++	PERF_REG_CSKY_R9,
++	PERF_REG_CSKY_R10,
++	PERF_REG_CSKY_R11,
++	PERF_REG_CSKY_R12,
++	PERF_REG_CSKY_R13,
++	PERF_REG_CSKY_R16,
++	PERF_REG_CSKY_R17,
++	PERF_REG_CSKY_R18,
++	PERF_REG_CSKY_R19,
++	PERF_REG_CSKY_R20,
++	PERF_REG_CSKY_R21,
++	PERF_REG_CSKY_R22,
++	PERF_REG_CSKY_R23,
++	PERF_REG_CSKY_R24,
++	PERF_REG_CSKY_R25,
++	PERF_REG_CSKY_R26,
++	PERF_REG_CSKY_R27,
++	PERF_REG_CSKY_R28,
++	PERF_REG_CSKY_R29,
++	PERF_REG_CSKY_R30,
++	PERF_REG_CSKY_HI,
++	PERF_REG_CSKY_LO,
++	PERF_REG_CSKY_DCSR,
++	PERF_REG_CSKY_MAX,
++};
++#endif /* _ASM_CSKY_PERF_REGS_H */
+diff --git a/arch/csky/kernel/Makefile b/arch/csky/kernel/Makefile
+index 4c462f5..1624b04 100644
+--- a/arch/csky/kernel/Makefile
++++ b/arch/csky/kernel/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o
+ obj-$(CONFIG_STACKTRACE)		+= stacktrace.o
+ obj-$(CONFIG_CSKY_PMU_V1)		+= perf_event.o
+ obj-$(CONFIG_PERF_EVENTS)		+= perf_callchain.o
++obj-$(CONFIG_HAVE_PERF_REGS)            += perf_regs.o
+ 
+ ifdef CONFIG_FUNCTION_TRACER
+ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+diff --git a/arch/csky/kernel/perf_regs.c b/arch/csky/kernel/perf_regs.c
+new file mode 100644
+index 0000000..153c8f6
+--- /dev/null
++++ b/arch/csky/kernel/perf_regs.c
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
++
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/perf_event.h>
++#include <linux/bug.h>
++#include <asm/perf_regs.h>
++#include <asm/ptrace.h>
++
++u64 perf_reg_value(struct pt_regs *regs, int idx)
++{
++	if (WARN_ON_ONCE((u32)idx >= PERF_REG_CSKY_MAX))
++		return 0;
++
++	return ((long *)regs)[idx];
++}
++
++#define REG_RESERVED (~((1ULL << PERF_REG_CSKY_MAX) - 1))
++
++int perf_reg_validate(u64 mask)
++{
++	if (!mask || mask & REG_RESERVED)
++		return -EINVAL;
++
++	return 0;
++}
++
++u64 perf_reg_abi(struct task_struct *task)
++{
++	return PERF_SAMPLE_REGS_ABI_32;
++}
++
++void perf_get_regs_user(struct perf_regs *regs_user,
++			struct pt_regs *regs,
++			struct pt_regs *regs_user_copy)
++{
++	regs_user->regs = task_pt_regs(current);
++	regs_user->abi = perf_reg_abi(current);
++}
+-- 
+2.7.4
 
-On Mon, 01 Apr 2019 05:25:05 +0200,
-Jian-Hong Pan wrote:
-> 
-> The Acer TravelMate B114-21 laptop cannot detect and record sound from 
-> headset MIC.  This patch adds the ALC233_FIXUP_ACER_HEADSET_MIC HDA 
-> verb quirk chained with ALC233_FIXUP_ASUS_MIC_NO_PRESENCE pin quirk to 
-> fix this issue.
-> 
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> Signed-off-by: Daniel Drake <drake@endlessm.com>
-> ---
->  sound/pci/hda/patch_realtek.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/sound/pci/hda/patch_realtek.c 
-> b/sound/pci/hda/patch_realtek.c index a3fb3d4c5730..bdb2227be4eb 
-> 100644
-> --- a/sound/pci/hda/patch_realtek.c
-> +++ b/sound/pci/hda/patch_realtek.c
-> @@ -5690,6 +5690,7 @@ enum {
->  	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
->  	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
->  	ALC299_FIXUP_PREDATOR_SPK,
-> +	ALC233_FIXUP_ACER_HEADSET_MIC,
->  };
->  
->  static const struct hda_fixup alc269_fixups[] = { @@ -6713,6 +6714,15 
-> @@ static const struct hda_fixup alc269_fixups[] = {
->  			{ 0x21, 0x90170150 }, /* use as headset mic, without its own jack detect */
->  			{ }
->  		}
-> +	[ALC233_FIXUP_ACER_HEADSET_MIC] = {
-> +		.type = HDA_FIXUP_VERBS,
-> +		.v.verbs = (const struct hda_verb[]) {
-> +			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x45 },
-> +			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5089 },
-> +			{ }
-
-For the additional COEF application, I'd like to hear ack from Kailang.  It's still a black magic from Realtek, so need some confirmation.
-
-
-thanks,
-
-Takashi
-
-> +		},
-> +		.chained = true,
-> +		.chain_id = ALC233_FIXUP_ASUS_MIC_NO_PRESENCE
->  	},
->  };
->  
-> @@ -6737,6 +6747,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
->  	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
->  	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
->  	SND_PCI_QUIRK(0x1025, 0x1308, "Acer Aspire Z24-890", 
-> ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-> +	SND_PCI_QUIRK(0x1025, 0x132a, "Acer TravelMate B114-21", 
-> +ALC233_FIXUP_ACER_HEADSET_MIC),
->  	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
->  	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
->  	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", 
-> ALC275_FIXUP_DELL_XPS),
-> --
-> 2.20.1
-> 
-> 
-
-------Please consider the environment before printing this e-mail.
