@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA7DC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE25C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD3E20856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7878820856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbfDBNqv (ORCPT
+        id S1731429AbfDBNkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:46:51 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43130 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731422AbfDBNkE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:04 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42832 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731160AbfDBNkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 09:40:01 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdx-0002os-Bd; Tue, 02 Apr 2019 14:40:01 +0100
+        id 1hBJdv-0002mo-4v; Tue, 02 Apr 2019 14:39:59 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdw-0004uc-NL; Tue, 02 Apr 2019 14:40:00 +0100
+        id 1hBJdu-0004rx-6l; Tue, 02 Apr 2019 14:39:58 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Simon Horman" <horms+renesas@verge.net.au>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Uwe Kleine-=?UTF-8?Q?K=C3=B6nig?=" <u.kleine-koenig@pengutronix.de>,
+        "Stefan Agner" <stefan@agner.ch>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.864702870@decadent.org.uk>
+Message-ID: <lsq.1554212307.311838504@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 52/99] pinctrl: sh-pfc: sh7269: Add missing PCIOR0 field
+Subject: [PATCH 3.16 19/99] serial: imx: fix error handling in console_setup
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,33 +56,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Stefan Agner <stefan@agner.ch>
 
-commit 9540cbdfcd861caf67a6f0e4bb7f46d41c4aad86 upstream.
+commit 63fd4b94b948c14eeb27a3bbf50ea0f7f0593bad upstream.
 
-The Port C I/O Register 0 contains 7 reserved bits, but the descriptor
-contains only dummy configuration values for 6 reserved bits, thus
-breaking the configuration of all subsequent fields in the register.
+The ipg clock only needs to be unprepared in case preparing
+per clock fails. The ipg clock has already disabled at the point.
 
-Fix this by adding the two missing configuration values.
-
-Fixes: f5e811f2a43117b2 ("sh-pfc: Add sh7269 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 1cf93e0d5488 ("serial: imx: remove the uart_console() check")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7269.c | 2 +-
+ drivers/tty/serial/imx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-@@ -2119,7 +2119,7 @@ static const struct pinmux_cfg_reg pinmu
- 	},
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -1777,7 +1777,7 @@ imx_console_setup(struct console *co, ch
  
- 	{ PINMUX_CFG_REG("PCIOR0", 0xfffe3852, 16, 1) {
--		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 		PC8_IN, PC8_OUT,
- 		PC7_IN, PC7_OUT,
- 		PC6_IN, PC6_OUT,
+ 	retval = clk_prepare(sport->clk_per);
+ 	if (retval)
+-		clk_disable_unprepare(sport->clk_ipg);
++		clk_unprepare(sport->clk_ipg);
+ 
+ error_console:
+ 	return retval;
 
