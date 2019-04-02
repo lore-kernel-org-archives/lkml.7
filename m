@@ -2,714 +2,115 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D808CC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE28AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A22F20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E5920882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbfDBOin (ORCPT
+        id S1731992AbfDBOit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:38:43 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:44001 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730776AbfDBOin (ORCPT
+        Tue, 2 Apr 2019 10:38:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41828 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731396AbfDBOir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:38:43 -0400
-X-Originating-IP: 90.88.30.125
-Received: from aptenodytes (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 908D86001F;
-        Tue,  2 Apr 2019 14:38:37 +0000 (UTC)
-Message-ID: <249eaf7b385054a5d56302562bc3d6420e3fec4e.camel@bootlin.com>
-Subject: Re: [PATCH v2 1/2] drm/vc4: Use common helpers for debugfs setup by
- the driver components.
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Date:   Tue, 02 Apr 2019 16:38:36 +0200
-In-Reply-To: <20190401183559.3823-1-eric@anholt.net>
-References: <20190401183559.3823-1-eric@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 2 Apr 2019 10:38:47 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x32EXtDx022720
+        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 10:38:46 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rm8p2v7aj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 10:38:46 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 2 Apr 2019 15:38:45 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 2 Apr 2019 15:38:40 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x32EcdWc26083378
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Apr 2019 14:38:39 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51469B206E;
+        Tue,  2 Apr 2019 14:38:39 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F91EB206A;
+        Tue,  2 Apr 2019 14:38:39 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Apr 2019 14:38:39 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 4C47316C1EAE; Tue,  2 Apr 2019 07:38:44 -0700 (PDT)
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: [PATCH RFC v2 tip/core/rcu 4/4] rcu: Allow rcu_read_unlock_special() to raise_softirq() if in_irq()
+Date:   Tue,  2 Apr 2019 07:38:42 -0700
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190402143758.GA15134@linux.ibm.com>
+References: <20190402143758.GA15134@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19040214-0068-0000-0000-000003AF74A6
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010860; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01183287; UDB=6.00619479; IPR=6.00964035;
+ MB=3.00026260; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-02 14:38:44
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040214-0069-0000-0000-000048048791
+Message-Id: <20190402143842.16068-4-paulmck@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=888 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904020099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+When running in an interrupt handler, raise_softirq() and
+raise_softirq_irqoff() have extremely low overhead: They simply set a
+bit in a per-CPU mask, which is checked upon exit from that interrupt
+handler.  Therefore, if rcu_read_unlock_special() is invoked within an
+interrupt handler and RCU_SOFTIRQ is in use, this commit make use of
+raise_softirq_irqoff() even if there is no expedited grace period in
+flight and even if this is not a nohz_full CPU.
 
-Le lundi 01 avril 2019 à 11:35 -0700, Eric Anholt a écrit :
-> The global list of all debugfs entries for the driver was painful: the
-> list couldn't see into the components' structs, so each component had
-> its own debugs show function to find the component, then find the
-> regset and dump it.  The components also had to be careful to check
-> that they were actually registered in vc4 before dereferencing
-> themselves, in case they weren't probed on a particular platform.
-> They routinely failed at that.
-> 
-> Instead, we can have the components add their debugfs callbacks to a
-> little list in vc4 to be registered at drm_dev_register() time, which
-> gets vc4_debugfs.c out of the business of knowing the whole list of
-> components.
-> 
-> Thanks to this change, dsi0 (if it existed) would register its node.
-> 
-> v2: Rebase on hvs_underrun addition.
+Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+---
+ kernel/rcu/tree_plugin.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Glad that we have a unified and relatively painless approach for
-debugfs with this change. Looks good to me so this is:
-
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-
-Cheers,
-
-Paul1`
-
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  drivers/gpu/drm/vc4/vc4_bo.c      |  6 +--
->  drivers/gpu/drm/vc4/vc4_crtc.c    | 33 +++----------
->  drivers/gpu/drm/vc4/vc4_debugfs.c | 82 ++++++++++++++++++++++++-------
->  drivers/gpu/drm/vc4/vc4_dpi.c     | 20 +-------
->  drivers/gpu/drm/vc4/vc4_drv.c     |  1 +
->  drivers/gpu/drm/vc4/vc4_drv.h     | 41 +++++++++++-----
->  drivers/gpu/drm/vc4/vc4_dsi.c     | 24 ++-------
->  drivers/gpu/drm/vc4/vc4_hdmi.c    |  6 +--
->  drivers/gpu/drm/vc4/vc4_hvs.c     | 20 ++------
->  drivers/gpu/drm/vc4/vc4_txp.c     | 20 +-------
->  drivers/gpu/drm/vc4/vc4_v3d.c     | 19 ++-----
->  drivers/gpu/drm/vc4/vc4_vec.c     | 20 +-------
->  12 files changed, 126 insertions(+), 166 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo.c
-> index 276ea9c550c0..88ebd681d7eb 100644
-> --- a/drivers/gpu/drm/vc4/vc4_bo.c
-> +++ b/drivers/gpu/drm/vc4/vc4_bo.c
-> @@ -66,8 +66,7 @@ static void vc4_bo_stats_print(struct drm_printer *p, struct vc4_dev *vc4)
->  	mutex_unlock(&vc4->purgeable.lock);
->  }
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_bo_stats_debugfs(struct seq_file *m, void *unused)
-> +static int vc4_bo_stats_debugfs(struct seq_file *m, void *unused)
->  {
->  	struct drm_info_node *node = (struct drm_info_node *)m->private;
->  	struct drm_device *dev = node->minor->dev;
-> @@ -78,7 +77,6 @@ int vc4_bo_stats_debugfs(struct seq_file *m, void *unused)
->  
->  	return 0;
->  }
-> -#endif
->  
->  /* Takes ownership of *name and returns the appropriate slot for it in
->   * the bo_labels[] array, extending it as necessary.
-> @@ -1005,6 +1003,8 @@ int vc4_bo_cache_init(struct drm_device *dev)
->  
->  	mutex_init(&vc4->bo_lock);
->  
-> +	vc4_debugfs_add_file(dev, "bo_stats", vc4_bo_stats_debugfs, NULL);
-> +
->  	INIT_LIST_HEAD(&vc4->bo_cache.time_list);
->  
->  	INIT_WORK(&vc4->bo_cache.time_work, vc4_bo_cache_time_work);
-> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-> index 6e564783ba94..b2891ca0e7f4 100644
-> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
-> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-> @@ -84,33 +84,6 @@ static const struct debugfs_reg32 crtc_regs[] = {
->  	VC4_REG32(PV_HACT_ACT),
->  };
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_crtc_debugfs_regs(struct seq_file *m, void *unused)
-> -{
-> -	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> -	struct drm_device *dev = node->minor->dev;
-> -	int crtc_index = (uintptr_t)node->info_ent->data;
-> -	struct drm_printer p = drm_seq_file_printer(m);
-> -	struct drm_crtc *crtc;
-> -	struct vc4_crtc *vc4_crtc;
-> -	int i;
-> -
-> -	i = 0;
-> -	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
-> -		if (i == crtc_index)
-> -			break;
-> -		i++;
-> -	}
-> -	if (!crtc)
-> -		return 0;
-> -	vc4_crtc = to_vc4_crtc(crtc);
-> -
-> -	drm_print_regset32(&p, &vc4_crtc->regset);
-> -
-> -	return 0;
-> -}
-> -#endif
-> -
->  bool vc4_crtc_get_scanoutpos(struct drm_device *dev, unsigned int crtc_id,
->  			     bool in_vblank_irq, int *vpos, int *hpos,
->  			     ktime_t *stime, ktime_t *etime,
-> @@ -1070,6 +1043,7 @@ static const struct drm_crtc_helper_funcs vc4_crtc_helper_funcs = {
->  
->  static const struct vc4_crtc_data pv0_data = {
->  	.hvs_channel = 0,
-> +	.debugfs_name = "crtc0_regs",
->  	.encoder_types = {
->  		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI0,
->  		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_DPI,
-> @@ -1078,6 +1052,7 @@ static const struct vc4_crtc_data pv0_data = {
->  
->  static const struct vc4_crtc_data pv1_data = {
->  	.hvs_channel = 2,
-> +	.debugfs_name = "crtc1_regs",
->  	.encoder_types = {
->  		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI1,
->  		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_SMI,
-> @@ -1086,6 +1061,7 @@ static const struct vc4_crtc_data pv1_data = {
->  
->  static const struct vc4_crtc_data pv2_data = {
->  	.hvs_channel = 1,
-> +	.debugfs_name = "crtc2_regs",
->  	.encoder_types = {
->  		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_HDMI,
->  		[PV_CONTROL_CLK_SELECT_VEC] = VC4_ENCODER_TYPE_VEC,
-> @@ -1247,6 +1223,9 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
->  
->  	platform_set_drvdata(pdev, vc4_crtc);
->  
-> +	vc4_debugfs_add_regset32(drm, vc4_crtc->data->debugfs_name,
-> +				 &vc4_crtc->regset);
-> +
->  	return 0;
->  
->  err_destroy_planes:
-> diff --git a/drivers/gpu/drm/vc4/vc4_debugfs.c b/drivers/gpu/drm/vc4/vc4_debugfs.c
-> index 59cdad89f844..69df84bdf904 100644
-> --- a/drivers/gpu/drm/vc4/vc4_debugfs.c
-> +++ b/drivers/gpu/drm/vc4/vc4_debugfs.c
-> @@ -15,28 +15,20 @@
->  #include "vc4_drv.h"
->  #include "vc4_regs.h"
->  
-> -static const struct drm_info_list vc4_debugfs_list[] = {
-> -	{"bo_stats", vc4_bo_stats_debugfs, 0},
-> -	{"dpi_regs", vc4_dpi_debugfs_regs, 0},
-> -	{"dsi1_regs", vc4_dsi_debugfs_regs, 0, (void *)(uintptr_t)1},
-> -	{"hdmi_regs", vc4_hdmi_debugfs_regs, 0},
-> -	{"vec_regs", vc4_vec_debugfs_regs, 0},
-> -	{"txp_regs", vc4_txp_debugfs_regs, 0},
-> -	{"hvs_regs", vc4_hvs_debugfs_regs, 0},
-> -	{"hvs_underrun",  vc4_hvs_debugfs_underrun, 0},
-> -	{"crtc0_regs", vc4_crtc_debugfs_regs, 0, (void *)(uintptr_t)0},
-> -	{"crtc1_regs", vc4_crtc_debugfs_regs, 0, (void *)(uintptr_t)1},
-> -	{"crtc2_regs", vc4_crtc_debugfs_regs, 0, (void *)(uintptr_t)2},
-> -	{"v3d_ident", vc4_v3d_debugfs_ident, 0},
-> -	{"v3d_regs", vc4_v3d_debugfs_regs, 0},
-> +struct vc4_debugfs_info_entry {
-> +	struct list_head link;
-> +	struct drm_info_list info;
->  };
->  
-> -#define VC4_DEBUGFS_ENTRIES ARRAY_SIZE(vc4_debugfs_list)
-> -
-> +/**
-> + * Called at drm_dev_register() time on each of the minors registered
-> + * by the DRM device, to attach the debugfs files.
-> + */
->  int
->  vc4_debugfs_init(struct drm_minor *minor)
->  {
->  	struct vc4_dev *vc4 = to_vc4_dev(minor->dev);
-> +	struct vc4_debugfs_info_entry *entry;
->  	struct dentry *dentry;
->  
->  	dentry = debugfs_create_bool("hvs_load_tracker", S_IRUGO | S_IWUSR,
-> @@ -45,6 +37,60 @@ vc4_debugfs_init(struct drm_minor *minor)
->  	if (!dentry)
->  		return -ENOMEM;
->  
-> -	return drm_debugfs_create_files(vc4_debugfs_list, VC4_DEBUGFS_ENTRIES,
-> -					minor->debugfs_root, minor);
-> +	list_for_each_entry(entry, &vc4->debugfs_list, link) {
-> +		int ret = drm_debugfs_create_files(&entry->info, 1,
-> +						   minor->debugfs_root, minor);
-> +
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int vc4_debugfs_regset32(struct seq_file *m, void *unused)
-> +{
-> +	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> +	struct debugfs_regset32 *regset = node->info_ent->data;
-> +	struct drm_printer p = drm_seq_file_printer(m);
-> +
-> +	drm_print_regset32(&p, regset);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * Registers a debugfs file with a callback function for a vc4 component.
-> + *
-> + * This is like drm_debugfs_create_files(), but that can only be
-> + * called a given DRM minor, while the various VC4 components want to
-> + * register their debugfs files during the component bind process.  We
-> + * track the request and delay it to be called on each minor during
-> + * vc4_debugfs_init().
-> + */
-> +void vc4_debugfs_add_file(struct drm_device *dev,
-> +			  const char *name,
-> +			  int (*show)(struct seq_file*, void*),
-> +			  void *data)
-> +{
-> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> +
-> +	struct vc4_debugfs_info_entry *entry =
-> +		devm_kzalloc(dev->dev, sizeof(*entry), GFP_KERNEL);
-> +
-> +	if (!entry)
-> +		return;
-> +
-> +	entry->info.name = name;
-> +	entry->info.show = show;
-> +	entry->info.data = data;
-> +
-> +	list_add(&entry->link, &vc4->debugfs_list);
-> +}
-> +
-> +void vc4_debugfs_add_regset32(struct drm_device *drm,
-> +			      const char *name,
-> +			      struct debugfs_regset32 *regset)
-> +{
-> +	vc4_debugfs_add_file(drm, name, vc4_debugfs_regset32, regset);
->  }
-> diff --git a/drivers/gpu/drm/vc4/vc4_dpi.c b/drivers/gpu/drm/vc4/vc4_dpi.c
-> index 8be2264f496a..34f90ca8f479 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dpi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dpi.c
-> @@ -125,24 +125,6 @@ static const struct debugfs_reg32 dpi_regs[] = {
->  	VC4_REG32(DPI_ID),
->  };
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_dpi_debugfs_regs(struct seq_file *m, void *unused)
-> -{
-> -	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> -	struct drm_device *dev = node->minor->dev;
-> -	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> -	struct vc4_dpi *dpi = vc4->dpi;
-> -	struct drm_printer p = drm_seq_file_printer(m);
-> -
-> -	if (!dpi)
-> -		return 0;
-> -
-> -	drm_print_regset32(&p, &dpi->regset);
-> -
-> -	return 0;
-> -}
-> -#endif
-> -
->  static const struct drm_encoder_funcs vc4_dpi_encoder_funcs = {
->  	.destroy = drm_encoder_cleanup,
->  };
-> @@ -349,6 +331,8 @@ static int vc4_dpi_bind(struct device *dev, struct device *master, void *data)
->  
->  	vc4->dpi = dpi;
->  
-> +	vc4_debugfs_add_regset32(drm, "dpi_regs", &dpi->regset);
-> +
->  	return 0;
->  
->  err_destroy_encoder:
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-> index f2d0fb3aa729..3d6fccea5080 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.c
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.c
-> @@ -262,6 +262,7 @@ static int vc4_drm_bind(struct device *dev)
->  	platform_set_drvdata(pdev, drm);
->  	vc4->dev = drm;
->  	drm->dev_private = vc4;
-> +	INIT_LIST_HEAD(&vc4->debugfs_list);
->  
->  	ret = vc4_bo_cache_init(drm);
->  	if (ret)
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-> index f6c9de75d465..be85656024fa 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.h
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-> @@ -210,7 +210,12 @@ struct vc4_dev {
->  
->  	struct drm_modeset_lock ctm_state_lock;
->  	struct drm_private_obj ctm_manager;
-> -	struct drm_private_obj load_tracker;
-> + 	struct drm_private_obj load_tracker;
-> +
-> +	/* List of vc4_debugfs_info_entry for adding to debugfs once
-> +	 * the minor is available (after drm_dev_register()).
-> +	 */
-> +	struct list_head debugfs_list;
->  };
->  
->  static inline struct vc4_dev *
-> @@ -429,6 +434,7 @@ struct vc4_crtc_data {
->  	int hvs_channel;
->  
->  	enum vc4_encoder_type encoder_types[4];
-> +	const char *debugfs_name;
->  };
->  
->  struct vc4_crtc {
-> @@ -715,7 +721,6 @@ struct drm_gem_object *vc4_prime_import_sg_table(struct drm_device *dev,
->  void *vc4_prime_vmap(struct drm_gem_object *obj);
->  int vc4_bo_cache_init(struct drm_device *dev);
->  void vc4_bo_cache_destroy(struct drm_device *dev);
-> -int vc4_bo_stats_debugfs(struct seq_file *m, void *arg);
->  int vc4_bo_inc_usecnt(struct vc4_bo *bo);
->  void vc4_bo_dec_usecnt(struct vc4_bo *bo);
->  void vc4_bo_add_to_purgeable_pool(struct vc4_bo *bo);
-> @@ -723,7 +728,6 @@ void vc4_bo_remove_from_purgeable_pool(struct vc4_bo *bo);
->  
->  /* vc4_crtc.c */
->  extern struct platform_driver vc4_crtc_driver;
-> -int vc4_crtc_debugfs_regs(struct seq_file *m, void *arg);
->  bool vc4_crtc_get_scanoutpos(struct drm_device *dev, unsigned int crtc_id,
->  			     bool in_vblank_irq, int *vpos, int *hpos,
->  			     ktime_t *stime, ktime_t *etime,
-> @@ -736,17 +740,37 @@ void vc4_crtc_get_margins(struct drm_crtc_state *state,
->  
->  /* vc4_debugfs.c */
->  int vc4_debugfs_init(struct drm_minor *minor);
-> +#ifdef CONFIG_DEBUG_FS
-> +void vc4_debugfs_add_file(struct drm_device *drm,
-> +			  const char *filename,
-> +			  int (*show)(struct seq_file*, void*),
-> +			  void *data);
-> +void vc4_debugfs_add_regset32(struct drm_device *drm,
-> +			      const char *filename,
-> +			      struct debugfs_regset32 *regset);
-> +#else
-> +static inline void vc4_debugfs_add_file(struct drm_device *drm,
-> +					const char *filename,
-> +					int (*show)(struct seq_file*, void*),
-> +					void *data)
-> +{
-> +}
-> +
-> +static inline void vc4_debugfs_add_regset32(struct drm_device *drm,
-> +					    const char *filename,
-> +					    struct debugfs_regset32 *regset)
-> +{
-> +}
-> +#endif
->  
->  /* vc4_drv.c */
->  void __iomem *vc4_ioremap_regs(struct platform_device *dev, int index);
->  
->  /* vc4_dpi.c */
->  extern struct platform_driver vc4_dpi_driver;
-> -int vc4_dpi_debugfs_regs(struct seq_file *m, void *unused);
->  
->  /* vc4_dsi.c */
->  extern struct platform_driver vc4_dsi_driver;
-> -int vc4_dsi_debugfs_regs(struct seq_file *m, void *unused);
->  
->  /* vc4_fence.c */
->  extern const struct dma_fence_ops vc4_fence_ops;
-> @@ -774,15 +798,12 @@ int vc4_gem_madvise_ioctl(struct drm_device *dev, void *data,
->  
->  /* vc4_hdmi.c */
->  extern struct platform_driver vc4_hdmi_driver;
-> -int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused);
->  
->  /* vc4_vec.c */
->  extern struct platform_driver vc4_vec_driver;
-> -int vc4_vec_debugfs_regs(struct seq_file *m, void *unused);
->  
->  /* vc4_txp.c */
->  extern struct platform_driver vc4_txp_driver;
-> -int vc4_txp_debugfs_regs(struct seq_file *m, void *unused);
->  
->  /* vc4_irq.c */
->  irqreturn_t vc4_irq(int irq, void *arg);
-> @@ -794,8 +815,6 @@ void vc4_irq_reset(struct drm_device *dev);
->  /* vc4_hvs.c */
->  extern struct platform_driver vc4_hvs_driver;
->  void vc4_hvs_dump_state(struct drm_device *dev);
-> -int vc4_hvs_debugfs_regs(struct seq_file *m, void *unused);
-> -int vc4_hvs_debugfs_underrun(struct seq_file *m, void *unused);
->  void vc4_hvs_unmask_underrun(struct drm_device *dev, int channel);
->  void vc4_hvs_mask_underrun(struct drm_device *dev, int channel);
->  
-> @@ -812,8 +831,6 @@ void vc4_plane_async_set_fb(struct drm_plane *plane,
->  
->  /* vc4_v3d.c */
->  extern struct platform_driver vc4_v3d_driver;
-> -int vc4_v3d_debugfs_ident(struct seq_file *m, void *unused);
-> -int vc4_v3d_debugfs_regs(struct seq_file *m, void *unused);
->  int vc4_v3d_get_bin_slot(struct vc4_dev *vc4);
->  int vc4_v3d_pm_get(struct vc4_dev *vc4);
->  void vc4_v3d_pm_put(struct vc4_dev *vc4);
-> diff --git a/drivers/gpu/drm/vc4/vc4_dsi.c b/drivers/gpu/drm/vc4/vc4_dsi.c
-> index 806cfaa2a6a7..9412709067f5 100644
-> --- a/drivers/gpu/drm/vc4/vc4_dsi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_dsi.c
-> @@ -657,25 +657,6 @@ static const struct debugfs_reg32 dsi1_regs[] = {
->  	VC4_REG32(DSI1_ID),
->  };
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_dsi_debugfs_regs(struct seq_file *m, void *unused)
-> -{
-> -	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> -	struct drm_device *drm = node->minor->dev;
-> -	struct vc4_dev *vc4 = to_vc4_dev(drm);
-> -	int dsi_index = (uintptr_t)node->info_ent->data;
-> -	struct vc4_dsi *dsi = (dsi_index == 1 ? vc4->dsi1 : NULL);
-> -	struct drm_printer p = drm_seq_file_printer(m);
-> -
-> -	if (!dsi)
-> -		return 0;
-> -
-> -	drm_print_regset32(&p, &dsi->regset);
-> -
-> -	return 0;
-> -}
-> -#endif
-> -
->  static void vc4_dsi_encoder_destroy(struct drm_encoder *encoder)
->  {
->  	drm_encoder_cleanup(encoder);
-> @@ -1637,6 +1618,11 @@ static int vc4_dsi_bind(struct device *dev, struct device *master, void *data)
->  	 */
->  	dsi->encoder->bridge = NULL;
->  
-> +	if (dsi->port == 0)
-> +		vc4_debugfs_add_regset32(drm, "dsi0_regs", &dsi->regset);
-> +	else
-> +		vc4_debugfs_add_regset32(drm, "dsi1_regs", &dsi->regset);
-> +
->  	pm_runtime_enable(dev);
->  
->  	return 0;
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index 38c9172cfe52..99fc8569e0f5 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -187,8 +187,7 @@ static const struct debugfs_reg32 hd_regs[] = {
->  	VC4_REG32(VC4_HD_FRAME_COUNT),
->  };
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
-> +static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
->  {
->  	struct drm_info_node *node = (struct drm_info_node *)m->private;
->  	struct drm_device *dev = node->minor->dev;
-> @@ -201,7 +200,6 @@ int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
->  
->  	return 0;
->  }
-> -#endif /* CONFIG_DEBUG_FS */
->  
->  static enum drm_connector_status
->  vc4_hdmi_connector_detect(struct drm_connector *connector, bool force)
-> @@ -1432,6 +1430,8 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->  	if (ret)
->  		goto err_destroy_encoder;
->  
-> +	vc4_debugfs_add_file(drm, "hdmi_regs", vc4_hdmi_debugfs_regs, hdmi);
-> +
->  	return 0;
->  
->  #ifdef CONFIG_DRM_VC4_HDMI_CEC
-> diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-> index c463453f941b..f746e9a7a88c 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hvs.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-> @@ -80,20 +80,7 @@ void vc4_hvs_dump_state(struct drm_device *dev)
->  	}
->  }
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_hvs_debugfs_regs(struct seq_file *m, void *unused)
-> -{
-> -	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> -	struct drm_device *dev = node->minor->dev;
-> -	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> -	struct drm_printer p = drm_seq_file_printer(m);
-> -
-> -	drm_print_regset32(&p, &vc4->hvs->regset);
-> -
-> -	return 0;
-> -}
-> -
-> -int vc4_hvs_debugfs_underrun(struct seq_file *m, void *data)
-> +static int vc4_hvs_debugfs_underrun(struct seq_file *m, void *data)
->  {
->  	struct drm_info_node *node = m->private;
->  	struct drm_device *dev = node->minor->dev;
-> @@ -104,7 +91,6 @@ int vc4_hvs_debugfs_underrun(struct seq_file *m, void *data)
->  
->  	return 0;
->  }
-> -#endif
->  
->  /* The filter kernel is composed of dwords each containing 3 9-bit
->   * signed integers packed next to each other.
-> @@ -316,6 +302,10 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
->  	if (ret)
->  		return ret;
->  
-> +	vc4_debugfs_add_regset32(drm, "hvs_regs", &hvs->regset);
-> +	vc4_debugfs_add_file(drm, "hvs_underrun", vc4_hvs_debugfs_underrun,
-> +			     NULL);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
-> index c8f80064c179..1220f4a5aac4 100644
-> --- a/drivers/gpu/drm/vc4/vc4_txp.c
-> +++ b/drivers/gpu/drm/vc4/vc4_txp.c
-> @@ -169,24 +169,6 @@ static const struct debugfs_reg32 txp_regs[] = {
->  	VC4_REG32(TXP_PROGRESS),
->  };
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_txp_debugfs_regs(struct seq_file *m, void *unused)
-> -{
-> -	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> -	struct drm_device *dev = node->minor->dev;
-> -	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> -	struct vc4_txp *txp = vc4->txp;
-> -	struct drm_printer p = drm_seq_file_printer(m);
-> -
-> -	if (!txp)
-> -		return 0;
-> -
-> -	drm_print_regset32(&p, &txp->regset);
-> -
-> -	return 0;
-> -}
-> -#endif
-> -
->  static int vc4_txp_connector_get_modes(struct drm_connector *connector)
->  {
->  	struct drm_device *dev = connector->dev;
-> @@ -424,6 +406,8 @@ static int vc4_txp_bind(struct device *dev, struct device *master, void *data)
->  	dev_set_drvdata(dev, txp);
->  	vc4->txp = txp;
->  
-> +	vc4_debugfs_add_regset32(drm, "txp_regs", &txp->regset);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
-> index 27c70eb52405..36e6c7086ecf 100644
-> --- a/drivers/gpu/drm/vc4/vc4_v3d.c
-> +++ b/drivers/gpu/drm/vc4/vc4_v3d.c
-> @@ -22,7 +22,6 @@
->  #include "vc4_drv.h"
->  #include "vc4_regs.h"
->  
-> -#ifdef CONFIG_DEBUG_FS
->  static const struct debugfs_reg32 v3d_regs[] = {
->  	VC4_REG32(V3D_IDENT0),
->  	VC4_REG32(V3D_IDENT1),
-> @@ -104,19 +103,7 @@ static const struct debugfs_reg32 v3d_regs[] = {
->  	VC4_REG32(V3D_ERRSTAT),
->  };
->  
-> -int vc4_v3d_debugfs_regs(struct seq_file *m, void *unused)
-> -{
-> -	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> -	struct drm_device *dev = node->minor->dev;
-> -	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> -	struct drm_printer p = drm_seq_file_printer(m);
-> -
-> -	drm_print_regset32(&p, &vc4->v3d->regset);
-> -
-> -	return 0;
-> -}
-> -
-> -int vc4_v3d_debugfs_ident(struct seq_file *m, void *unused)
-> +static int vc4_v3d_debugfs_ident(struct seq_file *m, void *unused)
->  {
->  	struct drm_info_node *node = (struct drm_info_node *)m->private;
->  	struct drm_device *dev = node->minor->dev;
-> @@ -141,7 +128,6 @@ int vc4_v3d_debugfs_ident(struct seq_file *m, void *unused)
->  
->  	return 0;
->  }
-> -#endif /* CONFIG_DEBUG_FS */
->  
->  /**
->   * Wraps pm_runtime_get_sync() in a refcount, so that we can reliably
-> @@ -442,6 +428,9 @@ static int vc4_v3d_bind(struct device *dev, struct device *master, void *data)
->  	pm_runtime_set_autosuspend_delay(dev, 40); /* a little over 2 frames. */
->  	pm_runtime_enable(dev);
->  
-> +	vc4_debugfs_add_file(drm, "v3d_ident", vc4_v3d_debugfs_ident, NULL);
-> +	vc4_debugfs_add_regset32(drm, "v3d_regs", &v3d->regset);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/vc4/vc4_vec.c b/drivers/gpu/drm/vc4/vc4_vec.c
-> index 83227d2440aa..0a27e48fab31 100644
-> --- a/drivers/gpu/drm/vc4/vc4_vec.c
-> +++ b/drivers/gpu/drm/vc4/vc4_vec.c
-> @@ -252,24 +252,6 @@ static const struct debugfs_reg32 vec_regs[] = {
->  	VC4_REG32(VEC_DAC_MISC),
->  };
->  
-> -#ifdef CONFIG_DEBUG_FS
-> -int vc4_vec_debugfs_regs(struct seq_file *m, void *unused)
-> -{
-> -	struct drm_info_node *node = (struct drm_info_node *)m->private;
-> -	struct drm_device *dev = node->minor->dev;
-> -	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> -	struct vc4_vec *vec = vc4->vec;
-> -	struct drm_printer p = drm_seq_file_printer(m);
-> -
-> -	if (!vec)
-> -		return 0;
-> -
-> -	drm_print_regset32(&p, &vec->regset);
-> -
-> -	return 0;
-> -}
-> -#endif
-> -
->  static void vc4_vec_ntsc_mode_set(struct vc4_vec *vec)
->  {
->  	VEC_WRITE(VEC_CONFIG0, VEC_CONFIG0_NTSC_STD | VEC_CONFIG0_PDEN);
-> @@ -609,6 +591,8 @@ static int vc4_vec_bind(struct device *dev, struct device *master, void *data)
->  
->  	vc4->vec = vec;
->  
-> +	vc4_debugfs_add_regset32(drm, "vec_regs", &vec->regset);
-> +
->  	return 0;
->  
->  err_destroy_encoder:
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index d15cdab6aeb4..e1005f5e8094 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -615,7 +615,7 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 		      (rdp->grpmask & rnp->expmask) ||
+ 		      tick_nohz_full_cpu(rdp->cpu);
+ 		// Need to defer quiescent state until everything is enabled.
+-		if (exp && irqs_were_disabled && use_softirq &&
++		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
+ 		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
+ 			// Using softirq, safe to awaken, and we get
+ 			// no help from enabling irqs, unlike bh/preempt.
 -- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.17.1
 
