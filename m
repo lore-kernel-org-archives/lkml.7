@@ -2,238 +2,137 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBE9C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6646DC10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BF420856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342E820857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="PG3fiudl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RuFfLcGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbfDBLxd (ORCPT
+        id S1730877AbfDBLxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:53:33 -0400
-Received: from smtprelay4.synopsys.com ([198.182.47.9]:40990 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfDBLxd (ORCPT
+        Tue, 2 Apr 2019 07:53:43 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34424 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbfDBLxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:53:33 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 1324624E2BBB;
-        Tue,  2 Apr 2019 04:53:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1554206012; bh=DDsoY1SqZJGJfBL2gRYA6iAkq8mng4wyoqs4h9tMqSo=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=PG3fiudlTO2hBnlbeBrTmFU74KHs3ICuh592f8VRkXlheAS02hBpNCIoeZkksXHr5
-         f9e7E3IcZAnQpSHiabodzKO9XtSeC7gxpJIOJu/QmwAUiceGtsqaWpjHlCHV/FLUFM
-         2aV+klAvdQlsOmsvHNUyeZYJQVD0A/e2juHeP0jCOHQ3SYPo/FacI4Wi8jBKRwuKNk
-         VGENsYCnD6rzsYZVTHVtDCHj5KkxB507IqIUe1AZrguUN3soF83SpqOJmAkr5QpeGn
-         3AMOR7dMN9zvQdYLO+W5tJqphYkTrlIVZcuMneXyGQ2aKAo9huhQQ96tuHrihOKch3
-         cjSW1gB8p4J/w==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 1A6A5A005A;
-        Tue,  2 Apr 2019 11:53:31 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 2 Apr 2019 04:53:30 -0700
-Received: from DE02WEMBXA.internal.synopsys.com ([fe80::a014:7216:77d:d55c])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
- 2 Apr 2019 13:53:29 +0200
-From:   Jose Abreu <jose.abreu@synopsys.com>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Jose Abreu <jose.abreu@synopsys.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>,
-        =?utf-8?B?Q2hyaXN0b3BoIE3DvGxsbmVy?= 
-        <christoph.muellner@theobroma-systems.com>
-CC:     "Leonidas P. Papadakos" <papadakospan@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>
-Subject: RE: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-Thread-Topic: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-Thread-Index: AQHU6Ld2BNOIyyJamEeC//pMtZni+6YnhciAgAADZICAAAGHgIAA920AgAAfNACAACI8cA==
-Date:   Tue, 2 Apr 2019 11:53:27 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
-References: <20190401181840.31255-1-papadakospan@gmail.com>
- <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
- <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
- <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
- <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
-In-Reply-To: <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jYW05aFluSmxkVnhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV1ZqTkRjelpERTFMVFUxTTJRdE1URmxPUzFpTmpOaUxXWTBaREV3?=
- =?utf-8?B?T0dVMk5tRTBNVnhoYldVdGRHVnpkRnhsWXpRM00yUXhOeTAxTlROa0xURXha?=
- =?utf-8?B?VGt0WWpZellpMW1OR1F4TURobE5qWmhOREZpYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?STVNVElpSUhROUlqRXpNVGs0TmpjNU5qQTJOekV6TkRNNE55SWdhRDBpVVZw?=
- =?utf-8?B?YVJGWTRhMjFFU0ZGVlRqaHlNeTlTTmtNelJrNW1jR1ZyUFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlFsRktRVUZEZW0wMUszVlRkVzVWUVZwTGJuSjBOVXRaV2k4NGEz?=
- =?utf-8?B?RmxkVE5yY0dodUwzZFBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVFclJsZGtjWGRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
- =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
- =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
- =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
- =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
- =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
- =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
- =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
- =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
- =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
- =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 2 Apr 2019 07:53:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x32BrV3R049013;
+        Tue, 2 Apr 2019 06:53:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554206011;
+        bh=A+/yNFGAasYygghk616I28v7p8AvbtQE0el+4KQgItQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RuFfLcGojPwi6YRN1P00NgoGz0mYAnR21EaD4MhtzpaH4mgBMEMD+OAXKrsV00s0D
+         gXYiPUtuJ6Gn8hjnNohdJuBWcKMxswtjOLM4mg/qoWLlgjrT/49mQ/YXzBBD7+40d/
+         ZnKAoH3FqAMXM/S1ylH4DOtI1hPcTFq3qoHkHPZs=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x32BrVqa069095
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Apr 2019 06:53:31 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Apr
+ 2019 06:53:31 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 2 Apr 2019 06:53:31 -0500
+Received: from [172.22.72.122] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x32BrVEK032694;
+        Tue, 2 Apr 2019 06:53:31 -0500
+Subject: Re: [RFC PATCH 3/5] documention: leds: Add multicolor class
+ documentation
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>,
+        <marek.behun@nic.cz>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20190401173400.14238-1-dmurphy@ti.com>
+ <20190401173400.14238-4-dmurphy@ti.com> <20190401212709.GA14681@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e2621a54-4c5c-4235-9aba-39a856cfbe88@ti.com>
+Date:   Tue, 2 Apr 2019 06:53:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190401212709.GA14681@amd>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4NCkRhdGU6IFR1ZSwgQXBy
-IDAyLCAyMDE5IGF0IDEyOjQ5OjM2DQoNCj4gT24gMDIvMDQvMjAxOSAwODo1OSwgSm9zZSBBYnJl
-dSB3cm90ZToNCj4gPiBGcm9tOiBQaGlsaXBwIFRvbXNpY2ggPHBoaWxpcHAudG9tc2ljaEB0aGVv
-YnJvbWEtc3lzdGVtcy5jb20+DQo+ID4gRGF0ZTogTW9uLCBBcHIgMDEsIDIwMTkgYXQgMjA6MTI6
-MjENCj4gPiANCj4gPj4gKyBDaHJpc3RvcGguDQo+ID4+DQo+ID4+PiBPbiAwMS4wNC4yMDE5LCBh
-dCAyMTowNiwgSGVpa28gU3TDvGJuZXIgPGhlaWtvQHNudGVjaC5kZT4gd3JvdGU6DQo+ID4+Pg0K
-PiA+Pj4gQW0gTW9udGFnLCAxLiBBcHJpbCAyMDE5LCAyMDo1NDo0NSBDRVNUIHNjaHJpZWIgUm9i
-aW4gTXVycGh5Og0KPiA+Pj4+IE9uIDAxLzA0LzIwMTkgMTk6MTgsIExlb25pZGFzIFAuIFBhcGFk
-YWtvcyB3cm90ZToNCj4gPj4+Pj4gRnJvbTogPT9VVEYtOD9xP0thbWlsPTIwVHJ6Y2k9QzU9ODRz
-a2k/PSA8YXl1ZmFuQGF5dWZhbi5ldT4NCj4gPj4+Pj4NCj4gPj4+Pj4gU29tZSByb2NrY2hpcCBi
-b2FyZHMgZXhoaWJpdCBhbiBpc3N1ZSB3aGVyZSB0eCBjaGVja3N1bW1pbmcgZG9lcyBub3QgDQo+
-IHdvcmsNCj4gPj4gd2l0aA0KPiA+Pj4+PiBwYWNrZXRzIGxhcmdlciB0aGFuIDE0OTguDQo+ID4+
-Pj4NCj4gPj4+PiBJcyBpdCByZWFsbHkgYSBib2FyZC1sZXZlbCBwcm9ibGVtPyBJJ20gbm8gbmV0
-d29ya2luZyBleHBlcnQsIGJ1dCB0aGUNCj4gPj4+PiBuYXR1cmUgb2YgdGhlIHdvcmthcm91bmQg
-c3VnZ2VzdHMgdGhpcyBpcyBtb3JlIGxpa2VseSB0byBiZSBzb21lDQo+ID4+Pj4gaW5oZXJlbnQg
-bGltaXRhdGlvbiBvZiB0aGUgSVAgYmxvY2sgaW4gdGhlIFNvQywgcmF0aGVyIHRoYW4gc29tZXRo
-aW5nIHRvDQo+ID4+Pj4gZG8gd2l0aCBob3cgdGhlIGV4dGVybmFsIHBpbnMgZ2V0IHdpcmVkIHVw
-LiBEb2VzIGFueW9uZSBoYXZlIGFuIFJLMzMyOA0KPiA+Pj4+IG9yIFJLMzM5OSBib2FyZCB0aGF0
-IHByb3ZhYmx5ICpkb2VzKiBjaGVja3N1bSBsYXJnZSBwYWNrZXRzIGNvcnJlY3RseT8NCj4gPj4+
-DQo+ID4+PiBJIGRvbid0IGhhdmUgdGhhdCBtYW55IHJrMzM5OS1ib2FyZHMgd2l0aCBhY3R1YWwg
-ZXRoZXJuZXQgYW5kIGV2ZW4gb25seQ0KPiA+Pj4gdGhlIHJvY2s2NCBmcm9tIHJrMzMyOC1sYW5k
-LCBidXQgYXQgbGVhc3QgbXkgcmszMzk5LWZpcmVmbHkgYWxzbyBzZWVtcw0KPiA+Pj4gYWZmZWN0
-ZWQgYnkgdGhpcy4NCj4gPj4+DQo+ID4+PiBCdXQgc28gZmFyIHRoZSByazMzOTktcHVtYSBib2Fy
-ZCBmcm9tIFRoZW9icm9tYSBkaWQgbm90IHNob3cgdGhhdCANCj4gZXRoZXJuZXQNCj4gPj4+IGlz
-c3VlIGZvciBtZSwgc28gSSd2ZSBhZGRlZCB0d28gVGhlb2Jyb21hIHBlb3BsZSB3aG8gbWF5IG9y
-IG1heSBub3QgdGVsbA0KPiA+Pj4gaWYgdGhleSd2ZSBhbHNvIHNlZW4gdGhhdCBpc3N1ZS4NCj4g
-Pj4+DQo+ID4+Pj4NCj4gPj4+Pj4gVGhpcyBpcyBiYWQgZm9yIG5ldHdvcmsgc3RhYmlsaXR5Lg0K
-PiA+Pj4+Pg0KPiA+Pj4+PiBUaGUgcHJldmlvdXMgYXBwcm9hY2ggd2FzIHVzaW5nIGZvcmNlX3Ro
-cmVzaF9kbWFfbW9kZSBpbiB0aGUgYm9hcmQgZHRzLA0KPiA+PiB3aGljaA0KPiA+Pj4+PiBkb2Vz
-IG1vcmUgdGhhbiB3ZSBuZWVkLg0KPiA+Pj4+DQo+ID4+Pj4gSWYgaW5kZWVkIGl0IGlzIGEgU29D
-LWxldmVsIHRoaW5nIChvciBhdCBsZWFzdCB3ZSB3YW50IHRvIHRyZWF0IGl0IGFzDQo+ID4+Pj4g
-c3VjaCksIHRoZW4gY291bGRuJ3Qgd2UganVzdCBoYW5nIGl0IG9mZiB0aGUgZXhpc3RpbmcgU29D
-LXNwZWNpZmljDQo+ID4+Pj4gY29tcGF0aWJsZXMgaW4gZHdtYWMtcmsuYyBhbmQgYXZvaWQgdGhl
-IG5lZWQgZm9yIGEgbmV3IERUIHByb3BlcnR5IGF0DQo+ID4+Pj4gYWxsPyBBZnRlciBhbGwsIHRo
-YXQncyBwcmVjaXNlbHkgd2h5IFNvQy1zcGVjaWZpYyBjb21wYXRpYmxlcyBhcmUgYQ0KPiA+Pj4+
-IHRoaW5nIGluIHRoZSBmaXJzdCBwbGFjZS4NCj4gPj4+Pg0KPiA+IA0KPiA+IFRoaXMgY2FuIGhh
-cHBlbiB3aGVuIEZJRk8gc2l6ZSArIFBCTCBzZXR0aW5ncyBhcmUgbm90IGJpZyBlbm91Z2ggZm9y
-IENPRS4NCj4gPiANCj4gPiBDYW4geW91IHBsZWFzZSBzaGFyZSB0aGUgYWJvdmUgc2V0dGluZ3Mg
-Pw0KPiANCj4gQ2FuIHRoZSBGSUZPIHNpemUgYmUgZGlzY292ZXJlZCBieSBkdW1waW5nIHJlZ2lz
-dGVycywgb3IgZG9lcyBzb21lb25lIA0KPiBmcm9tIFJvY2tjaGlwIG5lZWQgdG8gbG9vayB1cCB0
-aGUgSVAgY29uZmlndXJhdGlvbiBkZXRhaWxzPw0KPiANCj4gRldJVywgdGFraW5nIGEgbG9vayBh
-dCB0aGUgUkszMzk5IFRSTSwgdGhpcyAocDc4OCkganVtcHMgb3V0Og0KPiANCj4gIlBCTA0KPiAu
-Li4NCj4gRm9yIFR4RklGTywgdmFsaWQgUEJMIHJhbmdlIGluIGZ1bGwgZHVwbGV4IG1vZGUgYW5k
-IGR1cGxleCBtb2RlIGlzDQo+IDEyOCBvciBsZXNzLg0KPiBGb3IgUnhGSUZPLCB2YWxpZCBQQkwg
-cmFuZ2UgaW4gZnVsbCBkdXBsZXggbW9kZSBpcyBhbGwuIg0KPiANCj4gDQo+IERvZXMgdGhhdCBz
-dWdnZXN0IHRoYXQgaXQncyB3b3J0aCBmaWRkbGluZyB3aXRoIHRoZSAic25wcyx0eHBibCIgdmFs
-dWUgDQo+IGluIERUPw0KDQpZZXMsIHBsZWFzZSB0cnkgd2l0aCBQQkwgPSAweDEgYW5kIG5vLXBi
-bC14OC4gUGVyZm9ybWFuY2Ugd2lsbCBiZSBsb3dlcg0KYnV0IGF0IGxlYXN0IHdlIHdpbGwga25v
-dyBpZiB0aGF04oCZcyB0aGUgY2F1c2UuDQoNClRoYW5rcywNCkpvc2UgTWlndWVsIEFicmV1DQo=
+Pavel
+
+Thanks for the comments
+
+On 4/1/19 4:27 PM, Pavel Machek wrote:
+> Hi!
+> 
+>> +Under the "colors" directory there are two files created "sync" and
+>> +"sync_enable". The sync_enable file controls whether the LED brightness
+>> +value is set real time or if the LED brightness value setting is deferred until
+>> +the "sync" file is written.  If sync_enable is set then writing to each LED
+>> +"brightness" file will store the brightness value.  Once the "sync" file is
+>> +written then each LED color defined in the node will write the brightness of
+>> +the LED in the device driver.
+>> +
+>> +If "sync_enable" is not set then writing the brightness value of the LED to the
+>> +device driver is done immediately.  Writing the "sync" file has no
+>> affect.
+> 
+> I believe better solutions exists for this problem.
+> 
+
+I agree there are other solutions.  Better not so sure.
+We keep kicking a solution down the road we have been talking about adding something to the kernel
+for almost 5 months now, but no one can decide what to do.
+
+How do we move a solution forward?
+Should we just forget the whole idea and keep developing against the current framework?
+
+> One was discussed before -- have single file which contains
+> coefficients for r/g/b channels.
+> 
+
+That has been presented as well and the concept was not well received either.
+
+> Or at least... you should not really need separate sync and
+> sync_enable files. One should do.
+> 
+
+The idea here was to be able to set the LED brightness immediately on a single LED
+with a single brightness write or setup the color brightness on all the LEDs and then
+sync the LED brightnesses.
+
+If you wanted to control a single LED for notifications the user space may have to do
+
+echo 0 > blue/brightness
+echo 0 > green/brightness
+echo 255 > red/brightness
+echo 1 > sync
+
+As opposed to just
+echo 255 > red/brightness
+
+But if that is not a concern then removing the sync_enable is fine with me from a code standpoint
+but not from a user space side.
+
+Dan
+
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
