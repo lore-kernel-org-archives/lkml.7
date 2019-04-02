@@ -2,149 +2,113 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDABC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED4FC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB70206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554221426;
-	bh=ccHuPlXAR7ezzcldoDq4MmlGtVtin1XesNIZQ6CiHkU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGl6Kq0R77r4VCv60tZtOAKaM4QpSnf8cew/+RMgnPtymwVqSeORDc3EM2OCxnw2F
-	 suvbySbNImj/lNdM4kYAd+DQ3ixh4VzG29P7jU2iF4yCVtgkgLI2/9jw9hqWjcMpUp
-	 7+6DezaXhVyCRXIlO4/etHhPwmhKOHxzt7QnPDtY=
+	by mail.kernel.org (Postfix) with ESMTP id DD39B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="N8lS+KOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbfDBQG3 (ORCPT
+        id S1730439AbfDBQLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730358AbfDBQG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:06:26 -0400
-Received: from quaco.ghostprotocols.net (unknown [187.65.94.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D606E208E4;
-        Tue,  2 Apr 2019 16:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554221185;
-        bh=ccHuPlXAR7ezzcldoDq4MmlGtVtin1XesNIZQ6CiHkU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDJtqejTCwHG5mWGKNiJpvn0En/ykMMdgW+/bOLj5VTizwoMi8Bb5JzXE3nrJLvHv
-         sEZaTrvVqBr0xnqyoCvqgFrCPq+kgaKIU0Zr616wMGQJ3RJ6xF8vIXUwoiSyb13iIw
-         vWsLwIwsd5wUIFDG2oqg7iKKGEhiAG1gKPFZaKIo=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 07/44] perf stat: Revert checks for duration_time
-Date:   Tue,  2 Apr 2019 13:05:12 -0300
-Message-Id: <20190402160549.13544-8-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190402160549.13544-1-acme@kernel.org>
-References: <20190402160549.13544-1-acme@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 2 Apr 2019 12:11:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44460 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfDBQLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:11:23 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i2so6796530pgj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 09:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=R5sYu8eFEFWeOED/6+uFY3pY5zrSN/jFLcMXCXb72Oc=;
+        b=N8lS+KOJ1/xe+vodMT0FXgXWRkaWf0Y8Hrt6dbd7LqpskOBBWQWGJxToIJo7S3Oq5u
+         qqqtQ0RaOS54608K1HWBpeleUoR6ScuNpWxQxMNdLKS60a7H55ydyRG5rMHZmV5qdFCR
+         lIBQFo+628b7u6N/RzeORwdSkhz+lc/3/3NJUzPnNxUvEa9MkZMGJaPQG8Wyh8xDIP2F
+         8cAthFMLlC2AY2ZWayNZS63oemkvjOCPKX6ftufNf2qvXxs2Qp/RKhK7kGN51Rpj53iY
+         oaB+uQk00ftEbTtRTRpjvxw7tseVYx7oVfd8uHEYZbDtNe5FMuo6mX3DHKatr11boFHS
+         94aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=R5sYu8eFEFWeOED/6+uFY3pY5zrSN/jFLcMXCXb72Oc=;
+        b=SUVZoCMHv9Y3MYJvzhJG3ZtjkMzOLxZkFwLuoWR7dzaJKmWOM3NpnjPlF6mZa59ZFF
+         qUV08yqUtqma9exho8vJtMQ4rkpkbDWXCVIL738jUNgUoLdNCE9NaqOO33vpBId+sm21
+         Twwy1nMjPFLmL2a5Bs/+yxlRUKGSy5oYe8PzhrLvShDCCDpy5zYFMRbJD3NeBV+/mDb6
+         6dATZtlaxyVnpjOiz0wWhIW2bJi9hzXNFvIpaaq52x7UskXdnQkDxxdwtBnUukleYb5i
+         qTzqDvZKoaspEKPMTzPmNET7aFk/Nlm73BUbPblo54a08B3MBbpiGb9xiNcQbJjQm0/E
+         AofA==
+X-Gm-Message-State: APjAAAVqJ7H3letrnh00Y3j7cgdxnB9cRU2v3Uvt581UkxbZKfsHJhPQ
+        djsDEXZKb863jT2PZQFcd/8ZNQ==
+X-Google-Smtp-Source: APXvYqyk6zIrdBGTScusPFMKzb51Sf1TcA6OrVpVaiwEF7JKp+F1kiv9g3+SIcTT5pAixcJZyRNsvg==
+X-Received: by 2002:a63:4e5b:: with SMTP id o27mr67984364pgl.204.1554221482513;
+        Tue, 02 Apr 2019 09:11:22 -0700 (PDT)
+Received: from ?IPv6:2600:100e:b118:ffaf:d107:e4b0:1269:f9d6? ([2600:100e:b118:ffaf:d107:e4b0:1269:f9d6])
+        by smtp.gmail.com with ESMTPSA id v188sm23811377pgb.7.2019.04.02.09.11.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 09:11:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16D57)
+In-Reply-To: <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
+Date:   Tue, 2 Apr 2019 10:11:19 -0600
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7789E14E-C623-4DB7-B076-76B931957C9C@amacapital.net>
+References: <20190331214020.836098943@linutronix.de> <20190331215136.039902969@linutronix.de> <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de> <20190402154329.scp7i7uqevubgwrz@treble> <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
 
-This reverts e864c5ca145e ("perf stat: Hide internal duration_time
-counter") but doing it manually since the code has now moved to a
-different file.
 
-The next patch will properly implement duration_time as a full event, so
-no need to hide it anymore.
+> On Apr 2, 2019, at 9:48 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>=20
+>> On Tue, 2 Apr 2019, Josh Poimboeuf wrote:
+>>> On Tue, Apr 02, 2019 at 12:19:46PM +0200, Thomas Gleixner wrote:
+>>> +/*
+>>> + * Array of exception stack page descriptors. If the stack is larger th=
+an
+>>> + * PAGE_SIZE, all pages covering a particular stack will have the same
+>>> + * info.
+>>> + */
+>>> +static const struct estack_pages estack_pages[ESTACK_PAGES] ____cacheli=
+ne_aligned =3D {
+>>> +    [CONDRANGE(DF)]        =3D ESTACK_PAGE(DOUBLEFAULT_IST, DF),
+>>> +    [CONDRANGE(NMI)]    =3D ESTACK_PAGE(NMI_IST, NMI),
+>>> +    [PAGERANGE(DB)]        =3D ESTACK_PAGE(DEBUG_IST, DB),
+>>> +    [CONDRANGE(MCE)]    =3D ESTACK_PAGE(MCE_IST, MCE),
+>>=20
+>> It would be nice if the *_IST macro naming aligned with the struct
+>> cea_exception_stacks field naming.  Then you could just do, e.g.
+>> ESTACKPAGE(DF).
+>=20
+> Yes, lemme fix that up.
+>=20
+>> Also it's a bit unfortunate that some of the stack size knowledge is
+>> hard-coded here, i.e #DB always being > 1 page and non-#DB being
+>> sometimes 1 page.
+>=20
+> The problem is that there is no way to make this macro maze conditional on=
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190326221823.11518-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/stat-display.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+> sizeof(). But my macro foo is rusty.
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 6d043c78f3c2..3324f23c7efc 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -18,11 +18,6 @@
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
- 
--static bool is_duration_time(struct perf_evsel *evsel)
--{
--	return !strcmp(evsel->name, "duration_time");
--}
--
- static void print_running(struct perf_stat_config *config,
- 			  u64 run, u64 ena)
- {
-@@ -628,9 +623,6 @@ static void print_aggr(struct perf_stat_config *config,
- 		ad.id = id = config->aggr_map->map[s];
- 		first = true;
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
--
- 			ad.val = ad.ena = ad.run = 0;
- 			ad.nr = 0;
- 			if (!collect_data(config, counter, aggr_cb, &ad))
-@@ -848,8 +840,6 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
- 		if (prefix)
- 			fputs(prefix, config->output);
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			if (first) {
- 				aggr_printout(config, counter, cpu, 0);
- 				first = false;
-@@ -906,8 +896,6 @@ static void print_metric_headers(struct perf_stat_config *config,
- 
- 	/* Print metrics headers only */
- 	evlist__for_each_entry(evlist, counter) {
--		if (is_duration_time(counter))
--			continue;
- 		os.evsel = counter;
- 		out.ctx = &os;
- 		out.print_metric = print_metric_header;
-@@ -1136,15 +1124,11 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
- 		break;
- 	case AGGR_THREAD:
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			print_aggr_thread(config, _target, counter, prefix);
- 		}
- 		break;
- 	case AGGR_GLOBAL:
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			print_counter_aggr(config, counter, prefix);
- 		}
- 		if (metric_only)
-@@ -1155,8 +1139,6 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
- 			print_no_aggr_metric(config, evlist, prefix);
- 		else {
- 			evlist__for_each_entry(evlist, counter) {
--				if (is_duration_time(counter))
--					continue;
- 				print_counter(config, counter, prefix);
- 			}
- 		}
--- 
-2.20.1
-
+How about a much better fix: make the DB stack be the same size as all the o=
+thers and just have 4 of them (DB0, DB1, DB2, and DB3.  After all, overflowi=
+ng from one debug stack into another is just as much of a bug as overflowing=
+ into a different IST stack.
