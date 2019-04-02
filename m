@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680A9C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29202C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFCC2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E7D20882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554221174;
-	bh=F1gy2f16v2Iy0gWQY2bRvLT77KZ1qRUvgsWe8g85ZbA=;
+	s=default; t=1554221178;
+	bh=q4EYfW3Ob+V9xawBPlDLFGEmMvPTFAyx43X2QIGcsQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQ6YuP1UlpDrm6F1u/eo5sja62AePC+1Zg9/aDyw0W1KKbP5rSztPLJ+JeGmvRz5C
-	 lFYVXzvopfGzI1O/8iu4ECHspe7H1cX15EG6RckO6Jnc5BEtGEtD+hlqUBNRT3k2uC
-	 NeYheo4vlKsE8V/CjYU47iKvEqrHTiqN+Qc44uZw=
+	b=MoT3d6Zk7csdRHmdIRohVtPJHfBbYVkRkK5g2vzQwyG35AQeo112OrwJwBumuE7Tu
+	 0nmnAl/U9dayQKURG0OlSkWguC0XO6vppOF0cnQSAZYon68Kt1r0/FKbNL3zlG3bpH
+	 N0Lgm+wzkg8egefVNxcZZtziNPcEBYsPpnXBTU10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfDBQGM (ORCPT
+        id S1729793AbfDBQGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43762 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 12:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729364AbfDBQGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:06:10 -0400
+        id S1729364AbfDBQGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:06:14 -0400
 Received: from quaco.ghostprotocols.net (unknown [187.65.94.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A97C920856;
-        Tue,  2 Apr 2019 16:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7A7520857;
+        Tue,  2 Apr 2019 16:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554221168;
-        bh=F1gy2f16v2Iy0gWQY2bRvLT77KZ1qRUvgsWe8g85ZbA=;
+        s=default; t=1554221173;
+        bh=q4EYfW3Ob+V9xawBPlDLFGEmMvPTFAyx43X2QIGcsQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvfwWNxSaDFgB4W9Tqg3dzssNRENotSdtgg8itOMY/P4l+wmw+WaOk+jGpEH3F8up
-         p0CwwB5R45VZo0HgVoJTveTEoNEQs1RE9Uu2pAv8gKHxemHTon6j9p1/oCAV58yd/8
-         9DlPYkhv/NG9eTNMkP3VDcBV0U45hGIPupRbCLvM=
+        b=T28R/VVSz253dedaDNorLUybCo9tfvovoCG2K0TiLPJFZY3vGKIr196p5vVfaptvt
+         lMraETr1LHx1sRuTC8y1QDNpcaZ0Q7SrGdnW8NRkj1mtWx1z060cpAE6Zj9JQ50lDS
+         AJq9yGTBbz1uPeuvLR6YNYbJX4Wz44OKInMMxw3w=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,17 +47,22 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Gianluca Borello <g.borello@gmail.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
         =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH 02/44] perf augmented_raw_syscalls: Copy strings from all syscalls with 1st or 2nd string arg
-Date:   Tue,  2 Apr 2019 13:05:07 -0300
-Message-Id: <20190402160549.13544-3-acme@kernel.org>
+        <lclaudio@redhat.com>, Martin Lau <kafai@fb.com>,
+        Wang Nan <wangnan0@huawei.com>, Yonghong Song <yhs@fb.com>
+Subject: [PATCH 03/44] perf augmented_raw_syscalls: Use a PERCPU_ARRAY map to copy more string bytes
+Date:   Tue,  2 Apr 2019 13:05:08 -0300
+Message-Id: <20190402160549.13544-4-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190402160549.13544-1-acme@kernel.org>
 References: <20190402160549.13544-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,224 +70,279 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Gets the augmented_raw_syscalls a bit more useful as-is, add a comment
-stating that the intent is to have all this in a map populated by
-userspace via the 'syscalls' BPF map, that right now has only a flag
-stating if the syscall is filtered or not.
+The previous method, copying to the BPF stack limited us in how many
+bytes we could copy from strings, use a PERCPU_ARRAY map like devised by
+the sysdig guys[1] to copy more bytes:
 
-With it:
+Before:
 
-  # grep -B1 augmented_raw ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
+  # trace --no-inherit -e openat touch `python -c "print "$s" 'a' * 2000"`
+  touch: cannot touch 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa':=
+ File name too long
+  openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) =3D 3
+  openat(AT_FDCWD, "/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) =3D 3
+  openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) =
+=3D 3
+  openat(AT_FDCWD, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", O_CREAT|O_NOCTTY|O_NON=
+BLOCK|O_WRONLY, S_IRUGO|S_IWUGO) =3D -1 ENAMETOOLONG (File name too long)
+  openat(AT_FDCWD, "/usr/share/locale/locale.alias", O_RDONLY|O_CLOEXEC) =
+=3D 3
+  openat(AT_FDCWD, "/usr/share/locale/en_US.UTF-8/LC_MESSAGES/coreutils.mo"=
+, O_RDONLY) =3D -1 ENOENT (No such file or directory)
+  openat(AT_FDCWD, "/usr/share/locale/en_US.utf8/LC_MESSAGES/coreutils.mo",=
+ O_RDONLY) =3D -1 ENOENT (No such file or directory)
+  <SNIP some openat calls>
   #
-  # perf trace -e string
-  weechat/6001 stat("/etc/localtime", 0x7ffe22c23d10)  = 0
-  gnome-shell/1943 openat(AT_FDCWD, "/proc/self/stat", O_RDONLY) = 81
-  weechat/6001 stat("/etc/localtime", 0x7ffe22c23d10)  = 0
-  gmain/2475 inotify_add_watch(20<anon_inode:inotify>, "/home/acme/.config/firewall", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "/var/cache/app-info/yaml", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "/var/lib/app-info/xmls", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "/var/lib/app-info/yaml", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "/usr/share/app-info/yaml", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "/usr/local/share/app-info/xmls", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "/usr/local/share/app-info/yaml", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2391 inotify_add_watch(3<anon_inode:inotify>, "/home/acme/.local/share/app-info/yaml", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/1121 inotify_add_watch(12<anon_inode:inotify>, "/etc/NetworkManager/VPN", 16789454) = -1 ENOENT (No such file or directory)
-  weechat/6001 stat("/etc/localtime", 0x7ffe22c23d10)  = 0
-  gmain/2050 inotify_add_watch(8<anon_inode:inotify>, "/home/acme/~", 16789454) = -1 ENOENT (No such file or directory)
-  gmain/2521 inotify_add_watch(6<anon_inode:inotify>, "/var/lib/fwupd/remotes.d/lvfs-testing", 16789454) = -1 ENOENT (No such file or directory)
-  weechat/6001 stat("/etc/localtime", 0x7ffe22c23d10)  = 0
-  DOM Worker/22714  ... [continued]: openat())             = 257
-  FS Broker 3982/3990 openat(AT_FDCWD, "/dev/urandom", O_RDONLY|O_CLOEXEC|O_NOCTTY) = 187
-  DOMCacheThread/16652 mkdir("/home/acme/.mozilla/firefox/ina67tev.default/storage/default/https+++web.whatsapp.com/cache/morgue/192", S_IRUGO|S_IXUGO|S_IWUSR) = -1 EEXIST (File exists)
-  ^C#
+
+After:
+
+  [root@quaco acme]# trace --no-inherit -e openat touch `python -c "print "=
+$s" 'a' * 2000"`
+  <STRIP what is the same as in the 'before' part>
+  openat(AT_FDCWD, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", O_=
+CREAT|O_NOCTTY|O_NONBLOC) =3D -1 ENAMETOOLONG (File name too long)
+  <STRIP what is the same as in the 'before' part>
+
+If we leave something like 'perf trace -e string' to trace all syscalls
+with a string, and then do some 'perf top', to get some annotation for
+the augmented_raw_syscalls.o BPF program we get:
+
+       =E2=94=82     =E2=86=92 callq  *ffffffffc45576d1                    =
+                                                                           =
+           =E2=96=92
+       =E2=94=82                augmented_args->filename.size =3D probe_rea=
+d_str(&augmented_args->filename.value,                                     =
+     =E2=96=92
+  0.05 =E2=94=82       mov    %eax,0x40(%r13)
+
+Looking with pahole, expanding types, asking for hex offsets and sizes,
+and use of BTF type information to see what is at that 0x40 offset from
+%r13:
+
+  # pahole -F btf -C augmented_args_filename --expand_types --hex /home/acm=
+e/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
+  struct augmented_args_filename {
+	struct syscall_enter_args {
+		long long unsigned int common_tp_fields;                                 =
+/*     0   0x8 */
+		long int           syscall_nr;                                           =
+/*   0x8   0x8 */
+		long unsigned int  args[6];                                              =
+/*  0x10  0x30 */
+	} args; /*     0  0x40 */
+	/* --- cacheline 1 boundary (64 bytes) --- */
+	struct augmented_filename {
+		unsigned int       size;                                                 =
+/*  0x40   0x4 */
+		int                reserved;                                             =
+/*  0x44   0x4 */
+		char               value[4096];                                          =
+/*  0x48 0x1000 */
+	} filename; /*  0x40 0x1008 */
+
+	/* size: 4168, cachelines: 66, members: 2 */
+	/* last cacheline: 8 bytes */
+  };
+  #
+
+Then looking if PATH_MAX leaves some signature in the tests:
+
+       =E2=94=82                if (augmented_args->filename.size < sizeof(=
+augmented_args->filename.value)) {                                         =
+   =E2=96=92
+       =E2=94=82       cmp    $0xfff,%rdi
+
+0xfff =3D=3D 4095
+sizeof(augmented_args->filename.value) =3D=3D PATH_MAX =3D=3D 4096
+
+[1] https://sysdig.com/blog/the-art-of-writing-ebpf-programs-a-primer/
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <borkmann@iogearbox.net>
+Cc: Gianluca Borello <g.borello@gmail.com>
+Cc: Jesper Dangaard Brouer <brouer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Luis Cl=C3=A1udio Gon=C3=A7alves <lclaudio@redhat.com>
+cc: Martin Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-a1hxffoy8t43e0wq6bzhp23u@git.kernel.org
+Cc: Yonghong Song <yhs@fb.com>
+Link: https://lkml.kernel.org/n/tip-76gce2d2ghzq537ubwhjkone@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../examples/bpf/augmented_raw_syscalls.c     | 150 +++++++++++++++++-
- 1 file changed, 147 insertions(+), 3 deletions(-)
+ .../examples/bpf/augmented_raw_syscalls.c     | 46 +++++++++++--------
+ 1 file changed, 28 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index f9b2161e1ca4..9f8b31ad7a49 100644
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/=
+examples/bpf/augmented_raw_syscalls.c
+index 9f8b31ad7a49..2422894a8194 100644
 --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
 +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -44,9 +44,78 @@ struct augmented_filename {
- 	char		value[256];
+@@ -15,6 +15,7 @@
+  */
+=20
+ #include <unistd.h>
++#include <linux/limits.h>
+ #include <pid_filter.h>
+=20
+ /* bpf-output associated map */
+@@ -41,7 +42,7 @@ struct syscall_exit_args {
+ struct augmented_filename {
+ 	unsigned int	size;
+ 	int		reserved;
+-	char		value[256];
++	char		value[PATH_MAX];
  };
- 
--#define SYS_OPEN 2
--#define SYS_ACCESS 21
--#define SYS_OPENAT 257
-+/* syscalls where the first arg is a string */
-+#define SYS_OPEN                 2
-+#define SYS_STAT                 4
-+#define SYS_LSTAT                6
-+#define SYS_ACCESS              21
-+#define SYS_EXECVE              59
-+#define SYS_TRUNCATE            76
-+#define SYS_CHDIR               80
-+#define SYS_RENAME              82
-+#define SYS_MKDIR               83
-+#define SYS_RMDIR               84
-+#define SYS_CREAT               85
-+#define SYS_LINK                86
-+#define SYS_UNLINK              87
-+#define SYS_SYMLINK             88
-+#define SYS_READLINK            89
-+#define SYS_CHMOD               90
-+#define SYS_CHOWN               92
-+#define SYS_LCHOWN              94
-+#define SYS_MKNOD              133
-+#define SYS_STATFS             137
-+#define SYS_PIVOT_ROOT         155
-+#define SYS_CHROOT             161
-+#define SYS_ACCT               163
-+#define SYS_SWAPON             167
-+#define SYS_SWAPOFF            168
-+#define SYS_DELETE_MODULE      176
-+#define SYS_SETXATTR           188
-+#define SYS_LSETXATTR          189
-+#define SYS_GETXATTR           191
-+#define SYS_LGETXATTR          192
-+#define SYS_LISTXATTR          194
-+#define SYS_LLISTXATTR         195
-+#define SYS_REMOVEXATTR        197
-+#define SYS_LREMOVEXATTR       198
-+#define SYS_MQ_OPEN            240
-+#define SYS_MQ_UNLINK          241
-+#define SYS_ADD_KEY            248
-+#define SYS_REQUEST_KEY        249
-+#define SYS_SYMLINKAT          266
-+#define SYS_MEMFD_CREATE       319
-+
-+/* syscalls where the first arg is a string */
-+
-+#define SYS_PWRITE64            18
-+#define SYS_EXECVE              59
-+#define SYS_RENAME              82
-+#define SYS_QUOTACTL           179
-+#define SYS_FSETXATTR          190
-+#define SYS_FGETXATTR          193
-+#define SYS_FREMOVEXATTR       199
-+#define SYS_MQ_TIMEDSEND       242
-+#define SYS_REQUEST_KEY        249
-+#define SYS_INOTIFY_ADD_WATCH  254
-+#define SYS_OPENAT             257
-+#define SYS_MKDIRAT            258
-+#define SYS_MKNODAT            259
-+#define SYS_FCHOWNAT           260
-+#define SYS_FUTIMESAT          261
-+#define SYS_NEWFSTATAT         262
-+#define SYS_UNLINKAT           263
-+#define SYS_RENAMEAT           264
-+#define SYS_LINKAT             265
-+#define SYS_READLINKAT         267
-+#define SYS_FCHMODAT           268
-+#define SYS_FACCESSAT          269
-+#define SYS_UTIMENSAT          280
-+#define SYS_NAME_TO_HANDLE_AT  303
-+#define SYS_FINIT_MODULE       313
-+#define SYS_RENAMEAT2          316
-+#define SYS_EXECVEAT           322
-+#define SYS_STATX              332
- 
+=20
+ /* syscalls where the first arg is a string */
+@@ -119,23 +120,32 @@ struct augmented_filename {
+=20
  pid_filter(pids_filtered);
- 
-@@ -109,11 +178,86 @@ int sys_enter(struct syscall_enter_args *args)
- 	 *
- 	 * 	 after the ctx memory access to prevent their down stream merging.
+=20
++struct augmented_args_filename {
++       struct syscall_enter_args args;
++       struct augmented_filename filename;
++};
++
++bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_f=
+ilename, 1);
++
+ SEC("raw_syscalls:sys_enter")
+ int sys_enter(struct syscall_enter_args *args)
+ {
+-	struct {
+-		struct syscall_enter_args args;
+-		struct augmented_filename filename;
+-	} augmented_args;
+-	struct syscall *syscall;
+-	unsigned int len =3D sizeof(augmented_args);
++	struct augmented_args_filename *augmented_args;
++	unsigned int len =3D sizeof(*augmented_args);
+ 	const void *filename_arg =3D NULL;
++	struct syscall *syscall;
++	int key =3D 0;
++
++        augmented_args =3D bpf_map_lookup_elem(&augmented_filename_map, &k=
+ey);
++        if (augmented_args =3D=3D NULL)
++                return 1;
+=20
+ 	if (pid_filter__has(&pids_filtered, getpid()))
+ 		return 0;
+=20
+-	probe_read(&augmented_args.args, sizeof(augmented_args.args), args);
++	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
+=20
+-	syscall =3D bpf_map_lookup_elem(&syscalls, &augmented_args.args.syscall_n=
+r);
++	syscall =3D bpf_map_lookup_elem(&syscalls, &augmented_args->args.syscall_=
+nr);
+ 	if (syscall =3D=3D NULL || !syscall->enabled)
+ 		return 0;
+ 	/*
+@@ -191,7 +201,7 @@ int sys_enter(struct syscall_enter_args *args)
+ 	 * processor architecture, making the kernel part the same no matter what
+ 	 * kernel version or processor architecture it runs on.
  	 */
-+	/*
-+	 * This table of what args are strings will be provided by userspace,
-+	 * in the syscalls map, i.e. we will already have to do the lookup to
-+	 * see if this specific syscall is filtered, so we can as well get more
-+	 * info about what syscall args are strings or pointers, and how many
-+	 * bytes to copy, per arg, etc.
-+	 *
-+	 * For now hard code it, till we have all the basic mechanisms in place
-+	 * to automate everything and make the kernel part be completely driven
-+	 * by information obtained in userspace for each kernel version and
-+	 * processor architecture, making the kernel part the same no matter what
-+	 * kernel version or processor architecture it runs on.
-+	 */
- 	switch (augmented_args.args.syscall_nr) {
-+	case SYS_ACCT:
-+	case SYS_ADD_KEY:
-+	case SYS_CHDIR:
-+	case SYS_CHMOD:
-+	case SYS_CHOWN:
-+	case SYS_CHROOT:
-+	case SYS_CREAT:
-+	case SYS_DELETE_MODULE:
-+	case SYS_EXECVE:
-+	case SYS_GETXATTR:
-+	case SYS_LCHOWN:
-+	case SYS_LGETXATTR:
-+	case SYS_LINK:
-+	case SYS_LISTXATTR:
-+	case SYS_LLISTXATTR:
-+	case SYS_LREMOVEXATTR:
-+	case SYS_LSETXATTR:
-+	case SYS_LSTAT:
-+	case SYS_MEMFD_CREATE:
-+	case SYS_MKDIR:
-+	case SYS_MKNOD:
-+	case SYS_MQ_OPEN:
-+	case SYS_MQ_UNLINK:
-+	case SYS_PIVOT_ROOT:
-+	case SYS_READLINK:
-+	case SYS_REMOVEXATTR:
-+	case SYS_RENAME:
-+	case SYS_REQUEST_KEY:
-+	case SYS_RMDIR:
-+	case SYS_SETXATTR:
-+	case SYS_STAT:
-+	case SYS_STATFS:
-+	case SYS_SWAPOFF:
-+	case SYS_SWAPON:
-+	case SYS_SYMLINK:
-+	case SYS_SYMLINKAT:
-+	case SYS_TRUNCATE:
-+	case SYS_UNLINK:
- 	case SYS_ACCESS:
- 	case SYS_OPEN:	 filename_arg = (const void *)args->args[0];
- 			__asm__ __volatile__("": : :"memory");
- 			 break;
-+	case SYS_EXECVEAT:
-+	case SYS_FACCESSAT:
-+	case SYS_FCHMODAT:
-+	case SYS_FCHOWNAT:
-+	case SYS_FGETXATTR:
-+	case SYS_FINIT_MODULE:
-+	case SYS_FREMOVEXATTR:
-+	case SYS_FSETXATTR:
-+	case SYS_FUTIMESAT:
-+	case SYS_INOTIFY_ADD_WATCH:
-+	case SYS_LINKAT:
-+	case SYS_MKDIRAT:
-+	case SYS_MKNODAT:
-+	case SYS_MQ_TIMEDSEND:
-+	case SYS_NAME_TO_HANDLE_AT:
-+	case SYS_NEWFSTATAT:
-+	case SYS_PWRITE64:
-+	case SYS_QUOTACTL:
-+	case SYS_READLINKAT:
-+	case SYS_RENAMEAT:
-+	case SYS_RENAMEAT2:
-+	case SYS_STATX:
-+	case SYS_UNLINKAT:
-+	case SYS_UTIMENSAT:
- 	case SYS_OPENAT: filename_arg = (const void *)args->args[1];
- 			 break;
+-	switch (augmented_args.args.syscall_nr) {
++	switch (augmented_args->args.syscall_nr) {
+ 	case SYS_ACCT:
+ 	case SYS_ADD_KEY:
+ 	case SYS_CHDIR:
+@@ -263,20 +273,20 @@ int sys_enter(struct syscall_enter_args *args)
  	}
--- 
+=20
+ 	if (filename_arg !=3D NULL) {
+-		augmented_args.filename.reserved =3D 0;
+-		augmented_args.filename.size =3D probe_read_str(&augmented_args.filename=
+.value,
+-							      sizeof(augmented_args.filename.value),
++		augmented_args->filename.reserved =3D 0;
++		augmented_args->filename.size =3D probe_read_str(&augmented_args->filena=
+me.value,
++							      sizeof(augmented_args->filename.value),
+ 							      filename_arg);
+-		if (augmented_args.filename.size < sizeof(augmented_args.filename.value)=
+) {
+-			len -=3D sizeof(augmented_args.filename.value) - augmented_args.filenam=
+e.size;
+-			len &=3D sizeof(augmented_args.filename.value) - 1;
++		if (augmented_args->filename.size < sizeof(augmented_args->filename.valu=
+e)) {
++			len -=3D sizeof(augmented_args->filename.value) - augmented_args->filen=
+ame.size;
++			len &=3D sizeof(augmented_args->filename.value) - 1;
+ 		}
+ 	} else {
+-		len =3D sizeof(augmented_args.args);
++		len =3D sizeof(augmented_args->args);
+ 	}
+=20
+ 	/* If perf_event_output fails, return non-zero so that it gets recorded u=
+naugmented */
+-	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU=
+, &augmented_args, len);
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU=
+, augmented_args, len);
+ }
+=20
+ SEC("raw_syscalls:sys_exit")
+--=20
 2.20.1
 
