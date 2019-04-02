@@ -2,112 +2,116 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77599C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7336C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365392075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6612148E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:32:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="obydRoeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbfDBUaT (ORCPT
+        id S1726315AbfDBUcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 16:30:19 -0400
-Received: from mga12.intel.com ([192.55.52.136]:34142 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfDBUaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 16:30:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 13:30:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,302,1549958400"; 
-   d="scan'208";a="333164073"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Apr 2019 13:30:15 -0700
-Date:   Tue, 2 Apr 2019 13:30:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     pbonzini@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, yu-cheng.yu@intel.com,
-        Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: Re: [RFC PATCH v4 5/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190402203014.GJ31303@linux.intel.com>
-References: <20190318150351.15550-1-weijiang.yang@intel.com>
- <20190318150351.15550-6-weijiang.yang@intel.com>
+        Tue, 2 Apr 2019 16:32:16 -0400
+Received: from mail-it1-f180.google.com ([209.85.166.180]:55715 "EHLO
+        mail-it1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfDBUcP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 16:32:15 -0400
+Received: by mail-it1-f180.google.com with SMTP id z126so7427405itd.5;
+        Tue, 02 Apr 2019 13:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tc8hZ8L4fi++Tw9DLZC3eVfYKxd9pX9rhYuoyQAvDdY=;
+        b=obydRoeEGZnksP9jGuzxEUd2LyttqTQ2VETVqPXmM4wAYfnphVjfMih2mLqbJoIdR2
+         dGMx5GcmRJDkFrndo0+wJfhVUVLWyD55SB4dX/3ij2kNPWne5pnutCUU4eMobhcW0WMR
+         SWFMjxyLfOgEH84bPK/rV4XDQupb4/83BNMzeUJJLBgD8PG0DevnjydxXTnHHETQc87B
+         Ocd5QpAzQ9NfF07daUzLZ3J9hnjz4Vy/NmqzlVIR5YOHtkFfGf8Wpibo7VHP4c4BaGr7
+         At8YCrFhTm/etCxfjb7ezt4EJiKdBSsXtlckoO5OW7tFQW3zxJC1HdgxgFiMyNKjwRO7
+         1UGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tc8hZ8L4fi++Tw9DLZC3eVfYKxd9pX9rhYuoyQAvDdY=;
+        b=fWkubKgfjllC7PMod5vrFb7WVEvzfXsl3rQC02Oe/ANfpoq5CzbKUKKKaAGfVofuUe
+         EBC8opLyURnXRulTXuqY40x4u/ABIbs0EYTAfTLEcmoNqj+gQwbqTgMBop/ixzHqXi47
+         CyH7hTox+0bsWRflD9wQfJHrWQszJJdmC9XQk12GZxp0mmDx7QeTCvu0aSWKuwwYO3qp
+         VhVHIonEm1kraHh2NO7jEkyYyxQh24OfQyKr68q/2hUn9epadRcS3JlXbsYKeMk7mfwW
+         mPFiHWgOAEeY0wPGdEUOijjRVQX8BsmIYILu24wjKbtINkDt+PqnAYi0+bcPunai4JqG
+         G0iQ==
+X-Gm-Message-State: APjAAAX+LngIP5ezDZNmg0rSo614uccP0IrguGv1TQKNeiWeM934cS4I
+        LoX3NTF7gw8j8rPiDCMbSv1wvU2rtfu8zRgJ4u6uug==
+X-Google-Smtp-Source: APXvYqxC1u78KAXj8zZQ3IqH24rndQYPRU5w27rDMpCPRpJr/Q00SxbPZ9VNpm2UZeX41ObAYByqBsJ8PtxwORJ5BF8=
+X-Received: by 2002:a05:660c:243:: with SMTP id t3mr5942207itk.124.1554237134400;
+ Tue, 02 Apr 2019 13:32:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318150351.15550-6-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com>
+ <20190401104608-mutt-send-email-mst@kernel.org> <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
+ <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com> <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
+ <20190402112115-mutt-send-email-mst@kernel.org> <3dd76ce6-c138-b019-3a43-0bb0b793690a@redhat.com>
+ <CAKgT0Uc78NYnva4T+G5uas_iSnE_YHGz+S5rkBckCvhNPV96gw@mail.gmail.com>
+ <6b0a3610-0e7b-08dc-8b5f-707062f87bea@redhat.com> <CAKgT0UdHA66z1j=3H06AfgtiF4ThFdXwQ6i8p1MszdL2bRHeZQ@mail.gmail.com>
+ <20190402134722-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190402134722-mutt-send-email-mst@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 2 Apr 2019 13:32:03 -0700
+Message-ID: <CAKgT0UeZE29qBOAxDb2EmLr_hr1_W-m3Rw3gKs-UAPbD80K_+Q@mail.gmail.com>
+Subject: Re: On guest free page hinting and OOM
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 11:03:48PM +0800, Yang Weijiang wrote:
-> "Load Guest CET state" bit controls whether guest CET states
-> will be loaded at Guest entry. Before doing that, KVM needs
-> to check if CPU CET feature is available.
+On Tue, Apr 2, 2019 at 10:53 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Tue, Apr 02, 2019 at 10:45:43AM -0700, Alexander Duyck wrote:
+> > We went through this back in the day with
+> > networking. Adding more buffers is not the solution. The solution is
+> > to have a way to gracefully recover and keep our hinting latency and
+> > buffer bloat to a minimum.
+>
+> That's an interesting approach, I think that things that end up working
+> well are NAPI (asychronous notifications), limited batching, XDP (big
+> aligned buffers) and BQL (accounting). Is that your perspective too?
+>
 
-Use the changelog to describe *why* the patch does what it does, for
-something this simple it's obvious *what* the patch adds.  Specifically,
-there was a decent amount of discussion regarding the virtualization
-hole that gets introduced when SHSTK!=IBT, and that need to be captured
-in the changelog.
+Yes, that is kind of what I was getting at.
 
-> 
-> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/kvm/vmx.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> index 28b8ac027bd7..246467c12930 100644
-> --- a/arch/x86/kvm/vmx.c
-> +++ b/arch/x86/kvm/vmx.c
-> @@ -55,6 +55,7 @@
->  #include <asm/mmu_context.h>
->  #include <asm/spec-ctrl.h>
->  #include <asm/mshyperv.h>
-> +#include <asm/cet.h>
->  
->  #include "trace.h"
->  #include "pmu.h"
-> @@ -5414,6 +5415,23 @@ static int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
->  			return 1;
->  	}
->  
-> +	/*
-> +	 * To enable Guest CET, check whether CPU CET feature is
-> +	 * available, if it's there, set Guest CET state loading bit
-> +	 * per CR4.CET status, otherwise, return a fault to Guest.
-> +	 */
+Basically we could have a kthread running somewhere that goes through
+and pulls something like 64M of pages out of the MAX_ORDER - 1
+freelist, does what is necessary to isolate them, puts them on a queue
+somewhere, kicks the virtio ring, and waits for the response to come
+back indicating that the hints have been processed. We would just have
+to keep it running until the list doesn't have enough non-"Offline"
+memory to fulfill the request. Then we just wait until we again reach
+a level necessary to justify waking the thread back up and repeat.
 
-No need for the comment, the code is straightforward.
+In my mind it looks a lot like your standard Rx ring in that we
+allocate some fixed number of buffers and wait for hardware to tell us
+when the buffers are ready. The only extra complexity is having to add
+tracking using the PageType "Offline" bit which should be cheap when
+we are already having to manipulate the "Buddy" PageType anyway.
 
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
-> +		if (cr4 & X86_CR4_CET)
-> +			vmcs_set_bits(VM_ENTRY_CONTROLS,
-> +				      VM_ENTRY_LOAD_GUEST_CET_STATE);
-> +		else
-> +			vmcs_clear_bits(VM_ENTRY_CONTROLS,
-> +					VM_ENTRY_LOAD_GUEST_CET_STATE);
-> +	} else if (cr4 & X86_CR4_CET) {
-> +		return 1;
-> +	}
-> +
->  	if (to_vmx(vcpu)->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
->  		return 1;
->  
-> -- 
-> 2.17.1
-> 
+It would let us get away from having to do the per-cpu queues and
+complicated coordination logic to translate free pages to their buddy.
