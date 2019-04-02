@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D725DC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30784C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B2C2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53192084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jSztmzH8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g5ZZ7Icj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfDBVjj (ORCPT
+        id S1726607AbfDBVkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:39:39 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:40796 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfDBVjj (ORCPT
+        Tue, 2 Apr 2019 17:40:39 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:44009 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbfDBVkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:39:39 -0400
-Received: by mail-vs1-f65.google.com with SMTP id f22so8721200vso.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:39:38 -0700 (PDT)
+        Tue, 2 Apr 2019 17:40:39 -0400
+Received: by mail-vk1-f193.google.com with SMTP id s63so634093vkg.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:40:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sb1t6f7PMkPhKdCQnKJiIIJA0EVTSKOkOLlWb1FyN24=;
-        b=jSztmzH8j4Mx9qsc3jFlYQaQJUCAk0juoz8VnhUdBr5DNPPg/LZRNS9LNcZtoSCQw9
-         df7rtCdE3iBDQb4xaqxx3ubV1BYDMFfYCvkzZNc11f1h/8VA76bSdYyiOA2TGUkWhSBu
-         yqT/KsTqNHh8kvcfTQghaR9w4mW5JTqtGeyHw=
+        bh=LX8kUzOaHxHTzkRPmHJmLool6PxekiwIJ46DJSVJBNc=;
+        b=g5ZZ7Icjpc/UeXuKV8fIT4NQhbym6dSVYmPVjBQuMhtnPgikSRquP7YXMxyfmaCqtp
+         7dOsPO/YLaOwWPpZ3z1dFn6UBS4vUo/0MdiUsCgDoQI/QqBi5TGk+FfOqung6am0txiu
+         NiHmxw3+hpAM5SNHMVPCBdIWdpf84035tPXd0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sb1t6f7PMkPhKdCQnKJiIIJA0EVTSKOkOLlWb1FyN24=;
-        b=g620Fkp7lM4H+lzBB42mJSDa3YSSQ5Slo7sFvXlJ87J6QqP0jWvaYRTs1xS8cm1wRu
-         PA6dB7v4Ai1DLCpwKyKJUYGwSEELNJQIBaQnMAx9MdzXVfRWdvN0L3hCwIPvDE7gckE9
-         jm1mWGgVUQSp29+6JQzIJTeWVLwTSwwrE3PwxGcoQlGlkOWrX6OcJzFK9Dn9E4H9Wb9N
-         ZlRHdIgfC/TPAMHeOZ7SS6FLpwwrTiqBGFcC4SRoe6A0ef+51UFesLUHAqcxjRaQ56VJ
-         x+0Xkr91teEtOuAAPosa7Ltm+70fbXLAqEsBNkVRlJ7pDwql24L4lwMkJwLaudCksMXD
-         oQrg==
-X-Gm-Message-State: APjAAAWSYfm6cgyd1nRVDdrgOzjSEgfGIpt9G2UdyXD7JBBvO52S12x6
-        tkMA/U88RUz9KvQiGwpKY65lU5XLcQM=
-X-Google-Smtp-Source: APXvYqxiTfC1Fc93NNHezohfDjZAs5G7h7YMWoLkL98lJyMPxRz2Pdbvpza8JekNhmLz3mnH4X0iHA==
-X-Received: by 2002:a67:ea53:: with SMTP id r19mr26081890vso.12.1554241177538;
-        Tue, 02 Apr 2019 14:39:37 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id r199sm4613238vke.30.2019.04.02.14.39.37
+        bh=LX8kUzOaHxHTzkRPmHJmLool6PxekiwIJ46DJSVJBNc=;
+        b=AzXmOpShKHumMUoxILi4KO+rI6tOtfwLIvYUHgS2JoP3UVMh+lVqbFjFnnL4+1sSxl
+         8TzRqiPozhHvuoAGdKlqXf2cq3p75Gh5GTlN3CPfga8e14TPJR/MC0BdtvLZ5jgVpQD4
+         pvK8/T5hW27XGs7i7mCh18UVJlwMZbMPlurJAe71s5//ls/wlKgXba9O28dVR/rwGllQ
+         lVMKDuEtX7NWB0illcKvvVaLNoNWLGhXITX/uFA4JSXKEE4oaBnckJfYZas3g8XLuvaL
+         5x/FnlPyaK9rW00DU0nxLy8Es5/Ywe4cgDHpXqa/txY8v/2tjtKuNMm3Ak7JvpttM40/
+         GkJg==
+X-Gm-Message-State: APjAAAXYy+TvCZ2udHap7aF9BNpV1NyEc6PjCSCymLV+aqXNu8S7E1zX
+        9A0RrCEQcIC/KLbHvBucqcP+Be/JuTM=
+X-Google-Smtp-Source: APXvYqyw6DcLnO/MGrMkXFtmsDd//vljaLUHpv7g1v0Kczld3ubIhadFMxlLssENgm7JUFqbZkXoCQ==
+X-Received: by 2002:a1f:8101:: with SMTP id c1mr34202402vkd.55.1554241237993;
+        Tue, 02 Apr 2019 14:40:37 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id 187sm11361893vku.45.2019.04.02.14.40.37
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 14:39:37 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id v7so4904006uak.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:39:37 -0700 (PDT)
-X-Received: by 2002:ab0:2f8:: with SMTP id 111mr3213192uah.123.1554240751192;
- Tue, 02 Apr 2019 14:32:31 -0700 (PDT)
+        Tue, 02 Apr 2019 14:40:37 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id c6so4910196uan.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:40:37 -0700 (PDT)
+X-Received: by 2002:ab0:a97:: with SMTP id d23mr37644264uak.99.1554240913430;
+ Tue, 02 Apr 2019 14:35:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190306214226.14598-1-tobin@kernel.org> <20190306214226.14598-6-tobin@kernel.org>
-In-Reply-To: <20190306214226.14598-6-tobin@kernel.org>
+References: <20190306214226.14598-1-tobin@kernel.org> <20190306214226.14598-7-tobin@kernel.org>
+In-Reply-To: <20190306214226.14598-7-tobin@kernel.org>
 From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 2 Apr 2019 14:32:19 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLpC8tGNfa2N3H24eby6j=HMWZKgkQaM=3W8MznLQsAOw@mail.gmail.com>
-Message-ID: <CAGXu5jLpC8tGNfa2N3H24eby6j=HMWZKgkQaM=3W8MznLQsAOw@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] lib: Use new kselftest header
+Date:   Tue, 2 Apr 2019 14:35:02 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+4hxuOcrm5mqHuUS4TfLZRrR7+uEUOr9YKsK7sAWJJ8A@mail.gmail.com>
+Message-ID: <CAGXu5j+4hxuOcrm5mqHuUS4TfLZRrR7+uEUOr9YKsK7sAWJJ8A@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] lib/string: Add strscpy_pad() function
 To:     "Tobin C. Harding" <tobin@kernel.org>
 Cc:     Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -91,124 +91,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Mar 6, 2019 at 1:43 PM Tobin C. Harding <tobin@kernel.org> wrote:
 >
-> We just added a new C header file for use with test modules that are
-> intended to be run with kselftest.  We can reduce code duplication by
-> using this header.
+> We have a function to copy strings safely and we have a function to copy
+> strings and zero the tail of the destination (if source string is
+> shorter than destination buffer) but we do not have a function to do
+> both at once.  This means developers must write this themselves if they
+> desire this functionality.  This is a chore, and also leaves us open to
+> off by one errors unnecessarily.
 >
-> Use new kselftest header to reduce code duplication in test_printf and
-> test_bitmap test modules.
+> Add a function that calls strscpy() then memset()s the tail to zero if
+> the source string is shorter than the destination buffer.
 >
 > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 
-Nice consolidation.
+Lovely. :)
 
 Acked-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
 > ---
->  lib/test_bitmap.c | 20 ++++----------------
->  lib/test_printf.c | 23 +++++------------------
->  2 files changed, 9 insertions(+), 34 deletions(-)
+>  include/linux/string.h |  4 ++++
+>  lib/string.c           | 47 +++++++++++++++++++++++++++++++++++-------
+>  2 files changed, 44 insertions(+), 7 deletions(-)
 >
-> diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-> index 6cd7d0740005..792d90608052 100644
-> --- a/lib/test_bitmap.c
-> +++ b/lib/test_bitmap.c
-> @@ -12,6 +12,8 @@
->  #include <linux/slab.h>
->  #include <linux/string.h>
->
-> +#include "../tools/testing/selftests/kselftest_module.h"
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 7927b875f80c..bfe95bf5d07e 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -31,6 +31,10 @@ size_t strlcpy(char *, const char *, size_t);
+>  #ifndef __HAVE_ARCH_STRSCPY
+>  ssize_t strscpy(char *, const char *, size_t);
+>  #endif
 > +
->  static unsigned total_tests __initdata;
->  static unsigned failed_tests __initdata;
->
-> @@ -361,7 +363,7 @@ static void noinline __init test_mem_optimisations(void)
->         }
->  }
->
-> -static int __init test_bitmap_init(void)
-> +static void __init selftest(void)
->  {
->         test_zero_clear();
->         test_fill_set();
-> @@ -369,22 +371,8 @@ static int __init test_bitmap_init(void)
->         test_bitmap_arr32();
->         test_bitmap_parselist();
->         test_mem_optimisations();
-> -
-> -       if (failed_tests == 0)
-> -               pr_info("all %u tests passed\n", total_tests);
-> -       else
-> -               pr_warn("failed %u out of %u tests\n",
-> -                       failed_tests, total_tests);
-> -
-> -       return failed_tests ? -EINVAL : 0;
->  }
->
-> -static void __exit test_bitmap_cleanup(void)
-> -{
-> -}
-> -
-> -module_init(test_bitmap_init);
-> -module_exit(test_bitmap_cleanup);
-> -
-> +KSTM_MODULE_LOADERS(test_bitmap);
->  MODULE_AUTHOR("david decotigny <david.decotigny@googlers.com>");
->  MODULE_LICENSE("GPL");
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 601e8519319a..f4fcc1c43739 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -21,6 +21,8 @@
->  #include <linux/gfp.h>
->  #include <linux/mm.h>
->
-> +#include "../tools/testing/selftests/kselftest_module.h"
+> +/* Wraps calls to strscpy()/memset(), no arch specific code required */
+> +ssize_t strscpy_pad(char *dest, const char *src, size_t count);
 > +
->  #define BUF_SIZE 256
->  #define PAD_SIZE 16
->  #define FILL_CHAR '$'
-> @@ -590,12 +592,11 @@ test_pointer(void)
->         flags();
->  }
->
-> -static int __init
-> -test_printf_init(void)
-> +static void __init selftest(void)
+>  #ifndef __HAVE_ARCH_STRCAT
+>  extern char * strcat(char *, const char *);
+>  #endif
+> diff --git a/lib/string.c b/lib/string.c
+> index 38e4ca08e757..3a3353512184 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -159,11 +159,9 @@ EXPORT_SYMBOL(strlcpy);
+>   * @src: Where to copy the string from
+>   * @count: Size of destination buffer
+>   *
+> - * Copy the string, or as much of it as fits, into the dest buffer.
+> - * The routine returns the number of characters copied (not including
+> - * the trailing NUL) or -E2BIG if the destination buffer wasn't big enough.
+> - * The behavior is undefined if the string buffers overlap.
+> - * The destination buffer is always NUL terminated, unless it's zero-sized.
+> + * Copy the string, or as much of it as fits, into the dest buffer.  The
+> + * behavior is undefined if the string buffers overlap.  The destination
+> + * buffer is always NUL terminated, unless it's zero-sized.
+>   *
+>   * Preferred to strlcpy() since the API doesn't require reading memory
+>   * from the src string beyond the specified "count" bytes, and since
+> @@ -173,8 +171,10 @@ EXPORT_SYMBOL(strlcpy);
+>   *
+>   * Preferred to strncpy() since it always returns a valid string, and
+>   * doesn't unnecessarily force the tail of the destination buffer to be
+> - * zeroed.  If the zeroing is desired, it's likely cleaner to use strscpy()
+> - * with an overflow test, then just memset() the tail of the dest buffer.
+> + * zeroed.  If zeroing is desired please use strscpy_pad().
+> + *
+> + * Return: The number of characters copied (not including the trailing
+> + *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
+>   */
+>  ssize_t strscpy(char *dest, const char *src, size_t count)
 >  {
->         alloced_buffer = kmalloc(BUF_SIZE + 2*PAD_SIZE, GFP_KERNEL);
->         if (!alloced_buffer)
-> -               return -ENOMEM;
-> +               return;
->         test_buffer = alloced_buffer + PAD_SIZE;
+> @@ -237,6 +237,39 @@ ssize_t strscpy(char *dest, const char *src, size_t count)
+>  EXPORT_SYMBOL(strscpy);
+>  #endif
 >
->         test_basic();
-> @@ -604,22 +605,8 @@ test_printf_init(void)
->         test_pointer();
->
->         kfree(alloced_buffer);
-> -
-> -       if (failed_tests == 0)
-> -               pr_info("all %u tests passed\n", total_tests);
-> -       else
-> -               pr_warn("failed %u out of %u tests\n", failed_tests, total_tests);
-> -
-> -       return failed_tests ? -EINVAL : 0;
->  }
->
-> -module_init(test_printf_init);
-> -
-> -static void __exit test_printf_exit(void)
-> -{
-> -}
-> -
-> -module_exit(test_printf_exit);
-> -
-> +KSTM_MODULE_LOADERS(test_printf);
->  MODULE_AUTHOR("Rasmus Villemoes <linux@rasmusvillemoes.dk>");
->  MODULE_LICENSE("GPL");
+> +/**
+> + * strscpy_pad() - Copy a C-string into a sized buffer
+> + * @dest: Where to copy the string to
+> + * @src: Where to copy the string from
+> + * @count: Size of destination buffer
+> + *
+> + * Copy the string, or as much of it as fits, into the dest buffer.  The
+> + * behavior is undefined if the string buffers overlap.  The destination
+> + * buffer is always %NUL terminated, unless it's zero-sized.
+> + *
+> + * If the source string is shorter than the destination buffer, zeros
+> + * the tail of the destination buffer.
+> + *
+> + * For full explanation of why you may want to consider using the
+> + * 'strscpy' functions please see the function docstring for strscpy().
+> + *
+> + * Return: The number of characters copied (not including the trailing
+> + *         %NUL) or -E2BIG if the destination buffer wasn't big enough.
+> + */
+> +ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+> +{
+> +       ssize_t written;
+> +
+> +       written = strscpy(dest, src, count);
+> +       if (written < 0 || written == count - 1)
+> +               return written;
+> +
+> +       memset(dest + written + 1, 0, count - written - 1);
+> +
+> +       return written;
+> +}
+> +EXPORT_SYMBOL(strscpy_pad);
+> +
+>  #ifndef __HAVE_ARCH_STRCAT
+>  /**
+>   * strcat - Append one %NUL-terminated string to another
 > --
 > 2.20.1
 >
