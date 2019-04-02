@@ -2,94 +2,96 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F85AC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE31C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D656207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9FB20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfDBJup (ORCPT
+        id S1729763AbfDBJvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:50:45 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:45657 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729004AbfDBJuo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:50:44 -0400
-X-Originating-IP: 90.88.32.136
-Received: from localhost (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id A4C1BE000D;
-        Tue,  2 Apr 2019 09:50:40 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 11:50:40 +0200
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
-Subject: Re: [PATCH net-next v3 1/2] net: phy: marvell10g: implement
- suspend/resume callbacks
-Message-ID: <20190402095040.GB3354@kwain>
-References: <20190326145302.9563-1-antoine.tenart@bootlin.com>
- <20190326145302.9563-2-antoine.tenart@bootlin.com>
- <dcd7bdaa-5587-0099-3a2e-ce55b32ab7f9@gmail.com>
+        Tue, 2 Apr 2019 05:51:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43206 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729004AbfDBJvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 05:51:06 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [10.3.19.201])
+        by Forcepoint Email with ESMTP id 855DE74FF9DE1D79078F;
+        Tue,  2 Apr 2019 17:46:25 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Tue, 2 Apr 2019
+ 17:46:18 +0800
+Subject: Re: [RFC PATCH v2 1/3] resource: Request IO port regions from
+ children of ioport_resource
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <1553105650-28012-1-git-send-email-john.garry@huawei.com>
+ <1553105650-28012-2-git-send-email-john.garry@huawei.com>
+ <20190325233255.GF24180@google.com>
+ <b9164269-c2a1-e0fa-4c17-2d06fb42f39b@huawei.com>
+ <20190326224810.GY24180@google.com> <20190328174655.GC19825@red-moon>
+ <418943e2-19cd-f4b9-b5e1-2a49bce99b66@huawei.com>
+ <20190329122206.GA28421@e107981-ln.cambridge.arm.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <wangkefeng.wang@huawei.com>,
+        <arnd@arndb.de>, <rafael@kernel.org>, <linux-pci@vger.kernel.org>,
+        "Will Deacon" <will.deacon@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <andy.shevchenko@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, <bp@suse.de>,
+        <linux@roeck-us.net>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2b98fa8b-d12a-8d48-e47d-075d25c47bb2@huawei.com>
+Date:   Tue, 2 Apr 2019 10:46:10 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dcd7bdaa-5587-0099-3a2e-ce55b32ab7f9@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190329122206.GA28421@e107981-ln.cambridge.arm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiner,
+On 29/03/2019 12:22, Lorenzo Pieralisi wrote:
+>>> > >Side note: these drivers can't be compiled on PPC, it would be
+>>> > >good to understand why, I have a hunch it can be related.
+>> >
+>> > I mentioned this earlier:
+>> >
+>> > I saw that in commits like 746cdfbf01c0 ("hwmon: Avoid building drivers
+>> > forpowerpc that read/write ISA addresses"), PPC would not build these
+>> > drivers, as, like arm, it has no native ISA.
+>> >
+>> > However I still don't think just avoiding compiling these drivers for
+>> > certain archs solves the problem.
+> No it does not but I would like to understand how relevant is fixing
+> those drivers (that should not use ISA IO space without first claiming
+> their resources, for the records) given that PPC did not even try and
+> apparently that's not a problem.
+>
 
-On Fri, Mar 29, 2019 at 10:32:02PM +0100, Heiner Kallweit wrote:
-> On 26.03.2019 15:53, Antoine Tenart wrote:
-> > This patch adds the suspend/resume callbacks for Marvell 10G PHYs. The
-> > three PCS (base-t, base-r and 1000base-x) are set in low power (the PCS
-> > are powered down) when the PHY isn't used.
-> > 
-> > Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > ---
-> >  drivers/net/phy/marvell10g.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> > 
-> > diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-> > index 100b401b1f4a..b56cd35182d5 100644
-> > --- a/drivers/net/phy/marvell10g.c
-> > +++ b/drivers/net/phy/marvell10g.c
-> > @@ -226,11 +226,25 @@ static int mv3310_probe(struct phy_device *phydev)
-> >  
-> >  static int mv3310_suspend(struct phy_device *phydev)
-> >  {
-> > +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_T + MDIO_CTRL1,
-> > +		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
-> > +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_BASE_R + MDIO_CTRL1,
-> > +		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
-> > +	phy_modify_mmd(phydev, MDIO_MMD_PCS, MV_PCS_1000BASEX + MDIO_CTRL1,
-> > +		       MDIO_CTRL1_LPOWER, MDIO_CTRL1_LPOWER);
-> > +
-> When you re-submit this series, in addition to my previous comment:
-> Instead of phy_modify_mmd() it would be clearer to use
-> phy_set/clear_bits_mmd(). And checking the return value wouldn't hurt.
+Hi Lorenzo,
 
-OK, will do.
+Those drivers should still be fixed up separately.
 
-Thanks!
-Antoine
+The tricky part in this series is making the resource claim fail if 
+there is no IO space mapped/accessible at the addresses requested.
 
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+However I would still like to fix up the low level IO port accessors to 
+discard accesses when no IO space is mapped.
+
+Thanks,
+John
+
+>> >
+>> > [...]
+>> >
+>>>>>>> > >>>>>[1] https://www.spinics.net/lists/linux-pci
+
+
