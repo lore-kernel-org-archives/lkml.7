@@ -2,109 +2,102 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2874AC10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC34CC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C33207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8788E208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BSd6EyVe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmY8gXBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbfDBJEb (ORCPT
+        id S1729869AbfDBJEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:04:31 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9949 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfDBJEa (ORCPT
+        Tue, 2 Apr 2019 05:04:45 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43608 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfDBJEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:04:30 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca3259b0002>; Tue, 02 Apr 2019 02:04:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 02 Apr 2019 02:04:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 02 Apr 2019 02:04:29 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Apr
- 2019 09:04:27 +0000
-Subject: Re: [PATCH 5.0 000/146] 5.0.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190401170048.449559024@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a109b148-2523-dd77-6aa0-35faec9e925c@nvidia.com>
-Date:   Tue, 2 Apr 2019 10:04:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 2 Apr 2019 05:04:43 -0400
+Received: by mail-lf1-f65.google.com with SMTP id g7so8377149lfh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 02:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yfjTMt38drQF2ZeNKh0D4h5huWYelq/lQZojYMb5Wr0=;
+        b=TmY8gXBSVmBCDM78j/p4VRHBWr0CbE9QvMl6dWxaQ6jHUDJvE8ql7ztJ8zJXVxPnB4
+         NQNjb1nbMVM76EESuYBmNMo+o8l2ZYk7dzcAydIeI/q3VbcqlDbyhxRe+lyB+/gwr7Ik
+         uzOSZiYVwG8J/YDwNuE0nSeQEHToUiU6pZuF4003yMl3gTfj7dYy9oeD4CgX9jBiOiTd
+         N26kiSJgKU6hEVGxWbEzTcfbA4WdZcmJCCcs8c3hIngll/ehQ7k1jWQHnm0mDRbVjYiJ
+         +qapoITVW50P/KkZrgAFkMOH70XHw2UGtCj5woxeFIRn6Q0DdLLfLjHbIc/6XDmh/Enf
+         d1yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yfjTMt38drQF2ZeNKh0D4h5huWYelq/lQZojYMb5Wr0=;
+        b=R8EuCNbRrG/gZaRqhJVNzKAtm2WS0088ivRV6/fy0qgbyyYS+lSTOb2C2JFwClpTsD
+         rdgNucsKBjSH9zYJxAt/hGOGUXwshhYljGfuDW28QeuByp7q789E2W9F+ErIiXsDmiy8
+         oqszGmJMlv6HJYIUVvVNwFZpyYVRw9bRIv03r2DEIeuGAxlCpR1/+43KBjRrf0aJTRTN
+         R8VwTghH2NbC7IeDo7/WxSX60oLx9Z3sDgwH0pAKSjB4fKYH1EgZOVDyShfnQR0DUHOe
+         8w638WGlJI/hTcktO4FDHQwvsRZGJ7pA3dnG5HyHYOgptcMNTlMI8xGukhSYVnVk5gbn
+         KDow==
+X-Gm-Message-State: APjAAAVX+hJ6PTFGyUZTK8pBQrhALXzel8bgn1o2AfhkFD3niTv/GlCD
+        roqJHOraX6CX61FqeC8UBynrevg7MXZD75za0YVQ+Q==
+X-Google-Smtp-Source: APXvYqzAUMQvQqf8pPeVYLAXYjfBr8PmBdjZgNDzcJoyrod0gdqm9izzdkfzLQlhxU3PFvS8rAQq0DpwwiszU5v06XE=
+X-Received: by 2002:ac2:54b0:: with SMTP id w16mr1658614lfk.138.1554195881960;
+ Tue, 02 Apr 2019 02:04:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190401170048.449559024@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554195867; bh=Nvdl6pRs5B5LfsXDK3E7YfW4ooiisEmV5gjiL1rp73w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BSd6EyVeqRve1gmbZS0rfhdo3iooyzlY5BzvevaDgqYC/a1XU+TgXkY+CYVKaQFDF
-         jLK0OhMUHbxe2uAyyPUQDGmMgOeQzWA6gRvcYLNmlyO8pExjQax3n3VtdXqnU40pr4
-         eXnraDbctpD8tan0rCGwUr3muztj+GUOQw3NxDkH2PNZi2/NFchXPen4sy5+GWgJdq
-         9gT4soWs9HRgX1nv13TF49XJ5DG8EbzMw9sOg85E+Lk8o0aUYoRxtV85pL7bO64aUr
-         GM9BFuAjlG7OPq1k8vEze8t6hPN1FVpT2rwUIrOFwrVR1u36Lr0+W8nXuh2W5DJ2Q7
-         pTdq1wWi2zNDg==
+References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-29-git-send-email-info@metux.net>
+In-Reply-To: <1552330521-4276-29-git-send-email-info@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 2 Apr 2019 16:04:30 +0700
+Message-ID: <CACRpkdYa+oaw-P9aYL6KApvetVBZLt7USVV3kx7xZ4R7U=Hfew@mail.gmail.com>
+Subject: Re: [PATCH 29/42] drivers: gpio: sprd: use devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 12, 2019 at 1:57 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
-On 01/04/2019 18:00, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.6 release.
-> There are 146 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed Apr  3 16:59:21 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.6-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-All tests are passing for Tegra ...
+Patch applied with Baolin's ACK.
 
-Test results for stable-v5.0:
-    11 builds:	11 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    30 tests:	30 pass, 0 fail
-
-Linux version:	5.0.6-rc1-g7505a89
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Yours,
+Linus Walleij
