@@ -2,106 +2,135 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBC0C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A1EC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD22207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554196214;
-	bh=RCLI6jvyLpySCZZYO8g+bGv43T2N8g5KVkec6dBhgT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eunLQeIKGijPItIMt94Dn6POPfH2/Tww8RJz7puO63q5H+/CYCsN+uADQFM8WfOER
-	 ah82rva5vRVxL+gVd9M2QYQqOUYpBwUDFJMSsuv6pcgyD5cXg1IFvZnPUgLYH7vVom
-	 vkDVV55DxzCAGosM1ObVxT0j8KcqqkvjScjxizQo=
+	by mail.kernel.org (Postfix) with ESMTP id 9895F207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="t5Ohdgk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbfDBJKN (ORCPT
+        id S1730019AbfDBJK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:10:13 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49222 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbfDBJKN (ORCPT
+        Tue, 2 Apr 2019 05:10:27 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:22833 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbfDBJK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:10:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PQtR22IfGnpW+4UD8rHmpQlgcjqz35SLOcrjDxw9uB0=; b=ogJNGOM02Dyx7WFRUUxxL78PO
-        Op7JXiRheKKf4vNXPhChJnnzTcUG1r/rkgiiyp8c9lW0o4GWSt1mMksmvA1yLvjDDghsvKytlYQtu
-        CzfotaPeYqIIb09qX9uIespYhjGLAueSApZx6mGLi3gTPIQQ6susw3QPT/tjQU0y9T05E=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBFQm-0006lO-Sc; Tue, 02 Apr 2019 09:10:09 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id EB5F2440082; Tue,  2 Apr 2019 10:10:05 +0100 (BST)
-Date:   Tue, 2 Apr 2019 16:10:05 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: Re: [RFC PATCH 0/4] spi: spi-fsl-spi: try to make cpu-mode transfers
- faster
-Message-ID: <20190402091005.GC2059@sirena.org.uk>
-References: <20190327143040.16013-1-rasmus.villemoes@prevas.dk>
- <20190401073450.GG2059@sirena.org.uk>
- <ce9e8ca8-6db7-1be8-5ea3-c098b1c1c813@prevas.dk>
+        Tue, 2 Apr 2019 05:10:26 -0400
+Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x3298VSZ007626;
+        Tue, 2 Apr 2019 18:08:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x3298VSZ007626
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554196113;
+        bh=EAXKI8xuU8IlM0GjkRwXsx7k4dD562vpzZxwsiCOtOY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=t5Ohdgk47kaYLy5jMmLNtp2C+KaJs0Yof76QBkFUx2e2iECi4EATjKYso9lb8FiIb
+         /FyshpraRsqHqdZSDoSygB++IntV63cWnHOrnGnhufUUZMfn4FEqMHk+0wrcjKScsV
+         ip5jnjmok0zcuWgieChwBXkpZAQb8MQwo5yoWwgl2BYTekW/ECbbnXTdXnLaH/ol5V
+         5ZcEseI6OZUSDHERhKACExgZd4DZbFc8r8tDc518b/7Bu8WkPZllPdlA+wzUOdbpk7
+         zTngzozMALddTivC0aDWCVpMO/BtyG1mNCQIeCg6h34uzeyAtkVVqFqICqqDlbC2Mr
+         bYu3GRwLpvjqQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Gross <andy.gross@linaro.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-arch@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH v2] Remove SPDX "WITH Linux-syscall-note" from kernel-space headers
+Date:   Tue,  2 Apr 2019 18:08:24 +0900
+Message-Id: <1554196104-3522-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="U58U7wle/RT11wuz"
-Content-Disposition: inline
-In-Reply-To: <ce9e8ca8-6db7-1be8-5ea3-c098b1c1c813@prevas.dk>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The "WITH Linux-syscall-note" should be added to headers exported to
+the user-space.
 
---U58U7wle/RT11wuz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Some kernel-space headers have "WITH Linux-syscall-note", which seems
+a mistake.
 
-On Tue, Apr 02, 2019 at 08:43:51AM +0000, Rasmus Villemoes wrote:
+[1] arch/x86/include/asm/hyperv-tlfs.h
 
-> Thanks! There's one other option I can think of: don't do the interrupts
-> at all, but just busy-wait for the completion of each word transfer (in
-> a cpu_relax() loop). That could be guarded by something like
-> 1000000*bits_per_word < hz (roughly, the word transfer takes less than 1
-> us). At least on -rt, having the interrupt thread scheduled in and out
-> again easily takes more than 1us of cpu time, and AFAIU we'd still be
-> preemptible throughout - and/or one can throw in a cond_resched() every
-> nnn words. But this might be a bit -rt specific, and the 1us threshold
-> is rather arbitrary.
+5a4858032217 ("x86/hyper-v: move hyperv.h out of uapi") moved this file
+out of uapi, but missed to update the SPDX License tag.
 
-Yeah, that's definitely worth exploring as a mitigation but obviously
-with things like flash I/O that gets a bit rude.  Hopefully what's there
-at the minute turns out to be robust enough.
+[2] include/asm-generic/shmparam.h
 
---U58U7wle/RT11wuz
-Content-Type: application/pgp-signature; name="signature.asc"
+76ce2a80a28e ("Rename include/{uapi => }/asm-generic/shmparam.h really")
+moved this file out of uapi, but missed to update the SPDX License tag.
 
------BEGIN PGP SIGNATURE-----
+[3] include/linux/qcom-geni-se.h
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyjJu0ACgkQJNaLcl1U
-h9AQpwf+OuW45aY1671qbCW3I/2+1Z2PuTbheg08DkMzK9IQ6qmkz9Web828TcQk
-Wh+mr066jfLo2rf2NL3Ed2/zu4Y1GPn4wtqblsg1Jl2UsRGk+V4Eb27iaj6szvU2
-GenjVXF7zia3xVVw5ISh5IKVnko+rRZnatuusPffejsXoRrtiG5gN3W9EJH6+oK3
-b6BIPgQBqS0/de54NjVFthmd5X24fGwRfi2DkMwtN/W1k2Y8/bTQwTY+z5lepLRU
-pM83mhetp3X1jZAt4KwjGlKmE4ATaU3Q8bDwOwTCyhyRMxDtUkts7pcyf1uez/rh
-X3OwafCkR2xlVNqfRPt/mepvxntvLg==
-=dmgT
------END PGP SIGNATURE-----
+eddac5af0654 ("soc: qcom: Add GENI based QUP Wrapper driver") added this
+file, but I do not see a good reason why its license tag must include
+"WITH Linux-syscall-note".
 
---U58U7wle/RT11wuz--
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+  - Fix a typo in commit log
+
+ arch/x86/include/asm/hyperv-tlfs.h | 2 +-
+ include/asm-generic/shmparam.h     | 2 +-
+ include/linux/qcom-geni-se.h       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index 2bdbbbc..cdf44aa 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* SPDX-License-Identifier: GPL-2.0 */
+ 
+ /*
+  * This file contains definitions from Hyper-V Hypervisor Top-Level Functional
+diff --git a/include/asm-generic/shmparam.h b/include/asm-generic/shmparam.h
+index 8b78c0b..b8f9035 100644
+--- a/include/asm-generic/shmparam.h
++++ b/include/asm-generic/shmparam.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef __ASM_GENERIC_SHMPARAM_H
+ #define __ASM_GENERIC_SHMPARAM_H
+ 
+diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+index 3bcd67f..dd46494 100644
+--- a/include/linux/qcom-geni-se.h
++++ b/include/linux/qcom-geni-se.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+  */
+-- 
+2.7.4
+
