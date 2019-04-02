@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094A7C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B4BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCB920857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885F32084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554221277;
-	bh=Eq4Ju++VKbhJEzO/mees4dREd6urQlZMyOeufdKO1x0=;
+	s=default; t=1554221282;
+	bh=poTimfobPizsMZweSjSebvizaJAZFpp1MHlET46VrpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T/i6kgEt19gnLm0zKUNE59bVCU+inPy8k/vF4Xpv4L7j7RFnRY3Ji6wNn5IOn34HS
-	 ct9X50eFaQzqMr1YjuMNnpdQ4B3fFX5acwQbSiuqKVpttyy2qV3hOKmIbGCjarIhFu
-	 cJ8Mijhjz69VRZ0xW9D2ziJZcpdroDJPK+WLeneA=
+	b=eFNqgBDOf3VlBzjkUPKvFTdEov7hMc4M0X87tHN0TOJ5ZQ0t2alNph0xCIA8QOfmB
+	 aEpztiuUhgD+iOFZtOeYzQXuPKknVUg4tC6Y8Qgyb/U08ZldGqXHW4BM3aYzksmq+z
+	 iyepuX2DLKE42vdQeIzytDjIs3YfriBZstgszGUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbfDBQHz (ORCPT
+        id S1731521AbfDBQIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:07:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 12:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731458AbfDBQHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:07:52 -0400
+        id S1729616AbfDBQH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:07:56 -0400
 Received: from quaco.ghostprotocols.net (unknown [187.65.94.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86D3A2082C;
-        Tue,  2 Apr 2019 16:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9812214AF;
+        Tue,  2 Apr 2019 16:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554221264;
-        bh=Eq4Ju++VKbhJEzO/mees4dREd6urQlZMyOeufdKO1x0=;
+        s=default; t=1554221270;
+        bh=poTimfobPizsMZweSjSebvizaJAZFpp1MHlET46VrpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pi8HED3uIvjfnWrec0U6AW4AHojviMStSLjhMRTzuy8J3Jn/j4o6/Ifm1/RyM3fLF
-         eJsKIGiay0tTfn5RQEGsDiegnvTO1pVH5aXuj0TMpmKhrBPeC7TFKqULevzJnbpT+m
-         fglsY9+okvBPBJZGyhYRIZ/dlwAn5jBci/IqZjcY=
+        b=Fj11amWD+UBYkQhndr90DgmzJXpSxdXllMhSdnqDkc774n4xcggVdi76Ccw5XhdcX
+         Ic2W9CJMMlX2/EEw0fhXaJaBT/ZNSjNMbRYed1Z+wwdHKuOXp9JjTgf2VNYHn4fTNO
+         YWWtcDk8Rw07kEYof+qD3z8hrU6biQiRV3CwnZNc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,14 +47,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 31/44] perf vendor events intel: Update Skylake events to v42
-Date:   Tue,  2 Apr 2019 13:05:36 -0300
-Message-Id: <20190402160549.13544-32-acme@kernel.org>
+Subject: [PATCH 33/44] perf vendor events intel: Update BroadwellX events to v14
+Date:   Tue,  2 Apr 2019 13:05:38 -0300
+Message-Id: <20190402160549.13544-34-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190402160549.13544-1-acme@kernel.org>
 References: <20190402160549.13544-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,4559 +68,1287 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Link: https://lkml.kernel.org/r/20190315165219.GA21223@tassilo.jf.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../pmu-events/arch/x86/skylake/cache.json    | 2193 ++++++++++++++++-
- .../pmu-events/arch/x86/skylake/frontend.json |   14 +-
- .../pmu-events/arch/x86/skylake/memory.json   | 1121 ++++++++-
- .../pmu-events/arch/x86/skylake/pipeline.json |   39 +-
- 4 files changed, 3181 insertions(+), 186 deletions(-)
+ .../pmu-events/arch/x86/broadwellx/cache.json | 161 +++++++++---------
+ .../arch/x86/broadwellx/floating-point.json   |  16 +-
+ .../arch/x86/broadwellx/memory.json           | 148 ++++++++--------
+ .../arch/x86/broadwellx/pipeline.json         |  50 +++---
+ 4 files changed, 186 insertions(+), 189 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/cache.json b/tools/perf=
-/pmu-events/arch/x86/skylake/cache.json
-index 54bfe9e4045c..720458139049 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/cache.json
-@@ -60,10 +60,10 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/cache.json b/tools/perf/pmu-events/arch/x86/broadwellx/cache.json
+index 141b1080429d..75a3098d5775 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/cache.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/cache.json
+@@ -57,17 +57,17 @@
      },
      {
--        "PublicDescription": "Counts the number of demand Data Read reques=
-ts that hit L2 cache. Only non rejected loads are counted.",
-+        "PublicDescription": "Counts the number of demand Data Read reques=
-ts, initiated by load instructions, that hit L2 cache",
          "EventCode": "0x24",
-         "Counter": "0,1,2,3",
 -        "UMask": "0x41",
 +        "UMask": "0xc1",
-         "EventName": "L2_RQSTS.DEMAND_DATA_RD_HIT",
-         "SampleAfterValue": "200003",
          "BriefDescription": "Demand Data Read requests that hit L2 cache",
-@@ -73,7 +73,7 @@
-         "PublicDescription": "Counts the RFO (Read-for-Ownership) requests=
- that hit L2 cache.",
-         "EventCode": "0x24",
          "Counter": "0,1,2,3",
+         "EventName": "L2_RQSTS.DEMAND_DATA_RD_HIT",
+-        "PublicDescription": "This event counts the number of demand Data Read requests that hit L2 cache. Only not rejected loads are counted.",
++        "PublicDescription": "Counts the number of demand Data Read requests, initiated by load instructions, that hit L2 cache.",
+         "SampleAfterValue": "200003",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+     {
+         "EventCode": "0x24",
 -        "UMask": "0x42",
 +        "UMask": "0xc2",
-         "EventName": "L2_RQSTS.RFO_HIT",
-         "SampleAfterValue": "200003",
-         "BriefDescription": "RFO requests that hit L2 cache",
-@@ -83,7 +83,7 @@
-         "PublicDescription": "Counts L2 cache hits when fetching instructi=
-ons, code reads.",
-         "EventCode": "0x24",
+         "BriefDescription": "RFO requests that hit L2 cache.",
          "Counter": "0,1,2,3",
+         "EventName": "L2_RQSTS.RFO_HIT",
+@@ -76,7 +76,7 @@
+     },
+     {
+         "EventCode": "0x24",
 -        "UMask": "0x44",
 +        "UMask": "0xc4",
+         "BriefDescription": "L2 cache hits when fetching instructions, code reads.",
+         "Counter": "0,1,2,3",
          "EventName": "L2_RQSTS.CODE_RD_HIT",
-         "SampleAfterValue": "200003",
-         "BriefDescription": "L2 cache hits when fetching instructions, cod=
-e reads.",
-@@ -482,7 +482,7 @@
+@@ -85,7 +85,7 @@
      },
      {
-         "PEBS": "1",
--        "PublicDescription": "Counts retired load instructions with at lea=
-st one uop that hit in the L1 data cache. This event includes all SW prefet=
-ches and lock instructions regardless of the data source.\r\n",
-+        "PublicDescription": "Counts retired load instructions with at lea=
-st one uop that hit in the L1 data cache. This event includes all SW prefet=
-ches and lock instructions regardless of the data source.",
-         "EventCode": "0xD1",
+         "EventCode": "0x24",
+-        "UMask": "0x50",
++        "UMask": "0xd0",
+         "BriefDescription": "L2 prefetch requests that hit L2 cache",
          "Counter": "0,1,2,3",
+         "EventName": "L2_RQSTS.L2_PF_HIT",
+@@ -396,24 +396,24 @@
+     {
+         "EventCode": "0xD0",
+         "UMask": "0x11",
+-        "BriefDescription": "Retired load uops that miss the STLB. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops that miss the STLB.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_UOPS_RETIRED.STLB_MISS_LOADS",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts load uops with true STLB miss retired to the architected path. True STLB miss is an uop triggering page walk that gets completed without blocks, and later gets retired. This page walk can end up with or without a fault.",
++        "PublicDescription": "This event counts load uops with true STLB miss retired to the architected path. True STLB miss is an uop triggering page walk that gets completed without blocks, and later gets retired. This page walk can end up with or without a fault.",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+     {
+         "EventCode": "0xD0",
+         "UMask": "0x12",
+-        "BriefDescription": "Retired store uops that miss the STLB. (Precise Event - PEBS)",
++        "BriefDescription": "Retired store uops that miss the STLB.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_UOPS_RETIRED.STLB_MISS_STORES",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts store uops true STLB miss retired to the architected path. True STLB miss is an uop triggering page walk that gets completed without blocks, and later gets retired. This page walk can end up with or without a fault.",
++        "PublicDescription": "This event counts store uops with true STLB miss retired to the architected path. True STLB miss is an uop triggering page walk that gets completed without blocks, and later gets retired. This page walk can end up with or without a fault.",
+         "SampleAfterValue": "100003",
+         "L1_Hit_Indication": "1",
+         "CounterHTOff": "0,1,2,3"
+@@ -421,37 +421,37 @@
+     {
+         "EventCode": "0xD0",
+         "UMask": "0x21",
+-        "BriefDescription": "Retired load uops with locked access. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops with locked access.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_UOPS_RETIRED.LOCK_LOADS",
+         "Errata": "BDM35",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts load uops with locked access retired to the architected path.",
++        "PublicDescription": "This event counts load uops with locked access retired to the architected path.",
+         "SampleAfterValue": "100007",
+         "CounterHTOff": "0,1,2,3"
+     },
+     {
+         "EventCode": "0xD0",
+         "UMask": "0x41",
+-        "BriefDescription": "Retired load uops that split across a cacheline boundary.(Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops that split across a cacheline boundary.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_UOPS_RETIRED.SPLIT_LOADS",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts line-split load uops retired to the architected path. A line split is across 64B cache-line which includes a page split (4K).",
++        "PublicDescription": "This event counts line-splitted load uops retired to the architected path. A line split is across 64B cache-line which includes a page split (4K).",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+     {
+         "EventCode": "0xD0",
+         "UMask": "0x42",
+-        "BriefDescription": "Retired store uops that split across a cacheline boundary. (Precise Event - PEBS)",
++        "BriefDescription": "Retired store uops that split across a cacheline boundary.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_UOPS_RETIRED.SPLIT_STORES",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts line-split store uops retired to the architected path. A line split is across 64B cache-line which includes a page split (4K).",
++        "PublicDescription": "This event counts line-splitted store uops retired to the architected path. A line split is across 64B cache-line which includes a page split (4K).",
+         "SampleAfterValue": "100003",
+         "L1_Hit_Indication": "1",
+         "CounterHTOff": "0,1,2,3"
+@@ -459,24 +459,24 @@
+     {
+         "EventCode": "0xD0",
+         "UMask": "0x81",
+-        "BriefDescription": "All retired load uops. (Precise Event - PEBS)",
++        "BriefDescription": "All retired load uops.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts load uops retired to the architected path with a filter on bits 0 and 1 applied.\nNote: This event ?ounts AVX-256bit load/store double-pump memory uops as a single uop at retirement. This event also counts SW prefetches.",
++        "PublicDescription": "This event counts load uops retired to the architected path with a filter on bits 0 and 1 applied.\nNote: This event counts AVX-256bit load/store double-pump memory uops as a single uop at retirement. This event also counts SW prefetches.",
+         "SampleAfterValue": "2000003",
+         "CounterHTOff": "0,1,2,3"
+     },
+     {
+         "EventCode": "0xD0",
+         "UMask": "0x82",
+-        "BriefDescription": "Retired store uops that split across a cacheline boundary. (Precise Event - PEBS)",
++        "BriefDescription": "All retired store uops.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts store uops retired to the architected path with a filter on bits 0 and 1 applied.\nNote: This event ?ounts AVX-256bit load/store double-pump memory uops as a single uop at retirement.",
++        "PublicDescription": "This event counts store uops retired to the architected path with a filter on bits 0 and 1 applied.\nNote: This event counts AVX-256bit load/store double-pump memory uops as a single uop at retirement.",
+         "SampleAfterValue": "2000003",
+         "L1_Hit_Indication": "1",
+         "CounterHTOff": "0,1,2,3"
+@@ -484,69 +484,69 @@
+     {
+         "EventCode": "0xD1",
          "UMask": "0x1",
-@@ -554,7 +554,7 @@
-     },
-     {
+-        "BriefDescription": "Retired load uops with L1 cache hits as data sources. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops with L1 cache hits as data sources.",
+         "Data_LA": "1",
          "PEBS": "1",
--        "PublicDescription": "Counts retired load instructions with at lea=
-st one uop was load missed in L1 but hit FB (Fill Buffers) due to preceding=
- miss to the same cache line with data not ready. \r\n",
-+        "PublicDescription": "Counts retired load instructions with at lea=
-st one uop was load missed in L1 but hit FB (Fill Buffers) due to preceding=
- miss to the same cache line with data not ready.",
-         "EventCode": "0xD1",
          "Counter": "0,1,2,3",
-         "UMask": "0x40",
-@@ -661,13 +661,13 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data source were hits in the nearest-level (L1) cache.\nNote: Only two data-sources of L1/FB are applicable for AVX-256bit  even though the corresponding AVX load could be serviced by a deeper level in the memory hierarchy. Data source is reported for the Low-half load. This event also counts SW prefetches independent of the actual data source.",
++        "PublicDescription": "This event counts retired load uops which data sources were hits in the nearest-level (L1) cache.\nNote: Only two data-sources of L1/FB are applicable for AVX-256bit  even though the corresponding AVX load could be serviced by a deeper level in the memory hierarchy. Data source is reported for the Low-half load. This event also counts SW prefetches independent of the actual data source.",
+         "SampleAfterValue": "2000003",
+         "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "Counts the number of lines that have been ha=
-rdware prefetched but not used and now evicted by L2 cache.",
-+        "PublicDescription": "This event is deprecated. Refer to new event=
- L2_LINES_OUT.USELESS_HWPF",
-         "EventCode": "0xF2",
+         "EventCode": "0xD1",
+         "UMask": "0x2",
+-        "BriefDescription": "Retired load uops with L2 cache hits as data sources. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops with L2 cache hits as data sources.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
+         "Errata": "BDM35",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were hits in the mid-level (L2) cache.",
++        "PublicDescription": "This event counts retired load uops which data sources were hits in the mid-level (L2) cache.",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+     {
+         "EventCode": "0xD1",
          "UMask": "0x4",
-         "EventName": "L2_LINES_OUT.USELESS_PREF",
-         "SampleAfterValue": "200003",
--        "BriefDescription": "Counts the number of lines that have been har=
-dware prefetched but not used and now evicted by L2 cache",
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-L2_LINES_OUT.USELESS_HWPF",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
-@@ -690,249 +690,2238 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fc0400001 ",
-+        "MSRValue": "0x3FC0408000",
+-        "BriefDescription": "Hit in last-level (L3) cache. Excludes Unknown data-source. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops which data sources were data hits in L3 without snoops required.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.ANY_=
-SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L4_HIT_LOCAL_L4 & ANY_SNOOP",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
+         "Errata": "BDM100",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were data hits in the last-level (L3) cache without snoops required.",
++        "PublicDescription": "This event counts retired load uops which data sources were data hits in the last-level (L3) cache without snoops required.",
+         "SampleAfterValue": "50021",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000400001 ",
-+        "MSRValue": "0x1000408000",
+         "EventCode": "0xD1",
+         "UMask": "0x8",
+-        "BriefDescription": "Retired load uops misses in L1 cache as data sources. Uses PEBS.",
++        "BriefDescription": "Retired load uops misses in L1 cache as data sources.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L1_MISS",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were misses in the nearest-level (L1) cache. Counting excludes unknown and UC data source.",
++        "PublicDescription": "This event counts retired load uops which data sources were misses in the nearest-level (L1) cache. Counting excludes unknown and UC data source.",
          "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L4_HIT_LOCAL_L4 & SNOOP_HITM=
-",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400400001 ",
-+        "MSRValue": "0x0400408000",
+         "EventCode": "0xD1",
+         "UMask": "0x10",
+-        "BriefDescription": "Retired load uops with L2 cache misses as data sources. Uses PEBS.",
++        "BriefDescription": "Miss in mid-level (L2) cache. Excludes Unknown data-source.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.SNOOP_HIT_NO_=
-FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L4_HIT_LOCAL_L4 & SNOOP_HIT_=
-NO_FWD",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L2_MISS",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were misses in the mid-level (L2) cache. Counting excludes unknown and UC data source.",
++        "PublicDescription": "This event counts retired load uops which data sources were misses in the mid-level (L2) cache. Counting excludes unknown and UC data source.",
+         "SampleAfterValue": "50021",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200400001 ",
-+        "MSRValue": "0x0200408000",
+         "EventCode": "0xD1",
+         "UMask": "0x20",
+-        "BriefDescription": "Miss in last-level (L3) cache. Excludes Unknown data-source. (Precise Event - PEBS).",
++        "BriefDescription": "Miss in last-level (L3) cache. Excludes Unknown data-source.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
+@@ -558,83 +558,84 @@
+     {
+         "EventCode": "0xD1",
+         "UMask": "0x40",
+-        "BriefDescription": "Retired load uops which data sources were load uops missed L1 but hit FB due to preceding miss to the same cache line with data not ready. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops which data sources were load uops missed L1 but hit FB due to preceding miss to the same cache line with data not ready.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.HIT_LFB",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were load uops missed L1 but hit a fill buffer due to a preceding miss to the same cache line with the data not ready.\nNote: Only two data-sources of L1/FB are applicable for AVX-256bit  even though the corresponding AVX load could be serviced by a deeper level in the memory hierarchy. Data source is reported for the Low-half load.",
++        "PublicDescription": "This event counts retired load uops which data sources were load uops missed L1 but hit a fill buffer due to a preceding miss to the same cache line with the data not ready.\nNote: Only two data-sources of L1/FB are applicable for AVX-256bit  even though the corresponding AVX load could be serviced by a deeper level in the memory hierarchy. Data source is reported for the Low-half load.",
          "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L4_HIT_LOCAL_L4 & SNOOP_MISS=
-",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100400001 ",
-+        "MSRValue": "0x0100408000",
-         "Counter": "0,1,2,3",
+         "EventCode": "0xD2",
          "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.SNOOP_NOT_NEE=
-DED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L4_HIT_LOCAL_L4 & SNOOP_NOT_=
-NEEDED",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
+-        "BriefDescription": "Retired load uops which data sources were L3 hit and cross-core snoop missed in on-pkg core cache. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops which data sources were L3 hit and cross-core snoop missed in on-pkg core cache.",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_MISS",
+         "Errata": "BDM100",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were L3 Hit and a cross-core snoop missed in the on-pkg core cache.",
++        "PublicDescription": "This event counts retired load uops which data sources were L3 Hit and a cross-core snoop missed in the on-pkg core cache.",
+         "SampleAfterValue": "20011",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080400001 ",
-+        "MSRValue": "0x0080408000",
+         "EventCode": "0xD2",
+         "UMask": "0x2",
+-        "BriefDescription": "Retired load uops which data sources were L3 and cross-core snoop hits in on-pkg core cache. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops which data sources were L3 and cross-core snoop hits in on-pkg core cache.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L4_HIT_LOCAL_L4 & SNOOP_NONE=
-",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
+         "EventName": "MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HIT",
+         "Errata": "BDM100",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were L3 hit and a cross-core snoop hit in the on-pkg core cache.",
++        "PublicDescription": "This event counts retired load uops which data sources were L3 hit and a cross-core snoop hit in the on-pkg core cache.",
+         "SampleAfterValue": "20011",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fc01c0001 ",
-+        "MSRValue": "0x0040408000",
+         "EventCode": "0xD2",
+         "UMask": "0x4",
+-        "BriefDescription": "Retired load uops which data sources were HitM responses from shared L3. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops which data sources were HitM responses from shared L3.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_HIT & ANY_SNOOP",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
+         "EventName": "MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_HITM",
+         "Errata": "BDM100",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were HitM responses from a core on same socket (shared L3).",
++        "PublicDescription": "This event counts retired load uops which data sources were HitM responses from a core on same socket (shared L3).",
+         "SampleAfterValue": "20011",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10001c0001 ",
-+        "MSRValue": "0x3FC01C8000",
+         "EventCode": "0xD2",
+         "UMask": "0x8",
+-        "BriefDescription": "Retired load uops which data sources were hits in L3 without snoops required. (Precise Event - PEBS)",
++        "BriefDescription": "Retired load uops which data sources were hits in L3 without snoops required.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
+         "EventName": "MEM_LOAD_UOPS_L3_HIT_RETIRED.XSNP_NONE",
+         "Errata": "BDM100",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts retired load uops which data sources were hits in the last-level (L3) cache without snoops required.",
++        "PublicDescription": "This event counts retired load uops which data sources were hits in the last-level (L3) cache without snoops required.",
          "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-and the snoops to sibling cores hit in either E/S state and the line is not=
- forwarded. Offcore response can be programmed only with a specific pair of=
- event select and counter MSR, and with specific event codes and predefine =
-mask bit value in a dedicated MSR to specify attributes of the offcore tran=
-saction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04001c0001 ",
-+        "MSRValue": "0x10001C8000",
-         "Counter": "0,1,2,3",
+         "EventCode": "0xD3",
          "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 a=
-nd the snoops to sibling cores hit in either E/S state and the line is not =
-forwarded.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
++        "BriefDescription": "Data from local DRAM either Snoop not needed or Snoop Miss (RspI)",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "MEM_LOAD_UOPS_L3_MISS_RETIRED.LOCAL_DRAM",
+         "Errata": "BDE70, BDM100",
+-        "PublicDescription": "This event counts retired load uops where the data came from local DRAM. This does not include hardware prefetches. This is a precise event.",
++        "PublicDescription": "Retired load uop whose Data Source was: local DRAM either Snoop not needed or Snoop Miss (RspI).",
+         "SampleAfterValue": "100007",
          "CounterHTOff": "0,1,2,3"
      },
      {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-and the snoops sent to sibling cores return clean response. Offcore respons=
-e can be programmed only with a specific pair of event select and counter M=
-SR, and with specific event codes and predefine mask bit value in a dedicat=
-ed MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02001c0001 ",
-+        "MSRValue": "0x04001C8000",
+         "EventCode": "0xD3",
+         "UMask": "0x4",
+-        "BriefDescription": "Retired load uop whose Data Source was: remote DRAM either Snoop not needed or Snoop Miss (RspI) (Precise Event)",
++        "BriefDescription": "Retired load uop whose Data Source was: remote DRAM either Snoop not needed or Snoop Miss (RspI)",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 a=
-nd the snoops sent to sibling cores return clean response.",
-+        "BriefDescription": "Counts any other requests",
+@@ -646,7 +647,7 @@
+     {
+         "EventCode": "0xD3",
+         "UMask": "0x10",
+-        "BriefDescription": "Retired load uop whose Data Source was: Remote cache HITM (Precise Event)",
++        "BriefDescription": "Retired load uop whose Data Source was: Remote cache HITM",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+@@ -658,7 +659,7 @@
+     {
+         "EventCode": "0xD3",
+         "UMask": "0x20",
+-        "BriefDescription": "Retired load uop whose Data Source was: forwarded from remote cache (Precise Event)",
++        "BriefDescription": "Retired load uop whose Data Source was: forwarded from remote cache",
+         "Data_LA": "1",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+@@ -810,12 +811,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all requests that hit in the L3",
+-        "MSRValue": "0x3f803c8fff",
++        "BriefDescription": "Counts all requests hit in the L3",
++        "MSRValue": "0x3F803C8FFF",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_REQUESTS.LLC_HIT.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all requests that hit in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all requests hit in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-and sibling core snoops are not needed as either the core-valid bit is not =
-set or the shared line is present in multiple cores. Offcore response can b=
-e programmed only with a specific pair of event select and counter MSR, and=
- with specific event codes and predefine mask bit value in a dedicated MSR =
-to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01001c0001 ",
-+        "MSRValue": "0x02001C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 a=
-nd sibling core snoops are not needed as either the core-valid bit is not s=
-et or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts any other requests",
+@@ -823,12 +824,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+-        "MSRValue": "0x10003c07f7",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
++        "MSRValue": "0x10003C07F7",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_HIT.HITM_OTHER_CORE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00801c0001 ",
-+        "MSRValue": "0x01001C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_HIT & SNOOP_NONE",
-+        "BriefDescription": "Counts any other requests",
+@@ -836,12 +837,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+-        "MSRValue": "0x04003c07f7",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
++        "MSRValue": "0x04003C07F7",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fc0020001 ",
-+        "MSRValue": "0x00801C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.ANY_SN=
-OOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts any other requests",
+@@ -849,12 +850,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch code reads that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+-        "MSRValue": "0x04003c0244",
++        "BriefDescription": "Counts all demand & prefetch code reads hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
++        "MSRValue": "0x04003C0244",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch code reads that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch code reads hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020001 ",
-+        "MSRValue": "0x00401C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts any other requests",
+@@ -862,12 +863,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch RFOs that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+-        "MSRValue": "0x10003c0122",
++        "BriefDescription": "Counts all demand & prefetch RFOs hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
++        "MSRValue": "0x10003C0122",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_HIT.HITM_OTHER_CORE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch RFOs that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch RFOs hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020001 ",
-+        "MSRValue": "0x3FC0108000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_HIT_NO=
-_FWD",
-+        "BriefDescription": "Counts any other requests",
+@@ -875,12 +876,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch RFOs that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+-        "MSRValue": "0x04003c0122",
++        "BriefDescription": "Counts all demand & prefetch RFOs hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
++        "MSRValue": "0x04003C0122",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch RFOs that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch RFOs hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020001 ",
-+        "MSRValue": "0x1000108000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts any other requests",
+@@ -888,12 +889,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch data reads that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+-        "MSRValue": "0x10003c0091",
++        "BriefDescription": "Counts all demand & prefetch data reads hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
++        "MSRValue": "0x10003C0091",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.HITM_OTHER_CORE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch data reads that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch data reads hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020001 ",
-+        "MSRValue": "0x0400108000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_NOT_NE=
-EDED",
-+        "BriefDescription": "Counts any other requests",
+@@ -901,12 +902,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch data reads that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+-        "MSRValue": "0x04003c0091",
++        "BriefDescription": "Counts all demand & prefetch data reads hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
++        "MSRValue": "0x04003C0091",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_HIT.HIT_OTHER_CORE_NO_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch data reads that hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch data reads hit in the L3 and the snoops to sibling cores hit in either E/S state and the line is not forwarded",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020001 ",
-+        "MSRValue": "0x0200108000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
--        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100108000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.SNOOP_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080108000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040108000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.SNOOP_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.SNOOP_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_HIT_NO_FW=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_NOT_NEEDE=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests have any response =
-type.",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0000018000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests have any response t=
-ype.",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.ANY_=
-SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.SNOO=
-P_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.SNOO=
-P_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.SNOO=
-P_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.SPL_=
-HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC01C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x10001C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x04001C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_HIT_NO_=
-FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x02001C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x01001C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_NOT_NEE=
-DED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00801C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00401C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.SNOOP_HIT_N=
-O_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.SNOOP_NOT_N=
-EEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.SNOOP_HIT_N=
-O_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.SNOOP_NOT_N=
-EEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.SNOOP_HIT_N=
-O_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.SNOOP_NOT_N=
-EEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.ANY_SN=
-OOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SPL_HI=
-T",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that have any response type.",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0000010004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any response type.",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.ANY_SNOO=
-P",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.SNOOP_HI=
-TM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.SNOOP_HI=
-T_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.SNOOP_MI=
-SS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.SNOOP_NO=
-T_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.SNOOP_NO=
-NE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC01C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x10001C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x04001C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x02001C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x01001C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00801C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00401C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.SNOOP_HIT_NO_FW=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.SNOOP_NOT_NEEDE=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.SNOOP_HIT_NO_FW=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.SNOOP_NOT_NEEDE=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.SNOOP_HIT_NO_FW=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.SNOOP_NOT_NEEDE=
-D",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.SNOOP_HITM=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.SNOOP_HIT_=
-NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.SNOOP_MISS=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.SNOOP_NOT_=
-NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.SNOOP_NONE=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs) have an=
-y response type.",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0000010002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs) have any=
- response type.",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.ANY_=
-SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SPL_=
-HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC01C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x10001C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x04001C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_=
-FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x02001C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x01001C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NOT_NEE=
-DED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00801C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00401C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.SNOOP_HIT_N=
-O_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.SNOOP_NOT_N=
-EEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.SNOOP_HIT_N=
-O_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.SNOOP_NOT_N=
-EEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.SNOOP_HIT_N=
-O_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.SNOOP_NOT_N=
-EEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC0020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.ANY_SN=
-OOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1000020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0400020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0200020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0100020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0080020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0040020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SPL_HI=
-T",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts demand data reads",
+@@ -914,12 +915,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads that hit in the L3",
+-        "MSRValue": "0x3f803c0200",
++        "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads hit in the L3",
++        "MSRValue": "0x3F803C0200",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.PF_LLC_CODE_RD.LLC_HIT.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads that hit in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads hit in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "Counts demand data reads that have any respo=
-nse type. Offcore response can be programmed only with a specific pair of e=
-vent select and counter MSR, and with specific event codes and predefine ma=
-sk bit value in a dedicated MSR to specify attributes of the offcore transa=
-ction.",
-+        "PublicDescription": "Counts demand data reads have any response t=
-ype.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010001 ",
-+        "MSRValue": "0x0000010001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that have any respon=
-se type.",
-+        "BriefDescription": "Counts demand data reads have any response ty=
-pe.",
+@@ -927,12 +928,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that hit in the L3",
+-        "MSRValue": "0x3f803c0100",
++        "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs hit in the L3",
++        "MSRValue": "0x3F803C0100",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.PF_LLC_RFO.LLC_HIT.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs that hit in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs hit in the L3",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -940,12 +941,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand data writes (RFOs) that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+-        "MSRValue": "0x10003c0002",
++        "BriefDescription": "Counts all demand data writes (RFOs) hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
++        "MSRValue": "0x10003C0002",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.HITM_OTHER_CORE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand data writes (RFOs) that hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand data writes (RFOs) hit in the L3 and the snoop to one of the sibling cores hits the line in M state and the line is forwarded",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -953,12 +954,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand data writes (RFOs) that hit in the L3",
+-        "MSRValue": "0x3f803c0002",
++        "BriefDescription": "Counts all demand data writes (RFOs) hit in the L3",
++        "MSRValue": "0x3F803C0002",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand data writes (RFOs) that hit in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand data writes (RFOs) hit in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      }
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/frontend.json b/tools/p=
-erf/pmu-events/arch/x86/skylake/frontend.json
-index 578dff5bd823..7fa95a35e3ca 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/frontend.json
-@@ -177,7 +177,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/floating-point.json b/tools/perf/pmu-events/arch/x86/broadwellx/floating-point.json
+index d7b9d9c9c518..ba0e0c4e74eb 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/floating-point.json
+@@ -42,7 +42,7 @@
      {
--        "PublicDescription": "Counts the number of uops not delivered to R=
-esource Allocation Table (RAT) per thread adding 4  x when Resource Allocat=
-ion Table (RAT) is not stalled and Instruction Decode Queue (IDQ) delivers =
-x uops to Resource Allocation Table (RAT) (where x belongs to {0,1,2,3}). C=
-ounting does not cover cases when: a. IDQ-Resource Allocation Table (RAT) p=
-ipe serves the other thread. b. Resource Allocation Table (RAT) is stalled =
-for the thread (including uop drops and clear BE conditions).  c. Instructi=
-on Decode Queue (IDQ) delivers four uops.",
-+        "PublicDescription": "Counts the number of uops not delivered to R=
-esource Allocation Table (RAT) per thread adding \u201c4 \u2013 x\u201d whe=
-n Resource Allocation Table (RAT) is not stalled and Instruction Decode Que=
-ue (IDQ) delivers x uops to Resource Allocation Table (RAT) (where x belong=
-s to {0,1,2,3}). Counting does not cover cases when: a. IDQ-Resource Alloca=
-tion Table (RAT) pipe serves the other thread. b. Resource Allocation Table=
- (RAT) is stalled for the thread (including uop drops and clear BE conditio=
-ns).  c. Instruction Decode Queue (IDQ) delivers four uops.",
-         "EventCode": "0x9C",
+         "EventCode": "0xC7",
+         "UMask": "0x3",
+-        "BriefDescription": "Number of SSE/AVX computational scalar floating-point instructions retired. Applies to SSE* and AVX* scalar, double and single precision floating-point: ADD SUB MUL DIV MIN MAX RSQRT RCP SQRT FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
++        "BriefDescription": "Number of SSE/AVX computational scalar floating-point instructions retired. Applies to SSE* and AVX* scalar, double and single precision floating-point: ADD SUB MUL DIV MIN MAX RSQRT RCP SQRT FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element. (RSQRT for single precision?)",
          "Counter": "0,1,2,3",
-         "UMask": "0x1",
-@@ -242,7 +242,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "Counts Decode Stream Buffer (DSB)-to-MITE sw=
-itch true penalty cycles. These cycles do not include uops routed through b=
-ecause of the switch itself, for example, when Instruction Decode Queue (ID=
-Q) pre-allocation is unavailable, or Instruction Decode Queue (IDQ) is full=
-. SBD-to-MITE switch true penalty cycles happen after the merge mux (MM) re=
-ceives Decode Stream Buffer (DSB) Sync-indication until receiving the first=
- MITE uop. MM is placed before Instruction Decode Queue (IDQ) to merge uops=
- being fed from the MITE and Decode Stream Buffer (DSB) paths. Decode Strea=
-m Buffer (DSB) inserts the Sync-indication whenever a Decode Stream Buffer =
-(DSB)-to-MITE switch occurs.Penalty: A Decode Stream Buffer (DSB) hit follo=
-wed by a Decode Stream Buffer (DSB) miss can cost up to six cycles in which=
- no uops are delivered to the IDQ. Most often, such switches from the Decod=
-e Stream Buffer (DSB) to the legacy pipeline cost 02 cycles.",
-+        "PublicDescription": "Counts Decode Stream Buffer (DSB)-to-MITE sw=
-itch true penalty cycles. These cycles do not include uops routed through b=
-ecause of the switch itself, for example, when Instruction Decode Queue (ID=
-Q) pre-allocation is unavailable, or Instruction Decode Queue (IDQ) is full=
-. SBD-to-MITE switch true penalty cycles happen after the merge mux (MM) re=
-ceives Decode Stream Buffer (DSB) Sync-indication until receiving the first=
- MITE uop. MM is placed before Instruction Decode Queue (IDQ) to merge uops=
- being fed from the MITE and Decode Stream Buffer (DSB) paths. Decode Strea=
-m Buffer (DSB) inserts the Sync-indication whenever a Decode Stream Buffer =
-(DSB)-to-MITE switch occurs.Penalty: A Decode Stream Buffer (DSB) hit follo=
-wed by a Decode Stream Buffer (DSB) miss can cost up to six cycles in which=
- no uops are delivered to the IDQ. Most often, such switches from the Decod=
-e Stream Buffer (DSB) to the legacy pipeline cost 0\u20132 cycles.",
-         "EventCode": "0xAB",
-         "Counter": "0,1,2,3",
-         "UMask": "0x2",
-@@ -253,7 +253,7 @@
-     },
-     {
-         "PEBS": "1",
--        "PublicDescription": "Counts retired Instructions that experienced=
- DSB (Decode stream buffer i.e. the decoded instruction-cache) miss. \r\n",
-+        "PublicDescription": "Counts retired Instructions that experienced=
- DSB (Decode stream buffer i.e. the decoded instruction-cache) miss.",
-         "EventCode": "0xC6",
-         "MSRValue": "0x11",
-         "Counter": "0,1,2,3",
-@@ -360,7 +360,7 @@
-     },
-     {
-         "PEBS": "1",
--        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end after a front-end stall of at least 8 cycles. During thi=
-s period the front-end delivered no uops. \r\n",
-+        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end after a front-end stall of at least 8 cycles. During thi=
-s period the front-end delivered no uops.",
-         "EventCode": "0xC6",
-         "MSRValue": "0x400806",
-         "Counter": "0,1,2,3",
-@@ -374,7 +374,7 @@
-     },
-     {
-         "PEBS": "1",
--        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end after a front-end stall of at least 16 cycles. During th=
-is period the front-end delivered no uops.\r\n",
-+        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end after a front-end stall of at least 16 cycles. During th=
-is period the front-end delivered no uops.",
-         "EventCode": "0xC6",
-         "MSRValue": "0x401006",
-         "Counter": "0,1,2,3",
-@@ -388,7 +388,7 @@
-     },
-     {
-         "PEBS": "1",
--        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end  after a front-end stall of at least 32 cycles. During t=
-his period the front-end delivered no uops.\r\n",
-+        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end  after a front-end stall of at least 32 cycles. During t=
-his period the front-end delivered no uops.",
-         "EventCode": "0xC6",
-         "MSRValue": "0x402006",
-         "Counter": "0,1,2,3",
-@@ -454,7 +454,7 @@
-     },
-     {
-         "PEBS": "1",
--        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end after the front-end had at least 1 bubble-slot for a per=
-iod of 2 cycles. A bubble-slot is an empty issue-pipeline slot while there =
-was no RAT stall.\r\n",
-+        "PublicDescription": "Counts retired instructions that are deliver=
-ed to the back-end after the front-end had at least 1 bubble-slot for a per=
-iod of 2 cycles. A bubble-slot is an empty issue-pipeline slot while there =
-was no RAT stall.",
-         "EventCode": "0xC6",
-         "MSRValue": "0x100206",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/memory.json b/tools/per=
-f/pmu-events/arch/x86/skylake/memory.json
-index 3bd8b712c889..f197b4c7695b 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/memory.json
-@@ -215,7 +215,7 @@
-         "UMask": "0x4",
-         "EventName": "HLE_RETIRED.ABORTED",
+         "EventName": "FP_ARITH_INST_RETIRED.SCALAR",
          "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of times an HLE execution aborted due =
-to any reasons (multiple categories may count as one). ",
-+        "BriefDescription": "Number of times an HLE execution aborted due =
-to any reasons (multiple categories may count as one).",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
+@@ -51,7 +51,7 @@
      {
-@@ -237,6 +237,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
-+        "PublicDescription": "Number of times an HLE execution aborted due=
- to HLE-unfriendly instructions and certain unfriendly events (such as AD a=
-ssists etc.).",
-         "EventCode": "0xC8",
+         "EventCode": "0xC7",
+         "UMask": "0x4",
+-        "BriefDescription": "Number of SSE/AVX computational 128-bit packed double precision floating-point instructions retired.  Each count represents 2 computations. Applies to SSE* and AVX* packed double precision floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
++        "BriefDescription": "Number of SSE/AVX computational 128-bit packed double precision floating-point instructions retired.  Each count represents 2 computations. Applies to SSE* and AVX* packed double precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
          "Counter": "0,1,2,3",
+         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE",
+         "SampleAfterValue": "2000003",
+@@ -60,7 +60,7 @@
+     {
+         "EventCode": "0xC7",
+         "UMask": "0x8",
+-        "BriefDescription": "Number of SSE/AVX computational 128-bit packed single precision floating-point instructions retired.  Each count represents 4 computations. Applies to SSE* and AVX* packed single precision floating-point instructions: ADD SUB MUL DIV MIN MAX RCP RSQRT SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
++        "BriefDescription": "Number of SSE/AVX computational 128-bit packed single precision floating-point instructions retired.  Each count represents 4 computations. Applies to SSE* and AVX* packed single precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT RSQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
+         "Counter": "0,1,2,3",
+         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE",
+         "SampleAfterValue": "2000003",
+@@ -69,7 +69,7 @@
+     {
+         "EventCode": "0xC7",
+         "UMask": "0x10",
+-        "BriefDescription": "Number of SSE/AVX computational 256-bit packed double precision floating-point instructions retired.  Each count represents 4 computations. Applies to SSE* and AVX* packed double precision floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
++        "BriefDescription": "Number of SSE/AVX computational 256-bit packed double precision floating-point instructions retired.  Each count represents 4 computations. Applies to SSE* and AVX* packed double precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
+         "Counter": "0,1,2,3",
+         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE",
+         "SampleAfterValue": "2000003",
+@@ -78,7 +78,7 @@
+     {
+         "EventCode": "0xC7",
+         "UMask": "0x15",
+-        "BriefDescription": "Number of SSE/AVX computational double precision floating-point instructions retired. Applies to SSE* and AVX*scalar, double and single precision floating-point: ADD SUB MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.  ?.",
++        "BriefDescription": "Number of SSE/AVX computational double precision floating-point instructions retired. Applies to SSE* and AVX*scalar, double and single precision floating-point: ADD SUB MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
+         "Counter": "0,1,2,3",
+         "EventName": "FP_ARITH_INST_RETIRED.DOUBLE",
+         "SampleAfterValue": "2000006",
+@@ -87,7 +87,7 @@
+     {
+         "EventCode": "0xc7",
          "UMask": "0x20",
-@@ -292,7 +293,7 @@
-         "UMask": "0x4",
-         "EventName": "RTM_RETIRED.ABORTED",
+-        "BriefDescription": "Number of SSE/AVX computational 256-bit packed single precision floating-point instructions retired.  Each count represents 8 computations. Applies to SSE* and AVX* packed single precision floating-point instructions: ADD SUB MUL DIV MIN MAX RCP RSQRT SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
++        "BriefDescription": "Number of SSE/AVX computational 256-bit packed single precision floating-point instructions retired.  Each count represents 8 computations. Applies to SSE* and AVX* packed single precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT RSQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
+         "Counter": "0,1,2,3",
+         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE",
          "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of times an RTM execution aborted due =
-to any reasons (multiple categories may count as one). ",
-+        "BriefDescription": "Number of times an RTM execution aborted due =
-to any reasons (multiple categories may count as one).",
+@@ -96,7 +96,7 @@
+     {
+         "EventCode": "0xC7",
+         "UMask": "0x2a",
+-        "BriefDescription": "Number of SSE/AVX computational single precision floating-point instructions retired. Applies to SSE* and AVX*scalar, double and single precision floating-point: ADD SUB MUL DIV MIN MAX RCP RSQRT SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element. ?.",
++        "BriefDescription": "Number of SSE/AVX computational single precision floating-point instructions retired. Applies to SSE* and AVX*scalar, double and single precision floating-point: ADD SUB MUL DIV MIN MAX RCP RSQRT SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
+         "Counter": "0,1,2,3",
+         "EventName": "FP_ARITH_INST_RETIRED.SINGLE",
+         "SampleAfterValue": "2000005",
+@@ -105,7 +105,7 @@
+     {
+         "EventCode": "0xC7",
+         "UMask": "0x3c",
+-        "BriefDescription": "Number of SSE/AVX computational packed floating-point instructions retired. Applies to SSE* and AVX*, packed, double and single precision floating-point: ADD SUB MUL DIV MIN MAX RSQRT RCP SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element.",
++        "BriefDescription": "Number of SSE/AVX computational packed floating-point instructions retired. Applies to SSE* and AVX*, packed, double and single precision floating-point: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple calculations per element. (RSQRT for single-precision?)",
+         "Counter": "0,1,2,3",
+         "EventName": "FP_ARITH_INST_RETIRED.PACKED",
+         "SampleAfterValue": "2000004",
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/memory.json b/tools/perf/pmu-events/arch/x86/broadwellx/memory.json
+index d79a5cfea44b..ecb413bb67ca 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/memory.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/memory.json
+@@ -170,11 +170,11 @@
+     {
+         "EventCode": "0xc8",
+         "UMask": "0x4",
+-        "BriefDescription": "Number of times HLE abort was triggered (PEBS)",
++        "BriefDescription": "Number of times HLE abort was triggered",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "HLE_RETIRED.ABORTED",
+-        "PublicDescription": "Number of times HLE abort was triggered (PEBS).",
++        "PublicDescription": "Number of times HLE abort was triggered.",
+         "SampleAfterValue": "2000003",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
+@@ -251,11 +251,11 @@
      {
-@@ -346,7 +347,7 @@
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 4 cycles.  Reported latency may be long=
-er than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 4 cycles.  Reported l=
-atency may be longer than just the memory latency.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x4",
+         "EventCode": "0xc9",
+         "UMask": "0x4",
+-        "BriefDescription": "Number of times RTM abort was triggered (PEBS)",
++        "BriefDescription": "Number of times RTM abort was triggered",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-@@ -354,13 +355,13 @@
+         "EventName": "RTM_RETIRED.ABORTED",
+-        "PublicDescription": "Number of times RTM abort was triggered (PEBS).",
++        "PublicDescription": "Number of times RTM abort was triggered .",
+         "SampleAfterValue": "2000003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -312,14 +312,14 @@
+     {
+         "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 4",
++        "BriefDescription": "Randomly selected loads with latency value being above 4",
+         "PEBS": "2",
+         "MSRValue": "0x4",
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_4",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 4 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 4 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above four.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above four.",
          "TakenAlone": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "3"
+@@ -327,14 +327,14 @@
      {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 8 cycles.  Reported latency may be long=
-er than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 8 cycles.  Reported l=
-atency may be longer than just the memory latency.",
          "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 8",
++        "BriefDescription": "Randomly selected loads with latency value being above 8",
+         "PEBS": "2",
          "MSRValue": "0x8",
-         "Counter": "0,1,2,3",
-@@ -368,13 +369,13 @@
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_8",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "50021",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 8 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 8 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above eight.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above eight.",
          "TakenAlone": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
+         "SampleAfterValue": "50021",
+         "CounterHTOff": "3"
+@@ -342,14 +342,14 @@
      {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 16 cycles.  Reported latency may be lon=
-ger than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 16 cycles.  Reported =
-latency may be longer than just the memory latency.",
          "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 16",
++        "BriefDescription": "Randomly selected loads with latency value being above 16",
+         "PEBS": "2",
          "MSRValue": "0x10",
-         "Counter": "0,1,2,3",
-@@ -382,13 +383,13 @@
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_16",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "20011",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 16 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 16 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above 16.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above 16.",
          "TakenAlone": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
+         "SampleAfterValue": "20011",
+         "CounterHTOff": "3"
+@@ -357,14 +357,14 @@
      {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 32 cycles.  Reported latency may be lon=
-ger than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 32 cycles.  Reported =
-latency may be longer than just the memory latency.",
          "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 32",
++        "BriefDescription": "Randomly selected loads with latency value being above 32",
+         "PEBS": "2",
          "MSRValue": "0x20",
-         "Counter": "0,1,2,3",
-@@ -396,13 +397,13 @@
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_32",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 32 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 32 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above 32.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above 32.",
          "TakenAlone": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
+         "SampleAfterValue": "100007",
+         "CounterHTOff": "3"
+@@ -372,14 +372,14 @@
      {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 64 cycles.  Reported latency may be lon=
-ger than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 64 cycles.  Reported =
-latency may be longer than just the memory latency.",
          "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 64",
++        "BriefDescription": "Randomly selected loads with latency value being above 64",
+         "PEBS": "2",
          "MSRValue": "0x40",
-         "Counter": "0,1,2,3",
-@@ -410,13 +411,13 @@
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_64",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "2003",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 64 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 64 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above 64.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above 64.",
          "TakenAlone": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
+         "SampleAfterValue": "2003",
+         "CounterHTOff": "3"
+@@ -387,14 +387,14 @@
      {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 128 cycles.  Reported latency may be lo=
-nger than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 128 cycles.  Reported=
- latency may be longer than just the memory latency.",
          "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 128",
++        "BriefDescription": "Randomly selected loads with latency value being above 128",
+         "PEBS": "2",
          "MSRValue": "0x80",
-         "Counter": "0,1,2,3",
-@@ -424,13 +425,13 @@
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_128",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "1009",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 128 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 128 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above 128.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above 128.",
          "TakenAlone": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
+         "SampleAfterValue": "1009",
+         "CounterHTOff": "3"
+@@ -402,14 +402,14 @@
      {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 256 cycles.  Reported latency may be lo=
-nger than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 256 cycles.  Reported=
- latency may be longer than just the memory latency.",
          "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 256",
++        "BriefDescription": "Randomly selected loads with latency value being above 256",
+         "PEBS": "2",
          "MSRValue": "0x100",
-         "Counter": "0,1,2,3",
-@@ -438,13 +439,13 @@
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_256",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "503",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 256 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 256 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above 256.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above 256.",
          "TakenAlone": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
+         "SampleAfterValue": "503",
+         "CounterHTOff": "3"
+@@ -417,14 +417,14 @@
      {
-         "PEBS": "2",
--        "PublicDescription": "Counts loads when the latency from first dis=
-patch to completion is greater than 512 cycles.  Reported latency may be lo=
-nger than just the memory latency.",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 512 cycles.  Reported=
- latency may be longer than just the memory latency.",
          "EventCode": "0xCD",
+         "UMask": "0x1",
+-        "BriefDescription": "Loads with latency value being above 512",
++        "BriefDescription": "Randomly selected loads with latency value being above 512",
+         "PEBS": "2",
          "MSRValue": "0x200",
-         "Counter": "0,1,2,3",
-@@ -452,163 +453,1151 @@
+         "Counter": "3",
          "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_512",
          "MSRIndex": "0x3F6",
-         "SampleAfterValue": "101",
--        "BriefDescription": "Counts loads when the latency from first disp=
-atch to completion is greater than 512 cycles.",
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 512 cycles.",
+         "Errata": "BDM100, BDM35",
+-        "PublicDescription": "This event counts loads with latency value being above 512.",
++        "PublicDescription": "Counts randomly selected loads with latency value being above 512.",
          "TakenAlone": "1",
+         "SampleAfterValue": "101",
+         "CounterHTOff": "3"
+@@ -433,12 +433,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all requests that miss in the L3",
+-        "MSRValue": "0x3fbfc08fff",
++        "BriefDescription": "Counts all requests miss in the L3",
++        "MSRValue": "0x3FBFC08FFF",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_REQUESTS.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all requests that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all requests miss in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3ffc000001 ",
-+        "MSRValue": "0x3FFC408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x203C408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x103C408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x043C408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x023C408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x013C408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00BC408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x007C408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC4008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2004008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NON_=
-DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1004008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_HITM=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0404008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_HIT_=
-NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0204008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_MISS=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0104008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NOT_=
-NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0084008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NONE=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0044008000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000408000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L4_HIT_LOCAL_L4.SNOOP_NON_DRA=
-M",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x20001C8000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000108000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_S.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000088000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_E.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000048000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT_M.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts any other requests",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000028000",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts any other requests",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FFC400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x203C400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_NON_DR=
-AM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x103C400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x043C400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_HIT_NO=
-_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x023C400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x013C400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_NOT_NE=
-EDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00BC400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x007C400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC4000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.A=
-NY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2004000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1004000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0404000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0204000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0104000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0084000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0044000004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-PL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000400004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x20001C0004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_NON_DRA=
-M",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000100004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_S.SNOOP_NON_D=
-RAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000080004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_E.SNOOP_NON_D=
-RAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000040004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT_M.SNOOP_NON_D=
-RAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand instruction fetches and L1 ins=
-truction cache prefetches that",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000020004",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FFC400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.ANY_SNOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x203C400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x103C400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x043C400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_HIT_NO_FWD=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x023C400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x013C400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_NOT_NEEDED=
-",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x00BC400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x007C400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FC4000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.ANY_S=
-NOOP",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2004000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1004000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_HITM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0404000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0204000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_MISS",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0104000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_NOT_NEEDED",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0084000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_NONE",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0044000002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.SPL_H=
-IT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000400002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L4_HIT_LOCAL_L4.SNOOP_NO=
-N_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x20001C0002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000100002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_S.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000080002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_E.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000040002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT_M.SNOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000020002",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.SUPPLIER_NONE.SNOOP_NON_=
-DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x3FFC400001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & ANY_SNOOP",
-+        "BriefDescription": "Counts demand data reads",
+@@ -446,12 +446,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and clean or shared data is transferred from remote cache",
+-        "MSRValue": "0x087fc007f7",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and clean or shared data is transferred from remote cache",
++        "MSRValue": "0x087FC007F7",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.REMOTE_HIT_FORWARD",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and clean or shared data is transferred from remote cache Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and clean or shared data is transferred from remote cache",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x103c000001 ",
-+        "MSRValue": "0x203C400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_NON_DR=
-AM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x103C400001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & SNOOP_HITM",
-+        "BriefDescription": "Counts demand data reads",
+@@ -459,12 +459,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and the modified data is transferred from remote cache",
+-        "MSRValue": "0x103fc007f7",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and the modified data is transferred from remote cache",
++        "MSRValue": "0x103FC007F7",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.REMOTE_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and the modified data is transferred from remote cache Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and the modified data is transferred from remote cache",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000001 ",
-+        "MSRValue": "0x043C400001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_HIT_NO=
-_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts demand data reads",
+@@ -472,12 +472,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and the data is returned from remote dram",
+-        "MSRValue": "0x063bc007f7",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and the data is returned from remote dram",
++        "MSRValue": "0x063BC007F7",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.REMOTE_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and the data is returned from remote dram Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and the data is returned from remote dram",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000001 ",
-+        "MSRValue": "0x023C400001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & SNOOP_MISS",
-+        "BriefDescription": "Counts demand data reads",
+@@ -485,12 +485,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and the data is returned from local dram",
+-        "MSRValue": "0x06040007f7",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and the data is returned from local dram",
++        "MSRValue": "0x06040007F7",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss the L3 and the data is returned from local dram Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) miss the L3 and the data is returned from local dram",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000001 ",
-+        "MSRValue": "0x013C400001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_NOT_NE=
-EDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts demand data reads",
+@@ -498,12 +498,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss in the L3",
+-        "MSRValue": "0x3fbfc007f7",
++        "BriefDescription": "Counts all data/code/rfo reads (demand & prefetch) miss in the L3",
++        "MSRValue": "0x3FBFC007F7",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_READS.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all data/code/rfo reads (demand & prefetch) miss in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000001 ",
-+        "MSRValue": "0x00BC400001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x007C400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SPL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & SNOOP_NONE",
-+        "BriefDescription": "Counts demand data reads",
+@@ -511,12 +511,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch code reads that miss the L3 and the data is returned from local dram",
++        "BriefDescription": "Counts all demand & prefetch code reads miss the L3 and the data is returned from local dram",
+         "MSRValue": "0x0604000244",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_MISS.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch code reads that miss the L3 and the data is returned from local dram Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch code reads miss the L3 and the data is returned from local dram",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3fc4000001 ",
-+        "MSRValue": "0x3FC4000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.A=
-NY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & ANY_SNO=
-OP",
-+        "BriefDescription": "Counts demand data reads",
+@@ -524,12 +524,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch code reads that miss in the L3",
+-        "MSRValue": "0x3fbfc00244",
++        "BriefDescription": "Counts all demand & prefetch code reads miss in the L3",
++        "MSRValue": "0x3FBFC00244",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_CODE_RD.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch code reads that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch code reads miss in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000001 ",
-+        "MSRValue": "0x2004000001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x1004000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-ITM",
-+        "BriefDescription": "Counts demand data reads",
+@@ -537,12 +537,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch RFOs that miss the L3 and the data is returned from local dram",
++        "BriefDescription": "Counts all demand & prefetch RFOs miss the L3 and the data is returned from local dram",
+         "MSRValue": "0x0604000122",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_MISS.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch RFOs that miss the L3 and the data is returned from local dram Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch RFOs miss the L3 and the data is returned from local dram",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000001 ",
-+        "MSRValue": "0x0404000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-IT_NO_FWD",
-+        "BriefDescription": "Counts demand data reads",
+@@ -550,12 +550,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch RFOs that miss in the L3",
+-        "MSRValue": "0x3fbfc00122",
++        "BriefDescription": "Counts all demand & prefetch RFOs miss in the L3",
++        "MSRValue": "0x3FBFC00122",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_RFO.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch RFOs that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch RFOs miss in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000001 ",
-+        "MSRValue": "0x0204000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_M=
-ISS",
-+        "BriefDescription": "Counts demand data reads",
+@@ -563,12 +563,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and clean or shared data is transferred from remote cache",
+-        "MSRValue": "0x087fc00091",
++        "BriefDescription": "Counts all demand & prefetch data reads miss the L3 and clean or shared data is transferred from remote cache",
++        "MSRValue": "0x087FC00091",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.REMOTE_HIT_FORWARD",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch data reads that miss the L3 and clean or shared data is transferred from remote cache Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch data reads miss the L3 and clean or shared data is transferred from remote cache",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000001 ",
-+        "MSRValue": "0x0104000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-OT_NEEDED",
-+        "BriefDescription": "Counts demand data reads",
+@@ -576,12 +576,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and the modified data is transferred from remote cache",
+-        "MSRValue": "0x103fc00091",
++        "BriefDescription": "Counts all demand & prefetch data reads miss the L3 and the modified data is transferred from remote cache",
++        "MSRValue": "0x103FC00091",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.REMOTE_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch data reads that miss the L3 and the modified data is transferred from remote cache Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch data reads miss the L3 and the modified data is transferred from remote cache",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000001 ",
-+        "MSRValue": "0x0084000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x0044000001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-PL_HIT",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000400001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L4_HIT_LOCAL_L4.SNOO=
-P_NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x20001C0001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NON_DRA=
-M",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000100001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_S.SNOOP_NON_D=
-RAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000080001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_E.SNOOP_NON_D=
-RAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000040001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT_M.SNOOP_NON_D=
-RAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-+        "SampleAfterValue": "100003",
-+        "BriefDescription": "Counts demand data reads",
-+        "Offcore": "1",
-+        "CounterHTOff": "0,1,2,3"
-+    },
-+    {
-+        "PublicDescription": "Counts demand data reads",
-+        "EventCode": "0xB7, 0xBB",
-+        "MSRValue": "0x2000020001",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NON_DRAM",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ONE",
-+        "BriefDescription": "Counts demand data reads",
+@@ -589,12 +589,12 @@
          "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and the data is returned from remote dram",
+-        "MSRValue": "0x063bc00091",
++        "BriefDescription": "Counts all demand & prefetch data reads miss the L3 and the data is returned from remote dram",
++        "MSRValue": "0x063BC00091",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.REMOTE_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch data reads that miss the L3 and the data is returned from remote dram Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch data reads miss the L3 and the data is returned from remote dram",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -602,12 +602,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch data reads that miss the L3 and the data is returned from local dram",
++        "BriefDescription": "Counts all demand & prefetch data reads miss the L3 and the data is returned from local dram",
+         "MSRValue": "0x0604000091",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch data reads that miss the L3 and the data is returned from local dram Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch data reads miss the L3 and the data is returned from local dram",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -615,12 +615,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand & prefetch data reads that miss in the L3",
+-        "MSRValue": "0x3fbfc00091",
++        "BriefDescription": "Counts all demand & prefetch data reads miss in the L3",
++        "MSRValue": "0x3FBFC00091",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand & prefetch data reads that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand & prefetch data reads miss in the L3",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -628,12 +628,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads that miss in the L3",
+-        "MSRValue": "0x3fbfc00200",
++        "BriefDescription": "Counts prefetch (that bring data to LLC only) code reads miss in the L3",
++        "MSRValue": "0x3FBFC00200",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.PF_LLC_CODE_RD.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts prefetch (that bring data to LLC only) code reads miss in the L3",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -641,12 +641,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss in the L3",
+-        "MSRValue": "0x3fbfc00100",
++        "BriefDescription": "Counts all prefetch (that bring data to LLC only) RFOs miss in the L3",
++        "MSRValue": "0x3FBFC00100",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.PF_LLC_RFO.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all prefetch (that bring data to LLC only) RFOs miss in the L3",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -654,12 +654,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand data writes (RFOs) that miss the L3 and the modified data is transferred from remote cache",
+-        "MSRValue": "0x103fc00002",
++        "BriefDescription": "Counts all demand data writes (RFOs) miss the L3 and the modified data is transferred from remote cache",
++        "MSRValue": "0x103FC00002",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_MISS.REMOTE_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand data writes (RFOs) that miss the L3 and the modified data is transferred from remote cache Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand data writes (RFOs) miss the L3 and the modified data is transferred from remote cache",
+         "SampleAfterValue": "100003",
+         "CounterHTOff": "0,1,2,3"
+     },
+@@ -667,12 +667,12 @@
+         "Offcore": "1",
+         "EventCode": "0xB7, 0xBB",
+         "UMask": "0x1",
+-        "BriefDescription": "Counts all demand data writes (RFOs) that miss in the L3",
+-        "MSRValue": "0x3fbfc00002",
++        "BriefDescription": "Counts all demand data writes (RFOs) miss in the L3",
++        "MSRValue": "0x3FBFC00002",
+         "Counter": "0,1,2,3",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_MISS.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+-        "PublicDescription": "Counts all demand data writes (RFOs) that miss in the L3 Offcore response can be programmed only with a specific pair of event select and counter MSR, and with specific event codes and predefine mask bit value in a dedicated MSR to specify attributes of the offcore transaction.",
++        "PublicDescription": "Counts all demand data writes (RFOs) miss in the L3",
+         "SampleAfterValue": "100003",
          "CounterHTOff": "0,1,2,3"
      }
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/pipeline.json b/tools/p=
-erf/pmu-events/arch/x86/skylake/pipeline.json
-index bc6d2afbcd8a..4a891fbbc4bb 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/pipeline.json
-@@ -1,7 +1,6 @@
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.json b/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.json
+index 0d04bf9db000..c2f6932a5817 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/pipeline.json
+@@ -1,6 +1,5 @@
  [
      {
-         "PublicDescription": "Counts the number of instructions retired fr=
-om execution. For instructions that consist of multiple micro-ops, Counts t=
-he retirement of the last micro-op of the instruction. Counting continues d=
-uring hardware interrupts, traps, and inside interrupt handlers. Notes: INS=
-T_RETIRED.ANY is counted by a designated fixed counter, leaving the four (e=
-ight when Hyperthreading is disabled) programmable counters available for o=
-ther events. INST_RETIRED.ANY_P is counted by a programmable counter and it=
- is an architectural performance event. Counting: Faulting executions of GE=
-TSEC/VM entry/VM Exit/MWait will not count as retired instructions.",
 -        "EventCode": "0x00",
-         "Counter": "Fixed counter 0",
          "UMask": "0x1",
-         "EventName": "INST_RETIRED.ANY",
-@@ -11,7 +10,6 @@
+         "BriefDescription": "Instructions retired from execution.",
+         "Counter": "Fixed counter 0",
+@@ -10,7 +9,6 @@
+         "CounterHTOff": "Fixed counter 0"
      },
      {
-         "PublicDescription": "Counts the number of core cycles while the t=
-hread is not in a halt state. The thread enters the halt state when it is r=
-unning the HLT instruction. This event is a component in many key event rat=
-ios. The core frequency may change from time to time due to transitions ass=
-ociated with Enhanced Intel SpeedStep Technology or TM2. For this reason th=
-is event may have a changing ratio with regards to time. When the core freq=
-uency is constant, this event can approximate elapsed time while the core w=
-as not in the halt state. It is counted on a dedicated fixed counter, leavi=
-ng the four (eight when Hyperthreading is disabled) programmable counters a=
-vailable for other events.",
 -        "EventCode": "0x00",
-         "Counter": "Fixed counter 1",
          "UMask": "0x2",
-         "EventName": "CPU_CLK_UNHALTED.THREAD",
+         "BriefDescription": "Core cycles when the thread is not in halt state",
+         "Counter": "Fixed counter 1",
 @@ -20,7 +18,6 @@
          "CounterHTOff": "Fixed counter 1"
      },
      {
 -        "EventCode": "0x00",
+         "UMask": "0x2",
+         "BriefDescription": "Core cycles when at least one thread on the physical core is not in halt state.",
          "Counter": "Fixed counter 1",
-         "UMask": "0x2",
-         "AnyThread": "1",
-@@ -31,7 +28,6 @@
+@@ -30,7 +27,6 @@
+         "CounterHTOff": "Fixed counter 1"
      },
      {
-         "PublicDescription": "Counts the number of reference cycles when t=
-he core is not in a halt state. The core enters the halt state when it is r=
-unning the HLT instruction or the MWAIT instruction. This event is not affe=
-cted by core frequency changes (for example, P states, TM2 transitions) but=
- has the same incrementing frequency as the time stamp counter. This event =
-can approximate elapsed time while the core was not in a halt state. This e=
-vent has a constant ratio with the CPU_CLK_UNHALTED.REF_XCLK event. It is c=
-ounted on a dedicated fixed counter, leaving the four (eight when Hyperthre=
-ading is disabled) programmable counters available for other events. Note: =
-On all current platforms this event stops counting during 'throttling (TM)'=
- states duty off periods the processor is 'halted'.  The counter update is =
-done at a lower clock rate then the core clock the overflow status bit for =
-this counter may appear 'sticky'.  After the counter has overflowed and sof=
-tware clears the overflow status bit and resets the counter to less than MA=
-X. The reset value to the counter is not clocked immediately so the overflo=
-w status bit will flip 'high (1)' and generate another PMI (if enabled) aft=
-er which the reset value gets clocked into the counter. Therefore, software=
- will get the interrupt, read the overflow status bit '1 for bit 34 while t=
-he counter value is less than MAX. Software should ignore this case.",
 -        "EventCode": "0x00",
-         "Counter": "Fixed counter 2",
          "UMask": "0x3",
-         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-@@ -121,7 +117,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "Counts the number of Blend Uops issued by th=
-e Resource Allocation Table (RAT) to the reservation station (RS) in order =
-to preserve upper bits of vector registers. Starting with the Skylake micro=
-architecture, these Blend uops are needed since every Intel SSE instruction=
- executed in Dirty Upper State needs to preserve bits 128-255 of the destin=
-ation register. For more information, refer to Mixing Intel AVX and Intel S=
-SE Code section of the Optimization Guide.",
-+        "PublicDescription": "Counts the number of Blend Uops issued by th=
-e Resource Allocation Table (RAT) to the reservation station (RS) in order =
-to preserve upper bits of vector registers. Starting with the Skylake micro=
-architecture, these Blend uops are needed since every Intel SSE instruction=
- executed in Dirty Upper State needs to preserve bits 128-255 of the destin=
-ation register. For more information, refer to \u201cMixing Intel AVX and I=
-ntel SSE Code\u201d section of the Optimization Guide.",
-         "EventCode": "0x0E",
+         "BriefDescription": "Reference cycles when the core is not in halt state.",
+         "Counter": "Fixed counter 2",
+@@ -322,7 +318,7 @@
+         "BriefDescription": "Stalls caused by changing prefix length of the instruction.",
          "Counter": "0,1,2,3",
-         "UMask": "0x2",
-@@ -247,6 +243,16 @@
-         "BriefDescription": "Demand load dispatches that hit L1D fill buff=
-er (FB) allocated for software prefetch.",
+         "EventName": "ILD_STALL.LCP",
+-        "PublicDescription": "This event counts stalls occurred due to changing prefix length (66, 67 or REX.W when they change the length of the decoded instruction). Occurrences counting is proportional to the number of prefixes in a 16B-line. This may result in the following penalties: three-cycle penalty for each LCP in a 16-byte chunk.",
++        "PublicDescription": "This event counts stalls occured due to changing prefix length (66, 67 or REX.W when they change the length of the decoded instruction). Occurrences counting is proportional to the number of prefixes in a 16B-line. This may result in the following penalties: three-cycle penalty for each LCP in a 16-byte chunk.",
+         "SampleAfterValue": "2000003",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
-+    {
-+        "PublicDescription": "This event counts cycles during which the mi=
-crocode scoreboard stalls happen.",
-+        "EventCode": "0x59",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x1",
-+        "EventName": "PARTIAL_RAT_STALLS.SCOREBOARD",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Cycles where the pipeline is stalled due to s=
-erializing operations.",
-+        "CounterHTOff": "0,1,2,3,4,5,6,7"
-+    },
-     {
-         "PublicDescription": "Counts cycles during which the reservation s=
-tation (RS) is empty for the thread.; Note: In ST-mode, not active thread s=
-hould drive 0. This is usually caused by severely costly branch mispredicti=
-ons, or allocator/FE issues.",
-         "EventCode": "0x5E",
-@@ -361,8 +367,8 @@
+@@ -786,12 +782,12 @@
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
      {
--        "PublicDescription": "Counts resource-related stall cycles. Reason=
-s for stalls can be as follows:a. *any* u-arch structure got full (LB, SB, =
-RS, ROB, BOB, LM, Physical Register Reclaim Table (PRRT), or Physical Histo=
-ry Table (PHT) slots).b. *any* u-arch structure got empty (like INT/SIMD Fr=
-eeLists).c. FPU control word (FPCW), MXCSR.and others. This counts cycles t=
-hat the pipeline back-end blocked uop delivery from the front-end.",
 -        "EventCode": "0xA2",
-+        "PublicDescription": "Counts resource-related stall cycles.",
 +        "EventCode": "0xa2",
-         "Counter": "0,1,2,3",
          "UMask": "0x1",
+         "BriefDescription": "Resource-related stall cycles",
+         "Counter": "0,1,2,3",
          "EventName": "RESOURCE_STALLS.ANY",
-@@ -735,7 +741,7 @@
+-        "PublicDescription": "This event counts resource-related stall cycles. Reasons for stalls can be as follows:\n - *any* u-arch structure got full (LB, SB, RS, ROB, BOB, LM, Physical Register Reclaim Table (PRRT), or Physical History Table (PHT) slots)\n - *any* u-arch structure got empty (like INT/SIMD FreeLists)\n - FPU control word (FPCW), MXCSR\nand others. This counts cycles that the pipeline backend blocked uop delivery from the front end.",
++        "PublicDescription": "This event counts resource-related stall cycles.",
+         "SampleAfterValue": "2000003",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
+@@ -1168,12 +1164,12 @@
      {
--        "PublicDescription": "This is a non-precise version (that is, does=
- not use PEBS) of the event that counts cycles without actually retired uop=
-s.",
-+        "PublicDescription": "This event counts cycles without actually re=
-tired uops.",
          "EventCode": "0xC2",
-         "Invert": "1",
-         "Counter": "0,1,2,3",
-@@ -759,6 +765,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
-+        "PublicDescription": "Number of machine clears (nukes) of any type=
-.",
-         "EventCode": "0xC3",
-         "Counter": "0,1,2,3",
          "UMask": "0x1",
-@@ -839,14 +846,15 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This is a non-precise version (that is, does=
- not use PEBS) of the event that counts not taken branch instructions retir=
-ed.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts not taken branch instructions retired.",
-         "EventCode": "0xC4",
+-        "BriefDescription": "Actually retired uops. (Precise Event - PEBS)",
++        "BriefDescription": "Actually retired uops.",
+         "Data_LA": "1",
+         "PEBS": "1",
          "Counter": "0,1,2,3",
-         "UMask": "0x10",
-         "Errata": "SKL091",
-         "EventName": "BR_INST_RETIRED.NOT_TAKEN",
+         "EventName": "UOPS_RETIRED.ALL",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts all actually retired uops. Counting increments by two for micro-fused uops, and by one for macro-fused and other uops. Maximal increment value for one cycle is eight.",
++        "PublicDescription": "This event counts all actually retired uops. Counting increments by two for micro-fused uops, and by one for macro-fused and other uops. Maximal increment value for one cycle is eight.",
+         "SampleAfterValue": "2000003",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+@@ -1204,11 +1200,11 @@
+     {
+         "EventCode": "0xC2",
+         "UMask": "0x2",
+-        "BriefDescription": "Retirement slots used. (Precise Event - PEBS)",
++        "BriefDescription": "Retirement slots used.",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "UOPS_RETIRED.RETIRE_SLOTS",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts the number of retirement slots used.",
++        "PublicDescription": "This event counts the number of retirement slots used.",
+         "SampleAfterValue": "2000003",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+@@ -1266,33 +1262,33 @@
+     {
+         "EventCode": "0xC4",
+         "UMask": "0x1",
+-        "BriefDescription": "Conditional branch instructions retired. (Precise Event - PEBS)",
++        "BriefDescription": "Conditional branch instructions retired.",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_INST_RETIRED.CONDITIONAL",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts conditional branch instructions retired.",
++        "PublicDescription": "This event counts conditional branch instructions retired.",
          "SampleAfterValue": "400009",
--        "BriefDescription": "Not taken branch instructions retired.",
-+        "BriefDescription": "Counts all not taken macro branch instruction=
-s retired.",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
      {
-@@ -924,7 +932,7 @@
+         "EventCode": "0xC4",
+         "UMask": "0x2",
+-        "BriefDescription": "Direct and indirect near call instructions retired. (Precise Event - PEBS)",
++        "BriefDescription": "Direct and indirect near call instructions retired.",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_INST_RETIRED.NEAR_CALL",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts both direct and indirect near call instructions retired.",
++        "PublicDescription": "This event counts both direct and indirect near call instructions retired.",
+         "SampleAfterValue": "100007",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+     {
+         "EventCode": "0xC4",
+         "UMask": "0x2",
+-        "BriefDescription": "Direct and indirect macro near call instructions retired (captured in ring 3). (Precise Event - PEBS)",
++        "BriefDescription": "Direct and indirect macro near call instructions retired (captured in ring 3).",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_INST_RETIRED.NEAR_CALL_R3",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts both direct and indirect macro near call instructions retired (captured in ring 3).",
++        "PublicDescription": "This event counts both direct and indirect macro near call instructions retired (captured in ring 3).",
+         "SampleAfterValue": "100007",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+@@ -1311,11 +1307,11 @@
+     {
+         "EventCode": "0xC4",
+         "UMask": "0x8",
+-        "BriefDescription": "Return instructions retired. (Precise Event - PEBS)",
++        "BriefDescription": "Return instructions retired.",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_INST_RETIRED.NEAR_RETURN",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts return instructions retired.",
++        "PublicDescription": "This event counts return instructions retired.",
+         "SampleAfterValue": "100007",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+@@ -1332,11 +1328,11 @@
+     {
+         "EventCode": "0xC4",
          "UMask": "0x20",
-         "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
+-        "BriefDescription": "Taken branch instructions retired. (Precise Event - PEBS)",
++        "BriefDescription": "Taken branch instructions retired.",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_INST_RETIRED.NEAR_TAKEN",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts taken branch instructions retired.",
++        "PublicDescription": "This event counts taken branch instructions retired.",
          "SampleAfterValue": "400009",
--        "BriefDescription": "Number of near branch instructions retired th=
-at were mispredicted and taken. ",
-+        "BriefDescription": "Number of near branch instructions retired th=
-at were mispredicted and taken.",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+@@ -1364,11 +1360,11 @@
+     {
+         "EventCode": "0xC5",
+         "UMask": "0x1",
+-        "BriefDescription": "Mispredicted conditional branch instructions retired. (Precise Event - PEBS)",
++        "BriefDescription": "Mispredicted conditional branch instructions retired.",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_MISP_RETIRED.CONDITIONAL",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts mispredicted conditional branch instructions retired.",
++        "PublicDescription": "This event counts mispredicted conditional branch instructions retired.",
+         "SampleAfterValue": "400009",
+         "CounterHTOff": "0,1,2,3,4,5,6,7"
+     },
+@@ -1386,22 +1382,22 @@
+     {
+         "EventCode": "0xC5",
+         "UMask": "0x8",
+-        "BriefDescription": "This event counts the number of mispredicted ret instructions retired.(Precise Event)",
++        "BriefDescription": "This event counts the number of mispredicted ret instructions retired. Non PEBS",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_MISP_RETIRED.RET",
+-        "PublicDescription": "This is a precise version (that is, uses PEBS) of the event that counts mispredicted return instructions retired.",
++        "PublicDescription": "This event counts mispredicted return instructions retired.",
+         "SampleAfterValue": "100007",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
      {
-@@ -937,6 +945,15 @@
-         "BriefDescription": "Increments whenever there is an update to the=
- LBR array.",
+         "EventCode": "0xC5",
+         "UMask": "0x20",
+-        "BriefDescription": "number of near branch instructions retired that were mispredicted and taken. (Precise Event - PEBS).",
++        "BriefDescription": "number of near branch instructions retired that were mispredicted and taken.",
+         "PEBS": "1",
+         "Counter": "0,1,2,3",
+         "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
+-        "PublicDescription": "Number of near branch instructions retired that were mispredicted and taken. (Precise Event - PEBS).",
++        "PublicDescription": "Number of near branch instructions retired that were mispredicted and taken.",
+         "SampleAfterValue": "400009",
          "CounterHTOff": "0,1,2,3,4,5,6,7"
      },
-+    {
-+        "EventCode": "0xCC",
-+        "Counter": "0,1,2,3",
-+        "UMask": "0x40",
-+        "EventName": "ROB_MISC_EVENTS.PAUSE_INST",
-+        "SampleAfterValue": "2000003",
-+        "BriefDescription": "Number of retired PAUSE instructions (that do=
- not end up with a VMExit to the VMM; TSX aborted Instructions may be count=
-ed). This event is not supported on first SKL and KBL products.",
-+        "CounterHTOff": "0,1,2,3,4,5,6,7"
-+    },
-     {
-         "PublicDescription": "Counts the number of times the front-end is =
-resteered when it finds a branch instruction in a fetch line. This occurs f=
-or the first time a branch instruction is fetched or when the branch is not=
- tracked by the BPU (Branch Prediction Unit) anymore.",
-         "EventCode": "0xE6",
---=20
+-- 
 2.20.1
 
