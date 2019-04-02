@@ -5,85 +5,102 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B85C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A91C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D593020857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91FCC20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbfDBKZ1 (ORCPT
+        id S1729593AbfDBK0J convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:25:27 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:41971 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbfDBKZ1 (ORCPT
+        Tue, 2 Apr 2019 06:26:09 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:49671 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfDBK0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:25:27 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-144-6HOur-ojMKWgvSRAKelcEg-1; Tue, 02 Apr 2019 11:25:24 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 2 Apr 2019 11:26:30 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 2 Apr 2019 11:26:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Borislav Petkov' <bp@alien8.de>, Jann Horn <jannh@google.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Qiaowei Ren <qiaowei.ren@intel.com>,
-        Mukesh Ojha <mojha@codeaurora.org>
-Subject: RE: [PATCH v3 2/4] x86/microcode: Fix __user annotations around
- generic_load_microcode()
-Thread-Topic: [PATCH v3 2/4] x86/microcode: Fix __user annotations around
- generic_load_microcode()
-Thread-Index: AQHU6TsNmzNw9bfABUGSSCXaVCkeoqYoqP3g
-Date:   Tue, 2 Apr 2019 10:26:30 +0000
-Message-ID: <fa9c73f385a649cfbedae47f21a5447f@AcuMS.aculab.com>
-References: <20190329214652.258477-1-jannh@google.com>
- <20190329214652.258477-2-jannh@google.com> <20190401173031.GK28264@zn.tnic>
- <CAG48ez04ARfFNXHUsod1kCH08k=-EvTbQkgLoLMfegNfyj-0zg@mail.gmail.com>
- <20190402100134.GE6826@zn.tnic>
-In-Reply-To: <20190402100134.GE6826@zn.tnic>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
+        Tue, 2 Apr 2019 06:26:09 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x32APuFm020574
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 2 Apr 2019 19:25:56 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x32APuxJ029137;
+        Tue, 2 Apr 2019 19:25:56 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x32APtBI000597;
+        Tue, 2 Apr 2019 19:25:55 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.139] [10.38.151.139]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-3914660; Tue, 2 Apr 2019 19:22:10 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC11GP.gisp.nec.co.jp ([10.38.151.139]) with mapi id 14.03.0319.002; Tue, 2
+ Apr 2019 19:22:10 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Chao Fan <fanc.fnst@cn.fujitsu.com>
+CC:     Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>,
+        "Dave Young" <dyoung@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Topic: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Index: AQHU6TAPBuKir5aKdUeGLetpGKkWo6YoCrIAgAAUVAD///OVgA==
+Date:   Tue, 2 Apr 2019 10:22:08 +0000
+Message-ID: <cbe93b95-5bde-c77f-4984-fb982a3cb24f@ce.jp.nec.com>
+References: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic> <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402094149.GB1555@localhost.localdomain>
+ <20190402095350.GA20733@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402110635.GC1555@localhost.localdomain>
+In-Reply-To: <20190402110635.GC1555@localhost.localdomain>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <A14B196DC5264A4C9ED9C2E5B572E8BE@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MC-Unique: 6HOur-ojMKWgvSRAKelcEg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQm9yaXNsYXYgUGV0a292DQo+IFNlbnQ6IDAyIEFwcmlsIDIwMTkgMTE6MDINCj4gDQo+
-IE9uIE1vbiwgQXByIDAxLCAyMDE5IGF0IDA3OjUzOjQ2UE0gKzAyMDAsIEphbm4gSG9ybiB3cm90
-ZToNCj4gPiBIbS4gcmVxdWVzdF9taWNyb2NvZGVfZncoKSBnZXRzIHRoYXQgYnVmZmVyIGZyb20N
-Cj4gPiByZXF1ZXN0X2Zpcm13YXJlX2RpcmVjdCgpLCB3aGljaCBkb2VzIHRoaXM6DQo+ID4NCj4g
-PiAgICAgICAgIF9fbW9kdWxlX2dldChUSElTX01PRFVMRSk7DQo+ID4gICAgICAgICByZXQgPSBf
-cmVxdWVzdF9maXJtd2FyZShmaXJtd2FyZV9wLCBuYW1lLCBkZXZpY2UsIE5VTEwsIDAsDQo+ID4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBGV19PUFRfVUVWRU5UIHwgRldfT1BUX05P
-X1dBUk4gfA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRldfT1BUX05PRkFM
-TEJBQ0spOw0KPiA+ICAgICAgICAgbW9kdWxlX3B1dChUSElTX01PRFVMRSk7DQo+ID4gICAgICAg
-ICByZXR1cm4gcmV0Ow0KPiA+DQo+ID4gV2hhdCBpcyB0aGF0IG1vZHVsZV9nZXQoKS9tb2R1bGVf
-cHV0KCkgc3VwcG9zZWQgdG8gYmUgZ29vZCBmb3I/IEFyZSB3ZQ0KPiA+IGV4cGVjdGluZyB0aGF0
-IGNhbGxlciB0byBkbyBzb21ldGhpbmcgcmlkaWN1bG91cyBsaWtlIGNhbGxpbmcNCj4gPiBtb2R1
-bGVfcHV0KCkgb24gdXM/IFRoaXMgZG9lc24ndCBzZWVtIHRvIG1ha2UgYW55IHNlbnNlLg0KPiAN
-Cj4gWWFoLCB0aGUgbWljcm9jb2RlIHRoaW5nIHVzZWQgdG8gYmUgYSBtb2R1bGUuIE5vdCBhbnlt
-b3JlLg0KDQpUaGF0IHByb2JhYmx5IG1ha2VzIGRpZGRseS1zcXVpdCBkaWZmZXJlbmNlLg0KVGhl
-cmUgaGFzIHRvIGJlIGEgJ2hvbGQnIG9uIFRISVNfTU9EVUxFIGluIG9yZGVyIHRvIGJlIGV4ZWN1
-dGluZw0KY29kZSBmcm9tIGl0Lg0KWW91IG9ubHkgKHVzdWFsbHkpIG5lZWQgYW4gZXh0cmEgcmVm
-ZXJlbmNlIGZvciBhIGtlcm5lbCB0aHJlYWQsDQphbmQgdGhhdCBuZWVkcyB0byBleGl0IHdpdGgg
-bW9kdWxlX3B1dF9hbmRfZXhpdCgpLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
-IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
-UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On 4/2/19 8:06 PM, Chao Fan wrote:
+> On Tue, Apr 02, 2019 at 09:53:51AM +0000, Junichi Nomura wrote:
+>> On Tue, Apr 02, 2019 at 05:41:49PM +0800, Chao Fan wrote:
+>>> [   77.989030] kexec_core: Starting new kernel
+>>> early console in extract_kernel
+>>> input_data: 0x000000017f6033b1
+>>> input_len: 0x00000000008412d4
+>>> output: 0x000000017e000000
+>>> output_len: 0x0000000001e15844
+>>> kernel_total_size: 0x0000000001e2c000
+>>> trampoline_32bit: 0x000000000009d000
+>>> booted via startup_64()
+>>>
+>>>
+>>> Physical KASLR disabled: no suitable memory region!
+>>> ------
+>>>
+>>> I am not sure whether I have done the right test.
+>>> This guest is booted from EFI. Here we can see the kexeced kernel
+>>> has completed the compressed boot stage. So I think your PATCH works.
+>>
+>> Thanks for testing.  If your test bed doesn't boot even with the patch,
+>> you could check what was found as RSDP with a debug patch like below.
+> 
+> Oh no, it booted. I just put the compressed stag log.
 
+Ah, then I think the patch worked as expected. Thanks.
+
+-- 
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
