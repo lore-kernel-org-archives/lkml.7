@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D1FC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E43C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A092084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C79207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INw0CMrz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHnkxw+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbfDBPpd (ORCPT
+        id S1731002AbfDBPpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:45:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43427 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730741AbfDBPpa (ORCPT
+        Tue, 2 Apr 2019 11:45:38 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35361 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730847AbfDBPpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:45:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z9so6758959pgu.10;
-        Tue, 02 Apr 2019 08:45:30 -0700 (PDT)
+        Tue, 2 Apr 2019 11:45:32 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so78008plp.2;
+        Tue, 02 Apr 2019 08:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FFFTfhLy6qm86XkOlWp4trauKJ3kmEOKlYTBp1fQxws=;
-        b=INw0CMrzVrJK43sbFU90adMOEfRQdJ7SSyQMJT085qwwHrmKvQRCo1bnsTQ7SxApFB
-         UjYDfxvmAOK8OSTxYuUupWlMdUiKMr1KFfPVDB0GaImbqWdnyD3F2dLRymS4Vart/kQS
-         LdfBbrOSO6VnHM7Ayq49MzS7UC9bf6ZmoBlvBnLmVMrPqW0k/B8+gsVq+JwkvEGYa+KP
-         OZXPJ2NWj8Y6FWc6SPskYqw/UUxWLEwlzjs08rxzCDKko7Gvpe+AtKwTy8riUUUy3j53
-         3i4p9E0Uc3PMZBVNmnDewsNdwel/HqHULnjxmcXx5rb93mwL08NEmMAHzCowRMSphvCj
-         /AXQ==
+        bh=4uxe1E1Jb0575SpiiJ17Oop6Mb4b8piqz0TyUf0UhNE=;
+        b=dHnkxw+zt1qMfDqgs5Tgi1zG8zRT3UXIBPWboHI+1N1IAar6nxyLJb7JMZkBHKbgsq
+         cgwxqxcyNNiA9iTfVZzu9Murf/x/mgrQ83cRfJJ+nCx8Dhdp1anQu31oKAddiJHAzX4n
+         RwWg9hxgpi2I9kKZezbnMqT9uaBRSv3e85Vwj/AiXUmQwAXberJyIejKszjOqMGUqIkh
+         r2dcsoa8uZhw6od9Yl3L2PumO7TX/x9E2I7srErtZf/q0tkSH8wE9z+gYbDn+0OLfSOQ
+         R+LAa1hcIJtr3JnngYNJikwSbirX+VodtBMnoL21kmNhWZYaTX5OLoSuuSsXB2OJFMje
+         mJUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FFFTfhLy6qm86XkOlWp4trauKJ3kmEOKlYTBp1fQxws=;
-        b=tdjozL/qTAmmnQ5BuShDcuweegpHHASoDzpb/pPVjGldRB5XB7Tog0DeG3o1iRsKHn
-         wMoniYaw+ZlLYHVUho9XF9R49TFVYS1SWlptONVdipewbSNQ2ENCGzE/H4xIPP/5Ib8R
-         g/YPJJ1NvVEv1XxKXbSzne20LlR8klqikdoCXlcy2hhsA9YWvSeH6yvsHEuuu5lwVxK/
-         VKt/7cYCQrRLDUsOGuBzp0BfT8BMlAijGrCNxQq64G1dM7qPNbJk7eANVJPUFkAFBgYb
-         rOLw6J2QeFTikZQqSJkh96a84YhWgiGRqmPqVxYwiz/Sk6drtIgFn6Onn6WzYm8YqZ6R
-         XuLQ==
-X-Gm-Message-State: APjAAAXR0YRVeuZUZesCuJGt94Ja93X7KTdFveAYymHbBrK4zgEEZhvU
-        M/Zpx6Dj8CZ6mQZ6otEiiPs=
-X-Google-Smtp-Source: APXvYqxEgsK3I3Otq75CIGSEIel6eEaHkxfxeAj6w3Ia6+3PNLwlv5E4uR0MSw6wtkFtWDoWbETZjA==
-X-Received: by 2002:a63:e70c:: with SMTP id b12mr67787121pgi.399.1554219929754;
-        Tue, 02 Apr 2019 08:45:29 -0700 (PDT)
+        bh=4uxe1E1Jb0575SpiiJ17Oop6Mb4b8piqz0TyUf0UhNE=;
+        b=ClA559EqVDMAGxVqzsQK+v+HYGmpQpPj40rzQxJfFsRsBJRVTK6og2wmvtgtHOre6I
+         VsJeAzgIM1hp0gYws0qNsrOhJETwxMUFY3vA/yCdMdhRt/hagDIJr+ndoXdsU4qNiUa0
+         UJM2et/embTHHR2FRbJiT/z5dNoC1M9q8HwAj+56nBBoXN+oIsUi4U3w3nMAPVO6gkBZ
+         Z0iYRSiB2eazxIEO+UYj27WkEcPVCwMnV0hpVbPsXajGhdNM4UPKwgY1FN928BMR8p55
+         E5PjjIx/PnD0/AtOGqFnGboxR+RIq/HVtVH8HsSKJtX3Hl1+W4Xuj98u3PPh9TvTnlbG
+         OVnw==
+X-Gm-Message-State: APjAAAXx9YbAUS1zLOtByE8Mhd2iD79rYCTG0ZHk4N+5knWTpzCxy3HY
+        YuBU5OoTuCVPj+SJQ97/IW8ixCW40VE=
+X-Google-Smtp-Source: APXvYqwgs9WaStI+ri79ooYvBjDhMOBr4FvLWlSmupOMhTUFD+Puuv9W9xTRVyCi5zTTk4spgd8e6Q==
+X-Received: by 2002:a17:902:681:: with SMTP id 1mr72236656plh.31.1554219932029;
+        Tue, 02 Apr 2019 08:45:32 -0700 (PDT)
 Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
-        by smtp.gmail.com with ESMTPSA id s5sm15986916pgv.8.2019.04.02.08.45.28
+        by smtp.gmail.com with ESMTPSA id y20sm1113222pfe.188.2019.04.02.08.45.31
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 08:45:29 -0700 (PDT)
+        Tue, 02 Apr 2019 08:45:31 -0700 (PDT)
 From:   Yangtao Li <tiny.windzz@gmail.com>
 To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v2 4/5] nvmem: sunxi-sid: add new reg_read func
-Date:   Tue,  2 Apr 2019 11:45:13 -0400
-Message-Id: <20190402154514.11284-5-tiny.windzz@gmail.com>
+Subject: [PATCH v2 5/5] nvmem: sunxi-sid: add support for H6's SID controller
+Date:   Tue,  2 Apr 2019 11:45:14 -0400
+Message-Id: <20190402154514.11284-6-tiny.windzz@gmail.com>
 X-Mailer: git-send-email 2.17.0
 In-Reply-To: <20190402154514.11284-1-tiny.windzz@gmail.com>
 References: <20190402154514.11284-1-tiny.windzz@gmail.com>
@@ -71,73 +71,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because there was an endianness issue. It seems that reg_read
-function which the nvmem the driver currently exposes is wrong.
-So add the new read function, the new function is used when the
-native_endian flag is set.
+Add support for H6's SID controller. It supports 4K-bit
+EFUSE, bigger than before. And convert to use sunxi_sid_read_native
+func.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 ---
- drivers/nvmem/sunxi_sid.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/nvmem/sunxi_sid.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-index 54620d72ddb9..5b8a42f686cd 100644
+index 5b8a42f686cd..3c2b06140490 100644
 --- a/drivers/nvmem/sunxi_sid.c
 +++ b/drivers/nvmem/sunxi_sid.c
-@@ -37,6 +37,7 @@ struct sunxi_sid_cfg {
- 	u32	value_offset;
- 	u32	size;
- 	bool	need_register_readout;
-+	bool	native_endian;
+@@ -239,11 +239,18 @@ static const struct sunxi_sid_cfg sun50i_a64_cfg = {
+ 	.size = 0x100,
  };
  
- struct sunxi_sid {
-@@ -75,6 +76,31 @@ static int sunxi_sid_read(void *context, unsigned int offset,
- 	return 0;
- }
- 
-+static u8 sunxi_sid_read_byte_native(const struct sunxi_sid *sid,
-+			      const unsigned int offset)
-+{
-+	u32 sid_key;
++static const struct sunxi_sid_cfg sun50i_h6_cfg = {
++	.value_offset = 0x200,
++	.size = 0x200,
++	.native_endian = true,
++};
 +
-+	sid_key = ioread32(sid->base + round_down(offset, 4));
-+	sid_key >>= (offset % 4) * 8;
-+
-+	return sid_key;
-+}
-+
-+static int sunxi_sid_read_native(void *context, unsigned int offset,
-+			  void *val, size_t bytes)
-+{
-+	struct sunxi_sid *sid = context;
-+	u8 *buf = val;
-+
-+	offset += sid->value_offset;
-+
-+	while (bytes--)
-+		*buf++ = sunxi_sid_read_byte_native(sid, offset++);
-+
-+	return 0;
-+}
-+
- static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
- 				      const unsigned int offset,
- 				      u32 *out)
-@@ -169,9 +195,12 @@ static int sunxi_sid_probe(struct platform_device *pdev)
- 	econfig.dev = dev;
- 	if (cfg->need_register_readout)
- 		econfig.reg_read = sun8i_sid_read_by_reg;
-+	else if (cfg->native_endian)
-+		econfig.reg_read = sunxi_sid_read_native;
- 	else
- 		econfig.reg_read = sunxi_sid_read;
- 	econfig.priv = sid;
-+
- 	nvmem = devm_nvmem_register(dev, &econfig);
- 	if (IS_ERR(nvmem))
- 		return PTR_ERR(nvmem);
+ static const struct of_device_id sunxi_sid_of_match[] = {
+ 	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
+ 	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-sid", .data = &sun50i_a64_cfg },
++	{ .compatible = "allwinner,sun50i-h6-sid", .data = &sun50i_h6_cfg },
+ 	{/* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
 -- 
 2.17.0
 
