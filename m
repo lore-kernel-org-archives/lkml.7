@@ -2,163 +2,114 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9524C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3300AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760E6204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554217169;
-	bh=1+ox9KmxBAfYApWCQmyunO6xk4Ie0reeruGa71hrh7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HJiHeBBUU5x2IEAECG3KSeU48Ul9vBiHx7tzZOgPzgJT74C0Iod15A4FrHzxmnuQT
-	 9ObpMH5J5s6fXHd+Wd/2TCegqJMEd0Hxz7MUATTAHNZ2MAbFHf2WirDirx8Mb41naN
-	 Ze6Fnpi/+OAq7koCzn+edhat8gvw5tGjwGCxfH3o=
+	by mail.kernel.org (Postfix) with ESMTP id 0510C204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbfDBO72 (ORCPT
+        id S1731237AbfDBPDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:59:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33306 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfDBO72 (ORCPT
+        Tue, 2 Apr 2019 11:03:04 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45477 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfDBPDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:59:28 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e5so10755917oii.0;
-        Tue, 02 Apr 2019 07:59:27 -0700 (PDT)
+        Tue, 2 Apr 2019 11:03:04 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e5so12264338otk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 08:03:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xWX6f0JZfWeGkSxnTaaeYO2L1I/Qhqr7srvTenf9DTA=;
-        b=uGlzW8Va7aHBEDzVQzXY2Ea5WZBRXHJ/WJNhorwSAO+wsBBLPD/qq053ounUEo7wz0
-         7w7nc3pW7F22keGiSzeLh7AJONPIK3Zvz7v86e8iWW6RBPmziFH+T+n+iQQwZdqPXRba
-         /hm3EFDLz1QfB0vkhozTSuzb4xr4cjilA6ZPo4MJmK06rekgbZV61mQ0Dls8kp8p7SiI
-         GZLBOIWp0y5pc0DYJMKob6blbs5tBQeDsP4JMrE5cgteIGdcEUN/+Q7J80eXk0XrrvVV
-         KtvK8Gl+4LmX8vRPuWNinO4V9eq3ijFD0IbeNiirnrH+KooQjw9AcKA7mzDc1l+kZSOV
-         VJgw==
-X-Gm-Message-State: APjAAAV6DMhFpRKTHJDLnZ8NOTX3gq+FWaIU3j+KV2CX3ehNYAlCdB9z
-        +d+svLSy0gWFxa3PUNCJWJ0=
-X-Google-Smtp-Source: APXvYqzzTO+EDrrJZcrBeOUA650tuR3/yLxK2A15NfsG6HmpZ/OD/dGmatYAgZFK3YDLKXU/wtSF/A==
-X-Received: by 2002:aca:dcc4:: with SMTP id t187mr17562529oig.3.1554217166999;
-        Tue, 02 Apr 2019 07:59:26 -0700 (PDT)
-Received: from localhost ([130.164.62.212])
-        by smtp.gmail.com with ESMTPSA id w187sm5580965oif.36.2019.04.02.07.59.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 07:59:26 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 07:59:25 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     atull@kernel.org, mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Luwei Kang <luwei.kang@intel.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH 14/17] fpga: dfl: fme: add thermal management support
-Message-ID: <20190402145925.GA15773@archbook>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-15-git-send-email-hao.wu@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BUfVvLNJ8XEZ8yqYZ/FSJWf93tZXQEWYNsJ7QWWfbeE=;
+        b=nVCgbJ3mH9H1lygTABv0P0i3aODw0h1H4e63l4zYWKwyLghPIq/hjVQ7IW8flp52MP
+         PAqVkipl7CK5AcmsWyiVNrtZ3CKEeyjCicgD3DudJkwU5iKCBrzI6UZxI8fYjcIekqQn
+         9NQWuRyvhBtKHELAJ/FQr838tDHh16MKgb7VKhKS6+Fp8SBOnU/YrYHpb8Ot0F4H4AKm
+         Zb8IdgdrBheICoRkmE1pjYqASaJgnw8L5H7wkFDj1LvIqq0HtugT+p2dRUjxjcCBeflu
+         fJ6Y5PRXWQn+uKnpFtIQjT/06PnL21xsL/G1Fzh84Y61DUSedOdY/moKL+KBU4TaWXOc
+         k+qg==
+X-Gm-Message-State: APjAAAWpEfAwvxNGIrUx8/9/Zx55XeFNeTILgfsWZ2nQ+xExhZ9uU0n9
+        ixC8LrWWry9+ujDFv5oovOhIRA1ar7diHoofzHCHFw==
+X-Google-Smtp-Source: APXvYqxEjtpjVeg7P+/Oam6bSEdFkBhoBL8IOvYOpXmSVtGv1TkAu6DGu3COzQcjNMAq1j06YG2ISi8fJ1Cq0T2VOSw=
+X-Received: by 2002:a9d:27e9:: with SMTP id c96mr13400968otb.206.1554217383379;
+ Tue, 02 Apr 2019 08:03:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553483264-5379-15-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190307123254.348-1-omosnace@redhat.com> <20190307123254.348-3-omosnace@redhat.com>
+ <alpine.DEB.2.21.1903280039530.1789@nanos.tec.linutronix.de>
+ <CAFqZXNvQioPGUiU0q5R4nQLW7pQDsViNH-DR=SF4Fec+-CwksA@mail.gmail.com> <alpine.DEB.2.21.1904021100410.1676@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904021100410.1676@nanos.tec.linutronix.de>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Tue, 2 Apr 2019 17:02:52 +0200
+Message-ID: <CAFqZXNuh9nVh+6JSQzsEBcoa75R97P+69u5Gz=_FvMc_UC9qHg@mail.gmail.com>
+Subject: Re: [RFC PATCH ghak10 v6 2/2] ntp: Audit NTP parameters adjustment
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wu,
+On Tue, Apr 2, 2019 at 11:33 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Mon, 1 Apr 2019, Ondrej Mosnacek wrote:
+> > On Thu, Mar 28, 2019 at 1:02 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > On Thu, 7 Mar 2019, Ondrej Mosnacek wrote:
+> > > >                       /* adjtime() is independent from ntp_adjtime() */
+> > > >                       time_adjust = txc->offset;
+> > > >                       ntp_update_frequency();
+> > > > +
+> > > > +                     audit_ntp_adjust("adjust", save_adjust, txc->offset);
+> > > >               }
+> > > >               txc->offset = save_adjust;
+> > > >       } else {
+> > >
+> > > Not going to happen. We are not reshuffling all that code just to
+> > > accomodate random audit log invocations in a critical section plus having a
+> > > gazillion of GFP_ATOMIC allocation in the critical section just because.
+> >
+> > OK, seems I underestimated the consequences of putting the logging
+> > calls directly in there. While I was offline over the weekend I
+> > already came up with a cleaner version that collects the changes in a
+> > structure and does the logging outside of the critical section. I
+> > currently does a few unnecessary writes into memory under
+> > CONFIG_AUDIT=n, but if that is an issue I can boost the abstraction or
+> > just add some #ifdefs to avoid that.
+>
+> No ifdefs please.
 
-On Mon, Mar 25, 2019 at 11:07:41AM +0800, Wu Hao wrote:
-> This patch adds support to thermal management private feature for DFL
-> FPGA Management Engine (FME). As thermal throttling is handled by
-> hardware automatically per pre-defined thresholds, this private
-> feature driver only provides read-only sysfs interfaces for user
-> to read temperature, thresholds, threshold policy and other info.
-> 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++++
->  drivers/fpga/dfl-fme-main.c                      | 202 +++++++++++++++++++++++
->  2 files changed, 258 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> index b8327e9..d3aeb88 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> @@ -44,3 +44,59 @@ Description:	Read-only. It returns socket_id to indicate which socket
->  		this FPGA belongs to, only valid for integrated solution.
->  		User only needs this information, in case standard numa node
->  		can't provide correct information.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/temperature
-> +Date:		March 2019
-> +KernelVersion:  5.2
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns temperature (in Celsius) of this FPGA
-> +		device.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1
-> +Date:		March 2019
-> +KernelVersion:  5.2
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. Read this file to get the temperature threshold1
-> +		(in Celsius).
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2
-> +Date:		March 2019
-> +KernelVersion:  5.2
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. Read this file to get the temperature threshold2
-> +		(in Celsius).
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/trip_threshold
-> +Date:		March 2019
-> +KernelVersion:  5.2
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns trip threshold (in Celsius), once FPGA
-> +		temperature reaches trip threshold, it triggers a fatal event
-> +		to board management controller (BMC) to shutdown FPGA.
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_status
-> +Date:		March 2019
-> +KernelVersion:  5.2
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns 1 if temperature reaches threshold1,
-> +		otherwise 0. Once temperature reaches threshold1, hardware
-> +		will automatically enter throttling state (AP1 - 50%
-> +		or AP2 - 90% throttling, see 'threshold1_policy').
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2_status
-> +Date:		March 2019
-> +KernelVersion:  5.2
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. It returns 1 if temperature reaches threshold2,
-> +		otherwise 0. Once temperature reaches threshold2, hardware
-> +		will automatically enter the deepest throttling state (AP6
-> +		- 100% throttling).
-> +
-> +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_policy
-> +Date:		March 2019
-> +KernelVersion:  5.2
-> +Contact:	Wu Hao <hao.wu@intel.com>
-> +Description:	Read-only. Read this file to get the policy of temperature
-> +		threshold1. It only supports two value (policy):
-> +		    0 - AP2 state (90% throttling)
-> +		    1 - AP1 state (50% throttling)
+Yep, no worries, I already found a clean way to make all the audit
+operations a no-op under CONFIG_AUDITSYSCALL=n that keeps all the
+#ifdefs contained within <linux/audit.h>.
 
-These look like they could directly map to the linux thermal framework,
-any reason you can't use the thermal framework?
+> Aside of that, why do you need all those details of the
+> ntp internals in the first place? The changelog does not give me an answer
+> to that.
 
-The trip stuff literally maps 1:1 to what a thermal driver does, I think
-that's something you'd wanna consider.
+Yeah, the changelog should be more explanatory, I'll try to improve
+that in the next revision. I actually stated the justification in the
+RFE page [1] (paragraphs 3-4) linked from the cover letter (I don't
+blame you for not finding it...). The idea is that it is (or at least
+seems) possible to do some evil changes to the clock indirectly by
+modifying these parameters as well. Maybe it is a bit overkill, but
+it's better to be safe than sorry... If anyone doesn't want the extra
+records, they can be easily filtered out by adding a simple audit
+rule.
 
-Cheers,
-Moritz
+[1] https://github.com/linux-audit/audit-kernel/wiki/RFE-More-detailed-auditing-of-changes-to-system-clock#feature-design
+
+-- 
+Ondrej Mosnacek <omosnace at redhat dot com>
+Software Engineer, Security Technologies
+Red Hat, Inc.
