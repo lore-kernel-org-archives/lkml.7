@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8FEC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B27C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5A72133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B5320856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbfDBNkF (ORCPT
+        id S1732165AbfDBNqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:40:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42796 "EHLO
+        Tue, 2 Apr 2019 09:46:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43184 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731140AbfDBNkB (ORCPT
+        by vger.kernel.org with ESMTP id S1731431AbfDBNkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:40:01 -0400
+        Tue, 2 Apr 2019 09:40:05 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdu-0002ma-77; Tue, 02 Apr 2019 14:39:58 +0100
+        id 1hBJdx-0002oc-53; Tue, 02 Apr 2019 14:40:01 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdt-0004r0-FV; Tue, 02 Apr 2019 14:39:57 +0100
+        id 1hBJdw-0004u8-Hn; Tue, 02 Apr 2019 14:40:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Teigland" <teigland@redhat.com>,
-        "Vasily Averin" <vvs@virtuozzo.com>
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms+renesas@verge.net.au>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.717224544@decadent.org.uk>
+Message-ID: <lsq.1554212307.412617625@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 08/99] dlm: memory leaks on error path in
- dlm_user_request()
+Subject: [PATCH 3.16 46/99] pinctrl: sh-pfc: r8a7740: Add missing LCD0
+ marks to lcd0_data24_1 group
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,53 +56,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit d47b41aceeadc6b58abc9c7c6485bef7cfb75636 upstream.
+commit 96bb2a6ab4eca10e5b6490b3f0738e9f7ec22c2b upstream.
 
-According to comment in dlm_user_request() ua should be freed
-in dlm_free_lkb() after successful attach to lkb.
+The lcd0_data24_1_pins[] array contains the LCD0 D1[2-5] pin numbers,
+but the lcd0_data24_1_mux[] array lacks the corresponding pin marks.
 
-However ua is attached to lkb not in set_lock_args() but later,
-inside request_lock().
-
-Fixes 597d0cae0f99 ("[DLM] dlm: user locks")
-
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Fixes: 06c7dd866da70f6c ("sh-pfc: r8a7740: Add LCDC0 and LCDC1 pin groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/dlm/lock.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7740.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/dlm/lock.c
-+++ b/fs/dlm/lock.c
-@@ -5795,20 +5795,20 @@ int dlm_user_request(struct dlm_ls *ls,
- 			goto out;
- 		}
- 	}
--
--	/* After ua is attached to lkb it will be freed by dlm_free_lkb().
--	   When DLM_IFL_USER is set, the dlm knows that this is a userspace
--	   lock and that lkb_astparam is the dlm_user_args structure. */
--
- 	error = set_lock_args(mode, &ua->lksb, flags, namelen, timeout_cs,
- 			      fake_astfn, ua, fake_bastfn, &args);
--	lkb->lkb_flags |= DLM_IFL_USER;
--
- 	if (error) {
-+		kfree(ua->lksb.sb_lvbptr);
-+		ua->lksb.sb_lvbptr = NULL;
-+		kfree(ua);
- 		__put_lkb(ls, lkb);
- 		goto out;
- 	}
- 
-+	/* After ua is attached to lkb it will be freed by dlm_free_lkb().
-+	   When DLM_IFL_USER is set, the dlm knows that this is a userspace
-+	   lock and that lkb_astparam is the dlm_user_args structure. */
-+	lkb->lkb_flags |= DLM_IFL_USER;
- 	error = request_lock(ls, lkb, name, namelen, &args);
- 
- 	switch (error) {
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
+@@ -2159,6 +2159,7 @@ static const unsigned int lcd0_data24_1_
+ 	LCD0_D0_MARK, LCD0_D1_MARK, LCD0_D2_MARK, LCD0_D3_MARK,
+ 	LCD0_D4_MARK, LCD0_D5_MARK, LCD0_D6_MARK, LCD0_D7_MARK,
+ 	LCD0_D8_MARK, LCD0_D9_MARK, LCD0_D10_MARK, LCD0_D11_MARK,
++	LCD0_D12_MARK, LCD0_D13_MARK, LCD0_D14_MARK, LCD0_D15_MARK,
+ 	LCD0_D16_MARK, LCD0_D17_MARK, LCD0_D18_PORT163_MARK,
+ 	LCD0_D19_PORT162_MARK, LCD0_D20_PORT161_MARK, LCD0_D21_PORT158_MARK,
+ 	LCD0_D22_PORT160_MARK, LCD0_D23_PORT159_MARK,
 
