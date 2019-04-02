@@ -2,84 +2,183 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB141C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753F4C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A68152084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D522204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="z8ICpJZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbfDBOXF (ORCPT
+        id S1730610AbfDBOYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:23:05 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:53911 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730527AbfDBOXE (ORCPT
+        Tue, 2 Apr 2019 10:24:00 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:20905 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbfDBOX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:23:04 -0400
-Received: from stefan-Vostro-260.fritz.box ([109.104.50.84]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MUXd0-1hK1Uw3S8O-00QP7r; Tue, 02 Apr 2019 16:22:10 +0200
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V4 2/3] Documentation: pwm-fan: Add description for RPM support
-Date:   Tue,  2 Apr 2019 16:21:49 +0200
-Message-Id: <1554214910-29925-3-git-send-email-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
-References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
-X-Provags-ID: V03:K1:sW79vU0wqdEQ18pGVxWJjoGC9YpoDTcqaW1ETqYXlKp3U1zGahB
- HxgNcz9aH5EDwV70pNcg7vFo+BAgpO2MJerJdAzUSV2k+OD3Pd5WkwYir0P/oumrS6cMOvm
- LQUD8hHpslqSfVVlbDgNznumPL8wCJitqor1Yj9OeZycotwEFbmmh2eJ+HSSWBnL4mNCRQU
- dDFmTHFZCiUzofUeHNZhg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jEJ+CZrIMRo=:Cj2whXIIO5n7sfq+ZiaUDb
- Qd9mg8G+3DQWmg9yfEeN7VpX23kqJ4uIBD4FGUMFY6q2+D8Kqe3zb3vgmGKTdWA+NI1SD+mFJ
- Kn/qrTRUBjaKfoG5rJPq6ykWVymTX6RRFWt25lMqy7fH3T6YuRroRbPYupSjpc95bcWOW2LP/
- aSKwyUAcEZvFBKVmlDD/q64Ikr9rHxofyp6kiQmo47BU1I9o58NnYe4piWkbuXB4NdgsMKEH5
- rgAuvfGjmc2TT8Ztj3+0qU/d2vVU574Pkuz0QKQLpWp1i0QnJpFHNYn0dhPINh4a64KASuQQh
- q7P9uEvvh/r79MsxVK7BnWH+AQLzHeZaNdrBS0rORsMDqOHZT5HNUycUjer4KnJI4S98+N8pg
- LwMnzVBo8hvpHXlyQiz5L+nTeqJzyv7u79XRpqQkxsnBfIxeiBhUlSJPxuDGdK2oEYh+S4Gr3
- 0zH8O78a4Ox+3/oZdxiXr3YyO1lOzFO9DOUL+qKO0iuo8Fn4IWCWiK3LGTxozZS6169Wj1Dws
- ubkBqVfgMEkC14s04haMUF8G9211efB/kW1R+sfxlDS2WKvHJ/8udAQ8dgDy8Md8XKUAao8Ia
- QI+ErzEC8OxJARaMb7nbyd+mwJXJzIqsQ9i2EEKek28l3FQfo/aFaOHJ2VJXSqO9byOPD+rqn
- EHP30stPibKFOH0lMm+UMER0638a8OLFh/DnS37eqBzzewL0AavGfnkTSWb8nDrqn+KGUvjSy
- SDXvF+T9ngXmx+pYsRpjCjtkAz+noW54ZxYg5Jifc/DBACPyyaN1DIMvylQ=
+        Tue, 2 Apr 2019 10:23:59 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x32ENpxI012919;
+        Tue, 2 Apr 2019 23:23:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x32ENpxI012919
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554215032;
+        bh=bbAhzq6SiFMsQqCZLGw2iTj/W+HyNnE00Wii2xbClRc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=z8ICpJZzG6mJrWabuMJrPwhM8n1hHBrhfJPK++qkYUZMev83iaJIocR/JuSTn9zqh
+         0b8moUfC5x93gEzKbGrkxyMrQUEfnHbUcytsq45SvArghWxMYBwMu8h14c2KQyiJQ6
+         JYcQ8Nnj0IZOlLqycGHdfHNR3pYDXphWOSZZmkiXjkNTUbgBMYD/Snu0Wub9prytrN
+         LbcjhyBWPTfX04pNdoc50RW0x6izZjr1cFeKhmfJP9QZ2p+jKu8xbmxnjXaOtTmmkY
+         NQui8ZUMH1dfaxo8H8NofEys0PUSaU3bsuNHuIRTwv8Fb7sQhGrNEOPf1JQlESXTmb
+         ENmhxHZiRzjug==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id b8so4416483uaq.7;
+        Tue, 02 Apr 2019 07:23:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAUajaBNzJhEB/42MRWai1Y7+0T5TVKsPUrdm4AFAGOfUEI78oPN
+        FV+GVp/y+DzXyYK3iYjvGhsb+AQ4gfxQI5jnXAE=
+X-Google-Smtp-Source: APXvYqytaA1SamhYLAFxemuW+bjtZBvoAr6+RH0vwwU4G/XxoYkbsq3vRkQuwisx7K8Mt1rGuJaWdLLkN5ajleQ1HBw=
+X-Received: by 2002:ab0:65c7:: with SMTP id n7mr21056318uaq.3.1554215030462;
+ Tue, 02 Apr 2019 07:23:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <1553947458-8311-1-git-send-email-yamada.masahiro@socionext.com>
+ <1553947458-8311-2-git-send-email-yamada.masahiro@socionext.com> <ad958d87-1e1e-2790-2f7e-380d4d9d67da@kernel.org>
+In-Reply-To: <ad958d87-1e1e-2790-2f7e-380d4d9d67da@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 2 Apr 2019 23:23:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASXGWD02KJfZ0=me_Brp-E6T30huzuNMSzd3dGwrjTxzQ@mail.gmail.com>
+Message-ID: <CAK7LNASXGWD02KJfZ0=me_Brp-E6T30huzuNMSzd3dGwrjTxzQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] kbuild: allow Kbuild to start from any directory
+To:     Kieran Bingham <kbingham@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a short description for the new RPM support of the pwm-fan
-driver.
+Hi Kieran,
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- Documentation/hwmon/pwm-fan | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/hwmon/pwm-fan b/Documentation/hwmon/pwm-fan
-index 18529d2..82fe967 100644
---- a/Documentation/hwmon/pwm-fan
-+++ b/Documentation/hwmon/pwm-fan
-@@ -15,3 +15,6 @@ The driver implements a simple interface for driving a fan connected to
- a PWM output. It uses the generic PWM interface, thus it can be used with
- a range of SoCs. The driver exposes the fan to the user space through
- the hwmon's sysfs interface.
-+
-+The fan rotation speed returned via the optional 'fan1_input' is extrapolated
-+from the sampled interrupts from the tachometer signal within 1 second.
+On Tue, Apr 2, 2019 at 1:41 PM Kieran Bingham <kbingham@kernel.org> wrote:
+>
+> Hi Yamada-san,
+>
+> Thank you for the patches,
+>
+> I like the direction this series is taking.
+>
+> Small spelling error spotted below...
+> But as I've now gone through all of it I'll offer
+>
+> Reviewed-by: Kieran Bingham <kbingham@kernel.org>
+>
+>
+> On 30/03/2019 12:04, Masahiro Yamada wrote:
+> > Kbuild always runs in the top of the output directory.
+> >
+> > If Make starts in the source directory with O=, it relocates the
+> > working directory to the location specified by O=.
+> >
+> > Also, users can start build from the output directory by using the
+> > Makefile generated by scripts/mkmakefile.
+> >
+> > With a little more effort, Kbuild will be able to start from any
+> > directory path.
+> >
+> > This commit allows to specify the source directory by using
+> > the -f option.
+> >
+> > For example, you can do:
+> >
+> >   $ cd path/to/output/dir
+> >   $ make -f path/to/source/dir/Makefile
+> >
+> > Or, for the equivalent behavior, you can do:
+> >
+> >   $ make O=path/to/output/dir -f path/to/source/dir/Makefile
+> >
+> > KBUILD_SRC is now deprecated.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  Makefile | 87 +++++++++++++++++++++++++++++++++++++---------------------------
+> >  1 file changed, 50 insertions(+), 37 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 9cbd367..1b2a70e 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -96,56 +96,65 @@ endif
+> >
+> >  export quiet Q KBUILD_VERBOSE
+> >
+> > -# kbuild supports saving output files in a separate directory.
+> > -# To locate output files in a separate directory two syntaxes are supported.
+> > -# In both cases the working directory must be the root of the kernel src.
+> > +# Kbuild will save output files in the current working directory.
+> > +# This does not need to match to the root of the kernel source tree.
+> > +#
+> > +# For example, you can do this:
+> > +#
+> > +#  cd /dir/to/store/output/files; make -f /dir/to/kernel/source/Makefile
+> > +#
+> > +# If you want to save output files in a different location, there are
+> > +# two syntaxes to specify it.
+> > +#
+> >  # 1) O=
+> >  # Use "make O=dir/to/store/output/files/"
+> >  #
+> >  # 2) Set KBUILD_OUTPUT
+> > -# Set the environment variable KBUILD_OUTPUT to point to the directory
+> > -# where the output files shall be placed.
+> > -# export KBUILD_OUTPUT=dir/to/store/output/files/
+> > -# make
+> > +# Set the environment variable KBUILD_OUTPUT to point to the output directory.
+> > +# export KBUILD_OUTPUT=dir/to/store/output/files/; make
+> >  #
+> >  # The O= assignment takes precedence over the KBUILD_OUTPUT environment
+> >  # variable.
+> >
+> > -# KBUILD_SRC is not intended to be used by the regular user (for now),
+> > -# it is set on invocation of make with KBUILD_OUTPUT or O= specified.
+> > -
+> > -# OK, Make called in directory where kernel src resides
+> > -# Do we want to locate output files in a separate directory?
+> > +# Do we want to change the working directory?
+> >  ifeq ("$(origin O)", "command line")
+> >    KBUILD_OUTPUT := $(O)
+> >  endif
+> >
+> > -ifneq ($(words $(subst :, ,$(CURDIR))), 1)
+> > -  $(error main directory cannot contain spaces nor colons)
+> > +ifneq ($(KBUILD_OUTPUT),)
+> > +# Make's built-in functions such as $(abspath ...), $(realpath ...) cannot
+> > +# expand a shell special character '~'. We use a bit tredious way to handle it.
+>
+> very minor, but I noticed while looking through the series ^^
+>
+> s/bit tredious/somewhat tedious/
+
+
+Oops, 'tredious' is a typo.
+
+As a non-native, I do not understand the difference
+between 'a bit' and 'somewhat', but I will apply it.
+
+Thanks.
+
+
+
+
+
 -- 
-2.7.4
-
+Best Regards
+Masahiro Yamada
