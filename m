@@ -3,138 +3,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488D9C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E40C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF4D2133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 435F920883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbfDBL4g convert rfc822-to-8bit (ORCPT
+        id S1730607AbfDBL5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:56:36 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56285 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDBL4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:56:36 -0400
-X-Originating-IP: 90.88.32.136
-Received: from xps13 (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id B865340016;
-        Tue,  2 Apr 2019 11:56:32 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 13:56:31 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the nand tree
-Message-ID: <20190402135631.38dcfe2a@xps13>
-In-Reply-To: <1554161512.10471.3@crapouillou.net>
-References: <20190402101431.6708cb70@canb.auug.org.au>
-        <1554161512.10471.3@crapouillou.net>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 2 Apr 2019 07:57:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49254 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfDBL5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:57:51 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 29105C057F32;
+        Tue,  2 Apr 2019 11:57:51 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 61F2E60856;
+        Tue,  2 Apr 2019 11:57:50 +0000 (UTC)
+Date:   Tue, 2 Apr 2019 13:57:48 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] kvm: move KVM_CAP_NR_MEMSLOTS to common code
+Message-ID: <20190402135748.5d845872.cohuck@redhat.com>
+In-Reply-To: <1553793000-53968-1-git-send-email-pbonzini@redhat.com>
+References: <1553793000-53968-1-git-send-email-pbonzini@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 02 Apr 2019 11:57:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Thu, 28 Mar 2019 18:10:00 +0100
+Paolo Bonzini <pbonzini@redhat.com> wrote:
 
-Paul Cercueil <paul@crapouillou.net> wrote on Tue, 02 Apr 2019 01:31:52
-+0200:
-
-> Hi Stephen,
+> All architectures except MIPS were defining it in the same way,
+> and memory slots are handled entirely by common code so there
+> is no point in keeping the definition per-architecture.
 > 
-> Le mar. 2 avril 2019 à 1:14, Stephen Rothwell <sfr@canb.auug.org.au> a écrit :
-> > Hi all,
-> > 
-> > After merging the nand tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:26:5: error: redefinition > of 'ingenic_ecc_calculate'
-> >  int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
-> >      ^~~~~~~~~~~~~~~~~~~~~
-> > In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:39:5: note: previous > definition of 'ingenic_ecc_calculate' was here
-> >  int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
-> >      ^~~~~~~~~~~~~~~~~~~~~
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:47:5: error: redefinition > of 'ingenic_ecc_correct'
-> >  int ingenic_ecc_correct(struct ingenic_ecc *ecc,
-> >      ^~~~~~~~~~~~~~~~~~~
-> > In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:46:5: note: previous > definition of 'ingenic_ecc_correct' was here
-> >  int ingenic_ecc_correct(struct ingenic_ecc *ecc,
-> >      ^~~~~~~~~~~~~~~~~~~
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:93:21: error: redefinition > of 'of_ingenic_ecc_get'
-> >  struct ingenic_ecc *of_ingenic_ecc_get(struct device_node *of_node)
-> >                      ^~~~~~~~~~~~~~~~~~
-> > In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:57:21: note: previous > definition of 'of_ingenic_ecc_get' was here
-> >  struct ingenic_ecc *of_ingenic_ecc_get(struct device_node *np)
-> >                      ^~~~~~~~~~~~~~~~~~
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:119:6: error: redefinition > of 'ingenic_ecc_release'
-> >  void ingenic_ecc_release(struct ingenic_ecc *ecc)
-> >       ^~~~~~~~~~~~~~~~~~~
-> > In file included from drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:53:6: note: previous > definition of 'ingenic_ecc_release' was here
-> >  void ingenic_ecc_release(struct ingenic_ecc *ecc)
-> >       ^~~~~~~~~~~~~~~~~~~
-> > 
-> > Caused by commit
-> > 
-> >   8278ad0d709a ("mtd: rawnand: ingenic: Separate top-level and SoC > specific code")
-> > 
-> > I have used the nand tree from next-20190401 for today.  
-> 
-> That makes no sense to me; from the offsets of the errors in the ingenic_ecc.h
-> file, it seems that CONFIG_MTD_NAND_INGENIC_ECC is not set, and in this case
-> ingenic_ecc.c should not be compiled at all.
-> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  Documentation/virtual/kvm/api.txt | 5 ++---
+>  arch/powerpc/kvm/powerpc.c        | 3 ---
+>  arch/s390/kvm/kvm-s390.c          | 3 ---
+>  arch/x86/kvm/x86.c                | 3 ---
+>  virt/kvm/arm/arm.c                | 3 ---
+>  virt/kvm/kvm_main.c               | 2 ++
+>  6 files changed, 4 insertions(+), 15 deletions(-)
 
-I think
-
-        #ifdef FOO
-
-evaluates to true if
-
-        FOO=y
-
-while we can have
-
-        FOO=m
-
-which is evaluated to false, hence the double definition with
-allmodconfig.
-
-Here is a diff solving the issue, if you are fine with it I will
-correct in-place and push -f nand/next for tomorrow's build.
-
----8<---
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
-index d0486f963cc9..2cda439b5e11 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
-@@ -25,7 +25,7 @@ struct ingenic_ecc_params {
-        int strength;
- };
- 
--#ifdef CONFIG_MTD_NAND_INGENIC_ECC
-+#if IS_ENABLED(CONFIG_MTD_NAND_INGENIC_ECC)
- int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
-                          struct ingenic_ecc_params *params,
-                          const u8 *buf, u8 *ecc_code);
---->8---
-
-
-Thanks,
-Miquèl
-
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
