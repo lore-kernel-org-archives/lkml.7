@@ -2,104 +2,101 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2562CC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B4AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFAD22082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554221324;
-	bh=yqTu62958iIjifZD1j4b0a4k+Ngw2t3SqbOh/WUV1AE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWg5oRjuNniiJpCUXTS+fn+qI7kJWvMnj0plv+U+ml+oNmkpVTcgiQqpBUWRPJH0J
-	 nvR7SArP1LkcAojuP/lEp7ScT20Aj/UMOm4rjzaanxxYV7dUsUBXQY2jvuOXx8VT/j
-	 7kVJoD+0qgCuYLhLyHs+R0zIhkcJwAgNrAdb6hWg=
+	by mail.kernel.org (Postfix) with ESMTP id 00F7E2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731691AbfDBQIW (ORCPT
+        id S1731763AbfDBQIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 2 Apr 2019 12:08:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53726 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731671AbfDBQIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 12:08:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbfDBQIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:08:15 -0400
-Received: from quaco.ghostprotocols.net (unknown [187.65.94.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AB94214AF;
-        Tue,  2 Apr 2019 16:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554221294;
-        bh=yqTu62958iIjifZD1j4b0a4k+Ngw2t3SqbOh/WUV1AE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtZXkg4scybOaFj7hEEmIsL4ESw1XFusGi50Pvj8XJVUTx4fsRoPqjSYnuzOtZ5Z+
-         MLO9HDtFiMP/9/JhREb2KCQrW49L0zwRFKJG5lxkuQVFvNlChVya63m2EGoDwj1SGo
-         tN4sWxHNfCeEL+kksf6HMbffpqEmd7vb/PMgXcx0=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 41/44] perf vendor events intel: Update Bonnell to V4
-Date:   Tue,  2 Apr 2019 13:05:46 -0300
-Message-Id: <20190402160549.13544-42-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190402160549.13544-1-acme@kernel.org>
-References: <20190402160549.13544-1-acme@kernel.org>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81684374;
+        Tue,  2 Apr 2019 09:08:21 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71B633F721;
+        Tue,  2 Apr 2019 09:08:20 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 17:08:14 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bharat Kumar Gogada <bharatku@xilinx.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: xilinx-nwl: Fix Multi MSI data programming
+Message-ID: <20190402160814.GA30068@e107981-ln.cambridge.arm.com>
+References: <1552304759-5394-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <BN6PR02MB2772BFC74C01857BA58FB5C7A5550@BN6PR02MB2772.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN6PR02MB2772BFC74C01857BA58FB5C7A5550@BN6PR02MB2772.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On Mon, Apr 01, 2019 at 05:00:40PM +0000, Bharat Kumar Gogada wrote:
+> Hi All,
+> 
+> Please let me know if anyone has any inputs on this.
+> 
+> Regards,
+> Bharat
+> > 
+> > The current Multi MSI data programming fails if multiple end points
+> > requesting MSI and multi MSI are connected with switch, i.e the current
+> > multi MSI data being given is not considering the number of vectors being
+> > requested in case of multi MSI.
+> > Due to this if multiple end points are connected and requesting MSI and
+> > multi MSI combination, the multi MSI data is ending up using wrong MSI
+> > data, which might be used by different device.
+> > 
+> > Fix Multi MSI data programming with required alignment by using number
+> > of vectors being requested.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: https://lkml.kernel.org/r/20190315165219.GA21223@tassilo.jf.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/pmu-events/arch/x86/bonnell/frontend.json | 2 +-
- tools/perf/pmu-events/arch/x86/bonnell/pipeline.json | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+I still do not understand what you mean I am sorry. An example is worth
+two thousand words, I would start with that as it stands this commit
+log does not provide any information on what you are actually fixing.
 
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/frontend.json b/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
-index 935b7dcf067d..ef69540ab61d 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
-@@ -77,7 +77,7 @@
-         "UMask": "0x1",
-         "EventName": "UOPS.MS_CYCLES",
-         "SampleAfterValue": "2000000",
--        "BriefDescription": "This event counts the cycles where 1 or more uops are issued by the micro-sequencer (MS), including microcode assists and inserted flows, and written to the IQ. ",
-+        "BriefDescription": "This event counts the cycles where 1 or more uops are issued by the micro-sequencer (MS), including microcode assists and inserted flows, and written to the IQ.",
-         "CounterMask": "1"
-     }
- ]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-index b2e681c78466..09c6de13de20 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-@@ -189,7 +189,7 @@
-         "UMask": "0x8",
-         "EventName": "BR_MISSP_TYPE_RETIRED.IND_CALL",
-         "SampleAfterValue": "200000",
--        "BriefDescription": "Mispredicted indirect calls, including both register and memory indirect. "
-+        "BriefDescription": "Mispredicted indirect calls, including both register and memory indirect."
-     },
-     {
-         "EventCode": "0x89",
--- 
-2.20.1
+Lorenzo
 
+> > Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe Host
+> > Controller")
+> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > ---
+> > V2:
+> >  - Added more description of fix
+> > ---
+> >  drivers/pci/controller/pcie-xilinx-nwl.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > index 81538d7..36669c5 100644
+> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > @@ -484,7 +484,7 @@ static int nwl_irq_domain_alloc(struct irq_domain
+> > *domain, unsigned int virq,
+> > 
+> >  	mutex_lock(&msi->lock);
+> >  	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> > -					 nr_irqs, 0);
+> > +					 nr_irqs, nr_irqs - 1);
+> >  	if (bit >= INT_PCI_MSI_NR) {
+> >  		mutex_unlock(&msi->lock);
+> >  		return -ENOSPC;
+> > --
+> > 2.7.4
+> 
