@@ -2,102 +2,110 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC76C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73606C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB382075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA142082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554229684;
+	bh=p2vac/PvgYjmRUWgNY6t5VCBn6XLBmcK6FXROsSb7oA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XNo6i/xmnD01264uw7j7WiuLeqb8i3Xo5Bt5kHVyWSIoAmb/hKvELr+77xJU6fr04
+	 n3msdsGxt9EywhTlRWiWd3z1iHeubOM7Y78so1y4gkaJUsaOphb62vV3SBRT92GyqO
+	 LExOLdhyu+V7yUb9/q8zUE35r5fumuCIGshIP9LY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfDBS0n (ORCPT
+        id S1729205AbfDBS2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 14:26:43 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:44022 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726314AbfDBS0n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 14:26:43 -0400
-Received: (qmail 6171 invoked by uid 2102); 2 Apr 2019 14:26:42 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 2 Apr 2019 14:26:42 -0400
-Date:   Tue, 2 Apr 2019 14:26:42 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jesse Hathaway <jesse@mbuki-mvuki.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>
-Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
-In-Reply-To: <d1070139-5b14-f42a-938f-2fe51779642b@linux.intel.com>
-Message-ID: <Pine.LNX.4.44L0.1904021424450.1562-100000@iolanthe.rowland.org>
+        Tue, 2 Apr 2019 14:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfDBS2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 14:28:02 -0400
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE2B92082C;
+        Tue,  2 Apr 2019 18:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554229681;
+        bh=p2vac/PvgYjmRUWgNY6t5VCBn6XLBmcK6FXROsSb7oA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XYVgmd4Gt3v/QWQr0qe68OIJCzmH14K+vsGXpOrZFsM+uTv0J3LVtwS3hxJ8THwqT
+         c/j6/sb0MXKOLZtGslLNotCw0Ot9M04JjNBOVCHI8OtLtMI2u5lOLy6X/uwVHkqRM+
+         XWmz5noJ91I8jWWfWlKxH2/vQV8Qyymu03pBv88A=
+Received: by mail-ed1-f48.google.com with SMTP id s16so12567007edr.3;
+        Tue, 02 Apr 2019 11:28:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAX3K5AvFIRqEAP7Kam0hTggSjjVwBqkpVuFzcQmahKFlebkTDpu
+        UX9dJWrrffRUgAc7e1arKK0KjJ7Cprwiomg3ZH0=
+X-Google-Smtp-Source: APXvYqwsywFoxkKDpR4AJ7cstgyIkZjNJd29jZiKGA2hoNuppmZIkyCHOwtj0kX74JpsymvkxsfbfiGT8yHC3sAK/lw=
+X-Received: by 2002:a50:94aa:: with SMTP id s39mr49592784eda.191.1554229679567;
+ Tue, 02 Apr 2019 11:27:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20190402123123.915-1-nava.manne@xilinx.com> <20190402123123.915-4-nava.manne@xilinx.com>
+In-Reply-To: <20190402123123.915-4-nava.manne@xilinx.com>
+From:   Alan Tull <atull@kernel.org>
+Date:   Tue, 2 Apr 2019 13:27:23 -0500
+X-Gmail-Original-Message-ID: <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+Message-ID: <CANk1AXQEMLt5Vk9LhsmBg9U0Twknr1oy-myoL_0vZ4pqSu3DwQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+To:     Nava kishore Manne <nava.manne@xilinx.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rajan Vaja <rajanv@xilinx.com>, Jolly Shah <jollys@xilinx.com>,
+        linux-fpga@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kishore m <chinnikishore369@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019, Mathias Nyman wrote:
+On Tue, Apr 2, 2019 at 7:32 AM Nava kishore Manne <nava.manne@xilinx.com> wrote:
 
-> On 2.4.2019 17.29, Alan Stern wrote:
-> > On Mon, 1 Apr 2019, Bjorn Helgaas wrote:
-> > 
-> >> [+cc Mathias, Greg, Alan, linux-usb]
-> >>
-> >> Beginning of thread: https://lore.kernel.org/linux-pci/CANSNSoWiKd98Dt1N2sSjP9Af8zk1NPV-=3P4VLtFs_cSQG4RUg@mail.gmail.com
-> >>
-> >> Synopsis: v5.0 hangs at boot unless the following commits are reverted:
-> >>
-> >>    1302fcf0d03e ("PCI: Configure *all* devices, not just hot-added ones")
-> >>    1c3c5eab1715 ("sched/core: Enable might_sleep() and smp_processor_id() checks early")
-> >>
-> >> The hang appears to be in quirk_usb_early_handoff().  With
-> >> "initcall_debug", we see the call but not the completion:
-> >>
-> >> On Fri, Mar 22, 2019 at 03:02:11PM -0500, Jesse Hathaway wrote:
-> >>>> So apparently the hang happens while we're running the "final" PCI
-> >>>> fixups.  This happens after all the rest of PCI is initialized.
-> >>>>
-> >>>> Can you boot v5.0 vanilla with "initcall_debug"?  Maybe we can narrow
-> >>>> it down to a specific quirk.
-> >>>
-> >>> yup, added the "initcall_debug" output to the ticket:
-> >>> https://bugzilla.kernel.org/show_bug.cgi?id=202927, here is the tail end
-> >>>
-> >>> [   14.896337] NET: Registered protocol family 1
-> >>> [   14.901314] initcall af_unix_init+0x0/0x4e returned 0 after 4866 usecs
-> >>> [   14.908694] calling  ipv6_offload_init+0x0/0x7f @ 1
-> >>> [   14.914238] initcall ipv6_offload_init+0x0/0x7f returned 0 after 1 usecs
-> >>> [   14.921821] calling  vlan_offload_init+0x0/0x20 @ 1
-> >>> [   14.927365] initcall vlan_offload_init+0x0/0x20 returned 0 after 0 usecs
-> >>> [   14.934948] calling  pci_apply_final_quirks+0x0/0x126 @ 1
-> >>> [   14.941106] pci 0000:00:1a.0: calling  quirk_usb_early_handoff+0x0/0x6a0 @ 1
-> >>>
-> >>> thanks, Jesse Hathaway
-> > 
-> > Most likely the problem occurs somewhere inside
-> > quirk_usb_handoff_xhci().  Can Jesse add debugging statements to that
-> > routine in order to pin down exactly where the problem lies?
-> > 
-> > Alan Stern
-> > 
-> 
-> lspci log from bugzilla shows 0000:00:1a.0 is a EHCI device,
-> so probably woth adding debugging to quirk_usb_disable_ehci() as well
-> 
-> 00:1a.0 USB controller: Intel Corporation C610/X99 series chipset USB Enhanced Host Controller #2 (rev 05) (prog-if 20 [EHCI])
+Hi Nava,
 
-Oops!  Quite right, my mistake.  After all these years, I ought to
-remember that Intel puts their motherboards' EHCI and UHCI controllers
-at PCI addresses 00:1a and 00:1d.
+Looks good.
 
-Alan Stern
+>
+> This patch adds FPGA Manager support for the Xilinx
+> ZynqMP chip.
+>
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+Acked-by: Alan Tull <atull@kernel.org>
 
+> ---
+> Changes for v4:
+>                 -Updated the Fpga Mgr registrations call's
+>                  to 5.0
+>                 -Removed dma_set_mask_and_coherent() As the FW
+>                  supports only 32-bit address operations.
+>
+> Changes for v3:
+>                 -Created patches on top of 5.0-rc5.
+>                  No functional changes.
+>
+> Changes for v2:
+>                 -Fixed some minor coding issues as suggested by
+>                  Moritz
+>
+> Changes for v1:
+>                 -None.
+>
+> Changes for RFC-V2:
+>                 -Updated the Fpga Mgr registrations call's
+>                  to 4.18
+
+Thanks,
+Alan
