@@ -2,170 +2,185 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFCEC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E641EC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 540E22082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32252082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbfDBQCm (ORCPT
+        id S1730064AbfDBQCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:02:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33367 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbfDBQCm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:02:42 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i19so6605324pfd.0;
-        Tue, 02 Apr 2019 09:02:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D/uBRxoSLaw7wt0dOZLsPDgDlRxlgS5VpEnLB3tUVe4=;
-        b=RtnziyQ7nqg49SU0mkFngfWLcF0Xss1YuR3fflrso9GPT1PWuXOfUQH7TmSdZIVATB
-         Yi6MCNtw5OgcohMKGLttcVShq4lHgNYQic/I1JdmmmKMW4TSgTHcGcSjTkN1z0La/BAo
-         MS4SL9omiBKA0cmBR/5EQIXfbxHSsp8FT/Gp/5s+FwwALNHLeisrYl3fewiOIJZ8MJdj
-         /Z3BYH5MuMMtJ1MrkDszmaniFrPSngm/7XVLBlhYqiDNTYmisZNZgSfXw+yPu8rtWqpX
-         vBPYG9BABsASX5dFO3ie5LEE7YpABUQuovo1Ul9ZzyYsI+v7wLlLCKOkuk0XxuiW8dHk
-         0Psg==
-X-Gm-Message-State: APjAAAVjcF2/c7xGCRYIJlrIeDivK/La86d5CAyjqwmzGjVdTUz4Cy87
-        q+uoKRukPqhdeojtuS07IZsULY+s
-X-Google-Smtp-Source: APXvYqxoF4PPZpoqtWmdw1Bn4yJ/eK8x7Z1MLBULanjxdoxSz25FmafF2Ed6NgkMHuJrc/icHkWJjw==
-X-Received: by 2002:a63:e004:: with SMTP id e4mr15910058pgh.344.1554220960463;
-        Tue, 02 Apr 2019 09:02:40 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id a17sm18057191pgd.30.2019.04.02.09.02.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 09:02:39 -0700 (PDT)
-Message-ID: <1554220958.118779.145.camel@acm.org>
-Subject: Re: [PATCH v2 3/8] block: Replace all ktype default_attrs with
- groups
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Kimberly Brown <kimbrownkd@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Tue, 2 Apr 2019 12:02:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54180 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729060AbfDBQCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:02:43 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 32A7930832C2;
+        Tue,  2 Apr 2019 16:02:43 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id DA83D19C7B;
+        Tue,  2 Apr 2019 16:02:41 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue,  2 Apr 2019 18:02:42 +0200 (CEST)
+Date:   Tue, 2 Apr 2019 18:02:41 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Roman Gushchin <guroan@gmail.com>
+Cc:     Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        kernel-team@fb.com, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Tue, 02 Apr 2019 09:02:38 -0700
-In-Reply-To: <e3b82e2105d1e2b4d6313d862172007e0f4477e2.1554151487.git.kimbrownkd@gmail.com>
-References: <20190322201440.GA30814@ubu-Virtual-Machine>
-         <cover.1554151487.git.kimbrownkd@gmail.com>
-         <e3b82e2105d1e2b4d6313d862172007e0f4477e2.1554151487.git.kimbrownkd@gmail.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v9 4/9] cgroup: cgroup v2 freezer
+Message-ID: <20190402160241.GA10425@redhat.com>
+References: <20190316175812.6787-1-guro@fb.com>
+ <20190316175812.6787-5-guro@fb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190316175812.6787-5-guro@fb.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 02 Apr 2019 16:02:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-04-01 at 22:51 -0400, Kimberly Brown wrote:
-+AD4 The kobj+AF8-type default+AF8-attrs field is being replaced by the
-+AD4 default+AF8-groups field. Replace all of the ktype default+AF8-attrs fields in
-+AD4 the block subsystem with default+AF8-groups and use the ATTRIBUTE+AF8-GROUPS
-+AD4 macro to create the default groups.
-+AD4 
-+AD4 Remove default+AF8-ctx+AF8-attrs+AFsAXQ because it doesn't contain any attributes.
-+AD4 
-+AD4 This patch was tested by verifying that the sysfs files for the
-+AD4 attributes in the default groups were created.
-+AD4 
-+AD4 Signed-off-by: Kimberly Brown +ADw-kimbrownkd+AEA-gmail.com+AD4
-+AD4 ---
-+AD4  block/blk-integrity.c +AHw 3 +-+--
-+AD4  block/blk-mq-sysfs.c  +AHw 8 +-+-------
-+AD4  block/blk-sysfs.c     +AHw 3 +-+--
-+AD4  3 files changed, 6 insertions(+-), 8 deletions(-)
-+AD4 
-+AD4 diff --git a/block/blk-integrity.c b/block/blk-integrity.c
-+AD4 index d1ab089e0919..85864c71e858 100644
-+AD4 --- a/block/blk-integrity.c
-+AD4 +-+-+- b/block/blk-integrity.c
-+AD4 +AEAAQA -365,6 +-365,7 +AEAAQA static struct attribute +ACo-integrity+AF8-attrs+AFsAXQ +AD0 +AHs
-+AD4  	+ACY-integrity+AF8-device+AF8-entry.attr,
-+AD4  	NULL,
-+AD4  +AH0AOw
-+AD4 +-ATTRIBUTE+AF8-GROUPS(integrity)+ADs
-+AD4  
-+AD4  static const struct sysfs+AF8-ops integrity+AF8-ops +AD0 +AHs
-+AD4  	.show	+AD0 +ACY-integrity+AF8-attr+AF8-show,
-+AD4 +AEAAQA -372,7 +-373,7 +AEAAQA static const struct sysfs+AF8-ops integrity+AF8-ops +AD0 +AHs
-+AD4  +AH0AOw
-+AD4  
-+AD4  static struct kobj+AF8-type integrity+AF8-ktype +AD0 +AHs
-+AD4 -	.default+AF8-attrs	+AD0 integrity+AF8-attrs,
-+AD4 +-	.default+AF8-groups +AD0 integrity+AF8-groups,
-+AD4  	.sysfs+AF8-ops	+AD0 +ACY-integrity+AF8-ops,
-+AD4  +AH0AOw
-+AD4  
-+AD4 diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
-+AD4 index 3f9c3f4ac44c..5315e538b3b1 100644
-+AD4 --- a/block/blk-mq-sysfs.c
-+AD4 +-+-+- b/block/blk-mq-sysfs.c
-+AD4 +AEAAQA -173,10 +-173,6 +AEAAQA static ssize+AF8-t blk+AF8-mq+AF8-hw+AF8-sysfs+AF8-cpus+AF8-show(struct blk+AF8-mq+AF8-hw+AF8-ctx +ACo-hctx, char +ACo-page)
-+AD4  	return ret+ADs
-+AD4  +AH0
-+AD4  
-+AD4 -static struct attribute +ACo-default+AF8-ctx+AF8-attrs+AFsAXQ +AD0 +AHs
-+AD4 -	NULL,
-+AD4 -+AH0AOw
-+AD4 -
-+AD4  static struct blk+AF8-mq+AF8-hw+AF8-ctx+AF8-sysfs+AF8-entry blk+AF8-mq+AF8-hw+AF8-sysfs+AF8-nr+AF8-tags +AD0 +AHs
-+AD4  	.attr +AD0 +AHs.name +AD0 +ACI-nr+AF8-tags+ACI, .mode +AD0 0444 +AH0,
-+AD4  	.show +AD0 blk+AF8-mq+AF8-hw+AF8-sysfs+AF8-nr+AF8-tags+AF8-show,
-+AD4 +AEAAQA -196,6 +-192,7 +AEAAQA static struct attribute +ACo-default+AF8-hw+AF8-ctx+AF8-attrs+AFsAXQ +AD0 +AHs
-+AD4  	+ACY-blk+AF8-mq+AF8-hw+AF8-sysfs+AF8-cpus.attr,
-+AD4  	NULL,
-+AD4  +AH0AOw
-+AD4 +-ATTRIBUTE+AF8-GROUPS(default+AF8-hw+AF8-ctx)+ADs
-+AD4  
-+AD4  static const struct sysfs+AF8-ops blk+AF8-mq+AF8-sysfs+AF8-ops +AD0 +AHs
-+AD4  	.show	+AD0 blk+AF8-mq+AF8-sysfs+AF8-show,
-+AD4 +AEAAQA -214,13 +-211,12 +AEAAQA static struct kobj+AF8-type blk+AF8-mq+AF8-ktype +AD0 +AHs
-+AD4  
-+AD4  static struct kobj+AF8-type blk+AF8-mq+AF8-ctx+AF8-ktype +AD0 +AHs
-+AD4  	.sysfs+AF8-ops	+AD0 +ACY-blk+AF8-mq+AF8-sysfs+AF8-ops,
-+AD4 -	.default+AF8-attrs	+AD0 default+AF8-ctx+AF8-attrs,
-+AD4  	.release	+AD0 blk+AF8-mq+AF8-ctx+AF8-sysfs+AF8-release,
-+AD4  +AH0AOw
-+AD4  
-+AD4  static struct kobj+AF8-type blk+AF8-mq+AF8-hw+AF8-ktype +AD0 +AHs
-+AD4  	.sysfs+AF8-ops	+AD0 +ACY-blk+AF8-mq+AF8-hw+AF8-sysfs+AF8-ops,
-+AD4 -	.default+AF8-attrs	+AD0 default+AF8-hw+AF8-ctx+AF8-attrs,
-+AD4 +-	.default+AF8-groups +AD0 default+AF8-hw+AF8-ctx+AF8-groups,
-+AD4  	.release	+AD0 blk+AF8-mq+AF8-hw+AF8-sysfs+AF8-release,
-+AD4  +AH0AOw
-+AD4  
-+AD4 diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-+AD4 index 422327089e0f..7a95a1eb27e1 100644
-+AD4 --- a/block/blk-sysfs.c
-+AD4 +-+-+- b/block/blk-sysfs.c
-+AD4 +AEAAQA -769,6 +-769,7 +AEAAQA static struct attribute +ACo-default+AF8-attrs+AFsAXQ +AD0 +AHs
-+AD4  +ACM-endif
-+AD4  	NULL,
-+AD4  +AH0AOw
-+AD4 +-ATTRIBUTE+AF8-GROUPS(default)+ADs
-+AD4  
-+AD4  +ACM-define to+AF8-queue(atr) container+AF8-of((atr), struct queue+AF8-sysfs+AF8-entry, attr)
-+AD4  
-+AD4 +AEAAQA -890,7 +-891,7 +AEAAQA static const struct sysfs+AF8-ops queue+AF8-sysfs+AF8-ops +AD0 +AHs
-+AD4  
-+AD4  struct kobj+AF8-type blk+AF8-queue+AF8-ktype +AD0 +AHs
-+AD4  	.sysfs+AF8-ops	+AD0 +ACY-queue+AF8-sysfs+AF8-ops,
-+AD4 -	.default+AF8-attrs	+AD0 default+AF8-attrs,
-+AD4 +-	.default+AF8-groups +AD0 default+AF8-groups,
-+AD4  	.release	+AD0 blk+AF8-release+AF8-queue,
-+AD4  +AH0AOw
+Hi Roman,
 
-I think this should have been four patches instead of one.
+let me apologize again for the huge delay.
 
-Anyway:
+I see nothing really wrong in this version, so no objections from me.
 
-Reviewed-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4
+However, 4/9 doesn't apply, so it seems you will need to make v10 anyway
+to adapt these changes to the recent changes in kernel/signal.c ;)
+
+Just a couple of minor nits below...
+
+On 03/16, Roman Gushchin wrote:
+>
+> + * If always_leave is not set, and the cgroup is freezing,
+> + * we're racing with the cgroup freezing. In this case, we don't
+> + * drop the frozen counter to avoid a transient switch to
+> + * the unfrozen state. To make sure that the task won't go
+> + * to the userspace before reaching the signal handler loop,
+> + * let's set TIF_SIGPENDING flag.
+> + */
+> +void cgroup_leave_frozen(bool always_leave)
+> +{
+> +	struct cgroup *cgrp;
+> +
+> +	spin_lock_irq(&css_set_lock);
+> +	cgrp = task_dfl_cgroup(current);
+> +	if (always_leave || !test_bit(CGRP_FREEZE, &cgrp->flags)) {
+> +		cgroup_dec_frozen_cnt(cgrp);
+> +		cgroup_update_frozen(cgrp);
+> +		WARN_ON_ONCE(!current->frozen);
+> +		current->frozen = false;
+> +	} else {
+> +		set_tsk_thread_flag(current, TIF_SIGPENDING);
+
+The setting of TIF_SIGPENDING looks unnecessary and even not correct; because
+this flag must not be updated without ->siglock held (even if "set" is more
+or less safe).
+
+If JOBCTL_TRAP_FREEZE is already set, then TIF_SIGPENDING must be set too.
+
+Otherwise set_tsk_thread_flag(TIF_SIGPENDING) can't help because the task can
+do recalc_sigpending() at any moment.
+
+In particular, get_signal() does dequeue_signal()->recalc_sigpending() right
+after cgroup_leave_frozen(), so I fail to understand why do we need to set
+TIF_SIGPENDING.
+
+
+> @@ -912,6 +912,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+>  	tsk->fail_nth = 0;
+>  #endif
+>
+> +#ifdef CONFIG_CGROUPS
+> +	tsk->frozen = 0;
+> +#endif
+
+Hmm, do we really need this? How can a cgroup_task_frozen() task call
+copy_process() ?
+
+> +static void do_freezer_trap(void)
+> +	__releases(&current->sighand->siglock)
+> +{
+> +	/*
+> +	 * If a fatal signal is pending, there is no way back for the process,
+> +	 * so let it escape from the freezer trap and exit.
+> +	 * If the task has been frozen, cgroup_leave_frozen() will be invoked
+> +	 * to update the cgroup state, if necessary.
+> +	 */
+> +	if (fatal_signal_pending(current)) {
+> +		current->jobctl &= ~JOBCTL_TRAP_FREEZE;
+> +		spin_unlock_irq(&current->sighand->siglock);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * If there are other trap bits pending except JOBCTL_TRAP_FREEZE,
+> +	 * let's make another loop to give it a chance to be handled.
+> +	 * In any case, we'll return back.
+> +	 */
+> +	if (((current->jobctl & (JOBCTL_PENDING_MASK | JOBCTL_TRAP_FREEZE)) !=
+> +	     JOBCTL_TRAP_FREEZE) || fatal_signal_pending(current)) {
+                                    ^^^^^^^^^^^^^^^^^^^^
+
+We have already checked fatal_signal_pending() at the start?
+
+And in fact, you can probably remove fatal_signal_pending() altogether...
+Note that with recent changes get_signal() does
+
+	if (signal_group_exit(signal)) {
+		ksig->info.si_signo = signr = SIGKILL;
+		sigdelset(&current->pending.signal, SIGKILL);
+		recalc_sigpending();
+		goto fatal;
+	}
+
+before the main loop, so afaics fatal_signal_pending() == T in do_freezer_trap()
+is simply impossible. This means that you can't clear JOBCTL_TRAP_FREEZE, but
+this is probably fine... if not, you can add jobctl &= ~JOBCTL_TRAP_FREEZE into
+the "if (signal_group_exit(signal))" above.
+
+> @@ -2401,12 +2453,27 @@ bool get_signal(struct ksignal *ksig)
+>  		    do_signal_stop(0))
+>  			goto relock;
+>  
+> -		if (unlikely(current->jobctl & JOBCTL_TRAP_MASK)) {
+> -			do_jobctl_trap();
+> -			spin_unlock_irq(&sighand->siglock);
+> +		if (unlikely(current->jobctl &
+> +			     (JOBCTL_TRAP_MASK | JOBCTL_TRAP_FREEZE))) {
+> +			if (current->jobctl & JOBCTL_TRAP_MASK) {
+> +				do_jobctl_trap();
+> +				spin_unlock_irq(&sighand->siglock);
+> +			} else if (current->jobctl & JOBCTL_TRAP_FREEZE)
+> +				do_freezer_trap();
+> +
+>  			goto relock;
+>  		}
+>  
+> +		/*
+> +		 * If the task is leaving the frozen state, let's update
+> +		 * cgroup counters and reset the frozen bit.
+> +		 */
+> +		if (unlikely(cgroup_task_frozen(current))) {
+> +			spin_unlock_irq(&sighand->siglock);
+> +			cgroup_leave_frozen(true);
+> +			spin_lock_irq(&sighand->siglock);
+
+I'd suggest to do "goto relock" rather than spin_lock_irq(&sighand->siglock).
+To ensure we can't miss SIGKILL which can come right after we drop siglock,
+note again the new signal_group_exit() check above.
+
+Oleg.
 
