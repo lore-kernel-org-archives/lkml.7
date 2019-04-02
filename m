@@ -2,135 +2,114 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA6AC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C61C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743F620882
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B00920882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfDBMQh convert rfc822-to-8bit (ORCPT
+        id S1730755AbfDBMR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:16:37 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:54173 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDBMQh (ORCPT
+        Tue, 2 Apr 2019 08:17:59 -0400
+Received: from mailproxy03.manitu.net ([217.11.48.67]:43976 "EHLO
+        mailproxy03.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfDBMR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:16:37 -0400
-Received: from xps13 (aaubervilliers-681-1-91-136.w90-88.abo.wanadoo.fr [90.88.32.136])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6D8C1200017;
-        Tue,  2 Apr 2019 12:16:32 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 14:16:31 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the nand tree
-Message-ID: <20190402141631.471c3f5f@xps13>
-In-Reply-To: <1554206414.1199.0@crapouillou.net>
-References: <20190402101431.6708cb70@canb.auug.org.au>
-        <1554161512.10471.3@crapouillou.net>
-        <20190402135631.38dcfe2a@xps13>
-        <1554206414.1199.0@crapouillou.net>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 2 Apr 2019 08:17:58 -0400
+Received: from [192.168.178.20] (aftr-185-17-207-219.dynamic.mnet-online.de [185.17.207.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy03.manitu.net (Postfix) with ESMTPSA id C91EDD40028;
+        Tue,  2 Apr 2019 14:23:54 +0200 (CEST)
+Subject: Re: [PATCH v11 1/5] can: m_can: Create a m_can platform framework
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190319172651.10012-1-dmurphy@ti.com>
+ <3ce79402-00f1-d7e6-955e-1ad7eb00d0de@ti.com>
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <c05a6a22-c162-518d-683a-18731bd67e38@grandegger.com>
+Date:   Tue, 2 Apr 2019 14:17:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <3ce79402-00f1-d7e6-955e-1ad7eb00d0de@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hello Dan,
 
-Paul Cercueil <paul@crapouillou.net> wrote on Tue, 02 Apr 2019 14:00:14
-+0200:
-
-> Hi Miquel,
+Am 02.04.19 um 14:03 schrieb Dan Murphy:
+> Wolfgang
 > 
-> Le mar. 2 avril 2019 à 13:56, Miquel Raynal <miquel.raynal@bootlin.com> a écrit :
-> > Hi Paul,
-> > 
-> > Paul Cercueil <paul@crapouillou.net> wrote on Tue, 02 Apr 2019 > 01:31:52
-> > +0200:
-> >   
-> >>  Hi Stephen,  
-> >> >>  Le mar. 2 avril 2019 à 1:14, Stephen Rothwell >> <sfr@canb.auug.org.au> a écrit :  
-> >>  > Hi all,
-> >>  >
-> >>  > After merging the nand tree, today's linux-next build (x86_64
-> >>  > allmodconfig) failed like this:
-> >>  >
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:26:5: error: >> redefinition > of 'ingenic_ecc_calculate'
-> >>  >  int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
-> >>  >      ^~~~~~~~~~~~~~~~~~~~~
-> >>  > In file included from >> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:39:5: note: previous > >> definition of 'ingenic_ecc_calculate' was here
-> >>  >  int ingenic_ecc_calculate(struct ingenic_ecc *ecc,
-> >>  >      ^~~~~~~~~~~~~~~~~~~~~
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:47:5: error: >> redefinition > of 'ingenic_ecc_correct'
-> >>  >  int ingenic_ecc_correct(struct ingenic_ecc *ecc,
-> >>  >      ^~~~~~~~~~~~~~~~~~~
-> >>  > In file included from >> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:46:5: note: previous > >> definition of 'ingenic_ecc_correct' was here
-> >>  >  int ingenic_ecc_correct(struct ingenic_ecc *ecc,
-> >>  >      ^~~~~~~~~~~~~~~~~~~
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:93:21: error: >> redefinition > of 'of_ingenic_ecc_get'
-> >>  >  struct ingenic_ecc *of_ingenic_ecc_get(struct device_node >> *of_node)
-> >>  >                      ^~~~~~~~~~~~~~~~~~
-> >>  > In file included from >> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:57:21: note: previous >> > definition of 'of_ingenic_ecc_get' was here
-> >>  >  struct ingenic_ecc *of_ingenic_ecc_get(struct device_node *np)
-> >>  >                      ^~~~~~~~~~~~~~~~~~
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:119:6: error: >> redefinition > of 'ingenic_ecc_release'
-> >>  >  void ingenic_ecc_release(struct ingenic_ecc *ecc)
-> >>  >       ^~~~~~~~~~~~~~~~~~~
-> >>  > In file included from >> drivers/mtd/nand/raw/ingenic/ingenic_ecc.c:14:
-> >>  > drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:53:6: note: previous > >> definition of 'ingenic_ecc_release' was here
-> >>  >  void ingenic_ecc_release(struct ingenic_ecc *ecc)
-> >>  >       ^~~~~~~~~~~~~~~~~~~
-> >>  >
-> >>  > Caused by commit
-> >>  >
-> >>  >   8278ad0d709a ("mtd: rawnand: ingenic: Separate top-level and >> SoC > specific code")
-> >>  >
-> >>  > I have used the nand tree from next-20190401 for today.  
-> >> >>  That makes no sense to me; from the offsets of the errors in the >> ingenic_ecc.h  
-> >>  file, it seems that CONFIG_MTD_NAND_INGENIC_ECC is not set, and in >> this case
-> >>  ingenic_ecc.c should not be compiled at all.  
-> >> > > I think  
-> > 
-> >         #ifdef FOO
-> > 
-> > evaluates to true if
-> > 
-> >         FOO=y
-> > 
-> > while we can have
-> > 
-> >         FOO=m
-> > 
-> > which is evaluated to false, hence the double definition with
-> > allmodconfig.  
+> On 3/19/19 12:26 PM, Dan Murphy wrote:
+>> Create a m_can platform framework that peripheral
+>> devices can register to and use common code and register sets.
+>> The peripheral devices may provide read/write and configuration
+>> support of the IP.
+>>
+>> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
 > 
-> That's good to know, I guess I'll have to start using IS_DEFINED()
-> from now on.
-> 
-> > Here is a diff solving the issue, if you are fine with it I will
-> > correct in-place and push -f nand/next for tomorrow's build.  
-> 
-> That would be great.
+> Wondering if this will be going into 5.1 PR?
 
-Done. I also pushed on 0-day, hope I'll have the notification before
-tonight.
+it's Marc who is doing the upstreaming ... and maybe a final review as well.
 
-
-Thanks,
-Miquèl
+Wolfgang.
