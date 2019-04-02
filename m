@@ -2,77 +2,72 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEE7C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E69C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E0F2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554240134;
-	bh=KC6MHSot9P/wc1EbQ8B05h05KHQOkZfOi9okVVBBapM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WmqYSNFDqAtTOetLMW4VT1DE5TYQJSpV2mkfvwHgWq3Jz74MBRrnwaSqTBT/hjmuz
-	 FQwNyVjM6huT22CCJp0kOAYwWjpPzKSSy6qR7Wohw0hGUH7c7pW2C28TiHGgF7yfHS
-	 Q+rceZ7aiTOFiJCG+aL3nTzDRCjtjOS//ljM0P4o=
+	by mail.kernel.org (Postfix) with ESMTP id 85EA92075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:24:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Oy1Ir6rQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfDBVWN (ORCPT
+        id S1726431AbfDBVY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:22:13 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:47692 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfDBVWM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:22:12 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 311E2E7C;
-        Tue,  2 Apr 2019 21:22:11 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 14:22:10 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
-        Manfred Spraul <manfred@colorfullife.com>
-Subject: Re: [RESEND PATCH 2/3] ipc: Conserve sequence numbers in
- ipcmni_extend mode
-Message-Id: <20190402142210.ba29c7dfc10d5a315a1c39dd@linux-foundation.org>
-In-Reply-To: <20190329204930.21620-2-longman@redhat.com>
-References: <20190329204930.21620-1-longman@redhat.com>
-        <20190329204930.21620-2-longman@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 2 Apr 2019 17:24:27 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47802 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbfDBVY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 17:24:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=OSjgGd9Q92nZmCML3Z/NiiN55xh1w4bwXTehn8e1hbc=; b=Oy1Ir6rQ383kwaloCc8rJYLWgP
+        MHe6FF6sc8N+QqDK9aDsGwUg2ZzLYpcLYsbn2hLOLYFqln8RsarEAbx53M1FFr3VBcis1x/MoSH3n
+        jUeJE3PeUDF07f1bOH9Zm0hE06m57YQHFR2h8Ib2O6pxjuDHLaZNZ/N//tz++HxJtLG4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hBQtK-0001M2-MJ; Tue, 02 Apr 2019 23:24:22 +0200
+Date:   Tue, 2 Apr 2019 23:24:22 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        georg.waibel@sensor-technik.de
+Subject: Re: [PATCH net-next 16/17] Documentation: networking: dsa: Add
+ details about NXP SJA1105 driver
+Message-ID: <20190402212422.GH22349@lunn.ch>
+References: <20190331174232.22060-1-olteanv@gmail.com>
+ <20190331174232.22060-17-olteanv@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190331174232.22060-17-olteanv@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Mar 2019 16:49:29 -0400 Waiman Long <longman@redhat.com> wrote:
+> +The switches do not support switch tagging in hardware. But they do support
+> +customizing the TPID by which VLAN traffic is identified as such. The switch
+> +driver is leveraging CONFIG_NET_DSA_TAG_8021Q by requesting that special VLANs
+> +(with a custom TPID of ETH_P_EDSA instead of ETH_P_8021Q)
 
-> From: Manfred Spraul <manfred@colorfullife.com>
-> 
-> Rewrite, based on the patch from Waiman Long:
-> 
-> ...
->
-> Suggested-by: Matthew Wilcox <willy@infradead.org>
-> Original-patch-from: Waiman Long <longman@redhat.com>
-> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
-> Acked-by: Waiman Long <longman@redhat.com>
+Hi Vladimir
 
-I added your Signed-off-by: to this.  Because you contributed and
-because you were on the patch delivery path (either of these require a
-SOB).
+Reusing ETH_P_EDSA is possibility going to case problems in tcpdump.
+It has code which looks for this Ethertype and uses it to call the
+Marvell EDSA header decoder code. This is not going to work for your
+switch, where you have a normal VLAN header.
 
-And I removed the Original-patch-from line.  The changelog already says
-that and Original-patch-from isn't a standard changelog tag.
+I wounder if we should allocate a new EtherType for this application
+of VLANs?
+
+   Andrew
