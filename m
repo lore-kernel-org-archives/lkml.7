@@ -2,274 +2,125 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC72C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E23C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350D420857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E4720857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbfDBO1I (ORCPT
+        id S1729605AbfDBO2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:27:08 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:56887 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbfDBO1I (ORCPT
+        Tue, 2 Apr 2019 10:28:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44774 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725778AbfDBO2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:27:08 -0400
-X-Originating-IP: 90.88.30.125
-Received: from aptenodytes (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 10C29240019;
-        Tue,  2 Apr 2019 14:27:05 +0000 (UTC)
-Message-ID: <9314dc73441b0d731321774be1a12003333eb2f5.camel@bootlin.com>
-Subject: Re: [PATCH v2 2/2] drm/vc4: Disable V3D interactions if the v3d
- component didn't probe.
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Date:   Tue, 02 Apr 2019 16:27:05 +0200
-In-Reply-To: <20190401183559.3823-2-eric@anholt.net>
-References: <20190401183559.3823-1-eric@anholt.net>
-         <20190401183559.3823-2-eric@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Tue, 2 Apr 2019 10:28:21 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x32EOgCB078038
+        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 10:28:20 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rm9fn0847-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 10:28:19 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 2 Apr 2019 15:28:18 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 2 Apr 2019 15:28:12 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x32ESBFM23265466
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Apr 2019 14:28:12 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6096B2064;
+        Tue,  2 Apr 2019 14:28:11 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C62B6B2068;
+        Tue,  2 Apr 2019 14:28:11 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Apr 2019 14:28:11 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id DA0E816C2A3D; Tue,  2 Apr 2019 07:28:16 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 07:28:16 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        linux-nvdimm@lists.01.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org
+Subject: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040214-0068-0000-0000-000003AF7385
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010860; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01183284; UDB=6.00619477; IPR=6.00964032;
+ MB=3.00026260; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-02 14:28:17
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040214-0069-0000-0000-0000480481E6
+Message-Id: <20190402142816.GA13084@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=477 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904020097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello!
 
-On Mon, 2019-04-01 at 11:35 -0700, Eric Anholt wrote:
-> One might want to use the VC4 display stack without using Mesa.
-> Similar to the debugfs fixes for not having all of the possible
-> display bits enabled, make sure you can't oops in vc4 if v3d isn't
-> enabled.
-> 
-> v2: Fix matching against other v3d variants (review by Paul), don't
->     forget to set irq_enabled so that the vblank uapi works
+This series prohibits use of DEFINE_SRCU() and DEFINE_STATIC_SRCU()
+by loadable modules.  The reason for this prohibition is the fact
+that using these two macros within modules requires that the size of
+the reserved region be increased, which is not something we want to
+be doing all that often.  Instead, loadable modules should define an
+srcu_struct and invoke init_srcu_struct() from their module_init function
+and cleanup_srcu_struct() from their module_exit function.  Note that
+modules using call_srcu() will also need to invoke srcu_barrier() from
+their module_exit function.
 
-Looks good to me!
+This series consist of the following:
 
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+1.	Dynamically allocate dax_srcu.
 
-Cheers,
+2.	Dynamically allocate drm_unplug_srcu.
 
-Paul
+3.	Dynamically allocate kfd_processes_srcu.
 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  drivers/gpu/drm/vc4/vc4_drv.c     | 10 ++++++++++
->  drivers/gpu/drm/vc4/vc4_drv.h     |  1 +
->  drivers/gpu/drm/vc4/vc4_gem.c     | 10 ++++++++++
->  drivers/gpu/drm/vc4/vc4_irq.c     |  9 +++++++++
->  drivers/gpu/drm/vc4/vc4_kms.c     |  1 +
->  drivers/gpu/drm/vc4/vc4_perfmon.c | 18 ++++++++++++++++++
->  drivers/gpu/drm/vc4/vc4_v3d.c     |  2 +-
->  7 files changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-> index 3d6fccea5080..d840b52b9805 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.c
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.c
-> @@ -72,6 +72,9 @@ static int vc4_get_param_ioctl(struct drm_device *dev, void *data,
->  	if (args->pad != 0)
->  		return -EINVAL;
->  
-> +	if (!vc4->v3d)
-> +		return -EINVAL;
-> +
->  	switch (args->param) {
->  	case DRM_VC4_PARAM_V3D_IDENT0:
->  		ret = vc4_v3d_pm_get(vc4);
-> @@ -248,6 +251,7 @@ static int vc4_drm_bind(struct device *dev)
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct drm_device *drm;
->  	struct vc4_dev *vc4;
-> +	struct device_node *node;
->  	int ret = 0;
->  
->  	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> @@ -256,6 +260,12 @@ static int vc4_drm_bind(struct device *dev)
->  	if (!vc4)
->  		return -ENOMEM;
->  
-> +	/* If VC4 V3D is missing, don't advertise render nodes. */
-> +	node = of_find_matching_node_and_match(NULL, vc4_v3d_dt_match, NULL);
-> +	if (!node || !of_device_is_available(node))
-> +		vc4_drm_driver.driver_features &= ~DRIVER_RENDER;
-> +	of_node_put(node);
-> +
->  	drm = drm_dev_alloc(&vc4_drm_driver, dev);
->  	if (IS_ERR(drm))
->  		return PTR_ERR(drm);
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-> index be85656024fa..e61734af059b 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.h
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-> @@ -831,6 +831,7 @@ void vc4_plane_async_set_fb(struct drm_plane *plane,
->  
->  /* vc4_v3d.c */
->  extern struct platform_driver vc4_v3d_driver;
-> +extern const struct of_device_id vc4_v3d_dt_match[];
->  int vc4_v3d_get_bin_slot(struct vc4_dev *vc4);
->  int vc4_v3d_pm_get(struct vc4_dev *vc4);
->  void vc4_v3d_pm_put(struct vc4_dev *vc4);
-> diff --git a/drivers/gpu/drm/vc4/vc4_gem.c b/drivers/gpu/drm/vc4/vc4_gem.c
-> index 5e9496d477bf..4544a478f106 100644
-> --- a/drivers/gpu/drm/vc4/vc4_gem.c
-> +++ b/drivers/gpu/drm/vc4/vc4_gem.c
-> @@ -74,6 +74,11 @@ vc4_get_hang_state_ioctl(struct drm_device *dev, void *data,
->  	u32 i;
->  	int ret = 0;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("VC4_GET_HANG_STATE with no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	spin_lock_irqsave(&vc4->job_lock, irqflags);
->  	kernel_state = vc4->hang_state;
->  	if (!kernel_state) {
-> @@ -1119,6 +1124,11 @@ vc4_submit_cl_ioctl(struct drm_device *dev, void *data,
->  	struct dma_fence *in_fence;
->  	int ret = 0;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("VC4_SUBMIT_CL with no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	if ((args->flags & ~(VC4_SUBMIT_CL_USE_CLEAR_COLOR |
->  			     VC4_SUBMIT_CL_FIXED_RCL_ORDER |
->  			     VC4_SUBMIT_CL_RCL_ORDER_INCREASING_X |
-> diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
-> index 4cd2ccfe15f4..ffd0a4388752 100644
-> --- a/drivers/gpu/drm/vc4/vc4_irq.c
-> +++ b/drivers/gpu/drm/vc4/vc4_irq.c
-> @@ -229,6 +229,9 @@ vc4_irq_preinstall(struct drm_device *dev)
->  {
->  	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  
-> +	if (!vc4->v3d)
-> +		return;
-> +
->  	init_waitqueue_head(&vc4->job_wait_queue);
->  	INIT_WORK(&vc4->overflow_mem_work, vc4_overflow_mem_work);
->  
-> @@ -243,6 +246,9 @@ vc4_irq_postinstall(struct drm_device *dev)
->  {
->  	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  
-> +	if (!vc4->v3d)
-> +		return 0;
-> +
->  	/* Enable both the render done and out of memory interrupts. */
->  	V3D_WRITE(V3D_INTENA, V3D_DRIVER_IRQS);
->  
-> @@ -254,6 +260,9 @@ vc4_irq_uninstall(struct drm_device *dev)
->  {
->  	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  
-> +	if (!vc4->v3d)
-> +		return;
-> +
->  	/* Disable sending interrupts for our driver's IRQs. */
->  	V3D_WRITE(V3D_INTDIS, V3D_DRIVER_IRQS);
->  
-> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
-> index 5160cad25fce..295dacc8bcb9 100644
-> --- a/drivers/gpu/drm/vc4/vc4_kms.c
-> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
-> @@ -525,6 +525,7 @@ int vc4_kms_load(struct drm_device *dev)
->  	/* Set support for vblank irq fast disable, before drm_vblank_init() */
->  	dev->vblank_disable_immediate = true;
->  
-> +	dev->irq_enabled = true;
->  	ret = drm_vblank_init(dev, dev->mode_config.num_crtc);
->  	if (ret < 0) {
->  		dev_err(dev->dev, "failed to initialize vblank\n");
-> diff --git a/drivers/gpu/drm/vc4/vc4_perfmon.c b/drivers/gpu/drm/vc4/vc4_perfmon.c
-> index 495150415020..6562d3d30b20 100644
-> --- a/drivers/gpu/drm/vc4/vc4_perfmon.c
-> +++ b/drivers/gpu/drm/vc4/vc4_perfmon.c
-> @@ -100,12 +100,18 @@ void vc4_perfmon_close_file(struct vc4_file *vc4file)
->  int vc4_perfmon_create_ioctl(struct drm_device *dev, void *data,
->  			     struct drm_file *file_priv)
->  {
-> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  	struct vc4_file *vc4file = file_priv->driver_priv;
->  	struct drm_vc4_perfmon_create *req = data;
->  	struct vc4_perfmon *perfmon;
->  	unsigned int i;
->  	int ret;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("Creating perfmon no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	/* Number of monitored counters cannot exceed HW limits. */
->  	if (req->ncounters > DRM_VC4_MAX_PERF_COUNTERS ||
->  	    !req->ncounters)
-> @@ -146,10 +152,16 @@ int vc4_perfmon_create_ioctl(struct drm_device *dev, void *data,
->  int vc4_perfmon_destroy_ioctl(struct drm_device *dev, void *data,
->  			      struct drm_file *file_priv)
->  {
-> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  	struct vc4_file *vc4file = file_priv->driver_priv;
->  	struct drm_vc4_perfmon_destroy *req = data;
->  	struct vc4_perfmon *perfmon;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("Destroying perfmon no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	mutex_lock(&vc4file->perfmon.lock);
->  	perfmon = idr_remove(&vc4file->perfmon.idr, req->id);
->  	mutex_unlock(&vc4file->perfmon.lock);
-> @@ -164,11 +176,17 @@ int vc4_perfmon_destroy_ioctl(struct drm_device *dev, void *data,
->  int vc4_perfmon_get_values_ioctl(struct drm_device *dev, void *data,
->  				 struct drm_file *file_priv)
->  {
-> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  	struct vc4_file *vc4file = file_priv->driver_priv;
->  	struct drm_vc4_perfmon_get_values *req = data;
->  	struct vc4_perfmon *perfmon;
->  	int ret;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("Getting perfmon no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	mutex_lock(&vc4file->perfmon.lock);
->  	perfmon = idr_find(&vc4file->perfmon.idr, req->id);
->  	vc4_perfmon_get(perfmon);
-> diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
-> index 36e6c7086ecf..a4b6859e3af6 100644
-> --- a/drivers/gpu/drm/vc4/vc4_v3d.c
-> +++ b/drivers/gpu/drm/vc4/vc4_v3d.c
-> @@ -474,7 +474,7 @@ static int vc4_v3d_dev_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id vc4_v3d_dt_match[] = {
-> +const struct of_device_id vc4_v3d_dt_match[] = {
->  	{ .compatible = "brcm,bcm2835-v3d" },
->  	{ .compatible = "brcm,cygnus-v3d" },
->  	{ .compatible = "brcm,vc4-v3d" },
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+These build and have been subjected to 0day testing, but might also need
+testing by someone having the requisite hardware.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ drivers/dax/super.c                        |   10 +++++-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c |    5 +++
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c   |    2 -
+ drivers/gpu/drm/drm_drv.c                  |    8 ++++
+ include/linux/srcutree.h                   |   19 +++++++++--
+ kernel/rcu/rcuperf.c                       |   40 +++++++++++++++++++-----
+ kernel/rcu/rcutorture.c                    |   48 +++++++++++++++++++++--------
+ 7 files changed, 105 insertions(+), 27 deletions(-)
 
