@@ -2,143 +2,150 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21F6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF78C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7B0206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28822070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbfDBCVB (ORCPT
+        id S1728764AbfDBCZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 22:21:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
+        Mon, 1 Apr 2019 22:25:36 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30765 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfDBCVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 22:21:00 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 235FD206B6;
-        Tue,  2 Apr 2019 02:20:59 +0000 (UTC)
-Date:   Mon, 1 Apr 2019 22:20:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jason Behmer <jbehmer@google.com>
-Cc:     tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: Re: Nested events with zero deltas, can use absolute timestamps
- instead?
-Message-ID: <20190401222056.3da6e7a7@oasis.local.home>
-In-Reply-To: <CAMmhGqKPw1sxB_Qc+Z-MXZue+wtAQsQDDgUvjs4JQTVY8bR65g@mail.gmail.com>
-References: <CAMmhGqKc27W03roONYXhmwB0dtz5Z8nGoS2MLSsKJ3Zotv5-JA@mail.gmail.com>
-        <20190329125258.2c6fe0cb@gandalf.local.home>
-        <CAMmhGqKPw1sxB_Qc+Z-MXZue+wtAQsQDDgUvjs4JQTVY8bR65g@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726269AbfDBCZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 22:25:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 19:25:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
+   d="scan'208";a="139188473"
+Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
+  by orsmga003.jf.intel.com with ESMTP; 01 Apr 2019 19:25:33 -0700
+Date:   Tue, 2 Apr 2019 10:28:40 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 1/2] printk: Add an option to flush all messages on panic
+Message-ID: <20190402022840.et7sbiamxeutbw2q@shbuild888>
+References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
+ <20190402021419.GA617@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402021419.GA617@jagdpanzerIV>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 1 Apr 2019 15:54:20 -0700
-Jason Behmer <jbehmer@google.com> wrote:
+Hi Sergey,
 
-> The concurrency model is still a little bit unclear to me as I'm new
-> to this codebase.  So I'm having some trouble reasoning about what
-> operations are safe at one point on the ring buffer.    It seems like
-> we can't be preempted in general, just interrupts?  And the events for
-> the events emitted by interrupts will be fully processed before
-> getting back to the event pointed at by the commit pointer?  If this
-> is true I think the approach below (and prototyped in the attached
-> patch against head) might work and would love feedback.  If not, this
-> problem is way harder.
+Thanks for the review.
+
+On Tue, Apr 02, 2019 at 11:14:19AM +0900, Sergey Senozhatsky wrote:
+> On (04/01/19 18:48), Feng Tang wrote:
+> > diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+> > index 1fd45a8..58d9580 100644
+> > --- a/arch/powerpc/kernel/traps.c
+> > +++ b/arch/powerpc/kernel/traps.c
+> > @@ -179,7 +179,7 @@ extern void panic_flush_kmsg_end(void)
+> >  	kmsg_dump(KMSG_DUMP_PANIC);
+> >  	bust_spinlocks(0);
+> >  	debug_locks_off();
+> > -	console_flush_on_panic();
+> > +	console_flush_on_panic(false);
+> >  }
+> [..]
+> > @@ -277,7 +277,7 @@ void panic(const char *fmt, ...)
+> >  	 * panic() is not being callled from OOPS.
+> >  	 */
+> >  	debug_locks_off();
+> > -	console_flush_on_panic();
+> > +	console_flush_on_panic(false);
+> [..]
+> > -void console_flush_on_panic(void)
+> > +void console_flush_on_panic(bool flush_all)
+> >  {
+> >  	/*
+> >  	 * If someone else is holding the console lock, trylock will fail
+> > @@ -2539,6 +2540,12 @@ void console_flush_on_panic(void)
+> >  	 */
+> >  	console_trylock();
+> >  	console_may_schedule = 0;
+> > +
+> > +	/* User may want to see all the printk messages on panic */
+> > +	if (flush_all) {
+> > +		console_seq = log_first_seq;
+> > +		console_idx = log_first_idx;
+> > +	}
+> >  	console_unlock();
 > 
-> We detect nested events by checking our event pointer against the
-> commit pointer.  This is safe because we reserve our event space
-> atomically in the buffer, leading to an ordering of events we can
-> depend on.  But to add a TIME_STAMP event we need to reserve more
-> space before we even have an event pointer, so we need to know
-> something about the ordering of events before we've actually
-> atomically reserved ours.  We could check if the write pointer is set
-> to the commit pointer, and if it isn't we know we're a nested event.
-> But, someone could update the write pointer and/or commit pointer
-> between the time we check it and the time we atomically reserve our
-> space in the buffer.  However, I think maybe this is ok.
+> So my first thought was - let's not add a `bool flag', but instead add
+> an `enum' with clear flag names, e.g. DUMP_ALL/DUMP_PENDING, etc. Something
+> similar to what ftrace_dump(DUMP_ALL) does. And we already have panic_print
+> bit-mask and panic_print_sys_info(), which controls what we print when in
+> panic. So we can move console_flush_on_panic() to panic_print_sys_info()
+> and handle different types of console_flush_on_panic() there:
 > 
-> If we see that the write pointer is not equal to the commit pointer,
-> then we're in an interrupt, and the only thing that could update the
-> commit pointer is the original event emitting code that was
-> interrupted, which can't run again until we're finished.  And the only
-> thing that can update the write pointer is further interrupts of us,
-> which will advance the write pointer further away from commit, leaving
-> our decision to allocate a TIME_STAMP event as valid.
+> ---
 > 
-> If we see that the write pointer is equal to the commit pointer, then
-> anything that interrupts us before we move the write pointer will see
-> that same state and will need to, before returning to us, commit their
-> event and set commit to their new write pointer, which will make our
-> decision valid once again.
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 0ae0d7332f12..e142faaebbcd 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -134,6 +134,11 @@ EXPORT_SYMBOL(nmi_panic);
+>  
+>  static void panic_print_sys_info(void)
+>  {
+> +	if (panic_print & PANIC_PRINT_REPLAY_LOGBUF)
+> +		console_flush_on_panic(DUMP_ALL);
+> +	else
+> +		console_flush_on_panic(DUMP_PENDING);
+> +
+>  	if (panic_print & PANIC_PRINT_TASK_INFO)
+>  		show_state();
+>  
+> @@ -277,7 +282,6 @@ void panic(const char *fmt, ...)
+>  	 * panic() is not being callled from OOPS.
+>  	 */
+>  	debug_locks_off();
+> -	console_flush_on_panic();
+>  
+>  	panic_print_sys_info();
+>  
+
+I guess this is what my 2/2 patch exactly does :)
+
+
+> ---
 > 
-> There's a lot of assumptions in there that I'd love to be checked on
-> as I'm new to this code base.  For example I haven't read the read
-> path at all and have no idea if it interacts with this at all.
+> After looking at this more - DUMP_ALL/DUMP_PENDING clearly depend
+> on panic_print. So... May be we can move panic_print_sys_info() to
+> printk.c, and for PANIC_PRINT_REPLAY_LOGBUF case just reset console
+> seq/idx (console seq/idx are internal to printk) before we
+> flush_on_panic. This way we would not need to modify
+> console_flush_on_panic() prototype at all.
 
-I think you pretty much got the idea correct. The issue is what to put
-into the extra timestamp value. As the time we record the timestamp
-compared to the time we allocate the space for the timestamp is not
-atomic. And we can't have time go backwards :-(
+My thought is panic_print_sys_info() may be more related to panic, but
+I'm fine with either way.
 
-		|                                  |
-commit 	--->	+----------------------------------+
-		| TS offset from previous event    |  (A)
-		+----------------------------------+
-		| outer event data                 |
-<interrupt>	+----------------------------------+
-		| extended TS                      |  (B)
-		+----------------------------------+
-		| interrupt event data             |
-		+----------------------------------+
- head	--->	|                                  |
+Thanks,
+Feng
 
-
-	TS = rdstc();
-	A = reserve_ring_buffer
-	*A = TS
-
-interrupt:
-	TS = rdtsc();
-	B = reserve_ring_buffer
-	*B = TS
-
-
-What's important is what we store in A and B
-
-	TS = rdtsc();
-		<interrupt> --->
-					TS = rdstc()
-					(this is first commit!)
-					A = reserver_ring_buffer
-					*A = TS
-					(finish commit)
-		<----
-	A = reserver_ring_buffer
-	*A = TS
-
-You can see how the recording of the timestamp and writing it gets
-complex. Also it gets more complex when we use deltas and not direct writes.
-
-Now we may be able to handle this if we take the timestamp before doing
-anything, and if it's nested, take it again (which should guarantee
-that it's after the previous timestamp)
-
-Now of course the question is, how do we update the write stamp that we
-will use to compute new "deltas"? Or we just use absolute timestamps to
-the end of the page, and start over again, when we start a new page
-that isn't nested.
-
-But see where the complexity comes from?
-
--- Steve
+> 
+> Let's hear from people.
+> 
+> 	-ss
