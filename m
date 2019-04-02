@@ -2,84 +2,80 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647D3C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD09C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E09206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8243020856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbfDBLoT (ORCPT
+        id S1730727AbfDBLoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:44:19 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:23742 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726716AbfDBLoT (ORCPT
+        Tue, 2 Apr 2019 07:44:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38148 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfDBLog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:44:19 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-57-JBKtKZidP6OeCylcTurrsg-1; Tue, 02 Apr 2019 12:44:15 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 2 Apr 2019 12:45:21 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 2 Apr 2019 12:45:20 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Alexander Potapenko' <glider@google.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "peterz@infradead.org" <peterz@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>,
-        "jyknight@google.com" <jyknight@google.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>
-Subject: RE: [PATCH v2] x86/asm: fix assembly constraints in bitops
-Thread-Topic: [PATCH v2] x86/asm: fix assembly constraints in bitops
-Thread-Index: AQHU6UdY5ims1sqDDECRt8+l+UbnY6YovS9A
-Date:   Tue, 2 Apr 2019 11:45:20 +0000
-Message-ID: <4c6a1e592fd345618ef7b7d5bee592da@AcuMS.aculab.com>
-References: <20190402112813.193378-1-glider@google.com>
-In-Reply-To: <20190402112813.193378-1-glider@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 2 Apr 2019 07:44:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k11so16249598wro.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 04:44:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pUC3T+KFPMqkSdft5y94SHojq5KTehiWMuFREzb863E=;
+        b=fx2wCWKNnv9jaMlxhc3uRvm7BVLUoFMIcbYTNyKwfBlwirIhca5WCldQ9f73ZYD57a
+         oSneETNQ75UL5ww4ldxxFhJOQ096h7gWaUrgxVJ/4WaFgoQfqvc7SFBqOzVR9roSRKyy
+         1Iciz4By3mV8JMMv0AGA58e/3tVlEuiBK4AXmcQojP7RHS2sHXtRezDYhpA4aImPuDrS
+         qltcAr3xMtBqGYsZsJIRlzzx9TNkfosMhBphq5CmWsveBXTDe+H3nfzP4Le7AkGCNcxt
+         VaLnlJ1BxjTL0Dt37egd090kubbZW+VENAhSb+drPJ6zsddA5kPbzBKJriDPU3IKG0ae
+         eBjA==
+X-Gm-Message-State: APjAAAXwAS0B+/mPqZUHfShsU1d5jIiKQnyrXCRwPwgoIwa5uSKYurX5
+        8JOmn5tOngn0yBcg7vU9g8I8V4i4iYY=
+X-Google-Smtp-Source: APXvYqxd0YrqNUY/2DULHTbYH/PuGLPIAFBOtopJ3d3uqSSOOVLTpKJSt+gz7S0RNRpt6znmEGbUUw==
+X-Received: by 2002:adf:e547:: with SMTP id z7mr43200375wrm.295.1554205474562;
+        Tue, 02 Apr 2019 04:44:34 -0700 (PDT)
+Received: from localhost ([90.85.130.193])
+        by smtp.gmail.com with ESMTPSA id m13sm13327531wmg.42.2019.04.02.04.44.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 04:44:33 -0700 (PDT)
+From:   Christina Quast <cquast@hanoverdisplays.com>
+Cc:     trivial@kernel.org, Christina Quast <cquast@hanoverdisplays.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: kernfs: Corrected spelling mistake
+Date:   Tue,  2 Apr 2019 13:44:14 +0200
+Message-Id: <20190402114414.23767-1-cquast@hanoverdisplays.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MC-Unique: JBKtKZidP6OeCylcTurrsg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQWxleGFuZGVyIFBvdGFwZW5rbw0KPiBTZW50OiAwMiBBcHJpbCAyMDE5IDEyOjI4DQo+
-IA0KPiAxLiBVc2UgbWVtb3J5IGNsb2JiZXIgaW4gYml0b3BzIHRoYXQgdG91Y2ggYXJiaXRyYXJ5
-IG1lbW9yeQ0KPiANCj4gQ2VydGFpbiBiaXQgb3BlcmF0aW9ucyB0aGF0IHJlYWQvd3JpdGUgYml0
-cyB0YWtlIGEgYmFzZSBwb2ludGVyIGFuZCBhbg0KPiBhcmJpdHJhcmlseSBsYXJnZSBvZmZzZXQg
-dG8gYWRkcmVzcyB0aGUgYml0IHJlbGF0aXZlIHRvIHRoYXQgYmFzZS4NCg0KQWx0aG91Z2ggeDg2
-XzY0IGNhbiB1c2UgYSBzaWduZWQgNjRiaXQgYml0IG51bWJlciwgbG9va2luZyBhdCBhcm0gYW5k
-IGFybTY0DQp0aGV5IHVzZSAnaW50IG5yJyB0aHJvdWdob3V0IGFzIGRvIHRoZSBnZW5lcmljIGZ1
-bmN0aW9ucy4NCk1heWJlIHg4NiBvdWdodCB0byBiZSBjb25zaXN0ZW50IGhlcmUuDQpJIGRvdWJ0
-IG5lZ2F0aXZlIGJpdCBudW1iZXJzIGFyZSBleHBlY3RlZCB0byB3b3JrPw0KDQpEaWQgeW91IHRy
-eSB0ZWxsaW5nIGdjYyB0aGF0IGEgYmlnIGJ1ZmZlciAoMjUwTUIgaXMgdGhlIGxpbWl0IGZvciAz
-MmJpdCkNCmZyb20gdGhlIHBvaW50ZXIgbWlnaHQgYmUgY2hhbmdlZD8NClRoYXQgb3VnaHQgdG8g
-YmUgc29mdGVyIHRoYW4gYSBmdWxsICdtZW1vcnknIGNsb2JiZXIgYXMgaXQgc2hvdWxkDQpvbmx5
-IGFmZmVjdCBtZW1vcnkgdGhhdCBjb3VsZCBiZSBhY2Nlc3NlZCB0aHJvdWdoIHRoZSBwb2ludGVy
-Lg0KDQouLi4uDQo+IC0jZGVmaW5lIEJJVE9QX0FERFIoeCkgIittIiAoKih2b2xhdGlsZSBsb25n
-ICopICh4KSkNCj4gKyNkZWZpbmUgUkxPTkdfQUREUih4KSAibSIgKCoodm9sYXRpbGUgbG9uZyAq
-KSAoeCkpDQo+ICsjZGVmaW5lIFdCWVRFX0FERFIoeCkgIittIiAoKih2b2xhdGlsZSBjaGFyICop
-ICh4KSkNCj4gDQo+IC0jZGVmaW5lIEFERFIJCQkJQklUT1BfQUREUihhZGRyKQ0KPiArI2RlZmlu
-ZSBBRERSCQkJCVJMT05HX0FERFIoYWRkcikNCg0KSXMgaXQgd29ydGgganVzdCBraWxsaW5nIEFE
-RFIgPw0KKGFzIGEgZGlmZmVyZW50IHBhdGNoKQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBB
-ZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMs
-IE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+---
+ include/linux/kernfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
+index c8893f663470..e446ab97ee0c 100644
+--- a/include/linux/kernfs.h
++++ b/include/linux/kernfs.h
+@@ -64,7 +64,7 @@ enum kernfs_root_flag {
+ 	KERNFS_ROOT_CREATE_DEACTIVATED		= 0x0001,
+ 
+ 	/*
+-	 * For regular flies, if the opener has CAP_DAC_OVERRIDE, open(2)
++	 * For regular files, if the opener has CAP_DAC_OVERRIDE, open(2)
+ 	 * succeeds regardless of the RW permissions.  sysfs had an extra
+ 	 * layer of enforcement where open(2) fails with -EACCES regardless
+ 	 * of CAP_DAC_OVERRIDE if the permission doesn't have the
+-- 
+2.20.1
 
