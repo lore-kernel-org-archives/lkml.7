@@ -2,192 +2,110 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B5BC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3586C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0825620693
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FEB20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:49:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="BdLifG04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731824AbfDBOrq (ORCPT
+        id S1731883AbfDBOtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:47:46 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:48915 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbfDBOrq (ORCPT
+        Tue, 2 Apr 2019 10:49:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33964 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731783AbfDBOtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:47:46 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 408A22000E;
-        Tue,  2 Apr 2019 14:47:43 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 16:47:42 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula@amarulasolutions.com,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v9 2/5] drm/sun4i: sun6i_mipi_dsi: Fix TCON DRQ set bits
-Message-ID: <20190402144742.gdc57oxiqv3uz4o6@flea>
-References: <20190303173527.31055-1-jagan@amarulasolutions.com>
- <20190303173527.31055-3-jagan@amarulasolutions.com>
- <20190304154320.uledvwz5jhzt22o3@flea>
- <CAMty3ZDWkLWgWhGWBjhXOsmAXzuGKGADAEhzB6gcL+jd7FRazQ@mail.gmail.com>
- <20190307153935.uxh2hsmahw5l7h4q@flea>
- <CAMty3ZDyk60R0YCsBV6toz84CFjD0D6uWyLVhmp8PC+Mj8GJpQ@mail.gmail.com>
- <20190311140923.vvtubx7wndos2rfr@flea>
- <CAMty3ZCABQ8Sa9+E_nznzMEYpvVm+KrnXDuEgt9qwue9t5Zs8g@mail.gmail.com>
- <20190319105648.54i6pd4l74uvp4px@flea>
- <CAMty3ZAp9tXD2dMKEdOYy6zftqobHNOs6U4fSUeAOfmSiO909A@mail.gmail.com>
+        Tue, 2 Apr 2019 10:49:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p10so17067167wrq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 07:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KKpqAZk8ZPLTi+w4by/A8Sx+wgJCRI5IaCwsZ3rsIJ0=;
+        b=BdLifG04va0ZcioS+cyiaj6h5/KXx1W/ZLC1O+Brt3fJ/cYFYnGCNkfWa/RDPYAXq8
+         Ao9mB/JDrAEJMlpvz4hQJNG3Sgx7ggZC9ln7CtWmV+6EDDYY+N2RaO2jKioHd4DdEvl5
+         wL/ENPXHSnnZAqB1jasENfnP5OtUDgXFgewK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KKpqAZk8ZPLTi+w4by/A8Sx+wgJCRI5IaCwsZ3rsIJ0=;
+        b=mDgHctURUtyNVu87zsq1qPO39yWX2iZ6Hfd2vFjfdjO+Xt4iZFNQ0C73qBi6zEf1Ob
+         FbzgCjEI7qivkepT1DDOz4XJQ55ageD5rcIbRo0dG2F44oxbmk9fL19CeXlORHj3ylOM
+         ww6WhrdJXraEvQvJzZrklC5WEPnbBVSg1ihdytZUcGdFxevIPeL8VZbUjeks28vgYiLm
+         n5ikQMHhMoiIge7vpXmqfP8MMOvJK9GhXgRqM9eqKBOtcWv4Npe73GwGN84/L9+zCmA5
+         AO44gRPGvuhbnFsDAkRIxq2/Q/kmXh6HdXXJBn4e5UFf++xD568z/Amchw5URqqGlu5g
+         0nFg==
+X-Gm-Message-State: APjAAAWMMJUg9DYV38k91IP1YnVyTTm4X58H6oaHyJsoIRR9fIGYwVHt
+        u/Iu8eWXyxL78EC71it+ZgEwLQ==
+X-Google-Smtp-Source: APXvYqzFG/gi2VTtm6uozMfLN1t0+Catgnql8boWnrGWwJ6AioTthn1cPup0HEPMaNbtcQt6WRghHw==
+X-Received: by 2002:a5d:698b:: with SMTP id g11mr3728077wru.65.1554216559327;
+        Tue, 02 Apr 2019 07:49:19 -0700 (PDT)
+Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id f11sm15267916wrm.30.2019.04.02.07.49.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 07:49:17 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 16:49:11 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, stern@rowland.harvard.edu, will.deacon@arm.com,
+        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        akiyks@gmail.com
+Subject: Re: [PATCH tip/core/rcu 08/21] tools/memory-model: Add support for
+ synchronize_srcu_expedited()
+Message-ID: <20190402144911.GA10044@andrea>
+References: <20190326234114.GA23843@linux.ibm.com>
+ <20190326234133.24962-8-paulmck@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kz6w2pkvgsyb3k3x"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZAp9tXD2dMKEdOYy6zftqobHNOs6U4fSUeAOfmSiO909A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190326234133.24962-8-paulmck@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 26, 2019 at 04:41:20PM -0700, Paul E. McKenney wrote:
+> Given that synchronize_rcu_expedited() is supported, this commit adds
+> support for synchronize_srcu_expedited().
+> 
+> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> ---
+>  tools/memory-model/linux-kernel.def | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/memory-model/linux-kernel.def b/tools/memory-model/linux-kernel.def
+> index 0c3f0ef486f4..551eeaa389d4 100644
+> --- a/tools/memory-model/linux-kernel.def
+> +++ b/tools/memory-model/linux-kernel.def
+> @@ -51,6 +51,7 @@ synchronize_rcu_expedited() { __fence{sync-rcu}; }
+>  srcu_read_lock(X)  __srcu{srcu-lock}(X)
+>  srcu_read_unlock(X,Y) { __srcu{srcu-unlock}(X,Y); }
+>  synchronize_srcu(X)  { __srcu{sync-srcu}(X); }
+> +synchronize_srcu_expedited(X)  { __srcu{sync-srcu}(X); }
 
---kz6w2pkvgsyb3k3x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This and the other patches from the series do not apply to "tip/core/rcu"
+(from the Subject), but this seems straightforward enough:
 
-On Thu, Mar 28, 2019 at 05:23:39PM +0530, Jagan Teki wrote:
-> On Tue, Mar 19, 2019 at 4:26 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Mon, Mar 11, 2019 at 08:28:22PM +0530, Jagan Teki wrote:
-> > > On Mon, Mar 11, 2019 at 7:39 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Thu, Mar 07, 2019 at 09:24:02PM +0530, Jagan Teki wrote:
-> > > > > On Thu, Mar 7, 2019 at 9:09 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > >
-> > > > > > On Thu, Mar 07, 2019 at 05:49:07PM +0530, Jagan Teki wrote:
-> > > > > > > On Mon, Mar 4, 2019 at 9:13 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > >
-> > > > > > > > On Sun, Mar 03, 2019 at 11:05:24PM +0530, Jagan Teki wrote:
-> > > > > > > > > TCON DRQ for non-burst DSI mode can computed based on horizontal
-> > > > > > > > > front porch value, but the current driver trying to include sync
-> > > > > > > > > timings along with front porch resulting wrong drq.
-> > > > > > > > >
-> > > > > > > > > This patch is trying to update the drq by subtracting hsync_start
-> > > > > > > > > with hdisplay, which is horizontal front porch.
-> > > > > > > > >
-> > > > > > > > > Current code:
-> > > > > > > > > ------------
-> > > > > > > > > mode->hsync_end - mode->hdisplay => horizontal front porch + sync
-> > > > > > > > >
-> > > > > > > > > With this patch:
-> > > > > > > > > ----------------
-> > > > > > > > > mode->hsync_start - mode->hdisplay => horizontal front porch
-> > > > > > > > >
-> > > > > > > > > BSP code form BPI-M64-bsp is computing TCON DRQ set bits
-> > > > > > > > > for non-burts as (from linux-sunxi/
-> > > > > > > > > drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-> > > > > > > > >
-> > > > > > > > > => panel->lcd_ht -    panel->lcd_x - panel->lcd_hbp
-> > > > > > > > > => (timmings->hor_front_porch + panel->lcd_hbp + panel->lcd_x)
-> > > > > > > >                                   ^ + sync length +
-> > > > > > > > >    - panel->lcd_x - panel->hbp
-> > > > > > > > > => timmings->hor_front_porch
-> > > > > > > >                                ^ + sync
-> > > > > > > > > => mode->hsync_start - mode->hdisplay
-> > > > > > > >
-> > > > > > > > s/hsync_start/hsync_end/
-> > > > > > >
-> > > > > > > No, it should be front porch so it is hsync_start. This change is
-> > > > > > > trying to update DRQ set to use front porch and above evaluation from
-> > > > > > > BSP, result the same front front porch
-> > > > > > >
-> > > > > > > Current driver has hsync_end - hdisplay which is not front porch
-> > > > > > > timing (it is adding extra sync timing).
-> > > > > >
-> > > > > > It would be if you considered that the back porch actually was the
-> > > > > > back porch plus the sync length. I have found no such evidence, quite
-> > > > > > the opposite actually, everything seems to point at the fact that
-> > > > > > unlike the TCON, the DSI block uses the back porch as only the back
-> > > > > > porch.
-> > > > >
-> > > > > Sorry, I'm not clear about back porch here.
-> > > > >
-> > > > > The current code has mode->hsync_end - mode->hdisplay which is Front
-> > > > > porch + sync time do you think it's not?
-> > > >
-> > > > It is.
-> > > >
-> > > > > DRQ set time is pure front porch value (according BSP) as I didn't
-> > > > > see any information about DRQ set bits in manual or anywhere.
-> > > >
-> > > > This is what I'm telling you. If you consider the back porch as only
-> > > > the back porch, then the result of that BSP calculation you mentionned
-> > > > earlier is the front porch and the sync length.
-> > > >
-> > > > You imply that the back porch should actually be treated as the back
-> > > > porch and the sync length in your calculation. What makes you say so?
-> > >
-> > > I'm consider the computations accordingly to drm_modes.h and which
-> > > matches similar like BSP code.
-> > >
-> > > mode->hsync_end - mode->hdisplay = front porch + sync
-> > >
-> > > but the actual computation is
-> > > mode->hsync_start - mode->hdisplay =>  front porch
-> > >
-> > > Which is similar to what BSP is using.
-> > >
-> > > => panel->lcd_ht -    panel->lcd_x - panel->lcd_hbp
-> > > => (timmings->hor_front_porch + panel->lcd_hbp + panel->lcd_x)
-> > >    - panel->lcd_x - panel->hbp
-> > > => timmings->hor_front_porch
-> > > => mode->hsync_start - mode->hdisplay
-> >
-> > You're missing the point. What I'm asking for is why you think that
-> > panel->lcd_ht == (timmings->hor_front_porch + panel->lcd_hbp +
-> > panel->lcd_x) and not timmings->hor_front_porch + panel->lcd_hbp +
-> > sync_width + panel->lcd_x
->
-> No ie not true we can't include sync_width, please see here [1]
->
-> timmings->hor_front_porch= panel_info->lcd_ht-panel_info->lcd_hbp -
-> panel_info->lcd_x;
-> panel_info->lcd_ht = timmings->hor_front_porch + panel_info->lcd_hbp +
-> panel_info->lcd_x;
->
-> and the result of this lcd_ht is exactly matched with Mainline timings
-> or any supported panel in A64.
->
-> [1] https://github.com/longsleep/linux-pine64/blob/pine64-hacks-1.2/drivers/video/sunxi/disp2/disp/de/disp_lcd.c#L1839
+Acked-by: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-Can we please start to reason in actual timings instead of whatever
-Allwinner comes up with in their BSP?
+  Andrea
 
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---kz6w2pkvgsyb3k3x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKN2DgAKCRDj7w1vZxhR
-xSqeAQDx9BENI+4TJ3ci0QpZ7BjfMqO0Vh62flCE/SGh1xBZ1AEA90msbhYdW4kl
-QZEV8OU5fZZksH7oMSKF0v0/jry/Wwg=
-=fcSY
------END PGP SIGNATURE-----
-
---kz6w2pkvgsyb3k3x--
+>  
+>  // Atomic
+>  atomic_read(X) READ_ONCE(*X)
+> -- 
+> 2.17.1
+> 
