@@ -2,159 +2,194 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0370BC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3653C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99512084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B055E20700
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:16:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZHUgm2Mu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfDBXK4 (ORCPT
+        id S1726442AbfDBXQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 19:10:56 -0400
-Received: from smtp-out-so.shaw.ca ([64.59.136.137]:44654 "EHLO
-        smtp-out-so.shaw.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfDBXK4 (ORCPT
+        Tue, 2 Apr 2019 19:16:15 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58158 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfDBXQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 19:10:56 -0400
-X-Greylist: delayed 487 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Apr 2019 19:10:47 EDT
-Received: from tethys.mmayer.net ([70.68.144.247])
-        by shaw.ca with ESMTP
-        id BSQZhhs5XGusjBSQahTVxO; Tue, 02 Apr 2019 17:02:48 -0600
-X-Authority-Analysis: v=2.3 cv=fOdHIqSe c=1 sm=1 tr=0
- a=5Vvn7CJLxh9yo+qVPaC6cg==:117 a=5Vvn7CJLxh9yo+qVPaC6cg==:17
- a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=oexKYjalfGEA:10 a=Q-fNiiVtAAAA:8
- a=nEoe6GGM0fj7lErqnHgA:9 a=Fp8MccfUoT0GBdDC_Lng:22
-Received: by tethys.mmayer.net (Postfix, from userid 501)
-        id F3D243010142FE; Tue,  2 Apr 2019 16:02:46 -0700 (PDT)
-From:   Markus Mayer <code@mmayer.net>
-To:     Brian Norris <computersforpeace@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/6] memory: brcmstb: dpfe: prepare for API-dependent sysfs attributes
-Date:   Tue,  2 Apr 2019 16:01:02 -0700
-Message-Id: <20190402230103.25491-6-code@mmayer.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190402230103.25491-1-code@mmayer.net>
-References: <20190402230103.25491-1-code@mmayer.net>
+        Tue, 2 Apr 2019 19:16:15 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32Kd3oq163977;
+        Tue, 2 Apr 2019 20:44:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2018-07-02;
+ bh=SWwbtSuBuVRAsBvShPwVRYWt3xedhjkFQ6ROdmYUzro=;
+ b=ZHUgm2MuOOV0krty4T7QXlZIWISL8Smr5VxapxX5M+iGYwDtJrdgceBsKxYJad72jdFs
+ WS6PXNlId7SQt1sMM422gZWgqsqdoOXN4TuZV9XoD+5A4MgP2ZHg4kYngmD/wvkJ+Xgj
+ OcxQ0Ed7eusFEwspi+mZ4o+M15eUeGihEv2NnqjMkMR9M/SgYecFbMS2YxvOnsYMm27K
+ DbDjihLSkP5+pHWFMCMIJK0R0jhEKczACn8l1Bgh/JSxMplw+viZEOvNtNzKtkwi8JNd
+ G8lMfgtiWXb7/DUUffMG3VNE5jGReclP09wmyGjuhYIpBk/SM3T6LIXX7CzgD5iDuFEY xw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2rj0dnm0bs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:44:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32KfJxi065003;
+        Tue, 2 Apr 2019 20:42:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2rm8f4yk08-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:42:22 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x32KgLio031444;
+        Tue, 2 Apr 2019 20:42:21 GMT
+Received: from localhost.localdomain (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Apr 2019 13:42:21 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     akpm@linux-foundation.org
+Cc:     daniel.m.jordan@oracle.com, Alan Tull <atull@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        linux-mm@kvack.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/6] fpga/dlf/afu: drop mmap_sem now that locked_vm is atomic
+Date:   Tue,  2 Apr 2019 16:41:56 -0400
+Message-Id: <20190402204158.27582-5-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfHms0JvIk2OhUXdKqqesYKQxioLZy7kmYeMDS3Y6Tv3p3W9m3o+LOeJL3AbWQ78+aCNRHZY9rDnJyFVBRfuVyE0tMthBPbcCbEDX0X+PyNBmBQ1KWm1Z
- VHSuhDo37qNR48INZpZEmUHPmjvm1inTQr4mqZMgYwkXVzOeVsSB+/WhkgN2s39lL2tQy37kFsddCS8g54VxO6/FQogpZe8UCWQ3c4L9Aia65j3JZBr7wiNE
- 1u7HwZ9usVX1H7IuJ3mXXUFBFsb4Y8nA7aSuNWZyj9XdNXfrgmNEGCxRxGqtt6zAtU1GC4zn4qk+nhe4SUjRj5d2cpClezEz4SXqbW31X1p20zwmjwAdRaZg
- W6tBEOJIKT87VRMwJhyzsVCgmsPis7KoKRJFgMrkksm3cKQWBi1dEw1TfaRSEpwObFPRrMJSN+tgOldyFro7ew8bwDiCJw==
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904020138
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904020138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Mayer <mmayer@broadcom.com>
+With locked_vm now an atomic, there is no need to take mmap_sem as
+writer.  Delete and refactor accordingly.
 
-Prepare the driver so that sysfs attributes can differ based on the API
-version.
-
-Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Alan Tull <atull@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Moritz Fischer <mdf@kernel.org>
+Cc: Wu Hao <hao.wu@intel.com>
+Cc: <linux-mm@kvack.org>
+Cc: <linux-fpga@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
 ---
- drivers/memory/brcmstb_dpfe.c | 47 +++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 13 deletions(-)
+ drivers/fpga/dfl-afu-dma-region.c | 40 ++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
-index 9ad5ea08c134..43a53246abb3 100644
---- a/drivers/memory/brcmstb_dpfe.c
-+++ b/drivers/memory/brcmstb_dpfe.c
-@@ -168,6 +168,7 @@ struct init_data {
- struct dpfe_api {
- 	int version;
- 	const char *fw_name;
-+	const struct attribute_group **sysfs_attrs;
- 	u32 command[DPFE_CMD_MAX][MSG_FIELD_MAX];
- };
- 
-@@ -186,10 +187,39 @@ static const char *error_text[] = {
- 	"Incorrect checksum", "Malformed command", "Timed out",
- };
- 
-+/*
-+ * Forward declaration of our sysfs attribute functions, so we can declare the
-+ * attribute data structures early.
-+ */
-+static ssize_t show_info(struct device *, struct device_attribute *, char *);
-+static ssize_t show_refresh(struct device *, struct device_attribute *, char *);
-+static ssize_t store_refresh(struct device *, struct device_attribute *,
-+			  const char *, size_t);
-+static ssize_t show_vendor(struct device *, struct device_attribute *, char *);
-+
-+/*
-+ * Declare our attributes early, so they can be referenced in the API data
-+ * structure. We need to do this, because the attributes depend on the API
-+ * version.
-+ */
-+static DEVICE_ATTR(dpfe_info, 0444, show_info, NULL);
-+static DEVICE_ATTR(dpfe_refresh, 0644, show_refresh, store_refresh);
-+static DEVICE_ATTR(dpfe_vendor, 0444, show_vendor, NULL);
-+
-+/* API v2 sysfs attributes */
-+static struct attribute *dpfe_v2_attrs[] = {
-+	&dev_attr_dpfe_info.attr,
-+	&dev_attr_dpfe_refresh.attr,
-+	&dev_attr_dpfe_vendor.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(dpfe_v2);
-+
- /* API v2 firmware commands */
- static const struct dpfe_api dpfe_api_v2 = {
- 	.version = 2,
- 	.fw_name = "dpfe.bin",
-+	.sysfs_attrs = dpfe_v2_groups,
- 	.command = {
- 		[DPFE_CMD_GET_INFO] = {
- 			[MSG_HEADER] = DPFE_MSG_TYPE_COMMAND,
-@@ -687,17 +717,6 @@ static int brcmstb_dpfe_resume(struct platform_device *pdev)
- 	return brcmstb_dpfe_download_firmware(pdev, &init);
- }
- 
--static DEVICE_ATTR(dpfe_info, 0444, show_info, NULL);
--static DEVICE_ATTR(dpfe_refresh, 0644, show_refresh, store_refresh);
--static DEVICE_ATTR(dpfe_vendor, 0444, show_vendor, NULL);
--static struct attribute *dpfe_attrs[] = {
--	&dev_attr_dpfe_info.attr,
--	&dev_attr_dpfe_refresh.attr,
--	&dev_attr_dpfe_vendor.attr,
--	NULL
--};
--ATTRIBUTE_GROUPS(dpfe);
--
- static int brcmstb_dpfe_probe(struct platform_device *pdev)
+diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
+index 08132fd9b6b7..81e3e3a71758 100644
+--- a/drivers/fpga/dfl-afu-dma-region.c
++++ b/drivers/fpga/dfl-afu-dma-region.c
+@@ -35,46 +35,36 @@ void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
+  * afu_dma_adjust_locked_vm - adjust locked memory
+  * @dev: port device
+  * @npages: number of pages
+- * @incr: increase or decrease locked memory
+  *
+  * Increase or decrease the locked memory size with npages input.
+  *
+  * Return 0 on success.
+  * Return -ENOMEM if locked memory size is over the limit and no CAP_IPC_LOCK.
+  */
+-static int afu_dma_adjust_locked_vm(struct device *dev, long npages, bool incr)
++static int afu_dma_adjust_locked_vm(struct device *dev, long pages)
  {
- 	struct device *dev = &pdev->dev;
-@@ -750,7 +769,7 @@ static int brcmstb_dpfe_probe(struct platform_device *pdev)
- 		return ret;
+-	unsigned long locked, lock_limit;
++	unsigned long lock_limit;
+ 	s64 locked_vm;
+ 	int ret = 0;
+ 
+ 	/* the task is exiting. */
+-	if (!current->mm)
++	if (!current->mm || !pages)
+ 		return 0;
+ 
+-	down_write(&current->mm->mmap_sem);
+-
+-	locked_vm = atomic64_read(&current->mm->locked_vm);
+-	if (incr) {
+-		locked = locked_vm + npages;
++	locked_vm = atomic64_add_return(pages, &current->mm->locked_vm);
++	WARN_ON_ONCE(locked_vm < 0);
++	if (pages > 0 && !capable(CAP_IPC_LOCK)) {
+ 		lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+-
+-		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
++		if (locked_vm > lock_limit) {
+ 			ret = -ENOMEM;
+-		else
+-			atomic64_add(npages, &current->mm->locked_vm);
+-	} else {
+-		if (WARN_ON_ONCE(npages > locked_vm))
+-			npages = locked_vm;
+-		atomic64_sub(npages, &current->mm->locked_vm);
++			atomic64_sub(pages, &current->mm->locked_vm);
++		}
  	}
  
--	ret = sysfs_create_groups(&pdev->dev.kobj, dpfe_groups);
-+	ret = sysfs_create_groups(&pdev->dev.kobj, priv->dpfe_api->sysfs_attrs);
- 	if (!ret)
- 		dev_info(dev, "registered with API v%d.\n",
- 			 priv->dpfe_api->version);
-@@ -760,7 +779,9 @@ static int brcmstb_dpfe_probe(struct platform_device *pdev)
+ 	dev_dbg(dev, "[%d] RLIMIT_MEMLOCK %c%ld %lld/%lu%s\n", current->pid,
+-		incr ? '+' : '-', npages << PAGE_SHIFT,
+-		(s64)atomic64_read(&current->mm->locked_vm) << PAGE_SHIFT,
+-		rlimit(RLIMIT_MEMLOCK), ret ? "- exceeded" : "");
+-
+-	up_write(&current->mm->mmap_sem);
++		(pages > 0) ? '+' : '-', pages << PAGE_SHIFT,
++		locked_vm << PAGE_SHIFT, rlimit(RLIMIT_MEMLOCK),
++		ret ? "- exceeded" : "");
  
- static int brcmstb_dpfe_remove(struct platform_device *pdev)
- {
--	sysfs_remove_groups(&pdev->dev.kobj, dpfe_groups);
-+	struct private_data *priv = dev_get_drvdata(&pdev->dev);
-+
-+	sysfs_remove_groups(&pdev->dev.kobj, priv->dpfe_api->sysfs_attrs);
+ 	return ret;
+ }
+@@ -94,7 +84,7 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+ 	struct device *dev = &pdata->dev->dev;
+ 	int ret, pinned;
  
- 	return 0;
+-	ret = afu_dma_adjust_locked_vm(dev, npages, true);
++	ret = afu_dma_adjust_locked_vm(dev, npages);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -123,7 +113,7 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+ free_pages:
+ 	kfree(region->pages);
+ unlock_vm:
+-	afu_dma_adjust_locked_vm(dev, npages, false);
++	afu_dma_adjust_locked_vm(dev, -npages);
+ 	return ret;
+ }
+ 
+@@ -143,7 +133,7 @@ static void afu_dma_unpin_pages(struct dfl_feature_platform_data *pdata,
+ 
+ 	put_all_pages(region->pages, npages);
+ 	kfree(region->pages);
+-	afu_dma_adjust_locked_vm(dev, npages, false);
++	afu_dma_adjust_locked_vm(dev, -npages);
+ 
+ 	dev_dbg(dev, "%ld pages unpinned\n", npages);
  }
 -- 
-2.17.1
+2.21.0
 
