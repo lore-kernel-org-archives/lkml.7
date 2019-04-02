@@ -2,102 +2,84 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BD0C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF60C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AA120882
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BFE20883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfDBM0e (ORCPT
+        id S1730890AbfDBM1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:26:34 -0400
-Received: from mga17.intel.com ([192.55.52.151]:52519 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730585AbfDBM0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:26:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 05:26:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,300,1549958400"; 
-   d="scan'208";a="160630016"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.72.79])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Apr 2019 05:26:31 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [Intel-gfx] linux-next: Tree for Mar 29 (i915, no ACPI)
-In-Reply-To: <a7cf7fb9-c154-77b6-c63d-d71a12a1706b@infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190329141831.30fd841f@canb.auug.org.au> <a7cf7fb9-c154-77b6-c63d-d71a12a1706b@infradead.org>
-Date:   Tue, 02 Apr 2019 15:29:09 +0300
-Message-ID: <87zhp8zj3e.fsf@intel.com>
+        Tue, 2 Apr 2019 08:27:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:47054 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730099AbfDBM1R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 08:27:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t17so3356979wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 05:27:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=84XKEaT4CcALlJdLU6TbLSH4wKSJNLbfVyM0oAsVIbM=;
+        b=ef88Vk5m6CZWHG8ffTteq6XPZKVLxAnKOLTNFp81hPiLkAP9l/uJBa356lGM8rOjST
+         AFaCwx7JVwEP9ctW0rS8wwnthtBBYAqFu8vuLFesW2PoM2G97Mwcmh5T/bTA40XTdojy
+         Hm7B/hPk3D10RCAeJnTlkR0a068UyWnhJYw8p3TKCgZwKj70WrVrCKtaJNTx0ftNvcTQ
+         5lYpQ1alwhEHNFjSCd633Sw5MbuueFXkVQftj/ySx2J7s+HueWo8b+pMz/tgKoo0+P8w
+         8130v2zX87jyrCo3v87Imm1PU6YHYDYr3/arcfpx+1UhOtCnqCO970PsaKerAVkdzs/R
+         7k3A==
+X-Gm-Message-State: APjAAAU+ktTVUWipWgIYCPjDltlzg4cOYakiev6kFpJsTSUnGNriVOgE
+        z8RMpMqaBv6pPdmHR9o1THU=
+X-Google-Smtp-Source: APXvYqyulZw4PiBhwJS2jxhnqVEmKfrZRz5Wj2gcyzB7AAsrL3w02x+QciHY233jL4md9bAn7L4i1w==
+X-Received: by 2002:adf:f1ce:: with SMTP id z14mr28484866wro.152.1554208035305;
+        Tue, 02 Apr 2019 05:27:15 -0700 (PDT)
+Received: from localhost ([90.85.130.193])
+        by smtp.gmail.com with ESMTPSA id u2sm13607441wmc.45.2019.04.02.05.27.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 05:27:14 -0700 (PDT)
+From:   Christina Quast <cquast@hanoverdisplays.com>
+Cc:     trivial@kernel.org, Christina Quast <cquast@hanoverdisplays.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] fs: kernfs: Corrected spelling mistake
+Date:   Tue,  2 Apr 2019 14:27:06 +0200
+Message-Id: <20190402122706.27548-1-cquast@hanoverdisplays.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190402120059.GA24119@kroah.com>
+References: <20190402120059.GA24119@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 Mar 2019, Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 3/28/19 8:18 PM, Stephen Rothwell wrote:
->> Hi all,
->> 
->> Changes since 20190328:
->> 
->> The pidfd tree lost its build failures.
->> 
->
-> on x86_64, when # CONFIG_ACPI is not set/enabled:
->
-> ld: drivers/gpu/drm/i915/intel_panel.o: in function `intel_backlight_device_register':
-> intel_panel.c:(.text+0x2c49): undefined reference to `backlight_device_register'
-> ld: drivers/gpu/drm/i915/intel_panel.o: in function `intel_backlight_device_unregister':
-> intel_panel.c:(.text+0x2d01): undefined reference to `backlight_device_unregister'
->
->
->
-> Full randconfig file is attached.
+flies => files
 
-# CONFIG_ACPI is not set
-CONFIG_DRM_I915=y
-CONFIG_BACKLIGHT_CLASS_DEVICE=m
+Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+---
+ include/linux/kernfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-drivers/gpu/drm/i915/Kconfig:
-
-config DRM_I915
-	# ...
-	select BACKLIGHT_CLASS_DEVICE if ACPI
-
-The above pretty much sums it up. It's been reported before, the
-earliest I could find was [1].
-
-I've previously suggested patches that would make backlight a dependency
-instead of selecting it, in line with [2]. However we can't do that in
-i915 alone without recursive dependencies, and changing all backlight
-users was met with opposition because "select is convenient".
-
-Maybe I'll look at this one of these days, but don't hold your breath.
-
-
-BR,
-Jani.
-
-
-[1] http://mid.mail-archive.com/CA+r1ZhhmT4DrWtf6MbRQo5EqXwx+LxCqh15Vsu_d9WpftLhnxw@mail.gmail.com
-
-[2] Documentation/kbuild/kconfig-language.txt "In general use select
-    only for non-visible symbols (no prompts anywhere) and for symbols
-    with no dependencies."
-
+diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
+index c8893f663470..e446ab97ee0c 100644
+--- a/include/linux/kernfs.h
++++ b/include/linux/kernfs.h
+@@ -64,7 +64,7 @@ enum kernfs_root_flag {
+ 	KERNFS_ROOT_CREATE_DEACTIVATED		= 0x0001,
+ 
+ 	/*
+-	 * For regular flies, if the opener has CAP_DAC_OVERRIDE, open(2)
++	 * For regular files, if the opener has CAP_DAC_OVERRIDE, open(2)
+ 	 * succeeds regardless of the RW permissions.  sysfs had an extra
+ 	 * layer of enforcement where open(2) fails with -EACCES regardless
+ 	 * of CAP_DAC_OVERRIDE if the permission doesn't have the
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.20.1
+
