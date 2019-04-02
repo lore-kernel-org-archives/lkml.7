@@ -2,198 +2,100 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0441C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE45C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19AE206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA05206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:01:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JUiUEqhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbfDBHAk (ORCPT
+        id S1729396AbfDBHBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 03:00:40 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:43096 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725863AbfDBHAk (ORCPT
+        Tue, 2 Apr 2019 03:01:39 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43274 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfDBHBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 03:00:40 -0400
-X-IronPort-AV: E=Sophos;i="5.60,298,1549900800"; 
-   d="scan'208";a="58278672"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 02 Apr 2019 15:00:37 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id E59BC4CD7909;
-        Tue,  2 Apr 2019 15:00:39 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.56) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Tue, 2 Apr 2019 15:00:43 +0800
-Date:   Tue, 2 Apr 2019 15:59:39 +0800
-From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-CC:     <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
-Message-ID: <20190402075939.GA6560@localhost.localdomain>
-References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
- <20190402061926.GA1555@localhost.localdomain>
- <CAFgQCTv+2oVVeH6rarSgObQNwsBVBCr3phHp8rManLB3hrVOjA@mail.gmail.com>
+        Tue, 2 Apr 2019 03:01:38 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z9so6053856pgu.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 00:01:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=to7nO3wZcirLehPoKKoyB4khRFaxONhctW/3CrLUmdY=;
+        b=JUiUEqhMD5SbQXq4FlL08qCkHgIl6zChPoBhAImH038ZtqKLnEF+vW/3rNg1zxjqMZ
+         fI4UbPos3qJYb04Wsmble6/bevgl2l5D6fkCTWXuN+cvCvKRaRfX6xHYdD88MtH6QDtN
+         TVIp3L/PrR2d79+utPlOs26u7uZkX7lt1IqdlwnM99L3b/XVklYCuT4ArS+Q11sgnUQ1
+         71U/JQnjONq11IHtVY8Lbto0fuMemOQkNGM+BdfxUpC5orBs2rba1CET0cQ0GsGtlOKW
+         5n8jpbJsrcRTnagNiaGm4XyJ91BtTONbVwzWiWfs+MiqtRc6b9rqdb+o20/28glWKOM5
+         HXYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=to7nO3wZcirLehPoKKoyB4khRFaxONhctW/3CrLUmdY=;
+        b=rB8E3WBtRDUbAC/ESJUb8ydlve9Jzwf6KHkm1AMnP2mp1oETHToK/pG7W65s43qRn0
+         RUcfiLTYIp+lVybQfUkgnKp7t0aJj+fw8EqVHlp3SfMCA/pBYuWywKbY6fRzYWyD2QnU
+         I+DaKpNiLeonVTemUmOSpa1JZtT22IdmF3cMhdXTpAAun+TJX73D8u1Sai2IsowdrFtf
+         0YAx8fBYmzq51kj5Zbfp+YlA0VcAr5G5IshxAu6u+JZDeAovm3OXoqhCk9v1pR1ABf6T
+         OZQ3deVC8Iw6zO6tPxLr+w9oLrf5dh+nLpjOJL6IbKE3AbIEpQdZTFiL0fUHD3w7DXp/
+         IC9g==
+X-Gm-Message-State: APjAAAWJa0lF93hJADsTxuTBfOiirZj9wgLUa96q/gWtofwF+v0Rij2v
+        rZnvI9RIXuhEE7JlXISk4+EEpd9tONFoNg==
+X-Google-Smtp-Source: APXvYqxkdTRPgUKbcn225hIRUB5rclUYik7jUdPR8U4xbrRWOZWTrUihW0YDZHosk5KEp7XU0nOf+g==
+X-Received: by 2002:a63:3d4c:: with SMTP id k73mr48589027pga.154.1554188497982;
+        Tue, 02 Apr 2019 00:01:37 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id d69sm28286561pfg.26.2019.04.02.00.01.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 00:01:37 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 08:01:33 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: axp20x: Allow the AXP223 to be probed by i2c
+Message-ID: <20190402070133.GD4187@dell>
+References: <20190318125548.24851-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAFgQCTv+2oVVeH6rarSgObQNwsBVBCr3phHp8rManLB3hrVOjA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.167.225.56]
-X-yoursite-MailScanner-ID: E59BC4CD7909.AECA2
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190318125548.24851-1-maxime.ripard@bootlin.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 02:58:53PM +0800, Pingfan Liu wrote:
->On Tue, Apr 2, 2019 at 1:20 PM Chao Fan <fanc.fnst@cn.fujitsu.com> wrote:
->>
->> On Tue, Apr 02, 2019 at 12:10:46PM +0800, Pingfan Liu wrote:
->> >crashkernel=x@y or or =range1:size1[,range2:size2,...]@offset option may
->> or or?
->> >fail to reserve the required memory region if KASLR puts kernel into the
->> >region. To avoid this uncertainty, asking KASLR to skip the required
->> >region.
->> >
->> >Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
->> >Cc: Thomas Gleixner <tglx@linutronix.de>
->> >Cc: Ingo Molnar <mingo@redhat.com>
->> >Cc: Borislav Petkov <bp@alien8.de>
->> >Cc: "H. Peter Anvin" <hpa@zytor.com>
->> >Cc: Baoquan He <bhe@redhat.com>
->> >Cc: Will Deacon <will.deacon@arm.com>
->> >Cc: Nicolas Pitre <nico@linaro.org>
->> >Cc: Pingfan Liu <kernelfans@gmail.com>
->> >Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
->> >Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
->> >Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->> >Cc: linux-kernel@vger.kernel.org
->> >---
->> [...]
->> >+
->> >+/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
->>
->> Before review, I want to say more about the background.
->> It's very hard to review the code for someone who is not so familiar
->> with kdump, so could you please explain more ahout
->> the uasge of crashkernel=range1:size1[,range2:size2,...]@offset.
->> And also there are so many jobs who are parsing string. So I really
->> need your help to understand the PATCH.
->>
->> >+static void mem_avoid_specified_crashkernel_region(char *option)
->> >+{
->> >+      unsigned long long crash_size, crash_base = 0;
->> >+      char    *first_colon, *first_space, *cur = option;
->> Is there a tab after char?
->> >+
->> >+      first_colon = strchr(option, ':');
->> >+      first_space = strchr(option, ' ');
->> >+      /* if contain ":" */
->> >+      if (first_colon && (!first_space || first_colon < first_space)) {
->> >+              int i;
->> >+              u64 total_sz = 0;
->> >+              struct boot_e820_entry *entry;
->> >+
->> >+              for (i = 0; i < boot_params->e820_entries; i++) {
->> >+                      entry = &boot_params->e820_table[i];
->> >+                      /* Skip non-RAM entries. */
->> >+                      if (entry->type != E820_TYPE_RAM)
->> >+                              continue;
->> >+                      total_sz += entry->size;
->> I wonder whether it's needed to consider the memory ranges here.
->> I think it's OK to only record the regions should to be avoid.
->Maybe not catch you exactly. In the case of
->crashkernel=range1:size1[,range2:size2,...]@offset, the size of avoid
->region depends on the size of total system ram.
+On Mon, 18 Mar 2019, Maxime Ripard wrote:
 
-Got it, I midunderstand it.
+> The AXP223 can be used both using the RSB proprietary bus, or a more
+> traditional I2C bus. The RSB is a faster bus and provides more features
+> (like some integrity checks on the messages), so it's usually preferrable
+> to use it, but since it's proprietary, when we want to use the PMIC in a
+> multi-master setup, the i2c might make sense as well.
+> 
+> Let's add that possibility.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  drivers/mfd/axp20x-i2c.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Thanks,
-Chao Fan
->> I remeber I ever talked with Baoquan about the similiar problems.
->> @Baoquan, I am not sure if I misunderstand something.
->>
->> Thanks,
->> Chao Fan
->> >+              }
->> >+              handle_crashkernel_mem(option, total_sz, &crash_size,
->> >+                      &crash_base);
->> >+      } else {
->> >+              crash_size = memparse(option, &cur);
->> >+              if (option == cur)
->> >+                      return;
->> >+              while (*cur && *cur != ' ' && *cur != '@')
->> >+                      cur++;
->> >+              if (*cur == '@') {
->> >+                      option = cur + 1;
->> >+                      crash_base = memparse(option, &cur);
->> >+              }
->> >+      }
->> >+      if (crash_base) {
->> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
->> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
->> >+      } else {
->> >+              /*
->> >+               * Clearing mem_avoid if no offset is given. This is consistent
->> >+               * with kernel, which uses the last crashkernel= option.
->> >+               */
->> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
->> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
->> >+      }
->> >+}
->> >
->> > static void handle_mem_options(void)
->> > {
->> >@@ -248,7 +358,7 @@ static void handle_mem_options(void)
->> >       u64 mem_size;
->> >
->> >       if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
->> >-              !strstr(args, "hugepages"))
->> >+              !strstr(args, "hugepages") && !strstr(args, "crashkernel="))
->> >               return;
->> >
->> >       tmp_cmdline = malloc(len + 1);
->> >@@ -284,6 +394,8 @@ static void handle_mem_options(void)
->> >                               goto out;
->> >
->> >                       mem_limit = mem_size;
->> >+              } else if (strstr(param, "crashkernel")) {
->> >+                      mem_avoid_specified_crashkernel_region(val);
->> >               }
->> >       }
->> >
->> >@@ -412,7 +524,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
->> >
->> >       /* We don't need to set a mapping for setup_data. */
->> >
->> >-      /* Mark the memmap regions we need to avoid */
->> >+      /* Mark the regions we need to avoid */
->> >       handle_mem_options();
->> >
->> >       /* Enumerate the immovable memory regions */
->> >--
->> >2.7.4
->> >
->> >
->> >
->>
->>
->
->
+Applied, thanks.
 
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
