@@ -2,251 +2,238 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9A3C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7D4C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84F5208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9867420856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfDBKkW (ORCPT
+        id S1729163AbfDBKmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:40:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39691 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbfDBKkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:40:22 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x32Ae6A31349978
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 2 Apr 2019 03:40:06 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x32Ae6ia1349974;
-        Tue, 2 Apr 2019 03:40:06 -0700
-Date:   Tue, 2 Apr 2019 03:40:06 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-de7b77e5bb9451417ca57f1b6501da654587c048@git.kernel.org>
-Cc:     aarcange@redhat.com, hpa@zytor.com, tglx@linutronix.de,
-        jpoimboe@redhat.com, mingo@kernel.org, jikos@kernel.org,
-        peterz@infradead.org, linux-kernel@vger.kernel.org,
-        longman@redhat.com
-Reply-To: jikos@kernel.org, peterz@infradead.org, mingo@kernel.org,
-          jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
-          longman@redhat.com, aarcange@redhat.com, tglx@linutronix.de,
-          hpa@zytor.com
-In-Reply-To: <469c2b98055f2c41e75748e06447d592a64080c9.1553635520.git.jpoimboe@redhat.com>
-References: <469c2b98055f2c41e75748e06447d592a64080c9.1553635520.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:smp/hotplug] cpu/hotplug: Create SMT sysfs interface for all
- arches
-Git-Commit-ID: de7b77e5bb9451417ca57f1b6501da654587c048
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 2 Apr 2019 06:42:19 -0400
+Received: from foss.arm.com ([217.140.101.70]:48272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726468AbfDBKmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:42:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8B511688;
+        Tue,  2 Apr 2019 03:42:17 -0700 (PDT)
+Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8FF093F59C;
+        Tue,  2 Apr 2019 03:42:14 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: [PATCH v8 00/16] Add utilization clamping support
+Date:   Tue,  2 Apr 2019 11:41:36 +0100
+Message-Id: <20190402104153.25404-1-patrick.bellasi@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  de7b77e5bb9451417ca57f1b6501da654587c048
-Gitweb:     https://git.kernel.org/tip/de7b77e5bb9451417ca57f1b6501da654587c048
-Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Wed, 27 Mar 2019 07:00:29 -0500
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 2 Apr 2019 12:36:56 +0200
+Hi all, this is a respin of:
 
-cpu/hotplug: Create SMT sysfs interface for all arches
+   https://lore.kernel.org/lkml/20190208100554.32196-1-patrick.bellasi@arm.com/
 
-Make the /sys/devices/system/cpu/smt/* files available on all arches, so
-user space has a consistent way to detect whether SMT is enabled.
+which includes the following main changes:
 
-The 'control' file now shows 'notimplemented' for architectures which
-don't yet have CONFIG_HOTPLUG_SMT.
+ - remove "bucket local boosting" code and move it into a dedicated patch
+ - refactor uclamp_rq_update() to make it cleaner
+ - s/uclamp_rq_update/uclamp_rq_max_value/ and move update into caller
+ - update changelog to clarify the configuration fitting in one cache line
+ - s/uclamp_bucket_value/uclamp_bucket_base_value/
+ - update UCLAMP_BUCKET_DELTA to use DIV_ROUND_CLOSEST()
+ - moved flag reset into uclamp_rq_inc()
+ - add "requested" values uclamp_se instance beside the existing "effective"
+   values instance
+ - rename uclamp_effective_{get,assign}() into uclamp_eff_{get,set}()
+ - make uclamp_eff_get() return the new "effective" values by copy
+ - run uclamp_fork() code independently from the class being supported
+ - add sysctl_sched_uclamp_handler()'s internal mutex to serialize concurrent
+   usages
+ - make schedutil_type visible on !CONFIG_CPU_FREQ_GOV_SCHEDUTIL
+ - drop optional renamings
+ - keep using unsigned long for utilization
+ - update first cgroup patch's changelog to make it more clear
 
-[ tglx: Make notimplemented a real state ]
+Thanks for all the valuable comments, almost there... :?
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jikos@kernel.org>
-Link: https://lkml.kernel.org/r/469c2b98055f2c41e75748e06447d592a64080c9.1553635520.git.jpoimboe@redhat.com
+Cheers Patrick
 
----
- Documentation/ABI/testing/sysfs-devices-system-cpu | 10 ++--
- include/linux/cpu.h                                |  3 +-
- kernel/cpu.c                                       | 64 +++++++++++++---------
- 3 files changed, 47 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index 9605dbd4b5b5..5eea46fefcb2 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -511,10 +511,12 @@ Description:	Control Symetric Multi Threading (SMT)
- 		control: Read/write interface to control SMT. Possible
- 			 values:
- 
--			 "on"		SMT is enabled
--			 "off"		SMT is disabled
--			 "forceoff"	SMT is force disabled. Cannot be changed.
--			 "notsupported" SMT is not supported by the CPU
-+			 "on"		  SMT is enabled
-+			 "off"		  SMT is disabled
-+			 "forceoff"	  SMT is force disabled. Cannot be changed.
-+			 "notsupported"   SMT is not supported by the CPU
-+			 "notimplemented" SMT runtime toggling is not
-+					  implemented for the architecture
- 
- 			 If control status is "forceoff" or "notsupported" writes
- 			 are rejected.
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 5041357d0297..ae99dde02320 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -175,6 +175,7 @@ enum cpuhp_smt_control {
- 	CPU_SMT_DISABLED,
- 	CPU_SMT_FORCE_DISABLED,
- 	CPU_SMT_NOT_SUPPORTED,
-+	CPU_SMT_NOT_IMPLEMENTED,
- };
- 
- #if defined(CONFIG_SMP) && defined(CONFIG_HOTPLUG_SMT)
-@@ -182,7 +183,7 @@ extern enum cpuhp_smt_control cpu_smt_control;
- extern void cpu_smt_disable(bool force);
- extern void cpu_smt_check_topology(void);
- #else
--# define cpu_smt_control		(CPU_SMT_ENABLED)
-+# define cpu_smt_control		(CPU_SMT_NOT_IMPLEMENTED)
- static inline void cpu_smt_disable(bool force) { }
- static inline void cpu_smt_check_topology(void) { }
- #endif
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 6754f3ecfd94..b8bf3f93e39b 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -2033,19 +2033,6 @@ static const struct attribute_group cpuhp_cpu_root_attr_group = {
- 
- #ifdef CONFIG_HOTPLUG_SMT
- 
--static const char *smt_states[] = {
--	[CPU_SMT_ENABLED]		= "on",
--	[CPU_SMT_DISABLED]		= "off",
--	[CPU_SMT_FORCE_DISABLED]	= "forceoff",
--	[CPU_SMT_NOT_SUPPORTED]		= "notsupported",
--};
--
--static ssize_t
--show_smt_control(struct device *dev, struct device_attribute *attr, char *buf)
--{
--	return snprintf(buf, PAGE_SIZE - 2, "%s\n", smt_states[cpu_smt_control]);
--}
--
- static void cpuhp_offline_cpu_device(unsigned int cpu)
- {
- 	struct device *dev = get_cpu_device(cpu);
-@@ -2116,9 +2103,10 @@ static int cpuhp_smt_enable(void)
- 	return ret;
- }
- 
-+
- static ssize_t
--store_smt_control(struct device *dev, struct device_attribute *attr,
--		  const char *buf, size_t count)
-+__store_smt_control(struct device *dev, struct device_attribute *attr,
-+		    const char *buf, size_t count)
- {
- 	int ctrlval, ret;
- 
-@@ -2156,14 +2144,44 @@ store_smt_control(struct device *dev, struct device_attribute *attr,
- 	unlock_device_hotplug();
- 	return ret ? ret : count;
- }
-+
-+#else /* !CONFIG_HOTPLUG_SMT */
-+static ssize_t
-+__store_smt_control(struct device *dev, struct device_attribute *attr,
-+		    const char *buf, size_t count)
-+{
-+	return -ENODEV;
-+}
-+#endif /* CONFIG_HOTPLUG_SMT */
-+
-+static const char *smt_states[] = {
-+	[CPU_SMT_ENABLED]		= "on",
-+	[CPU_SMT_DISABLED]		= "off",
-+	[CPU_SMT_FORCE_DISABLED]	= "forceoff",
-+	[CPU_SMT_NOT_SUPPORTED]		= "notsupported",
-+	[CPU_SMT_NOT_IMPLEMENTED]	= "notimplemented",
-+};
-+
-+static ssize_t
-+show_smt_control(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	const char *state = smt_states[cpu_smt_control];
-+
-+	return snprintf(buf, PAGE_SIZE - 2, "%s\n", state);
-+}
-+
-+static ssize_t
-+store_smt_control(struct device *dev, struct device_attribute *attr,
-+		  const char *buf, size_t count)
-+{
-+	return __store_smt_control(dev, attr, buf, count);
-+}
- static DEVICE_ATTR(control, 0644, show_smt_control, store_smt_control);
- 
- static ssize_t
- show_smt_active(struct device *dev, struct device_attribute *attr, char *buf)
- {
--	bool active = topology_max_smt_threads() > 1;
--
--	return snprintf(buf, PAGE_SIZE - 2, "%d\n", active);
-+	return snprintf(buf, PAGE_SIZE - 2, "%d\n", sched_smt_active());
- }
- static DEVICE_ATTR(active, 0444, show_smt_active, NULL);
- 
-@@ -2179,21 +2197,17 @@ static const struct attribute_group cpuhp_smt_attr_group = {
- 	NULL
- };
- 
--static int __init cpu_smt_state_init(void)
-+static int __init cpu_smt_sysfs_init(void)
- {
- 	return sysfs_create_group(&cpu_subsys.dev_root->kobj,
- 				  &cpuhp_smt_attr_group);
- }
- 
--#else
--static inline int cpu_smt_state_init(void) { return 0; }
--#endif
--
- static int __init cpuhp_sysfs_init(void)
- {
- 	int cpu, ret;
- 
--	ret = cpu_smt_state_init();
-+	ret = cpu_smt_sysfs_init();
- 	if (ret)
- 		return ret;
- 
-@@ -2214,7 +2228,7 @@ static int __init cpuhp_sysfs_init(void)
- 	return 0;
- }
- device_initcall(cpuhp_sysfs_init);
--#endif
-+#endif /* CONFIG_SYSFS && CONFIG_HOTPLUG_CPU */
- 
- /*
-  * cpu_bit_bitmap[] is a special, "compressed" data structure that
+Series Organization
+===================
+
+The series is organized into these main sections:
+
+ - Patches [01-07]: Per task (primary) API
+ - Patches [08-09]: Schedutil integration for FAIR and RT tasks
+ - Patches [10-11]: Integration with EAS's energy_compute()
+ - Patches [12-16]: Per task group (secondary) API
+
+It is based on today's tip/sched/core and the full tree is available here:
+
+   git://linux-arm.org/linux-pb.git   lkml/utilclamp_v8
+   http://www.linux-arm.org/git?p=linux-pb.git;a=shortlog;h=refs/heads/lkml/utilclamp_v8
+
+
+Newcomer's Short Abstract
+=========================
+
+The Linux scheduler tracks a "utilization" signal for each scheduling entity
+(SE), e.g. tasks, to know how much CPU time they use. This signal allows the
+scheduler to know how "big" a task is and, in principle, it can support
+advanced task placement strategies by selecting the best CPU to run a task.
+Some of these strategies are represented by the Energy Aware Scheduler [3].
+
+When the schedutil cpufreq governor is in use, the utilization signal allows
+the Linux scheduler to also drive frequency selection. The CPU utilization
+signal, which represents the aggregated utilization of tasks scheduled on that
+CPU, is used to select the frequency which best fits the workload generated by
+the tasks.
+
+The current translation of utilization values into a frequency selection is
+simple: we go to max for RT tasks or to the minimum frequency which can
+accommodate the utilization of DL+FAIR tasks.
+However, utilisation values by themselves cannot convey the desired
+power/performance behaviours of each task as intended by user-space.
+As such they are not ideally suited for task placement decisions.
+
+Task placement and frequency selection policies in the kernel can be improved
+by taking into consideration hints coming from authorised user-space elements,
+like for example the Android middleware or more generally any "System
+Management Software" (SMS) framework.
+
+Utilization clamping is a mechanism which allows to "clamp" (i.e. filter) the
+utilization generated by RT and FAIR tasks within a range defined by user-space.
+The clamped utilization value can then be used, for example, to enforce a
+minimum and/or maximum frequency depending on which tasks are active on a CPU.
+
+The main use-cases for utilization clamping are:
+
+ - boosting: better interactive response for small tasks which
+   are affecting the user experience.
+
+   Consider for example the case of a small control thread for an external
+   accelerator (e.g. GPU, DSP, other devices). Here, from the task utilization
+   the scheduler does not have a complete view of what the task's requirements
+   are and, if it's a small utilization task, it keeps selecting a more energy
+   efficient CPU, with smaller capacity and lower frequency, thus negatively
+   impacting the overall time required to complete task activations.
+
+ - capping: increase energy efficiency for background tasks not affecting the
+   user experience.
+
+   Since running on a lower capacity CPU at a lower frequency is more energy
+   efficient, when the completion time is not a main goal, then capping the
+   utilization considered for certain (maybe big) tasks can have positive
+   effects, both on energy consumption and thermal headroom.
+   This feature allows also to make RT tasks more energy friendly on mobile
+   systems where running them on high capacity CPUs and at the maximum
+   frequency is not required.
+
+From these two use-cases, it's worth noticing that frequency selection
+biasing, introduced by patches 9 and 10 of this series, is just one possible
+usage of utilization clamping. Another compelling extension of utilization
+clamping is in helping the scheduler in macking tasks placement decisions.
+
+Utilization is (also) a task specific property the scheduler uses to know
+how much CPU bandwidth a task requires, at least as long as there is idle time.
+Thus, the utilization clamp values, defined either per-task or per-task_group,
+can represent tasks to the scheduler as being bigger (or smaller) than what
+they actually are.
+
+Utilization clamping thus enables interesting additional optimizations, for
+example on asymmetric capacity systems like Arm big.LITTLE and DynamIQ CPUs,
+where:
+
+ - boosting: try to run small/foreground tasks on higher-capacity CPUs to
+   complete them faster despite being less energy efficient.
+
+ - capping: try to run big/background tasks on low-capacity CPUs to save power
+   and thermal headroom for more important tasks
+
+This series does not present this additional usage of utilization clamping but
+it's an integral part of the EAS feature set, where [1] is one of its main
+components.
+
+Android kernels use SchedTune, a solution similar to utilization clamping, to
+bias both 'frequency selection' and 'task placement'. This series provides the
+foundation to add similar features to mainline while focusing, for the
+time being, just on schedutil integration.
+
+
+References
+==========
+
+[1] "Expressing per-task/per-cgroup performance hints"
+     Linux Plumbers Conference 2018
+     https://linuxplumbersconf.org/event/2/contributions/128/
+
+[2] Message-ID: <20180911162827.GJ1100574@devbig004.ftw2.facebook.com>
+    https://lore.kernel.org/lkml/20180911162827.GJ1100574@devbig004.ftw2.facebook.com/
+
+[3] https://lore.kernel.org/lkml/20181203095628.11858-1-quentin.perret@arm.com/
+
+
+Patrick Bellasi (16):
+  sched/core: uclamp: Add CPU's clamp buckets refcounting
+  sched/core: Add bucket local max tracking
+  sched/core: uclamp: Enforce last task's UCLAMP_MAX
+  sched/core: uclamp: Add system default clamps
+  sched/core: Allow sched_setattr() to use the current policy
+  sched/core: uclamp: Extend sched_setattr() to support utilization
+    clamping
+  sched/core: uclamp: Reset uclamp values on RESET_ON_FORK
+  sched/core: uclamp: Set default clamps for RT tasks
+  sched/cpufreq: uclamp: Add clamps for FAIR and RT tasks
+  sched/core: uclamp: Add uclamp_util_with()
+  sched/fair: uclamp: Add uclamp support to energy_compute()
+  sched/core: uclamp: Extend CPU's cgroup controller
+  sched/core: uclamp: Propagate parent clamps
+  sched/core: uclamp: Propagate system defaults to root group
+  sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
+  sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+
+ Documentation/admin-guide/cgroup-v2.rst |  46 ++
+ include/linux/log2.h                    |  37 ++
+ include/linux/sched.h                   |  58 ++
+ include/linux/sched/sysctl.h            |  11 +
+ include/linux/sched/topology.h          |   6 -
+ include/uapi/linux/sched.h              |  16 +-
+ include/uapi/linux/sched/types.h        |  66 +-
+ init/Kconfig                            |  75 +++
+ kernel/sched/core.c                     | 791 +++++++++++++++++++++++-
+ kernel/sched/cpufreq_schedutil.c        |  22 +-
+ kernel/sched/fair.c                     |  44 +-
+ kernel/sched/rt.c                       |   4 +
+ kernel/sched/sched.h                    | 123 +++-
+ kernel/sysctl.c                         |  16 +
+ 14 files changed, 1270 insertions(+), 45 deletions(-)
+
+-- 
+2.20.1
+
