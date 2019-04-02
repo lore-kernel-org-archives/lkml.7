@@ -2,560 +2,181 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEBEC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3766AC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783A32084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554201220;
-	bh=4SlOSe7Sk2HN9C1Jwnf4NILWZ/RsNV01Kv0SmrNqBbU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y2CWBOCPAH74ewPMs5sWp5u8TXke2mG1XMzRRsrTTvG2f12qsWW9PgBwFsBY+/i/Z
-	 /noUHbiNmAsm42NrHaaOjCmRONilllfvsST34C9li1i7W76Ao2jV0wW9a2Ph3gTzVK
-	 Afj22ulrJNSslWvsmqHe7jOcAz6w/nrHGqaeC1jU=
+	by mail.kernel.org (Postfix) with ESMTP id F07712084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="xvsDQN7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbfDBKdj (ORCPT
+        id S1730566AbfDBKdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:33:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbfDBKca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:32:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD232084C;
-        Tue,  2 Apr 2019 10:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554201148;
-        bh=4SlOSe7Sk2HN9C1Jwnf4NILWZ/RsNV01Kv0SmrNqBbU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IFGoh8ChF9VrRATbA/R0TWXGpj0tRLll7lLRpnkIauRqpjD567uKjbaHZV2+BeJQe
-         5oxKZ+1iTFVOVIZ8yM7Qj1fkkXuoRbWawWj/mZhCGmX+e97iJ4cVq1O5D3DF/3OS6F
-         mx6dn7NtVEPuDDMwW55m7hieTfqVW5y9JOllQYXg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        mjpeg-users@lists.sourceforge.net
-Subject: [PATCH 13/16] staging: media: zoran: add proper SPDX identifiers on files that did not have them.
-Date:   Tue,  2 Apr 2019 12:32:00 +0200
-Message-Id: <20190402103203.14959-14-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190402103203.14959-1-gregkh@linuxfoundation.org>
-References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
+        Tue, 2 Apr 2019 06:33:45 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.4]:6283 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730342AbfDBKdn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:33:43 -0400
+Received: from [46.226.52.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.eu-west-1.aws.symcld.net id B3/8D-04122-38A33AC5; Tue, 02 Apr 2019 10:33:39 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRWlGSWpSXmKPExsWSoc9orttstTj
+  G4NpjEYv2d8vYLebOnsRo8ezWXiaLy7vmsFlsffmOyeLY6itsFn3n3C1WnpjF7MDhMW9NtcfE
+  s7oehw53MHo8W7iexePkqScsHp83yQWwRbFm5iXlVySwZuxoXcdYcJO/oqfpOXMD41ueLkYuD
+  haB9cwSKw62soE4QgITmCQWr5/IDuHcY5S4uO4eUxcjJwebgKHEvDfvGbsYOThEBCIkem6Ggd
+  QwC7xlkri65wsbSI2wgL7ElM33wepFBAwk7hy6DjZIRGAyo8S53n9gRSwCKhK7zy0BK+IViJV
+  Y/2k3E8S2S8wSy2/3MoMkOAX0JF7N/swOYjMKyEp8aVwNFmcWEJe49WQ+WLOEgIDEkj3nmSFs
+  UYmXj/+xQtTHS7Tvf8sOEdeROHv9CSOErSSx7MYsVghbVuLS/G6ouK/Epb6pYEdICFxklFj/b
+  REbREJLYmrTd6gGKYkTF49C2TkSK5pXQB0hI/H09y4WiOaPrBJPL09kAUkICSRLfJh7FuoKOY
+  lVvQ+hii4wS9w93cIK8Y6OxILdn9gmMGrOQvLdLCQpCFtbYtnC18yzwEEmKHFy5hOWBYwsqxg
+  tkooy0zNKchMzc3QNDQx0DQ2NdA0tjXWNjE30Eqt0E/VSS3XLU4tLdA31EsuL9Yorc5NzUvTy
+  Uks2MQKTWkrBwVc7GHetSD/EKMnBpCTKu0ZrcYwQX1J+SmVGYnFGfFFpTmrxIUYZDg4lCV49S
+  6CcYFFqempFWmYOML3CpCU4eJREeG+BpHmLCxJzizPTIVKnGHU5Dix6OJdZiCUvPy9VSpxXFq
+  RIAKQoozQPbgQs1V9ilJUS5mVkYGAQ4ilILcrNLEGVf8UozsGoJMzLDTKFJzOvBG7TK6AjmIC
+  OsCidD3JESSJCSqqBsdk74N/5yZFnnaKdor6d5dr1ID9h0fc/8dcSXMqPa+rLrlVRzZ7MlP7r
+  qHFLyYX9/V3PuNl+XnJRMb14qKTpaci8DVKVmzUz//Efn1N7/WlWjbLfu4Yv/z+1Ploalbgwl
+  u2ZTMutoCOvdSRWvuw8d+Tkh7c77ky1KZb0XKjmltLq5aWv9tRnihJLcUaioRZzUXEiAOESho
+  /wAwAA
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-10.tower-268.messagelabs.com!1554201218!4442828!1
+X-Originating-IP: [104.47.1.55]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 27918 invoked from network); 2 Apr 2019 10:33:39 -0000
+Received: from mail-ve1eur01lp2055.outbound.protection.outlook.com (HELO EUR01-VE1-obe.outbound.protection.outlook.com) (104.47.1.55)
+  by server-10.tower-268.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 2 Apr 2019 10:33:39 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6w4DOgBTU7i+GdJuJQeRad1CE2lvqKySW+C9JUjZcV8=;
+ b=xvsDQN7iV0Jn10uxr6NOASb67rlG3SBTxXJUA0sH5JlCKn8lzBWo+Jm/Vl70Kk4tbqjCvvmFqZrwDASIOnicOW0OL+PbMf0F0lLKGNnV/qRGgFTogr9+v2wOvzsJs3jcQ56Gxu6iQz4SJurZRy5U7tz7JOnRYBdgizZ0IpIoS68=
+Received: from DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM (20.177.121.154) by
+ DB7PR10MB2060.EURPRD10.PROD.OUTLOOK.COM (52.134.102.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.17; Tue, 2 Apr 2019 10:33:37 +0000
+Received: from DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::1dc3:973e:6ed6:a60b]) by DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::1dc3:973e:6ed6:a60b%5]) with mapi id 15.20.1750.021; Tue, 2 Apr 2019
+ 10:33:37 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 1/2] rtc: da9063: set range
+Thread-Topic: [PATCH 1/2] rtc: da9063: set range
+Thread-Index: AQHU388srtB02IcKs0uFchLWhDDC3qYnDdiAgAAE+gCAAAkNIIAANSwAgAAK4ICAAAUwgIAAGJUAgAACcwCAAAnyAIAAMsQAgAALXICAAN89gIAAC1WAgAAE04CAAAEDQA==
+Date:   Tue, 2 Apr 2019 10:33:37 +0000
+Message-ID: <DB7PR10MB2348398516E5744F4CF8C18BFE560@DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM>
+References: <CAMuHMdVsp86n_1+c6NZpCG1MwcAzEH7rgaESHfYESb5YcLk6zw@mail.gmail.com>
+ <20190401132109.GA4570@kunai>
+ <CAMuHMdV79HAn8jpodQcripAViCqBh3rFGZ39oEiSiP8nC+UyTA@mail.gmail.com>
+ <20190401150741.vwqzzngnma4jvkid@ninjato> <20190401151628.GK3430@piout.net>
+ <20190401155204.GA5964@kunai> <20190401185346.GP3430@piout.net>
+ <20190401193424.sqnapthocznhjqok@ninjato> <20190402085325.GT3430@piout.net>
+ <20190402093359.GB2960@kunai> <20190402095115.GW3430@piout.net>
+In-Reply-To: <20190402095115.GW3430@piout.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d886baf5-a221-43b9-83d5-08d6b756aa67
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR10MB2060;
+x-ms-traffictypediagnostic: DB7PR10MB2060:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DB7PR10MB20600D9B088817C5615B8039F5560@DB7PR10MB2060.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 0995196AA2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(346002)(376002)(136003)(396003)(189003)(199004)(68736007)(55016002)(33656002)(76176011)(186003)(26005)(7696005)(66066001)(6506007)(97736004)(14454004)(71190400001)(8676002)(71200400001)(81156014)(81166006)(86362001)(966005)(305945005)(229853002)(478600001)(53936002)(6246003)(14444005)(74316002)(446003)(11346002)(99286004)(102836004)(486006)(476003)(6436002)(6306002)(8936002)(4326008)(3846002)(6116002)(110136005)(7736002)(256004)(54906003)(2906002)(5660300002)(52536014)(93886005)(316002)(105586002)(25786009)(106356001)(9686003)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR10MB2060;H:DB7PR10MB2348.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IF0FcfVmycob5noONLebUWYx3n4qDoh6a/sidDOKHJj+bRzN8OuVna7Xr+zBiR/6NEcy1fV5vxxq96Lk0bxqhsWvilUZ1q2fwj36xKJUnxirNkTACAt/zzZvkD/WVXUt6bf+Dz8P0Ifev45RH/mOx657UI2VBjCniv+H9lzP4a/MR1gZE/ZPgp9dX6dr9xXhHHe1sx9Av1y1n7HA8/5zGJ0PlN51YVpwQTMZ99C+SKORajRh7MzhzsfKkIwFC4tCBbEiC43ooVHLG2XEwqaEnBrujocYQ1gUsmlk6AYc8KQOAh2BDw4PUEd+IcToNx8mWOugrSr5Oh1gT9uDOxedqSEXVAyJsMcfjO1B6169GXmoNPYmKPa/Fg5l2e4pK++7RfegS9Z47NjS/iTYqwchZsgQc7LHAt+1/Y4ZstgnhKY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d886baf5-a221-43b9-83d5-08d6b756aa67
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2019 10:33:37.2264
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR10MB2060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were a few files for the zoran driver that did not have SPDX
-identifiers on them, so fix that up.  At the same time, remove the "free
-form" text that specified the license of the file, as that is impossible
-for any tool to properly parse.
+Hi,
 
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org
-Cc: mjpeg-users@lists.sourceforge.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/staging/media/zoran/videocodec.h   | 17 +----------------
- drivers/staging/media/zoran/zoran.h        | 12 +-----------
- drivers/staging/media/zoran/zoran_card.c   | 12 +-----------
- drivers/staging/media/zoran/zoran_card.h   | 12 +-----------
- drivers/staging/media/zoran/zoran_device.c | 12 +-----------
- drivers/staging/media/zoran/zoran_device.h | 12 +-----------
- drivers/staging/media/zoran/zoran_driver.c | 13 +------------
- drivers/staging/media/zoran/zoran_procfs.c | 12 +-----------
- drivers/staging/media/zoran/zoran_procfs.h | 12 +-----------
- drivers/staging/media/zoran/zr36016.c      | 18 +-----------------
- drivers/staging/media/zoran/zr36016.h      | 18 +-----------------
- drivers/staging/media/zoran/zr36050.c      | 18 +-----------------
- drivers/staging/media/zoran/zr36050.h      | 18 +-----------------
- drivers/staging/media/zoran/zr36057.h      | 12 +-----------
- drivers/staging/media/zoran/zr36060.c      | 18 +-----------------
- drivers/staging/media/zoran/zr36060.h      | 18 +-----------------
- 16 files changed, 16 insertions(+), 218 deletions(-)
+> > >  drivers/rtc/rtc-da9063.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/drivers/rtc/rtc-da9063.c b/drivers/rtc/rtc-da9063.c
+> > > index 1b792bcea3c7..53e690b0f3a2 100644
+> > > --- a/drivers/rtc/rtc-da9063.c
+> > > +++ b/drivers/rtc/rtc-da9063.c
+> > > @@ -475,6 +475,9 @@ static int da9063_rtc_probe(struct platform_devic=
+e *pdev)
+> > >  	da9063_data_to_tm(data, &rtc->alarm_time, rtc);
+> > >  	rtc->rtc_sync =3D false;
+> > >
+> > > +	if (config->rtc_data_start !=3D RTC_SEC)
+> > > +		rtc->rtc_dev->uie_unsupported =3D 1;
+> > > +
+> >
+> > I think we should have a comment here, like:
+> > /* FIXME: Make use of the TICK interrupt once the RTC core supports it =
+*/
 
-diff --git a/drivers/staging/media/zoran/videocodec.h b/drivers/staging/media/zoran/videocodec.h
-index 8ed5a0f7ac01..4946791fce0d 100644
---- a/drivers/staging/media/zoran/videocodec.h
-+++ b/drivers/staging/media/zoran/videocodec.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * VIDEO MOTION CODECs internal API for video devices
-  *
-@@ -5,22 +6,6 @@
-  * bound to a master device.
-  *
-  * (c) 2002 Wolfgang Scherr <scherr@net4you.at>
-- *
-- * $Id: videocodec.h,v 1.1.2.4 2003/01/14 21:15:03 rbultje Exp $
-- *
-- * ------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * ------------------------------------------------------------------------
-  */
- 
- /* =================== */
-diff --git a/drivers/staging/media/zoran/zoran.h b/drivers/staging/media/zoran/zoran.h
-index e84fb604a689..1b2e1fb3555f 100644
---- a/drivers/staging/media/zoran/zoran.h
-+++ b/drivers/staging/media/zoran/zoran.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * zoran - Iomega Buz driver
-  *
-@@ -12,18 +13,7 @@
-  * bttv - Bt848 frame grabber driver
-  * Copyright (C) 1996,97,98 Ralph  Metzler (rjkm@thp.uni-koeln.de)
-  *                        & Marcus Metzler (mocm@thp.uni-koeln.de)
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #ifndef _BUZ_H_
- #define _BUZ_H_
- 
-diff --git a/drivers/staging/media/zoran/zoran_card.c b/drivers/staging/media/zoran/zoran_card.c
-index ea10523194e8..dad5d1412033 100644
---- a/drivers/staging/media/zoran/zoran_card.c
-+++ b/drivers/staging/media/zoran/zoran_card.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Zoran zr36057/zr36067 PCI controller driver, for the
-  * Pinnacle/Miro DC10/DC10+/DC30/DC30+, Iomega Buz, Linux
-@@ -11,18 +12,7 @@
-  *   Ronald Bultje    <rbultje@ronald.bitfreak.net>
-  *   Laurent Pinchart <laurent.pinchart@skynet.be>
-  *   Mailinglist      <mjpeg-users@lists.sf.net>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #include <linux/delay.h>
- 
- #include <linux/types.h>
-diff --git a/drivers/staging/media/zoran/zoran_card.h b/drivers/staging/media/zoran/zoran_card.h
-index 0cdb7d34926d..600b9a3f320c 100644
---- a/drivers/staging/media/zoran/zoran_card.h
-+++ b/drivers/staging/media/zoran/zoran_card.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Zoran zr36057/zr36067 PCI controller driver, for the
-  * Pinnacle/Miro DC10/DC10+/DC30/DC30+, Iomega Buz, Linux
-@@ -11,18 +12,7 @@
-  *   Ronald Bultje    <rbultje@ronald.bitfreak.net>
-  *   Laurent Pinchart <laurent.pinchart@skynet.be>
-  *   Mailinglist      <mjpeg-users@lists.sf.net>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #ifndef __ZORAN_CARD_H__
- #define __ZORAN_CARD_H__
- 
-diff --git a/drivers/staging/media/zoran/zoran_device.c b/drivers/staging/media/zoran/zoran_device.c
-index b60c4823ce5e..2191fe69b0f9 100644
---- a/drivers/staging/media/zoran/zoran_device.c
-+++ b/drivers/staging/media/zoran/zoran_device.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Zoran zr36057/zr36067 PCI controller driver, for the
-  * Pinnacle/Miro DC10/DC10+/DC30/DC30+, Iomega Buz, Linux
-@@ -11,18 +12,7 @@
-  *   Ronald Bultje    <rbultje@ronald.bitfreak.net>
-  *   Laurent Pinchart <laurent.pinchart@skynet.be>
-  *   Mailinglist      <mjpeg-users@lists.sf.net>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-diff --git a/drivers/staging/media/zoran/zoran_device.h b/drivers/staging/media/zoran/zoran_device.h
-index 20bf75dfbb76..b3b8a03f2004 100644
---- a/drivers/staging/media/zoran/zoran_device.h
-+++ b/drivers/staging/media/zoran/zoran_device.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Zoran zr36057/zr36067 PCI controller driver, for the
-  * Pinnacle/Miro DC10/DC10+/DC30/DC30+, Iomega Buz, Linux
-@@ -11,18 +12,7 @@
-  *   Ronald Bultje    <rbultje@ronald.bitfreak.net>
-  *   Laurent Pinchart <laurent.pinchart@skynet.be>
-  *   Mailinglist      <mjpeg-users@lists.sf.net>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #ifndef __ZORAN_DEVICE_H__
- #define __ZORAN_DEVICE_H__
- 
-diff --git a/drivers/staging/media/zoran/zoran_driver.c b/drivers/staging/media/zoran/zoran_driver.c
-index 4c281d9a0e60..438d2d1cd1fc 100644
---- a/drivers/staging/media/zoran/zoran_driver.c
-+++ b/drivers/staging/media/zoran/zoran_driver.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Zoran zr36057/zr36067 PCI controller driver, for the
-  * Pinnacle/Miro DC10/DC10+/DC30/DC30+, Iomega Buz, Linux
-@@ -27,19 +28,7 @@
-  * bttv - Bt848 frame grabber driver
-  * Copyright (C) 1996,97,98 Ralph  Metzler (rjkm@thp.uni-koeln.de)
-  *                        & Marcus Metzler (mocm@thp.uni-koeln.de)
-- *
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/delay.h>
-diff --git a/drivers/staging/media/zoran/zoran_procfs.c b/drivers/staging/media/zoran/zoran_procfs.c
-index 78ac8f853748..941f73fe323b 100644
---- a/drivers/staging/media/zoran/zoran_procfs.c
-+++ b/drivers/staging/media/zoran/zoran_procfs.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Zoran zr36057/zr36067 PCI controller driver, for the
-  * Pinnacle/Miro DC10/DC10+/DC30/DC30+, Iomega Buz, Linux
-@@ -11,18 +12,7 @@
-  *   Ronald Bultje    <rbultje@ronald.bitfreak.net>
-  *   Laurent Pinchart <laurent.pinchart@skynet.be>
-  *   Mailinglist      <mjpeg-users@lists.sf.net>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #include <linux/types.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-diff --git a/drivers/staging/media/zoran/zoran_procfs.h b/drivers/staging/media/zoran/zoran_procfs.h
-index 0ac7cb0011f2..db9f642c851a 100644
---- a/drivers/staging/media/zoran/zoran_procfs.h
-+++ b/drivers/staging/media/zoran/zoran_procfs.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Zoran zr36057/zr36067 PCI controller driver, for the
-  * Pinnacle/Miro DC10/DC10+/DC30/DC30+, Iomega Buz, Linux
-@@ -11,18 +12,7 @@
-  *   Ronald Bultje    <rbultje@ronald.bitfreak.net>
-  *   Laurent Pinchart <laurent.pinchart@skynet.be>
-  *   Mailinglist      <mjpeg-users@lists.sf.net>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #ifndef __ZORAN_PROCFS_H__
- #define __ZORAN_PROCFS_H__
- 
-diff --git a/drivers/staging/media/zoran/zr36016.c b/drivers/staging/media/zoran/zr36016.c
-index 8736b9d8d97e..b300a0abe95f 100644
---- a/drivers/staging/media/zoran/zr36016.c
-+++ b/drivers/staging/media/zoran/zr36016.c
-@@ -1,25 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Zoran ZR36016 basic configuration functions
-  *
-  * Copyright (C) 2001 Wolfgang Scherr <scherr@net4you.at>
-- *
-- * $Id: zr36016.c,v 1.1.2.14 2003/08/20 19:46:55 rbultje Exp $
-- *
-- * ------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * ------------------------------------------------------------------------
-  */
--
- #define ZR016_VERSION "v0.7"
- 
- #include <linux/module.h>
-diff --git a/drivers/staging/media/zoran/zr36016.h b/drivers/staging/media/zoran/zr36016.h
-index 784bcf5727b8..6e66581c27b2 100644
---- a/drivers/staging/media/zoran/zr36016.h
-+++ b/drivers/staging/media/zoran/zr36016.h
-@@ -1,25 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Zoran ZR36016 basic configuration functions - header file
-  *
-  * Copyright (C) 2001 Wolfgang Scherr <scherr@net4you.at>
-- *
-- * $Id: zr36016.h,v 1.1.2.3 2003/01/14 21:18:07 rbultje Exp $
-- *
-- * ------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * ------------------------------------------------------------------------
-  */
--
- #ifndef ZR36016_H
- #define ZR36016_H
- 
-diff --git a/drivers/staging/media/zoran/zr36050.c b/drivers/staging/media/zoran/zr36050.c
-index 5ebfc16672f3..cd58307af378 100644
---- a/drivers/staging/media/zoran/zr36050.c
-+++ b/drivers/staging/media/zoran/zr36050.c
-@@ -1,25 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Zoran ZR36050 basic configuration functions
-  *
-  * Copyright (C) 2001 Wolfgang Scherr <scherr@net4you.at>
-- *
-- * $Id: zr36050.c,v 1.1.2.11 2003/08/03 14:54:53 rbultje Exp $
-- *
-- * ------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * ------------------------------------------------------------------------
-  */
--
- #define ZR050_VERSION "v0.7.1"
- 
- #include <linux/module.h>
-diff --git a/drivers/staging/media/zoran/zr36050.h b/drivers/staging/media/zoran/zr36050.h
-index 9236486d3c2b..c485913dc820 100644
---- a/drivers/staging/media/zoran/zr36050.h
-+++ b/drivers/staging/media/zoran/zr36050.h
-@@ -1,25 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Zoran ZR36050 basic configuration functions - header file
-  *
-  * Copyright (C) 2001 Wolfgang Scherr <scherr@net4you.at>
-- *
-- * $Id: zr36050.h,v 1.1.2.2 2003/01/14 21:18:22 rbultje Exp $
-- *
-- * ------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * ------------------------------------------------------------------------
-  */
--
- #ifndef ZR36050_H
- #define ZR36050_H
- 
-diff --git a/drivers/staging/media/zoran/zr36057.h b/drivers/staging/media/zoran/zr36057.h
-index c8acb21dcb5c..c5138cef4ef5 100644
---- a/drivers/staging/media/zoran/zr36057.h
-+++ b/drivers/staging/media/zoran/zr36057.h
-@@ -1,19 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * zr36057.h - zr36057 register offsets
-  *
-  * Copyright (C) 1998 Dave Perks <dperks@ibm.net>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
--
- #ifndef _ZR36057_H_
- #define _ZR36057_H_
- 
-diff --git a/drivers/staging/media/zoran/zr36060.c b/drivers/staging/media/zoran/zr36060.c
-index 7ee53ba4f7fc..a3c817fd5c07 100644
---- a/drivers/staging/media/zoran/zr36060.c
-+++ b/drivers/staging/media/zoran/zr36060.c
-@@ -1,25 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  * Zoran ZR36060 basic configuration functions
-  *
-  * Copyright (C) 2002 Laurent Pinchart <laurent.pinchart@skynet.be>
-- *
-- * $Id: zr36060.c,v 1.1.2.22 2003/05/06 09:35:36 rbultje Exp $
-- *
-- * ------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * ------------------------------------------------------------------------
-  */
--
- #define ZR060_VERSION "v0.7"
- 
- #include <linux/module.h>
-diff --git a/drivers/staging/media/zoran/zr36060.h b/drivers/staging/media/zoran/zr36060.h
-index 82911757ba78..9fa553dc475f 100644
---- a/drivers/staging/media/zoran/zr36060.h
-+++ b/drivers/staging/media/zoran/zr36060.h
-@@ -1,25 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-  * Zoran ZR36060 basic configuration functions - header file
-  *
-  * Copyright (C) 2002 Laurent Pinchart <laurent.pinchart@skynet.be>
-- *
-- * $Id: zr36060.h,v 1.1.1.1.2.3 2003/01/14 21:18:47 rbultje Exp $
-- *
-- * ------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * ------------------------------------------------------------------------
-  */
--
- #ifndef ZR36060_H
- #define ZR36060_H
- 
--- 
-2.21.0
+Is this TICK interrupt suggestion to use the DA9063 TICK interrupt to simul=
+ate
+a second granularity in the AD alarm?
 
+If I remember correctly, the original DA9063 patch set which was for AD sil=
+icon
+only, and which was sent to LKML before I took over looking at DA9063, used=
+ the
+DA9063 1-second TICK interrupt to count-down the seconds from the nearest
+minute in order to simulate second resolution on the RTC alarm for AD.
+
+... yes. Here it is. The original patch was from Krystian Garbaciak and tri=
+ed to
+support RTC alarms on the AD silicon to a second resolution by counting dow=
+n
+the DA9063 TICK interrupt:
+
+https://marc.info/?l=3Dlm-sensors&m=3D134613501230005&w=3D2
+
+However, I dropped that patch completely and wrote a new RTC device driver
+because it didn't work in my tests.
+
+The problem was: the TICK interrupt was indistinguishable from the ALARM
+interrupt for a wake event and when I tested AD silicon to wake up an Andro=
+id
+device from suspend or power-off using the RTC IRQ, the device woke up on t=
+he
+ALARM minute (0 seconds), discovered it was not the correct time and immedi=
+ately
+went back to sleep. Then it woke-up and returned back to sleep every TICK I=
+RQ
+second until the correct alarm time was reached (up to 59 times!). At which=
+ point
+it woke up properly.
+
+Regards,
+Steve
