@@ -2,136 +2,132 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB185C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F5FC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978E8206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FBE2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TURtBL1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbfDBP5W (ORCPT
+        id S1729790AbfDBP7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:57:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50932 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725991AbfDBP5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:57:22 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 771E681F0C;
-        Tue,  2 Apr 2019 15:57:21 +0000 (UTC)
-Received: from [10.36.116.151] (ovpn-116-151.ams2.redhat.com [10.36.116.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EBE58491D;
-        Tue,  2 Apr 2019 15:57:07 +0000 (UTC)
-Subject: Re: On guest free page hinting and OOM
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-References: <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
- <20190329125034-mutt-send-email-mst@kernel.org>
- <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
- <20190401073007-mutt-send-email-mst@kernel.org>
- <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
- <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com>
- <20190401104608-mutt-send-email-mst@kernel.org>
- <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
- <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com>
- <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
- <20190402112115-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <3dd76ce6-c138-b019-3a43-0bb0b793690a@redhat.com>
-Date:   Tue, 2 Apr 2019 17:57:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190402112115-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 2 Apr 2019 11:59:01 -0400
+Received: from mail-eopbgr780111.outbound.protection.outlook.com ([40.107.78.111]:64121
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725920AbfDBP7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 11:59:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=ov3RaWlt+VSfIAh+KTna84hvQLTB4UZuNt40c9wnQAv6b27Uyd7sa92IswrhkZCXlsRLCYKDR06QIFDA2P/f0RoJjMCJd0fZk64Q2MK7LSowrTw5aqi3wDmXNdqXzaJcp++0cVG8jdzaAtshYEO9wvp503OBp16CfYBRmaRCsOw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mOVH1ZJfJFLSNf/eaahU50B/ZOQJjeEf0Z4AIjXT7zs=;
+ b=O41N3IeVk0BWNK4wLs4bnIugCB6i5EQhdunqSsoOKDHylYmNOfarmdE5DVsAAnZq4D+PZHxIo+jR7614kq+DQX3tDSUevVuJ/4lFFBz6/xj/k3RSqfD54XXy9dli+hSRiJPbmQGibEWrmkBbKE3jPdqkVtBc0TVbI1zdJmBvJnc=
+ARC-Authentication-Results: i=1; test.office365.com 1;dmarc=none action=none
+ header.from=microsoft.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mOVH1ZJfJFLSNf/eaahU50B/ZOQJjeEf0Z4AIjXT7zs=;
+ b=TURtBL1APgcMNBVCbjzARhaVVffoT1UFvsX98a7T3xR0kQX/McKVh7dx2jtNIHZ8wd5o49Hk9Nu4RlfjnD5GvnfAhc5msrGWKPo7EUkWfEHcfVxdHE4Iz/fSrQ3dZXcVzZYsR9OeUgnxLHudNExWXDq2BKxpYofPF1AfNpKcMZU=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1195.namprd21.prod.outlook.com (20.179.49.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.7; Tue, 2 Apr 2019 15:58:57 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::a8f3:221a:ccfe:f049]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::a8f3:221a:ccfe:f049%8]) with mapi id 15.20.1792.000; Tue, 2 Apr 2019
+ 15:58:57 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        Long Li <longli@microsoft.com>,
+        "James.Bottomley@hansenpartnership.com" 
+        <James.Bottomley@hansenpartnership.com>,
+        "emilne@redhat.com" <emilne@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH 1/1] scsi: storvsc: Reduce default ring buffer size to 128
+ Kbytes
+Thread-Topic: [PATCH 1/1] scsi: storvsc: Reduce default ring buffer size to
+ 128 Kbytes
+Thread-Index: AQHU6NPAwqy3b0fRgku3jt+SxDRai6YpCAbA
+Date:   Tue, 2 Apr 2019 15:58:57 +0000
+Message-ID: <DM6PR21MB1337435B5EBFF250E412C506CA560@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1554154871-10305-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1554154871-10305-1-git-send-email-mikelley@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 02 Apr 2019 15:57:21 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-04-02T15:58:55.9823007Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b055f675-b910-4eb5-80f8-ed8f2dbf4aa1;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a924f993-74d0-45ac-b2e1-08d6b7841d58
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1195;
+x-ms-traffictypediagnostic: DM6PR21MB1195:
+x-microsoft-antispam-prvs: <DM6PR21MB1195AB30756D8867FE55EFA9CA560@DM6PR21MB1195.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0995196AA2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(366004)(396003)(346002)(376002)(189003)(199004)(13464003)(81166006)(33656002)(6506007)(7696005)(55016002)(71190400001)(66066001)(6246003)(476003)(486006)(8990500004)(86612001)(316002)(10090500001)(2906002)(26005)(6436002)(106356001)(53546011)(105586002)(2201001)(11346002)(102836004)(14454004)(10290500003)(86362001)(71200400001)(1511001)(68736007)(9686003)(8936002)(305945005)(4326008)(76176011)(25786009)(186003)(6116002)(229853002)(446003)(81156014)(8676002)(22452003)(256004)(97736004)(4744005)(52536014)(3846002)(53936002)(99286004)(74316002)(2501003)(5660300002)(7736002)(107886003)(478600001)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1195;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qfaKsSGkG+QNqiwQRcxNcObJp9CAWNolX3B/lG6h1mdXQrN8MKvL4sJ9qTVHeH9P0etAJ4+o8h0CFKn5yAjsjOBs1wIUFz3uyzqXPlgKSZQRPL65UizevYUdhxSRU/o90a7kgMn7WRMz9dWFUk4kLrrUEKROyDTfg91xNlmvcEwQpk2ys6unIntPMgTNtBF/tmvB2E1Fz1mdy6LfHO0yuyTTUJ/sW2QmDNNXBFX7BTRoJM1H3GRJteHe1FjuX5p5fpIWSvMAs907hvRKWz4aha9NbUpXp4ywr52JauP0tC+fywkyInI/e7xNCnYYhKhQs59E61ioGo8imKexgT40KPdwTrwnEer2qBS9Tm7angHd8YERf6GOFWTKl7iwTdfpG0cqv6Ua0JQir5LwqhLCRt5bYJbQlMFwaKqjHM3XeCs=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a924f993-74d0-45ac-b2e1-08d6b7841d58
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2019 15:58:57.3720
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1195
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.04.19 17:25, Michael S. Tsirkin wrote:
-> On Tue, Apr 02, 2019 at 08:04:00AM -0700, Alexander Duyck wrote:
->> Basically what we would be doing is providing a means for
->> incrementally transitioning the buddy memory into the idle/offline
->> state to reduce guest memory overhead. It would require one function
->> that would walk the free page lists and pluck out pages that don't
->> have the "Offline" page type set,
-> 
-> I think we will need an interface that gets
-> an offline page and returns the next online free page.
-> 
-> If we restart the list walk each time we can't guarantee progress.
-
-Yes, and essentially we are scanning all the time for chunks vs. we get
-notified which chunks are possible hinting candidates. Totally different
-design.
-
-
--- 
-
-Thanks,
-
-David / dhildenb
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtaHlwZXJ2LW93
+bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgtaHlwZXJ2LQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5v
+cmc+IE9uIEJlaGFsZiBPZiBNaWNoYWVsIEtlbGxleQ0KPiBTZW50OiBNb25kYXksIEFwcmlsIDEs
+IDIwMTkgNTo0MiBQTQ0KPiBUbzogS1kgU3Jpbml2YXNhbiA8a3lzQG1pY3Jvc29mdC5jb20+OyBt
+YXJ0aW4ucGV0ZXJzZW5Ab3JhY2xlLmNvbTsgTG9uZyBMaQ0KPiA8bG9uZ2xpQG1pY3Jvc29mdC5j
+b20+OyBKYW1lcy5Cb3R0b21sZXlAaGFuc2VucGFydG5lcnNoaXAuY29tOw0KPiBlbWlsbmVAcmVk
+aGF0LmNvbTsgbGludXgtaHlwZXJ2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNjc2lAdmdlci5rZXJuZWwub3JnDQo+IENjOiBNaWNoYWVs
+IEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gU3ViamVjdDogW1BBVENIIDEvMV0g
+c2NzaTogc3RvcnZzYzogUmVkdWNlIGRlZmF1bHQgcmluZyBidWZmZXIgc2l6ZSB0byAxMjggS2J5
+dGVzDQo+IA0KPiBSZWR1Y2UgdGhlIGRlZmF1bHQgVk1idXMgY2hhbm5lbCByaW5nIGJ1ZmZlciBz
+aXplIGZvciBzdG9ydnNjIFNDU0kgZGV2aWNlcw0KPiBmcm9tIDEgTWJ5dGUgdG8gMTI4IEtieXRl
+cy4gTWVhc3VyZW1lbnRzIHNob3cgdGhhdCByaW5nIGJ1ZmZlciBzaXplcyBhYm92ZQ0KPiAxMjgg
+S2J5dGVzIGRvIG5vdCBpbmNyZWFzZSBwZXJmb3JtYW5jZSBldmVuIGF0IHZlcnkgaGlnaCBJT1BT
+IHJhdGVzLCBzbyBkb24ndA0KPiB3YXN0ZSB0aGUgbWVtb3J5LiBBbHNvIHJlbW92ZSB0aGUgZGVw
+ZW5kZW5jZSBvbiBQQUdFX1NJWkUsIHNpbmNlIHRoZSByaW5nDQo+IGJ1ZmZlciBzaXplIHNob3Vs
+ZCBub3QgY2hhbmdlIG9uIGFyY2hpdGVjdHVyZXMgd2hlcmUgUEFHRV9TSVpFIGlzIG5vdCA0IEti
+eXRlcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNy
+b3NvZnQuY29tPg0KDQpSZXZpZXdlZC1ieTogSGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pAbWljcm9z
+b2Z0LmNvbT4NClRoYW5rIHlvdS4NCg==
