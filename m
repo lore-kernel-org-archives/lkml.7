@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92A2C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466ABC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A779C20830
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0393E20830
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:29:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NO0CC482"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SVPzt/BE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDBV1i (ORCPT
+        id S1726372AbfDBV3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:27:38 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46007 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfDBV1i (ORCPT
+        Tue, 2 Apr 2019 17:29:48 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:34144 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfDBV3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:27:38 -0400
-Received: by mail-vs1-f66.google.com with SMTP id n14so8651094vsp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:27:37 -0700 (PDT)
+        Tue, 2 Apr 2019 17:29:48 -0400
+Received: by mail-vk1-f195.google.com with SMTP id x84so2018355vkd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:29:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qiIybSas6l3Go+QGXlovOiyqOyWhoq4kX0QAlAr0REw=;
-        b=NO0CC48215QJX+LvelRD6HW7H3fHFnoJuYQuFV5NlHIHgBVXT9OUGd0Pk9EBuK3AhX
-         U3wniD5FUh4a326ZPT0EiC+1czgqvNkwhBWmswFLo081atSBOhBKJJMiIf5XKZ+r3uHf
-         15b7iODK9dlFQsLopQUgPOornurFJG9r2UBEk=
+        bh=mdMF1dPhHlX6mW7IUYjf4Lqz+x729lAivuO2qyg8Mxg=;
+        b=SVPzt/BE6w0xzkBcjPhBSZ3wPhCvnJFBZ2QV9GRk54lvn1iturdJocsJW+5LRvuV/d
+         gulVktjsRTLeatu5JPLuuzLMX56A/JRA7V0XnebLJa/R6gWHZgdzWgHj2LkLKJitTcV4
+         0cj7Tg+e55wARmJbOxZT1HE76BsWp/RHcCgfI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qiIybSas6l3Go+QGXlovOiyqOyWhoq4kX0QAlAr0REw=;
-        b=psumDR0sGPLfV1r3W1zk0poOdWoHOZrN4jYqNXWEZX3KIhUndxeXn2lqVAS0kSrrwq
-         vW2xnMbLPXPp4m6QpoBY6wZwdv58IXiZVrrsFYV6s2RB66b1SFLh+fZnWpZ+bNLXfOu6
-         YT2xXVH8Gc/b7LT146WyIx3mI8REa//t21v+7yWMDntbJtm5c70Mtf90QkyL53j3LiF3
-         8Rs41i7JXQl+pqpiuUIBwV+aSz+OFC+AcsX6TWFBICIr+Y/KNPaWcWdqTvVcJf6fVXPS
-         Ifj/PdQPo3W8dX5Fd+5jlCtXuL9tOSmV49sSI//Vd0rLwtkXOOvsC1eNBZy25Yi1XnyA
-         x9DQ==
-X-Gm-Message-State: APjAAAWn7d1gvO6AMxE0MWRYKejPnKkju1QDG1GIb1GzdudaMVbdU4XE
-        9yPGPSMYzypEn5q35JjfgEL/eRhVsew=
-X-Google-Smtp-Source: APXvYqw7ibe0oOmfjBIeBJVIL0E9oSsOgcfS4/otedUqErhyFFs4p7xFoMt6BvSdNWaj23dgomecwA==
-X-Received: by 2002:a67:828f:: with SMTP id e137mr43363765vsd.131.1554240456537;
-        Tue, 02 Apr 2019 14:27:36 -0700 (PDT)
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com. [209.85.221.176])
-        by smtp.gmail.com with ESMTPSA id t201sm5129232vke.15.2019.04.02.14.27.33
+        bh=mdMF1dPhHlX6mW7IUYjf4Lqz+x729lAivuO2qyg8Mxg=;
+        b=bIHiKW5DLSGBk32uE3ppIsBTanmNa2gXfD0IBQ5zhrBPf9YLV1mQxCTT9lhMRy3hd/
+         jSA0kMxJd5B+WhQB7HDyrCO1Q8uK+CvMi0wtAzzFcL8vNPHVy1Y5gnRwY6q6cQzgOsyE
+         Qz3R/Ykqpm3TB3KGT5jAtzAzRPkseSNFnR5kgExMuM058LcVV+XJDwW6foiFQ8ApaD1h
+         Q2KPK2n0qOEFTVNUuP0dvNDguGUU6fgxuhiqncxBnBwQacvrqUT+hd+pTRhpaNMkadT1
+         OHMPorqvNOOFmvd9B8zlnkWAGHhF0zCj9vfrvHogq4sXSTiHZ45SlXOcS1KiyMcW+VKD
+         oK3w==
+X-Gm-Message-State: APjAAAVP97UOUrryTMTeHYrXfNzaXVfwx05JDxC4AmXCWTCQ4WJHLfxr
+        DLPpmCJpJnv807bK1H8e3K8r4FPNv/w=
+X-Google-Smtp-Source: APXvYqzGwCE7HmicKbcus7g9q8fr7M8px0Y74QQCd2sjUeEoe4t1Xmc4tlQ9PfJX6YBmTi79rgzcKw==
+X-Received: by 2002:a1f:2c8:: with SMTP id 191mr37793247vkc.29.1554240586377;
+        Tue, 02 Apr 2019 14:29:46 -0700 (PDT)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id y1sm14519067uai.0.2019.04.02.14.29.43
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 14:27:33 -0700 (PDT)
-Received: by mail-vk1-f176.google.com with SMTP id h71so3335909vkf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:27:33 -0700 (PDT)
-X-Received: by 2002:a1f:29c5:: with SMTP id p188mr42395945vkp.24.1554240452727;
- Tue, 02 Apr 2019 14:27:32 -0700 (PDT)
+        Tue, 02 Apr 2019 14:29:43 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id h71so3337150vkf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:29:43 -0700 (PDT)
+X-Received: by 2002:a1f:2443:: with SMTP id k64mr11670405vkk.47.1554240582841;
+ Tue, 02 Apr 2019 14:29:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190306214226.14598-1-tobin@kernel.org> <20190306214226.14598-3-tobin@kernel.org>
-In-Reply-To: <20190306214226.14598-3-tobin@kernel.org>
+References: <20190306214226.14598-1-tobin@kernel.org> <20190306214226.14598-4-tobin@kernel.org>
+In-Reply-To: <20190306214226.14598-4-tobin@kernel.org>
 From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 2 Apr 2019 14:27:21 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+=O3C6z7H5j93Z4mQkpS3f0ea_7T+LRQEnRCZCoKX8zw@mail.gmail.com>
-Message-ID: <CAGXu5j+=O3C6z7H5j93Z4mQkpS3f0ea_7T+LRQEnRCZCoKX8zw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] kselftest: Add test runner creation script
+Date:   Tue, 2 Apr 2019 14:29:31 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+OPGL3N95cxRWDm5zi=ZpyEH5qA4==UdedYqWr_yi6GQ@mail.gmail.com>
+Message-ID: <CAGXu5j+OPGL3N95cxRWDm5zi=ZpyEH5qA4==UdedYqWr_yi6GQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] kselftest/lib: Use new shell runner to define tests
 To:     "Tobin C. Harding" <tobin@kernel.org>
 Cc:     Shuah Khan <shuah@kernel.org>, Jann Horn <jannh@google.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -91,115 +91,138 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Mar 6, 2019 at 1:43 PM Tobin C. Harding <tobin@kernel.org> wrote:
 >
-> Currently if we wish to use kselftest to run tests within a kernel
-> module we write a small script to load/unload and do error reporting.
-> There are a bunch of these under tools/testing/selftests/lib/ that are
-> all identical except for the test name.  We can reduce code duplication
-> and improve maintainability if we have one version of this.  However
-> kselftest requires an executable for each test.  We can move all the
-> script logic to a central script then have each individual test script
-> set the module name and call the main script.  There is a little bit of
-> boilerplate left in each script to handle building/running tests with
-> the O=/path/to/out make option.
+> We just added a new script kselftest_module.sh that can be used to
+> define kselftest tests that run tests within a kernel module.  We can
+> use it to reduce code duplication in all of the test runner scripts in
+> tools/testing/selftests/lib/.
 >
-> Add test runner creation script.
+> Use new shell runner tools/testing/selftests/kselftest_module.sh to
+> define test runner scripts.
 >
 > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 > ---
->  tools/testing/selftests/kselftest_module.sh | 75 +++++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100755 tools/testing/selftests/kselftest_module.sh
+>  tools/testing/selftests/lib/bitmap.sh        | 25 ++++++++++----------
+>  tools/testing/selftests/lib/prime_numbers.sh | 23 +++++++++---------
+>  tools/testing/selftests/lib/printf.sh        | 25 ++++++++++----------
+>  3 files changed, 35 insertions(+), 38 deletions(-)
 >
-> diff --git a/tools/testing/selftests/kselftest_module.sh b/tools/testing/selftests/kselftest_module.sh
-> new file mode 100755
-> index 000000000000..b5d446738614
-> --- /dev/null
-> +++ b/tools/testing/selftests/kselftest_module.sh
-> @@ -0,0 +1,75 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0+
-> +
+> diff --git a/tools/testing/selftests/lib/bitmap.sh b/tools/testing/selftests/lib/bitmap.sh
+> index 5a90006d1aea..ed4180ea0021 100755
+> --- a/tools/testing/selftests/lib/bitmap.sh
+> +++ b/tools/testing/selftests/lib/bitmap.sh
+> @@ -1,19 +1,18 @@
+>  #!/bin/sh
+>  # SPDX-License-Identifier: GPL-2.0
+>
+> -# Kselftest framework requirement - SKIP code is 4.
+> -ksft_skip=4
+> +module=test_bitmap
+> +description="bitmap"
+>
+> -# Runs bitmap infrastructure tests using test_bitmap kernel module
+> -if ! /sbin/modprobe -q -n test_bitmap; then
+> -       echo "bitmap: module test_bitmap is not found [SKIP]"
+> -       exit $ksft_skip
+> -fi
 > +#
-> +# Runs an individual test module.  kselftest expects a separate
-> +# executable for each test.  So test should each have an individial
-> +# script that can call this script.
+> +# Shouldn't need to edit anything below here.
 > +#
-> +
-> +# Individual test scrits should define these:
-> +module=""                      # filename (without the .ko).
-> +desc=""                                # Output prefix.
-> +
-> +modprobe="/sbin/modprobe"
-> +
-> +main() {
-> +    parse_args $@
-> +    assert_root
-> +    assert_have_module
-> +    run_module
-> +}
-> +
-> +parse_args() {
-> +    script=${0##*/}
-> +
-> +    if [[ ! $# -eq 2 ]]; then
-> +       echo "Usage: $script <module_name> <description> [FAIL]"
-> +       exit 1
-> +    fi
-> +
-> +    module=$1
-> +    desc=$2
-> +}
-> +
-> +assert_root() {
-> +    if [[ $EUID -ne 0 ]]; then
-> +       skip "please run as root"
-> +    fi
-> +}
-> +
-> +assert_have_module() {
-> +    if ! $modprobe -q -n $module; then
-> +       skip "module $module is not found"
-> +    fi
-> +}
-> +
-> +run_module() {
-> +    if $modprobe -q $module; then
-> +       $modprobe -q -r $module
+>
+> -if /sbin/modprobe -q test_bitmap; then
+> -       /sbin/modprobe -q -r test_bitmap
+> -       echo "bitmap: ok"
+> -else
+> -       echo "bitmap: [FAIL]"
+> -       exit 1
+> +file="kselftest_module.sh"
+> +path="../$file"
+> +if [[ ! $KBUILD_SRC == "" ]]; then
+> +    path="${KBUILD_SRC}/tools/testing/selftests/$file"
+>  fi
 
-Probably will need a way to pass arguments into the modprobe here, but
-otherwise looks fine.
+Can this just be reduced to something like:
 
-> +       say "ok"
-> +    else
-> +       fail ""
-> +    fi
-> +}
+. $(dirname $0)/../kselftest_module.sh
+
+call_functions_here ...
+
 > +
-> +say() {
-> +    echo "$desc: $1"
-> +}
+> +$path $module $description
 > +
-> +
-> +fail() {
-> +    say "$1 [FAIL]" >&2
-> +    exit 1
-> +}
-> +
-> +skip() {
-> +    say "$1 [SKIP]" >&2
-> +    # Kselftest framework requirement - SKIP code is 4.
-> +    exit 4
-> +}
-> +
+> diff --git a/tools/testing/selftests/lib/prime_numbers.sh b/tools/testing/selftests/lib/prime_numbers.sh
+> index 78e7483c8d60..6f782386d897 100755
+> --- a/tools/testing/selftests/lib/prime_numbers.sh
+> +++ b/tools/testing/selftests/lib/prime_numbers.sh
+> @@ -2,18 +2,17 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Checks fast/slow prime_number generation for inconsistencies
+>
+> -# Kselftest framework requirement - SKIP code is 4.
+> -ksft_skip=4
+> +module=prime_numbers
+> +description="prime_numbers"
+>
+> -if ! /sbin/modprobe -q -n prime_numbers; then
+> -       echo "prime_numbers: module prime_numbers is not found [SKIP]"
+> -       exit $ksft_skip
+> -fi
 > +#
-> +# Main script
+> +# Shouldn't need to edit anything below here.
 > +#
-> +main $@
+>
+> -if /sbin/modprobe -q prime_numbers selftest=65536; then
+> -       /sbin/modprobe -q -r prime_numbers
+> -       echo "prime_numbers: ok"
+> -else
+> -       echo "prime_numbers: [FAIL]"
+> -       exit 1
+> +file="kselftest_module.sh"
+> +path="../$file"
+> +if [[ ! $KBUILD_SRC == "" ]]; then
+> +    path="${KBUILD_SRC}/tools/testing/selftests/$file"
+>  fi
+> +
+> +$path $module $description
+> diff --git a/tools/testing/selftests/lib/printf.sh b/tools/testing/selftests/lib/printf.sh
+> index 45a23e2d64ad..89717915d028 100755
+> --- a/tools/testing/selftests/lib/printf.sh
+> +++ b/tools/testing/selftests/lib/printf.sh
+> @@ -1,19 +1,18 @@
+>  #!/bin/sh
+>  # SPDX-License-Identifier: GPL-2.0
+> -# Runs printf infrastructure using test_printf kernel module
+> +# Tests the printf infrastructure using test_printf kernel module.
+>
+> -# Kselftest framework requirement - SKIP code is 4.
+> -ksft_skip=4
+> +module=test_printf
+> +description="printf"
+>
+> -if ! /sbin/modprobe -q -n test_printf; then
+> -       echo "printf: module test_printf is not found [SKIP]"
+> -       exit $ksft_skip
+> -fi
+> +#
+> +# Shouldn't need to edit anything below here.
+> +#
+>
+> -if /sbin/modprobe -q test_printf; then
+> -       /sbin/modprobe -q -r test_printf
+> -       echo "printf: ok"
+> -else
+> -       echo "printf: [FAIL]"
+> -       exit 1
+> +file="kselftest_module.sh"
+> +path="../$file"
+> +if [[ ! $KBUILD_SRC == "" ]]; then
+> +    path="${KBUILD_SRC}/tools/testing/selftests/$file"
+>  fi
+> +
+> +$path $module $description
 > --
 > 2.20.1
 >
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
