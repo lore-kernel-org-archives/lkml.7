@@ -2,161 +2,221 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BE9C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CE4C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D1320657
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346F220657
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbfDBPmL (ORCPT
+        id S1730386AbfDBPnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:42:11 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:34946 "EHLO ns.iliad.fr"
+        Tue, 2 Apr 2019 11:43:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53828 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729843AbfDBPmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:42:10 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 125AB20A5F;
-        Tue,  2 Apr 2019 17:42:09 +0200 (CEST)
-Received: from [192.168.108.8] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id ED77B20A52;
-        Tue,  2 Apr 2019 17:42:08 +0200 (CEST)
-Subject: Re: [PATCH v2] iommu/arm-smmu: Break insecure users by disabling
- bypass by default
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Evan Green <evgreen@chromium.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190301192017.39770-1-dianders@chromium.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <a860d7e8-54dc-f225-0274-0dcf68373ccb@free.fr>
-Date:   Tue, 2 Apr 2019 17:42:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1729784AbfDBPnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 11:43:35 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 35C2CC02E601;
+        Tue,  2 Apr 2019 15:43:34 +0000 (UTC)
+Received: from treble (ovpn-122-147.rdu2.redhat.com [10.10.122.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 948105D78F;
+        Tue,  2 Apr 2019 15:43:31 +0000 (UTC)
+Date:   Tue, 2 Apr 2019 10:43:29 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
+Message-ID: <20190402154329.scp7i7uqevubgwrz@treble>
+References: <20190331214020.836098943@linutronix.de>
+ <20190331215136.039902969@linutronix.de>
+ <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190301192017.39770-1-dianders@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Apr  2 17:42:09 2019 +0200 (CEST)
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 02 Apr 2019 15:43:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/03/2019 20:20, Douglas Anderson wrote:
-
-> If you're bisecting why your peripherals stopped working, it's
-> probably this CL.  Specifically if you see this in your dmesg:
->   Unexpected global fault, this could be serious
-> ...then it's almost certainly this CL.
+On Tue, Apr 02, 2019 at 12:19:46PM +0200, Thomas Gleixner wrote:
+> The current implementation of in_exception_stack() iterates over the
+> exception stacks array. Most of the time this is an useless exercise, but
+> even for the actual use cases (perf and ftrace) it takes at least 2
+> iterations to get to the NMI stack.
 > 
-> Running your IOMMU-enabled peripherals with the IOMMU in bypass mode
-> is insecure and effectively disables the protection they provide.
-> There are few reasons to allow unmatched stream bypass, and even fewer
-> good ones.
+> As the exception stacks and the guard pages are page aligned the loop can
+> be avoided completely.
 > 
-> This patch starts the transition over to make it much harder to run
-> your system insecurely.  Expected steps:
+> Add a initial check whether the stack pointer is inside the full exception
+> stack area and leave early if not.
 > 
-> 1. By default disable bypass (so anyone insecure will notice) but make
->    it easy for someone to re-enable bypass with just a KConfig change.
->    That's this patch.
+> Create a lookup table which describes the stack area. The table index is
+> the page offset from the beginning of the exception stacks. So for any
+> given stack pointer the page offset is computed and a lookup in the
+> description table is performed. If it is inside a guard page, return. If
+> not, use the descriptor to fill in the info structure.
 > 
-> 2. After people have had a little time to come to grips with the fact
->    that they need to set their IOMMUs properly and have had time to
->    dig into how to do this, the KConfig will be eliminated and bypass
->    will simply be disabled.  Folks who are truly upset and still
->    haven't fixed their system can either figure out how to add
->    'arm-smmu.disable_bypass=n' to their command line or revert the
->    patch in their own private kernel.  Of course these folks will be
->    less secure.
+> The table is filled at compile time with nasty macro magic and for the
+> !KASAN case the interesting page descriptors exactly fit into a single
+> cache line. Just the last guard page descriptor is in the next cacheline,
+> but that should not be accessed in the regular case.
 > 
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
+>  arch/x86/kernel/dumpstack_64.c |   97 +++++++++++++++++++++++++++--------------
+>  1 file changed, 66 insertions(+), 31 deletions(-)
 > 
-> Changes in v2:
-> - Flipped default to 'yes' and changed comments a lot.
-> 
->  drivers/iommu/Kconfig    | 25 +++++++++++++++++++++++++
->  drivers/iommu/arm-smmu.c |  3 ++-
->  2 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 1ca1fa107b21..a4210672804a 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -359,6 +359,31 @@ config ARM_SMMU
->  	  Say Y here if your SoC includes an IOMMU device implementing
->  	  the ARM SMMU architecture.
+> --- a/arch/x86/kernel/dumpstack_64.c
+> +++ b/arch/x86/kernel/dumpstack_64.c
+> @@ -48,50 +48,85 @@ const char *stack_type_name(enum stack_t
+>  	return NULL;
+>  }
 >  
-> +config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
-> +	bool "Default to disabling bypass on ARM SMMU v1 and v2"
-> +	depends on ARM_SMMU
-> +	default y
-> +	help
-> +	  Say Y here to (by default) disable bypass streams such that
-> +	  incoming transactions from devices that are not attached to
-> +	  an iommu domain will report an abort back to the device and
-> +	  will not be allowed to pass through the SMMU.
+> -struct estack_layout {
+> -	unsigned int	begin;
+> -	unsigned int	end;
+> +#define ESTACK_S(st)						\
+> +	(offsetof(struct cea_exception_stacks, st## _stack))
 > +
-> +	  Any old kernels that existed before this KConfig was
-> +	  introduced would default to _allowing_ bypass (AKA the
-> +	  equivalent of NO for this config).  However the default for
-> +	  this option is YES because the old behavior is insecure.
+> +#define ESTACK_E(st)							\
+> +	(offsetof(struct cea_exception_stacks, st## _stack_guard))
 > +
-> +	  There are few reasons to allow unmatched stream bypass, and
-> +	  even fewer good ones.  If saying YES here breaks your board
-> +	  you should work on fixing your board.  This KConfig option
-> +	  is expected to be removed in the future and we'll simply
-> +	  hardcode the bypass disable in the code.
+> +#define PAGENR(offs)	((offs) / PAGE_SIZE)
+> +#define PAGERANGE(st)	PAGENR(ESTACK_S(st)) ... PAGENR(ESTACK_E(st) - 1)
 > +
-> +	  NOTE: the kernel command line parameter
-> +	  'arm-smmu.disable_bypass' will continue to override this
-> +	  config.
+> +#if EXCEPTION_STKSZ == PAGE_SIZE
+> +# define CONDRANGE(st)	PAGENR(ESTACK_S(st))
+> +#else
+> +# define CONDRANGE(st)	PAGERANGE(st)
+> +#endif
 > +
->  config ARM_SMMU_V3
->  	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
->  	depends on ARM64
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 045d93884164..930c07635956 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -110,7 +110,8 @@ static int force_stage;
->  module_param(force_stage, int, S_IRUGO);
->  MODULE_PARM_DESC(force_stage,
->  	"Force SMMU mappings to be installed at a particular stage of translation. A value of '1' or '2' forces the corresponding stage. All other values are ignored (i.e. no stage is forced). Note that selecting a specific stage will disable support for nested translation.");
-> -static bool disable_bypass;
-> +static bool disable_bypass =
-> +	IS_ENABLED(CONFIG_ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT);
->  module_param(disable_bypass, bool, S_IRUGO);
->  MODULE_PARM_DESC(disable_bypass,
->  	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
-> 
+> +/**
+> + * struct estack_pages - Page descriptor for exception stacks
+> + * @offs:	Offset from the start of the exception stack area
+> + * @size:	Size of the exception stack
+> + * @type:	Type to store in the stack_info struct
+> + */
+> +struct estack_pages {
+> +	u32	offs;
+> +	u16	size;
+> +	u16	type;
+>  };
+>  
+> -#define	ESTACK_ENTRY(x)	{						  \
+> -	.begin	= offsetof(struct cea_exception_stacks, x## _stack),	  \
+> -	.end	= offsetof(struct cea_exception_stacks, x## _stack_guard) \
+> +#define ESTACK_PAGE(ist, est) {				\
+> +	.offs	= ESTACK_S(est),			\
+> +	.size	= ESTACK_E(est) - ESTACK_S(est),	\
+> +	.type	= STACK_TYPE_EXCEPTION + ist,		\
+>  	}
+>  
+> -static const struct estack_layout layout[N_EXCEPTION_STACKS] = {
+> -	[ DOUBLEFAULT_IST	]	= ESTACK_ENTRY(DF),
+> -	[ NMI_IST		]	= ESTACK_ENTRY(NMI),
+> -	[ DEBUG_IST		]	= ESTACK_ENTRY(DB),
+> -	[ MCE_IST		]	= ESTACK_ENTRY(MCE),
+> +#define ESTACK_PAGES	(sizeof(struct cea_exception_stacks) / PAGE_SIZE)
+> +
+> +/*
+> + * Array of exception stack page descriptors. If the stack is larger than
+> + * PAGE_SIZE, all pages covering a particular stack will have the same
+> + * info.
+> + */
+> +static const struct estack_pages estack_pages[ESTACK_PAGES] ____cacheline_aligned = {
+> +	[CONDRANGE(DF)]		= ESTACK_PAGE(DOUBLEFAULT_IST, DF),
+> +	[CONDRANGE(NMI)]	= ESTACK_PAGE(NMI_IST, NMI),
+> +	[PAGERANGE(DB)]		= ESTACK_PAGE(DEBUG_IST, DB),
+> +	[CONDRANGE(MCE)]	= ESTACK_PAGE(MCE_IST, MCE),
 
-OK, so my defconfig contains neither IOMMU_DEFAULT_PASSTHROUGH nor
-ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT.
+It would be nice if the *_IST macro naming aligned with the struct
+cea_exception_stacks field naming.  Then you could just do, e.g.
+ESTACKPAGE(DF).
 
-Thus my .config contains:
-# CONFIG_IOMMU_DEFAULT_PASSTHROUGH is not set
-CONFIG_ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT=y
+Also it's a bit unfortunate that some of the stack size knowledge is
+hard-coded here, i.e #DB always being > 1 page and non-#DB being
+sometimes 1 page.
 
-I have checked that disable_bypass is indeed set to true.
-And that we can override the default value on the command-line with arm-smmu.disable_bypass=0
-And that PCIe and UFS still work on my board (they are "behind" the ANOC1 SMMU).
+>  };
+>  
+>  static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+>  {
+> -	unsigned long estacks, begin, end, stk = (unsigned long)stack;
+> +	unsigned long begin, end, stk = (unsigned long)stack;
+> +	const struct estack_pages *ep;
+>  	struct pt_regs *regs;
+>  	unsigned int k;
+>  
+>  	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
+>  
+> -	estacks = (unsigned long)__this_cpu_read(cea_exception_stacks);
+> -
+> -	for (k = 0; k < N_EXCEPTION_STACKS; k++) {
+> -		begin = estacks + layout[k].begin;
+> -		end   = estacks + layout[k].end;
+> -		regs  = (struct pt_regs *)end - 1;
+> -
+> -		if (stk <= begin || stk >= end)
+> -			continue;
+> -
+> -		info->type	= STACK_TYPE_EXCEPTION + k;
+> -		info->begin	= (unsigned long *)begin;
+> -		info->end	= (unsigned long *)end;
+> -		info->next_sp	= (unsigned long *)regs->sp;
+> -
+> -		return true;
+> -	}
+> -
+> -	return false;
+> +	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
+> +	end = begin + sizeof(struct cea_exception_stacks);
+> +	/* Bail if @stack is outside the exception stack area. */
+> +	if (stk <= begin || stk >= end)
+> +		return false;
 
-Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+This check is the most important piece.  Exception stack dumps are quite
+rare, so this ensures an early exit in most cases regardless of whether
+there's a loop below.
 
-Regards.
+> +
+> +	/* Calc page offset from start of exception stacks */
+> +	k = (stk - begin) >> PAGE_SHIFT;
+> +	/* Lookup the page descriptor */
+> +	ep = &estack_pages[k];
+> +	/* Guard page? */
+> +	if (unlikely(!ep->size))
+> +		return false;
+> +
+> +	begin += (unsigned long)ep->offs;
+> +	end = begin + (unsigned long)ep->size;
+> +	regs = (struct pt_regs *)end - 1;
+> +
+> +	info->type	= ep->type;
+> +	info->begin	= (unsigned long *)begin;
+> +	info->end	= (unsigned long *)end;
+> +	info->next_sp	= (unsigned long *)regs->sp;
+> +	return true;
+
+With the above "(stk <= begin || stk >= end)" check, removing the loop
+becomes not all that important since exception stack dumps are quite
+rare and not performance sensitive.  With all the macros this code
+becomes a little more obtuse, so I'm not sure whether removal of the
+loop is a net positive.
+
+>  }
+>  
+>  static bool in_irq_stack(unsigned long *stack, struct stack_info *info)
+
+-- 
+Josh
