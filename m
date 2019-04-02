@@ -4,122 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BD1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA774C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8CA2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938FA2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dvivgHko"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJL5w8n3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbfDBEGy (ORCPT
+        id S1726130AbfDBEK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:06:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41483 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfDBEGy (ORCPT
+        Tue, 2 Apr 2019 00:10:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42484 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfDBEK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:06:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so5651765pfd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 21:06:53 -0700 (PDT)
+        Tue, 2 Apr 2019 00:10:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p6so5838120pgh.9
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 21:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=/BudzxJSuvPoxSMTNXL/vt4h+DmYX8E7c5je0g6hGW8=;
-        b=dvivgHkoQ4ODL8dw6MmsDW63sPJs9D9JiOlFz86R1MLBXEPrVz7ERxEO5NaFm4Ok9A
-         QdA8FBVIvlAJrh9+vzYROiKU8Pd7pAVkD6Me5fDzV03NnSSJVD8NVhCLmSaWetmbSKIr
-         VGFJMeeuqBhuSUPCOMkBc5pTbY8NwQxO+yABXTfPB5tSIYneGOCTJEZO4/vuiTfQd1ze
-         VclgvI9sq08cevrkEGBaSNjwiG2we0sZ61HYCFtPv1chvvTpvS+ey4e9n+d+Anwbein2
-         RoPfr2IdUEq1lU18iqsADeh6Aa3rO9Zg3Q4/z3e7PJdwBanB179gOxHhi5alYgqafuAv
-         ceQw==
+        bh=pIp4s/uZcJpfXdEIyppuCcmzflVMJ51Cq2s5rU3+TOA=;
+        b=zJL5w8n31kIpGsJs+2RjKhMhF9rAUKht2R91mDcIx5V7vae1cVcjhobNT/otrwoDeP
+         YAn+c44ylm63zl35lIIveVSpAPFqzAxYJJPR639DOp5tS9T0hB+glC8y/zTNV6y9bUQK
+         /v907poFH4Hb26GP5Lluij8CNuxJSB1NHXL5EwtPV2gVQ0sX8p3fHSnRa1wPymGSLQYi
+         vV/9lY1CAvZCTdf2VnV5U10MkN/zj2uYxHYadb19O1YlQ6w01Wqblw3safCucP7r8BFF
+         hfLdSQwze7Oo9+Uf7kjjcORWyW84vZBzJNPzbEuOrYqSOToB6ocKHBlblAAxbGqRmYex
+         tIvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=/BudzxJSuvPoxSMTNXL/vt4h+DmYX8E7c5je0g6hGW8=;
-        b=o1HFTNRBGJQCtASz2QNMmBsjpw4rJQkz4iEriOQr3gM8qza8LK1f7AAg/a21hcHl9g
-         dN3zaqCFL8X7wh2ZIprSiF6O8t99TCOrLSxuiM4edDXJUWGeQ7QRLwRD/oRYxVmk+Hre
-         AuO1Y84OlXSM8vEruUGIqmp/km6PVHRsiNGOixmbs79f6ZGARNA/3ZqfFCtb7NPGDEJ2
-         BKweleo1WTHH7Gyn5CLWzYjKfeRm+gzKBg4JGIT6UnBCaVKAS3b0U0eY6arzol6TmIoG
-         0azN87s080nT+Fjte1cw4c7jjQ/dVyAvaQQJH1c2ej3U4EOLyjTpvWFfcJQb3eDKe5BQ
-         1VLg==
-X-Gm-Message-State: APjAAAVY7MgM3faVUQsj1EfTYa500/g3pe3d5nfvTp4md443FLiZ34hk
-        Cw54XFNtqLYHeFagP95gY093P7shxUaf1g==
-X-Google-Smtp-Source: APXvYqwxmw2QRNvSjQmtk6J/WURH/2rBtCOHPr3bQV28vrxyjHq2aqGftylbbyXxyBFxuRnlLXh4tw==
-X-Received: by 2002:a65:6144:: with SMTP id o4mr27172989pgv.247.1554178013420;
-        Mon, 01 Apr 2019 21:06:53 -0700 (PDT)
+        bh=pIp4s/uZcJpfXdEIyppuCcmzflVMJ51Cq2s5rU3+TOA=;
+        b=AtAamZZe2CZ2h/9B2CxO7ROwewMy6hlEQhkYVcpvbeqb5eTS+zrHMYPNTOOMdk5lHN
+         Lq0M3+ugXjFN4Nc1XZEYrZmLZmL9Ssnh3VbRUwA3Gr9mC8UUukyyTtqfelV5SK+4h0hE
+         KNTuTCRH88/BuDkMzTWr1+LZXgAAeLYKBJIz8xxj/4ADkrkxZKlLU3IjoIXX6sYj6rUw
+         4MO0x60KpnDfBM5vYhO/9sfT3wqehUfeB9XHNRoQjBT7Qxk6DzxyDL8vvyRnhNMx1n4l
+         9TxvJ29yxR6n7bfb4tcW1weDgh2lf9q+SYrXPecBYFtkmcrV/qot56+4axC6k30HXtjj
+         ZJpw==
+X-Gm-Message-State: APjAAAVNlHxudth+boPn2yuEZyKLTfFSGWwQvLw2IgTwV3mlXh+wIuxB
+        ZKF1iCScIYDP2mB+vhzjlBHa5I1jg62suw==
+X-Google-Smtp-Source: APXvYqxpCd/9TWbZY2zy/yhfZFD0a7SPohkD2IJ8e6Ff4ZQVpAIvqikzZ1HmWlsXTHpVabCiXbiQnQ==
+X-Received: by 2002:a65:51c9:: with SMTP id i9mr8820022pgq.187.1554178256812;
+        Mon, 01 Apr 2019 21:10:56 -0700 (PDT)
 Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id y12sm32774618pgq.64.2019.04.01.21.06.49
+        by smtp.gmail.com with ESMTPSA id j28sm26352131pgb.46.2019.04.01.21.10.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 21:06:52 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 05:06:47 +0100
+        Mon, 01 Apr 2019 21:10:55 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 05:10:51 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     gwendal@chromium.org, bleung@chromium.org,
-        linux-kernel@vger.kernel.org, groeck@chromium.org,
-        kernel@collabora.com, dtor@chromium.org,
-        Vincent Palatin <vpalatin@chromium.org>
-Subject: Re: [PATCH] mfd: cros_ec_dev: Add a poll handler to receive MKBP
- events
-Message-ID: <20190402040647.GM4187@dell>
-References: <20190308123659.16101-1-enric.balletbo@collabora.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 068/114] drivers: mfd: Kconfig: pedantic formatting
+Message-ID: <20190402041051.GN4187@dell>
+References: <1552310346-7629-1-git-send-email-info@metux.net>
+ <1552310346-7629-69-git-send-email-info@metux.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190308123659.16101-1-enric.balletbo@collabora.com>
+In-Reply-To: <1552310346-7629-69-git-send-email-info@metux.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 08 Mar 2019, Enric Balletbo i Serra wrote:
+On Mon, 11 Mar 2019, Enrico Weigelt, metux IT consult wrote:
 
-> From: Vincent Palatin <vpalatin@chromium.org>
+> Formatting of Kconfig files doesn't look so pretty, so let the
+> Great White Handkerchief come around and clean it up.
 > 
-> Allow to poll on the cros_ec device to receive the MKBP events.
-> 
-> The /dev/cros_[ec|fp|..] file operations now implements the poll
-> operation. The userspace can now receive specific MKBP events by doing the
-> following:
-> - Open the /dev/cros_XX file.
-> - Call the CROS_EC_DEV_IOCEVENTMASK ioctl with the bitmap of the MKBP
->   events it wishes to receive as argument.
-> - Poll on the file descriptor.
-> - When it gets POLLIN, do a read on the file descriptor, the first
->   queued event will be returned (using the struct
->   ec_response_get_next_event format: one byte of event type, then
->   the payload).
-> 
-> The read() operation returns at most one event even if there are several
-> queued, and it might be truncated if the buffer is smaller than the
-> event (but the caller should know the maximum size of the events it is
-> reading).
-> 
-> read() used to return the EC version string, it still does it when no
-> event mask or an empty event is set for backward compatibility (despite
-> nobody really using this feature).
-> 
-> This will be used, for example, by the userspace daemon to receive and
-> treat the EC_MKBP_EVENT_FINGERPRINT sent by the FP MCU.
-
-MFD does not seem like the correct place for this.  Maybe this is a
-good candidate for drivers/platform/chrome/* where the rest of your
-platform empire now resides.
-
-> Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 > ---
-> 
->  drivers/mfd/cros_ec_dev.c | 163 +++++++++++++++++++++++++++++++++++++-
->  drivers/mfd/cros_ec_dev.h |   1 +
->  2 files changed, 160 insertions(+), 4 deletions(-)
+>  drivers/mfd/Kconfig | 62 ++++++++++++++++++++++++++---------------------------
+>  1 file changed, 31 insertions(+), 31 deletions(-)
+
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
