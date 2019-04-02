@@ -2,81 +2,267 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E43C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6867DC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6752B20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NpAB4QO8"
+	by mail.kernel.org (Postfix) with ESMTP id 3216F20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554180119;
+	bh=o1orBNUqoGT7WvWBxrx3ZCt01taJOdMi0vlXBNLVaK0=;
+	h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:List-ID:
+	 From;
+	b=gm+SLhJYfGb7fu9viAMr4Rh9kOmsZljzQ32FIKa5xQ983WxYc9c1BiBK1UnKfRKtK
+	 Y0tXSHFLwfkCp16MVmV3alziVKY7Ik4dpgBr2rx7zJBfOst0pJxrgsNcP3Xd0HkmJ9
+	 KcerXF9/J6/3Vn5SR0F8ooZgxRlMffhltIRMOII0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfDBEli (ORCPT
+        id S1728799AbfDBEl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:41:38 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34660 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfDBElh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:41:37 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y18so7933016lfe.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 21:41:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/vl6J89XgagQKYNNgKiOqHql7e5NVWi0yfcj7xtLNWs=;
-        b=NpAB4QO807HdXtc+bvVUAOK8FzUDVPZEaIIpJaJ7MDjiYLUgjMvuDLt/OGJrigPBDi
-         k2oZbknM6afivb5J1FneMXmDvhq6M+ayegW4lE2afbzsLAUcb+afOz9WP/w/UwaZYYDy
-         6Ua4MEm3NdiBP9NEn0HdGQbPN2hFIPlmsGRWU62xsQjLs5xMlBMOYsjhUEX3RmNPE1mm
-         MpHLokupzMOWIRcyGFvh1wblNduVHu77FkqCzwKwsSxKf+4afwbZec9EtfnOQaHsU5nd
-         6YiL5jEfHrI6H0rTxkPQpNrn7+2BJd8BXFxgGWPExwFat5asR+sOFWS64PGGkyDYJ5My
-         dQ/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/vl6J89XgagQKYNNgKiOqHql7e5NVWi0yfcj7xtLNWs=;
-        b=ser+Z3rdDH2IcKEYrdMW+TkFVXSlD+RddLj6SAfqa3+KyeI5iHqE8fPuITT1EqLKv6
-         svHA7wrm1CKFIXtVjvm5uxAHNaDgedZCeqPo1WV5zr6XtMv8s1qs10F/JhU+1lvx+Wly
-         YUafeNDVESNfUfiPL3iPOb7R1fV7xBv5E/TQtq7SUgqp+x1ygjrVORHnMhwsynSazWcw
-         GhP5boSpuZPsjXMCIUAsni4M8NGlRBe6i08SxDbno0wLcCqZmxVR7l4O0o2WAp0Lrzfh
-         Rn/LsttS8d53yNQSxf5XueyZdrKxvJcEyS7ZOnOKpTXQ3Ssb9lallKUrzIz4QUybjhMf
-         8MAg==
-X-Gm-Message-State: APjAAAUeRUE+nMD0YBuhCNnVEXs/LoAYjP0ewadiNOwhKN0yY5uvcfV7
-        1OfsFmB5+ptWb0/YqfUdbDJ/WkeutWY02hW5alDNrkiR
-X-Google-Smtp-Source: APXvYqzbq4vE8F7XgSbNVGyq6DFTavl2mgrcV1IutxQgK3EmFG3COuvItQtXGH6h33FrTt512ZSA4qIEuECCioxm3qI=
-X-Received: by 2002:ac2:491a:: with SMTP id n26mr19756620lfi.122.1554180095751;
- Mon, 01 Apr 2019 21:41:35 -0700 (PDT)
+        Tue, 2 Apr 2019 00:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbfDBEl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 00:41:57 -0400
+Received: from [10.71.11.124] (unknown [147.50.13.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2923020651;
+        Tue,  2 Apr 2019 04:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554180115;
+        bh=o1orBNUqoGT7WvWBxrx3ZCt01taJOdMi0vlXBNLVaK0=;
+        h=Subject:To:Cc:References:Reply-To:From:Date:In-Reply-To:From;
+        b=WEMg0dC//yB+cp8/4WUjxPSS5J3HENn2UgtRliVWYlr9jEu6neCLQvvWztKPLDO35
+         RuIAFXHzVWEJU2KDdlDHYGYFYD0Bc58DltGuxi4M3c8FoL+kmFVC8u8YZNJYfeOUtN
+         RkhBunrD+xKHn8OgbZmBUDt03tRM1nirLWky7GX8=
+Subject: Re: [PATCH 2/6] kbuild: allow Kbuild to start from any directory
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+References: <1553947458-8311-1-git-send-email-yamada.masahiro@socionext.com>
+ <1553947458-8311-2-git-send-email-yamada.masahiro@socionext.com>
+Reply-To: kbingham@kernel.org
+From:   Kieran Bingham <kbingham@kernel.org>
+Openpgp: preference=signencrypt
+Newsgroups: gmane.linux.kernel,gmane.linux.kbuild.devel
+Message-ID: <ad958d87-1e1e-2790-2f7e-380d4d9d67da@kernel.org>
+Date:   Tue, 2 Apr 2019 11:41:38 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1551746131-10232-1-git-send-email-info@metux.net>
-In-Reply-To: <1551746131-10232-1-git-send-email-info@metux.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 2 Apr 2019 11:41:23 +0700
-Message-ID: <CACRpkdZ7iop_Y9g4qWiotfwjREEJ_vqABU-ucSMzOU5Oyg52Bw@mail.gmail.com>
-Subject: Re: [PATCH] drivers: gpio: Kconfig: pedantic formatting cleanups
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1553947458-8311-2-git-send-email-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 7:35 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+Hi Yamada-san,
 
-> Align the Kconfig formatting with the vast majority of the Kconfig
-> files, to make it a bit easier / more pleasant to read ;-)
->
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+Thank you for the patches,
 
-Patch applied.
+I like the direction this series is taking.
 
-Yours,
-Linus Walleij
+Small spelling error spotted below...
+But as I've now gone through all of it I'll offer
+
+Reviewed-by: Kieran Bingham <kbingham@kernel.org>
+
+
+On 30/03/2019 12:04, Masahiro Yamada wrote:
+> Kbuild always runs in the top of the output directory.
+> 
+> If Make starts in the source directory with O=, it relocates the
+> working directory to the location specified by O=.
+> 
+> Also, users can start build from the output directory by using the
+> Makefile generated by scripts/mkmakefile.
+> 
+> With a little more effort, Kbuild will be able to start from any
+> directory path.
+> 
+> This commit allows to specify the source directory by using
+> the -f option.
+> 
+> For example, you can do:
+> 
+>   $ cd path/to/output/dir
+>   $ make -f path/to/source/dir/Makefile
+> 
+> Or, for the equivalent behavior, you can do:
+> 
+>   $ make O=path/to/output/dir -f path/to/source/dir/Makefile
+> 
+> KBUILD_SRC is now deprecated.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  Makefile | 87 +++++++++++++++++++++++++++++++++++++---------------------------
+>  1 file changed, 50 insertions(+), 37 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 9cbd367..1b2a70e 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -96,56 +96,65 @@ endif
+>  
+>  export quiet Q KBUILD_VERBOSE
+>  
+> -# kbuild supports saving output files in a separate directory.
+> -# To locate output files in a separate directory two syntaxes are supported.
+> -# In both cases the working directory must be the root of the kernel src.
+> +# Kbuild will save output files in the current working directory.
+> +# This does not need to match to the root of the kernel source tree.
+> +#
+> +# For example, you can do this:
+> +#
+> +#  cd /dir/to/store/output/files; make -f /dir/to/kernel/source/Makefile
+> +#
+> +# If you want to save output files in a different location, there are
+> +# two syntaxes to specify it.
+> +#
+>  # 1) O=
+>  # Use "make O=dir/to/store/output/files/"
+>  #
+>  # 2) Set KBUILD_OUTPUT
+> -# Set the environment variable KBUILD_OUTPUT to point to the directory
+> -# where the output files shall be placed.
+> -# export KBUILD_OUTPUT=dir/to/store/output/files/
+> -# make
+> +# Set the environment variable KBUILD_OUTPUT to point to the output directory.
+> +# export KBUILD_OUTPUT=dir/to/store/output/files/; make
+>  #
+>  # The O= assignment takes precedence over the KBUILD_OUTPUT environment
+>  # variable.
+>  
+> -# KBUILD_SRC is not intended to be used by the regular user (for now),
+> -# it is set on invocation of make with KBUILD_OUTPUT or O= specified.
+> -
+> -# OK, Make called in directory where kernel src resides
+> -# Do we want to locate output files in a separate directory?
+> +# Do we want to change the working directory?
+>  ifeq ("$(origin O)", "command line")
+>    KBUILD_OUTPUT := $(O)
+>  endif
+>  
+> -ifneq ($(words $(subst :, ,$(CURDIR))), 1)
+> -  $(error main directory cannot contain spaces nor colons)
+> +ifneq ($(KBUILD_OUTPUT),)
+> +# Make's built-in functions such as $(abspath ...), $(realpath ...) cannot
+> +# expand a shell special character '~'. We use a bit tredious way to handle it.
+
+very minor, but I noticed while looking through the series ^^
+
+s/bit tredious/somewhat tedious/
+
+
+
+> +abs_objtree := $(shell mkdir -p $(KBUILD_OUTPUT) && cd $(KBUILD_OUTPUT) && pwd)
+> +$(if $(abs_objtree),, \
+> +     $(error failed to create output directory "$(KBUILD_OUTPUT)"))
+> +
+> +# $(realpath ...) resolves symlinks
+> +abs_objtree := $(realpath $(abs_objtree))
+> +else
+> +abs_objtree := $(CURDIR)
+> +endif # ifneq ($(KBUILD_OUTPUT),)
+> +
+> +ifeq ($(abs_objtree),$(CURDIR))
+> +# Suppress "Entering directory ..." unless we are changing the work directory.
+> +MAKEFLAGS += --no-print-directory
+> +else
+> +need-sub-make := 1
+>  endif
+>  
+> -ifneq ($(KBUILD_OUTPUT),)
+> -# check that the output directory actually exists
+> -saved-output := $(KBUILD_OUTPUT)
+> -KBUILD_OUTPUT := $(shell mkdir -p $(KBUILD_OUTPUT) && cd $(KBUILD_OUTPUT) \
+> -								&& pwd)
+> -$(if $(KBUILD_OUTPUT),, \
+> -     $(error failed to create output directory "$(saved-output)"))
+> +abs_srctree := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+> +
+> +ifneq ($(words $(subst :, ,$(abs_srctree))), 1)
+> +$(error source directory cannot contain spaces or colons)
+> +endif
+>  
+> +ifneq ($(abs_srctree),$(abs_objtree))
+>  # Look for make include files relative to root of kernel src
+>  #
+>  # This does not become effective immediately because MAKEFLAGS is re-parsed
+> -# once after the Makefile is read.  It is OK since we are going to invoke
+> -# 'sub-make' below.
+> -MAKEFLAGS += --include-dir=$(CURDIR)
+> -
+> +# once after the Makefile is read. We need to invoke sub-make.
+> +MAKEFLAGS += --include-dir=$(abs_srctree)
+>  need-sub-make := 1
+> -else
+> -
+> -# Do not print "Entering directory ..." at all for in-tree build.
+> -MAKEFLAGS += --no-print-directory
+> -
+> -endif # ifneq ($(KBUILD_OUTPUT),)
+> +endif
+>  
+>  ifneq ($(filter 3.%,$(MAKE_VERSION)),)
+>  # 'MAKEFLAGS += -rR' does not immediately become effective for GNU Make 3.x
+> @@ -155,6 +164,7 @@ need-sub-make := 1
+>  $(lastword $(MAKEFILE_LIST)): ;
+>  endif
+>  
+> +export abs_srctree abs_objtree
+>  export sub_make_done := 1
+>  
+>  ifeq ($(need-sub-make),1)
+> @@ -166,9 +176,7 @@ $(filter-out _all sub-make $(lastword $(MAKEFILE_LIST)), $(MAKECMDGOALS)) _all:
+>  
+>  # Invoke a second make in the output directory, passing relevant variables
+>  sub-make:
+> -	$(Q)$(MAKE) \
+> -	$(if $(KBUILD_OUTPUT),-C $(KBUILD_OUTPUT) KBUILD_SRC=$(CURDIR)) \
+> -	-f $(CURDIR)/Makefile $(MAKECMDGOALS)
+> +	$(Q)$(MAKE) -C $(abs_objtree) -f $(abs_srctree)/Makefile $(MAKECMDGOALS)
+>  
+>  endif # need-sub-make
+>  endif # sub_make_done
+> @@ -213,16 +221,21 @@ ifeq ("$(origin M)", "command line")
+>    KBUILD_EXTMOD := $(M)
+>  endif
+>  
+> -ifeq ($(KBUILD_SRC),)
+> +ifeq ($(abs_srctree),$(abs_objtree))
+>          # building in the source tree
+>          srctree := .
+>  else
+> -        ifeq ($(KBUILD_SRC)/,$(dir $(CURDIR)))
+> +        ifeq ($(abs_srctree)/,$(dir $(abs_objtree)))
+>                  # building in a subdirectory of the source tree
+>                  srctree := ..
+>          else
+> -                srctree := $(KBUILD_SRC)
+> +                srctree := $(abs_srctree)
+>          endif
+> +
+> +	# TODO:
+> +	# KBUILD_SRC is only used to distinguish in-tree/out-of-tree build.
+> +	# Replace it with $(srctree) or something.
+> +	KBUILD_SRC := $(abs_srctree)
+>  endif
+>  
+>  export KBUILD_CHECKSRC KBUILD_EXTMOD KBUILD_SRC
+> 
+
+
+-- 
+--
+Kieran
