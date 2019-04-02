@@ -2,108 +2,70 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF43C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C210C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2927F208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553E221738
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:26:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H9dsrtV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfDBLXb (ORCPT
+        id S1730285AbfDBL06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:23:31 -0400
-Received: from foss.arm.com ([217.140.101.70]:49170 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfDBLXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:23:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90186168F;
-        Tue,  2 Apr 2019 04:23:30 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBBF93F59C;
-        Tue,  2 Apr 2019 04:23:27 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
-To:     Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc:     Rob Herring <robh@kernel.org>, Lyude Paul <lyude@redhat.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        iommu@lists.linux-foundation.org, Daniel Vetter <daniel@ffwll.ch>,
-        "Marty E . Plummer" <hanetzer@startmail.com>,
-        Sean Paul <sean@poorly.run>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190401074730.12241-1-robh@kernel.org>
- <20190401074730.12241-4-robh@kernel.org>
- <6ce32759-ea83-ee79-33d3-237737f7b866@arm.com>
- <20190402003326.GB12934@rosenzweig.io>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <bb389964-13af-5de0-099c-27443844f18a@arm.com>
-Date:   Tue, 2 Apr 2019 12:23:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 2 Apr 2019 07:26:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37758 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfDBL05 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:26:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YxIQd0UrH8O9EYTD4F5l3+7Mbk+tK6paTxHr+FkZ/qk=; b=H9dsrtV3ayKtR4GhPwIXU85l+
+        R1Z5x0HkUofktDxYlno5zDJCNSdCrdVxr7eIZf837srzTCfJYQNhR+rVhXO7poFVzPiLBm3QcZziL
+        3zIOeZvumBptrQPofHmtb3IQSvM0Di/MtXtmmtMyFHrOVzE/OMkJiRRHZg/Z/VhJhYVVYbCMQ3fwC
+        xUpOe+naJVev8euou/E9qFOrJhjTZHt6zwCTnV6MA5pC3/HgTLRSqHqLW5Ghzge9ck3m+b8WRujTa
+        zo7jJSB+b8A5QloFPD7DV3jNsDZwa0MJn4moWG9P8vwK59lvOamRafUSX1cw1c3kcXigqIq8LlSBm
+        7ouhjMFJA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBHZA-0006OV-Br; Tue, 02 Apr 2019 11:26:56 +0000
+Date:   Tue, 2 Apr 2019 04:26:56 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Qiang Yu <yuq825@gmail.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+Message-ID: <20190402112656.GE22763@bombadil.infradead.org>
+References: <20190402105006.48f93e53@canb.auug.org.au>
+ <CAKGbVbvj9cZnJuey_ra7U+xm-JhoB17bpTgcXKiKaHWbjB9Sxw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190402003326.GB12934@rosenzweig.io>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKGbVbvj9cZnJuey_ra7U+xm-JhoB17bpTgcXKiKaHWbjB9Sxw@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2019 01:33, Alyssa Rosenzweig wrote:
->> the userspace definitely doesn't support T624
-> 
-> This is true, yes. Shouldn't be too hard to backport; if there's still
-> interest in Midgard 1st/2nd gen, I suppose I can grab hardware and sort
-> it out...
+On Tue, Apr 02, 2019 at 01:55:03PM +0800, Qiang Yu wrote:
+> Thanks, patch is:
+> Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
-I'm quite likely the only person trying this on an Arm Juno board, and 
-even then it's really only for giggles because I can :)  I guess there 
-might be a fair few Odroid-XU3/XU4 (T628) users interested, though.
-
->> You probably want a dma_set_mask_and_coherent() call for your 'real' output
->> address size somewhere - the default 32-bit mask works out OK for RK3399,
->> but on systems with RAM above 4GB io-pgtable will get very unhappy about DMA
->> bounce-buffering.
-> 
-> Out of curiosity, are there Mali systems with >4GB RAM? That sounds
-> awesome :)
-
-Now that the "early-access Armv8 silicon" angle has well and truly 
-expired, Juno is essentially a prototyping platform where the SoC just 
-serves to (slowly) drive interesting things in FPGA cards, so although 
-it may have 8GB of RAM, it's not all that exciting. There is one 
-somewhat more realistic board I'm aware of, namely HiKey 970 with a G72 
-and 6GB.
-
->> Any chance of resurrecting the generic "arm,mali-midgard" compatible? :P
-> 
-> ...Would that require editing everybody's DT file?
-
-If they already have one of the strings from the current upstream 
-binding, no - I only mean to suggest adding it as an additional 
-last-level fallback. That would aid compatibility with downstream DTs, 
-for example RK3288 which currently has zero overlap:
-
-upstream: "rockchip,rk3288-mali", "arm,mali-t760";
-
-downstream: "arm,malit764", "arm,malit76x", "arm,malit7xx", 
-"arm,mali-midgard";
-
-Similarly, it might be reasonable for panfrost_{gpu,mmu,job}_init() to 
-retry platform_get_irq_byname() with uppercase interrupt names if the 
-expected ones aren't found - obviously the upstream binding comes first 
-and foremost, but I don't see any harm in quietly supporting bits of the 
-downstream binding if it makes users' lives easier when switching 
-between mainline and vendor kernels.
-
-Cheers,
-Robin.
+This looks like a fairly naive conversion from the old IDR API to the
+XArray API.  You should be able to remove mgr->lock entirely, relying on
+the xa_lock for synchronising free and get.  If you think it's worth it,
+you could even use kfree_rcu() to free the ctx and kref_get_unless_zero()
+and then your get path would be lock-free.
