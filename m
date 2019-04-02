@@ -2,103 +2,200 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED97C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E77C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3AAC20840
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554180961;
-	bh=J32IraCAWptgtGKlaZGVNtAnjJ+QGMmBlmKZqJhH4PE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2wbtPTOBzvmd/y+aIq5EUIoxu+RrP0SLxDURqrc6aCb184phAMaEwkoOylqbKhVyv
-	 UGujV17QNVfPcfQ8aA185xNqcQfUyGMw8Xmo8mYMEm8OB2GImiIFZy14zY3AKqVhGb
-	 u7hBlVRHebL0nkX3bx5Fc9P6Cv19FSxfOz8psMQw=
+	by mail.kernel.org (Postfix) with ESMTP id 8724D2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:58:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eEZ6Ljls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfDBE4A (ORCPT
+        id S1728067AbfDBE6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:56:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45570 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfDBE4A (ORCPT
+        Tue, 2 Apr 2019 00:58:37 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39005 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfDBE6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:56:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=naCwJ05RzQIUKhqewbne4ttpme8Mxrbti8Ipod9sLfI=; b=ByJEd5ZRT1Kfb2AYMte3+JLio
-        stT5cjnTvyjqYMHei3aaANEZPBSEEzmOZD6yE3YbwXiGTamlYb2cC+h1T1UY3QIiOPRSCfJOkT5kP
-        u3iccGoydizb9VOxSGq/aa5ThfCrWMYg+93+S9a6cAWVZN57/H/kZvxLuqKahg5tZv0+A=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBBSZ-0005nk-WA; Tue, 02 Apr 2019 04:55:44 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 32660440082; Tue,  2 Apr 2019 05:55:40 +0100 (BST)
-Date:   Tue, 2 Apr 2019 11:55:40 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Applied "ASoC: es8316: Add support for inverted jack detect" to
- the asoc tree
-Message-ID: <20190402045540.GU2059@sirena.org.uk>
-References: <20190329215045.6254-1-paul@crapouillou.net>
- <20190401085258.20BE0440083@finisterre.ee.mobilebroadband>
- <1554141439.10471.2@crapouillou.net>
+        Tue, 2 Apr 2019 00:58:37 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b65so5612450plb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 21:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=OH4i3uT4EBcimwMTT/CT8VMm0Y4hc83kBVZZr8qoonw=;
+        b=eEZ6LjlshLGqQf+4hzeHnZVYzt0vHpzqhJr0ai0/6Lx6ee6fXeMQVG8erw91Z8mhyi
+         UdeCmNawHHMiRMuv2UgIzjCZxeNXA1UIN5o7/2HlsrCjRtCh3WkAr/233h08uQ28QySe
+         T4ivLVu14X4lsDjythZEnQphVr6ml/G4C68hAMBdN4IAOhLoWUOa+74MAixYIpUNhj17
+         cM7i3BFwhiONwXPvlwob46XdZTjP3Epe1Npna+Dyw4m+fDeScnxa0RPDCCzZ9sefMAdU
+         5JlQBE+r/VbQbPI8uTEQg1P7KgziAQ4OeiRKd+1aZh/RhEqxQN9y495jX0hgVUGKr1Ko
+         zKhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=OH4i3uT4EBcimwMTT/CT8VMm0Y4hc83kBVZZr8qoonw=;
+        b=UOaM8+cF16V6JTv7keXFvWHza1F3aamoE3a9o102HBPXPYKH42s1oA5cCabLHGzisH
+         hCvQjvD/F8ByZPX0EwXHmmKVf4IbEDAV2k3QVvckjKnw1HgeTTQdUprIWxCgOVQY0T0F
+         LBrK3A2kABsptmZcbLanV/Y6dvJt4DuKo0ossfPVIvCZX7A08slK0tR0WntP9C2QRgYs
+         1yjLcmKiG4eYg/MAfF9hM6YPhzBjzk7AE9CAGGteIVkdFAebGlTnw1LspmDxWudq77Bv
+         TbkjLGDGFIogyK0izrCgngLtYXcEKPvTdMQu9T9uNh68WDu0LjHlOgPJ5Ie8Q9YAM/C6
+         dj1A==
+X-Gm-Message-State: APjAAAU0oLwoGZu73PQBvEqUcH9OzhydtTipsOMO9rE7YR/uQikc13gB
+        6MMYMDHEisIMlZpyDT2aT/0N2A==
+X-Google-Smtp-Source: APXvYqzjuF05kINbZcLgLi+lueGIWrFA4OeB8arsi1Tmp1y6gpxSL/X8A2eCjaM6h0IqjC1CRLdPtw==
+X-Received: by 2002:a17:902:7590:: with SMTP id j16mr32711175pll.98.1554181115817;
+        Mon, 01 Apr 2019 21:58:35 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id n26sm35167130pfi.165.2019.04.01.21.58.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 01 Apr 2019 21:58:35 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 05:58:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     arnd@arndb.de, broonie@kernel.org, orsonzhai@gmail.com,
+        zhang.lyra@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] mfd: sc27xx: Use SoC compatible string for PMIC
+ devices
+Message-ID: <20190402045829.GQ4187@dell>
+References: <af33f66a602462f14431e99433324b8523f74f78.1552879519.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZjLa2K+dB9SFbrgo"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1554141439.10471.2@crapouillou.net>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <af33f66a602462f14431e99433324b8523f74f78.1552879519.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 18 Mar 2019, Baolin Wang wrote:
 
---ZjLa2K+dB9SFbrgo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> We should use SoC compatible string in stead of wildcard string for
+> PMIC child devices.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Hi Lee,
+> 
+> Could you merge this patch into v5.1-rc if no objection from you?
+> Since our DTS patches had been merged into v5.1, our PMIC can not
+> work without this patch. Thanks.
 
-On Mon, Apr 01, 2019 at 07:57:19PM +0200, Paul Cercueil wrote:
+Oh dear, what a pickle.  Really you should have pushed these change
+though one tree, in either a single patch or at the very least a
+single patch-set.  I will see what I can do, so that this doesn't
+break for an entire kernel version (but I make no promises).
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+> ---
+>  drivers/mfd/sprd-sc27xx-spi.c |   42 ++++++++++++++++++++---------------------
+>  1 file changed, 21 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+> index 69df277..43ac716 100644
+> --- a/drivers/mfd/sprd-sc27xx-spi.c
+> +++ b/drivers/mfd/sprd-sc27xx-spi.c
+> @@ -53,67 +53,67 @@ struct sprd_pmic_data {
+>  static const struct mfd_cell sprd_pmic_devs[] = {
+>  	{
+>  		.name = "sc27xx-wdt",
+> -		.of_compatible = "sprd,sc27xx-wdt",
+> +		.of_compatible = "sprd,sc2731-wdt",
+>  	}, {
+>  		.name = "sc27xx-rtc",
+> -		.of_compatible = "sprd,sc27xx-rtc",
+> +		.of_compatible = "sprd,sc2731-rtc",
+>  	}, {
+>  		.name = "sc27xx-charger",
+> -		.of_compatible = "sprd,sc27xx-charger",
+> +		.of_compatible = "sprd,sc2731-charger",
+>  	}, {
+>  		.name = "sc27xx-chg-timer",
+> -		.of_compatible = "sprd,sc27xx-chg-timer",
+> +		.of_compatible = "sprd,sc2731-chg-timer",
+>  	}, {
+>  		.name = "sc27xx-fast-chg",
+> -		.of_compatible = "sprd,sc27xx-fast-chg",
+> +		.of_compatible = "sprd,sc2731-fast-chg",
+>  	}, {
+>  		.name = "sc27xx-chg-wdt",
+> -		.of_compatible = "sprd,sc27xx-chg-wdt",
+> +		.of_compatible = "sprd,sc2731-chg-wdt",
+>  	}, {
+>  		.name = "sc27xx-typec",
+> -		.of_compatible = "sprd,sc27xx-typec",
+> +		.of_compatible = "sprd,sc2731-typec",
+>  	}, {
+>  		.name = "sc27xx-flash",
+> -		.of_compatible = "sprd,sc27xx-flash",
+> +		.of_compatible = "sprd,sc2731-flash",
+>  	}, {
+>  		.name = "sc27xx-eic",
+> -		.of_compatible = "sprd,sc27xx-eic",
+> +		.of_compatible = "sprd,sc2731-eic",
+>  	}, {
+>  		.name = "sc27xx-efuse",
+> -		.of_compatible = "sprd,sc27xx-efuse",
+> +		.of_compatible = "sprd,sc2731-efuse",
+>  	}, {
+>  		.name = "sc27xx-thermal",
+> -		.of_compatible = "sprd,sc27xx-thermal",
+> +		.of_compatible = "sprd,sc2731-thermal",
+>  	}, {
+>  		.name = "sc27xx-adc",
+> -		.of_compatible = "sprd,sc27xx-adc",
+> +		.of_compatible = "sprd,sc2731-adc",
+>  	}, {
+>  		.name = "sc27xx-audio-codec",
+> -		.of_compatible = "sprd,sc27xx-audio-codec",
+> +		.of_compatible = "sprd,sc2731-audio-codec",
+>  	}, {
+>  		.name = "sc27xx-regulator",
+> -		.of_compatible = "sprd,sc27xx-regulator",
+> +		.of_compatible = "sprd,sc2731-regulator",
+>  	}, {
+>  		.name = "sc27xx-vibrator",
+> -		.of_compatible = "sprd,sc27xx-vibrator",
+> +		.of_compatible = "sprd,sc2731-vibrator",
+>  	}, {
+>  		.name = "sc27xx-keypad-led",
+> -		.of_compatible = "sprd,sc27xx-keypad-led",
+> +		.of_compatible = "sprd,sc2731-keypad-led",
+>  	}, {
+>  		.name = "sc27xx-bltc",
+> -		.of_compatible = "sprd,sc27xx-bltc",
+> +		.of_compatible = "sprd,sc2731-bltc",
+>  	}, {
+>  		.name = "sc27xx-fgu",
+> -		.of_compatible = "sprd,sc27xx-fgu",
+> +		.of_compatible = "sprd,sc2731-fgu",
+>  	}, {
+>  		.name = "sc27xx-7sreset",
+> -		.of_compatible = "sprd,sc27xx-7sreset",
+> +		.of_compatible = "sprd,sc2731-7sreset",
+>  	}, {
+>  		.name = "sc27xx-poweroff",
+> -		.of_compatible = "sprd,sc27xx-poweroff",
+> +		.of_compatible = "sprd,sc2731-poweroff",
+>  	}, {
+>  		.name = "sc27xx-syscon",
+> -		.of_compatible = "sprd,sc27xx-syscon",
+> +		.of_compatible = "sprd,sc2731-syscon",
+>  	},
+>  };
+>  
 
-> What about the other two patches? Should I make a new patchset with these?
-
-They're Intel board patches so the Intel people will hopefully review.
-
---ZjLa2K+dB9SFbrgo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyi60sACgkQJNaLcl1U
-h9CAtAf/WlQsJFP+bB2DBFWNRIVdHgOV6ZiB1HGy0T9l0rCS5WNvYdbYByLv7yKq
-Bsj1Dvihr4EI/9bnQcycw18MPNf3szP5ipSYJbuY3NSor3/vFv6FZVRISp1hhqL9
-vp+2t2AuRn/kphazTsX6CxfslOO6FXQH9gP3bxFAHPDxXL4xu+Zbp2RFMgLvySj9
-RyK1MDoIyliuuUygyoPnK1mh044kvswBB60HWvb4xwvbzwb9/o9hUwNbBAxRu7pq
-w1N5U8pb1640VrkskElE061SVYK+PV6+cEcPUggPC8+usuqX8K2sKwk2NMkRu9IJ
-91q+HxA8VoORafrxNAk42Fzyithqmg==
-=4ORZ
------END PGP SIGNATURE-----
-
---ZjLa2K+dB9SFbrgo--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
