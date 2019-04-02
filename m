@@ -2,86 +2,70 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA2FC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66062C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F6720857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DAA20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L7E8+IRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfDBIys (ORCPT
+        id S1729638AbfDBIzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 04:54:48 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:34121 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbfDBIys (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 04:54:48 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hBFBp-00006F-AE; Tue, 02 Apr 2019 10:54:41 +0200
-Date:   Tue, 2 Apr 2019 10:54:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andi Kleen <ak@linux.intel.com>
-cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH 02/17] x86, lto: Mark all top level asm statements as
- .text
-In-Reply-To: <alpine.DEB.2.21.1903272337250.1789@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1904021053160.1676@nanos.tec.linutronix.de>
-References: <20190326213803.GN18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903262321390.1789@nanos.tec.linutronix.de> <20190327005523.bbxxittqf4d5bdz5@two.firstfloor.org> <alpine.DEB.2.21.1903270820530.1789@nanos.tec.linutronix.de> <20190327145918.GU18020@tassilo.jf.intel.com>
- <alpine.DEB.2.21.1903271600050.1789@nanos.tec.linutronix.de> <20190327154522.GV18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903271958320.1789@nanos.tec.linutronix.de> <20190327204049.GW18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903272217240.1789@nanos.tec.linutronix.de>
- <20190327222914.GX18020@tassilo.jf.intel.com> <alpine.DEB.2.21.1903272337250.1789@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 2 Apr 2019 04:55:37 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50666 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727583AbfDBIzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 04:55:36 -0400
+Received: from zn.tnic (p200300EC2F148A00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f14:8a00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 30F5B1EC0669;
+        Tue,  2 Apr 2019 10:55:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1554195335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=npCYkg5K+Xqv5zwlckJItjgfP+oeKUroHRCoLQtln04=;
+        b=L7E8+IRMu45ZSi0G9SkjMrLhWdj6R63V3KL8NMFxML7ULDhNxDI7yT/YGP6zrPZFNyBTSt
+        gJ1HKtuSCnwMedalTpbX1ld8fljP6MkAKdwT9Dvt88z8ANkfwCh6hTANE4EZnNyQSVYvBX
+        2YlxktkzKCG0hX+P1gxhT2jGpHVEwno=
+Date:   Tue, 2 Apr 2019 10:55:30 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     thor.thayer@linux.intel.com
+Cc:     mchehab@kernel.org, james.morse@arm.com, atull@kernel.org,
+        richard.gong@intel.com, gregkh@linuxfoundation.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] firmware: Intel: Add Stratix10 ECC DBE SMC call
+Message-ID: <20190402085529.GC6826@zn.tnic>
+References: <1553870639-23895-1-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1553870639-23895-1-git-send-email-thor.thayer@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019, Thomas Gleixner wrote:
-> On Wed, 27 Mar 2019, Andi Kleen wrote:
+On Fri, Mar 29, 2019 at 09:43:58AM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> > > > I checked the code general and with the .globl in NATIVE_LABEL the
-> > > 
-> > > With or without? I removed that as well.
-> > 
-> > With.
-> > 
-> > LTO would still need the .globls because the variable and the asm
-> > statement can end up in different assembler files, and resolution
-> > would rely on the linker.
-> 
-> This really sucks. As this is a constant source of trouble, we might better
-> bite the bullet and get rid of this fancy macro completely. It's not that
-> we add these patch patterns every other day.
-> 
-> So a good old:
-> 
-> /* xor %eax %ex */
-> static const unsigend char patch_qspinlock[] = { 0x31, 0xc0 };
-> 
-> and then in the patch code:
-> 
-> 	return paravirt_patch_insns(ibuf, len, patch_qspinlock,
->     	   			    patch_qspinlock + ARRAY_SIZE(patch_qspinlock));
-> 
-> might be less trouble than dealing with that clever inline assembly
-> forever.
+> Reserve ECC Double Bit Error SMC call to alert U-Boot that
+> a DBE has occurred. Moving the call from local EDAC header
+> file to this common file.
 
-Just for the record. GCC people have confirmed that all the constructs suck
-in one way or the other and are just working by chance. So the above is the
-sanest solution.
+Is there any particular reason this needs to be two patches or can I
+merge them into one?
 
-Thanks,
+-- 
+Regards/Gruss,
+    Boris.
 
-	tglx
-
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
