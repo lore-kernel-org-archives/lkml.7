@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92A4C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E0AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80CAF2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D67E2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbfDBNk1 (ORCPT
+        id S1731622AbfDBNkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:40:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43352 "EHLO
+        Tue, 2 Apr 2019 09:40:22 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43272 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731460AbfDBNkH (ORCPT
+        by vger.kernel.org with ESMTP id S1731452AbfDBNkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:40:07 -0400
+        Tue, 2 Apr 2019 09:40:06 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe0-0002oa-I1; Tue, 02 Apr 2019 14:40:04 +0100
+        id 1hBJdx-0002oa-2d; Tue, 02 Apr 2019 14:40:01 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdx-0004wA-BH; Tue, 02 Apr 2019 14:40:01 +0100
+        id 1hBJdw-0004tz-GM; Tue, 02 Apr 2019 14:40:00 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jeff Kirsher" <jeffrey.t.kirsher@intel.com>,
-        "Aaron Brown" <aaron.f.brown@intel.com>,
-        "Kai-Heng Feng" <kai.heng.feng@canonical.com>
-Date:   Tue, 02 Apr 2019 14:38:28 +0100
-Message-ID: <lsq.1554212308.424329625@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Scott Chen" <scott@labau.com.tw>
+Date:   Tue, 02 Apr 2019 14:38:27 +0100
+Message-ID: <lsq.1554212307.362747675@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 71/99] igb: Fix an issue that PME is not enabled
- during runtime suspend
+Subject: [PATCH 3.16 44/99] USB: serial: pl2303: add ids for
+ Hewlett-Packard HP POS pole displays
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,44 +56,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Scott Chen <scott@labau.com.tw>
 
-commit 1fb3a7a75e2efcc83ef21f2434069cddd6fae6f5 upstream.
+commit 8d503f206c336677954160ac62f0c7d9c219cd89 upstream.
 
-I210 ethernet card doesn't wakeup when a cable gets plugged. It's
-because its PME is not set.
+Add device ids to pl2303 for the HP POS pole displays:
+LM920:   03f0:026b
+TD620:   03f0:0956
+LD960TA: 03f0:4439
+LD220TA: 03f0:4349
+LM940:   03f0:5039
 
-Since commit 42eca2302146 ("PCI: Don't touch card regs after runtime
-suspend D3"), if the PCI state is saved, pci_pm_runtime_suspend() stops
-calling pci_finish_runtime_suspend(), which enables the PCI PME.
-
-To fix the issue, let's not to save PCI states when it's runtime
-suspend, to let the PCI subsystem enables PME.
-
-Fixes: 42eca2302146 ("PCI: Don't touch card regs after runtime suspend D3")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Scott Chen <scott@labau.com.tw>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/serial/pl2303.c | 5 +++++
+ drivers/usb/serial/pl2303.h | 5 +++++
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -7419,9 +7419,11 @@ static int __igb_shutdown(struct pci_dev
- 	igb_clear_interrupt_scheme(adapter);
+--- a/drivers/usb/serial/pl2303.c
++++ b/drivers/usb/serial/pl2303.c
+@@ -85,9 +85,14 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(YCCABLE_VENDOR_ID, YCCABLE_PRODUCT_ID) },
+ 	{ USB_DEVICE(SUPERIAL_VENDOR_ID, SUPERIAL_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220_PRODUCT_ID) },
++	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220TA_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960_PRODUCT_ID) },
++	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960TA_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LCM220_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LCM960_PRODUCT_ID) },
++	{ USB_DEVICE(HP_VENDOR_ID, HP_LM920_PRODUCT_ID) },
++	{ USB_DEVICE(HP_VENDOR_ID, HP_LM940_PRODUCT_ID) },
++	{ USB_DEVICE(HP_VENDOR_ID, HP_TD620_PRODUCT_ID) },
+ 	{ USB_DEVICE(CRESSI_VENDOR_ID, CRESSI_EDY_PRODUCT_ID) },
+ 	{ USB_DEVICE(ZEAGLE_VENDOR_ID, ZEAGLE_N2ITION3_PRODUCT_ID) },
+ 	{ USB_DEVICE(SONY_VENDOR_ID, SONY_QN3USB_PRODUCT_ID) },
+--- a/drivers/usb/serial/pl2303.h
++++ b/drivers/usb/serial/pl2303.h
+@@ -122,10 +122,15 @@
  
- #ifdef CONFIG_PM
--	retval = pci_save_state(pdev);
--	if (retval)
--		return retval;
-+	if (!runtime) {
-+		retval = pci_save_state(pdev);
-+		if (retval)
-+			return retval;
-+	}
- #endif
+ /* Hewlett-Packard POS Pole Displays */
+ #define HP_VENDOR_ID		0x03f0
++#define HP_LM920_PRODUCT_ID	0x026b
++#define HP_TD620_PRODUCT_ID	0x0956
+ #define HP_LD960_PRODUCT_ID	0x0b39
+ #define HP_LCM220_PRODUCT_ID	0x3139
+ #define HP_LCM960_PRODUCT_ID	0x3239
+ #define HP_LD220_PRODUCT_ID	0x3524
++#define HP_LD220TA_PRODUCT_ID	0x4349
++#define HP_LD960TA_PRODUCT_ID	0x4439
++#define HP_LM940_PRODUCT_ID	0x5039
  
- 	status = rd32(E1000_STATUS);
+ /* Cressi Edy (diving computer) PC interface */
+ #define CRESSI_VENDOR_ID	0x04b8
 
