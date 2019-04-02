@@ -7,144 +7,134 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A721C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80114C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62AED2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BEC207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="P2x5Ph6h"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wJz91kZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfDBJJO (ORCPT
+        id S1730016AbfDBJJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:09:14 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:41472 "EHLO pegase1.c-s.fr"
+        Tue, 2 Apr 2019 05:09:15 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:34703 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729872AbfDBJIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:08:41 -0400
+        id S1729848AbfDBJIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 05:08:40 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44YNft2vhPz9v0Zk;
-        Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44YNfs2hmvz9v0Zn;
+        Tue,  2 Apr 2019 11:08:37 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=P2x5Ph6h; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=wJz91kZe; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ftmQvr-74cau; Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
+        with ESMTP id HnmsqkcSq8j7; Tue,  2 Apr 2019 11:08:37 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44YNft1nrKz9v0ZY;
-        Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44YNfs1VDWz9v0Zh;
+        Tue,  2 Apr 2019 11:08:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1554196118; bh=f1NH52KDwlxCG2X+m7ZotoQ0rAUSw3Nc7DpOwVnBcDE=;
+        t=1554196117; bh=7w5C2YrN3MdzgkpgW+H6BlOOu0kSi9B/PGq/t78Pl0w=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=P2x5Ph6hsQfVJeO40Sp7IPTppt6gpv4IlX4jkKLV/FhlFGnrAAS/OnNDPMKQJcHQL
-         wrG91/FyIz7VObrYYMia6eNGfn4KFUNDMFmwdQOadwWFMrJHVHelRWdNv2rKtB/cWp
-         E7ocRdFTz3n/qTJlMO9eZUybjmcYLBRicFJYdJXY=
+        b=wJz91kZe5ygoE2Ee6o0f23svpTgOfHi1Zn3jFGjxX/j5ob/VoePZQ5JOCAa2TuMaV
+         B2g6tsmN31Kzxnqy3SNi6qDN/X6YNnw+lsMtJZx5GYX2Y6/8zxZBukiKWUXihyB3xF
+         XSlUwcmzK9k3qP/dUBSkhkRLw59OEDlKaOeLaEfc=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3C0B18B8C4;
-        Tue,  2 Apr 2019 11:08:39 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 387BE8B8C5;
+        Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id puBK2H34Ay-R; Tue,  2 Apr 2019 11:08:39 +0200 (CEST)
+        with ESMTP id MSNxiReW1ySx; Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0B3898B8C3;
-        Tue,  2 Apr 2019 11:08:39 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0C1458B8C3;
+        Tue,  2 Apr 2019 11:08:38 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E7047661D9; Tue,  2 Apr 2019 09:08:38 +0000 (UTC)
-Message-Id: <5ad9ed13155f55e1715274561354aa7ab57973fc.1554195798.git.christophe.leroy@c-s.fr>
+        id E1685661D9; Tue,  2 Apr 2019 09:08:37 +0000 (UTC)
+Message-Id: <a65e145d464451885f8d2570f7fca1e433155c13.1554195798.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1554195798.git.christophe.leroy@c-s.fr>
 References: <cover.1554195798.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 4/9] powerpc/prom_init: get rid of PROM_SCRATCH_SIZE
+Subject: [PATCH 3/9] drivers: of: use cmdline building function
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, danielwa@cisco.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-arch@vger.kernel.org
-Date:   Tue,  2 Apr 2019 09:08:38 +0000 (UTC)
+Date:   Tue,  2 Apr 2019 09:08:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PROM_SCRATCH_SIZE is same as sizeof(prom_scratch)
+This patch uses the new cmdline building function to
+concatenate the of provided cmdline with built-in parts
+based on compile-time options.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/prom_init.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ drivers/of/fdt.c        | 23 ++++-------------------
+ include/linux/cmdline.h |  2 +-
+ 2 files changed, 5 insertions(+), 20 deletions(-)
 
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index a6cd52240c58..d4889ba04ddd 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -154,10 +154,8 @@ static struct prom_t __prombss prom;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 4734223ab702..c6d941785b37 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -24,6 +24,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/cmdline.h>
  
- static unsigned long __prombss prom_entry;
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -1090,26 +1091,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
  
--#define PROM_SCRATCH_SIZE 256
--
- static char __prombss of_stdout_device[256];
--static char __prombss prom_scratch[PROM_SCRATCH_SIZE];
-+static char __prombss prom_scratch[256];
+ 	/* Retrieve command line */
+ 	p = of_get_flat_dt_prop(node, "bootargs", &l);
+-	if (p != NULL && l > 0)
+-		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
++	if (l <= 0)
++		p = NULL;
  
- static unsigned long __prombss dt_header_start;
- static unsigned long __prombss dt_struct_start, dt_struct_end;
-@@ -1486,8 +1484,8 @@ static void __init prom_init_mem(void)
- 		endp = p + (plen / sizeof(cell_t));
+-	/*
+-	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+-	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
+-	 * is set in which case we override whatever was found earlier.
+-	 */
+-#ifdef CONFIG_CMDLINE
+-#if defined(CONFIG_CMDLINE_EXTEND)
+-	strlcat(data, " ", COMMAND_LINE_SIZE);
+-	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+-#elif defined(CONFIG_CMDLINE_FORCE)
+-	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+-#else
+-	/* No arguments from boot loader, use kernel's  cmdl*/
+-	if (!((char *)data)[0])
+-		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+-#endif
+-#endif /* CONFIG_CMDLINE */
++	cmdline_build(data, p, COMMAND_LINE_SIZE);
  
- #ifdef DEBUG_PROM
--		memset(path, 0, PROM_SCRATCH_SIZE);
--		call_prom("package-to-path", 3, 1, node, path, PROM_SCRATCH_SIZE-1);
-+		memset(path, 0, sizeof(prom_scratch));
-+		call_prom("package-to-path", 3, 1, node, path, sizeof(prom_scratch) - 1);
- 		prom_debug("  node %s :\n", path);
- #endif /* DEBUG_PROM */
+ 	pr_debug("Command line is: %s\n", (char*)data);
  
-@@ -1795,10 +1793,10 @@ static void __init prom_initialize_tce_table(void)
- 			local_alloc_bottom = base;
- 
- 		/* It seems OF doesn't null-terminate the path :-( */
--		memset(path, 0, PROM_SCRATCH_SIZE);
-+		memset(path, 0, sizeof(prom_scratch));
- 		/* Call OF to setup the TCE hardware */
- 		if (call_prom("package-to-path", 3, 1, node,
--			      path, PROM_SCRATCH_SIZE-1) == PROM_ERROR) {
-+			      path, sizeof(prom_scratch) - 1) == PROM_ERROR) {
- 			prom_printf("package-to-path failed\n");
- 		}
- 
-@@ -2159,14 +2157,14 @@ static void __init prom_check_displays(void)
- 
- 		/* It seems OF doesn't null-terminate the path :-( */
- 		path = prom_scratch;
--		memset(path, 0, PROM_SCRATCH_SIZE);
-+		memset(path, 0, sizeof(prom_scratch));
- 
- 		/*
- 		 * leave some room at the end of the path for appending extra
- 		 * arguments
- 		 */
- 		if (call_prom("package-to-path", 3, 1, node, path,
--			      PROM_SCRATCH_SIZE-10) == PROM_ERROR)
-+			      sizeof(prom_scratch) - 10) == PROM_ERROR)
- 			continue;
- 		prom_printf("found display   : %s, opening... ", path);
- 		
-@@ -2362,8 +2360,8 @@ static void __init scan_dt_build_struct(phandle node, unsigned long *mem_start,
- 
- 	/* get it again for debugging */
- 	path = prom_scratch;
--	memset(path, 0, PROM_SCRATCH_SIZE);
--	call_prom("package-to-path", 3, 1, node, path, PROM_SCRATCH_SIZE-1);
-+	memset(path, 0, sizeof(prom_scratch));
-+	call_prom("package-to-path", 3, 1, node, path, sizeof(prom_scratch) - 1);
- 
- 	/* get and store all properties */
- 	prev_name = "";
+diff --git a/include/linux/cmdline.h b/include/linux/cmdline.h
+index 8610ddf813ff..afcc00d7628d 100644
+--- a/include/linux/cmdline.h
++++ b/include/linux/cmdline.h
+@@ -10,7 +10,7 @@
+  * @src: The starting string or NULL if there isn't one. Must not equal dest.
+  * @length: the length of dest buffer.
+  */
+-static __always_inline void cmdline_build(char *dest, char *src, size_t length)
++static __always_inline void cmdline_build(char *dest, const char *src, size_t length)
+ {
+ 	if (length <= 0)
+ 		return;
 -- 
 2.13.3
 
