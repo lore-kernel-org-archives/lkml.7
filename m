@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AC8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921D9C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B442133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC1320856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbfDBNpf (ORCPT
+        id S1732113AbfDBNph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:45:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43358 "EHLO
+        Tue, 2 Apr 2019 09:45:37 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43298 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731461AbfDBNkH (ORCPT
+        by vger.kernel.org with ESMTP id S1731455AbfDBNkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:40:07 -0400
+        Tue, 2 Apr 2019 09:40:06 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe0-0002os-LG; Tue, 02 Apr 2019 14:40:04 +0100
+        id 1hBJe0-0002ny-B1; Tue, 02 Apr 2019 14:40:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdx-0004vg-5a; Tue, 02 Apr 2019 14:40:01 +0100
+        id 1hBJdx-0004wP-Di; Tue, 02 Apr 2019 14:40:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Shivasharan S" <shivasharan.srikanteshwara@broadcom.com>
-Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.325149625@decadent.org.uk>
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
+Date:   Tue, 02 Apr 2019 14:38:28 +0100
+Message-ID: <lsq.1554212308.713198748@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 65/99] scsi: megaraid_sas: Use 63-bit DMA addressing
+Subject: [PATCH 3.16 74/99] Input: nomadik-ske-keypad - fix a loop timeout
+ test
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,31 +56,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 894169db12463cea08d0e2a9e35f42b291340e5a upstream.
+commit 4d8f727b83bcd6702c2d210330872c9122d2d360 upstream.
 
-Although MegaRAID controllers support 64-bit DMA addressing, as per
-hardware design, DMA address with all 64-bits set
-(0xFFFFFFFF-FFFFFFFF) results in a firmware fault.
+The loop exits with "timeout" set to -1 not to 0.
 
-Driver will set 63-bit DMA mask to ensure the above address will not be
-used.
-
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-[bwh: Backported to 3.16: Only one instance of a 64-bit mask needs changing]
+Fixes: 1158f0f16224 ("Input: add support for Nomadik SKE keypad controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -4592,7 +4592,7 @@ megasas_set_dma_mask(struct pci_dev *pde
- 	 * All our contollers are capable of performing 64-bit DMA
- 	 */
- 	if (IS_DMA64) {
--		if (pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) != 0) {
-+		if (pci_set_dma_mask(pdev, DMA_BIT_MASK(63)) != 0) {
+ drivers/input/keyboard/nomadik-ske-keypad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/input/keyboard/nomadik-ske-keypad.c
++++ b/drivers/input/keyboard/nomadik-ske-keypad.c
+@@ -100,7 +100,7 @@ static int __init ske_keypad_chip_init(s
+ 	while ((readl(keypad->reg_base + SKE_RIS) != 0x00000000) && timeout--)
+ 		cpu_relax();
  
- 			if (pci_set_dma_mask(pdev, DMA_BIT_MASK(32)) != 0)
- 				goto fail_set_dma_mask;
+-	if (!timeout)
++	if (timeout == -1)
+ 		return -EINVAL;
+ 
+ 	/*
 
