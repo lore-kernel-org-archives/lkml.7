@@ -2,159 +2,399 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BE9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928CDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25A02084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Npbowo8A"
+	by mail.kernel.org (Postfix) with ESMTP id 568962084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDBHw0 (ORCPT
+        id S1728727AbfDBHxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 03:52:26 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34755 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfDBHw0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 03:52:26 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p10so15303486wrq.1;
-        Tue, 02 Apr 2019 00:52:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=VbjnPB8oxfwyp4XsX1/X3QiYhlRSJbXfLliTZ1HkW1Q=;
-        b=Npbowo8Ai5nkxYcBtzQfgel5AJbSrsgwWEvIeO4IMtXlj2V2wTtRfBN0RlkL9O5Jmg
-         /ZDK21e1nVh0ci8BHqfQi+eZ+sAIv1g5PpiM7VwbHQw+kZd60cXZB3cMcUHqJawcghvR
-         rdkNtKpvx/XzPVBAqYWoBGbd/210HHkPX+2K9CZYszQ+HtSm2gBtG41VVKjP5p2CIQqI
-         kWxztnV24aKUxCSTPNxihs6WTPlWNWBGWl/Brtst2NAT6t5qrP592ttCRO7Q3kco2HcN
-         /1JNnZRnDDgU6yvE37MA5ryjn8vhBHxz/VP51FlZz3nHH2bsYUk6omYjy/6+jlyuH3bH
-         qJ/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=VbjnPB8oxfwyp4XsX1/X3QiYhlRSJbXfLliTZ1HkW1Q=;
-        b=QYxaGooNctnndRkBxIERZ7iEVZvfhplxYpH6O49Kv+dHsHHcNEYghQ9Fk7exAfjrrX
-         5JUp+e+MOM7UH/F/SiL1osDG3bVyf781spPElMHgD+rOAmlBlypDwz8nSdQWkt+Kl0ht
-         7/Xk5GEsaTf52foS+N+rI3EvjBdMmvwMRqxhY6wsGDJ9tL9JLY5jizkYoPlYzHpD+4CH
-         Edeb3Oup9FqgiNUF17/4gXa0C5Sk+opBTYRy+6Apeer7m1t9CJWrDSL2nYILkI6jM9te
-         UCrCPn1kN4s0Ev1lBRX5Qj2PKSKBXvcsexabcG5rIbcXxaXW/1PJNkReTOmub538jGER
-         z7LQ==
-X-Gm-Message-State: APjAAAVhMFcCBsTI7EQl36BIeSwutDUBUhBCFGz7sMOgSaeSoPnSHr5d
-        zQA+2Xt8iulVO0C98dBw4C6rhR5TxJjb1asSGfM=
-X-Google-Smtp-Source: APXvYqzsMIWvHJdXjVtz1tlgcwE9Fkdd2h9XL5/dBU5OIbpVOs3v1TOj4LQ+T7P1XLpeCq2DRNZ43Ps/lBaDAz6TPD8=
-X-Received: by 2002:a5d:698b:: with SMTP id g11mr2146374wru.65.1554191544197;
- Tue, 02 Apr 2019 00:52:24 -0700 (PDT)
+        Tue, 2 Apr 2019 03:53:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38830 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbfDBHxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 03:53:16 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9006990C9B;
+        Tue,  2 Apr 2019 07:53:15 +0000 (UTC)
+Received: from [10.36.117.163] (ovpn-117-163.ams2.redhat.com [10.36.117.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3220760BE6;
+        Tue,  2 Apr 2019 07:53:09 +0000 (UTC)
+Subject: Re: [PATCH 1/1] vfio: Use dev_printk() when possible
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joe Perches <joe@perches.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20190330144135.17351-1-helgaas@kernel.org>
+ <20190330144135.17351-2-helgaas@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <6366c078-2900-af88-d889-d9aeb3f7497f@redhat.com>
+Date:   Tue, 2 Apr 2019 09:53:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <CAK7LNAQw7nPwykOEV5i+yWjkxzgf1gPa5ewFhDxbbn8XXjwFUA@mail.gmail.com>
- <20190402070858.49597-1-ndesaulniers@google.com>
-In-Reply-To: <20190402070858.49597-1-ndesaulniers@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 2 Apr 2019 09:52:13 +0200
-Message-ID: <CA+icZUUgvw7G0rrrhLL0KGXgeuPAxnSAQCopqWrqAAXvjSK=Yw@mail.gmail.com>
-Subject: Re: [PATCH v3] Makefile: lld: tell clang to use lld
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190330144135.17351-2-helgaas@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 02 Apr 2019 07:53:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 9:09 AM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> This is needed because clang doesn't select which linker to use based on
-> $LD but rather -fuse-ld={bfd,gold,lld,<absolute path to linker>}.  This
-> is problematic especially for cc-ldoption, which checks for linker flag
-> support via invoking the compiler, rather than the linker.
->
-> Select the linker via absolute path from $PATH via `which`. This allows
-> you to build with:
->
-> $ make LD=ld.lld
-> $ make LD=ld.lld-8
-> $ make LD=/path/to/ld.lld
->
-> Add -Qunused-arguments to KBUILD_CPPFLAGS when using LLD, as otherwise
-> Clang likes to complain about -fuse-lld= being unused when compiling but
-> not linking (-c) such as when cc-option is used.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/342
-> Link: https://github.com/ClangBuiltLinux/linux/issues/366
-> Link: https://github.com/ClangBuiltLinux/linux/issues/357
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Hi Bjorn, Alex,
 
-Thanks for bringing this up again, Nick.
+On 3/30/19 3:41 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Use dev_printk() when possible to make messages consistent with other
+> device-related messages.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+For the vfio-platform part:
+Acked-by: Eric Auger <eric.auger@redhat.com>
 
-Suggested-by: Sedat Dilek <sedat.dilek@gmail.com> (see [1]).
+For the rest:
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-I suggest to do a separate patch on the move of  "KBUILD_CPPFLAGS +=
--Qunused-arguments".
-( Patch was attached in [2],[3]. )
 
-As pointed by Nathan this needs the removal in the original code-block.
+Thanks
 
-Other than that:
+Eric
 
-Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-[1] https://github.com/ClangBuiltLinux/linux/issues/366#issuecomment-466836735
-[2] https://github.com/ClangBuiltLinux/linux/issues/366#issuecomment-467118373
-[3] https://github.com/ClangBuiltLinux/linux/files/2901865/kbuild-clang-lld-Move-Qunused-arguments-CPPFLAGS-patch.txt
 
 > ---
-> Changes V2->V3:
-> * Use absolute path based on `which $LD` as per Masahiro.
-> * Add -Qunused-arguments.
-> * Drop tested-by/reviewed-by tags, since this patched has changed enough
->   to warrant re-testing/re-review, IMO.
-> * Add more info to the commit message.
-> Changes V1->V2:
-> * add reviewed and tested by tags.
-> * move this addition up 2 statments so that it's properly added to
->   KBUILD_*FLAGS as per Nathan.
->
->  Makefile | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 026fbc450906..895c076b6305 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -514,6 +514,10 @@ ifneq ($(GCC_TOOLCHAIN),)
->  CLANG_FLAGS    += --gcc-toolchain=$(GCC_TOOLCHAIN)
->  endif
->  CLANG_FLAGS    += -no-integrated-as
-> +ifneq ($(shell $(LD) --version 2>&1 | head -n 1 | grep LLD),)
-> +CLANG_FLAGS    += -fuse-ld=$(shell which $(LD))
-> +KBUILD_CPPFLAGS += -Qunused-arguments
-> +endif
->  KBUILD_CFLAGS  += $(CLANG_FLAGS)
->  KBUILD_AFLAGS  += $(CLANG_FLAGS)
->  export CLANG_FLAGS
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To post to this group, send email to clang-built-linux@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190402070858.49597-1-ndesaulniers%40google.com.
-> For more options, visit https://groups.google.com/d/optout.
+>  drivers/vfio/pci/vfio_pci.c                   | 26 +++++++----------
+>  drivers/vfio/pci/vfio_pci_config.c            | 28 ++++++++----------
+>  .../platform/reset/vfio_platform_amdxgbe.c    |  5 ++--
+>  drivers/vfio/platform/vfio_platform_common.c  | 12 ++++----
+>  drivers/vfio/vfio.c                           | 29 +++++++++----------
+>  include/linux/pci.h                           |  3 ++
+>  6 files changed, 49 insertions(+), 54 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index a25659b5a5d1..b0fb4ea3253a 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -12,6 +12,7 @@
+>   */
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +#define dev_fmt pr_fmt
+>  
+>  #include <linux/device.h>
+>  #include <linux/eventfd.h>
+> @@ -287,12 +288,11 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  	pci_save_state(pdev);
+>  	vdev->pci_saved_state = pci_store_saved_state(pdev);
+>  	if (!vdev->pci_saved_state)
+> -		pr_debug("%s: Couldn't store %s saved state\n",
+> -			 __func__, dev_name(&pdev->dev));
+> +		pci_dbg(pdev, "%s: Couldn't store saved state\n", __func__);
+>  
+>  	if (likely(!nointxmask)) {
+>  		if (vfio_pci_nointx(pdev)) {
+> -			dev_info(&pdev->dev, "Masking broken INTx support\n");
+> +			pci_info(pdev, "Masking broken INTx support\n");
+>  			vdev->nointx = true;
+>  			pci_intx(pdev, 0);
+>  		} else
+> @@ -336,8 +336,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  	    IS_ENABLED(CONFIG_VFIO_PCI_IGD)) {
+>  		ret = vfio_pci_igd_init(vdev);
+>  		if (ret) {
+> -			dev_warn(&vdev->pdev->dev,
+> -				 "Failed to setup Intel IGD regions\n");
+> +			pci_warn(pdev, "Failed to setup Intel IGD regions\n");
+>  			goto disable_exit;
+>  		}
+>  	}
+> @@ -346,8 +345,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  	    IS_ENABLED(CONFIG_VFIO_PCI_NVLINK2)) {
+>  		ret = vfio_pci_nvdia_v100_nvlink2_init(vdev);
+>  		if (ret && ret != -ENODEV) {
+> -			dev_warn(&vdev->pdev->dev,
+> -				 "Failed to setup NVIDIA NV2 RAM region\n");
+> +			pci_warn(pdev, "Failed to setup NVIDIA NV2 RAM region\n");
+>  			goto disable_exit;
+>  		}
+>  	}
+> @@ -356,8 +354,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  	    IS_ENABLED(CONFIG_VFIO_PCI_NVLINK2)) {
+>  		ret = vfio_pci_ibm_npu2_init(vdev);
+>  		if (ret && ret != -ENODEV) {
+> -			dev_warn(&vdev->pdev->dev,
+> -					"Failed to setup NVIDIA NV2 ATSD region\n");
+> +			pci_warn(pdev, "Failed to setup NVIDIA NV2 ATSD region\n");
+>  			goto disable_exit;
+>  		}
+>  	}
+> @@ -429,8 +426,7 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+>  	 * is just busy work.
+>  	 */
+>  	if (pci_load_and_free_saved_state(pdev, &vdev->pci_saved_state)) {
+> -		pr_info("%s: Couldn't reload %s saved state\n",
+> -			__func__, dev_name(&pdev->dev));
+> +		pci_info(pdev, "%s: Couldn't reload saved state\n", __func__);
+>  
+>  		if (!vdev->reset_works)
+>  			goto out;
+> @@ -1255,17 +1251,17 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+>  static void vfio_pci_request(void *device_data, unsigned int count)
+>  {
+>  	struct vfio_pci_device *vdev = device_data;
+> +	struct pci_dev *pdev = vdev->pdev;
+>  
+>  	mutex_lock(&vdev->igate);
+>  
+>  	if (vdev->req_trigger) {
+>  		if (!(count % 10))
+> -			dev_notice_ratelimited(&vdev->pdev->dev,
+> -				"Relaying device request to user (#%u)\n",
+> -				count);
+> +			pci_notice_ratelimited(pdev,
+> +				"Relaying device request to user (#%u)\n", count);
+>  		eventfd_signal(vdev->req_trigger, 1);
+>  	} else if (count == 0) {
+> -		dev_warn(&vdev->pdev->dev,
+> +		pci_warn(pdev,
+>  			"No device request channel registered, blocked until released by user\n");
+>  	}
+>  
+> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> index e82b51114687..d639ec508a84 100644
+> --- a/drivers/vfio/pci/vfio_pci_config.c
+> +++ b/drivers/vfio/pci/vfio_pci_config.c
+> @@ -412,8 +412,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
+>  	if (pdev->is_virtfn)
+>  		return;
+>  
+> -	pr_info("%s: %s reset recovery - restoring bars\n",
+> -		__func__, dev_name(&pdev->dev));
+> +	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
+>  
+>  	for (i = PCI_BASE_ADDRESS_0; i <= PCI_BASE_ADDRESS_5; i += 4, rbar++)
+>  		pci_user_write_config_dword(pdev, i, *rbar);
+> @@ -1298,8 +1297,8 @@ static int vfio_cap_len(struct vfio_pci_device *vdev, u8 cap, u8 pos)
+>  		else
+>  			return PCI_SATA_SIZEOF_SHORT;
+>  	default:
+> -		pr_warn("%s: %s unknown length for pci cap 0x%x@0x%x\n",
+> -			dev_name(&pdev->dev), __func__, cap, pos);
+> +		pci_warn(pdev, "%s: unknown length for PCI cap %#x@%#x\n",
+> +			 __func__, cap, pos);
+>  	}
+>  
+>  	return 0;
+> @@ -1372,8 +1371,8 @@ static int vfio_ext_cap_len(struct vfio_pci_device *vdev, u16 ecap, u16 epos)
+>  		}
+>  		return PCI_TPH_BASE_SIZEOF;
+>  	default:
+> -		pr_warn("%s: %s unknown length for pci ecap 0x%x@0x%x\n",
+> -			dev_name(&pdev->dev), __func__, ecap, epos);
+> +		pci_warn(pdev, "%s: unknown length for PCI ecap %#x@%#x\n",
+> +			 __func__, ecap, epos);
+>  	}
+>  
+>  	return 0;
+> @@ -1474,8 +1473,7 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+>  		}
+>  
+>  		if (!len) {
+> -			pr_info("%s: %s hiding cap 0x%x\n",
+> -				__func__, dev_name(&pdev->dev), cap);
+> +			pci_info(pdev, "%s: hiding cap %#x@%#x\n", __func__, cap, pos);
+>  			*prev = next;
+>  			pos = next;
+>  			continue;
+> @@ -1486,9 +1484,8 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+>  			if (likely(map[pos + i] == PCI_CAP_ID_INVALID))
+>  				continue;
+>  
+> -			pr_warn("%s: %s pci config conflict @0x%x, was cap 0x%x now cap 0x%x\n",
+> -				__func__, dev_name(&pdev->dev),
+> -				pos + i, map[pos + i], cap);
+> +			pci_warn(pdev, "%s: PCI config conflict @%#x, was cap %#x now cap %#x\n",
+> +				 __func__, pos + i, map[pos + i], cap);
+>  		}
+>  
+>  		BUILD_BUG_ON(PCI_CAP_ID_MAX >= PCI_CAP_ID_INVALID_VIRT);
+> @@ -1549,8 +1546,8 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
+>  		}
+>  
+>  		if (!len) {
+> -			pr_info("%s: %s hiding ecap 0x%x@0x%x\n",
+> -				__func__, dev_name(&pdev->dev), ecap, epos);
+> +			pci_info(pdev, "%s: hiding ecap %#x@%#x\n",
+> +				 __func__, ecap, epos);
+>  
+>  			/* If not the first in the chain, we can skip over it */
+>  			if (prev) {
+> @@ -1572,9 +1569,8 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
+>  			if (likely(map[epos + i] == PCI_CAP_ID_INVALID))
+>  				continue;
+>  
+> -			pr_warn("%s: %s pci config conflict @0x%x, was ecap 0x%x now ecap 0x%x\n",
+> -				__func__, dev_name(&pdev->dev),
+> -				epos + i, map[epos + i], ecap);
+> +			pci_warn(pdev, "%s: PCI config conflict @%#x, was ecap %#x now ecap %#x\n",
+> +				 __func__, epos + i, map[epos + i], ecap);
+>  		}
+>  
+>  		/*
+> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> index 3ddb2704221d..fe95964bc3be 100644
+> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> @@ -89,7 +89,8 @@ static int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+>  	} while ((pcs_value & MDIO_CTRL1_RESET) && --count);
+>  
+>  	if (pcs_value & MDIO_CTRL1_RESET)
+> -		pr_warn("%s XGBE PHY reset timeout\n", __func__);
+> +		dev_warn(vdev->device, "%s: XGBE PHY reset timeout\n",
+> +			 __func__);
+>  
+>  	/* disable auto-negotiation */
+>  	value = xmdio_read(xpcs_regs->ioaddr, MDIO_MMD_AN, MDIO_CTRL1);
+> @@ -114,7 +115,7 @@ static int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+>  		usleep_range(500, 600);
+>  
+>  	if (!count)
+> -		pr_warn("%s MAC SW reset failed\n", __func__);
+> +		dev_warn(vdev->device, "%s: MAC SW reset failed\n", __func__);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index c0cd824be2b7..d369d9ae166b 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> @@ -12,6 +12,8 @@
+>   * GNU General Public License for more details.
+>   */
+>  
+> +#define dev_fmt(fmt)	"VFIO: " fmt
+> +
+>  #include <linux/device.h>
+>  #include <linux/acpi.h>
+>  #include <linux/iommu.h>
+> @@ -63,7 +65,7 @@ static int vfio_platform_acpi_probe(struct vfio_platform_device *vdev,
+>  
+>  	adev = ACPI_COMPANION(dev);
+>  	if (!adev) {
+> -		pr_err("VFIO: ACPI companion device not found for %s\n",
+> +		dev_err(dev, "ACPI companion device not found for %s\n",
+>  			vdev->name);
+>  		return -ENODEV;
+>  	}
+> @@ -638,7 +640,7 @@ static int vfio_platform_of_probe(struct vfio_platform_device *vdev,
+>  	ret = device_property_read_string(dev, "compatible",
+>  					  &vdev->compat);
+>  	if (ret)
+> -		pr_err("VFIO: Cannot retrieve compat for %s\n", vdev->name);
+> +		dev_err(dev, "Cannot retrieve compat for %s\n", vdev->name);
+>  
+>  	return ret;
+>  }
+> @@ -680,14 +682,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+>  
+>  	ret = vfio_platform_get_reset(vdev);
+>  	if (ret && vdev->reset_required) {
+> -		pr_err("VFIO: No reset function found for device %s\n",
+> -		       vdev->name);
+> +		dev_err(dev, "No reset function found for device %s\n",
+> +		        vdev->name);
+>  		return ret;
+>  	}
+>  
+>  	group = vfio_iommu_group_get(dev);
+>  	if (!group) {
+> -		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+> +		dev_err(dev, "No IOMMU group for device %s\n", vdev->name);
+>  		ret = -EINVAL;
+>  		goto put_reset;
+>  	}
+> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> index a3030cdf3c18..7fb68968097a 100644
+> --- a/drivers/vfio/vfio.c
+> +++ b/drivers/vfio/vfio.c
+> @@ -704,8 +704,8 @@ static int vfio_group_nb_add_dev(struct vfio_group *group, struct device *dev)
+>  		return 0;
+>  
+>  	/* TODO Prevent device auto probing */
+> -	WARN(1, "Device %s added to live group %d!\n", dev_name(dev),
+> -	     iommu_group_id(group->iommu_group));
+> +	dev_WARN(dev, "Device added to live group %d!\n",
+> +		 iommu_group_id(group->iommu_group));
+>  
+>  	return 0;
+>  }
+> @@ -748,25 +748,22 @@ static int vfio_iommu_group_notifier(struct notifier_block *nb,
+>  		 */
+>  		break;
+>  	case IOMMU_GROUP_NOTIFY_BIND_DRIVER:
+> -		pr_debug("%s: Device %s, group %d binding to driver\n",
+> -			 __func__, dev_name(dev),
+> -			 iommu_group_id(group->iommu_group));
+> +		dev_dbg(dev, "%s: group %d binding to driver\n", __func__,
+> +			iommu_group_id(group->iommu_group));
+>  		break;
+>  	case IOMMU_GROUP_NOTIFY_BOUND_DRIVER:
+> -		pr_debug("%s: Device %s, group %d bound to driver %s\n",
+> -			 __func__, dev_name(dev),
+> -			 iommu_group_id(group->iommu_group), dev->driver->name);
+> +		dev_dbg(dev, "%s: group %d bound to driver %s\n", __func__,
+> +			iommu_group_id(group->iommu_group), dev->driver->name);
+>  		BUG_ON(vfio_group_nb_verify(group, dev));
+>  		break;
+>  	case IOMMU_GROUP_NOTIFY_UNBIND_DRIVER:
+> -		pr_debug("%s: Device %s, group %d unbinding from driver %s\n",
+> -			 __func__, dev_name(dev),
+> -			 iommu_group_id(group->iommu_group), dev->driver->name);
+> +		dev_dbg(dev, "%s: group %d unbinding from driver %s\n",
+> +			__func__, iommu_group_id(group->iommu_group),
+> +			dev->driver->name);
+>  		break;
+>  	case IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER:
+> -		pr_debug("%s: Device %s, group %d unbound from driver\n",
+> -			 __func__, dev_name(dev),
+> -			 iommu_group_id(group->iommu_group));
+> +		dev_dbg(dev, "%s: group %d unbound from driver\n", __func__,
+> +			iommu_group_id(group->iommu_group));
+>  		/*
+>  		 * XXX An unbound device in a live group is ok, but we'd
+>  		 * really like to avoid the above BUG_ON by preventing other
+> @@ -830,8 +827,8 @@ int vfio_add_group_dev(struct device *dev,
+>  
+>  	device = vfio_group_get_device(group, dev);
+>  	if (device) {
+> -		WARN(1, "Device %s already exists on group %d\n",
+> -		     dev_name(dev), iommu_group_id(iommu_group));
+> +		dev_WARN(dev, "Device already exists on group %d\n",
+> +			 iommu_group_id(iommu_group));
+>  		vfio_device_put(device);
+>  		vfio_group_put(group);
+>  		return -EBUSY;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 77448215ef5b..27854731afc4 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2363,4 +2363,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+>  #define pci_info(pdev, fmt, arg...)	dev_info(&(pdev)->dev, fmt, ##arg)
+>  #define pci_dbg(pdev, fmt, arg...)	dev_dbg(&(pdev)->dev, fmt, ##arg)
+>  
+> +#define pci_notice_ratelimited(pdev, fmt, arg...) \
+> +	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
+> +
+>  #endif /* LINUX_PCI_H */
+> 
