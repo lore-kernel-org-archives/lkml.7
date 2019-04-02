@@ -2,141 +2,140 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127A6C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF625C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3082084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B777D2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbfDBIfH (ORCPT
+        id S1729542AbfDBIj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 04:35:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35284 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbfDBIfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 04:35:07 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x328T2U4026248
-        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 04:35:05 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rm1nd8qn9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 04:35:05 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 2 Apr 2019 09:35:03 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 2 Apr 2019 09:35:01 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x328Z0TP61669568
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Apr 2019 08:35:00 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E58054C040;
-        Tue,  2 Apr 2019 08:34:59 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 364934C050;
-        Tue,  2 Apr 2019 08:34:59 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  2 Apr 2019 08:34:59 +0000 (GMT)
-Date:   Tue, 2 Apr 2019 11:34:57 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RISC-V: Fix Maximum Physical Memory 2GiB option for
- 64bit systems
-References: <20190402055902.14017-1-anup.patel@wdc.com>
+        Tue, 2 Apr 2019 04:39:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59506 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729481AbfDBIj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 04:39:26 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B6BB81250;
+        Tue,  2 Apr 2019 08:39:25 +0000 (UTC)
+Received: from [10.36.117.141] (ovpn-117-141.ams2.redhat.com [10.36.117.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AFD8173B9;
+        Tue,  2 Apr 2019 08:39:23 +0000 (UTC)
+Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
+ memory
+To:     Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190328134320.13232-1-osalvador@suse.de>
+ <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
+ <efb08377-ca5d-4110-d7ae-04a0d61ac294@redhat.com>
+ <20190329084547.5k37xjwvkgffwajo@d104.suse.de>
+ <20190329134243.GA30026@dhcp22.suse.cz>
+ <20190401075936.bjt2qsrhw77rib77@d104.suse.de>
+ <20190401115306.GF28293@dhcp22.suse.cz>
+ <20190402082812.fefamf7qlzulb7t2@d104.suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
+ 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
+ xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
+ jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
+ s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
+ m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
+ MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
+ z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
+ dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
+ UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
+ 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
+ uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
+ 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
+ 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
+ xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
+ 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
+ hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
+ u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
+ gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
+ rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
+ BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
+ KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
+ NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
+ YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
+ lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
+ qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
+ C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
+ W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
+ TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
+ +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <40a84fa8-c1b0-185e-8c6d-230a381099a2@redhat.com>
+Date:   Tue, 2 Apr 2019 10:39:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402055902.14017-1-anup.patel@wdc.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19040208-0028-0000-0000-0000035C41CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040208-0029-0000-0000-0000241B4508
-Message-Id: <20190402083456.GA2153@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904020062
+In-Reply-To: <20190402082812.fefamf7qlzulb7t2@d104.suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 02 Apr 2019 08:39:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 06:02:38AM +0000, Anup Patel wrote:
-> The Maximum Physical Memory 2GiB option for 64bit systems is currently
-> broken because kernel hangs at boot-time when this option is enabled
-> and the underlying system has more than 2GiB memory.
+On 02.04.19 10:28, Oscar Salvador wrote:
+> On Mon, Apr 01, 2019 at 01:53:06PM +0200, Michal Hocko wrote:
+>> On Mon 01-04-19 09:59:36, Oscar Salvador wrote:
+>>> On Fri, Mar 29, 2019 at 02:42:43PM +0100, Michal Hocko wrote:
+>>>> Having a larger contiguous area is definitely nice to have but you also
+>>>> have to consider the other side of the thing. If we have a movable
+>>>> memblock with unmovable memory then we are breaking the movable
+>>>> property. So there should be some flexibility for caller to tell whether
+>>>> to allocate on per device or per memblock. Or we need something to move
+>>>> memmaps during the hotremove.
+>>>
+>>> By movable memblock you mean a memblock whose pages can be migrated over when
+>>> this memblock is offlined, right?
+>>
+>> I am mostly thinking about movable_node kernel parameter which makes
+>> newly hotpluged memory go into ZONE_MOVABLE and people do use that to
+>> make sure such a memory can be later hotremoved.
 > 
-> This issue can be easily reproduced on SiFive Unleashed board where
-> we have 8GiB of memory.
+> Uhm, I might be missing your point, but hot-added memory that makes use of
+> vmemmap pages can be hot-removed as any other memory.
 > 
-> This patch fixes above issue by reserving unusable memory region in
-> setup_bootmem().
-> 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/mm/init.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 5fd8c922e1c2..6b063f20a9d0 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -121,6 +121,14 @@ void __init setup_bootmem(void)
->  			 */
->  			memblock_reserve(reg->base, vmlinux_end - reg->base);
->  			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
-> +
-> +			/*
-> +			 * Reserve from the end of usable area to the end of
-> +			 * region
-> +			 */
-> +			if ((reg->base + mem_size) < end)
-> +				memblock_reserve(reg->base + mem_size,
-> +						 end - reg->base - mem_size);
+> Vmemmap pages do not account as unmovable memory, they just stick around
+> until all sections they referred to have been removed, and then, we proceed
+> with removing them.
+> So, to put it in another way: vmemmap pages are left in the system until the
+> whole memory device (DIMM, virt mem-device or whatever) is completely
+> hot-removed.
 
-The memory above MAXPHYSMEM should not be reserved. It should be either
-removed from memblock with memblock_remove or not added at the first place.
-
-Frankly, I fail to understand the logic behind setting PAGE_OFFSET to
-MAXPHYSMEM and then using PAGE_OFFSET as the limit for accessible physical
-memory. Still, as it is there, you can set MAX_MEMBLOCK_ADDR=PAGE_OFFSET in
-arch/riscv/include/page.h and then early_init_dt_add_memory_arch() will
-simply ignore the memory above PAGE_OFFSET.
-
-More sustainable fix for the long term, IMHO, would be to break
-PAGE_OFFSET and MAXPHYSMEM interdependency.
-
-
->  		}
->  	}
->  	BUG_ON(mem_size == 0);
-> -- 
-> 2.17.1
-> 
+Indeed, separate memblocks can be offlined, but vmemmap is removed along
+with remove_memory().
 
 -- 
-Sincerely yours,
-Mike.
 
+Thanks,
+
+David / dhildenb
