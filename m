@@ -2,111 +2,91 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F271C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44462C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5E02075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B4E2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Z7c8RfEA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rlmnKgSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfDBTCb (ORCPT
+        id S1729658AbfDBTDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:02:31 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43903 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbfDBTCa (ORCPT
+        Tue, 2 Apr 2019 15:03:55 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42951 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbfDBTDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:02:30 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d26so12627177ede.10
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 12:02:29 -0700 (PDT)
+        Tue, 2 Apr 2019 15:03:55 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r15so6819988pfn.9;
+        Tue, 02 Apr 2019 12:03:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vnnMwtGlBE0Yvz+axzlkS6WeB8MVf14JlhwhvAZOtHQ=;
-        b=Z7c8RfEAZYSyKXV43cMabVo3yW/U1akBHSg9xQDPDOGiFzE8pmsrbH5XE4YQ9cWtYQ
-         yJqkj3R6jm0qo1Tz1q3ae9DPXBc+LxQT46v+tBblZr3r1ZGogKYD8ZMfzTjbkxtsAQ4W
-         OqR61ocLErFA+S9Krkya0y9m2HBoGFoZ2dtdE=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZIN2Y8rLqflzwQDFYfLgLohx8RHN4GTkqaFf1mMK9Pc=;
+        b=rlmnKgSSTXrAAoLhEZUy59l9lVD/GamnjaIMMsCvJaEyx5Lzk93M4VRrY4zWe78Zhu
+         PAN9nUts5y7ajlpylv5nvGFQToWlwvQ9Whru3gPDoBaMr4wd6HJ8e0XsWWd57Oy75VGd
+         umx4s0fTHsx6UWmjSpwOM7iUhpLi86VeG6cnV8uVySNx37AG+N+m0uGmLYC11G3dU1tJ
+         sLoYRiuphybnNwcVTYrH4mkaSR5zXL77UW5Ef3ujaLQk389Yqs5fXcRSCuqLcJhlLFrZ
+         2yIaAiCoOCP3Sgmgp+FAvVHP/8DoyukNarTboFMk1GPJ8exT0l8261IPwS/ysdwSq7Wv
+         rudw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vnnMwtGlBE0Yvz+axzlkS6WeB8MVf14JlhwhvAZOtHQ=;
-        b=bffy14Aa+swmHQFsRrhnOPaFFhF47xhXSn66X4xmUYQbl63YKcVATnrT6u5Okb+KjD
-         vfq9eUgf8eugIQrvufBRv1VO92XqjXVCWIoK6ZOP5qHJZgGyZKoPgYCRM/FbkGfBP2x1
-         HN2udzbS40hAVcU+98Xin1bdudadk2Bn5kAfYrTe9Uq8MXjHra1hXIZSNLPErdJqmhpC
-         M4HSXWWeQ7D8e7QQ1JLm64ZQ34YIEuj2qblKHcWRd+G+DME/0d4yGHZ7ULrx3TTMky0c
-         iNBjM9fAfDNyTmN13hA0HH2Pd79oIaVJYsXZ7GHWNH5JL8AV0jG9s4m7qBnGjQQGvd13
-         R1uw==
-X-Gm-Message-State: APjAAAU8exiUflvhHm+ngATqqMWkg6fzXx5htIkmU5SYVer1rD8Da2Dr
-        clFeCRYt14eACzBrm+q+IyDvBg==
-X-Google-Smtp-Source: APXvYqxmFKba2USa8sutCHaQJHfi5k9VKPY1K2aZOeb8EfTIf6efFnH/Wf5sXWj3qTvMd9ifK1MAoA==
-X-Received: by 2002:a50:b618:: with SMTP id b24mr49039482ede.9.1554231749062;
-        Tue, 02 Apr 2019 12:02:29 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
-        by smtp.gmail.com with ESMTPSA id x20sm4212588eda.40.2019.04.02.12.02.27
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZIN2Y8rLqflzwQDFYfLgLohx8RHN4GTkqaFf1mMK9Pc=;
+        b=aNvs2dmMYp2dobTBLdri6Pp3S26NiEsXr3qL9m/s2luGJGIGwKtVvifMgocKeAstFf
+         PYIldKdmacPFQi2tyDVqhmLeA6SIjNMXsmnzyT8ov2LPMmjlRtA2QV2+e1AIPcU/Sv7o
+         AdsIlfV6BgWXOy3mYD5FtpITqjyxpYqEWUXodGQ6ehKM6KWdNetBDWmXAr2Z8bbLtrEj
+         Uqj3ypNl169PaytrWgdpD16rSrei9ZOfybU+TIDR4CUC2HzYbQVaNQ4akRBrtWnVUrp2
+         utC3eIYrFgF+sei80xue2z2NGGB4oSCjIwgnwKDBFN31v/TlnEVA096V6q7ND958U73o
+         sxWw==
+X-Gm-Message-State: APjAAAWA5i57lE95Z9eUSmllimMAlHEeqB00VYAcY7LjxTioYmPxlsFi
+        XO3u6sj8mxI3u0grp8v200Y=
+X-Google-Smtp-Source: APXvYqwpiXJtnucBqq4o5C728lR8kBDuGAc2s9SQ8xSEI5/UVGN6HdMOzwW2YjoXZEeAGAvk1fskoA==
+X-Received: by 2002:a62:1249:: with SMTP id a70mr70619381pfj.160.1554231834427;
+        Tue, 02 Apr 2019 12:03:54 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o67sm17662383pga.55.2019.04.02.12.03.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 12:02:28 -0700 (PDT)
-Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-References: <20190331214020.836098943@linutronix.de>
- <20190331215136.039902969@linutronix.de>
- <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de>
- <20190402154329.scp7i7uqevubgwrz@treble>
- <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <4db4323f-3416-54a8-27e3-c491827a2fbd@rasmusvillemoes.dk>
-Date:   Tue, 2 Apr 2019 21:02:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 02 Apr 2019 12:03:53 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 12:03:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 3.18 00/50] 3.18.138-stable review
+Message-ID: <20190402190352.GA14232@roeck-us.net>
+References: <20190401170041.257273804@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2019 17.48, Thomas Gleixner wrote:
-> On Tue, 2 Apr 2019, Josh Poimboeuf wrote:
->> On Tue, Apr 02, 2019 at 12:19:46PM +0200, Thomas Gleixner wrote:
->>> +/*
->>> + * Array of exception stack page descriptors. If the stack is larger than
->>> + * PAGE_SIZE, all pages covering a particular stack will have the same
->>> + * info.
->>> + */
->>> +static const struct estack_pages estack_pages[ESTACK_PAGES] ____cacheline_aligned = {
->>> +	[CONDRANGE(DF)]		= ESTACK_PAGE(DOUBLEFAULT_IST, DF),
->>> +	[CONDRANGE(NMI)]	= ESTACK_PAGE(NMI_IST, NMI),
->>> +	[PAGERANGE(DB)]		= ESTACK_PAGE(DEBUG_IST, DB),
->>> +	[CONDRANGE(MCE)]	= ESTACK_PAGE(MCE_IST, MCE),
->>
->> It would be nice if the *_IST macro naming aligned with the struct
->> cea_exception_stacks field naming.  Then you could just do, e.g.
->> ESTACKPAGE(DF).
+On Mon, Apr 01, 2019 at 07:02:43PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 3.18.138 release.
+> There are 50 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Yes, lemme fix that up.
+> Responses should be made by Wed Apr  3 16:59:36 UTC 2019.
+> Anything received after that time might be too late.
 > 
->> Also it's a bit unfortunate that some of the stack size knowledge is
->> hard-coded here, i.e #DB always being > 1 page and non-#DB being
->> sometimes 1 page.
-> 
-> The problem is that there is no way to make this macro maze conditional on
-> sizeof(). But my macro foo is rusty.
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 226 pass: 226 fail: 0
 
-Eh, but why do you need the CONDRANGE thing at all? [5 ... 5] is a
-perfectly fine designator, equivalent to [5]. So you can just use
-PAGERANGE in all cases, no?
-
-Rasmus
+Guenter
