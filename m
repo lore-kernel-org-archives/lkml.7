@@ -2,318 +2,347 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7AFC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88478C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBFD20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4315B2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P3NFcLsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfDBJR1 (ORCPT
+        id S1729989AbfDBJRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:17:27 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54290 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728479AbfDBJR0 (ORCPT
+        Tue, 2 Apr 2019 05:17:35 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:12933 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbfDBJRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:17:26 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x329Bgjl030772;
-        Tue, 2 Apr 2019 11:17:13 +0200
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rjee2dmuy-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 02 Apr 2019 11:17:13 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7837A38;
-        Tue,  2 Apr 2019 09:17:08 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E0E6B16B8;
-        Tue,  2 Apr 2019 09:17:07 +0000 (GMT)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 2 Apr
- 2019 11:17:07 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1347.000; Tue, 2 Apr 2019 11:17:07 +0200
-From:   Hugues FRUCHET <hugues.fruchet@st.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH 0/2] DCMI bridge support
-Thread-Topic: [PATCH 0/2] DCMI bridge support
-Thread-Index: AQHU6HuFEwx2TCjLb02f3w/jSuAX66YnJV4AgAAGJ4CAAUulgA==
-Date:   Tue, 2 Apr 2019 09:17:07 +0000
-Message-ID: <0aec498c-09a1-7a8d-6919-a221d3484789@st.com>
-References: <1554111076-31471-1-git-send-email-hugues.fruchet@st.com>
- <158aa8b9-e607-3630-0e13-ad10759d3468@xs4all.nl>
- <2ff6b4cb-dd57-e982-a839-00c50037d2a4@st.com>
- <80572a34-a79c-862b-6040-668e8a79568b@xs4all.nl>
-In-Reply-To: <80572a34-a79c-862b-6040-668e8a79568b@xs4all.nl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.45]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BB4E3E7A0697C047A7465C8B7320735D@st.com>
-Content-Transfer-Encoding: base64
+        Tue, 2 Apr 2019 05:17:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ca3287d0000>; Tue, 02 Apr 2019 02:16:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 02 Apr 2019 02:16:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 02 Apr 2019 02:16:42 -0700
+Received: from [10.24.47.153] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Apr
+ 2019 09:16:30 +0000
+Subject: Re: [PATCH 05/10] dt-bindings: PCI: tegra: Add device tree support
+ for T194
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>
+CC:     <bhelgaas@google.com>, <mark.rutland@arm.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <lorenzo.pieralisi@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <mperttunen@nvidia.com>, <tiwai@suse.de>, <spujar@nvidia.com>,
+        <skomatineni@nvidia.com>, <liviu.dudau@arm.com>, <krzk@kernel.org>,
+        <heiko@sntech.de>, <horms+renesas@verge.net.au>, <olof@lixom.net>,
+        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
+        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
+        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
+        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
+        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
+        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
+        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>
+References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
+ <1553613207-3988-6-git-send-email-vidyas@nvidia.com>
+ <5ca06149.1c69fb81.720fd.79e1@mx.google.com>
+ <5ef50168-2476-1088-7156-8a4488d7a2e1@nvidia.com>
+ <20190401143138.GA4874@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <67f9b726-c075-0291-7777-8f10ecc9e29d@nvidia.com>
+Date:   Tue, 2 Apr 2019 14:46:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_04:,,
- signatures=0
+In-Reply-To: <20190401143138.GA4874@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554196606; bh=qpB2HpWh9Rh9N17jpHX8wd0qoQBh0ZVFbnm2lss8LTA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=P3NFcLspu7AcAO18Y9lgs4CgJZ+P57rRdNYMuan+esqp7vB/N6manFQEWtHfHacyj
+         K34l6D1t8v26bN1ZshrxS5zFGIo7KXAxe5tI0JXhkkU88AUwVp6M5ot8dkQr8lShZk
+         ZDJHhGI8efEAF8fcv9y/Ja5/HtDw12MxqS5X9Utnsmimmh2mI5y0Dm73aND22b9lz2
+         FAuZMg4xovpM+GLj0q9bitLRc0DWQ2B2emllXpXIhO+tHyhFJEMujPK5iMadryowqJ
+         68ae9/hWU5l5aGOBu8RzDIvCYLa1acayQ9S9CYfgYDjbWsM5TWBMiPbo95ksrJ4TsD
+         lKBR5rAjaA6PA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIEhhbnMsDQoNCkkndmUgYWxpZ25lZCBib3RoIG5hbWluZ3MgYnkgdXBkYXRpbmcgcXVl
-cnljYXA6DQoNCkBAIC0xMjU3LDcgKzEyNTcsOCBAQCBzdGF0aWMgaW50IGRjbWlfcXVlcnljYXAo
-c3RydWN0IGZpbGUgKmZpbGUsIHZvaWQgDQoqcHJpdiwNCiAgCXN0cnNjcHkoY2FwLT5kcml2ZXIs
-IERSVl9OQU1FLCBzaXplb2YoY2FwLT5kcml2ZXIpKTsNCiAgCXN0cnNjcHkoY2FwLT5jYXJkLCAi
-U1RNMzIgQ2FtZXJhIE1lbW9yeSBJbnRlcmZhY2UiLA0KICAJCXNpemVvZihjYXAtPmNhcmQpKTsN
-Ci0Jc3Ryc2NweShjYXAtPmJ1c19pbmZvLCAicGxhdGZvcm06ZGNtaSIsIHNpemVvZihjYXAtPmJ1
-c19pbmZvKSk7DQorCXNucHJpbnRmKGNhcC0+YnVzX2luZm8sIHNpemVvZihjYXAtPmJ1c19pbmZv
-KSwNCisJCSAicGxhdGZvcm06JXMiLCBEUlZfTkFNRSk7DQogIAlyZXR1cm4gMDsNCiAgfQ0KDQpz
-byBub3cgYm90aCBWNEwyIGFuZCBNQyBhcmUgcmV0dXJuaW5nICAicGxhdGZvcm06c3RtMzItZGNt
-aSIuDQoNCkknbGwgcHVzaCBpbiB2Mi4NCg0KQlIsDQpIdWd1ZXMuDQoNCg0KT24gNC8xLzE5IDM6
-MzAgUE0sIEhhbnMgVmVya3VpbCB3cm90ZToNCj4gT24gNC8xLzE5IDM6MDggUE0sIEh1Z3VlcyBG
-UlVDSEVUIHdyb3RlOg0KPj4gSGkgSGFucywNCj4+DQo+PiBIZXJlIGl0IGlzLg0KPj4NCj4+IFNI
-QTEgaXMgYWEzNzFjOTk1ZWMyYWQ3MDMyM2RiMDBjNDdiMzEzMjAwMmIwNjBiNzoNCj4+DQo+PiBB
-dXRob3I6IEhhbnMgVmVya3VpbCA8aHZlcmt1aWwtY2lzY29AeHM0YWxsLm5sPiAgMjAxOS0wMi0w
-OCAxNjoyMToyMw0KPj4gQ29tbWl0dGVyOiBIYW5zIFZlcmt1aWwgPGh2ZXJrdWlsLWNpc2NvQHhz
-NGFsbC5ubD4gIDIwMTktMDItMDggMTY6MjE6MjMNCj4+IFBhcmVudDogOThkNTYyMjU1MWViNmI5
-YTAzOTc0NjRmYjUyMzc4OTQ5ZjMzYzM2NCAodjRsMi1jb21wbGlhbmNlOg0KPj4gc3VwcG9ydCBt
-Mm0gZGV2aWNlcyB3aXRoIC1mKQ0KPj4gQ2hpbGQ6ICA1OWY5ODQwNzgxYWFiNDY0YzEzMzFkY2Ri
-ODJlNjNkZDA1NDRiNWM2ICh2NGwyLWNvbXBsaWFuY2U6DQo+PiByZW1vdmUgZHVwbGljYXRlIE1F
-RElBX0lPQ19ERVZJQ0VfSU5GTyBpb2N0bCBjYWxsKQ0KPj4gQnJhbmNoZXM6IG1hc3RlciwgbWFz
-dGVyMiwgcmVtb3Rlcy9vcmlnaW4vbWFzdGVyDQo+PiBGb2xsb3dzOiB2NGwtdXRpbHMtMS4xNi4w
-DQo+PiBQcmVjZWRlczoNCj4+DQo+PiAgICAgICB2NGwyLWNvbXBsaWFuY2U6IC1mIGJ1ZyBmaXhl
-cw0KPj4NCj4+DQo+PiBSZXN1bHQgaXMgYmVsb3c6DQo+Pg0KPj4gcm9vdEBzdG0zMm1wMTp+IyB2
-NGwyLWNvbXBsaWFuY2UgLW0gL2Rldi9tZWRpYTANCj4+IHY0bDItY29tcGxpYW5jZSBTSEE6IGVi
-OGUzYjA3YzkyNDlmZjU2MDkxYWU0YmMzYWU5Yjc2Nzc5ZGI0Y2QsIDMyIGJpdHMNCj4+DQo+PiBD
-b21wbGlhbmNlIHRlc3QgZm9yIHN0bTMyLWRjbWkgZGV2aWNlIC9kZXYvbWVkaWEwOg0KPj4NCj4+
-IE1lZGlhIERyaXZlciBJbmZvOg0KPj4gICAgICAgICAgIERyaXZlciBuYW1lICAgICAgOiBzdG0z
-Mi1kY21pDQo+PiAgICAgICAgICAgTW9kZWwgICAgICAgICAgICA6IHN0bTMyLWRjbWkNCj4+ICAg
-ICAgICAgICBTZXJpYWwgICAgICAgICAgIDoNCj4+ICAgICAgICAgICBCdXMgaW5mbyAgICAgICAg
-IDogcGxhdGZvcm06c3RtMzItZGNtaQ0KPj4gICAgICAgICAgIE1lZGlhIHZlcnNpb24gICAgOiA1
-LjAuMA0KPj4gICAgICAgICAgIEhhcmR3YXJlIHJldmlzaW9uOiAweDAwMDAwMDAwICgwKQ0KPj4g
-ICAgICAgICAgIERyaXZlciB2ZXJzaW9uICAgOiA1LjAuMA0KPj4NCj4+IFJlcXVpcmVkIGlvY3Rs
-czoNCj4+ICAgICAgICAgICB0ZXN0IE1FRElBX0lPQ19ERVZJQ0VfSU5GTzogT0sNCj4+DQo+PiBB
-bGxvdyBmb3IgbXVsdGlwbGUgb3BlbnM6DQo+PiAgICAgICAgICAgdGVzdCBzZWNvbmQgL2Rldi9t
-ZWRpYTAgb3BlbjogT0sNCj4+ICAgICAgICAgICB0ZXN0IE1FRElBX0lPQ19ERVZJQ0VfSU5GTzog
-T0sNCj4+ICAgICAgICAgICB0ZXN0IGZvciB1bmxpbWl0ZWQgb3BlbnM6IE9LDQo+Pg0KPj4gTWVk
-aWEgQ29udHJvbGxlciBpb2N0bHM6DQo+PiAgICAgICAgICAgdGVzdCBNRURJQV9JT0NfR19UT1BP
-TE9HWTogT0sNCj4+ICAgICAgICAgICBFbnRpdGllczogMyBJbnRlcmZhY2VzOiAyIFBhZHM6IDQg
-TGlua3M6IDQNCj4+ICAgICAgICAgICB0ZXN0IE1FRElBX0lPQ19FTlVNX0VOVElUSUVTL0xJTktT
-OiBPSw0KPj4gICAgICAgICAgIHRlc3QgTUVESUFfSU9DX1NFVFVQX0xJTks6IE9LDQo+Pg0KPj4g
-VG90YWwgZm9yIHN0bTMyLWRjbWkgZGV2aWNlIC9kZXYvbWVkaWEwOiA3LCBTdWNjZWVkZWQ6IDcs
-IEZhaWxlZDogMCwNCj4+IFdhcm5pbmdzOiAwDQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-Pj4gQ29tcGxpYW5jZSB0ZXN0IGZvciBzdG0zMi1kY21pIGRldmljZSAvZGV2L3ZpZGVvMDoNCj4+
-DQo+PiBEcml2ZXIgSW5mbzoNCj4+ICAgICAgICAgICBEcml2ZXIgbmFtZSAgICAgIDogc3RtMzIt
-ZGNtaQ0KPj4gICAgICAgICAgIENhcmQgdHlwZSAgICAgICAgOiBTVE0zMiBDYW1lcmEgTWVtb3J5
-IEludGVyZmFjZQ0KPj4gICAgICAgICAgIEJ1cyBpbmZvICAgICAgICAgOiBwbGF0Zm9ybTpkY21p
-DQo+PiAgICAgICAgICAgRHJpdmVyIHZlcnNpb24gICA6IDUuMC4wDQo+PiAgICAgICAgICAgQ2Fw
-YWJpbGl0aWVzICAgICA6IDB4ODUyMDAwMDENCj4+ICAgICAgICAgICAgICAgICAgIFZpZGVvIENh
-cHR1cmUNCj4+ICAgICAgICAgICAgICAgICAgIFJlYWQvV3JpdGUNCj4+ICAgICAgICAgICAgICAg
-ICAgIFN0cmVhbWluZw0KPj4gICAgICAgICAgICAgICAgICAgWyAyMTE3LjMzNjQ3N10gc3RtMzIt
-ZGNtaSA0YzAwNjAwMC5kY21pOg0KPj4gPT09PT09PT09PT09PT09PT0gIFNUQVJUIFNUQVRVUyAg
-PT09PT09PT09PT09PT09PT0NCj4+IEVbIDIxMTcuMzQ0NjQ3XSBzdG0zMi1kY21pIDRjMDA2MDAw
-LmRjbWk6IFdoaXRlIEJhbGFuY2UsIEF1dG9tYXRpYzogdHJ1ZQ0KPj4gWyAyMTE3LjM1MDk5MF0g
-c3RtMzItZGNtaSA0YzAwNjAwMC5kY21pOiBCbHVlIEJhbGFuY2U6IDAgaW5hY3RpdmUNCj4+IHhb
-IDIxMTcuMzU2ODUzXSBzdG0zMi1kY21pIDRjMDA2MDAwLmRjbWk6IFJlZCBCYWxhbmNlOiAwIGlu
-YWN0aXZlDQo+PiBbIDIxMTcuMzYyNjQ1XSBzdG0zMi1kY21pIDRjMDA2MDAwLmRjbWk6IEF1dG8g
-RXhwb3N1cmU6IEF1dG8gTW9kZQ0KPj4gWyAyMTE3LjM2ODQzOF0gc3RtMzItZGNtaSA0YzAwNjAw
-MC5kY21pOiBFeHBvc3VyZTogMCBpbmFjdGl2ZSB2b2xhdGlsZQ0KPj4gdFsgMjExNy4zNzQ3Mjld
-IHN0bTMyLWRjbWkgNGMwMDYwMDAuZGNtaTogR2FpbiwgQXV0b21hdGljOiB0cnVlDQo+PiBbIDIx
-MTcuMzgwMzM1XSBzdG0zMi1kY21pIDRjMDA2MDAwLmRjbWk6IEdhaW46IDAgaW5hY3RpdmUgdm9s
-YXRpbGUNCj4+IGVbIDIxMTcuMzg2MzA1XSBzdG0zMi1kY21pIDRjMDA2MDAwLmRjbWk6IFNhdHVy
-YXRpb246IDY0DQo+PiBbIDIxMTcuMzkxMjc1XSBzdG0zMi1kY21pIDRjMDA2MDAwLmRjbWk6IEh1
-ZTogMA0KPj4gblsgMjExNy4zOTU1NzJdIHN0bTMyLWRjbWkgNGMwMDYwMDAuZGNtaTogQ29udHJh
-c3Q6IDANCj4+IFsgMjExNy40MDAzMDVdIHN0bTMyLWRjbWkgNGMwMDYwMDAuZGNtaTogVGVzdCBQ
-YXR0ZXJuOiBEaXNhYmxlZA0KPj4gZFsgMjExNy40MDU5ODhdIHN0bTMyLWRjbWkgNGMwMDYwMDAu
-ZGNtaTogSG9yaXpvbnRhbCBGbGlwOiBmYWxzZQ0KPj4gWyAyMTE3LjQxMTcyMV0gc3RtMzItZGNt
-aSA0YzAwNjAwMC5kY21pOiBWZXJ0aWNhbCBGbGlwOiBmYWxzZQ0KPj4gWyAyMTE3LjQxNzE0OF0g
-c3RtMzItZGNtaSA0YzAwNjAwMC5kY21pOiBQb3dlciBMaW5lIEZyZXF1ZW5jeTogNTAgSHoNCj4+
-IFsgMjExNy40MjMyNjVdIHN0bTMyLWRjbWkgNGMwMDYwMDAuZGNtaTogPT09PT09PT09PT09PT09
-PT09ICBFTkQgU1RBVFVTDQo+PiA9PT09PT09PT09PT09PT09PT0NCj4+IGVkIFBpeCBGb3JtYXQN
-Cj4+ICAgICAgICAgICAgICAgICAgIERldmljZSBDYXBhYmlsaXRpZXMNCj4+ICAgICAgICAgICBE
-ZXZpY2UgQ2FwcyAgICAgIDogMHgwNTIwMDAwMQ0KPj4gICAgICAgICAgICAgICAgICAgVmlkZW8g
-Q2FwdHVyZQ0KPj4gICAgICAgICAgICAgICAgICAgUmVhZC9Xcml0ZQ0KPj4gICAgICAgICAgICAg
-ICAgICAgU3RyZWFtaW5nDQo+PiAgICAgICAgICAgICAgICAgICBFeHRlbmRlZCBQaXggRm9ybWF0
-DQo+PiBNZWRpYSBEcml2ZXIgSW5mbzoNCj4+ICAgICAgICAgICBEcml2ZXIgbmFtZSAgICAgIDog
-c3RtMzItZGNtaQ0KPj4gICAgICAgICAgIE1vZGVsICAgICAgICAgICAgOiBzdG0zMi1kY21pDQo+
-PiAgICAgICAgICAgU2VyaWFsICAgICAgICAgICA6DQo+PiAgICAgICAgICAgQnVzIGluZm8gICAg
-ICAgICA6IHBsYXRmb3JtOnN0bTMyLWRjbWkNCj4+ICAgICAgICAgICBNZWRpYSB2ZXJzaW9uICAg
-IDogNS4wLjANCj4+ICAgICAgICAgICBIYXJkd2FyZSByZXZpc2lvbjogMHgwMDAwMDAwMCAoMCkN
-Cj4+ICAgICAgICAgICBEcml2ZXIgdmVyc2lvbiAgIDogNS4wLjANCj4+IEludGVyZmFjZSBJbmZv
-Og0KPj4gICAgICAgICAgIElEICAgICAgICAgICAgICAgOiAweDAzMDAwMDAzDQo+PiAgICAgICAg
-ICAgVHlwZSAgICAgICAgICAgICA6IFY0TCBWaWRlbw0KPj4gRW50aXR5IEluZm86DQo+PiAgICAg
-ICAgICAgSUQgICAgICAgICAgICAgICA6IDB4MDAwMDAwMDEgKDEpDQo+PiAgICAgICAgICAgTmFt
-ZSAgICAgICAgICAgICA6IHN0bTMyX2RjbWkNCj4+ICAgICAgICAgICBGdW5jdGlvbiAgICAgICAg
-IDogVjRMMiBJL08NCj4+ICAgICAgICAgICBGbGFncyAgICAgICAgIDogZGVmYXVsdA0KPj4gICAg
-ICAgICAgIFBhZCAweDAxMDAwMDAyICAgOiAwOiBTaW5rDQo+PiAgICAgICAgICAgICBMaW5rIDB4
-MDIwMDAwMDg6IGZyb20gcmVtb3RlIHBhZCAweDEwMDAwMDcgb2YgZW50aXR5ICdtaXBpZDAyDQo+
-PiAwLTAwMTQnOiBEYXRhLCBFbmFibGVkLCBJbW11dGFibGUNCj4+DQo+PiBSZXF1aXJlZCBpb2N0
-bHM6DQo+PiAgICAgICAgICAgdGVzdCBNQyBpbmZvcm1hdGlvbiAoc2VlICdNZWRpYSBEcml2ZXIg
-SW5mbycgYWJvdmUpOiBPSw0KPj4gICAgICAgICAgICAgICAgICAgd2FybjoNCj4+IC4uLy4uLy4u
-Ly4uLy4uLy4uLy4uLy4uLy4uL3NvdXJjZXMvdjRsLXV0aWxzL3V0aWxzL3Y0bDItY29tcGxpYW5j
-ZS92NGwyLWNvbXBsaWFuY2UuY3BwKDYyMSk6DQo+PiBtZWRpYSBidXNfaW5mbyAncGxhdGZvcm06
-c3RtMzItZGNtaQ0KPj4gJyBkaWZmZXJzIGZyb20gVjRMMiBidXNfaW5mbyAncGxhdGZvcm06ZGNt
-aScNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19RVUVSWUNBUDogT0sNCj4+DQo+PiBBbGxvdyBm
-b3IgbXVsdGlwbGUgb3BlbnM6DQo+PiAgICAgICAgICAgdGVzdCBzZWNvbmQgL2Rldi92aWRlbzAg
-b3BlbjogT0sNCj4+ICAgICAgICAgICAgICAgICAgIHdhcm46DQo+PiAuLi8uLi8uLi8uLi8uLi8u
-Li8uLi8uLi8uLi9zb3VyY2VzL3Y0bC11dGlscy91dGlscy92NGwyLWNvbXBsaWFuY2UvdjRsMi1j
-b21wbGlhbmNlLmNwcCg2MjEpOg0KPj4gbWVkaWEgYnVzX2luZm8gJ3BsYXRmb3JtOnN0bTMyLWRj
-bWkNCj4+ICcgZGlmZmVycyBmcm9tIFY0TDIgYnVzX2luZm8gJ3BsYXRmb3JtOmRjbWknDQo+PiAg
-ICAgICAgICAgdGVzdCBWSURJT0NfUVVFUllDQVA6IE9LDQo+PiAgICAgICAgICAgdGVzdCBWSURJ
-T0NfRy9TX1BSSU9SSVRZOiBPSw0KPj4gICAgICAgICAgIHRlc3QgZm9yIHVubGltaXRlZCBvcGVu
-czogT0sNCj4+DQo+PiBEZWJ1ZyBpb2N0bHM6DQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfREJH
-X0cvU19SRUdJU1RFUjogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+PiAgICAgICAgICAgdGVzdCBWSURJ
-T0NfTE9HX1NUQVRVUzogT0sNCj4+DQo+PiBJbnB1dCBpb2N0bHM6DQo+PiAgICAgICAgICAgdGVz
-dCBWSURJT0NfRy9TX1RVTkVSL0VOVU1fRlJFUV9CQU5EUzogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+
-PiAgICAgICAgICAgdGVzdCBWSURJT0NfRy9TX0ZSRVsgMjExNy41NjQ3NzBdIG1pcGlkMDIgMC0w
-MDE0Og0KPj4gPT09PT09PT09PT09PT09PT0gIFNUQVJUIFNUQVRVUyAgPT09PT09PT09PT09PT09
-PT0NCj4+IFFbIDIxMTcuNTcyMDQyXSBtaXBpZDAyIDAtMDAxNDogPT09PT09PT09PT09PT09PT09
-ICBFTkQgU1RBVFVTDQo+PiA9PT09PT09PT09PT09PT09PT0NCj4+IFVFTkNZOiBPSyAoTm90IFN1
-cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19TX0hXX0ZSRVFfU0VFSzogT0sgKE5v
-dCBTdXBwb3J0ZWQpDQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfRU5VTUFVRElPOiBPSyAoTm90
-IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19HL1MvRU5VTUlOUFVUOiBPSw0K
-Pj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19BVURJTzogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+
-PiAgICAgICAgICAgSW5wdXRzOiAxIEF1ZGlvIElucHV0czogMCBUdW5lcnM6IDANCj4+DQo+PiBP
-dXRwdXQgaW9jdGxzOg0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19NT0RVTEFUT1I6IE9L
-IChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19GUkVRVUVOQ1k6
-IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0VOVU1BVURPVVQ6
-IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvUy9FTlVNT1VU
-UFVUOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19HL1NfQVVE
-T1VUOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICBPdXRwdXRzOiAwIEF1ZGlvIE91
-dHB1dHM6IDAgTW9kdWxhdG9yczogMA0KPj4NCj4+IElucHV0L091dHB1dCBjb25maWd1cmF0aW9u
-IGlvY3RsczoNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19FTlVNL0cvUy9RVUVSWV9TVEQ6IE9L
-IChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0VOVU0vRy9TL1FVRVJZ
-X0RWX1RJTUlOR1M6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9D
-X0RWX1RJTUlOR1NfQ0FQOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJ
-RElPQ19HL1NfRURJRDogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+Pg0KPj4gQ29udHJvbCBpb2N0bHMg
-KElucHV0IDApOg0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX1FVRVJZX0VYVF9DVFJML1FVRVJZ
-TUVOVTogT0sNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19RVUVSWUNUUkw6IE9LDQo+PiAgICAg
-ICAgICAgdGVzdCBWSURJT0NfRy9TX0NUUkw6IE9LDQo+PiAgICAgICAgICAgdGVzdCBWSURJT0Nf
-Ry9TL1RSWV9FWFRfQ1RSTFM6IE9LDQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfKFVOKVNVQlND
-UklCRV9FVkVOVC9EUUVWRU5UOiBPSw0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19KUEVH
-Q09NUDogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+PiAgICAgICAgICAgU3RhbmRhcmQgQ29udHJvbHM6
-IDE3IFByaXZhdGUgQ29udHJvbHM6IDANCj4+DQo+PiBGb3JtYXQgaW9jdGxzIChJbnB1dCAwKToN
-Cj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19FTlVNX0ZNVC9GUkFNRVNJWkVTL0ZSQU1FSU5URVJW
-QUxTOiBPSw0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19QQVJNOiBPSw0KPj4gICAgICAg
-ICAgIHRlc3QgVklESU9DX0dfRkJVRjogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+PiAgICAgICAgICAg
-dGVzdCBWSURJT0NfR19GTVQ6IE9LDQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfVFJZX0ZNVDog
-T0sNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19TX0ZNVDogT0sNCj4+ICAgICAgICAgICB0ZXN0
-IFZJRElPQ19HX1NMSUNFRF9WQklfQ0FQOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAg
-ICAgICAgICAgIGZhaWw6DQo+PiAuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9zb3VyY2VzL3Y0
-bC11dGlscy91dGlscy92NGwyLWNvbXBsaWFuY2UvdjRsMi10ZXN0LWZvcm1hdHMuY3BwKDEzMzgp
-Og0KPj4gbm9kZS0+ZnJtc2l6ZXNfY291bnRbcGl4Zm10XSA+IDENCj4+ICAgICAgICAgICB0ZXN0
-IENyb3BwaW5nOiBGQUlMDQo+PiAgICAgICAgICAgdGVzdCBDb21wb3Npbmc6IE9LIChOb3QgU3Vw
-cG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgU2NhbGluZzogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+
-Pg0KPj4gQ29kZWMgaW9jdGxzIChJbnB1dCAwKToNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ18o
-VFJZXylFTkNPREVSX0NNRDogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+PiAgICAgICAgICAgdGVzdCBW
-SURJT0NfR19FTkNfSU5ERVg6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3Qg
-VklESU9DXyhUUllfKURFQ09ERVJfQ01EOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+DQo+PiBCdWZm
-ZXIgaW9jdGxzIChJbnB1dCAwKToNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19SRVFCVUZTL0NS
-RUFURV9CVUZTL1FVRVJZQlVGOiBPSw0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0VYUEJVRjog
-T0sNCj4+ICAgICAgICAgICB0ZXN0IFJlcXVlc3RzOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+DQo+
-PiBUb3RhbCBmb3Igc3RtMzItZGNtaSBkZXZpY2UgL2Rldi92aWRlbzA6IDQ1LCBTdWNjZWVkZWQ6
-IDQ0LCBGYWlsZWQ6IDEsDQo+PiBXYXJuaW5nczogMg0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0NCj4+IENvbXBsaWFuY2UgdGVzdCBmb3IgZGV2aWNlIC9kZXYvdjRsLXN1YmRldjA6DQo+Pg0K
-Pj4NCj4+IFJlcXVpcmVkIGlvY3RsczoNCj4+DQo+PiBBbGxvdyBmb3IgbXVsdGlwbGUgb3BlbnM6
-DQo+PiAgICAgICAgICAgdGVzdCBzZWNvbmQgL2Rldi92NGwtc3ViZGV2MCBvcGVuOiBPSw0KPj4g
-ICAgICAgICAgIHRlc3QgZm9yIHVubGltaXRlZCBvcGVuczogT0sNCj4+DQo+PiBEZWJ1ZyBpb2N0
-bHM6DQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfTE9HX1NUQVRVUzogT0sgKE5vdCBTdXBwb3J0
-ZWQpDQo+Pg0KPj4gSW5wdXQgaW9jdGxzOg0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19U
-VU5FUi9FTlVNX0ZSRVFfQkFORFM6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRl
-c3QgVklESU9DX0cvU19GUkVRVUVOQ1k6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAg
-IHRlc3QgVklESU9DX1NfSFdfRlJFUV9TRUVLOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAg
-ICAgICB0ZXN0IFZJRElPQ19FTlVNQVVESU86IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAg
-ICAgIHRlc3QgVklESU9DX0cvUy9FTlVNSU5QVVQ6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAg
-ICAgICAgIHRlc3QgVklESU9DX0cvU19BVURJTzogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+PiAgICAg
-ICAgICAgSW5wdXRzOiAwIEF1ZGlvIElucHV0czogMCBUdW5lcnM6IDANCj4+DQo+PiBPdXRwdXQg
-aW9jdGxzOg0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19NT0RVTEFUT1I6IE9LIChOb3Qg
-U3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19GUkVRVUVOQ1k6IE9LIChO
-b3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0VOVU1BVURPVVQ6IE9LIChO
-b3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvUy9FTlVNT1VUUFVUOiBP
-SyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19HL1NfQVVET1VUOiBP
-SyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICBPdXRwdXRzOiAwIEF1ZGlvIE91dHB1dHM6
-IDAgTW9kdWxhdG9yczogMA0KPj4NCj4+IElucHV0L091dHB1dCBjb25maWd1cmF0aW9uIGlvY3Rs
-czoNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19FTlVNL0cvUy9RVUVSWV9TVEQ6IE9LIChOb3Qg
-U3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0VOVU0vRy9TL1FVRVJZX0RWX1RJ
-TUlOR1M6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0RWX1RJ
-TUlOR1NfQ0FQOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19H
-L1NfRURJRDogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+Pg0KPj4gQ29udHJvbCBpb2N0bHM6DQo+PiAg
-ICAgICAgICAgdGVzdCBWSURJT0NfUVVFUllfRVhUX0NUUkwvUVVFUllNRU5VOiBPSyAoTm90IFN1
-cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19RVUVSWUNUUkw6IE9LIChOb3QgU3Vw
-cG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19DVFJMOiBPSyAoTm90IFN1cHBv
-cnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19HL1MvVFJZX0VYVF9DVFJMUzogT0sgKE5v
-dCBTdXBwb3J0ZWQpDQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfKFVOKVNVQlNDUklCRV9FVkVO
-VC9EUUVWRU5UOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19H
-L1NfSlBFR0NPTVA6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIFN0YW5kYXJkIENv
-bnRyb2xzOiAwIFByaXZhdGUgQ29udHJvbHM6IDANCj4+DQo+PiBGb3JtYXQgaW9jdGxzOg0KPj4g
-ICAgICAgICAgIHRlc3QgVklESU9DX0VOVU1fRk1UL0ZSQU1FU0laRVMvRlJBTUVJTlRFUlZBTFM6
-IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0cvU19QQVJNOiBP
-SyAoTm90IFN1cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19HX0ZCVUY6IE9LIChO
-b3QgU3VwcG9ydGVkKQ0KPj4gICAgICAgICAgIHRlc3QgVklESU9DX0dfRk1UOiBPSyAoTm90IFN1
-cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19UUllfRk1UOiBPSyAoTm90IFN1cHBv
-cnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19TX0ZNVDogT0sgKE5vdCBTdXBwb3J0ZWQp
-DQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfR19TTElDRURfVkJJX0NBUDogT0sgKE5vdCBTdXBw
-b3J0ZWQpDQo+PiAgICAgICAgICAgdGVzdCBDcm9wcGluZzogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+
-PiAgICAgICAgICAgdGVzdCBDb21wb3Npbmc6IE9LIChOb3QgU3VwcG9ydGVkKQ0KPj4gICAgICAg
-ICAgIHRlc3QgU2NhbGluZzogT0sgKE5vdCBTdXBwb3J0ZWQpDQo+Pg0KPj4gQ29kZWMgaW9jdGxz
-Og0KPj4gICAgICAgICAgIHRlc3QgVklESU9DXyhUUllfKUVOQ09ERVJfQ01EOiBPSyAoTm90IFN1
-cHBvcnRlZCkNCj4+ICAgICAgICAgICB0ZXN0IFZJRElPQ19HX0VOQ19JTkRFWDogT0sgKE5vdCBT
-dXBwb3J0ZWQpDQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfKFRSWV8pREVDT0RFUl9DTUQ6IE9L
-IChOb3QgU3VwcG9ydGVkKQ0KPj4NCj4+IEJ1ZmZlciBpb2N0bHM6DQo+PiAgICAgICAgICAgdGVz
-dCBWSURJT0NfUkVRQlVGUy9DUkVBVEVfQlVGUy9RVUVSWUJVRjogT0sgKE5vdCBTdXBwb3J0ZWQp
-DQo+PiAgICAgICAgICAgdGVzdCBWSURJT0NfRVhQQlVGOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+
-ICAgICAgICAgICB0ZXN0IFJlcXVlc3RzOiBPSyAoTm90IFN1cHBvcnRlZCkNCj4+DQo+PiBUb3Rh
-bCBmb3IgZGV2aWNlIC9kZXYvdjRsLXN1YmRldjA6IDQwLCBTdWNjZWVkZWQ6IDQwLCBGYWlsZWQ6
-IDAsIFdhcm5pbmdzOiAwDQo+Pg0KPj4gR3JhbmQgVG90YWwgZm9yIHN0bTMyLWRjbWkgZGV2aWNl
-IC9kZXYvbWVkaWEwOiA5MiwgU3VjY2VlZGVkOiA5MSwNCj4+IEZhaWxlZDogMSwgV2FybmluZ3M6
-IDINCj4gDQo+IFRoZSB3YXJuaW5ncyBzaG91bGQgYmUgZml4ZWQgKGJvdGggd2FybmluZ3MgcmVm
-ZXIgdG8gdGhlIHNhbWUgcHJvYmxlbSkuDQo+IA0KPiBUaGUgZmFpbCB3YXMgcHJlc2VudCBiZWZv
-cmUgdGhpcyBwYXRjaCBzZXJpZXMuDQo+IA0KPiBUaGUgY29yZSBwcm9ibGVtIHRoZXJlIGlzIHRo
-YXQgaWYgdGhlcmUgYXJlIG11bHRpcGxlIHBvc3NpYmxlIGZyYW1lc2l6ZXMsDQo+IHRoZW4gY3Jv
-cCBzdXBwb3J0IGlzIGFtYmlndW91czogYWdhaW5zdCB3aGljaCBmcmFtZXNpemUgZG8geW91IGNy
-b3A/DQo+IA0KPiBJIHNlZSB0aGF0IGRjbWlfdHJ5X2ZtdCgpIGhhcyBhIGhldXJpc3RpYyBmb3Ig
-dGhhdC4gV2UgcmVhbGx5IG5lZWQgdG8gZml4DQo+IHRoaXMgaW4gdGhlIEFQSSwgYnV0IHRoaXMg
-c2l0dWF0aW9uIHJhcmVseSBvY2N1cnMuDQo+IA0KPiBTbyBmb3Igbm93IEkgZG9uJ3QgdGhpbmsg
-dGhlcmUgaXMgYSBuZWVkIHRvIGZpeCB0aGUgZmFpbC4NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiAJ
-SGFucw0KPiANCj4+DQo+Pg0KPj4gQlIsDQo+PiBIdWd1ZXMuDQo+Pg0KPj4gT24gNC8xLzE5IDE6
-MTAgUE0sIEhhbnMgVmVya3VpbCB3cm90ZToNCj4+PiBIaSBIdWd1ZXMsDQo+Pj4NCj4+PiBPbiA0
-LzEvMTkgMTE6MzEgQU0sIEh1Z3VlcyBGcnVjaGV0IHdyb3RlOg0KPj4+PiBUaGlzIHBhdGNoIHNl
-cmllIGFsbG93cyB0byBjb25uZWN0IG5vbi1wYXJhbGxlbCBjYW1lcmEgc2Vuc29yIHRvDQo+Pj4+
-IERDTUkgdGhhbmtzIHRvIGEgYnJpZGdlIGNvbm5lY3RlZCBpbiBiZXR3ZWVuIHN1Y2ggYXMgU1RN
-SVBJRDAyIFsxXS4NCj4+Pj4NCj4+Pj4gTWVkaWEgY29udHJvbGxlciBzdXBwb3J0IGlzIGludHJv
-ZHVjZWQgZmlyc3QsIHRoZW4gc3VwcG9ydCBvZg0KPj4+PiBzZXZlcmFsIHN1Yi1kZXZpY2VzIHdp
-dGhpbiBwaXBlbGluZSB3aXRoIGR5bmFtaWMgbGlua2luZw0KPj4+PiBiZXR3ZWVuIHRoZW0uDQo+
-Pj4NCj4+PiBDYW4geW91IHBvc3QgdGhlIG91dHB1dCBvZiB2NGwyLWNvbXBsaWFuY2UgLW0gL2Rl
-di9tZWRpYVggPw0KPj4+DQo+Pj4gVGhhbmtzIQ0KPj4+DQo+Pj4gCUhhbnMNCj4+Pg0KPj4+Pg0K
-Pj4+PiBbMV0gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZGV2aWNldHJlZS9tc2cyNzgw
-MDIuaHRtbA0KPj4+Pg0KPj4+PiBIdWd1ZXMgRnJ1Y2hldCAoMik6DQo+Pj4+ICAgICBtZWRpYTog
-c3RtMzItZGNtaTogYWRkIG1lZGlhIGNvbnRyb2xsZXIgc3VwcG9ydA0KPj4+PiAgICAgbWVkaWE6
-IHN0bTMyLWRjbWk6IGFkZCBzdXBwb3J0IG9mIHNldmVyYWwgc3ViLWRldmljZXMNCj4+Pj4NCj4+
-Pj4gICAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9LY29uZmlnICAgICAgICAgICAgfCAgIDIgKy0N
-Cj4+Pj4gICAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMgfCAyMTMg
-KysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+Pj4+ICAgIDIgZmlsZXMgY2hhbmdlZCwg
-MTc3IGluc2VydGlvbnMoKyksIDM4IGRlbGV0aW9ucygtKQ0KPj4+Pg0KPiA=
+On 4/1/2019 8:01 PM, Thierry Reding wrote:
+> On Mon, Apr 01, 2019 at 04:48:42PM +0530, Vidya Sagar wrote:
+>> On 3/31/2019 12:12 PM, Rob Herring wrote:
+>>> On Tue, Mar 26, 2019 at 08:43:22PM +0530, Vidya Sagar wrote:
+>>>> Add support for Tegra194 PCIe controllers. These controllers are based
+>>>> on Synopsys DesignWare core IP.
+>>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> ---
+>>>>    .../bindings/pci/nvidia,tegra194-pcie.txt          | 209 +++++++++++++++++++++
+>>>>    .../devicetree/bindings/phy/phy-tegra194-p2u.txt   |  34 ++++
+>>>>    2 files changed, 243 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>>>>    create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>>>> new file mode 100644
+>>>> index 000000000000..31527283a0cd
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+>>>> @@ -0,0 +1,209 @@
+>>>> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
+>>>> +
+>>>> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+>>>> +and thus inherits all the common properties defined in designware-pcie.txt.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+>>>> +- device_type: Must be "pci"
+>>>> +- reg: A list of physical base address and length for each set of controller
+>>>> +  registers. Must contain an entry for each entry in the reg-names property.
+>>>> +- reg-names: Must include the following entries:
+>>>> +  "appl": Controller's application logic registers
+>>>> +  "window1": This is the aperture of controller available under 4GB boundary
+>>>> +             (i.e. within 32-bit space). This aperture is typically used for
+>>>> +             accessing config space of root port itself and also the connected
+>>>> +             endpoints (by appropriately programming internal Address
+>>>> +             Translation Unit's (iATU) out bound region) and also to map
+>>>> +             prefetchable/non-prefetchable BARs.
+>>>
+>>> This is usually represented in 'ranges' for BARs.
+>> I added window1 and window2 as the umbrella apertures that each PCIe controller has
+>> and gave a description of how each aperture *can* be used. This is an overview and as
+>> such these two entries are not directly used by the driver.
+>> 'ranges' property gives us the information as to how exactly are window1 and window2
+>> apertures used.
+>> Thierry Reding also gave few comments about these entries. If this is confusing,
+>> I'm ok to remove them as well. Please let me know.
+> 
+> If all you want to do is document how these are used, it may be better
+> to enhance the device tree bindings for the ranges property if it does
+> not describe this fully enough yet, or add comments in the DT nodes to
+> clarify.
+It looks like having window1 and window2 is causing confusion here. I'll remove
+them in my next patch.
+
+> 
+>>>> +  "config": As per the definition in designware-pcie.txt
+>>>> +  "atu_dma": iATU and DMA register. This is where the iATU (internal Address
+>>>> +             Translation Unit) registers of the PCIe core are made available
+>>>> +             fow SW access.
+>>>> +  "dbi": The aperture where root port's own configuration registers are
+>>>> +         available
+>>>> +  "window2": This is the larger (compared to window1) aperture available above
+>>>> +             4GB boundary (i.e. in 64-bit space). This is typically used for
+>>>> +             mapping prefetchable/non-prefetchable BARs of endpoints
+>>>> +- interrupts: A list of interrupt outputs of the controller. Must contain an
+>>>> +  entry for each entry in the interrupt-names property.
+>>>> +- interrupt-names: Must include the following entries:
+>>>> +  "intr": The Tegra interrupt that is asserted for controller interrupts
+>>>> +  "msi": The Tegra interrupt that is asserted when an MSI is received
+>>>> +- bus-range: Range of bus numbers associated with this controller
+>>>> +- #address-cells: Address representation for root ports (must be 3)
+>>>> +  - cell 0 specifies the bus and device numbers of the root port:
+>>>> +    [23:16]: bus number
+>>>> +    [15:11]: device number
+>>>> +  - cell 1 denotes the upper 32 address bits and should be 0
+>>>> +  - cell 2 contains the lower 32 address bits and is used to translate to the
+>>>> +    CPU address space
+>>>> +- #size-cells: Size representation for root ports (must be 2)
+>>>> +- ranges: Describes the translation of addresses for root ports and standard
+>>>> +  PCI regions. The entries must be 7 cells each, where the first three cells
+>>>> +  correspond to the address as described for the #address-cells property
+>>>> +  above, the fourth and fifth cells are for the physical CPU address to
+>>>> +  translate to and the sixth and seventh cells are as described for the
+>>>> +  #size-cells property above.
+>>>> +  - Entries setup the mapping for the standard I/O, memory and
+>>>> +    prefetchable PCI regions. The first cell determines the type of region
+>>>> +    that is setup:
+>>>> +    - 0x81000000: I/O memory region
+>>>> +    - 0x82000000: non-prefetchable memory region
+>>>> +    - 0xc2000000: prefetchable memory region
+>>>> +  Please refer to the standard PCI bus binding document for a more detailed
+>>>> +  explanation.
+>>>> +- #interrupt-cells: Size representation for interrupts (must be 1)
+>>>> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+>>>> +  Please refer to the standard PCI bus binding document for a more detailed
+>>>> +  explanation.
+>>>> +- clocks: Must contain an entry for each entry in clock-names.
+>>>> +  See ../clocks/clock-bindings.txt for details.
+>>>> +- clock-names: Must include the following entries:
+>>>> +  - core_clk
+>>>> +- resets: Must contain an entry for each entry in reset-names.
+>>>> +  See ../reset/reset.txt for details.
+>>>> +- reset-names: Must include the following entries:
+>>>> +  - core_apb_rst
+>>>> +  - core_rst
+>>>> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
+>>>> +- phy-names: Must include an entry for each active lane.
+>>>> +  "pcie-p2u-N": where N ranges from 0 to one less than the total number of lanes
+>>>> +- Controller dependent register offsets
+>>>> +  - nvidia,event-cntr-ctrl: EVENT_COUNTER_CONTROL reg offset
+>>>> +      0x168 - FPGA
+>>>> +      0x1a8 - C1, C2 and C3
+>>>> +      0x1c4 - C4
+>>>> +      0x1d8 - C0 and C5
+>>>> +  - nvidia,event-cntr-data: EVENT_COUNTER_DATA reg offset
+>>>> +      0x16c - FPGA
+>>>> +      0x1ac - C1, C2 and C3
+>>>> +      0x1c8 - C4
+>>>> +      0x1dc - C0 and C5
+>>>> +- nvidia,controller-id : Controller specific ID
+>>>> +      0x0 - C0
+>>>> +      0x1 - C1
+>>>> +      0x2 - C2
+>>>> +      0x3 - C3
+>>>> +      0x4 - C4
+>>>> +      0x5 - C5
+>>>> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
+>>>> +
+>>>> +Optional properties:
+>>>> +- nvidia,max-speed: limits controllers max speed to this value.
+>>>> +    1 - Gen-1 (2.5 GT/s)
+>>>> +    2 - Gen-2 (5 GT/s)
+>>>> +    3 - Gen-3 (8 GT/s)
+>>>> +    4 - Gen-4 (16 GT/s)
+>>>> +- nvidia,init-speed: limits controllers init speed to this value.
+>>>> +    1 - Gen-1 (2. 5 GT/s)
+>>>> +    2 - Gen-2 (5 GT/s)
+>>>> +    3 - Gen-3 (8 GT/s)
+>>>> +    4 - Gen-4 (16 GT/s)
+>>>
+>>> Don't we have standard speed properties?
+>> Not that I'm aware of. If you come across any, please do let me know and
+>> I'll change these.
+> 
+> See Documentation/devicetree/bindings/pci/pci.txt, max-link-speed.
+> There's a standard of_pci_get_max_link_speed() property that reads it
+> from device tree.
+Thanks for the pointer. I'll switch to this in the next patch.
+
+> 
+>>> Why do we need 2 values?
+>> max-speed configures the controller to advertise the speed mentioned through
+>> this flag, whereas, init-speed gets the link up at this speed and software
+>> can further take the link speed to a different speed by retraining the link.
+>> This is to give flexibility to developers depending on the platform.
+> 
+> This seems to me like overcomplicating things. Couldn't we do something
+> like start in the slowest mode by default and then upgrade if endpoints
+> support higher speeds?
+> 
+> I'm assuming that the maximum speed is already fixed by the IP hardware
+> instantiation, so why would we want to limit it additionally? Similarly,
+> what's the use-case for setting the initial link speed to something
+> other than the lowest speed?
+You are right that maximum speed supported by hardware is fixed and through
+max-link-speed DT option, flexibility is given to limit it to the desired speed
+for a controller on a given platform. As mentioned in the documentation for max-link-speed,
+this is a strategy to avoid unnecessary operation for unsupported link speed.
+There is no real use-case as such even for setting the initial link speed, but it is
+there to give flexibility (for any debugging) to get the link up at a certain speed
+and then take it to a higher speed at a later point of time. Please note that, hardware
+as such already has the capability to take the link to maximum speed agreed by both
+upstream and downstream ports. 'nvidia,init-speed' is only to give more flexibility
+while debugging. I'm OK to remove it if this is not adding much value here.
+
+> 
+>>>> +- nvidia,disable-aspm-states : controls advertisement of ASPM states
+>>>> +    bit-0 to '1' : disables advertisement of ASPM-L0s
+>>>> +    bit-1 to '1' : disables advertisement of ASPM-L1. This also disables
+>>>> +                 advertisement of ASPM-L1.1 and ASPM-L1.2
+>>>> +    bit-2 to '1' : disables advertisement of ASPM-L1.1
+>>>> +    bit-3 to '1' : disables advertisement of ASPM-L1.2
+>>>
+>>> Seems like these too should be common.
+>> This flag controls the advertisement of different ASPM states by root port.
+>> Again, I'm not aware of any common method for this.
+> 
+> rockchip-pcie-host.txt documents an "aspm-no-l0s" property that prevents
+> the root complex from advertising L0s. Sounds like maybe following a
+> similar scheme would be best for consistency. I think we'll also want
+> these to be non-NVIDIA specific, so drop the "nvidia," prefix and maybe
+> document them in pci.txt so that they can be more broadly used.
+Since we have ASPM-L0s, L1, L1.1 and L1.2 states, I prefer to have just one entry
+with different bit positions indicating which particular state should not be
+advertised by root port. Do you see any particular advantage to have 4 different options?
+If having one options is fine, I'll remove "nvidia," and document it in pci.txt.
+
+> 
+>>>> +- nvidia,disable-clock-request : gives a hint to driver that there is no
+>>>> +    CLKREQ signal routing on board
+>>>> +- nvidia,update-fc-fixup : needs it to improve perf when a platform is designed
+>>>> +    in such a way that it satisfies at least one of the following conditions
+>>>> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
+>>>> +    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
+>>>
+>>> What is Cx?
+>> Cx is the Controller with its ID.
+>>
+>>>
+>>>> +       a) speed is Gen-2 and MPS is 256B
+>>>> +       b) speed is >= Gen-3 with any MPS
+>>>> +- nvidia,cdm-check : Enables CDM checking. For more information, refer Synopsis
+>>>> +    DesignWare Cores  PCI Express Controller Databook r4.90a Chapter S.4
+>>>> +- nvidia,enable-power-down : Enables power down of respective controller and
+>>>> +    corresponding PLLs if they are not shared by any other entity
+>>>> +- "nvidia,pex-wake" : Add PEX_WAKE gpio number to provide wake support.
+>>>> +- "nvidia,plat-gpios" : Add gpio number that needs to be configured before
+>>>> +   system goes for enumeration. There could be platforms where enabling 3.3V and
+>>>> +   12V power supplies are done through GPIOs, in which case, list of all such
+>>>> +   GPIOs can be specified through this property.
+>>>
+>>> These should be split out to their specific function.
+>> Enabling Power rails is just an example and depending on the platform, there could be
+>> some on-board muxes which are controlled through GPIOs and all such platform specific
+>> configuration can be handled through this flag.
+> 
+> Doing this via a "generic" GPIO binding is bound to break at some point.
+> What if at some point one of those muxes needs additional power, perhaps
+> controlled through an I2C regulator? Or if the mux requires multiple
+> GPIOs for the correct configuration? How do you allow the mux to be
+> reconfigured to one of the other options?
+> 
+> If all you have is a generic GPIO consumer of GPIOs there's not enough
+> context for the driver to do anything with these GPIOs other than
+> perhaps setting them to a specific value at probe time. In that case you
+> could achieve the same thing using a gpio-hog.
+> 
+> I think we need to identify what the various uses for these can be and
+> then find the right bindings (or come up with new ones) to properly
+> describe the actual hardware. Otherwise we're going to paint ourselves
+> into a corner.
+> 
+> Are there any use-cases besides regulators and muxes? For regulators we
+> already have fixed and GPIO regulators, and for muxes there are a number
+> of bindings defined in Documentation/devicetree/bindings/mux.
+We don't have any other use cases apart from regulator and muxes and I agree with
+your comment that we should use regulator/mux frameworks than this generic GPIO
+configuration. I'll make changes for this in the next patch series.
+
+> 
+> Thierry
+> 
+
