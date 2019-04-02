@@ -5,61 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D67C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04A6C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2728120857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAF0206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="irdhOPyj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hBwOt1KY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfDBV4I (ORCPT
+        id S1726856AbfDBV4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:56:08 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:55802 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDBV4H (ORCPT
+        Tue, 2 Apr 2019 17:56:12 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:50843 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfDBV4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:56:07 -0400
-Received: by mail-pg1-f201.google.com with SMTP id 14so10734113pgf.22
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:56:06 -0700 (PDT)
+        Tue, 2 Apr 2019 17:56:10 -0400
+Received: by mail-vk1-f201.google.com with SMTP id k78so7058038vkk.17
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=2arIsG/tUSBODeVZx7IuFZx2ONfMcieJcM9WtFlfh5Y=;
-        b=irdhOPyj25p21xUXEp9WqiYzCS+PN+hSOPVjqRf/1pMl2yr+Srt+K7/1wUPnJoGYm0
-         poW3I8ln2Q54tERGmk/Gaeo0mM71hWfqCx0tzpbnwQ59fBDlEMxigRqlQucX31Ybs0jo
-         0JgMgAiRNNLxUfqaX35Y/KFntKmR/yBwecK5W7VLhffmD/TZRyfC+XOYhLf/594xGDaw
-         MEMwPwsok0sMsLOFuWvrEPl/Kn0NzTWNEC64KgFaoK6z5NmCVZ0GaWaKoQSpRKtjgu3k
-         jtX0IGiLHE//Isvb8+5wBdrWS+W+pAFyC3bXafIEseARTrtGQyeGuyKXfpuVG7jrSUHg
-         c3uQ==
+        bh=xAnLkZL1jyDU4wUU0qf3ZAhpM4BKPDzENsbu9cKQ3gk=;
+        b=hBwOt1KY/S2uIniM4uFql4vhJq1+I+SV0JwBPnd6cpnh5u70Q0egl+Pda6RtRrk4G9
+         XryZ14ijBJwA90CttJ9xqQr6MT9kqr4AEkbbh+8ZUJd2jF63Lv8fYLSIRyjaO1hFTaHe
+         qypGhs4EgIN1eTJKz/p/VN/BhNNnmpZk50RIDbb5H0nB+IHXMnULLix0LEuMkhkpJUzh
+         GoA0tqd6LYz52L1efoenVNY0J/7oyv2FpYrLzz9oQrdAnINEU8S4uowwVAoMDh/9tTLk
+         R5oWdSWJ83ZoR9Jz9MSFKG5Lo3ikcvUfQTS1yQlu1lsTwFAQWs764Z/15Hp1WYjPxPhr
+         RpLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=2arIsG/tUSBODeVZx7IuFZx2ONfMcieJcM9WtFlfh5Y=;
-        b=glOzSauTfZI7mHJZ4VI53E0NYk1lH4Hymr0OFZAq7xKbo5qNysoSlJM9GedhZCsq/P
-         Z0SVA1fsVk4mwyFtz2PNmJm9JKj6JmfC/vhKXtE63m9Xo+xPstIPKE0Rda9Yl0udLWXt
-         nu769ChR36xg6aXmSgi2dbXG1ETBNrYFFi1M5a8zWERo9417h/Tolp8JLJG3AapLmbd7
-         wnJdJ618a2ZU/+f9dKTorNrTX8YtWHPVUUZToZUUmUTEPkioEMJv1jQIlRQwTfwL9v6b
-         OiU70pN9/E0cJetxnSfbwRNxNUCGzR5AIqULVbUQOSUqgPM2MbDqFVrKkjydS0WqI/sX
-         LkKw==
-X-Gm-Message-State: APjAAAXTRXYbBBgahoBvDONjXeY7x2YOCd1KsQRLEHnVVRHbJmzWU0W1
-        7wx273JQJQKPfy+uyCVs33UHVHmXe8ISlUzXfs1AJg==
-X-Google-Smtp-Source: APXvYqyDf5uijU2bb1TFP10+0uBx4zXwelGC8AzwFvArYzNvm6TDP60F9adar3mAL+ydsK93+s7oHZ13Yk2FE3z5G7Jrtg==
-X-Received: by 2002:a63:7c01:: with SMTP id x1mr1196450pgc.146.1554242165653;
- Tue, 02 Apr 2019 14:56:05 -0700 (PDT)
-Date:   Tue,  2 Apr 2019 14:55:55 -0700
+        bh=xAnLkZL1jyDU4wUU0qf3ZAhpM4BKPDzENsbu9cKQ3gk=;
+        b=tNnvugmFS/UjJ/bKTbop9kP1mizWahjlimwbR8Z/TCxylBQ4AZh+dkKPdj4Kn9aZNl
+         6iG2rpvFktrMwdJDlNqxVtxViRBpCOxaOJkWimCzUcK63G95mBJGYBR4usRdanI+akEg
+         IJKgPPRt6CwIxt1fOjxM52ARXuNJmWBSAKaJ7AdxxYlgV532lVbQ1eUPvP3Ekx6uk/uK
+         Ty2Afb6fd6gJ0UJP/4K+btfC7taLOA5g1Nw6qcobVqzYiJEwmD6n4zvJakhUoIIKciMT
+         HGVA4jZRV8Nj8Ap3T9oQIrqkE+T0Q2N43byGDy6ta+Cu5BPBZHXrDyBAfl8FonMdkfIZ
+         cD9w==
+X-Gm-Message-State: APjAAAUt5+bYTgn0cscy8CeTxhdPIEKqxN+1gxI2mjM2xpQulu9yzRg2
+        EmgkPKSm8vLJUixHbix4+1aR8yjdwq+7ZhIn6mEm5g==
+X-Google-Smtp-Source: APXvYqwrNJFsd5Ezw4ZaFEPU/r7zZ4SKNLVE1WTRINE8K7foX3ow2e4EGMGfbGf0SXKgkqqpmznTS0V0FljbkM8yyeWxKA==
+X-Received: by 2002:a67:e295:: with SMTP id g21mr8830432vsf.24.1554242168324;
+ Tue, 02 Apr 2019 14:56:08 -0700 (PDT)
+Date:   Tue,  2 Apr 2019 14:55:56 -0700
 In-Reply-To: <20190402215556.257406-1-matthewgarrett@google.com>
-Message-Id: <20190402215556.257406-2-matthewgarrett@google.com>
+Message-Id: <20190402215556.257406-3-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190402215556.257406-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH 1/2] efi: Fix cast to pointer from integer of different size
- in TPM log code
+Subject: [PATCH 2/2] tpm: Fix builds on platforms that lack early_memremap()
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     linux-integrity@vger.kernel.org
 Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
@@ -74,30 +73,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-8bfcff4a6a1d9d7226bb63a7da758b82d9ab4373 introduced a cast from
-efi_physical_address_t to (void *), which are different sizes on 32-bit.
-Fix that. Caught by the 0-day test bot.
+On EFI systems, __calc_tpm2_event_size() needs to be able to map tables
+at early boot time in order to extract information from them.
+Unfortunately this interacts badly with other architectures that don't
+provide the early_memremap() interface but which may still have other
+mechanisms for obtaining crypto-agile logs. Abstract this away so we
+can avoid the need for two implementations while still avoiding breakage
+on architectures that don't require remapping of the table.
 
 Signed-off-by: Matthew Garrett <mjg59@google.com>
 ---
- drivers/firmware/efi/libstub/tpm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/tpm.c   |  3 +++
+ include/linux/tpm_eventlog.h | 32 ++++++++++++++++++++------------
+ 2 files changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
-index b6e93e14fcf1..6b3b507a54eb 100644
---- a/drivers/firmware/efi/libstub/tpm.c
-+++ b/drivers/firmware/efi/libstub/tpm.c
-@@ -114,8 +114,8 @@ void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
- 			 */
- 			last_entry_size =
- 				__calc_tpm2_event_size((void *)last_entry_addr,
--						       (void *)log_location,
--						       false);
-+						    (void *)(long)log_location,
-+						    false);
- 		} else {
- 			last_entry_size = sizeof(struct tcpa_event) +
- 			   ((struct tcpa_event *) last_entry_addr)->event_size;
+diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+index f2a13cbb8688..fe48150f06d1 100644
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -4,6 +4,9 @@
+  *     Thiebaud Weksteen <tweek@google.com>
+  */
+ 
++#define TPM_MEMREMAP(start, size) early_memremap(start, size)
++#define TPM_MEMUNMAP(start, size) early_memunmap(start, size)
++
+ #include <linux/efi.h>
+ #include <linux/init.h>
+ #include <linux/memblock.h>
+diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+index d889e12047d9..0ca27bc053af 100644
+--- a/include/linux/tpm_eventlog.h
++++ b/include/linux/tpm_eventlog.h
+@@ -128,6 +128,14 @@ struct tcg_algorithm_info {
+ 	struct tcg_algorithm_size digest_sizes[];
+ };
+ 
++#ifndef TPM_MEMREMAP
++#define TPM_MEMREMAP(start, size) NULL
++#endif
++
++#ifndef TPM_MEMUNMAP
++#define TPM_MEMUNMAP(start, size) do{} while(0)
++#endif
++
+ /**
+  * __calc_tpm2_event_size - calculate the size of a TPM2 event log entry
+  * @event:        Pointer to the event whose size should be calculated
+@@ -171,8 +179,8 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	/* Map the event header */
+ 	if (do_mapping) {
+ 		mapping_size = marker - marker_start;
+-		mapping = early_memremap((unsigned long)marker_start,
+-					 mapping_size);
++		mapping = TPM_MEMREMAP((unsigned long)marker_start,
++				       mapping_size);
+ 		if (!mapping) {
+ 			size = 0;
+ 			goto out;
+@@ -192,10 +200,10 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 
+ 		/* Map the digest's algorithm identifier */
+ 		if (do_mapping) {
+-			early_memunmap(mapping, mapping_size);
++			TPM_MEMUNMAP(mapping, mapping_size);
+ 			mapping_size = marker - marker_start + halg_size;
+-			mapping = early_memremap((unsigned long)marker_start,
+-						 mapping_size);
++			mapping = TPM_MEMREMAP((unsigned long)marker_start,
++					       mapping_size);
+ 			if (!mapping) {
+ 				size = 0;
+ 				goto out;
+@@ -212,10 +220,10 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 
+ 				/* Map the digest content itself */
+ 				if (do_mapping) {
+-					early_memunmap(mapping, mapping_size);
++					TPM_MEMUNMAP(mapping, mapping_size);
+ 					mapping_size = marker - marker_start;
+-					mapping = early_memremap((unsigned long)marker_start,
+-						      mapping_size);
++					mapping = TPM_MEMREMAP((unsigned long)marker_start,
++							       mapping_size);
+ 					if (!mapping) {
+ 						size = 0;
+ 						goto out;
+@@ -238,10 +246,10 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 	 * we don't need to map it
+ 	 */
+ 	if (do_mapping) {
+-		early_memunmap(marker_start, mapping_size);
++		TPM_MEMUNMAP(marker_start, mapping_size);
+ 		mapping_size += sizeof(event_field->event_size);
+-		mapping = early_memremap((unsigned long)marker_start,
+-					 mapping_size);
++		mapping = TPM_MEMREMAP((unsigned long)marker_start,
++				       mapping_size);
+ 		if (!mapping) {
+ 			size = 0;
+ 			goto out;
+@@ -256,7 +264,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+ 		size = 0;
+ out:
+ 	if (do_mapping)
+-		early_memunmap(mapping, mapping_size);
++		TPM_MEMUNMAP(mapping, mapping_size);
+ 	return size;
+ }
+ 
 -- 
 2.21.0.392.gf8f6787159e-goog
 
