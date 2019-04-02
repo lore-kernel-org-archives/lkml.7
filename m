@@ -2,103 +2,143 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EECC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E419C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969192084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B29820880
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="g3m1Y2Sc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfDBDJ7 (ORCPT
+        id S1728897AbfDBDKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:09:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5650 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726841AbfDBDJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:09:58 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [10.3.19.208])
-        by Forcepoint Email with ESMTP id B0DEEB5F7C4F7C7DE724;
-        Tue,  2 Apr 2019 11:09:56 +0800 (CST)
-Received: from [127.0.0.1] (10.184.191.73) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Tue, 2 Apr 2019
- 11:09:47 +0800
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <mingfangsen@huawei.com>, <liuzhiqiang26@huawei.com>,
-        <zhangwenhao8@huawei.com>, <wangxiaogang3@huawei.com>
-From:   hujunwei <hujunwei4@huawei.com>
-Subject: [PATCH v3 net] ipv6: Fix dangling pointer when ipv6 fragment
-Message-ID: <44e8dcf8-bf64-0407-65bb-122d0853c672@huawei.com>
-Date:   Tue, 2 Apr 2019 11:09:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 1 Apr 2019 23:10:24 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44416 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfDBDKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 23:10:24 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g12so5484889pll.11
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hp60OTE4ke8iP5Aud+CmanJ0ZyIKgseuIbzLLPcisQY=;
+        b=g3m1Y2ScyzDAURubjhsTnVSDieFyBlqPSM2LC7CUatm8gRlzI4Z4XQ8e+sauoBVcMy
+         /Si0ZgUXDkb0dPj3vSxlgc5r0s2q7Upfik19UZen265H5YZZ42iiEK9QbuX7YonIPVGD
+         d0/tPGVBnFEdWBuZzWmyAl7nqsH30axLzN9a/pDbloDEH6lC9LU9a4jIP9tdhzmsciY5
+         S3tIIQOc4z1gsawWCFsfc9AkK7pkcFlCQf4Z5R8i1IFoxZ3IVzHzOFybLqrgNgncMa7W
+         Yh4ifra9SolAtD3ZfW1fVy94mG7zhGcdjiK400DReloJN9yY0S5qFzHvofEschSfANPf
+         kDSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hp60OTE4ke8iP5Aud+CmanJ0ZyIKgseuIbzLLPcisQY=;
+        b=D5ujoxlQj6GNcBMRblKduPLcOndkhU1v8uR7ntjT53kA89N8wl/D20NYm8GhR/HOGF
+         xzlY32AsfK21LZYwHZ/+4l0mpOP2lQaH+6MYb0qHE4neSIGMm3ptI3cVbGOlICnPNPu2
+         HslEXUD9xxvDtUrNyuRne8fzRJc43KZxx20spwxH/M0HNUyf3M7HxVYqoH0pIcqsLgf8
+         VYQZhyyTMm6wc4fmnSqtflvRilEHmKFwZEcZOKwg5U+8C2VOuXBsubcRzgIbaZRVdjiM
+         AVbc9XD56fsQDzveD2uekvZe0cjhs6teEkl/dlLqUVHRUaf5eBjW3gCb2usN1D9JKBGK
+         S1mg==
+X-Gm-Message-State: APjAAAXVB5U+Y4BB04HP9u3BP9C7/3QuCrCP2fDjxgpVPWgk/iZZimGB
+        siYN6wESULfQgY1Q0T7A1W1f3A==
+X-Google-Smtp-Source: APXvYqyBVin/OFPJ5V12iXbP2gcs5Osv/4t27BzE77qH7pR8fgo4gJrG7KlV5JQtMOT9MiQxqhVPIg==
+X-Received: by 2002:a17:902:2c83:: with SMTP id n3mr69465358plb.281.1554174623140;
+        Mon, 01 Apr 2019 20:10:23 -0700 (PDT)
+Received: from trong-glaptop.imgcgcw.net ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id c17sm16168464pfd.76.2019.04.01.20.10.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 20:10:22 -0700 (PDT)
+From:   trong@android.com
+To:     oberpar@linux.ibm.com, akpm@linux-foundation.org
+Cc:     ndesaulniers@google.com, ghackmann@android.com, linux-mm@kvack.org,
+        kbuild-all@01.org, rdunlap@infradead.org, lkp@intel.com,
+        linux-kernel@vger.kernel.org, Tri Vo <trong@android.com>
+Subject: [PATCH v3] gcov: fix when CONFIG_MODULES is not set
+Date:   Tue,  2 Apr 2019 10:09:56 +0700
+Message-Id: <20190402030956.48166-1-trong@android.com>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.191.73]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junwei Hu <hujunwei4@huawei.com>
+From: Tri Vo <trong@android.com>
 
-At the beginning of ip6_fragment func, the prevhdr pointer is
-obtained in the ip6_find_1stfragopt func.
-However, all the pointers pointing into skb header may change
-when calling skb_checksum_help func with
-skb->ip_summed = CHECKSUM_PARTIAL condition.
-The prevhdr pointe will be dangling if it is not reloaded after
-calling __skb_linearize func in skb_checksum_help func.
+Fixes: 8c3d220cb6b5 ("gcov: clang support")
 
-Here, I add a variable, nexthdr_offset, to evaluate the offset,
-which does not changes even after calling __skb_linearize func.
-
-Fixes: 405c92f7a541 ("ipv6: add defensive check for CHECKSUM_PARTIAL skbs in ip_fragment")
-Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
-Reported-by: Wenhao Zhang <zhangwenhao8@huawei.com>
-Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+Cc: Greg Hackmann <ghackmann@android.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: linux-mm@kvack.org
+Cc: kbuild-all@01.org
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Tri Vo <trong@android.com>
 ---
-V2->V3:
-- fix patch format issue
-- add Acked-by
+ kernel/gcov/clang.c   | 4 ++++
+ kernel/gcov/gcc_3_4.c | 4 ++++
+ kernel/gcov/gcc_4_7.c | 4 ++++
+ 3 files changed, 12 insertions(+)
 
- net/ipv6/ip6_output.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
-index edbd12067170..533be3268e52 100644
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -601,11 +601,12 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 				inet6_sk(skb->sk) : NULL;
- 	struct ipv6hdr *tmp_hdr;
- 	struct frag_hdr *fh;
--	unsigned int mtu, hlen, left, len;
-+	unsigned int mtu, hlen, left, len, nexthdr_offset;
- 	int hroom, troom;
- 	__be32 frag_id;
- 	int ptr, offset = 0, err = 0;
- 	u8 *prevhdr, nexthdr = 0;
-+	nexthdr_offset = prevhdr - skb_network_header(skb);
-
- 	err = ip6_find_1stfragopt(skb, &prevhdr);
- 	if (err < 0)
-@@ -646,6 +647,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 	    (err = skb_checksum_help(skb)))
- 		goto fail;
-
-+	prevhdr = skb_network_header(skb) + nexthdr_offset;
- 	hroom = LL_RESERVED_SPACE(rt->dst.dev);
- 	if (skb_has_frag_list(skb)) {
- 		unsigned int first_len = skb_pagelen(skb);
+diff --git a/kernel/gcov/clang.c b/kernel/gcov/clang.c
+index 125c50397ba2..cfb9ce5e0fed 100644
+--- a/kernel/gcov/clang.c
++++ b/kernel/gcov/clang.c
+@@ -223,7 +223,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+  */
+ bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+ {
++#ifdef CONFIG_MODULES
+ 	return within_module((unsigned long)info->filename, mod);
++#else
++	return false;
++#endif
+ }
+ 
+ /* Symbolic links to be created for each profiling data file. */
+diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
+index 801ee4b0b969..8fc30f178351 100644
+--- a/kernel/gcov/gcc_3_4.c
++++ b/kernel/gcov/gcc_3_4.c
+@@ -146,7 +146,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+  */
+ bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+ {
++#ifdef CONFIG_MODULES
+ 	return within_module((unsigned long)info, mod);
++#else
++	return false;
++#endif
+ }
+ 
+ /* Symbolic links to be created for each profiling data file. */
+diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
+index ec37563674d6..0b6886d4a4dd 100644
+--- a/kernel/gcov/gcc_4_7.c
++++ b/kernel/gcov/gcc_4_7.c
+@@ -159,7 +159,11 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
+  */
+ bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
+ {
++#ifdef CONFIG_MODULES
+ 	return within_module((unsigned long)info, mod);
++#else
++	return false;
++#endif
+ }
+ 
+ /* Symbolic links to be created for each profiling data file. */
 -- 
-2.19.1
+2.21.0.392.gf8f6787159e-goog
 
