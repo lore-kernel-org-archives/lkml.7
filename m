@@ -2,94 +2,145 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47972C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6F4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C0A206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A72C206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jlCRUBBl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dOzQEPkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbfDBDxW (ORCPT
+        id S1728931AbfDBDy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:53:22 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45608 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbfDBDxW (ORCPT
+        Mon, 1 Apr 2019 23:54:28 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39883 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbfDBDy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:53:22 -0400
-Received: by mail-pg1-f194.google.com with SMTP id y3so5814529pgk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:53:22 -0700 (PDT)
+        Mon, 1 Apr 2019 23:54:28 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b65so5537260plb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lal2WHvtJNuY3hfsxdKB3Hc+UyF+52PkMoX1ZCyfv7o=;
-        b=jlCRUBBlnP20P4DQCAMtms2plBMcl/q9IhsY/OWk/0iLqrGjUqW4T7TdLUuOGqM7lq
-         /DkBGtjiji/Fh6RZra8heqMxU2xsqgaHwMHwnbAE6p++f+gWNESGWaxYA123ll3KjCZ7
-         r7H/Mq7gWmEI4aEtXDN2D3NXxeqvSRZ7vwWqq+JFO6KuNwhXhQuEoUy1Zs7VAtwllcTZ
-         ZdYDdYyYP49ROMLNlvOs4MEkmtx2btdWAfJBYfs2PAK6ZfpAIncp7wlYAQVExmr/niWN
-         wIeDCyrCyWV9FcZsOLLbcauZOAswkUrxB8fyBoOxD3GhIgut/Zqre1H2s09VEEC3dsNv
-         DRlQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bS9a/wdyzrQl8eX3az2nu97FEDv8n+9ViI7DAmxGGLI=;
+        b=dOzQEPkFsOSZ/JaXiC3jkpE3hntOwGrW+pFT4/Of21vxrU+PTTv8QgKGdWhp1CP0OM
+         2H4qkFEdY5VwRtTpsw3Mcvl2RfpH3UM/GvM9S2qVTfisy8RLQCGkDAI56lX4ACyaZutU
+         anExfsAYF3hcm8gRzYAZ50X5X6iI00JbumE0oPRuVTZfzw26ENt/Jg5T6UA+YSsPQJti
+         Rj/AfTdinrIAA7f+ff2gMhqVzwYn3DoKuOaP/XBtrh0XYRmXiFsJPT78GtlaaU2aUhkQ
+         +xpqFWm+QArxv6Qf2tDJsxoVZGu+S3AJ6RkEGNW9hRBu1JTmo/L//qn/5jh06SEUmMP2
+         TojA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lal2WHvtJNuY3hfsxdKB3Hc+UyF+52PkMoX1ZCyfv7o=;
-        b=WZCIDKAIUjZ9DT0qXzYS2OpAnACcy2GiL5EDAXZA9bpdz6yIwF5vDzgoXnneJyT1MD
-         bNl+HgKFBvyEpXtPO0XjuXWmKuzgAMAPVITLPoCJ5pPs4S01mT68p3sEjtC/G4VPUTUW
-         MP9keULKiCBtA2vmRVaUf6Y/HNg/r44E0OnsWpBs8Q5wfCBLXR7Dt+u7QKusf4Qab1n7
-         hA88BcPKC6YHYIjxLJy3dH/tL86JbAs2JnXiorLnmdIdzIbXoL488IxRKScVi88UJDAF
-         tuBS5hswd+AzpVNuwM50r5c4+lJ2o2gMrzxvTu1OvqKFIWUzyQj+uiIHyF88IN47KFXj
-         89MA==
-X-Gm-Message-State: APjAAAVt0WgQDrbqFTXj05/fI8L8lfehEYO89boiQhXuvwIX3ESOWLNc
-        kYE6w2zhY3/wwabyEBEYqMjILg==
-X-Google-Smtp-Source: APXvYqw4X3sAutZmbz6/wstJxUMCVxqJpqTM2zFiUQbwL9CnrSf6G7krTn2j0y6D0oyn8hN+YmAaFg==
-X-Received: by 2002:a65:5c42:: with SMTP id v2mr5253116pgr.360.1554177202007;
-        Mon, 01 Apr 2019 20:53:22 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id f65sm17658298pff.21.2019.04.01.20.53.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 20:53:21 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 04:53:17 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: sm501: Fix potential NULL pointer dereference
-Message-ID: <20190402035317.GJ4187@dell>
-References: <20190302212727.14118-1-pakki001@umn.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bS9a/wdyzrQl8eX3az2nu97FEDv8n+9ViI7DAmxGGLI=;
+        b=stoSqTVypcqovmas/zOmTVDl2CMAvuskPvG5wYkcUm2dDZ27W7oZadzz7efCKFb2Ef
+         AzquhEXnELTdhXlN+NH8ce9N3I64Chdtfb7g8c19GL7oo5vNx1Dvn+mBPuoANjvkfUGZ
+         hKwP8OJPZ9YEnv0yDuBOvBdlXT9n93z1ryHI++pEXbqsUJwjP+L5N5ILWIaYw58sFJM1
+         Y4KZROiL8UlC+gaorK7ykmrol0tmVEAh66EsOKPZ/Yg6rf292YzOMuHDFSyRcOXgg3lx
+         r97y6DJh6TM3ZSm6knRaR1EUq43dS9AUu1E3xgw1JvnfZy5qRjHdVhRtJVIDH0tm+SPm
+         K2rw==
+X-Gm-Message-State: APjAAAUFeM19oklgC9jJeV2wP2p+s94XPuZ5LRlSeCz/9okf9R8/KR4P
+        h/O9SY3LxDSSmtaU15MvPKBBVCyseE3r/ZoXW9lSXg==
+X-Google-Smtp-Source: APXvYqxkeYf/1TfPQYzoZV7sMv/JsIp6VjvXXmY+7RcEjiQLUx1YeYy+SpBMuTcXFJDdsZzwwatnw2gk6QmpVCaPhjs=
+X-Received: by 2002:a17:902:8a8b:: with SMTP id p11mr59632904plo.227.1554177266898;
+ Mon, 01 Apr 2019 20:54:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190302212727.14118-1-pakki001@umn.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190211193008.24101-1-ndesaulniers@google.com>
+ <20190211193008.24101-3-ndesaulniers@google.com> <CAK7LNATZY-K4g81LLvXpjp=+oMSY8L0wQoVXgHt-Bjrb2WXnNg@mail.gmail.com>
+ <CAKwvOdmyNFsV=67eLQtETSDJJyDZ8aEJY1+LHuoP4OtpdQOdWQ@mail.gmail.com> <CAK7LNAQMoYNevPns0zSaSx0iU5LA+2146snNDmy9fF8v5ej5tg@mail.gmail.com>
+In-Reply-To: <CAK7LNAQMoYNevPns0zSaSx0iU5LA+2146snNDmy9fF8v5ej5tg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 2 Apr 2019 10:54:15 +0700
+Message-ID: <CAKwvOd=h9F1hVjE7C=5mjtF0EXnBW9zTuR78gczhHBv9YUT=Cw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] Makefile: lld: tell clang to use lld
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Smith <Peter.Smith@arm.com>,
+        Stephen Hines <srhines@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 02 Mar 2019, Aditya Pakki wrote:
+On Sat, Feb 16, 2019 at 10:09 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Thu, Feb 14, 2019 at 8:08 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > On Wed, Feb 13, 2019 at 6:59 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> > >
+> > > On Tue, Feb 12, 2019 at 5:42 AM <ndesaulniers@google.com> wrote:
+> > > >
+> > > > This is needed because clang doesn't select which linker to use based on
+> > > > $LD but rather -fuse-ld=lld. This is problematic especially for
+> > > > cc-ldoption, which checks for linker flag support via invoking the
+> > > > compiler, rather than the linker.
+> > >
+> > >
+> > > Sorry, please explain what kind of problem
+> > > this patch solves.
+> > >
+> > >
+> > >
+> > > [1] $(LD) is used to link vmlinux, modules, etc.
+> > >
+> > > [2] $(CC) is used to link vdso, etc.
+> > >     and -fuse-ld= selects which linker is invoked from $(CC)
+> >
+> > It solves case 2.
+> >
+> > >
+> > >
+> > > Is it a problem to use a different
+> > > type of linker for [1] and [2] ?
+> >
+> > Ideally, no, but I can think of at least one case where it might be
+> > problematic to mix linkers like that:
+> > You might be mixing linker flags added via ld-option from one linker
+> > that aren't actually supported by the other linker.
+>
+> You can do this only when you are sure
+> that the _exactly_ same linker is used.
+>
+> In my understanding, -fuse-ld=lld does not guarantee it.
 
-> lookup variable on failure of allocating memory via devm_kzalloc
-> can cause a NULL pointer dereference. This patch avoids such a scenario.
-> 
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  drivers/mfd/sm501.c | 3 +++
->  1 file changed, 3 insertions(+)
-
-Applied, thanks.
+I really don't think we should be mixing and matching linkers during a
+kernel build.  When we compile with clang, we don't have escape
+hatches that allow for some object files to be compiled with GCC
+(mixing clang and GCC compiled object files into one build).
+Following the same logic, I think mixing linkers during kernel build
+should similarly be dissuaded.  This patch AVOIDS clang using a
+different linker than what was specified via $LD, which is CRITICAL
+for cc-ldoption kbuild macro.  Masahiro, I hope this patch can be
+re-evaluated, or if I'm not understanding your point, that you can
+provide additional clarification.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+~Nick Desaulniers
