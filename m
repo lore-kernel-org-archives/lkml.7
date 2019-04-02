@@ -2,128 +2,84 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD912C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647D3C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84CEB20856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E09206B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730703AbfDBLmG (ORCPT
+        id S1730715AbfDBLoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:42:06 -0400
-Received: from mx.socionext.com ([202.248.49.38]:43306 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfDBLmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:42:06 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 02 Apr 2019 20:42:04 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 31F2B6117D;
-        Tue,  2 Apr 2019 20:42:04 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 2 Apr 2019 20:42:04 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 0F8341A04E1;
-        Tue,  2 Apr 2019 20:42:04 +0900 (JST)
-Received: from [127.0.0.1] (unknown [10.213.119.83])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 021F6120487;
-        Tue,  2 Apr 2019 20:42:04 +0900 (JST)
-From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     ARM-SoC Maintainers <arm@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
- <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
- <20190401091050.cwph7xlpv3pmkwnq@flea>
- <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
- <20190401113546.d6p2mg2y47abhumz@flea>
- <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
-Message-ID: <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
-Date:   Tue, 2 Apr 2019 20:42:02 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Tue, 2 Apr 2019 07:44:19 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:23742 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726716AbfDBLoT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:44:19 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-57-JBKtKZidP6OeCylcTurrsg-1; Tue, 02 Apr 2019 12:44:15 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
+ 2 Apr 2019 12:45:21 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 2 Apr 2019 12:45:20 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Alexander Potapenko' <glider@google.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>,
+        "jyknight@google.com" <jyknight@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>
+Subject: RE: [PATCH v2] x86/asm: fix assembly constraints in bitops
+Thread-Topic: [PATCH v2] x86/asm: fix assembly constraints in bitops
+Thread-Index: AQHU6UdY5ims1sqDDECRt8+l+UbnY6YovS9A
+Date:   Tue, 2 Apr 2019 11:45:20 +0000
+Message-ID: <4c6a1e592fd345618ef7b7d5bee592da@AcuMS.aculab.com>
+References: <20190402112813.193378-1-glider@google.com>
+In-Reply-To: <20190402112813.193378-1-glider@google.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: JBKtKZidP6OeCylcTurrsg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2019/04/01 22:02, Sugaya, Taichi wrote:
-> Hi,
-> 
-> On 2019/04/01 20:35, Maxime Ripard wrote:
->> Hi,
->>
->> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
->>> On 2019/04/01 18:10, Maxime Ripard wrote:
->>>> Hi Sugaya, Arnd, Olof,
->>>>
->>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
->>>>> +arm-soc
->>>>>
->>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->>>>>>
->>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
->>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
->>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
->>>>>> in a failure when trying to use that schemas for validation.
->>>>>>
->>>>>> Use spaces instead of tabs to indent to fix this.
->>>>>>
->>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
->>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->>>>>> ---
->>>>>>    Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
->>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>>
->>>>> This should be applied to arm-soc tree having the commit.
->>>>
->>>> Could you pick up that patch?
->>>
->>> I got it.
->>> My mission is to resubmit your fix-patch added my singned-off tag and
->>> Rob's reviewed tag...right?
->>
->> If you are part of arm-soc and send your pull requests to Arnd and
->> Olof, simply pick it up in the same branch than the initial patch was
->> in. And when you apply that patch, you indeed need to add your
->> Signed-off-by (note that most commands to commit have an option to do
->> that automatically: -s and that includes git am) and the Rob's
->> reviewed-by.
->>
->> Then, send a new pull request to arm-soc.
->>
-> 
-> Okay, thanks for your suggestion.
-> I try to make pull request!
-> 
-
-Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
-
-Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
-
-> Thanks,
-> Sugaya Taichi
-> 
->> Maxime
->>
->> -- 
->> Maxime Ripard, Bootlin
->> Embedded Linux and Kernel engineering
->> https://bootlin.com
->>
+RnJvbTogQWxleGFuZGVyIFBvdGFwZW5rbw0KPiBTZW50OiAwMiBBcHJpbCAyMDE5IDEyOjI4DQo+
+IA0KPiAxLiBVc2UgbWVtb3J5IGNsb2JiZXIgaW4gYml0b3BzIHRoYXQgdG91Y2ggYXJiaXRyYXJ5
+IG1lbW9yeQ0KPiANCj4gQ2VydGFpbiBiaXQgb3BlcmF0aW9ucyB0aGF0IHJlYWQvd3JpdGUgYml0
+cyB0YWtlIGEgYmFzZSBwb2ludGVyIGFuZCBhbg0KPiBhcmJpdHJhcmlseSBsYXJnZSBvZmZzZXQg
+dG8gYWRkcmVzcyB0aGUgYml0IHJlbGF0aXZlIHRvIHRoYXQgYmFzZS4NCg0KQWx0aG91Z2ggeDg2
+XzY0IGNhbiB1c2UgYSBzaWduZWQgNjRiaXQgYml0IG51bWJlciwgbG9va2luZyBhdCBhcm0gYW5k
+IGFybTY0DQp0aGV5IHVzZSAnaW50IG5yJyB0aHJvdWdob3V0IGFzIGRvIHRoZSBnZW5lcmljIGZ1
+bmN0aW9ucy4NCk1heWJlIHg4NiBvdWdodCB0byBiZSBjb25zaXN0ZW50IGhlcmUuDQpJIGRvdWJ0
+IG5lZ2F0aXZlIGJpdCBudW1iZXJzIGFyZSBleHBlY3RlZCB0byB3b3JrPw0KDQpEaWQgeW91IHRy
+eSB0ZWxsaW5nIGdjYyB0aGF0IGEgYmlnIGJ1ZmZlciAoMjUwTUIgaXMgdGhlIGxpbWl0IGZvciAz
+MmJpdCkNCmZyb20gdGhlIHBvaW50ZXIgbWlnaHQgYmUgY2hhbmdlZD8NClRoYXQgb3VnaHQgdG8g
+YmUgc29mdGVyIHRoYW4gYSBmdWxsICdtZW1vcnknIGNsb2JiZXIgYXMgaXQgc2hvdWxkDQpvbmx5
+IGFmZmVjdCBtZW1vcnkgdGhhdCBjb3VsZCBiZSBhY2Nlc3NlZCB0aHJvdWdoIHRoZSBwb2ludGVy
+Lg0KDQouLi4uDQo+IC0jZGVmaW5lIEJJVE9QX0FERFIoeCkgIittIiAoKih2b2xhdGlsZSBsb25n
+ICopICh4KSkNCj4gKyNkZWZpbmUgUkxPTkdfQUREUih4KSAibSIgKCoodm9sYXRpbGUgbG9uZyAq
+KSAoeCkpDQo+ICsjZGVmaW5lIFdCWVRFX0FERFIoeCkgIittIiAoKih2b2xhdGlsZSBjaGFyICop
+ICh4KSkNCj4gDQo+IC0jZGVmaW5lIEFERFIJCQkJQklUT1BfQUREUihhZGRyKQ0KPiArI2RlZmlu
+ZSBBRERSCQkJCVJMT05HX0FERFIoYWRkcikNCg0KSXMgaXQgd29ydGgganVzdCBraWxsaW5nIEFE
+RFIgPw0KKGFzIGEgZGlmZmVyZW50IHBhdGNoKQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBB
+ZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMs
+IE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
