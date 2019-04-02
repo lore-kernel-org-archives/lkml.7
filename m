@@ -2,257 +2,1243 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915A3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBAEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBB920830
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554184021;
-	bh=FuVZZ49BpPo9xCUqthe0Edco2/zv8JmBm3N/MIVoQbE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=GH84S/5wKW7RS/gTLD+U63zP6EP0UCFdR8Nbv8m8Dg5VEyv72P5BcbF1UDSIaxOXX
-	 ESrobx1xSt3bvXaow/0SX7EtRcl/4QfhRsYJPy3e1DeeQBJIYVK1iTKli8fP8fjlUe
-	 tN20/ayZk7a13hXmas5f0HGAzTqQH/IoWtxLmBmU=
+	by mail.kernel.org (Postfix) with ESMTP id B839D20830
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfDBFq7 (ORCPT
+        id S1728567AbfDBFsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 01:46:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46692 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfDBFq7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 01:46:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=KkZhymn0jGjGB4i3GkMdkP8pIa3OS5O3PNizJ587Xnk=; b=GSmAFBwLc+kG
-        41ZEtrT3bTGmMWwe6jkV8OgHC3pheWmql6Ut74eFe7C0qM7QJWDfIROl6omfTytrdgpXRQY6YvYib
-        nByheQFbLdEhPgrWtM5rD9qWzzgVfG1nWDhTpsK+ayWP+1tZyNGUrzHqS8p3BpZWuzDOaNtTrSRoa
-        gCNe0=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBCG8-0005zE-Pz; Tue, 02 Apr 2019 05:46:57 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BFA1D44133F; Tue,  2 Apr 2019 06:46:53 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: bcm590xx: Convert to use simplified DT parsing" to the regulator tree
-In-Reply-To: 
-X-Patchwork-Hint: ignore
-Message-Id: <20190402054653.BFA1D44133F@finisterre.ee.mobilebroadband>
-Date:   Tue,  2 Apr 2019 06:46:53 +0100 (BST)
+        Tue, 2 Apr 2019 01:48:01 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8376 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbfDBFsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 01:48:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 22:47:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
+   d="scan'208";a="132187355"
+Received: from rajeev-desktop.iind.intel.com ([10.223.84.39])
+  by orsmga006.jf.intel.com with ESMTP; 01 Apr 2019 22:47:47 -0700
+From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+To:     srinivas.pandruvada@linux.intel.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org
+Cc:     ncrews@chromium.org, jettrink@chromium.org, gwendal@google.com,
+        rushikesh.s.kadam@intel.com, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: [PATCH v5] HID: intel-ish-hid: ISH firmware loader client driver
+Date:   Tue,  2 Apr 2019 11:17:41 +0530
+Message-Id: <1554184061-2872-1-git-send-email-rushikesh.s.kadam@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+This driver adds support for loading Intel Integrated
+Sensor Hub (ISH) firmware from host file system to ISH
+SRAM and start execution.
 
-   regulator: bcm590xx: Convert to use simplified DT parsing
+At power-on, the ISH subsystem shall boot to an interim
+Shim loader-firmware, which shall expose an ISHTP loader
+device.
 
-has been applied to the regulator tree at
+The driver implements an ISHTP client that communicates
+with the Shim ISHTP loader device over the intel-ish-hid
+stack, to download the main ISH firmware.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From a4e73625cb12f662b2a72d292f34232c61cca47f Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Mon, 1 Apr 2019 22:42:36 +0800
-Subject: [PATCH] regulator: bcm590xx: Convert to use simplified DT parsing
-
-Use regulator core's simplified DT parsing code to simply the driver
-implementation.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Acked-by: Nick Crews <ncrews@chromium.org>
+Tested-by: Jett Rink <jettrink@chromium.org>
 ---
- drivers/regulator/bcm590xx-regulator.c | 105 +------------------------
- 1 file changed, 2 insertions(+), 103 deletions(-)
+The patches are baselined to hid git tree, branch for-5.2/ish
+https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/log/?h=for-5.2/ish
 
-diff --git a/drivers/regulator/bcm590xx-regulator.c b/drivers/regulator/bcm590xx-regulator.c
-index e49c0a7d5dd5..85ccc93b2bb6 100644
---- a/drivers/regulator/bcm590xx-regulator.c
-+++ b/drivers/regulator/bcm590xx-regulator.c
-@@ -103,10 +103,6 @@
- 	((n > BCM590XX_REG_VSR) && (n < BCM590XX_REG_VBUS))
- #define BCM590XX_REG_IS_VBUS(n)	(n == BCM590XX_REG_VBUS)
+v5
+ - Added the Acked-by & Tested-by to commit message. No other
+   change.
+
+v4
+ - Changed process_recv() to wake the caller in case of
+   error as well. Earlier caller would wait until timeout on
+   an error.
+ - Change sequence of few checks in process_recv().
+
+v3
+ - Moved a couple of sanity checks from loader_cl_send() to
+   process_recv().
+ - Several minor changes to address review comments.
+
+v2
+ - Change loader_cl_send() so that the calling function
+   shall allocate and pass the buffer to be used for
+   receiving firwmare response data. Corresponding changes
+   in calling function and process_recv().
+ - Introduced struct response_info to encapsulate and pass
+   data between from the process_recv() callback to
+   calling function loader_cl_send().
+ - Keep count of host firmware load retries, and fail after
+   3 unsuccessful attempts.
+ - Dropped report_bad_packets() function previously used for
+   keeping count of bad packets.
+ - Inlined loader_ish_hw_reset()'s functionality
+
+v1
+ - Initial version.
+
+ drivers/hid/Makefile                        |    1 +
+ drivers/hid/intel-ish-hid/Kconfig           |   15 +
+ drivers/hid/intel-ish-hid/Makefile          |    3 +
+ drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 1085 +++++++++++++++++++++++++++
+ 4 files changed, 1104 insertions(+)
+ create mode 100644 drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index 170163b..d8d393e 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -134,3 +134,4 @@ obj-$(CONFIG_USB_KBD)		+= usbhid/
+ obj-$(CONFIG_I2C_HID)		+= i2c-hid/
  
--struct bcm590xx_board {
--	struct regulator_init_data *bcm590xx_pmu_init_data[BCM590XX_NUM_REGS];
--};
--
- /* LDO group A: supported voltages in microvolts */
- static const unsigned int ldo_a_table[] = {
- 	1200000, 1800000, 2500000, 2700000, 2800000,
-@@ -280,105 +276,15 @@ static const struct regulator_ops bcm590xx_ops_vbus = {
- 	.disable		= regulator_disable_regmap,
- };
+ obj-$(CONFIG_INTEL_ISH_HID)	+= intel-ish-hid/
++obj-$(INTEL_ISH_FIRMWARE_DOWNLOADER)	+= intel-ish-hid/
+diff --git a/drivers/hid/intel-ish-hid/Kconfig b/drivers/hid/intel-ish-hid/Kconfig
+index 519e4c8..786adbc 100644
+--- a/drivers/hid/intel-ish-hid/Kconfig
++++ b/drivers/hid/intel-ish-hid/Kconfig
+@@ -14,4 +14,19 @@ config INTEL_ISH_HID
+ 	  Broxton and Kaby Lake.
  
--#define BCM590XX_MATCH(_name, _id) \
--	{ \
--		.name = #_name, \
--		.driver_data = (void *)&bcm590xx_regs[BCM590XX_REG_##_id], \
--	}
--
--static struct of_regulator_match bcm590xx_matches[] = {
--	BCM590XX_MATCH(rfldo, RFLDO),
--	BCM590XX_MATCH(camldo1, CAMLDO1),
--	BCM590XX_MATCH(camldo2, CAMLDO2),
--	BCM590XX_MATCH(simldo1, SIMLDO1),
--	BCM590XX_MATCH(simldo2, SIMLDO2),
--	BCM590XX_MATCH(sdldo, SDLDO),
--	BCM590XX_MATCH(sdxldo, SDXLDO),
--	BCM590XX_MATCH(mmcldo1, MMCLDO1),
--	BCM590XX_MATCH(mmcldo2, MMCLDO2),
--	BCM590XX_MATCH(audldo, AUDLDO),
--	BCM590XX_MATCH(micldo, MICLDO),
--	BCM590XX_MATCH(usbldo, USBLDO),
--	BCM590XX_MATCH(vibldo, VIBLDO),
--	BCM590XX_MATCH(csr, CSR),
--	BCM590XX_MATCH(iosr1, IOSR1),
--	BCM590XX_MATCH(iosr2, IOSR2),
--	BCM590XX_MATCH(msr, MSR),
--	BCM590XX_MATCH(sdsr1, SDSR1),
--	BCM590XX_MATCH(sdsr2, SDSR2),
--	BCM590XX_MATCH(vsr, VSR),
--	BCM590XX_MATCH(gpldo1, GPLDO1),
--	BCM590XX_MATCH(gpldo2, GPLDO2),
--	BCM590XX_MATCH(gpldo3, GPLDO3),
--	BCM590XX_MATCH(gpldo4, GPLDO4),
--	BCM590XX_MATCH(gpldo5, GPLDO5),
--	BCM590XX_MATCH(gpldo6, GPLDO6),
--	BCM590XX_MATCH(vbus, VBUS),
--};
--
--static struct bcm590xx_board *bcm590xx_parse_dt_reg_data(
--		struct platform_device *pdev,
--		struct of_regulator_match **bcm590xx_reg_matches)
--{
--	struct bcm590xx_board *data;
--	struct device_node *np = pdev->dev.parent->of_node;
--	struct device_node *regulators;
--	struct of_regulator_match *matches = bcm590xx_matches;
--	int count = ARRAY_SIZE(bcm590xx_matches);
--	int idx = 0;
--	int ret;
--
--	if (!np) {
--		dev_err(&pdev->dev, "of node not found\n");
--		return NULL;
--	}
--
--	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
--	if (!data)
--		return NULL;
--
--	np = of_node_get(np);
--	regulators = of_get_child_by_name(np, "regulators");
--	if (!regulators) {
--		dev_warn(&pdev->dev, "regulator node not found\n");
--		return NULL;
--	}
--
--	ret = of_regulator_match(&pdev->dev, regulators, matches, count);
--	of_node_put(regulators);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Error parsing regulator init data: %d\n",
--			ret);
--		return NULL;
--	}
--
--	*bcm590xx_reg_matches = matches;
--
--	for (idx = 0; idx < count; idx++) {
--		if (!matches[idx].init_data || !matches[idx].of_node)
--			continue;
--
--		data->bcm590xx_pmu_init_data[idx] = matches[idx].init_data;
--	}
--
--	return data;
--}
--
- static int bcm590xx_probe(struct platform_device *pdev)
- {
- 	struct bcm590xx *bcm590xx = dev_get_drvdata(pdev->dev.parent);
--	struct bcm590xx_board *pmu_data = NULL;
- 	struct bcm590xx_reg *pmu;
- 	struct regulator_config config = { };
- 	struct bcm590xx_info *info;
--	struct regulator_init_data *reg_data;
- 	struct regulator_dev *rdev;
--	struct of_regulator_match *bcm590xx_reg_matches = NULL;
- 	int i;
+ 	  Say Y here if you want to support Intel ISH. If unsure, say N.
++
++config INTEL_ISH_FIRMWARE_DOWNLOADER
++	tristate "Host Firmware Load feature for Intel ISH"
++	depends on INTEL_ISH_HID
++	depends on X86
++	help
++	  The Integrated Sensor Hub (ISH) enables the kernel to offload
++	  sensor polling and algorithm processing to a dedicated low power
++	  processor in the chipset.
++
++	  The Host Firmware Load feature adds support to load the ISH
++	  firmware from host file system at boot.
++
++	  Say M here if you want to support Host Firmware Loading feature
++	  for Intel ISH. If unsure, say N.
+ endmenu
+diff --git a/drivers/hid/intel-ish-hid/Makefile b/drivers/hid/intel-ish-hid/Makefile
+index 825b70a..2de97e4 100644
+--- a/drivers/hid/intel-ish-hid/Makefile
++++ b/drivers/hid/intel-ish-hid/Makefile
+@@ -20,4 +20,7 @@ obj-$(CONFIG_INTEL_ISH_HID) += intel-ishtp-hid.o
+ intel-ishtp-hid-objs := ishtp-hid.o
+ intel-ishtp-hid-objs += ishtp-hid-client.o
  
--	pmu_data = bcm590xx_parse_dt_reg_data(pdev,
--					      &bcm590xx_reg_matches);
--
- 	pmu = devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
- 	if (!pmu)
- 		return -ENOMEM;
-@@ -397,13 +303,10 @@ static int bcm590xx_probe(struct platform_device *pdev)
- 	info = bcm590xx_regs;
- 
- 	for (i = 0; i < BCM590XX_NUM_REGS; i++, info++) {
--		if (pmu_data)
--			reg_data = pmu_data->bcm590xx_pmu_init_data[i];
--		else
--			reg_data = NULL;
--
- 		/* Register the regulators */
- 		pmu->desc[i].name = info->name;
-+		pmu->desc[i].of_match = of_match_ptr(info->name);
-+		pmu->desc[i].regulators_node = of_match_ptr("regulators");
- 		pmu->desc[i].supply_name = info->vin_name;
- 		pmu->desc[i].id = i;
- 		pmu->desc[i].volt_table = info->volt_table;
-@@ -433,16 +336,12 @@ static int bcm590xx_probe(struct platform_device *pdev)
- 		pmu->desc[i].owner = THIS_MODULE;
- 
- 		config.dev = bcm590xx->dev;
--		config.init_data = reg_data;
- 		config.driver_data = pmu;
- 		if (BCM590XX_REG_IS_GPLDO(i) || BCM590XX_REG_IS_VBUS(i))
- 			config.regmap = bcm590xx->regmap_sec;
- 		else
- 			config.regmap = bcm590xx->regmap_pri;
- 
--		if (bcm590xx_reg_matches)
--			config.of_node = bcm590xx_reg_matches[i].of_node;
--
- 		rdev = devm_regulator_register(&pdev->dev, &pmu->desc[i],
- 					       &config);
- 		if (IS_ERR(rdev)) {
++obj-$(CONFIG_INTEL_ISH_FIRMWARE_DOWNLOADER) += intel-ishtp-loader.o
++intel-ishtp-loader-objs += ishtp-fw-loader.o
++
+ ccflags-y += -Idrivers/hid/intel-ish-hid/ishtp
+diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+new file mode 100644
+index 0000000..e770e22
+--- /dev/null
++++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
+@@ -0,0 +1,1085 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ISH-TP client driver for ISH firmware loading
++ *
++ * Copyright (c) 2019, Intel Corporation.
++ */
++
++#include <linux/firmware.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/intel-ish-client-if.h>
++#include <linux/property.h>
++#include <asm/cacheflush.h>
++
++/* Number of times we attempt to load the firmware before giving up */
++#define MAX_LOAD_ATTEMPTS			3
++
++/* ISH TX/RX ring buffer pool size */
++#define LOADER_CL_RX_RING_SIZE			1
++#define LOADER_CL_TX_RING_SIZE			1
++
++/*
++ * ISH Shim firmware loader reserves 4 Kb buffer in SRAM. The buffer is
++ * used to temporarily hold the data transferred from host to Shim
++ * firmware loader. Reason for the odd size of 3968 bytes? Each IPC
++ * transfer is 128 bytes (= 4 bytes header + 124 bytes payload). So the
++ * 4 Kb buffer can hold maximum of 32 IPC transfers, which means we can
++ * have a max payload of 3968 bytes (= 32 x 124 payload).
++ */
++#define LOADER_SHIM_IPC_BUF_SIZE		3968
++
++/**
++ * enum ish_loader_commands -	ISH loader host commands.
++ * LOADER_CMD_XFER_QUERY	Query the Shim firmware loader for
++ *				capabilities
++ * LOADER_CMD_XFER_FRAGMENT	Transfer one firmware image fragment at a
++ *				time. The command may be executed
++ *				multiple times until the entire firmware
++ *				image is downloaded to SRAM.
++ * LOADER_CMD_START		Start executing the main firmware.
++ */
++enum ish_loader_commands {
++	LOADER_CMD_XFER_QUERY = 0,
++	LOADER_CMD_XFER_FRAGMENT,
++	LOADER_CMD_START,
++};
++
++/* Command bit mask */
++#define	CMD_MASK				GENMASK(6, 0)
++#define	IS_RESPONSE				BIT(7)
++
++/*
++ * ISH firmware max delay for one transmit failure is 1 Hz,
++ * and firmware will retry 2 times, so 3 Hz is used for timeout.
++ */
++#define ISHTP_SEND_TIMEOUT			(3 * HZ)
++
++/*
++ * Loader transfer modes:
++ *
++ * LOADER_XFER_MODE_ISHTP mode uses the existing ISH-TP mechanism to
++ * transfer data. This may use IPC or DMA if supported in firmware.
++ * The buffer size is limited to 4 Kb by the IPC/ISH-TP protocol for
++ * both IPC & DMA (legacy).
++ *
++ * LOADER_XFER_MODE_DIRECT_DMA - firmware loading is a bit different
++ * from the sensor data streaming. Here we download a large (300+ Kb)
++ * image directly to ISH SRAM memory. There is limited benefit of
++ * DMA'ing 300 Kb image in 4 Kb chucks limit. Hence, we introduce
++ * this "direct dma" mode, where we do not use ISH-TP for DMA, but
++ * instead manage the DMA directly in kernel driver and Shim firmware
++ * loader (allocate buffer, break in chucks and transfer). This allows
++ * to overcome 4 Kb limit, and optimize the data flow path in firmware.
++ */
++#define LOADER_XFER_MODE_DIRECT_DMA		BIT(0)
++#define LOADER_XFER_MODE_ISHTP			BIT(1)
++
++/* ISH Transport Loader client unique GUID */
++static const guid_t loader_ishtp_guid =
++	GUID_INIT(0xc804d06a, 0x55bd, 0x4ea7,
++		  0xad, 0xed, 0x1e, 0x31, 0x22, 0x8c, 0x76, 0xdc);
++
++#define FILENAME_SIZE				256
++
++/*
++ * The firmware loading latency will be minimum if we can DMA the
++ * entire ISH firmware image in one go. This requires that we allocate
++ * a large DMA buffer in kernel, which could be problematic on some
++ * platforms. So here we limit the DMA buffer size via a module_param.
++ * We default to 4 pages, but a customer can set it to higher limit if
++ * deemed appropriate for his platform.
++ */
++static int dma_buf_size_limit = 4 * PAGE_SIZE;
++
++/**
++ * struct loader_msg_hdr - Header for ISH Loader commands.
++ * @command:		LOADER_CMD* commands. Bit 7 is the response.
++ * @status:		Command response status. Non 0, is error
++ *			condition.
++ *
++ * This structure is used as header for every command/data sent/received
++ * between Host driver and ISH Shim firmware loader.
++ */
++struct loader_msg_hdr {
++	u8 command;
++	u8 reserved[2];
++	u8 status;
++} __packed;
++
++struct loader_xfer_query {
++	struct loader_msg_hdr hdr;
++	u32 image_size;
++} __packed;
++
++struct ish_fw_version {
++	u16 major;
++	u16 minor;
++	u16 hotfix;
++	u16 build;
++} __packed;
++
++union loader_version {
++	u32 value;
++	struct {
++		u8 major;
++		u8 minor;
++		u8 hotfix;
++		u8 build;
++	};
++} __packed;
++
++struct loader_capability {
++	u32 max_fw_image_size;
++	u32 xfer_mode;
++	u32 max_dma_buf_size; /* only for dma mode, multiples of cacheline */
++} __packed;
++
++struct shim_fw_info {
++	struct ish_fw_version ish_fw_version;
++	u32 protocol_version;
++	union loader_version ldr_version;
++	struct loader_capability ldr_capability;
++} __packed;
++
++struct loader_xfer_query_response {
++	struct loader_msg_hdr hdr;
++	struct shim_fw_info fw_info;
++} __packed;
++
++struct loader_xfer_fragment {
++	struct loader_msg_hdr hdr;
++	u32 xfer_mode;
++	u32 offset;
++	u32 size;
++	u32 is_last;
++} __packed;
++
++struct loader_xfer_ipc_fragment {
++	struct loader_xfer_fragment fragment;
++	u8 data[] ____cacheline_aligned; /* variable length payload here */
++} __packed;
++
++struct loader_xfer_dma_fragment {
++	struct loader_xfer_fragment fragment;
++	u64 ddr_phys_addr;
++} __packed;
++
++struct loader_start {
++	struct loader_msg_hdr hdr;
++} __packed;
++
++/**
++ * struct response_info - Encapsulate firmware response related
++ *			information for passing between function
++ *			loader_cl_send() and process_recv() callback.
++ * @data		Copy the data received from firmware here.
++ * @max_size		Max size allocated for the @data buffer. If the
++ *			received data exceeds this value, we log an
++ *			error.
++ * @size		Actual size of data received from firmware.
++ * @error		Returns 0 for success, negative error code for a
++ *			failure in function process_recv().
++ * @received		Set to true on receiving a valid firmware
++ *			response to host command
++ * @wait_queue		Wait queue for Host firmware loading where the
++ *			client sends message to ISH firmware and waits
++ *			for response
++ */
++struct response_info {
++	void *data;
++	size_t max_size;
++	size_t size;
++	int error;
++	bool received;
++	wait_queue_head_t wait_queue;
++};
++
++/**
++ * struct ishtp_cl_data - Encapsulate per ISH-TP Client Data.
++ * @work_ishtp_reset:	Work queue for reset handling.
++ * @work_fw_load:	Work queue for host firmware loading.
++ * @flag_retry		Flag for indicating host firmware loading should
++ *			be retried.
++ * @retry_count		Count the number of retries.
++ *
++ * This structure is used to store data per client.
++ */
++struct ishtp_cl_data {
++	struct ishtp_cl *loader_ishtp_cl;
++	struct ishtp_cl_device *cl_device;
++
++	/*
++	 * Used for passing firmware response information between
++	 * loader_cl_send() and process_recv() callback.
++	 */
++	struct response_info response;
++
++	struct work_struct work_ishtp_reset;
++	struct work_struct work_fw_load;
++
++	/*
++	 * In certain failure scenrios, it makes sense to reset the ISH
++	 * subsystem and retry Host firmware loading (e.g. bad message
++	 * packet, ENOMEM, etc.). On the other hand, failures due to
++	 * protocol mismatch, etc., are not recoverable. We do not
++	 * retry them.
++	 *
++	 * If set, the flag indicates that we should re-try the
++	 * particular failure.
++	 */
++	bool flag_retry;
++	int retry_count;
++};
++
++#define IPC_FRAGMENT_DATA_PREAMBLE				\
++	offsetof(struct loader_xfer_ipc_fragment, data)
++
++#define cl_data_to_dev(client_data) ishtp_device((client_data)->cl_device)
++
++/**
++ * get_firmware_variant() - Gets the filename of firmware image to be
++ *			loaded based on platform variant.
++ * @client_data		Client data instance.
++ * @filename		Returns firmware filename.
++ *
++ * Queries the firmware-name device property string.
++ *
++ * Return: 0 for success, negative error code for failure.
++ */
++static int get_firmware_variant(struct ishtp_cl_data *client_data,
++				char *filename)
++{
++	int rv;
++	const char *val;
++	struct device *devc = ishtp_get_pci_device(client_data->cl_device);
++
++	rv = device_property_read_string(devc, "firmware-name", &val);
++	if (rv < 0) {
++		dev_err(devc,
++			"Error: ISH firmware-name device property required\n");
++		return rv;
++	}
++	return snprintf(filename, FILENAME_SIZE, "intel/%s", val);
++}
++
++/**
++ * loader_cl_send()	Send message from host to firmware
++ * @client_data:	Client data instance
++ * @out_msg		Message buffer to be sent to firmware
++ * @out_size		Size of out going message
++ * @in_msg		Message buffer where the incoming data copied.
++ *			This buffer is allocated by calling
++ * @in_size		Max size of incoming message
++ *
++ * Return: Number of bytes copied in the in_msg on success, negative
++ * error code on failure.
++ */
++static int loader_cl_send(struct ishtp_cl_data *client_data,
++			  u8 *out_msg, size_t out_size,
++			  u8 *in_msg, size_t in_size)
++{
++	int rv;
++	struct loader_msg_hdr *out_hdr = (struct loader_msg_hdr *)out_msg;
++	struct ishtp_cl *loader_ishtp_cl = client_data->loader_ishtp_cl;
++
++	dev_dbg(cl_data_to_dev(client_data),
++		"%s: command=%02lx is_response=%u status=%02x\n",
++		__func__,
++		out_hdr->command & CMD_MASK,
++		out_hdr->command & IS_RESPONSE ? 1 : 0,
++		out_hdr->status);
++
++	/* Setup in coming buffer & size */
++	client_data->response.data = in_msg;
++	client_data->response.max_size = in_size;
++	client_data->response.error = 0;
++	client_data->response.received = false;
++
++	rv = ishtp_cl_send(loader_ishtp_cl, out_msg, out_size);
++	if (rv < 0) {
++		dev_err(cl_data_to_dev(client_data),
++			"ishtp_cl_send error %d\n", rv);
++		return rv;
++	}
++
++	wait_event_interruptible_timeout(client_data->response.wait_queue,
++					 client_data->response.received,
++					 ISHTP_SEND_TIMEOUT);
++	if (!client_data->response.received) {
++		dev_err(cl_data_to_dev(client_data),
++			"Timed out for response to command=%02lx",
++			out_hdr->command & CMD_MASK);
++		return -ETIMEDOUT;
++	}
++
++	if (client_data->response.error < 0)
++		return client_data->response.error;
++
++	return client_data->response.size;
++}
++
++/**
++ * process_recv() -	Receive and parse incoming packet
++ * @loader_ishtp_cl:	Client instance to get stats
++ * @rb_in_proc:		ISH received message buffer
++ *
++ * Parse the incoming packet. If it is a response packet then it will
++ * update received and wake up the caller waiting to for the response.
++ */
++static void process_recv(struct ishtp_cl *loader_ishtp_cl,
++			 struct ishtp_cl_rb *rb_in_proc)
++{
++	struct loader_msg_hdr *hdr;
++	size_t data_len = rb_in_proc->buf_idx;
++	struct ishtp_cl_data *client_data =
++		ishtp_get_client_data(loader_ishtp_cl);
++
++	/* Sanity check */
++	if (!client_data->response.data) {
++		dev_err(cl_data_to_dev(client_data),
++			"Receiving buffer is null. Should be allocated by calling function\n");
++		client_data->response.error = -EINVAL;
++		goto end;
++	}
++
++	if (client_data->response.received) {
++		dev_err(cl_data_to_dev(client_data),
++			"Previous firmware message not yet processed\n");
++		client_data->response.error = -EINVAL;
++		goto end;
++	}
++	/*
++	 * All firmware messages have a header. Check buffer size
++	 * before accessing elements inside.
++	 */
++	if (!rb_in_proc->buffer.data) {
++		dev_warn(cl_data_to_dev(client_data),
++			 "rb_in_proc->buffer.data returned null");
++		client_data->response.error = -EBADMSG;
++		goto end;
++	}
++
++	if (data_len < sizeof(struct loader_msg_hdr)) {
++		dev_err(cl_data_to_dev(client_data),
++			"data size %zu is less than header %zu\n",
++			data_len, sizeof(struct loader_msg_hdr));
++		client_data->response.error = -EMSGSIZE;
++		goto end;
++	}
++
++	hdr = (struct loader_msg_hdr *)rb_in_proc->buffer.data;
++
++	dev_dbg(cl_data_to_dev(client_data),
++		"%s: command=%02lx is_response=%u status=%02x\n",
++		__func__,
++		hdr->command & CMD_MASK,
++		hdr->command & IS_RESPONSE ? 1 : 0,
++		hdr->status);
++
++	if (((hdr->command & CMD_MASK) != LOADER_CMD_XFER_QUERY) &&
++	    ((hdr->command & CMD_MASK) != LOADER_CMD_XFER_FRAGMENT) &&
++	    ((hdr->command & CMD_MASK) != LOADER_CMD_START)) {
++		dev_err(cl_data_to_dev(client_data),
++			"Invalid command=%02lx\n",
++			hdr->command & CMD_MASK);
++		client_data->response.error = -EPROTO;
++		goto end;
++	}
++
++	if (data_len > client_data->response.max_size) {
++		dev_err(cl_data_to_dev(client_data),
++			"Received buffer size %zu is larger than allocated buffer %zu\n",
++			data_len, client_data->response.max_size);
++		client_data->response.error = -EMSGSIZE;
++		goto end;
++	}
++
++	/* We expect only "response" messages from firmware */
++	if (!(hdr->command & IS_RESPONSE)) {
++		dev_err(cl_data_to_dev(client_data),
++			"Invalid response to command\n");
++		client_data->response.error = -EIO;
++		goto end;
++	}
++
++	if (hdr->status) {
++		dev_err(cl_data_to_dev(client_data),
++			"Loader returned status %d\n",
++			hdr->status);
++		client_data->response.error = -EIO;
++		goto end;
++	}
++
++	/* Update the actual received buffer size */
++	client_data->response.size = data_len;
++
++	/*
++	 * Copy the buffer received in firmware response for the
++	 * calling thread.
++	 */
++	memcpy(client_data->response.data,
++	       rb_in_proc->buffer.data, data_len);
++
++	/* Set flag before waking up the caller */
++	client_data->response.received = true;
++
++end:
++	/* Free the buffer */
++	ishtp_cl_io_rb_recycle(rb_in_proc);
++	rb_in_proc = NULL;
++
++	/* Wake the calling thread */
++	wake_up_interruptible(&client_data->response.wait_queue);
++}
++
++/**
++ * loader_cl_event_cb() - bus driver callback for incoming message
++ * @device:		Pointer to the ishtp client device for which this
++ *			message is targeted
++ *
++ * Remove the packet from the list and process the message by calling
++ * process_recv
++ */
++static void loader_cl_event_cb(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl_rb *rb_in_proc;
++	struct ishtp_cl	*loader_ishtp_cl = ishtp_get_drvdata(cl_device);
++
++	while ((rb_in_proc = ishtp_cl_rx_get_rb(loader_ishtp_cl)) != NULL) {
++		/* Process the data packet from firmware */
++		process_recv(loader_ishtp_cl, rb_in_proc);
++	}
++}
++
++/**
++ * ish_query_loader_prop() -  Query ISH Shim firmware loader
++ * @client_data:	Client data instance
++ * @fw:			Poiner to firmware data struct in host memory
++ * @fw_info:		Loader firmware properties
++ *
++ * This function queries the ISH Shim firmware loader for capabilities.
++ *
++ * Return: 0 for success, negative error code for failure.
++ */
++static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
++				 const struct firmware *fw,
++				 struct shim_fw_info *fw_info)
++{
++	int rv;
++	struct loader_xfer_query ldr_xfer_query;
++	struct loader_xfer_query_response ldr_xfer_query_resp;
++
++	memset(&ldr_xfer_query, 0, sizeof(ldr_xfer_query));
++	ldr_xfer_query.hdr.command = LOADER_CMD_XFER_QUERY;
++	ldr_xfer_query.image_size = fw->size;
++	rv = loader_cl_send(client_data,
++			    (u8 *)&ldr_xfer_query,
++			    sizeof(ldr_xfer_query),
++			    (u8 *)&ldr_xfer_query_resp,
++			    sizeof(ldr_xfer_query_resp));
++	if (rv < 0) {
++		client_data->flag_retry = true;
++		return rv;
++	}
++
++	/* On success, the return value is the received buffer size */
++	if (rv != sizeof(struct loader_xfer_query_response)) {
++		dev_err(cl_data_to_dev(client_data),
++			"data size %d is not equal to size of loader_xfer_query_response %zu\n",
++			rv, sizeof(struct loader_xfer_query_response));
++		client_data->flag_retry = true;
++		return -EMSGSIZE;
++	}
++
++	/* Save fw_info for use outside this function */
++	*fw_info = ldr_xfer_query_resp.fw_info;
++
++	/* Loader firmware properties */
++	dev_dbg(cl_data_to_dev(client_data),
++		"ish_fw_version: major=%d minor=%d hotfix=%d build=%d protocol_version=0x%x loader_version=%d\n",
++		fw_info->ish_fw_version.major,
++		fw_info->ish_fw_version.minor,
++		fw_info->ish_fw_version.hotfix,
++		fw_info->ish_fw_version.build,
++		fw_info->protocol_version,
++		fw_info->ldr_version.value);
++
++	dev_dbg(cl_data_to_dev(client_data),
++		"loader_capability: max_fw_image_size=0x%x xfer_mode=%d max_dma_buf_size=0x%x dma_buf_size_limit=0x%x\n",
++		fw_info->ldr_capability.max_fw_image_size,
++		fw_info->ldr_capability.xfer_mode,
++		fw_info->ldr_capability.max_dma_buf_size,
++		dma_buf_size_limit);
++
++	/* Sanity checks */
++	if (fw_info->ldr_capability.max_fw_image_size < fw->size) {
++		dev_err(cl_data_to_dev(client_data),
++			"ISH firmware size %zu is greater than Shim firmware loader max supported %d\n",
++			fw->size,
++			fw_info->ldr_capability.max_fw_image_size);
++		return -ENOSPC;
++	}
++
++	/* For DMA the buffer size should be multiple of cacheline size */
++	if ((fw_info->ldr_capability.xfer_mode & LOADER_XFER_MODE_DIRECT_DMA) &&
++	    (fw_info->ldr_capability.max_dma_buf_size % L1_CACHE_BYTES)) {
++		dev_err(cl_data_to_dev(client_data),
++			"Shim firmware loader buffer size %d should be multipe of cacheline\n",
++			fw_info->ldr_capability.max_dma_buf_size);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++/**
++ * ish_fw_xfer_ishtp()	Loads ISH firmware using ishtp interface
++ * @client_data:	Client data instance
++ * @fw:			Pointer to firmware data struct in host memory
++ *
++ * This function uses ISH-TP to transfer ISH firmware from host to
++ * ISH SRAM. Lower layers may use IPC or DMA depending on firmware
++ * support.
++ *
++ * Return: 0 for success, negative error code for failure.
++ */
++static int ish_fw_xfer_ishtp(struct ishtp_cl_data *client_data,
++			     const struct firmware *fw)
++{
++	int rv;
++	u32 fragment_offset, fragment_size, payload_max_size;
++	struct loader_xfer_ipc_fragment *ldr_xfer_ipc_frag;
++	struct loader_msg_hdr ldr_xfer_ipc_ack;
++
++	payload_max_size =
++		LOADER_SHIM_IPC_BUF_SIZE - IPC_FRAGMENT_DATA_PREAMBLE;
++
++	ldr_xfer_ipc_frag = kzalloc(LOADER_SHIM_IPC_BUF_SIZE, GFP_KERNEL);
++	if (!ldr_xfer_ipc_frag) {
++		client_data->flag_retry = true;
++		return -ENOMEM;
++	}
++
++	ldr_xfer_ipc_frag->fragment.hdr.command = LOADER_CMD_XFER_FRAGMENT;
++	ldr_xfer_ipc_frag->fragment.xfer_mode = LOADER_XFER_MODE_ISHTP;
++
++	/* Break the firmware image into fragments and send as ISH-TP payload */
++	fragment_offset = 0;
++	while (fragment_offset < fw->size) {
++		if (fragment_offset + payload_max_size < fw->size) {
++			fragment_size = payload_max_size;
++			ldr_xfer_ipc_frag->fragment.is_last = 0;
++		} else {
++			fragment_size = fw->size - fragment_offset;
++			ldr_xfer_ipc_frag->fragment.is_last = 1;
++		}
++
++		ldr_xfer_ipc_frag->fragment.offset = fragment_offset;
++		ldr_xfer_ipc_frag->fragment.size = fragment_size;
++		memcpy(ldr_xfer_ipc_frag->data,
++		       &fw->data[fragment_offset],
++		       fragment_size);
++
++		dev_dbg(cl_data_to_dev(client_data),
++			"xfer_mode=ipc offset=0x%08x size=0x%08x is_last=%d\n",
++			ldr_xfer_ipc_frag->fragment.offset,
++			ldr_xfer_ipc_frag->fragment.size,
++			ldr_xfer_ipc_frag->fragment.is_last);
++
++		rv = loader_cl_send(client_data,
++				    (u8 *)ldr_xfer_ipc_frag,
++				    IPC_FRAGMENT_DATA_PREAMBLE + fragment_size,
++				    (u8 *)&ldr_xfer_ipc_ack,
++				    sizeof(ldr_xfer_ipc_ack));
++		if (rv < 0) {
++			client_data->flag_retry = true;
++			goto end_err_resp_buf_release;
++		}
++
++		fragment_offset += fragment_size;
++	}
++
++	kfree(ldr_xfer_ipc_frag);
++	return 0;
++
++end_err_resp_buf_release:
++	/* Free ISH buffer if not done already, in error case */
++	kfree(ldr_xfer_ipc_frag);
++	return rv;
++}
++
++/**
++ * ish_fw_xfer_direct_dma() - Loads ISH firmware using direct dma
++ * @client_data:	Client data instance
++ * @fw:			Pointer to firmware data struct in host memory
++ * @fw_info:		Loader firmware properties
++ *
++ * Host firmware load is a unique case where we need to download
++ * a large firmware image (200+ Kb). This function implements
++ * direct DMA transfer in kernel and ISH firmware. This allows
++ * us to overcome the ISH-TP 4 Kb limit, and allows us to DMA
++ * directly to ISH UMA at location of choice.
++ * Function depends on corresponding support in ISH firmware.
++ *
++ * Return: 0 for success, negative error code for failure.
++ */
++static int ish_fw_xfer_direct_dma(struct ishtp_cl_data *client_data,
++				  const struct firmware *fw,
++				  const struct shim_fw_info fw_info)
++{
++	int rv;
++	void *dma_buf;
++	dma_addr_t dma_buf_phy;
++	u32 fragment_offset, fragment_size, payload_max_size;
++	struct loader_msg_hdr ldr_xfer_dma_frag_ack;
++	struct loader_xfer_dma_fragment ldr_xfer_dma_frag;
++	struct device *devc = ishtp_get_pci_device(client_data->cl_device);
++	u32 shim_fw_buf_size =
++		fw_info.ldr_capability.max_dma_buf_size;
++
++	/*
++	 * payload_max_size should be set to minimum of
++	 *  (1) Size of firmware to be loaded,
++	 *  (2) Max DMA buffer size supported by Shim firmware,
++	 *  (3) DMA buffer size limit set by boot_param dma_buf_size_limit.
++	 */
++	payload_max_size = min3(fw->size,
++				(size_t)shim_fw_buf_size,
++				(size_t)dma_buf_size_limit);
++
++	/*
++	 * Buffer size should be multiple of cacheline size
++	 * if it's not, select the previous cacheline boundary.
++	 */
++	payload_max_size &= ~(L1_CACHE_BYTES - 1);
++
++	dma_buf = kmalloc(payload_max_size, GFP_KERNEL | GFP_DMA32);
++	if (!dma_buf) {
++		client_data->flag_retry = true;
++		return -ENOMEM;
++	}
++
++	dma_buf_phy = dma_map_single(devc, dma_buf, payload_max_size,
++				     DMA_TO_DEVICE);
++	if (dma_mapping_error(devc, dma_buf_phy)) {
++		dev_err(cl_data_to_dev(client_data), "DMA map failed\n");
++		client_data->flag_retry = true;
++		rv = -ENOMEM;
++		goto end_err_dma_buf_release;
++	}
++
++	ldr_xfer_dma_frag.fragment.hdr.command = LOADER_CMD_XFER_FRAGMENT;
++	ldr_xfer_dma_frag.fragment.xfer_mode = LOADER_XFER_MODE_DIRECT_DMA;
++	ldr_xfer_dma_frag.ddr_phys_addr = (u64)dma_buf_phy;
++
++	/* Send the firmware image in chucks of payload_max_size */
++	fragment_offset = 0;
++	while (fragment_offset < fw->size) {
++		if (fragment_offset + payload_max_size < fw->size) {
++			fragment_size = payload_max_size;
++			ldr_xfer_dma_frag.fragment.is_last = 0;
++		} else {
++			fragment_size = fw->size - fragment_offset;
++			ldr_xfer_dma_frag.fragment.is_last = 1;
++		}
++
++		ldr_xfer_dma_frag.fragment.offset = fragment_offset;
++		ldr_xfer_dma_frag.fragment.size = fragment_size;
++		memcpy(dma_buf, &fw->data[fragment_offset], fragment_size);
++
++		dma_sync_single_for_device(devc, dma_buf_phy,
++					   payload_max_size,
++					   DMA_TO_DEVICE);
++
++		/*
++		 * Flush cache here because the dma_sync_single_for_device()
++		 * does not do for x86.
++		 */
++		clflush_cache_range(dma_buf, payload_max_size);
++
++		dev_dbg(cl_data_to_dev(client_data),
++			"xfer_mode=dma offset=0x%08x size=0x%x is_last=%d ddr_phys_addr=0x%016llx\n",
++			ldr_xfer_dma_frag.fragment.offset,
++			ldr_xfer_dma_frag.fragment.size,
++			ldr_xfer_dma_frag.fragment.is_last,
++			ldr_xfer_dma_frag.ddr_phys_addr);
++
++		rv = loader_cl_send(client_data,
++				    (u8 *)&ldr_xfer_dma_frag,
++				    sizeof(ldr_xfer_dma_frag),
++				    (u8 *)&ldr_xfer_dma_frag_ack,
++				    sizeof(ldr_xfer_dma_frag_ack));
++		if (rv < 0) {
++			client_data->flag_retry = true;
++			goto end_err_resp_buf_release;
++		}
++
++		fragment_offset += fragment_size;
++	}
++
++	dma_unmap_single(devc, dma_buf_phy, payload_max_size, DMA_TO_DEVICE);
++	kfree(dma_buf);
++	return 0;
++
++end_err_resp_buf_release:
++	/* Free ISH buffer if not done already, in error case */
++	dma_unmap_single(devc, dma_buf_phy, payload_max_size, DMA_TO_DEVICE);
++end_err_dma_buf_release:
++	kfree(dma_buf);
++	return rv;
++}
++
++/**
++ * ish_fw_start()	Start executing ISH main firmware
++ * @client_data:	client data instance
++ *
++ * This function sends message to Shim firmware loader to start
++ * the execution of ISH main firmware.
++ *
++ * Return: 0 for success, negative error code for failure.
++ */
++static int ish_fw_start(struct ishtp_cl_data *client_data)
++{
++	struct loader_start ldr_start;
++	struct loader_msg_hdr ldr_start_ack;
++
++	memset(&ldr_start, 0, sizeof(ldr_start));
++	ldr_start.hdr.command = LOADER_CMD_START;
++	return loader_cl_send(client_data,
++			    (u8 *)&ldr_start,
++			    sizeof(ldr_start),
++			    (u8 *)&ldr_start_ack,
++			    sizeof(ldr_start_ack));
++}
++
++/**
++ * load_fw_from_host()	Loads ISH firmware from host
++ * @client_data:	Client data instance
++ *
++ * This function loads the ISH firmware to ISH SRAM and starts execution
++ *
++ * Return: 0 for success, negative error code for failure.
++ */
++static int load_fw_from_host(struct ishtp_cl_data *client_data)
++{
++	int rv;
++	u32 xfer_mode;
++	char *filename;
++	const struct firmware *fw;
++	struct shim_fw_info fw_info;
++	struct ishtp_cl *loader_ishtp_cl = client_data->loader_ishtp_cl;
++
++	client_data->flag_retry = false;
++
++	filename = kzalloc(FILENAME_SIZE, GFP_KERNEL);
++	if (!filename) {
++		client_data->flag_retry = true;
++		rv = -ENOMEM;
++		goto end_error;
++	}
++
++	/* Get filename of the ISH firmware to be loaded */
++	rv = get_firmware_variant(client_data, filename);
++	if (rv < 0)
++		goto end_err_filename_buf_release;
++
++	rv = request_firmware(&fw, filename, cl_data_to_dev(client_data));
++	if (rv < 0)
++		goto end_err_filename_buf_release;
++
++	/* Step 1: Query Shim firmware loader properties */
++
++	rv = ish_query_loader_prop(client_data, fw, &fw_info);
++	if (rv < 0)
++		goto end_err_fw_release;
++
++	/* Step 2: Send the main firmware image to be loaded, to ISH SRAM */
++
++	xfer_mode = fw_info.ldr_capability.xfer_mode;
++	if (xfer_mode & LOADER_XFER_MODE_DIRECT_DMA) {
++		rv = ish_fw_xfer_direct_dma(client_data, fw, fw_info);
++	} else if (xfer_mode & LOADER_XFER_MODE_ISHTP) {
++		rv = ish_fw_xfer_ishtp(client_data, fw);
++	} else {
++		dev_err(cl_data_to_dev(client_data),
++			"No transfer mode selected in firmware\n");
++		rv = -EINVAL;
++	}
++	if (rv < 0)
++		goto end_err_fw_release;
++
++	/* Step 3: Start ISH main firmware exeuction */
++
++	rv = ish_fw_start(client_data);
++	if (rv < 0)
++		goto end_err_fw_release;
++
++	release_firmware(fw);
++	kfree(filename);
++	dev_info(cl_data_to_dev(client_data), "ISH firmware %s loaded\n",
++		 filename);
++	return 0;
++
++end_err_fw_release:
++	release_firmware(fw);
++end_err_filename_buf_release:
++	kfree(filename);
++end_error:
++	/* Keep a count of retries, and give up after 3 attempts */
++	if (client_data->flag_retry &&
++	    client_data->retry_count++ < MAX_LOAD_ATTEMPTS) {
++		dev_warn(cl_data_to_dev(client_data),
++			 "ISH host firmware load failed %d. Resetting ISH, and trying again..\n",
++			 rv);
++		ish_hw_reset(ishtp_get_ishtp_device(loader_ishtp_cl));
++	} else {
++		dev_err(cl_data_to_dev(client_data),
++			"ISH host firmware load failed %d\n", rv);
++	}
++	return rv;
++}
++
++static void load_fw_from_host_handler(struct work_struct *work)
++{
++	struct ishtp_cl_data *client_data;
++
++	client_data = container_of(work, struct ishtp_cl_data,
++				   work_fw_load);
++	load_fw_from_host(client_data);
++}
++
++/**
++ * loader_init() -	Init function for ISH-TP client
++ * @loader_ishtp_cl:	ISH-TP client instance
++ * @reset:		true if called for init after reset
++ *
++ * Return: 0 for success, negative error code for failure
++ */
++static int loader_init(struct ishtp_cl *loader_ishtp_cl, int reset)
++{
++	int rv;
++	struct ishtp_fw_client *fw_client;
++	struct ishtp_cl_data *client_data =
++		ishtp_get_client_data(loader_ishtp_cl);
++
++	dev_dbg(cl_data_to_dev(client_data), "reset flag: %d\n", reset);
++
++	rv = ishtp_cl_link(loader_ishtp_cl);
++	if (rv < 0) {
++		dev_err(cl_data_to_dev(client_data), "ishtp_cl_link failed\n");
++		return rv;
++	}
++
++	/* Connect to firmware client */
++	ishtp_set_tx_ring_size(loader_ishtp_cl, LOADER_CL_TX_RING_SIZE);
++	ishtp_set_rx_ring_size(loader_ishtp_cl, LOADER_CL_RX_RING_SIZE);
++
++	fw_client =
++		ishtp_fw_cl_get_client(ishtp_get_ishtp_device(loader_ishtp_cl),
++				       &loader_ishtp_guid);
++	if (!fw_client) {
++		dev_err(cl_data_to_dev(client_data),
++			"ISH client uuid not found\n");
++		rv = -ENOENT;
++		goto err_cl_unlink;
++	}
++
++	ishtp_cl_set_fw_client_id(loader_ishtp_cl,
++				  ishtp_get_fw_client_id(fw_client));
++	ishtp_set_connection_state(loader_ishtp_cl, ISHTP_CL_CONNECTING);
++
++	rv = ishtp_cl_connect(loader_ishtp_cl);
++	if (rv < 0) {
++		dev_err(cl_data_to_dev(client_data), "Client connect fail\n");
++		goto err_cl_unlink;
++	}
++
++	dev_dbg(cl_data_to_dev(client_data), "Client connected\n");
++
++	ishtp_register_event_cb(client_data->cl_device, loader_cl_event_cb);
++
++	return 0;
++
++err_cl_unlink:
++	ishtp_cl_unlink(loader_ishtp_cl);
++	return rv;
++}
++
++static void loader_deinit(struct ishtp_cl *loader_ishtp_cl)
++{
++	ishtp_set_connection_state(loader_ishtp_cl, ISHTP_CL_DISCONNECTING);
++	ishtp_cl_disconnect(loader_ishtp_cl);
++	ishtp_cl_unlink(loader_ishtp_cl);
++	ishtp_cl_flush_queues(loader_ishtp_cl);
++
++	/* Disband and free all Tx and Rx client-level rings */
++	ishtp_cl_free(loader_ishtp_cl);
++}
++
++static void reset_handler(struct work_struct *work)
++{
++	int rv;
++	struct ishtp_cl_data *client_data;
++	struct ishtp_cl *loader_ishtp_cl;
++	struct ishtp_cl_device *cl_device;
++
++	client_data = container_of(work, struct ishtp_cl_data,
++				   work_ishtp_reset);
++
++	loader_ishtp_cl = client_data->loader_ishtp_cl;
++	cl_device = client_data->cl_device;
++
++	/* Unlink, flush queues & start again */
++	ishtp_cl_unlink(loader_ishtp_cl);
++	ishtp_cl_flush_queues(loader_ishtp_cl);
++	ishtp_cl_free(loader_ishtp_cl);
++
++	loader_ishtp_cl = ishtp_cl_allocate(cl_device);
++	if (!loader_ishtp_cl)
++		return;
++
++	ishtp_set_drvdata(cl_device, loader_ishtp_cl);
++	ishtp_set_client_data(loader_ishtp_cl, client_data);
++	client_data->loader_ishtp_cl = loader_ishtp_cl;
++	client_data->cl_device = cl_device;
++
++	rv = loader_init(loader_ishtp_cl, 1);
++	if (rv < 0) {
++		dev_err(ishtp_device(cl_device), "Reset Failed\n");
++		return;
++	}
++
++	/* ISH firmware loading from host */
++	load_fw_from_host(client_data);
++}
++
++/**
++ * loader_ishtp_cl_probe() - ISH-TP client driver probe
++ * @cl_device:		ISH-TP client device instance
++ *
++ * This function gets called on device create on ISH-TP bus
++ *
++ * Return: 0 for success, negative error code for failure
++ */
++static int loader_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl *loader_ishtp_cl;
++	struct ishtp_cl_data *client_data;
++	int rv;
++
++	client_data = devm_kzalloc(ishtp_device(cl_device),
++				   sizeof(*client_data),
++				   GFP_KERNEL);
++	if (!client_data)
++		return -ENOMEM;
++
++	loader_ishtp_cl = ishtp_cl_allocate(cl_device);
++	if (!loader_ishtp_cl)
++		return -ENOMEM;
++
++	ishtp_set_drvdata(cl_device, loader_ishtp_cl);
++	ishtp_set_client_data(loader_ishtp_cl, client_data);
++	client_data->loader_ishtp_cl = loader_ishtp_cl;
++	client_data->cl_device = cl_device;
++
++	init_waitqueue_head(&client_data->response.wait_queue);
++
++	INIT_WORK(&client_data->work_ishtp_reset,
++		  reset_handler);
++	INIT_WORK(&client_data->work_fw_load,
++		  load_fw_from_host_handler);
++
++	rv = loader_init(loader_ishtp_cl, 0);
++	if (rv < 0) {
++		ishtp_cl_free(loader_ishtp_cl);
++		return rv;
++	}
++	ishtp_get_device(cl_device);
++
++	client_data->retry_count = 0;
++
++	/* ISH firmware loading from host */
++	schedule_work(&client_data->work_fw_load);
++
++	return 0;
++}
++
++/**
++ * loader_ishtp_cl_remove() - ISH-TP client driver remove
++ * @cl_device:		ISH-TP client device instance
++ *
++ * This function gets called on device remove on ISH-TP bus
++ *
++ * Return: 0
++ */
++static int loader_ishtp_cl_remove(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl_data *client_data;
++	struct ishtp_cl	*loader_ishtp_cl = ishtp_get_drvdata(cl_device);
++
++	client_data = ishtp_get_client_data(loader_ishtp_cl);
++
++	/*
++	 * The sequence of the following two cancel_work_sync() is
++	 * important. The work_fw_load can in turn schedue
++	 * work_ishtp_reset, so first cancel work_fw_load then
++	 * cancel work_ishtp_reset.
++	 */
++	cancel_work_sync(&client_data->work_fw_load);
++	cancel_work_sync(&client_data->work_ishtp_reset);
++	loader_deinit(loader_ishtp_cl);
++	ishtp_put_device(cl_device);
++
++	return 0;
++}
++
++/**
++ * loader_ishtp_cl_reset() - ISH-TP client driver reset
++ * @cl_device:		ISH-TP client device instance
++ *
++ * This function gets called on device reset on ISH-TP bus
++ *
++ * Return: 0
++ */
++static int loader_ishtp_cl_reset(struct ishtp_cl_device *cl_device)
++{
++	struct ishtp_cl_data *client_data;
++	struct ishtp_cl	*loader_ishtp_cl = ishtp_get_drvdata(cl_device);
++
++	client_data = ishtp_get_client_data(loader_ishtp_cl);
++
++	schedule_work(&client_data->work_ishtp_reset);
++
++	return 0;
++}
++
++static struct ishtp_cl_driver	loader_ishtp_cl_driver = {
++	.name = "ish-loader",
++	.guid = &loader_ishtp_guid,
++	.probe = loader_ishtp_cl_probe,
++	.remove = loader_ishtp_cl_remove,
++	.reset = loader_ishtp_cl_reset,
++};
++
++static int __init ish_loader_init(void)
++{
++	return ishtp_cl_driver_register(&loader_ishtp_cl_driver, THIS_MODULE);
++}
++
++static void __exit ish_loader_exit(void)
++{
++	ishtp_cl_driver_unregister(&loader_ishtp_cl_driver);
++}
++
++late_initcall(ish_loader_init);
++module_exit(ish_loader_exit);
++
++module_param(dma_buf_size_limit, int, 0644);
++MODULE_PARM_DESC(dma_buf_size_limit, "Limit the DMA buf size to this value in bytes");
++
++MODULE_DESCRIPTION("ISH ISH-TP Host firmware Loader Client Driver");
++MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
++
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("ishtp:*");
 -- 
-2.20.1
+1.9.1
 
