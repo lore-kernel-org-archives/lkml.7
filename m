@@ -4,38 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5653BC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0232C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE5420830
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A5420830
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:21:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="XX0exfil"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Fg6yIS7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732413AbfDBPVW (ORCPT
+        id S1732425AbfDBPV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:21:22 -0400
-Received: from mail-eopbgr810055.outbound.protection.outlook.com ([40.107.81.55]:58187
+        Tue, 2 Apr 2019 11:21:27 -0400
+Received: from mail-eopbgr810041.outbound.protection.outlook.com ([40.107.81.41]:9184
         "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731386AbfDBPVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:21:19 -0400
+        id S1727525AbfDBPVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 11:21:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mCeuUYy65GFSjO6p53HQdhcj2MvO1K6WwUsAQLkOxkI=;
- b=XX0exfilwTmuVpMASzkaBd1CWsOpwZ99t6DjLXH7RYvaAvNwRacArDAZJwHyd7SyFF1L0jUULoruhW8f2eWdOabY8npQX6Nm5MKMqsAzjX2OuY43HbOesYl5g9PdHotBnySRfqA+3ZM4V3CXXam5g4fcohAZpzGw355rNe/LCQU=
+ bh=P30Ck+bfonuK5aDwsqTcfk5eTi0QSnfuMkaflIFvqBI=;
+ b=Fg6yIS7KSnw4dVLqRjYjwkDaNx6/ACqwh2XArbq73bsmmyRJRrraUyV1S/2DnabgQKpE5W9YOFl4juoB4fTxTVPExN1z8aQ+w2YdNaUVUFSfmkirWcfhvHNpPY97leJDaqeay60uyxqpBP2DSYjMbhJ4dfbhHGZQaS7OUMkOgME=
 Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
  DM6PR12MB3257.namprd12.prod.outlook.com (20.179.105.213) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.15; Tue, 2 Apr 2019 15:21:17 +0000
+ 15.20.1750.15; Tue, 2 Apr 2019 15:21:19 +0000
 Received: from DM6PR12MB3163.namprd12.prod.outlook.com
  ([fe80::b1af:416d:c2c3:8e3b]) by DM6PR12MB3163.namprd12.prod.outlook.com
  ([fe80::b1af:416d:c2c3:8e3b%5]) with mapi id 15.20.1750.014; Tue, 2 Apr 2019
- 15:21:16 +0000
+ 15:21:19 +0000
 From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "x86@kernel.org" <x86@kernel.org>
@@ -47,13 +46,13 @@ CC:     Thomas Gleixner <tglx@linutronix.de>,
         Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH v4 2/3] x86/perf/amd: Resolve NMI latency issues for active
- PMCs
-Thread-Topic: [PATCH v4 2/3] x86/perf/amd: Resolve NMI latency issues for
- active PMCs
-Thread-Index: AQHU6We3GCgpzqJns0SOblHx8pDxSw==
-Date:   Tue, 2 Apr 2019 15:21:16 +0000
-Message-ID: <86189495b177259b925f48e79d892a3ef4653fa6.1554218314.git.thomas.lendacky@amd.com>
+Subject: [PATCH v4 3/3] x86/perf/amd: Remove need to check "running" bit in
+ NMI handler
+Thread-Topic: [PATCH v4 3/3] x86/perf/amd: Remove need to check "running" bit
+ in NMI handler
+Thread-Index: AQHU6We44l0L00uiFESByVAPrTj2og==
+Date:   Tue, 2 Apr 2019 15:21:18 +0000
+Message-ID: <9a9195641915b347277bf65173ff9367b7c9bb37.1554218314.git.thomas.lendacky@amd.com>
 References: <cover.1554218314.git.thomas.lendacky@amd.com>
 In-Reply-To: <cover.1554218314.git.thomas.lendacky@amd.com>
 Accept-Language: en-US
@@ -69,23 +68,23 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [165.204.78.1]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12d0c341-25a0-494d-c213-08d6b77ed9a5
+x-ms-office365-filtering-correlation-id: 940d8766-56a7-4ff3-2d73-08d6b77edade
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3257;
 x-ms-traffictypediagnostic: DM6PR12MB3257:
-x-microsoft-antispam-prvs: <DM6PR12MB32578788C1419C6FA2BEDB46EC560@DM6PR12MB3257.namprd12.prod.outlook.com>
+x-microsoft-antispam-prvs: <DM6PR12MB3257952A8581F39334A11951EC560@DM6PR12MB3257.namprd12.prod.outlook.com>
 x-forefront-prvs: 0995196AA2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(136003)(366004)(396003)(189003)(199004)(106356001)(7416002)(110136005)(50226002)(66066001)(105586002)(102836004)(2906002)(476003)(2616005)(5660300002)(386003)(256004)(486006)(6506007)(99286004)(6436002)(36756003)(446003)(186003)(6486002)(118296001)(11346002)(14444005)(76176011)(97736004)(2501003)(81156014)(81166006)(8936002)(316002)(3846002)(72206003)(14454004)(4326008)(26005)(6512007)(68736007)(52116002)(8676002)(25786009)(54906003)(305945005)(7736002)(71200400001)(53936002)(86362001)(71190400001)(478600001)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3257;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(136003)(366004)(396003)(43544003)(189003)(199004)(106356001)(7416002)(110136005)(50226002)(66066001)(105586002)(102836004)(2906002)(476003)(2616005)(5660300002)(386003)(256004)(486006)(6506007)(99286004)(6436002)(36756003)(446003)(186003)(6486002)(118296001)(11346002)(14444005)(76176011)(97736004)(2501003)(81156014)(81166006)(8936002)(316002)(3846002)(72206003)(14454004)(4326008)(26005)(6512007)(68736007)(52116002)(8676002)(25786009)(54906003)(305945005)(7736002)(71200400001)(53936002)(86362001)(71190400001)(478600001)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3257;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Cd/tghtoVYh0WHDdaYCrM1OZaCq7FEM2PVxFdrF3CTiM/QmDxBnHe4fEVcdzjmXh5/jGHA+/cleZuIce0POyo8wTJSpkKk8tKLaHll3686H5gqga5N+QPVm0CWDe17B5u2FfufRqNQ89to7/mNgUo6ZBvdh0YkU1vk6jLUG55snl+IKIOMPJ27xMXUzS53dVVs79lSmISVz3i1CbE29EqhOa5CWcHUyLwiCwqqm9nsSq8Sy9EGDl3M38nFE9g4nU+8XAK5Fa7XrK9uBzJxD9sfWxRCPlz3soPJKLjfWBeb65Awu4AxocZs8h8B2vyN5th/2hFbRvLkwaJxw6CuYxxw9vAykG9S29Ed4RVYql9bm1d3KMrF1IuZijSMFJyi2sF3bYROPjuOIOMDcS7HOFCTltDmJ+BIQusAS+oc3h5sc=
+x-microsoft-antispam-message-info: QYn18Fc39Xde0vHsKOCcg2yM3/huae/vyU89W73Pl6T5KDNNvXL8srZ9ZkAAsutK5DHQbFoZsInL+kY7KM75GeqxfTSq+qs30TFgFYiifSqOq0fPlrjrox6EMeDd+w1o0vbzOB30TM0FmunlfKPECOKHxIiYt6fB2XalfCbqC+fmiO70BYHxLomlcX3qs4obZHczJa53e/szvO/MNxpXHuNUKuLEBxEwaaM9NcZkfFJ7n02hH0+r34PhL3bcPFcD8JvdQJemXn/gaEoBUG9E9ihkJ45GfRv/Q9oUx2Zha6+VTYuJZ/uCpBCD1v9k2eEv76v5K2J0r7+VO9IoJQ9cesyw2LUigr0gbJ97rijsWAmKep0bPZzuT/pH1hRGgEoPdaQZHVi3m3r/hdvOhFWkjXc8mBKXJkapTm5hLRCMYEk=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12d0c341-25a0-494d-c213-08d6b77ed9a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2019 15:21:16.8547
+X-MS-Exchange-CrossTenant-Network-Message-Id: 940d8766-56a7-4ff3-2d73-08d6b77edade
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2019 15:21:19.0233
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
@@ -96,138 +95,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On AMD processors, the detection of an overflowed PMC counter in the NMI
-handler relies on the current value of the PMC. So, for example, to check
-for overflow on a 48-bit counter, bit 47 is checked to see if it is 1 (not
-overflowed) or 0 (overflowed).
+Spurious interrupt support was adding to perf in:
+commit 63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling =
+counters")
 
-When the perf NMI handler executes it does not know in advance which PMC
-counters have overflowed. As such, the NMI handler will process all active
-PMC counters that have overflowed. NMI latency in newer AMD processors can
-result in multiple overflowed PMC counters being processed in one NMI and
-then a subsequent NMI, that does not appear to be a back-to-back NMI, not
-finding any PMC counters that have overflowed. This may appear to be an
-unhandled NMI resulting in either a panic or a series of messages,
-depending on how the kernel was configured.
+The two previous patches (resolving the race condition when disabling a
+PMC and NMI latency mitigation) allow for the removal of this older
+spurious interrupt support.
 
-To mitigate this issue, add an AMD handle_irq callback function,
-amd_pmu_handle_irq(), that will invoke the common x86_pmu_handle_irq()
-function and upon return perform some additional processing that will
-indicate if the NMI has been handled or would have been handled had an
-earlier NMI not handled the overflowed PMC. Using a per-CPU variable, a
-minimum value of the number of active PMCs or 2 will be set whenever a
-PMC is active. This is used to indicate the possible number of NMIs that
-can still occur. The value of 2 is used for when an NMI does not arrive
-at the LAPIC in time to be collapsed into an already pending NMI. Each
-time the function is called without having handled an overflowed counter,
-the per-CPU value is checked. If the value is non-zero, it is decremented
-and the NMI indicates that it handled the NMI. If the value is zero, then
-the NMI indicates that it did not handle the NMI.
+Currently in x86_pmu_stop(), the bit for the PMC in the active_mask bitmap
+is cleared before disabling the PMC, which sets up a race condition. This
+race condition was mitigated by introducing the running bitmap. That race
+condition can be eliminated by first disabling the PMC, waiting for PMC
+reset on overflow and then clearing the bit for the PMC in the active_mask
+bitmap. The NMI handler will not re-enable a disabled counter.
+
+If x86_pmu_stop() is called from the perf NMI handler, the NMI latency
+mitigation support will guard against any unhandled NMI messages.
 
 Cc: <stable@vger.kernel.org> # 4.14.x-
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/events/amd/core.c | 56 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
+ arch/x86/events/amd/core.c | 19 ++++++++++++++++++-
+ arch/x86/events/core.c     | 13 +++----------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index beb132593622..8f06ec0e673b 100644
+index 8f06ec0e673b..22d6667c7063 100644
 --- a/arch/x86/events/amd/core.c
 +++ b/arch/x86/events/amd/core.c
-@@ -4,10 +4,13 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/nmi.h>
- #include <asm/apicdef.h>
-=20
- #include "../perf_event.h"
-=20
-+static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
-+
- static __initconst const u64 amd_hw_cache_event_ids
- 				[PERF_COUNT_HW_CACHE_MAX]
- 				[PERF_COUNT_HW_CACHE_OP_MAX]
-@@ -487,6 +490,57 @@ static void amd_pmu_disable_all(void)
+@@ -490,6 +490,23 @@ static void amd_pmu_disable_all(void)
  	}
  }
 =20
-+/*
-+ * Because of NMI latency, if multiple PMC counters are active or other so=
-urces
-+ * of NMIs are received, the perf NMI handler can handle one or more overf=
-lowed
-+ * PMC counters outside of the NMI associated with the PMC overflow. If th=
-e NMI
-+ * doesn't arrive at the LAPIC in time to become a pending NMI, then the k=
-ernel
-+ * back-to-back NMI support won't be active. This PMC handler needs to tak=
-e into
-+ * account that this can occur, otherwise this could result in unknown NMI
-+ * messages being issued. Examples of this is PMC overflow while in the NM=
-I
-+ * handler when multiple PMCs are active or PMC overflow while handling so=
-me
-+ * other source of an NMI.
-+ *
-+ * Attempt to mitigate this by using the number of active PMCs to determin=
-e
-+ * whether to return NMI_HANDLED if the perf NMI handler did not handle/re=
-set
-+ * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of =
-the
-+ * number of active PMCs or 2. The value of 2 is used in case an NMI does =
-not
-+ * arrive at the LAPIC in time to be collapsed into an already pending NMI=
-.
-+ */
-+static int amd_pmu_handle_irq(struct pt_regs *regs)
++static void amd_pmu_disable_event(struct perf_event *event)
 +{
-+	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
-+	int active, handled;
++	x86_pmu_disable_event(event);
 +
 +	/*
-+	 * Obtain the active count before calling x86_pmu_handle_irq() since
-+	 * it is possible that x86_pmu_handle_irq() may make a counter
-+	 * inactive (through x86_pmu_stop).
++	 * This can be called from NMI context (via x86_pmu_stop). The counter
++	 * may have overflowed, but either way, we'll never see it get reset
++	 * by the NMI if we're already in the NMI. And the NMI latency support
++	 * below will take care of any pending NMI that might have been
++	 * generated by the overflow.
 +	 */
-+	active =3D __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
++	if (in_nmi())
++		return;
 +
-+	/* Process any counter overflows */
-+	handled =3D x86_pmu_handle_irq(regs);
-+
-+	/*
-+	 * If a counter was handled, record the number of possible remaining
-+	 * NMIs that can occur.
-+	 */
-+	if (handled) {
-+		this_cpu_write(perf_nmi_counter,
-+			       min_t(unsigned int, 2, active));
-+
-+		return handled;
-+	}
-+
-+	if (!this_cpu_read(perf_nmi_counter))
-+		return NMI_DONE;
-+
-+	this_cpu_dec(perf_nmi_counter);
-+
-+	return NMI_HANDLED;
++	amd_pmu_wait_on_overflow(event->hw.idx);
 +}
 +
- static struct event_constraint *
- amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event)
-@@ -679,7 +733,7 @@ static ssize_t amd_event_sysfs_show(char *page, u64 con=
-fig)
-=20
- static __initconst const struct x86_pmu amd_pmu =3D {
- 	.name			=3D "AMD",
--	.handle_irq		=3D x86_pmu_handle_irq,
-+	.handle_irq		=3D amd_pmu_handle_irq,
+ /*
+  * Because of NMI latency, if multiple PMC counters are active or other so=
+urces
+  * of NMIs are received, the perf NMI handler can handle one or more overf=
+lowed
+@@ -737,7 +754,7 @@ static __initconst const struct x86_pmu amd_pmu =3D {
  	.disable_all		=3D amd_pmu_disable_all,
  	.enable_all		=3D x86_pmu_enable_all,
  	.enable			=3D x86_pmu_enable_event,
+-	.disable		=3D x86_pmu_disable_event,
++	.disable		=3D amd_pmu_disable_event,
+ 	.hw_config		=3D amd_pmu_hw_config,
+ 	.schedule_events	=3D x86_schedule_events,
+ 	.eventsel		=3D MSR_K7_EVNTSEL0,
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index e2b1447192a8..81911e11a15d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1349,8 +1349,9 @@ void x86_pmu_stop(struct perf_event *event, int flags=
+)
+ 	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
+ 	struct hw_perf_event *hwc =3D &event->hw;
+=20
+-	if (__test_and_clear_bit(hwc->idx, cpuc->active_mask)) {
++	if (test_bit(hwc->idx, cpuc->active_mask)) {
+ 		x86_pmu.disable(event);
++		__clear_bit(hwc->idx, cpuc->active_mask);
+ 		cpuc->events[hwc->idx] =3D NULL;
+ 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+ 		hwc->state |=3D PERF_HES_STOPPED;
+@@ -1447,16 +1448,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 	apic_write(APIC_LVTPC, APIC_DM_NMI);
+=20
+ 	for (idx =3D 0; idx < x86_pmu.num_counters; idx++) {
+-		if (!test_bit(idx, cpuc->active_mask)) {
+-			/*
+-			 * Though we deactivated the counter some cpus
+-			 * might still deliver spurious interrupts still
+-			 * in flight. Catch them:
+-			 */
+-			if (__test_and_clear_bit(idx, cpuc->running))
+-				handled++;
++		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+-		}
+=20
+ 		event =3D cpuc->events[idx];
+=20
 --=20
 2.17.1
 
