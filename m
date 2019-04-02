@@ -2,62 +2,62 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DF8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6DCC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C240F207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D67207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554175875;
-	bh=hp7g6jd2An7qHadtH4UWmz7gr6Z9rruv2mieKHJ1Xmc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=AqJs9+VkLzaHpbP7F4mSI8c+Gwox8BlKuo4JI552TR8ll1wAbTIKo9Gl/9DeXOhg4
-	 BXf1g+u9/3PZ8Oexbn1eGtGbqlpvqd+zENHJuv9kkpoQ8GhzUAD7u5IxHIH+cxzzgM
-	 aW5L6+OV00XNE2I1y6Fu2JcqhS6XX5pg2wSMiSpI=
+	s=default; t=1554175879;
+	bh=FE/eNTVVmkZpNxedhTlxMNBvv1R+8n1pzmyI1KBQOMI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c/zxZ5OK+44ULB8DOyBtdRALC7/+SfqFXc0qbEV6LxgBA7dM31ZjEc4mkJwtmSE51
+	 dlfyAIFrWNuKubEARIwPI9HTnmN4WdOc0Zw4f/vqVhf8CdvY5LpEvNyej+lZDJhzTk
+	 HrLXQP8wHPjIuT0BOLVc8PwUYnPB0NZwfpou273k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfDBDbO (ORCPT
+        id S1729122AbfDBDbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:31:14 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45907 "EHLO
+        Mon, 1 Apr 2019 23:31:18 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34481 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726501AbfDBDbN (ORCPT
+        by vger.kernel.org with ESMTP id S1726501AbfDBDbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:31:13 -0400
+        Mon, 1 Apr 2019 23:31:17 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id A7F3E22205;
-        Mon,  1 Apr 2019 23:31:12 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 7444822246;
+        Mon,  1 Apr 2019 23:31:15 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 01 Apr 2019 23:31:12 -0400
+  by compute3.internal (MEProxy); Mon, 01 Apr 2019 23:31:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=GhdVsMTVKjBk9iUxn
-        5IpYnUVsn7WlgpvFL7kEcghYa8=; b=4h6GGvxjAduskW8z2+xkvHUDonHLeaxzo
-        OpdND1moNstvSCB3U3UdLmRHXe652TX2LIbSCHBSSeU2QHfoPUnDpE/SYUUWHrju
-        W4n+KQ8A8O9eQCbep+ok5OoWGoIRWpbjYMHH/DgckHggOrlWn80KS/F77ZkwFSE8
-        qwu6spWnxPpVn+Y3rSjZsqBrCwJaBQBm2h/lUw0WXJ0MZGBYH43tKJ+g13TezuSN
-        9G3nOBLFdSlM+BpaDnGL5yRbumtwrw7id36ZWRmKDMuHLJRyeGfnRyWFbrGaHhzO
-        D8XKDA3g/TzeQZqMTyKCU05fKaIMBrbi9XLTMsgpKTGE4is3wPx5g==
-X-ME-Sender: <xms:fteiXAjnNz3kCdhLz_BNzY1vJkrn2ex_iR3UDTk_kTdj153i9WeFIg>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=qS74YLv32TK4OdRxyP79l+k5LQKLZkF6HF7u7XLPsVY=; b=J08A5mJb
+        UVl31TB6lBjTNCDo3r2bk4xwTFtJIQ9a+1YCHSkj1oQGYW7B3uWXxsbHyGIoyaY6
+        1cSMIi8SOQdEFgMG3V1puLlXCNvSlftMGeu4BP1PPbcyeVt1+CFXp/GljiqrGZ0Y
+        hsuDAsRcHfDYGAaJCmkVuwj1wU9Kg+588EQPWr8MFpUTH8BJA8/JDQ0Ldap/S9F8
+        +yTfqCBElrEHZlrL72Ngk6jd6gw9WFdY65Fvbrr8mHQB5yd/8MwpBE6rPxOMQUsW
+        z2l/Jb4UG2O/9BpRfOnjSdL9RQYz4oP30CF+IwA0i1PCrw/JeY5J69iOE9vfwE8H
+        EQpqkROtgrjsDQ==
+X-ME-Sender: <xms:g9eiXCHV__yzzZ4dYncfoCwTDXxYKKqFVUVI1ZtzwIsUjJdJEor6WA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrleehgdeikecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
-    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucffohhmrg
-    hinhepghhithhhuhgsrdgtohhmpdhoiihlrggsshdrohhrghenucfkphepuddvgedrudej
-    uddrvdefrdduvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhnsehkvghrnh
-    gvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:fteiXPEdeXrUl6-EIAHSsIYBBfSJGzp32qnEMy0YjngnrfonQJ_G1A>
-    <xmx:fteiXLWmLQ_UGez3uQT65pc1rGihfbjIIHgdKhTxYSFQzRc-MVpEYA>
-    <xmx:fteiXJYwuU6SQ9oBX_iQqk506dpLynTdOZh4bH6rWD2AxjmALkLW6w>
-    <xmx:gNeiXMWpmRg18hyrF_R-xsScykLtThsdIv0Pn3YCaKvtUWsow9nZOQ>
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
+    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
+    epuddvgedrudejuddrvdefrdduvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:g9eiXA1IwyQqtEnT7rMxLhFSYTAYY4Uk3HXvutL05cjcw8FiG7Ma4w>
+    <xmx:g9eiXOxOo2l5ZMyZEBeDEA5jJdFenChkeDY_TfKSoxghmCD5vBFleQ>
+    <xmx:g9eiXBjwd-RlVNhHmI9SHrSWUgvXthaKe8RyCy4NstFCi9iazAzT8g>
+    <xmx:g9eiXAr0-Wuk57VBwwiHYe4poMe5AbqzVM_rWxW9QfdpD9ehnSzNdg>
 Received: from eros.localdomain (124-171-23-122.dyn.iinet.net.au [124.171.23.122])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CD8B710390;
-        Mon,  1 Apr 2019 23:31:06 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 549AC100E5;
+        Mon,  1 Apr 2019 23:31:11 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>, LKP <lkp@01.org>,
@@ -66,11 +66,13 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>, LKP <lkp@01.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/1] slob: Fix list_head bug during allocation
-Date:   Tue,  2 Apr 2019 14:29:56 +1100
-Message-Id: <20190402032957.26249-1-tobin@kernel.org>
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: [PATCH 1/1] slob: Only use list functions when safe to do so
+Date:   Tue,  2 Apr 2019 14:29:57 +1100
+Message-Id: <20190402032957.26249-2-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190402032957.26249-1-tobin@kernel.org>
+References: <20190402032957.26249-1-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,91 +80,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Currently we call (indirectly) list_del() then we manually try to combat
+the fact that the list may be in an undefined state by getting 'prev'
+and 'next' pointers in a somewhat contrived manner.  It is hard to
+verify that this works for all initial states of the list.  Clearly the
+author (me) got it wrong the first time because the 0day kernel testing
+robot managed to crash the kernel thanks to this code.
 
-This patch is in response to an email from the 0day kernel test robot
-subject:
+All this is done in order to do an optimisation aimed at preventing
+fragmentation at the start of a slab.  We can just skip this
+optimisation any time the list is put into an undefined state since this
+only occurs when an allocation completely fills the slab and in this
+case the optimisation is unnecessary since we have not fragmented the slab
+by this allocation.
 
-  340d3d6178 ("mm/slob.c: respect list_head abstraction layer"):  kernel BUG at lib/list_debug.c:31!
+Change the page pointer passed to slob_alloc_page() to be a double
+pointer so that we can set it to NULL to indicate that the page was
+removed from the list.  Skip the optimisation if the page was removed.
 
+Found thanks to the kernel test robot, email subject:
 
-This patch applies on top of linux-next tag: next-20190401
+	340d3d6178 ("mm/slob.c: respect list_head abstraction layer"):  kernel BUG at lib/list_debug.c:31!
 
-It fixes a patch that was merged recently into mm:
-
-  The patch titled
-       Subject: mm/slob.c: respect list_head abstraction layer
-  has been added to the -mm tree.  Its filename is
-       slob-respect-list_head-abstraction-layer.patch
-  
-  This patch should soon appear at
-      http://ozlabs.org/~akpm/mmots/broken-out/slob-respect-list_head-abstraction-layer.patch
-  and later at
-      http://ozlabs.org/~akpm/mmotm/broken-out/slob-respect-list_head-abstraction-layer.patch
-
-
-If reverting is easier than patching I can re-work this into another
-version of the original (buggy) patch set which was the series:
-
-  [PATCH 0/4] mm: Use slab_list list_head instead of lru
-
-Please don't be afraid to give a firm response.  I'm new to mm and I'd
-like to not be a nuisance if I can manage it ;)  I'd also like to fix
-this in a way that makes your day as easy as possible.
-
-
-The 0day kernel test robot found a bug in the slob allocator caused by a
-patch from me recently merged into the mm tree.  This is the first time
-the 0day has found a bug in already merged code of mine so I do not know
-the exact protocol in regards to linking the fix with the report,
-patching, reverting etc.
-
-I was unable to reproduce the crash, I tried building with the config
-attached to the email above but the kernel booted fine for me in Qemu.
-
-So I re-worked the module originally used for testing, it can be found
-here:
-
-	https://github.com/tcharding/ktest/tree/master/list_head
-
-From this I think the list.h code added prior to the buggy patch is
-ok.
-
-Next I tried to find the bug just using my eyes.  This patch is the
-result.  Unfortunately I can not understand why this bug was not
-triggered _before_ I originally patched it.  Perhaps I'm not juggling
-all the state perfectly in my head.  Anyways, this patch stops and code
-calling list manipulation functions if the slab_list page member has
-been modified during allocation.
-
-The code in question revolves around an optimisation aimed at preventing
-fragmentation at the start of a slab due to the first fit nature of the
-allocation algorithm.
-
-Full explanation is in the commit log for the patch, the short version
-is; skip optimisation if page list is modified, this only occurs when an
-allocation completely fills the slab and in this case the optimisation
-is unnecessary since we have not fragmented the slab by this allocation.
-
-This is more than just a bug fix, it significantly reduces the
-complexity of the function while still fixing the reason for originally
-touching this code (violation of list_head abstraction).
-
-The only testing I've done is to build and boot a kernel in Qemu (with
-CONFIG_LIST_DEBUG and CONFIG_SLOB) enabled).  However, as mentioned,
-this method of testing did _not_ reproduce the 0day crash so if there
-are better suggestions on how I should test these I'm happy to do so.
-
-thanks,
-Tobin.
-
-
-Tobin C. Harding (1):
-  slob: Only use list functions when safe to do so
-
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+---
  mm/slob.c | 50 ++++++++++++++++++++++++++++++--------------------
  1 file changed, 30 insertions(+), 20 deletions(-)
 
+diff --git a/mm/slob.c b/mm/slob.c
+index 21af3fdb457a..c543da10df45 100644
+--- a/mm/slob.c
++++ b/mm/slob.c
+@@ -213,10 +213,18 @@ static void slob_free_pages(void *b, int order)
+ }
+ 
+ /*
+- * Allocate a slob block within a given slob_page sp.
++ * slob_page_alloc() - Allocate a slob block within a given slob_page sp.
++ * @spp: Page to look in, return parameter.
++ * @size: Size of the allocation.
++ * @align: Allocation alignment.
++ *
++ * Tries to find a chunk of memory at least @size within page.  If the
++ * allocation fills up page then page is removed from list, in this case
++ * *spp will be set to %NULL to signal that list removal occurred.
+  */
+-static void *slob_page_alloc(struct page *sp, size_t size, int align)
++static void *slob_page_alloc(struct page **spp, size_t size, int align)
+ {
++	struct page *sp = *spp;
+ 	slob_t *prev, *cur, *aligned = NULL;
+ 	int delta = 0, units = SLOB_UNITS(size);
+ 
+@@ -254,8 +262,11 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
+ 			}
+ 
+ 			sp->units -= units;
+-			if (!sp->units)
++			if (!sp->units) {
+ 				clear_slob_page_free(sp);
++				/* Signal that page was removed from list. */
++				*spp = NULL;
++			}
+ 			return cur;
+ 		}
+ 		if (slob_last(cur))
+@@ -268,7 +279,7 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
+  */
+ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ {
+-	struct page *sp, *prev, *next;
++	struct page *sp;
+ 	struct list_head *slob_list;
+ 	slob_t *b = NULL;
+ 	unsigned long flags;
+@@ -283,6 +294,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 	spin_lock_irqsave(&slob_lock, flags);
+ 	/* Iterate through each partially free page, try to find room */
+ 	list_for_each_entry(sp, slob_list, slab_list) {
++		struct page **spp = &sp;
+ #ifdef CONFIG_NUMA
+ 		/*
+ 		 * If there's a node specification, search for a partial
+@@ -295,27 +307,25 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 		if (sp->units < SLOB_UNITS(size))
+ 			continue;
+ 
+-		/*
+-		 * Cache previous entry because slob_page_alloc() may
+-		 * remove sp from slob_list.
+-		 */
+-		prev = list_prev_entry(sp, slab_list);
+-
+ 		/* Attempt to alloc */
+-		b = slob_page_alloc(sp, size, align);
++		b = slob_page_alloc(spp, size, align);
+ 		if (!b)
+ 			continue;
+ 
+-		next = list_next_entry(prev, slab_list); /* This may or may not be sp */
+-
+ 		/*
+-		 * Improve fragment distribution and reduce our average
+-		 * search time by starting our next search here. (see
+-		 * Knuth vol 1, sec 2.5, pg 449)
++		 * If slob_page_alloc() removed sp from the list then we
++		 * cannot call list functions on sp.  Just bail, don't
++		 * worry about the optimisation below.
+ 		 */
+-		if (!list_is_first(&next->slab_list, slob_list))
+-			list_rotate_to_front(&next->slab_list, slob_list);
+-
++		if (*spp) {
++			/*
++			 * Improve fragment distribution and reduce our average
++			 * search time by starting our next search here. (see
++			 * Knuth vol 1, sec 2.5, pg 449)
++			 */
++			if (!list_is_first(&sp->slab_list, slob_list))
++				list_rotate_to_front(&sp->slab_list, slob_list);
++		}
+ 		break;
+ 	}
+ 	spin_unlock_irqrestore(&slob_lock, flags);
+@@ -334,7 +344,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+ 		INIT_LIST_HEAD(&sp->slab_list);
+ 		set_slob(b, SLOB_UNITS(PAGE_SIZE), b + SLOB_UNITS(PAGE_SIZE));
+ 		set_slob_page_free(sp, slob_list);
+-		b = slob_page_alloc(sp, size, align);
++		b = slob_page_alloc(&sp, size, align);
+ 		BUG_ON(!b);
+ 		spin_unlock_irqrestore(&slob_lock, flags);
+ 	}
 -- 
 2.21.0
 
