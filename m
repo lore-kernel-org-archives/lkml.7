@@ -2,140 +2,178 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF119C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264CAC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A164F2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:13:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RXuO6aqo"
+	by mail.kernel.org (Postfix) with ESMTP id E8E362082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbfDBTNZ (ORCPT
+        id S1730378AbfDBTN5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:13:25 -0400
-Received: from mout.gmx.net ([212.227.17.21]:34869 "EHLO mout.gmx.net"
+        Tue, 2 Apr 2019 15:13:57 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48151 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfDBTNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:13:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1554232399;
-        bh=qWoR88u3UXyVY3Dan0Jg67N4efQgr/usDeKN+ubd73A=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=RXuO6aqobTDN62iT1ajDdjEBDXymsEm+Rv08q33xm82vuGt45QFCS/FhJwV+N1QDe
-         PocrjwxDA/KMcFh/N094PetSUI69lU3G6zMwe2utj4ZklYP1IoFzbwYoCwmCVkE5vE
-         0hBiLuxHlIzB3+70187aFEnOMHUb5OYQ1k8/8pGo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([109.90.232.48]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0LmNHK-1gbW850KoM-00Zu3J; Tue, 02
- Apr 2019 21:13:19 +0200
-Date:   Tue, 2 Apr 2019 21:13:17 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-doc@vger.kernel.org, Martin Kepplinger <martink@posteo.de>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: kernel-docs: Move vfs.txt under "Docs at
- the Linux Kernel tree"
-Message-ID: <20190402191317.GG2095@latitude>
-References: <20190331221439.22892-1-j.neuschaefer@gmx.net>
- <20190402094358.38c15809@lwn.net>
+        id S1726083AbfDBTN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 15:13:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 12:13:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,301,1549958400"; 
+   d="scan'208";a="333143377"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by fmsmga006.fm.intel.com with ESMTP; 02 Apr 2019 12:13:56 -0700
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 2 Apr 2019 12:13:56 -0700
+Received: from lcsmsx152.ger.corp.intel.com (10.186.165.231) by
+ FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 2 Apr 2019 12:13:55 -0700
+Received: from hasmsx108.ger.corp.intel.com ([169.254.9.237]) by
+ LCSMSX152.ger.corp.intel.com ([10.186.165.231]) with mapi id 14.03.0415.000;
+ Tue, 2 Apr 2019 22:13:52 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Subject: RE: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
+Thread-Topic: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
+Thread-Index: AQHU6L4DTy7PYCgxuEOQPC9C1rGO2qYnxnWAgAEbdYCAAFcTkA==
+Date:   Tue, 2 Apr 2019 19:13:52 +0000
+Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B9DAE2759@hasmsx108.ger.corp.intel.com>
+References: <20190401190607.GA23795@beast>
+ <20190401234625.GA29016@linux.intel.com>
+ <20190402164057.GA4544@linux.intel.com>
+In-Reply-To: <20190402164057.GA4544@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.249.91.79]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="FoLtEtfbNGMjfgrs"
-Content-Disposition: inline
-In-Reply-To: <20190402094358.38c15809@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:75a/cp3rvVbazYZqV14AZHIHlRl+FRB0qBGUQyXyC7aPqcRrY6s
- QmgyFtkCwZn7LjyrG5Da0LX+Q0C75/kKOcx++/DuaOLk5Lsn6wmFIDwLpt3sUkVQGb7d5Wj
- Yb1bqhlV2I/zB6LSkvyeOsWNK9kkk3Co8aAiu/jJYqsW8DKt2F2t30J1NzFUL4Camo6nwnC
- BZHLC/zwvc6oV4hgtAZWQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hnw4kuHEjb0=:q5WL0JeI2YFpcAoGzJRZhZ
- Pfcf+SV3D17w0XIOAHBGEC0r3MRAdpbOaSxi0i2VBluccLOIxX6d+beddlZyEqx4CDo0b/fp4
- GhrwxucLaGvfDjgK62S1XLW6YrE/PBcWYrQp4NzLsc3kNDJmIObis/Wi5wZic/xeIjLtvfu91
- 20r4Hme6zaPZkd/ICGzJrTxkDZPAAyZro9JFVe3fYLZljklM+O27WHaqG/v+1Bwhvq9LFN/dn
- 5hqI/Goj9e0j5dDURDPEixHKU9Kb+x0piCBpbk2vShgmmZXqtgW4LMPopF+SJiCF5IzZkBJai
- 6iSrQV6MFUvswGJHD3p0L8DAWeSj+ePk9fNI5gt3BEJDQTxI5DIQ8aBwmuZqgFrBollFIiQx0
- QKVhn7apmrJedO7IS7W+vZuera/XE5TG6/HGTt7j7RSfL/+QjQGGlytypt3VC++6QTB6v+hjw
- H6q8gUeFfaLopjR8WzQLwZFAPB+NR4uLRsclEbKDDdjckqw5SoOF1nKBfwOLl4fx38z7SuuF7
- az+wMemOOMsMhEOo3VLs1m2h4nUZE+isb+a8kPxFtxlQjMrBHopu9eYUvxHqrl4r9AdorF7kq
- rvKIWzQrSw5wE0jA67XK3PIKYy/buFZhSj8Y7C91y9dzn00em/qzPr5naaP2Kj4uLOJkOFYEw
- F0WjYHKb9q93ckax3Xp7Buqv9bNSp91L3tCPfzPTtebIpqZp+hhr5AvI5MuXWopcFPIK33bzU
- oxdsV6VzCQnPIWXzzI4DqgkfoYts54yotX+vZNScfr46W0tbL8r9jf5zbCKILSEPpCYGbDrOS
- e6Qhsx2Ww0bhgMnZup/et6um7NknCtC8VWIF4nT/0nhmiDQgZLMih+fv2Rt6KxgcmvdxqTtF7
- 7XrBFiUainAjgrSXz91aHz63p2o8DDh9g1BAABnABu4auOJ9y8tlzsDYj1rJX2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---FoLtEtfbNGMjfgrs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 02, 2019 at 09:43:58AM -0600, Jonathan Corbet wrote:
-> On Mon,  1 Apr 2019 00:14:37 +0200
-> Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
->=20
-> > It's unnecessary to point to an external mirror of the Documentation
-> > directory. Also, drop the date field, because in-kernel documentation is
-> > continually updated.
->=20
-> So I had to ponder on this one a bit...saying "continually updated" is
-> pretty amusing for a document that leads off with:
->=20
-> 		  Last updated on June 24, 2007.
+> On Tue, Apr 02, 2019 at 02:46:25AM +0300, Jarkko Sakkinen wrote:
+> > On Mon, Apr 01, 2019 at 12:06:07PM -0700, Kees Cook wrote:
+> > > A "get random" may fail with a TPM error, but those codes were
+> > > returned as-is to the caller, which assumed the result was the
+> > > number of bytes that had been written to the target buffer, which
+> > > could lead to a kernel heap memory exposure and over-read.
+> > >
+> > > This fixes tpm1_get_random() to mask positive TPM errors into -EIO,
+> > > as before.
+> > >
+> > > [   18.092103] tpm tpm0: A TPM error (379) occurred attempting get
+> random
+> > > [   18.092106] usercopy: Kernel memory exposure attempt detected from
+> SLUB object 'kmalloc-64' (offset 0, size 379)!
+> > >
+> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
+> > > Reported-by: Phil Baker <baker1tex@gmail.com>
+> > > Reported-by: Craig Robson <craig@zhatt.com>
+> > > Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using
+> > > tpm_buf structure")
+> > > Cc: Laura Abbott <labbott@redhat.com>
+> > > Cc: Tomas Winkler <tomas.winkler@intel.com>
+> > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > v3: fix never-succeed, limit checks to tpm cmd return (James, Jason)
+> > > v2: also fix tpm2 implementation (Jason Gunthorpe)
+> > > ---
+> > >  drivers/char/tpm/tpm1-cmd.c | 7 +++++--
+> > > drivers/char/tpm/tpm2-cmd.c | 7 +++++--
+> > >  2 files changed, 10 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/char/tpm/tpm1-cmd.c
+> > > b/drivers/char/tpm/tpm1-cmd.c index 85dcf2654d11..faacbe1ffa1a
+> > > 100644
+> > > --- a/drivers/char/tpm/tpm1-cmd.c
+> > > +++ b/drivers/char/tpm/tpm1-cmd.c
+> > > @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+> > >   *
+> > >   * Return:
+> > >   * *  number of bytes read
+> > > - * * -errno or a TPM return code otherwise
+> > > + * * -errno (positive TPM return codes are masked to -EIO)
+> > >   */
+> > >  int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
+> > > @@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chip, u8
+> > > *dest, size_t max)
+> > >
+> > >  		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
+> > >  				      "attempting get random");
+> > > -		if (rc)
+> > > +		if (rc) {
+> > > +			if (rc > 0)
+> > > +				rc = -EIO;
+> > >  			goto out;
+> > > +		}
+> > >
+> > >  		out = (struct tpm1_get_random_out
+> *)&buf.data[TPM_HEADER_SIZE];
+> > >
+> > > diff --git a/drivers/char/tpm/tpm2-cmd.c
+> > > b/drivers/char/tpm/tpm2-cmd.c index e74c5b7b64bf..8ffa6af61580
+> > > 100644
+> > > --- a/drivers/char/tpm/tpm2-cmd.c
+> > > +++ b/drivers/char/tpm/tpm2-cmd.c
+> > > @@ -301,7 +301,7 @@ struct tpm2_get_random_out {
+> > >   *
+> > >   * Return:
+> > >   *   size of the buffer on success,
+> > > - *   -errno otherwise
+> > > + *   -errno otherwise ((positive TPM return codes are masked to -EIO)
+> > >   */
+> > >  int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
+> > > @@ -328,8 +328,11 @@ int tpm2_get_random(struct tpm_chip *chip, u8
+> *dest, size_t max)
+> > >  				       offsetof(struct tpm2_get_random_out,
+> > >  						buffer),
+> > >  				       "attempting get random");
+> > > -		if (err)
+> > > +		if (err) {
+> > > +			if (err > 0)
+> > > +				err = -EIO;
+> > >  			goto out;
+> > > +		}
+> > >
+> > >  		out = (struct tpm2_get_random_out *)
+> > >  			&buf.data[TPM_HEADER_SIZE];
+> > > --
+> > > 2.17.1
+> > >
+> > >
+> > > --
+> > > Kees Cook
+> >
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> Applied to my master branch. Jason, Tomas, do you want me to add reviewed-
+> by's?
+Sure, it fixes my patch.
 
-Ok, I should have been more explicit with what I meant and written "(in
-principle) continually update"; compared to journal articles or sections
-of a specific edition of a book, that's what files in Git are.
-
-However, looking at the Git history for vfs.txt, it has indeed been
-updated multiple times per year, and not just with typo fixes, so I
-think this line should simply be removed to avoid further confusion.
-
->=20
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > ---
-> >=20
-> > Alternatively, we might drop this entry of the list entirely, because
-> > Documentation/ is already covered.
->=20
-> In the end, I think this alternative option is the better one.  We don't
-> want to turn kernel-docs.rst into yet another out-of-date index for the
-> rest of Documentation/, and the removal of the external URL takes away the
-> only bit of additional information that this entry offers.
-
-Good points, I'll do that for v2.
-
-
-Jonathan Neusch=C3=A4fer
-
---FoLtEtfbNGMjfgrs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlyjtEUACgkQCDBEmo7z
-X9tuDxAAhI7/Ps7vFq8GC175FVfxPhfZxKqwVIIz3QGw1eGhSrA1EdDS1W/SWElf
-WzM6T71NkvscGCAOyvvwW4hj+bGlvwpUt84wWyjl8MNFqZq+v/4wKwATMvk3O+mA
-KRpLnCy2E67hNsLMZKFIdrYnboUxkA/w/oWrKpx6fNPZrAEK0mvL2Ttl5fa6Tled
-qgjmGFS41e1KUOViXMdiW37+FGZ8w+ugIj6rcD1vkRnhkrF7Lcbijbv2rODhpm8A
-XT29Kz3Pb4r+7hpFem+J1tmICERgECcz7GKyYuq0m5SoqZthAcBzwlNJAOGzW/iH
-qqyYVL1NQvkyUecgJt/XVKu5zDAxEF691tF/oVlKAiCIFMmy4F5WuBr4fczkmR1D
-iBwNM9onP2M7lzaRFCwV+5jOMn01HDaalUstG96t8v0wfqrDzcdA+h8cQiiJMCIx
-j7OUpGxnBb+01ZH5HTImrHt/YqtQlLB7VkNT3gWx4cr3kjvi7L8ZHzKuA7JlzNGb
-XdpxForWCTFty9bUkSWiJYSXCISFB0SGeZAN0MV7jVd0oN7CkFG8ZOX1lfmGP/5X
-Ln13VCw42IEgISfwUChnPKiv3PTzPH1lE2CKAsOfbOdRYsl5+7dAOq0+mFBJxM8A
-7qb3aAT+W28DTMBqvzPts3oe7XLHTKtpxnmRHpknOkuzPUnPGv0=
-=TAgE
------END PGP SIGNATURE-----
-
---FoLtEtfbNGMjfgrs--
+> /Jarkko
