@@ -2,196 +2,155 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34955C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A93C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F5C2070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC552070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wUC3kuwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbfDBHiX (ORCPT
+        id S1729264AbfDBHlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 03:38:23 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:41838 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727021AbfDBHiW (ORCPT
+        Tue, 2 Apr 2019 03:41:12 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33241 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728797AbfDBHlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 03:38:22 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id BDzrh1wZAiLOmBDzuheofo; Tue, 02 Apr 2019 09:38:19 +0200
-Subject: Re: [PATCH v15 0/6] Media Device Allocator API
-To:     Shuah Khan <shuah@kernel.org>, mchehab@kernel.org, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-References: <cover.1554155701.git.shuah@kernel.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fb0b46d3-a8a5-c5b5-7f3e-08ddfd27235b@xs4all.nl>
-Date:   Tue, 2 Apr 2019 09:38:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 2 Apr 2019 03:41:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b12so6137881pgk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 00:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0DygoCdd8v7Idn0OS/eHsV068yD1YAoIz9JRL6f968Y=;
+        b=wUC3kuwF+78TcNsB9XUyOoGfC1otCCNAbFSu8ZpS8yHP+p4eYEOEkKEAQHj9Zw1e3I
+         Z1LBVexOuaWlU9O65dfXEoUP1texilH0/VOADyDQKJksMQrj2pLsrIPF2k+mNbL3kmq/
+         yanI8cdEtgDzfYvFVXCfCQ/lHtszLmCxdXP1KFWBfatn0KzcTYZS+hYXIsa91tazL4fD
+         sArW6gRWzB2aBpPsTpAou5qlfl1VXnIX0Pu92sl9m4stNYaG78zUipba9JGcvtl4RkQv
+         PYPO9B3sl2Q56znmdB8ScMzJkEUclAnVSasn2nq1ZwNO8kgHfjSh4o8xo30thVj0d4bR
+         ohfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0DygoCdd8v7Idn0OS/eHsV068yD1YAoIz9JRL6f968Y=;
+        b=kBJEn2cJ4qNkS5KuSlHGmpn1vNoKONdhO9o4hS8pI9C48WN1mR7WaZxmcJ5LbhaFc2
+         tjw38/gsq3Bm08LJpNGCokb2ircrrV6I9nfXJMhnFprl+E/qBJMA7/ezh2vKpZRl/tkH
+         zv8yEfPO2XGFPNWu0xqs6DaqyDLUMLJ8E1Jy3b6zBvjqPXyCCFflwLo9EZ8LYgThRzz/
+         B+SV2fWbbdeSKcWBvD78G5KHfUcICvqfMWv9QxjS0c7RVO9GfqeY7GQbN4L7qh7LtiKO
+         x9ErYgXxoizca5l3ElYl0mXRaxiq8FOFB4MfnFjBzVY9tcucAt+8n6C+ey3HwVGrF/32
+         hsxQ==
+X-Gm-Message-State: APjAAAUOnblR9cwLcklrbrevqSe2yuBLE/PHOZlx0a9+arMKaBPJ1GBY
+        0Zwm8Jgcw96S9f3vM0byHx2zjg==
+X-Google-Smtp-Source: APXvYqwIU2EKsOb+GkR7CmnXXTOJFz6V6UxQ1p8yRizr5jm2ahSGCW+lo8VETFezXn1pZWA6RLJqnA==
+X-Received: by 2002:aa7:884b:: with SMTP id k11mr6180199pfo.49.1554190871179;
+        Tue, 02 Apr 2019 00:41:11 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id 14sm27115895pft.137.2019.04.02.00.41.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 00:41:10 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 08:41:03 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RESEND PATCH v6 05/11] mfd: core: document mfd_add_devices()
+Message-ID: <20190402074103.GG4187@dell>
+References: <20190318174228.18194-1-brgl@bgdev.pl>
+ <20190318174228.18194-6-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <cover.1554155701.git.shuah@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKoI3P/MjjA07cHE8vWFlLivYlutl+G4LQG+xVduRiEoU3Zyb3VRUxMb3cLzyC6cKGwpJKA8zV539hEilQ/1izL1ldQJFDI+SuZwr6x+lOZlZsXtdgud
- Jwb/ykLdVxitw7JjDL2uIiCVQlZyHS/vdys8+g1y90jKo3EvBCaIIFwYBBfAlSYTtumFcmuSSxD/TWUxkJF53SP88lIOqwBHhIhs+itWPnJFfxR3TPJS4Z46
- Q1Vf6NVquaeaEl5yIaeAUb/ratGT91pWjKw/HLuQPcm7dRk9MvjWVqQXYfSb1WKPEjF1gaeEpO5i4YNAEiKaHcY1APfxiz7TB2ctwTyu9LKDFDB6F6gvrdCk
- Bmz3QcTi3NGgrf7bj3GQSspL7pGuqA==
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190318174228.18194-6-brgl@bgdev.pl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/19 2:40 AM, Shuah Khan wrote:
-> Media Device Allocator API to allows multiple drivers share a media device.
-> This API solves a very common use-case for media devices where one physical
-> device (an USB stick) provides both audio and video. When such media device
-> exposes a standard USB Audio class, a proprietary Video class, two or more
-> independent drivers will share a single physical USB bridge. In such cases,
-> it is necessary to coordinate access to the shared resource.
-> 
-> Using this API, drivers can allocate a media device with the shared struct
-> device as the key. Once the media device is allocated by a driver, other
-> drivers can get a reference to it. The media device is released when all
-> the references are released.
-> 
-> The primary focus for testing The patch series is making sure media
-> device is released when both drivers release the media device with
-> a series of unbind/binds on both drivers.
-> 
-> - both au0828 and snd-usb-aduio as built-in
-> - both au0828 and snd-usb-aduio as modules
-> - au0828 as module and snd-usb-aduio as built-in
-> - au0828 as built-in and snd-usb-aduio as module
-> 
-> Test results can be found at:
-> 
-> https://docs.google.com/document/d/1RMF8Rwj7xHJEoOx6_K2f-REgZJ63BMeAVEf-CV-0HsM/edit?usp=sharing
+On Mon, 18 Mar 2019, Bartosz Golaszewski wrote:
 
-Phew, after posting v2 of my patch "au0828: stop video streaming only when last
-user stops" everything now works as it should, including the issue with two VBI
-streams you found.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Add a kernel doc for mfd_add_devices().
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/mfd/mfd-core.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index 94e3f32ce935..0898a8db1747 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -269,6 +269,20 @@ static int mfd_add_device(struct device *parent, int id,
+>  	return ret;
+>  }
+>  
+> +/**
+> + * mfd_add_devices - register a set of child devices
 
-Should I take the selftest patch or will you take that yourself?
+"register child devices"
 
-Let me know so I can make the pull request for this. It's been a long journey
-since the first post on April 9th, 2014: "[RFC PATCH 0/2] managed token devres
-interfaces".
+> + *
+> + * @parent: Parent device for all sub-nodes.
+> + * @id: Platform device id. If >= 0, each sub-device will have its cell_id
+> + *      added to this number and use it as the platform device id.
+> + * @cells: Array of mfd cells describing sub-devices.
+> + * @n_devs: Number of sub-devices to register.
+> + * @mem_base: Parent register range resource for sub-devices.
+> + * @irq_base: Base of the range of virtual interrupt numbers allocated for
+> + *            this MFD device. Unused if @domain is specified.
+> + * @domain: Interrupt domain used to create mappings for HW interrupt numbers
+> + *          specificed in sub-devices' IRQ resources.
 
-Almost exactly five years of work!
+Spelling.
 
-Regards,
+> + */
+>  int mfd_add_devices(struct device *parent, int id,
+>  		    const struct mfd_cell *cells, int n_devs,
+>  		    struct resource *mem_base,
 
-	Hans
+How about this:
 
-> 
-> Changes since v14:
-> - Fixed typos and Copyright date.
-> - Made VBI shareable with audio and video.
-> - Tested with Hans's patch to to fix second VBi stream stepping
->   on active VBI stream. The patch didn't fix the problem.
-> 
->   1. Start qv4l2 -V /dev/vbi0
->     Start capture - Streaming active
-> 
->   2. Start qv4l2 -V /dev/vbi0
->    Start capture - Streaming active
->    Streaming won't start and the first stream stops.
-> 
-> There is still a problem in au0828. I am sending the patch series with
-> audio, video, and VBI shareable with this known issue.
-> 
-> Changes since v13:
-> - Minor changes to variable names and other minor changes to copyright
->   and typos suggested by Hans Verkuil.
-> 
-> Changes since v12:
-> - Patch 1: Fixed prototype warns from media_dev_allocator.c. Removed
->   dependency on find_module() by adding struct module to input args.
->   Still need module name to pass into media_device API.
-> - Patch 2 & 4: Update media dev allocator api calls to pass in struct module
->   pointer.
-> - No changes to Patches 3 & 5.
-> - Added patch 6 with a test. It can go in separately.
-> 
-> Changes since v11:
-> - Patch 1: Add CONFIG_MODULES dependency in media_dev_allocator files.
->   to fix compile errors when CONFIG_MODULES is disabled.
-> - Patch 2, 3: No changes.
-> - Patch 4: Fix sparse error reported by Dan Carpenter.
-> - Patch 5: Fix warns found by Hans Verkuil.
-> - v11 was tested on 5.0-rc7 and addresses comments on v10 series from
->   Hans Verkuil. Fixed problems found in resource sharing logic in au0828
->   adding a patch 5 to this series. The test plan used for testing resource
->   sharing could serve as a regression test plan and the test results can be
->   found at:
-> - v10 was tested on 5.0-rc3 and addresses comments on v9 series from
->   Hans Verkuil.
-> 
-> Changes since v10:
-> - Patch 1: Fixed SPDX tag and removed redundant IS_ENABLED(CONFIG_USB)
->            around media_device_usb_allocate() - Sakari Ailus's review
->            comment.
-> - Patch 2 and 3: No changes
-> - Patch 4: Fixed SPDX tag - Sakari Ailus's review comment.
-> - Carried Reviewed-by tag from Takashi Iwai for the sound from v9.
-> - Patch 5: This is a new patch added to fix resource sharing
->            inconsistencies and problem found during testing using Han's
->            tests.
-> 
-> Changes since v9:
-> - Patch 1: Fix mutex assert warning from find_module() calls. This
->   code was written before the change to find_module() that requires
->   callers to hold module_mutex. I missed this during my testing on
->   4.20-rc6. Hans Verkuil reported the problem.
-> - Patch 4: sound/usb: Initializes all the entities it can before
->   registering the device based on comments from Hans Verkuil
-> - Carried Reviewed-by tag from Takashi Iwai for the sound from v9.
-> - No changes to Patches 2 and 3.
-> 
-> References:
-> https://lkml.org/lkml/2018/11/2/169
-> https://www.mail-archive.com/linux-media@vger.kernel.org/msg105854.html
-> 
-> Shuah Khan (6):
->   media: Media Device Allocator API
->   media: change au0828 to use Media Device Allocator API
->   media: media.h: Enable ALSA MEDIA_INTF_T* interface types
->   sound/usb: Use Media Controller API to share media resources
->   au0828: fix enable and disable source audio and video inconsistencies
->   selftests: media_dev_allocator api test
-> 
->  Documentation/media/kapi/mc-core.rst          |  41 +++
->  drivers/media/Makefile                        |   6 +
->  drivers/media/media-dev-allocator.c           | 135 ++++++++
->  drivers/media/usb/au0828/Kconfig              |   2 +
->  drivers/media/usb/au0828/au0828-core.c        | 196 ++++++++---
->  drivers/media/usb/au0828/au0828.h             |   6 +-
->  include/media/media-dev-allocator.h           |  63 ++++
->  include/uapi/linux/media.h                    |  25 +-
->  sound/usb/Kconfig                             |   4 +
->  sound/usb/Makefile                            |   2 +
->  sound/usb/card.c                              |  14 +
->  sound/usb/card.h                              |   3 +
->  sound/usb/media.c                             | 327 ++++++++++++++++++
->  sound/usb/media.h                             |  74 ++++
->  sound/usb/mixer.h                             |   3 +
->  sound/usb/pcm.c                               |  29 +-
->  sound/usb/quirks-table.h                      |   1 +
->  sound/usb/stream.c                            |   2 +
->  sound/usb/usbaudio.h                          |   6 +
->  .../media_tests/media_dev_allocator.sh        |  85 +++++
->  20 files changed, 963 insertions(+), 61 deletions(-)
->  create mode 100644 drivers/media/media-dev-allocator.c
->  create mode 100644 include/media/media-dev-allocator.h
->  create mode 100644 sound/usb/media.c
->  create mode 100644 sound/usb/media.h
->  create mode 100755 tools/testing/selftests/media_tests/media_dev_allocator.sh
-> 
+/**
+ * mfd_add_devices - register child devices
+ *
+ * @parent:	Pointer to parent device.
+ * @id:		Can be PLATFORM_DEVID_AUTO to let the Platform API take care
+ * 		of device numbering, or will be added to a device's cell_id.
+ * @cells:	Array of (struct mfd_cell)s describing child devices.
+ * @n_devs:	Number of child devices to register.
+ * @mem_base:	Parent register range resource for child devices.
+ * @irq_base:	Base of the range of virtual interrupt numbers allocated for
+ * 		this MFD device. Unused if @domain is specified.
+ * @domain:	Interrupt domain to create mappings for hardware interrupts.
+ */
 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
