@@ -2,135 +2,111 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A1EC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56B8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9895F207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23262082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 09:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="t5Ohdgk4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FXttMIzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbfDBJK1 (ORCPT
+        id S1730034AbfDBJKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 05:10:27 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:22833 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbfDBJK0 (ORCPT
+        Tue, 2 Apr 2019 05:10:50 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33897 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729934AbfDBJKu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 05:10:26 -0400
-Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x3298VSZ007626;
-        Tue, 2 Apr 2019 18:08:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x3298VSZ007626
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554196113;
-        bh=EAXKI8xuU8IlM0GjkRwXsx7k4dD562vpzZxwsiCOtOY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=t5Ohdgk47kaYLy5jMmLNtp2C+KaJs0Yof76QBkFUx2e2iECi4EATjKYso9lb8FiIb
-         /FyshpraRsqHqdZSDoSygB++IntV63cWnHOrnGnhufUUZMfn4FEqMHk+0wrcjKScsV
-         ip5jnjmok0zcuWgieChwBXkpZAQb8MQwo5yoWwgl2BYTekW/ECbbnXTdXnLaH/ol5V
-         5ZcEseI6OZUSDHERhKACExgZd4DZbFc8r8tDc518b/7Bu8WkPZllPdlA+wzUOdbpk7
-         zTngzozMALddTivC0aDWCVpMO/BtyG1mNCQIeCg6h34uzeyAtkVVqFqICqqDlbC2Mr
-         bYu3GRwLpvjqQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Gross <andy.gross@linaro.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        Sagar Dharia <sdharia@codeaurora.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arch@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH v2] Remove SPDX "WITH Linux-syscall-note" from kernel-space headers
-Date:   Tue,  2 Apr 2019 18:08:24 +0900
-Message-Id: <1554196104-3522-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 2 Apr 2019 05:10:50 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k21so11439085otf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 02:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VXZ0694S7fFzp5Y3g6ww3d5ergdGQYmUb1qBPSGUqb4=;
+        b=FXttMIzIsP71KjSeodaDsnif8KC8LaNlL3Cwfnj9hLZ0Xp0O7pd1ka/F3P2OQrn9gp
+         t5N4x+abBKqy1Bi82RjDD1TccBPW1ZHpTDsIVA0oTu4+7UG9IW8hEQs92yb1vcyZGzLJ
+         pP9N85f1V9GaROM6f6apIIj8yKTNKJN1/hFMZrc9/uIuvKaTa3JhDI3hAbqIUaRf8Yin
+         xxVmhKtA/hd6tRsVyKUZ8rest6nNfcVu99UYxTAy5vTxz5Qp0lNU09B7/FuISmdnN4pZ
+         0W3fyQ0NsN0MRNuaYuFGeVG85qCgrJ80j3vb4MzQVjPpBQZFLhK/YNRcdn7mjXxfoOy+
+         4Q7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VXZ0694S7fFzp5Y3g6ww3d5ergdGQYmUb1qBPSGUqb4=;
+        b=uFJbAm0pmvod5dHZ4oEkb1rM+I3mYSx1kR+3EmcfCWEYlF81qTNsVyjZNt7EnWKQKP
+         0VanxA2NLovGH1Cq9KaJyixGTjjEaTXEe83LJUsknMc0IZ4QYayywSjbI1Uy0bJyevoZ
+         E1Imm7VuBXh2nXqtVV6WlKvxY7kLkCDkABkLw9hRYHBPPI5XWKi1YXXL4duahH8B8H04
+         nVqSy3iYmXHKGbDXGqKJnPW0txo/u+xlZRZi/UaAtpPwktC+r9bB2xR9grJf7lANGF4h
+         D+G2F+t0Nkcz1S365spErnW9usqYZsdDZ4yTlwBmpJy2M3DjAJHmzFk93EhfbbofT7SK
+         naMA==
+X-Gm-Message-State: APjAAAVbuC9Y8IsmS8Yn+ahjPlpl9HCmurqAbj+D9vix5qmpw2TTh5LT
+        BE2Vruxki0cLiYL92TWLLO2bYmnBk04N/a01slnrYw==
+X-Google-Smtp-Source: APXvYqz1MJ8bMDmcZW1WgEYchJMU4A9Q2Irypej5jBC2LEJOWBDCMbDy5VRyiIwuhZoQgWi1vgQSiZxPkh1DGVYN44U=
+X-Received: by 2002:a05:6830:1446:: with SMTP id w6mr35990731otp.157.1554196249559;
+ Tue, 02 Apr 2019 02:10:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1552330521-4276-1-git-send-email-info@metux.net>
+ <1552330521-4276-29-git-send-email-info@metux.net> <CACRpkdYa+oaw-P9aYL6KApvetVBZLt7USVV3kx7xZ4R7U=Hfew@mail.gmail.com>
+In-Reply-To: <CACRpkdYa+oaw-P9aYL6KApvetVBZLt7USVV3kx7xZ4R7U=Hfew@mail.gmail.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 2 Apr 2019 17:10:38 +0800
+Message-ID: <CAMz4ku+L_iAGB4HrBuS8w5AQus1AZgKpbWbABbHwzDPWj9-rqg@mail.gmail.com>
+Subject: Re: [PATCH 29/42] drivers: gpio: sprd: use devm_platform_ioremap_resource()
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "WITH Linux-syscall-note" should be added to headers exported to
-the user-space.
+Hi Linus,
 
-Some kernel-space headers have "WITH Linux-syscall-note", which seems
-a mistake.
+On Tue, 2 Apr 2019 at 17:04, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, Mar 12, 2019 at 1:57 AM Enrico Weigelt, metux IT consult
+> <info@metux.net> wrote:
+>
+> > Use the new helper that wraps the calls to platform_get_resource()
+> > and devm_ioremap_resource() together.
+> >
+> > Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+>
+> Patch applied with Baolin's ACK.
 
-[1] arch/x86/include/asm/hyperv-tlfs.h
+This patch had some problems which I've pointed out and I did not ack
+this patch. Please do not apply it now until fixing the problem.
 
-5a4858032217 ("x86/hyper-v: move hyperv.h out of uapi") moved this file
-out of uapi, but missed to update the SPDX License tag.
-
-[2] include/asm-generic/shmparam.h
-
-76ce2a80a28e ("Rename include/{uapi => }/asm-generic/shmparam.h really")
-moved this file out of uapi, but missed to update the SPDX License tag.
-
-[3] include/linux/qcom-geni-se.h
-
-eddac5af0654 ("soc: qcom: Add GENI based QUP Wrapper driver") added this
-file, but I do not see a good reason why its license tag must include
-"WITH Linux-syscall-note".
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
-  - Fix a typo in commit log
-
- arch/x86/include/asm/hyperv-tlfs.h | 2 +-
- include/asm-generic/shmparam.h     | 2 +-
- include/linux/qcom-geni-se.h       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 2bdbbbc..cdf44aa 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0 */
- 
- /*
-  * This file contains definitions from Hyper-V Hypervisor Top-Level Functional
-diff --git a/include/asm-generic/shmparam.h b/include/asm-generic/shmparam.h
-index 8b78c0b..b8f9035 100644
---- a/include/asm-generic/shmparam.h
-+++ b/include/asm-generic/shmparam.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __ASM_GENERIC_SHMPARAM_H
- #define __ASM_GENERIC_SHMPARAM_H
- 
-diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-index 3bcd67f..dd46494 100644
---- a/include/linux/qcom-geni-se.h
-+++ b/include/linux/qcom-geni-se.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-  */
 -- 
-2.7.4
-
+Baolin Wang
+Best Regards
