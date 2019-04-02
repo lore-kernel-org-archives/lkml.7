@@ -2,133 +2,91 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CABC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403F1C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34FB620883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554201313;
-	bh=VkbNACm/8od0be0SyULl7JcTxUCS+//sRbl2F+o4Iog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TPsdNmr/wCffROCJKzuEqUlc7AtnQwwOs86igQfu9rHYXKH3nocpdd85ZjvZkzSrI
-	 fnOl0kNvgKJdmqEJ8A8In4YCOL6gWW/uVOJIH2ijRE8J0REQqO6w6gVLAR1pZzwDFI
-	 Z/e/gS6ejOK0U5y4xGW004SgkWHTajKJCWU8cdsg=
+	by mail.kernel.org (Postfix) with ESMTP id 1874D2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbfDBKfL (ORCPT
+        id S1729294AbfDBKh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726705AbfDBKfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:35:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB272084C;
-        Tue,  2 Apr 2019 10:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554201309;
-        bh=VkbNACm/8od0be0SyULl7JcTxUCS+//sRbl2F+o4Iog=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ycdDV7k8M8Y14E0mQ3iNCIPeUgG/S+/kLIJZ0N/a8lvLVi3632jrAzzeTHZD1C4K0
-         O2ugQj3umNpssjD9/xyRYNSqPg3LGzdOTBvxzCvp6ZSkASRB7akXcmyby+A9MZLsKQ
-         OrLh1w4pW/Rkt5E3RbKjsNqFP0NzA5u+GnNDtBG4=
-Date:   Tue, 2 Apr 2019 12:35:07 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jari Ruusu <jari.ruusu@gmail.com>
-Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: ext3 file system livelock and file system corruption, 4.9.166
- stable kernel
-Message-ID: <20190402103507.GA15511@kroah.com>
-References: <CACMCwJ+qLHV+cjQC2kAnLQP6qVz1bJ75V8BqQBV5HE1edRC-AQ@mail.gmail.com>
+        Tue, 2 Apr 2019 06:37:29 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:52603 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfDBKh3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:37:29 -0400
+Received: from [192.168.178.52] ([109.104.50.84]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N3bb3-1gkDQZ2n4t-010dd9; Tue, 02 Apr 2019 12:37:04 +0200
+Subject: Re: [PATCH 05/16] staging: vc04_services: add proper SPDX identifier
+ for dual licensed files
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
+        Aymen Qader <qader.aymen@gmail.com>,
+        =?UTF-8?Q?Tobias_B=c3=bcttner?= <tobias.buettner@fau.de>,
+        Dominic Braun <inf.braun@fau.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>,
+        Phil Elwell <phil@raspberrypi.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
+ <20190402103203.14959-6-gregkh@linuxfoundation.org>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <e78cb1c1-8c57-7499-36ce-e401a02fe469@i2se.com>
+Date:   Tue, 2 Apr 2019 12:37:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACMCwJ+qLHV+cjQC2kAnLQP6qVz1bJ75V8BqQBV5HE1edRC-AQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190402103203.14959-6-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:8K98nb3DYCaYyUnmya1a/CmlfrM1ZUTJKMnMNYPYAiGEA2FtbWP
+ HoZezODxskOkwr2YoFX7izv/ov20IEDszSWzHoiFmAQWZahzac1tstZ2aE2T7V6FHwL/8ET
+ NVHLPyOD/B9rC5v35xKca6Svtj6W+8A5lNzZWtJoFLuyRxZSKIGR/mKdFEEzWxiFnv47+yO
+ qfWPGzrQXiIxe29kx3w/Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9HeFFDVxzRs=:KvLDZ9HVjnvOO1Xy6BaaJ/
+ 4Ippo2npn5MThIldtYbK3FWOFVocvUl443Ax6A989nxxHbM46L8DT2FF3YxoRd3VvsHClNSVg
+ g7091+Hq6UtX69MKwhsKu6jTRbx5q+b3VN/AaaZb894dv7bVofj+EW0pcigiyD70rSPMbzyVQ
+ 2uR8P5gOdAS0xvvjwY66gpHu9sKwnifoyFXv1tTdsWTNGDJdYUl3V4+vZ1jRLFIKmacjjU5Y2
+ 2q8GaA6CZmVT1UzLRo0zpmM4fbrN8nS4hk5pnQJrOyeFsbguUUsBgx15eZAhoeNKXluFkWoL/
+ gNJ868dHlB3hInS04gk4sLviFCdWadt/o4w17PvMhE7CdeL4xG2VO/+XWNPyEBdrE17WZVs69
+ UIR5gR1b866VciDWF3oxAqQsLWLxPm+vWzo907gGs5n7LqwYYf3Eg4aPradhw4qDmdx4YWuLa
+ OEoDl/IbbGiW83kYigQUD/rYh0bx7yfO8SGJnWQxZyJEyKjahKdTUOPPXrMZpw1yLpiw3J/89
+ X1p8JpGCa3fO/pVue8hl3vWNd0x13zYHIUPwGcihrXA4uBF+Paj8ePe47rkt/10BHTBNrkPP4
+ ccCihP/7topa4N5L+GGCXAhWsgf5Xy29m5t3s3SMuNMZVseBixTD/Wz9r9KAjgln9oPDLi7yC
+ OmLkXsmoBBZHssGFeAUZ6XCnzN4Ai7yo6aS/suiiGk2p7mMkgEW8hOXAFIT498zw3sYCH4Bjq
+ 11XLML/B4gfup2tOTLfy3bQgCCjTKhxi2cAeXaVSJ/5LKWWUb7S72njEE3M=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 01:08:45PM +0300, Jari Ruusu wrote:
-> To trigger this ext4 file system bug, you need a sparse file with
-> correct sparse pattern on old-school ext3 file system. I tried
-> more simpler ways to trigger this but those attempts did not
-> trigger the bug. I have provided compressed sparse file that
-> reliably triggers the bug. Size of compressed sparse file 1667256
-> bytes. Size of uncompressed sparse file 7369850880 bytes.
-> Following commands will demo the problem.
-> 
->   wget http://www.elisanet.fi/jariruusu/123/sparse-demo.data.xz
->   xz -d sparse-demo.data.xz
->   mkfs -t ext3 -b 4096 -e remount-ro -O "^dir_index" /dev/sdc1
->   mount -t ext3 /dev/sdc1 /mnt
->   cp -v --sparse=always sparse-demo.data /mnt/aa
->   cp -v --sparse=always sparse-demo.data /mnt/bb
->   umount /mnt
->   mount -t ext3 /dev/sdc1 /mnt
->   cp -v --sparse=always /mnt/bb /mnt/aa
-> 
-> That last cp command reliably triggers the bug that livelocks and
-> after reset you have file system corruption to deal with. Deeply
-> unfunny.
-> 
-> The bug is caused by
-> "ext4: brelse all indirect buffer in ext4_ind_remove_space()"
-> upstream commit 674a2b27234d1b7afcb0a9162e81b2e53aeef217, from
-> <yi.zhang@huawei.com>, who provided a follow-up patch
-> "ext4: cleanup bh release code in ext4_ind_remove_space()"
-> upstream commit 5e86bdda41534e17621d5a071b294943cae4376e. The
-> problem with that follow-up patch is that it is almost criminally
-> mislabeled. It should have said "fixes ext3 livelock and file
-> system corrupting bug" or something like that, so that Greg KH &
-> Co would have understood that it must be backported to stable
-> kernels too. Now the bug appears to be in all/most stable kernels
-> already.
-> 
-> Below is the buggy patch that causes the problem. Look at those
-> new while loops. Once the while condition is true once, it is
-> ALWAYS true, so it livelocks.
-> 
-> > --- a/fs/ext4/indirect.c
-> > +++ b/fs/ext4/indirect.c
-> > @@ -1385,10 +1385,14 @@ end_range:
-> >  					   partial->p + 1,
-> >  					   partial2->p,
-> >  					   (chain+n-1) - partial);
-> > -			BUFFER_TRACE(partial->bh, "call brelse");
-> > -			brelse(partial->bh);
-> > -			BUFFER_TRACE(partial2->bh, "call brelse");
-> > -			brelse(partial2->bh);
-> > +			while (partial > chain) {
-> > +				BUFFER_TRACE(partial->bh, "call brelse");
-> > +				brelse(partial->bh);
-> > +			}
-> > +			while (partial2 > chain2) {
-> > +				BUFFER_TRACE(partial2->bh, "call brelse");
-> > +				brelse(partial2->bh);
-> > +			}
-> >  			return 0;
-> >  		}
-> >
-> 
-> Greg & Co,
-> Please revert that above patch from stable kernels or backport the
-> follow-up patch that fixes the problem.
-
-So you need 5e86bdda4153 ("ext4: cleanup bh release code in
-ext4_ind_remove_space()") applied to all of the stable and LTS kernels
-at the moment (as that patch only showed up in 5.1-rc1)?
-
-If so, I need an ack from the ext4 developers/maintainer to do so.
-
-thanks,
-
-greg k-h
+Am 02.04.19 um 12:31 schrieb Greg Kroah-Hartman:
+> There are a number of vc04_services files that are dual licensed under
+> the GPL2 and BSD-3 licenses.  They currently do not have a SPDX
+> identifier on them, so fix that up and add the proper identifier so that
+> tools can pick it up easily.
+>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> Cc: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+> Cc: Aymen Qader <qader.aymen@gmail.com>
+> Cc: "Tobias Büttner" <tobias.buettner@fau.de>
+> Cc: Dominic Braun <inf.braun@fau.de>
+> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Cc: Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>
+> Cc: Phil Elwell <phil@raspberrypi.org>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
