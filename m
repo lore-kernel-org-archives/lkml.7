@@ -2,172 +2,133 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D00BC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EB1C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D29D2064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:14:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZLtk758R"
+	by mail.kernel.org (Postfix) with ESMTP id 88B3B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbfDBQOe (ORCPT
+        id S1730076AbfDBQPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:14:34 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45530 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729546AbfDBQOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:14:33 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m16so12157380edd.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 09:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1FwBWnVtp2A1UjavE6GDLjjZeFVpOsXxYVw4gzWiuzo=;
-        b=ZLtk758R6+fqNBqGlySDep2Y6wKz//X4O3sRTaS2OgUOSA0IqDaRnjG1RnLLlJ5yRN
-         qtZ87qs7F35qFa2HWV+RcF4f8kAI6UCvc7BCYdHnGHa7qZnqnfWVwaMOBCCkFd8r+gsh
-         9QIV0XYqE35Z1uAIFxpnYAsVxnmwMUIhTqx9Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=1FwBWnVtp2A1UjavE6GDLjjZeFVpOsXxYVw4gzWiuzo=;
-        b=il5MUNA9yOUD2uC1W0I9AXDSg1CKv+z+AwybDfYeExrbs/66zD5VNhk03cWgDb5DiT
-         jMZgA+gg2CUenMX0LTZIcSxaKsJxb/kUnuEi1NETelQKB5wW9iNOUI0vPkAr6aUlsGWc
-         hYI4Yf4L90F07rHf0bDOClCkq00F/J0VeZO/cdGNM79H0Xb/+0e7hEXrVjLY6zGAtRjN
-         dicn1G2Fh9d2rfL7HlZvTyE69iI9f9n/9umshJQwRmrhvsykGrqLrp3Kzdj0hNDAQtBB
-         KYrIxa5Bq6ObRd7PosSkKWQYcrkXhdEySqbbhrOQKC5JMJgs8iA/AREAndgneec2hhWA
-         sHIw==
-X-Gm-Message-State: APjAAAX6ZjGzayIYBnwn0BFMoRN72sJv5ohygowBAueWZOEAW9RodB32
-        oD1TOO3Fg5s/Lddfds4UAZrjRw==
-X-Google-Smtp-Source: APXvYqyLX1vOgTPjCKVjyTUPGS2O9zDO0yejogmOVBsYFAQ6G7YEaaj9ndy9tEPUqUwkH2B1lu1PlQ==
-X-Received: by 2002:a50:cb4a:: with SMTP id h10mr47180168edi.134.1554221671203;
-        Tue, 02 Apr 2019 09:14:31 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id k8sm4114064edr.85.2019.04.02.09.14.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 09:14:30 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 18:14:28 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Tejun Heo <tj@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH RFC tip/core/rcu 2/4] drivers/gpu/drm: Dynamically
- allocate drm_unplug_srcu
-Message-ID: <20190402161428.GM2665@phenom.ffwll.local>
-Mail-Followup-To: "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Tejun Heo <tj@kernel.org>, dri-devel@lists.freedesktop.org
-References: <20190402142816.GA13084@linux.ibm.com>
- <20190402142933.14547-2-paulmck@linux.ibm.com>
+        Tue, 2 Apr 2019 12:15:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40464 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729063AbfDBQPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:15:50 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C563F821CB;
+        Tue,  2 Apr 2019 16:15:49 +0000 (UTC)
+Received: from gimli.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B4857FFFC;
+        Tue,  2 Apr 2019 16:15:39 +0000 (UTC)
+Subject: [PATCH v2] vfio/type1: Limit DMA mappings per container
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     alex.williamson@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eric.auger@redhat.com, cohuck@redhat.com, peterx@redhat.com
+Date:   Tue, 02 Apr 2019 10:15:38 -0600
+Message-ID: <155422160029.16896.1992475589398080933.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402142933.14547-2-paulmck@linux.ibm.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 02 Apr 2019 16:15:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 07:29:31AM -0700, Paul E. McKenney wrote:
-> Having DEFINE_SRCU() or DEFINE_STATIC_SRCU() in a loadable module
-> requires that the size of the reserved region be increased, which is not
-> something we really want to be doing.  This commit therefore removes
-> the DEFINE_STATIC_SRCU() from drivers/gpu/drm/drm_drv.c in favor of
-> defining drm_unplug_srcu as a simple srcu_struct, initializing it in
-> drm_core_init(), and cleaning it up in drm_core_exit().
-> 
-> In this particular case, drm_unplug_srcu is statically allocated and thus
-> guaranteed to be initially zero.  Unfortunately, cleanup_srcu_struct()
-> cannot rely on this in the general case (which includes dynamically
-> allocated srcu_struct structures), and therefore cannot tell whether it
-> is being called on something that has been passed to init_srcu_struct().
-> Thus the code added to drm_core_init() is a bit non-standard.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Sean Paul <sean@poorly.run>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: <dri-devel@lists.freedesktop.org>
+Memory backed DMA mappings are accounted against a user's locked
+memory limit, including multiple mappings of the same memory.  This
+accounting bounds the number of such mappings that a user can create.
+However, DMA mappings that are not backed by memory, such as DMA
+mappings of device MMIO via mmaps, do not make use of page pinning
+and therefore do not count against the user's locked memory limit.
+These mappings still consume memory, but the memory is not well
+associated to the process for the purpose of oom killing a task.
 
-Seems reasonable (but I don't have the full patch series as context).
+To add bounding on this use case, we introduce a limit to the total
+number of concurrent DMA mappings that a user is allowed to create.
+This limit is exposed as a tunable module option where the default
+value of 64K is expected to be well in excess of any reasonable use
+case (a large virtual machine configuration would typically only make
+use of tens of concurrent mappings).
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+This fixes CVE-2019-3882.
 
-Any preferences as to how this should be merged? Upfront ack for merging
-through rcu trees if that helps you.
--Daniel
-> ---
->  drivers/gpu/drm/drm_drv.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-> index 381581b01d48..ce4582af814d 100644
-> --- a/drivers/gpu/drm/drm_drv.c
-> +++ b/drivers/gpu/drm/drm_drv.c
-> @@ -77,7 +77,7 @@ static bool drm_core_init_complete = false;
->  
->  static struct dentry *drm_debugfs_root;
->  
-> -DEFINE_STATIC_SRCU(drm_unplug_srcu);
-> +static struct srcu_struct drm_unplug_srcu;
->  
->  /*
->   * DRM Minors
-> @@ -958,12 +958,18 @@ static void drm_core_exit(void)
->  	drm_sysfs_destroy();
->  	idr_destroy(&drm_minors_idr);
->  	drm_connector_ida_destroy();
-> +	cleanup_srcu_struct(&drm_unplug_srcu);
->  }
->  
->  static int __init drm_core_init(void)
->  {
->  	int ret;
->  
-> +	ret = init_srcu_struct(&drm_unplug_srcu);
-> +	if (ret) {
-> +		DRM_ERROR("Cannot create DRM class: %d\n", ret);
-> +		return ret; /* cannot cleanup after failed srcu_struct init. */
-> +	}
->  	drm_connector_ida_init();
->  	idr_init(&drm_minors_idr);
->  
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+v2: Remove unnecessary atomic, all runtime access occurs while
+    holding vfio_iommu.lock.  Change to unsigned int since we're
+    no longer bound by the atomic_t.
+
+ drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 73652e21efec..d0f731c9920a 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -58,12 +58,18 @@ module_param_named(disable_hugepages,
+ MODULE_PARM_DESC(disable_hugepages,
+ 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
+ 
++static unsigned int dma_entry_limit __read_mostly = U16_MAX;
++module_param_named(dma_entry_limit, dma_entry_limit, uint, 0644);
++MODULE_PARM_DESC(dma_entry_limit,
++		 "Maximum number of user DMA mappings per container (65535).");
++
+ struct vfio_iommu {
+ 	struct list_head	domain_list;
+ 	struct vfio_domain	*external_domain; /* domain for external user */
+ 	struct mutex		lock;
+ 	struct rb_root		dma_list;
+ 	struct blocking_notifier_head notifier;
++	unsigned int		dma_avail;
+ 	bool			v2;
+ 	bool			nesting;
+ };
+@@ -836,6 +842,7 @@ static void vfio_remove_dma(struct vfio_iommu *iommu, struct vfio_dma *dma)
+ 	vfio_unlink_dma(iommu, dma);
+ 	put_task_struct(dma->task);
+ 	kfree(dma);
++	iommu->dma_avail++;
+ }
+ 
+ static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
+@@ -1081,12 +1088,18 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
+ 		goto out_unlock;
+ 	}
+ 
++	if (!iommu->dma_avail) {
++		ret = -ENOSPC;
++		goto out_unlock;
++	}
++
+ 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
+ 	if (!dma) {
+ 		ret = -ENOMEM;
+ 		goto out_unlock;
+ 	}
+ 
++	iommu->dma_avail--;
+ 	dma->iova = iova;
+ 	dma->vaddr = vaddr;
+ 	dma->prot = prot;
+@@ -1583,6 +1596,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
+ 
+ 	INIT_LIST_HEAD(&iommu->domain_list);
+ 	iommu->dma_list = RB_ROOT;
++	iommu->dma_avail = dma_entry_limit;
+ 	mutex_init(&iommu->lock);
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
+ 
+
