@@ -2,66 +2,145 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA55C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2B8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB16E2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325FC2084C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3dhzuKoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfDBWQT (ORCPT
+        id S1726419AbfDBWTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 18:16:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60183 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbfDBWQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 18:16:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 15:16:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,302,1549958400"; 
-   d="scan'208";a="158165271"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Apr 2019 15:16:17 -0700
-From:   richard.gong@linux.intel.com
-To:     atull@kernel.org, mdf@kernel.org
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
-Subject: [PATCHv1] fpga: mgr: add FPGA configuration log
-Date:   Tue,  2 Apr 2019 17:25:43 -0500
-Message-Id: <1554243943-25507-1-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 2 Apr 2019 18:19:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40758 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDBWTk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 18:19:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32Kd3B7163968;
+        Tue, 2 Apr 2019 20:42:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2018-07-02; bh=80amkJDfmO8rQR51MIz8k/sRGV6h3aL7PZ9G0VgPgaI=;
+ b=3dhzuKoWxKS942ub9epZAEYv9lHvjtSKguDUksCdLymSkrm4017tbZP/McvSHb7vgphg
+ HG1QB1Mh/DUs2M5kG4NtQfn/NpSXSuW/JfOB9deJC8CuMJJ6BXSKb4Dc9r/dk4bYPbkq
+ P/R8IH1neNmPTMdwZ4cjHRaRJeCuYXwP8IRNDyEQHjd6RFituOicmQsVLgc6AzvOXMZ2
+ 073tkjOQNg/UWN0G0z2uEi3ss0M9iEeF0pZfTmw0omvIW/7BX9PB9k1EJnV7GNRcOyGz
+ bftpAc2WL/XOoenSSKb/on4FvPH4QftOeOijD0L4mkW56CTL89av5zBJx06UQWAi81s4 +A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2rj0dnkyvd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:42:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32KfG0w064769;
+        Tue, 2 Apr 2019 20:42:12 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2rm8f4yjxx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Apr 2019 20:42:12 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x32Kg9r8029935;
+        Tue, 2 Apr 2019 20:42:09 GMT
+Received: from localhost.localdomain (/73.60.114.248)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 02 Apr 2019 13:42:09 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     akpm@linux-foundation.org
+Cc:     daniel.m.jordan@oracle.com, Alan Tull <atull@kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] convert locked_vm from unsigned long to atomic64_t
+Date:   Tue,  2 Apr 2019 16:41:52 -0400
+Message-Id: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904020138
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904020138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+Hi,
 
-Add a log for user to know FPGA configuration is successful
+From patch 1:
 
-Signed-off-by: Richard Gong <richard.gong@intel.com>
----
- drivers/fpga/fpga-mgr.c | 1 +
- 1 file changed, 1 insertion(+)
+  Taking and dropping mmap_sem to modify a single counter, locked_vm, is
+  overkill when the counter could be synchronized separately.
+  
+  Make mmap_sem a little less coarse by changing locked_vm to an atomic,
+  the 64-bit variety to avoid issues with overflow on 32-bit systems.
 
-diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
-index c386681..559e046 100644
---- a/drivers/fpga/fpga-mgr.c
-+++ b/drivers/fpga/fpga-mgr.c
-@@ -151,6 +151,7 @@ static int fpga_mgr_write_complete(struct fpga_manager *mgr,
- 	}
- 	mgr->state = FPGA_MGR_STATE_OPERATING;
- 
-+	dev_info(&mgr->dev, "Successfully programming FPGA\n");
- 	return 0;
- }
- 
+This is a more conservative alternative to [1] with no user-visible
+effects.  Thanks to Alexey Kardashevskiy for pointing out the racy
+atomics and to Alex Williamson, Christoph Lameter, Ira Weiny, and Jason
+Gunthorpe for their comments on [1].
+
+Davidlohr Bueso recently did a similar conversion for pinned_vm[2].
+
+Testing
+ 1. passes LTP mlock[all], munlock[all], fork, mmap, and mremap tests in an
+    x86 kvm guest
+ 2. a VFIO-enabled x86 kvm guest shows the same VmLck in
+    /proc/pid/status before and after this change
+ 3. cross-compiles on powerpc
+
+The series is based on v5.1-rc3.  Please consider for 5.2.
+
+Daniel
+
+[1] https://lore.kernel.org/linux-mm/20190211224437.25267-1-daniel.m.jordan@oracle.com/
+[2] https://lore.kernel.org/linux-mm/20190206175920.31082-1-dave@stgolabs.net/
+
+Daniel Jordan (6):
+  mm: change locked_vm's type from unsigned long to atomic64_t
+  vfio/type1: drop mmap_sem now that locked_vm is atomic
+  vfio/spapr_tce: drop mmap_sem now that locked_vm is atomic
+  fpga/dlf/afu: drop mmap_sem now that locked_vm is atomic
+  powerpc/mmu: drop mmap_sem now that locked_vm is atomic
+  kvm/book3s: drop mmap_sem now that locked_vm is atomic
+
+ arch/powerpc/kvm/book3s_64_vio.c    | 34 ++++++++++--------------
+ arch/powerpc/mm/mmu_context_iommu.c | 28 +++++++++-----------
+ drivers/fpga/dfl-afu-dma-region.c   | 40 ++++++++++++-----------------
+ drivers/vfio/vfio_iommu_spapr_tce.c | 37 ++++++++++++--------------
+ drivers/vfio/vfio_iommu_type1.c     | 31 +++++++++-------------
+ fs/proc/task_mmu.c                  |  2 +-
+ include/linux/mm_types.h            |  2 +-
+ kernel/fork.c                       |  2 +-
+ mm/debug.c                          |  5 ++--
+ mm/mlock.c                          |  4 +--
+ mm/mmap.c                           | 18 ++++++-------
+ mm/mremap.c                         |  6 ++---
+ 12 files changed, 89 insertions(+), 120 deletions(-)
+
+
+base-commit: 79a3aaa7b82e3106be97842dedfd8429248896e6
 -- 
-2.7.4
+2.21.0
 
