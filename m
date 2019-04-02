@@ -2,136 +2,170 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD3AC10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D788FC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A184C2084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3172133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554246389;
+	bh=fneNnKSLrG1qJf//W0e6XEycdUKKXuqZKYEeFfu+X14=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=acp4foEI0uW34u6dxvgxLZrc4/gur6VaKBpTRNQtg09lFq992O5M98AxQ9zwWsjxp
+	 RhBVCRnxvAgVNure0YbvkTkbS3BIkksK9mlodyXQYN5FMrrNkFME+FxSw3fH4XbugF
+	 nN69mn54Nx8OMgfoD/qI3z5XIbmbw24HXlgUTVvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfDBXFc (ORCPT
+        id S1726542AbfDBXG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 19:05:32 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44990 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDBXFc (ORCPT
+        Tue, 2 Apr 2019 19:06:28 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:44013 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726083AbfDBXG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 19:05:32 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i21so11957119oib.11;
-        Tue, 02 Apr 2019 16:05:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FNGeNmpMXmbmbGQ8XUlYBSMpsJzpAXQAXL/ACI9Obp8=;
-        b=Ev2fkpBvfCJyBe6bJrpEBdCxczs//8eMuCPxs/BFF6qSHzuBHU4/TVjfhvDS4i8KZx
-         f5Xirh+IdrGMaROlSt7V5RMGNUFGggc6F0xPDgztZaUZlW5jAiGLh0CpxTTgo3FyRFS+
-         5RBkynTuNG7gzJpADIvFXvEa+yFQktYHj0qcZoAyLFGf3frrgR9fu5Odint6YG2ngy9u
-         nKAkFIaFn0Bvv6EBReFh9YT+0+Yd72FC5s3JBBO5VPD+e+qvwHfmDn03rlGtlmircdek
-         Wf835dXefITIe9kJdq2IyBMA0Sp7b95BbAz9VyPwcXSyR+UcC3Pu2JabWuy/CxW0/3DT
-         YD6g==
-X-Gm-Message-State: APjAAAU3sZB/eVRuCdjIDXxHj9Qw0ev2QcLaCl/5x7XDrknlYh+SgDvk
-        mo7SCnp83wYR8YL6+MxnWGFyuBHqKsg=
-X-Google-Smtp-Source: APXvYqxFYoMjRSkD8WuoscEFjLHD05z//XpzPEO6cQL/gT2y1CHSA4zpx8gjKy2axPO5slwJ++76tA==
-X-Received: by 2002:a05:6808:650:: with SMTP id z16mr19166461oih.100.1554246330858;
-        Tue, 02 Apr 2019 16:05:30 -0700 (PDT)
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com. [209.85.167.177])
-        by smtp.gmail.com with ESMTPSA id p132sm5889224oig.37.2019.04.02.16.05.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 16:05:30 -0700 (PDT)
-Received: by mail-oi1-f177.google.com with SMTP id y84so11961896oia.12;
-        Tue, 02 Apr 2019 16:05:29 -0700 (PDT)
-X-Received: by 2002:aca:d984:: with SMTP id q126mr12607185oig.108.1554246329538;
- Tue, 02 Apr 2019 16:05:29 -0700 (PDT)
+        Tue, 2 Apr 2019 19:06:28 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5D9D721F01;
+        Tue,  2 Apr 2019 19:06:27 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 02 Apr 2019 19:06:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=l8c5endvJscPewd22
+        ZTuMis3Zjlpf6zi6ZDP1+P2ofI=; b=nM0+XCotwYgyyp+aIrzkVuUlO3vBiZiMl
+        NhDd+NNkIrwuxQatdvngcz0uoq4WFUzaYghV7U04+LyAKqRSrfj3SYCu/619irQ1
+        otkqhxHfvErJHKMpH7bersJh6JXmdWljB1PUnhFrJzoC477+DrS9hGVPnHKq+5zK
+        tIxUPns+amcbKkfeyKAmth9d5II/lsXmvKCn/8jCsEjydZUzWp5W5DMClKRIFDec
+        NKNVxCmX+4Qu92a/iQ68wty/d7tkXBm4T/Krpqoia3AUGbWZFlahm/dC7rCnNejJ
+        ToVjT24JgmdKtvlVHYjFxDFVx0qmZFRfX1LlzuEKP+dl28tNy7Hkg==
+X-ME-Sender: <xms:8OqjXAgBJr2e1HK8XbZF6S4hNaT-P7KhnhmaSBY9F893eWAk7PpyWA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdduieculddtuddrgedutddrtddtmd
+    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfh
+    rhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvg
+    hlrdhorhhgqeenucfkphepuddvgedrudeiledrvdejrddvtdeknecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedt
+X-ME-Proxy: <xmx:8OqjXF51mRj2Nx7U703Tn1p2rc9G2UEeKN7pYize8-njg2wMLCjMVw>
+    <xmx:8OqjXH0i_hxkJlbj3JvQJhZ6aY4yKWwbHPK3o1YpEMKrqN0aGWQ35Q>
+    <xmx:8OqjXAst7V3hoW50X66Wz3Jpv-2OBnipWKJK79EiUE5jwB0X708RVw>
+    <xmx:8-qjXMAeBWoYpAJc-79Roxk8qpcb9vGVV4PeI8mOLUyAFPIzQQT-Tg>
+Received: from eros.localdomain (124-169-27-208.dyn.iinet.net.au [124.169.27.208])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9A2171030F;
+        Tue,  2 Apr 2019 19:06:21 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Roman Gushchin <guro@fb.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/7] mm: Use slab_list list_head instead of lru
+Date:   Wed,  3 Apr 2019 10:05:38 +1100
+Message-Id: <20190402230545.2929-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com> <1551132245-6089-3-git-send-email-vabhav.sharma@nxp.com>
-In-Reply-To: <1551132245-6089-3-git-send-email-vabhav.sharma@nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Tue, 2 Apr 2019 18:05:18 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTcY6fMJZDmsWzPzkn1hMzsoJh15-Gchepg_vJLxL=zcw@mail.gmail.com>
-Message-ID: <CADRPPNTcY6fMJZDmsWzPzkn1hMzsoJh15-Gchepg_vJLxL=zcw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] soc/fsl/guts: Add definition for LX2160A
-To:     Vabhav Sharma <vabhav.sharma@nxp.com>
-Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "oss@buserror.net" <oss@buserror.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel-owner@vger.kernel.org" 
-        <linux-kernel-owner@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        Yinbo Zhu <yinbo.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 4:12 AM Vabhav Sharma <vabhav.sharma@nxp.com> wrote:
->
-> Adding compatible string "lx2160a-dcfg" to
-> initialize guts driver for lx2160 and SoC die
-> attribute definition for LX2160A
+Hi Andrew,
+
+Here is the updated series that caused the bug found by 0day test
+robot.  To ease the load on your memory, this series is aimed at
+replacing the following:
+
+Original buggy series:
+
+ mm-remove-stale-comment-from-page-struct.patch
+ slub-use-slab_list-instead-of-lru.patch
+ slab-use-slab_list-instead-of-lru.patch
+ slob-use-slab_list-instead-of-lru.patch
+ slub-add-comments-to-endif-pre-processor-macros.patch
+ slob-respect-list_head-abstraction-layer.patch
+ list-add-function-list_rotate_to_front.patch
+
+And the bug fix patch:
+
+ slob-only-use-list-functions-when-safe-to-do-so.patch
+
+Applies cleanly on top of Linus' tree (tag: v5.1-rc3).
+
+This series differs from the bug fix above by adding a separate return
+parameter to slob_page_alloc() instead of using a double pointer.  This
+is defensive in case later someone adds code that accesses sp (struct
+page *), also it is easier to read/verify the code since its less 'tricky'.
+
+Tested by building and booting a kernel using the SLOB allocator and
+with CONFIG_DEBUG_LIST.
+
+From v4 ... 
+
+Currently the slab allocators (ab)use the struct page 'lru' list_head.
+We have a list head for slab allocators to use, 'slab_list'.
+
+During v2 it was noted by Christoph that the SLOB allocator was reaching
+into a list_head, this version adds 2 patches to the front of the set to
+fix that.
+
+Clean up all three allocators by using the 'slab_list' list_head instead
+of overloading the 'lru' list_head.
+
+Changes since v4:
+ - Add return parameter to slob_page_alloc() to indicate whether the
+   page is removed from the freelist during allocation.
+ - Only do list rotate optimisation if the page was _not_ removed from
+   the freelist (fix bug found by 0day test robot).
+
+Changes since v3:
+
+ - Change all ->lru to ->slab_list in slob (thanks Roman).
+
+Changes since v2:
+
+ - Add list_rotate_to_front().
+ - Fix slob to use list_head API.
+ - Re-order patches to put the list.h changes up front.
+ - Add acks from Christoph.
+
+Changes since v1:
+
+ - Verify object files are the same before and after the patch set is
+   applied (suggested by Matthew).
+ - Add extra explanation to the commit logs explaining why these changes
+   are safe to make (suggested by Roman).
+ - Remove stale comment (thanks Willy).
 
 
-Applied to branch next.  Thanks.
+thanks,
+Tobin.
 
-Regards,
-Leo
->
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
-> Acked-by: Li Yang <leoyang.li@nxp.com>
-> ---
->  drivers/soc/fsl/guts.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/soc/fsl/guts.c b/drivers/soc/fsl/guts.c
-> index 302e0c8..bcab1ee 100644
-> --- a/drivers/soc/fsl/guts.c
-> +++ b/drivers/soc/fsl/guts.c
-> @@ -100,6 +100,11 @@ static const struct fsl_soc_die_attr fsl_soc_die[] = {
->           .svr          = 0x87000000,
->           .mask         = 0xfff70000,
->         },
-> +       /* Die: LX2160A, SoC: LX2160A/LX2120A/LX2080A */
-> +       { .die          = "LX2160A",
-> +         .svr          = 0x87360000,
-> +         .mask         = 0xff3f0000,
-> +       },
->         { },
->  };
->
-> @@ -222,6 +227,7 @@ static const struct of_device_id fsl_guts_of_match[] = {
->         { .compatible = "fsl,ls1088a-dcfg", },
->         { .compatible = "fsl,ls1012a-dcfg", },
->         { .compatible = "fsl,ls1046a-dcfg", },
-> +       { .compatible = "fsl,lx2160a-dcfg", },
->         {}
->  };
->  MODULE_DEVICE_TABLE(of, fsl_guts_of_match);
-> --
-> 2.7.4
->
+
+Tobin C. Harding (7):
+  list: Add function list_rotate_to_front()
+  slob: Respect list_head abstraction layer
+  slob: Use slab_list instead of lru
+  slub: Add comments to endif pre-processor macros
+  slub: Use slab_list instead of lru
+  slab: Use slab_list instead of lru
+  mm: Remove stale comment from page struct
+
+ include/linux/list.h     | 18 ++++++++++++
+ include/linux/mm_types.h |  2 +-
+ mm/slab.c                | 49 ++++++++++++++++----------------
+ mm/slob.c                | 59 +++++++++++++++++++++++++++------------
+ mm/slub.c                | 60 ++++++++++++++++++++--------------------
+ 5 files changed, 115 insertions(+), 73 deletions(-)
+
+-- 
+2.21.0
+
