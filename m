@@ -2,108 +2,98 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04335C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD568C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D296B20645
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986ED20645
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731559AbfDBPtB (ORCPT
+        id S1731702AbfDBPt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:49:01 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:37328 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728978AbfDBPtA (ORCPT
+        Tue, 2 Apr 2019 11:49:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37867 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731650AbfDBPt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:49:00 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hBLei-0003QC-Oh; Tue, 02 Apr 2019 17:48:56 +0200
-Date:   Tue, 2 Apr 2019 17:48:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
-In-Reply-To: <20190402154329.scp7i7uqevubgwrz@treble>
-Message-ID: <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
-References: <20190331214020.836098943@linutronix.de> <20190331215136.039902969@linutronix.de> <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de> <20190402154329.scp7i7uqevubgwrz@treble>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 2 Apr 2019 11:49:26 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hBLfA-0003VL-5y; Tue, 02 Apr 2019 17:49:24 +0200
+Message-ID: <1554220163.2338.2.camel@pengutronix.de>
+Subject: Re: [PATCH 1/3] ipuv3-crtc: add remove action for devres data
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Michael Grzeschik <m.grzeschik@pengutronix.de>, airlied@linux.ie,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, linux@armlinux.org.uk,
+        dri-devel@lists.freedesktop.org, rafael@kernel.org,
+        kernel@pengutronix.de
+Date:   Tue, 02 Apr 2019 17:49:23 +0200
+In-Reply-To: <20190402134904.588-2-m.grzeschik@pengutronix.de>
+References: <0687f68004b28ed3a364b06a9eb64e2e@agner.ch>
+         <20190402134904.588-1-m.grzeschik@pengutronix.de>
+         <20190402134904.588-2-m.grzeschik@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019, Josh Poimboeuf wrote:
-> On Tue, Apr 02, 2019 at 12:19:46PM +0200, Thomas Gleixner wrote:
-> > +/*
-> > + * Array of exception stack page descriptors. If the stack is larger than
-> > + * PAGE_SIZE, all pages covering a particular stack will have the same
-> > + * info.
-> > + */
-> > +static const struct estack_pages estack_pages[ESTACK_PAGES] ____cacheline_aligned = {
-> > +	[CONDRANGE(DF)]		= ESTACK_PAGE(DOUBLEFAULT_IST, DF),
-> > +	[CONDRANGE(NMI)]	= ESTACK_PAGE(NMI_IST, NMI),
-> > +	[PAGERANGE(DB)]		= ESTACK_PAGE(DEBUG_IST, DB),
-> > +	[CONDRANGE(MCE)]	= ESTACK_PAGE(MCE_IST, MCE),
+Hi Michael,
+
+On Tue, 2019-04-02 at 15:49 +0200, Michael Grzeschik wrote:
+> The destroy function in drm_mode_config_cleanup will remove the objects
+> in ipu-drm-core by calling its destroy functions if the bind function
+> fails. The drm_crtc is also part of the devres allocated ipu_crtc
+> object. The ipu_crtc object will already be cleaned up if the bind for
+> the crtc fails. This leads drm_crtc_cleanup try to clean already freed
+> memory.
 > 
-> It would be nice if the *_IST macro naming aligned with the struct
-> cea_exception_stacks field naming.  Then you could just do, e.g.
-> ESTACKPAGE(DF).
-
-Yes, lemme fix that up.
-
-> Also it's a bit unfortunate that some of the stack size knowledge is
-> hard-coded here, i.e #DB always being > 1 page and non-#DB being
-> sometimes 1 page.
-
-The problem is that there is no way to make this macro maze conditional on
-sizeof(). But my macro foo is rusty.
-
-> > +	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
-> > +	end = begin + sizeof(struct cea_exception_stacks);
-> > +	/* Bail if @stack is outside the exception stack area. */
-> > +	if (stk <= begin || stk >= end)
-> > +		return false;
+> We fix this issue by adding the devres action ipu_crtc_remove_head which
+> will remove its head from the objects in ipu-drm-core which then never
+> calls its destroy function anymore.
 > 
-> This check is the most important piece.  Exception stack dumps are quite
-> rare, so this ensures an early exit in most cases regardless of whether
-> there's a loop below.
+> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+> ---
+>  drivers/gpu/drm/imx/ipuv3-crtc.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> > +
-> > +	/* Calc page offset from start of exception stacks */
-> > +	k = (stk - begin) >> PAGE_SHIFT;
-> > +	/* Lookup the page descriptor */
-> > +	ep = &estack_pages[k];
-> > +	/* Guard page? */
-> > +	if (unlikely(!ep->size))
-> > +		return false;
-> > +
-> > +	begin += (unsigned long)ep->offs;
-> > +	end = begin + (unsigned long)ep->size;
-> > +	regs = (struct pt_regs *)end - 1;
-> > +
-> > +	info->type	= ep->type;
-> > +	info->begin	= (unsigned long *)begin;
-> > +	info->end	= (unsigned long *)end;
-> > +	info->next_sp	= (unsigned long *)regs->sp;
-> > +	return true;
-> 
-> With the above "(stk <= begin || stk >= end)" check, removing the loop
-> becomes not all that important since exception stack dumps are quite
-> rare and not performance sensitive.  With all the macros this code
-> becomes a little more obtuse, so I'm not sure whether removal of the
-> loop is a net positive.
+> diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+> index ec3602ebbc1cd..fa1ee33a43d77 100644
+> --- a/drivers/gpu/drm/imx/ipuv3-crtc.c
+> +++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+> @@ -429,6 +429,14 @@ static int ipu_crtc_init(struct ipu_crtc *ipu_crtc,
+>  	return ret;
+>  }
+>  
+> +static void ipu_crtc_remove_head(void *data)
+> +{
+> +	struct ipu_crtc *ipu_crtc = data;
+> +	struct drm_crtc *crtc = &ipu_crtc->base;
+> +
+> +	list_del(&crtc->head);
 
-What about perf? It's NMI context and probably starts from there. Peter?
+I don't think reaching into drm_crtc internals like this is going to be
+robust. Currently, this is either missing the rest of drm_crtc_cleanup,
+or it will crash if drm_crtc_init_with_planes hasn't been called yet.
 
-Thanks,
+I think you could call devm_add_action with a function that calls
+drm_crtc_cleanup after drm_crtc_init_with_planes in ipu_crtc_init.
 
-	tglx
+Alternatively, the ipu_crtc allocation could be changed to kzalloc. It
+would then have to freed manually in the drm_crtc_funcs->destroy
+callback.
+
+regards
+Philipp
