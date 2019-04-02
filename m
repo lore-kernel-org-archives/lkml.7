@@ -2,128 +2,103 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABDBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C517AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17502146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5qU6jv/"
+	by mail.kernel.org (Postfix) with ESMTP id 9DF3120882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732137AbfDBOkH (ORCPT
+        id S1732151AbfDBOks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:40:07 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46880 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729541AbfDBOkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:40:06 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z17so15205827qts.13;
-        Tue, 02 Apr 2019 07:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LYC+RxtQwxH16TNk/fXaRpRGuPwPLr8g5GZ5yFg0rBw=;
-        b=A5qU6jv/8+aiYuIyfUCQAByQ201Llx9m2PYw1oUWZROERdanRIk4kw9N3bGVdxYP5I
-         YAPHldO7nuE69j8mg7F3A0tJjN/pxwK1ZQkcBm1EqeihHiLteiiSLjYqvOcmsWTtl5ni
-         s+avOEo/cnCcdN52oYgmQHsO3Tv2sT6GDRkmJyFnkWXFc3QrW2G4mogPjrHRmEj6xDE1
-         QFiHlZ2OyW+xbV14cqdrl8h8UNeAfMaCf9v6fsfVD7PLGIWsSOu78JwAD9sOhH6af9zp
-         J7DggDT+D+Z8bDiMu/HYSgK6igF4Sf7/eMcB3bPqqO6ueKmbdPlRqc842ocn2ZbwCJJ4
-         aGgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LYC+RxtQwxH16TNk/fXaRpRGuPwPLr8g5GZ5yFg0rBw=;
-        b=HV4pIPjrpT2sEjJUTMG4j8bc2TlhRU8BfgvVGjI4iXeHtG1U10vUEY+fuvun64kr5i
-         oZQUu1RF8hS7jDZ8XAK3Tl+JC8wCRTvwAL2hDX2azMwDUEpKQfC5ObFx/hqmjdyBk+bq
-         NBMthWzBs8c8/SbvCk9Zte2i9rwHlyI+zGB8Zr4C1eiaBXkNJh9OhcKZqSgw9FcIJaDE
-         pMOzYtEfQXEz6AhH2fnlH49TtlmM4+PTwsmYByGYOwiU8MdPdHEGjuLj6Ntb+i7ufbkm
-         JnovtPs8dQGvkthElwZ/AU3z8C9PIjBryQ/3Qi5uoembQo6dvIoX1FMUhb+5dIx+F8YM
-         37/g==
-X-Gm-Message-State: APjAAAXg0gaq6Yxe+4vmgYqPyyFV9uMQjtGyG8xH3rgbftt8cks2v3Gi
-        t+4gupDl8pU5yHgAxkapfu4=
-X-Google-Smtp-Source: APXvYqyoI5aAgR6ke0kibHcIu/438gT7QDatqIz4MBC6eQfXL+WNucZj/rijYaUL5XMvOFVHUeBgMQ==
-X-Received: by 2002:a0c:9861:: with SMTP id e30mr59479340qvd.52.1554216005591;
-        Tue, 02 Apr 2019 07:40:05 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id t69sm6679961qke.38.2019.04.02.07.40.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 02 Apr 2019 07:40:04 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 11:40:00 -0300
-From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Mukesh Ojha <mojha@codeaurora.org>, lars@metafoo.de,
-        Michael.Hennerich@analog.com, stefan.popa@analog.com,
-        jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: Re: [PATCH 2/4] staging: iio: ad9832: add SPDX identifier
-Message-ID: <20190402144000.pjtygmqi4pxn2p5j@smtp.gmail.com>
-References: <20190401143724.mcn73jhdtq3zp3nk@smtp.gmail.com>
- <ac167cc8-4236-2e15-d5f2-fa222d95da49@codeaurora.org>
- <20190401171355.GA19716@kroah.com>
+        Tue, 2 Apr 2019 10:40:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51018 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730673AbfDBOks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 10:40:48 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 34937C04FFEF;
+        Tue,  2 Apr 2019 14:40:48 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7563F8491A;
+        Tue,  2 Apr 2019 14:40:41 +0000 (UTC)
+Date:   Tue, 2 Apr 2019 08:40:40 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        eric.auger@redhat.com, cohuck@redhat.com
+Subject: Re: [PATCH] vfio/type1: Limit DMA mappings per container
+Message-ID: <20190402084040.72c3ceb5@x1.home>
+In-Reply-To: <20190402051802.GB11008@xz-x1>
+References: <155414977872.12780.13728555131525362206.stgit@gimli.home>
+        <20190402024115.GA11008@xz-x1>
+        <20190401223413.3783af5f@x1.home>
+        <20190402051802.GB11008@xz-x1>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190401171355.GA19716@kroah.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 02 Apr 2019 14:40:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/01, Greg KH wrote:
-> On Mon, Apr 01, 2019 at 08:36:50PM +0530, Mukesh Ojha wrote:
-> > 
-> > On 4/1/2019 8:07 PM, Marcelo Schmitt wrote:
-> > > Add SPDX identifier of GPL-2.0 for the ad9832 driver.
+On Tue, 2 Apr 2019 13:18:02 +0800
+Peter Xu <peterx@redhat.com> wrote:
+
+> On Mon, Apr 01, 2019 at 10:34:13PM -0600, Alex Williamson wrote:
+> > On Tue, 2 Apr 2019 10:41:15 +0800
+> > Peter Xu <peterx@redhat.com> wrote:
+> >   
+> > > On Mon, Apr 01, 2019 at 02:16:52PM -0600, Alex Williamson wrote:
 > > > 
-> > > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> > > ---
-> > >   drivers/staging/iio/frequency/ad9832.c | 3 +--
-> > >   1 file changed, 1 insertion(+), 2 deletions(-)
+> > > [...]
+> > >   
+> > > > @@ -1081,8 +1088,14 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
+> > > >  		goto out_unlock;
+> > > >  	}
+> > > >  
+> > > > +	if (!atomic_add_unless(&iommu->dma_avail, -1, 0)) {
+> > > > +		ret = -ENOSPC;
+> > > > +		goto out_unlock;
+> > > > +	}
+> > > > +
+> > > >  	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
+> > > >  	if (!dma) {
+> > > > +		atomic_inc(&iommu->dma_avail);    
 > > > 
-> > > diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-> > > index 50a583020072..d8d4a7936275 100644
-> > > --- a/drivers/staging/iio/frequency/ad9832.c
-> > > +++ b/drivers/staging/iio/frequency/ad9832.c
-> > > @@ -1,9 +1,8 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
+> > > This should be the only special path to revert the change.  Not sure
+> > > whether this can be avoided by simply using atomic_read() or even
+> > > READ_ONCE() (I feel like we don't need atomic ops with dma_avail
+> > > because we've had the mutex but it of course it doesn't hurt...) to
+> > > replace atomic_add_unless() above to check against zero then we do
+> > > +1/-1 in vfio_[un]link_dma() only.  But AFAICT this patch is correct.  
 > > 
-> > FYI
-> > 
-> > Use C notations here as per https://lkml.org/lkml/2019/2/13/570.
-> > 
-> > <https://lkml.org/lkml/2019/2/13/570>
-
-OK, I'll check it out.
-
-> > 
-> > Once you fix it then you can take mine
-> > Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> > Thanks for the review, you're right, we're only twiddling this atomic
+> > while holding the iommu->lock mutex, so it appears unnecessary.  Since
+> > we're within the mutex, I think we don't even need a READ_ONCE.  We can
+> > simple test it before alloc and decrement after.  Am I missing something
+> > that would specifically require READ_ONCE within our mutex critical
+> > section?  Thanks,  
 > 
-> Did you read the documentation about how to put a proper SPDX line in
-> the kernel documentation?  For .c files, you have to use "//", not "/* */"
-> 
-> Please read:
-> 	Documentation/process/license-rules.rst
-> and see the section "Style" for all of the details.
+> I don't know very clear on this and I'd be glad to learn about that.
+> My understanding is that [READ|WRITE]_ONCE() is the same as volatile
+> mem operation and will make sure we don't keep variables in the
+> registers.  So if the mutex semantics can support that (say, a "*addr
+> = val" following with a mutex_unlock will make sure "val" will
+> definitely land into memory of "&addr") then I do think it's fine even
+> without it (which corresponds to WRITE_ONCE(&addr, val) in this case).
 
-Thanks, I'll read it to understand the details.
+The READ/WRITE_ONCE macros add memory barriers, but we have the mutex
+for protecting concurrent access to the data.  I don't see that there's
+anything special about a counter on the iommu object that needs special
+attention vs any other elements that might get modified in these
+sections.  Thanks,
 
-> 
-> thanks,
-> 
-> greg k-h
-
-Thanks for the advises,
-
-Marcelo
+Alex
