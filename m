@@ -2,246 +2,97 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA141C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C063C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C872070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:35:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJcwxYel"
+	by mail.kernel.org (Postfix) with ESMTP id 710562070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfDBHfk (ORCPT
+        id S1729427AbfDBHiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 03:35:40 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46673 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfDBHfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 03:35:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 9so5905032pfj.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 00:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/+CIpKJJox4EkuvzaMU0mH8JnfDNrkf5xJ/FuG90arQ=;
-        b=NJcwxYel4CSGRJDydgzvH0wwBuSbkhLKck2BfOiRigsn3TC+5KFQ9ysCQz3R1KzGPo
-         357mqh9AFFu49sEpFmcChbG3PqnsWZHlBS2Ag/VMZQ7Mmtl42qscWyruhOwi/eZepSkx
-         B3srudRgD1R79hCoFIYblhKuweNrsvdcET5jx/jKXx4h45gUQcWZWLrwRFobMgcwf5JH
-         H9OiShVHDoDDPisGg2qOdAVfD0wZFGNn+9a6itvN+1WACRzs+ghOGrsLPzECg9CXgMRD
-         abhzyD6y6x+nNQ9RKtqWKTeQeTs0Q6IFQ4qrl/zcKPcp38MRGt495ii4fEeBUWpxJUQE
-         eb4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/+CIpKJJox4EkuvzaMU0mH8JnfDNrkf5xJ/FuG90arQ=;
-        b=TC2poWzu4fOdHSmvzpAqq5wcqMtacGtYDN+Z7FAklqgGkE2zda2SYN7wR7t95chAfi
-         1zIYSXBrPiy+aN7oLIQsbLhkSyY5vcpCMnGRXVkMLPlAvSXoZFWTNQCj5I7Pl5A5XVNO
-         b+Y8cUgjmVDBet7hTWQmilXF5NYd5sm8FBfJtfKa79B4lbwaUC0eDokQ1XN5rcKl1Fn9
-         YU9GPEdzA6xzKSTI1RcucOY1J2RcZVoRanWTAfXdnTkqCxTjWZlGmW/oNtt+dDc/CgQz
-         gx2jCVCIeVxnfIUszBjL9LDO7MVMhWOalYX/d0kW/yD9I3IJZUA9TmlG898hGUlVNGz3
-         abLA==
-X-Gm-Message-State: APjAAAVO4po/RvGUaanoqe+LZsmqKuuoDBbxRjyuCfh0Q4lRQCIdUD9e
-        ij59DtWO429vmsPkZ4N/Hq3lpA==
-X-Google-Smtp-Source: APXvYqyo94FuoocpnD+hj1r6YcD7kcciDAIXDVscitLXSZhFT1ugv+iflEbLizOeoF9L6Y5VN3noTQ==
-X-Received: by 2002:a63:195f:: with SMTP id 31mr55032834pgz.116.1554190538811;
-        Tue, 02 Apr 2019 00:35:38 -0700 (PDT)
-Received: from centauri ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id e126sm10694721pfh.35.2019.04.02.00.35.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 00:35:36 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 09:35:31 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Gaurav Kohli <gkohli@codeaurora.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2] nvmem: core: Set no-read-write provider to avoid
- userspace read/write
-Message-ID: <20190402073531.GA25959@centauri>
-References: <1552831940-7327-1-git-send-email-gkohli@codeaurora.org>
- <48a71861-c60b-7fe7-d4af-5269cd7c20eb@linaro.org>
- <5f11070f-bf9b-c313-9a78-e412a2fb2908@codeaurora.org>
- <865519b5-62c9-3eb3-3855-eebf98bded85@linaro.org>
- <68755fdb-b2c6-ac25-a786-7593a692a173@codeaurora.org>
- <cfa22512-2abe-f0db-0576-e6d0cd1eee9c@linaro.org>
+        Tue, 2 Apr 2019 03:38:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52700 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727021AbfDBHiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 03:38:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 575EFAA71;
+        Tue,  2 Apr 2019 07:38:14 +0000 (UTC)
+Subject: Re: [RFC PATCH 35/68] vfs: Convert xenfs to use the new mount API
+To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
+ <155373029773.7602.5749182816677575121.stgit@warthog.procyon.org.uk>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ab60d95f-11a2-05c4-ef18-ffa904902881@suse.com>
+Date:   Tue, 2 Apr 2019 09:38:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfa22512-2abe-f0db-0576-e6d0cd1eee9c@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <155373029773.7602.5749182816677575121.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 03:02:11PM +0000, Srinivas Kandagatla wrote:
+On 28/03/2019 00:44, David Howells wrote:
+> Convert the xenfs filesystem to the new internal mount API as the old
+> one will be obsoleted and removed.  This allows greater flexibility in
+> communication of mount parameters between userspace, the VFS and the
+> filesystem.
 > 
+> See Documentation/filesystems/mount_api.txt for more information.
 > 
-> On 20/03/2019 17:50, Gaurav Kohli wrote:
-> > 
-> > > Is root only option not helping you in this case?
-> > Yes we want to protect at root level as well, i mean it is better if we
-> > can avoid exposing to userspace at all.
-> Can you try below patch!
-> 
-> > > 
-> > > We could go down the route of adding new config option something
-> > > like CONFIG_NVMEM_NO_SYSFS_ENTRY to prevent adding nvmem entry in
-> > > userspace.
-> > > 
-> > > Let me know if you are happy to create a patch for this change?
-> > 
-> > I am happy with either way config option or dt binding(seems easy),
-> > please let me know we will post new patch for the same.
-> DT way is totally NAK.
-> 
-> 
-> --------------------------->cut<-----------------------------------
-> 
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Date: Wed, 20 Mar 2019 16:15:21 +0000
-> Subject: [PATCH] nvmem: core: add support to NVMEM_NO_SYSFS_ENTRY
-> 
-> Some users might not want to expose nvmem entry to sysfs and
-> only intend to use kernel interface so add such provision.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  Documentation/ABI/stable/sysfs-bus-nvmem |  2 ++
->  drivers/nvmem/Kconfig                    |  5 +++++
->  drivers/nvmem/core.c                     | 11 ++++++-----
->  3 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-bus-nvmem
-> b/Documentation/ABI/stable/sysfs-bus-nvmem
-> index 5923ab4620c5..12aab0a85fea 100644
-> --- a/Documentation/ABI/stable/sysfs-bus-nvmem
-> +++ b/Documentation/ABI/stable/sysfs-bus-nvmem
-> @@ -6,6 +6,8 @@ Description:
->  		This file allows user to read/write the raw NVMEM contents.
->  		Permissions for write to this file depends on the nvmem
->  		provider configuration.
-> +		Note: This file is not present if CONFIG_NVMEM_NO_SYSFS_ENTRY
-> +		is enabled
-> 
->  		ex:
->  		hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 0a7a470ee859..6ab3276d287c 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -192,4 +192,9 @@ config SC27XX_EFUSE
->  	  This driver can also be built as a module. If so, the module
->  	  will be called nvmem-sc27xx-efuse.
-> 
-> +config NVMEM_NO_SYSFS_ENTRY
-> +	bool "No nvmem sysfs entry"
-> +
-> +	help
-> +		Say Yes if you do not want to add nvmem entry to sysfs.
->  endif
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> cc: Juergen Gross <jgross@suse.com>
+> cc: Stefano Stabellini <sstabellini@kernel.org>
+> cc: xen-devel@lists.xenproject.org
 
-Hello Srini,
-
-doesn't it make sense to instead have a CONFIG_NVMEM_SYSFS,
-maked as default y, that way the default behavior will be the same,
-and people not wanting it can explicitly disable it.
-
-This also aligns with how it's done in other drivers:
-
-$ grep  SYSFS .config
-# CONFIG_SYSFS_DEPRECATED is not set
-CONFIG_SYSFS_SYSCALL=y
-# CONFIG_DMI_SYSFS is not set
-# CONFIG_FW_CFG_SYSFS is not set
-# CONFIG_ISCSI_BOOT_SYSFS is not set
-# CONFIG_GPIO_SYSFS is not set
-# CONFIG_WATCHDOG_SYSFS is not set
-CONFIG_EDAC_LEGACY_SYSFS=y
-CONFIG_RTC_INTF_SYSFS=y
-CONFIG_CROS_EC_SYSFS=m
-# CONFIG_IIO_SYSFS_TRIGGER is not set
-CONFIG_PWM_SYSFS=y
-CONFIG_SYSFS=y
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
 
-Kind regards,
-Niklas
-
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index b9a0270883a0..c70f183fe379 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -216,7 +216,7 @@ static const struct attribute_group nvmem_bin_rw_group =
-> {
->  	.attrs		= nvmem_attrs,
->  };
-> 
-> -static const struct attribute_group *nvmem_rw_dev_groups[] = {
-> +static const __maybe_unused struct attribute_group *nvmem_rw_dev_groups[] =
-> {
->  	&nvmem_bin_rw_group,
->  	NULL,
->  };
-> @@ -240,7 +240,7 @@ static const struct attribute_group nvmem_bin_ro_group =
-> {
->  	.attrs		= nvmem_attrs,
->  };
-> 
-> -static const struct attribute_group *nvmem_ro_dev_groups[] = {
-> +static const __maybe_unused struct attribute_group *nvmem_ro_dev_groups[] =
-> {
->  	&nvmem_bin_ro_group,
->  	NULL,
->  };
-> @@ -265,7 +265,7 @@ static const struct attribute_group
-> nvmem_bin_rw_root_group = {
->  	.attrs		= nvmem_attrs,
->  };
-> 
-> -static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
-> +static const __maybe_unused struct attribute_group
-> *nvmem_rw_root_dev_groups[] = {
->  	&nvmem_bin_rw_root_group,
->  	NULL,
->  };
-> @@ -289,7 +289,7 @@ static const struct attribute_group
-> nvmem_bin_ro_root_group = {
->  	.attrs		= nvmem_attrs,
->  };
-> 
-> -static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> +static const __maybe_unused struct attribute_group
-> *nvmem_ro_root_dev_groups[] = {
->  	&nvmem_bin_ro_root_group,
->  	NULL,
->  };
-> @@ -688,6 +688,7 @@ struct nvmem_device *nvmem_register(const struct
-> nvmem_config *config)
->  	nvmem->read_only = device_property_present(config->dev, "read-only") |
->  			   config->read_only;
-> 
-> +#if !defined(CONFIG_NVMEM_NO_SYSFS_ENTRY)
->  	if (config->root_only)
->  		nvmem->dev.groups = nvmem->read_only ?
->  			nvmem_ro_root_dev_groups :
-> @@ -696,7 +697,7 @@ struct nvmem_device *nvmem_register(const struct
-> nvmem_config *config)
->  		nvmem->dev.groups = nvmem->read_only ?
->  			nvmem_ro_dev_groups :
->  			nvmem_rw_dev_groups;
-> -
-> +#endif
->  	device_initialize(&nvmem->dev);
-> 
->  	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
-> -- 
-> 2.21.0
-> 
-> --------------------------->cut<-----------------------------------
+Juergen
