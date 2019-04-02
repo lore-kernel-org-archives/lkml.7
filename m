@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A32CC10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A82C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D63B2147C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E66221473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554221208;
-	bh=1jg6GJY253MjL7FG3UZTbAhGKjrcGGANXiJpFsK/h2M=;
+	s=default; t=1554221211;
+	bh=g8PFNOYD/v6kuRTn1RGxEpSkYVpMWcXBC/3jfHbp6J4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PozhwxmEQgMdKNQoK8z7fQonsGmFx1m0tmAlKKwhAOcGmbwXdMaN0nd7i1XARdWpu
-	 iaIHfCtNjrAAa6mVM83GLf//lQbSFGon2w+1Wjf2UTsawCV3DO+QKnJ22q/ULASoFF
-	 3EHYpBJiclKK3FsxN+6XJGSvyjkDFGU9TV/1Iqps=
+	b=DWumYFwAtqyGuh+jDEnPRfCiBzF7SMLwJdBS4RHHkBRTHbJw4Jqr2C8D+dgJqdYLi
+	 uNY29B9kL7CElLSH3EOSW2KRwnurH5OVRM7ScuTdyypr5aUIcgOw46OO/sHylqWpRi
+	 wJhwVy8xrRUDBJNw6ID6+neNGDC9Sth+U7b2TP5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbfDBQGq (ORCPT
+        id S1731081AbfDBQGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44508 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 12:06:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730698AbfDBQGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:06:44 -0400
+        id S1730698AbfDBQGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:06:47 -0400
 Received: from quaco.ghostprotocols.net (unknown [187.65.94.38])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9043520856;
-        Tue,  2 Apr 2019 16:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC78A20840;
+        Tue,  2 Apr 2019 16:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554221203;
-        bh=1jg6GJY253MjL7FG3UZTbAhGKjrcGGANXiJpFsK/h2M=;
+        s=default; t=1554221206;
+        bh=g8PFNOYD/v6kuRTn1RGxEpSkYVpMWcXBC/3jfHbp6J4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBgdQ0qYPn4NmMRFyScN+pmAX0fBCRODUEt8DaYvvuCSDGCaPCuEg8WJZGSoVi5aY
-         wY6S8kDFzGZb1Y/l88jEbaAwMiZigoyZ7uBVZ0C0u6ibz6ooLYEOkZcnNrleyqbRqs
-         fMuZO3ASBAvNDb821MTjhmCk7vHRta7HGhFPjEVE=
+        b=doNSryO1wi3Uk7U6/uoLvYapwG2swmC8QAjWj0YLiipmR7gU1+jtSy/rFaqIFReRG
+         i3yQk3YdLXCOO7fEvhzzEOELQNXefrDFQU7K4oOxTb5nnomHo9EZBwdivs6vMqhgy0
+         bmYFH5Z/DdKGLi9+DsXI6Yax50zeNkHkuMgyHaDk=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Jiri Olsa <jolsa@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 13/44] tools lib traceevent: Implement a new API, tep_list_events_copy()
-Date:   Tue,  2 Apr 2019 13:05:18 -0300
-Message-Id: <20190402160549.13544-14-acme@kernel.org>
+Subject: [PATCH 14/44] tools lib traceevent: Add more debugging to see various internal ring buffer entries
+Date:   Tue,  2 Apr 2019 13:05:19 -0300
+Message-Id: <20190402160549.13544-15-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190402160549.13544-1-acme@kernel.org>
 References: <20190402160549.13544-1-acme@kernel.org>
@@ -62,180 +62,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+From: "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>
 
-Existing API tep_list_events() is not thread safe, it uses the internal
-array sort_events to keep cache of the sorted events and reuses it. This
-patch implements a new API, tep_list_events_copy(), which allocates new
-sorted array each time it is called. It could be used when a sorted
-events functionality is needed in thread safe use cases. It is up to the
-caller to free the array.
+When trace-cmd report --debug is set, show the internal ring buffer
+entries like time-extends and padding. This requires adding new kbuffer
+API to retrieve these items.
 
-Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/linux-trace-devel/20181218133013.31094-1-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190401164343.117437443@goodmis.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lkml.kernel.org/r/20190401164343.257591565@goodmis.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 109 +++++++++++++++++++++++------
- tools/lib/traceevent/event-parse.h |   5 +-
- 2 files changed, 91 insertions(+), 23 deletions(-)
+ tools/lib/traceevent/kbuffer-parse.c | 49 ++++++++++++++++++++++++++++
+ tools/lib/traceevent/kbuffer.h       | 13 ++++++++
+ 2 files changed, 62 insertions(+)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 666e23ded6ed..c00aebab3c33 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -5651,32 +5651,26 @@ static int events_system_cmp(const void *a, const void *b)
- 	return events_id_cmp(a, b);
- }
- 
--struct tep_event **tep_list_events(struct tep_handle *pevent, enum tep_event_sort_type sort_type)
-+static struct tep_event **list_events_copy(struct tep_handle *tep)
+diff --git a/tools/lib/traceevent/kbuffer-parse.c b/tools/lib/traceevent/kbuffer-parse.c
+index af2a1f3b7424..b887e7437d67 100644
+--- a/tools/lib/traceevent/kbuffer-parse.c
++++ b/tools/lib/traceevent/kbuffer-parse.c
+@@ -727,3 +727,52 @@ int kbuffer_start_of_data(struct kbuffer *kbuf)
  {
- 	struct tep_event **events;
--	int (*sort)(const void *a, const void *b);
--
--	events = pevent->sort_events;
--
--	if (events && pevent->last_type == sort_type)
--		return events;
- 
--	if (!events) {
--		events = malloc(sizeof(*events) * (pevent->nr_events + 1));
--		if (!events)
--			return NULL;
-+	if (!tep)
-+		return NULL;
- 
--		memcpy(events, pevent->events, sizeof(*events) * pevent->nr_events);
--		events[pevent->nr_events] = NULL;
-+	events = malloc(sizeof(*events) * (tep->nr_events + 1));
-+	if (!events)
-+		return NULL;
- 
--		pevent->sort_events = events;
-+	memcpy(events, tep->events, sizeof(*events) * tep->nr_events);
-+	events[tep->nr_events] = NULL;
-+	return events;
-+}
- 
--		/* the internal events are sorted by id */
--		if (sort_type == TEP_EVENT_SORT_ID) {
--			pevent->last_type = sort_type;
--			return events;
--		}
--	}
-+static void list_events_sort(struct tep_event **events, int nr_events,
-+			     enum tep_event_sort_type sort_type)
-+{
-+	int (*sort)(const void *a, const void *b);
- 
- 	switch (sort_type) {
- 	case TEP_EVENT_SORT_ID:
-@@ -5689,11 +5683,82 @@ struct tep_event **tep_list_events(struct tep_handle *pevent, enum tep_event_sor
- 		sort = events_system_cmp;
- 		break;
- 	default:
-+		sort = NULL;
-+	}
-+
-+	if (sort)
-+		qsort(events, nr_events, sizeof(*events), sort);
-+}
-+
-+/**
-+ * tep_list_events - Get events, sorted by given criteria.
-+ * @tep: a handle to the tep context
-+ * @sort_type: desired sort order of the events in the array
-+ *
-+ * Returns an array of pointers to all events, sorted by the given
-+ * @sort_type criteria. The last element of the array is NULL. The returned
-+ * memory must not be freed, it is managed by the library.
-+ * The function is not thread safe.
-+ */
-+struct tep_event **tep_list_events(struct tep_handle *tep,
-+				   enum tep_event_sort_type sort_type)
-+{
-+	struct tep_event **events;
-+
-+	if (!tep)
-+		return NULL;
-+
-+	events = tep->sort_events;
-+	if (events && tep->last_type == sort_type)
- 		return events;
-+
-+	if (!events) {
-+		events = list_events_copy(tep);
-+		if (!events)
-+			return NULL;
-+
-+		tep->sort_events = events;
-+
-+		/* the internal events are sorted by id */
-+		if (sort_type == TEP_EVENT_SORT_ID) {
-+			tep->last_type = sort_type;
-+			return events;
-+		}
- 	}
- 
--	qsort(events, pevent->nr_events, sizeof(*events), sort);
--	pevent->last_type = sort_type;
-+	list_events_sort(events, tep->nr_events, sort_type);
-+	tep->last_type = sort_type;
-+
-+	return events;
-+}
-+
-+
-+/**
-+ * tep_list_events_copy - Thread safe version of tep_list_events()
-+ * @tep: a handle to the tep context
-+ * @sort_type: desired sort order of the events in the array
-+ *
-+ * Returns an array of pointers to all events, sorted by the given
-+ * @sort_type criteria. The last element of the array is NULL. The returned
-+ * array is newly allocated inside the function and must be freed by the caller
-+ */
-+struct tep_event **tep_list_events_copy(struct tep_handle *tep,
-+					enum tep_event_sort_type sort_type)
-+{
-+	struct tep_event **events;
-+
-+	if (!tep)
-+		return NULL;
-+
-+	events = list_events_copy(tep);
-+	if (!events)
-+		return NULL;
-+
-+	/* the internal events are sorted by id */
-+	if (sort_type == TEP_EVENT_SORT_ID)
-+		return events;
-+
-+	list_events_sort(events, tep->nr_events, sort_type);
- 
- 	return events;
+ 	return kbuf->start;
  }
-diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
-index aec48f2aea8a..41159358abc2 100644
---- a/tools/lib/traceevent/event-parse.h
-+++ b/tools/lib/traceevent/event-parse.h
-@@ -544,7 +544,10 @@ void tep_event_info(struct trace_seq *s, struct tep_event *event,
- int tep_strerror(struct tep_handle *pevent, enum tep_errno errnum,
- 		 char *buf, size_t buflen);
++
++/**
++ * kbuffer_raw_get - get raw buffer info
++ * @kbuf:	The kbuffer
++ * @subbuf:	Start of mapped subbuffer
++ * @info:	Info descriptor to fill in
++ *
++ * For debugging. This can return internals of the ring buffer.
++ * Expects to have info->next set to what it will read.
++ * The type, length and timestamp delta will be filled in, and
++ * @info->next will be updated to the next element.
++ * The @subbuf is used to know if the info is passed the end of
++ * data and NULL will be returned if it is.
++ */
++struct kbuffer_raw_info *
++kbuffer_raw_get(struct kbuffer *kbuf, void *subbuf, struct kbuffer_raw_info *info)
++{
++	unsigned long long flags;
++	unsigned long long delta;
++	unsigned int type_len;
++	unsigned int size;
++	int start;
++	int length;
++	void *ptr = info->next;
++
++	if (!kbuf || !subbuf)
++		return NULL;
++
++	if (kbuf->flags & KBUFFER_FL_LONG_8)
++		start = 16;
++	else
++		start = 12;
++
++	flags = read_long(kbuf, subbuf + 8);
++	size = (unsigned int)flags & COMMIT_MASK;
++
++	if (ptr < subbuf || ptr >= subbuf + start + size)
++		return NULL;
++
++	type_len = translate_data(kbuf, ptr, &ptr, &delta, &length);
++
++	info->next = ptr + length;
++
++	info->type = type_len;
++	info->delta = delta;
++	info->length = length;
++
++	return info;
++}
+diff --git a/tools/lib/traceevent/kbuffer.h b/tools/lib/traceevent/kbuffer.h
+index 03dce757553f..ed4d697fc137 100644
+--- a/tools/lib/traceevent/kbuffer.h
++++ b/tools/lib/traceevent/kbuffer.h
+@@ -65,4 +65,17 @@ int kbuffer_subbuffer_size(struct kbuffer *kbuf);
+ void kbuffer_set_old_format(struct kbuffer *kbuf);
+ int kbuffer_start_of_data(struct kbuffer *kbuf);
  
--struct tep_event **tep_list_events(struct tep_handle *pevent, enum tep_event_sort_type);
-+struct tep_event **tep_list_events(struct tep_handle *tep,
-+				   enum tep_event_sort_type);
-+struct tep_event **tep_list_events_copy(struct tep_handle *tep,
-+					enum tep_event_sort_type);
- struct tep_format_field **tep_event_common_fields(struct tep_event *event);
- struct tep_format_field **tep_event_fields(struct tep_event *event);
- 
++/* Debugging */
++
++struct kbuffer_raw_info {
++	int			type;
++	int			length;
++	unsigned long long	delta;
++	void			*next;
++};
++
++/* Read raw data */
++struct kbuffer_raw_info *kbuffer_raw_get(struct kbuffer *kbuf, void *subbuf,
++					 struct kbuffer_raw_info *info);
++
+ #endif /* _K_BUFFER_H */
 -- 
 2.20.1
 
