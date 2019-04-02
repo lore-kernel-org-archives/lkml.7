@@ -2,123 +2,103 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284CBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D9EC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9672082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CEB2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LcCo62mZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHbabakp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbfDBTSZ (ORCPT
+        id S1730611AbfDBTT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:18:25 -0400
-Received: from smtprelay.synopsys.com ([198.182.60.111]:41666 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfDBTSZ (ORCPT
+        Tue, 2 Apr 2019 15:19:26 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34047 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfDBTT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:18:25 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id CC6BE10C0F5F;
-        Tue,  2 Apr 2019 12:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1554232704; bh=ByDI/KJNqJEArUWnhkZTp8SvCGXT1p14aRUfg2hMysM=;
-        h=From:To:CC:Subject:Date:From;
-        b=LcCo62mZz62zqz9kTxMwjFIOP54iqBLRX4Pjdi4mTyxMAnvhkELmGIAgjnwKxKwVT
-         6SSz+XYjdF6Q+fdD3jetIJmfKj3mxp0rD0oEJilUmnfTLuPyuB23I9l92CKh2fwF7H
-         Wnj2rQSAWwgCovqtl5b7IhyCXGQovLcMADGw9xXQgc2kRIRtOdeQc6XPCQss6cn+cJ
-         esEBqmm0yB0RvLLnFxAkgOEDK+SAeyu+uG+qMG73GrqjNDNv7EgLmmXKIEbsWBU/JS
-         9bqwtXiWN+dMq/8GGlpO7nu5+e6QkcEH1EJCAklVFqP8jrcF/ONeAh27O/4IoC9Jvc
-         jYYtOo1O9d61w==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 9E16BA005A;
-        Tue,  2 Apr 2019 19:18:23 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 2 Apr 2019 12:18:21 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 3 Apr 2019 00:48:28 +0530
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.13.182.230) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 3 Apr 2019 00:48:26 +0530
-From:   Vineet Gupta <vineet.gupta1@synopsys.com>
-To:     <linux-snps-arc@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <eugeniy.paltsev@synopsys.com>,
-        <robh@kernel.org>, Vineet Gupta <vineet.gupta1@synopsys.com>
-Subject: [PATCH] ARC: [hsdk] Make it easier to add PAE40 region to DTB
-Date:   Tue, 2 Apr 2019 12:18:03 -0700
-Message-ID: <1554232683-8173-1-git-send-email-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.13.182.230]
+        Tue, 2 Apr 2019 15:19:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id n11so11949364ioh.1;
+        Tue, 02 Apr 2019 12:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KAuT93FL/T7+bDPNkTO+kqBb77YV0Jq933v3CJxUkZw=;
+        b=AHbabakp2VubV4yWs1vbHuWcxA5uj9EQDgxv44uikqQPKGD+EozaZik4y2E1RsyPHr
+         1c/cFYwjSTqNGza2ipL/DRjesdMEHk4p0a70YMQpko4F+sb/sbbGXzlu+3RzEl8CSITd
+         wXs8d0rRNbAy8RibRBULZ0pJcutU1jLZfm6uJCnKzZphEd+0p+TrxyRo0u6PMTSV4eF2
+         Ni+LIQXrYfbDdE1LPeJOKbfzRXcIaJAMyt3ot6LfDdbZALx8M+iTwlSPb1SeFEUCsaPW
+         NTNIkiOqEGuUPzOwcgxorAJuhPIbOpLVMsXPlcXaNINFO+KK9+g7S8R/j2YFfVlZf9Tb
+         rzeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KAuT93FL/T7+bDPNkTO+kqBb77YV0Jq933v3CJxUkZw=;
+        b=qRGqPJE9Mo0BUQ180Qj1fv88EoBWstCFyk6ZHYD93rT4AvLhBGAHd9mY6Yhad+vBMZ
+         q6uz1ZvCfhohMRmWXYdtyLnU/Sv2+2AVhTOsqo4BMIBczHrcMWK/TsoKKBbZFg/P/AI6
+         p/d4TMH4Oq+g+VrcLbqfKZczCyuhe2zbBhZHKZNQWeqg69jEEj4Ou4fY/eDFxG7gC+Ri
+         TU/SSa5HxBYvqjB9gKGI0evp5Jdlm/nXYjpJtWaNMQ9LzADBQEqwajXZ8Kdha9yuCc1i
+         UURWwPQNK5bDWfNZv+eVnRp+KLXwYvFwAcubysHok+p+1p/Ylw+cxqmcng9G4vqwrXLa
+         23HA==
+X-Gm-Message-State: APjAAAX3z+yIkwtpToDb+K02M5FOuJeWFwM92OCIfAo/DjVF5NeG4Cnj
+        TlFCE2ky63wy9BhF3g/soIQ=
+X-Google-Smtp-Source: APXvYqyOykSfVzJdj7sp/mJ0SO0aEslbKdXnQ/KMJk2kHJsX4SHBMT1t/urWpC6AJlO5l0SHIMa5mg==
+X-Received: by 2002:a5d:8910:: with SMTP id b16mr46782280ion.178.1554232765383;
+        Tue, 02 Apr 2019 12:19:25 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id m143sm7428370itm.32.2019.04.02.12.19.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 12:19:24 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] ARM: dts: imx6q-logicpd: Reduce inrush current on start
+Date:   Tue,  2 Apr 2019 14:19:08 -0500
+Message-Id: <20190402191908.4306-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Bump top level address-cells/size-cells nodes to 2 (to ensure all
-   down stream addresses are 64-bits, unless explicitly specified
-   otherwise (in "soc" bus with all peripherals)
+The main 3.3V regulator sources a series of additional regulators.
+This patch adds a small delay, so when the 3.3V regulator comes
+on it delays a bit before the subsequent regulators can come on.
+This reduces the inrush current a bit on the external DC power
+supply to help prevent a situation where the sourcing power supply
+cannot source enough current and overloads and the kit fails to
+start.
 
-2. "memory" also specified with address/size 2
+Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD
+i.MX6QD EVM")
 
-3. Add a commented reference for PAE40 region beyond 4GB physical
-   address space
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- arch/arc/boot/dts/hsdk.dts | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 69bc1c9e8e50..7425bb0f2d1b 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -18,8 +18,8 @@
- 	model = "snps,hsdk";
- 	compatible = "snps,hsdk";
- 
--	#address-cells = <1>;
--	#size-cells = <1>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
- 
- 	chosen {
- 		bootargs = "earlycon=uart8250,mmio32,0xf0005000,115200n8 console=ttyS0,115200n8 debug print-fatal-signals=1";
-@@ -105,7 +105,7 @@
- 		#size-cells = <1>;
- 		interrupt-parent = <&idu_intc>;
- 
--		ranges = <0x00000000 0xf0000000 0x10000000>;
-+		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
- 
- 		cgu_rst: reset-controller@8a0 {
- 			compatible = "snps,hsdk-reset";
-@@ -269,9 +269,10 @@
+diff --git a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+index fb01fa6e4224..e31b6923cb72 100644
+--- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
++++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+@@ -99,6 +99,7 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <70000>;
+ 		enable-active-high;
+ 		regulator-always-on;
  	};
- 
- 	memory@80000000 {
--		#address-cells = <1>;
--		#size-cells = <1>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
- 		device_type = "memory";
--		reg = <0x80000000 0x40000000>;  /* 1 GiB */
-+		reg = <0x0 0x80000000 0x0 0x40000000>;  /* 1 GB lowmem */
-+		/*     0x1 0x00000000 0x0 0x40000000>;     1 GB highmem */
- 	};
- };
 -- 
-2.7.4
+2.17.1
 
