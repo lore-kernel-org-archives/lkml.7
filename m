@@ -2,118 +2,123 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BFCC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4A3C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AFF206B6
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADD9205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:07:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gLbx2NKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbfDBQ52 (ORCPT
+        id S1731164AbfDBRHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:57:28 -0400
-Received: from muru.com ([72.249.23.125]:44022 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730288AbfDBQ50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:57:26 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id CC2BA805F;
-        Tue,  2 Apr 2019 16:57:40 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 09:57:23 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     nsekhar@ti.com, s-anna@ti.com, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [RFC PATCH 4/4] bus: ti-sysc: Ensure PRU-ICSS doesn't break
- suspend/resume
-Message-ID: <20190402165723.GM49658@atomide.com>
-References: <20190402133752.6912-1-rogerq@ti.com>
- <20190402133752.6912-5-rogerq@ti.com>
+        Tue, 2 Apr 2019 13:07:05 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48062 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDBRHE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 13:07:04 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x32H6rgo047282;
+        Tue, 2 Apr 2019 12:06:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554224813;
+        bh=+/7po9A1i8sjerZ4j8FxSaGiLq6wV0jePtVrKCjce7o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gLbx2NKrdqs8grWX7M2lDjxEf2cX0TdMVNPcP+Y67bxUsrX1yegcCKRQUhNwkKqeO
+         gxnDFa07y9M0mm9y1BtVhNaEkvaDpbgBMi+iFRXVIUqJEPudhbysi0qX03U91rxP8W
+         EMI0ceO94iQY7RskqH/rEyG4192lCV4+wuE8yDnE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x32H6rSU115636
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 2 Apr 2019 12:06:53 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 2 Apr
+ 2019 12:06:52 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 2 Apr 2019 12:06:52 -0500
+Received: from [172.22.126.131] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x32H6qN8120656;
+        Tue, 2 Apr 2019 12:06:52 -0500
+Subject: Re: [RFC PATCH 2/5] dt: bindings: Add multicolor class dt bindings
+ documention
+To:     Marek Behun <marek.behun@nic.cz>
+CC:     Pavel Machek <pavel@ucw.cz>, <robh+dt@kernel.org>,
+        <jacek.anaszewski@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>,
+        =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
+References: <20190401173400.14238-1-dmurphy@ti.com>
+ <20190401173400.14238-3-dmurphy@ti.com> <20190401212921.GB14681@amd>
+ <f8655180-0c3a-7292-3a49-57d997473992@ti.com>
+ <20190402181712.3eccdb4b@nic.cz>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <c6abe495-d7fe-a784-0b9b-1c690b01e008@ti.com>
+Date:   Tue, 2 Apr 2019 12:06:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402133752.6912-5-rogerq@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190402181712.3eccdb4b@nic.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [190402 13:38]:
-> The PRU-ICSS subsystem's SYSCONFIG register is similar to
-> omap4-simple but has 2 special bits STANDBY_INIT and SUB_MWAIT.
+Marek
+
+On 4/2/19 11:17 AM, Marek Behun wrote:
+> On Tue, 2 Apr 2019 06:40:53 -0500
+> Dan Murphy <dmurphy@ti.com> wrote:
 > 
-> The STANDBY_INIT bit initiates a Standby sequence (when set) and
-> triggers a MStandby request to the SoC's PRCM module. This same
-> bit is also used to enable the OCP master ports (when cleared).
+>> I have had off line conversations with Jacek about this brightness model node.
+>>
+>> Your concern was actually one of my concerns as well.  Not only millions of entries but also having a huge
+>> DT binary.
+>>
+>> We wanted to RFC this to get feedback.  And this is why I have not added any support for this in the framework code.
+>>
+>> Dan
+>>
 > 
-> Some PRU applications require the OCP master port access to be
-> enabled thus keeping it out of standby.
-
-So do we need to configure this depending on the application?
-
-> During sustem suspend/resume we must ensure that the PRUSS is in
-> standby else it will break resume.
+> What if we just stuck to color spaces and defined channel curves in the
+> device tree?
 > 
-> NOTE:
-> 1. This patch only adds the PM callbacks with code to fix the System
-> Suspend/Resume hang issue on AM33xx/AM437x SoCs, but does not
-> implement the full context save and restore required for the PRUSS
-> drivers to work across system suspend/resume when the power domain
-> is switched off (L4PER domain is switched OFF on AM335x/AM437x
-> during system suspend/resume, so PRUSS modules do lose context).
 
-I think we already restore the interconnect target module access
-properly on resume. If not we should fix that.
+Vesa did a good summary of the current MC framework implementations that are being proposed
+The thread also documents Pavel's requirements
 
-Saving and restoring the child device state is up to the device
-drivers managing the child device(s), and there's not much ti-sysc.c
-can do about it, right?
+https://lore.kernel.org/patchwork/patch/1037147/
 
-> @@ -92,6 +93,7 @@ struct sysc {
->  	bool enabled;
->  	bool needs_resume;
->  	bool child_needs_resume;
-> +	bool in_standby;
->  	struct delayed_work idle_work;
->  };
+And here is the series with a single brightness file and passing in multiple integers.
+I did not document this code as I was pretty certain it was not the way to go.
 
-We should start using bitfields for the bool here, might as well
-already do it now:
+https://patches.linaro.org/project/linux-leds/list/?series=18022
 
-unsigned long in_standby:1;
+Dan
 
-See "17) Using bool" in Documentation/process/coding-style.rst.
+> The curve could then be defined via an array of integer pairs, which
+> would be interpreted as points via which the curve passes and the curve
+> would be approximated by linear segemts...
+> 
+>   led@0 {
+>     colorspace = <COLOR_SPACE_ID_RGB>;
+>     red-curve = <0 0>, <255 255>;
+>     green-curve = <0 0>, <255 128>;
+>     blue-curve = <0 0>, <255 128>;
+>   };
+> 
 
-> @@ -1023,6 +1025,21 @@ static int __maybe_unused sysc_noirq_suspend(struct device *dev)
->  	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
->  		return 0;
->  
-> +	if (ddata->cap->type == TI_SYSC_PRUSS) {
 
-Should this test be made more generic based on the mstandby
-bit being configured?
-
-And can you please make these into separate functions to
-avoid cluttering the suspend and resume functions. Something
-like sysc_handle_mstandby() maybe?
-
-> +		u32 reg, mask;
-> +		const struct sysc_regbits *regbits = ddata->cap->regbits;
-> +
-> +		mask = BIT(regbits->standby_init_shift);
-> +		reg = sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
-> +		ddata->in_standby = reg & mask;
-
-Hmm so could we just assume that the device drivers for child device(s)
-configure the MSTANDBY bit? Or do we need to manage it in ti-sysc?
-
-See for example drivers/usb/musb/omap2430.c omap2430_low_level_init()
-and omap2430_low_level_exit(). That's a separate register though.
-
-Regards,
-
-Tony
+-- 
+------------------
+Dan Murphy
