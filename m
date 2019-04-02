@@ -2,108 +2,198 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB417C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0441C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB08206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XqahE8ek"
+	by mail.kernel.org (Postfix) with ESMTP id B19AE206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 07:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfDBHAQ (ORCPT
+        id S1729383AbfDBHAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 03:00:16 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40997 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfDBHAP (ORCPT
+        Tue, 2 Apr 2019 03:00:40 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:43096 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725863AbfDBHAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 03:00:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so5870505pfd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 00:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lG7q6x9bOATHtEAjfI+YGWaPNzgsxOn7kFCqmU7RA24=;
-        b=XqahE8ekqUVFS4tzTGLzmL74ptchRVDTW9nkVV58ffVsP9BKCdg2INqdSOiiC9SjQD
-         A1ugBwXu2E6MCucD4mUzKUFkzggMLo/BYZviJ+KD2XdmcDj5nFz933zBh9iicsR6O6rq
-         Hz+9Vs3b/KmqdrWV1KWmYVwkCw9QsK/h/6D5Lv+M7DS0OgHWNupLDH9hNhvZMd1eNkK8
-         xoVPrcceQ25WBMu0My92CJCK3O5h3z9zJhCIfs0CgluUkNlzi6vpYOFNYnNzhxb1ji9c
-         3RvIDBZ3rWmNLAxnYcail7f+tn0CYOhEXpEqp0A52FZ/9z8rPUwf1um9LGF9CYnHyUR0
-         w9QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lG7q6x9bOATHtEAjfI+YGWaPNzgsxOn7kFCqmU7RA24=;
-        b=AVqiwUZzpjXRFBbuvLDfjXsL5qMCA0KkLLXvq0mJkO+5qcmyOiTGr6FW896aMkhVGk
-         5aviiYghnVei/xlk1CAfmjrTjv0dIRjwB6E7GVYSOrznIXcvPmd5/3kk7/H5N7npNDG1
-         LhWM817/lS/PaIuHavDtGatueyBuxxzVfo6EsSmnR1nB9W+OQ7LvQX7nMrBI3WxACvMx
-         WRLGlDB9o6ytBW5IRDz07KQGH74SL6Ie64KgKG2ZPyNkMOdgb9jbk+JQjuPxoesalDVE
-         4062up+/47VTC/TB5oHH208+YDl4cRyOB7d8VZbPsR8f8f6scnI1WKhRG5x02Mm+QaL2
-         t8Tw==
-X-Gm-Message-State: APjAAAVUkfh1QyBiNHnrXOYb6dDErOR/6a25FgD47x8b0KE5a31W/zJr
-        CitkgCpeQEkjf972zmhS1TJ0mw==
-X-Google-Smtp-Source: APXvYqzTFEZ6Qlqz/GH8bk2tKD5L8rc0DmuRjI2qt8hubuCpxemLu19AP3S4u4E8ZhDqCUEBxfo5BQ==
-X-Received: by 2002:aa7:8c84:: with SMTP id p4mr28442799pfd.164.1554188415241;
-        Tue, 02 Apr 2019 00:00:15 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id v188sm17945692pgb.7.2019.04.02.00.00.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 00:00:14 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 08:00:07 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 3/9] dt-bindings: mfd: Add compatible for the MediaTek
- MT6358 PMIC
-Message-ID: <20190402070007.GC4187@dell>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1552275991-34648-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Tue, 2 Apr 2019 03:00:40 -0400
+X-IronPort-AV: E=Sophos;i="5.60,298,1549900800"; 
+   d="scan'208";a="58278672"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 02 Apr 2019 15:00:37 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id E59BC4CD7909;
+        Tue,  2 Apr 2019 15:00:39 +0800 (CST)
+Received: from localhost.localdomain (10.167.225.56) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Tue, 2 Apr 2019 15:00:43 +0800
+Date:   Tue, 2 Apr 2019 15:59:39 +0800
+From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+CC:     <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
+Message-ID: <20190402075939.GA6560@localhost.localdomain>
+References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
+ <20190402061926.GA1555@localhost.localdomain>
+ <CAFgQCTv+2oVVeH6rarSgObQNwsBVBCr3phHp8rManLB3hrVOjA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1552275991-34648-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAFgQCTv+2oVVeH6rarSgObQNwsBVBCr3phHp8rManLB3hrVOjA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.167.225.56]
+X-yoursite-MailScanner-ID: E59BC4CD7909.AECA2
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019, Hsin-Hsiung Wang wrote:
+On Tue, Apr 02, 2019 at 02:58:53PM +0800, Pingfan Liu wrote:
+>On Tue, Apr 2, 2019 at 1:20 PM Chao Fan <fanc.fnst@cn.fujitsu.com> wrote:
+>>
+>> On Tue, Apr 02, 2019 at 12:10:46PM +0800, Pingfan Liu wrote:
+>> >crashkernel=x@y or or =range1:size1[,range2:size2,...]@offset option may
+>> or or?
+>> >fail to reserve the required memory region if KASLR puts kernel into the
+>> >region. To avoid this uncertainty, asking KASLR to skip the required
+>> >region.
+>> >
+>> >Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+>> >Cc: Thomas Gleixner <tglx@linutronix.de>
+>> >Cc: Ingo Molnar <mingo@redhat.com>
+>> >Cc: Borislav Petkov <bp@alien8.de>
+>> >Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> >Cc: Baoquan He <bhe@redhat.com>
+>> >Cc: Will Deacon <will.deacon@arm.com>
+>> >Cc: Nicolas Pitre <nico@linaro.org>
+>> >Cc: Pingfan Liu <kernelfans@gmail.com>
+>> >Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+>> >Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+>> >Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> >Cc: linux-kernel@vger.kernel.org
+>> >---
+>> [...]
+>> >+
+>> >+/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
+>>
+>> Before review, I want to say more about the background.
+>> It's very hard to review the code for someone who is not so familiar
+>> with kdump, so could you please explain more ahout
+>> the uasge of crashkernel=range1:size1[,range2:size2,...]@offset.
+>> And also there are so many jobs who are parsing string. So I really
+>> need your help to understand the PATCH.
+>>
+>> >+static void mem_avoid_specified_crashkernel_region(char *option)
+>> >+{
+>> >+      unsigned long long crash_size, crash_base = 0;
+>> >+      char    *first_colon, *first_space, *cur = option;
+>> Is there a tab after char?
+>> >+
+>> >+      first_colon = strchr(option, ':');
+>> >+      first_space = strchr(option, ' ');
+>> >+      /* if contain ":" */
+>> >+      if (first_colon && (!first_space || first_colon < first_space)) {
+>> >+              int i;
+>> >+              u64 total_sz = 0;
+>> >+              struct boot_e820_entry *entry;
+>> >+
+>> >+              for (i = 0; i < boot_params->e820_entries; i++) {
+>> >+                      entry = &boot_params->e820_table[i];
+>> >+                      /* Skip non-RAM entries. */
+>> >+                      if (entry->type != E820_TYPE_RAM)
+>> >+                              continue;
+>> >+                      total_sz += entry->size;
+>> I wonder whether it's needed to consider the memory ranges here.
+>> I think it's OK to only record the regions should to be avoid.
+>Maybe not catch you exactly. In the case of
+>crashkernel=range1:size1[,range2:size2,...]@offset, the size of avoid
+>region depends on the size of total system ram.
 
-> This adds compatible for the MediaTek MT6358 PMIC.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+Got it, I midunderstand it.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Thanks,
+Chao Fan
+>> I remeber I ever talked with Baoquan about the similiar problems.
+>> @Baoquan, I am not sure if I misunderstand something.
+>>
+>> Thanks,
+>> Chao Fan
+>> >+              }
+>> >+              handle_crashkernel_mem(option, total_sz, &crash_size,
+>> >+                      &crash_base);
+>> >+      } else {
+>> >+              crash_size = memparse(option, &cur);
+>> >+              if (option == cur)
+>> >+                      return;
+>> >+              while (*cur && *cur != ' ' && *cur != '@')
+>> >+                      cur++;
+>> >+              if (*cur == '@') {
+>> >+                      option = cur + 1;
+>> >+                      crash_base = memparse(option, &cur);
+>> >+              }
+>> >+      }
+>> >+      if (crash_base) {
+>> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
+>> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
+>> >+      } else {
+>> >+              /*
+>> >+               * Clearing mem_avoid if no offset is given. This is consistent
+>> >+               * with kernel, which uses the last crashkernel= option.
+>> >+               */
+>> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
+>> >+              mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
+>> >+      }
+>> >+}
+>> >
+>> > static void handle_mem_options(void)
+>> > {
+>> >@@ -248,7 +358,7 @@ static void handle_mem_options(void)
+>> >       u64 mem_size;
+>> >
+>> >       if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
+>> >-              !strstr(args, "hugepages"))
+>> >+              !strstr(args, "hugepages") && !strstr(args, "crashkernel="))
+>> >               return;
+>> >
+>> >       tmp_cmdline = malloc(len + 1);
+>> >@@ -284,6 +394,8 @@ static void handle_mem_options(void)
+>> >                               goto out;
+>> >
+>> >                       mem_limit = mem_size;
+>> >+              } else if (strstr(param, "crashkernel")) {
+>> >+                      mem_avoid_specified_crashkernel_region(val);
+>> >               }
+>> >       }
+>> >
+>> >@@ -412,7 +524,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+>> >
+>> >       /* We don't need to set a mapping for setup_data. */
+>> >
+>> >-      /* Mark the memmap regions we need to avoid */
+>> >+      /* Mark the regions we need to avoid */
+>> >       handle_mem_options();
+>> >
+>> >       /* Enumerate the immovable memory regions */
+>> >--
+>> >2.7.4
+>> >
+>> >
+>> >
+>>
+>>
+>
+>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
