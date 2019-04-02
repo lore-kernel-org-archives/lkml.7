@@ -2,114 +2,209 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5F1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2CCC10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4E82070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255452084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 18:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OSP/mj/Q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n43EItqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbfDBR5j (ORCPT
+        id S1729535AbfDBSFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 13:57:39 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:45620 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfDBR5j (ORCPT
+        Tue, 2 Apr 2019 14:05:04 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33068 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfDBSFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 13:57:39 -0400
-Received: by mail-yb1-f193.google.com with SMTP id b18so5146774yba.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 10:57:38 -0700 (PDT)
+        Tue, 2 Apr 2019 14:05:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t16so4776157plo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 11:05:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2d9K9JUUlUqo7KV2H4/IAzjMAbwM+ocor4KxdYwAt1E=;
-        b=OSP/mj/Q43obVdXvQ57TjzVvFutjUvARj/fwj7KwQbAGYyhMFLmt+xaCFRQ2gFX5wH
-         UolTLDXM2nO1GNy0xLGQvjSqBfxb1glIYRzt//1E+1EpDhqDFPhMpRlyHYQxJOMNgMDu
-         ceXfkzEkoJp16tAo59KKj/qtDNvKX55VkTRC4=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UZmm2yKfctlxCZPnZgX3MXlTS77WwX1GVQIRkmMVQGc=;
+        b=n43EItqKZAToEG6snnFferYbR3Cv8rjRMhFR1LtqSGbDccKTn52/M3cECgnNGOyicm
+         himUNmCe5pkPQCXc8QUCmWBW3TVK5Wcd7qQkR+RI0vvO/LdQLrMw95gjQvks7GVSSuAr
+         NOAQN+2xu2ez1nWhim+5W9YBE+D9cU6PVMvrY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2d9K9JUUlUqo7KV2H4/IAzjMAbwM+ocor4KxdYwAt1E=;
-        b=RTN8Xmadj5zLHaUH7v2G3ZD6v26aUrf/KeugdN6675uo6rUqoMLDu7s3WxrPKYKAWw
-         hyfKYnq9281/KrSocSJ9hLszi1V9GYKCmPifpH9rYEjShfgLVQe8rhzJzbf0AIiCcWUn
-         HxPIy7IDEKNRCLLYf0foCB571U0bdfToNxBNCRszwvVvQA1ASpNxw5iukqf9S1Iz0+p0
-         iwr5c0ELKCPqbpTgFBnvpO6ur3cK2avH6w8wNmgtJmD+24ZckNTwGrygqCzmCzBlW/IL
-         2+vpotnz9RKumBWHsIp1k/TWZqrftwbUUINNiatWPAeuZ2Fqy6Lrv7pbG6K/CM15pSJ3
-         9MMA==
-X-Gm-Message-State: APjAAAVRx06/BKZ4znLbrjFBNN2N89OM3gCwIdh9K9sBavlC49cPdb0R
-        1ZfuySjr99Pf1SaevhQjYEzGRA==
-X-Google-Smtp-Source: APXvYqzJiMWjvkLIiSZO9C+i7oQS9V/YAY//eV4eWJhDinLcHwvY25ygiyVAQJ5RZA0V86V+Tydgjg==
-X-Received: by 2002:a25:9941:: with SMTP id n1mr58710999ybo.85.1554227857972;
-        Tue, 02 Apr 2019 10:57:37 -0700 (PDT)
-Received: from [10.136.8.252] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id c206sm4681079ywc.71.2019.04.02.10.57.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 10:57:36 -0700 (PDT)
-Subject: Re: [PATCH v5 7/8] i2c: iproc: add NIC I2C support
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-References: <20190214175725.60462-1-ray.jui@broadcom.com>
- <20190214175725.60462-8-ray.jui@broadcom.com> <20190402102733.GD2960@kunai>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <a1a7a9c9-be4e-c582-d0d5-feccba4022ab@broadcom.com>
-Date:   Tue, 2 Apr 2019 10:57:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UZmm2yKfctlxCZPnZgX3MXlTS77WwX1GVQIRkmMVQGc=;
+        b=NWlnOUMU93ilaV+rD22DsSwB7zlvuPuoWxhMXIac5yZlgC9egDjDrU1VjTjLgT7aoX
+         fS6EOkJl7/MtGM4qQYUDt+TWMLN8Epi7kr2Pl02RDY7fy8JJOyqaFdTBhD8uG5ngE6CP
+         Td2lYn7V2qxOSh9UbljUV0d1LvrK4781JhxCxNA/DeUGVXon+80ME65njvSZGkRx/bpe
+         5NQy/si24RY9JqD77mypIK/g1/HiloprIH5IPE457tSr8boND1VvhhV7qRJbLqH1nawf
+         YW9AWtxdrjFLmBRpBUcKNZ1vAGnnjWWz1VWFxRFPDd+KwS1xg0C/tfX7V1pZD/8rkz3u
+         lfNw==
+X-Gm-Message-State: APjAAAVjzzQZCgcKhusm6bNS2qccvQs28+pTWJxxhkXNaDlFZDJSpL3N
+        BFqeZWr3LVOqCr+3TKi8fc9WAg==
+X-Google-Smtp-Source: APXvYqyOQkMGDDQ4+fsU3xhhhw7bymbRlWXK82D+i8mKOtSGjgjkMqQqvdEuJ6gu3XhPPUmiPKxGew==
+X-Received: by 2002:a17:902:2e83:: with SMTP id r3mr54239766plb.153.1554228303233;
+        Tue, 02 Apr 2019 11:05:03 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id k75sm34776680pfj.46.2019.04.02.11.05.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 11:05:02 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 11:05:01 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hemantg <hemantg@codeaurora.org>
+Subject: Re: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change
+ vendor event
+Message-ID: <20190402180501.GK112750@google.com>
+References: <20190307004041.38059-1-mka@chromium.org>
+ <20190307004041.38059-3-mka@chromium.org>
+ <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
+ <20190307182009.GB138592@google.com>
+ <20190307233039.GA69116@google.com>
+ <c985a6712f91930d7c710ca4abb42e80@codeaurora.org>
+ <a03acbdc6bfad172fdd65f428ffbe4cf@codeaurora.org>
+ <20190401171202.GH112750@google.com>
+ <1bebaf0766988a9f27cbbcb9bb35e26f@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190402102733.GD2960@kunai>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1bebaf0766988a9f27cbbcb9bb35e26f@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/2/2019 3:27 AM, Wolfram Sang wrote:
+On Tue, Apr 02, 2019 at 05:32:54PM +0530, Balakrishna Godavarthi wrote:
+> Hi Matthias,
 > 
->> +#define IDM_CTRL_DIRECT_OFFSET       0x00
+> On 2019-04-01 22:42, Matthias Kaehlcke wrote:
+> > On Mon, Apr 01, 2019 at 01:48:23PM +0530, Balakrishna Godavarthi wrote:
+> > > Hi Matthias,
+> > > 
+> > > On 2019-04-01 13:29, Balakrishna Godavarthi wrote:
+> > > > Hi Matthias,
+> > > >
+> > > > Sorry for the late reply i was on vacation.
+> > > >
+> > > > On 2019-03-08 05:00, Matthias Kaehlcke wrote:
+> > > > > On Thu, Mar 07, 2019 at 10:20:09AM -0800, Matthias Kaehlcke wrote:
+> > > > > > Hi Balakrishna,
+> > > > > >
+> > > > > > On Thu, Mar 07, 2019 at 10:35:08AM +0530, Balakrishna Godavarthi
+> > > > > > wrote:
+> > > > > > > hi Matthias,
+> > > > > > >
+> > > > > > > On 2019-03-07 06:10, Matthias Kaehlcke wrote:
+> > > > > > > > Firmware download to the WCN3990 often fails with a 'TLV response size
+> > > > > > > > mismatch' error:
+> > > > > > > >
+> > > > > > > > [  133.064659] Bluetooth: hci0: setting up wcn3990
+> > > > > > > > [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
+> > > > > > > > [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
+> > > > > > > > [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
+> > > > > > > > [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
+> > > > > > > >
+> > > > > > > > This is caused by a vendor event that corresponds to an earlier command
+> > > > > > > > to change the baudrate. The event is not processed in the context of the
+> > > > > > > > baudrate change and later interpreted as response to the firmware
+> > > > > > > > download command (which is also a vendor command), but the driver
+> > > > > > > > detects
+> > > > > > > > that the event doesn't have the expected amount of associated data.
+> > > > > > > >
+> > > > > > > > More details:
+> > > > > > > >
+> > > > > > > > For the WCN3990 the vendor command for a baudrate change isn't sent as
+> > > > > > > > synchronous HCI command, because the controller sends the corresponding
+> > > > > > > > vendor event with the new baudrate. The event is received and decoded
+> > > > > > > > after the baudrate change of the host port.
+> > > > > > > >
+> > > > > > > > Identify the 'unused' event when it is received and don't add it to
+> > > > > > > > the queue of RX frames.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > > > > ---
+> > > > > > >
+> > > > > > > ...
+> > > > > > >
+> > > > > > > Can you test by reverting this change "94d6671473924".
+> > > > > >
+> > > > > > The issue is still reproducible.
+> > > > > >
+> > > > > > > We need at least 15ms minimum delay for the soc to change its baud rate and
+> > > > > > > respond to the with command complete event.
+> > > > > >
+> > > > > > The baudrate change has clearly been successful when the problem is
+> > > > > > observed, since the host receives the vendor event with the new
+> > > > > > baudrate.
+> > > > >
+> > > > > I forgot to mention this earlier: the controller doesn't send a
+> > > > > command complete event for the command, or at least not a correct
+> > > > > one.
+> > > > >
+> > > > > That's the data that is received:
+> > > > >
+> > > > > 04 0e 04 01 00 00 00
+> > > > >             ~~ ~~
+> > > > >
+> > > > [Bala]: can you share me the command sent and event recevied.
+> > > >  I see that we receive a command complete event for the baud rate
+> > > > change command.
+> > > >
+> > > > command sent: 01 48 fc 01 11
+> > > > vendor specific event: 04 ff 02 92 01
+> > > > command complete event: 04 0e 04 01 00 00 00.
+> > > >
+> > > >
+> > > >
+> > > > > This is *a* command complete event, but the opcode is 0x0000 instead
+> > > > > of the earlier command. The same happens for the firmware
+> > > > > download/read version command, which is the reason why the command
+> > > > > complete injection mess
+> > > > > (https://lore.kernel.org/patchwork/patch/1027955/) is needed in one
+> > > > > way or another.
+> > > > >
+> > > > [Bala]: fw download approach is different where we use
+> > > > __hci_cmd_sync() where as here we use hci_uart_tx_wakeup()
+> > > >         which directly calls the hci_uart_write_work(). so even we
+> > > > send an valid opcode or not for baudrate change will bot matter.
+> > > >
+> > > [Bala]: i miss understood the comment. Yes your true. in the all
+> > > vendor
+> > > commands SoC responds with an 0x0000 opcode.
+> > 
+> > And IIUC this is not compliant with the spec, or at least the BT core
+> > expects the actual opcode to consider the command to be completed.
 > 
-> And this IDM thing is also never used outside of the I2C context? In
-> other words, it also doesn't need a seperate DT node?
-> 
-> 
+> [Bala]: Did you try increasing the the baud rate change timeout to 50ms
+> instead of 10ms.
 
-That is correct. Only in the I2C context in our use case.
+It is even reproducible with the ROME timeout of 300ms.
 
->> +	/* indicates no slave mode support */
->> +	bool no_slave;
-> 
-> I would suggest to not use a flag, but to nullify the {un}reg_slave
-> callbacks in probe depending on the type. That will also tell the
-> i2c-core that slave functionality is not supported. And you can use if
-> (!algo->reg_slave) as a flag, too.
-> 
+The timeout doesn't help here. With 78e8fa2972e5 ("Bluetooth: hci_qca:
+Deassert RTS while baudrate change command") RTS is deasserted during
+the baudrate change, hence the controller only sends the response when
+RTS is asserted again. Before the event resulted in a frame reassembly
+error and the data was discarded.
 
-Yes. Great idea. I'll make the change and remove reg_slave.
+>         i suspect it is an timing issue.
 
->> +	iproc_i2c->type =
->> +		(enum bcm_iproc_i2c_type) of_device_get_match_data(&pdev->dev);
-> 
-> No need to cast a void*.
-> 
+Timing is certainly also a factor here (the problem isn't seen
+always), but I don't think 'timing issue' is a proper description of
+this issue. The problem is an event that the Bluetooth core doesn't
+expect due to the hack of sending a raw command behind the core's back
+to work around the firmware 'feature' of sending the command response
+with the new baudrate.
 
-Yes will fix.
-
-Thanks,
-
-Ray
+Maybe a delay after re-asserting RTS can address is reliably, I don't
+remember if I already experimented with that in the past. If a delay
+can 'fix' the issue reliably I'm open to consider it for the sake of
+simplicity, but only with a detailed comment that describes the
+problem.
