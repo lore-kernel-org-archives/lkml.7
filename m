@@ -2,141 +2,149 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C761BC10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50EDC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10982084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B649F2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554214036;
+	bh=BRSruHyESr/0VPJcIICsAXACkRFWWDXhg+wyR0+NyvQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mANl6XgKPejGaelYT7Zi9zvIkj07hYx9ysdoOIp4nlhG2WwrVllb5/5cHD/i3sKqv
+	 LTHhkMc8K1s1AZXq/PTLCisfCvx60enxkcAufqg3zuNEoNWaSVHFY+jWDRrLj3/xnz
+	 dOr55GO2nroNjmHR9aZ9UVuyQDqXGO1LPlljSCU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbfDBOGd (ORCPT
+        id S1731620AbfDBOHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:06:33 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:54189 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfDBOGd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:06:33 -0400
-X-Originating-IP: 109.213.83.19
-Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1B9CD6001E;
-        Tue,  2 Apr 2019 14:06:27 +0000 (UTC)
-Date:   Tue, 2 Apr 2019 16:06:27 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        srv_heupstream@mediatek.com,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 9/9] rtc: Add support for the MediaTek MT6358 RTC
-Message-ID: <20190402140627.GC22216@piout.net>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1553161886.13384.7.camel@mtksdaap41>
+        Tue, 2 Apr 2019 10:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbfDBOHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 10:07:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B919F2084B;
+        Tue,  2 Apr 2019 14:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554214033;
+        bh=BRSruHyESr/0VPJcIICsAXACkRFWWDXhg+wyR0+NyvQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nQYJSq0l7FpvyZwxA5YZPx/mpTtpxLUkMcNc2MtxMRpCChgRGwbo8B6LqZ6QQtdPu
+         cd749sS19GmQY2nkVQMXDVZeqEn0KNnEvFac1y3zQ2nKvmNjwB7uL9T0ZeW6ClTWrm
+         G8jWVKSaY0JytRjBLNoo/syaRZETYXKBlkyKx9h4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-serial@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 2/2] tty: fix up a few remaining files without SPDX identifiers
+Date:   Tue,  2 Apr 2019 16:07:08 +0200
+Message-Id: <20190402140708.519-2-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190402140708.519-1-gregkh@linuxfoundation.org>
+References: <20190402140708.519-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553161886.13384.7.camel@mtksdaap41>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/03/2019 17:51:26+0800, Yingjoe Chen wrote:
-> 
-> Hi,
-> 
-> 
-> Should use 'rtc: mt6397: ' as prefix for this patch.
-> 
-> 
-> On Mon, 2019-03-11 at 11:46 +0800, Hsin-Hsiung Wang wrote:
-> > From: Ran Bi <ran.bi@mediatek.com>
-> > 
-> > This add support for the MediaTek MT6358 RTC. MT6397 mfd will pass
-> > RTC_WRTGR address offset to RTC driver.
-> > 
-> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > ---
-> >  drivers/rtc/rtc-mt6397.c | 16 ++++++++++++++--
-> >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> > index f85f1fc..c8a0090 100644
-> > --- a/drivers/rtc/rtc-mt6397.c
-> > +++ b/drivers/rtc/rtc-mt6397.c
-> > @@ -27,7 +27,7 @@
-> >  #define RTC_BBPU		0x0000
-> >  #define RTC_BBPU_CBUSY		BIT(6)
-> >  
-> > -#define RTC_WRTGR		0x003c
-> > +#define RTC_WRTGR_DEFAULT	0x003c
-> >  
-> >  #define RTC_IRQ_STA		0x0002
-> >  #define RTC_IRQ_STA_AL		BIT(0)
-> > @@ -78,6 +78,7 @@ struct mt6397_rtc {
-> >  	struct regmap		*regmap;
-> >  	int			irq;
-> >  	u32			addr_base;
-> > +	u32			wrtgr_offset;
-> >  };
-> >  
-> >  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
-> > @@ -86,7 +87,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
-> >  	int ret;
-> >  	u32 data;
-> >  
-> > -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> > +	ret = regmap_write(rtc->regmap,
-> > +			   rtc->addr_base + rtc->wrtgr_offset, 1);
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > @@ -341,6 +343,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	rtc->addr_base = res->start;
-> >  
-> > +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> > +	if (res) {
-> > +		rtc->wrtgr_offset = res->start;
-> > +		dev_info(&pdev->dev, "register offset:%d\n", rtc->wrtgr_offset);
-> > +	} else {
-> > +		rtc->wrtgr_offset = RTC_WRTGR_DEFAULT;
-> > +		dev_err(&pdev->dev, "Failed to get register offset\n");
-> > +	}
-> > +
-> 
-> Since this will be passed by MFD, do we still need to keep the DEFAULT?
-> Any case this platform_get_resource will failed?
-> 
-> It's too bad HW changed this offset, but I'm not sure about passing this
-> information from MFD. We have 1 register that have different offset now,
-> and might have others for future chips, adding each one by
-> IORESOURCE_IRQ doesn't looks like a good solution. Keeping this
-> information in RTC driver only also looks better.
-> 
+There were a few straggling files under drivers/tty/ that did not have
+any SPDX identifier either because they entered the tree recently, or
+they somehow missed the mass-tagging of commit b24413180f56 ("License
+cleanup: add SPDX GPL-2.0 license identifier to files with no license")
 
-I agree, this would be better.
+This commit follows the same rule as b24413180f56 ("License cleanup: add
+SPDX GPL-2.0 license identifier to files with no license") where files
+without any specified license in them fall under GPL-2.0 as the correct
+license for the individual file.  Add that identifier to these remaining
+files so that we don't have to guess at the license of them in the
+future.
 
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/tty/serial/8250/8250_men_mcb.c | 1 +
+ drivers/tty/serial/sn_console.c        | 1 +
+ drivers/tty/vcc.c                      | 1 +
+ drivers/tty/vt/.gitignore              | 1 +
+ drivers/tty/vt/cp437.uni               | 1 +
+ drivers/tty/vt/defkeymap.c_shipped     | 1 +
+ drivers/tty/vt/defkeymap.map           | 1 +
+ 7 files changed, 7 insertions(+)
 
+diff --git a/drivers/tty/serial/8250/8250_men_mcb.c b/drivers/tty/serial/8250/8250_men_mcb.c
+index 127017cc41d9..02c5aff58a74 100644
+--- a/drivers/tty/serial/8250/8250_men_mcb.c
++++ b/drivers/tty/serial/8250/8250_men_mcb.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+diff --git a/drivers/tty/serial/sn_console.c b/drivers/tty/serial/sn_console.c
+index fe9170731c16..283493358a62 100644
+--- a/drivers/tty/serial/sn_console.c
++++ b/drivers/tty/serial/sn_console.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * C-Brick Serial Port (and console) driver for SGI Altix machines.
+  *
+diff --git a/drivers/tty/vcc.c b/drivers/tty/vcc.c
+index 58b454c34560..d2a1e1228c82 100644
+--- a/drivers/tty/vcc.c
++++ b/drivers/tty/vcc.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /* vcc.c: sun4v virtual channel concentrator
+  *
+  * Copyright (C) 2017 Oracle. All rights reserved.
+diff --git a/drivers/tty/vt/.gitignore b/drivers/tty/vt/.gitignore
+index 83683a2d8e6a..9b38b85f9d9a 100644
+--- a/drivers/tty/vt/.gitignore
++++ b/drivers/tty/vt/.gitignore
+@@ -1,2 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
+ consolemap_deftbl.c
+ defkeymap.c
+diff --git a/drivers/tty/vt/cp437.uni b/drivers/tty/vt/cp437.uni
+index bc6163484f62..a1991904c559 100644
+--- a/drivers/tty/vt/cp437.uni
++++ b/drivers/tty/vt/cp437.uni
+@@ -1,3 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
+ #
+ # Unicode table for IBM Codepage 437.  Note that there are many more
+ # substitutions that could be conceived (for example, thick-line
+diff --git a/drivers/tty/vt/defkeymap.c_shipped b/drivers/tty/vt/defkeymap.c_shipped
+index d2208dfe3f67..c7095fb7d2d1 100644
+--- a/drivers/tty/vt/defkeymap.c_shipped
++++ b/drivers/tty/vt/defkeymap.c_shipped
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /* Do not edit this file! It was automatically generated by   */
+ /*    loadkeys --mktable defkeymap.map > defkeymap.c          */
+ 
+diff --git a/drivers/tty/vt/defkeymap.map b/drivers/tty/vt/defkeymap.map
+index 50b30cace261..37f1ac6ddfb9 100644
+--- a/drivers/tty/vt/defkeymap.map
++++ b/drivers/tty/vt/defkeymap.map
+@@ -1,3 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
+ # Default kernel keymap. This uses 7 modifier combinations.
+ keymaps 0-2,4-5,8,12
+ # Change the above line into
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.21.0
+
