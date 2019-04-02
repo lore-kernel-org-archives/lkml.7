@@ -2,101 +2,99 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF955C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCC0C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A298F2070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rWimYmqH"
+	by mail.kernel.org (Postfix) with ESMTP id CDA3F2084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554233607;
+	bh=5KxC84bwbVbpAolFqKP5oU9aKIFes2h5919zu1PKdaY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tZnJaF3j8JgpYF0tZ1NpI/HX6XRxcI9Hy2PN7x56SRXPy2MkE1Wzjl4nWxIgx6+gb
+	 JliaqJXzDgUdBLEp25hxwuWW5f2bAHfwylmw0Teq1tymtM+O6lgx9bjfIFRJtyaNcl
+	 eRT7VNE558dVwcpeLid5blDyggm7TF7Krk9o/YGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbfDBTcU (ORCPT
+        id S1731059AbfDBTd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:32:20 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:50474 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDBTcT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:32:19 -0400
-Received: by mail-it1-f196.google.com with SMTP id q14so7211695itk.0;
-        Tue, 02 Apr 2019 12:32:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xHwX7N1RZtbO0BzmhJG1pDFtWgUBQ/UisLEym+aQ4Nc=;
-        b=rWimYmqHtDgbCxlsnXvUGJpIxkI63OM170yLErYsFvxcd0vSq+zQtc/Par6O9kvNBJ
-         zFyHykGVP5PntmHKHrLZy9brHjVRBth/XvNlJnGi3nehxf+Vn7TvtVt2bskBOFyuUO09
-         qU5rtiBWvt5sj088KSdfoICC8PJQY40rUoqLrv1ac2IHHyjkYaQCJ+qYxtDtelCdsGhm
-         eXbQ8KxmhAccexzQXNs9Fa39Ex6omZrSdeSvtagVxHTMW8gqQeNoLwmc1cb3S65Zaxfc
-         RDmLBPNCpFTB4JAsjHexnYKs0XeEhp8jmfe2mRZrrDHKavzMfEMDGdB1h2w4e5ZEm8XN
-         zLqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xHwX7N1RZtbO0BzmhJG1pDFtWgUBQ/UisLEym+aQ4Nc=;
-        b=ach9M5Z+0oeMbUzajDKNAt9iDC6I09WSF3HtV0CQkSXZAS6mn3u2At1vwjTCpdKYsb
-         jj2OgWkDLcKVXU+Ax7IB2uZLewPx8mPTijeLu9Qlhhv36BNp0hJklxeCxIfsnznsZjeI
-         bEtUftHii/W//Zs4SfWcLbhC2ZRbUQtTFV90IZad5bZjLLlS0r/95ac+906rwUoHrqC0
-         QqlDbLGQgY3P2XMaLM3MZGXV88MjqUN4MZ/1q/pspm9khLtynB/BXqKCW3mGQOrXrwSi
-         H8iG/9WfOiewJenYQzTLoP0Gji/GQD+o13MDfb5yWiujefnGoneqF3q2l1oJgdWAeODZ
-         uV6g==
-X-Gm-Message-State: APjAAAXWL5BmFTDwCIKPTpvNAE6UT+wyjINxRMZwkU2/M5a3A9agLp29
-        yut8D8ji1LD19QA3YGJwqdE=
-X-Google-Smtp-Source: APXvYqyShfHs+0zc4tkF4ve19J8mwhfRPFCnfbhA5gj3uHrWM4YLWiMnVmH5dx7yFoW8Y5RRAaj38g==
-X-Received: by 2002:a24:d45:: with SMTP id 66mr2231163itx.9.1554233538962;
-        Tue, 02 Apr 2019 12:32:18 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id f204sm7654219itc.26.2019.04.02.12.32.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 12:32:17 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: imx6q-logicpd: Reduce inrush current on USBH1
-Date:   Tue,  2 Apr 2019 14:32:04 -0500
-Message-Id: <20190402193204.4745-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Apr 2019 15:33:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726168AbfDBTd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 15:33:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A3EC2070D;
+        Tue,  2 Apr 2019 19:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554233605;
+        bh=5KxC84bwbVbpAolFqKP5oU9aKIFes2h5919zu1PKdaY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n+Qu8qQ77Zhj0SV60h8rfBOmeeeY1Ok+PLkL/+t6lmWx6277B2Tmky2C0EUSM+WOo
+         cSlPHURMqM0Dbk++DTV9GOskQSQPKz6RHIk/vfnaOd6B1i5eCQf+viX4h9ioF4SbgL
+         WWgebZMub6pvR1JBuU7LU0Uuh1mjw1gDCAl/R9k0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
+Cc:     linux-kernel@microsoft.com, bryankel@microsoft.com,
+        thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 1/2] ftpm: dt-binding: add dts documentation for fTPM driver
+Date:   Tue,  2 Apr 2019 15:33:15 -0400
+Message-Id: <20190402193316.15144-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some USB peripherals draw more power, and the sourcing regulator
-take a little time to turn on.  This patch fixes an issue where
-some devices occasionally do not get detected, because the power
-isn't quite ready when communication starts, so we add a bit
-of a delay.
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../bindings/security/tpm/tpm_ftpm_tee.txt          | 13 +++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt         |  1 +
+ 2 files changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt
 
-Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD
-i.MX6QD EVM")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-
-diff --git a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-index db6b5b900826..7731db493cb0 100644
---- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-+++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-@@ -88,6 +88,7 @@
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 		gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <70000>;
- 		enable-active-high;
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt b/Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt
+new file mode 100644
+index 000000000000..20fca67a56c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/tpm_ftpm_tee.txt
+@@ -0,0 +1,13 @@
++Required properties:
++- compatible: should be "microsoft,ftpm"
++- linux,sml-base: 64-bit base address of the reserved memory allocated
++		  for the firmware event log
++- linux,sml-size: size of the memory allocated for the firmware event log
++
++Example:
++
++tpm@0 {
++	compatible = "microsoft,ftpm";
++	linux,sml-base = <0x0 0xC0000000>;
++	linux,sml-size = <0x10000>;
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 8162b0eb4b50..902798bcb9a5 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -249,6 +249,7 @@ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
+ microcrystal	Micro Crystal AG
+ micron	Micron Technology Inc.
++microsoft	Microsoft Corporation
+ mikroe		MikroElektronika d.o.o.
+ minix	MINIX Technology Ltd.
+ miramems	MiraMEMS Sensing Technology Co., Ltd.
 -- 
-2.17.1
+2.19.1
 
