@@ -2,119 +2,135 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41A8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4BEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE93620830
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96A320830
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554184006;
+	bh=omMl8Vj5r1BYhFOfG3remByu4jfIr0b/L1rL/TcdyEI=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=g6yneZZXeTHJdNzUOR+IlOpw+HwaXU7eR+dYTJRLbTHTYHv5BfzCjLs1Vdg/6g7vG
+	 SjH/YuGVfo+r10y6lZAK1dia0T+2oUriBRTOI/gembg+TpB43LHehyF3mg8erxdifg
+	 28e7L9AXNY252+IITt3c6FvRwB0ukBErSJcjdUac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfDBFoo (ORCPT
+        id S1727214AbfDBFqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 01:44:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51056 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725910AbfDBFon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 01:44:43 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 22:44:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
-   d="asc'?scan'208";a="136797253"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Apr 2019 22:44:41 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [RFC] Allowing modules to control tracing subsystem
-In-Reply-To: <87h8bvffth.fsf@linux.intel.com>
-References: <87h8bvffth.fsf@linux.intel.com>
-Date:   Tue, 02 Apr 2019 08:44:31 +0300
-Message-ID: <87k1gdezb4.fsf@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Tue, 2 Apr 2019 01:46:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46294 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDBFqp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 01:46:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=5wOjXf2FFTS2pgLuvWn4ks3Ni7da/aBZO9u0hG9QHSk=; b=oxcAJmbXF5Yr
+        DbA3lE+aJZh3PqBwsCQffPXwUeBUPkPwe/xAm0OeBEBrIuF8QU8LGjNQtU0fcW1Z2/eEUx7dJV3zv
+        RKcKTZYEYP2qraaVYPn9+VoA69bI5NKoxSApL3lVSuecVp7wxKvOw6h8LPP70KJf751CuccnjUlo+
+        Fr9do=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hBCFt-0005yn-EM; Tue, 02 Apr 2019 05:46:41 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 9F576442467; Tue,  2 Apr 2019 06:46:38 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: dpcm: skip missing substream while applying symmetry" to the asoc tree
+In-Reply-To:  <20190401130354.24202-1-jbrunet@baylibre.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190402054638.9F576442467@finisterre.ee.mobilebroadband>
+Date:   Tue,  2 Apr 2019 06:46:38 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The patch
 
+   ASoC: dpcm: skip missing substream while applying symmetry
 
-Hi,
+has been applied to the asoc tree at
 
-Felipe Balbi <felipe.balbi@linux.intel.com> writes:
-> Hi guys,
->
-> I've been thinking about turning my f-trace.c USB function [1] into an
-> implementation of the USB Debug Class [2]. In order to support all
-> requests, I would need means to control parts of the tracing subsystem,
-> for example enabling and disabling tracing, flushing the trace buffer,
-> changing trace buffer size, choose which trace events to enable, etc.
->
-> Some of those functions (e.g. print_trace_line()) are available for
-> things like trace_kdb.c [3], but they're not available for modules;
-> i.e. they're not exported symbols.
->
-> This will involve a rather large change to tracing subsystem however we
-> could rely on such infrastructure for remote debugging of e.g. IVIs,
-> phones, etc.
->
-> The USB Debug Class already predicts the presence of JTAG access and
-> Hardware tracing modules to be exported over USB. It also allows for
-> GDB-type access. Adding our linux kernel tracing would make it into a
-> complete tracing solution.
->
-> In order to fully support this we would need, not only to expose some
-> internal trace functions for modules, but I suppose the trace format
-> would have to be slightly better defined so that it be decoded remotely
-> give access to vmlinux.
->
-> What do you guys think about this? Would this be something that folks
-> would be interested in? Currently we can only export ftrace data, not
-> trace events or anything else. Ideally we would export raw trace buffer
-> entries to be decoded at a later moment.
->
-> cheers
->
-> [1] https://marc.info/?i=3D20190321094748.7031-1-felipe.balbi@linux.intel=
-.com
-> [2] https://www.usb.org/sites/default/files/documents/usb_debug_class_rev=
-_1_0_final_0.pdf
-> [3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/kernel/trace/trace_kdb.c#n20
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-A gentle reminder here.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-=2D-=20
-balbi
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
------BEGIN PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlyi9sEACgkQzL64meEa
-mQaEvg//TSMz2p0hj3O7GdFFjVDBRXFkzRRQSLCwZZIpB44AnXcOCz/762WXBtg+
-PCSEA8d63PV4AzmIw5mmvr33A6ivSWU/aoM1s+Cdj+NvaWu0m+VvE2TMNJPDvfGq
-OnlkoUrBpW36cxbzSnFvMlilBdR16nXYioyim7CnkZDH+kJp4w3BXpVHWnKm7y7N
-NmabZ62Re7wcEz0bz8BQ9vSfPWoaW0PqgNZQzB5dcyWSa7pDI9FMEp7Hcs9+rjUM
-vEwUMJjjaqf0VLWIZjg+6EEOQ2brx/6On7nQ3ocflR7PJTAlaBy40wES9PHlyVyr
-Uvk1oReiBphykqz233QGkLz2hr7z9iv74j+95uOA+JQ04/+xWOmdQw7dZo+LENto
-Bv6TBktjDnfD6Do35IhswggoUejQV194pHxml7zjHaHD8zbIGNsHFBP/0y6LUp0J
-JCoM5kQ7di1PAMCure5PRafmTsoYnp9BEpkvyAM63nojejx4ZwHT1GbL5oDFxCN5
-YOP49uwQxH9KHhzx66j5WBCuN7oMcyKlPDWF0c8RI4zs/rkyW7iHnzxvAXOSl2dB
-XDtkMYOaiq5H23pIHYTCfvDtuoNBl6YQ+5PcgyqXeneaMqbsORMfuIaT8K2Grz5h
-mhtz6VGuDPa76t9r4KW4UlJwUc8ZSjvudrFxGZMisPSmeJ1EsHc=
-=iVXs
------END PGP SIGNATURE-----
---=-=-=--
+Thanks,
+Mark
+
+From 6246f283d5e02ac757bd8d9bacde8fdc54c4582d Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Mon, 1 Apr 2019 15:03:54 +0200
+Subject: [PATCH] ASoC: dpcm: skip missing substream while applying symmetry
+
+If for any reason, the backend does not have the requested substream
+(like capture on a playback only backend), the BE will be skipped in
+dpcm_be_dai_startup().
+
+However, dpcm_apply_symmetry() does not skip those BE and will
+dereference the be_substream (NULL) pointer anyway.
+
+Like in dpcm_be_dai_startup(), just skip those BE.
+
+Fixes: 906c7d690c3b ("ASoC: dpcm: Apply symmetry for DPCM")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/soc-pcm.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 7fe5321000e8..2d5d5cac4ba6 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1911,10 +1911,15 @@ static int dpcm_apply_symmetry(struct snd_pcm_substream *fe_substream,
+ 		struct snd_soc_pcm_runtime *be = dpcm->be;
+ 		struct snd_pcm_substream *be_substream =
+ 			snd_soc_dpcm_get_substream(be, stream);
+-		struct snd_soc_pcm_runtime *rtd = be_substream->private_data;
++		struct snd_soc_pcm_runtime *rtd;
+ 		struct snd_soc_dai *codec_dai;
+ 		int i;
+ 
++		/* A backend may not have the requested substream */
++		if (!be_substream)
++			continue;
++
++		rtd = be_substream->private_data;
+ 		if (rtd->dai_link->be_hw_params_fixup)
+ 			continue;
+ 
+-- 
+2.20.1
+
