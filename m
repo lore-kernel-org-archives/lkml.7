@@ -2,103 +2,79 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7478EC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C25C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2022070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8E72070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfDBQuj (ORCPT
+        id S1731352AbfDBQu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:50:39 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45272 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731142AbfDBQui (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:50:38 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hBMaG-00037G-7l; Tue, 02 Apr 2019 16:48:24 +0000
-Date:   Tue, 2 Apr 2019 17:48:24 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Neil Brown <neilb@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] Convert vfs.txt to vfs.rst
-Message-ID: <20190402164824.GK2217@ZenIV.linux.org.uk>
-References: <20190327051717.23225-1-tobin@kernel.org>
- <20190402094934.5b242dc0@lwn.net>
+        Tue, 2 Apr 2019 12:50:58 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54548 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729138AbfDBQu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 12:50:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A21B80D;
+        Tue,  2 Apr 2019 09:50:58 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6D303F721;
+        Tue,  2 Apr 2019 09:50:56 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 17:50:54 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Prasad Sodagudi <psodagud@codeaurora.org>
+Cc:     mingo@redhat.com, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH] perf: Change PMCR write to read-modify-write
+Message-ID: <20190402165054.GB1442@fuggles.cambridge.arm.com>
+References: <1553134066-20272-1-git-send-email-psodagud@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190402094934.5b242dc0@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1553134066-20272-1-git-send-email-psodagud@codeaurora.org>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 09:49:34AM -0600, Jonathan Corbet wrote:
-> On Wed, 27 Mar 2019 16:16:53 +1100
-> "Tobin C. Harding" <tobin@kernel.org> wrote:
+[+MarkR]
+
+On Wed, Mar 20, 2019 at 07:07:46PM -0700, Prasad Sodagudi wrote:
+> Preserves the bitfields of PMCR_EL0(AArch64) during PMU reset.
+> Reset routine should write a 1 to PMCR.C and PMCR.P fields only
+> to reset the counters. Other fields should not be changed
+> as they could be set before PMU initialization and their
+> value must be preserved even after reset.
 > 
-> > Hi Al,
-> > 
-> > This series converts the VFS file Documentation/filesystems/vfs.txt to
-> > reStructuredText format.  Please consider taking this series through
-> > your tree as apposed to Jon's tree because this set makes a fair amount
-> > of changes to VFS files (and also the VFS tree and docs tree are out of
-> > sync right now with the recent work by Mauro and Neil).
+> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+> ---
+>  arch/arm64/kernel/perf_event.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Al, do you have any thoughts on how you want to handle this?  I was about
-> to apply Jeff Layton's vfs.txt update, but would rather not create
-> conflicts unnecessarily.  Let me know if you'd like me to pick this work
-> up.
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index 4addb38..0c1afdd 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -868,8 +868,8 @@ static void armv8pmu_reset(void *info)
+>  	 * Initialize & Reset PMNC. Request overflow interrupt for
+>  	 * 64 bit cycle counter but cheat in armv8pmu_write_counter().
+>  	 */
+> -	armv8pmu_pmcr_write(ARMV8_PMU_PMCR_P | ARMV8_PMU_PMCR_C |
+> -			    ARMV8_PMU_PMCR_LC);
+> +	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_P |
+> +			ARMV8_PMU_PMCR_C | ARMV8_PMU_PMCR_LC);
 
-Frankly, I would rather see that file be eventually replaced by something
-saner, and I'm not talking about the format.  Re Jeff's patch... 
+No, I don't think this is right at all. Many of these bits are UNKNOWN
+out of reset, so you're throwing away our means of getting the PMU into
+a deterministic state.
 
-+  d_prune: called prior to pruning (i.e. unhashing and killing) a hashed
-+       dentry from the dcache.
+Who is setting which bits that you want to preserve and why?
 
-is flat-out misguiding.  First of all, it *is* called for unhashed dentries,
-TYVM.  Furthermore, "prior to" is far too vague.
-
-What really happens: there's a point in state diagram for dentries where
-we commit to destroying a dentry and start taking it apart.  That transition
-happens with ->d_lock of dentry, ->i_lock of its inode (if any) and
-->d_lock of the parent (again, if any) held; ->d_prune() is the last
-chance for filesystem to see the (now doomed) dentry still intact.
-
-It doesn't matter whether it's hashed or not, etc.  The locks held
-are sufficient to stabilize pretty much everything[1] in dentry and
-nothing is destroyed yet.  The only apparent exception is ->d_count,
-but that's not real - we are guaranteed that there had been no other
-counted references to dentry at the decision point and that none
-could've been added.  So this "oh, it's not 0 now, it's gone negative
-after lockref_mark_dead() the caller has just done" is a red herring.
-
-->d_prune() must not drop/regain any of the locks held by caller.
-It must _not_ free anything attached to dentry - that belongs
-later in the shutdown sequence.  If anything, I'm tempted to
-make it take const struct dentry * as argument, just to make
-that clear.
-
-No new (counted) references can be acquired by that point;
-lockless dcache lookup might find our dentry a match, but
-result of such lookup is not going to be legitimized - it's
-doomed to be thrown out as stale.
-
-It really makes more sense as part of struct dentry lifecycle
-description...  
-
-[1] in theory, ->d_time might be changed by overlapping lockless
-call of ->d_revalidate().  Up to filesystem - VFS doesn't touch
-that field (and AFAICS only NFS uses it these days).
+Will
