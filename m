@@ -2,162 +2,158 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C951DC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33969C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFBC207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02AB2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:21:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAXy/i1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbfDBNS7 (ORCPT
+        id S1730809AbfDBNVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:18:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47498 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729603AbfDBNS6 (ORCPT
+        Tue, 2 Apr 2019 09:21:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40921 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728817AbfDBNVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:18:58 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x32DHhMO007622
-        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 09:18:57 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rm6t56ea2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 09:18:56 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 2 Apr 2019 14:18:55 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 2 Apr 2019 14:18:50 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x32DImvi18481378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Apr 2019 13:18:49 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2A38B205F;
-        Tue,  2 Apr 2019 13:18:48 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 92F34B2065;
-        Tue,  2 Apr 2019 13:18:48 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Apr 2019 13:18:48 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 94EFA16C1B24; Tue,  2 Apr 2019 06:18:53 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 06:18:53 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+        Tue, 2 Apr 2019 09:21:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t8so11948136otp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 06:21:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pT1tSOA1Izh0qdqOIeOKkczIFYFbYblirMLL0FSKvVE=;
+        b=QAXy/i1YEtShdsaCx7vsv8jDJPeucGa2kYjy4TxmC1XzmHwn2VFyZZokEMcPZJKFsA
+         oOY56MtJQ7KHnJ7Q4u4t58KA7U3Xlb93L9TTOBIeHsp0u7MlBSIgrvaojkPJaQ3mn+hm
+         3Om9mb7OJj8R+Y2cpPjHQyL8IYhO6/8uCZoD3N9SPTs14+sWwzesQRINdhDg4ezvQd+R
+         GNeX59DqVBOX3yL9ZmHpLM75BjNZNT5CrFQdsUopJapLT5Q5oy2+rNeHr+2gHvuxpEOK
+         hB+yu6GguNQWSDGICbLcEQ+QryAdgQzx1QxNsL9h2BRV12B+h3Rm0eqTAgav5D5oKoFb
+         V3bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pT1tSOA1Izh0qdqOIeOKkczIFYFbYblirMLL0FSKvVE=;
+        b=JyWs/Udh3WN60NWmyP49piiWvM42iRII/iVQbo25aPQxs7+fdxyplQa0QnvmXJJiMQ
+         wsWOMb/Zjxvu3cNsIyfMk1R2kVSaMUltXB3A6xJh1hpKfEl5yqBqF/phIMRU6VfL8p2m
+         kEfY5yuufh1aKJ5I/Nsw+vrNWLZVfSfMw5WYFjW4igYc//SJQLlD0PYbIyOJoR/+CCRZ
+         SB3skWahvrHP/ZM2mSjT1g70Uv5X+5a3qlkN9uSmvbv/YjTZaq6wG8zVC7s1PnUadMc9
+         pvyHuc7j7y6BOsHVhAXQ4u0+gsjYZxHqLF6HgqduNHdjp9kKrO+vEDwUYMI2Je/mznT7
+         PW4A==
+X-Gm-Message-State: APjAAAU96xglCDwEyJ38qSc5zcrerfm6LznCNPB0pKCvdcFmQaqlrQDA
+        6YVi+QkpJonl7nb3mD0YZPM=
+X-Google-Smtp-Source: APXvYqxNRhiottBcA458rSTczxL1HvQ/AELHcqbTHYEKjkNySffNoBVVOnvjItEb+9ZKCij4hhj68w==
+X-Received: by 2002:a9d:5a11:: with SMTP id v17mr31945482oth.150.1554211266274;
+        Tue, 02 Apr 2019 06:21:06 -0700 (PDT)
+Received: from PF15AMXS.hz.ali.com ([205.204.117.33])
+        by smtp.gmail.com with ESMTPSA id g17sm5524865otq.45.2019.04.02.06.21.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 06:21:05 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 21:20:55 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH tip/core/rcu 2/2] rcu: Check for wakeup-safe conditions
- in rcu_read_unlock_special()
-Reply-To: paulmck@linux.ibm.com
-References: <20190329182608.GA23877@linux.ibm.com>
- <20190329182634.24994-2-paulmck@linux.ibm.com>
- <20190401083211.GD11158@hirez.programming.kicks-ass.net>
- <20190401172257.GN4102@linux.ibm.com>
- <20190402070953.GG12232@hirez.programming.kicks-ass.net>
+Cc:     Aaron Lu <aaron.lu@linux.alibaba.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, tim.c.chen@linux.intel.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        subhra.mazumdar@oracle.com, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Aubrey Li <aubrey.intel@gmail.com>
+Subject: Re: [RFC][PATCH 13/16] sched: Add core wide task selection and
+ scheduling.
+Message-ID: <20190402132038.GA1198@PF15AMXS.hz.ali.com>
+References: <20190218165620.383905466@infradead.org>
+ <20190218173514.667598558@infradead.org>
+ <20190402064612.GA46500@aaronlu>
+ <20190402082812.GJ12232@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190402070953.GG12232@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040213-0064-0000-0000-000003C56614
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010860; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01183261; UDB=6.00619463; IPR=6.00964009;
- MB=3.00026260; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-02 13:18:54
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040213-0065-0000-0000-00003CEC4613
-Message-Id: <20190402131853.GV4102@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=953 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904020090
+In-Reply-To: <20190402082812.GJ12232@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 09:09:53AM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 01, 2019 at 10:22:57AM -0700, Paul E. McKenney wrote:
-> > > > The initial solution to this problem was to use set_tsk_need_resched() and
-> > > > set_preempt_need_resched() to force a future context switch, which allows
-> > > > rcu_preempt_note_context_switch() to report the deferred quiescent state
-> > > > to RCU's core processing.  Unfortunately for expedited grace periods,
-> > > > there can be a significant delay between the call for a context switch
-> > > > and the actual context switch.
-> > > 
-> > > This is all PREEMPT=y kernels, right? Where is the latency coming from?
-> > > Because PREEMPT=y _should_ react quite quickly.
-> > 
-> > Yes, PREEMPT=y.  It happens like this:
-> > 
-> > 1.	rcu_read_lock() with everything enabled.
-> > 
-> > 2.	Preemption then resumption.
-> > 
-> > 3.	local_irq_disable().
-> > 
-> > 4.	rcu_read_unlock().
-> > 
-> > 5.	local_irq_enable().
-> > 
-> > From what I know, the scheduler doesn't see anything until the next
-> > interrupt, local_bh_enable(), return to userspace, etc.  Because this
-> > is PREEMPT=y, preempt_enable() and cond_resched() do nothing.  So
-> > it could be some time (milliseconds, depending on HZ, NO_HZ_FULL, and
-> > so on) until the scheduler responds.  With NO_HZ_FULL, last I knew,
-> > the delay can be extremely long.
-> > 
-> > Or am I missing something that gets the scheduler on the job faster?
+On Tue, Apr 02, 2019 at 10:28:12AM +0200, Peter Zijlstra wrote:
+> Another approach would be something like the below:
 > 
-> Oh urgh, yah. So normally we only twiddle with the need_resched state:
-> 
->  - while preempt_disabl(), such that preempt_enable() will reschedule
->  - from interrupt context, such that interrupt return will reschedule
-> 
-> But the usage here 'violates' those rules and then there is an
-> unspecified latency between setting the state and it getting observed,
-> but no longer than 1 tick I would think.
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -87,7 +87,7 @@ static inline int __task_prio(struct tas
+>   */
+>  
+>  /* real prio, less is less */
+> -static inline bool __prio_less(struct task_struct *a, struct task_struct *b, bool runtime)
+> +static inline bool __prio_less(struct task_struct *a, struct task_struct *b, u64 vruntime)
+>  {
+>  	int pa = __task_prio(a), pb = __task_prio(b);
+>  
+> @@ -104,21 +104,25 @@ static inline bool __prio_less(struct ta
+>  	if (pa == -1) /* dl_prio() doesn't work because of stop_class above */
+>  		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+>  
+> -	if (pa == MAX_RT_PRIO + MAX_NICE && runtime) /* fair */
+> -		return !((s64)(a->se.vruntime - b->se.vruntime) < 0);
+> +	if (pa == MAX_RT_PRIO + MAX_NICE) /* fair */
+> +		return !((s64)(a->se.vruntime - vruntime) < 0);
+>  
+>  	return false;
+>  }
+>  
+>  static inline bool cpu_prio_less(struct task_struct *a, struct task_struct *b)
+>  {
+> -	return __prio_less(a, b, true);
+> +	return __prio_less(a, b, b->se.vruntime);
+>  }
+>  
+>  static inline bool core_prio_less(struct task_struct *a, struct task_struct *b)
+>  {
+> -	/* cannot compare vruntime across CPUs */
+> -	return __prio_less(a, b, false);
+> +	u64 vruntime = b->se.vruntime;
+> +
+> +	vruntime -= task_rq(b)->cfs.min_vruntime;
+> +	vruntime += task_rq(a)->cfs.min_vruntime
+> +
+> +	return __prio_less(a, b, vruntime);
+>  }
+>  
+>  static inline bool __sched_core_less(struct task_struct *a, struct task_struct *b)
 
-In general, yes, which is fine (famous last words) for normal grace
-periods but not so good for expedited grace periods.
+Brilliant, I like this approach, it makes core_prio_less() work across
+CPUs. So I tested this, together with changing
+cpu_prio_less(max, class_pick) to core_prio_less(max, class_pick) in
+pick_task(), this problem is gone :-)
 
-> I don't think we can go NOHZ with need_resched set, because the moment
-> we hit the idle loop with that set, we _will_ reschedule.
+I verified with below debug code:
 
-Agreed, and I believe that transitioning to usermode execution also
-gives the scheduler a chance to take action.
-
-The one exception to this is when a nohz_full CPU running in nohz_full
-mode does a system call that decides to execute for a very long time.
-Last I checked, the scheduling-clock interrupt did -not- get retriggered
-in this case, and the delay could be indefinite, as in bad even for
-normal grace periods.
-
-> So in that respect the irq_work suggestion I made would fix things
-> properly.
-
-But wouldn't the current use of set_tsk_need_resched(current) followed by
-set_preempt_need_resched() work just as well in that case?  The scheduler
-would react to these at the next scheduler-clock interrupt on their
-own, right?  Or am I being scheduler-naive again?
-
-							Thanx, Paul
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index cb24a0141e57..50658e79363f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3832,6 +3832,14 @@ next_class:;
+ 
+ 		WARN_ON_ONCE(!rq_i->core_pick);
+ 
++		if (rq->core->core_cookie && rq_i->core_pick->core_cookie &&
++			rq->core->core_cookie != rq_i->core_pick->core_cookie) {
++			trace_printk("expect 0x%lx, cpu%d got 0x%lx\n",
++					rq->core->core_cookie, i,
++					rq_i->core_pick->core_cookie);
++			WARN_ON_ONCE(1);
++		}
++
+ 		rq_i->core_pick->core_occupation = occ;
+ 
+ 		if (i == cpu)
+-- 
+2.19.1.3.ge56e4f7
 
