@@ -2,157 +2,137 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F235C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C472075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67922084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="be1A/4kh"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QgW1w8E2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfDBF0w (ORCPT
+        id S1728847AbfDBF1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 01:26:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33699 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfDBF0q (ORCPT
+        Tue, 2 Apr 2019 01:27:39 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17030 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfDBF1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 01:26:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id b12so5958247pgk.0;
-        Mon, 01 Apr 2019 22:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rSPQ7DGVhBjhVIpC2feD1Zf1Ln5mj7QIJLWAJErFVR8=;
-        b=be1A/4khegj3mIW9Gsrt9X2ep0KdCNXs6dz41ASwBfq2DIBgJ/1ttK+wzjpFYsQPhK
-         YzBtE7MDPsfEJaD7eEhrcnx+qpQCCRRkOTzuAdooWeK2+xdzCqfHqRcFXlbqXrWkC2DQ
-         mbVOWFhmuYANWizeIyDBnzTfRhNGYnMP0419OySztGGDQzEUcJR8sgG0w3rAKcw9u1ot
-         jNRa2zfODowOGpXAaujbeSbYTrWZZUp29E39FVUcWqrZXs1/dWoygzHBeWcbntLm3rP5
-         1ma72KqfoLJNHrfxuZy8zV5koO4ykso7uSwVKQFLrNC3DJ75JRmsyNWRIMu9UO2ZGSnZ
-         RYAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rSPQ7DGVhBjhVIpC2feD1Zf1Ln5mj7QIJLWAJErFVR8=;
-        b=F/uPokKHcD3U1s/opRAenlMFphR2cF3a/tPEWNgX84iQqga6+9KaR8SAnDr6SHlyvJ
-         TbtKbqEfq5GjSjU2gIXlNECoEWDU1e7ueU2SlmvMt5uCnfdzGEl7zgoA/ELwo5u2oRvM
-         yZlv3jvudQ4GUbD3ZiD0u6FKL9UKlLY27l2kGzrNj5ZhR9ltvfZDrk+s7EPrAo+tza+o
-         RHzeffkE7sikZGE7R7/YAZS4qiGnRDqCEXCIpPbvsj8V/4P4sBRoFQqKsms0MLzR9H5K
-         dgoBrTBDcxBIGKIOZmNKqGPOdJtk6ltcY2o2opsHr6WWQciG3pe8tQb4XA+BzFyYQS1z
-         tCxQ==
-X-Gm-Message-State: APjAAAUbR/fsqafK/kFQizWhXN62NxhQ2VNLRLNtnWxoyWGPS8tnA36a
-        ZWHnAHsp7MnN/p5JbBvUmzY=
-X-Google-Smtp-Source: APXvYqxOzTAj5Phn1SxrnTUYKb2QkToYaHVqQoKlKJE+BYNZ+E2L7dgtHInn3bchY1nPiUklXIwzqg==
-X-Received: by 2002:a63:6fcd:: with SMTP id k196mr52581017pgc.238.1554182805315;
-        Mon, 01 Apr 2019 22:26:45 -0700 (PDT)
-Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id d75sm30535482pga.66.2019.04.01.22.26.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Apr 2019 22:26:44 -0700 (PDT)
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-To:     peter_hong@fintek.com.tw, johan@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: [PATCH V4 3/3] USB: serial: f81232: implement break control
-Date:   Tue,  2 Apr 2019 13:26:37 +0800
-Message-Id: <1554182797-12815-3-git-send-email-hpeter+linux_kernel@gmail.com>
+        Tue, 2 Apr 2019 01:27:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ca2f2c80001>; Mon, 01 Apr 2019 22:27:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 01 Apr 2019 22:27:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 01 Apr 2019 22:27:38 -0700
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Apr
+ 2019 05:27:38 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 2 Apr 2019 05:27:37 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.1]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ca2f2c80001>; Mon, 01 Apr 2019 22:27:37 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>
+CC:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <anrao@nvidia.com>, <talho@nvidia.com>,
+        <bbiswas@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+Subject: [PATCH V1] mmc: tegra: add sdhci tegra suspend and resume
+Date:   Mon, 1 Apr 2019 22:27:33 -0700
+Message-ID: <1554182853-31612-1-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554182797-12815-1-git-send-email-hpeter+linux_kernel@gmail.com>
-References: <1554182797-12815-1-git-send-email-hpeter+linux_kernel@gmail.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554182856; bh=60mqR9zeYJkjdHLqH4RETBoPqs1ENZaD7JJYT9wSpxo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=QgW1w8E2YXNeDy3DB1dAdYGgZtCg7AlNPNNjUJh+nrO2q8Ng4ttGXRS/gyev2OT2F
+         Kb4NQuUSBR8W0fmNKWfTwJhKAKuPPGbe46rCQnRbLnoj/v1BMXxDsrALwQGfW1qy1E
+         4q5oS3hOmMffFe/OZU6s6GuQLuO9oxQ+UOyquQcQsXxtOpgsQQnu/LduRRdzIt9eW0
+         baD+kvbgZoRdhedhNWbruDjZG8Vu6RRYGmpv2Lxb/5xENczoHChiEW1bGh9lm6BFLX
+         bDQW/ZfUn6WxvuE9wYcKG0V1gmqGokP5kb4MNHj9uaK3+ZHKvXIis9GzzB5zDMbtMM
+         ssOLWMBShYqDg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement Fintek F81232 break on/off with LCR register.
-It's the same with 16550A LCR register layout.
+This patch adds suspend and resume PM ops for tegra SDHCI.
 
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
-v4:
-	1: no change
+ drivers/mmc/host/sdhci-tegra.c | 45 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
-v3:
-	1: using shadow_lcr to save LCR in f81232_break_ctl()
-
- drivers/usb/serial/f81232.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-index 37da345acafd..763a51222384 100644
---- a/drivers/usb/serial/f81232.c
-+++ b/drivers/usb/serial/f81232.c
-@@ -65,6 +65,7 @@ struct f81232_private {
- 	struct mutex lock;
- 	u8 modem_control;
- 	u8 modem_status;
-+	u8 shadow_lcr;
- 	speed_t baud_base;
- 	bool lsr_work_resched;
- 	struct work_struct lsr_work;
-@@ -378,13 +379,23 @@ static void f81232_process_read_urb(struct urb *urb)
- 
- static void f81232_break_ctl(struct tty_struct *tty, int break_state)
- {
--	/* FIXME - Stubbed out for now */
-+	struct usb_serial_port *port = tty->driver_data;
-+	struct f81232_private *priv = usb_get_serial_port_data(port);
-+	int status;
- 
--	/*
--	 * break_state = -1 to turn on break, and 0 to turn off break
--	 * see drivers/char/tty_io.c to see it used.
--	 * last_set_data_urb_value NEVER has the break bit set in it.
--	 */
-+	mutex_lock(&priv->lock);
-+
-+	if (break_state)
-+		priv->shadow_lcr |= UART_LCR_SBC;
-+	else
-+		priv->shadow_lcr &= ~UART_LCR_SBC;
-+
-+	status = f81232_set_register(port, LINE_CONTROL_REGISTER,
-+					priv->shadow_lcr);
-+	if (status)
-+		dev_err(&port->dev, "set break failed: %d\n", status);
-+
-+	mutex_unlock(&priv->lock);
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index eafaaefab4a6..68263ea4a93e 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -1611,11 +1611,54 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
- static int f81232_find_clk(speed_t baudrate)
-@@ -520,6 +531,7 @@ static int f81232_port_disable(struct usb_serial_port *port)
- static void f81232_set_termios(struct tty_struct *tty,
- 		struct usb_serial_port *port, struct ktermios *old_termios)
- {
-+	struct f81232_private *priv = usb_get_serial_port_data(port);
- 	u8 new_lcr = 0;
- 	int status = 0;
- 	speed_t baudrate;
-@@ -573,11 +585,16 @@ static void f81232_set_termios(struct tty_struct *tty,
- 		break;
- 	}
- 
-+	mutex_lock(&priv->lock);
++#ifdef CONFIG_PM_SLEEP
++static int sdhci_tegra_suspend(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	int ret;
 +
-+	new_lcr |= (priv->shadow_lcr & UART_LCR_SBC);
- 	status = f81232_set_register(port, LINE_CONTROL_REGISTER, new_lcr);
- 	if (status) {
- 		dev_err(&port->dev, "%s failed to set LCR: %d\n",
- 			__func__, status);
- 	}
++	if (host->mmc->caps2 & MMC_CAP2_CQE) {
++		ret = cqhci_suspend(host->mmc);
++		if (ret)
++			return ret;
++	}
 +
-+	mutex_unlock(&priv->lock);
- }
- 
- static int f81232_tiocmget(struct tty_struct *tty)
++	ret = sdhci_suspend_host(host);
++	if (ret)
++		return ret;
++
++	clk_disable_unprepare(pltfm_host->clk);
++	return 0;
++}
++
++static int sdhci_tegra_resume(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	int ret;
++
++	clk_prepare_enable(pltfm_host->clk);
++
++	ret = sdhci_resume_host(host);
++	if (ret)
++		return ret;
++
++	if (host->mmc->caps2 & MMC_CAP2_CQE)
++		return cqhci_resume(host->mmc);
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(sdhci_tegra_dev_pm_ops, sdhci_tegra_suspend,
++			 sdhci_tegra_resume);
++
+ static struct platform_driver sdhci_tegra_driver = {
+ 	.driver		= {
+ 		.name	= "sdhci-tegra",
+ 		.of_match_table = sdhci_tegra_dt_match,
+-		.pm	= &sdhci_pltfm_pmops,
++		.pm	= &sdhci_tegra_dev_pm_ops,
+ 	},
+ 	.probe		= sdhci_tegra_probe,
+ 	.remove		= sdhci_tegra_remove,
 -- 
 2.7.4
 
