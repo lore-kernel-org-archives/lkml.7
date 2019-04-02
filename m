@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A8FC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65967C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17DA620856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409B02146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732158AbfDBNr5 (ORCPT
+        id S1732267AbfDBNr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:47:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43002 "EHLO
+        Tue, 2 Apr 2019 09:47:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42990 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731302AbfDBNkD (ORCPT
+        by vger.kernel.org with ESMTP id S1731301AbfDBNkD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:03 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdw-0002ny-NW; Tue, 02 Apr 2019 14:40:01 +0100
+        id 1hBJdw-0002o0-Lf; Tue, 02 Apr 2019 14:40:01 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdv-0004tQ-OT; Tue, 02 Apr 2019 14:39:59 +0100
+        id 1hBJdv-0004tU-Sc; Tue, 02 Apr 2019 14:39:59 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Filipe Manana" <fdmanana@suse.com>, "Chris Mason" <clm@fb.com>
+        "Vijay Chidambaram" <vvijay03@gmail.com>,
+        "Filipe Manana" <fdmanana@suse.com>,
+        "David Sterba" <dsterba@suse.com>,
+        "Jayashree Mohan" <jayashree2912@gmail.com>
 Date:   Tue, 02 Apr 2019 14:38:27 +0100
-Message-ID: <lsq.1554212307.919816124@decadent.org.uk>
+Message-ID: <lsq.1554212307.812106934@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 37/99] Btrfs: fix stale dir entries after unlink,
- inode eviction and fsync
+Subject: [PATCH 3.16 38/99] Btrfs: fix fsync of files with multiple hard
+ links in new directories
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,172 +60,149 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filipe Manana <fdmanana@suse.com>
 
-commit bde6c242027b0f1d697d5333950b3a05761d40e4 upstream.
+commit 41bd60676923822de1df2c50b3f9a10171f4338a upstream.
 
-If we remove a hard link from an inode, the inode gets evicted, then
-we fsync the inode and then power fail/crash, when the log tree is
-replayed, the parent directory inode still has entries pointing to
-the name that no longer exists, while our inode no longer has the
-BTRFS_INODE_REF_KEY item matching the deleted hard link (as expected),
-leaving the filesystem in an inconsistent state. The stale directory
-entries can not be deleted (an attempt to delete them causes -ESTALE
-errors), which makes it impossible to delete the parent directory.
+The log tree has a long standing problem that when a file is fsync'ed we
+only check for new ancestors, created in the current transaction, by
+following only the hard link for which the fsync was issued. We follow the
+ancestors using the VFS' dget_parent() API. This means that if we create a
+new link for a file in a directory that is new (or in an any other new
+ancestor directory) and then fsync the file using an old hard link, we end
+up not logging the new ancestor, and on log replay that new hard link and
+ancestor do not exist. In some cases, involving renames, the file will not
+exist at all.
 
-This happens because we track the id of the transaction where the last
-unlink operation for the inode happened (last_unlink_trans) in an
-in-memory only field of the inode, that is, a value that is never
-persisted in the inode item stored on the fs/subvol btree. So if an
-inode is evicted and loaded again, the value for last_unlink_trans is
-set to 0, which prevents the fsync from logging the parent directory
-at btrfs_log_inode_parent(). So fix this by setting last_unlink_trans
-to the id of the transaction that last modified the inode when we
-load the inode. This is a pessimistic approach but it always ensures
-correctness with the trade off of ocassional full transaction commits
-when an fsync is done against the inode in the same transaction where
-it was evicted and reloaded when our inode is a directory and often
-logging its parent unnecessarily when our inode is not a directory.
+Example:
 
-The following test case for fstests triggers the problem:
+  mkfs.btrfs -f /dev/sdb
+  mount /dev/sdb /mnt
 
-  seq=`basename $0`
-  seqres=$RESULT_DIR/$seq
-  echo "QA output created by $seq"
-  tmp=/tmp/$$
-  status=1	# failure is the default!
-  trap "_cleanup; exit \$status" 0 1 2 3 15
+  mkdir /mnt/A
+  touch /mnt/foo
+  ln /mnt/foo /mnt/A/bar
+  xfs_io -c fsync /mnt/foo
 
-  _cleanup()
-  {
-      _cleanup_flakey
-      rm -f $tmp.*
-  }
+  <power failure>
 
-  # get standard environment, filters and checks
-  . ./common/rc
-  . ./common/filter
-  . ./common/dmflakey
+In this example after log replay only the hard link named 'foo' exists
+and directory A does not exist, which is unexpected. In other major linux
+filesystems, such as ext4, xfs and f2fs for example, both hard links exist
+and so does directory A after mounting again the filesystem.
 
-  # real QA test starts here
-  _need_to_be_root
-  _supported_fs generic
-  _supported_os Linux
-  _require_scratch
-  _require_dm_flakey
-  _require_metadata_journaling $SCRATCH_DEV
+Checking if any new ancestors are new and need to be logged was added in
+2009 by commit 12fcfd22fe5b ("Btrfs: tree logging unlink/rename fixes"),
+however only for the ancestors of the hard link (dentry) for which the
+fsync was issued, instead of checking for all ancestors for all of the
+inode's hard links.
 
-  rm -f $seqres.full
+So fix this by tracking the id of the last transaction where a hard link
+was created for an inode and then on fsync fallback to a full transaction
+commit when an inode has more than one hard link and at least one new hard
+link was created in the current transaction. This is the simplest solution
+since this is not a common use case (adding frequently hard links for
+which there's an ancestor created in the current transaction and then
+fsync the file). In case it ever becomes a common use case, a solution
+that consists of iterating the fs/subvol btree for each hard link and
+check if any ancestor is new, could be implemented.
 
-  _scratch_mkfs >>$seqres.full 2>&1
-  _init_flakey
-  _mount_flakey
+This solves many unexpected scenarios reported by Jayashree Mohan and
+Vijay Chidambaram, and for which there is a new test case for fstests
+under review.
 
-  # Create our test file with 2 hard links.
-  mkdir $SCRATCH_MNT/testdir
-  touch $SCRATCH_MNT/testdir/foo
-  ln $SCRATCH_MNT/testdir/foo $SCRATCH_MNT/testdir/bar
-
-  # Make sure everything done so far is durably persisted.
-  sync
-
-  # Now remove one of the links, trigger inode eviction and then fsync
-  # our inode.
-  unlink $SCRATCH_MNT/testdir/bar
-  echo 2 > /proc/sys/vm/drop_caches
-  $XFS_IO_PROG -c "fsync" $SCRATCH_MNT/testdir/foo
-
-  # Silently drop all writes on our scratch device to simulate a power failure.
-  _load_flakey_table $FLAKEY_DROP_WRITES
-  _unmount_flakey
-
-  # Allow writes again and mount the fs to trigger log/journal replay.
-  _load_flakey_table $FLAKEY_ALLOW_WRITES
-  _mount_flakey
-
-  # Now verify our directory entries.
-  echo "Entries in testdir:"
-  ls -1 $SCRATCH_MNT/testdir
-
-  # If we remove our inode, its parent should become empty and therefore we should
-  # be able to remove the parent.
-  rm -f $SCRATCH_MNT/testdir/*
-  rmdir $SCRATCH_MNT/testdir
-
-  _unmount_flakey
-
-  # The fstests framework will call fsck against our filesystem which will verify
-  # that all metadata is in a consistent state.
-
-  status=0
-  exit
-
-The test failed on btrfs with:
-
-  generic/098 4s ... - output mismatch (see /home/fdmanana/git/hub/xfstests/results//generic/098.out.bad)
->   --- tests/generic/098.out	2015-07-23 18:01:12.616175932 +0100
->   +++ /home/fdmanana/git/hub/xfstests/results//generic/098.out.bad	2015-07-23 18:04:58.924138308 +0100
-    @@ -1,3 +1,6 @@
-     QA output created by 098
-     Entries in testdir:
-    +bar
-     foo
-    +rm: cannot remove '/home/fdmanana/btrfs-tests/scratch_1/testdir/foo': Stale file handle
-    +rmdir: failed to remove '/home/fdmanana/btrfs-tests/scratch_1/testdir': Directory not empty
-    ...
-    (Run 'diff -u tests/generic/098.out /home/fdmanana/git/hub/xfstests/results//generic/098.out.bad'  to see the entire diff)
-  _check_btrfs_filesystem: filesystem on /dev/sdc is inconsistent (see /home/fdmanana/git/hub/xfstests/results//generic/098.full)
-
-  $ cat /home/fdmanana/git/hub/xfstests/results//generic/098.full
-  (...)
-  checking fs roots
-  root 5 inode 258 errors 2001, no inode item, link count wrong
-     unresolved ref dir 257 index 0 namelen 3 name foo filetype 1 errors 6, no dir index, no inode ref
-     unresolved ref dir 257 index 3 namelen 3 name bar filetype 1 errors 5, no dir item, no inode ref
-  Checking filesystem on /dev/sdc
-  (...)
-
+Fixes: 12fcfd22fe5b ("Btrfs: tree logging unlink/rename fixes")
+Reported-by: Vijay Chidambaram <vvijay03@gmail.com>
+Reported-by: Jayashree Mohan <jayashree2912@gmail.com>
 Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Chris Mason <clm@fb.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[bwh: Backported to 3.16:
+ - In btrfs_log_inode_parent(), inode is a struct inode pointer not a
+   struct btrfs_inode pointer
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/inode.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ fs/btrfs/btrfs_inode.h |  6 ++++++
+ fs/btrfs/inode.c       | 17 +++++++++++++++++
+ fs/btrfs/tree-log.c    | 16 ++++++++++++++++
+ 3 files changed, 39 insertions(+)
 
+--- a/fs/btrfs/btrfs_inode.h
++++ b/fs/btrfs/btrfs_inode.h
+@@ -144,6 +144,12 @@ struct btrfs_inode {
+ 	u64 last_unlink_trans;
+ 
+ 	/*
++	 * Track the transaction id of the last transaction used to create a
++	 * hard link for the inode. This is used by the log tree (fsync).
++	 */
++	u64 last_link_trans;
++
++	/*
+ 	 * Number of bytes outstanding that are going to need csums.  This is
+ 	 * used in ENOSPC accounting.
+ 	 */
 --- a/fs/btrfs/inode.c
 +++ b/fs/btrfs/inode.c
-@@ -3533,6 +3533,35 @@ cache_index:
- 		set_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
- 			&BTRFS_I(inode)->runtime_flags);
- 
+@@ -3561,6 +3561,21 @@ cache_index:
+ 	 * inode is not a directory, logging its parent unnecessarily.
+ 	 */
+ 	BTRFS_I(inode)->last_unlink_trans = BTRFS_I(inode)->last_trans;
 +	/*
-+	 * We don't persist the id of the transaction where an unlink operation
-+	 * against the inode was last made. So here we assume the inode might
-+	 * have been evicted, and therefore the exact value of last_unlink_trans
-+	 * lost, and set it to last_trans to avoid metadata inconsistencies
-+	 * between the inode and its parent if the inode is fsync'ed and the log
-+	 * replayed. For example, in the scenario:
++	 * Similar reasoning for last_link_trans, needs to be set otherwise
++	 * for a case like the following:
 +	 *
-+	 * touch mydir/foo
-+	 * ln mydir/foo mydir/bar
-+	 * sync
-+	 * unlink mydir/bar
-+	 * echo 2 > /proc/sys/vm/drop_caches   # evicts inode
-+	 * xfs_io -c fsync mydir/foo
++	 * mkdir A
++	 * touch foo
++	 * ln foo A/bar
++	 * echo 2 > /proc/sys/vm/drop_caches
++	 * fsync foo
 +	 * <power failure>
-+	 * mount fs, triggers fsync log replay
 +	 *
-+	 * We must make sure that when we fsync our inode foo we also log its
-+	 * parent inode, otherwise after log replay the parent still has the
-+	 * dentry with the "bar" name but our inode foo has a link count of 1
-+	 * and doesn't have an inode ref with the name "bar" anymore.
-+	 *
-+	 * Setting last_unlink_trans to last_trans is a pessimistic approach,
-+	 * but it guarantees correctness at the expense of ocassional full
-+	 * transaction commits on fsync if our inode is a directory, or if our
-+	 * inode is not a directory, logging its parent unnecessarily.
++	 * Would result in link bar and directory A not existing after the power
++	 * failure.
 +	 */
-+	BTRFS_I(inode)->last_unlink_trans = BTRFS_I(inode)->last_trans;
-+
++	BTRFS_I(inode)->last_link_trans = BTRFS_I(inode)->last_trans;
+ 
  	path->slots[0]++;
  	if (inode->i_nlink != 1 ||
- 	    path->slots[0] >= btrfs_header_nritems(leaf))
+@@ -6183,6 +6198,7 @@ static int btrfs_link(struct dentry *old
+ 			if (err)
+ 				goto fail;
+ 		}
++		BTRFS_I(inode)->last_link_trans = trans->transid;
+ 		d_instantiate(dentry, inode);
+ 		btrfs_log_new_name(trans, inode, NULL, parent);
+ 	}
+@@ -8250,6 +8266,7 @@ struct inode *btrfs_alloc_inode(struct s
+ 	ei->index_cnt = (u64)-1;
+ 	ei->dir_index = 0;
+ 	ei->last_unlink_trans = 0;
++	ei->last_link_trans = 0;
+ 	ei->last_log_commit = 0;
+ 
+ 	spin_lock_init(&ei->lock);
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4430,6 +4430,22 @@ static int btrfs_log_inode_parent(struct
+ 		goto end_trans;
+ 	}
+ 
++	/*
++	 * If a new hard link was added to the inode in the current transaction
++	 * and its link count is now greater than 1, we need to fallback to a
++	 * transaction commit, otherwise we can end up not logging all its new
++	 * parents for all the hard links. Here just from the dentry used to
++	 * fsync, we can not visit the ancestor inodes for all the other hard
++	 * links to figure out if any is new, so we fallback to a transaction
++	 * commit (instead of adding a lot of complexity of scanning a btree,
++	 * since this scenario is not a common use case).
++	 */
++	if (inode->i_nlink > 1 &&
++	    BTRFS_I(inode)->last_link_trans > last_committed) {
++		ret = -EMLINK;
++		goto end_trans;
++	}
++
+ 	inode_only = LOG_INODE_EXISTS;
+ 	while (1) {
+ 		if (!parent || !parent->d_inode || sb != parent->d_inode->i_sb)
 
