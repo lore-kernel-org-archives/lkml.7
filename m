@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33549C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF746C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F380B20856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE8D2133D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731800AbfDBNmN (ORCPT
+        id S1730324AbfDBNmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:42:13 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43734 "EHLO
+        Tue, 2 Apr 2019 09:42:32 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43682 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731543AbfDBNkM (ORCPT
+        by vger.kernel.org with ESMTP id S1731524AbfDBNkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 2 Apr 2019 09:40:12 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJe4-0002oP-6Y; Tue, 02 Apr 2019 14:40:08 +0100
+        id 1hBJe4-0002oR-6a; Tue, 02 Apr 2019 14:40:08 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hBJdy-0004xh-01; Tue, 02 Apr 2019 14:40:02 +0100
+        id 1hBJdx-0004xU-TV; Tue, 02 Apr 2019 14:40:01 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,23 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Hildenbrand" <david@redhat.com>,
-        "Naoya Horiguchi" <n-horiguchi@ah.jp.nec.com>,
-        "Michal Hocko" <mhocko@suse.com>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        "Dmitry Vyukov" <dvyukov@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "KOSAKI Motohiro" <kosaki.motohiro@jp.fujitsu.com>,
+        "Sasha Levin" <sasha.levin@oracle.com>,
+        "Hugh Dickins" <hughd@google.com>,
+        "Christoph Lameter" <cl@linux.com>,
+        "Rik van Riel" <riel@redhat.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Oscar Salvador" <osalvador@suse.com>
+        "Vlastimil Babka" <vbabka@suse.cz>
 Date:   Tue, 02 Apr 2019 14:38:28 +0100
-Message-ID: <lsq.1554212308.577740229@decadent.org.uk>
+Message-ID: <lsq.1554212308.203583591@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 90/99] hwpoison, memory_hotplug: allow hwpoisoned
- pages to be offlined
+Subject: [PATCH 3.16 87/99] mm: rmap use pte lock not mmap_sem to set
+ PageMlocked
 In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,167 +65,252 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michal Hocko <mhocko@suse.com>
+From: Hugh Dickins <hughd@google.com>
 
-commit b15c87263a69272423771118c653e9a1d0672caa upstream.
+commit b87537d9e2feb30f6a962f27eb32768682698d3b upstream.
 
-We have received a bug report that an injected MCE about faulty memory
-prevents memory offline to succeed on 4.4 base kernel.  The underlying
-reason was that the HWPoison page has an elevated reference count and the
-migration keeps failing.  There are two problems with that.  First of all
-it is dubious to migrate the poisoned page because we know that accessing
-that memory is possible to fail.  Secondly it doesn't make any sense to
-migrate a potentially broken content and preserve the memory corruption
-over to a new location.
+KernelThreadSanitizer (ktsan) has shown that the down_read_trylock() of
+mmap_sem in try_to_unmap_one() (when going to set PageMlocked on a page
+found mapped in a VM_LOCKED vma) is ineffective against races with
+exit_mmap()'s munlock_vma_pages_all(), because mmap_sem is not held when
+tearing down an mm.
 
-Oscar has found out that 4.4 and the current upstream kernels behave
-slightly differently with his simply testcase
+But that's okay, those races are benign; and although we've believed for
+years in that ugly down_read_trylock(), it's unsuitable for the job, and
+frustrates the good intention of setting PageMlocked when it fails.
 
-===
+It just doesn't matter if here we read vm_flags an instant before or after
+a racing mlock() or munlock() or exit_mmap() sets or clears VM_LOCKED: the
+syscalls (or exit) work their way up the address space (taking pt locks
+after updating vm_flags) to establish the final state.
 
-int main(void)
-{
-        int ret;
-        int i;
-        int fd;
-        char *array = malloc(4096);
-        char *array_locked = malloc(4096);
+We do still need to be careful never to mark a page Mlocked (hence
+unevictable) by any race that will not be corrected shortly after.  The
+page lock protects from many of the races, but not all (a page is not
+necessarily locked when it's unmapped).  But the pte lock we just dropped
+is good to cover the rest (and serializes even with
+munlock_vma_pages_all(), so no special barriers required): now hold on to
+the pte lock while calling mlock_vma_page().  Is that lock ordering safe?
+Yes, that's how follow_page_pte() calls it, and how page_remove_rmap()
+calls the complementary clear_page_mlock().
 
-        fd = open("/tmp/data", O_RDONLY);
-        read(fd, array, 4095);
+This fixes the following case (though not a case which anyone has
+complained of), which mmap_sem did not: truncation's preliminary
+unmap_mapping_range() is supposed to remove even the anonymous COWs of
+filecache pages, and that might race with try_to_unmap_one() on a
+VM_LOCKED vma, so that mlock_vma_page() sets PageMlocked just after
+zap_pte_range() unmaps the page, causing "Bad page state (mlocked)" when
+freed.  The pte lock protects against this.
 
-        for (i = 0; i < 4096; i++)
-                array_locked[i] = 'd';
+You could say that it also protects against the more ordinary case, racing
+with the preliminary unmapping of a filecache page itself: but in our
+current tree, that's independently protected by i_mmap_rwsem; and that
+race would be why "Bad page state (mlocked)" was seen before commit
+48ec833b7851 ("Revert mm/memory.c: share the i_mmap_rwsem").
 
-        ret = mlock((void *)PAGE_ALIGN((unsigned long)array_locked), sizeof(array_locked));
-        if (ret)
-                perror("mlock");
+Vlastimil Babka points out another race which this patch protects against.
+ try_to_unmap_one() might reach its mlock_vma_page() TestSetPageMlocked a
+moment after munlock_vma_pages_all() did its Phase 1 TestClearPageMlocked:
+leaving PageMlocked and unevictable when it should be evictable.  mmap_sem
+is ineffective because exit_mmap() does not hold it; page lock ineffective
+because __munlock_pagevec() only takes it afterwards, in Phase 2; pte lock
+is effective because __munlock_pagevec_fill() takes it to get the page,
+after VM_LOCKED was cleared from vm_flags, so visible to try_to_unmap_one.
 
-        sleep (20);
+Kirill Shutemov points out that if the compiler chooses to implement a
+"vma->vm_flags &= VM_WHATEVER" or "vma->vm_flags |= VM_WHATEVER" operation
+with an intermediate store of unrelated bits set, since I'm here foregoing
+its usual protection by mmap_sem, try_to_unmap_one() might catch sight of
+a spurious VM_LOCKED in vm_flags, and make the wrong decision.  This does
+not appear to be an immediate problem, but we may want to define vm_flags
+accessors in future, to guard against such a possibility.
 
-        ret = madvise((void *)PAGE_ALIGN((unsigned long)array_locked), 4096, MADV_HWPOISON);
-        if (ret)
-                perror("madvise");
+While we're here, make a related optimization in try_to_munmap_one(): if
+it's doing TTU_MUNLOCK, then there's no point at all in descending the
+page tables and getting the pt lock, unless the vma is VM_LOCKED.  Yes,
+that can change racily, but it can change racily even without the
+optimization: it's not critical.  Far better not to waste time here.
 
-        for (i = 0; i < 4096; i++)
-                array_locked[i] = 'd';
+Stopped short of separating try_to_munlock_one() from try_to_munmap_one()
+on this occasion, but that's probably the sensible next step - with a
+rename, given that try_to_munlock()'s business is to try to set Mlocked.
 
-        return 0;
-}
-===
+Updated the unevictable-lru Documentation, to remove its reference to mmap
+semaphore, but found a few more updates needed in just that area.
 
-+ offline this memory.
-
-In 4.4 kernels he saw the hwpoisoned page to be returned back to the LRU
-list
-kernel:  [<ffffffff81019ac9>] dump_trace+0x59/0x340
-kernel:  [<ffffffff81019e9a>] show_stack_log_lvl+0xea/0x170
-kernel:  [<ffffffff8101ac71>] show_stack+0x21/0x40
-kernel:  [<ffffffff8132bb90>] dump_stack+0x5c/0x7c
-kernel:  [<ffffffff810815a1>] warn_slowpath_common+0x81/0xb0
-kernel:  [<ffffffff811a275c>] __pagevec_lru_add_fn+0x14c/0x160
-kernel:  [<ffffffff811a2eed>] pagevec_lru_move_fn+0xad/0x100
-kernel:  [<ffffffff811a334c>] __lru_cache_add+0x6c/0xb0
-kernel:  [<ffffffff81195236>] add_to_page_cache_lru+0x46/0x70
-kernel:  [<ffffffffa02b4373>] extent_readpages+0xc3/0x1a0 [btrfs]
-kernel:  [<ffffffff811a16d7>] __do_page_cache_readahead+0x177/0x200
-kernel:  [<ffffffff811a18c8>] ondemand_readahead+0x168/0x2a0
-kernel:  [<ffffffff8119673f>] generic_file_read_iter+0x41f/0x660
-kernel:  [<ffffffff8120e50d>] __vfs_read+0xcd/0x140
-kernel:  [<ffffffff8120e9ea>] vfs_read+0x7a/0x120
-kernel:  [<ffffffff8121404b>] kernel_read+0x3b/0x50
-kernel:  [<ffffffff81215c80>] do_execveat_common.isra.29+0x490/0x6f0
-kernel:  [<ffffffff81215f08>] do_execve+0x28/0x30
-kernel:  [<ffffffff81095ddb>] call_usermodehelper_exec_async+0xfb/0x130
-kernel:  [<ffffffff8161c045>] ret_from_fork+0x55/0x80
-
-And that latter confuses the hotremove path because an LRU page is
-attempted to be migrated and that fails due to an elevated reference
-count.  It is quite possible that the reuse of the HWPoisoned page is some
-kind of fixed race condition but I am not really sure about that.
-
-With the upstream kernel the failure is slightly different.  The page
-doesn't seem to have LRU bit set but isolate_movable_page simply fails and
-do_migrate_range simply puts all the isolated pages back to LRU and
-therefore no progress is made and scan_movable_pages finds same set of
-pages over and over again.
-
-Fix both cases by explicitly checking HWPoisoned pages before we even try
-to get reference on the page, try to unmap it if it is still mapped.  As
-explained by Naoya:
-
-: Hwpoison code never unmapped those for no big reason because
-: Ksm pages never dominate memory, so we simply didn't have strong
-: motivation to save the pages.
-
-Also put WARN_ON(PageLRU) in case there is a race and we can hit LRU
-HWPoison pages which shouldn't happen but I couldn't convince myself about
-that.  Naoya has noted the following:
-
-: Theoretically no such gurantee, because try_to_unmap() doesn't have a
-: guarantee of success and then memory_failure() returns immediately
-: when hwpoison_user_mappings fails.
-: Or the following code (comes after hwpoison_user_mappings block) also impli=
-: es
-: that the target page can still have PageLRU flag.
-:
-:         /*
-:          * Torn down by someone else?
-:          */
-:         if (PageLRU(p) && !PageSwapCache(p) && p->mapping =3D=3D NULL) {
-:                 action_result(pfn, MF_MSG_TRUNCATED_LRU, MF_IGNORED);
-:                 res =3D -EBUSY;
-:                 goto out;
-:         }
-:
-: So I think it's OK to keep "if (WARN_ON(PageLRU(page)))" block in
-: current version of your patch.
-
-Link: http://lkml.kernel.org/r/20181206120135.14079-1-mhocko@kernel.org
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.com>
-Debugged-by: Oscar Salvador <osalvador@suse.com>
-Tested-by: Oscar Salvador <osalvador@suse.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Rik van Riel <riel@redhat.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Sasha Levin <sasha.levin@oracle.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[bwh: Backported to 3.16: adjust context]
+[bwh: Backported to 3.16 in preparation for commit 017b1660df89
+ "mm: migration: fix migration of huge PMD shared pages". Adjusted context.]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- mm/memory_hotplug.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ Documentation/vm/unevictable-lru.txt | 61 ++++++++--------------------
+ mm/rmap.c                            | 36 +++++-----------
+ 2 files changed, 27 insertions(+), 70 deletions(-)
 
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -32,6 +32,7 @@
- #include <linux/hugetlb.h>
- #include <linux/memblock.h>
- #include <linux/bootmem.h>
-+#include <linux/rmap.h>
+--- a/Documentation/vm/unevictable-lru.txt
++++ b/Documentation/vm/unevictable-lru.txt
+@@ -523,37 +523,20 @@ map.
  
- #include <asm/tlbflush.h>
- 
-@@ -1393,6 +1394,21 @@ do_migrate_range(unsigned long start_pfn
- 			continue;
- 		}
- 
-+		/*
-+		 * HWPoison pages have elevated reference counts so the migration would
-+		 * fail on them. It also doesn't make any sense to migrate them in the
-+		 * first place. Still try to unmap such a page in case it is still mapped
-+		 * (e.g. current hwpoison implementation doesn't unmap KSM pages but keep
-+		 * the unmap as the catch all safety net).
-+		 */
-+		if (PageHWPoison(page)) {
-+			if (WARN_ON(PageLRU(page)))
-+				isolate_lru_page(page);
-+			if (page_mapped(page))
-+				try_to_unmap(page, TTU_IGNORE_MLOCK | TTU_IGNORE_ACCESS);
-+			continue;
-+		}
+ try_to_unmap() is always called, by either vmscan for reclaim or for page
+ migration, with the argument page locked and isolated from the LRU.  Separate
+-functions handle anonymous and mapped file pages, as these types of pages have
+-different reverse map mechanisms.
+-
+- (*) try_to_unmap_anon()
+-
+-     To unmap anonymous pages, each VMA in the list anchored in the anon_vma
+-     must be visited - at least until a VM_LOCKED VMA is encountered.  If the
+-     page is being unmapped for migration, VM_LOCKED VMAs do not stop the
+-     process because mlocked pages are migratable.  However, for reclaim, if
+-     the page is mapped into a VM_LOCKED VMA, the scan stops.
+-
+-     try_to_unmap_anon() attempts to acquire in read mode the mmap semaphore of
+-     the mm_struct to which the VMA belongs.  If this is successful, it will
+-     mlock the page via mlock_vma_page() - we wouldn't have gotten to
+-     try_to_unmap_anon() if the page were already mlocked - and will return
+-     SWAP_MLOCK, indicating that the page is unevictable.
+-
+-     If the mmap semaphore cannot be acquired, we are not sure whether the page
+-     is really unevictable or not.  In this case, try_to_unmap_anon() will
+-     return SWAP_AGAIN.
+-
+- (*) try_to_unmap_file()
+-
+-     Unmapping of a mapped file page works the same as for anonymous mappings,
+-     except that the scan visits all VMAs that map the page's index/page offset
+-     in the page's mapping's reverse map interval search tree.
+-
+-     As for anonymous pages, on encountering a VM_LOCKED VMA for a mapped file
+-     page, try_to_unmap_file() will attempt to acquire the associated
+-     mm_struct's mmap semaphore to mlock the page, returning SWAP_MLOCK if this
+-     is successful, and SWAP_AGAIN, if not.
++functions handle anonymous and mapped file and KSM pages, as these types of
++pages have different reverse map lookup mechanisms, with different locking.
++In each case, whether rmap_walk_anon() or rmap_walk_file() or rmap_walk_ksm(),
++it will call try_to_unmap_one() for every VMA which might contain the page.
 +
- 		if (!get_page_unless_zero(page))
- 			continue;
- 		/*
++When trying to reclaim, if try_to_unmap_one() finds the page in a VM_LOCKED
++VMA, it will then mlock the page via mlock_vma_page() instead of unmapping it,
++and return SWAP_MLOCK to indicate that the page is unevictable: and the scan
++stops there.
++
++mlock_vma_page() is called while holding the page table's lock (in addition
++to the page lock, and the rmap lock): to serialize against concurrent mlock or
++munlock or munmap system calls, mm teardown (munlock_vma_pages_all), reclaim,
++holepunching, and truncation of file pages and their anonymous COWed pages.
+ 
+ 
+ try_to_munlock() REVERSE MAP SCAN
+@@ -569,22 +552,15 @@ all PTEs from the page.  For this purpos
+ introduced a variant of try_to_unmap() called try_to_munlock().
+ 
+ try_to_munlock() calls the same functions as try_to_unmap() for anonymous and
+-mapped file pages with an additional argument specifying unlock versus unmap
++mapped file and KSM pages with a flag argument specifying unlock versus unmap
+ processing.  Again, these functions walk the respective reverse maps looking
+ for VM_LOCKED VMAs.  When such a VMA is found, as in the try_to_unmap() case,
+-the functions attempt to acquire the associated mmap semaphore, mlock the page
+-via mlock_vma_page() and return SWAP_MLOCK.  This effectively undoes the
+-pre-clearing of the page's PG_mlocked done by munlock_vma_page.
+-
+-If try_to_unmap() is unable to acquire a VM_LOCKED VMA's associated mmap
+-semaphore, it will return SWAP_AGAIN.  This will allow shrink_page_list() to
+-recycle the page on the inactive list and hope that it has better luck with the
+-page next time.
++the functions mlock the page via mlock_vma_page() and return SWAP_MLOCK.  This
++undoes the pre-clearing of the page's PG_mlocked done by munlock_vma_page.
+ 
+ Note that try_to_munlock()'s reverse map walk must visit every VMA in a page's
+ reverse map to determine that a page is NOT mapped into any VM_LOCKED VMA.
+-However, the scan can terminate when it encounters a VM_LOCKED VMA and can
+-successfully acquire the VMA's mmap semaphore for read and mlock the page.
++However, the scan can terminate when it encounters a VM_LOCKED VMA.
+ Although try_to_munlock() might be called a great many times when munlocking a
+ large region or tearing down a large address space that has been mlocked via
+ mlockall(), overall this is a fairly rare event.
+@@ -612,11 +588,6 @@ Some examples of these unevictable pages
+  (3) mlocked pages that could not be isolated from the LRU and moved to the
+      unevictable list in mlock_vma_page().
+ 
+- (4) Pages mapped into multiple VM_LOCKED VMAs, but try_to_munlock() couldn't
+-     acquire the VMA's mmap semaphore to test the flags and set PageMlocked.
+-     munlock_vma_page() was forced to let the page back on to the normal LRU
+-     list for vmscan to handle.
+-
+ shrink_inactive_list() also diverts any unevictable pages that it finds on the
+ inactive lists to the appropriate zone's unevictable list.
+ 
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1197,6 +1197,10 @@ static int try_to_unmap_one(struct page
+ 	int ret = SWAP_AGAIN;
+ 	enum ttu_flags flags = (enum ttu_flags)arg;
+ 
++	/* munlock has nothing to gain from examining un-locked vmas */
++	if ((flags & TTU_MUNLOCK) && !(vma->vm_flags & VM_LOCKED))
++		goto out;
++
+ 	pte = page_check_address(page, mm, address, &ptl, 0);
+ 	if (!pte)
+ 		goto out;
+@@ -1207,9 +1211,12 @@ static int try_to_unmap_one(struct page
+ 	 * skipped over this mm) then we should reactivate it.
+ 	 */
+ 	if (!(flags & TTU_IGNORE_MLOCK)) {
+-		if (vma->vm_flags & VM_LOCKED)
+-			goto out_mlock;
+-
++		if (vma->vm_flags & VM_LOCKED) {
++			/* Holding pte lock, we do *not* need mmap_sem here */
++			mlock_vma_page(page);
++			ret = SWAP_MLOCK;
++			goto out_unmap;
++		}
+ 		if (flags & TTU_MUNLOCK)
+ 			goto out_unmap;
+ 	}
+@@ -1299,31 +1306,10 @@ static int try_to_unmap_one(struct page
+ 
+ out_unmap:
+ 	pte_unmap_unlock(pte, ptl);
+-	if (ret != SWAP_FAIL && !(flags & TTU_MUNLOCK))
++	if (ret != SWAP_FAIL && ret != SWAP_MLOCK && !(flags & TTU_MUNLOCK))
+ 		mmu_notifier_invalidate_page(mm, address);
+ out:
+ 	return ret;
+-
+-out_mlock:
+-	pte_unmap_unlock(pte, ptl);
+-
+-
+-	/*
+-	 * We need mmap_sem locking, Otherwise VM_LOCKED check makes
+-	 * unstable result and race. Plus, We can't wait here because
+-	 * we now hold anon_vma->rwsem or mapping->i_mmap_mutex.
+-	 * if trylock failed, the page remain in evictable lru and later
+-	 * vmscan could retry to move the page to unevictable lru if the
+-	 * page is actually mlocked.
+-	 */
+-	if (down_read_trylock(&vma->vm_mm->mmap_sem)) {
+-		if (vma->vm_flags & VM_LOCKED) {
+-			mlock_vma_page(page);
+-			ret = SWAP_MLOCK;
+-		}
+-		up_read(&vma->vm_mm->mmap_sem);
+-	}
+-	return ret;
+ }
+ 
+ bool is_vma_temporary_stack(struct vm_area_struct *vma)
 
