@@ -2,109 +2,114 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D589AC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B0CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A652D20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554299520;
-	bh=1ZRresJgJEzsVEBoj/S/AYbwc7Vmx6/76WgBUf4AB1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e7mZpALnpF9ofh3683dRIq/v7HT0bUvwyUJc23dAMeSfjUrmpMLsX2PqFJqqwI/q9
-	 zDpRxIXe+8x4jh+vITjPJChChh2xpXr1d1KPQKVZrHCIREdPv2+RDBZtuB/i1fuhZn
-	 f7G1JVbkOiajaRtXMwk2JoOkGTfuMds3jDjtYcSc=
+	by mail.kernel.org (Postfix) with ESMTP id D51C820830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfDCNv7 (ORCPT
+        id S1726605AbfDCNwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:51:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
+        Wed, 3 Apr 2019 09:52:44 -0400
+Received: from mga12.intel.com ([192.55.52.136]:12439 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfDCNv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:51:59 -0400
-Received: from localhost (217-101-180-136.cable.dynamic.v4.ziggo.nl [217.101.180.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1499420700;
-        Wed,  3 Apr 2019 13:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554299518;
-        bh=1ZRresJgJEzsVEBoj/S/AYbwc7Vmx6/76WgBUf4AB1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sfx4Sv9E5vvjif3hht4ndpY+8ZyJWD8jXnep/tLrC21vq4L+tBGozQIBKsIanuWcU
-         FMLN2foPwzFszoFqUcpa8ZCIQXlUvJcwmgtDq8CQwt5zi7K40Cx3aJ/hokx+bVG1/v
-         nlOozo9HDnMP9+C8ZJX3umNkXc9ZXYtbb66198P0=
-Date:   Wed, 3 Apr 2019 15:40:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.4 078/131] PM / Hibernate: Call flush_icache_range() on
- pages restored in-place
-Message-ID: <20190403134008.GA6963@kroah.com>
-References: <20190401170051.645954551@linuxfoundation.org>
- <20190401170058.681712612@linuxfoundation.org>
- <20190401203918.GA26671@amd>
- <20190403110051.GB34351@arrakis.emea.arm.com>
+        id S1725959AbfDCNwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:52:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 06:52:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
+   d="scan'208";a="139657192"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by orsmga003.jf.intel.com with ESMTP; 03 Apr 2019 06:52:41 -0700
+Date:   Wed, 3 Apr 2019 04:46:21 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     pbonzini@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, yu-cheng.yu@intel.com,
+        Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [RFC PATCH v4 4/8] KVM:VMX: Pass through host CET related MSRs
+ to Guest.
+Message-ID: <20190402204621.GA6644@local-michael-cet-test.sh.intel.com>
+References: <20190318150351.15550-1-weijiang.yang@intel.com>
+ <20190318150351.15550-5-weijiang.yang@intel.com>
+ <20190402202733.GI31303@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403110051.GB34351@arrakis.emea.arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190402202733.GI31303@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 12:00:51PM +0100, Catalin Marinas wrote:
-> On Mon, Apr 01, 2019 at 10:39:18PM +0200, Pavel Machek wrote:
-> > On Mon 2019-04-01 19:02:28, Greg Kroah-Hartman wrote:
-> > > 4.4-stable review patch.  If anyone has any objections, please let me know.
-> > > 
-> > > ------------------
-> > > 
-> > > [ Upstream commit f6cf0545ec697ddc278b7457b7d0c0d86a2ea88e ]
-> > > 
-> > > Some architectures require code written to memory as if it were data to be
-> > > 'cleaned' from any data caches before the processor can fetch them as new
-> > > instructions.
-> > > 
-> > > During resume from hibernate, the snapshot code copies some pages directly,
-> > > meaning these architectures do not get a chance to perform their cache
-> > > maintenance. Modify the read and decompress code to call
-> > > flush_icache_range() on all pages that are restored, so that the restored
-> > > in-place pages are guaranteed to be executable on these architectures.
-> > > 
-> > > Signed-off-by: James Morse <james.morse@arm.com>
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > Acked-by: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> > > [will: make clean_pages_on_* static and remove initialisers]
-> > > Signed-off-by: Will Deacon <will.deacon@arm.com>
-> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Tue, Apr 02, 2019 at 01:27:33PM -0700, Sean Christopherson wrote:
+> On Mon, Mar 18, 2019 at 11:03:47PM +0800, Yang Weijiang wrote:
+> > The CET runtime settings, i.e., CET state control bits(IA32_U_CET/
+> > IA32_S_CET), CET SSP(IA32_PL3_SSP/IA32_PL0_SSP) and SSP table address
+> > (IA32_INTERRUPT_SSP_TABLE_ADDR) are task/thread specific, therefore,
+> > OS needs to save/restore the states properly during context switch,
+> > e.g., task/thread switching, interrupt/exception handling, it uses
+> > xsaves/xrstors to achieve that.
 > > 
-> > I don't think this is suitable for stable.
+> > The difference between VMCS CET area fields and xsave CET area, is that
+> > the former is for state retention during Guest/Host context
+> > switch while the latter is for state retention during OS execution.
 > > 
-> > Catalin: Are there platforms that a) need this and b) support
-> > hibernation in 4.4.X?
+> > Linux currently doesn't support CPL1 and CPL2, so SSPs for these level
+> > are skipped here.
+> > 
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/vmx.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > index 53cef5a3db96..28b8ac027bd7 100644
+> > --- a/arch/x86/kvm/vmx.c
+> > +++ b/arch/x86/kvm/vmx.c
+> > @@ -11774,6 +11774,7 @@ static void nested_vmx_entry_exit_ctls_update(struct kvm_vcpu *vcpu)
+> >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> >  {
+> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > +	unsigned long *msr_bitmap;
+> >  
+> >  	if (cpu_has_secondary_exec_ctrls()) {
+> >  		vmx_compute_secondary_exec_control(vmx);
+> > @@ -11791,6 +11792,18 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
+> >  		nested_vmx_cr_fixed1_bits_update(vcpu);
+> >  		nested_vmx_entry_exit_ctls_update(vcpu);
+> >  	}
+> > +
+> > +	msr_bitmap = vmx->vmcs01.msr_bitmap;
+> > +
+> > +	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
+> > +	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW);
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
 > 
-> Good point. This commit was required for the arm64 hibernate support
-> that went in the 4.7 kernel.
-> 
-> Greg, why was this patch selected for stable? It's harmless anyway.
-
-It came in through Sasha's "magic patch selection AI" tools :)
-
-If it's harmless, might as well leave it in now, and not revert it.
-
-thanks,
-
-greg k-h
+> I thought we had agreed to pass-through PL1 and PL2, or am I misremembering?
+>
+Thanks Sean! I missed your last comments on this patch, will add them in
+next version.
+> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
+> > +	}
+> > +
+> >  }
+> >  
+> >  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+> > -- 
+> > 2.17.1
+> > 
