@@ -2,29 +2,30 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B6AC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B9BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4790420883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 192F02147C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfDBMvV (ORCPT
+        id S1731167AbfDBMvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:51:21 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37925 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730774AbfDBMvN (ORCPT
+        Tue, 2 Apr 2019 08:51:24 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50195 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731090AbfDBMvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:51:13 -0400
+        Tue, 2 Apr 2019 08:51:19 -0400
 X-Originating-IP: 109.213.83.19
 Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C1FED20019;
-        Tue,  2 Apr 2019 12:51:09 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2BA371C0004;
+        Tue,  2 Apr 2019 12:51:15 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -33,9 +34,9 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3 2/7] clk: at91: allow configuring generated PCR layout
-Date:   Tue,  2 Apr 2019 14:50:51 +0200
-Message-Id: <20190402125056.21509-3-alexandre.belloni@bootlin.com>
+Subject: [PATCH v3 5/7] clk: at91: add sam9x60 PLL driver
+Date:   Tue,  2 Apr 2019 14:50:54 +0200
+Message-Id: <20190402125056.21509-6-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190402125056.21509-1-alexandre.belloni@bootlin.com>
 References: <20190402125056.21509-1-alexandre.belloni@bootlin.com>
@@ -46,182 +47,389 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PCR register layout for GCLKCSS is changing for the future SoCs, allow
-configuring it.
+The PLLs on the sam9x60 (PLLA and USB PLL) use a different register set and
+programming model than the previous SoCs.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/clk-generated.c | 48 +++++++++++++++++---------------
- drivers/clk/at91/dt-compat.c     |  3 +-
- drivers/clk/at91/pmc.h           |  1 +
- drivers/clk/at91/sama5d2.c       |  1 +
- include/linux/clk/at91_pmc.h     |  7 +----
- 5 files changed, 30 insertions(+), 30 deletions(-)
+ drivers/clk/at91/Makefile          |   1 +
+ drivers/clk/at91/clk-sam9x60-pll.c | 330 +++++++++++++++++++++++++++++
+ drivers/clk/at91/pmc.h             |   6 +
+ 3 files changed, 337 insertions(+)
+ create mode 100644 drivers/clk/at91/clk-sam9x60-pll.c
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index 66e7f7baf958..5f18847965c1 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -11,6 +11,7 @@
-  *
-  */
- 
+diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+index c75df1cad60e..0a30fc8dfcb0 100644
+--- a/drivers/clk/at91/Makefile
++++ b/drivers/clk/at91/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_HAVE_AT91_SMD)		+= clk-smd.o
+ obj-$(CONFIG_HAVE_AT91_H32MX)		+= clk-h32mx.o
+ obj-$(CONFIG_HAVE_AT91_GENERATED_CLK)	+= clk-generated.o
+ obj-$(CONFIG_HAVE_AT91_I2S_MUX_CLK)	+= clk-i2s-mux.o
++obj-$(CONFIG_HAVE_AT91_SAM9X60_PLL)	+= clk-sam9x60-pll.o
+ obj-$(CONFIG_SOC_AT91SAM9) += at91sam9260.o at91sam9rl.o at91sam9x5.o
+ obj-$(CONFIG_SOC_SAMA5D4) += sama5d4.o
+ obj-$(CONFIG_SOC_SAMA5D2) += sama5d2.o
+diff --git a/drivers/clk/at91/clk-sam9x60-pll.c b/drivers/clk/at91/clk-sam9x60-pll.c
+new file mode 100644
+index 000000000000..34b817825b22
+--- /dev/null
++++ b/drivers/clk/at91/clk-sam9x60-pll.c
+@@ -0,0 +1,330 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ *  Copyright (C) 2019 Microchip Technology Inc.
++ *
++ */
++
 +#include <linux/bitfield.h>
- #include <linux/clk-provider.h>
- #include <linux/clkdev.h>
- #include <linux/clk/at91_pmc.h>
-@@ -31,6 +32,7 @@ struct clk_generated {
- 	spinlock_t *lock;
- 	u32 id;
- 	u32 gckdiv;
-+	const struct clk_pcr_layout *layout;
- 	u8 parent_id;
- 	bool audio_pll_allowed;
- };
-@@ -47,14 +49,14 @@ static int clk_generated_enable(struct clk_hw *hw)
- 		 __func__, gck->gckdiv, gck->parent_id);
- 
- 	spin_lock_irqsave(gck->lock, flags);
--	regmap_write(gck->regmap, AT91_PMC_PCR,
--		     (gck->id & AT91_PMC_PCR_PID_MASK));
--	regmap_update_bits(gck->regmap, AT91_PMC_PCR,
--			   AT91_PMC_PCR_GCKDIV_MASK | AT91_PMC_PCR_GCKCSS_MASK |
--			   AT91_PMC_PCR_CMD | AT91_PMC_PCR_GCKEN,
--			   AT91_PMC_PCR_GCKCSS(gck->parent_id) |
--			   AT91_PMC_PCR_CMD |
--			   AT91_PMC_PCR_GCKDIV(gck->gckdiv) |
-+	regmap_write(gck->regmap, gck->layout->offset,
-+		     (gck->id & gck->layout->pid_mask));
-+	regmap_update_bits(gck->regmap, gck->layout->offset,
-+			   AT91_PMC_PCR_GCKDIV_MASK | gck->layout->gckcss_mask |
-+			   gck->layout->cmd | AT91_PMC_PCR_GCKEN,
-+			   field_prep(gck->layout->gckcss_mask, gck->parent_id) |
-+			   gck->layout->cmd |
-+			   FIELD_PREP(AT91_PMC_PCR_GCKDIV_MASK, gck->gckdiv) |
- 			   AT91_PMC_PCR_GCKEN);
- 	spin_unlock_irqrestore(gck->lock, flags);
- 	return 0;
-@@ -66,11 +68,11 @@ static void clk_generated_disable(struct clk_hw *hw)
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(gck->lock, flags);
--	regmap_write(gck->regmap, AT91_PMC_PCR,
--		     (gck->id & AT91_PMC_PCR_PID_MASK));
--	regmap_update_bits(gck->regmap, AT91_PMC_PCR,
--			   AT91_PMC_PCR_CMD | AT91_PMC_PCR_GCKEN,
--			   AT91_PMC_PCR_CMD);
-+	regmap_write(gck->regmap, gck->layout->offset,
-+		     (gck->id & gck->layout->pid_mask));
-+	regmap_update_bits(gck->regmap, gck->layout->offset,
-+			   gck->layout->cmd | AT91_PMC_PCR_GCKEN,
-+			   gck->layout->cmd);
- 	spin_unlock_irqrestore(gck->lock, flags);
- }
- 
-@@ -81,9 +83,9 @@ static int clk_generated_is_enabled(struct clk_hw *hw)
- 	unsigned int status;
- 
- 	spin_lock_irqsave(gck->lock, flags);
--	regmap_write(gck->regmap, AT91_PMC_PCR,
--		     (gck->id & AT91_PMC_PCR_PID_MASK));
--	regmap_read(gck->regmap, AT91_PMC_PCR, &status);
-+	regmap_write(gck->regmap, gck->layout->offset,
-+		     (gck->id & gck->layout->pid_mask));
-+	regmap_read(gck->regmap, gck->layout->offset, &status);
- 	spin_unlock_irqrestore(gck->lock, flags);
- 
- 	return status & AT91_PMC_PCR_GCKEN ? 1 : 0;
-@@ -259,19 +261,18 @@ static void clk_generated_startup(struct clk_generated *gck)
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(gck->lock, flags);
--	regmap_write(gck->regmap, AT91_PMC_PCR,
--		     (gck->id & AT91_PMC_PCR_PID_MASK));
--	regmap_read(gck->regmap, AT91_PMC_PCR, &tmp);
-+	regmap_write(gck->regmap, gck->layout->offset,
-+		     (gck->id & gck->layout->pid_mask));
-+	regmap_read(gck->regmap, gck->layout->offset, &tmp);
- 	spin_unlock_irqrestore(gck->lock, flags);
- 
--	gck->parent_id = (tmp & AT91_PMC_PCR_GCKCSS_MASK)
--					>> AT91_PMC_PCR_GCKCSS_OFFSET;
--	gck->gckdiv = (tmp & AT91_PMC_PCR_GCKDIV_MASK)
--					>> AT91_PMC_PCR_GCKDIV_OFFSET;
-+	gck->parent_id = field_get(gck->layout->gckcss_mask, tmp);
-+	gck->gckdiv = FIELD_GET(AT91_PMC_PCR_GCKDIV_MASK, tmp);
- }
- 
- struct clk_hw * __init
- at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
-+			    const struct clk_pcr_layout *layout,
- 			    const char *name, const char **parent_names,
- 			    u8 num_parents, u8 id, bool pll_audio,
- 			    const struct clk_range *range)
-@@ -298,6 +299,7 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
- 	gck->lock = lock;
- 	gck->range = *range;
- 	gck->audio_pll_allowed = pll_audio;
-+	gck->layout = layout;
- 
- 	clk_generated_startup(gck);
- 	hw = &gck->hw;
-diff --git a/drivers/clk/at91/dt-compat.c b/drivers/clk/at91/dt-compat.c
-index aa09072f36db..aa1754eac59f 100644
---- a/drivers/clk/at91/dt-compat.c
-+++ b/drivers/clk/at91/dt-compat.c
-@@ -154,7 +154,8 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
- 		     id == GCK_ID_CLASSD))
- 			pll_audio = true;
- 
--		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock, name,
-+		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock,
-+						 &dt_pcr_layout, name,
- 						 parent_names, num_parents,
- 						 id, pll_audio, &range);
- 		if (IS_ERR(hw))
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/clk/at91_pmc.h>
++#include <linux/of.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
++
++#include "pmc.h"
++
++#define PMC_PLL_CTRL0	0xc
++#define		PMC_PLL_CTRL0_DIV_MSK		GENMASK(7, 0)
++#define		PMC_PLL_CTRL0_ENPLL		BIT(28)
++#define		PMC_PLL_CTRL0_ENPLLCK		BIT(29)
++#define		PMC_PLL_CTRL0_ENLOCK		BIT(31)
++
++#define PMC_PLL_CTRL1	0x10
++#define		PMC_PLL_CTRL1_FRACR_MSK		GENMASK(21, 0)
++#define		PMC_PLL_CTRL1_MUL_MSK		GENMASK(30, 24)
++
++#define PMC_PLL_ACR	0x18
++#define		PMC_PLL_ACR_DEFAULT		0x1b040010UL
++#define		PMC_PLL_ACR_UTMIVR		BIT(12)
++#define		PMC_PLL_ACR_UTMIBG		BIT(13)
++#define		PMC_PLL_ACR_LOOP_FILTER_MSK	GENMASK(31, 24)
++
++#define PMC_PLL_UPDT	0x1c
++#define		PMC_PLL_UPDT_UPDATE		BIT(8)
++
++#define PMC_PLL_ISR0	0xec
++
++#define PLL_DIV_MAX		(FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, UINT_MAX) + 1)
++#define UPLL_DIV		2
++#define PLL_MUL_MAX		(FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, UINT_MAX) + 1)
++
++#define PLL_MAX_ID		1
++
++struct sam9x60_pll {
++	struct clk_hw hw;
++	struct regmap *regmap;
++	spinlock_t *lock;
++	const struct clk_pll_characteristics *characteristics;
++	u32 frac;
++	u8 id;
++	u8 div;
++	u16 mul;
++};
++
++#define to_sam9x60_pll(hw) container_of(hw, struct sam9x60_pll, hw)
++
++static inline bool sam9x60_pll_ready(struct regmap *regmap, int id)
++{
++	unsigned int status;
++
++	regmap_read(regmap, PMC_PLL_ISR0, &status);
++
++	return !!(status & BIT(id));
++}
++
++static int sam9x60_pll_prepare(struct clk_hw *hw)
++{
++	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
++	struct regmap *regmap = pll->regmap;
++	unsigned long flags;
++	u8 div;
++	u16 mul;
++	u32 val;
++
++	spin_lock_irqsave(pll->lock, flags);
++	regmap_write(regmap, PMC_PLL_UPDT, pll->id);
++
++	regmap_read(regmap, PMC_PLL_CTRL0, &val);
++	div = FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, val);
++
++	regmap_read(regmap, PMC_PLL_CTRL1, &val);
++	mul = FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, val);
++
++	if (sam9x60_pll_ready(regmap, pll->id) &&
++	    (div == pll->div && mul == pll->mul)) {
++		spin_unlock_irqrestore(pll->lock, flags);
++		return 0;
++	}
++
++	/* Recommended value for PMC_PLL_ACR */
++	val = PMC_PLL_ACR_DEFAULT;
++	regmap_write(regmap, PMC_PLL_ACR, val);
++
++	regmap_write(regmap, PMC_PLL_CTRL1,
++		     FIELD_PREP(PMC_PLL_CTRL1_MUL_MSK, pll->mul));
++
++	if (pll->characteristics->upll) {
++		/* Enable the UTMI internal bandgap */
++		val |= PMC_PLL_ACR_UTMIBG;
++		regmap_write(regmap, PMC_PLL_ACR, val);
++
++		udelay(10);
++
++		/* Enable the UTMI internal regulator */
++		val |= PMC_PLL_ACR_UTMIVR;
++		regmap_write(regmap, PMC_PLL_ACR, val);
++
++		udelay(10);
++	}
++
++	regmap_update_bits(regmap, PMC_PLL_UPDT,
++			   PMC_PLL_UPDT_UPDATE, PMC_PLL_UPDT_UPDATE);
++
++	regmap_write(regmap, PMC_PLL_CTRL0,
++		     PMC_PLL_CTRL0_ENLOCK | PMC_PLL_CTRL0_ENPLL |
++		     PMC_PLL_CTRL0_ENPLLCK | pll->div);
++
++	regmap_update_bits(regmap, PMC_PLL_UPDT,
++			   PMC_PLL_UPDT_UPDATE, PMC_PLL_UPDT_UPDATE);
++
++	while (!sam9x60_pll_ready(regmap, pll->id))
++		cpu_relax();
++
++	spin_unlock_irqrestore(pll->lock, flags);
++
++	return 0;
++}
++
++static int sam9x60_pll_is_prepared(struct clk_hw *hw)
++{
++	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
++
++	return sam9x60_pll_ready(pll->regmap, pll->id);
++}
++
++static void sam9x60_pll_unprepare(struct clk_hw *hw)
++{
++	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
++	unsigned long flags;
++
++	spin_lock_irqsave(pll->lock, flags);
++
++	regmap_write(pll->regmap, PMC_PLL_UPDT, pll->id);
++
++	regmap_update_bits(pll->regmap, PMC_PLL_CTRL0,
++			   PMC_PLL_CTRL0_ENPLLCK, 0);
++
++	regmap_update_bits(pll->regmap, PMC_PLL_UPDT,
++			   PMC_PLL_UPDT_UPDATE, PMC_PLL_UPDT_UPDATE);
++
++	regmap_update_bits(pll->regmap, PMC_PLL_CTRL0, PMC_PLL_CTRL0_ENPLL, 0);
++
++	if (pll->characteristics->upll)
++		regmap_update_bits(pll->regmap, PMC_PLL_ACR,
++				   PMC_PLL_ACR_UTMIBG | PMC_PLL_ACR_UTMIVR, 0);
++
++	regmap_update_bits(pll->regmap, PMC_PLL_UPDT,
++			   PMC_PLL_UPDT_UPDATE, PMC_PLL_UPDT_UPDATE);
++
++	spin_unlock_irqrestore(pll->lock, flags);
++}
++
++static unsigned long sam9x60_pll_recalc_rate(struct clk_hw *hw,
++					     unsigned long parent_rate)
++{
++	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
++
++	return (parent_rate * (pll->mul + 1)) / (pll->div + 1);
++}
++
++static long sam9x60_pll_get_best_div_mul(struct sam9x60_pll *pll,
++					 unsigned long rate,
++					 unsigned long parent_rate,
++					 bool update)
++{
++	const struct clk_pll_characteristics *characteristics =
++							pll->characteristics;
++	unsigned long bestremainder = ULONG_MAX;
++	unsigned long maxdiv, mindiv, tmpdiv;
++	long bestrate = -ERANGE;
++	unsigned long bestdiv = 0;
++	unsigned long bestmul = 0;
++	unsigned long bestfrac = 0;
++
++	if (rate < characteristics->output[0].min ||
++	    rate > characteristics->output[0].max)
++		return -ERANGE;
++
++	if (!pll->characteristics->upll) {
++		mindiv = parent_rate / rate;
++		if (mindiv < 2)
++			mindiv = 2;
++
++		maxdiv = DIV_ROUND_UP(parent_rate * PLL_MUL_MAX, rate);
++		if (maxdiv > PLL_DIV_MAX)
++			maxdiv = PLL_DIV_MAX;
++	} else {
++		mindiv = maxdiv = UPLL_DIV;
++	}
++
++	for (tmpdiv = mindiv; tmpdiv <= maxdiv; tmpdiv++) {
++		unsigned long remainder;
++		unsigned long tmprate;
++		unsigned long tmpmul;
++		unsigned long tmpfrac = 0;
++
++		/*
++		 * Calculate the multiplier associated with the current
++		 * divider that provide the closest rate to the requested one.
++		 */
++		tmpmul = mult_frac(rate, tmpdiv, parent_rate);
++		tmprate = mult_frac(parent_rate, tmpmul, tmpdiv);
++		remainder = rate - tmprate;
++
++		if (remainder) {
++			tmpfrac = DIV_ROUND_CLOSEST_ULL((u64)remainder * tmpdiv * (1 << 22),
++							parent_rate);
++
++			tmprate += DIV_ROUND_CLOSEST_ULL((u64)tmpfrac * parent_rate,
++							 tmpdiv * (1 << 22));
++
++			if (tmprate > rate)
++				remainder = tmprate - rate;
++			else
++				remainder = rate - tmprate;
++		}
++
++		/*
++		 * Compare the remainder with the best remainder found until
++		 * now and elect a new best multiplier/divider pair if the
++		 * current remainder is smaller than the best one.
++		 */
++		if (remainder < bestremainder) {
++			bestremainder = remainder;
++			bestdiv = tmpdiv;
++			bestmul = tmpmul;
++			bestrate = tmprate;
++			bestfrac = tmpfrac;
++		}
++
++		/* We've found a perfect match!  */
++		if (!remainder)
++			break;
++	}
++
++	/* Check if bestrate is a valid output rate  */
++	if (bestrate < characteristics->output[0].min &&
++	    bestrate > characteristics->output[0].max)
++		return -ERANGE;
++
++	if (update) {
++		pll->div = bestdiv - 1;
++		pll->mul = bestmul - 1;
++		pll->frac = bestfrac;
++	}
++
++	return bestrate;
++}
++
++static long sam9x60_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++				   unsigned long *parent_rate)
++{
++	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
++
++	return sam9x60_pll_get_best_div_mul(pll, rate, *parent_rate, false);
++}
++
++static int sam9x60_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long parent_rate)
++{
++	struct sam9x60_pll *pll = to_sam9x60_pll(hw);
++
++	return sam9x60_pll_get_best_div_mul(pll, rate, parent_rate, true);
++}
++
++static const struct clk_ops pll_ops = {
++	.prepare = sam9x60_pll_prepare,
++	.unprepare = sam9x60_pll_unprepare,
++	.is_prepared = sam9x60_pll_is_prepared,
++	.recalc_rate = sam9x60_pll_recalc_rate,
++	.round_rate = sam9x60_pll_round_rate,
++	.set_rate = sam9x60_pll_set_rate,
++};
++
++struct clk_hw * __init
++sam9x60_clk_register_pll(struct regmap *regmap, spinlock_t *lock,
++			 const char *name, const char *parent_name, u8 id,
++			 const struct clk_pll_characteristics *characteristics)
++{
++	struct sam9x60_pll *pll;
++	struct clk_hw *hw;
++	struct clk_init_data init;
++	unsigned int pllr;
++	int ret;
++
++	if (id > PLL_MAX_ID)
++		return ERR_PTR(-EINVAL);
++
++	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
++	if (!pll)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &pll_ops;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++	init.flags = CLK_SET_RATE_GATE;
++
++	pll->id = id;
++	pll->hw.init = &init;
++	pll->characteristics = characteristics;
++	pll->regmap = regmap;
++	pll->lock = lock;
++
++	regmap_write(regmap, PMC_PLL_UPDT, id);
++	regmap_read(regmap, PMC_PLL_CTRL0, &pllr);
++	pll->div = FIELD_GET(PMC_PLL_CTRL0_DIV_MSK, pllr);
++	regmap_read(regmap, PMC_PLL_CTRL1, &pllr);
++	pll->mul = FIELD_GET(PMC_PLL_CTRL1_MUL_MSK, pllr);
++
++	hw = &pll->hw;
++	ret = clk_hw_register(NULL, hw);
++	if (ret) {
++		kfree(pll);
++		hw = ERR_PTR(ret);
++	}
++
++	return hw;
++}
++
 diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 616c04588093..4027306b904c 100644
+index 4a30c20f17f1..fb9e9c4cdc8d 100644
 --- a/drivers/clk/at91/pmc.h
 +++ b/drivers/clk/at91/pmc.h
-@@ -116,6 +116,7 @@ at91_clk_register_audio_pll_pmc(struct regmap *regmap, const char *name,
+@@ -69,6 +69,7 @@ struct clk_pll_characteristics {
+ 	struct clk_range *output;
+ 	u16 *icpll;
+ 	u8 *out;
++	u8 upll : 1;
+ };
  
+ struct clk_programmable_layout {
+@@ -169,6 +170,11 @@ struct clk_hw * __init
+ at91_clk_register_plldiv(struct regmap *regmap, const char *name,
+ 			 const char *parent_name);
+ 
++struct clk_hw * __init
++sam9x60_clk_register_pll(struct regmap *regmap, spinlock_t *lock,
++			 const char *name, const char *parent_name, u8 id,
++			 const struct clk_pll_characteristics *characteristics);
++
  struct clk_hw * __init
- at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
-+			    const struct clk_pcr_layout *layout,
- 			    const char *name, const char **parent_names,
- 			    u8 num_parents, u8 id, bool pll_audio,
- 			    const struct clk_range *range);
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index 9d128bd60fee..096156850e08 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -305,6 +305,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	parent_names[5] = "audiopll_pmcck";
- 	for (i = 0; i < ARRAY_SIZE(sama5d2_gck); i++) {
- 		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock,
-+						 &sama5d2_pcr_layout,
- 						 sama5d2_gck[i].n,
- 						 parent_names, 6,
- 						 sama5d2_gck[i].id,
-diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
-index b97b8dcbffe6..31f00ebf1315 100644
---- a/include/linux/clk/at91_pmc.h
-+++ b/include/linux/clk/at91_pmc.h
-@@ -187,13 +187,8 @@
- 
- #define AT91_PMC_PCR		0x10c			/* Peripheral Control Register [some SAM9 and SAMA5] */
- #define		AT91_PMC_PCR_PID_MASK		0x3f
--#define		AT91_PMC_PCR_GCKCSS_OFFSET	8
--#define		AT91_PMC_PCR_GCKCSS_MASK	(0x7  << AT91_PMC_PCR_GCKCSS_OFFSET)
--#define		AT91_PMC_PCR_GCKCSS(n)		((n)  << AT91_PMC_PCR_GCKCSS_OFFSET)	/* GCK Clock Source Selection */
- #define		AT91_PMC_PCR_CMD		(0x1  <<  12)				/* Command (read=0, write=1) */
--#define		AT91_PMC_PCR_GCKDIV_OFFSET	20
--#define		AT91_PMC_PCR_GCKDIV_MASK	(0xff  << AT91_PMC_PCR_GCKDIV_OFFSET)
--#define		AT91_PMC_PCR_GCKDIV(n)		((n)  << AT91_PMC_PCR_GCKDIV_OFFSET)	/* Generated Clock Divisor Value */
-+#define		AT91_PMC_PCR_GCKDIV_MASK	GENMASK(27, 20)
- #define		AT91_PMC_PCR_EN			(0x1  <<  28)				/* Enable */
- #define		AT91_PMC_PCR_GCKEN		(0x1  <<  29)				/* GCK Enable */
- 
+ at91_clk_register_programmable(struct regmap *regmap, const char *name,
+ 			       const char **parent_names, u8 num_parents, u8 id,
 -- 
 2.20.1
 
