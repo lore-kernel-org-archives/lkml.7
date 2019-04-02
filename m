@@ -2,186 +2,91 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04A6C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D47C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDAF0206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 21:56:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hBwOt1KY"
+	by mail.kernel.org (Postfix) with ESMTP id CAC4B2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfDBV4M (ORCPT
+        id S1726372AbfDBWBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 17:56:12 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:50843 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfDBV4K (ORCPT
+        Tue, 2 Apr 2019 18:01:16 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:59730 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfDBWBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 17:56:10 -0400
-Received: by mail-vk1-f201.google.com with SMTP id k78so7058038vkk.17
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 14:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=xAnLkZL1jyDU4wUU0qf3ZAhpM4BKPDzENsbu9cKQ3gk=;
-        b=hBwOt1KY/S2uIniM4uFql4vhJq1+I+SV0JwBPnd6cpnh5u70Q0egl+Pda6RtRrk4G9
-         XryZ14ijBJwA90CttJ9xqQr6MT9kqr4AEkbbh+8ZUJd2jF63Lv8fYLSIRyjaO1hFTaHe
-         qypGhs4EgIN1eTJKz/p/VN/BhNNnmpZk50RIDbb5H0nB+IHXMnULLix0LEuMkhkpJUzh
-         GoA0tqd6LYz52L1efoenVNY0J/7oyv2FpYrLzz9oQrdAnINEU8S4uowwVAoMDh/9tTLk
-         R5oWdSWJ83ZoR9Jz9MSFKG5Lo3ikcvUfQTS1yQlu1lsTwFAQWs764Z/15Hp1WYjPxPhr
-         RpLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=xAnLkZL1jyDU4wUU0qf3ZAhpM4BKPDzENsbu9cKQ3gk=;
-        b=tNnvugmFS/UjJ/bKTbop9kP1mizWahjlimwbR8Z/TCxylBQ4AZh+dkKPdj4Kn9aZNl
-         6iG2rpvFktrMwdJDlNqxVtxViRBpCOxaOJkWimCzUcK63G95mBJGYBR4usRdanI+akEg
-         IJKgPPRt6CwIxt1fOjxM52ARXuNJmWBSAKaJ7AdxxYlgV532lVbQ1eUPvP3Ekx6uk/uK
-         Ty2Afb6fd6gJ0UJP/4K+btfC7taLOA5g1Nw6qcobVqzYiJEwmD6n4zvJakhUoIIKciMT
-         HGVA4jZRV8Nj8Ap3T9oQIrqkE+T0Q2N43byGDy6ta+Cu5BPBZHXrDyBAfl8FonMdkfIZ
-         cD9w==
-X-Gm-Message-State: APjAAAUt5+bYTgn0cscy8CeTxhdPIEKqxN+1gxI2mjM2xpQulu9yzRg2
-        EmgkPKSm8vLJUixHbix4+1aR8yjdwq+7ZhIn6mEm5g==
-X-Google-Smtp-Source: APXvYqwrNJFsd5Ezw4ZaFEPU/r7zZ4SKNLVE1WTRINE8K7foX3ow2e4EGMGfbGf0SXKgkqqpmznTS0V0FljbkM8yyeWxKA==
-X-Received: by 2002:a67:e295:: with SMTP id g21mr8830432vsf.24.1554242168324;
- Tue, 02 Apr 2019 14:56:08 -0700 (PDT)
-Date:   Tue,  2 Apr 2019 14:55:56 -0700
-In-Reply-To: <20190402215556.257406-1-matthewgarrett@google.com>
-Message-Id: <20190402215556.257406-3-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <20190402215556.257406-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH 2/2] tpm: Fix builds on platforms that lack early_memremap()
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tweek@google.com,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Apr 2019 18:01:16 -0400
+Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1hBRSs-0000uC-PW; Tue, 02 Apr 2019 18:01:12 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Neil Horman <nhorman@tuxdriver.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] Fix xoring of arch_get_random_long into crng->state array
+Date:   Tue,  2 Apr 2019 18:00:25 -0400
+Message-Id: <20190402220025.14499-1-nhorman@tuxdriver.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On EFI systems, __calc_tpm2_event_size() needs to be able to map tables
-at early boot time in order to extract information from them.
-Unfortunately this interacts badly with other architectures that don't
-provide the early_memremap() interface but which may still have other
-mechanisms for obtaining crypto-agile logs. Abstract this away so we
-can avoid the need for two implementations while still avoiding breakage
-on architectures that don't require remapping of the table.
+When _crng_extract is called, any arch that has a registered
+arch_get_random_long method, attempts to mix an unsigned long value into
+the crng->state buffer, it only mixes in 32 of the 64 bits available,
+because the state buffer is an array of u32 values, even though 2 u32
+are expected to be filled (owing to the fact that it expects indexes 14
+and 15 to be filled).
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
+Bring the expected behavior into alignment by casting index 14 to an
+unsignled long pointer, and xoring that in instead.
+
+Tested successfully by myself
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Reported-by: Steve Grubb <sgrubb@redhat.com>
+CC: "Theodore Ts'o" <tytso@mit.edu>
+CC: Arnd Bergmann <arnd@arndb.de>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/firmware/efi/tpm.c   |  3 +++
- include/linux/tpm_eventlog.h | 32 ++++++++++++++++++++------------
- 2 files changed, 23 insertions(+), 12 deletions(-)
+ drivers/char/random.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index f2a13cbb8688..fe48150f06d1 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -4,6 +4,9 @@
-  *     Thiebaud Weksteen <tweek@google.com>
-  */
- 
-+#define TPM_MEMREMAP(start, size) early_memremap(start, size)
-+#define TPM_MEMUNMAP(start, size) early_memunmap(start, size)
-+
- #include <linux/efi.h>
- #include <linux/init.h>
- #include <linux/memblock.h>
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index d889e12047d9..0ca27bc053af 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -128,6 +128,14 @@ struct tcg_algorithm_info {
- 	struct tcg_algorithm_size digest_sizes[];
- };
- 
-+#ifndef TPM_MEMREMAP
-+#define TPM_MEMREMAP(start, size) NULL
-+#endif
-+
-+#ifndef TPM_MEMUNMAP
-+#define TPM_MEMUNMAP(start, size) do{} while(0)
-+#endif
-+
- /**
-  * __calc_tpm2_event_size - calculate the size of a TPM2 event log entry
-  * @event:        Pointer to the event whose size should be calculated
-@@ -171,8 +179,8 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	/* Map the event header */
- 	if (do_mapping) {
- 		mapping_size = marker - marker_start;
--		mapping = early_memremap((unsigned long)marker_start,
--					 mapping_size);
-+		mapping = TPM_MEMREMAP((unsigned long)marker_start,
-+				       mapping_size);
- 		if (!mapping) {
- 			size = 0;
- 			goto out;
-@@ -192,10 +200,10 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 
- 		/* Map the digest's algorithm identifier */
- 		if (do_mapping) {
--			early_memunmap(mapping, mapping_size);
-+			TPM_MEMUNMAP(mapping, mapping_size);
- 			mapping_size = marker - marker_start + halg_size;
--			mapping = early_memremap((unsigned long)marker_start,
--						 mapping_size);
-+			mapping = TPM_MEMREMAP((unsigned long)marker_start,
-+					       mapping_size);
- 			if (!mapping) {
- 				size = 0;
- 				goto out;
-@@ -212,10 +220,10 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 
- 				/* Map the digest content itself */
- 				if (do_mapping) {
--					early_memunmap(mapping, mapping_size);
-+					TPM_MEMUNMAP(mapping, mapping_size);
- 					mapping_size = marker - marker_start;
--					mapping = early_memremap((unsigned long)marker_start,
--						      mapping_size);
-+					mapping = TPM_MEMREMAP((unsigned long)marker_start,
-+							       mapping_size);
- 					if (!mapping) {
- 						size = 0;
- 						goto out;
-@@ -238,10 +246,10 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 	 * we don't need to map it
- 	 */
- 	if (do_mapping) {
--		early_memunmap(marker_start, mapping_size);
-+		TPM_MEMUNMAP(marker_start, mapping_size);
- 		mapping_size += sizeof(event_field->event_size);
--		mapping = early_memremap((unsigned long)marker_start,
--					 mapping_size);
-+		mapping = TPM_MEMREMAP((unsigned long)marker_start,
-+				       mapping_size);
- 		if (!mapping) {
- 			size = 0;
- 			goto out;
-@@ -256,7 +264,7 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
- 		size = 0;
- out:
- 	if (do_mapping)
--		early_memunmap(mapping, mapping_size);
-+		TPM_MEMUNMAP(mapping, mapping_size);
- 	return size;
- }
- 
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 38c6d1af6d1c..8178618458ac 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -975,14 +975,16 @@ static void _extract_crng(struct crng_state *crng,
+ 			  __u8 out[CHACHA_BLOCK_SIZE])
+ {
+ 	unsigned long v, flags;
+-
++	unsigned long *archrnd;
+ 	if (crng_ready() &&
+ 	    (time_after(crng_global_init_time, crng->init_time) ||
+ 	     time_after(jiffies, crng->init_time + CRNG_RESEED_INTERVAL)))
+ 		crng_reseed(crng, crng == &primary_crng ? &input_pool : NULL);
+ 	spin_lock_irqsave(&crng->lock, flags);
+-	if (arch_get_random_long(&v))
+-		crng->state[14] ^= v;
++	if (arch_get_random_long(&v)) {
++		archrnd = (unsigned long *)&crng->state[14];
++		*archrnd ^= v;
++	}
+ 	chacha20_block(&crng->state[0], out);
+ 	if (crng->state[12] == 0)
+ 		crng->state[13]++;
 -- 
-2.21.0.392.gf8f6787159e-goog
+2.20.1
 
