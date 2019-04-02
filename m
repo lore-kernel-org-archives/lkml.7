@@ -2,91 +2,124 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D47C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27711C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC4B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25DC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 22:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554242669;
+	bh=4PInamFNxl62bNmmGfz4cuypjGy82gHuDchempTYZXk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P6x18fFvpkFLAPGslGSHT/aZ57tauuOFFYpfvZy10AGSxG4LmtdHmgKwoTdWNtV2X
+	 wo+6BngZxK0Ga1U9A4G7lniquCMljmA7LR3wKdBadqUC2731Vj745pRCwfCFIyaGgA
+	 9ljuag0B163YBaopcPmteKaPZCYf2Y4+2ewZmoN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfDBWBQ (ORCPT
+        id S1726456AbfDBWE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 18:01:16 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:59730 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfDBWBQ (ORCPT
+        Tue, 2 Apr 2019 18:04:27 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:49832 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfDBWE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 18:01:16 -0400
-Received: from cpe-2606-a000-111b-405a-9816-2c85-c514-8f7a.dyn6.twc.com ([2606:a000:111b:405a:9816:2c85:c514:8f7a] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1hBRSs-0000uC-PW; Tue, 02 Apr 2019 18:01:12 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Neil Horman <nhorman@tuxdriver.com>,
-        Steve Grubb <sgrubb@redhat.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] Fix xoring of arch_get_random_long into crng->state array
-Date:   Tue,  2 Apr 2019 18:00:25 -0400
-Message-Id: <20190402220025.14499-1-nhorman@tuxdriver.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 2 Apr 2019 18:04:27 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id EB8B0C84;
+        Tue,  2 Apr 2019 22:04:25 +0000 (UTC)
+Date:   Tue, 2 Apr 2019 15:04:24 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Alan Tull <atull@kernel.org>, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] mm: change locked_vm's type from unsigned long to
+ atomic64_t
+Message-Id: <20190402150424.5cf64e19deeafa58fc6c1a9f@linux-foundation.org>
+In-Reply-To: <20190402204158.27582-2-daniel.m.jordan@oracle.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+        <20190402204158.27582-2-daniel.m.jordan@oracle.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When _crng_extract is called, any arch that has a registered
-arch_get_random_long method, attempts to mix an unsigned long value into
-the crng->state buffer, it only mixes in 32 of the 64 bits available,
-because the state buffer is an array of u32 values, even though 2 u32
-are expected to be filled (owing to the fact that it expects indexes 14
-and 15 to be filled).
+On Tue,  2 Apr 2019 16:41:53 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
 
-Bring the expected behavior into alignment by casting index 14 to an
-unsignled long pointer, and xoring that in instead.
+> Taking and dropping mmap_sem to modify a single counter, locked_vm, is
+> overkill when the counter could be synchronized separately.
+> 
+> Make mmap_sem a little less coarse by changing locked_vm to an atomic,
+> the 64-bit variety to avoid issues with overflow on 32-bit systems.
+> 
+> ...
+>
+> --- a/arch/powerpc/kvm/book3s_64_vio.c
+> +++ b/arch/powerpc/kvm/book3s_64_vio.c
+> @@ -59,32 +59,34 @@ static unsigned long kvmppc_stt_pages(unsigned long tce_pages)
+>  static long kvmppc_account_memlimit(unsigned long stt_pages, bool inc)
+>  {
+>  	long ret = 0;
+> +	s64 locked_vm;
+>  
+>  	if (!current || !current->mm)
+>  		return ret; /* process exited */
+>  
+>  	down_write(&current->mm->mmap_sem);
+>  
+> +	locked_vm = atomic64_read(&current->mm->locked_vm);
+>  	if (inc) {
+>  		unsigned long locked, lock_limit;
+>  
+> -		locked = current->mm->locked_vm + stt_pages;
+> +		locked = locked_vm + stt_pages;
+>  		lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+>  		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
+>  			ret = -ENOMEM;
+>  		else
+> -			current->mm->locked_vm += stt_pages;
+> +			atomic64_add(stt_pages, &current->mm->locked_vm);
+>  	} else {
+> -		if (WARN_ON_ONCE(stt_pages > current->mm->locked_vm))
+> -			stt_pages = current->mm->locked_vm;
+> +		if (WARN_ON_ONCE(stt_pages > locked_vm))
+> +			stt_pages = locked_vm;
+>  
+> -		current->mm->locked_vm -= stt_pages;
+> +		atomic64_sub(stt_pages, &current->mm->locked_vm);
+>  	}
 
-Tested successfully by myself
+With the current code, current->mm->locked_vm cannot go negative. 
+After the patch, it can go negative.  If someone else decreased
+current->mm->locked_vm between this function's atomic64_read() and
+atomic64_sub().
 
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-Reported-by: Steve Grubb <sgrubb@redhat.com>
-CC: "Theodore Ts'o" <tytso@mit.edu>
-CC: Arnd Bergmann <arnd@arndb.de>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/char/random.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+I guess this is a can't-happen in this case because the racing code
+which performed the modification would have taken it negative anyway.
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 38c6d1af6d1c..8178618458ac 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -975,14 +975,16 @@ static void _extract_crng(struct crng_state *crng,
- 			  __u8 out[CHACHA_BLOCK_SIZE])
- {
- 	unsigned long v, flags;
--
-+	unsigned long *archrnd;
- 	if (crng_ready() &&
- 	    (time_after(crng_global_init_time, crng->init_time) ||
- 	     time_after(jiffies, crng->init_time + CRNG_RESEED_INTERVAL)))
- 		crng_reseed(crng, crng == &primary_crng ? &input_pool : NULL);
- 	spin_lock_irqsave(&crng->lock, flags);
--	if (arch_get_random_long(&v))
--		crng->state[14] ^= v;
-+	if (arch_get_random_long(&v)) {
-+		archrnd = (unsigned long *)&crng->state[14];
-+		*archrnd ^= v;
-+	}
- 	chacha20_block(&crng->state[0], out);
- 	if (crng->state[12] == 0)
- 		crng->state[13]++;
--- 
-2.20.1
+But this all makes me rather queazy.
+
+
+Also, we didn't remove any down_write(mmap_sem)s from core code so I'm
+thinking that the benefit of removing a few mmap_sem-takings from a few
+obscure drivers (sorry ;)) is pretty small.
+
+
+Also, the argument for switching 32-bit arches to a 64-bit counter was
+suspiciously vague.  What overflow issues?  Or are we just being lazy?
 
