@@ -2,252 +2,127 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA9FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9263DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC082084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F42420857
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ysZs7YtL"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="dA8jCy2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfDBEC3 (ORCPT
+        id S1726680AbfDBEEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:02:29 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36271 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfDBEC1 (ORCPT
+        Tue, 2 Apr 2019 00:04:31 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:18462 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfDBEEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:02:27 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d18so7883162lfn.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 21:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mEnHlHFgv3rjZawr7892Gum2foH9J2y5ehxHGPunKSw=;
-        b=ysZs7YtLDdKwYHgIMULdyPRkVk1vdmqOZE3l0b8crM1DpxzBCvGZx0MdWa7H1Hnz5X
-         0grpbl5LT6wHBSs/Yk/uIEgpXH2/t8qAPmuf8fDLVqILRiVr1i7xDt+AyPNioH4vOkEF
-         HOOAkAdJnZWKdsv5daleqF+HKwyhSk9mqf8MlSbU4mPwwDtnlP7M0wURsqFABgpeQV7H
-         GGYkeVfZva9e0a9bFaeRxpKi8xoyluObf8KUl7uJviu874kaOJzGXMyKe1dH8Z6ShUBe
-         yBDkATvJqkXRCNbC43QA66oxFMTlf9uvFlV78jKASVWmM53Ct499+U8ZlOVhXVPVhbG0
-         pJUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mEnHlHFgv3rjZawr7892Gum2foH9J2y5ehxHGPunKSw=;
-        b=lJ4gtFpvtJYlu7FSmc0BlJbVTmNko0Rml3E0+EFhbEFGDBfaUJ8njrduUJoKn6Ew3X
-         RInWaISOhI7/RprX3MdAT+JHLwggj6uJga0QVxDrhRVg4tZSIaT2FgYWjWAckJke/QMb
-         JLnZrozK5AXZPcFSOP+LWMojlS+aNY97T5/TnB0F8WrsjrqEa95KmEPzXsWGUEINjIDy
-         QNibVlp0nFRhi9KGUtBDl9renY1n+BgGpdIZsxjC5Rckz24RvPZfXosNhzZdqAbGU7ht
-         MuNcI/WVOFWjRqOJZmIeeOe8iAuf4+d9nPlM9fFKoc7aeBVan6RqvZGIIV1+6ZzIhFH5
-         ziWQ==
-X-Gm-Message-State: APjAAAUfWO6VPiKa8gnOokug8ffYVpaMAmrREl6L+0rcLwbYUX5q2/Qa
-        xUYKPT8nSmDi08VM73KGR3Whwndcm1XyeBMPajF5fQ==
-X-Google-Smtp-Source: APXvYqyUnB+fS0V9xSsn/y9S8tEb93Xe13NUHTx1WdFbcbkomDJt31e3HG35QoMMhhXByzBFAReLIyH7jAwwNWl3TSQ=
-X-Received: by 2002:ac2:485a:: with SMTP id 26mr34098628lfy.128.1554177744601;
- Mon, 01 Apr 2019 21:02:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <7509BFB6-36E4-441A-9F16-7A4FEE7F7CF3@goldelico.com>
- <5488EF42-08DB-4273-95FF-49ED31E27472@goldelico.com> <CACRpkdb4URKcdZ-=3aG_np86Bp=1ahs+qztM-7yQkSP18ZkE6A@mail.gmail.com>
- <2286C331-4AFC-46A9-B8C4-8A8BA9CD33C2@goldelico.com>
-In-Reply-To: <2286C331-4AFC-46A9-B8C4-8A8BA9CD33C2@goldelico.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 2 Apr 2019 11:02:12 +0700
-Message-ID: <CACRpkda4k_Vaoo1qEaZ3nv8bA4tcrPEN6oT-v+n9HRdA6=5Xvg@mail.gmail.com>
-Subject: Re: [BUG] gpiolib: spi chip select legacy support breaks modern chip
- select and whitens the GTA04 LCD panel
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Kumar Gala <galak@codeaurora.org>,
-        Wolfgang Ocker <weo@reccoware.de>
-Cc:     Jan Kotas <jank@cadence.com>, LKML <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 2 Apr 2019 00:04:31 -0400
+Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x3243Hab021871;
+        Tue, 2 Apr 2019 13:03:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3243Hab021871
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554177807;
+        bh=980FdvUomFNwVGg8bn0Nn0Bzbo9qhxxbdHbHtPN2Q0I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dA8jCy2YPFzHxOwZ/7ESGIRn1rQ/xdG3j2V8+/X3yfXZGxWtBrgjYRpNID9LREdPL
+         mcTfJzqzY7MJwNDZEcJ+lAoBIwGrFSESjIeTnFB9E0N0negwEbFHqXY9mjpSTcQcfD
+         VPNCtft9gVeyuEUgH5DNoU3mcvXogF0WB0/PDxiyzQyx+YVTCS62WnVPAvmkKzOuo/
+         LpRVTj30ZDR5pfHx6wZKPPcg0QO1aMSOhMgd4O+bLKwyX0RBHvAOuCOjrm5NR/4x+m
+         JhnWezias5Cdk+BkljMsnPgubEohKJrcEoobIvB7V8QFjnp6JULIB3Ypc/gQKbuTxG
+         pwgtfd/jn+rEw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mtd@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: [PATCH v5 8/9] mtd: rawnand: denali: remove DENALI_NR_BANKS macro
+Date:   Tue,  2 Apr 2019 13:03:08 +0900
+Message-Id: <1554177789-15414-9-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554177789-15414-1-git-send-email-yamada.masahiro@socionext.com>
+References: <1554177789-15414-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(CC Kumar and Wolfgang who came up with spi-active-low, I think.)
+Use the runtime-detected denali->nbanks instead of hard-coded
+DENALI_NR_BANKS (=4).
 
-On Sun, Mar 24, 2019 at 1:56 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> > Am 24.03.2019 um 05:15 schrieb Linus Walleij <linus.walleij@linaro.org>:
+The actual number of banks depends on the IP configuration, and
+can be less than DENALI_NR_BANKS. It is pointless to touch
+registers of unsupported banks.
 
-> > But I fixed it in that case by introducing a spi-cs-high into the DTS file:
-> > https://marc.info/?l=linux-arm-kernel&m=155292310015309&w=2
->
-> Yes, that of course works and is our temporary solution.
->
-> And I see that you also have it on the controller node and not the slave node.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Yes I git it wrong, the slave should have it and another bug of mine
-made it look at the controller not (some days I should not write
-code in paths that do not get executed).
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-> > I'm sorry about that, however if you look at the DT binding document:
-> > Documentation/devicetree/bindings/spi/spi-bus.txt
->
-> Shouldn't it be a property of the slave node and not the controller node?
+ drivers/mtd/nand/raw/denali.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Indeed.
+diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
+index 8722762..e918c3d 100644
+--- a/drivers/mtd/nand/raw/denali.c
++++ b/drivers/mtd/nand/raw/denali.c
+@@ -40,7 +40,6 @@
+ #define DENALI_BANK(denali)	((denali)->active_bank << 24)
+ 
+ #define DENALI_INVALID_BANK	-1
+-#define DENALI_NR_BANKS		4
+ 
+ static struct denali_chip *to_denali_chip(struct nand_chip *chip)
+ {
+@@ -92,7 +91,7 @@ static void denali_enable_irq(struct denali_controller *denali)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < DENALI_NR_BANKS; i++)
++	for (i = 0; i < denali->nbanks; i++)
+ 		iowrite32(U32_MAX, denali->reg + INTR_EN(i));
+ 	iowrite32(GLOBAL_INT_EN_FLAG, denali->reg + GLOBAL_INT_ENABLE);
+ }
+@@ -101,7 +100,7 @@ static void denali_disable_irq(struct denali_controller *denali)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < DENALI_NR_BANKS; i++)
++	for (i = 0; i < denali->nbanks; i++)
+ 		iowrite32(0, denali->reg + INTR_EN(i));
+ 	iowrite32(0, denali->reg + GLOBAL_INT_ENABLE);
+ }
+@@ -117,7 +116,7 @@ static void denali_clear_irq_all(struct denali_controller *denali)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < DENALI_NR_BANKS; i++)
++	for (i = 0; i < denali->nbanks; i++)
+ 		denali_clear_irq(denali, i, U32_MAX);
+ }
+ 
+@@ -130,7 +129,7 @@ static irqreturn_t denali_isr(int irq, void *dev_id)
+ 
+ 	spin_lock(&denali->irq_lock);
+ 
+-	for (i = 0; i < DENALI_NR_BANKS; i++) {
++	for (i = 0; i < denali->nbanks; i++) {
+ 		irq_status = ioread32(denali->reg + INTR_STATUS(i));
+ 		if (irq_status)
+ 			ret = IRQ_HANDLED;
+-- 
+2.7.4
 
-> > You will see that spi-cs-high is mandatory. So these DTS files are
-> > incorrect.
->
-> How do you read that it is mandatory from
->
-> "All slave nodes can contain the following optional properties:
-> - spi-cs-high     - Empty property indicating device requires chip select
->                     active high."
->
-> I read it as optional and indicative. Equal priority to cs-gpios.
-
-The basic problem is that spi-cs-high is defined negatively,
-so by default a CS GPIO is active low. This clashes with the
-default GPIO flag, as GPIO_ACTIVE_HIGH is zero, no flag,
-and thus the default if nothing is specified, so if the GPIO flag is
-zero it should be active high, but if "spi-active-high" is not on the
-slave node it should be active low, so one of them have
-to win, they can't both win.
-
-I'd say that spi-cs-high existed before we standardized the GPIO
-flags in the DT bindings. So people were relying on it for years before
-we came up with the ACTIVE_HIGH/LOW flags.
-
-commit f618ebfcbf9616a0fa9a78f5ecb69762f0fa3c59
-Author: Wolfgang Ocker <weo@reccoware.de>
-Date:   Wed Oct 15 15:00:47 2008 +0200
-
-    of/spi: Support specifying chip select as active high via device tree
-
-    The patch allows to specify that an SPI device needs an active high chip
-    select.
-
-    Signed-off-by: Wolfgang Ocker <weo@reccoware.de>
-    Signed-off-by: Kumar Gala <galak@kernel.crashing.org>
-
-While the GPIO binding turns up 5 years later:
-
-commit 71fab21fee07fd6d5f1a984db387cc5e4596f3fa
-Author: Stephen Warren <swarren@nvidia.com>
-Date:   Tue Feb 12 17:22:36 2013 -0700
-
-    ARM: dt: add header to define GPIO flags
-
-    Many GPIO device tree bindings use the same flags. Create a header to
-    define those.
-
-    Signed-off-by: Stephen Warren <swarren@nvidia.com>
-    Acked-by: Rob Herring <rob.herring@calxeda.com>
-
-And then this guy think it is a good idea to standardize this for
-all GPIO phandles two years later:
-
-commit 69d301fdd19635a39cb2b78e53fdd625b7a27924
-Author: Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu Sep 24 15:05:45 2015 -0700
-
-    gpio: add DT bindings for existing consumer flags
-
-    It is customary for GPIO controllers to support open drain/collector
-    and open source/emitter configurations. Add standard GPIO line flags
-    to account for this and augment the documentation to say that these
-    are the most generic bindings.
-
-    Several people approached me to add new flags to the lines, and this
-    makes sense, but let's first bind up the most common cases before we
-    start to add exotic stuff.
-
-    Thanks to H. Nikolaus Schaller for ideas on how to encode single-ended
-    wiring such as open drain/source and open collector/emitter.
-
-    Cc: Tony Lindgren <tony@atomide.com>
-    Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-    Cc: H. Nikolaus Schaller <hns@goldelico.com>
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
-> > This does not work because there are devices that requires spi-cs-high to be
-> > respected and the DTS second cell GPIO flag to be ignored.
->
-> Then, those should be fixed...
-
-This can't be done because some old systems (mostly powerpc)
-added between 2008-2013 do not know about GPIO flags and
-have DTBs deployed in firmware that need to keep working.
-They cannot be fixed.
-
-> > They might have deployed DTB binaries that need to keep working,
->
-> Well, that is a weak argument. What if the GTA04 would have the DTB in FLASH
-> and would need it working (fortunately we always reflash kernel + dtbs)?
-
-Usually the definition I use for "deployed DTB" is not
-"deployed on my desk" but "deployed by a factory" i.e. someone
-producing millions of TV sets or something. For example my monitor
-is using a PowerPC CPU and has one of these DTBs in flash,
-and expect it to keep working if I upgrade the kernel separately.
-
-> BTW, on which node do these invariable DTBs have the spi-cs-high flag?
-> In the controller node (IMHO wrong) or the slave node (according to bindings doc)?
-
-Slave node I hope, the controller thing was just one of my stupid
-mistakes.
-
-> I have checked with randomly picked imx51-babbage.dts and it has it in the
-> slave node (pmic: mc13892@0). It also seems to be an example where different
-> CS lines want different settings.
-
-I'm afraid the consumers of the old powerpc DTS files are not even
-maintained inside the Linux kernel, as we sometimes assume. Those
-were created and dispersed by vendors at a time when it was assumed
-it was OK to maintain your DTS files somewhere out there on the
-side (some people still hold this opinion, I don't).
-
-> > I think in this case the oldest binding wins.
->
-> Ok, it is the question when such deprecated things are really removed.
-> There is no clear answer...
-
-I think the DT bindings people would say never. They are deprecated
-but they can never stop working. I guess in theory you could try to
-figure out when the last piece of equipment using the old binding and
-ever wanting a FW update stops working. That seems hard, but I don't
-know much about these powerpc systems.
-
-That is the reason why I try to contain these weirdness things inside
-gpiolib-of.c rather than out amongst the different subsystems, so I can
-have it under control.
-
-> > I think you simply have to patch these GTA04 DTS files to use
-> > spi-cs-high.
->
-> Ugly... Well, if DTS maintainers accept that?
-
-I suppose.
-
-> What about a CONFIG to explicitly enable/disable this legacy support?
->
-> IMHO it will need to be enabled for les than 1% of the kernel builds and
-> therefore also keeps the zImage smaller for all others. And avoids DTB
-> changes where the gpio flags are already correct.
-
-Dunno about this, it looks fragile, I would prefer to keep all working.
-But I will listen to reason.
-
-I have thought about using of_machine_is_compatible("vendor,foo")
-in gpiolib-of.h to whitelist some systems that will just use the
-new way, or reversely blacklist some old systems that have to use the
-old syntax. What do you think about this?
-
-Yours,
-Linus Walleij
