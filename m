@@ -2,112 +2,118 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A890C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB44C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A9320840
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:26:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SLPfjtRv"
+	by mail.kernel.org (Postfix) with ESMTP id E5B0520840
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfDBG0I (ORCPT
+        id S1728933AbfDBG0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 02:26:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34345 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDBG0I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 02:26:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v12so6028638pgq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 23:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=WP8Ny4UZUhZTpeEy7aNPAFetaj06ClqEV6SediKdXdk=;
-        b=SLPfjtRvQ1ShDqw9Km8Egk++VeXGZJ5KYOiQDfAKcNbl4y4o4fxH0DdTqLS8BLcHna
-         2LnBAZTp7feV43JrdJdkFUTM0FF+SPN/qG/vQoEm59d7au4Rsj998ECQJlRqz0NMa9O4
-         LgfHkGHcGMXNO0cWmR1nt9QvrImaa8devqRa9GNlP9CWh/5G3B3/IGE+RgLEwG1zrRI6
-         3kyAebNWWgGaL+aFjMrLL/bQ31RwtjqwiqP6RHivtMql7ggUoKpFoB/egjitpn7mkpfK
-         /EYbLgmpDOaZQvYpY3N9vAhwT1fo5v9TJtZyGSO3qGUXT67P0av88L/CvS94w2Ze6HOe
-         58Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=WP8Ny4UZUhZTpeEy7aNPAFetaj06ClqEV6SediKdXdk=;
-        b=nZp2m+/xn5P3A4yh8y9TekOvp0nk3pQ2d5OwbQQAYvanmmYw/R8EOj8ZaAVqS07q9y
-         X6+ggdvBsJ43luFI+FrjUR5KVd+wta2UcqeYm4rIc4ZAg+Vrmc9/jrMsmYoMs2+Phv9z
-         NHpkaRbq3BFUB/Z79oWmwS0xvjokdzoLwkcA/TnHUs9MHaQ5BQCi5b9OmvjM84JZbtlh
-         TZV2QIbBw2hg0XsYMSZ7lMk48BdWN4SaInDCA6rrUqCyGmgfhkOPY0Z0j9ffOZO6JAUv
-         A2oRv98dMMRXQ6j8guJanHpbDbXLXd9s1bjuZwVJj9ddGYXoF83eGaZLfBzDwfpL8Q73
-         586Q==
-X-Gm-Message-State: APjAAAXxcLV8Ssh3xVXb2iwgb4686IEtJscLEKPQ8Dfdhll90eVkMRBz
-        z2OrbbmStwogQtvCXayqK7lBF+K4XE6CTQ==
-X-Google-Smtp-Source: APXvYqwZRFTg82E4osqz8bKv39xsW7jKYwcOMOKKwNUiSpQcFhHq20JWByMcp+r1JhC2ETzOB5qUUg==
-X-Received: by 2002:aa7:814e:: with SMTP id d14mr43414090pfn.101.1554186367781;
-        Mon, 01 Apr 2019 23:26:07 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id x16sm14251517pge.27.2019.04.01.23.26.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 23:26:06 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 07:26:01 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Morris Ku <saumah@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, morris_ku@sunix.com
-Subject: Re: [PATCH 4/4] Add support for SUNIX Multi-I/O board
-Message-ID: <20190402062601.GX4187@dell>
-References: <20190319120835.3840-1-saumah@gmail.com>
+        Tue, 2 Apr 2019 02:26:12 -0400
+Received: from mx.socionext.com ([202.248.49.38]:39671 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbfDBG0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 02:26:10 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 02 Apr 2019 15:26:08 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 6356F6117D;
+        Tue,  2 Apr 2019 15:26:08 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 2 Apr 2019 15:26:08 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 0F6C41A04E0;
+        Tue,  2 Apr 2019 15:26:08 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.234.213])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id D340C120487;
+        Tue,  2 Apr 2019 15:26:07 +0900 (JST)
+Cc:     kanematsu.shinji@socionext.com, jic23@kernel.org,
+        mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org,
+        orito.takao@socionext.com, sugaya.taichi@socionext.com,
+        kasai.kazuhiro@socionext.com
+Subject: Re: [PATCH 1/2] dt-bindings: iio: counter: Add Milbeaut Updown
+ Counter
+To:     Rob Herring <robh@kernel.org>
+References: <1553581989-13525-1-git-send-email-kanematsu.shinji@socionext.com>
+ <20190331015228.GA27625@bogus>
+From:   =?UTF-8?B?S2FuZW1hdHN1LCBTaGluamkv5YW85p2+IOS8uOasoQ==?= 
+        <kanematsu.shinji@socionext.com>
+Message-ID: <976d5e2a-4bb8-3314-453b-921d06ba8ec6@socionext.com>
+Date:   Tue, 2 Apr 2019 15:26:07 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190319120835.3840-1-saumah@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190331015228.GA27625@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Mar 2019, Morris Ku wrote:
+Hi Rob,
 
-> Driver for SUNIX Multi-I/O card.Based on parport_pc.c, ppdev.c
-> and lp.c by Linus Torvalds, Theodore Ts'o.
+Thank you for your review.
 
-Parallel port drivers should live in 'drivers/parport' and
-'drivers/char'.  LP drivers should live in 'drivers/char'.
+On 2019/03/31 15:42, Rob Herring wrote:
+> On Tue, Mar 26, 2019 at 03:33:09PM +0900, Shinji Kanematsu wrote:
+>> Add documentation for Milbeaut Updown Counter device
+>> quadrature encoder and counter binding.
+>>
+>> Signed-off-by: Shinji Kanematsu <kanematsu.shinji@socionext.com>
+>> ---
+>>   .../bindings/iio/counter/milbeaut-updown_cnt.txt   | 22 ++++++++++++++++++++++
+>>   1 file changed, 22 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
+>> new file mode 100644
+>> index 0000000..6771567
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/counter/milbeaut-updown_cnt.txt
+>> @@ -0,0 +1,22 @@
+>> +SOCIONEXT Milbeaut Updown counter
+>> +
+>> +Required properties:
+>> +- compatible:       Must be "socionext,milbeaut-updown-counter".
+>> +- reg:              Offset and length of the device's register set.
+>> +- clocks:           Phandle to the clock used by the Updown counter module.
+>> +- clock-names:      Must be "mux".
+>> +- interrupts:       SPI number of the device's set.
+>> +- cms_type:         connected_device
+>> +                     1: updown button  (updown counter mode)
+>> +                     2: rotary encoder (phase difference counter mode)
+> 
+> We should have a common property for describing what's attached.
+> IIRC, just had a similar binding recently.
+> 
 
-Please them there.
+OK, I search the similar binding.
 
-> Signed-off-by: Morris Ku <saumah@gmail.com>
-> ---
->  mfd/sunix/snx_ieee1284.c     | 144 +++++++
->  mfd/sunix/snx_ieee1284_ops.c | 258 +++++++++++++
->  mfd/sunix/snx_lp.c           | 717 +++++++++++++++++++++++++++++++++++
->  mfd/sunix/snx_lp.h           | 119 ++++++
->  mfd/sunix/snx_parallel.c     | 397 +++++++++++++++++++
->  mfd/sunix/snx_ppdev.c        | 454 ++++++++++++++++++++++
->  mfd/sunix/snx_ppdev.h        |  15 +
->  mfd/sunix/snx_share.c        | 629 ++++++++++++++++++++++++++++++
->  8 files changed, 2733 insertions(+)
->  create mode 100644 mfd/sunix/snx_ieee1284.c
->  create mode 100644 mfd/sunix/snx_ieee1284_ops.c
->  create mode 100644 mfd/sunix/snx_lp.c
->  create mode 100644 mfd/sunix/snx_lp.h
->  create mode 100644 mfd/sunix/snx_parallel.c
->  create mode 100644 mfd/sunix/snx_ppdev.c
->  create mode 100644 mfd/sunix/snx_ppdev.h
->  create mode 100644 mfd/sunix/snx_share.c
+Thank you,
+Kanematsu
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>> +
+>> +Example:
+>> +
+>> +	updown0: updown@1e002000 {
+>> +		compatible = "socionext,milbeaut-updown-counter";
+>> +		reg = <0x1e002000 0x20>;
+>> +		clocks = <&clk 4>;
+>> +		clock-names = "mux";
+>> +		interrupts = <0 104 0x4>;
+>> +		cms_type = <1>;
+>> +	};
+>> -- 
+>> 1.9.1
+>>
+> 
+
