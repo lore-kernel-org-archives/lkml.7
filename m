@@ -2,126 +2,104 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E7BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274AE217D4
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554206506;
-	bh=OmkwyPoQeje3hm7RMlllAZzDVtxLJQq6KbHMB9kzzlw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rv97QMyd1QP6Bco+qCX4LQqWsQUoiEFyxcJ7vtSDw+ds3VCAnhK2VBdpARS62arsh
-	 VoOzA7HCODZvQsPT5fWeBKXqbUAfpWK5l/WRmZTJ3ZAtiGfswFJz4lmOmiHvU0Oarz
-	 9Uyd9kCHR5oW94JtP8uI+hoKMsyxXctCnhEefgvk=
+	by mail.kernel.org (Postfix) with ESMTP id CE62420883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:02:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbfDBMBo (ORCPT
+        id S1730826AbfDBMCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:01:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 08:02:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36634 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729605AbfDBMBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:01:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726903AbfDBMCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 08:02:51 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACFED20883;
-        Tue,  2 Apr 2019 12:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554206503;
-        bh=OmkwyPoQeje3hm7RMlllAZzDVtxLJQq6KbHMB9kzzlw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CL4UMNAdM8IBzC0/X2CfoGZI8nENKj+KbmmWt6ROYvTIwqTkPk54sQFe0T7uwb+sM
-         UXlpgx9/FOjvqgtDB1QBBbBYiQAe7ZhoBvyXo8xbq+mkJc44MDEAyeySe4VfTY1BX5
-         oJATFMCwbMiBgp6lZw0ADhjFt+NFNsp6alrGMAKc=
-Date:   Tue, 2 Apr 2019 14:01:40 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Omer Shpigelman <oshpigelman@habana.ai>
-Subject: Re: [PATCH 1/2] habanalabs: add new IOCTL for debug, tracing and
- profiling
-Message-ID: <20190402120140.GB24119@kroah.com>
-References: <20190402113539.23838-1-oded.gabbay@gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 6904120276;
+        Tue,  2 Apr 2019 12:02:46 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-45.pek2.redhat.com [10.72.12.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E1D3F848D9;
+        Tue,  2 Apr 2019 12:02:08 +0000 (UTC)
+Subject: Re: [PATCH 1/2 RESEND v10] x86/mm, resource: add a new I/O resource
+ descriptor 'IORES_DESC_RESERVED'
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
+        Thomas.Lendacky@amd.com
+References: <20190329123914.20939-1-lijiang@redhat.com>
+ <20190329123914.20939-2-lijiang@redhat.com> <20190402090652.GD6826@zn.tnic>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <c94f887e-2ac8-49c6-e02c-92453e1ad894@redhat.com>
+Date:   Tue, 2 Apr 2019 20:02:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402113539.23838-1-oded.gabbay@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190402090652.GD6826@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 02 Apr 2019 12:02:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 02:35:38PM +0300, Oded Gabbay wrote:
-> From: Omer Shpigelman <oshpigelman@habana.ai>
+在 2019年04月02日 17:06, Borislav Petkov 写道:
+> On Fri, Mar 29, 2019 at 08:39:13PM +0800, Lianbo Jiang wrote:
+>> -static int __ioremap_check_desc_other(struct resource *res)
+>> +/*
+>> + * Originally, these areas described as IORES_DESC_NONE are not mapped
+>> + * as encrypted when using ioremap(), for example, E820_TYPE_{RESERVED,
+>> + * RESERVED_KERN,RAM,UNUSABLE}, etc. It checks for a resource that is
+>> + * not described as IORES_DESC_NONE, which can make sure the reserved
+>> + * areas are not mapped as encrypted when using ioremap().
+>> + *
+>> + * Now IORES_DESC_RESERVED has been created for the reserved areas so
+>> + * the check needs to be expanded so that these areas are not mapped
+>> + * encrypted when using ioremap().
+>> + */
+>> +static int __ioremap_check_desc_none_and_reserved(struct resource *res)
+>>  {
+>> -	return (res->desc != IORES_DESC_NONE);
+>> +	return ((res->desc != IORES_DESC_NONE) &&
 > 
-> Habanalabs ASICs use the ARM coresight infrastructure to support debug,
-> tracing and profiling of neural networks topologies.
+> Why is this still checking IORES_DESC_NONE when the idea is to have this
+> specific IORES_DESC_RESERVED for all marked as *reserved* regions in
+> e820 which should not be mapped encrypted?
 > 
-> Because the coresight is configured using register writes and reads, and
-> some of the registers hold sensitive information (e.g. the address in
-> the device's DRAM where the trace data is written to), the user must go
-> through the kernel driver to configure this mechanism.
+> IOW, which regions are still marked as IORES_DESC_NONE and should not be
+> mapped encrypted?
 > 
-> This patch implements the common code of the IOCTL and calls the
-> ASIC-specific function for the actual H/W configuration.
-> 
-> The IOCTL supports configuration of seven coresight components:
-> ETR, ETF, STM, FUNNEL, BMON, SPMU and TIMESTAMP
-> 
-> The user specifies which component he wishes to configure and provides a
-> pointer to a structure (located in its process space) that contains the
-> relevant configuration.
-> 
-> The common code copies the relevant data from the user-space to kernel
-> space and then calls the ASIC-specific function to do the H/W
-> configuration.
-> 
-> After the configuration is done, which is usually composed
-> of several IOCTL calls depending on what the user wanted to trace, the
-> user can start executing the topology. The trace data will be written to
-> the user's area in the device's DRAM.
-> 
-> After the tracing operation is complete, and user will call the IOCTL
-> again to disable the tracing operation. The user also need to read
-> values from registers for some of the components (e.g. the size of the
-> trace data in the device's DRAM). In that case, the user will provide a
-> pointer to an "output" structure in user-space, which the IOCTL code will
-> fill according the to selected component.
-> 
-> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-> ---
->  drivers/misc/habanalabs/device.c              |   2 +-
->  drivers/misc/habanalabs/goya/Makefile         |   3 +-
->  drivers/misc/habanalabs/goya/goya.c           |   1 +
->  drivers/misc/habanalabs/goya/goyaP.h          |   1 +
->  drivers/misc/habanalabs/goya/goya_coresight.c |  13 ++
->  drivers/misc/habanalabs/habanalabs.h          |  25 ++++
->  drivers/misc/habanalabs/habanalabs_ioctl.c    | 123 +++++++++++++++++-
->  include/uapi/misc/habanalabs.h                | 116 ++++++++++++++++-
->  8 files changed, 280 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/misc/habanalabs/goya/goya_coresight.c
-> 
-> diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-> index e3797f582436..6cbfd560721e 100644
-> --- a/drivers/misc/habanalabs/device.c
-> +++ b/drivers/misc/habanalabs/device.c
-> @@ -1044,7 +1044,7 @@ void hl_device_fini(struct hl_device *hdev)
->  			WARN(1, "Failed to remove device because reset function did not finish\n");
->  			return;
->  		}
-> -	};
-> +	}
->  
->  	/* Mark device as disabled */
->  	hdev->disabled = true;
+Thanks for your comment.
 
-This change isn't part of this new feature :(
+These regions(E820_TYPE_{RESERVED_KERN,RAM,UNUSABLE}) are still marked as
+IORES_DESC_NONE and should not be mapped encrypted when using ioremap().
+Please refer to the following function.
 
+static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+{
+        switch (entry->type) {
+        case E820_TYPE_ACPI:            return IORES_DESC_ACPI_TABLES;
+        case E820_TYPE_NVS:             return IORES_DESC_ACPI_NV_STORAGE;
+        case E820_TYPE_PMEM:            return IORES_DESC_PERSISTENT_MEMORY;
+        case E820_TYPE_PRAM:            return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
+	case E820_TYPE_RESERVED:        return IORES_DESC_RESERVED;
+        case E820_TYPE_RESERVED_KERN:   /* Fall-through: */
+        case E820_TYPE_RAM:             /* Fall-through: */
+        case E820_TYPE_UNUSABLE:        /* Fall-through: */
+        default:                        return IORES_DESC_NONE;
+        }
+}
+
+
+Thanks.
+Lianbo
