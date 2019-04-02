@@ -6,88 +6,88 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEB3C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D2C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEDD2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB00A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="datq/tqe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tVMzqa9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbfDBTFG (ORCPT
+        id S1729829AbfDBTFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:05:06 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35426 "EHLO
+        Tue, 2 Apr 2019 15:05:25 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44256 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbfDBTFF (ORCPT
+        with ESMTP id S1728479AbfDBTFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:05:05 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g8so7030217pgf.2;
-        Tue, 02 Apr 2019 12:05:05 -0700 (PDT)
+        Tue, 2 Apr 2019 15:05:25 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i2so7011589pgj.11;
+        Tue, 02 Apr 2019 12:05:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=AzyRa8cjTsPh8BeC6LSVOIA2BFgCNkK7tVkBCVr1Hjw=;
-        b=datq/tqeMrV5ycr3TDGun4TgGeTmuhdMmY/5fyZ11t02AOjaYa77JsyqGjDfT4/Dfs
-         fKh5vJWTYuj2kZ6OglKrw4Ry9IO40Te6uciA2TpCrLJQzQjuDNyhJBud46XuwUo9rQHQ
-         jrpZ3xHSreU5y++GgV/aINXRyqyQFctWvDK2EngrNnD80Ri4m7Mc52k4lrzutPceNpjc
-         0wAf3JgNdDJ964T4uJ620o2oq4owg2VNYMn4y9E+oummOaWsqm4QLNXxCyiSqu3Dyt+y
-         LLTccHgaxbsRBusaT+R8TaVRmvi8EjKI1KmvYobThcLgxuGaELkMPHrdxK69VZT0kw9U
-         H/bg==
+        bh=6HMVgzizPYc0+hy5W56q6fqUQG3h8F4vDoayaeh6WCk=;
+        b=tVMzqa9kVFQhNTvXrMA1mx9bIVjZWDdaHyDopdgz1jig+QM8tT8PwgGDZE4dxz6f67
+         yn7mwQ0U2ReGEUEvqzqNZ2iOsYAeVdOBgrbIuMPpRqeiixsp+fP4L1LcvamTB93W/ZCR
+         W9y7RXiFNOQ0Vs0zYJKrCcoQsMsMZUZNtpPBrghxvSdPLq5Ul7jfyiyRfDtth0nK+dyX
+         H0PZSA+KHwBqwG32pkRzqiPsdJXXI8mYnayzbrcOHgMFuD77eVmUZ1AE9Ha1bq7tfxQe
+         aRhibOL2MvVW28AckeosDSUmLVt/t36LFIyZ64x3EAWRofRdyxM9tnFt24IUzGhmcU8n
+         0sSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AzyRa8cjTsPh8BeC6LSVOIA2BFgCNkK7tVkBCVr1Hjw=;
-        b=e0MevqRK1V3O5btxGoZGvOaSmQLHw7SaHgSQQZWQAcuZTnwPX2VKq4L8+As39f4MKF
-         yE6mTtunDHS1oBA7vke/Zsqs6YbXGMybjrl/suwMBA9TwemZANQkvLiCww4VUh62/61W
-         gh3O3RIjYy1sarX6ZaUGER21PlXTvW7JejVdgHbDKa1w5+3iCKQGKs6EL9KOnEABt+bY
-         OGpm0Q3QBizznoPOFqMNIT1eu8NiwAbCKbUWTpga9/znrGKAIpiB+Zh3OtOM4EQaptyS
-         TIf6mVig2t28dnSENkF/qC2scmZzyeoraGzLzf26z7BGYrMe/bC6x972ntuZsgpcDRq+
-         /Irw==
-X-Gm-Message-State: APjAAAV4jz/DfqrLnaKXmrl2WLJW9q8HFWypp9re/UDFsbJSZQBWH0yk
-        TkzicYs6hJQ9H7w4e4q8YPY=
-X-Google-Smtp-Source: APXvYqzRs0hLdSYlobrF77gO7zJYjvLUjNg8ys56sRwCx3O2Wc9MiRMHuRfqKP4yjvQeCQf9FSFLcg==
-X-Received: by 2002:a65:4802:: with SMTP id h2mr51250048pgs.98.1554231905090;
-        Tue, 02 Apr 2019 12:05:05 -0700 (PDT)
+        bh=6HMVgzizPYc0+hy5W56q6fqUQG3h8F4vDoayaeh6WCk=;
+        b=E0endn4ZQurKmyBrqShH5wnRyWbUtmsbY8jAwE8KeeypV+lv98nzjB10igFlMHV5tW
+         xd917sJKYevs1mybdBO/dwASVlXxEUIm8tbElfjtKZk9ZK+iDND0AJz7E08tFt9Jel3k
+         UBbFXYJddVdKehg4e3ri2g1N/M9SURLxLwxseBpGNqVfy/sxXm57SBl2bvtP6lFEmvUo
+         jlUmUhRA52AMnWRgkYjsMfDQqxNiIpqpOJXOIe1IjiAsJXS5j+C/CFPOIUq8G39T/asW
+         /86a0oSO53ZdVzyv0KH8lQevZMmSthR2A7pBJIRmUxqY6ajedNnComgevggYgd9W6M+k
+         nzOg==
+X-Gm-Message-State: APjAAAWY9GB23nOvXISIaOJT9w1U9QF0DllWo2ZsvD91FAZBrL0lHR4X
+        6tKdwMXq9PaFseYZG56DzXXqTftU
+X-Google-Smtp-Source: APXvYqwUHGrmQZWXQS7XmGzrhtkXQCFqZdiERvdP0ajogrD9bgpKDVqitoCKv3Wfk866ImGF069YfA==
+X-Received: by 2002:a62:6985:: with SMTP id e127mr36109148pfc.188.1554231924731;
+        Tue, 02 Apr 2019 12:05:24 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f125sm26216593pfc.91.2019.04.02.12.04.57
+        by smtp.gmail.com with ESMTPSA id s79sm38976485pfa.31.2019.04.02.12.05.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 12:04:58 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 12:04:57 -0700
+        Tue, 02 Apr 2019 12:05:24 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 12:05:23 -0700
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
         akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/56] 4.9.167-stable review
-Message-ID: <20190402190457.GC14232@roeck-us.net>
-References: <20190401170103.398401360@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 000/107] 4.14.110-stable review
+Message-ID: <20190402190523.GD14232@roeck-us.net>
+References: <20190401170045.246405031@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190401170103.398401360@linuxfoundation.org>
+In-Reply-To: <20190401170045.246405031@linuxfoundation.org>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 07:02:16PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.167 release.
-> There are 56 patches in this series, all will be posted as a response
+On Mon, Apr 01, 2019 at 07:01:15PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.110 release.
+> There are 107 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
-> Responses should be made by Wed Apr  3 17:00:20 UTC 2019.
+> Responses should be made by Wed Apr  3 16:59:25 UTC 2019.
 > Anything received after that time might be too late.
 > 
 
 Build results:
 	total: 172 pass: 172 fail: 0
 Qemu test results:
-	total: 316 pass: 316 fail: 0
+	total: 329 pass: 329 fail: 0
 
 Guenter
