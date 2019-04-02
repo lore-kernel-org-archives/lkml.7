@@ -2,113 +2,103 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFDC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21368C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA29A2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E251E2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 14:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RIAfXofg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ds6lyNlw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfDBOKo (ORCPT
+        id S1731141AbfDBOND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 10:10:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42100 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfDBOKo (ORCPT
+        Tue, 2 Apr 2019 10:13:03 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34812 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbfDBOND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 10:10:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yJAk7JBHZRxnc+86KWmwsxNa65Ai6RJsNUROoSDZXM8=; b=RIAfXofgI5AXMkmJK8jl1V8lt
-        1XNAJC+z8pYk6lpA22iStJgLlLs4bBogHezEOmO70VSMOS/+G6f3w6Sb58MoJIHScd1yItwYbYhqQ
-        /mQuxMdd0L6jfHu4ngsiBSUURN/t3ghJjuukIOuGHNal5AFilhYkyl7N9YAYXecOlP59dCgTOks9D
-        Xvrc/IPxnFoqDt1/+HtJd9rdrymV2bM82XZSsBwDhxzxNStLpSraHPKAEj0h8asN4ZBRVaLGySzP6
-        0rXi1QKpdtKnuGRsFh50RBIx6d+K3WI6T+l7uc2FoFwAWQ1NB2uhi5bWRvmhg2HLKRcEydUTm/2OE
-        JDPPbHB0Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hBK7d-0004gb-Jg; Tue, 02 Apr 2019 14:10:41 +0000
-Date:   Tue, 2 Apr 2019 07:10:41 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Qiang Yu <yuq825@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Anholt <eric@anholt.net>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20190402141041.GF22763@bombadil.infradead.org>
-References: <20190402105006.48f93e53@canb.auug.org.au>
- <CAKGbVbvj9cZnJuey_ra7U+xm-JhoB17bpTgcXKiKaHWbjB9Sxw@mail.gmail.com>
- <20190402112656.GE22763@bombadil.infradead.org>
- <CAKGbVbuY3mKAZ6bA9G87NHq7mdxkw95p7OoO_QyUU_101yQEuQ@mail.gmail.com>
+        Tue, 2 Apr 2019 10:13:03 -0400
+Received: by mail-pf1-f195.google.com with SMTP id b3so6459136pfd.1;
+        Tue, 02 Apr 2019 07:13:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3hnOwdjxBlqNg7VVcRE/8zfPc8TAr8TXpOT6LOY3G4o=;
+        b=Ds6lyNlwphhXHT/y7a/K0YfLwcunPEf6SojJZ89eDyl02SIpIMr/AmmWzZ4tHRY8MX
+         ru16fW4Fy2T5QwxbY2TMmQR1cfo11YBzP6ODfV70TJPVSC+/AMhZwDES/3gq57OzHsCr
+         TkgtYloz/SgpV7FC0HFxN5u7aLzOOHL3f+mBds5/TuyiLVdH94YSdqeNO1Lkh9sAPnM4
+         N7txlgms6sEVKayvqS0oteJr5aqVLbdBJpFtCF3QmyRNaaX5jxlk8QZqE/5cAvEUqSH+
+         Y1shfdcg2pMg3S4HDzb9NZXzuwjWscxQ1tDCWTr/YSFbPeONzCrnxibzHgvuxCRYPWKx
+         Cv6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3hnOwdjxBlqNg7VVcRE/8zfPc8TAr8TXpOT6LOY3G4o=;
+        b=H8qbFt90gEIAx20fd1cdCSZ1ODL5LlMa8+fQeOrtPb0iIX2+3WgDtTvQuq+l8piQL0
+         kKJvtAqvKZQQasYoV7WdWuYzJaj5SWNDSLSG51EFIRvBdJkSXqJr8Im04ui29bUJudj0
+         qa1hYCHPLgoFi7YXQ186lAgAG8IFh9BgEBO/Y+vSL5vjLRfJQOfnYPYzlnczHXZ/m8+y
+         ua/rAeSJK5jV55E4JFMOkfpxRXM1LfO5OR9IBMUgel3xhL/YY5kBifIwccT1Y0/SCY6M
+         qaLcK5onW2FTBh6bukx2oNcQyU2eU6xDVUnXCDZ/Z329iIjEX0pImde40ONTTeLKyoVi
+         OR7g==
+X-Gm-Message-State: APjAAAXRWsldHnkPgAUAVTAoNjOvkK1mxJYFWH0w9/gpp4Sfbfz++aW6
+        LbdMSHRTflZknga0pQBS93o=
+X-Google-Smtp-Source: APXvYqxuaBKoeAgLVDxk/VT+gKkQ3JDb6ApBCpzEiCiQrHUJwmEArHIwMhd1CwB18qNmeVVrW/g5pw==
+X-Received: by 2002:a63:2a8f:: with SMTP id q137mr66340969pgq.31.1554214382126;
+        Tue, 02 Apr 2019 07:13:02 -0700 (PDT)
+Received: from zhlao-linux.corp.microsoft.com ([167.220.232.97])
+        by smtp.gmail.com with ESMTPSA id p34sm15940286pgb.18.2019.04.02.07.12.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 07:13:01 -0700 (PDT)
+From:   Zhongcheng Lao <laozhongcheng@gmail.com>
+X-Google-Original-From: Zhongcheng Lao <Zhongcheng.Lao@microsoft.com>
+To:     haiyangz@microsoft.com
+Cc:     Zhongcheng Lao <Zhongcheng.Lao@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Do not overwrite CFLAG passed into makefile
+Date:   Tue,  2 Apr 2019 22:11:22 +0800
+Message-Id: <20190402141123.97941-1-Zhongcheng.Lao@microsoft.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKGbVbuY3mKAZ6bA9G87NHq7mdxkw95p7OoO_QyUU_101yQEuQ@mail.gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 09:56:08PM +0800, Qiang Yu wrote:
-> On Tue, Apr 2, 2019 at 7:26 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Tue, Apr 02, 2019 at 01:55:03PM +0800, Qiang Yu wrote:
-> > > Thanks, patch is:
-> > > Reviewed-by: Qiang Yu <yuq825@gmail.com>
-> >
-> > This looks like a fairly naive conversion from the old IDR API to the
-> > XArray API.  You should be able to remove mgr->lock entirely, relying on
-> > the xa_lock for synchronising free and get.
-> 
-> I'm afraid the a little complex free path may involve some might sleep
-> functions so use a mutex lock instead of spinlock.
+It is necessary to pass a custom value for KVP_SCRIPTS_PATH
+because of the directory structure differences in Linux distros.
+Current makefile does not allow this.
 
-Ah, good call ...
+The patch fixes the issue.
 
-+       mutex_lock(&mgr->lock);
-+       ctx = xa_erase(&mgr->handles, id);
-+       if (ctx)
-+               kref_put(&ctx->refcnt, lima_ctx_do_release);
-+       else
-+               ret = -EINVAL;
-+       mutex_unlock(&mgr->lock);
+Signed-off-by: Zhongcheng Lao <Zhongcheng.Lao@microsoft.com>
+---
+ tools/hv/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-+static void lima_ctx_do_release(struct kref *ref)
-+{
-+       struct lima_ctx *ctx = container_of(ref, struct lima_ctx, refcnt);
-+       int i;
-+
-+       for (i = 0; i < lima_pipe_num; i++)
-+               lima_sched_context_fini(ctx->dev->pipe + i, ctx->context + i);
-+       kfree(ctx);
-+}
+diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+index 5db5e62cebda..058c3dbb7824 100644
+--- a/tools/hv/Makefile
++++ b/tools/hv/Makefile
+@@ -2,7 +2,7 @@
+ # Makefile for Hyper-V tools
+ 
+ WARNINGS = -Wall -Wextra
+-CFLAGS = $(WARNINGS) -g $(shell getconf LFS_CFLAGS)
++CFLAGS += $(WARNINGS) -g $(shell getconf LFS_CFLAGS)
+ 
+ CFLAGS += -D__EXPORTED_HEADERS__ -I../../include/uapi -I../../include
+ 
+-- 
+2.21.0
 
-+void lima_sched_context_fini(struct lima_sched_pipe *pipe,
-+                            struct lima_sched_context *context)
-+{
-+       drm_sched_entity_fini(&context->base);
-+}
-
-and drm_sched_entity_fini() can call kthread_park(), which does sleep.
-
-> > If you think it's worth it,
-> > you could even use kfree_rcu() to free the ctx and kref_get_unless_zero()
-> > and then your get path would be lock-free.
-> 
-> I can take a look this way, thanks.
-
-I think that's the only way you can get rid of the mutex, given the
-sleeping functions called in the free path.
