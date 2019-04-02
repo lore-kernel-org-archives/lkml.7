@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8ABC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F573C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471292147A
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF06214AF
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554201149;
-	bh=hBm57Xew89RWN8jIR/QamUgYHH5TuIeK6aoC3BYwizQ=;
+	s=default; t=1554201154;
+	bh=pke/94e60F2LGIR7FKrTIOcMww1OtZaqVr2+gq6IvnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zk0/S/F19OHDe6hbfACFxborqlOhdnIx1jsMwHZGM5ejU/tqxqk4haEwZATWHcTnW
-	 HlZCGUh5bzO1nvnAloNPHuqP1I0LVfBM9eR7OAqIFaaqqpbIKadWfjvP1ENARk3/yT
-	 Cwmt+8YLlpNxHJiAiDbm/JcdajqJ5RJRQywyFAhQ=
+	b=AQHJIySK+5MKSRhU7nzoOydbj/tYUUIyYO2NqQjvH2SoZmCV9zeTJqBY4QX4ghJiM
+	 /Jlc2yiMTseE1Iur7MuWZik9zlQrx4186B929eensDcUL96larxAs9jpkP2tcftVu9
+	 Uyvty5q9KhEq3NOO4tp0I2g6QUff1EF1SmLCbM50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfDBKc1 (ORCPT
+        id S1730373AbfDBKcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 06:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730342AbfDBKcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:32:25 -0400
+        id S1725959AbfDBKc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:32:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE25B2084C;
-        Tue,  2 Apr 2019 10:32:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A79920883;
+        Tue,  2 Apr 2019 10:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554201143;
-        bh=hBm57Xew89RWN8jIR/QamUgYHH5TuIeK6aoC3BYwizQ=;
+        s=default; t=1554201146;
+        bh=pke/94e60F2LGIR7FKrTIOcMww1OtZaqVr2+gq6IvnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2PZpvrVYCM3X6/Pxc1rnGUNYyz/J+XMZQXux+/oZfs4TBdnykVZW4kgFrsRo23rd
-         sJrb5Nz6BjSWOukaUwV82VOu0ldATXajqWCpOsiLXu2MlmaE/pZD291LauBmVfepac
-         fne6JmGvoLG293nzLs9sSMsFsbAaqQHWz1BjIGXM=
+        b=V0F2eQVPVPfEffBU6kQ2nilXIvR8gLOzPQNIbo95pAL3hqagp4fkZTTgeu6jNz2wK
+         EGlxnbyPvPdMFWatOafdlZ74ORXayF2Q2LiMcM44FTo+lponBawPq36ChfOfq7zRnG
+         WhHJXygzlxU+lFzWGyXu+PVTHc3WtqVo0ZOTwpoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     devel@driverdev.osuosl.org
 Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 11/16] staging: rtl8192e: add proper SPDX identifiers on files that did not have them.
-Date:   Tue,  2 Apr 2019 12:31:58 +0200
-Message-Id: <20190402103203.14959-12-gregkh@linuxfoundation.org>
+Subject: [PATCH 12/16] staging: rtl8192e: delete license file.
+Date:   Tue,  2 Apr 2019 12:31:59 +0200
+Message-Id: <20190402103203.14959-13-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190402103203.14959-1-gregkh@linuxfoundation.org>
 References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
@@ -56,1453 +56,362 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were a few files for the rtl8192e driver that did not have SPDX
-identifiers on them, so fix that up.  At the same time, remove the "free
-form" text that specified the license of the file, as that is impossible
-for any tool to properly parse.
+There is no need for yet-another-copy of the gpl to be in the kernel
+source tree, especially for just a single driver.  This got added as
+part of the import of the driver from when it was a stand-along chunk of
+code.
 
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../staging/rtl8192e/rtl8192e/r8190P_def.h    | 18 ++++-----------
- .../rtl8192e/rtl8192e/r8190P_rtl8256.c        | 17 ++++----------
- .../rtl8192e/rtl8192e/r8190P_rtl8256.h        | 17 ++++----------
- .../staging/rtl8192e/rtl8192e/r8192E_cmdpkt.c | 17 ++++----------
- .../staging/rtl8192e/rtl8192e/r8192E_cmdpkt.h | 16 ++++----------
- .../staging/rtl8192e/rtl8192e/r8192E_dev.c    | 19 ++++------------
- .../staging/rtl8192e/rtl8192e/r8192E_dev.h    | 22 ++++---------------
- .../rtl8192e/rtl8192e/r8192E_firmware.c       | 17 ++++----------
- .../rtl8192e/rtl8192e/r8192E_firmware.h       | 16 ++++----------
- drivers/staging/rtl8192e/rtl8192e/r8192E_hw.h | 18 ++++-----------
- .../staging/rtl8192e/rtl8192e/r8192E_hwimg.c  | 18 ++++-----------
- .../staging/rtl8192e/rtl8192e/r8192E_hwimg.h  | 16 ++++----------
- .../staging/rtl8192e/rtl8192e/r8192E_phy.c    | 17 ++++----------
- .../staging/rtl8192e/rtl8192e/r8192E_phy.h    | 16 ++++----------
- .../staging/rtl8192e/rtl8192e/r8192E_phyreg.h | 16 ++++----------
- drivers/staging/rtl8192e/rtl8192e/rtl_cam.c   | 19 ++++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_cam.h   | 19 ++++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c  | 19 ++++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_core.h  | 20 ++++-------------
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.c    | 16 ++++----------
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.h    | 16 ++++----------
- .../staging/rtl8192e/rtl8192e/rtl_eeprom.c    | 19 ++++------------
- .../staging/rtl8192e/rtl8192e/rtl_eeprom.h    | 21 ++++--------------
- .../staging/rtl8192e/rtl8192e/rtl_ethtool.c   | 18 +++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_pci.c   | 19 ++++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_pci.h   | 19 ++++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_pm.c    | 17 ++++----------
- drivers/staging/rtl8192e/rtl8192e/rtl_pm.h    | 17 ++++----------
- drivers/staging/rtl8192e/rtl8192e/rtl_ps.c    | 19 ++++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_ps.h    | 19 ++++------------
- drivers/staging/rtl8192e/rtl8192e/rtl_wx.c    | 17 ++++----------
- drivers/staging/rtl8192e/rtl8192e/rtl_wx.h    | 17 ++++----------
- drivers/staging/rtl8192e/rtl819x_BA.h         | 16 ++++----------
- drivers/staging/rtl8192e/rtl819x_BAProc.c     | 16 ++++----------
- drivers/staging/rtl8192e/rtl819x_HT.h         | 16 ++++----------
- drivers/staging/rtl8192e/rtl819x_HTProc.c     | 16 ++++----------
- drivers/staging/rtl8192e/rtl819x_Qos.h        | 16 ++++----------
- drivers/staging/rtl8192e/rtl819x_TS.h         | 16 ++++----------
- drivers/staging/rtl8192e/rtl819x_TSProc.c     | 16 ++++----------
- drivers/staging/rtl8192e/rtllib.h             |  6 +----
- drivers/staging/rtl8192e/rtllib_crypt_tkip.c  |  6 +----
- drivers/staging/rtl8192e/rtllib_crypt_wep.c   |  6 +----
- drivers/staging/rtl8192e/rtllib_debug.h       | 22 ++++---------------
- drivers/staging/rtl8192e/rtllib_module.c      | 19 +++-------------
- drivers/staging/rtl8192e/rtllib_rx.c          | 20 +++++------------
- drivers/staging/rtl8192e/rtllib_softmac.c     |  5 +----
- drivers/staging/rtl8192e/rtllib_softmac_wx.c  |  5 +----
- drivers/staging/rtl8192e/rtllib_tx.c          | 22 +++----------------
- drivers/staging/rtl8192e/rtllib_wx.c          | 19 +++-------------
- 49 files changed, 179 insertions(+), 634 deletions(-)
+ drivers/staging/rtl8192e/license | 339 -------------------------------
+ 1 file changed, 339 deletions(-)
+ delete mode 100644 drivers/staging/rtl8192e/license
 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8190P_def.h b/drivers/staging/rtl8192e/rtl8192e/r8190P_def.h
-index 03421033d14a..53fd79a28189 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8190P_def.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8190P_def.h
-@@ -1,19 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+diff --git a/drivers/staging/rtl8192e/license b/drivers/staging/rtl8192e/license
+deleted file mode 100644
+index 4bea9fa60daa..000000000000
+--- a/drivers/staging/rtl8192e/license
++++ /dev/null
+@@ -1,339 +0,0 @@
 -
+-"This software program is licensed subject to the GNU General Public License
+-(GPL). Version 2, June 1991, available at
+-<http:
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef R8190P_DEF_H
- #define R8190P_DEF_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.c b/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.c
-index 85f93056d28b..7876b389913a 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.c
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-GNU General Public License
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "r8192E_phyreg.h"
- #include "r8192E_phy.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.h b/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.h
-index bbea13b452b2..4cb483f1a152 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8190P_rtl8256.h
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-Version 2, June 1991
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef RTL8225H
- #define RTL8225H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.c
-index 467287ae6c1c..fece982475e8 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.c
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+-59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "r8192E_hw.h"
- #include "r8192E_cmdpkt.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.h b/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.h
-index a8c63ad2ac2e..c63909199e93 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_cmdpkt.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef R819XUSB_CMDPKT_H
- #define R819XUSB_CMDPKT_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-index f70d65e3d64b..0353f7ee5341 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "r8192E_phy.h"
- #include "r8192E_phyreg.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.h b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.h
-index f4233bb12f81..1713381dc2b4 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.h
-@@ -1,23 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * Based on the r8180 driver, which is:
-- * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _RTL8192E_H
- #define _RTL8192E_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.c
-index 3c7831250987..9b025b9fa7ab 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.c
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-Everyone is permitted to copy and distribute verbatim copies of this license
+-document, but changing it is not allowed.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "r8192E_hw.h"
- #include "r8192E_hwimg.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.h b/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.h
-index 61c8dac826a8..b9059abc901b 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_firmware.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef __INC_FIRMWARE_H
- #define __INC_FIRMWARE_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_hw.h b/drivers/staging/rtl8192e/rtl8192e/r8192E_hw.h
-index 5c20cb476281..3e223151d4b7 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_hw.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_hw.h
-@@ -1,19 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-Preamble
 -
+-The licenses for most software are designed to take away your freedom to
+-share and change it. By contrast, the GNU General Public License is intended
+-to guarantee your freedom to share and change free software--to make sure
+-the software is free for all its users. This General Public License applies
+-to most of the Free Software Foundation's software and to any other program
+-whose authors commit to using it. (Some other Free Software Foundation
+-software is covered by the GNU Library General Public License instead.) You
+-can apply it to your programs, too.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef R8180_HW
- #define R8180_HW
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.c
-index d437a8efe933..e6fce749e65b 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.c
-@@ -1,19 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
--/*Created on  2008/11/18,  3: 7*/
+-When we speak of free software, we are referring to freedom, not price. Our
+-General Public Licenses are designed to make sure that you have the freedom
+-to distribute copies of free software (and charge for this service if you
+-wish), that you receive source code or can get it if you want it, that you
+-can change the software or use pieces of it in new free programs; and that
+-you know you can do these things.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "r8192E_hwimg.h"
- 
- u32 Rtl8192PciEPHY_REGArray[PHY_REGArrayLengthPciE] = {0x0,};
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.h b/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.h
-index 4e2bbab6a413..7d63f5a5c1b7 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_hwimg.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef __INC_HAL8192PciE_FW_IMG_H
- #define __INC_HAL8192PciE_FW_IMG_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c
-index 5603570f6dda..5d2f86afb24b 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.c
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-To protect your rights, we need to make restrictions that forbid anyone to
+-deny you these rights or to ask you to surrender the rights. These
+-restrictions translate to certain responsibilities for you if you distribute
+-copies of the software, or if you modify it.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include <linux/bitops.h>
- #include "rtl_core.h"
- #include "r8192E_hw.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.h b/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.h
-index b534d72bf708..7c9148e033d8 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_phy.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _R819XU_PHY_H
- #define _R819XU_PHY_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_phyreg.h b/drivers/staging/rtl8192e/rtl8192e/r8192E_phyreg.h
-index 03d6d70b2d28..433272a2aae8 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_phyreg.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_phyreg.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _R819XU_PHYREG_H
- #define _R819XU_PHYREG_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.c b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.c
-index c62481fcf0b1..627ea1029509 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.c
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "r8192E_phy.h"
- #include "r8192E_phyreg.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-index 12f01f196752..1ebd92e27441 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_cam.h
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _RTL_CAM_H
- #define _RTL_CAM_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-index 253f1911a3f4..f932cb15e4e5 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include <linux/uaccess.h>
- #include <linux/pci.h>
- #include <linux/vmalloc.h>
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_core.h b/drivers/staging/rtl8192e/rtl8192e/rtl_core.h
-index 866fe4d4cb28..736f1a824cd2 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.h
-@@ -1,24 +1,12 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-For example, if you distribute copies of such a program, whether gratis or
+-for a fee, you must give the recipients all the rights that you have. You
+-must make sure that they, too, receive or can get the source code. And you
+-must show them these terms so they know their rights.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _RTL_CORE_H
- #define _RTL_CORE_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-index 157bcee34067..55d857926bba 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "rtl_dm.h"
- #include "r8192E_hw.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.h b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.h
-index 52a4a1522bae..ea1b14bbcdcd 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef	__R8192UDM_H__
- #define __R8192UDM_H__
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.c b/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.c
-index e1d305d4fa20..59532ed2156d 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.c
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "rtl_eeprom.h"
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.h b/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.h
-index 6212e5eadede..66f1979bb1d5 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_eeprom.h
-@@ -1,25 +1,12 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-We protect your rights with two steps: (1) copyright the software, and (2)
+-offer you this license which gives you legal permission to copy, distribute
+-and/or modify the software.
 -
+-Also, for each author's protection and ours, we want to make certain that
+-everyone understands that there is no warranty for this free software. If
+-the software is modified by someone else and passed on, we want its
+-recipients to know that what they have is not the original, so that any
+-problems introduced by others will not reflect on the original authors'
+-reputations.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #define EPROM_DELAY 10
- 
- u32 rtl92e_eeprom_read(struct net_device *dev, u32 addr);
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_ethtool.c b/drivers/staging/rtl8192e/rtl8192e/rtl_ethtool.c
-index f172f776245d..6ae7a67e767f 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_ethtool.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_ethtool.c
-@@ -1,23 +1,11 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-  */
- #include <linux/netdevice.h>
- #include <linux/ethtool.h>
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.c b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.c
-index 2ff52e7dd32f..bab41ab7c0a5 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.c
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_pci.h"
- #include "rtl_core.h"
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-index 73d357d530d0..866e0efbc4fd 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pci.h
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- ******************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _RTL_PCI_H
- #define _RTL_PCI_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c
-index 81a68b0b4a7f..cd3e17b41d6f 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-Finally, any free program is threatened constantly by software patents. We
+-wish to avoid the danger that redistributors of a free program will
+-individually obtain patent licenses, in effect making the program
+-proprietary. To prevent this, we have made it clear that any patent must be
+-licensed for everyone's free use or not licensed at all.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_core.h"
- #include "r8192E_hw.h"
- #include "r8190P_rtl8256.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h
-index 03fe79ff5a1b..e58f2bcdb1dd 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-The precise terms and conditions for copying, distribution and modification
+-follow.
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef R8192E_PM_H
- #define R8192E_PM_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_ps.c b/drivers/staging/rtl8192e/rtl8192e/rtl_ps.c
-index 9281116366d2..9475f8c6edf7 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_ps.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_ps.c
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtl_ps.h"
- #include "rtl_core.h"
- #include "r8192E_phy.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_ps.h b/drivers/staging/rtl8192e/rtl8192e/rtl_ps.h
-index a46f4cffca23..70fe5d39be9a 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_ps.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_ps.h
-@@ -1,23 +1,12 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-  * Based on the r8180 driver, which is:
-  * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- ******************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _RTL_PS_H
- #define _RTL_PS_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_wx.c b/drivers/staging/rtl8192e/rtl8192e/rtl_wx.c
-index 44e06cba7b7b..16bcee13f64b 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_wx.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_wx.c
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include <linux/string.h>
- #include "rtl_core.h"
- #include "rtl_wx.h"
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_wx.h b/drivers/staging/rtl8192e/rtl8192e/rtl_wx.h
-index c313fb79de4d..d70a747ac1dd 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_wx.h
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_wx.h
-@@ -1,18 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
+-0. This License applies to any program or other work which contains a notice
+-   placed by the copyright holder saying it may be distributed under the
+-   terms of this General Public License. The "Program", below, refers to any
+-   such program or work, and a "work based on the Program" means either the
+-   Program or any derivative work under copyright law: that is to say, a
+-   work containing the Program or a portion of it, either verbatim or with
+-   modifications and/or translated into another language. (Hereinafter,
+-   translation is included without limitation in the term "modification".)
+-   Each licensee is addressed as "you".
 -
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef R819x_WX_H
- #define R819x_WX_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl819x_BA.h b/drivers/staging/rtl8192e/rtl819x_BA.h
-index 978c9a54043e..8b6e4c26f0fb 100644
---- a/drivers/staging/rtl8192e/rtl819x_BA.h
-+++ b/drivers/staging/rtl8192e/rtl819x_BA.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _BATYPE_H_
- #define _BATYPE_H_
- 
-diff --git a/drivers/staging/rtl8192e/rtl819x_BAProc.c b/drivers/staging/rtl8192e/rtl819x_BAProc.c
-index 2d330d2bbf6d..816d31c1d5c7 100644
---- a/drivers/staging/rtl8192e/rtl819x_BAProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_BAProc.c
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- ******************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include <asm/byteorder.h>
- #include <asm/unaligned.h>
- #include <linux/etherdevice.h>
-diff --git a/drivers/staging/rtl8192e/rtl819x_HT.h b/drivers/staging/rtl8192e/rtl819x_HT.h
-index 24e86620c94c..11269fe6b395 100644
---- a/drivers/staging/rtl8192e/rtl819x_HT.h
-+++ b/drivers/staging/rtl8192e/rtl819x_HT.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _RTL819XU_HTTYPE_H_
- #define _RTL819XU_HTTYPE_H_
- 
-diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-index f0e11726a72a..f02263af9624 100644
---- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- ******************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtllib.h"
- #include "rtl819x_HT.h"
- u8 MCS_FILTER_ALL[16] = {
-diff --git a/drivers/staging/rtl8192e/rtl819x_Qos.h b/drivers/staging/rtl8192e/rtl819x_Qos.h
-index 576241233a35..5073f9f40fdc 100644
---- a/drivers/staging/rtl8192e/rtl819x_Qos.h
-+++ b/drivers/staging/rtl8192e/rtl819x_Qos.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef __INC_QOS_TYPE_H
- #define __INC_QOS_TYPE_H
- 
-diff --git a/drivers/staging/rtl8192e/rtl819x_TS.h b/drivers/staging/rtl8192e/rtl819x_TS.h
-index 654c223030e3..9dc93d41939d 100644
---- a/drivers/staging/rtl8192e/rtl819x_TS.h
-+++ b/drivers/staging/rtl8192e/rtl819x_TS.h
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _TSTYPE_H_
- #define _TSTYPE_H_
- #include "rtl819x_Qos.h"
-diff --git a/drivers/staging/rtl8192e/rtl819x_TSProc.c b/drivers/staging/rtl8192e/rtl819x_TSProc.c
-index f839d2447b85..672bf0987943 100644
---- a/drivers/staging/rtl8192e/rtl819x_TSProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_TSProc.c
-@@ -1,17 +1,9 @@
--/******************************************************************************
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- ******************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #include "rtllib.h"
- #include <linux/etherdevice.h>
- #include "rtl819x_TS.h"
-diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
-index 61ebd12831c3..2dd57e88276e 100644
---- a/drivers/staging/rtl8192e/rtllib.h
-+++ b/drivers/staging/rtl8192e/rtllib.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Merged with mainline rtllib.h in Aug 2004.  Original ieee802_11
-  * remains copyright by the original authors
-@@ -15,11 +16,6 @@
-  *
-  * Modified for Realtek's wi-fi cards by Andrea Merello
-  * <andrea.merello@gmail.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation. See README and COPYING for
-- * more details.
-  */
- #ifndef RTLLIB_H
- #define RTLLIB_H
-diff --git a/drivers/staging/rtl8192e/rtllib_crypt_tkip.c b/drivers/staging/rtl8192e/rtllib_crypt_tkip.c
-index 55da8c9dfe50..25fa1eb677a6 100644
---- a/drivers/staging/rtl8192e/rtllib_crypt_tkip.c
-+++ b/drivers/staging/rtl8192e/rtllib_crypt_tkip.c
-@@ -1,12 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Host AP crypt: host-based TKIP encryption implementation for Host AP driver
-  *
-  * Copyright (c) 2003-2004, Jouni Malinen <jkmaline@cc.hut.fi>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation. See README and COPYING for
-- * more details.
-  */
- 
- #include <crypto/hash.h>
-diff --git a/drivers/staging/rtl8192e/rtllib_crypt_wep.c b/drivers/staging/rtl8192e/rtllib_crypt_wep.c
-index d11ec39171d5..b1ea650036d2 100644
---- a/drivers/staging/rtl8192e/rtllib_crypt_wep.c
-+++ b/drivers/staging/rtl8192e/rtllib_crypt_wep.c
-@@ -1,12 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Host AP crypt: host-based WEP encryption implementation for Host AP driver
-  *
-  * Copyright (c) 2002-2004, Jouni Malinen <jkmaline@cc.hut.fi>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation. See README and COPYING for
-- * more details.
-  */
- 
- #include <crypto/skcipher.h>
-diff --git a/drivers/staging/rtl8192e/rtllib_debug.h b/drivers/staging/rtl8192e/rtllib_debug.h
-index 7b0e6e9c4456..9065901636f5 100644
---- a/drivers/staging/rtl8192e/rtllib_debug.h
-+++ b/drivers/staging/rtl8192e/rtllib_debug.h
-@@ -1,23 +1,9 @@
--/******************************************************************************
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Copyright(c) 2008 - 2010 Realtek Corporation. All rights reserved.
-  *
-- * Based on the r8180 driver, which is:
-- * Copyright 2004-2005 Andrea Merello <andrea.merello@gmail.com>, et al.
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-- * Contact Information:
-- * wlanfae <wlanfae@realtek.com>
-- *****************************************************************************/
-+ * Contact Information: wlanfae <wlanfae@realtek.com>
-+ */
- #ifndef _RTL_DEBUG_H
- #define _RTL_DEBUG_H
- 
-diff --git a/drivers/staging/rtl8192e/rtllib_module.c b/drivers/staging/rtl8192e/rtllib_module.c
-index cdf4c9060c51..265ad437ae2e 100644
---- a/drivers/staging/rtl8192e/rtllib_module.c
-+++ b/drivers/staging/rtl8192e/rtllib_module.c
-@@ -1,5 +1,5 @@
--/*******************************************************************************
-- *
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2004 Intel Corporation. All rights reserved.
-  *
-  * Portions of this file are based on the WEP enablement code provided by the
-@@ -8,23 +8,10 @@
-  * <jkmaline@cc.hut.fi>
-  * Copyright (c) 2002-2003, Jouni Malinen <jkmaline@cc.hut.fi>
-  *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-  * Contact Information:
-  * James P. Ketrenos <ipw2100-admin@linux.intel.com>
-  * Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
-- *
-- ******************************************************************************/
-+ */
- 
- #include <linux/compiler.h>
- #include <linux/errno.h>
-diff --git a/drivers/staging/rtl8192e/rtllib_rx.c b/drivers/staging/rtl8192e/rtllib_rx.c
-index debc2e40af00..0c19ac2bc3bf 100644
---- a/drivers/staging/rtl8192e/rtllib_rx.c
-+++ b/drivers/staging/rtl8192e/rtllib_rx.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Original code based Host AP (software wireless LAN access point) driver
-  * for Intersil Prism2/2.5/3 - hostap.o module, common routines
-@@ -7,20 +8,11 @@
-  * Copyright (c) 2002-2003, Jouni Malinen <jkmaline@cc.hut.fi>
-  * Copyright (c) 2004, Intel Corporation
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation. See README and COPYING for
-- * more details.
-- ******************************************************************************
+-   Activities other than copying, distribution and modification are not
+-   covered by this License; they are outside its scope. The act of running
+-   the Program is not restricted, and the output from the Program is covered
+-   only if its contents constitute a work based on the Program (independent
+-   of having been made by running the Program). Whether that is true depends
+-   on what the Program does.
 -
--  Few modifications for Realtek's Wi-Fi drivers by
--  Andrea Merello <andrea.merello@gmail.com>
+-1. You may copy and distribute verbatim copies of the Program's source code
+-   as you receive it, in any medium, provided that you conspicuously and
+-   appropriately publish on each copy an appropriate copyright notice and
+-   disclaimer of warranty; keep intact all the notices that refer to this
+-   License and to the absence of any warranty; and give any other recipients
+-   of the Program a copy of this License along with the Program.
 -
--  A special thanks goes to Realtek for their support !
+-   You may charge a fee for the physical act of transferring a copy, and you
+-   may at your option offer warranty protection in exchange for a fee.
 -
--******************************************************************************/
+-2. You may modify your copy or copies of the Program or any portion of it,
+-   thus forming a work based on the Program, and copy and distribute such
+-   modifications or work under the terms of Section 1 above, provided that
+-   you also meet all of these conditions:
 -
+-   * a) You must cause the modified files to carry prominent notices stating
+-        that you changed the files and the date of any change.
 -
-+ * Few modifications for Realtek's Wi-Fi drivers by
-+ * Andrea Merello <andrea.merello@gmail.com>
-+ *
-+ * A special thanks goes to Realtek for their support !
-+ */
- #include <linux/compiler.h>
- #include <linux/errno.h>
- #include <linux/if_arp.h>
-diff --git a/drivers/staging/rtl8192e/rtllib_softmac.c b/drivers/staging/rtl8192e/rtllib_softmac.c
-index ee275857868f..e29e8d6f4611 100644
---- a/drivers/staging/rtl8192e/rtllib_softmac.c
-+++ b/drivers/staging/rtl8192e/rtllib_softmac.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /* IEEE 802.11 SoftMAC layer
-  * Copyright (c) 2005 Andrea Merello <andrea.merello@gmail.com>
-  *
-@@ -9,11 +10,7 @@
-  *
-  * WPA code stolen from the ipw2200 driver.
-  * Copyright who own it's copyright.
-- *
-- * released under the GPL
-  */
+-   * b) You must cause any work that you distribute or publish, that in
+-        whole or in part contains or is derived from the Program or any part
+-        thereof, to be licensed as a whole at no charge to all third parties
+-        under the terms of this License.
 -
+-   * c) If the modified program normally reads commands interactively when
+-        run, you must cause it, when started running for such interactive
+-        use in the most ordinary way, to print or display an announcement
+-        including an appropriate copyright notice and a notice that there is
+-        no warranty (or else, saying that you provide a warranty) and that
+-        users may redistribute the program under these conditions, and
+-        telling the user how to view a copy of this License. (Exception: if
+-        the Program itself is interactive but does not normally print such
+-        an announcement, your work based on the Program is not required to
+-        print an announcement.)
 -
- #include "rtllib.h"
- 
- #include <linux/random.h>
-diff --git a/drivers/staging/rtl8192e/rtllib_softmac_wx.c b/drivers/staging/rtl8192e/rtllib_softmac_wx.c
-index 5f1412fc410d..f89799d43b1b 100644
---- a/drivers/staging/rtl8192e/rtllib_softmac_wx.c
-+++ b/drivers/staging/rtl8192e/rtllib_softmac_wx.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /* IEEE 802.11 SoftMAC layer
-  * Copyright (c) 2005 Andrea Merello <andrea.merello@gmail.com>
-  *
-@@ -9,11 +10,7 @@
-  *
-  * PS wx handler mostly stolen from hostap, copyright who
-  * own it's copyright ;-)
-- *
-- * released under the GPL
-  */
+-   These requirements apply to the modified work as a whole. If identifiable
+-   sections of that work are not derived from the Program, and can be
+-   reasonably considered independent and separate works in themselves, then
+-   this License, and its terms, do not apply to those sections when you
+-   distribute them as separate works. But when you distribute the same
+-   sections as part of a whole which is a work based on the Program, the
+-   distribution of the whole must be on the terms of this License, whose
+-   permissions for other licensees extend to the entire whole, and thus to
+-   each and every part regardless of who wrote it.
 -
+-   Thus, it is not the intent of this section to claim rights or contest
+-   your rights to work written entirely by you; rather, the intent is to
+-   exercise the right to control the distribution of derivative or
+-   collective works based on the Program.
 -
- #include <linux/etherdevice.h>
- 
- #include "rtllib.h"
-diff --git a/drivers/staging/rtl8192e/rtllib_tx.c b/drivers/staging/rtl8192e/rtllib_tx.c
-index d314b2f602e4..8cddb2e12dc4 100644
---- a/drivers/staging/rtl8192e/rtllib_tx.c
-+++ b/drivers/staging/rtl8192e/rtllib_tx.c
-@@ -1,32 +1,16 @@
--/******************************************************************************
-- *
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2003 - 2004 Intel Corporation. All rights reserved.
-  *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-  * Contact Information:
-  * James P. Ketrenos <ipw2100-admin@linux.intel.com>
-  * Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
-  *
-- *****************************************************************************
-- *
-  * Few modifications for Realtek's Wi-Fi drivers by
-  * Andrea Merello <andrea.merello@gmail.com>
-  *
-  * A special thanks goes to Realtek for their support !
-- *
-- *****************************************************************************/
+-   In addition, mere aggregation of another work not based on the Program
+-   with the Program (or with a work based on the Program) on a volume of a
+-   storage or distribution medium does not bring the other work under the
+-   scope of this License.
 -
-+ */
- #include <linux/compiler.h>
- #include <linux/errno.h>
- #include <linux/if_arp.h>
-diff --git a/drivers/staging/rtl8192e/rtllib_wx.c b/drivers/staging/rtl8192e/rtllib_wx.c
-index 4f4904a300e0..beb40967936a 100644
---- a/drivers/staging/rtl8192e/rtllib_wx.c
-+++ b/drivers/staging/rtl8192e/rtllib_wx.c
-@@ -1,5 +1,5 @@
--/******************************************************************************
-- *
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-  * Copyright(c) 2004 Intel Corporation. All rights reserved.
-  *
-  * Portions of this file are based on the WEP enablement code provided by the
-@@ -8,23 +8,10 @@
-  * <jkmaline@cc.hut.fi>
-  * Copyright (c) 2002-2003, Jouni Malinen <jkmaline@cc.hut.fi>
-  *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of version 2 of the GNU General Public License as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
-- *
-- * The full GNU General Public License is included in this distribution in the
-- * file called LICENSE.
-- *
-  * Contact Information:
-  * James P. Ketrenos <ipw2100-admin@linux.intel.com>
-  * Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
-- *
-- *****************************************************************************/
-+ */
- #include <linux/wireless.h>
- #include <linux/kmod.h>
- #include <linux/module.h>
+-3. You may copy and distribute the Program (or a work based on it, under
+-   Section 2) in object code or executable form under the terms of Sections
+-   1 and 2 above provided that you also do one of the following:
+-
+-   * a) Accompany it with the complete corresponding machine-readable source
+-        code, which must be distributed under the terms of Sections 1 and 2
+-        above on a medium customarily used for software interchange; or,
+-
+-   * b) Accompany it with a written offer, valid for at least three years,
+-        to give any third party, for a charge no more than your cost of
+-        physically performing source distribution, a complete machine-
+-        readable copy of the corresponding source code, to be distributed
+-        under the terms of Sections 1 and 2 above on a medium customarily
+-        used for software interchange; or,
+-
+-   * c) Accompany it with the information you received as to the offer to
+-        distribute corresponding source code. (This alternative is allowed
+-        only for noncommercial distribution and only if you received the
+-        program in object code or executable form with such an offer, in
+-        accord with Subsection b above.)
+-
+-   The source code for a work means the preferred form of the work for
+-   making modifications to it. For an executable work, complete source code
+-   means all the source code for all modules it contains, plus any
+-   associated interface definition files, plus the scripts used to control
+-   compilation and installation of the executable. However, as a special
+-   exception, the source code distributed need not include anything that is
+-   normally distributed (in either source or binary form) with the major
+-   components (compiler, kernel, and so on) of the operating system on which
+-   the executable runs, unless that component itself accompanies the
+-   executable.
+-
+-   If distribution of executable or object code is made by offering access
+-   to copy from a designated place, then offering equivalent access to copy
+-   the source code from the same place counts as distribution of the source
+-   code, even though third parties are not compelled to copy the source
+-   along with the object code.
+-
+-4. You may not copy, modify, sublicense, or distribute the Program except as
+-   expressly provided under this License. Any attempt otherwise to copy,
+-   modify, sublicense or distribute the Program is void, and will
+-   automatically terminate your rights under this License. However, parties
+-   who have received copies, or rights, from you under this License will not
+-   have their licenses terminated so long as such parties remain in full
+-   compliance.
+-
+-5. You are not required to accept this License, since you have not signed
+-   it. However, nothing else grants you permission to modify or distribute
+-   the Program or its derivative works. These actions are prohibited by law
+-   if you do not accept this License. Therefore, by modifying or
+-   distributing the Program (or any work based on the Program), you
+-   indicate your acceptance of this License to do so, and all its terms and
+-   conditions for copying, distributing or modifying the Program or works
+-   based on it.
+-
+-6. Each time you redistribute the Program (or any work based on the
+-   Program), the recipient automatically receives a license from the
+-   original licensor to copy, distribute or modify the Program subject to
+-   these terms and conditions. You may not impose any further restrictions
+-   on the recipients' exercise of the rights granted herein. You are not
+-   responsible for enforcing compliance by third parties to this License.
+-
+-7. If, as a consequence of a court judgment or allegation of patent
+-   infringement or for any other reason (not limited to patent issues),
+-   conditions are imposed on you (whether by court order, agreement or
+-   otherwise) that contradict the conditions of this License, they do not
+-   excuse you from the conditions of this License. If you cannot distribute
+-   so as to satisfy simultaneously your obligations under this License and
+-   any other pertinent obligations, then as a consequence you may not
+-   distribute the Program at all. For example, if a patent license would
+-   not permit royalty-free redistribution of the Program by all those who
+-   receive copies directly or indirectly through you, then the only way you
+-   could satisfy both it and this License would be to refrain entirely from
+-   distribution of the Program.
+-
+-   If any portion of this section is held invalid or unenforceable under any
+-   particular circumstance, the balance of the section is intended to apply
+-   and the section as a whole is intended to apply in other circumstances.
+-
+-   It is not the purpose of this section to induce you to infringe any
+-   patents or other property right claims or to contest validity of any
+-   such claims; this section has the sole purpose of protecting the
+-   integrity of the free software distribution system, which is implemented
+-   by public license practices. Many people have made generous contributions
+-   to the wide range of software distributed through that system in
+-   reliance on consistent application of that system; it is up to the
+-   author/donor to decide if he or she is willing to distribute software
+-   through any other system and a licensee cannot impose that choice.
+-
+-   This section is intended to make thoroughly clear what is believed to be
+-   a consequence of the rest of this License.
+-
+-8. If the distribution and/or use of the Program is restricted in certain
+-   countries either by patents or by copyrighted interfaces, the original
+-   copyright holder who places the Program under this License may add an
+-   explicit geographical distribution limitation excluding those countries,
+-   so that distribution is permitted only in or among countries not thus
+-   excluded. In such case, this License incorporates the limitation as if
+-   written in the body of this License.
+-
+-9. The Free Software Foundation may publish revised and/or new versions of
+-   the General Public License from time to time. Such new versions will be
+-   similar in spirit to the present version, but may differ in detail to
+-   address new problems or concerns.
+-
+-   Each version is given a distinguishing version number. If the Program
+-   specifies a version number of this License which applies to it and "any
+-   later version", you have the option of following the terms and
+-   conditions either of that version or of any later version published by
+-   the Free Software Foundation. If the Program does not specify a version
+-   number of this License, you may choose any version ever published by the
+-   Free Software Foundation.
+-
+-10. If you wish to incorporate parts of the Program into other free programs
+-    whose distribution conditions are different, write to the author to ask
+-    for permission. For software which is copyrighted by the Free Software
+-    Foundation, write to the Free Software Foundation; we sometimes make
+-    exceptions for this. Our decision will be guided by the two goals of
+-    preserving the free status of all derivatives of our free software and
+-    of promoting the sharing and reuse of software generally.
+-
+-   NO WARRANTY
+-
+-11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+-    FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
+-    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+-    PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+-    EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+-    ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
+-    YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+-    NECESSARY SERVICING, REPAIR OR CORRECTION.
+-
+-12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+-    WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+-    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
+-    DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
+-    DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
+-    (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
+-    INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
+-    THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
+-    OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+-
+-END OF TERMS AND CONDITIONS
+-
+-How to Apply These Terms to Your New Programs
+-
+-If you develop a new program, and you want it to be of the greatest
+-possible use to the public, the best way to achieve this is to make it free
+-software which everyone can redistribute and change under these terms.
+-
+-To do so, attach the following notices to the program. It is safest to
+-attach them to the start of each source file to most effectively convey the
+-exclusion of warranty; and each file should have at least the "copyright"
+-line and a pointer to where the full notice is found.
+-
+-one line to give the program's name and an idea of what it does.
+-Copyright (C) yyyy  name of author
+-
+-This program is free software; you can redistribute it and/or modify it
+-under the terms of the GNU General Public License as published by the Free
+-Software Foundation; either version 2 of the License, or (at your option)
+-any later version.
+-
+-This program is distributed in the hope that it will be useful, but WITHOUT
+-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+-more details.
+-
+-You should have received a copy of the GNU General Public License along with
+-this program; if not, write to the Free Software Foundation, Inc., 59
+-Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-
+-Also add information on how to contact you by electronic and paper mail.
+-
+-If the program is interactive, make it output a short notice like this when
+-it starts in an interactive mode:
+-
+-Gnomovision version 69, Copyright (C) year name of author Gnomovision comes
+-with ABSOLUTELY NO WARRANTY; for details type 'show w'.  This is free
+-software, and you are welcome to redistribute it under certain conditions;
+-type 'show c' for details.
+-
+-The hypothetical commands 'show w' and 'show c' should show the appropriate
+-parts of the General Public License. Of course, the commands you use may be
+-called something other than 'show w' and 'show c'; they could even be
+-mouse-clicks or menu items--whatever suits your program.
+-
+-You should also get your employer (if you work as a programmer) or your
+-school, if any, to sign a "copyright disclaimer" for the program, if
+-necessary. Here is a sample; alter the names:
+-
+-Yoyodyne, Inc., hereby disclaims all copyright interest in the program
+-'Gnomovision' (which makes passes at compilers) written by James Hacker.
+-
+-signature of Ty Coon, 1 April 1989
+-Ty Coon, President of Vice
+-
+-This General Public License does not permit incorporating your program into
+-proprietary programs. If your program is a subroutine library, you may
+-consider it more useful to permit linking proprietary applications with the
+-library. If this is what you want to do, use the GNU Library General Public
+-License instead of this License.
 -- 
 2.21.0
 
