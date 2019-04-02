@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3A1C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C644C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51D32084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6565420856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554246093;
-	bh=dzd7PCwRRfPfuAc/7nvl9MamfV8T+7jn8AD1EHfUI04=;
+	s=default; t=1554246101;
+	bh=mtOhSACUkKmGbH0M8QNgAFkjuCtDEJwQy80mdxplswI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UvbMpaqsz41gUW+HqOqBMD45Ez2ISTwdeDJYAQKZh2EaWcryfJlO1ibbs8wLxA9l1
-	 W5znMC1CaPiP0BvAiNNOeQFnp7ZdQBaCqw8Y3Y6QT4uzWqMfSk0zNbSUg96eRqRd8n
-	 Go8TIl+yBw69Zpzt08iciW5h0hgbIigeRJ/Yi4NQ=
+	b=15dL/qwD1c7n/z8qby5rqBaz93zryrNisClyzWnJhEZYIp/c18G+wCmjPmsnzmSdT
+	 jN2sEgCkzJr6ONAyjqqz3CQ0AVlQ40H/z0p+rYvQmLWzoZju7Eg/aUwQHdPZptenXg
+	 hODvcP6YaNS+qJXpbDMeFVQQp2b2JO6LnGSlAQOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfDBXBb (ORCPT
+        id S1726827AbfDBXBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 19:01:31 -0400
+        Tue, 2 Apr 2019 19:01:40 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbfDBXBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 19:01:07 -0400
+        id S1726412AbfDBXBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 19:01:06 -0400
 Received: from mail.kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE16520882;
-        Tue,  2 Apr 2019 23:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC1812146E;
+        Tue,  2 Apr 2019 23:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554246066;
-        bh=dzd7PCwRRfPfuAc/7nvl9MamfV8T+7jn8AD1EHfUI04=;
+        s=default; t=1554246065;
+        bh=mtOhSACUkKmGbH0M8QNgAFkjuCtDEJwQy80mdxplswI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1l7rqJhaxVp3TDDQ9XgOLXoz7K6Vif2Z31tuFnPRWusg7++JThajA3NcbTy00Y5yK
-         FnnOrzsKmC92RxQkcbXDRTLqicP6D0hCVtsZUI1n7iXQ5FwmToNRdKSHHDEMkf5xjx
-         5lShOWBPUOLzNEkaP5hp3T6arNLojkz04aR8Vwew=
+        b=bCX6nxLGL6fOqQ51vWXnpBBSwPCrtGQI9/lVSknLa2j4shoP+pLXdyRJSl2HeVT2n
+         AAmfZxEm6EMytqPygbxNe49R20wWpTVcx3u1/S5R5W8h0mraIyIikP0yK3pZhGoG9t
+         2dTrirzljsRHAxD8QgvPLca2ZnDwGvp7QAPb5Iwo=
 From:   Stephen Boyd <sboyd@kernel.org>
 To:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH 5/8] clk: nxp: Drop 'flags' on fixed_rate clk macro
-Date:   Tue,  2 Apr 2019 16:01:01 -0700
-Message-Id: <20190402230104.105845-6-sboyd@kernel.org>
+Subject: [PATCH 2/8] clk: Document deprecated things
+Date:   Tue,  2 Apr 2019 16:00:58 -0700
+Message-Id: <20190402230104.105845-3-sboyd@kernel.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190402230104.105845-1-sboyd@kernel.org>
 References: <20190402230104.105845-1-sboyd@kernel.org>
@@ -55,52 +55,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The flags argument here is always 0, and we want to get rid of the flags
-member of the clk_fixed_rate struct. So remove this here and just pass 0
-when it's used.
+We don't want driver authors to use the struct clk based registration
+and provider APIs. Instead, they should use the clk_hw based APIs. Add
+some notes in the kerneldoc to this effect.
 
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/nxp/clk-lpc32xx.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/clk/clk.c            | 15 ++++++++++-----
+ include/linux/clk-provider.h |  2 +-
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/nxp/clk-lpc32xx.c b/drivers/clk/nxp/clk-lpc32xx.c
-index 5eeecee17b69..7524d19fe60b 100644
---- a/drivers/clk/nxp/clk-lpc32xx.c
-+++ b/drivers/clk/nxp/clk-lpc32xx.c
-@@ -1085,13 +1085,12 @@ struct clk_hw_proto {
- 	};
- };
- 
--#define LPC32XX_DEFINE_FIXED(_idx, _rate, _flags)			\
-+#define LPC32XX_DEFINE_FIXED(_idx, _rate)			\
- [CLK_PREFIX(_idx)] = {							\
- 	.type = CLK_FIXED,						\
- 	{								\
- 		.f = {							\
- 			.fixed_rate = (_rate),				\
--			.flags = (_flags),				\
- 		},							\
- 	},								\
- }
-@@ -1225,7 +1224,7 @@ struct clk_hw_proto {
- }
- 
- static struct clk_hw_proto clk_hw_proto[LPC32XX_CLK_HW_MAX] = {
--	LPC32XX_DEFINE_FIXED(RTC, 32768, 0),
-+	LPC32XX_DEFINE_FIXED(RTC, 32768),
- 	LPC32XX_DEFINE_PLL(PLL397X, pll_397x, HCLKPLL_CTRL, BIT(1)),
- 	LPC32XX_DEFINE_PLL(HCLK_PLL, hclk_pll, HCLKPLL_CTRL, PLL_CTRL_ENABLE),
- 	LPC32XX_DEFINE_PLL(USB_PLL, usb_pll, USB_CTRL, PLL_CTRL_ENABLE),
-@@ -1468,7 +1467,7 @@ static struct clk * __init lpc32xx_clk_register(u32 id)
- 		struct clk_fixed_rate *fixed = &clk_hw->f;
- 
- 		clk = clk_register_fixed_rate(NULL, lpc32xx_clk->name,
--			parents[0], fixed->flags, fixed->fixed_rate);
-+			parents[0], 0, fixed->fixed_rate);
- 		break;
- 	}
- 	default:
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 75d13c0eff12..592e315f7cfd 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3240,8 +3240,10 @@ void __clk_free_clk(struct clk *clk)
+  * @dev: device that is registering this clock
+  * @hw: link to hardware-specific clock data
+  *
+- * clk_register is the primary interface for populating the clock tree with new
+- * clock nodes.  It returns a pointer to the newly allocated struct clk which
++ * clk_register is the *deprecated* interface for populating the clock tree with
++ * new clock nodes. Use clk_hw_register() instead.
++ *
++ * Returns: a pointer to the newly allocated struct clk which
+  * cannot be dereferenced by driver code but may be used in conjunction with the
+  * rest of the clock API.  In the event of an error clk_register will return an
+  * error code; drivers must test for an error code after calling clk_register.
+@@ -3486,9 +3488,10 @@ static void devm_clk_hw_release(struct device *dev, void *res)
+  * @dev: device that is registering this clock
+  * @hw: link to hardware-specific clock data
+  *
+- * Managed clk_register(). Clocks returned from this function are
+- * automatically clk_unregister()ed on driver detach. See clk_register() for
+- * more information.
++ * Managed clk_register(). This function is *deprecated*, use devm_clk_hw_register() instead.
++ *
++ * Clocks returned from this function are automatically clk_unregister()ed on
++ * driver detach. See clk_register() for more information.
+  */
+ struct clk *devm_clk_register(struct device *dev, struct clk_hw *hw)
+ {
+@@ -3820,6 +3823,8 @@ EXPORT_SYMBOL_GPL(of_clk_hw_onecell_get);
+  * @np: Device node pointer associated with clock provider
+  * @clk_src_get: callback for decoding clock
+  * @data: context pointer for @clk_src_get callback.
++ *
++ * This function is *deprecated*. Use of_clk_add_hw_provider() instead.
+  */
+ int of_clk_add_provider(struct device_node *np,
+ 			struct clk *(*clk_src_get)(struct of_phandle_args *clkspec,
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index b65b48cc31f1..adb8a58e213c 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -24,7 +24,7 @@
+ #define CLK_SET_RATE_PARENT	BIT(2) /* propagate rate change up one level */
+ #define CLK_IGNORE_UNUSED	BIT(3) /* do not gate even if unused */
+ 				/* unused */
+-#define CLK_IS_BASIC		BIT(5) /* Basic clk, can't do a to_clk_foo() */
++#define CLK_IS_BASIC		BIT(5) /* deprecated, don't use */
+ #define CLK_GET_RATE_NOCACHE	BIT(6) /* do not use the cached clk rate */
+ #define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change */
+ #define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accuracy */
 -- 
 Sent by a computer through tubes
 
