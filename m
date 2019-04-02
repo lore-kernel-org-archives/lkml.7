@@ -2,150 +2,242 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF78C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281D0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28822070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB48E20833
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfDBCZg (ORCPT
+        id S1728796AbfDBC1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 22:25:36 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30765 "EHLO mga04.intel.com"
+        Mon, 1 Apr 2019 22:27:35 -0400
+Received: from foss.arm.com ([217.140.101.70]:43468 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfDBCZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 22:25:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 19:25:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
-   d="scan'208";a="139188473"
-Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
-  by orsmga003.jf.intel.com with ESMTP; 01 Apr 2019 19:25:33 -0700
-Date:   Tue, 2 Apr 2019 10:28:40 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH 1/2] printk: Add an option to flush all messages on panic
-Message-ID: <20190402022840.et7sbiamxeutbw2q@shbuild888>
-References: <1554115684-26846-1-git-send-email-feng.tang@intel.com>
- <20190402021419.GA617@jagdpanzerIV>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402021419.GA617@jagdpanzerIV>
-User-Agent: NeoMutt/20170609 (1.8.3)
+        id S1726269AbfDBC1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 1 Apr 2019 22:27:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6978880D;
+        Mon,  1 Apr 2019 19:27:34 -0700 (PDT)
+Received: from a075553-lin.blr.arm.com (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AC1A63F59C;
+        Mon,  1 Apr 2019 19:27:29 -0700 (PDT)
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>
+Subject: [PATCH v8 0/9] Add ARMv8.3 pointer authentication for kvm guest
+Date:   Tue,  2 Apr 2019 07:57:08 +0530
+Message-Id: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergey,
+Hi,
 
-Thanks for the review.
+This patch series adds pointer authentication support for KVM guest and
+is based on top of Linux 5.1-rc3. The basic patches in this series was
+originally posted by Mark Rutland earlier[1,2] and contains some history
+of this work.
 
-On Tue, Apr 02, 2019 at 11:14:19AM +0900, Sergey Senozhatsky wrote:
-> On (04/01/19 18:48), Feng Tang wrote:
-> > diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> > index 1fd45a8..58d9580 100644
-> > --- a/arch/powerpc/kernel/traps.c
-> > +++ b/arch/powerpc/kernel/traps.c
-> > @@ -179,7 +179,7 @@ extern void panic_flush_kmsg_end(void)
-> >  	kmsg_dump(KMSG_DUMP_PANIC);
-> >  	bust_spinlocks(0);
-> >  	debug_locks_off();
-> > -	console_flush_on_panic();
-> > +	console_flush_on_panic(false);
-> >  }
-> [..]
-> > @@ -277,7 +277,7 @@ void panic(const char *fmt, ...)
-> >  	 * panic() is not being callled from OOPS.
-> >  	 */
-> >  	debug_locks_off();
-> > -	console_flush_on_panic();
-> > +	console_flush_on_panic(false);
-> [..]
-> > -void console_flush_on_panic(void)
-> > +void console_flush_on_panic(bool flush_all)
-> >  {
-> >  	/*
-> >  	 * If someone else is holding the console lock, trylock will fail
-> > @@ -2539,6 +2540,12 @@ void console_flush_on_panic(void)
-> >  	 */
-> >  	console_trylock();
-> >  	console_may_schedule = 0;
-> > +
-> > +	/* User may want to see all the printk messages on panic */
-> > +	if (flush_all) {
-> > +		console_seq = log_first_seq;
-> > +		console_idx = log_first_idx;
-> > +	}
-> >  	console_unlock();
-> 
-> So my first thought was - let's not add a `bool flag', but instead add
-> an `enum' with clear flag names, e.g. DUMP_ALL/DUMP_PENDING, etc. Something
-> similar to what ftrace_dump(DUMP_ALL) does. And we already have panic_print
-> bit-mask and panic_print_sys_info(), which controls what we print when in
-> panic. So we can move console_flush_on_panic() to panic_print_sys_info()
-> and handle different types of console_flush_on_panic() there:
-> 
-> ---
-> 
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 0ae0d7332f12..e142faaebbcd 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -134,6 +134,11 @@ EXPORT_SYMBOL(nmi_panic);
->  
->  static void panic_print_sys_info(void)
->  {
-> +	if (panic_print & PANIC_PRINT_REPLAY_LOGBUF)
-> +		console_flush_on_panic(DUMP_ALL);
-> +	else
-> +		console_flush_on_panic(DUMP_PENDING);
-> +
->  	if (panic_print & PANIC_PRINT_TASK_INFO)
->  		show_state();
->  
-> @@ -277,7 +282,6 @@ void panic(const char *fmt, ...)
->  	 * panic() is not being callled from OOPS.
->  	 */
->  	debug_locks_off();
-> -	console_flush_on_panic();
->  
->  	panic_print_sys_info();
->  
+Extension Overview:
+=============================================
 
-I guess this is what my 2/2 patch exactly does :)
+The ARMv8.3 pointer authentication extension adds functionality to detect
+modification of pointer values, mitigating certain classes of attack such as
+stack smashing, and making return oriented programming attacks harder.
 
+The extension introduces the concept of a pointer authentication code (PAC),
+which is stored in some upper bits of pointers. Each PAC is derived from the
+original pointer, another 64-bit value (e.g. the stack pointer), and a secret
+128-bit key.
 
-> ---
-> 
-> After looking at this more - DUMP_ALL/DUMP_PENDING clearly depend
-> on panic_print. So... May be we can move panic_print_sys_info() to
-> printk.c, and for PANIC_PRINT_REPLAY_LOGBUF case just reset console
-> seq/idx (console seq/idx are internal to printk) before we
-> flush_on_panic. This way we would not need to modify
-> console_flush_on_panic() prototype at all.
+New instructions are added which can be used to:
 
-My thought is panic_print_sys_info() may be more related to panic, but
-I'm fine with either way.
+* Insert a PAC into a pointer
+* Strip a PAC from a pointer
+* Authenticate and strip a PAC from a pointer
+
+The detailed description of ARMv8.3 pointer authentication support in
+userspace/kernel and can be found in Kristina's generic pointer authentication
+patch series[3].
+
+KVM guest work:
+==============================================
+
+If pointer authentication is enabled for KVM guests then the new PAC instructions
+will not trap to EL2. If not then they may be ignored if in HINT region or trapped
+in EL2 as illegal instruction. Since KVM guest vcpu runs as a thread so they have
+a key initialized which will be used by PAC. When world switch happens between
+host and guest then this key is exchanged.
+
+The current v8 patch series contains review comments and suggestions by James
+Morse, Kristina Martsenko, Julien Thierry and Dave Martin.
+
+The first two patch is cherry picked from Dave Martin [10, 11] v6 series which adds
+SVE support for KVM guest. 
+
+Changes since v7 [9]: Major changes are listed below and detail changes are in
+		      each patch.
+ * Comments and Documentation updated to reflect using address/generic
+   features flag together.
+ * Dropped the documentation patch and added those details in the relevant
+   patches.
+ * Rebased the patch series on 2 patches of Dave Martin v6 SVE series. 
+ * Small bug fixes.
+
+Changes since v6 [8]: Major changes are listed below.
+
+* Pointer authentication key switch entirely in assembly now.
+* isb instruction added after Key switched to host.
+* Use __hyp_this_cpu_ptr for both VHE and nVHE mode.
+* 2 separate flags for address and generic authentication.
+* kvm_arm_vcpu_ptrauth_allowed renamed to has_vcpu_ptrauth.
+* kvm_arm_vcpu_ptrauth_reset renamed to kvm_arm_vcpu_ptrauth_setup_lazy.
+* Save of host Key registers now done in ptrauth instruction trap.
+* A fix to add kern_hyp_va to get correct host_ctxt pointer in nVHE mode.
+* Patches re-structured to better reflect ABI change.
+
+Changes since v5 [7]: Major changes are listed below.
+
+* Split hcr_el2 and mdcr_el2 save/restore in two patches.
+* Reverted back save/restore of sys-reg keys as done in V4 [5]. There was
+  suggestion by James Morse to use ptrauth utilities in a single place
+  in arm core and use them from kvm. However this change deviates from the
+  existing sys-reg implementations and is not scalable.
+* Invoked the key switch C functions from __guest_enter/__guest_exit assembly.
+* Host key save is now done inside vcpu_load.
+* Reverted back masking of cpufeature ID registers for ptrauth when disabled
+  from userpace.
+* Reset of ptrauth key registers not done conditionally.
+* Code and Documentation cleanup.
+
+Changes since v4 [6]: Several suggestions from James Morse
+* Move host registers to be saved/restored inside struct kvm_cpu_context.
+* Similar to hcr_el2, save/restore mdcr_el2 register also.
+* Added save routines for ptrauth keys in generic arm core and
+  use them during KVM context switch.
+* Defined a GCC attribute __no_ptrauth which discards generating
+  ptrauth instructions in a function. This is taken from Kristina's
+  earlier kernel pointer authentication support patches [4].
+* Dropped a patch to mask cpufeature when not enabled from userspace and
+  now only key registers are masked from register list.
+
+Changes since v3 [5]:
+* Use pointer authentication only when VHE is present as ARM8.3 implies ARM8.1
+  features to be present.
+* Added lazy context handling of ptrauth instructions from V2 version again. 
+* Added more details in Documentation.
+
+Changes since v2 [1,2]:
+* Allow host and guest to have different HCR_EL2 settings and not just constant
+  value HCR_HOST_VHE_FLAGS or HCR_HOST_NVHE_FLAGS.
+* Optimise the reading of HCR_EL2 in host/guest switch by fetching it once
+  during KVM initialisation state and using it later.
+* Context switch pointer authentication keys when switching between guest
+  and host. Pointer authentication was enabled in a lazy context earlier[2] and
+  is removed now to make it simple. However it can be revisited later if there
+  is significant performance issue.
+* Added a userspace option to choose pointer authentication.
+* Based on the userspace option, ptrauth cpufeature will be visible.
+* Based on the userspace option, ptrauth key registers will be accessible.
+* A small document is added on how to enable pointer authentication from
+  userspace KVM API.
+
+Looking for feedback and comments.
 
 Thanks,
-Feng
+Amit
 
-> 
-> Let's hear from people.
-> 
-> 	-ss
+[1]: https://lore.kernel.org/lkml/20171127163806.31435-11-mark.rutland@arm.com/
+[2]: https://lore.kernel.org/lkml/20171127163806.31435-10-mark.rutland@arm.com/
+[3]: https://lkml.org/lkml/2018/12/7/666
+[4]: https://lore.kernel.org/lkml/20181005084754.20950-1-kristina.martsenko@arm.com/
+[5]: https://lkml.org/lkml/2018/10/17/594
+[6]: https://lkml.org/lkml/2018/12/18/80
+[7]: https://lkml.org/lkml/2019/1/28/49
+[8]: https://lkml.org/lkml/2019/2/19/190 
+[9]: https://lkml.org/lkml/2019/3/19/125 
+[10]: https://patchwork.kernel.org/patch/10860139/
+[11]: https://patchwork.kernel.org/patch/10860141/
+
+Linux (5.1-rc3 based):
+
+Amit Daniel Kachhap (4):
+  KVM: arm64: Move hyp_symbol_addr to fix dependency
+  KVM: arm/arm64: preserve host MDCR_EL2 value
+  KVM: arm64: Add vcpu feature flags to control ptrauth accessibility
+  KVM: arm64: Add capability to advertise ptrauth for guest
+
+Dave Martin (2):
+  KVM: arm64: Propagate vcpu into read_id_reg()
+  KVM: arm64: Support runtime sysreg visibility filtering
+
+Mark Rutland (2):
+  KVM: arm/arm64: preserve host HCR_EL2 value
+  KVM: arm/arm64: context-switch ptrauth registers
+
+ Documentation/arm64/pointer-authentication.txt |  19 ++++-
+ Documentation/virtual/kvm/api.txt              |   7 ++
+ arch/arm/include/asm/kvm_host.h                |   4 +-
+ arch/arm64/Kconfig                             |   5 +-
+ arch/arm64/include/asm/kvm_asm.h               |  22 ++++-
+ arch/arm64/include/asm/kvm_emulate.h           |  24 +++---
+ arch/arm64/include/asm/kvm_host.h              |  46 +++++++++--
+ arch/arm64/include/asm/kvm_hyp.h               |   2 +-
+ arch/arm64/include/asm/kvm_mmu.h               |  20 -----
+ arch/arm64/include/asm/kvm_ptrauth_asm.h       | 106 +++++++++++++++++++++++++
+ arch/arm64/include/uapi/asm/kvm.h              |   2 +
+ arch/arm64/kernel/asm-offsets.c                |   6 ++
+ arch/arm64/kvm/debug.c                         |  28 ++-----
+ arch/arm64/kvm/guest.c                         |  16 +++-
+ arch/arm64/kvm/handle_exit.c                   |  24 ++++--
+ arch/arm64/kvm/hyp/debug-sr.c                  |   5 --
+ arch/arm64/kvm/hyp/entry.S                     |   7 ++
+ arch/arm64/kvm/hyp/switch.c                    |  40 +++++-----
+ arch/arm64/kvm/hyp/sysreg-sr.c                 |  22 ++++-
+ arch/arm64/kvm/hyp/tlb.c                       |   6 +-
+ arch/arm64/kvm/reset.c                         |  13 +++
+ arch/arm64/kvm/sys_regs.c                      |  93 ++++++++++++++++++----
+ arch/arm64/kvm/sys_regs.h                      |  25 ++++++
+ include/uapi/linux/kvm.h                       |   2 +
+ virt/kvm/arm/arm.c                             |   4 +-
+ 25 files changed, 424 insertions(+), 124 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_ptrauth_asm.h
+
+kvmtool:
+
+Repo: git.kernel.org/pub/scm/linux/kernel/git/will/kvmtool.git
+
+Amit Daniel Kachhap (1):
+  KVM: arm/arm64: Add a vcpu feature for pointer authentication
+
+ arm/aarch32/include/kvm/kvm-cpu-arch.h    | 1 +
+ arm/aarch64/include/asm/kvm.h             | 2 ++
+ arm/aarch64/include/kvm/kvm-config-arch.h | 4 +++-
+ arm/aarch64/include/kvm/kvm-cpu-arch.h    | 2 ++
+ arm/include/arm-common/kvm-config-arch.h  | 1 +
+ arm/kvm-cpu.c                             | 7 +++++++
+ include/linux/kvm.h                       | 2 ++
+ 7 files changed, 18 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
