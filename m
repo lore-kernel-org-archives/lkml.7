@@ -2,87 +2,97 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79255C10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0963C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4048F206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA4D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 17:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V2u3YRsk"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="gMmDkaBl";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="dBKmMavn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfDBRPw (ORCPT
+        id S1731175AbfDBRYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 13:15:52 -0400
-Received: from mail-it1-f170.google.com ([209.85.166.170]:51324 "EHLO
-        mail-it1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729101AbfDBRPv (ORCPT
+        Tue, 2 Apr 2019 13:24:37 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:65123 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDBRYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 13:15:51 -0400
-Received: by mail-it1-f170.google.com with SMTP id s3so6432530itk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 10:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HFPmBx+B1WZ6nJT4RE69xmC8uy5jW1MyDXfthBDNL0c=;
-        b=V2u3YRsk7JpNkAIHI+OTVMyfoxGzTDvHwkXjKBqKrgsepoCcnmuPQ4iYHy5esNj3ua
-         D0XZjCjpY3DeDcVb9b14+PsHaVje90gM1LL/qBsyzEe4fCu09sC/zlvONsu7tpyk6N4h
-         h4E39GMWAex7ESOdk0WFndjGYkB8q+kXqO/q9m16xviXj3zTYkP5Iunn6MYcsF3/6In6
-         H9ehfOnxbMjw2hzUrELA+NoJHE7pbumjhoUmr/wwKLKJ3wcV6JWW2obBhgIegVSueF8Z
-         4zfu4Zchr5Kxo2wq37b2zQSUpz5R0gvSwth+nojdJ8DBNsGsEP9sjM2jwn+1qveDB2KJ
-         Ka1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HFPmBx+B1WZ6nJT4RE69xmC8uy5jW1MyDXfthBDNL0c=;
-        b=RE+XxZCbb7b3QsWfROfkTDgxzpQfzXJnlbmJn2ST+nTTiycASYhgqbgRIDjNcGb8iY
-         ykhHr8t8x1HpVT8fahijiK3SwnSghhmBcgFaC13KZDQ/7Lqy5FwTqYWCaJ3EV1jsA5mk
-         h+xDR+p9wTeM0fb0Q5r4yLuuRFypFRzJiN0dk9/U655w2KQ5Psrrl5ZVOU17+dLbTk+i
-         xfgshpYUsXAYnM700BCZPZVALkJeuz6gTcLHp6hnDLrChMaAOuXb3lxV89/Nr9Ihxz5i
-         eKbfYm/NWre60DsWXzRy+qMAVG3qwZej1XRI/RCoRs+ddDUgFUdT4uN4yAiYN3JSmDTQ
-         samw==
-X-Gm-Message-State: APjAAAWL0Ju9OJatateQDoU4JCY4I+aVnfhYAtO4pM7m/wbXX2915ag2
-        QRf0+14FaCgfTNwoQOYIHNfoFmGFE7BazLcTKiWDNA==
-X-Google-Smtp-Source: APXvYqxJjCW4h+i3d/gXbXt+9Vk9zPrvaLq8tThlHlRFPtr8bgRmEf41ON8OUqbZ67BMdd3UKwQCtNBY2GvZwlcWCOU=
-X-Received: by 2002:a24:cf41:: with SMTP id y62mr4867233itf.106.1554225350512;
- Tue, 02 Apr 2019 10:15:50 -0700 (PDT)
+        Tue, 2 Apr 2019 13:24:37 -0400
+X-Greylist: delayed 344 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Apr 2019 13:24:35 EDT
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id CCE3652B34;
+        Tue,  2 Apr 2019 13:18:50 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:message-id:mime-version:content-type; s=sasl; bh=lA3
+        XXJppY4E0zdXkUf0okQrIzCE=; b=gMmDkaBlDeGNluwVGaKQXZ4Vr6pDd/igfxx
+        OdHyDVRzzgVdaMhFKgR48aK3zFSvKldvptxXDXz+iEyPwMqbqUkiUF9u9oCLkNHD
+        hcXs7SJy0S3JzuRiylb6f/MRNiaDm3RlemkPWC1BvO/hBITV2+FECUfyNBxIGDy+
+        bM7mhFPw=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id C623C52B32;
+        Tue,  2 Apr 2019 13:18:50 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:message-id:mime-version:content-type;
+ s=2016-12.pbsmtp; bh=QJmCaYAwqEZuZmTZNPGtDIFJtseNCPGm4fIWacmp1jM=;
+ b=dBKmMavn4vghKi0tg9B7oFGqJIJU3K6LTLQMYcvYo+OmXudG5rqASbCSplXU/Ruv457NY5xBxvyRHpzvLwa3nHquUQXxwp5CkaJHzqZqhfOSLfPod9xWaunMl7an9yIZPiUvl6iGHQYE+V0hfssPU8Di4U0o34m3t4iyufBFBVw=
+Received: from yoda.home (unknown [70.82.104.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id A944B52B31;
+        Tue,  2 Apr 2019 13:18:47 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id B296E2DA0416;
+        Tue,  2 Apr 2019 13:18:45 -0400 (EDT)
+Date:   Tue, 2 Apr 2019 13:18:45 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org, nico@linaro.org
+Subject: [PATCH] update my email address
+Message-ID: <nycvar.YSQ.7.76.1904021315560.20244@knanqh.ubzr>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190227202658.197113-1-matthewgarrett@google.com>
- <20190401235245.GA29282@linux.intel.com> <CACdnJutCC7n++Nz5qy1YzmsSchEApDUvMH9-qpxYXckh-Dzf-Q@mail.gmail.com>
- <20190402130704.GA3916@linux.intel.com>
-In-Reply-To: <20190402130704.GA3916@linux.intel.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Tue, 2 Apr 2019 10:15:39 -0700
-Message-ID: <CACdnJuvFxKCwP3XftqacFiLTmTZzCGHkc9DzrJu2u6vwy5_o-w@mail.gmail.com>
-Subject: Re: Add support for TCG2 log format on UEFI systems
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     tomas.winkler@intel.com,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 604D773E-556B-11E9-A255-D01F9763A999-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 6:07 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->
-> I'll apply all patches soonish and include them to the next PR.
+The @linaro version won't be valid much longer.
 
-Thanks! Looks like I need some fixes to deal with non-x86
-architectures, I'll get on that today.
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+
+diff --git a/.mailmap b/.mailmap
+index b2cde8668d..ae2bcad06f 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -156,6 +156,8 @@ Morten Welinder <welinder@darter.rentec.com>
+ Morten Welinder <welinder@troll.com>
+ Mythri P K <mythripk@ti.com>
+ Nguyen Anh Quynh <aquynh@gmail.com>
++Nicolas Pitre <nico@fluxnic.net> <nicolas.pitre@linaro.org>
++Nicolas Pitre <nico@fluxnic.net> <nico@linaro.org>
+ Paolo 'Blaisorblade' Giarrusso <blaisorblade@yahoo.it>
+ Patrick Mochel <mochel@digitalimplant.org>
+ Paul Burton <paul.burton@mips.com> <paul.burton@imgtec.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 43b36dbed4..391405091c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4129,7 +4129,7 @@ F:	drivers/cpuidle/*
+ F:	include/linux/cpuidle.h
+ 
+ CRAMFS FILESYSTEM
+-M:	Nicolas Pitre <nico@linaro.org>
++M:	Nicolas Pitre <nico@fluxnic.net>
+ S:	Maintained
+ F:	Documentation/filesystems/cramfs.txt
+ F:	fs/cramfs/
