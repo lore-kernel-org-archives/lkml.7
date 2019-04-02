@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66139C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A93C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC8720883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1705420883
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731069AbfDBMkg (ORCPT
+        id S1731102AbfDBMkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:40:36 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:36753 "EHLO
+        Tue, 2 Apr 2019 08:40:40 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44755 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730850AbfDBMkf (ORCPT
+        with ESMTP id S1731055AbfDBMkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:40:35 -0400
+        Tue, 2 Apr 2019 08:40:37 -0400
 X-Originating-IP: 109.213.83.19
 Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 28D4A20007;
-        Tue,  2 Apr 2019 12:40:31 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0165120011;
+        Tue,  2 Apr 2019 12:40:34 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -33,9 +33,9 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 07/10] clk: at91: master: Add sam9x60 support
-Date:   Tue,  2 Apr 2019 14:40:13 +0200
-Message-Id: <20190402124016.20558-8-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 09/10] dt-bindings: clk: at91: add bindings for SAM9X60 pmc
+Date:   Tue,  2 Apr 2019 14:40:15 +0200
+Message-Id: <20190402124016.20558-10-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190402124016.20558-1-alexandre.belloni@bootlin.com>
 References: <20190402124016.20558-1-alexandre.belloni@bootlin.com>
@@ -46,87 +46,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sam9x60 cpu clock is located at a different offset but is otherwise
-similar to the master clock.
+Add SAM9X60 PMC compatible string.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/clk-master.c | 8 +++++---
- drivers/clk/at91/pmc.h        | 1 +
- include/linux/clk/at91_pmc.h  | 2 ++
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/clock/at91-clock.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/at91/clk-master.c b/drivers/clk/at91/clk-master.c
-index eb53b4a8fab6..12b5bf4cc7bb 100644
---- a/drivers/clk/at91/clk-master.c
-+++ b/drivers/clk/at91/clk-master.c
-@@ -29,6 +29,7 @@ struct clk_master {
- 	struct regmap *regmap;
- 	const struct clk_master_layout *layout;
- 	const struct clk_master_characteristics *characteristics;
-+	u32 mckr;
- };
+diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+index ce1d21102428..e0e4fa67716f 100644
+--- a/Documentation/devicetree/bindings/clock/at91-clock.txt
++++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+@@ -37,7 +37,8 @@ For example:
+ Power Management Controller (PMC):
  
- static inline bool clk_master_ready(struct regmap *regmap)
-@@ -69,7 +70,7 @@ static unsigned long clk_master_recalc_rate(struct clk_hw *hw,
- 						master->characteristics;
- 	unsigned int mckr;
- 
--	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
-+	regmap_read(master->regmap, master->layout->offset, &mckr);
- 	mckr &= layout->mask;
- 
- 	pres = (mckr >> layout->pres_shift) & MASTER_PRES_MASK;
-@@ -95,7 +96,7 @@ static u8 clk_master_get_parent(struct clk_hw *hw)
- 	struct clk_master *master = to_clk_master(hw);
- 	unsigned int mckr;
- 
--	regmap_read(master->regmap, AT91_PMC_MCKR, &mckr);
-+	regmap_read(master->regmap, master->layout->offset, &mckr);
- 
- 	return mckr & AT91_PMC_CSS;
- }
-@@ -147,13 +148,14 @@ at91_clk_register_master(struct regmap *regmap,
- 	return hw;
- }
- 
--
- const struct clk_master_layout at91rm9200_master_layout = {
- 	.mask = 0x31F,
- 	.pres_shift = 2,
-+	.offset = AT91_PMC_MCKR,
- };
- 
- const struct clk_master_layout at91sam9x5_master_layout = {
- 	.mask = 0x373,
- 	.pres_shift = 4,
-+	.offset = AT91_PMC_MCKR,
- };
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 44345e4ab1c9..4a30c20f17f1 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -38,6 +38,7 @@ struct clk_range {
- #define CLK_RANGE(MIN, MAX) {.min = MIN, .max = MAX,}
- 
- struct clk_master_layout {
-+	u32 offset;
- 	u32 mask;
- 	u8 pres_shift;
- };
-diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
-index 31f00ebf1315..0c53f26ae3d3 100644
---- a/include/linux/clk/at91_pmc.h
-+++ b/include/linux/clk/at91_pmc.h
-@@ -74,6 +74,8 @@
- #define			AT91_PMC_USBDIV_4		(2 << 28)
- #define		AT91_PMC_USB96M		(1     << 28)		/* Divider by 2 Enable (PLLB only) */
- 
-+#define AT91_PMC_CPU_CKR	0x28			/* CPU Clock Register */
-+
- #define	AT91_PMC_MCKR		0x30			/* Master Clock Register */
- #define		AT91_PMC_CSS		(3 <<  0)		/* Master Clock Selection */
- #define			AT91_PMC_CSS_SLOW		(0 << 0)
+ Required properties:
+-- compatible : shall be "atmel,<chip>-pmc", "syscon":
++- compatible : shall be "atmel,<chip>-pmc", "syscon" or
++	"microchip,sam9x60-pmc"
+ 	<chip> can be: at91rm9200, at91sam9260, at91sam9261,
+ 	at91sam9263, at91sam9g45, at91sam9n12, at91sam9rl, at91sam9g15,
+ 	at91sam9g25, at91sam9g35, at91sam9x25, at91sam9x35, at91sam9x5,
 -- 
 2.20.1
 
