@@ -2,65 +2,106 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5577C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E032C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C185820856
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DAD20856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730771AbfDBLry convert rfc822-to-8bit (ORCPT
+        id S1730801AbfDBLtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:47:54 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39696 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729568AbfDBLry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:47:54 -0400
-Received: from we0289.dip.tu-dresden.de ([141.76.177.33] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hBHtL-0002Vj-Ee; Tue, 02 Apr 2019 13:47:47 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: rockchip: add shutdown function to poweroff VOP and HDMI TX
-Date:   Tue, 02 Apr 2019 13:47:46 +0200
-Message-ID: <81811367.CzZtJVt0pY@phil>
-In-Reply-To: <CA+z=w3W+OYgxwejgfbNLJzFP28seh5ij62imuCDAY9XP_V39fQ@mail.gmail.com>
-References: <20190308183718.21409-1-jbx6244@gmail.com> <CA+z=w3W+OYgxwejgfbNLJzFP28seh5ij62imuCDAY9XP_V39fQ@mail.gmail.com>
+        Tue, 2 Apr 2019 07:49:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6212 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726903AbfDBLtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:49:16 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [10.3.19.209])
+        by Forcepoint Email with ESMTP id 88C49794F1B78C7F4759;
+        Tue,  2 Apr 2019 19:49:09 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 2 Apr 2019
+ 19:48:59 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <linux-ide@vger.kernel.org>, <tj@kernel.org>, <axboe@kernel.dk>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] ata: ahci: fix race between EH and ahci interrupt
+Date:   Tue, 2 Apr 2019 20:06:42 +0800
+Message-ID: <20190402120642.9274-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
+There is a race condition between EH and ahci interrupt when the EH is
+interrupted after the ata port is thaw by the ahci interrupt. In the
+ahci interrupt callback the port will be frozen again but the EH thread
+will not be scheduled because it is already running.
 
-Am Montag, 11. März 2019, 19:14:27 CEST schrieb Johan Jonker:
-> Hi,
-> 
-> Just found out that this was patched and reverted before.(lol)
-> The revert was 3 months ago for RK3399 boards, but other processors
-> like RK3066 are left without shutdown now.
-> 
-> What's the status for a fix?
-> Keep using the old patch for now?
+[interrupt]                             [scsi_eh]
+ahci_error_intr                         scsi_error_handler
+  =>ata_port_freeze
+  =>ahci_freeze (turn IRQ off)
+  =>ata_port_abort
+    =>ata_port_schedule_eh
+      =>host_eh_scheduled++;
+	host_eh_scheduled = 1
+    =>scsi_eh_wakeup
+					 =>ata_scsi_error
+					 =>ata_eh_thaw_port
+					   =>ahci_thaw (turn IRQ on)
+ahci_error_intr
+  =>ata_port_freeze
+  =>ahci_freeze (turn IRQ off)
+  =>ata_port_abort
+    =>ata_port_schedule_eh
+      =>host_eh_scheduled++;
+	host_eh_scheduled = 2
+      =>EH already running
+					 =>ata_std_end_eh
+					   =>host_eh_scheduled = 0;
+					 =>EH over, IRQ remain off
 
-I've just resurrected the patch from Vicente, calling the atomic_shutdown
-helper. Sadly I forgot to Cc you there, but you can for example find it at
+The host_eh_scheduled is 0 and scsi EH thread will not be scheduled again,
+and the ata port remain freeze and will never be enabled. If EH thread is
+already running, no need to freeze port and schedule EH again.
 
-https://patchwork.freedesktop.org/patch/295946/
+Reported-by: luojian <luojian5@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/ata/libahci.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-
-Heiko
-
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index 692782dddc0f..cba0f5dcb36f 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -1805,9 +1805,15 @@ static void ahci_error_intr(struct ata_port *ap, u32 irq_stat)
+ 
+ 	/* okay, let's hand over to EH */
+ 
+-	if (irq_stat & PORT_IRQ_FREEZE)
++	if (irq_stat & PORT_IRQ_FREEZE) {
++		/*
++		 * EH already running, this may happen if the port is thawed in the EH.
++		 * But we cannot freeze it again otherwise the port will never be thawed.
++		 */
++		if (ap->pflags & (ATA_PFLAG_EH_PENDING | ATA_PFLAG_EH_IN_PROGRESS))
++			return;
+ 		ata_port_freeze(ap);
+-	else if (fbs_need_dec) {
++	} else if (fbs_need_dec) {
+ 		ata_link_abort(link);
+ 		ahci_fbs_dec_intr(ap);
+ 	} else
+-- 
+2.17.2
 
