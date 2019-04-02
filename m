@@ -2,171 +2,257 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C44C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C0AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17C8620833
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF2620833
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 06:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbfDBGpo convert rfc822-to-8bit (ORCPT
+        id S1729194AbfDBGql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 02:45:44 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57509 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbfDBGpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 02:45:44 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x326jX6L008682, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtitcasv02.realtek.com.tw[172.21.6.19])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x326jX6L008682
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 2 Apr 2019 14:45:33 +0800
-Received: from RTITEXH01.realtek.com.tw (172.21.6.62) by
- RTITCASV02.realtek.com.tw (172.21.6.19) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 2 Apr 2019 14:45:33 +0800
-Received: from RTITMBSVM07.realtek.com.tw ([fe80::a512:a803:bf1e:b23]) by
- RTITEXH01.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Tue, 2 Apr 2019
- 14:45:32 +0800
-From:   Kailang <kailang@realtek.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Daniel Drake <drake@endlessm.com>,
-        "linux@endlessm.com" <linux@endlessm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
-Thread-Topic: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer
- TravelMate B114-21 with ALC233
-Thread-Index: AQHU6Dqw5knd0/Ath0C1mp5SHHcFl6YnBJOAgAFn61D//3uTAIAAhmXA
-Date:   Tue, 2 Apr 2019 06:45:32 +0000
-Message-ID: <6FAB7C47BCF00940BB0999A99BE3547A18DBAFCA@RTITMBSVM07.realtek.com.tw>
-References: <20190401032503.2821-1-jian-hong@endlessm.com>
-        <s5hmul9lkke.wl-tiwai@suse.de>
-        <6FAB7C47BCF00940BB0999A99BE3547A18DBAFAD@RTITMBSVM07.realtek.com.tw>
- <s5h7ecclxft.wl-tiwai@suse.de>
-In-Reply-To: <s5h7ecclxft.wl-tiwai@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.105.152]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 2 Apr 2019 02:46:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40966 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbfDBGql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 02:46:41 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3804420AFF;
+        Tue,  2 Apr 2019 06:46:40 +0000 (UTC)
+Received: from localhost (ovpn-12-91.pek2.redhat.com [10.72.12.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1EA9E58B1;
+        Tue,  2 Apr 2019 06:46:38 +0000 (UTC)
+Date:   Tue, 2 Apr 2019 14:46:36 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
+Message-ID: <20190402064636.GM7627@MiWiFi-R3L-srv>
+References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 02 Apr 2019 06:46:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/02/19 at 12:10pm, Pingfan Liu wrote:
+> crashkernel=x@y or or =range1:size1[,range2:size2,...]@offset option may
+> fail to reserve the required memory region if KASLR puts kernel into the
+> region. To avoid this uncertainty, asking KASLR to skip the required
+> region.
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Nicolas Pitre <nico@linaro.org>
+> Cc: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v2 -> v3: adding parsing of crashkernel=range1:size1[,range2:size2,...]@offset
+> 
+>  arch/x86/boot/compressed/kaslr.c | 116 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 114 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+> index 2e53c05..7f698f4 100644
+> --- a/arch/x86/boot/compressed/kaslr.c
+> +++ b/arch/x86/boot/compressed/kaslr.c
+> @@ -107,6 +107,7 @@ enum mem_avoid_index {
+>  	MEM_AVOID_BOOTPARAMS,
+>  	MEM_AVOID_MEMMAP_BEGIN,
+>  	MEM_AVOID_MEMMAP_END = MEM_AVOID_MEMMAP_BEGIN + MAX_MEMMAP_REGIONS - 1,
+> +	MEM_AVOID_CRASHKERNEL,
+>  	MEM_AVOID_MAX,
+>  };
+>  
+> @@ -238,6 +239,115 @@ static void parse_gb_huge_pages(char *param, char *val)
+>  	}
+>  }
+>  
+> +/* code heavily copied from parse_crashkernel_mem() */
+> +static void handle_crashkernel_mem(char *cmdline,
+> +					unsigned long long system_ram,
+> +					unsigned long long *crash_size,
+> +					unsigned long long *crash_base)
 
-Reviewed-by: Kailang Yang <kailang@realtek.com>
+This version looks better and the logic is simple. It will be much better
+if we can share code with parse_crashkernel_mem() since both of them look
+almost the same.
 
------Original Message-----
-From: Takashi Iwai <tiwai@suse.de> 
-Sent: Tuesday, April 2, 2019 2:43 PM
-To: Kailang <kailang@realtek.com>
-Cc: Jian-Hong Pan <jian-hong@endlessm.com>; alsa-devel@alsa-project.org; Daniel Drake <drake@endlessm.com>; linux@endlessm.com; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
+> +{
+> +	char *tmp, *cur = cmdline;
+> +
+> +	/* for each entry of the comma-separated list */
+> +	do {
+> +		unsigned long long start, end = ULLONG_MAX, size;
+> +
+> +		/* get the start of the range */
+> +		start = memparse(cur, &tmp);
+> +		/* no value given */
+> +		if (cur == tmp)
+> +			return;
+> +		cur = tmp;
+> +		if (*cur != '-')
+> +			return;
+> +		cur++;
+> +
+> +		/* if no ':' is here, than we read the end */
+> +		if (*cur != ':') {
+> +			end = memparse(cur, &tmp);
+> +			/* no value given */
+> +			if (cur == tmp)
+> +				return;
+> +			cur = tmp;
+> +			/* invalid if crashkernel end <= start */
+> +			if (end <= start)
+> +				return;
+> +		}
+> +		/* expect ":" after range */
+> +		if (*cur != ':')
+> +			return;
+> +		cur++;
+> +
+> +		size = memparse(cur, &tmp);
+> +		/* no size value given */
+> +		if (cur == tmp)
+> +			return;
+> +		cur = tmp;
+> +		if (size >= system_ram)
+> +			return;
+> +
+> +		/* match ? */
+> +		if (system_ram >= start && system_ram < end) {
+> +			*crash_size = size;
+> +			break;
+> +		}
+> +	} while (*cur++ == ',');
+> +
+> +	if (*crash_size > 0) {
+> +		while (*cur && *cur != ' ' && *cur != '@')
+> +			cur++;
+> +		if (*cur == '@') {
+> +			cur++;
+> +			*crash_base = memparse(cur, &tmp);
+> +		}
+> +	}
+> +}
+> +
+> +/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
+> +static void mem_avoid_specified_crashkernel_region(char *option)
 
-On Tue, 02 Apr 2019 08:38:32 +0200,
-Kailang wrote:
-> 
-> Hi Takashi,
-> 
-> This COEF value was modified by me.
+Maybe just add more words to explain the specified crashkernel region
+cases, but remove the 'speecified' word in function name?
 
-OK, then could you give your Acked-by or Reviewed-by tag?
+> +{
+> +	unsigned long long crash_size, crash_base = 0;
+> +	char	*first_colon, *first_space, *cur = option;
+> +
+> +	first_colon = strchr(option, ':');
+> +	first_space = strchr(option, ' ');
+> +	/* if contain ":" */
+> +	if (first_colon && (!first_space || first_colon < first_space)) {
+> +		int i;
+> +		u64 total_sz = 0;
+> +		struct boot_e820_entry *entry;
+> +
+> +		for (i = 0; i < boot_params->e820_entries; i++) {
+> +			entry = &boot_params->e820_table[i];
+> +			/* Skip non-RAM entries. */
+> +			if (entry->type != E820_TYPE_RAM)
+> +				continue;
+> +			total_sz += entry->size;
 
+Wrap this for loop into a static function to calculate the system RAM
+size?
 
-thanks,
+Other than these, I think this adding looks good. It won't impact the
+current handling, and very easy to recognize what it's doing. Thanks for
+the effort.
 
-Takashi
-
-> 
-> BR,
-> Kailang
-> 
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Tuesday, April 2, 2019 1:09 AM
-> To: Jian-Hong Pan <jian-hong@endlessm.com>
-> Cc: alsa-devel@alsa-project.org; Daniel Drake <drake@endlessm.com>; 
-> linux@endlessm.com; Kailang <kailang@realtek.com>; 
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] ALSA: hda/realtek: Enable headset MIC of Acer 
-> TravelMate B114-21 with ALC233
-> 
-> On Mon, 01 Apr 2019 05:25:05 +0200,
-> Jian-Hong Pan wrote:
-> > 
-> > The Acer TravelMate B114-21 laptop cannot detect and record sound 
-> > from headset MIC.  This patch adds the ALC233_FIXUP_ACER_HEADSET_MIC 
-> > HDA verb quirk chained with ALC233_FIXUP_ASUS_MIC_NO_PRESENCE pin 
-> > quirk to fix this issue.
-> > 
-> > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> > Signed-off-by: Daniel Drake <drake@endlessm.com>
-> > ---
-> >  sound/pci/hda/patch_realtek.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/sound/pci/hda/patch_realtek.c 
-> > b/sound/pci/hda/patch_realtek.c index a3fb3d4c5730..bdb2227be4eb
-> > 100644
-> > --- a/sound/pci/hda/patch_realtek.c
-> > +++ b/sound/pci/hda/patch_realtek.c
-> > @@ -5690,6 +5690,7 @@ enum {
-> >  	ALC286_FIXUP_ACER_AIO_HEADSET_MIC,
-> >  	ALC256_FIXUP_ASUS_MIC_NO_PRESENCE,
-> >  	ALC299_FIXUP_PREDATOR_SPK,
-> > +	ALC233_FIXUP_ACER_HEADSET_MIC,
-> >  };
-> >  
-> >  static const struct hda_fixup alc269_fixups[] = { @@ -6713,6 
-> > +6714,15 @@ static const struct hda_fixup alc269_fixups[] = {
-> >  			{ 0x21, 0x90170150 }, /* use as headset mic, without its own jack detect */
-> >  			{ }
-> >  		}
-> > +	[ALC233_FIXUP_ACER_HEADSET_MIC] = {
-> > +		.type = HDA_FIXUP_VERBS,
-> > +		.v.verbs = (const struct hda_verb[]) {
-> > +			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x45 },
-> > +			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5089 },
-> > +			{ }
-> 
-> For the additional COEF application, I'd like to hear ack from Kailang.  It's still a black magic from Realtek, so need some confirmation.
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
-> > +		},
-> > +		.chained = true,
-> > +		.chain_id = ALC233_FIXUP_ASUS_MIC_NO_PRESENCE
-> >  	},
-> >  };
-> >  
-> > @@ -6737,6 +6747,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-> >  	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-> >  	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-> >  	SND_PCI_QUIRK(0x1025, 0x1308, "Acer Aspire Z24-890", 
-> > ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
-> > +	SND_PCI_QUIRK(0x1025, 0x132a, "Acer TravelMate B114-21", 
-> > +ALC233_FIXUP_ACER_HEADSET_MIC),
-> >  	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
-> >  	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
-> >  	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", 
-> > ALC275_FIXUP_DELL_XPS),
-> > --
-> > 2.20.1
-> > 
-> > 
-> 
-> ------Please consider the environment before printing this e-mail.
+Thanks
+Baoquan
+> +		}
+> +		handle_crashkernel_mem(option, total_sz, &crash_size,
+> +			&crash_base);
+> +	} else {
+> +		crash_size = memparse(option, &cur);
+> +		if (option == cur)
+> +			return;
+> +		while (*cur && *cur != ' ' && *cur != '@')
+> +			cur++;
+> +		if (*cur == '@') {
+> +			option = cur + 1;
+> +			crash_base = memparse(option, &cur);
+> +		}
+> +	}
+> +	if (crash_base) {
+> +		mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
+> +		mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
+> +	} else {
+> +		/*
+> + 		 * Clearing mem_avoid if no offset is given. This is consistent
+> + 		 * with kernel, which uses the last crashkernel= option.
+> +		 */
+> +		mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
+> +		mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
+> +	}
+> +}
+>  
+>  static void handle_mem_options(void)
+>  {
+> @@ -248,7 +358,7 @@ static void handle_mem_options(void)
+>  	u64 mem_size;
+>  
+>  	if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
+> -		!strstr(args, "hugepages"))
+> +		!strstr(args, "hugepages") && !strstr(args, "crashkernel="))
+>  		return;
+>  
+>  	tmp_cmdline = malloc(len + 1);
+> @@ -284,6 +394,8 @@ static void handle_mem_options(void)
+>  				goto out;
+>  
+>  			mem_limit = mem_size;
+> +		} else if (strstr(param, "crashkernel")) {
+> +			mem_avoid_specified_crashkernel_region(val);
+>  		}
+>  	}
+>  
+> @@ -412,7 +524,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+>  
+>  	/* We don't need to set a mapping for setup_data. */
+>  
+> -	/* Mark the memmap regions we need to avoid */
+> +	/* Mark the regions we need to avoid */
+>  	handle_mem_options();
+>  
+>  	/* Enumerate the immovable memory regions */
+> -- 
+> 2.7.4
 > 
