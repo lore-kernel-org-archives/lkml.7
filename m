@@ -2,116 +2,247 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67D2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EFAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85FA220830
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6364120856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 08:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554192183;
-	bh=t2qFbe19O35nJOn0zDIVazGrzSn3miwc0jREppNxx8g=;
-	h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:List-ID:
-	 From;
-	b=cdxbnkaVgopnmMY0cvu7naxqh74AQcxmrtwVcPuJtX1QIr1VkiqzHhn1VZ9MWf3OY
-	 UhC+sdhl0PzsdqXSoaTFtxeU841iTC3T3dywVMxCjCFQp/gbE7gWu3cn1YK/53Ev1u
-	 UFjgGPAcc2dQpMMks3Cjn/Jhnt8QxUHPubZg96yI=
+	s=default; t=1554192199;
+	bh=aKRqMKGlCHgR5MJOukTAVQCYC1u82UpGVbA1o7T50n0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=fk0WDYc8XwyhZYrTupKMaXZeUvCaqXtOfZw57NpzCZfWkrR5JWgJ+uX56MRKOiHB2
+	 FIfXkcMMaTaNzZRDEufdDENRJzDGpDJdkKWBgvzBhD/5/LMrMXmqLe1mA5PlGnvCHk
+	 S7VRSWrUeA5xfCgXerxvH0UbEQ7++nVQ0ddzIiHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbfDBIDC (ORCPT
+        id S1729177AbfDBIDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 04:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 04:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfDBIDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 04:03:01 -0400
-Received: from [10.71.11.124] (unknown [147.50.13.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725778AbfDBIDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 04:03:17 -0400
+Received: from localhost.localdomain (unknown [115.192.191.234])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AA6020856;
-        Tue,  2 Apr 2019 08:02:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A65820830;
+        Tue,  2 Apr 2019 08:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554192180;
-        bh=t2qFbe19O35nJOn0zDIVazGrzSn3miwc0jREppNxx8g=;
-        h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:From;
-        b=KQ2jbCI+dFCDg04aay0pZE9/F4IH50XMQWuxGb3HkyCbkv5n5BUwF0l86ciMRHSz2
-         fnngsjSVi8Pb1oggdzJDhFObVtcKCkFt1CK94ASDBe6BXZ2dpE5NF3GOTfkegkW6X1
-         V9wIGYkdCO5yAy7t6ZxlwkQcCfbRF8V4okv+THQc=
-Subject: Re: [PATCH 4/6] kbuild: mkmakefile: generate a simple wrapper of top
- Makefile
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-References: <1553947458-8311-1-git-send-email-yamada.masahiro@socionext.com>
- <1553947458-8311-4-git-send-email-yamada.masahiro@socionext.com>
-From:   Kieran Bingham <kbingham@kernel.org>
-Reply-To: kbingham@kernel.org
-Openpgp: preference=signencrypt
-Message-ID: <5b2191d5-1fde-1ccd-023b-bd0de292c4b8@kernel.org>
-Date:   Tue, 2 Apr 2019 15:02:55 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <1553947458-8311-4-git-send-email-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        s=default; t=1554192196;
+        bh=aKRqMKGlCHgR5MJOukTAVQCYC1u82UpGVbA1o7T50n0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xzz3cGrCyVkFnYTXeD9k8ch6F3KP0YJ6cxeSLR9V+n3hTQcEF4WGMsQeoH/EjzqSC
+         7uOEGeAq9BRwRWXrWfLN3cbYtkse25hxenON59ID16Hsa12dk8w3jxZAe6xTsgK8IZ
+         P8Ok9E8L84/3xCPGc4lhaT5tAtW+U3GfF4f6GfwI=
+From:   guoren@kernel.org
+To:     arnd@arndb.de, palmer@sifive.com
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        ren_guo@c-sky.com, linux-riscv@lists.infradead.org
+Subject: [PATCH 1/3] csky: Use in_syscall & forget_syscall instead of r11_sig
+Date:   Tue,  2 Apr 2019 16:02:31 +0800
+Message-Id: <1554192153-2587-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+From: Guo Ren <ren_guo@c-sky.com>
 
-On 30/03/2019 12:04, Masahiro Yamada wrote:
-> Now that Kbuild is able to start from any directory, the generated
-> Makefile can simply wrap the top Makefile.
+We could use regs->sr 16-24 bits to detect syscall: VEC_TRAP0 and
+r11_sig is no necessary for current implementation.
 
-This is a really nice simplification :)
+In this patch, we implement the in_syscall and forget_syscall which are
+inspired from arm & nds32, but csky pt_regs has no syscall_num element
+and we just set zero to regs->sr's vector-bits-field instead.
 
-Reviewed-by: Kieran Bingham <kbingham@kernel.org>
+For ret_from_fork, current task was forked from parent which is in syscall
+progress and its regs->sr has been already setted with VEC_TRAP0. See:
+arch/csky/kernel/process.c: copy_thread()
 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  scripts/mkmakefile | 20 ++------------------
->  1 file changed, 2 insertions(+), 18 deletions(-)
-> 
-> diff --git a/scripts/mkmakefile b/scripts/mkmakefile
-> index 31de468..4d0faeb 100755
-> --- a/scripts/mkmakefile
-> +++ b/scripts/mkmakefile
-> @@ -12,22 +12,6 @@ if [ "${quiet}" != "silent_" ]; then
->  fi
->  
->  cat << EOF > Makefile
-> -# Automatically generated by $0: don't edit
-> -
-> -ifeq ("\$(origin V)", "command line")
-> -VERBOSE := \$(V)
-> -endif
-> -ifneq (\$(VERBOSE),1)
-> -Q := @
-> -endif
-> -
-> -MAKEFLAGS += --no-print-directory
-> -
-> -.PHONY: __sub-make \$(MAKECMDGOALS)
-> -
-> -__sub-make:
-> -	\$(Q)\$(MAKE) -C $1 O=\$(CURDIR) \$(MAKECMDGOALS)
-> -
-> -\$(filter-out __sub-make, \$(MAKECMDGOALS)): __sub-make
-> -	@:
-> +# Automatically generated by $(realpath $0): don't edit
-> +include $(realpath $1/Makefile)
->  EOF
-> 
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/csky/abiv1/inc/abi/regdef.h |  2 --
+ arch/csky/abiv2/inc/abi/regdef.h |  2 --
+ arch/csky/include/asm/ptrace.h   | 12 ++++++++++++
+ arch/csky/kernel/entry.S         | 11 +----------
+ arch/csky/kernel/signal.c        | 15 +++++++++------
+ 5 files changed, 22 insertions(+), 20 deletions(-)
 
-
+diff --git a/arch/csky/abiv1/inc/abi/regdef.h b/arch/csky/abiv1/inc/abi/regdef.h
+index 8766892..9e7e692 100644
+--- a/arch/csky/abiv1/inc/abi/regdef.h
++++ b/arch/csky/abiv1/inc/abi/regdef.h
+@@ -5,8 +5,6 @@
+ #define __ASM_CSKY_REGDEF_H
+ 
+ #define syscallid	r1
+-#define r11_sig		r11
+-
+ #define regs_syscallid(regs) regs->regs[9]
+ 
+ /*
+diff --git a/arch/csky/abiv2/inc/abi/regdef.h b/arch/csky/abiv2/inc/abi/regdef.h
+index c72abb7..652f5ce 100644
+--- a/arch/csky/abiv2/inc/abi/regdef.h
++++ b/arch/csky/abiv2/inc/abi/regdef.h
+@@ -5,8 +5,6 @@
+ #define __ASM_CSKY_REGDEF_H
+ 
+ #define syscallid	r7
+-#define r11_sig		r11
+-
+ #define regs_syscallid(regs) regs->regs[3]
+ 
+ /*
+diff --git a/arch/csky/include/asm/ptrace.h b/arch/csky/include/asm/ptrace.h
+index 1e00578..d0aba7b 100644
+--- a/arch/csky/include/asm/ptrace.h
++++ b/arch/csky/include/asm/ptrace.h
+@@ -5,6 +5,8 @@
+ #define __ASM_CSKY_PTRACE_H
+ 
+ #include <uapi/asm/ptrace.h>
++#include <asm/traps.h>
++#include <linux/types.h>
+ 
+ #ifndef __ASSEMBLY__
+ 
+@@ -20,6 +22,16 @@
+ #define instruction_pointer(regs) ((regs)->pc)
+ #define profile_pc(regs) instruction_pointer(regs)
+ 
++static inline bool in_syscall(struct pt_regs const *regs)
++{
++	return ((regs->sr >> 16) & 0xff) == VEC_TRAP0;
++}
++
++static inline void forget_syscall(struct pt_regs *regs)
++{
++	regs->sr &= ~(0xff << 16);
++}
++
+ static inline unsigned long regs_return_value(struct pt_regs *regs)
+ {
+ 	return regs->a0;
+diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
+index c18859a..d40fbd5 100644
+--- a/arch/csky/kernel/entry.S
++++ b/arch/csky/kernel/entry.S
+@@ -32,7 +32,6 @@
+ 	RD_MEH	a1
+ 	psrset  ee, ie
+ 	jbsr    do_page_fault
+-	movi    r11_sig, 0             /* r11 = 0, Not a syscall. */
+ 	jmpi    ret_from_exception
+ .endm
+ 
+@@ -125,7 +124,6 @@ ENTRY(ret_from_fork)
+ 	bmaski	r10, THREAD_SHIFT
+ 	andn	r9, r10
+ 	ldw	r8, (r9, TINFO_FLAGS)
+-	movi	r11_sig, 1
+ 	ANDI_R3	r8, (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
+ 	cmpnei	r8, 0
+ 	bf	3f
+@@ -160,12 +158,8 @@ exit_work:
+ 	/* If thread_info->flag is empty, RESTORE_ALL */
+ 	cmpnei	r8, 0
+ 	bf	1b
+-	mov	a1, sp
+ 	mov	a0, r8
+-	mov	a2, r11_sig		/* syscall? */
+-	btsti	r8, TIF_SIGPENDING	/* delivering a signal? */
+-	/* prevent further restarts(set r11 = 0) */
+-	clrt	r11_sig
++	mov	a1, sp
+ 	jbsr	do_notify_resume	/* do signals */
+ 	br	resume_userspace
+ 
+@@ -175,13 +169,11 @@ work_resched:
+ 	jmpi	schedule
+ 
+ ENTRY(sys_rt_sigreturn)
+-	movi	r11_sig, 0
+ 	jmpi	do_rt_sigreturn
+ 
+ ENTRY(csky_trap)
+ 	SAVE_ALL EPC_KEEP
+ 	psrset	ee
+-	movi	r11_sig, 0             /* r11 = 0, Not a syscall. */
+ 	mov	a0, sp                 /* Push Stack pointer arg */
+ 	jbsr	trap_c                 /* Call C-level trap handler */
+ 	jmpi	ret_from_exception
+@@ -215,7 +207,6 @@ ENTRY(csky_get_tls)
+ ENTRY(csky_irq)
+ 	SAVE_ALL EPC_KEEP
+ 	psrset	ee
+-	movi	r11_sig, 0		/* r11 = 0, Not a syscall. */
+ 
+ #ifdef CONFIG_PREEMPT
+ 	mov	r9, sp			/* Get current stack  pointer */
+diff --git a/arch/csky/kernel/signal.c b/arch/csky/kernel/signal.c
+index 207a891..5a18940 100644
+--- a/arch/csky/kernel/signal.c
++++ b/arch/csky/kernel/signal.c
+@@ -224,7 +224,7 @@ handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+  * that the kernel can handle, and then we build all the user-level signal
+  * handling stack-frames in one go after that.
+  */
+-static void do_signal(struct pt_regs *regs, int syscall)
++static void do_signal(struct pt_regs *regs)
+ {
+ 	unsigned int retval = 0, continue_addr = 0, restart_addr = 0;
+ 	struct ksignal ksig;
+@@ -241,7 +241,9 @@ static void do_signal(struct pt_regs *regs, int syscall)
+ 	/*
+ 	 * If we were from a system call, check for system call restarting...
+ 	 */
+-	if (syscall) {
++	if (in_syscall(regs)) {
++		forget_syscall(regs);
++
+ 		continue_addr = regs->pc;
+ #if defined(__CSKYABIV2__)
+ 		restart_addr = continue_addr - 4;
+@@ -249,7 +251,6 @@ static void do_signal(struct pt_regs *regs, int syscall)
+ 		restart_addr = continue_addr - 2;
+ #endif
+ 		retval = regs->a0;
+-
+ 		/*
+ 		 * Prepare for system call restart.  We do this here so that a
+ 		 * debugger will see the already changed.
+@@ -304,7 +305,9 @@ static void do_signal(struct pt_regs *regs, int syscall)
+ 	}
+ 
+ no_signal:
+-	if (syscall) {
++	if (in_syscall(regs)) {
++		forget_syscall(regs);
++
+ 		/*
+ 		 * Handle restarting a different system call.  As above,
+ 		 * if a debugger has chosen to restart at a different PC,
+@@ -333,10 +336,10 @@ static void do_signal(struct pt_regs *regs, int syscall)
+ }
+ 
+ asmlinkage void
+-do_notify_resume(unsigned int thread_flags, struct pt_regs *regs, int syscall)
++do_notify_resume(unsigned int thread_flags, struct pt_regs *regs)
+ {
+ 	if (thread_flags & _TIF_SIGPENDING)
+-		do_signal(regs, syscall);
++		do_signal(regs);
+ 
+ 	if (thread_flags & _TIF_NOTIFY_RESUME) {
+ 		clear_thread_flag(TIF_NOTIFY_RESUME);
 -- 
---
-Kieran
+2.7.4
+
