@@ -7,62 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFDBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68911C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC864206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D02E206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 16:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g3oRH+Vq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fGKBpiXE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbfDBQNo (ORCPT
+        id S1730888AbfDBQNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 12:13:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54079 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730293AbfDBQNj (ORCPT
+        Tue, 2 Apr 2019 12:13:46 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43919 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730616AbfDBQNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 12:13:39 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q16so4044025wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 09:13:38 -0700 (PDT)
+        Tue, 2 Apr 2019 12:13:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k17so17377370wrx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 09:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5XdVUklbAk1BF8gxDGmA3aa53/CL+l4UqAw0sFP3uO4=;
-        b=g3oRH+Vq/frBheTx1xc9MH7m0cQzUi96P2+u8jTFxAuuwEtbxJzdzCOYa8loyP6qwx
-         i1+QiyTmOfy52e1YRRMx4vIEFacX/QHc+WZLsmxsmF5CEqQrRIajzCdAZGEAgOGTsEmU
-         IDH+Z7w8bthdKw9JLgAnAmo2ZE7v9UniIwPTpBRZ6A8XYHwwu7uyyu7Dz6o8+DafQe5F
-         eK80qoHRBMAhO7gJpd4n5DsA+KPa79cGdI1PIcVnt5tI3KdSVoacmhnuNiMpHn7f1yxY
-         sKtX4nmxmqvF7fLH5PVMZRMvz+NaEdedWYqGyjIBqMhmT0jliqEk0m97xRjuqi6RRyLB
-         ZKOg==
+        bh=rC/ruLPUV5UEP+tXqVjLuNudKLQamQwxbTKse0K/0qM=;
+        b=fGKBpiXECn3PUfZEtCWv6t7IAoERdhQ3rv1YWI3q+hPmQrrwyoIBI9E2KDkyLKLb20
+         mN6v0Ct3jlI1NzMEoqSzyto8FKxHzBzZFRgWekYwwoEOoxFxMY37xRD0grOLirPz2G84
+         nK8XVGY+Bm7pvlwYoWQ7CP1c+qPnf3YhnlzscmUL4ToMBhqjp2OU0r4z4VteL8zcisNL
+         qTI25MO5r3adMTI4ecvXeNdL+YRC1KTZ5d8AIFb0jy1SQktIzrYLbCsCxZkq6d8RLfVK
+         CRyQr0VthPwHO0oh/ktXNLCTRRHh4yW9EVijYPa/KHTt9yMl5bf0aVh2CsVAAy0/FUh9
+         NrKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=5XdVUklbAk1BF8gxDGmA3aa53/CL+l4UqAw0sFP3uO4=;
-        b=VrUh+YAaT8Tw1/0ltKCVlj60LRTL1Ggm/wywpHvBOHepHx6UlJgYsPBZj38VIHEyOm
-         vZBULUTccS6zW6MTQ6V3Zouqvp52IWyJsi4tJpRkL9UvkHexVmCh8QBmMpZgfW2hwIX0
-         RvJk+WoQsrViOCtkQMEDVp6yaxitCWED1i1DAdC27GejFrzcaUWZU3L+6AufdT8uB0uk
-         4LkecFbnB3Fvuvh3OIw5trZZmX11drzrIdMO8aEPI2GW6fmwByLsSRAZciMHwwR/zII9
-         w1EDdSUcWgncaRE16jWNkz/bL1cUxvar9QQVlwOYlwWaw2rzSvpniIMDWuG3PWjIqQsB
-         uUFQ==
-X-Gm-Message-State: APjAAAUsRQJc6HH6IP7lS7GhLoXMv+p6m1X2kIbFMaMVl952WLbeHjPX
-        WOlGr+/dANvvHK/pjFTX7BYXqIF5wucjKQ==
-X-Google-Smtp-Source: APXvYqwQLa1V1vtFdnjqSFhPuHkACzje9KDz5B5Q4xhiBLqGrxAtmDXu4fxmbbCeVuGMYHBxmtjdeQ==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr4147149wmc.49.1554221617399;
-        Tue, 02 Apr 2019 09:13:37 -0700 (PDT)
+        bh=rC/ruLPUV5UEP+tXqVjLuNudKLQamQwxbTKse0K/0qM=;
+        b=rJblJbqGiy9NNoVYIPrDOR1Pq0ikh4obs+APl+kJFDgl6TDCAX7AKGVnRh3WDDU9eQ
+         NcJhC7lzL3euUESJgopaVRsJPUW+DSHvbHUWZJgaW/3IhDc4T0RvgLGe0ABH0Jb6JYlR
+         gFZVFiP1Bvceyv7Er93QaVcMTsaSSo9tg4c4hZFDjV4hnnbNK1ZMjOqDVoi/zKk39T/9
+         spZpwJvjTxW8FWf37I2G3tgkJUEq1l1QfcfZW1gj2EHINLOK6p9uvogLnfk7ArVlTBMD
+         wmrS0rmxGAN5MEttOdrVNLPaQ8ybDLf+tMXS+JtTTxhxS6DN6M/c0rAkUNPbLVy4WQQ7
+         AOYA==
+X-Gm-Message-State: APjAAAUy13GN7DXHJE7JtBXSSKRo/CQwDH/7LzAtkbxxwUB/nLIK/262
+        b/yjivD3BspuZ7lQy6OAWmRvj9ZODfhzQw==
+X-Google-Smtp-Source: APXvYqxosNL2IXziQlPxrkWgyCS8FSPHGBhAvNCX2KSHWxAXSBwlcQzJESXzSm3Z50U03dQI5F0UeA==
+X-Received: by 2002:a5d:494c:: with SMTP id r12mr34299806wrs.250.1554221622685;
+        Tue, 02 Apr 2019 09:13:42 -0700 (PDT)
 Received: from mai.imgcgcw.net (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.gmail.com with ESMTPSA id a126sm17054999wmh.4.2019.04.02.09.13.31
+        by smtp.gmail.com with ESMTPSA id a126sm17054999wmh.4.2019.04.02.09.13.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 09:13:36 -0700 (PDT)
+        Tue, 02 Apr 2019 09:13:42 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     rui.zhang@intel.com, edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
-Subject: [PATCH 3/7] thermal/drivers/core: Add init section table for self-encapsulation
-Date:   Tue,  2 Apr 2019 18:12:46 +0200
-Message-Id: <20190402161256.11044-3-daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/7] thermal/drivers/core: Use governor table to initialize
+Date:   Tue,  2 Apr 2019 18:12:47 +0200
+Message-Id: <20190402161256.11044-4-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190402161256.11044-1-daniel.lezcano@linaro.org>
 References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
@@ -71,77 +69,245 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the governors are declared in their respective files but they
-export their [un]register functions which in turn call the [un]register
-the governors core's functions. That implies a cyclic dependency which is
-not desirable. There is a way to self-encapsulate the governors by letting
-them to declare themselves in a __init section table.
+Now that the governor table is in place and the macro allows to browse the
+table, declare the governor so the entry is added in the governor table
+in the init section.
 
-Define the table in the asm generic linker description like the other
-tables and provide the specific macros to deal with.
+The [un]register_thermal_governors function does no longer need to use the
+exported [un]register thermal governor's specific function which in turn
+call the [un]register_thermal_governor. The governors are fully
+self-encapsulated.
+
+The cyclic dependency is no longer needed, remove it.
 
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/thermal/thermal_core.h    | 16 ++++++++++++++++
- include/asm-generic/vmlinux.lds.h | 11 +++++++++++
- 2 files changed, 27 insertions(+)
+ drivers/thermal/fair_share.c      | 12 +-------
+ drivers/thermal/gov_bang_bang.c   | 11 +------
+ drivers/thermal/power_allocator.c | 11 +------
+ drivers/thermal/step_wise.c       | 11 +------
+ drivers/thermal/thermal_core.c    | 51 +++++++++++++++++--------------
+ drivers/thermal/thermal_core.h    | 40 ------------------------
+ drivers/thermal/user_space.c      | 12 +-------
+ 7 files changed, 33 insertions(+), 115 deletions(-)
 
+diff --git a/drivers/thermal/fair_share.c b/drivers/thermal/fair_share.c
+index d3469fbc5207..bda2afc63471 100644
+--- a/drivers/thermal/fair_share.c
++++ b/drivers/thermal/fair_share.c
+@@ -129,14 +129,4 @@ static struct thermal_governor thermal_gov_fair_share = {
+ 	.name		= "fair_share",
+ 	.throttle	= fair_share_throttle,
+ };
+-
+-int thermal_gov_fair_share_register(void)
+-{
+-	return thermal_register_governor(&thermal_gov_fair_share);
+-}
+-
+-void thermal_gov_fair_share_unregister(void)
+-{
+-	thermal_unregister_governor(&thermal_gov_fair_share);
+-}
+-
++THERMAL_GOVERNOR_DECLARE(thermal_gov_fair_share);
+diff --git a/drivers/thermal/gov_bang_bang.c b/drivers/thermal/gov_bang_bang.c
+index fc5e5057f0de..c5e19c7d63da 100644
+--- a/drivers/thermal/gov_bang_bang.c
++++ b/drivers/thermal/gov_bang_bang.c
+@@ -126,13 +126,4 @@ static struct thermal_governor thermal_gov_bang_bang = {
+ 	.name		= "bang_bang",
+ 	.throttle	= bang_bang_control,
+ };
+-
+-int thermal_gov_bang_bang_register(void)
+-{
+-	return thermal_register_governor(&thermal_gov_bang_bang);
+-}
+-
+-void thermal_gov_bang_bang_unregister(void)
+-{
+-	thermal_unregister_governor(&thermal_gov_bang_bang);
+-}
++THERMAL_GOVERNOR_DECLARE(thermal_gov_bang_bang);
+diff --git a/drivers/thermal/power_allocator.c b/drivers/thermal/power_allocator.c
+index 3055f9a12a17..44636475b2a3 100644
+--- a/drivers/thermal/power_allocator.c
++++ b/drivers/thermal/power_allocator.c
+@@ -651,13 +651,4 @@ static struct thermal_governor thermal_gov_power_allocator = {
+ 	.unbind_from_tz	= power_allocator_unbind,
+ 	.throttle	= power_allocator_throttle,
+ };
+-
+-int thermal_gov_power_allocator_register(void)
+-{
+-	return thermal_register_governor(&thermal_gov_power_allocator);
+-}
+-
+-void thermal_gov_power_allocator_unregister(void)
+-{
+-	thermal_unregister_governor(&thermal_gov_power_allocator);
+-}
++THERMAL_GOVERNOR_DECLARE(thermal_gov_power_allocator);
+diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
+index ee047ca43084..6cd251ab56fc 100644
+--- a/drivers/thermal/step_wise.c
++++ b/drivers/thermal/step_wise.c
+@@ -218,13 +218,4 @@ static struct thermal_governor thermal_gov_step_wise = {
+ 	.name		= "step_wise",
+ 	.throttle	= step_wise_throttle,
+ };
+-
+-int thermal_gov_step_wise_register(void)
+-{
+-	return thermal_register_governor(&thermal_gov_step_wise);
+-}
+-
+-void thermal_gov_step_wise_unregister(void)
+-{
+-	thermal_unregister_governor(&thermal_gov_step_wise);
+-}
++THERMAL_GOVERNOR_DECLARE(thermal_gov_step_wise);
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 28f7ece0e8fe..50c88682a848 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -243,36 +243,41 @@ int thermal_build_list_of_policies(char *buf)
+ 	return count;
+ }
+ 
+-static int __init thermal_register_governors(void)
++static void __init thermal_unregister_governors(void)
+ {
+-	int result;
++	struct thermal_governor **governor;
+ 
+-	result = thermal_gov_step_wise_register();
+-	if (result)
+-		return result;
++	for_each_governor_table(governor)
++		thermal_unregister_governor(*governor);
++}
+ 
+-	result = thermal_gov_fair_share_register();
+-	if (result)
+-		return result;
++static int __init thermal_register_governors(void)
++{
++	int ret = 0;
++	struct thermal_governor **governor;
+ 
+-	result = thermal_gov_bang_bang_register();
+-	if (result)
+-		return result;
++	for_each_governor_table(governor) {
++		ret = thermal_register_governor(*governor);
++		if (ret) {
++			pr_err("Failed to register governor: '%s'",
++			       (*governor)->name);
++			break;
++		}
+ 
+-	result = thermal_gov_user_space_register();
+-	if (result)
+-		return result;
++		pr_info("Registered thermal governor '%s'",
++			(*governor)->name);
++	}
+ 
+-	return thermal_gov_power_allocator_register();
+-}
++	if (ret) {
++		struct thermal_governor **gov;
++		for_each_governor_table(gov) {
++			if (gov == governor)
++				break;
++			thermal_unregister_governor(*gov);
++		}
++	}
+ 
+-static void __init thermal_unregister_governors(void)
+-{
+-	thermal_gov_step_wise_unregister();
+-	thermal_gov_fair_share_unregister();
+-	thermal_gov_bang_bang_unregister();
+-	thermal_gov_user_space_unregister();
+-	thermal_gov_power_allocator_unregister();
++	return ret;
+ }
+ 
+ /*
 diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
-index 0df190ed82a7..28d18083e969 100644
+index 28d18083e969..a3c555b48eb3 100644
 --- a/drivers/thermal/thermal_core.h
 +++ b/drivers/thermal/thermal_core.h
-@@ -15,6 +15,22 @@
- /* Initial state of a cooling device during binding */
- #define THERMAL_NO_TARGET -1UL
+@@ -90,46 +90,6 @@ thermal_cooling_device_stats_update(struct thermal_cooling_device *cdev,
+ 				    unsigned long new_state) {}
+ #endif /* CONFIG_THERMAL_STATISTICS */
  
-+/* Init section thermal table */
-+extern struct thermal_governor * __governor_thermal_table[];
-+extern struct thermal_governor * __governor_thermal_table_end[];
-+
-+#define THERMAL_TABLE_ENTRY(table, name)			\
-+        static typeof(name) * __thermal_table_entry_##name	\
-+	__used __section(__##table##_thermal_table)		\
-+		= &name;
-+
-+#define THERMAL_GOVERNOR_DECLARE(name)	THERMAL_TABLE_ENTRY(governor, name)
-+
-+#define for_each_governor_table(__governor)		\
-+	for (__governor = __governor_thermal_table;	\
-+	     __governor < __governor_thermal_table_end;	\
-+	     __governor++)
-+
- /*
-  * This structure is used to describe the behavior of
-  * a certain cooling device on a certain trip point
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index f8f6f04c4453..9893a3ed242a 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -239,6 +239,16 @@
- #define ACPI_PROBE_TABLE(name)
- #endif
- 
-+#ifdef CONFIG_THERMAL
-+#define THERMAL_TABLE(name)						\
-+        . = ALIGN(8);							\
-+        __##name##_thermal_table = .;					\
-+        KEEP(*(__##name##_thermal_table))				\
-+        __##name##_thermal_table_end = .;
-+#else
-+#define THERMAL_TABLE(name)
-+#endif
-+
- #define KERNEL_DTB()							\
- 	STRUCT_ALIGN();							\
- 	__dtb_start = .;						\
-@@ -609,6 +619,7 @@
- 	IRQCHIP_OF_MATCH_TABLE()					\
- 	ACPI_PROBE_TABLE(irqchip)					\
- 	ACPI_PROBE_TABLE(timer)						\
-+	THERMAL_TABLE(governor)						\
- 	EARLYCON_TABLE()						\
- 	LSM_TABLE()
- 
+-#ifdef CONFIG_THERMAL_GOV_STEP_WISE
+-int thermal_gov_step_wise_register(void);
+-void thermal_gov_step_wise_unregister(void);
+-#else
+-static inline int thermal_gov_step_wise_register(void) { return 0; }
+-static inline void thermal_gov_step_wise_unregister(void) {}
+-#endif /* CONFIG_THERMAL_GOV_STEP_WISE */
+-
+-#ifdef CONFIG_THERMAL_GOV_FAIR_SHARE
+-int thermal_gov_fair_share_register(void);
+-void thermal_gov_fair_share_unregister(void);
+-#else
+-static inline int thermal_gov_fair_share_register(void) { return 0; }
+-static inline void thermal_gov_fair_share_unregister(void) {}
+-#endif /* CONFIG_THERMAL_GOV_FAIR_SHARE */
+-
+-#ifdef CONFIG_THERMAL_GOV_BANG_BANG
+-int thermal_gov_bang_bang_register(void);
+-void thermal_gov_bang_bang_unregister(void);
+-#else
+-static inline int thermal_gov_bang_bang_register(void) { return 0; }
+-static inline void thermal_gov_bang_bang_unregister(void) {}
+-#endif /* CONFIG_THERMAL_GOV_BANG_BANG */
+-
+-#ifdef CONFIG_THERMAL_GOV_USER_SPACE
+-int thermal_gov_user_space_register(void);
+-void thermal_gov_user_space_unregister(void);
+-#else
+-static inline int thermal_gov_user_space_register(void) { return 0; }
+-static inline void thermal_gov_user_space_unregister(void) {}
+-#endif /* CONFIG_THERMAL_GOV_USER_SPACE */
+-
+-#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
+-int thermal_gov_power_allocator_register(void);
+-void thermal_gov_power_allocator_unregister(void);
+-#else
+-static inline int thermal_gov_power_allocator_register(void) { return 0; }
+-static inline void thermal_gov_power_allocator_unregister(void) {}
+-#endif /* CONFIG_THERMAL_GOV_POWER_ALLOCATOR */
+-
+ /* device tree support */
+ #ifdef CONFIG_THERMAL_OF
+ int of_parse_thermal_zones(void);
+diff --git a/drivers/thermal/user_space.c b/drivers/thermal/user_space.c
+index 8e92a06ef48a..5fac99e5221d 100644
+--- a/drivers/thermal/user_space.c
++++ b/drivers/thermal/user_space.c
+@@ -56,14 +56,4 @@ static struct thermal_governor thermal_gov_user_space = {
+ 	.name		= "user_space",
+ 	.throttle	= notify_user_space,
+ };
+-
+-int thermal_gov_user_space_register(void)
+-{
+-	return thermal_register_governor(&thermal_gov_user_space);
+-}
+-
+-void thermal_gov_user_space_unregister(void)
+-{
+-	thermal_unregister_governor(&thermal_gov_user_space);
+-}
+-
++THERMAL_GOVERNOR_DECLARE(thermal_gov_user_space);
 -- 
 2.17.1
 
