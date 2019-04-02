@@ -2,257 +2,150 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC771C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5AEC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D2B2133D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2F020856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dCRP0Pxu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QT6jpJCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfDBL2Y (ORCPT
+        id S1730537AbfDBLcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:28:24 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:57332 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfDBL2X (ORCPT
+        Tue, 2 Apr 2019 07:32:10 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:44065 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730516AbfDBLcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:28:23 -0400
-Received: by mail-pg1-f202.google.com with SMTP id h14so5804502pgn.23
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 04:28:23 -0700 (PDT)
+        Tue, 2 Apr 2019 07:32:09 -0400
+Received: by mail-vs1-f68.google.com with SMTP id j184so7533105vsd.11
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 04:32:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=7SS6P6JHNXSn0UjPFp+y0uTOg2vVTb/5Uh4qZ9MyEaQ=;
-        b=dCRP0PxuLFP45jTz4uhtU0ufNmC9ZifsYoEACf4P5JIimWIvv+W9U8qz7o5VPn/96D
-         42wEjyphS1UuE4VO3vuUSJ2DK+kegfUaDClUIfj/XjDZ9jfJitiA2rMIYtr6OB8Ae57h
-         a2J6TdWnT2HlyzSS6K/CHgb6QcnBh65fLOxSdE0QrkkaHfJZ3Kz9KEHOZE+aPcfKqS2L
-         RpBVlUGqnB4ExbdthFp0FtPb7LqNTEvaKnlXgFwBNQL3C8PKf64qpsg5fzEWTdwUwnK4
-         61PU3HkQVmYM+CqSh6d8CttnlRiR/3nRFInFsIOv8cQ7VOWlSJgv9VhTVITAdfPXuHVx
-         63Kg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zUjXHBpjHSxq+1LD4/mMegqIsw7rgr06JRKbCdsX+lk=;
+        b=QT6jpJCaH1Ddd0JkqGvNiSjfSvzz4HbCdiXPoYN2+Yim5Df9TndLnrB05wmajX4kRt
+         U3t9NmrREsnEYS+iGSLNaXuIbaLaDBcmSttg6Kw+PdjySyyp8mr0wut274zQbPQmEoaq
+         vVsOzqvPY4tDrnz9eU8ufYL1fCKK2vAJnicIz6sxt73qeCZyEIWLXd+YQXF5AHwAN+Qd
+         luj6rLNwpj6hcYHIbwu0wqXBhjmVGL+/bP1E4NHXRpSvlR195TF65hT2B909PcLK32lS
+         LlbpYNZ9hHqpzPKO98DVXxXRsEN14uBYdk51BT/0AExWzKyRlIJNt8N7N4/Ks6owXKLG
+         xnuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=7SS6P6JHNXSn0UjPFp+y0uTOg2vVTb/5Uh4qZ9MyEaQ=;
-        b=Lyx7wG4RVXWzy3DGgBHYCowfjIMLGxiPslpw18uTl5AQmFKneJqyZbJjfwNgKr+i9f
-         485CFOJC6Ok/zvDNQsstGQmrUjf1eNqjJSEjfx1cX/veVDxmKxiXe+EQTvNusgxbKH5c
-         siJjaJalbkJ6LUSIsKS+/CCNAHLLnAYu5ZB2g9r4ye70dk6SMMpdoHNnAPulBMWA4IvK
-         Szds3MfuImvFxc8VT0XsMLF44/q2YrEPoqkUooCy74l1Wowlbod4x8kpE0kHLw5ErGW5
-         juJccjN0N4i6365W4cdvRr6EEzyR0lCiPF6+cn5YFZI+9Oaq8O2N45R0RFOZaWqjz7US
-         XAag==
-X-Gm-Message-State: APjAAAVW5AIl4gLfBa6BrYzYc/z3aKxKhltI3jQBE2j8sdaatgwbOInW
-        9OiwVQbveED1p68xTbx07J8xeBwxfv0=
-X-Google-Smtp-Source: APXvYqyasNy/YcfzVQmjrVwujWIrn2EFN8+jq+kT0jWf3HBeG55N9gadY6c2bWZD8zQKF0qrUe8QrwSpLEg=
-X-Received: by 2002:a17:902:d70a:: with SMTP id w10mr2438682ply.65.1554204502884;
- Tue, 02 Apr 2019 04:28:22 -0700 (PDT)
-Date:   Tue,  2 Apr 2019 13:28:13 +0200
-Message-Id: <20190402112813.193378-1-glider@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH v2] x86/asm: fix assembly constraints in bitops
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zUjXHBpjHSxq+1LD4/mMegqIsw7rgr06JRKbCdsX+lk=;
+        b=gLu7EnCUkSW4oYOCU1vqPT5yWv45FqQiXZYkiLpE2db9lRYH+AQz4leljBC7DUJv/T
+         jwFkT+Bz1nRNiJd4Dhl/QbUeCDTJRCLTBihRuvV0KrJB3t/crBDG25TksiqW2ppeurLu
+         R2Qvempd5E2OuuwGLfb7x7vJpkJs1muhVDupXLuAa2T0+3RzMf6+rx5AYhiPNTCjZAfr
+         ff/+YEWfIbbBgdPZw/Ek/JVFgO20DVCGpplU8rytc0xxgQzrnGAOh8TgHLE0eLz7upqI
+         +j1vn3LRd5ePrHPoAOu7d+728qqvNb6/oo2A/MwdctR056QI0pvYUsM+xHxAy++ZT5O/
+         snEA==
+X-Gm-Message-State: APjAAAXfP9js1h+DHoehfM/HEWf/RHSO5AwCFR46aUOY2T/Kk6atKW0L
+        TOm6Yf5Nry7+n0Jt8SzAXcFhpZjMIx45WQyqwRhY2w==
+X-Google-Smtp-Source: APXvYqyLqMCn8QY+l4A0NQFRjN1y1rxK1zcQsEJ6CArG53UDHRIKvG5bjjXTrLjNTY4msx0L8RhYGAQV8BxI0fjEk+I=
+X-Received: by 2002:a67:ba03:: with SMTP id l3mr32723043vsn.96.1554204728590;
+ Tue, 02 Apr 2019 04:32:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190401162408.249668-1-glider@google.com> <20190402072659.GH12232@hirez.programming.kicks-ass.net>
+ <CAG_fn=UJD=j1nNpq9qp9tr8J2ru4KaoPofk71XJjUW0=qcVTSA@mail.gmail.com>
+In-Reply-To: <CAG_fn=UJD=j1nNpq9qp9tr8J2ru4KaoPofk71XJjUW0=qcVTSA@mail.gmail.com>
 From:   Alexander Potapenko <glider@google.com>
-To:     paulmck@linux.ibm.com, hpa@zytor.com, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, dvyukov@google.com,
-        jyknight@google.com, x86@kernel.org, mingo@redhat.com
+Date:   Tue, 2 Apr 2019 13:31:57 +0200
+Message-ID: <CAG_fn=VAjx4iM8zdQnLY-nbbb09PEcwfzk3zbEWoCYxtjrnE-g@mail.gmail.com>
+Subject: Re: [PATCH] x86/asm: use memory clobber in bitops that touch
+ arbitrary memory
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Paul McKenney <paulmck@linux.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        James Y Knight <jyknight@google.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Use memory clobber in bitops that touch arbitrary memory
+On Tue, Apr 2, 2019 at 10:59 AM Alexander Potapenko <glider@google.com> wro=
+te:
+>
+> On Tue, Apr 2, 2019 at 9:27 AM Peter Zijlstra <peterz@infradead.org> wrot=
+e:
+> >
+> >
+> >
+> > On Mon, Apr 01, 2019 at 06:24:08PM +0200, Alexander Potapenko wrote:
+> > > diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bit=
+ops.h
+> > > index d153d570bb04..20e4950827d9 100644
+> > > --- a/arch/x86/include/asm/bitops.h
+> > > +++ b/arch/x86/include/asm/bitops.h
+> > > @@ -111,7 +111,7 @@ clear_bit(long nr, volatile unsigned long *addr)
+> > >       } else {
+> > >               asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+> > >                       : BITOP_ADDR(addr)
+> > > -                     : "Ir" (nr));
+> > > +                     : "Ir" (nr) : "memory");
+> > >       }
+> > >  }
+> >
+> > clear_bit() doesn't have a return value, so why are we now still using
+> > "+m" output ?
+> You're right, "m" should suffice. I'll update the patch.
+> By the way, now that we've added the memory barriers we can probably
+> remove the barrier() call from __clear_bit_unlock() and update the
+> comment accordingly.
+> For clear_bit() the memory barrier is missing on the IS_IMMEDIATE(nr)
+> path, so this one should be kept as is.
+>
+> > AFAICT the only reason we did that was to clobber the variable, which
+> > you've (afaiu correctly) argued to be incorrect.
+> >
+> > So whould we not write this as:
+> >
+> >         asm volatile (LOCK_PREFIX __ASM_SIZE(btr) " %[nr], %[addr]"
+> >                 : : [addr] "m" (*addr), [nr] "Ir" (nr)
+> >                 : "memory");
+Updated the patch.
+I took the liberty of not adding the symbolic names to reduce the diff.
+If you think that's necessary I can do that in a separate patch.
+> > ?
+> >
+> > And the very same for _all_ other sites touched in this patch.
+>
+>
+>
+> --
+> Alexander Potapenko
+> Software Engineer
+>
+> Google Germany GmbH
+> Erika-Mann-Stra=C3=9Fe, 33
+> 80636 M=C3=BCnchen
+>
+> Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+> Registergericht und -nummer: Hamburg, HRB 86891
+> Sitz der Gesellschaft: Hamburg
 
-Certain bit operations that read/write bits take a base pointer and an
-arbitrarily large offset to address the bit relative to that base.
-Inline assembly constraints aren't expressive enough to tell the
-compiler that the assembly directive is going to touch a specific memory
-location of unknown size, therefore we have to use the "memory" clobber
-to indicate that the assembly is going to access memory locations other
-than those listed in the inputs/outputs.
-To indicate that BTR/BTS instructions don't necessarily touch the first
-sizeof(long) bytes of the argument, we also move the address to assembly
-inputs.
 
-This particular change leads to size increase of 124 kernel functions in
-a defconfig build. For some of them the diff is in NOP operations, other
-end up re-reading values from memory and may potentially slow down the
-execution. But without these clobbers the compiler is free to cache
-the contents of the bitmaps and use them as if they weren't changed by
-the inline assembly.
 
-2. Use byte-sized arguments for operations touching single bytes.
+--=20
+Alexander Potapenko
+Software Engineer
 
-Passing a long value to ANDB/ORB/XORB instructions makes the compiler
-treat sizeof(long) bytes as being clobbered, which isn't the case. This
-may theoretically lead to worse code in the case of heavy optimization.
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: James Y Knight <jyknight@google.com>
----
- v2:
-  -- renamed the patch
-  -- addressed comment by Peter Zijlstra: don't use "+m" for functions
-  returning void
-  -- fixed input types for operations touching single bytes
----
- arch/x86/include/asm/bitops.h | 41 +++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 23 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index d153d570bb04..c0cb9c5d3476 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -36,16 +36,17 @@
-  * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
-  */
- 
--#define BITOP_ADDR(x) "+m" (*(volatile long *) (x))
-+#define RLONG_ADDR(x) "m" (*(volatile long *) (x))
-+#define WBYTE_ADDR(x) "+m" (*(volatile char *) (x))
- 
--#define ADDR				BITOP_ADDR(addr)
-+#define ADDR				RLONG_ADDR(addr)
- 
- /*
-  * We do the locked ops that don't return the old value as
-  * a mask operation on a byte.
-  */
- #define IS_IMMEDIATE(nr)		(__builtin_constant_p(nr))
--#define CONST_MASK_ADDR(nr, addr)	BITOP_ADDR((void *)(addr) + ((nr)>>3))
-+#define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
- #define CONST_MASK(nr)			(1 << ((nr) & 7))
- 
- /**
-@@ -73,7 +74,7 @@ set_bit(long nr, volatile unsigned long *addr)
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
--			: BITOP_ADDR(addr) : "Ir" (nr) : "memory");
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -88,7 +89,7 @@ set_bit(long nr, volatile unsigned long *addr)
-  */
- static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(bts) " %1,%0" : ADDR : "Ir" (nr) : "memory");
-+	asm volatile(__ASM_SIZE(bts) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- /**
-@@ -110,8 +111,7 @@ clear_bit(long nr, volatile unsigned long *addr)
- 			: "iq" ((u8)~CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
--			: BITOP_ADDR(addr)
--			: "Ir" (nr));
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -131,7 +131,7 @@ static __always_inline void clear_bit_unlock(long nr, volatile unsigned long *ad
- 
- static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(btr) " %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btr) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile unsigned long *addr)
-@@ -139,7 +139,7 @@ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile
- 	bool negative;
- 	asm volatile(LOCK_PREFIX "andb %2,%1"
- 		CC_SET(s)
--		: CC_OUT(s) (negative), ADDR
-+		: CC_OUT(s) (negative), WBYTE_ADDR(addr)
- 		: "ir" ((char) ~(1 << nr)) : "memory");
- 	return negative;
- }
-@@ -155,13 +155,9 @@ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile
-  * __clear_bit() is non-atomic and implies release semantics before the memory
-  * operation. It can be used for an unlock if no other CPUs can concurrently
-  * modify other bits in the word.
-- *
-- * No memory barrier is required here, because x86 cannot reorder stores past
-- * older loads. Same principle as spin_unlock.
-  */
- static __always_inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
- {
--	barrier();
- 	__clear_bit(nr, addr);
- }
- 
-@@ -176,7 +172,7 @@ static __always_inline void __clear_bit_unlock(long nr, volatile unsigned long *
-  */
- static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile(__ASM_SIZE(btc) " %1,%0" : ADDR : "Ir" (nr));
-+	asm volatile(__ASM_SIZE(btc) " %1,%0" : : ADDR, "Ir" (nr) : "memory");
- }
- 
- /**
-@@ -196,8 +192,7 @@ static __always_inline void change_bit(long nr, volatile unsigned long *addr)
- 			: "iq" ((u8)CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btc) " %1,%0"
--			: BITOP_ADDR(addr)
--			: "Ir" (nr));
-+			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
- 	}
- }
- 
-@@ -242,8 +237,8 @@ static __always_inline bool __test_and_set_bit(long nr, volatile unsigned long *
- 
- 	asm(__ASM_SIZE(bts) " %2,%1"
- 	    CC_SET(c)
--	    : CC_OUT(c) (oldbit), ADDR
--	    : "Ir" (nr));
-+	    : CC_OUT(c) (oldbit)
-+	    : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
- }
- 
-@@ -282,8 +277,8 @@ static __always_inline bool __test_and_clear_bit(long nr, volatile unsigned long
- 
- 	asm volatile(__ASM_SIZE(btr) " %2,%1"
- 		     CC_SET(c)
--		     : CC_OUT(c) (oldbit), ADDR
--		     : "Ir" (nr));
-+		     : CC_OUT(c) (oldbit)
-+		     : ADDR, "Ir" (nr) : "memory");
- 	return oldbit;
- }
- 
-@@ -294,8 +289,8 @@ static __always_inline bool __test_and_change_bit(long nr, volatile unsigned lon
- 
- 	asm volatile(__ASM_SIZE(btc) " %2,%1"
- 		     CC_SET(c)
--		     : CC_OUT(c) (oldbit), ADDR
--		     : "Ir" (nr) : "memory");
-+		     : CC_OUT(c) (oldbit)
-+		     : ADDR, "Ir" (nr) : "memory");
- 
- 	return oldbit;
- }
-@@ -326,7 +321,7 @@ static __always_inline bool variable_test_bit(long nr, volatile const unsigned l
- 	asm volatile(__ASM_SIZE(bt) " %2,%1"
- 		     CC_SET(c)
- 		     : CC_OUT(c) (oldbit)
--		     : "m" (*(unsigned long *)addr), "Ir" (nr));
-+		     : "m" (*(unsigned long *)addr), "Ir" (nr) : "memory");
- 
- 	return oldbit;
- }
--- 
-2.21.0.392.gf8f6787159e-goog
-
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
