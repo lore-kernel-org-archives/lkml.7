@@ -2,103 +2,95 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9ACC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A205C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F09220674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3907920882
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 12:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="J3TOJbfw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+ZluEoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbfDBMOE (ORCPT
+        id S1730647AbfDBMOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 08:14:04 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38778 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbfDBMOC (ORCPT
+        Tue, 2 Apr 2019 08:14:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37046 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfDBMOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 08:14:02 -0400
-Received: by mail-pg1-f196.google.com with SMTP id j26so6485720pgl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 05:14:01 -0700 (PDT)
+        Tue, 2 Apr 2019 08:14:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 8so6302271pfr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 05:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I+hjiJjVrhVZw3SAVj9ZfOCC0/U3RnZpABy72ZJ8DU0=;
-        b=J3TOJbfweFe8K+W8o27GqnknjYSSejpv5Do2tNsKJugWxEfAR+N4TtvHoXuB4uQv5B
-         mP3C7Km20wVRuGZKoo4OCj0mYcPrOTlnwHPHlYQF7BU079c3qUVJX8nyaBUjXao6trp7
-         lToDq3rdNvm9HSPpoH3+BvY70ceEwXSy15U70O9FHR6q6WE3OLfAhd3igCrUXUYQpVLr
-         F60nRp7Wzm5EzgKY99mqpzN1IeiNhfAW540RmuiIlv/rkeD1p7SPmZnqZuv33iYhaCBL
-         mde5+YSAZ4wKSvl6ZQs+dTm8UuzRDdXA0y6BwrteOwBTfKhhC+99A0u9XLGsRTa/945D
-         +J7g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fOTvj2CHNnElYQjxn2p/TjiU6IwYublLyO1UnfYA5/0=;
+        b=J+ZluEoaLhaUy/COTvfTmPQZuKDuJVrnrFmCFXTsDeFFuHrN9lLl+lAlRcW4Ia1SlH
+         610i8XcBtmqLYAI0ckIIS9cdkoX1o61p2HGQeyiwICtNHrYOQPp0b/uHmBbvP2pz8jGZ
+         c7KNRMat7K2IQKeZtawXosumUDdbc7dPjzuPW/UKICje7BNzdXqAmx/dF3rM9/SalSrr
+         mk3seFijgj4Qqr7l1n/O+GzXqBu7CIwXQ7ZUvhUEuaMt92sqabHAaNT/55Dg6TVmpZLY
+         9LchCztu2TvpJExq7Z5zFeVy+EFTInGtZflRWs58hfqqhK6FjXg6UvGyinpceA/m8w7f
+         4mLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=I+hjiJjVrhVZw3SAVj9ZfOCC0/U3RnZpABy72ZJ8DU0=;
-        b=dxdiWT5mZfeh5AcbLwdh3iqsUZt2cStaJjVf85MtxDP2iRGrKGfeyOl2lw9zVXjduZ
-         ec0oYO3JZJuc/kIOQemV1/zX4A2n3jkzhrsF0UZg7zKNJ1t1woHHVVx4mHwMdGupP7En
-         MspHRArUWKbQh3647FVqg9tDT+O6WPzxn2isKVTSpJoRlSj9Wgt4yv3O6a51uHNhZHRS
-         +f5wNQsRBKp5p1DeAaCMmKYAyryMu6LKa65Ex+nsMYCa2ci5Xdw2FUQgkJA0aRc5xHq8
-         sra5w8IiExM8baC6YXW79m71VZG/BD9myZNlcRnptKOblxIY5w2GxM0UzZxILzcLleOp
-         As3A==
-X-Gm-Message-State: APjAAAXqqzK+SIbQNf3eX9ee8QaGzQJ7meAVk373tXq0uvovQvSiafMm
-        lurCuXVTtbeHknrcBqaDD47pQQ==
-X-Google-Smtp-Source: APXvYqwGYnVJYQpDmL354+mH4UENtiX23T5DZ4Gf78SHIB97tRsvQVXYLYM2isVtME2G0aVzs0rj6w==
-X-Received: by 2002:a63:195e:: with SMTP id 30mr63276526pgz.312.1554207241098;
-        Tue, 02 Apr 2019 05:14:01 -0700 (PDT)
-Received: from localhost.localdomain (36-239-229-248.dynamic-ip.hinet.net. [36.239.229.248])
-        by smtp.gmail.com with ESMTPSA id a80sm36928415pfj.61.2019.04.02.05.13.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fOTvj2CHNnElYQjxn2p/TjiU6IwYublLyO1UnfYA5/0=;
+        b=fu86UQrOdra0K4xnLqlvMi3lYnqiIw/wMuljYo31IgGRkBSo89y0dbL1i4XY3qm7pJ
+         jM/4db2n5QmmwY2u+vA28vAB3K7zOk7/mPpuFRuG9nObu4WR6GMJX6JFh0KjRTMtYw4B
+         8ONywQPnrSA6VWZhCCD0jiLr+jcl9gPtpORLXF6QWeh6A6eRYgz/zTRzuNxM7aaEC29b
+         aIE8aTjo9Gmi7SInuswoRzzbOVVSOCMgE1lq09Asverz5XNdvhqQQk0yBAZbK7vAHAf6
+         F41Na1oIYRl9ssq3Km+LV1K+0INBldYQRxxEfZfOuqSMw1o9xHsO5k0lQd6LzAQ6aJBd
+         0t2w==
+X-Gm-Message-State: APjAAAUKsdeutiy3WoHcde+vEqd7sa55w2dtxD+fEZK9CoxgZ8/c06S7
+        Ov58AtXJe7qVcAXmr2n/+AwSn6Z6
+X-Google-Smtp-Source: APXvYqxMlyVYxODPcTtRhbPUgyA7gFEw4O3al+f5J9NQSm05eAluYahURQHTcPSuEI6DZAjTXeqcVg==
+X-Received: by 2002:a62:1bc7:: with SMTP id b190mr41953848pfb.29.1554207284105;
+        Tue, 02 Apr 2019 05:14:44 -0700 (PDT)
+Received: from localhost.localdomain ([61.83.141.141])
+        by smtp.gmail.com with ESMTPSA id x8sm877391pgp.48.2019.04.02.05.14.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 05:14:00 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Milo Kim <milo.kim@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: lm363x: Constify regulator_ops
-Date:   Tue,  2 Apr 2019 20:13:48 +0800
-Message-Id: <20190402121348.23477-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190402121348.23477-1-axel.lin@ingics.com>
-References: <20190402121348.23477-1-axel.lin@ingics.com>
+        Tue, 02 Apr 2019 05:14:43 -0700 (PDT)
+From:   Sidong Yang <realwakka@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sidong Yang <realwakka@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        Hugo Lefeuvre <hle@owl.eu.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: pi433: Return thread immediately when kthread_should_stop() call.
+Date:   Tue,  2 Apr 2019 12:14:31 +0000
+Message-Id: <20190402121431.8070-1-realwakka@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lm363x_boost_voltage_table_ops and lm363x_regulator_voltage_table_ops
-never need to be modified, make them const so compiler can put them to
-.rodata.
+When kthread_stop() called by removing module, running thread should
+return immediately. Otherwise, It is very dangerous that thread may access
+any released data like struct pi433_device.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Sidong Yang <realwakka@gmail.com>
 ---
- drivers/regulator/lm363x-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/pi433/pi433_if.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-index ebec91b55ceb..e02fdd1dd092 100644
---- a/drivers/regulator/lm363x-regulator.c
-+++ b/drivers/regulator/lm363x-regulator.c
-@@ -82,13 +82,13 @@ static int lm363x_regulator_enable_time(struct regulator_dev *rdev)
- 		return ENABLE_TIME_USEC * val;
- }
+diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
+index ab90d6f80931..16dc380eb176 100644
+--- a/drivers/staging/pi433/pi433_if.c
++++ b/drivers/staging/pi433/pi433_if.c
+@@ -736,7 +736,7 @@ pi433_tx_thread(void *data)
+ 					 device->free_in_fifo == FIFO_SIZE ||
+ 					 kthread_should_stop());
+ 		if (kthread_should_stop())
+-			dev_dbg(device->dev, "ABORT\n");
++			return 0;
  
--static struct regulator_ops lm363x_boost_voltage_table_ops = {
-+static const struct regulator_ops lm363x_boost_voltage_table_ops = {
- 	.list_voltage     = regulator_list_voltage_linear,
- 	.set_voltage_sel  = regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel  = regulator_get_voltage_sel_regmap,
- };
- 
--static struct regulator_ops lm363x_regulator_voltage_table_ops = {
-+static const struct regulator_ops lm363x_regulator_voltage_table_ops = {
- 	.list_voltage     = regulator_list_voltage_linear,
- 	.set_voltage_sel  = regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel  = regulator_get_voltage_sel_regmap,
+ 		/* STOP_TRANSMISSION */
+ 		dev_dbg(device->dev, "thread: Packet sent. Set mode to stby.");
 -- 
-2.17.1
+2.11.0
 
