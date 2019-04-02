@@ -2,217 +2,94 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6DCC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B270C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D67207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554175879;
-	bh=FE/eNTVVmkZpNxedhTlxMNBvv1R+8n1pzmyI1KBQOMI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/zxZ5OK+44ULB8DOyBtdRALC7/+SfqFXc0qbEV6LxgBA7dM31ZjEc4mkJwtmSE51
-	 dlfyAIFrWNuKubEARIwPI9HTnmN4WdOc0Zw4f/vqVhf8CdvY5LpEvNyej+lZDJhzTk
-	 HrLXQP8wHPjIuT0BOLVc8PwUYnPB0NZwfpou273k=
+	by mail.kernel.org (Postfix) with ESMTP id CC6E0207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FK03rLKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbfDBDbS (ORCPT
+        id S1729059AbfDBDcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:31:18 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34481 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726501AbfDBDbR (ORCPT
+        Mon, 1 Apr 2019 23:32:39 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46318 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728761AbfDBDci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:31:17 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7444822246;
-        Mon,  1 Apr 2019 23:31:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 01 Apr 2019 23:31:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=qS74YLv32TK4OdRxyP79l+k5LQKLZkF6HF7u7XLPsVY=; b=J08A5mJb
-        UVl31TB6lBjTNCDo3r2bk4xwTFtJIQ9a+1YCHSkj1oQGYW7B3uWXxsbHyGIoyaY6
-        1cSMIi8SOQdEFgMG3V1puLlXCNvSlftMGeu4BP1PPbcyeVt1+CFXp/GljiqrGZ0Y
-        hsuDAsRcHfDYGAaJCmkVuwj1wU9Kg+588EQPWr8MFpUTH8BJA8/JDQ0Ldap/S9F8
-        +yTfqCBElrEHZlrL72Ngk6jd6gw9WFdY65Fvbrr8mHQB5yd/8MwpBE6rPxOMQUsW
-        z2l/Jb4UG2O/9BpRfOnjSdL9RQYz4oP30CF+IwA0i1PCrw/JeY5J69iOE9vfwE8H
-        EQpqkROtgrjsDQ==
-X-ME-Sender: <xms:g9eiXCHV__yzzZ4dYncfoCwTDXxYKKqFVUVI1ZtzwIsUjJdJEor6WA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrleehgdeikecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvgedrudejuddrvdefrdduvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:g9eiXA1IwyQqtEnT7rMxLhFSYTAYY4Uk3HXvutL05cjcw8FiG7Ma4w>
-    <xmx:g9eiXOxOo2l5ZMyZEBeDEA5jJdFenChkeDY_TfKSoxghmCD5vBFleQ>
-    <xmx:g9eiXBjwd-RlVNhHmI9SHrSWUgvXthaKe8RyCy4NstFCi9iazAzT8g>
-    <xmx:g9eiXAr0-Wuk57VBwwiHYe4poMe5AbqzVM_rWxW9QfdpD9ehnSzNdg>
-Received: from eros.localdomain (124-171-23-122.dyn.iinet.net.au [124.171.23.122])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 549AC100E5;
-        Mon,  1 Apr 2019 23:31:11 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>, LKP <lkp@01.org>,
-        Roman Gushchin <guro@fb.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: [PATCH 1/1] slob: Only use list functions when safe to do so
-Date:   Tue,  2 Apr 2019 14:29:57 +1100
-Message-Id: <20190402032957.26249-2-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190402032957.26249-1-tobin@kernel.org>
-References: <20190402032957.26249-1-tobin@kernel.org>
+        Mon, 1 Apr 2019 23:32:38 -0400
+Received: by mail-io1-f65.google.com with SMTP id b9so9667255iot.13
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HKtA2OgqesJBgzJYv1b+Ap0iRtQayk+lqCYbZ43xI8w=;
+        b=FK03rLKmh+06R2ISmVFdO7t/8HBcyHS2UDZoQoNlv9KGwRE+69v+4KB4ebmrk2/J71
+         0DeUU2S8KwGTfOSfxly4wSnuwxE6ewXSxBLMstzrDwfu/4Qx+1hPDmjBBIFj4yhIvEIA
+         Bpzv5Rci63I0JFxRytOShr4IFrPuCGvBtpoTWNY6fs4ENlG/LB3Wqsdm3jFeKSuKXY+s
+         99k9Y7eyKX8e/aGaI5E7jx2G9iOq+NYuWLfwX/mopoJiTmbm23d+Zsim3b/YwNb0nsuh
+         WEZUY7IFvGoag9ePUe2PMs9DXUvVU6iyp5yk06iroetquCDju7bjtWGovkql1pXOyLvE
+         sdKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HKtA2OgqesJBgzJYv1b+Ap0iRtQayk+lqCYbZ43xI8w=;
+        b=Cxd93v45Cea3WexGqp+e7eH/JPtAdQ9bjV72tcogunpXbSAGPnl+yMq1CF1Ff3Nhrk
+         Qtia3glUXfu1OpElo0xfTd/40rXBg4sGlFx+KyJOxye14Dda9+GL8jMNeXX8BNO4JtBg
+         7LPuDyFWbrC4/8BlVzZXotd89C90iWUUhDCHYDVUXzRJwhnGTJIKrv2y01TePFjzQ9VV
+         WBRJUdP+0XE8dlz2HgDpNguqS+QvhSa6sYp6t7V/MHfEbNCZm42Boelh/xnULB2TRrmA
+         t9AqqoaMDIMk8UrCysFY7XZZOnLXWpNwPoA663DTxwfS3Tw2pVcH6iTFyvFevpu7u/dN
+         cbng==
+X-Gm-Message-State: APjAAAVdRlIhtotSI5DuJnpM2TCP1IFM2WCCQ5FqmRShfdQGYfKldL8C
+        xPZVMUZS4/dPzHmgYhowbuZ2DresrwVb6+5WawqXGg==
+X-Google-Smtp-Source: APXvYqyZsfl/tvgNCDWz0p3ouDKb+EqMbRCuHOu/5wT+soY7NpSaj22jNyr0K+QB2W87ITBd0Ec0w4XjUQ+pDdk4A7E=
+X-Received: by 2002:a6b:3106:: with SMTP id j6mr2342777ioa.147.1554175957400;
+ Mon, 01 Apr 2019 20:32:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190227202658.197113-1-matthewgarrett@google.com> <20190401235245.GA29282@linux.intel.com>
+In-Reply-To: <20190401235245.GA29282@linux.intel.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Mon, 1 Apr 2019 20:32:26 -0700
+Message-ID: <CACdnJutCC7n++Nz5qy1YzmsSchEApDUvMH9-qpxYXckh-Dzf-Q@mail.gmail.com>
+Subject: Re: Add support for TCG2 log format on UEFI systems
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     tomas.winkler@intel.com,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we call (indirectly) list_del() then we manually try to combat
-the fact that the list may be in an undefined state by getting 'prev'
-and 'next' pointers in a somewhat contrived manner.  It is hard to
-verify that this works for all initial states of the list.  Clearly the
-author (me) got it wrong the first time because the 0day kernel testing
-robot managed to crash the kernel thanks to this code.
+On Mon, Apr 1, 2019 at 4:52 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Wed, Feb 27, 2019 at 12:26:54PM -0800, Matthew Garrett wrote:
+> > Identical to V4, but based on tpmdd-next
+>
+> OK, so on my GLK NUC I get valid final log and invalid event log
+> after adding some extra klogs.
+>
+> I.e.
+>
+> -       if (efi.tpm_log == EFI_INVALID_TABLE_ADDR)
+> +       if (efi.tpm_log == EFI_INVALID_TABLE_ADDR) {
 
-All this is done in order to do an optimisation aimed at preventing
-fragmentation at the start of a slab.  We can just skip this
-optimisation any time the list is put into an undefined state since this
-only occurs when an allocation completely fills the slab and in this
-case the optimisation is unnecessary since we have not fragmented the slab
-by this allocation.
-
-Change the page pointer passed to slob_alloc_page() to be a double
-pointer so that we can set it to NULL to indicate that the page was
-removed from the list.  Skip the optimisation if the page was removed.
-
-Found thanks to the kernel test robot, email subject:
-
-	340d3d6178 ("mm/slob.c: respect list_head abstraction layer"):  kernel BUG at lib/list_debug.c:31!
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- mm/slob.c | 50 ++++++++++++++++++++++++++++++--------------------
- 1 file changed, 30 insertions(+), 20 deletions(-)
-
-diff --git a/mm/slob.c b/mm/slob.c
-index 21af3fdb457a..c543da10df45 100644
---- a/mm/slob.c
-+++ b/mm/slob.c
-@@ -213,10 +213,18 @@ static void slob_free_pages(void *b, int order)
- }
- 
- /*
-- * Allocate a slob block within a given slob_page sp.
-+ * slob_page_alloc() - Allocate a slob block within a given slob_page sp.
-+ * @spp: Page to look in, return parameter.
-+ * @size: Size of the allocation.
-+ * @align: Allocation alignment.
-+ *
-+ * Tries to find a chunk of memory at least @size within page.  If the
-+ * allocation fills up page then page is removed from list, in this case
-+ * *spp will be set to %NULL to signal that list removal occurred.
-  */
--static void *slob_page_alloc(struct page *sp, size_t size, int align)
-+static void *slob_page_alloc(struct page **spp, size_t size, int align)
- {
-+	struct page *sp = *spp;
- 	slob_t *prev, *cur, *aligned = NULL;
- 	int delta = 0, units = SLOB_UNITS(size);
- 
-@@ -254,8 +262,11 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
- 			}
- 
- 			sp->units -= units;
--			if (!sp->units)
-+			if (!sp->units) {
- 				clear_slob_page_free(sp);
-+				/* Signal that page was removed from list. */
-+				*spp = NULL;
-+			}
- 			return cur;
- 		}
- 		if (slob_last(cur))
-@@ -268,7 +279,7 @@ static void *slob_page_alloc(struct page *sp, size_t size, int align)
-  */
- static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
- {
--	struct page *sp, *prev, *next;
-+	struct page *sp;
- 	struct list_head *slob_list;
- 	slob_t *b = NULL;
- 	unsigned long flags;
-@@ -283,6 +294,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
- 	spin_lock_irqsave(&slob_lock, flags);
- 	/* Iterate through each partially free page, try to find room */
- 	list_for_each_entry(sp, slob_list, slab_list) {
-+		struct page **spp = &sp;
- #ifdef CONFIG_NUMA
- 		/*
- 		 * If there's a node specification, search for a partial
-@@ -295,27 +307,25 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
- 		if (sp->units < SLOB_UNITS(size))
- 			continue;
- 
--		/*
--		 * Cache previous entry because slob_page_alloc() may
--		 * remove sp from slob_list.
--		 */
--		prev = list_prev_entry(sp, slab_list);
--
- 		/* Attempt to alloc */
--		b = slob_page_alloc(sp, size, align);
-+		b = slob_page_alloc(spp, size, align);
- 		if (!b)
- 			continue;
- 
--		next = list_next_entry(prev, slab_list); /* This may or may not be sp */
--
- 		/*
--		 * Improve fragment distribution and reduce our average
--		 * search time by starting our next search here. (see
--		 * Knuth vol 1, sec 2.5, pg 449)
-+		 * If slob_page_alloc() removed sp from the list then we
-+		 * cannot call list functions on sp.  Just bail, don't
-+		 * worry about the optimisation below.
- 		 */
--		if (!list_is_first(&next->slab_list, slob_list))
--			list_rotate_to_front(&next->slab_list, slob_list);
--
-+		if (*spp) {
-+			/*
-+			 * Improve fragment distribution and reduce our average
-+			 * search time by starting our next search here. (see
-+			 * Knuth vol 1, sec 2.5, pg 449)
-+			 */
-+			if (!list_is_first(&sp->slab_list, slob_list))
-+				list_rotate_to_front(&sp->slab_list, slob_list);
-+		}
- 		break;
- 	}
- 	spin_unlock_irqrestore(&slob_lock, flags);
-@@ -334,7 +344,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
- 		INIT_LIST_HEAD(&sp->slab_list);
- 		set_slob(b, SLOB_UNITS(PAGE_SIZE), b + SLOB_UNITS(PAGE_SIZE));
- 		set_slob_page_free(sp, slob_list);
--		b = slob_page_alloc(sp, size, align);
-+		b = slob_page_alloc(&sp, size, align);
- 		BUG_ON(!b);
- 		spin_unlock_irqrestore(&slob_lock, flags);
- 	}
--- 
-2.21.0
-
+Just to make sure - are you booting via the EFI boot stub? We need to
+obtain the boot log before ExitBootServices() is called, so if you're
+booting directly into the 32-bit entry point (eg, by using the "linux"
+command in grub) then you won't get a log.
