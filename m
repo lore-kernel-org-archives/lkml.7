@@ -2,194 +2,204 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3653C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21623C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B055E20700
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDED120856
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZHUgm2Mu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XxC1ZGNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfDBXQP (ORCPT
+        id S1726399AbfDBXTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 19:16:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58158 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfDBXQP (ORCPT
+        Tue, 2 Apr 2019 19:19:20 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35125 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfDBXTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 19:16:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32Kd3oq163977;
-        Tue, 2 Apr 2019 20:44:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=SWwbtSuBuVRAsBvShPwVRYWt3xedhjkFQ6ROdmYUzro=;
- b=ZHUgm2MuOOV0krty4T7QXlZIWISL8Smr5VxapxX5M+iGYwDtJrdgceBsKxYJad72jdFs
- WS6PXNlId7SQt1sMM422gZWgqsqdoOXN4TuZV9XoD+5A4MgP2ZHg4kYngmD/wvkJ+Xgj
- OcxQ0Ed7eusFEwspi+mZ4o+M15eUeGihEv2NnqjMkMR9M/SgYecFbMS2YxvOnsYMm27K
- DbDjihLSkP5+pHWFMCMIJK0R0jhEKczACn8l1Bgh/JSxMplw+viZEOvNtNzKtkwi8JNd
- G8lMfgtiWXb7/DUUffMG3VNE5jGReclP09wmyGjuhYIpBk/SM3T6LIXX7CzgD5iDuFEY xw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2rj0dnm0bs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Apr 2019 20:44:23 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x32KfJxi065003;
-        Tue, 2 Apr 2019 20:42:23 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2rm8f4yk08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Apr 2019 20:42:22 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x32KgLio031444;
-        Tue, 2 Apr 2019 20:42:21 GMT
-Received: from localhost.localdomain (/73.60.114.248)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 02 Apr 2019 13:42:21 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     akpm@linux-foundation.org
-Cc:     daniel.m.jordan@oracle.com, Alan Tull <atull@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-        linux-mm@kvack.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] fpga/dlf/afu: drop mmap_sem now that locked_vm is atomic
-Date:   Tue,  2 Apr 2019 16:41:56 -0400
-Message-Id: <20190402204158.27582-5-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
-References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+        Tue, 2 Apr 2019 19:19:20 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w24so626782plp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 16:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0zqkJY7jl0hJky97MNhfAD6Z1FUXXVe8V2mRRUXg8qk=;
+        b=XxC1ZGNdW16Dfl5X9N7YRFmKbG4N+VC9NRUxEoibjOBu6bfie/gUCR+wUBkfYm/0q6
+         t4z3c7E33j0mZsgf4OnTlXC+G9QOzFSoCE6fMJdWDNQuFm6nfsKjx6oVhrQR1CkOGW4f
+         SR8wDJPvjElXaenl5l5LBjCKW7sPDvcT7rhM4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0zqkJY7jl0hJky97MNhfAD6Z1FUXXVe8V2mRRUXg8qk=;
+        b=g6U6bfW90Jz7z+61htuH/IyvyLkAFWA3HiiSYogdceC80VOT0nETfzbmkVmotoRwQD
+         OoDAXIXalP45fkH7P5JyKc2nRgaG8w51TOMgbdfxbxY78r7ykNYIuuKyWBP9cBcIuEQA
+         EZUW46iELkVw918aoqtR/dqMjOTFVvI/gx3fBGkEdkVI4Joh0XXGO7WzZWO7ivHeiS5U
+         OJiPcoj06P3fJLNWKQ531ILYu3ec2L3btxAS5BQwWQz+3XDCFMn9vtg8Mb/4h6D9eSHv
+         +ZvIXZqIJWkkZnpyAu9ozSR2xN+wXEE/nBa2Uss9ukNmTEKS7Te/HQrI70txwmnAEbeP
+         qQFw==
+X-Gm-Message-State: APjAAAWwIL2VJr9Hlhii2mVYz29Zfp2W1IjmBeTZOvDaRnA2t+Si79S/
+        3P2NqsiTKf0I9nUnVSXXI5ptng==
+X-Google-Smtp-Source: APXvYqzXvoS2GmevIQL7AWbe0vlPD9QkASPaJrD+esexwW+1JkkwN0mpFMVW2NT9/8A51wioRrnk3Q==
+X-Received: by 2002:a17:902:7893:: with SMTP id q19mr11878822pll.154.1554247159042;
+        Tue, 02 Apr 2019 16:19:19 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id e126sm17472767pfh.35.2019.04.02.16.19.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 16:19:18 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 16:19:17 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        amstan@chromium.org, linux-rockchip@lists.infradead.org,
+        sjg@chromium.org, briannorris@chromium.org, groeck@chromium.org,
+        broonie@kernel.org, ryandcase@chromium.org, rspangler@chromium.org,
+        heiko@sntech.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/chrome: cros_ec_spi: Transfer messages at high
+ priority
+Message-ID: <20190402231917.GL112750@google.com>
+References: <20190402224445.64823-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904020138
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904020138
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190402224445.64823-1-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With locked_vm now an atomic, there is no need to take mmap_sem as
-writer.  Delete and refactor accordingly.
+Hi Doug,
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Alan Tull <atull@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Moritz Fischer <mdf@kernel.org>
-Cc: Wu Hao <hao.wu@intel.com>
-Cc: <linux-mm@kvack.org>
-Cc: <linux-fpga@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
----
- drivers/fpga/dfl-afu-dma-region.c | 40 ++++++++++++-------------------
- 1 file changed, 15 insertions(+), 25 deletions(-)
+On Tue, Apr 02, 2019 at 03:44:44PM -0700, Douglas Anderson wrote:
+> The software running on the Chrome OS Embedded Controller (cros_ec)
+> handles SPI transfers in a bit of a wonky way.  Specifically if the EC
+> sees too long of a delay in a SPI transfer it will give up and the
+> transfer will be counted as failed.  Unfortunately the timeout is
+> fairly short, though the actual number may be different for different
+> EC codebases.
+> 
+> We can end up tripping the timeout pretty easily if we happen to
+> preempt the task running the SPI transfer and don't get back to it for
+> a little while.
+> 
+> Historically this hasn't been a _huge_ deal because:
+> 1. On old devices Chrome OS used to run PREEMPT_VOLUNTARY.  That meant
+>    we were pretty unlikely to take a big break from the transfer.
+> 2. On recent devices we had faster / more processors.
+> 3. Recent devices didn't use "cros-ec-spi-pre-delay".  Using that
+>    delay makes us more likely to trip this use case.
+> 4. For whatever reasons (I didn't dig) old kernels seem to be less
+>    likely to trip this.
+> 5. For the most part it's kinda OK if a few transfers to the EC fail.
+>    Mostly we're just polling the battery or doing some other task
+>    where we'll try again.
+> 
+> Even with the above things, this issue has reared its ugly head
+> periodically.  We could solve this in a nice way by adding reliable
+> retries to the EC protocol [1] or by re-designing the code in the EC
+> codebase to allow it to wait longer, but that code doesn't ever seem
+> to get changed.  ...and even if it did, it wouldn't help old devices.
+> 
+> It's now time to finally take a crack at making this a little better.
+> This patch isn't guaranteed to make every cros_ec SPI transfer
+> perfect, but it should improve things by a few orders of magnitude.
+> Specifically you can try this on a rk3288-veyron Chromebook (which is
+> slower and also _does_ need "cros-ec-spi-pre-delay"):
+>   md5sum /dev/zero &
+>   md5sum /dev/zero &
+>   md5sum /dev/zero &
+>   md5sum /dev/zero &
+>   while true; do
+>     cat /sys/class/power_supply/sbs-20-000b/charge_now > /dev/null;
+>   done
+> ...before this patch you'll see boatloads of errors.  After this patch I
+> don't see any in the testing I did.
+> 
+> The way this patch works is by effectively boosting the priority of
+> the cros_ec transfers.  As far as I know there is no simple way to
+> just boost the priority of the current process temporarily so the way
+> we accomplish this is by creating a "WQ_HIGHPRI" workqueue and doing
+> the transfers there.
+> 
+> NOTE: this patch relies on the fact that the SPI framework attempts to
+> push the messages out on the calling context (which is the one that is
+> boosted to high priority).  As I understand from earlier (long ago)
+> discussions with Mark Brown this should be a fine assumption.  Even if
+> it isn't true sometimes this patch will still not make things worse.
+> 
+> [1] https://crbug.com/678675
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  drivers/platform/chrome/cros_ec_spi.c | 107 ++++++++++++++++++++++++--
+>  1 file changed, 101 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+> index ffc38f9d4829..101f2deb7d3c 100644
+> --- a/drivers/platform/chrome/cros_ec_spi.c
+> +++ b/drivers/platform/chrome/cros_ec_spi.c
+>
+> ...
+>
+> +static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
+> +				struct cros_ec_command *ec_msg)
+> +{
+> +	struct cros_ec_spi *ec_spi = ec_dev->priv;
+> +	struct cros_ec_xfer_work_params params;
+> +
+> +	INIT_WORK(&params.work, cros_ec_pkt_xfer_spi_work);
+> +	params.ec_dev = ec_dev;
+> +	params.ec_msg = ec_msg;
+> +
+> +	queue_work(ec_spi->high_pri_wq, &params.work);
+> +	flush_workqueue(ec_spi->high_pri_wq);
 
-diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-index 08132fd9b6b7..81e3e3a71758 100644
---- a/drivers/fpga/dfl-afu-dma-region.c
-+++ b/drivers/fpga/dfl-afu-dma-region.c
-@@ -35,46 +35,36 @@ void afu_dma_region_init(struct dfl_feature_platform_data *pdata)
-  * afu_dma_adjust_locked_vm - adjust locked memory
-  * @dev: port device
-  * @npages: number of pages
-- * @incr: increase or decrease locked memory
-  *
-  * Increase or decrease the locked memory size with npages input.
-  *
-  * Return 0 on success.
-  * Return -ENOMEM if locked memory size is over the limit and no CAP_IPC_LOCK.
-  */
--static int afu_dma_adjust_locked_vm(struct device *dev, long npages, bool incr)
-+static int afu_dma_adjust_locked_vm(struct device *dev, long pages)
- {
--	unsigned long locked, lock_limit;
-+	unsigned long lock_limit;
- 	s64 locked_vm;
- 	int ret = 0;
- 
- 	/* the task is exiting. */
--	if (!current->mm)
-+	if (!current->mm || !pages)
- 		return 0;
- 
--	down_write(&current->mm->mmap_sem);
--
--	locked_vm = atomic64_read(&current->mm->locked_vm);
--	if (incr) {
--		locked = locked_vm + npages;
-+	locked_vm = atomic64_add_return(pages, &current->mm->locked_vm);
-+	WARN_ON_ONCE(locked_vm < 0);
-+	if (pages > 0 && !capable(CAP_IPC_LOCK)) {
- 		lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
--
--		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
-+		if (locked_vm > lock_limit) {
- 			ret = -ENOMEM;
--		else
--			atomic64_add(npages, &current->mm->locked_vm);
--	} else {
--		if (WARN_ON_ONCE(npages > locked_vm))
--			npages = locked_vm;
--		atomic64_sub(npages, &current->mm->locked_vm);
-+			atomic64_sub(pages, &current->mm->locked_vm);
-+		}
- 	}
- 
- 	dev_dbg(dev, "[%d] RLIMIT_MEMLOCK %c%ld %lld/%lu%s\n", current->pid,
--		incr ? '+' : '-', npages << PAGE_SHIFT,
--		(s64)atomic64_read(&current->mm->locked_vm) << PAGE_SHIFT,
--		rlimit(RLIMIT_MEMLOCK), ret ? "- exceeded" : "");
--
--	up_write(&current->mm->mmap_sem);
-+		(pages > 0) ? '+' : '-', pages << PAGE_SHIFT,
-+		locked_vm << PAGE_SHIFT, rlimit(RLIMIT_MEMLOCK),
-+		ret ? "- exceeded" : "");
- 
- 	return ret;
- }
-@@ -94,7 +84,7 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
- 	struct device *dev = &pdata->dev->dev;
- 	int ret, pinned;
- 
--	ret = afu_dma_adjust_locked_vm(dev, npages, true);
-+	ret = afu_dma_adjust_locked_vm(dev, npages);
- 	if (ret)
- 		return ret;
- 
-@@ -123,7 +113,7 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
- free_pages:
- 	kfree(region->pages);
- unlock_vm:
--	afu_dma_adjust_locked_vm(dev, npages, false);
-+	afu_dma_adjust_locked_vm(dev, -npages);
- 	return ret;
- }
- 
-@@ -143,7 +133,7 @@ static void afu_dma_unpin_pages(struct dfl_feature_platform_data *pdata,
- 
- 	put_all_pages(region->pages, npages);
- 	kfree(region->pages);
--	afu_dma_adjust_locked_vm(dev, npages, false);
-+	afu_dma_adjust_locked_vm(dev, -npages);
- 
- 	dev_dbg(dev, "%ld pages unpinned\n", npages);
- }
--- 
-2.21.0
+IIRC dedicated workqueues should be avoided unless they are needed. In
+this case it seems you could use system_highpri_wq + a
+completion. This would add a few extra lines to deal with the
+completion, in exchange the code to create the workqueue could be
+removed.
 
+> +	return params.ret;
+> +}
+> +
+> +static void cros_ec_cmd_xfer_spi_work(struct work_struct *work)
+> +{
+> +	struct cros_ec_xfer_work_params *params;
+> +
+> +	params = container_of(work, struct cros_ec_xfer_work_params, work);
+> +	params->ret = do_cros_ec_cmd_xfer_spi(params->ec_dev, params->ec_msg);
+> +}
+> +
+> +static int cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
+> +				struct cros_ec_command *ec_msg)
+> +{
+> +	struct cros_ec_spi *ec_spi = ec_dev->priv;
+> +	struct cros_ec_xfer_work_params params;
+> +
+> +	INIT_WORK(&params.work, cros_ec_cmd_xfer_spi_work);
+> +	params.ec_dev = ec_dev;
+> +	params.ec_msg = ec_msg;
+> +
+> +	queue_work(ec_spi->high_pri_wq, &params.work);
+> +	flush_workqueue(ec_spi->high_pri_wq);
+> +
+> +	return params.ret;
+> +}
+
+This is essentially a copy of cros_ec_pkt_xfer_spi() above. You
+could add a wrapper that receives the work function to avoid the
+duplicate code.
+
+Cheers
+
+Matthias
