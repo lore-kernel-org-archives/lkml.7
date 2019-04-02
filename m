@@ -2,212 +2,181 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50096C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A69DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156EC20674
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5DC20674
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 03:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YkcqT6AE"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="k1/zO0Xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfDBDqR (ORCPT
+        id S1728734AbfDBDr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 23:46:17 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43545 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDBDqR (ORCPT
+        Mon, 1 Apr 2019 23:47:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45254 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfDBDr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 23:46:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z9so5811659pgu.10
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:46:16 -0700 (PDT)
+        Mon, 1 Apr 2019 23:47:26 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y3so5808095pgk.12
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 20:47:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Qqq1z9eh+IopwWGoPO815E7iXUuR7R0b2TGX5uUn1IU=;
-        b=YkcqT6AER6SBCZT++NvZjBQNpWBRQc+25daIOG4TF8Thxxt9r6sYz+Kec2069aOwdI
-         ipsSHVmvpnJbMb7a8Aa9tAsyKGL+aGEiNw21NSxFUub0Q3BRNi2zI/Hh2p8e7jwtU3eA
-         wtfPV+KufDytjyMrgjSLCQBC8J9jMubP8tGkW20gIJ9K+uk9byIQI9bJeF8rtp91VUkS
-         mLmg07qSqhbglWbr7Y1Av6/p1CFqKZIcuhv1p8z8lPIPCaZHFgLfm2YqWYlTZPYdxlb5
-         RIhuJXcAonGUlIjj+ZmrmlKlzSHD6KT6y3ZSVBVVZr0mVZ8MzLOC0GORSyiVYUhAe0Wu
-         ardQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H47pxTGtMqAzpyNByDNqwgHUGsiBgDc5ThKwFxITzSM=;
+        b=k1/zO0XueqoX2VBC5fclqpGHwCv3RNMzC9HrZQqn3QJ73kcF/+F2EilHCa3A98//Ti
+         eOHUaTKBlix9ZG5vzm9gPeM9MmwRmHJ5ZZldCPBVZvpd7W/zULZMfR8AwuTso/7e4i07
+         OOYW/TmJW9+tRwF2ch5jUPGIHw1gLdHdp6dR7V7QG+ZM4rZhem4MQJRzTlOEC0MxblAe
+         iR9wq+7+4zDG51YSQ3sX/AXcewFwSutpXcYohCu6oTWdQv3bLYAOrSxMlrmUKS25Nwrp
+         jvy61+KqWKiz4GmVfN1U0sj9Xibxgpk/4c3s0zT/qdRBXe/W4pwYmb77P6pz1TvMGCHF
+         iYVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Qqq1z9eh+IopwWGoPO815E7iXUuR7R0b2TGX5uUn1IU=;
-        b=H/9u8z3jmepASdiErCkvL60P8ZLF6bXWZnmhBqbkj+Qp6NrQoKHCNTxfS8ZMuMy51u
-         DeOX4mVspwY1diPOJvAg57mISN9R4ImSNAmIjHCcCnqTvHySzF3HQYD9Lq7GZQMM+h8N
-         b21Nzvu88e9RExqOWbPZOODZkl47igOXzxkraED6zzuzRp42bH+T2BDmPzxdAm7q5Mcf
-         Ecamuy1UM20jr6aqUGxBi+2yo0Dmx2e60jCQILTrL9kfU1bcrbjljiPn8hcH12N9N8ar
-         bAktO1B6X9Ea/QDhCoDMSCmsTRo0pa/mzepIfZlz7UPRZNECosBREUGxhkMjBryKI/5o
-         Z7VQ==
-X-Gm-Message-State: APjAAAWTiV3ul/+uRO+MVj+/b+dKctZxz46KDObbwJRX1OUdrjIYO8/h
-        LH4foHYNHYywfY4xDDzD23n4lQ==
-X-Google-Smtp-Source: APXvYqwJiR8VkM+3Kl0dqaDNOB+j3XCXGn0EjOigLCbF7esVrkkt9evzkpX9JkxBTnlWSebNOFc8JQ==
-X-Received: by 2002:a62:1f92:: with SMTP id l18mr25169550pfj.180.1554176775654;
-        Mon, 01 Apr 2019 20:46:15 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id 17sm16988009pfw.65.2019.04.01.20.46.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 20:46:14 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 04:46:10 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     andy.shevchenko@gmail.com, groeck@chromium.org,
-        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v5] mfd: cros_ec_dev: Register cros_ec_accel_legacy
- driver as a subdevice
-Message-ID: <20190402034610.GG4187@dell>
-References: <CAMHSBOWZHLnGWXU_z1ouCVuRRWKg_59P5++zwhJOWrWJoNv=GA@mail.gmail.com>
- <20190228013541.76792-1-gwendal@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H47pxTGtMqAzpyNByDNqwgHUGsiBgDc5ThKwFxITzSM=;
+        b=IK3W4AjvZcSyjp4wfWLhXOHEoTHCCYwtThpXmXXQX4ATBSo4fi9nyc8DNdfkckUB+b
+         jYrFtPReopU1nTXvrrH0R3bp8cBJ/3izi0wr/rPvcRNrPBA6RXCoznagdFkTisEQA8Do
+         gz3dfE6eYl+y87AsKyBQ7Xtqzm9YcnjOzHrQYA4QGhLsdzPD8AGJgtgTyCbhx3BzPALX
+         1S5oyrb17Nfh3IdC/v7BoqsYq+C21ihZGPSzNSvHRgmrMTPNCqqpNq8IPieQvibxdsOB
+         iSpFxp97LX8juiKmeG95DGWshhhaqezDl3ipt5L+JaFjwRB+kwhmqVKc8qgXoEtvy58t
+         JduA==
+X-Gm-Message-State: APjAAAWqs+sTFgW4yiktaUKBdoVJ13r2qI0Y57XAXTw1ZcEkbzm7xphV
+        ZZtvE98yUuXMP7rh2f81zmDEohPL+p7qkw==
+X-Google-Smtp-Source: APXvYqxgyOI5WuPz1nMnHqGB3Ct+Ww6rpAftqJvxMgw5L/OtM8xsyx9Sx3vJcbMtOnzkpdx3YPNHzw==
+X-Received: by 2002:aa7:8b96:: with SMTP id r22mr65854202pfd.223.1554176845400;
+        Mon, 01 Apr 2019 20:47:25 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id v15sm15247317pff.105.2019.04.01.20.47.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Apr 2019 20:47:24 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: introduce inline reqs for IORING_SETUP_IOPOLL &
+ direct_io
+To:     Jianchao Wang <jianchao.w.wang@oracle.com>
+Cc:     viro@zeniv.linux.org.uk, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1554174646-1715-1-git-send-email-jianchao.w.wang@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <15be30c1-db76-d446-16c0-f2ef340658ec@kernel.dk>
+Date:   Mon, 1 Apr 2019 21:47:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1554174646-1715-1-git-send-email-jianchao.w.wang@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190228013541.76792-1-gwendal@chromium.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Feb 2019, Gwendal Grignou wrote:
+On 4/1/19 9:10 PM, Jianchao Wang wrote:
+> For the IORING_SETUP_IOPOLL & direct_io case, all of the submission
+> and completion are handled under ctx->uring_lock or in SQ poll thread
+> context, so io_get_req and io_put_req has been serialized well.
+> 
+> Based on this, we introduce the preallocated reqs ring per ctx and
+> needn't to provide any lock to serialize the updating of the head
+> and tail. The performacne benefits from this. The test result of
+> following fio command
+> 
+> fio --name=io_uring_test --ioengine=io_uring --hipri --fixedbufs
+> --iodepth=16 --direct=1 --numjobs=1 --filename=/dev/nvme0n1 --bs=4k
+> --group_reporting --runtime=10
+> 
+> shows IOPS upgrade from 197K to 206K.
 
-> From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> 
-> With this patch, the cros_ec_ctl driver will register the legacy
-> accelerometer driver (named cros_ec_accel_legacy) if it fails to
-> register sensors through the usual path cros_ec_sensors_register().
-> This legacy device is present on Chromebook devices with older EC
-> firmware only supporting deprecated EC commands (Glimmer based devices).
-> 
-> Tested-by: Gwendal Grignou <gwendal@chromium.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
-> Changes in v5:
-> - Remove unnecessary white lines.
-> 
-> Changes in v4:
-> - [5/8] Nit: EC -> ECs (Lee Jones)
-> - [5/8] Statically define cros_ec_accel_legacy_cells (Lee Jones)
-> 
-> Changes in v3:
-> - [5/8] Add the Reviewed-by Andy Shevchenko.
-> 
-> Changes in v2:
-> - [5/8] Add the Reviewed-by Gwendal.
-> 
->  drivers/mfd/cros_ec_dev.c | 66 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
-> 
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index d275deaecb12..64567bd0a081 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -376,6 +376,69 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
->  	kfree(msg);
+I like this idea, but not a fan of the execution of it. See below.
+
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 6aaa3058..40837e4 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -104,11 +104,17 @@ struct async_list {
+>  	size_t			io_pages;
+>  };
+>  
+> +#define INLINE_REQS_TOTAL 128
+> +
+>  struct io_ring_ctx {
+>  	struct {
+>  		struct percpu_ref	refs;
+>  	} ____cacheline_aligned_in_smp;
+>  
+> +	struct io_kiocb *inline_reqs[INLINE_REQS_TOTAL];
+> +	struct io_kiocb *inline_req_array;
+> +	unsigned long inline_reqs_h, inline_reqs_t;
+
+Why not just use a list? The req has a list member anyway. Then you don't
+need a huge array, just a count.
+
+> +
+>  	struct {
+>  		unsigned int		flags;
+>  		bool			compat;
+> @@ -183,7 +189,9 @@ struct io_ring_ctx {
+>  
+>  struct sqe_submit {
+>  	const struct io_uring_sqe	*sqe;
+> +	struct file 			*file;
+>  	unsigned short			index;
+> +	bool 				is_fixed;
+>  	bool				has_user;
+>  	bool				needs_lock;
+>  	bool				needs_fixed_file;
+
+Not sure why you're moving these to the sqe_submit?
+
+> @@ -228,7 +236,7 @@ struct io_kiocb {
+>  #define REQ_F_PREPPED		16	/* prep already done */
+>  	u64			user_data;
+>  	u64			error;
+> -
+> +	bool 			ctx_inline;
+>  	struct work_struct	work;
+>  };
+
+ctx_inline should just be a req flag.
+
+>  
+> @@ -397,7 +405,8 @@ static void io_ring_drop_ctx_refs(struct io_ring_ctx *ctx, unsigned refs)
 >  }
 >  
-> +static struct cros_ec_sensor_platform sensor_platforms[] = {
-> +	{ .sensor_num = 0 },
-> +	{ .sensor_num = 1 }
-> +};
-
-I'm still very uncomfortable with this struct.
-
-Other than these indices, the sensors have no other distinguishing
-features, thus there should be no need to identify or distinguish
-between them in this way.
-
-> +static const struct mfd_cell cros_ec_accel_legacy_cells[] = {
-> +	{
-> +		.name = "cros-ec-accel-legacy",
-> +		.id = 0,
-> +		.platform_data = &sensor_platforms[0],
-> +		.pdata_size = sizeof(struct cros_ec_sensor_platform),
-> +	},
-> +	{
-> +		.name = "cros-ec-accel-legacy",
-> +		.id = 1,
-> +		.platform_data = &sensor_platforms[1],
-> +		.pdata_size = sizeof(struct cros_ec_sensor_platform),
-> +	}
-> +};
-> +
-> +static void cros_ec_accel_legacy_register(struct cros_ec_dev *ec)
-> +{
-> +	struct cros_ec_device *ec_dev = ec->ec_dev;
-> +	u8 status;
-> +	int ret;
-> +
-> +	/*
-> +	 * ECs that need legacy support are the main EC, directly connected to
-> +	 * the AP.
-> +	 */
-> +	if (ec->cmd_offset != 0)
-> +		return;
-> +
-> +	/*
-> +	 * Check if EC supports direct memory reads and if EC has
-> +	 * accelerometers.
-> +	 */
-> +	if (!ec_dev->cmd_readmem)
-> +		return;
-> +
-> +	ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS, 1, &status);
-> +	if (ret < 0) {
-> +		dev_warn(ec->dev, "EC does not support direct reads.\n");
-> +		return;
-> +	}
-> +
-> +	/* Check if EC has accelerometers. */
-> +	if (!(status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
-> +		dev_info(ec->dev, "EC does not have accelerometers.\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Register 2 accelerometers
-> +	 */
-> +	ret = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
-
-Using PLATFORM_DEVID_AUTO whilst providing the MFD cells with IDs
-doesn't make any sense.  Please remove the IDs from the cells.
-
-> +			      cros_ec_accel_legacy_cells,
-> +			      ARRAY_SIZE(cros_ec_accel_legacy_cells),
-> +			      NULL, 0, NULL);
-> +	if (ret)
-> +		dev_err(ec_dev->dev, "failed to add EC sensors\n");
-> +}
-> +
->  static const struct mfd_cell cros_ec_cec_cells[] = {
->  	{ .name = "cros-ec-cec" }
->  };
-> @@ -437,6 +500,9 @@ static int ec_device_probe(struct platform_device *pdev)
->  	/* check whether this EC is a sensor hub. */
->  	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE))
->  		cros_ec_sensors_register(ec);
-> +	else
-> +		/* Workaroud for older EC firmware */
-> +		cros_ec_accel_legacy_register(ec);
+>  static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+> -				   struct io_submit_state *state)
+> +				   struct io_submit_state *state,
+> +				   bool direct_io)
+>  {
+>  	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
+>  	struct io_kiocb *req;
+> @@ -405,10 +414,19 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+>  	if (!percpu_ref_tryget(&ctx->refs))
+>  		return NULL;
 >  
->  	/* Check whether this EC instance has CEC host command support */
->  	if (cros_ec_check_features(ec, EC_FEATURE_CEC)) {
+> -	if (!state) {
+> +	/*
+> +	 * Avoid race with workqueue context that handle buffered IO.
+> +	 */
+> +	if (direct_io &&
+> +	    ctx->inline_reqs_h - ctx->inline_reqs_t < INLINE_REQS_TOTAL) {
+> +	    req = ctx->inline_reqs[ctx->inline_reqs_h % INLINE_REQS_TOTAL];
+> +	    ctx->inline_reqs_h++;
+> +	    req->ctx_inline = true;
+> +	} else if (!state) {
+
+What happens for O_DIRECT that ends up being punted to async context?
+We need a clearer indication of whether or not we're under the lock or
+not, and then get rid of the direct_io "limitation" for this. Arguably,
+cached buffered IO needs this even more than O_DIRECT does, since that
+is much faster.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Jens Axboe
+
