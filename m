@@ -2,179 +2,133 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE71C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05D0C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EBF2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D412082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tHKcp/Lw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfDBT5O (ORCPT
+        id S1726462AbfDBT6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:57:14 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30463 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfDBT5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:57:13 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 12:57:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,301,1549958400"; 
-   d="scan'208";a="219937579"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga001.jf.intel.com with ESMTP; 02 Apr 2019 12:57:12 -0700
-Date:   Tue, 2 Apr 2019 12:57:12 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     pbonzini@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, yu-cheng.yu@intel.com,
-        Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: Re: [RFC PATCH v4 1/8] KVM:VMX: Define CET VMCS fields and bits
-Message-ID: <20190402195712.GE31303@linux.intel.com>
-References: <20190318150351.15550-1-weijiang.yang@intel.com>
- <20190318150351.15550-2-weijiang.yang@intel.com>
+        Tue, 2 Apr 2019 15:58:50 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:54406 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDBT6t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 15:58:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554235126; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ucqDwDOGXGI6jS55GyrdLlnLrH9n9y70DM1gv/tM+j4=;
+        b=tHKcp/LwO71VA7bEx18TlOOCfjcigi+S5URmbFK/D9cr7GCT0T9J1oxMOrbTSpjHjP+03x
+        zk7y03IVDM9yMPJHQNAEzG2yZfV9lAUmcgKUWEidtVByyjv0O8bux9WF0V6jWjXREmkb0W
+        SOzYn8E94m9lqY+HzCSOcd7FIrXI8BY=
+Date:   Tue, 02 Apr 2019 21:58:42 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] usb: musb: Force-disable pullup on shutdown
+To:     Bin Liu <b-liu@ti.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me
+Message-Id: <1554235122.13181.0@crapouillou.net>
+In-Reply-To: <20190401182008.GL25852@uda0271908>
+References: <20190321144246.3547-1-paul@crapouillou.net>
+        <20190401171725.GK25852@uda0271908> <1554140782.10471.0@crapouillou.net>
+        <20190401182008.GL25852@uda0271908>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190318150351.15550-2-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 11:03:44PM +0800, Yang Weijiang wrote:
-> CET - Control-flow Enforcement Technology, it's used to
-> protect against return/jump oriented programming (ROP)
-> attacks. It provides the following capabilities to defend
-> against ROP/JOP style control-flow subversion attacks:
-> - Shadow Stack (SHSTK):
->                  A second stack for the program that is
->                  used exclusively for control transfer
->                  operations.
-> - Indirect Branch Tracking (IBT):
->                  Free branch protection to defend against
->                  Jump/Call Oriented Programming.
-> 
-> On processors that support CET, VMX saves/restores
-> the states of IA32_S_CET, SSP and IA32_INTR_SSP_TABL_ADDR MSR
-                                                  ^^^^
-Please spell out "table" in full, here and below.
+Hi,
 
-> to the VMCS area for Guest/Host unconditionally.
-> 
-> If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET MSRs are
-> restored from VMCS host-state area at VM exit as follows:
+Le lun. 1 avril 2019 =E0 20:20, Bin Liu <b-liu@ti.com> a =E9crit :
+> On Mon, Apr 01, 2019 at 07:46:22PM +0200, Paul Cercueil wrote:
+>>=20
+>>=20
+>>  Le lun. 1 avril 2019 =E0 19:17, Bin Liu <b-liu@ti.com> a =E9crit :
+>>  >On Thu, Mar 21, 2019 at 03:42:46PM +0100, Paul Cercueil wrote:
+>>  >> When the musb is shutdown, for instance when the driver is=20
+>> unloaded,
+>>  >> force-disable the pullup. Otherwise, the host will still see
+>>  >>the gadget
+>>  >> device even after the shutdown.
+>>  >
+>>  >how would this happen?
+>>  >
+>>  >when musb-hdrc driver is unloaded, udc core removes the bound=20
+>> gadget
+>>  >driver which calls musb_gadget_pullup() to disable the pullup.
+>>=20
+>>  I'm testing with the jz4740-musb driver. I don't unload the module=20
+>> (it's
+>>  built-in) but unbind it from sysfs.
+>=20
+> I did unbind too.
+>=20
+> root@am335x-evm:/sys/bus/platform/drivers/musb-hdrc# echo musb-hdrc.0=20
+> > unbind
+>=20
+> or unbind the glue driver:
+>=20
+> root@am335x-evm:/sys/bus/platform/drivers/musb-dsps# echo=20
+> 47401400.usb > unbind
+>=20
+> musb_gadget_pullup() is called in both cases.
+>=20
+> [ 3880.597014] [<bf444ab0>] (musb_gadget_pullup [musb_hdrc]) from=20
+> [<bf402cbc>] (usb_gadget_disconnect+0x3c/0xf4 [udc_core])
+> [ 3880.607959] [<bf402cbc>] (usb_gadget_disconnect [udc_core]) from=20
+> [<bf403b28>] (usb_gadget_remove_driver+0x4c/0x90 [udc_core])
+> [ 3880.619338] [<bf403b28>] (usb_gadget_remove_driver [udc_core])=20
+> from [<bf403d20>] (usb_del_gadget_udc+0x5c/0xc0 [udc_core])
 
-This contradicts the above statement that "VMX saves/restores ...
-IA32_S_CET, SSP and IA32_INTR_SSP_TABL_ADDR MSR" unconditionally.
+In my case this stops here, usb_del_gadget_udc() does not call
+usb_gadget_remove_driver(), that's why the pullup is never disabled.
 
-> 
-> - HOST_S_CET: Host supervisor mode IA32_S_CET MSR is loaded
->                    from this field.
+I guess that's because udc->driver is NULL; I'm testing with=20
+CONFIG_USB_CONFIGFS,
+and I don't configure anything in sysfs before unbinding the driver.
 
-Maybe provide a brief introduction on the MSRs instead of mixing that
-in with the VMCS field definition?  "Host supervisor mode IA32_S_CET"
-makes it sound as if the MSR only exists at cpl=0 or something.
+> [ 3880.630471] [<bf403d20>] (usb_del_gadget_udc [udc_core]) from=20
+> [<bf439ff8>] (musb_remove+0x50/0x134 [musb_hdrc])
+> [ 3880.640648] [<bf439ff8>] (musb_remove [musb_hdrc]) from=20
+> [<c05668cc>] (platform_drv_remove+0x28/0x48)
+> [ 3880.649831] [<c05668cc>] (platform_drv_remove) from [<c0564e3c>]=20
+> (device_release_driver_internal+0xe4/0x1b4)
+> [ 3880.659708] [<c0564e3c>] (device_release_driver_internal) from=20
+> [<c05633e4>] (bus_remove_device+0xe0/0x140)
+> [ 3880.669409] [<c05633e4>] (bus_remove_device) from [<c055f358>]=20
+> (device_del+0x140/0x374)
+> [ 3880.677455] [<c055f358>] (device_del) from [<c0566ff0>]=20
+> (platform_device_del.part.3+0x18/0x80)
+> [ 3880.686110] [<c0566ff0>] (platform_device_del.part.3) from=20
+> [<c0567098>] (platform_device_unregister+0x24/0x30)
+> [ 3880.696170] [<c0567098>] (platform_device_unregister) from=20
+> [<bf48c3e0>] (dsps_remove+0x1c/0x38 [musb_dsps])
+> [ 3880.706010] [<bf48c3e0>] (dsps_remove [musb_dsps]) from=20
+> [<c05668cc>] (platform_drv_remove+0x28/0x48)
+> [ 3880.715190] [<c05668cc>] (platform_drv_remove) from [<c0564e3c>]=20
+> (device_release_driver_internal+0xe4/0x1b4)
+> [ 3880.725065] [<c0564e3c>] (device_release_driver_internal) from=20
+> [<c0562b2c>] (unbind_store+0x64/0xd8)
+> [ 3880.734253] [<c0562b2c>] (unbind_store) from [<c0350c58>]=20
+> (kernfs_fop_write+0xf4/0x1cc)
+>=20
+> Regards,
+> -Bin.
+>=20
+>=20
 
-> 
-> - HOST_SSP : Host SSP is loaded from this field.
-> 
-> - HOST_INTR_SSP_TABLE : Host IA32_INTR_SSP_TABL_ADDR
-                                             ^^^^
->                              MSR is loaded from this field.
-> 
-> If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET MSRs are loaded
-> from VMCS guest-state area at VM entry as follows:
-> 
-> - GUEST_S_CET : Guest supervisor mode IA32_S_CET MSR is loaded
->                      from this field.
-> 
-> - GUEST_SSP :        Guest SSP is loaded from this field.
-> 
-> - GUEST_INTR_SSP_TABLE : Guest IA32_INTR_SSP_TABL_ADDR
-                                               ^^^^
->                              MSR is loaded from this field.
+=
 
-You can probably drop the per-field descriptions, the intro regarding
-VM_EXIT_LOAD_{HOST,GUEST}_CET_STATE should make it obvious to readers
-that these fields contain host/guest values, and the names line up with
-the MSRs (assuming you add a brief intro on the MSRs).  E.g.:
-
-If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host's CET MSRs are restored
-from the following VMCS fields at VM-Exit:
-
- - HOST_S_CET
- - HOST_SSP
- - HOST_INTR_SSP_TABLE
-
-> 
-> Additionally, to context switch guest and host CET states, the VMM
-> uses xsaves/xrstors instructions to save/restore the guest CET states
-> at VM exit/entry. The CET xsave area is within thread_struct.fpu area.
-> If OS execution flow changes during task switch/interrupt/exception etc.,
-> the OS also relies on xsaves/xrstors to switch CET states accordingly.
-> 
-> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-
-Assuming you both worked on these patches, a Co-developed-by: tag is
-needed for Zhang Yi.  The current docs on Co-developed-by: are a bit
-sparse, linux-next has a patch with more information on its usage[1].
-
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next/+/24a2bb90741bf86ddcf6558be419e182ff44fc95
-
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/include/asm/vmx.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index ade0f153947d..fd70c4577c5a 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -98,6 +98,7 @@
->  #define VM_EXIT_LOAD_IA32_EFER                  0x00200000
->  #define VM_EXIT_SAVE_VMX_PREEMPTION_TIMER       0x00400000
->  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
-> +#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
->  
->  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
->  
-> @@ -109,6 +110,7 @@
->  #define VM_ENTRY_LOAD_IA32_PAT			0x00004000
->  #define VM_ENTRY_LOAD_IA32_EFER                 0x00008000
->  #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
-> +#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
->  
->  #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
->  
-> @@ -325,6 +327,9 @@ enum vmcs_field {
->  	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
->  	GUEST_SYSENTER_ESP              = 0x00006824,
->  	GUEST_SYSENTER_EIP              = 0x00006826,
-> +	GUEST_S_CET                     = 0x00006828,
-> +	GUEST_SSP                       = 0x0000682a,
-> +	GUEST_INTR_SSP_TABLE            = 0x0000682c,
->  	HOST_CR0                        = 0x00006c00,
->  	HOST_CR3                        = 0x00006c02,
->  	HOST_CR4                        = 0x00006c04,
-> @@ -337,6 +342,9 @@ enum vmcs_field {
->  	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
->  	HOST_RSP                        = 0x00006c14,
->  	HOST_RIP                        = 0x00006c16,
-> +	HOST_S_CET                      = 0x00006c18,
-> +	HOST_SSP                        = 0x00006c1a,
-> +	HOST_INTR_SSP_TABLE             = 0x00006c1c
->  };
->  
->  /*
-> -- 
-> 2.17.1
-> 
