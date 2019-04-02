@@ -2,120 +2,103 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D713C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A47C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C85F2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64D52087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:55:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pu6ENkUE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S80rgrKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfDBCwD (ORCPT
+        id S1728840AbfDBCzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 22:52:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41496 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfDBCwC (ORCPT
+        Mon, 1 Apr 2019 22:55:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38535 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728196AbfDBCzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 22:52:02 -0400
-Received: by mail-io1-f65.google.com with SMTP id v10so9632575iom.8;
-        Mon, 01 Apr 2019 19:52:01 -0700 (PDT)
+        Mon, 1 Apr 2019 22:55:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 10so5572025pfo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 19:55:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wIWPyD9h3bQgfe9zg0uJ+mpqYiO9JDv7lJfMFW8Van8=;
-        b=pu6ENkUERaepnoXNksV4QvU537rbXFkWw/BpofYn8fZ6SwKMEji6wjD3zWFAFVHGou
-         QbSZua7CYQIgrX1JHp6S+8bOVvaPeN7+RXkd10ETJilMlbV/5BEHqvqVx1B03h37b6TJ
-         YPNyge2NBLsgejuBXU55T7s5Yl0pBm4hIQAqUGkWeFaboYbNyVl9Y7foQ8UPOHpmh4Oh
-         ZYxSXMw+0arVaH8sD+hE3vx3jZRW1PkOGrHHkocq5uGYGIsyJejeAslGtoE6HWPKknfs
-         BgkQ+KeU8TCsFupIZi4IXbsYLehxRQllCZl4jO3cR9CXz8Ut67CX0qptbOG7XpTfoLMY
-         ZdPQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2YJv0TU4reqr1XesjZUu85dr59wYQQ2sU3iSxRPA0nA=;
+        b=S80rgrKKnKgYNCbvkSPiIuDGpRPXZ5PcLNMr8oY8XBSSnzoUNg1wh2K+j+SDx3D6KZ
+         y67KJ3vRFSFhU+8rxZmJARzpzjtyYmpOfNMZzwrKFM8kmu5QoK4AF2gvXHa2J93wwbND
+         n+XLuFEc2J2TB2zeVCsLAxbLrt8LQsBtlRvByqaEkDdoa8uLwU/SA+mthltHW/KCb6go
+         Od8a8pSd2glFkZKmpeErd3GtbSACJEiQ9tgBl0w2NRg3bLHDJ2QVOIYuhh35nAtUtV1j
+         KOoVF0U0HQnV76bItRJ4RPzcrDsRoux2U9ue1+vdxGVWpKSTFD8hXNmzdeGzQDYsB2/g
+         ALqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wIWPyD9h3bQgfe9zg0uJ+mpqYiO9JDv7lJfMFW8Van8=;
-        b=ZfVUDWVJWJuPHYRGrSKU/c4zJXlkoIkWbRZeutM760v/dqNsUcdsCjbaRJ+aVA7as6
-         X3B3Y9bRGhbTFQBwVmhI6L5Dqtum+XdZBbdmST6Q+XE7vk0SCrSySOx0Y17fNApQDbVg
-         Pa+ysznOkLksnu6AGMwp1vc9e2SsPaXGztc2S7nLwgcXi4JQ6eJq0ByUJaFZmLG2wlEA
-         bOsEmvZrpJ+WJlNobS1TttggPLD5shIqBDuvs2PuijTlSC6ZJZmlN1TYiw+6I913p3Zj
-         GgyzJa7PLzmqlZRcDl9nbwlw9Hw4d7RTbhQ8hxB9TpRrEHRx4y9+mbMWaBSJPo7EMz1w
-         mIiw==
-X-Gm-Message-State: APjAAAV3A5gH3CUwvr7dh8czCKK45O8TgcuGfmv3qy0nsA0OOwr7x0RW
-        PJi2ZC28AGi38FAWuf3TNRk=
-X-Google-Smtp-Source: APXvYqxmJg6kJXjkGuk1za2hiwLv+d+VQOTSmnV5ZcISOev/xXRMt+nGbcAMMi4F3dh42zjq6Z/Dvw==
-X-Received: by 2002:a6b:e009:: with SMTP id z9mr30739152iog.127.1554173521377;
-        Mon, 01 Apr 2019 19:52:01 -0700 (PDT)
-Received: from ubu (2600-6c48-437f-c81d-984d-b4e8-0abe-7e26.dhcp6.chtrptr.net. [2600:6c48:437f:c81d:984d:b4e8:abe:7e26])
-        by smtp.gmail.com with ESMTPSA id h133sm6506558itb.34.2019.04.01.19.52.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 19:52:00 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 22:51:58 -0400
-From:   Kimberly Brown <kimbrownkd@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] livepatch: Replace klp_ktype_patch's default_attrs
- with groups
-Message-ID: <1571eb59b1d523aac81d524ae20a56cf378ef9c4.1554151487.git.kimbrownkd@gmail.com>
-References: <20190322201440.GA30814@ubu-Virtual-Machine>
- <cover.1554151487.git.kimbrownkd@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2YJv0TU4reqr1XesjZUu85dr59wYQQ2sU3iSxRPA0nA=;
+        b=pwmZsDavsa981/CTY0K9P4W4r9WNKBMHL+s8DzPvHuuLwY4/uJarwnJoDngKqSuoEx
+         L9mgfEQ4bMUwPAzVXppuI7mhxDOci8l8SvSqhh73zPGoLqszNz2EF4cXnX79EhncFdQu
+         ZqdClQZcuZ7MfSpfmJUqToLqYs1h7QhDhHngywkanmTvjEisr0iUMQvX1WAwt1lciy0j
+         KCMhCT3BIVs9baV8hXvpeytWsPReFHhH9LYkOOZgrcZ6hjQVye5PDXmKk3VYEP9ZJCHc
+         I/HPyFCJrrNPkcw/lKTjVStz7TwqHkzpu5EuvP53+7Kx8KBtbZEHq2z4mU+YMSjWqwqu
+         YqOA==
+X-Gm-Message-State: APjAAAUGqhyc/zVoq45gXVxIitEeL1sbv6Qr12xafmqJNNzfkfx3YnO7
+        xBGo4Ij72MCs3L5mLlP9rWsJQHrLoA9IJYp1FmCbjA==
+X-Google-Smtp-Source: APXvYqzCV5fvCjc8AQ2luhPjV0wd8ML4qhCjaMK9ahShMpCfz9YWDN4+7uPlOM+kDxTJd2fLOu9sX6RlX3SqvdiC70E=
+X-Received: by 2002:a63:7444:: with SMTP id e4mr46157276pgn.261.1554173701838;
+ Mon, 01 Apr 2019 19:55:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1554151487.git.kimbrownkd@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <eea3ce6a-732b-5c1d-9975-eddaeee21cf5@infradead.org>
+ <20190329181839.139301-1-ndesaulniers@google.com> <83226cfb-afa7-0174-896c-d9f7a6193cf4@infradead.org>
+ <CANA+-vAcW0VfAZmZWi84s1pQQ+tFx8VyzYsWi5_gj7vHT3Ao6Q@mail.gmail.com>
+In-Reply-To: <CANA+-vAcW0VfAZmZWi84s1pQQ+tFx8VyzYsWi5_gj7vHT3Ao6Q@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 2 Apr 2019 09:54:50 +0700
+Message-ID: <CAKwvOd=PstHEm_Vxtx_SGanKhAJSjoQiCb3kgCVeK4peUF2k-g@mail.gmail.com>
+Subject: Re: [PATCH v2] gcov: fix when CONFIG_MODULES is not set
+To:     Tri Vo <trong@android.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Hackmann <ghackmann@android.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        kbuild-all@01.org, kbuild test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kobj_type default_attrs field is being replaced by the
-default_groups field. Replace klp_ktype_patch's default_attrs field
-with default_groups and use the ATTRIBUTE_GROUPS macro to create
-klp_patch_groups.
+On Sun, Mar 31, 2019 at 6:57 AM Tri Vo <trong@android.com> wrote:
+>
+> On Fri, Mar 29, 2019 at 1:53 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >
+> > On 3/29/19 11:18 AM, Nick Desaulniers wrote:
+> > > Fixes commit 8c3d220cb6b5 ("gcov: clang support")
+> >
+> > There is a certain format for Fixes: and that's not quite it. :(
 
-This patch was tested by loading the livepatch-sample module and
-verifying that the sysfs files for the attributes in the default groups
-were created.
+Looks like the format is:
+Fixes: <first 12 characters of commit sha> ("<first line of commit>")
+so:
+Fixes: 8c3d220cb6b5 ("gcov: clang support")
 
-Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
----
- kernel/livepatch/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+We should update:
+https://www.kernel.org/doc/html/v5.0/process/stable-kernel-rules.html
+to include this information.
 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index eb0ee10a1981..34a8338657d2 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -419,6 +419,7 @@ static struct attribute *klp_patch_attrs[] = {
- 	&force_kobj_attr.attr,
- 	NULL
- };
-+ATTRIBUTE_GROUPS(klp_patch);
- 
- static void klp_free_object_dynamic(struct klp_object *obj)
- {
-@@ -546,7 +547,7 @@ static void klp_kobj_release_patch(struct kobject *kobj)
- static struct kobj_type klp_ktype_patch = {
- 	.release = klp_kobj_release_patch,
- 	.sysfs_ops = &kobj_sysfs_ops,
--	.default_attrs = klp_patch_attrs,
-+	.default_groups = klp_patch_groups,
- };
- 
- static void klp_kobj_release_object(struct kobject *kobj)
+> Thanks for taking a look at this Nick! I believe same fix should be
+> applied to kernel/gcov/clang.c. I'll send out an updated version later
+> today.
+
+All yours, happy to review.
+
 -- 
-2.17.1
-
+Thanks,
+~Nick Desaulniers
