@@ -5,98 +5,107 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98CCC10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9AAC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9108720857
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471A82082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 15:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfDBPZQ (ORCPT
+        id S1729770AbfDBP2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 11:25:16 -0400
-Received: from mail-qt1-f178.google.com ([209.85.160.178]:39230 "EHLO
-        mail-qt1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729442AbfDBPZQ (ORCPT
+        Tue, 2 Apr 2019 11:28:37 -0400
+Received: from semf04.mfg.siteprotect.com ([64.26.60.167]:56868 "EHLO
+        semf04.mfg.siteprotect.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726685AbfDBP2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 11:25:16 -0400
-Received: by mail-qt1-f178.google.com with SMTP id t28so15678052qte.6
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 08:25:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Mx9J4jw2GPScgHPcaXdWstBCWvWOeEoG4tjKtIlkD4g=;
-        b=TJ6JtoTtLQhpuJ2w6+i7tpKVWba+nAkb9tWl/+4vTgnZXGDXsW/Mnry0GTRi5Jk1gi
-         Y3OB0yDIWPBA+CRfx6sAsFxa972K5UGWLtkV0IG9SKEWgd5FjUm76O8tfHs3tiof9uM5
-         x0dAOz62cTAZTOpwEbg9RoRjFWISLpP/Q8UxX+z31P87pI1u2euracY8MtjwV6Ot7DPq
-         +Kd0/ktyPw71jJGLH/ZeCnonigsrL01K6RGerHILyfyF4rB+NOFR6M0CdoVOjv3Yq2mP
-         535iyHu/Ib/jR2opxQ5OGLQcmpcsGn555NsDyt0KdfV2dggIQpLG3QcFNSuZ8PRl8Z2V
-         /+6w==
-X-Gm-Message-State: APjAAAWxP/ce0NCxQPcSiiM4K4crwtHXobMT2KO7iUw5zH4iMTReD5Tt
-        jY4r43kjFP54dXcDaVKmZzns/g==
-X-Google-Smtp-Source: APXvYqwU2x/6XRs2Azjaky+XbQ7todIFJAnFK2yBCuWt+46dnJIjuwQoRZKqLUKdiA2YPkTMxWJ6bg==
-X-Received: by 2002:a0c:d07b:: with SMTP id d56mr58838282qvh.89.1554218715324;
-        Tue, 02 Apr 2019 08:25:15 -0700 (PDT)
-Received: from redhat.com ([66.187.232.66])
-        by smtp.gmail.com with ESMTPSA id a8sm7988404qtc.19.2019.04.02.08.25.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 08:25:13 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 11:25:10 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: On guest free page hinting and OOM
-Message-ID: <20190402112115-mutt-send-email-mst@kernel.org>
-References: <f0ee075d-3e99-efd5-8c82-98d53b9f204f@redhat.com>
- <20190329125034-mutt-send-email-mst@kernel.org>
- <fb23fd70-4f1b-26a8-5ecc-4c14014ef29d@redhat.com>
- <20190401073007-mutt-send-email-mst@kernel.org>
- <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
- <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com>
- <20190401104608-mutt-send-email-mst@kernel.org>
- <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
- <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com>
- <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
+        Tue, 2 Apr 2019 11:28:37 -0400
+X-Greylist: delayed 2045 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Apr 2019 11:28:37 EDT
+Received: from smtpauth01.mfg.siteprotect.com ([64.26.60.150])
+        by semf04.mfg.siteprotect.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <vince@deater.net>)
+        id 1hBKnh-0006h6-Rp; Tue, 02 Apr 2019 10:54:17 -0400
+Received: from pianoman.cluster.toy (unknown [100.16.227.202])
+        (Authenticated sender: vince@deater.net)
+        by smtpauth01.mfg.siteprotect.com (Postfix) with ESMTPSA id 44YXKB5fBDz162BwM;
+        Tue,  2 Apr 2019 10:53:50 -0400 (EDT)
+Date:   Tue, 2 Apr 2019 10:53:38 -0400 (EDT)
+From:   Vince Weaver <vince@deater.net>
+X-X-Sender: vince@pianoman.cluster.toy
+To:     Cyrill Gorcunov <gorcunov@gmail.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC PATCH v3 0/3] x86/perf/amd: AMD PMC counters and NMI
+ latency
+In-Reply-To: <20190402132200.GA23501@uranus>
+Message-ID: <alpine.DEB.2.21.1904021050090.15645@pianoman.cluster.toy>
+References: <155415519143.24457.2706922532995302758.stgit@tlendack-t1.amdoffice.net> <20190402130302.GL12232@hirez.programming.kicks-ass.net> <20190402132200.GA23501@uranus>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Authentication-Results: mfg.siteprotect.com; auth=pass smtp.auth=vince@deater.net smtp.mailfrom=<vince@deater.net>
+X-Originating-IP: 64.26.60.150
+X-portal.siteprotect.com-Domain: mfg.outbound
+X-portal.siteprotect.com-Username: 64.26.60.150/31
+Authentication-Results: mfg.siteprotect.com; auth=pass smtp.auth=64.26.60.150/31@mfg.outbound
+X-portal.siteprotect.com-Outgoing-Class: ham
+X-portal.siteprotect.com-Outgoing-Evidence: Combined (0.21)
+X-Recommended-Action: accept
+X-Filter-ID: EX5BVjFpneJeBchSMxfU5uVLfX9KsQzQ8XdKn7ZAcWp602E9L7XzfQH6nu9C/Fh9KJzpNe6xgvOx
+ q3u0UDjvO80kiOOXohirsWhwY064v2npeso7Ho1FT6opA0QnLMBdpVMzexAGJZ2+mPn7fP4I3bGQ
+ T8H3NmQhNu2O3z+K3mZwnXeuRadH9eS/0qlAQIeNVTCxY3GOeQ66b90JBslLPIYZZS/DUBLA5nGN
+ 6cIn1z9sSeI2joq9+ZZE6ghVOZbTTcd1LQTPB4kZ4onMihMMZ7yZgsqocyZY4jxjE3qUu/6r1AV5
+ UTHwbtCAXgD9KinxOsXa9bPF5P+TU1Hkgqx+i85wXGAwCBBM9Wuz7xpUTUsouBFVfnbvOnQHVZOr
+ UVdzPmpotkU9W6DwXKJZEzKGAWFx656NU5IkTRH0Up7qB8Lzno4t3kssqrr3QsvSu8BVGE1lcStX
+ Kcni7YkebcsPef+Bu4/uGdQrw1B0vCxVYoig1tMG8QVeXDZzT/jhEuU0P3dyVpD6b6jIZhxNG0yA
+ pgS8oWDbSKQ3tXcknJwLqWmW2UPE+vsQVOjHQoB8kKI5VBlSQp3tVGVu81giwHSvsh/iSK71nlwT
+ kZ/FUjBxvQvLVJD2VTUQ+kGxg2Pv3GfZNme3cik5CexJz1ox3HYe0QjaC0seZkfC0iy+spcexjk7
+ SHzg1GyOaFo+K3vVD2LSW+n8Hj6CJNEWfIqe3AMrex08L8pZyQFEYMQabfOl4IqgLgoO+53/F59y
+ H4idlSUpteH5C3/pSoxYOXdzgcqBafjL6IM/NPtmtMb38N+gNB/lgTl6fJxyntEfhZCKje4ZwyYO
+ nmpuMeHRjSmbB6RrUkSyszVtUeslVn8uY5bzuQsgr/U0flMcy2Vi/IcBgY4amwfEOQVUNYnWQ300
+ Dp6cJDE37L8A/sfCSfmp70N6CAkwoGPe+nvh19VPEW3k7miLRGgHloEW8jEP1L/Rx27Xzz69xZ5Y
+ e0WAUxsN5HA7UNtNfZRkU/qlxUHc6GOTsYb1GisIGxUJr7hu9AMHjQD/EXDMIS0tLJXIAOtcIzBo
+ I6meQp3k9SVx0LF1z2PwQHAv6PNCU/yT9rVFGLmNNL3pin9QfQfyieJWOKWrOSedp3uDSq3Q+WKe
+ 0YMArNQQ+c/cjrZXLGyv7MvlzLexb6aw2QRJ2i4lIocCm92ve//7+ElEMKkVAsdKzMH3lcQE8m4M
+ ZuM7jUXIESohoO51xWmU8XetsAn+dGLdW9wFnbfnLqlYLystwlXwpaZB/1+bghnKhieaPV2+qeEY
+ bMldDm0nFNF8d4YLM/kll0Q7WT6bKEPylIuYEMGLGYbBbBR3JTh3+HGJA0RGaAhm/MWtyZJn3DMa
+ IL48SHdwBur7C9FrSAVwMG9k36g/7bjS2E6qjwtRGvsY2hs/S+9Z3xB10KGOcqjxugQ/FndyXRUg
+ v2aA0ZQ=
+X-Report-Abuse-To: spam@semfq01.mfg.siteprotect.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 08:04:00AM -0700, Alexander Duyck wrote:
-> Basically what we would be doing is providing a means for
-> incrementally transitioning the buddy memory into the idle/offline
-> state to reduce guest memory overhead. It would require one function
-> that would walk the free page lists and pluck out pages that don't
-> have the "Offline" page type set,
+On Tue, 2 Apr 2019, Cyrill Gorcunov wrote:
+> On Tue, Apr 02, 2019 at 03:03:02PM +0200, Peter Zijlstra wrote:
+> > I have vague memories of the P4 thing crashing with Vince's perf_fuzzer,
+> > but maybe I'm wrong.
+> 
+> No, you're correct. p4 was crashing many times before we manage to make
+> it more-less stable. The main problem though that to find working p4 box
+> is really a problem.
 
-I think we will need an interface that gets
-an offline page and returns the next online free page.
+I do have some a functioning p4 system I can test on.
+I can easily run the fuzzer and report crashes, but I only have limited 
+time/skills to actually fix the problems it turns up.
 
-If we restart the list walk each time we can't guarantee progress.
+One nice thing is that as of Linux 5.0 *finally* the fuzzer can run 
+indefinitely on most modern Intel chips without crashing (still triggers a 
+few warnings).  So finally we have the ability to tell when a new crash is 
+a regression and potentially can bisect it.  Although obviously this 
+doesn't necessarily apply to the p4.
 
-> a one-line change to the logic for
-> allocating a page as we would need to clear that extra bit of state,
-> and optionally some bits for how to handle the merge of two "Offline"
-> pages in the buddy allocator (required for lower order support). It
-> solves most of the guest side issues with the free page hinting in
-> that trying to do it via the arch_free_page path is problematic at
-> best since it was designed for a synchronous setup, not an
-> asynchronous one.
+I do think the number of people trying to run perf on a p4 is probably 
+pretty small these days.
 
-
--- 
-MST
+Vince
