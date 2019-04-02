@@ -2,111 +2,131 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325C2C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEB6C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFC92084C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Bv2PncYb"
+	by mail.kernel.org (Postfix) with ESMTP id DAC632084B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 23:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDBXWn (ORCPT
+        id S1726328AbfDBXbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 19:22:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:58597 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbfDBXWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 19:22:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44YlcJ3lxMz9sSV;
-        Wed,  3 Apr 2019 10:22:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554247361;
-        bh=xQoog3/kUaEkPZsnGADzXcGqc9Kp5s6bW+AGa2DbZFU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Bv2PncYbtwYBQfDnIhMQQFJvQJjauB5tBonAu6vtfzHHMFPD9GpruU5oKCm1A+v2W
-         BdONR5PmrMVrLaws34whwmXm27PA9uhnEFxrn3v1W87Ks4shtD5J0V2QX9m5SVN6pH
-         sqixyVrhK7NEtnxzg4TCf/KmUXwugdkC3VSdI+MUCCzCsZefGvQhQLRUqXSlji3/Yw
-         vnchALU/YALfjYng6eK+5b6PAc7TNwtbITxd6C6cUiwgJo2SPjbu29jhGmgKO2AlP3
-         1wEPqX2Ao7qT9yvMCqzr2+enFssfcpm8n7MuGK1WIpRotTpa8oOUUnSlZMRgyLNnyA
-         CeCP/xyKQHr4A==
-Date:   Wed, 3 Apr 2019 10:22:39 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Tue, 2 Apr 2019 19:31:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56484 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726071AbfDBXbb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 19:31:31 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x32NSgku047935
+        for <linux-kernel@vger.kernel.org>; Tue, 2 Apr 2019 19:31:30 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmg3ju6y7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:31:30 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <cclaudio@linux.ibm.com>;
+        Wed, 3 Apr 2019 00:31:29 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Apr 2019 00:31:24 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x32NVNwT30867688
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Apr 2019 23:31:24 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8B87BE056;
+        Tue,  2 Apr 2019 23:31:23 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49305BE058;
+        Tue,  2 Apr 2019 23:31:21 +0000 (GMT)
+Received: from [9.18.235.111] (unknown [9.18.235.111])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Apr 2019 23:31:20 +0000 (GMT)
+Subject: Re: [PATCH 0/4] Enabling secure boot on PowerNV systems
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi <linux-efi@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: linux-next: build warning after merge of the nand tree
-Message-ID: <20190403102239.174fbe35@canb.auug.org.au>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+ <CACdnJuumhkqTb4+1=QBiLmbW4xd3wW=MZu6Tj_KdaoTMhCN+Tg@mail.gmail.com>
+ <4ce5e057-0702-b0d5-7bb2-cea5b22e2efa@linux.ibm.com>
+ <CACdnJusBm93zwDqTXTx_QYsg1-aGUAAHm_qq8Lcx3TvGTxdmbg@mail.gmail.com>
+From:   Claudio Carvalho <cclaudio@linux.ibm.com>
+Date:   Tue, 2 Apr 2019 20:31:19 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/q=JfJhV5EJO6hR.++ngTl6p"; protocol="application/pgp-signature"
+In-Reply-To: <CACdnJusBm93zwDqTXTx_QYsg1-aGUAAHm_qq8Lcx3TvGTxdmbg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19040223-8235-0000-0000-00000E78A12B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010863; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01183465; UDB=6.00619586; IPR=6.00964213;
+ MB=3.00026266; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-02 23:31:28
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040223-8236-0000-0000-00004500EEB7
+Message-Id: <2208f156-d441-3082-2f4c-8030c84ef788@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-02_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904020153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/q=JfJhV5EJO6hR.++ngTl6p
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 4/2/19 6:51 PM, Matthew Garrett wrote:
+> On Tue, Apr 2, 2019 at 2:11 PM Claudio Carvalho <cclaudio@linux.ibm.com> wrote:
+>> We want to use the efivarfs for compatibility with existing userspace
+>> tools. We will track and match any EFI changes that affect us.
+> So you implement the full PK/KEK/db/dbx/dbt infrastructure, and
+> updates are signed in the same way?
 
-After merging the nand tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+For the first version, our firmware will implement a simplistic PK, KEK and
+db infrastructure (without dbx and dbt) where only the Setup and User modes
+will be supported.
 
-drivers/mtd/nand/raw/ingenic/jz4725b_bch.c: In function 'jz4725b_bch_read_p=
-arity':
-drivers/mtd/nand/raw/ingenic/jz4725b_bch.c:147:12: warning: this statement =
-may fall through [-Wimplicit-fallthrough=3D]
-   dest8[2] =3D (val >> 16) & 0xff;
-   ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-drivers/mtd/nand/raw/ingenic/jz4725b_bch.c:148:2: note: here
-  case 2: /* fall-through */
-  ^~~~
-drivers/mtd/nand/raw/ingenic/jz4725b_bch.c:149:12: warning: this statement =
-may fall through [-Wimplicit-fallthrough=3D]
-   dest8[1] =3D (val >> 8) & 0xff;
-   ~~~~~~~~~^~~~~~~~~~~~~~~~~~~
-drivers/mtd/nand/raw/ingenic/jz4725b_bch.c:150:2: note: here
-  case 1: /* fall-through */
-  ^~~~
+PK, KEK and db updates will be signed the same way, that is, using
+userspace tooling like efitools in PowerNV. As for the authentication
+descriptors, only the EFI_VARIABLE_AUTHENTICATION_2 descriptor will be
+supported.
 
-Introduced by commit
 
-  acb29396f956 ("mtd: rawnand: ingenic: Add support for the JZ4725B")
+>> Our use case is restricted to secure boot - this is not going to be a
+>> general purpose EFI variable implementation.
+> In that case we might be better off with a generic interface for this
+> purpose that we can expose on all platforms that implement a secure
+> boot key hierarchy. Having an efivarfs that doesn't allow the creation
+> of arbitrary attributes may break other existing userland
+> expectations.
+>
+For what it's worth, gsmi uses the efivars infrastructure for EFI-like
+variables.
 
-I get this warning because I am building with -Wimplicit-fallthrough
-in attempt to catch new additions early.  The gcc warning can be turned
-off by adding a /* fall through */ comment at the point the fall through
-happens (i.e. before the next case label).
+What might a generic interface look like?  It would have to work for
+existing secure boot solutions - including EFI - which would seem to imply
+changes to userspace tools.
 
---=20
-Cheers,
-Stephen Rothwell
+Claudio
 
---Sig_/q=JfJhV5EJO6hR.++ngTl6p
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyj7r8ACgkQAVBC80lX
-0Gzl1wf9F8tBlFkm/RNfUFHRI+y37bVEP4U4FPmEBApNFtOIUsIpsWzMz0g9ZOlT
-o7YlySPP4CRcaT5L1w2vCOsAeA8ASVmT7q19IBdpioXblMN2NVrB381AwEwUlop8
-NLKe4m8xhUHNT9bhidz79IOetiJnMow0IUDOUdg56l6pJrhR1tgraj5+DgtTH7CQ
-JlWhgJQBKkSe7LwLytldW0fKDk0GZfAoxgsNULLDaNVirnlgvlqjC9Z3pxtgOF8o
-046oL6tpOUtOzSupJlosNwlKcIKjudE2yJKxHjcDhNGnPgoJuoT00+YK6c8r5ogO
-VKNrdMP9PIXLqikQKkQknWfZjpXXsg==
-=zYtu
------END PGP SIGNATURE-----
-
---Sig_/q=JfJhV5EJO6hR.++ngTl6p--
