@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4158C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97920C10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E11E206B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70305206B7
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 20:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfDBUEX (ORCPT
+        id S1726633AbfDBUE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 16:04:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39804 "EHLO mx1.redhat.com"
+        Tue, 2 Apr 2019 16:04:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41136 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfDBUEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 16:04:21 -0400
+        id S1725857AbfDBUEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 16:04:25 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 665A33082A51;
-        Tue,  2 Apr 2019 20:04:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EAD3B59447;
+        Tue,  2 Apr 2019 20:04:24 +0000 (UTC)
 Received: from localhost.default (ovpn-116-31.phx2.redhat.com [10.3.116.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2AE0A6014A;
-        Tue,  2 Apr 2019 20:04:18 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2A786014A;
+        Tue,  2 Apr 2019 20:04:21 +0000 (UTC)
 From:   Daniel Bristot de Oliveira <bristot@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
@@ -44,24 +44,21 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
         Romulo Silva de Oliveira <romulo.deoliveira@ufsc.br>,
         Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: [RFC PATCH 3/7] trace: Optimize trace_get_context_bit()
-Date:   Tue,  2 Apr 2019 22:03:55 +0200
-Message-Id: <d4efd910035c5b5eaa9f54eea64f8fef2c33339d.1554234787.git.bristot@redhat.com>
+Subject: [RFC PATCH 4/7] trace/ring_buffer: Use trace_get_context_bit()
+Date:   Tue,  2 Apr 2019 22:03:56 +0200
+Message-Id: <e96506d9a078637007b643c8b45f39ea7e48eaca.1554234787.git.bristot@redhat.com>
 In-Reply-To: <cover.1554234787.git.bristot@redhat.com>
 References: <cover.1554234787.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 02 Apr 2019 20:04:21 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 02 Apr 2019 20:04:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-trace_get_context_bit() and trace_recursive_lock() uses the same logic,
-but the second reads the per_cpu variable only once.
-
-Uses the trace_recursive_lock()'s logic in trace_get_context_bit().
+Unify the context identification in the function trace_get_context_bit().
 
 Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
@@ -82,40 +79,29 @@ Cc: Clark Williams <williams@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org
 ---
- kernel/trace/trace.h | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ kernel/trace/ring_buffer.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index dad2f0cd7208..09318748fab8 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -635,20 +635,13 @@ enum {
- 
- static __always_inline int trace_get_context_bit(void)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index fa8cbad2ca88..5bff5bcb1bf8 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2685,14 +2685,7 @@ static __always_inline int
+ trace_recursive_lock(struct ring_buffer_per_cpu *cpu_buffer)
  {
+ 	unsigned int val = cpu_buffer->current_context;
+-	unsigned long pc = preempt_count();
 -	int bit;
 -
--	if (in_interrupt()) {
--		if (in_nmi())
--			bit = TRACE_CTX_NMI;
-+	unsigned long pc = preempt_count();
- 
--		else if (in_irq())
--			bit = TRACE_CTX_IRQ;
--		else
--			bit = TRACE_CTX_SOFTIRQ;
--	} else
+-	if (!(pc & (NMI_MASK | HARDIRQ_MASK | SOFTIRQ_OFFSET)))
 -		bit = TRACE_CTX_NORMAL;
--
--	return bit;
-+	if (pc & (NMI_MASK | HARDIRQ_MASK | SOFTIRQ_OFFSET))
-+		return pc & NMI_MASK ? TRACE_CTX_NMI :
-+			pc & HARDIRQ_MASK ? TRACE_CTX_IRQ : TRACE_CTX_SOFTIRQ;
-+	else
-+		return TRACE_CTX_NORMAL;
- }
+-	else
+-		bit = pc & NMI_MASK ? TRACE_CTX_NMI :
+-			pc & HARDIRQ_MASK ? TRACE_CTX_IRQ : TRACE_CTX_SOFTIRQ;
++	int bit = trace_get_context_bit();
  
- static __always_inline int trace_test_and_set_recursion(int start, int max)
+ 	if (unlikely(val & (1 << (bit + cpu_buffer->nest))))
+ 		return 1;
 -- 
 2.20.1
 
