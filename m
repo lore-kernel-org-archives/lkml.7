@@ -2,93 +2,101 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CF6C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF955C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67EE2084B
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A298F2070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 19:32:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rWimYmqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbfDBT3i (ORCPT
+        id S1731040AbfDBTcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 15:29:38 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:37771 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbfDBT3i (ORCPT
+        Tue, 2 Apr 2019 15:32:20 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:50474 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDBTcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 15:29:38 -0400
-Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hBP6E-0006sp-Mt; Tue, 02 Apr 2019 21:29:34 +0200
-Date:   Tue, 2 Apr 2019 21:29:34 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
-In-Reply-To: <alpine.DEB.2.21.1904022027170.1812@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1904022127210.1812@nanos.tec.linutronix.de>
-References: <20190331214020.836098943@linutronix.de> <20190331215136.039902969@linutronix.de> <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de> <20190402154329.scp7i7uqevubgwrz@treble> <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
- <7789E14E-C623-4DB7-B076-76B931957C9C@amacapital.net> <alpine.DEB.2.21.1904022027170.1812@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 2 Apr 2019 15:32:19 -0400
+Received: by mail-it1-f196.google.com with SMTP id q14so7211695itk.0;
+        Tue, 02 Apr 2019 12:32:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xHwX7N1RZtbO0BzmhJG1pDFtWgUBQ/UisLEym+aQ4Nc=;
+        b=rWimYmqHtDgbCxlsnXvUGJpIxkI63OM170yLErYsFvxcd0vSq+zQtc/Par6O9kvNBJ
+         zFyHykGVP5PntmHKHrLZy9brHjVRBth/XvNlJnGi3nehxf+Vn7TvtVt2bskBOFyuUO09
+         qU5rtiBWvt5sj088KSdfoICC8PJQY40rUoqLrv1ac2IHHyjkYaQCJ+qYxtDtelCdsGhm
+         eXbQ8KxmhAccexzQXNs9Fa39Ex6omZrSdeSvtagVxHTMW8gqQeNoLwmc1cb3S65Zaxfc
+         RDmLBPNCpFTB4JAsjHexnYKs0XeEhp8jmfe2mRZrrDHKavzMfEMDGdB1h2w4e5ZEm8XN
+         zLqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xHwX7N1RZtbO0BzmhJG1pDFtWgUBQ/UisLEym+aQ4Nc=;
+        b=ach9M5Z+0oeMbUzajDKNAt9iDC6I09WSF3HtV0CQkSXZAS6mn3u2At1vwjTCpdKYsb
+         jj2OgWkDLcKVXU+Ax7IB2uZLewPx8mPTijeLu9Qlhhv36BNp0hJklxeCxIfsnznsZjeI
+         bEtUftHii/W//Zs4SfWcLbhC2ZRbUQtTFV90IZad5bZjLLlS0r/95ac+906rwUoHrqC0
+         QqlDbLGQgY3P2XMaLM3MZGXV88MjqUN4MZ/1q/pspm9khLtynB/BXqKCW3mGQOrXrwSi
+         H8iG/9WfOiewJenYQzTLoP0Gji/GQD+o13MDfb5yWiujefnGoneqF3q2l1oJgdWAeODZ
+         uV6g==
+X-Gm-Message-State: APjAAAXWL5BmFTDwCIKPTpvNAE6UT+wyjINxRMZwkU2/M5a3A9agLp29
+        yut8D8ji1LD19QA3YGJwqdE=
+X-Google-Smtp-Source: APXvYqyShfHs+0zc4tkF4ve19J8mwhfRPFCnfbhA5gj3uHrWM4YLWiMnVmH5dx7yFoW8Y5RRAaj38g==
+X-Received: by 2002:a24:d45:: with SMTP id 66mr2231163itx.9.1554233538962;
+        Tue, 02 Apr 2019 12:32:18 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id f204sm7654219itc.26.2019.04.02.12.32.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 12:32:17 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: imx6q-logicpd: Reduce inrush current on USBH1
+Date:   Tue,  2 Apr 2019 14:32:04 -0500
+Message-Id: <20190402193204.4745-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019, Thomas Gleixner wrote:
-> On Tue, 2 Apr 2019, Andy Lutomirski wrote:
-> > > On Apr 2, 2019, at 9:48 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > 
-> > >> On Tue, 2 Apr 2019, Josh Poimboeuf wrote:
-> > >>> On Tue, Apr 02, 2019 at 12:19:46PM +0200, Thomas Gleixner wrote:
-> > >>> +/*
-> > >>> + * Array of exception stack page descriptors. If the stack is larger than
-> > >>> + * PAGE_SIZE, all pages covering a particular stack will have the same
-> > >>> + * info.
-> > >>> + */
-> > >>> +static const struct estack_pages estack_pages[ESTACK_PAGES] ____cacheline_aligned = {
-> > >>> +    [CONDRANGE(DF)]        = ESTACK_PAGE(DOUBLEFAULT_IST, DF),
-> > >>> +    [CONDRANGE(NMI)]    = ESTACK_PAGE(NMI_IST, NMI),
-> > >>> +    [PAGERANGE(DB)]        = ESTACK_PAGE(DEBUG_IST, DB),
-> > >>> +    [CONDRANGE(MCE)]    = ESTACK_PAGE(MCE_IST, MCE),
-> > >> 
-> > >> It would be nice if the *_IST macro naming aligned with the struct
-> > >> cea_exception_stacks field naming.  Then you could just do, e.g.
-> > >> ESTACKPAGE(DF).
-> > > 
-> > > Yes, lemme fix that up.
-> > > 
-> > >> Also it's a bit unfortunate that some of the stack size knowledge is
-> > >> hard-coded here, i.e #DB always being > 1 page and non-#DB being
-> > >> sometimes 1 page.
-> > > 
-> > > The problem is that there is no way to make this macro maze conditional on
-> > > sizeof(). But my macro foo is rusty.
-> > 
-> > How about a much better fix: make the DB stack be the same size as all
-> > the others and just have 4 of them (DB0, DB1, DB2, and DB3.  After all,
-> > overflowing from one debug stack into another is just as much of a bug as
-> > overflowing into a different IST stack.
-> 
-> That makes sense.
+Some USB peripherals draw more power, and the sourcing regulator
+take a little time to turn on.  This patch fixes an issue where
+some devices occasionally do not get detected, because the power
+isn't quite ready when communication starts, so we add a bit
+of a delay.
 
-Except that we just have two not four.
+Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD
+i.MX6QD EVM")
 
-It needs some tweaking of the ist_shift stuff in entry_64.S but that's not
-rocket science. Famous last words....
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Thanks,
+diff --git a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+index db6b5b900826..7731db493cb0 100644
+--- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
++++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
+@@ -88,6 +88,7 @@
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+ 		gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
++		startup-delay-us = <70000>;
+ 		enable-active-high;
+ 	};
+ 
+-- 
+2.17.1
 
-	tglx
