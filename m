@@ -2,109 +2,105 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F5FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC63CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4E920651
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HOUylC4O"
+	by mail.kernel.org (Postfix) with ESMTP id 89EAD2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 05:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554182085;
+	bh=X2u9oqRsEaAuQVXF2Wpq4Ocm5o+1E/B+V/Q2GGD21eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JZaZnSEW5alsLsfsbsRCMbrKi9WMhthgahSSkhOnVKHezk8MIeD0dDsGdq9XcHIrl
+	 i8pv80XI97UvGN2b/nA+kRG49Jh3npk9OVprJO5hjS69ijJ5kFCpp8L/KQvn+jnD1u
+	 2LZORFMmAoEv2daQHapZxzsJLhlwSiBzQ6qDd7vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfDBFNX (ORCPT
+        id S1728994AbfDBFOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 01:13:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38286 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfDBFNX (ORCPT
+        Tue, 2 Apr 2019 01:14:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48846 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfDBFOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 01:13:23 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 10so5734159pfo.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 22:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=L/Txs2KhoR/LCp72vvcU/NBLIXPTwf+X2+Bnxu39Vz0=;
-        b=HOUylC4O6H7b6HY6clk7VwB2uZEyPDmCxH7V4gpCHPfJCbWoTr+hnwP/+IjJXLbCd+
-         XcwAAwfQeWxwUa/FkJNUjnk6FWz768VsZ5eFBFjkXXKCK+NGmOdxEdEMUs6BCMWBxc6D
-         /G1IscWMcYGSMNH00xnOnDVIbb8cHXayppNdJCO9vEysx2t/pG7SipdNkQideUjfySXM
-         Ihd4k00GjfzN6LYbht82nMw02NMkUxyAT0AfDnr9OKM5NuUfMxLMoIM+trw8kUOhGWWs
-         fE1TdsLETACUZSGCyef8MRUx1KamQo6ScGCPSVbngygqSMs47Gs/wQjNDGu0Qruxx2/E
-         tN7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=L/Txs2KhoR/LCp72vvcU/NBLIXPTwf+X2+Bnxu39Vz0=;
-        b=L4yFNR8uqNs3VV+hGsIOfyW8XpNGYtczqUsArgtzho3hvVF+VJj1l3DHwUhVDQ+UOT
-         AbjvZGJvdrYiRr9qyodpKjgiC5TPMnO4EUMyaLQUyTgPREcmFIxzX4NqQYb0sF0HaVZN
-         7rXZZ5+Qe1993S2NU5fUtHvb01UA0OM2U0MIfnhrNS2QC/yS8/E3DGq15a+EqDw5okKM
-         4v8NAPhwuTTymJCSaLw3s8xUktQz8KD95iKvJXEg5w+KPHFduZKxbamrdUm53H7FdnGq
-         Pvr3eOeoXMa67UO+AVuNyCli1H3o9PV51qLSL9CQLXQATjEkl0x/yGIgbBFN0zTfVnAj
-         SN7g==
-X-Gm-Message-State: APjAAAWFeoTzIS5OBFQCs3vM2Yr0iI5B0r7gq6MASXOd0aeoo3cldD57
-        DR809qm/ZTyYFfcf1g1dNpaMR0o+zB8axw==
-X-Google-Smtp-Source: APXvYqzZ+y9xLIt+i4WUmynfLgRjbUR8IDnl2a/IclmhVtwA1/TDm8mp6g/l9J03EWFu599BQQDWFg==
-X-Received: by 2002:a65:50c2:: with SMTP id s2mr56714056pgp.112.1554182002761;
-        Mon, 01 Apr 2019 22:13:22 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id v20sm16071480pfn.116.2019.04.01.22.13.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 22:13:21 -0700 (PDT)
-Date:   Tue, 2 Apr 2019 06:13:17 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-Cc:     bleung@chromium.org, enric.balletbo@collabora.com,
-        groeck@chromium.org, linux-kernel@vger.kernel.org,
-        gwendal@google.com, jettrink@chromium.org,
-        andriy.shevchenko@intel.com
-Subject: Re: [PATCH v3] mfd: cros_ec: instantiate properly CrOS ISH MCU device
-Message-ID: <20190402051317.GS4187@dell>
-References: <1551428454-596-1-git-send-email-rushikesh.s.kadam@intel.com>
+        Tue, 2 Apr 2019 01:14:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=X2u9oqRsEaAuQVXF2Wpq4Ocm5o+1E/B+V/Q2GGD21eo=; b=c3GIf+NZb/k/NQoA+eoUba3kb
+        DXsmA8M4ZlEPE92aZR4ZLBFbkyP+uYjTmDgQHpKTbTRNo9U+4yqVP8SPmdxLXzZScKRB1YCIPlXeY
+        qjLqIrB34As3EQFTszRgj+cXCfjbAEPvD7nmsEWQ6qFj0hToepE80SY+U6UFjuWFA+F/M=;
+Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hBBkQ-0005rr-Tv; Tue, 02 Apr 2019 05:14:11 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 59221440082; Tue,  2 Apr 2019 06:14:07 +0100 (BST)
+Date:   Tue, 2 Apr 2019 12:14:07 +0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Annaliese McDermond <nh6z@nh6z.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, linuxppc-dev@ozlabs.org
+Subject: Re: linux-next: build failure after merge of the sound-asoc tree
+Message-ID: <20190402051407.GX2059@sirena.org.uk>
+References: <20190326133349.3d9427dc@canb.auug.org.au>
+ <20190326131550.GB10898@sirena.org.uk>
+ <87pnqdndmk.fsf@concordia.ellerman.id.au>
+ <20190327115745.GA11404@sirena.org.uk>
+ <87tvfiou8f.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xd9y+pRso0hzCdjI"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1551428454-596-1-git-send-email-rushikesh.s.kadam@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87tvfiou8f.fsf@concordia.ellerman.id.au>
+X-Cookie: Use extra care when cleaning on stairs.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 01 Mar 2019, Rushikesh S Kadam wrote:
 
-> Integrated Sensor Hub (ISH) is also a MCU running EC
-> having feature bit EC_FEATURE_ISH. Instantiate it as
-> a special CrOS EC device with device name 'cros_ish'.
-> 
-> Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-> ---
-> v3
-> - Dropped "Intel" in commments in cros_ec header file. CrOS EC ISH
->   device is a generic ISH. This was missed earlier. 
-> v2
-> - Addressed review comments to term the CrOS EC device as a generic
->   Integrated Sensor Hub. 
-> v1
-> - Initial version.
-> 
->  drivers/mfd/cros_ec_dev.c            | 13 +++++++++++++
->  include/linux/mfd/cros_ec.h          |  1 +
->  include/linux/mfd/cros_ec_commands.h |  2 ++
->  3 files changed, 16 insertions(+)
+--xd9y+pRso0hzCdjI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+On Mon, Apr 01, 2019 at 10:11:44PM +1100, Michael Ellerman wrote:
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Anyway I think what you've done in next, make the code depend on
+> COMMON_CLOCK, is the best option. If anyone cares about that driver on
+> powerpc platforms that don't support COMMON_CLOCK they should speak up.
+
+It's probably fine for now for this one driver but it's going to cause
+issues going forwards since we're trying to make the framework's clock
+handling more standard. =20
+
+--xd9y+pRso0hzCdjI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyi754ACgkQJNaLcl1U
+h9BMxQf/VrR/8FAWEVz+p5IAVWhEp/5r8gGBQzY33Bg6n8m4Wx0mFHVfDDxORd/L
+SYSWqWbDGTk1AwbZ59dzTXaGEhh/9YX9/g5v6INunPhClb7NMBIvddfzvFv8pDTd
+nI6DbaUyOnQzFtXTMF+ClhtKHxRBVbT6MwFKFOLcoPRjkhU9ebaiaVmBrzOoaq6N
+dqDF7ukc0T15k/qvZ38kKczZA6m4DsGhVoSvpXxe5MucSHe7wphRFwyaJ8+S2AFR
+AYvOQJNcYPi4pJYpcQ8i6cX4lJecezofZkVbj+b8WBCjndlieq5CZtB76qLevleN
+WB8m8oAwM1GH+wdKRlWDmJWIOgRb3A==
+=JFD3
+-----END PGP SIGNATURE-----
+
+--xd9y+pRso0hzCdjI--
