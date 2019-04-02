@@ -2,115 +2,123 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BE9C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A0BC10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7816220830
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:24:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Tcbq+zIT"
+	by mail.kernel.org (Postfix) with ESMTP id 92F0220830
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 13:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554211519;
+	bh=8P4i6Bu0rH//ReLxvdPoeaukhesEkQrl/4m74J+VgZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QBSO4NsUFIy7VclMbS/b4IXLYD1Fzf8u0ep/Z0o0Qg4FSJOErcFNojrFRG/sJnTO2
+	 NpY8OpFn7uCWL41HgUt4gAmwo7nBC6gxvmk1iwbjj05mtfka9tqJuPJspvrDxNo4N5
+	 HZTIZdtQ2Dp6qEMifEHaKoZ94yi6LAv7+vqxe86I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfDBNYn (ORCPT
+        id S1731253AbfDBNZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 09:24:43 -0400
-Received: from onstation.org ([52.200.56.107]:41432 "EHLO onstation.org"
+        Tue, 2 Apr 2019 09:25:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfDBNYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 09:24:42 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        id S1726716AbfDBNZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 09:25:18 -0400
+Received: from localhost (173-27-100-4.client.mchsi.com [173.27.100.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id CDBCC4502C;
-        Tue,  2 Apr 2019 13:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1554211481;
-        bh=0T4dDsKz2NW5cIQbHt3NSk01QVcnIMhTTjqRyuGpjdA=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 570832133D;
+        Tue,  2 Apr 2019 13:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554211516;
+        bh=8P4i6Bu0rH//ReLxvdPoeaukhesEkQrl/4m74J+VgZA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tcbq+zIT4Aq9IvKauOc6j6lQH7l7UrWgrhYhioQM1x5lfXsbIfQ9UaV4skhnBQigP
-         lD6bs3Dyq+aSJfy6AFTRcXLYZujZfxOAiYegfeZchB5k6b4uCfrAINXR0478PR3Z2c
-         Xpz4vT0utCiuj4RthKshFla0gyzhqgVkjh57OD1A=
-Date:   Tue, 2 Apr 2019 09:24:40 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, robh+dt@kernel.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        jonathan@marek.ca
-Subject: Re: [PATCH v2 2/3] dt-bindings: backlight: add lm3630a bindings
-Message-ID: <20190402132440.GA10359@basecamp>
-References: <20190401103034.21062-1-masneyb@onstation.org>
- <20190401103034.21062-3-masneyb@onstation.org>
- <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
+        b=C3ZnPHkagTMFpj2ohh6vbkggK5B+jLn7PdpTkZJLzbeygEd508ccA5wYcPNQLt5uV
+         NrzzPzd8ub7PES9N2q1TBzojelMx6qxgpcs+tZ5QF0ZVasPCCdUGYToFcVKeOGMi/l
+         StkpUY15Y7H1Hc8mAtw9ndWV+qH+uSZXje0mE6d8=
+Date:   Tue, 2 Apr 2019 08:25:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     whiteheadm@acm.org
+Cc:     linux-pci@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        nic_swsd@realtek.com, linux-kernel@vger.kernel.org
+Subject: Re: r8169 not being recognized by different chipsets
+Message-ID: <20190402132514.GA10517@google.com>
+References: <CAP8WD_YguzTJ=O6aR_wOGYQoc4_XEu4j_VM8DNrdALwTDrS+FA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <68229e7f-4749-cde5-f541-793ab614084d@ti.com>
+In-Reply-To: <CAP8WD_YguzTJ=O6aR_wOGYQoc4_XEu4j_VM8DNrdALwTDrS+FA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 07:56:55AM -0500, Dan Murphy wrote:
-> This would connect control bank B to control bank A.  Or just use a flag to denote to connect them
-> and not use led-sources.  But led-sources is the property of choice.
+[+cc PHY and r8169 maintainers, LKML]
+
+Hi Matthew,
+
+On Wed, Mar 27, 2019 at 02:15:53PM -0400, tedheadster wrote:
+> The r8169 driver is not recognizing my CardBus ethernet card depending
+> on the chipset it has. It seems to be related to the PCI bus
+> recognizing the card.  It works with some hardware and not with others
+> on the same kernel.
 > 
-> led@0 {
-> 	reg = <0>;
-> 	led-sources = < 0 1 >;
-> 	label = "main-lcd";
-> 	default-brightness = <200>;
-> 	max-brightness = <255>;
-> };
+> This is with both the 5.1.0-rc2 and 5.0.4 kernels, so I am up to date
+> with patches.
 
-OK, I see. I wondered how we could do that in device tree.
+I assume this has never worked, i.e., it is not a regression?  If it
+*is* a regression, bisection is a possible approach if nobody has a
+better idea.
 
-> > +    properties:
-> > +      label:
-> > +        description: |
-> > +          The label for this LED. If omitted, the label is taken from the node
-> > +          name (excluding the unit address). It has to uniquely identify a
-> > +          device, i.e. no other LED class device can be assigned the same label.
-> > +
-> > +      led-sources:
-> > +        description: |
-> > +          List of device current outputs the LED is connected to.
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +          - minItems: 1
-> > +            maxItems: 2
-> > +            items:
-> > +              minimum: 0
-> > +              maximum: 1
-> > +
+> I have been able to debug it down to  mdiobus_scan() returning
+> returned -EIO, but that failure probably should not happen.
+
+I can't connect this failure to PCI yet (at least, I don't know enough
+to connect the dots).  Maybe the PHY or r8169 folks can shed more
+light.
+
+> Below is the relevant PCI information:
 > 
-> label and led-sources are already defined in the common.txt no need to redefine them here.
-
-If I'm going to use the new-style bindings, then I'll need to convert
-common.txt over to use the new format as well so that the automated
-schema validations will work. I'm willing to do that work if there is
-interest from the LED / backlight maintainers. The main issue is that
-there are 62 references to the file common.txt in the directory
-Documentation/devicetree/bindings/leds/. Would the maintainers prefer:
-
-- Once common.txt is converted to common.yaml, make common.txt only
-  have a line stating that the common bindings were moved into
-  common.yaml. We can remove this file once all of the other bindings
-  are converted to the new-style format.
-
-- Update all references to common.txt to common.yaml. (1 patch or 62
-  patches?)
-
-- Or, just go with the older-style binding format for now.
-
-Thanks Dan for your other comments. They make sense and I'll incorporate
-those changes into my next version.
-
-Brian
+> Failing systems:
+> - The same 81801 bridge chip, different CardBus chips
+> 
+> 00:1e.0 PCI bridge [0604]: Intel Corporation 82801 Mobile PCI Bridge
+> [8086:2448] (rev 81)
+> 02:00.0 CardBus bridge [0607]: Texas Instruments PCI4520 PC card
+> Cardbus Controller [104c:ac46] (rev 01)
+> 02:00.1 CardBus bridge [0607]: Texas Instruments PCI4520 PC card
+> Cardbus Controller [104c:ac46] (rev 01)
+> 07:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+> RTL8169 PCI Gigabit Ethernet Controller [10ec:8169] (rev 10)
+> 
+> 00:1e.0 PCI bridge [0604]: Intel Corporation 82801 Mobile PCI Bridge
+> [8086:2448] (rev 81)
+> 02:01.0 CardBus bridge [0607]: Texas Instruments PCI1520 PC card
+> Cardbus Controller [104c:ac55] (rev 01)
+> 02:01.1 CardBus bridge [0607]: Texas Instruments PCI1520 PC card
+> Cardbus Controller [104c:ac55] (rev 01)
+> 03:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+> RTL8169 PCI Gigabit Ethernet Controller [10ec:8169] (rev 10)
+> 
+> Working systems:
+> 
+> 00:01.0 PCI bridge [0604]: Intel Corporation 440BX/ZX/DX -
+> 82443BX/ZX/DX AGP bridge [8086:7191] (rev 02)
+> 00:04.0 CardBus bridge [0607]: Texas Instruments PCI1220 [104c:ac17] (rev 02)
+> 00:04.1 CardBus bridge [0607]: Texas Instruments PCI1220 [104c:ac17] (rev 02)
+> 06:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+> RTL8169 PCI Gigabit Ethernet Controller [10ec:8169] (rev 10)
+> 
+> 00:00.0 Host bridge [0600]: Cyrix Corporation PCI Master [1078:0001]
+> 00:11.0 CardBus bridge [0607]: Texas Instruments PCI1221 [104c:ac19]
+> 00:11.1 CardBus bridge [0607]: Texas Instruments PCI1221 [104c:ac19]
+> 01:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+> RTL8169 PCI Gigabit Ethernet Controller [10ec:8169] (rev 10)
+> 
+> - Matthew Whitehead
