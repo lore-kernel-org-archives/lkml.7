@@ -7,951 +7,480 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6140C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC76C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8302147C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E8721473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 10:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554201176;
-	bh=n3Ex+2dQqk1UMSM2gn/kLyeRFAt9WVbFKmiDFoMXYNw=;
+	s=default; t=1554201182;
+	bh=AKr6t1xXWnweNX3s4uwiR+GQcz0UOYU5vc4Z3bTWT/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IFjFKKkMq7FZETSKf93wVMCuXdnb1kDPHugdJLmr3oXB2iTpmINKcuawSt5nSrFzL
-	 M5+CNkHepyyxZgWZcrEY4CxzcNIJDHk8ZM3qPj/8HODbtcZQbR7PXHabngV9Ys946S
-	 YKCI4aTTAcAb68HRGHEPv0/+726hjcUNw1CzJ/X4=
+	b=jvxrwpsWdMjckxn72ZUbXflFmym2eUDcjBBnc+gb1Qi+dP85X78rMa3HmY697hYAN
+	 EXZ+3ymAvGzsUSemUS629fatsyLZO5fF3tjOa4qKGjA/VcG8oUk5LNK5EIese+UrAM
+	 Qy1yZfkCLx9TbThXYA+aUNBDAw+Xdnkoh+9bZZzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbfDBKcy (ORCPT
+        id S1730509AbfDBKdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 06:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36312 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 06:33:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfDBKcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 06:32:52 -0400
+        id S1730484AbfDBKcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 06:32:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F34662084C;
-        Tue,  2 Apr 2019 10:32:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49A522133D;
+        Tue,  2 Apr 2019 10:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554201169;
-        bh=n3Ex+2dQqk1UMSM2gn/kLyeRFAt9WVbFKmiDFoMXYNw=;
+        s=default; t=1554201174;
+        bh=AKr6t1xXWnweNX3s4uwiR+GQcz0UOYU5vc4Z3bTWT/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mKdOm78kI5lk2enG/XgyjRoW0RjP7vZXh4m1M83Yu+l42+npcu3Rd2Hc+gXwDnYSu
-         J4tR7wendnjQGu7nbj6r4AJxQIdXBTmgSrRHCWgaFgsJAcLrJBUL4GasDpyX9Jx+2L
-         DG2MSwMQ6a68nZpvnIZ6sNYEwht+ebSvDXccZpgo=
+        b=DNbYYTcQ47XjxFSSjzmgKhK1wXSdNnegXKH5jBTqTP+wt7oigdF/A3q/alnr2fo2m
+         6eZFnyOxllWmH79SA8z9w1uFoHiFukqz/mYbfYum5BJanK3bP5ANb6+5SkW3J8kAjB
+         6Kn+kY8CzxZJFdjo8oclnjETazjjn9OIYpQPrusE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     devel@driverdev.osuosl.org
 Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        Aymen Qader <qader.aymen@gmail.com>,
-        =?UTF-8?q?Tobias=20B=C3=BCttner?= <tobias.buettner@fau.de>,
-        Dominic Braun <inf.braun@fau.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>,
-        Phil Elwell <phil@raspberrypi.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 06/16] staging: vc04_services: remove remaining redundant license text
-Date:   Tue,  2 Apr 2019 12:31:53 +0200
-Message-Id: <20190402103203.14959-7-gregkh@linuxfoundation.org>
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH 08/16] staging: iio: add proper SPDX identifiers to remaining driver files
+Date:   Tue,  2 Apr 2019 12:31:55 +0200
+Message-Id: <20190402103203.14959-9-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190402103203.14959-1-gregkh@linuxfoundation.org>
 References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the SPDX tag is in all vc04_services files, that identifies the
-license in a specific and legally-defined manner.  So the extra GPL and
-BSD text wording can be removed as it is no longer needed at all.
+There are a number of IIO staging drivers that do not have a proper SPDX
+identifier on it.  So fix that up and at the same time, remove the "free
+form" license text, as that's pretty much impossible for any tool to
+parse.
 
-This is done on a quest to remove the 700+ different ways that files in
-the kernel describe the license text.
-
-No copyright headers or other non-license-description text was removed.
-
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Cc: Aymen Qader <qader.aymen@gmail.com>
-Cc: "Tobias Büttner" <tobias.buettner@fau.de>
-Cc: Dominic Braun <inf.braun@fau.de>
-Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: Alejandro Ismael Silva <silva.alejandro.ismael@gmail.com>
-Cc: Phil Elwell <phil@raspberrypi.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../vc04_services/interface/vchi/vchi.h       | 33 +------------------
- .../vc04_services/interface/vchi/vchi_cfg.h   | 33 +------------------
- .../interface/vchi/vchi_common.h              | 33 +------------------
- .../vc04_services/interface/vchiq_arm/vchiq.h | 33 +------------------
- .../interface/vchiq_arm/vchiq_2835_arm.c      | 33 +------------------
- .../interface/vchiq_arm/vchiq_arm.c           | 31 +----------------
- .../interface/vchiq_arm/vchiq_arm.h           | 31 +----------------
- .../interface/vchiq_arm/vchiq_cfg.h           | 33 +------------------
- .../interface/vchiq_arm/vchiq_connected.c     | 33 +------------------
- .../interface/vchiq_arm/vchiq_connected.h     | 33 +------------------
- .../interface/vchiq_arm/vchiq_core.c          | 33 +------------------
- .../interface/vchiq_arm/vchiq_core.h          | 33 +------------------
- .../interface/vchiq_arm/vchiq_debugfs.c       | 31 +----------------
- .../interface/vchiq_arm/vchiq_debugfs.h       | 33 +------------------
- .../interface/vchiq_arm/vchiq_if.h            | 33 +------------------
- .../interface/vchiq_arm/vchiq_ioctl.h         | 33 +------------------
- .../interface/vchiq_arm/vchiq_pagelist.h      | 33 +------------------
- .../interface/vchiq_arm/vchiq_shim.c          | 33 +------------------
- .../interface/vchiq_arm/vchiq_util.c          | 33 +------------------
- .../interface/vchiq_arm/vchiq_util.h          | 33 +------------------
- 20 files changed, 20 insertions(+), 634 deletions(-)
+ drivers/staging/iio/accel/adis16203.c           | 3 +--
+ drivers/staging/iio/accel/adis16240.c           | 3 +--
+ drivers/staging/iio/adc/ad7192.c                | 3 +--
+ drivers/staging/iio/adc/ad7192.h                | 3 +--
+ drivers/staging/iio/adc/ad7280a.c               | 3 +--
+ drivers/staging/iio/adc/ad7280a.h               | 3 +--
+ drivers/staging/iio/adc/ad7780.c                | 3 +--
+ drivers/staging/iio/adc/ad7816.c                | 3 +--
+ drivers/staging/iio/addac/adt7316-i2c.c         | 3 +--
+ drivers/staging/iio/addac/adt7316-spi.c         | 3 +--
+ drivers/staging/iio/addac/adt7316.c             | 4 +---
+ drivers/staging/iio/addac/adt7316.h             | 3 +--
+ drivers/staging/iio/cdc/ad7150.c                | 3 +--
+ drivers/staging/iio/cdc/ad7746.c                | 3 +--
+ drivers/staging/iio/cdc/ad7746.h                | 3 +--
+ drivers/staging/iio/frequency/ad9832.c          | 3 +--
+ drivers/staging/iio/frequency/ad9832.h          | 3 +--
+ drivers/staging/iio/frequency/ad9834.c          | 3 +--
+ drivers/staging/iio/frequency/ad9834.h          | 3 +--
+ drivers/staging/iio/frequency/dds.h             | 3 +--
+ drivers/staging/iio/impedance-analyzer/ad5933.c | 3 +--
+ drivers/staging/iio/meter/ade7854-i2c.c         | 3 +--
+ drivers/staging/iio/meter/ade7854-spi.c         | 3 +--
+ drivers/staging/iio/meter/ade7854.c             | 3 +--
+ drivers/staging/iio/resolver/ad2s1210.c         | 6 +-----
+ 25 files changed, 25 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
-index a662e1bf7341..f85562b9ba9e 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
+diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/iio/accel/adis16203.c
+index 5cc96c8086b5..70381756a64a 100644
+--- a/drivers/staging/iio/accel/adis16203.c
++++ b/drivers/staging/iio/accel/adis16203.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * ADIS16203 Programmable 360 Degrees Inclinometer
+  *
+  * Copyright 2010 Analog Devices Inc.
 - *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
+- * Licensed under the GPL-2 or later.
+  */
  
- #ifndef VCHI_H_
- #define VCHI_H_
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h b/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h
-index d9f16a544412..89aa4e6122cd 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi_cfg.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
+ #include <linux/delay.h>
+diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
+index 24e525f1ef25..b80e0d248b0f 100644
+--- a/drivers/staging/iio/accel/adis16240.c
++++ b/drivers/staging/iio/accel/adis16240.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * ADIS16240 Programmable Impact Sensor and Recorder driver
+  *
+  * Copyright 2010 Analog Devices Inc.
 - *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
+- * Licensed under the GPL-2 or later.
+  */
  
- #ifndef VCHI_CFG_H_
- #define VCHI_CFG_H_
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi_common.h b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-index fdb17a80fa5c..e7955cbaf26a 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+index acdbc07fd259..dfb79fbf63f4 100644
+--- a/drivers/staging/iio/adc/ad7192.c
++++ b/drivers/staging/iio/adc/ad7192.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD7190 AD7192 AD7193 AD7195 SPI ADC driver
+  *
+  * Copyright 2011-2015 Analog Devices Inc.
 - *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
+- * Licensed under the GPL-2.
+  */
  
- #ifndef VCHI_COMMON_H_
- #define VCHI_COMMON_H_
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-index 4b6e657081f1..25af99a0f394 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/adc/ad7192.h b/drivers/staging/iio/adc/ad7192.h
+index 7433a43c2611..e382b22c460b 100644
+--- a/drivers/staging/iio/adc/ad7192.h
++++ b/drivers/staging/iio/adc/ad7192.h
+@@ -1,9 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * AD7190 AD7192 AD7195 SPI ADC driver
+  *
+  * Copyright 2011 Analog Devices Inc.
 - *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
+- * Licensed under the GPL-2.
+  */
+ #ifndef IIO_ADC_AD7192_H_
+ #define IIO_ADC_AD7192_H_
+diff --git a/drivers/staging/iio/adc/ad7280a.c b/drivers/staging/iio/adc/ad7280a.c
+index d9df12665176..47cfe920b2ae 100644
+--- a/drivers/staging/iio/adc/ad7280a.c
++++ b/drivers/staging/iio/adc/ad7280a.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD7280A Lithium Ion Battery Monitoring System
+  *
+  * Copyright 2011 Analog Devices Inc.
 - *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
+- * Licensed under the GPL-2.
+  */
  
- #ifndef VCHIQ_VCHIQ_H
- #define VCHIQ_VCHIQ_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index 70d7f6ff1483..31eb7d5889f1 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -1,36 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
+ #include <linux/crc8.h>
+diff --git a/drivers/staging/iio/adc/ad7280a.h b/drivers/staging/iio/adc/ad7280a.h
+index ccfb90d20e71..23f18bb9e279 100644
+--- a/drivers/staging/iio/adc/ad7280a.h
++++ b/drivers/staging/iio/adc/ad7280a.h
+@@ -1,9 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * AD7280A Lithium Ion Battery Monitoring System
+  *
+  * Copyright 2011 Analog Devices Inc.
 - *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
+- * Licensed under the GPL-2.
+  */
  
- #include <linux/kernel.h>
+ #ifndef IIO_ADC_AD7280_H_
+diff --git a/drivers/staging/iio/adc/ad7780.c b/drivers/staging/iio/adc/ad7780.c
+index c4a85789c2db..c15389f562b2 100644
+--- a/drivers/staging/iio/adc/ad7780.c
++++ b/drivers/staging/iio/adc/ad7780.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD7170/AD7171 and AD7780/AD7781 SPI ADC driver
+  *
+  * Copyright 2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
+ 
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
+index ee50e7296795..a0e13f29ec07 100644
+--- a/drivers/staging/iio/adc/ad7816.c
++++ b/drivers/staging/iio/adc/ad7816.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * AD7816 digital temperature sensor driver supporting AD7816/7/8
+  *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/addac/adt7316-i2c.c b/drivers/staging/iio/addac/adt7316-i2c.c
+index 0f26bc38edc6..5543cc909707 100644
+--- a/drivers/staging/iio/addac/adt7316-i2c.c
++++ b/drivers/staging/iio/addac/adt7316-i2c.c
+@@ -1,10 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * I2C bus driver for ADT7316/7/8 ADT7516/7/9 digital temperature
+  * sensor, ADC and DAC
+  *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/device.h>
+diff --git a/drivers/staging/iio/addac/adt7316-spi.c b/drivers/staging/iio/addac/adt7316-spi.c
+index 8294b9c1e3c2..2066241b15b1 100644
+--- a/drivers/staging/iio/addac/adt7316-spi.c
++++ b/drivers/staging/iio/addac/adt7316-spi.c
+@@ -1,10 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * API bus driver for ADT7316/7/8 ADT7516/7/9 digital temperature
+  * sensor, ADC and DAC
+  *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/device.h>
+diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
+index 5e5d3d961a6c..b6a65ee8d558 100644
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -1,10 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * ADT7316 digital temperature sensor driver supporting ADT7316/7/8 ADT7516/7/9
+  *
+- *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/addac/adt7316.h b/drivers/staging/iio/addac/adt7316.h
+index 84ca4f6c88f5..8c2a92ae7157 100644
+--- a/drivers/staging/iio/addac/adt7316.h
++++ b/drivers/staging/iio/addac/adt7316.h
+@@ -1,9 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * ADT7316 digital temperature sensor driver supporting ADT7316/7/8 ADT7516/7/9
+  *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #ifndef _ADT7316_H_
+diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
+index 24f74ce60f80..dd7fcab8e19e 100644
+--- a/drivers/staging/iio/cdc/ad7150.c
++++ b/drivers/staging/iio/cdc/ad7150.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * AD7150 capacitive sensor driver supporting AD7150/1/6
+  *
+  * Copyright 2010-2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/cdc/ad7746.c b/drivers/staging/iio/cdc/ad7746.c
+index 0eb28fea876e..47610d863908 100644
+--- a/drivers/staging/iio/cdc/ad7746.c
++++ b/drivers/staging/iio/cdc/ad7746.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD7746 capacitive sensor driver supporting AD7745, AD7746 and AD7747
+  *
+  * Copyright 2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
+ 
+ #include <linux/delay.h>
+diff --git a/drivers/staging/iio/cdc/ad7746.h b/drivers/staging/iio/cdc/ad7746.h
+index ea8572d1df02..8bdbd732dbbd 100644
+--- a/drivers/staging/iio/cdc/ad7746.h
++++ b/drivers/staging/iio/cdc/ad7746.h
+@@ -1,9 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * AD7746 capacitive sensor driver supporting AD7745, AD7746 and AD7747
+  *
+  * Copyright 2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
+ 
+ #ifndef IIO_CDC_AD7746_H_
+diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+index a3ce50427724..18fae8ff5dd9 100644
+--- a/drivers/staging/iio/frequency/ad9832.c
++++ b/drivers/staging/iio/frequency/ad9832.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD9832 SPI DDS driver
+  *
+  * Copyright 2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
+ 
+ #include <linux/device.h>
+diff --git a/drivers/staging/iio/frequency/ad9832.h b/drivers/staging/iio/frequency/ad9832.h
+index 39d326cc1af9..dc66477f4c84 100644
+--- a/drivers/staging/iio/frequency/ad9832.h
++++ b/drivers/staging/iio/frequency/ad9832.h
+@@ -1,9 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * AD9832 SPI DDS driver
+  *
+  * Copyright 2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ #ifndef IIO_DDS_AD9832_H_
+ #define IIO_DDS_AD9832_H_
+diff --git a/drivers/staging/iio/frequency/ad9834.c b/drivers/staging/iio/frequency/ad9834.c
+index 0b0287503fb4..fc7e1126d143 100644
+--- a/drivers/staging/iio/frequency/ad9834.c
++++ b/drivers/staging/iio/frequency/ad9834.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD9833/AD9834/AD9837/AD9838 SPI DDS driver
+  *
+  * Copyright 2010-2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
+ 
+ #include <linux/clk.h>
+diff --git a/drivers/staging/iio/frequency/ad9834.h b/drivers/staging/iio/frequency/ad9834.h
+index da7e83ceedad..521943aa0e61 100644
+--- a/drivers/staging/iio/frequency/ad9834.h
++++ b/drivers/staging/iio/frequency/ad9834.h
+@@ -1,9 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * AD9833/AD9834/AD9837/AD9838 SPI DDS driver
+  *
+  * Copyright 2010-2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
+ #ifndef IIO_DDS_AD9834_H_
+ #define IIO_DDS_AD9834_H_
+diff --git a/drivers/staging/iio/frequency/dds.h b/drivers/staging/iio/frequency/dds.h
+index d6ccd99c14d7..2ebe68eb7398 100644
+--- a/drivers/staging/iio/frequency/dds.h
++++ b/drivers/staging/iio/frequency/dds.h
+@@ -1,9 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * dds.h - sysfs attributes associated with DDS devices
+  *
+  * Copyright (c) 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ #ifndef IIO_DDS_H_
+ #define IIO_DDS_H_
+diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
+index 3134295f014f..f98f6e8ff390 100644
+--- a/drivers/staging/iio/impedance-analyzer/ad5933.c
++++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AD5933 AD5934 Impedance Converter, Network Analyzer
+  *
+  * Copyright 2011 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2.
+  */
+ 
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/meter/ade7854-i2c.c b/drivers/staging/iio/meter/ade7854-i2c.c
+index c3aa6ea9d036..a9a06e8dda51 100644
+--- a/drivers/staging/iio/meter/ade7854-i2c.c
++++ b/drivers/staging/iio/meter/ade7854-i2c.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * ADE7854/58/68/78 Polyphase Multifunction Energy Metering IC Driver (I2C Bus)
+  *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/device.h>
+diff --git a/drivers/staging/iio/meter/ade7854-spi.c b/drivers/staging/iio/meter/ade7854-spi.c
+index fc9146757283..f12a6c8b3e88 100644
+--- a/drivers/staging/iio/meter/ade7854-spi.c
++++ b/drivers/staging/iio/meter/ade7854-spi.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * ADE7854/58/68/78 Polyphase Multifunction Energy Metering IC Driver (SPI Bus)
+  *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/device.h>
+diff --git a/drivers/staging/iio/meter/ade7854.c b/drivers/staging/iio/meter/ade7854.c
+index 029c3bf42d4d..b7fbf9022046 100644
+--- a/drivers/staging/iio/meter/ade7854.c
++++ b/drivers/staging/iio/meter/ade7854.c
+@@ -1,9 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * ADE7854/58/68/78 Polyphase Multifunction Energy Metering IC Driver
+  *
+  * Copyright 2010 Analog Devices Inc.
+- *
+- * Licensed under the GPL-2 or later.
+  */
+ 
+ #include <linux/interrupt.h>
+diff --git a/drivers/staging/iio/resolver/ad2s1210.c b/drivers/staging/iio/resolver/ad2s1210.c
+index cec9d995b3df..b6be0bc202f5 100644
+--- a/drivers/staging/iio/resolver/ad2s1210.c
++++ b/drivers/staging/iio/resolver/ad2s1210.c
+@@ -1,12 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * ad2s1210.c support for the ADI Resolver to Digital Converters: AD2S1210
+  *
+  * Copyright (c) 2010-2010 Analog Devices Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+  */
  #include <linux/types.h>
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-index c95b7eaf7343..e6681670c569 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
-@@ -1,36 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
--/**
-+/*
-  * Copyright (c) 2014 Raspberry Pi (Trading) Ltd. All rights reserved.
-  * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
- #include <linux/kernel.h>
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
-index fc732ca76ca5..c1d5a9d17071 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
-@@ -1,36 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-+/*
-  * Copyright (c) 2014 Raspberry Pi (Trading) Ltd. All rights reserved.
-  * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
- #ifndef VCHIQ_ARM_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_cfg.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_cfg.h
-index e31475610be0..c275e2e8e678 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_cfg.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_cfg.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2014 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2014 Broadcom. All rights reserved. */
- 
- #ifndef VCHIQ_CFG_H
- #define VCHIQ_CFG_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
-index fc5a9c359b09..e87e6619695e 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.c
-@@ -1,36 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #include "vchiq_connected.h"
- #include "vchiq_core.h"
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.h
-index dc6d99dbb1b4..ec5d2b716e7a 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_connected.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #ifndef VCHIQ_CONNECTED_H
- #define VCHIQ_CONNECTED_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index daadc9d6ff8e..6057a90436fc 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -1,36 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #include "vchiq_core.h"
- 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-index 34685f89f910..aee2d362e88d 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #ifndef VCHIQ_CORE_H
- #define VCHIQ_CORE_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c
-index e099be476ec5..2bb9120883fd 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.c
-@@ -1,36 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
--/**
-+/*
-  * Copyright (c) 2014 Raspberry Pi (Trading) Ltd. All rights reserved.
-  * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
- #include <linux/debugfs.h>
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.h
-index 1697d3fdb0a4..9b563d105fdb 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_debugfs.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2014 Raspberry Pi (Trading) Ltd. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2014 Raspberry Pi (Trading) Ltd. All rights reserved. */
- 
- #ifndef VCHIQ_DEBUGFS_H
- #define VCHIQ_DEBUGFS_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-index 957e226df626..5445f201e284 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #ifndef VCHIQ_IF_H
- #define VCHIQ_IF_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-index 4dbc16d2a944..460ccea088bf 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #ifndef VCHIQ_IOCTLS_H
- #define VCHIQ_IOCTLS_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-index eed4913a6c66..ebd12bfabb63 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #ifndef VCHIQ_PAGELIST_H
- #define VCHIQ_PAGELIST_H
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-index 661ec3df90a2..13910d205fce 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-@@ -1,36 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- #include <linux/module.h>
- #include <linux/types.h>
- 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
-index 5a60870c89c3..6c519d8e48cb 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.c
-@@ -1,36 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #include "vchiq_util.h"
- 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h
-index 3f0ddbc1dd5b..ee1459468171 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_util.h
-@@ -1,36 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/**
-- * Copyright (c) 2010-2012 Broadcom. All rights reserved.
-- *
-- * Redistribution and use in source and binary forms, with or without
-- * modification, are permitted provided that the following conditions
-- * are met:
-- * 1. Redistributions of source code must retain the above copyright
-- *    notice, this list of conditions, and the following disclaimer,
-- *    without modification.
-- * 2. Redistributions in binary form must reproduce the above copyright
-- *    notice, this list of conditions and the following disclaimer in the
-- *    documentation and/or other materials provided with the distribution.
-- * 3. The names of the above-listed copyright holders may not be used
-- *    to endorse or promote products derived from this software without
-- *    specific prior written permission.
-- *
-- * ALTERNATIVELY, this software may be distributed under the terms of the
-- * GNU General Public License ("GPL") version 2, as published by the Free
-- * Software Foundation.
-- *
-- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- */
-+/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
- 
- #ifndef VCHIQ_UTIL_H
- #define VCHIQ_UTIL_H
+ #include <linux/mutex.h>
 -- 
 2.21.0
 
