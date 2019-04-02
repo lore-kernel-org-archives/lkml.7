@@ -2,211 +2,95 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876BBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EACC10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC1D20883
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59BE21473
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 11:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ki8ugfsH";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FfWNOofr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730683AbfDBL6l (ORCPT
+        id S1730887AbfDBL65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 07:58:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:25321 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfDBL6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 07:58:40 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Apr 2019 04:58:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,300,1549958400"; 
-   d="scan'208";a="139305226"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga003.jf.intel.com with ESMTP; 02 Apr 2019 04:58:37 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1hBI3o-000836-E6; Tue, 02 Apr 2019 14:58:36 +0300
-Date:   Tue, 2 Apr 2019 14:58:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over
- suspend/resume
-Message-ID: <20190402115836.GL9224@smile.fi.intel.com>
-References: <20190327172940.GR3622@lahna.fi.intel.com>
- <20190328091729.GV9224@smile.fi.intel.com>
- <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
- <CAB4CAwfH237-EUgfyR8-KWKo0HJOf=QkxiNjkBRg+gBpbKiM7g@mail.gmail.com>
- <20190328123444.GX3622@lahna.fi.intel.com>
- <CAB4CAwcQTH5BiDDbzfFXTDDuYQ_fuDd_1tKkecf6vwygGQmn5w@mail.gmail.com>
- <20190401074953.GQ3622@lahna.fi.intel.com>
- <CAB4CAweW_3p4i_8ntscJyU9n55HwdLt3pxyT3Gf6SUSbZAJ8qA@mail.gmail.com>
- <20190401122256.GF9224@smile.fi.intel.com>
- <CAB4CAwd6+6+Qwb2wDFkVOc_auTNdrEw07tX2ha=XLvxfwFHRXw@mail.gmail.com>
+        Tue, 2 Apr 2019 07:58:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60494 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730684AbfDBL6z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 07:58:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 37BD160350; Tue,  2 Apr 2019 11:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554206335;
+        bh=65r4/OALWg0ucr4XJQLnYELcYjf1mVsr/lEGIatS9ig=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Ki8ugfsHftfNnYWMSpOF7nXajK73/OCpUcN/t6bxhx1ilRrT8MHHYobPLJSTLtvsb
+         pFDumuWkzxPw9pKR9fuHk7nvjlkJZ97k+X2eWcb87B7786LZDhhmEBuigW351rRKpH
+         7ag+28zDWBCkdCioYEJAYM4bJQVqN3zQqVhELv8w=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B3AE602BA;
+        Tue,  2 Apr 2019 11:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554206334;
+        bh=65r4/OALWg0ucr4XJQLnYELcYjf1mVsr/lEGIatS9ig=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FfWNOofr6mkOame8R0NqT/tAAdP/ZBraQ4ayLA0rOGKwYSBb1KNo59cr4isZblFBE
+         isOF6ubKtf0uC9Yw+9+dUYuahTNW7e4lbICaJ2qj3jPqFr1j20O12ymQ7qk8E2Cph0
+         jpwwixiN5ZECA/7x8JSFNA4Piu4xCd2r2i2pJmdM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B3AE602BA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] fs: kernfs: Corrected spelling mistake
+To:     Christina Quast <cquast@hanoverdisplays.com>
+Cc:     trivial@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
+References: <20190402114414.23767-1-cquast@hanoverdisplays.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <3485e510-623c-dc08-35d7-c5f4f1606082@codeaurora.org>
+Date:   Tue, 2 Apr 2019 17:28:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB4CAwd6+6+Qwb2wDFkVOc_auTNdrEw07tX2ha=XLvxfwFHRXw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190402114414.23767-1-cquast@hanoverdisplays.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 02:16:19PM +0800, Chris Chiu wrote:
-> On Mon, Apr 1, 2019 at 8:23 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Mon, Apr 01, 2019 at 06:41:57PM +0800, Chris Chiu wrote:
+flies => files
 
-> Thanks for the comment. My first version did mimic the logic of the interrupt
-> mask restore but it was based on the DMI quirk. It saves HOSTSW_OWN
-> for each padgroup and restores them all after resume if DMI info matched.
-> 
-> What really confused me is how to do this specifically for a requested GPIO
-> pin. So here's my new proposed patch. Please suggests if there's any better
-> idea. Thanks.
+On 4/2/2019 5:14 PM, Christina Quast wrote:
+> Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
->  struct intel_community_context {
->         u32 *intmask;
-> +       u32 *hostown;
-
-This is okay.
-
->  };
-
-> +#ifdef CONFIG_PM_SLEEP
-> +static void intel_save_hostown(struct intel_pinctrl *pctrl, unsigned int pin);
-> +#endif
-> +
-
-No need for this...
-
->         /* Disable TX buffer and enable RX (this will be input) */
->         __intel_gpio_set_direction(padcfg0, true);
-> +#ifdef CONFIG_PM_SLEEP
-> +       intel_save_hostown(pctrl, pin);
-> +#endif
-
-...and for this.
-Just save all of them at ->suspend()
-
->         for (i = 0; i < pctrl->ncommunities; i++) {
->                 struct intel_community *community = &pctrl->communities[i];
-> -               u32 *intmask;
-> +               u32 *intmask, *hostown;
-> 
->                 intmask = devm_kcalloc(pctrl->dev, community->ngpps,
->                                        sizeof(*intmask), GFP_KERNEL);
-> @@ -1292,6 +1299,13 @@ static int intel_pinctrl_pm_init(struct
-> intel_pinctrl *pctrl)
->                         return -ENOMEM;
-> 
->                 communities[i].intmask = intmask;
-> +
-> +               hostown = devm_kcalloc(pctrl->dev, community->ngpps,
-> +                                      sizeof(*hostown), GFP_KERNEL);
-> +               if (!hostown)
-> +                       return -ENOMEM;
-> +
-> +               communities[i].hostown= hostown;
-
-This is good.
-
->         }
-
-> +static void intel_save_hostown(struct intel_pinctrl *pctrl, unsigned int pin)
-> +{
-> +       const struct intel_community *community;
-> +       const struct intel_padgroup *padgrp;
-> +       int i;
-> +
-> +       community = intel_get_community(pctrl, pin);
-> +       if (!community)
-> +               return;
-> +       if (!community->hostown_offset)
-> +               return;
-> +
-> +       padgrp = intel_community_get_padgroup(community, pin);
-> +       if (!padgrp)
-> +               return;
-> +
-> +       for (i = 0; i < pctrl->ncommunities; i++) {
-> +               const struct intel_community *comm = &pctrl->communities[i];
-> +               int j;
-> +
-> +               for (j = 0; j < comm->ngpps; j++) {
-> +                       const struct intel_padgroup *pgrp = &comm->gpps[j];
-> +
-> +                       if (padgrp == pgrp) {
-> +                               struct intel_community_context *communities;
-> +                               void __iomem *base;
-> +
-> +                               communities = pctrl->context.communities;
-> +                               base = community->regs +
-> community->hostown_offset;
-> +                               communities[i].hostown[j] = readl(base + j * 4);
-> +                               break;
-> +                       }
-> +               }
-> +       }
-
-> +       return;
-
-Useless.
-
-> +}
-
-This is too complicated. Just add
-
-base = community->regs + community->hostown_offset;
-for (gpp = 0; gpp < community->ngpps; gpp++)
-	communities[i].hostown[gpp] = readl(base + gpp * 4);
-
-into ->suspend() loop.
-
-> +               base = community->regs + community->hostown_offset;
-> +               for (gpp = 0; gpp < community->ngpps; gpp++) {
-> +                       if (communities[i].hostown[gpp] &&
-> +                           communities[i].hostown[gpp] != readl(base
-> + gpp * 4)) {
-> +                               writel(communities[i].hostown[gpp],
-> base + gpp * 4);
-> +                               dev_warn(dev, "hostown changed after resume\n");
-> +                               dev_dbg(dev, "restored hostown %d/%u
-> %#08x\n", i, gpp,
-> +                                       readl(base + gpp * 4));
-> +                       }
-> +               }
-
-Instead you may need to loop over each pin in the part of the group related to
-one 32-bit HOSTSW_OWN register (i.e. 8, see PADOWN_*() macros in the driver),
-check if it's requested and break a loop. If loop index is off-by-one a limit,
-nothing to do, otherwise restore hostown register.
-
-More pedantic approach is to collect the mask inside the loop and apply it.
-
-The check function name is gpiochip_is_requested().
-
-(One of Intel's drivers which is using that at ->resume() is
- drivers/gpio/gpio-lynxpoint.c)
-
-P.S. I prefer pedantic approach. The simplification one is showed in order to
-give you an idea.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Cheers,
+-Mukesh
+> ---
+>   include/linux/kernfs.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
+> index c8893f663470..e446ab97ee0c 100644
+> --- a/include/linux/kernfs.h
+> +++ b/include/linux/kernfs.h
+> @@ -64,7 +64,7 @@ enum kernfs_root_flag {
+>   	KERNFS_ROOT_CREATE_DEACTIVATED		= 0x0001,
+>   
+>   	/*
+> -	 * For regular flies, if the opener has CAP_DAC_OVERRIDE, open(2)
+> +	 * For regular files, if the opener has CAP_DAC_OVERRIDE, open(2)
+>   	 * succeeds regardless of the RW permissions.  sysfs had an extra
+>   	 * layer of enforcement where open(2) fails with -EACCES regardless
+>   	 * of CAP_DAC_OVERRIDE if the permission doesn't have the
