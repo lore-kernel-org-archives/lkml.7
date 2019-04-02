@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10756C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D224DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6DF62070D
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2BF2070D
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 02:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuF5kf2u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ecj1mEMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfDBCv2 (ORCPT
+        id S1728914AbfDBCvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 1 Apr 2019 22:51:28 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38362 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfDBCv1 (ORCPT
+        Mon, 1 Apr 2019 22:51:35 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43057 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfDBCve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 1 Apr 2019 22:51:27 -0400
-Received: by mail-io1-f66.google.com with SMTP id v4so9649417ioj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2019 19:51:27 -0700 (PDT)
+        Mon, 1 Apr 2019 22:51:34 -0400
+Received: by mail-io1-f67.google.com with SMTP id x3so9613198iol.10;
+        Mon, 01 Apr 2019 19:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=cdw0h7f6dlrh5aXSLwgzdfQkXS3vqplD119RsMrSKT8=;
-        b=fuF5kf2uzO6eKCQJoCOImzmtFIl4srGNj+3NVxZ4GlFI+8xf32kbBiXzKQg4lYHh8m
-         0gHSewx2dwiiLdiEcfQOCi/Iq6omTexQyL/ZJSJNgCi/S07BWWSk907I/9vKv3NKUCGe
-         xt0abv28cYnhe1MXmY0Nw1S3GaFowyabYbMeMZtzcqhYsXc20h/p7dmbGlnQV6/kofn4
-         x6gMTQ9ER6+hOYcZ5s7cD9YBNd7LCnk75xY7JoMkkrOezsKXogOcbQn6oOTqylh+UVpu
-         LlvcoQPeJnu/r20E5MSI+BZXIlLQHSi8/yrbAV077YTu+qoWiVtbCC4LrstI9F0QHVH5
-         BSsQ==
+        bh=miyH2II+miP3tXVxsQJN3zlkey8N5ncDarOpVZMD6ek=;
+        b=Ecj1mEMehLkxsyS8gmIeF4HIoQHVcZ5eJjnvUBHznre0t0AnDK5dzb7i2KXZE0Ktz6
+         0TzRBKfAilMgESp5TdYnLFmEhSPXNCpa5pQ/QcImfB+YG3xsi0JRL01Ggx4WNaj+5c/t
+         +lcU/5iuIEOq4+ZsGP1+GDJBnf056jmemtN7kEflLouR+toWlA1BjRN41vEgme5EZ5ds
+         ff/HRbZEPoB5cd4t4HeXPfwxqCiQwQa4IaqfH6ffJ8GaKJGG53L55tDF/uH9yekRuOdL
+         n8ZxOi32Gm7RpvsB++nVsvZLh0SmUa16u3tVaSwltzPntzPvWtpnSTrkZVjNkQ1nK2zP
+         MppA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cdw0h7f6dlrh5aXSLwgzdfQkXS3vqplD119RsMrSKT8=;
-        b=XoVpDZUcpnnwwYhnB0eYNnlqwMpA/AJyKKTb5ozSU54nLLbZpKvCLBEsgGAMLHA5Rn
-         afdGPcFSYsOH9mWgAKZxLGSrq4ktYhcYLwOzH7RKIckGqMzD8itZKMyFIcX6S69CAOLx
-         9eSsG2HxNKFcvd2Xa8DtE4dtzrI8DLac/9r7j5Nqq1A+wv6b085miqLEgUwq04U9yS8d
-         5AfAjLFcuRNoCv29CqgBFrj3zMQXwR/RWNdMHW30RMoFIh1G5ebQD72QvIl2+xmo1mFw
-         sGaHua/Y8OvoAowJXBugKpQcJ1dD87naTBWwHgovx0INlnbtIxJAk2EcOZTtrp25aeCE
-         KxZg==
-X-Gm-Message-State: APjAAAVEsP+KquucCFkkEYF9j0fK3LJF/KlJE/KhwC4/AIkmngYE3DNb
-        8Hz0KXdYYoIK/POPTxNJouk=
-X-Google-Smtp-Source: APXvYqx1l4rB7O8duuoNbfA+uXPVlsXJUEXaVshzrHkemOxLXJv/auYVyk9ZS0PCXNEppkqZulLd9A==
-X-Received: by 2002:a5d:8d88:: with SMTP id b8mr29322375ioj.58.1554173487061;
-        Mon, 01 Apr 2019 19:51:27 -0700 (PDT)
+        bh=miyH2II+miP3tXVxsQJN3zlkey8N5ncDarOpVZMD6ek=;
+        b=MH75lOGbnD10h9WisY/Ru8BkpP5HeNsHfzUdDCQze6ZrKjhAkPd5QUi0dFZrqOPjtE
+         9m3BBlA2rIOVt/fDTBfe9i25w4ll0sc0fBAQ97WGlhbRrp+Rhqva8a1GYtUHpW/4Einr
+         Y6CM9vW9KyXUTNqZ+XYOOi+tfF+o3+3SH/V27kv+cimMOPOsqsIuAczMQ0f4Mo8V/qr2
+         EFNnOGfbE8olnl46mCuD9V+wJ/mbSeYq35jxdl2iAht1/PyaLWDuYvnpmgMx6vL8781O
+         W1PQGqw7si0BweN67JrJA6mASjFRgobr1iBmdZPZgIdbUu3Jydt40TleBEnFKm1+C2b5
+         FANQ==
+X-Gm-Message-State: APjAAAVfu0kvyYa9GKlK4WyWBfZLnIxTsQLFSkNit7tgPEMhyTFN1k/T
+        55RDxSsT5+IFRQuKR/1mBko=
+X-Google-Smtp-Source: APXvYqyUyZKl4cmApxYxLNGuYexxWfhbn4qo0LZjwmmFQO2Ji7F1jp0FTEoD/xnncUf07i7ewonPhg==
+X-Received: by 2002:a6b:ed0c:: with SMTP id n12mr33168370iog.259.1554173493353;
+        Mon, 01 Apr 2019 19:51:33 -0700 (PDT)
 Received: from ubu (2600-6c48-437f-c81d-984d-b4e8-0abe-7e26.dhcp6.chtrptr.net. [2600:6c48:437f:c81d:984d:b4e8:abe:7e26])
-        by smtp.gmail.com with ESMTPSA id f197sm7154847itf.5.2019.04.01.19.51.26
+        by smtp.gmail.com with ESMTPSA id w184sm6369080ita.9.2019.04.01.19.51.32
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 01 Apr 2019 19:51:26 -0700 (PDT)
-Date:   Mon, 1 Apr 2019 22:51:24 -0400
+        Mon, 01 Apr 2019 19:51:32 -0700 (PDT)
+Date:   Mon, 1 Apr 2019 22:51:30 -0400
 From:   Kimberly Brown <kimbrownkd@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/8] samples/kobject: Replace foo_ktype's default_attrs
- field with groups
-Message-ID: <ff51525109ba2697b0e0f91b622c1473ee2d0141.1554151487.git.kimbrownkd@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/8] block: Replace all ktype default_attrs with groups
+Message-ID: <e3b82e2105d1e2b4d6313d862172007e0f4477e2.1554151487.git.kimbrownkd@gmail.com>
 References: <20190322201440.GA30814@ubu-Virtual-Machine>
  <cover.1554151487.git.kimbrownkd@gmail.com>
 MIME-Version: 1.0
@@ -77,40 +78,102 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The kobj_type default_attrs field is being replaced by the
-default_groups field. Replace foo_ktype's default_attrs field with
-default_groups and use the ATTRIBUTE_GROUPS macro to create
-foo_default_groups.
+default_groups field. Replace all of the ktype default_attrs fields in
+the block subsystem with default_groups and use the ATTRIBUTE_GROUPS
+macro to create the default groups.
 
-This patch was tested by loading the kset-example module and verifying
-that the sysfs files for the attributes in the default group were
-created.
+Remove default_ctx_attrs[] because it doesn't contain any attributes.
+
+This patch was tested by verifying that the sysfs files for the
+attributes in the default groups were created.
 
 Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
 ---
- samples/kobject/kset-example.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ block/blk-integrity.c | 3 ++-
+ block/blk-mq-sysfs.c  | 8 ++------
+ block/blk-sysfs.c     | 3 ++-
+ 3 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/samples/kobject/kset-example.c b/samples/kobject/kset-example.c
-index 401328fd687d..c8010f126808 100644
---- a/samples/kobject/kset-example.c
-+++ b/samples/kobject/kset-example.c
-@@ -178,6 +178,7 @@ static struct attribute *foo_default_attrs[] = {
- 	&bar_attribute.attr,
- 	NULL,	/* need to NULL terminate the list of attributes */
+diff --git a/block/blk-integrity.c b/block/blk-integrity.c
+index d1ab089e0919..85864c71e858 100644
+--- a/block/blk-integrity.c
++++ b/block/blk-integrity.c
+@@ -365,6 +365,7 @@ static struct attribute *integrity_attrs[] = {
+ 	&integrity_device_entry.attr,
+ 	NULL,
  };
-+ATTRIBUTE_GROUPS(foo_default);
++ATTRIBUTE_GROUPS(integrity);
  
- /*
-  * Our own ktype for our kobjects.  Here we specify our sysfs ops, the
-@@ -187,7 +188,7 @@ static struct attribute *foo_default_attrs[] = {
- static struct kobj_type foo_ktype = {
- 	.sysfs_ops = &foo_sysfs_ops,
- 	.release = foo_release,
--	.default_attrs = foo_default_attrs,
-+	.default_groups = foo_default_groups,
+ static const struct sysfs_ops integrity_ops = {
+ 	.show	= &integrity_attr_show,
+@@ -372,7 +373,7 @@ static const struct sysfs_ops integrity_ops = {
  };
  
- static struct kset *example_kset;
+ static struct kobj_type integrity_ktype = {
+-	.default_attrs	= integrity_attrs,
++	.default_groups = integrity_groups,
+ 	.sysfs_ops	= &integrity_ops,
+ };
+ 
+diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
+index 3f9c3f4ac44c..5315e538b3b1 100644
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -173,10 +173,6 @@ static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_hw_ctx *hctx, char *page)
+ 	return ret;
+ }
+ 
+-static struct attribute *default_ctx_attrs[] = {
+-	NULL,
+-};
+-
+ static struct blk_mq_hw_ctx_sysfs_entry blk_mq_hw_sysfs_nr_tags = {
+ 	.attr = {.name = "nr_tags", .mode = 0444 },
+ 	.show = blk_mq_hw_sysfs_nr_tags_show,
+@@ -196,6 +192,7 @@ static struct attribute *default_hw_ctx_attrs[] = {
+ 	&blk_mq_hw_sysfs_cpus.attr,
+ 	NULL,
+ };
++ATTRIBUTE_GROUPS(default_hw_ctx);
+ 
+ static const struct sysfs_ops blk_mq_sysfs_ops = {
+ 	.show	= blk_mq_sysfs_show,
+@@ -214,13 +211,12 @@ static struct kobj_type blk_mq_ktype = {
+ 
+ static struct kobj_type blk_mq_ctx_ktype = {
+ 	.sysfs_ops	= &blk_mq_sysfs_ops,
+-	.default_attrs	= default_ctx_attrs,
+ 	.release	= blk_mq_ctx_sysfs_release,
+ };
+ 
+ static struct kobj_type blk_mq_hw_ktype = {
+ 	.sysfs_ops	= &blk_mq_hw_sysfs_ops,
+-	.default_attrs	= default_hw_ctx_attrs,
++	.default_groups = default_hw_ctx_groups,
+ 	.release	= blk_mq_hw_sysfs_release,
+ };
+ 
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 422327089e0f..7a95a1eb27e1 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -769,6 +769,7 @@ static struct attribute *default_attrs[] = {
+ #endif
+ 	NULL,
+ };
++ATTRIBUTE_GROUPS(default);
+ 
+ #define to_queue(atr) container_of((atr), struct queue_sysfs_entry, attr)
+ 
+@@ -890,7 +891,7 @@ static const struct sysfs_ops queue_sysfs_ops = {
+ 
+ struct kobj_type blk_queue_ktype = {
+ 	.sysfs_ops	= &queue_sysfs_ops,
+-	.default_attrs	= default_attrs,
++	.default_groups = default_groups,
+ 	.release	= blk_release_queue,
+ };
+ 
 -- 
 2.17.1
 
