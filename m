@@ -2,88 +2,228 @@ Return-Path: <SRS0=bo2+=SE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273CCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E17C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18562082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7F720840
+	for <linux-kernel@archiver.kernel.org>; Tue,  2 Apr 2019 04:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfDBEyU (ORCPT
+        id S1727787AbfDBEzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 00:54:20 -0400
-Received: from mga14.intel.com ([192.55.52.115]:57641 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfDBEyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 00:54:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Apr 2019 21:54:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,298,1549958400"; 
-   d="scan'208";a="157900878"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Apr 2019 21:54:17 -0700
-Date:   Tue, 2 Apr 2019 12:38:45 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     atull@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH 01/17] fpga: dfl-fme-mgr: fix FME_PR_INTFC_ID register
- address.
-Message-ID: <20190402043845.GA24012@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-2-git-send-email-hao.wu@intel.com>
- <20190401195447.GA1910@archbook>
+        Tue, 2 Apr 2019 00:55:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37370 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725778AbfDBEzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 00:55:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9AE0EACC8;
+        Tue,  2 Apr 2019 04:55:07 +0000 (UTC)
+Subject: Re: [LKP] [btrfs] 70d28b0e4f:
+ BUG:kernel_reboot-without-warning_in_early-boot_stage,
+ last_printk:Probing_EDD(edd=off_to_disable)...ok
+To:     Rong Chen <rong.a.chen@intel.com>, dsterba@suse.cz,
+        Nikolay Borisov <nborisov@suse.com>, lkp@01.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Yoon Jungyeon <jungyeon@gatech.edu>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190401132427.GC9217@shao2-debian>
+ <f3cef716-a1e3-2e84-0133-9a9c3fad2a74@suse.com>
+ <7a6c000e-c523-382a-d13c-790809260e4e@intel.com>
+ <5b82b026-bdd7-f781-e661-f1afdc9cb97b@suse.de>
+ <23823210-1951-0492-1755-6263ccf388fa@intel.com>
+ <20190401154044.GX29086@suse.cz>
+ <d1f57263-277a-d696-2fc2-51c62af6844f@intel.com>
+From:   Qu Wenruo <wqu@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wqu@suse.de; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0F1F1IFdlbnJ1byA8d3F1QHN1c2UuZGU+iQFUBBMBCAA+AhsDBQsJCAcCBhUICQoLAgQW
+ AgMBAh4BAheAFiEELd9y5aWlW6idqkLhwj2R86El/qgFAlnVgp0FCQlmAm4ACgkQwj2R86El
+ /qilmgf/cUq9kFQo577ku5gc6rFpVg68ublBwjYpwjw0b//xo+Wo1wm+RRbUGs+djSZAqw12
+ D4F3r0mBTI7abUCNWAbFkYZSAIFVi0DMkjypIVS7PSaEt04rM9VBTToE+YqU6WENeJ57R2p2
+ +hI0wZrBwxObdsdaOtxWtsp3bmhIbdqxSKrtXuRawy4KnQYcLuGzOce9okdlbAE0W3KHm1gQ
+ oNAe6FX8nC9qo14m8LqEbThYH+qj4iCMlN8HIfbSx4F3e7nHZ+UAMW+E/lnMRkIB9Df+JyVd
+ /NlXzIjZAggcWsqpx6D4wyAuexKWkiGQeUeArUNihAwXjmyqWPGmjVyIh+oC6LkBDQRZ1YGv
+ AQgAqlPrYeBLMv3PAZ75YhQIwH6c4SNcB++hQ9TCT5gIQNw51+SQzkXIGgmzxMIS49cZcE4K
+ Xk/kHw5hieQeQZa60BWVRNXwoRI4ib8okgDuMkD5Kz1WEyO149+BZ7HD4/yK0VFJGuvDJR8T
+ 7RZwB69uVSLjkuNZZmCmDcDzS0c/SJOg5nkxt1iTtgUETb1wNKV6yR9XzRkrEW/qShChyrS9
+ fNN8e9c0MQsC4fsyz9Ylx1TOY/IF/c6rqYoEEfwnpdlz0uOM1nA1vK+wdKtXluCa79MdfaeD
+ /dt76Kp/o6CAKLLcjU1Iwnkq1HSrYfY3HZWpvV9g84gPwxwxX0uXquHxLwARAQABiQE8BBgB
+ CAAmFiEELd9y5aWlW6idqkLhwj2R86El/qgFAlnVga8CGwwFCQPCZwAACgkQwj2R86El/qgN
+ 8Qf+M0vM2Idwm5txZZSs+/kSgcPxEwYmxUinnUJGyc0ZWYQXPl0cBetZon9El0naijGzNWvf
+ HxIPB+ZFehk6Otgc78p1a3/xck/s1myFRLrmbbTJNoFiyL25ljcq0J8z5Zp4yuABL2RiLdaZ
+ Pt/jfwjBHwGR+QKp6dD2qMrUWf9b7TFzYDMZXzZ2/eoIgtyjEelNBPrIgOFe24iKMjaGjd97
+ fJuRcBMHdhUAxvXQF1oRtd83JvYJ5OtwTd8MgkEfl+fo7HwWkuHbzc70L4fFKv2BowqFdaHy
+ mId1ijGPGr46tuZ5a4cw/zbaPYx6fJ4sK9tSv/6V1QPNUdqml6hm6pfs6A==
+Message-ID: <dde15cd2-5c17-86b0-68a7-638b3d1a3de9@suse.de>
+Date:   Tue, 2 Apr 2019 12:55:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190401195447.GA1910@archbook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <d1f57263-277a-d696-2fc2-51c62af6844f@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 12:54:47PM -0700, Moritz Fischer wrote:
-> Hi Wu,
+
+
+On 2019/4/2 上午11:14, Rong Chen wrote:
 > 
-> On Mon, Mar 25, 2019 at 11:07:28AM +0800, Wu Hao wrote:
-> > FME_PR_INTFC_ID is used as compat_id for fpga manager and region,
-> > but high 64 bits and low 64 bits of the compat_id are swapped by
-> > mistake. This patch fixes this problem by fixing register address.
-> > 
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > ---
-> >  drivers/fpga/dfl-fme-mgr.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/fpga/dfl-fme-mgr.c b/drivers/fpga/dfl-fme-mgr.c
-> > index 76f3770..b3f7eee 100644
-> > --- a/drivers/fpga/dfl-fme-mgr.c
-> > +++ b/drivers/fpga/dfl-fme-mgr.c
-> > @@ -30,8 +30,8 @@
-> >  #define FME_PR_STS		0x10
-> >  #define FME_PR_DATA		0x18
-> >  #define FME_PR_ERR		0x20
-> > -#define FME_PR_INTFC_ID_H	0xA8
-> > -#define FME_PR_INTFC_ID_L	0xB0
-> > +#define FME_PR_INTFC_ID_L	0xA8
-> > +#define FME_PR_INTFC_ID_H	0xB0
+> On 4/1/19 11:40 PM, David Sterba wrote:
+>> On Mon, Apr 01, 2019 at 11:02:37PM +0800,  Chen, Rong A  wrote:
+>>> On 4/1/2019 10:29 PM, Qu Wenruo wrote:
+>>>> On 2019/4/1 下午10:02,  Chen, Rong A  wrote:
+>>>>> On 4/1/2019 9:28 PM, Nikolay Borisov wrote:
+>>>>>> On 1.04.19 г. 16:24 ч., kernel test robot wrote:
+>>>>>>> FYI, we noticed the following commit (built with gcc-7):
+>>>>>>>
+>>>>>>> commit: 70d28b0e4f8ed2d38571e7b1f9bec7f321a53102 ("btrfs:
+>>>>>>> tree-checker: Verify dev item")
+>>>>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git
+>>>>>>> master
+>>>>>>>
+>>>>>>> in testcase: trinity
+>>>>>>> with following parameters:
+>>>>>>>
+>>>>>>>       runtime: 300s
+>>>>>>>
+>>>>>>> test-description: Trinity is a linux system call fuzz tester.
+>>>>>>> test-url: http://codemonkey.org.uk/projects/trinity/
+>>>>>>>
+>>>>>>>
+>>>>>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge
+>>>>>>> -smp
+>>>>>>> 2 -m 2G
+>>>>>>>
+>>>>>>> caused below changes (please refer to attached dmesg/kmsg for entire
+>>>>>>> log/backtrace):
+>>>>>>>
+>>>>>>>
+>>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>>
+>>>>>>>
+>>>>>>> |
+>>>>>>> | 36b9d2bc69 | 70d28b0e4f |
+>>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>>
+>>>>>>>
+>>>>>>> |
+>>>>>>> boot_successes
+>>>>>>> | 14         | 0          |
+>>>>>>> |
+>>>>>>> boot_failures
+>>>>>>> | 2          | 14         |
+>>>>>>> |
+>>>>>>> IP-Config:Auto-configuration_of_network_failed
+>>>>>>> | 2          |            |
+>>>>>>> |
+>>>>>>> BUG:kernel_reboot-without-warning_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+>>>>>>>
+>>>>>>> | 0          | 14         |
+>>>>>>> +--------------------------------------------------------------------------------------------------------+------------+------------+
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> early console in setup code
+>>>>>>> Probing EDD (edd=off to disable)... ok
+>>>>>>> BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>>>>>> Probing EDD (edd=off to disable)... ok
+>>>>>>> Linux version 5.0.0-rc8-00196-g70d28b0 #1
+>>>>>>> Command line: ip=::::vm-snb-quantal-x86_64-1415::dhcp root=/dev/ram0
+>>>>>>> user=lkp
+>>>>>>> job=/lkp/jobs/scheduled/vm-snb-quantal-x86_64-1415/trinity-300s-quantal-core-x86_64-2018-11-09.cgz-70d28b0-20190330-29362-1y6g0qb-2.yaml
+>>>>>>>
+>>>>>>> ARCH=x86_64 kconfig=x86_64-randconfig-s5-03231928
+>>>>>>> branch=linux-devel/devel-hourly-2019032317
+>>>>>>> commit=70d28b0e4f8ed2d38571e7b1f9bec7f321a53102
+>>>>>>> BOOT_IMAGE=/pkg/linux/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/vmlinuz-5.0.0-rc8-00196-g70d28b0
+>>>>>>>
+>>>>>>> max_uptime=1500
+>>>>>>> RESULT_ROOT=/result/trinity/300s/vm-snb-quantal-x86_64/quantal-core-x86_64-2018-11-09.cgz/x86_64-randconfig-s5-03231928/gcc-7/70d28b0e4f8ed2d38571e7b1f9bec7f321a53102/8
+>>>>>>>
+>>>>>>> LKP_SERVER=inn debug apic=debug sysrq_always_enabled
+>>>>>>> rcupdate.rcu_cpu_stall_timeout=100 net.ifnames=0 printk.devkmsg=on
+>>>>>>> panic=-1 softlockup_panic=1 nmi_watchdog=panic oops=panic
+>>>>>>> load_ramdisk=2 prompt_ramdisk=0 drbd.minor_count=8
+>>>>>>> systemd.log_level=err ignore_loglevel console=tty0
+>>>>>>> earlyprintk=ttyS0,115200 console=ttyS0,115200 vga=normal rw
+>>>>>>> rcuperf.shutdown=0
+>>>>>>>
+>>>>>> Can this report be made useful by actually including output from
+>>>>>> serial
+>>>>>> console? For example possible bug-ons or whatnot? dmesg.xz just
+>>>>>> contains
+>>>>>> qemu's command line + some metadata about the test and :
+>>>>>>
+>>>>>> "BUG: kernel reboot-without-warning in early-boot stage, last printk:
+>>>>>> Probing EDD (edd=off to disable)... ok"
+>>>>>>
+>>>>>> At least a stack trace would have been useful.
+>>>>>>
+>>>>>> <snip>
+>>>>> Hi,
+>>>>>
+>>>>> We usually use the tool ("bin/lkp qemu -k <bzImage> job-script") to
+>>>>> reproduce it.  It seems no stack trace in the result:
+>>>> So there is no regression at that commit right?
+>>>>
+>>>> Just some false alert?
+>>>
+>>> Hi,
+>>>
+>>> I think there's a regression, it stopped in the early-boot stage .
+>> Can you please provide any logs that would point at btrfs? If the module
+>> is loaded or built-in started, there's a line about that. Besides that
+>> it's preceded by messages from other subsystems' initialization.
 > 
-> Does this handle endianess correct?
+> 
+> Hi,
+> 
+> CONFIG_BTRFS_FS and CONFIG_BTRFS_FS_REF_VERIFY is enabled in the kconfig.
+> I disabled them for the experiment, and the new kernel is bootable. I
+> don't have more logs to prove it.
+> 
+> $ grep BTRFS config-5.0.0-rc8-00196-g70d28b0
+> CONFIG_BTRFS_FS=y
+> # CONFIG_BTRFS_FS_POSIX_ACL is not set
+> # CONFIG_BTRFS_FS_CHECK_INTEGRITY is not set
+> # CONFIG_BTRFS_FS_RUN_SANITY_TESTS is not set
+> # CONFIG_BTRFS_DEBUG is not set
+> # CONFIG_BTRFS_ASSERT is not set
+> CONFIG_BTRFS_FS_REF_VERIFY=y
 
-Hi Moritz,
+With the same BTRFS config, on v5.1.0-rc2+ (David's misc-next) branch,
+which has the so-called "regression" commit, it booted without any problem.
 
-This is just a bug fixing for wrong offsets given to these 2 registers
-according to spec. I think this is not endianess related, and per my
-understanding we don't need more code on endianess handling as that
-should be done inside the readq function already. :)
+So I really hope we could get some useful kernel message, either to
+determine what's wrong with btrfs or what's wrong with the test framework.
 
-Thanks
-Hao
+Thanks,
+Qu
+
+> 
+> 
+> Best Regards,
+> Rong Chen
+> 
+> 
+>> _______________________________________________
+>> LKP mailing list
+>> LKP@lists.01.org
+>> https://lists.01.org/mailman/listinfo/lkp
