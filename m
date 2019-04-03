@@ -2,316 +2,132 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6285AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5D8C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E56206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC922147A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QI5qSAZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfDCKlF (ORCPT
+        id S1726725AbfDCKlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:41:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59082 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfDCKlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:41:04 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2514CC049E22;
-        Wed,  3 Apr 2019 10:41:03 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (dhcp-10-65-161-59.pnq.redhat.com [10.65.161.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC6EC19926;
-        Wed,  3 Apr 2019 10:40:43 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com
-Subject: [PATCH v4 1/5] ibnvdimm: nd_region flush callback support
-Date:   Wed,  3 Apr 2019 16:10:14 +0530
-Message-Id: <20190403104018.23947-2-pagupta@redhat.com>
-In-Reply-To: <20190403104018.23947-1-pagupta@redhat.com>
-References: <20190403104018.23947-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 03 Apr 2019 10:41:03 +0000 (UTC)
+        Wed, 3 Apr 2019 06:41:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56212 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfDCKlH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 06:41:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HOqA3G6fAyIiMpTLMLBhRjQF/GEAu7CsNovS/oe9CVU=; b=QI5qSAZJxnd2V4dLaP+BEQzM9
+        Hab3Xr5RDHoZ3JnZUX1NlcgVJD/xDHjUkxPzV/9MPHZha6kMIJZ22t8GulN8MrvlpZG3oSSc7t9DT
+        TMLmwEsttFxI3Lo2o9BHsCzHlZMViYK3alGqjNt+d4wHDowDdEX/Evs0Gf8wqNoPwaoOp+I16q5K+
+        skrYdXwWhbr+nlNmGOuMBQnqd8XgfIBdSfw+KZT0OE0o+ZPs0/rIuez9ql2EajzQK4v+HGeis7qBx
+        TA7iKmVs0eUd00JrXCD2v63yKIXX2jVhoyggH835HidG0evW5ddWaJIeB08gp3iDYX9HKHx3cBYBN
+        s8IL9ljAw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBdKL-0006OS-3C; Wed, 03 Apr 2019 10:41:05 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 263E8202194EC; Wed,  3 Apr 2019 12:41:03 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 12:41:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc:     acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
+Message-ID: <20190403104103.GE4038@hirez.programming.kicks-ass.net>
+References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds functionality to perform flush from guest
-to host over VIRTIO. We are registering a callback based
-on 'nd_region' type. virtio_pmem driver requires this special
-flush function. For rest of the region types we are registering
-existing flush function. Report error returned by host fsync
-failure to userspace.
+On Wed, Apr 03, 2019 at 11:47:00AM +0200, Thomas-Mich Richter wrote:
+> I use linux 5.1.0-rc3 on s390 and got this WARN_ON_ONCE message:
+> 
+> WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
+>                 event_function_local.constprop.79+0xe2/0xe8
+> 
+> which was introduced with
+>    commit cca2094605ef ("perf/core: Fix event_function_local()").
+> 
+> This is the WARN_ON_ONCE message, which sometimes shows up in the kernel
+> log:
+>  [ 4598.316519] WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
+>                 event_function_local.constprop.79+0xe2/0xe8
+>  [ 4598.316524] Kernel panic - not syncing: panic_on_warn set ...
+>  [ 4598.316527] CPU: 15 PID: 0 Comm: swapper/15 Tainted: G           OE
+>                 5.1.0-20190402.rc3.git0.5e7a8ca31926.300.fc29.s390x+git #1
+>  [ 4598.316529] Hardware name: IBM 2964 NC9 712 (LPAR)
+>  [ 4598.316531] Call Trace:
+>  [ 4598.316534] ([<0000000000112eb8>] show_stack+0x58/0x70)
+>  [ 4598.316538]  [<0000000000a820aa>] dump_stack+0x7a/0xa8
+>  [ 4598.316541]  [<0000000000143b52>] panic+0x11a/0x2d0
+>  [ 4598.316543]  [<00000000001439b0>] __warn+0xf8/0x118
+>  [ 4598.316545]  [<0000000000a811a8>] report_bug+0xd8/0x150
+>  [ 4598.316547]  [<00000000001014ac>] do_report_trap+0xc4/0xe0
+>  [ 4598.316549]  [<0000000000101680>] illegal_op+0x138/0x150
+>  [ 4598.316552]  [<0000000000aa233c>] pgm_check_handler+0x1cc/0x220
+>  [ 4598.316554]  [<00000000002a6d02>] event_function_local.constprop.79+
+>                                                 0xe2/0xe8
+>  [ 4598.316556] ([<00000000002a6c7a>] event_function_local.constprop.79+
+>                                                 0x5a/0xe8)
+>  [ 4598.316559]  [<00000000002aa400>] perf_pending_event+0x88/0xb0
+>  [ 4598.316561]  [<0000000000271a8c>] irq_work_run_list+0x8c/0xb8
+>  [ 4598.316563]  [<0000000000271d78>] irq_work_tick+0x48/0x68
+>  [ 4598.316566]  [<00000000001d6058>] update_process_times+0x68/0x80
+>  [ 4598.316568]  [<00000000001e6c10>] tick_sched_handle.isra.6+0x50/0x60
+>  [ 4598.316570]  [<00000000001e6c7e>] tick_sched_timer+0x5e/0xb8
+>  [ 4598.316573]  [<00000000001d6b6a>] __hrtimer_run_queues+0x10a/0x2c0
+>  [ 4598.316575]  [<00000000001d7a88>] hrtimer_interrupt+0x138/0x2a8
+>  [ 4598.316577]  [<000000000010c3e4>] do_IRQ+0xac/0xb0
+>  [ 4598.316597]  [<0000000000aa2744>] ext_int_handler+0x128/0x12c
+>  [ 4598.316600]  [<00000000001034f6>] enabled_wait+0x46/0xd0
+>  [ 4598.316602] ([<000003e000d2fe10>] 0x3e000d2fe10)
+>  [ 4598.316604]  [<0000000000103842>] arch_cpu_idle+0x3a/0x50
+>  [ 4598.316606]  [<000000000017b808>] do_idle+0x180/0x1b0
+>  [ 4598.316608]  [<000000000017ba06>] cpu_startup_entry+0x36/0x40
+>  [ 4598.316611]  [<0000000000115d16>] smp_init_secondary+0xd6/0xf0
+>  [ 4598.316613]  [<000000000011521e>] smp_start_secondary+0x86/0x98
+> 
+> Any ideas or hints who to avoid/fix this warning?
 
-This also handles asynchronous flush requests from the block layer
-by creating a child bio and chaining it with parent bio.
+Some thoughts here:
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
----
- drivers/acpi/nfit/core.c     |  4 ++--
- drivers/nvdimm/claim.c       |  6 ++++--
- drivers/nvdimm/nd.h          |  1 +
- drivers/nvdimm/pmem.c        | 14 ++++++++-----
- drivers/nvdimm/region_devs.c | 38 ++++++++++++++++++++++++++++++++++--
- include/linux/libnvdimm.h    |  8 +++++++-
- 6 files changed, 59 insertions(+), 12 deletions(-)
+  https://lkml.kernel.org/r/20190213101644.GN32534@hirez.programming.kicks-ass.net
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 5a389a4f4f65..567017a2190e 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -2434,7 +2434,7 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk, unsigned int bw,
- 		offset = to_interleave_offset(offset, mmio);
- 
- 	writeq(cmd, mmio->addr.base + offset);
--	nvdimm_flush(nfit_blk->nd_region);
-+	nvdimm_flush(nfit_blk->nd_region, NULL, false);
- 
- 	if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
- 		readq(mmio->addr.base + offset);
-@@ -2483,7 +2483,7 @@ static int acpi_nfit_blk_single_io(struct nfit_blk *nfit_blk,
- 	}
- 
- 	if (rw)
--		nvdimm_flush(nfit_blk->nd_region);
-+		nvdimm_flush(nfit_blk->nd_region, NULL, false);
- 
- 	rc = read_blk_stat(nfit_blk, lane) ? -EIO : 0;
- 	return rc;
-diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
-index fb667bf469c7..a1dfa066786b 100644
---- a/drivers/nvdimm/claim.c
-+++ b/drivers/nvdimm/claim.c
-@@ -263,7 +263,7 @@ static int nsio_rw_bytes(struct nd_namespace_common *ndns,
- 	struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
- 	unsigned int sz_align = ALIGN(size + (offset & (512 - 1)), 512);
- 	sector_t sector = offset >> 9;
--	int rc = 0;
-+	int rc = 0, ret = 0;
- 
- 	if (unlikely(!size))
- 		return 0;
-@@ -301,7 +301,9 @@ static int nsio_rw_bytes(struct nd_namespace_common *ndns,
- 	}
- 
- 	memcpy_flushcache(nsio->addr + offset, buf, size);
--	nvdimm_flush(to_nd_region(ndns->dev.parent));
-+	ret = nvdimm_flush(to_nd_region(ndns->dev.parent), NULL, false);
-+	if (ret)
-+		rc = ret;
- 
- 	return rc;
- }
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index a5ac3b240293..916cd6c5451a 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -159,6 +159,7 @@ struct nd_region {
- 	struct badblocks bb;
- 	struct nd_interleave_set *nd_set;
- 	struct nd_percpu_lane __percpu *lane;
-+	int (*flush)(struct nd_region *nd_region);
- 	struct nd_mapping mapping[0];
- };
- 
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index bc2f700feef8..5a5b3ea4d073 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -192,6 +192,7 @@ static blk_status_t pmem_do_bvec(struct pmem_device *pmem, struct page *page,
- 
- static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- {
-+	int ret = 0;
- 	blk_status_t rc = 0;
- 	bool do_acct;
- 	unsigned long start;
-@@ -201,7 +202,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- 	struct nd_region *nd_region = to_region(pmem);
- 
- 	if (bio->bi_opf & REQ_PREFLUSH)
--		nvdimm_flush(nd_region);
-+		ret = nvdimm_flush(nd_region, bio, true);
- 
- 	do_acct = nd_iostat_start(bio, &start);
- 	bio_for_each_segment(bvec, bio, iter) {
-@@ -216,7 +217,10 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
- 		nd_iostat_end(bio, start);
- 
- 	if (bio->bi_opf & REQ_FUA)
--		nvdimm_flush(nd_region);
-+		ret = nvdimm_flush(nd_region, bio, true);
-+
-+	if (ret)
-+		bio->bi_status = errno_to_blk_status(ret);
- 
- 	bio_endio(bio);
- 	return BLK_QC_T_NONE;
-@@ -463,13 +467,13 @@ static int pmem_attach_disk(struct device *dev,
- 	disk->bb = &pmem->bb;
- 
- 	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops);
-+
- 	if (!dax_dev) {
- 		put_disk(disk);
- 		return -ENOMEM;
- 	}
- 	dax_write_cache(dax_dev, nvdimm_has_cache(nd_region));
- 	pmem->dax_dev = dax_dev;
--
- 	gendev = disk_to_dev(disk);
- 	gendev->groups = pmem_attribute_groups;
- 
-@@ -527,14 +531,14 @@ static int nd_pmem_remove(struct device *dev)
- 		sysfs_put(pmem->bb_state);
- 		pmem->bb_state = NULL;
- 	}
--	nvdimm_flush(to_nd_region(dev->parent));
-+	nvdimm_flush(to_nd_region(dev->parent), NULL, false);
- 
- 	return 0;
- }
- 
- static void nd_pmem_shutdown(struct device *dev)
- {
--	nvdimm_flush(to_nd_region(dev->parent));
-+	nvdimm_flush(to_nd_region(dev->parent), NULL, false);
- }
- 
- static void nd_pmem_notify(struct device *dev, enum nvdimm_event event)
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index b4ef7d9ff22e..fb1041ab32a6 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -295,7 +295,9 @@ static ssize_t deep_flush_store(struct device *dev, struct device_attribute *att
- 		return rc;
- 	if (!flush)
- 		return -EINVAL;
--	nvdimm_flush(nd_region);
-+	rc = nvdimm_flush(nd_region, NULL, false);
-+	if (rc)
-+		return rc;
- 
- 	return len;
- }
-@@ -1085,6 +1087,11 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 	dev->of_node = ndr_desc->of_node;
- 	nd_region->ndr_size = resource_size(ndr_desc->res);
- 	nd_region->ndr_start = ndr_desc->res->start;
-+	if (ndr_desc->flush)
-+		nd_region->flush = ndr_desc->flush;
-+	else
-+		nd_region->flush = generic_nvdimm_flush;
-+
- 	nd_device_register(dev);
- 
- 	return nd_region;
-@@ -1125,11 +1132,36 @@ struct nd_region *nvdimm_volatile_region_create(struct nvdimm_bus *nvdimm_bus,
- }
- EXPORT_SYMBOL_GPL(nvdimm_volatile_region_create);
- 
-+int nvdimm_flush(struct nd_region *nd_region, struct bio *bio, bool async)
-+{
-+	int rc = 0;
-+
-+	/* Create child bio for asynchronous flush and chain with
-+	 * parent bio. Otherwise directly call nd_region flush.
-+	 */
-+	if (async && bio->bi_iter.bi_sector != -1) {
-+
-+		struct bio *child = bio_alloc(GFP_ATOMIC, 0);
-+
-+		if (!child)
-+			return -ENOMEM;
-+		bio_copy_dev(child, bio);
-+		child->bi_opf = REQ_PREFLUSH;
-+		child->bi_iter.bi_sector = -1;
-+		bio_chain(child, bio);
-+		submit_bio(child);
-+	} else {
-+		if (nd_region->flush(nd_region))
-+			rc = -EIO;
-+	}
-+
-+	return rc;
-+}
- /**
-  * nvdimm_flush - flush any posted write queues between the cpu and pmem media
-  * @nd_region: blk or interleaved pmem region
-  */
--void nvdimm_flush(struct nd_region *nd_region)
-+int generic_nvdimm_flush(struct nd_region *nd_region)
- {
- 	struct nd_region_data *ndrd = dev_get_drvdata(&nd_region->dev);
- 	int i, idx;
-@@ -1153,6 +1185,8 @@ void nvdimm_flush(struct nd_region *nd_region)
- 		if (ndrd_get_flush_wpq(ndrd, i, 0))
- 			writeq(1, ndrd_get_flush_wpq(ndrd, i, idx));
- 	wmb();
-+
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(nvdimm_flush);
- 
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index feb342d026f2..d9d2ab8a6e64 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -65,6 +65,9 @@ enum {
- 	 */
- 	ND_REGION_PERSIST_MEMCTRL = 2,
- 
-+	/* Platform provides asynchronous flush mechanism */
-+	ND_REGION_ASYNC = 3,
-+
- 	/* mark newly adjusted resources as requiring a label update */
- 	DPA_RESOURCE_ADJUSTED = 1 << 0,
- };
-@@ -121,6 +124,7 @@ struct nd_mapping_desc {
- 	int position;
- };
- 
-+struct nd_region;
- struct nd_region_desc {
- 	struct resource *res;
- 	struct nd_mapping_desc *mapping;
-@@ -133,6 +137,7 @@ struct nd_region_desc {
- 	int target_node;
- 	unsigned long flags;
- 	struct device_node *of_node;
-+	int (*flush)(struct nd_region *nd_region);
- };
- 
- struct device;
-@@ -260,7 +265,8 @@ unsigned long nd_blk_memremap_flags(struct nd_blk_region *ndbr);
- unsigned int nd_region_acquire_lane(struct nd_region *nd_region);
- void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane);
- u64 nd_fletcher64(void *addr, size_t len, bool le);
--void nvdimm_flush(struct nd_region *nd_region);
-+int nvdimm_flush(struct nd_region *nd_region, struct bio *bio, bool async);
-+int generic_nvdimm_flush(struct nd_region *nd_region);
- int nvdimm_has_flush(struct nd_region *nd_region);
- int nvdimm_has_cache(struct nd_region *nd_region);
- int nvdimm_in_overwrite(struct nvdimm *nvdimm);
--- 
-2.20.1
+tl;dr, I've no frigging clue.
 
+> I ran a user space program which uses
+> 
+>   1. perf_event_open() system call with type HARDWARE
+>      and PERF_COUNT_HW_CPU_CYCLES in sampling mode.
+>   2. Assigns signal SIGIO to the file descriptor returned from
+>      perf_event_open() using:
+>        rc = fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC);
+>        rc |= fcntl(fd, F_SETSIG, signo);
+>        rc |= fcntl(fd, F_SETOWN, getpid());
+> 
+>   3. The signal handler increments some variables and issues
+>        ioctl(fd, PERF_EVENT_IOC_REFRESH, 1);
+>      to restart signal delivery.
+> 
+> I can send you the test program if needed.
+
+Does it reproduce on x86 without virt on? I don't have a PPC LPAR to
+test things on.
