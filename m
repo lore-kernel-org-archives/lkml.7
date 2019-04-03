@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC814C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46174C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE0820882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003FB20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fr66GgJn"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="w05wbNgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfDCKUb (ORCPT
+        id S1726471AbfDCKUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:20:31 -0400
-Received: from mail-eopbgr20079.outbound.protection.outlook.com ([40.107.2.79]:14350
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Wed, 3 Apr 2019 06:20:38 -0400
+Received: from mail-eopbgr70049.outbound.protection.outlook.com ([40.107.7.49]:61122
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725963AbfDCKUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:20:31 -0400
+        id S1725963AbfDCKUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 06:20:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MiSWBT8ptY9juWVOy+zF1jJ9M96a9tm8mY8GuMoCL3k=;
- b=fr66GgJnA6YTt8NBTrpLW1k3q4Z1sYxek4CGH1yas8cZXJ0PtHr9lszQdGYCNaHiLBioZ3kUlpexHPzPGOkRFGKak3+jiHTUK+4lHoQn4vZE8z/6r4YNnY5bOldM9V2wGjknJsNfh4BmX5Jz4XF1Rr+6fWlG5y4WJaiuZiTGFtM=
+ bh=0xakVv5ZmrdSvyk5HptNW+10h6jcMzZWPauC4XUHMrg=;
+ b=w05wbNgzYzRId2d5rt0OBb+IqWE/rZl4oKB7JHYbB9NqAIIs6wrHluZcI8PEhzaWr6ieuhaRzaub7+Syr1QfwRN6rAfEUWZXRMnf4YzpvIWbWIwIAeWJs1cQe/WhcSR/Vf0R2Nt3qGcz5u3FRBrm4sm3fgi5jlSutdS2VnQarK0=
 Received: from VI1PR0402MB3519.eurprd04.prod.outlook.com (52.134.4.24) by
- VI1PR0402MB2750.eurprd04.prod.outlook.com (10.175.22.148) with Microsoft SMTP
+ VI1PR0402MB2749.eurprd04.prod.outlook.com (10.175.22.147) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Wed, 3 Apr 2019 10:20:26 +0000
+ 15.20.1750.17; Wed, 3 Apr 2019 10:20:31 +0000
 Received: from VI1PR0402MB3519.eurprd04.prod.outlook.com
  ([fe80::78bc:c1e8:3caf:656b]) by VI1PR0402MB3519.eurprd04.prod.outlook.com
  ([fe80::78bc:c1e8:3caf:656b%6]) with mapi id 15.20.1750.014; Wed, 3 Apr 2019
- 10:20:26 +0000
+ 10:20:31 +0000
 From:   Jacky Bai <ping.bai@nxp.com>
 To:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
@@ -45,13 +45,15 @@ To:     "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
 CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v3 1/2] dt-bindings: timer: Add binding doc for nxp system
- counter timer
-Thread-Topic: [PATCH v3 1/2] dt-bindings: timer: Add binding doc for nxp
- system counter timer
-Thread-Index: AQHU6gbaUMi6opXlLUCEb6pueveq7w==
-Date:   Wed, 3 Apr 2019 10:20:25 +0000
-Message-ID: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
+Subject: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Thread-Topic: [PATCH v3 2/2] driver: clocksource: Add nxp system counter timer
+ driver support
+Thread-Index: AQHU6gbeQOyQqy4i5kKmRS2/nYe/7Q==
+Date:   Wed, 3 Apr 2019 10:20:31 +0000
+Message-ID: <1554287101-16189-2-git-send-email-ping.bai@nxp.com>
+References: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
+In-Reply-To: <1554287101-16189-1-git-send-email-ping.bai@nxp.com>
 Accept-Language: zh-CN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -65,28 +67,28 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.71]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9dad16ba-17a1-4070-2aba-08d6b81dfcce
+x-ms-office365-filtering-correlation-id: 103e1725-39e7-48fb-1217-08d6b81e002b
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB2750;
-x-ms-traffictypediagnostic: VI1PR0402MB2750:
-x-microsoft-antispam-prvs: <VI1PR0402MB2750870222B74D05E9E13DD287570@VI1PR0402MB2750.eurprd04.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR0402MB2749;
+x-ms-traffictypediagnostic: VI1PR0402MB2749:
+x-microsoft-antispam-prvs: <VI1PR0402MB2749BC2EBDBA4742EB8AB77387570@VI1PR0402MB2749.eurprd04.prod.outlook.com>
 x-forefront-prvs: 0996D1900D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(346002)(376002)(39860400002)(189003)(199004)(99286004)(54906003)(478600001)(106356001)(3846002)(68736007)(81156014)(71200400001)(53936002)(36756003)(6486002)(6116002)(6436002)(81166006)(6512007)(8936002)(2501003)(86362001)(7736002)(105586002)(25786009)(2906002)(5660300002)(305945005)(4326008)(386003)(316002)(14454004)(14444005)(256004)(50226002)(26005)(186003)(52116002)(102836004)(8676002)(97736004)(66066001)(6506007)(2616005)(6636002)(476003)(71190400001)(486006)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2750;H:VI1PR0402MB3519.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(136003)(39860400002)(376002)(366004)(396003)(346002)(199004)(189003)(25786009)(81166006)(305945005)(106356001)(71190400001)(76176011)(6506007)(99286004)(386003)(446003)(2616005)(11346002)(52116002)(105586002)(6512007)(2906002)(102836004)(2501003)(6116002)(36756003)(4326008)(186003)(26005)(7736002)(53936002)(110136005)(6636002)(476003)(6436002)(486006)(54906003)(97736004)(50226002)(478600001)(3846002)(71200400001)(316002)(66066001)(256004)(8936002)(8676002)(86362001)(14454004)(81156014)(5660300002)(68736007)(6486002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2749;H:VI1PR0402MB3519.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qrSOJ+0s7h0Ngd0rgpixeP9az8/3j2IeeRaTvnwOg1/CQjTfU1uOgNIW/ASS8BBs0Pa8oRgUhgdhb1H0CtwaJJ2sZv2uIlvZ0XXDztXkliHTntWU3xUPcWqT4M4W5W2sGK7nbLFRKG6gPoKY9k0Zz96UYj45M3l0/knmYFWeaJznX7X4wTXn+YUUFoopwIEwi4+AvEy0bFShhFuqhm7UxKiriL91Hb5gXzUUbZ/qmUmsvIxkk4sq842ZVfxU8vW3e8NeYJgWpACDK1arbPORhs4EccAugCwbUad8YY++RP/+q5yRkjMgcz4atDIpVQUYLBnLiGXav2gdbBgTj13WmWkZ7M9zKnyOcLmj/5E3aUiIbl/tF7tHyJ5MCVndloB1ST9MJkfdMwaYezSCKlTyLcRNLgo2jfE9WNzwBbKUMgA=
+x-microsoft-antispam-message-info: tvYJ8K4SsydOGOdD3igI7ST2Pma80QBGkeczeGd/NlfvOn8bPlbzH0ziEFIRErWj2LdqQMNIR7aHrKiD1kmOE00thD2egJVlsdLHiXxGy2QW//d0ZaI4zAIgH8MSmOrI0fbs7NKbsdg4Z2g+FDE14cQBF1+OfV+AfL0y91OzHpFhAWkQqQzbChWB/hIx2i7yztK1GimWUYqGQg/q8YKlYHUOu7avniz0yAFS9RAgnfRl6H/TTggXLVND3K0rMUqOydClla0kGlg/wZ/csrrNfF6xacmM1EIz+sMs8HWwPfKlwmYFDOVfyz3mu6ikUDTlIGbWIC09t1HIYM0/s0sZ8+P0cKz0wdYDewH8dHAPA+qn5xLILFi9n1PGoXdkf7B6EHkI/U5llWQetgkUupdwm0R5E8/yHdU2CfV51682nCQ=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dad16ba-17a1-4070-2aba-08d6b81dfcce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 10:20:26.0230
+X-MS-Exchange-CrossTenant-Network-Message-Id: 103e1725-39e7-48fb-1217-08d6b81e002b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 10:20:31.6290
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2750
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2749
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -94,56 +96,220 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bai Ping <ping.bai@nxp.com>
 
-Add the binding doc for nxp system counter timer module.
+The system counter (sys_ctr) is a programmable system counter
+which provides a shared time base to the Cortex A15, A7, A53 etc cores.
+It is intended for use in applications where the counter is always
+powered on and supports multiple, unrelated clocks. The sys_ctr hardware
+supports:
+ - 56-bit counter width (roll-over time greater than 40 years)
+ - compare frame(64-bit compare value) contains programmable interrupt
+   generation
 
 Signed-off-by: Bai Ping <ping.bai@nxp.com>
 ---
-change v1->v2
- - remove the blank line at EOF
-change v2->v3
- - update the binding example based on the driver change
+change v1->v2:
+ - no change=20
+change v2->v3:
+ - remove the clocksource, we only need to use this module for timer purpos=
+e,
+   so register it as clockevent is enough.
+ - use the timer_of_init to init the irq, clock, etc.
+ - remove some unnecessary comments.
 ---
- .../devicetree/bindings/timer/nxp,sysctr-timer.txt | 25 ++++++++++++++++++=
+ drivers/clocksource/Kconfig            |   7 ++
+ drivers/clocksource/Makefile           |   1 +
+ drivers/clocksource/timer-imx-sysctr.c | 149 +++++++++++++++++++++++++++++=
 ++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,sysctr-time=
-r.txt
+ 3 files changed, 157 insertions(+)
+ create mode 100644 drivers/clocksource/timer-imx-sysctr.c
 
-diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt b=
-/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 171502a..90cd908 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -598,6 +598,13 @@ config CLKSRC_IMX_TPM
+ 	  Enable this option to use IMX Timer/PWM Module (TPM) timer as
+ 	  clocksource.
+=20
++config TIMER_IMX_SYS_CTR
++	bool "i.MX system counter timer" if COMPILE_TEST
++	depends on ARCH_MXC
++	select TIMER_OF
++	help
++	  Enable this option to use i.MX system counter timer for clockevent.
++
+ config CLKSRC_ST_LPC
+ 	bool "Low power clocksource found in the LPC" if COMPILE_TEST
+ 	select TIMER_OF if OF
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index be6e0fb..bc5ce50 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -73,6 +73,7 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+=3D mips-gic-timer.o
+ obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+=3D timer-tango-xtal.o
+ obj-$(CONFIG_CLKSRC_IMX_GPT)		+=3D timer-imx-gpt.o
+ obj-$(CONFIG_CLKSRC_IMX_TPM)		+=3D timer-imx-tpm.o
++obj-$(CONFIG_TIMER_IMX_SYS_CTR)		+=3D timer-imx-sysctr.o
+ obj-$(CONFIG_ASM9260_TIMER)		+=3D asm9260_timer.o
+ obj-$(CONFIG_H8300_TMR8)		+=3D h8300_timer8.o
+ obj-$(CONFIG_H8300_TMR16)		+=3D h8300_timer16.o
+diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/t=
+imer-imx-sysctr.c
 new file mode 100644
-index 0000000..d576599
+index 0000000..d3afc3b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.txt
-@@ -0,0 +1,25 @@
-+NXP System Counter Module(sys_ctr)
++++ b/drivers/clocksource/timer-imx-sysctr.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright 2017-2019 NXP
 +
-+The system counter(sys_ctr) is a programmable system counter which provide=
-s
-+a shared time base to Cortex A15, A7, A53, A73, etc. it is intended for us=
-e in
-+applications where the counter is always powered and support multiple,
-+unrelated clocks. The compare frame inside can be used for timer purpose.
++#include <linux/interrupt.h>
++#include <linux/clockchips.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
 +
-+Required properties:
++#include "timer-of.h"
 +
-+- compatible :      should be "nxp,sysctr-timer"
-+- reg :             Specifies the base physical address and size of the co=
-mapre
-+                    frame and the counter control, read & compare.
-+- interrupts :      should be the first compare frames' interrupt
-+- clocks : 	    Specifies the counter clock.
-+- clock-names: 	    Specifies the clock's name of this module
++#define CMP_OFFSET	0x10000
 +
-+Example:
++#define CNTCV_LO	0x8
++#define CNTCV_HI	0xc
++#define CMPCV_LO	(CMP_OFFSET + 0x20)
++#define CMPCV_HI	(CMP_OFFSET + 0x24)
++#define CMPCR		(CMP_OFFSET + 0x2c)
 +
-+	system_counter: timer@306a0000 {
-+		compatible =3D "nxp,sysctr-timer";
-+		reg =3D <0x306a0000 0x20000>;/* system-counter-rd & compare */
-+		clocks =3D <&clk_8m>;
-+		clock-names =3D "per";
-+		interrupts =3D <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+	};
++#define SYS_CTR_EN		0x1
++#define SYS_CTR_IRQ_MASK	0x2
++
++static void __iomem *sys_ctr_base;
++
++static void sysctr_timer_enable(bool enable)
++{
++	u32 val;
++
++	val =3D readl(sys_ctr_base + CMPCR);
++	val &=3D ~SYS_CTR_EN;
++	if (enable)
++		val |=3D SYS_CTR_EN;
++
++	writel(val, sys_ctr_base + CMPCR);
++}
++
++static void sysctr_irq_acknowledge(void)
++{
++	/*
++	 * clear the enable bit(EN =3D0) will clear
++	 * the status bit(ISTAT =3D 0), then the interrupt
++	 * signal will be negated(acknowledged).
++	 */
++	sysctr_timer_enable(false);
++}
++
++static inline u64 sysctr_read_counter(void)
++{
++	u32 cnt_hi, tmp_hi, cnt_lo;
++
++	do {
++		cnt_hi =3D readl_relaxed(sys_ctr_base + CNTCV_HI);
++		cnt_lo =3D readl_relaxed(sys_ctr_base + CNTCV_LO);
++		tmp_hi =3D readl_relaxed(sys_ctr_base + CNTCV_HI);
++	} while (tmp_hi !=3D cnt_hi);
++
++	return  ((u64) cnt_hi << 32) | cnt_lo;
++}
++
++static int sysctr_set_next_event(unsigned long delta,
++				 struct clock_event_device *evt)
++{
++	u32 cmp_hi, cmp_lo;
++	u64 next;
++
++	sysctr_timer_enable(false);
++
++	next =3D sysctr_read_counter();
++
++	next +=3D delta;
++
++	cmp_hi =3D (next >> 32) & 0x00fffff;
++	cmp_lo =3D next & 0xffffffff;
++
++	writel_relaxed(cmp_hi, sys_ctr_base + CMPCV_HI);
++	writel_relaxed(cmp_lo, sys_ctr_base + CMPCV_LO);
++
++	sysctr_timer_enable(true);
++
++	return 0;
++}
++
++static int sysctr_set_state_oneshot(struct clock_event_device *evt)
++{
++	sysctr_timer_enable(true);
++
++	return 0;
++}
++
++static int sysctr_set_state_shutdown(struct clock_event_device *evt)
++{
++	sysctr_timer_enable(false);
++
++	return 0;
++}
++
++static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
++{
++	struct clock_event_device *evt =3D dev_id;
++
++	sysctr_irq_acknowledge();
++
++	evt->event_handler(evt);
++
++	return IRQ_HANDLED;
++}
++
++static struct timer_of to_sysctr =3D {
++	.flags =3D TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
++	.clkevt =3D {
++		.name			=3D "i.MX system counter timer",
++		.features		=3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ,
++		.set_state_oneshot	=3D sysctr_set_state_oneshot,
++		.set_next_event		=3D sysctr_set_next_event,
++		.set_state_shutdown	=3D sysctr_set_state_shutdown,
++		.rating			=3D 200,
++	},
++	.of_irq =3D {
++		.handler		=3D sysctr_timer_interrupt,
++		.flags			=3D IRQF_TIMER | IRQF_IRQPOLL,
++	},
++	.of_clk =3D {
++		.name =3D "per",
++	},
++};
++
++static void __init sysctr_clockevent_init(void)
++{
++	to_sysctr.clkevt.cpumask =3D cpumask_of(0);
++
++	clockevents_config_and_register(&to_sysctr.clkevt, timer_of_rate(&to_sysc=
+tr),
++					0xff, 0x7fffffff);
++}
++
++static int __init sysctr_timer_init(struct device_node *np)
++{
++	int ret =3D 0;
++
++	ret =3D timer_of_init(np, &to_sysctr);
++	if (ret)
++		return ret;
++
++	sys_ctr_base =3D timer_of_base(&to_sysctr);
++
++	sysctr_clockevent_init();
++
++	return 0;
++}
++TIMER_OF_DECLARE(sysctr_timer, "nxp,sysctr-timer", sysctr_timer_init);
 --=20
 1.9.1
 
