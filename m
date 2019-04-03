@@ -2,94 +2,104 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0374C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF38C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97662205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DB5205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfDCRTm (ORCPT
+        id S1726584AbfDCRUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:19:42 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33830 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfDCRTl (ORCPT
+        Wed, 3 Apr 2019 13:20:32 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.222]:23469 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726097AbfDCRUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:19:41 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hBjXl-000498-1C; Wed, 03 Apr 2019 17:19:21 +0000
-Date:   Wed, 3 Apr 2019 18:19:21 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH v2 14/14] dcache: Implement object migration
-Message-ID: <20190403171920.GS2217@ZenIV.linux.org.uk>
-References: <20190403042127.18755-1-tobin@kernel.org>
- <20190403042127.18755-15-tobin@kernel.org>
- <20190403170811.GR2217@ZenIV.linux.org.uk>
+        Wed, 3 Apr 2019 13:20:31 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 3E54F379814
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 12:20:31 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BjYthKLtfYTGMBjYthUPYs; Wed, 03 Apr 2019 12:20:31 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.114.183] (port=42602 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hBjYs-001xEV-Dv; Wed, 03 Apr 2019 12:20:30 -0500
+Date:   Wed, 3 Apr 2019 12:20:29 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] ath10k: Use struct_size() helper
+Message-ID: <20190403172029.GA302@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403170811.GR2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.114.183
+X-Source-L: No
+X-Exim-ID: 1hBjYs-001xEV-Dv
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.114.183]:42602
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 06:08:11PM +0100, Al Viro wrote:
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes, in particular in the
+context in which this code is being used.
 
-> Oh, *brilliant*
-> 
-> Let's do d_invalidate() on random dentries and hope they go away.
-> With convoluted and brittle logics for deciding which ones to
-> spare, which is actually wrong.  This will pick mountpoints
-> and tear them out, to start with.
-> 
-> NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
-> 
-> And this is a NAK for the entire approach; if it has a positive refcount,
-> LEAVE IT ALONE.  Period.  Don't play this kind of games, they are wrong.
-> d_invalidate() is not something that can be done to an arbitrary dentry.
+So, change the following form:
 
-PS: "try to evict what can be evicted out of this set" can be done, but
-you want something like
-	start with empty list
-	go through your array of references
-		grab dentry->d_lock
-		if dentry->d_lockref.count is not zero
-			unlock and continue
-		if dentry->d_flags & DCACHE_SHRINK_LIST
-			ditto, it's not for us to play with
-                if (dentry->d_flags & DCACHE_LRU_LIST)
-                        d_lru_del(dentry);
-		d_shrink_add(dentry, &list);
-		unlock
+sizeof(*rx) + (sizeof(struct htt_rx_indication_mpdu_range) * num_mpdu_ranges)
 
-on the collection phase and
-	if the list is not empty by the end of that loop
-		shrink_dentry_list(&list);
-on the disposal.
+ to :
+
+struct_size(rx, mpdu_ranges, num_mpdu_ranges)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/ath/ath10k/htt_rx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
+index a20ea270d519..9652cf323927 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_rx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
+@@ -2193,9 +2193,7 @@ static void ath10k_htt_rx_proc_rx_ind_ll(struct ath10k_htt *htt,
+ 	mpdu_ranges = htt_rx_ind_get_mpdu_ranges(rx);
+ 
+ 	ath10k_dbg_dump(ar, ATH10K_DBG_HTT_DUMP, NULL, "htt rx ind: ",
+-			rx, sizeof(*rx) +
+-			(sizeof(struct htt_rx_indication_mpdu_range) *
+-				num_mpdu_ranges));
++			rx, struct_size(rx, mpdu_ranges, num_mpdu_ranges));
+ 
+ 	for (i = 0; i < num_mpdu_ranges; i++)
+ 		mpdu_count += mpdu_ranges[i].mpdu_count;
+-- 
+2.21.0
+
