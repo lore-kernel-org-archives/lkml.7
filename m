@@ -2,426 +2,135 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773F6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9133C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC2C2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E162084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:38:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lp8Y/el5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfDCMiC (ORCPT
+        id S1726600AbfDCMiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:38:02 -0400
-Received: from foss.arm.com ([217.140.101.70]:39122 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfDCMiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:38:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CD35374;
-        Wed,  3 Apr 2019 05:38:00 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E26993F59C;
-        Wed,  3 Apr 2019 05:37:56 -0700 (PDT)
-Subject: Re: [PATCH 2/6] arm64/mm: Enable memory hot remove
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com
-Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
-        mark.rutland@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        logang@deltatee.com, pasha.tatashin@oracle.com, david@redhat.com,
-        cai@lca.pw, Steven Price <steven.price@arm.com>
-References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
- <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ed4ceac4-b92c-47f4-33b0-ed1d0833b40d@arm.com>
-Date:   Wed, 3 Apr 2019 13:37:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 3 Apr 2019 08:38:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35274 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfDCMiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:38:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g8so8280234pgf.2;
+        Wed, 03 Apr 2019 05:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xgQMxXBkLOuUj19gwYj/QYigabn1T7JzlpgpS9wY/K8=;
+        b=Lp8Y/el5IaXiJl8EkumleL6QK8dwB1R0RyGAJ1Im1Rig3eJZ70GquxK6BAymf8JWMC
+         cchVl5HFFQZnq2rkqw+A3DsDiyM4pdtKm9h+30QNYcxJ2wLiwn+UDFBVIFswtDoSMhOi
+         14Jjisrqsp+00CThmPydiDjwj1WciVaA8SoFk+6IhsqfAwd+J7qyfDRZXpoQipaikjo2
+         VsGc5oq1pFV977c9YixInVJDqVLl+8FQhxky9g6YlasEpiE7/P4PXO2yuP7hREPA5puC
+         ndjnom8poOJmoJwDWhQ9OkOu5Kc5zqDliFoqfb+AxJGqeYhTFKiDlLPU7Y1xph852gvx
+         rA4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xgQMxXBkLOuUj19gwYj/QYigabn1T7JzlpgpS9wY/K8=;
+        b=RP78oo3l0CKDWtEZLf0YxphLbeBd5PUQa3ULw7KUgalZlgGrQ7wWWADEl+b5O4qhuB
+         9AyLnCJZP8fgpMA4s7eZf6eSWbNwv3u8SJcilKGqyWY28J37EBf2msBs7s4UZylWXm9r
+         pLdVWvBa/Pa6JnpJl8wLpHRtYRECW6dJhnQZPJsY88vEbky7c8U+2baGL+ZtI9UAupUb
+         hIKjh/wuaQe/G6IradU7kGkpKZ3Ifd6qXamxG7lGfdBbasZuV4KMroPEYwDdT4fHyMpY
+         pYfjpN80bZXzpAPUEBLsDcYAt9GyqeRZ6J+9A7uCgfuS8PJI3kTZ3Q9Tt/i6nHO2YoYS
+         etdw==
+X-Gm-Message-State: APjAAAWGiyYtKjoXoh+qcnE1JWX8msrYRc/rFAu6VN9XYR8aEAesEud8
+        WXgMAkN1ijiU1zCAju9M4CI=
+X-Google-Smtp-Source: APXvYqzwjkON90/20WWBR2usL8D11tPtzy01xZg4dgO4fhlVwRmks6JhUvtSmps81ZjLgw1+BhFzfg==
+X-Received: by 2002:a63:465b:: with SMTP id v27mr54781170pgk.165.1554295083162;
+        Wed, 03 Apr 2019 05:38:03 -0700 (PDT)
+Received: from himanshu-Vostro-3559 ([103.77.43.209])
+        by smtp.gmail.com with ESMTPSA id k131sm31570588pfc.183.2019.04.03.05.37.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 05:38:02 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 18:07:54 +0530
+From:   Himanshu Jha <himanshujha199640@gmail.com>
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] staging:iio:accel:adis16203: add SPDX license
+ identifier tag
+Message-ID: <20190403123754.GB22738@himanshu-Vostro-3559>
+References: <1554284489-5023-1-git-send-email-hofrat@osadl.org>
 MIME-Version: 1.0
-In-Reply-To: <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554284489-5023-1-git-send-email-hofrat@osadl.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ +Steve ]
-
-Hi Anshuman,
-
-On 03/04/2019 05:30, Anshuman Khandual wrote:
-> Memory removal from an arch perspective involves tearing down two different
-> kernel based mappings i.e vmemmap and linear while releasing related page
-> table pages allocated for the physical memory range to be removed.
+On Wed, Apr 03, 2019 at 11:41:28AM +0200, Nicholas Mc Guire wrote:
+> Pop in the SPDX tag as the license is clearly indicated
+> as GPL V2 or later this should also be indicated with a SPDX license
+> identifier tag.
 > 
-> Define a common kernel page table tear down helper remove_pagetable() which
-> can be used to unmap given kernel virtual address range. In effect it can
-> tear down both vmemap or kernel linear mappings. This new helper is called
-> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
-> The argument 'direct' here identifies kernel linear mappings.
-> 
-> Vmemmap mappings page table pages are allocated through sparse mem helper
-> functions like vmemmap_alloc_block() which does not cycle the pages through
-> pgtable_page_ctor() constructs. Hence while removing it skips corresponding
-> destructor construct pgtable_page_dtor().
-> 
-> While here update arch_add_mempory() to handle __add_pages() failures by
-> just unmapping recently added kernel linear mapping. Now enable memory hot
-> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
-> 
-> This implementation is overall inspired from kernel page table tear down
-> procedure on X86 architecture.
-
-A bit of a nit, but since this depends on at least patch #4 to work 
-properly, it would be good to reorder the series appropriately.
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
 > ---
->   arch/arm64/Kconfig               |   3 +
->   arch/arm64/include/asm/pgtable.h |  14 +++
->   arch/arm64/mm/mmu.c              | 227 ++++++++++++++++++++++++++++++++++++++-
->   3 files changed, 241 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index a2418fb..db3e625 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -266,6 +266,9 @@ config HAVE_GENERIC_GUP
->   config ARCH_ENABLE_MEMORY_HOTPLUG
->   	def_bool y
->   
-> +config ARCH_ENABLE_MEMORY_HOTREMOVE
-> +	def_bool y
-> +
->   config ARCH_MEMORY_PROBE
->   	bool "Enable /sys/devices/system/memory/probe interface"
->   	depends on MEMORY_HOTPLUG
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index de70c1e..858098e 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -355,6 +355,18 @@ static inline int pmd_protnone(pmd_t pmd)
->   }
->   #endif
->   
-> +#if (CONFIG_PGTABLE_LEVELS > 2)
-> +#define pmd_large(pmd)	(pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT))
-> +#else
-> +#define pmd_large(pmd) 0
-> +#endif
-> +
-> +#if (CONFIG_PGTABLE_LEVELS > 3)
-> +#define pud_large(pud)	(pud_val(pud) && !(pud_val(pud) & PUD_TABLE_BIT))
-> +#else
-> +#define pud_large(pmd) 0
-> +#endif
-
-These seem rather different from the versions that Steve is proposing in 
-the generic pagewalk series - can you reach an agreement on which 
-implementation is preferred?
-
-> +
->   /*
->    * THP definitions.
->    */
-> @@ -555,6 +567,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
->   
->   #else
->   
-> +#define pmd_index(addr) 0
->   #define pud_page_paddr(pud)	({ BUILD_BUG(); 0; })
->   
->   /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
-> @@ -612,6 +625,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
->   
->   #else
->   
-> +#define pud_index(adrr)	0
->   #define pgd_page_paddr(pgd)	({ BUILD_BUG(); 0;})
->   
->   /* Match pud_offset folding in <asm/generic/pgtable-nopud.h> */
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index e97f018..ae0777b 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -714,6 +714,198 @@ int kern_addr_valid(unsigned long addr)
->   
->   	return pfn_valid(pte_pfn(pte));
->   }
-> +
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +static void __meminit free_pagetable(struct page *page, int order)
-
-Do these need to be __meminit? AFAICS it's effectively redundant with 
-the containing #ifdef, and removal feels like it's inherently a 
-later-than-init thing anyway.
-
-> +{
-> +	unsigned long magic;
-> +	unsigned int nr_pages = 1 << order;
-> +
-> +	if (PageReserved(page)) {
-> +		__ClearPageReserved(page);
-> +
-> +		magic = (unsigned long)page->freelist;
-> +		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
-> +			while (nr_pages--)
-> +				put_page_bootmem(page++);
-> +		} else
-> +			while (nr_pages--)
-> +				free_reserved_page(page++);
-> +	} else
-> +		free_pages((unsigned long)page_address(page), order);
-> +}
-> +
-> +#if (CONFIG_PGTABLE_LEVELS > 2)
-> +static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd, bool direct)
-> +{
-> +	pte_t *pte;
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_PTE; i++) {
-> +		pte = pte_start + i;
-> +		if (!pte_none(*pte))
-> +			return;
-> +	}
-> +
-> +	if (direct)
-> +		pgtable_page_dtor(pmd_page(*pmd));
-> +	free_pagetable(pmd_page(*pmd), 0);
-> +	spin_lock(&init_mm.page_table_lock);
-> +	pmd_clear(pmd);
-> +	spin_unlock(&init_mm.page_table_lock);
-> +}
-> +#else
-> +static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd, bool direct)
-> +{
-> +}
-> +#endif
-> +
-> +#if (CONFIG_PGTABLE_LEVELS > 3)
-> +static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud, bool direct)
-> +{
-> +	pmd_t *pmd;
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_PMD; i++) {
-> +		pmd = pmd_start + i;
-> +		if (!pmd_none(*pmd))
-> +			return;
-> +	}
-> +
-> +	if (direct)
-> +		pgtable_page_dtor(pud_page(*pud));
-> +	free_pagetable(pud_page(*pud), 0);
-> +	spin_lock(&init_mm.page_table_lock);
-> +	pud_clear(pud);
-> +	spin_unlock(&init_mm.page_table_lock);
-> +}
-> +
-> +static void __meminit free_pud_table(pud_t *pud_start, pgd_t *pgd, bool direct)
-> +{
-> +	pud_t *pud;
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_PUD; i++) {
-> +		pud = pud_start + i;
-> +		if (!pud_none(*pud))
-> +			return;
-> +	}
-> +
-> +	if (direct)
-> +		pgtable_page_dtor(pgd_page(*pgd));
-> +	free_pagetable(pgd_page(*pgd), 0);
-> +	spin_lock(&init_mm.page_table_lock);
-> +	pgd_clear(pgd);
-> +	spin_unlock(&init_mm.page_table_lock);
-> +}
-> +#else
-> +static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud, bool direct)
-> +{
-> +}
-> +
-> +static void __meminit free_pud_table(pud_t *pud_start, pgd_t *pgd, bool direct)
-> +{
-> +}
-> +#endif
-> +
-> +static void __meminit
-> +remove_pte_table(pte_t *pte_start, unsigned long addr,
-> +			unsigned long end, bool direct)
-> +{
-> +	pte_t *pte;
-> +
-> +	pte = pte_start + pte_index(addr);
-> +	for (; addr < end; addr += PAGE_SIZE, pte++) {
-> +		if (!pte_present(*pte))
-> +			continue;
-> +
-> +		if (!direct)
-> +			free_pagetable(pte_page(*pte), 0);
-> +		spin_lock(&init_mm.page_table_lock);
-> +		pte_clear(&init_mm, addr, pte);
-> +		spin_unlock(&init_mm.page_table_lock);
-> +	}
-> +}
-> +
-> +static void __meminit
-> +remove_pmd_table(pmd_t *pmd_start, unsigned long addr,
-> +			unsigned long end, bool direct)
-> +{
-> +	unsigned long next;
-> +	pte_t *pte_base;
-> +	pmd_t *pmd;
-> +
-> +	pmd = pmd_start + pmd_index(addr);
-> +	for (; addr < end; addr = next, pmd++) {
-> +		next = pmd_addr_end(addr, end);
-> +		if (!pmd_present(*pmd))
-> +			continue;
-> +
-> +		if (pmd_large(*pmd)) {
-> +			if (!direct)
-> +				free_pagetable(pmd_page(*pmd),
-> +						get_order(PMD_SIZE));
-> +			spin_lock(&init_mm.page_table_lock);
-> +			pmd_clear(pmd);
-> +			spin_unlock(&init_mm.page_table_lock);
-> +			continue;
-> +		}
-> +		pte_base = pte_offset_kernel(pmd, 0UL);
-> +		remove_pte_table(pte_base, addr, next, direct);
-> +		free_pte_table(pte_base, pmd, direct);
-> +	}
-> +}
-> +
-> +static void __meminit
-> +remove_pud_table(pud_t *pud_start, unsigned long addr,
-> +			unsigned long end, bool direct)
-> +{
-> +	unsigned long next;
-> +	pmd_t *pmd_base;
-> +	pud_t *pud;
-> +
-> +	pud = pud_start + pud_index(addr);
-> +	for (; addr < end; addr = next, pud++) {
-> +		next = pud_addr_end(addr, end);
-> +		if (!pud_present(*pud))
-> +			continue;
-> +
-> +		if (pud_large(*pud)) {
-> +			if (!direct)
-> +				free_pagetable(pud_page(*pud),
-> +						get_order(PUD_SIZE));
-> +			spin_lock(&init_mm.page_table_lock);
-> +			pud_clear(pud);
-> +			spin_unlock(&init_mm.page_table_lock);
-> +			continue;
-> +		}
-> +		pmd_base = pmd_offset(pud, 0UL);
-> +		remove_pmd_table(pmd_base, addr, next, direct);
-> +		free_pmd_table(pmd_base, pud, direct);
-> +	}
-> +}
-> +
-> +static void __meminit
-> +remove_pagetable(unsigned long start, unsigned long end, bool direct)
-> +{
-> +	unsigned long addr, next;
-> +	pud_t *pud_base;
-> +	pgd_t *pgd;
-> +
-> +	for (addr = start; addr < end; addr = next) {
-> +		next = pgd_addr_end(addr, end);
-> +		pgd = pgd_offset_k(addr);
-> +		if (!pgd_present(*pgd))
-> +			continue;
-> +
-> +		pud_base = pud_offset(pgd, 0UL);
-> +		remove_pud_table(pud_base, addr, next, direct);
-> +		free_pud_table(pud_base, pgd, direct);
-> +	}
-> +	flush_tlb_kernel_range(start, end);
-> +}
-> +#endif
-> +
->   #ifdef CONFIG_SPARSEMEM_VMEMMAP
->   #if !ARM64_SWAPPER_USES_SECTION_MAPS
->   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-> @@ -758,9 +950,12 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->   	return 0;
->   }
->   #endif	/* CONFIG_ARM64_64K_PAGES */
-> -void vmemmap_free(unsigned long start, unsigned long end,
-> +void __ref vmemmap_free(unsigned long start, unsigned long end,
-
-Why is the __ref needed? Presumably it's avoidable by addressing the 
-__meminit thing above.
-
->   		struct vmem_altmap *altmap)
->   {
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +	remove_pagetable(start, end, false);
-> +#endif
->   }
->   #endif	/* CONFIG_SPARSEMEM_VMEMMAP */
->   
-> @@ -1046,10 +1241,16 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
->   }
->   
->   #ifdef CONFIG_MEMORY_HOTPLUG
-> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
-> +{
-> +	WARN_ON(pgdir != init_mm.pgd);
-> +	remove_pagetable(start, start + size, true);
-> +}
-> +
->   int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
->   		    bool want_memblock)
->   {
-> -	int flags = 0;
-> +	int flags = 0, ret = 0;
-
-Initialising ret here is unnecessary.
-
-Robin.
-
->   
->   	if (rodata_full || debug_pagealloc_enabled())
->   		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
-> @@ -1057,7 +1258,27 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
->   	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
->   			     size, PAGE_KERNEL, pgd_pgtable_alloc, flags);
->   
-> -	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
-> +	ret = __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
->   			   altmap, want_memblock);
-> +	if (ret)
-> +		__remove_pgd_mapping(swapper_pg_dir,
-> +					__phys_to_virt(start), size);
-> +	return ret;
->   }
-> +
-> +#ifdef CONFIG_MEMORY_HOTREMOVE
-> +int arch_remove_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap)
-> +{
-> +	unsigned long start_pfn = start >> PAGE_SHIFT;
-> +	unsigned long nr_pages = size >> PAGE_SHIFT;
-> +	struct zone *zone = page_zone(pfn_to_page(start_pfn));
-> +	int ret;
-> +
-> +	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
-> +	if (!ret)
-> +		__remove_pgd_mapping(swapper_pg_dir,
-> +					__phys_to_virt(start), size);
-> +	return ret;
-> +}
-> +#endif
->   #endif
+> chackpatch.pl was warning:
+> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
 > 
+> Patch was compile tested with: X86_64_defconfig + SPI=y, IIO=m
+> STAGING=y, ADIS16203=m
+> 
+> Patch is against 5.1-rc3 (localversion-next is next-20190403)
+> 
+>  drivers/staging/iio/accel/adis16203.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/staging/iio/accel/adis16203.c b/drivers/staging/iio/accel/adis16203.c
+> index 5cc96c80..cf9d41a 100644
+> --- a/drivers/staging/iio/accel/adis16203.c
+> +++ b/drivers/staging/iio/accel/adis16203.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+
+SPDX-License-Identifier: GPL-2.0+ ?
+
+Documentation/process/license-rules.rst
+
+ For 'GNU General Public License (GPL) version 2 or any later version' use:
+   SPDX-License-Identifier: GPL-2.0+
+
+The following should also be removed in this same patch:
+
+	* Licensed under the GPL-2 or later.
+
+And lastly, MODULE_LICENSE() should also be checked, which appear
+to be correct in its current form.
+
+>  /*
+>   * ADIS16203 Programmable 360 Degrees Inclinometer
+>   *
+> -- 
+> 2.1.4
+> 
+
+-- 
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
