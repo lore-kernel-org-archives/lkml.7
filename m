@@ -2,131 +2,159 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC16CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983CAC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8AE2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689FE2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CRs6oIkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbfDCOBK (ORCPT
+        id S1726544AbfDCOCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:01:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37408 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbfDCOBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:01:09 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A0BB431688E3;
-        Wed,  3 Apr 2019 14:01:08 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1B325C8AB;
-        Wed,  3 Apr 2019 14:01:04 +0000 (UTC)
-Subject: Re: [RESEND PATCH 2/3] ipc: Conserve sequence numbers in
- ipcmni_extend mode
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
-        Manfred Spraul <manfred@colorfullife.com>
-References: <20190329204930.21620-1-longman@redhat.com>
- <20190329204930.21620-2-longman@redhat.com>
- <20190402142210.ba29c7dfc10d5a315a1c39dd@linux-foundation.org>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <cd36d33a-900e-e6a5-343c-7977040420be@redhat.com>
-Date:   Wed, 3 Apr 2019 10:01:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 3 Apr 2019 10:02:09 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39795 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfDCOCI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:02:08 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p20so15016765eds.6
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 07:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jmr0XL65zkJLVQU8qMMDu16r6hNH3o7/wQtFHYQMQl4=;
+        b=CRs6oIkki4ZwTJvuTzGu5Jup5fA7mvnHRyDoEDsyKtZc3mAIidZuFaIO3uaqr/TitR
+         Jmohs6IDShKzGKNp6CPEXS3FBCs9tgtx95pMTBn72l9e3bGBO0rXMCe3EXdDV5wBr8qo
+         e19jiWyCCxFbBGXknaj7MafFHjk3VLQggZ7Z84A5CgTce0na10wAl72Ytg5nVNiBRxrq
+         RfEloMeOUxroOXkFS808Hug5qADlLEeTE2LLuLFUvFcjyqcoTpqzBlDR1I8/AdBZnNp5
+         V4cJcq2uce5fBFWacbGao9WqYQlf8BzB9yBTthe0Wk6Vvr2KMvFxPmu+b4x7XuUUverq
+         OODg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jmr0XL65zkJLVQU8qMMDu16r6hNH3o7/wQtFHYQMQl4=;
+        b=siNR/w1VubHrRFr9vkr+LHPw2CdH10OsUpnK/wEr6EPrw4pxnMiroI3qzr0aiJsHG9
+         D6njGxri40fJskcwGpxaX68NBZLiMkHLl8c9cd0oMj4+9CXQWuVhQ/ex5Bk7jXqaVB1X
+         /aA8D9oQ9L44/6JcQg59H8k32lIY85iCvyiLZUTbhmQMgDCSMoZ139khHnXAAPXITjud
+         kizvEDmMVxaAmCeb70IYqE5dUoyRJiUZZu+ibYGAJYCFs7zgCzFKxtZg4sWkiK2V2maL
+         HOuMsUScPJBsZ5NeIyAUuzGeQHtPQK0jiUW51klsiULv+TFSgZw99g5CYCq+d8PKiXSF
+         IuGA==
+X-Gm-Message-State: APjAAAVMUotE0MIOqLqQK4OJWFNUoLxxYxecR/mEZRObYFuYbHwN4+fJ
+        0IAi4B9qj93gmu9YjDGHnhbcqg==
+X-Google-Smtp-Source: APXvYqzSYXi/Yk0XpBT9tURLiDfLo5/IkCeO7+7r8zv+aoxHzoe3cp2FNJb97xMAQ1RC4Czi1ndNXg==
+X-Received: by 2002:a50:fa90:: with SMTP id w16mr51909481edr.42.1554300126203;
+        Wed, 03 Apr 2019 07:02:06 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id b3sm3083871eje.3.2019.04.03.07.02.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Apr 2019 07:02:05 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 16:02:04 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>, willy@infradead.org,
+        zev@bewilderbeest.net, akpm@linux-foundation.org
+Subject: Re: [PATCH] kernel/sysctl.c: fix out of bounds access in fs.file-max
+Message-ID: <20190403140203.qq37rgcikvoawb5f@brauner.io>
+References: <20190328130306.25384-1-mcroce@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190402142210.ba29c7dfc10d5a315a1c39dd@linux-foundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 03 Apr 2019 14:01:08 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <20190328130306.25384-1-mcroce@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/2019 05:22 PM, Andrew Morton wrote:
-> On Fri, 29 Mar 2019 16:49:29 -0400 Waiman Long <longman@redhat.com> wrote:
->
->> From: Manfred Spraul <manfred@colorfullife.com>
->>
->> Rewrite, based on the patch from Waiman Long:
->>
->> ...
->>
->> Suggested-by: Matthew Wilcox <willy@infradead.org>
->> Original-patch-from: Waiman Long <longman@redhat.com>
->> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
->> Acked-by: Waiman Long <longman@redhat.com>
-> I added your Signed-off-by: to this.  Because you contributed and
-> because you were on the patch delivery path (either of these require a
-> SOB).
->
-> And I removed the Original-patch-from line.  The changelog already says
-> that and Original-patch-from isn't a standard changelog tag.
+On Thu, Mar 28, 2019 at 02:03:06PM +0100, Matteo Croce wrote:
+> fs.file-max sysctl uses proc_doulongvec_minmax() as proc handler, which
+> accesses *extra1 and *extra2 as unsigned long, but commit 32a5ad9c2285
+> ("sysctl: handle overflow for file-max") assigns &zero, which is an int,
+> to extra1, generating the following KASAN report.
+> Fix this by changing 'zero' to long, which does not need to be duplicated
+> like 'one' and 'one_ul' for two data types.
 
-Thanks for including those patches in your tree. Hopefully they can make
-5.2.
+Yeah, maybe but it still feels cleaner and more obvious to just add:
 
-Cheers,
-Longman
+static long long_zero;
 
+given that most callers actually seem to want an (unsigned) int.
+
+I don't have a strong opinion though so if others feel that it's just a
+waste of space consider it acked.
+
+> 
+> ==================================================================
+> BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x2f9/0x600
+> Read of size 8 at addr ffffffff8233dc20 by task systemd/1
+> 
+> CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc2-kvm+ #22
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+> Call Trace:
+>  print_address_description+0x67/0x23d
+>  kasan_report.cold.3+0x1c/0x36
+>  __do_proc_doulongvec_minmax+0x2f9/0x600
+>  proc_doulongvec_minmax+0x3a/0x50
+>  proc_sys_call_handler+0x11d/0x170
+>  vfs_write+0xd7/0x200
+>  ksys_write+0x93/0x110
+>  do_syscall_64+0x57/0x140
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7f67d33e8804
+> Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 48 8d 05 f9 5e 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89 f5 53
+> RSP: 002b:00007fffd9992ed8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f67d33e8804
+> RDX: 0000000000000015 RSI: 00005586ce2607b0 RDI: 0000000000000004
+> RBP: 00007fffd9992f30 R08: 000000000000c0c0 R09: ffffffffffff0000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+> R13: 0000000000000015 R14: 00005586ce2607c4 R15: 00007fffd9992f70
+> 
+> The buggy address belongs to the variable:
+>  0xffffffff8233dc20
+> 
+> Memory state around the buggy address:
+>  ffffffff8233db00: 00 00 00 00 00 00 00 00 fa fa fa fa 04 fa fa fa
+>  ffffffff8233db80: fa fa fa fa 04 fa fa fa fa fa fa fa 04 fa fa fa
+> >ffffffff8233dc00: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 00 00
+>                                ^
+>  ffffffff8233dc80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+>  ffffffff8233dd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ==================================================================
+> 
+> Fixes: 32a5ad9c2285 ("sysctl: handle overflow for file-max")
+
+Next time, please take the time to Cc the author of the Fixes patch as
+well whose commit this is fixing right away.
+
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
+>  kernel/sysctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index e5da394d1ca3..3e959d67d619 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -124,7 +124,7 @@ static int sixty = 60;
+>  
+>  static int __maybe_unused neg_one = -1;
+>  
+> -static int zero;
+> +static long zero;
+
+>  static int __maybe_unused one = 1;
+>  static int __maybe_unused two = 2;
+>  static int __maybe_unused four = 4;
+> -- 
+> 2.20.1
+> 
