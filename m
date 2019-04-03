@@ -2,90 +2,109 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34151C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17E1C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B062075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9352075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxiR3uwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfDCO5M (ORCPT
+        id S1726571AbfDCO6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:57:12 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:38811 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfDCO5M (ORCPT
+        Wed, 3 Apr 2019 10:58:50 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42880 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfDCO6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:57:12 -0400
-X-Originating-IP: 109.213.83.19
-Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id CC16E1C0002;
-        Wed,  3 Apr 2019 14:57:09 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 16:57:09 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
-Message-ID: <20190403145709.GN22216@piout.net>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Wed, 3 Apr 2019 10:58:49 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 103so15629315otd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 07:58:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=s3a6kw31Eh/tUpNZw00g//755YybTDwlei++L30AIDU=;
+        b=BxiR3uwaNbydHkdnYDjQqZ2CZpMUam68b7NlCWCf9WW5vpam/pUfZ8yhTP2iKeFTVY
+         NYuKa74n8WjXO6tJtY/7sxDBc/V8obuNRwfslwI9VPRE5zgITGOO38C9zekB/zmQK6Ry
+         PX1nkHtNvKXmgLAiNz3RaEx3LTdMGbsZNZbeZBgve8Y8lL5lK4iUN6JJDdTSL+9mUnLT
+         CskZbtM9+rBEKK5RhoWlMce/1+rhPLlNtA9mmE82lv650tG1zFcsXVTGDZaQkQYoKUs5
+         /5RcSHRh1oxBoDWR2YM/fb4+SSBnotjBT6XhMjmR5pTmR6yqSJCOspi68EOioqAS0K0d
+         PbLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=s3a6kw31Eh/tUpNZw00g//755YybTDwlei++L30AIDU=;
+        b=j8dPOX5dWtOYW+buIfMtk1cQMyIUGldGQs3a4oO5qOAJ8es2diD7dtFcaff20GSqow
+         cfEjvVBpEZN7J67sF4/N23xpPtSLz7yisVNMWyOgCIg8z4HHIKQ/ImpigYOnJPDQYpCR
+         s2qSPRHJLMkQk+ceCmbyaQEqvimooZEKvfZBBqXodY6sSoBiJpalXkBAX8FDLo5LnX8L
+         zgx8aWkuSaFGVWraXuo2jlI7hmTkNg1n2iyyqbDbT0OVahV40v4wiqsqn1oZ+GWwzQOq
+         py7NQCpK5qdfEOEmCGHDekVYvIzDjOKt2noRaphlxeY8zJDI27GDwBe5abZy8v1gL3Us
+         iLHA==
+X-Gm-Message-State: APjAAAXjiuR9R4R01lmZ0LrFls40ZJDWtA2uDrLoclvPcALL3js6UQN+
+        hrY8BFGsF4iYVA0R1n0daPo=
+X-Google-Smtp-Source: APXvYqwj0LBgaaa4bajaFsEB5msUekPfrTHPn6F2F3WGkYDfZ+/ouxmFQlRGA6JXW98x2m+6AZUvSw==
+X-Received: by 2002:a05:6830:1398:: with SMTP id d24mr86133otq.104.1554303528836;
+        Wed, 03 Apr 2019 07:58:48 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:1876:bc0b:8981:17be])
+        by smtp.gmail.com with ESMTPSA id 189sm6301129oid.35.2019.04.03.07.58.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 07:58:47 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH] Staging: gasket: Use DIV_ROUND_UP
+Date:   Wed,  3 Apr 2019 09:58:44 -0500
+Message-Id: <20190403145844.15624-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Use DIV_ROUND_UP in-kernel function to make code simple and more
+understandable.
 
-On 03/04/2019 16:52:44+0200, Flavio Suligoi wrote:
-> Some RTC devices have a battery-low automatic detection circuit.
-> The battery-low event is usually reported with:
-> 
-> - a bit change in a RTC status register
-> - a hw signaling (generally using an interrupt generation), changing
->   the hw level of a specific pin;
-> 
-> The new property "battery-low-hw-alarm" enable the RTC to generate the
-> hw signaling in case of battery-low event.
-> 
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-> index a97fc6a..f93a44d 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> @@ -31,6 +31,9 @@ below.
->                              expressed in femto Farad (fF).
->                              The default value shall be listed (if optional),
->                              and likewise all valid values.
-> +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This function
+Issue found using Coccinelle.
 
-I would name that voltage-low-alarm as not all the secondary voltages
-are batteries.
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
 
-> +                            is available on the following devices:
-> +                            - pcf2127 - pin used for alarm: INTn
->  
->  Trivial RTCs
->  ------------
-> -- 
-> 2.7.4
-> 
+---
+Changes in v2:
+- Commit log modified
+---
+ drivers/staging/gasket/gasket_page_table.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/staging/gasket/gasket_page_table.c b/drivers/staging/gasket/gasket_page_table.c
+index 26755d9ca41d..600928f63577 100644
+--- a/drivers/staging/gasket/gasket_page_table.c
++++ b/drivers/staging/gasket/gasket_page_table.c
+@@ -768,8 +768,7 @@ static bool gasket_is_extended_dev_addr_bad(struct gasket_page_table *pg_tbl,
+ 	page_lvl0_idx = gasket_extended_lvl0_page_idx(pg_tbl, dev_addr);
+ 
+ 	/* Get the count of affected level 0 pages. */
+-	num_lvl0_pages = (num_pages + GASKET_PAGES_PER_SUBTABLE - 1) /
+-		GASKET_PAGES_PER_SUBTABLE;
++	num_lvl0_pages = DIV_ROUND_UP(num_pages, GASKET_PAGES_PER_SUBTABLE);
+ 
+ 	if (gasket_components_to_dev_address(pg_tbl, 0, page_global_idx,
+ 					     page_offset) != dev_addr) {
+@@ -1258,7 +1257,7 @@ int gasket_alloc_coherent_memory(struct gasket_dev *gasket_dev, u64 size,
+ 	dma_addr_t handle;
+ 	void *mem;
+ 	int j;
+-	unsigned int num_pages = (size + PAGE_SIZE - 1) / PAGE_SIZE;
++	unsigned int num_pages = DIV_ROUND_UP(size, PAGE_SIZE);
+ 	const struct gasket_driver_desc *driver_desc =
+ 		gasket_get_driver_desc(gasket_dev);
+ 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
