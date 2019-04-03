@@ -2,106 +2,159 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D16AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C51EC10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EAB2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490F82082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfDCLbD (ORCPT
+        id S1726591AbfDCLbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 07:31:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:39887 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfDCLbC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 07:31:02 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hBe6R-0004at-NC; Wed, 03 Apr 2019 13:30:47 +0200
-Date:   Wed, 3 Apr 2019 13:30:47 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     nelson.dsouza@intel.com, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        peterz@infradead.org, vincent.weaver@maine.edu, eranian@google.com,
-        hpa@zytor.com, mingo@kernel.org, torvalds@linux-foundation.org,
-        acme@redhat.com
-cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:perf/urgent] perf/x86/intel: Initialize TFA MSR
-In-Reply-To: <tip-d7262457e35dbe239659e62654e56f8ddb814bed@git.kernel.org>
-Message-ID: <alpine.DEB.2.21.1904031330060.1967@nanos.tec.linutronix.de>
-References: <20190321123849.GN6521@hirez.programming.kicks-ass.net> <tip-d7262457e35dbe239659e62654e56f8ddb814bed@git.kernel.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 3 Apr 2019 07:31:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:38424 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbfDCLbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 07:31:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53E8B80D;
+        Wed,  3 Apr 2019 04:31:32 -0700 (PDT)
+Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 879B03F59C;
+        Wed,  3 Apr 2019 04:31:30 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 12:31:24 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Ray Jui <ray.jui@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abhishek Shah <abhishek.shah@broadcom.com>
+Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
+ I/O region
+Message-ID: <20190403113124.GA16233@e107981-ln.cambridge.arm.com>
+References: <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com>
+ <20190329173515.GA10367@e107981-ln.cambridge.arm.com>
+ <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
+ <20190401164416.GA8616@e107981-ln.cambridge.arm.com>
+ <e7d3e5a1-db5c-8438-f10f-81b87aba0e03@broadcom.com>
+ <CABe79T7uLo+68P0Yr7jpgn1+4H01qhoPRjX05gszin3FXkBZ5w@mail.gmail.com>
+ <20190402102639.GB22708@e107981-ln.cambridge.arm.com>
+ <CABe79T5O-1EWVrR1vZ27LWuxTBqN4_x37bkpfKxfm1ZB+oDUvA@mail.gmail.com>
+ <20190402133851.GA26122@e107981-ln.cambridge.arm.com>
+ <CABe79T7JdOh0Lpr2vhWX5QPE5nuP9hZeviSB9E3tVteeAX89fw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABe79T7JdOh0Lpr2vhWX5QPE5nuP9hZeviSB9E3tVteeAX89fw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019, tip-bot for Peter Zijlstra wrote:
-
-> Commit-ID:  d7262457e35dbe239659e62654e56f8ddb814bed
-> Gitweb:     https://git.kernel.org/tip/d7262457e35dbe239659e62654e56f8ddb814bed
-> Author:     Peter Zijlstra <peterz@infradead.org>
-> AuthorDate: Thu, 21 Mar 2019 13:38:49 +0100
-> Committer:  Ingo Molnar <mingo@kernel.org>
-> CommitDate: Wed, 3 Apr 2019 11:40:32 +0200
+On Wed, Apr 03, 2019 at 08:41:44AM +0530, Srinath Mannam wrote:
+> Hi Lorenzo,
 > 
-> perf/x86/intel: Initialize TFA MSR
+> Please see my reply below,
 > 
-> Stephane reported that the TFA MSR is not initialized by the kernel,
-> but the TFA bit could set by firmware or as a leftover from a kexec,
-> which makes the state inconsistent.
+> On Tue, Apr 2, 2019 at 7:08 PM Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> >
+> > On Tue, Apr 02, 2019 at 04:16:13PM +0530, Srinath Mannam wrote:
+> >
+> > [...]
+> >
+> > > > Ok - I start to understand. What does it mean in HW terms that your
+> > > > 32bit AXI address region size is 32MB ? Please explain to me in details.
+> > > >
+> > > In our PCIe controller HW, AXI address from 0x42000000 to 0x44000000
+> > > of 32MB size and .
+> > > AXI address from 0x400000000 to 0x480000000 of 2GB size are provided
+> > > to map ob address.
+> > > First IO region is inside 32bit address and second IO region is
+> > > outside 32bit address.
+> > > This code change is to map first IO region(0x42000000 to 0x44000000).
+> > >
+> > > > IIUC you are using an OARR0 of 128MB in size to map a 32MB address
+> > > > region, that's what I understand this patch does (and the lowest index
+> > > > corresponds to the smallest possible size - it is far from clear by
+> > > > looking at the patch).
+> > > Yes, lowest index corresponds to smallest possible size (128MB).
+> > > In our controller we have multiple windows like OARR0, OARR1, OARR2,
+> > > OARR3 all supports multiple sizes from 128MB to 1024MB.
+> > > These details are given at the top of this driver file, as shown
+> > > below. all windows supports 128MB size still we must use OARR0 window
+> > > to configure first IO region(0x42000000 to 0x44000000).
+> > >
+> > > static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
+> > >         {
+> > >                 /* OARR0/OMAP0 */
+> > >                 .window_sizes = { 128, 256 },
+> > >                 .nr_sizes = 2,
+> > >         },
+> > >         {
+> > >                 /* OARR1/OMAP1 */
+> > >                 .window_sizes = { 128, 256 },
+> > >                 .nr_sizes = 2,
+> > >         },
+> > >         {
+> > >                 /* OARR2/OMAP2 */
+> > >                 .window_sizes = { 128, 256, 512, 1024 },
+> > >                 .nr_sizes = 4,
+> > >         },
+> > >         {
+> > >                 /* OARR3/OMAP3 */
+> > >                 .window_sizes = { 128, 256, 512, 1024 },
+> > >                 .nr_sizes = 4,
+> > >         },
+> > > };
+> >
+> > Ok so this patch allows mapping an AXI I/O window that is smaller
+> > than OARR possible sizes, why it was not done from the beginning
+> > I really do not know.
+> >
+> Same Iproc driver we use for multiple SOCs, in previous SOCs does not
+> have 32-bit AXI address region to map ob.
+> In the present SOC, 32-bit AXI address region is available so that
+> this change is added.
 > 
-> Reported-by: Stephane Eranian <eranian@google.com>
-> Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Vince Weaver <vincent.weaver@maine.edu>
-> Cc: tonyj@suse.com
-> Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Now explain this to me please:
+> >
+> > > This patch add outbound window configuration to map below 32-bit I/O range
+> > > with corresponding PCI memory, which helps to access I/O region in ARM
+> > > 32-bit and one to one mapping of I/O region to PCI memory.
+> > >
+> > > Ex:
+> > > 1. ranges DT property given for current driver is,
+> > >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
+> > >     I/O region address is 0x400000000
+> > > 2. ranges DT property can be given after this patch,
+> > >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
+> > >     I/O region address is 0x42000000
+> >
+> > Why 1:1 AXI<->PCI address mapping is not possible in (1), how does the
+> > current code works on 32-bit systems and what's the benefit your change
+> > is bringing.
+> non-prefetchable memory range can only support 32-bit addresses, so
+> that we have taken 32-bit PCI bus address in (1).
+> current code does not work in 32-bit systems. In the present SOC with
+> this new change we can access from 32-bit CPU.
 
-This lacks:
+Thank you. I rewrote the log and pushed patches to pci/iproc, please
+have a look (Ray/Scott please do have a look too) and report back
+if that's fine.
 
- 1) Fixes tag
+Do you agree that the initial commit was lacking _significant_
+information ? Please remember that the commit log plays a fundamental
+part in understanding a change and this one is a very important one
+so I am being pedantic on it.
 
- 2) Cc: stable ....
-
-Sigh.
-
-> ---
->  arch/x86/events/intel/core.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 1539647ea39d..f61dcbef20ff 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -3575,6 +3575,12 @@ static void intel_pmu_cpu_starting(int cpu)
->  
->  	cpuc->lbr_sel = NULL;
->  
-> +	if (x86_pmu.flags & PMU_FL_TFA) {
-> +		WARN_ON_ONCE(cpuc->tfa_shadow);
-> +		cpuc->tfa_shadow = ~0ULL;
-> +		intel_set_tfa(cpuc, false);
-> +	}
-> +
->  	if (x86_pmu.version > 1)
->  		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
->  
-> 
+Thanks,
+Lorenzo
