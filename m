@@ -2,219 +2,109 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDB7C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D589AC10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCA720700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A652D20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554299520;
+	bh=1ZRresJgJEzsVEBoj/S/AYbwc7Vmx6/76WgBUf4AB1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e7mZpALnpF9ofh3683dRIq/v7HT0bUvwyUJc23dAMeSfjUrmpMLsX2PqFJqqwI/q9
+	 zDpRxIXe+8x4jh+vITjPJChChh2xpXr1d1KPQKVZrHCIREdPv2+RDBZtuB/i1fuhZn
+	 f7G1JVbkOiajaRtXMwk2JoOkGTfuMds3jDjtYcSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfDCNvw (ORCPT
+        id S1726585AbfDCNv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:51:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6227 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725959AbfDCNvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:51:52 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [10.3.19.207])
-        by Forcepoint Email with ESMTP id 7F3A75F44857EBFD6F91;
-        Wed,  3 Apr 2019 21:51:38 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Wed, 3 Apr 2019
- 21:51:29 +0800
-Subject: Re: [PATCH 2/3] arm64: kdump: support more than one crash kernel
- regions
-To:     Mike Rapoport <rppt@linux.ibm.com>
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-3-chenzhou10@huawei.com>
- <20190403112929.GA7715@rapoport-lnx>
-CC:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>,
-        <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <f98a5559-3659-fb35-3765-15861e70a796@huawei.com>
-Date:   Wed, 3 Apr 2019 21:51:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 3 Apr 2019 09:51:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfDCNv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:51:59 -0400
+Received: from localhost (217-101-180-136.cable.dynamic.v4.ziggo.nl [217.101.180.136])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1499420700;
+        Wed,  3 Apr 2019 13:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554299518;
+        bh=1ZRresJgJEzsVEBoj/S/AYbwc7Vmx6/76WgBUf4AB1U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sfx4Sv9E5vvjif3hht4ndpY+8ZyJWD8jXnep/tLrC21vq4L+tBGozQIBKsIanuWcU
+         FMLN2foPwzFszoFqUcpa8ZCIQXlUvJcwmgtDq8CQwt5zi7K40Cx3aJ/hokx+bVG1/v
+         nlOozo9HDnMP9+C8ZJX3umNkXc9ZXYtbb66198P0=
+Date:   Wed, 3 Apr 2019 15:40:08 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.4 078/131] PM / Hibernate: Call flush_icache_range() on
+ pages restored in-place
+Message-ID: <20190403134008.GA6963@kroah.com>
+References: <20190401170051.645954551@linuxfoundation.org>
+ <20190401170058.681712612@linuxfoundation.org>
+ <20190401203918.GA26671@amd>
+ <20190403110051.GB34351@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190403112929.GA7715@rapoport-lnx>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403110051.GB34351@arrakis.emea.arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-On 2019/4/3 19:29, Mike Rapoport wrote:
-> On Wed, Apr 03, 2019 at 11:05:45AM +0800, Chen Zhou wrote:
->> After commit (arm64: kdump: support reserving crashkernel above 4G),
->> there may be two crash kernel regions, one is below 4G, the other is
->> above 4G.
->>
->> Crash dump kernel reads more than one crash kernel regions via a dtb
->> property under node /chosen,
->> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
->>  include/linux/memblock.h |  1 +
->>  mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 66 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index ceb2a25..769c77a 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
->>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>  
->>  #ifdef CONFIG_KEXEC_CORE
->> +# define CRASH_MAX_USABLE_RANGES        2
->> +
->>  static int __init reserve_crashkernel_low(void)
->>  {
->>  	unsigned long long base, low_base = 0, low_size = 0;
->> @@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>  		const char *uname, int depth, void *data)
->>  {
->>  	struct memblock_region *usablemem = data;
->> -	const __be32 *reg;
->> -	int len;
->> +	const __be32 *reg, *endp;
->> +	int len, nr = 0;
->>  
->>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
->>  		return 0;
->> @@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
->>  		return 1;
->>  
->> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
->> +	endp = reg + (len / sizeof(__be32));
->> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
->> +
->> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
->> +			break;
->> +	}
->>  
->>  	return 1;
->>  }
->>  
->>  static void __init fdt_enforce_memory_region(void)
->>  {
->> -	struct memblock_region reg = {
->> -		.size = 0,
->> -	};
->> -
->> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
->> -
->> -	if (reg.size)
->> -		memblock_cap_memory_range(reg.base, reg.size);
->> +	int i, cnt = 0;
->> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
->> +
->> +	memset(regs, 0, sizeof(regs));
->> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
->> +
->> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
->> +		if (regs[i].size)
->> +			cnt++;
->> +		else
->> +			break;
->> +	if (cnt)
->> +		memblock_cap_memory_ranges(regs, cnt);
+On Wed, Apr 03, 2019 at 12:00:51PM +0100, Catalin Marinas wrote:
+> On Mon, Apr 01, 2019 at 10:39:18PM +0200, Pavel Machek wrote:
+> > On Mon 2019-04-01 19:02:28, Greg Kroah-Hartman wrote:
+> > > 4.4-stable review patch.  If anyone has any objections, please let me know.
+> > > 
+> > > ------------------
+> > > 
+> > > [ Upstream commit f6cf0545ec697ddc278b7457b7d0c0d86a2ea88e ]
+> > > 
+> > > Some architectures require code written to memory as if it were data to be
+> > > 'cleaned' from any data caches before the processor can fetch them as new
+> > > instructions.
+> > > 
+> > > During resume from hibernate, the snapshot code copies some pages directly,
+> > > meaning these architectures do not get a chance to perform their cache
+> > > maintenance. Modify the read and decompress code to call
+> > > flush_icache_range() on all pages that are restored, so that the restored
+> > > in-place pages are guaranteed to be executable on these architectures.
+> > > 
+> > > Signed-off-by: James Morse <james.morse@arm.com>
+> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > Acked-by: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > > [will: make clean_pages_on_* static and remove initialisers]
+> > > Signed-off-by: Will Deacon <will.deacon@arm.com>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > 
+> > I don't think this is suitable for stable.
+> > 
+> > Catalin: Are there platforms that a) need this and b) support
+> > hibernation in 4.4.X?
 > 
-> Why not simply call memblock_cap_memory_range() for each region?
-
-Function memblock_cap_memory_range() removes all memory type ranges except specified range.
-So if we call memblock_cap_memory_range() for each region simply, there will be no usable-memory
-on kdump capture kernel.
-
-Thanks,
-Chen Zhou
-
+> Good point. This commit was required for the arm64 hibernate support
+> that went in the 4.7 kernel.
 > 
->>  }
->>  
->>  void __init arm64_memblock_init(void)
->> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> index 47e3c06..aeade34 100644
->> --- a/include/linux/memblock.h
->> +++ b/include/linux/memblock.h
->> @@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
->>  phys_addr_t memblock_end_of_DRAM(void);
->>  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
->>  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
->> +void memblock_cap_memory_ranges(struct memblock_region *regs, int cnt);
->>  void memblock_mem_limit_remove_map(phys_addr_t limit);
->>  bool memblock_is_memory(phys_addr_t addr);
->>  bool memblock_is_map_memory(phys_addr_t addr);
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 28fa8926..1a7f4ee7c 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -1697,6 +1697,46 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
->>  			base + size, PHYS_ADDR_MAX);
->>  }
->>  
->> +void __init memblock_cap_memory_ranges(struct memblock_region *regs, int cnt)
->> +{
->> +	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
->> +	int i, j, ret, nr = 0;
->> +
->> +	for (i = 0; i < cnt; i++) {
->> +		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
->> +				regs[i].size, &start_rgn[i], &end_rgn[i]);
->> +		if (ret)
->> +			break;
->> +		nr++;
->> +	}
->> +	if (!nr)
->> +		return;
->> +
->> +	/* remove all the MAP regions */
->> +	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
->> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->> +			memblock_remove_region(&memblock.memory, i);
->> +
->> +	for (i = nr - 1; i > 0; i--)
->> +		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
->> +			if (!memblock_is_nomap(&memblock.memory.regions[j]))
->> +				memblock_remove_region(&memblock.memory, j);
->> +
->> +	for (i = start_rgn[0] - 1; i >= 0; i--)
->> +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->> +			memblock_remove_region(&memblock.memory, i);
->> +
->> +	/* truncate the reserved regions */
->> +	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
->> +
->> +	for (i = nr - 1; i > 0; i--)
->> +		memblock_remove_range(&memblock.reserved,
->> +				regs[i].base, regs[i - 1].base + regs[i - 1].size);
->> +
->> +	memblock_remove_range(&memblock.reserved,
->> +			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
->> +}
->> +
->>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->>  {
->>  	phys_addr_t max_addr;
->> -- 
->> 2.7.4
->>
-> 
+> Greg, why was this patch selected for stable? It's harmless anyway.
 
+It came in through Sasha's "magic patch selection AI" tools :)
+
+If it's harmless, might as well leave it in now, and not revert it.
+
+thanks,
+
+greg k-h
