@@ -2,83 +2,122 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B153CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F980C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E79C2084A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B0B2084A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfDCDJU (ORCPT
+        id S1727441AbfDCDK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:09:20 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726770AbfDCDJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:09:20 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [10.3.19.211])
-        by Forcepoint Email with ESMTP id 19E9D11A3E44648AF7A1;
-        Wed,  3 Apr 2019 11:09:18 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 3 Apr 2019 11:09:08 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 04/12] net: hns3: return 0 and print warning when hit duplicate MAC
-Date:   Wed, 3 Apr 2019 11:07:53 +0800
-Message-ID: <1554260881-44948-5-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554260881-44948-1-git-send-email-tanhuazhong@huawei.com>
-References: <1554260881-44948-1-git-send-email-tanhuazhong@huawei.com>
+        Tue, 2 Apr 2019 23:10:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33310 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbfDCDKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 23:10:55 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A7021330258;
+        Wed,  3 Apr 2019 03:10:54 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 336AD60240;
+        Wed,  3 Apr 2019 03:10:52 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 11:10:49 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
+Message-ID: <20190403031049.GP7627@MiWiFi-R3L-srv>
+References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
+ <20190402080811.GO7627@MiWiFi-R3L-srv>
+ <CAFgQCTtYLVS8Mfztg8=PWEn8cxDm9Lm1p=zXDR1YG8Oo0MLx0Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFgQCTtYLVS8Mfztg8=PWEn8cxDm9Lm1p=zXDR1YG8Oo0MLx0Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 03 Apr 2019 03:10:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Li <lipeng321@huawei.com>
+On 04/03/19 at 10:58am, Pingfan Liu wrote:
+> On Tue, Apr 2, 2019 at 4:08 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > > +/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
+> > > +static void mem_avoid_specified_crashkernel_region(char *option)
+> > > +{
+> > > +     unsigned long long crash_size, crash_base = 0;
+> > > +     char    *first_colon, *first_space, *cur = option;
+> > > +
+> >
+> > Another thing which need be noticed is that you may only need to handle
+> > when '@' is found. Otherwise just let it go. Right?
+> >
+> According to kernel's behavior, only the last "crashkernel=" option
+> takes effect. Hence if no '@', then clearing mem_avoid
 
-When set 2 same MAC to different function of one port, IMP
-will return error as the later one may modify the origin one.
-This will cause bond fail for 2 VFs of one port.
+Here I mean that you can search '@' at the beginning if crashkernel is
+found. Maybe no need to clear mem_avoid since it's global data, has been
+initialized to 0 during loading. It's in BSS, right?
 
-Driver just print warning and return 0 with this patch, so
-if set same MAC address, it will return 0 but do not really
-configure to HW.
+You don't have to search first colon or first space, then parse size of
+crashkernel, and finally find out that it's only crashkernel=512M-2G:64M,2G-:128M
+style, no '@' specified. What do you think?
 
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index e742a05..d45789e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -5962,8 +5962,11 @@ int hclge_add_uc_addr_common(struct hclge_vport *vport,
- 	}
- 
- 	/* check if we just hit the duplicate */
--	if (!ret)
--		ret = -EINVAL;
-+	if (!ret) {
-+		dev_warn(&hdev->pdev->dev, "VF %d mac(%pM) has been existed\n",
-+			 vport->vport_id, addr);
-+		return 0;
-+	}
- 
- 	dev_err(&hdev->pdev->dev,
- 		"PF failed to add unicast entry(%pM) in the MAC table\n",
--- 
-2.7.4
-
+> 
+> > > +     first_colon = strchr(option, ':');
+> > > +     first_space = strchr(option, ' ');
+> > > +     /* if contain ":" */
+> > > +     if (first_colon && (!first_space || first_colon < first_space)) {
+> > > +             int i;
+> > > +             u64 total_sz = 0;
+> > > +             struct boot_e820_entry *entry;
+> > > +
+> > > +             for (i = 0; i < boot_params->e820_entries; i++) {
+> > > +                     entry = &boot_params->e820_table[i];
+> > > +                     /* Skip non-RAM entries. */
+> > > +                     if (entry->type != E820_TYPE_RAM)
+> > > +                             continue;
+> > > +                     total_sz += entry->size;
+> > > +             }
+> > > +             handle_crashkernel_mem(option, total_sz, &crash_size,
+> > > +                     &crash_base);
+> > > +     } else {
+> > > +             crash_size = memparse(option, &cur);
+> > > +             if (option == cur)
+> > > +                     return;
+> > > +             while (*cur && *cur != ' ' && *cur != '@')
+> > > +                     cur++;
+> > > +             if (*cur == '@') {
+> > > +                     option = cur + 1;
+> > > +                     crash_base = memparse(option, &cur);
+> > > +             }
+> > > +     }
+> > > +     if (crash_base) {
+> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
+> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
+> > > +     } else {
+> > > +             /*
+> > > +              * Clearing mem_avoid if no offset is given. This is consistent
+> > > +              * with kernel, which uses the last crashkernel= option.
+> > > +              */
+> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
+> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
+> > > +     }
+> > > +}
