@@ -2,91 +2,81 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8503CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D79C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EDD206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB570206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfDCFpl (ORCPT
+        id S1728845AbfDCFqB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 01:45:41 -0400
-Received: from mx.sdf.org ([205.166.94.20]:61780 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfDCFpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 01:45:40 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x335jRBu028339
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Wed, 3 Apr 2019 05:45:27 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x335jQJO015258;
-        Wed, 3 Apr 2019 05:45:26 GMT
-Date:   Wed, 3 Apr 2019 05:45:26 GMT
-Message-Id: <201904030545.x335jQJO015258@sdf.org>
-From:   George Spelvin <lkml@sdf.org>
-Subject: [PATCH v2] ubsan: Avoid unnecessary 128-bit shifts
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        George Spelvin <lkml@sdf.org>
+        Wed, 3 Apr 2019 01:46:01 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:57614 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfDCFqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 01:46:00 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x335jlHi032156
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 3 Apr 2019 14:45:47 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x335jlLm010089;
+        Wed, 3 Apr 2019 14:45:47 +0900
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x335jGb1003185;
+        Wed, 3 Apr 2019 14:45:47 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-3939739; Wed, 3 Apr 2019 14:44:36 +0900
+Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
+ BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0319.002; Wed, 3
+ Apr 2019 14:44:36 +0900
+From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+To:     Oscar Salvador <osalvador@suse.de>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/hugetlb: Get rid of NODEMASK_ALLOC
+Thread-Topic: [PATCH] mm/hugetlb: Get rid of NODEMASK_ALLOC
+Thread-Index: AQHU6VjR5Ud9L/BTCUi9Q0MuQPILkqYpVxOA
+Date:   Wed, 3 Apr 2019 05:44:35 +0000
+Message-ID: <20190403054436.GA20228@hori.linux.bs1.fc.nec.co.jp>
+References: <20190402133415.21983-1-osalvador@suse.de>
+In-Reply-To: <20190402133415.21983-1-osalvador@suse.de>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.148]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <5D36004EC50BF549823C713D0A9EDB9A@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_ARCH_SUPPORTS_INT128, s_max is 128 bits, and variable
-sign-extending shifts of such a double-word data type are a non-trivial
-amount of code and complexity.  Do a single-word shift *before* the cast
-to (s_max), greatly simplifying the object code.
+On Tue, Apr 02, 2019 at 03:34:15PM +0200, Oscar Salvador wrote:
+> NODEMASK_ALLOC is used to allocate a nodemask bitmap, ant it does it by
+> first determining whether it should be allocated in the stack or dinamically
+> depending on NODES_SHIFT.
+> Right now, it goes the dynamic path whenever the nodemask_t is above 32
+> bytes.
+> 
+> Although we could bump it to a reasonable value, the largest a nodemask_t
+> can get is 128 bytes, so since __nr_hugepages_store_common is called from
+> a rather shore stack we can just get rid of the NODEMASK_ALLOC call here.
+> 
+> This reduces some code churn and complexity.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
 
-(Yes, I know "signed long" is redundant.  It's there for emphasis.)
+nice cleanup.
 
-On s390 (and perhaps some other arches), gcc implements variable
-128-bit shifts using an __ashrti3 helper function which the kernel
-doesn't provide, causing a link error.  In that case, this patch is
-a prerequisite for enabling INT128 support.  Andrey Ryabinin has gven
-permission for any arch that needs it to cherry-pick it so they don't
-have to wait for ubsan to be merged into Linus' tree.
-
-We *could*, alternatively, implement __ashrti3, but that becomes dead as
-soon as this patch is merged, so it seems like a waste of time and its
-absence discourages people from adding inefficient code.  Note that the
-shifts in <math64.h> (unsigned, and by a compile-time constant amount)
-are simpler and generated inline.
-
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Acked-By: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: linux-s390@vger.kernel.org
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
----
- lib/ubsan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-v1->v2:	Eliminated redundant cast to (s_max).
-	Rewrote commit message without "is this the right thing to do?"
-	verbiage.
-	Incorporated ack from Andrey Ryabinin.
-
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index e4162f59a81c..a7eb55fbeede 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -89,8 +89,8 @@ static bool is_inline_int(struct type_descriptor *type)
- static s_max get_signed_val(struct type_descriptor *type, unsigned long val)
- {
- 	if (is_inline_int(type)) {
--		unsigned extra_bits = sizeof(s_max)*8 - type_bit_width(type);
--		return ((s_max)val) << extra_bits >> extra_bits;
-+		unsigned extra_bits = sizeof(val)*8 - type_bit_width(type);
-+		return (signed long)val << extra_bits >> extra_bits;
- 	}
- 
- 	if (type_bit_width(type) == 64)
--- 
-2.20.1
-
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
