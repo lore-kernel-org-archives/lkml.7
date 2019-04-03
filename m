@@ -2,77 +2,78 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33DCC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAA7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788C221473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554282892;
-	bh=GJB+gVTbTg05re/OdMC/st+WTlhT765qsRoqYLMhxhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ir+iKuneOvp9+xz+7BIZxAUBxsIED4g0Mna54PDkdRneXzsXEKymAYat3XS/kQeTP
-	 Aud7LAPMiPG22xB2VvEZlxj9boVhdB4cxdtHyd3qlrnN1SBWeWC2MY3P+qRjyGY6Cf
-	 66sg3uKgrrUfRweb1/zRsAh4HF6SL2g84MNuVmu4=
+	by mail.kernel.org (Postfix) with ESMTP id 4A3CE20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfDCJOv (ORCPT
+        id S1726425AbfDCJPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfDCJOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:14:51 -0400
-Received: from X250 (unknown [147.50.13.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1690220830;
-        Wed,  3 Apr 2019 09:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554282890;
-        bh=GJB+gVTbTg05re/OdMC/st+WTlhT765qsRoqYLMhxhs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DzSgJkEKZZRdvSgP0MhqVJ0krI1o0vtZCmb45PJFjJHu3TrnVbLlAjLoDh65T10wO
-         g+BSVlZ6+cJ+6coGRbR1p2JEnRi/S0Hnh5Tgr/yyx9sCiQkJV9pzCc5Hl4pdbbnbqv
-         uyzo2TLwfvrrQE2n74EdIhjieShHUANx2Uu/mMEo=
-Date:   Wed, 3 Apr 2019 16:14:42 +0700
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Subject: Re: [PATCH v2 0/2] clk: imx5: Fix i.MX50 clock registers
-Message-ID: <20190403091440.GB7932@X250>
-References: <20190326182258.21945-1-j.neuschaefer@gmx.net>
+        Wed, 3 Apr 2019 05:15:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbfDCJPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:15:38 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [10.3.19.201])
+        by Forcepoint Email with ESMTP id 4DE6C384C15DCBDE2291;
+        Wed,  3 Apr 2019 17:15:36 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Wed, 3 Apr 2019
+ 17:15:28 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+Subject: [PATCH net] trival: net: skbuff: fix comment in skbuff.h
+To:     David Miller <davem@davemloft.net>, <willemb@google.com>,
+        <fw@strlen.de>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <pctammela@gmail.com>, <deepa.kernel@gmail.com>,
+        <sbrivio@redhat.com>, <mirq-linux@rere.qmqm.pl>,
+        <linux-kernel@vger.kernel.org>
+CC:     Mingfangsen <mingfangsen@huawei.com>
+Message-ID: <625895cf-f9aa-cb8b-effc-556f6ae70464@huawei.com>
+Date:   Wed, 3 Apr 2019 17:15:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190326182258.21945-1-j.neuschaefer@gmx.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 07:22:56PM +0100, Jonathan Neuschäfer wrote:
-> There are a few differences between the i.MX50 clock tree and those of
-> i.MX51 and i.MX53 that are not yet handled in clk-imx51-imx53.c.  This
-> series handles two of them.
-> 
-> Jonathan Neuschäfer (2):
->   clk: imx5: Fix i.MX50 mainbus clock registers
->   clk: imx5: Fix i.MX50 ESDHC clock registers
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-Applied both, thanks.
+It should be IPv6|UDP instead of IPv4|UDP for NETIF_F_IPV6_CSUM
+
+Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+---
+ include/linux/skbuff.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 69b5538adcea..9683e00a5a79 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -71,7 +71,7 @@
+  *     NETIF_F_IPV6_CSUM - Driver (device) is only able to checksum plain
+  *                       TCP or UDP packets over IPv6. These are specifically
+  *                       unencapsulated packets of the form IPv6|TCP or
+- *                       IPv4|UDP where the Next Header field in the IPv6
++ *                       IPv6|UDP where the Next Header field in the IPv6
+  *                       header is either TCP or UDP. IPv6 extension headers
+  *                       are not supported with this feature. This feature
+  *                       cannot be set in features for a device with
+-- 
+2.19.1
+
+
+
+.
+
+
