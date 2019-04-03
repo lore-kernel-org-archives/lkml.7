@@ -2,138 +2,139 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A6AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1894AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6AB20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hXTUkV+M"
+	by mail.kernel.org (Postfix) with ESMTP id E2C3B20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfDCDdA (ORCPT
+        id S1727346AbfDCDdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:33:00 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40503 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfDCDdA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:33:00 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so4323513plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jbb66Gq4hxOmdDo413ybTs1TFHX9luMtW2Ycj0bUqGk=;
-        b=hXTUkV+MQqfSMg+pre8w1bv+alE7XnEuXrIU41z2RE3j6dgyLtP8gvBZni/UDVgcQ1
-         aNXnWlxG/+Lz+08skF5QtIH/CkV3UPhOfDmtAJWPjpYhD0Zkv3j/XySpDUkhofeIS6Oo
-         q+FsumoyUMJB1L/wtT0h0iyuMZjsnazqK6th9qYrtp6uC54dYLqebAcVv77TCYnpRT4M
-         V+Jxth+PDNdxhKbVcZ0VcDq9vaYjDPhw6VJaia7tw3aC2niRNRkbG6ND9VeUIfRD/ISG
-         ndeyU6fUy9fjxMmRP8z4KUJD3UgvX0xYa6llauLa3j9NjNXlE5glYGWqtOUg9cVLV1Mf
-         Kgug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jbb66Gq4hxOmdDo413ybTs1TFHX9luMtW2Ycj0bUqGk=;
-        b=azYIEf7PTUOynmF0YmJdB3El0MxiHzb9flq00gewD7W19WCCRZLTMF1T5X3qVMyavI
-         VTzE1gXox8EJHYrHiEDqIL+UXcixMsSrRz8to3VxaFofSiNnK0W5vWSRyfrZjN5j09Ke
-         4xC/HUH4diRw6Bnh4tRRHDrZlBvsjw6oj8nbstjkvL/OGzq6rvbejI19yawxvUsnQwp7
-         HWuFg1eitpUWUFwRpPufV+MY5/ZY4nglhuWl+Zp5wwGqUaF69iUbN82MawFgLCHpx2T/
-         mPxINfUv1M8IyyRv3EYJ+dw4L16R5QF4ojMCGHfnIvKyP2NzDK35fsbPltVA3LJE9Yhd
-         fI+w==
-X-Gm-Message-State: APjAAAWmrwNjjjQR8Z2JpcFQilmKztPPjHWSraDJ0OBdmB1HnvVxjBM7
-        tqUBw0tXK3PcJJWax7oQSYTAgw==
-X-Google-Smtp-Source: APXvYqzYbiZDMR2KYfXB9LCNMpazJWieTQjoWPgjDD2xAmCVP+cUnlZCvYJiQoddac7tcjhgTfBfKg==
-X-Received: by 2002:a17:902:7481:: with SMTP id h1mr33384652pll.206.1554262379491;
-        Tue, 02 Apr 2019 20:32:59 -0700 (PDT)
-Received: from [10.71.14.66] ([147.50.13.10])
-        by smtp.googlemail.com with ESMTPSA id t82sm39923872pfa.153.2019.04.02.20.32.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 20:32:58 -0700 (PDT)
-Subject: Re: [PATCH 5/7] thermal/drivers/core: Remove depends on THERMAL in
- Kconfig
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
-References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
- <20190402161256.11044-5-daniel.lezcano@linaro.org>
- <CAHLCerNvp9Bb0TwCcO91ecrbzKGe7epCHFk=fx4RGJgHDE_BRA@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <9afb2911-512a-9048-9ed8-6aa9dd29a848@linaro.org>
-Date:   Wed, 3 Apr 2019 05:32:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 2 Apr 2019 23:33:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:59780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfDCDdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 23:33:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE52A80D;
+        Tue,  2 Apr 2019 20:33:21 -0700 (PDT)
+Received: from blommer (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFBD03F721;
+        Tue,  2 Apr 2019 20:33:19 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 04:33:15 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>
+Subject: Re: [PATCH] drivers: firmware: psci: add support for warm reset
+Message-ID: <20190403033314.k2wqxkm5c7imhtu5@blommer>
+References: <20190401181443.6459-1-aaro.koskinen@iki.fi>
 MIME-Version: 1.0
-In-Reply-To: <CAHLCerNvp9Bb0TwCcO91ecrbzKGe7epCHFk=fx4RGJgHDE_BRA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190401181443.6459-1-aaro.koskinen@iki.fi>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
-
-On 02/04/2019 20:51, Amit Kucheria wrote:
-> On Tue, Apr 2, 2019 at 11:14 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->>
->> The dependency on the THERMAL option to be set is already there implicitly
->> by the "if THERMAL" conditionnal option. The sub Kconfigs do not have to
->> check against the THERMAL option as they are called from a Kconfig block
->> which is enabled by the conditionnal option.
->>
->> Remove the useless "depends on THERMAL" in the Kconfigs.
->>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> ---
->>  drivers/thermal/Kconfig       | 2 --
->>  drivers/thermal/intel/Kconfig | 1 -
->>  drivers/thermal/qcom/Kconfig  | 1 -
->>  3 files changed, 4 deletions(-)
->>
->> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->> index ccf5b9408d7a..d8aa7fac8c56 100644
->> --- a/drivers/thermal/Kconfig
->> +++ b/drivers/thermal/Kconfig
->> @@ -24,7 +24,6 @@ config THERMAL_STATISTICS
->>
->>  config THERMAL_EMERGENCY_POWEROFF_DELAY_MS
->>         int "Emergency poweroff delay in milli-seconds"
->> -       depends on THERMAL
->>         default 0
->>         help
->>           Thermal subsystem will issue a graceful shutdown when
->> @@ -152,7 +151,6 @@ config CPU_THERMAL
->>         bool "generic cpu cooling support"
->>         depends on CPU_FREQ
->>         depends on THERMAL_OF
->> -       depends on THERMAL=y
+On Mon, Apr 01, 2019 at 09:14:43PM +0300, Aaro Koskinen wrote:
+> From: Aaro Koskinen <aaro.koskinen@nokia.com>
 > 
-> This will break the intention of afa1f2ab43d48d0e1. At the moment, we
-> need THERMAL=y if we want cpu_cooling.
+> Add support for warm reset using SYSTEM_RESET2 introduced in PSCI
+> 1.1 specification.
 
-The patch 1/7 changes the thermal option from tristate to bool, so the
-thermal is compiled-in always. The dependency is no longer needed in
-this case. Did I miss something?
+For reference, how do you intend to use this?
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+> ---
+>  drivers/firmware/psci.c   | 25 +++++++++++++++++++++++++
+>  include/uapi/linux/psci.h |  3 +++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+> index c80ec1d03274..1d95b5f6d403 100644
+> --- a/drivers/firmware/psci.c
+> +++ b/drivers/firmware/psci.c
+> @@ -73,6 +73,7 @@ enum psci_function {
+>  	PSCI_FN_CPU_ON,
+>  	PSCI_FN_CPU_OFF,
+>  	PSCI_FN_MIGRATE,
+> +	PSCI_FN_SYSTEM_RESET2,
+>  	PSCI_FN_MAX,
+>  };
+>  
+> @@ -256,6 +257,14 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+>  	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+>  }
+>  
+> +static void psci_sys_reset2(enum reboot_mode reboot_mode, const char *cmd)
+> +{
+> +	if (reboot_mode == REBOOT_WARM)
+> +		invoke_psci_fn(psci_function_id[PSCI_FN_SYSTEM_RESET2], 0, 0, 0);
+> +	else
+> +		psci_sys_reset(reboot_mode, cmd);
+> +}
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+What happens when RESET2 isn't available, but the user requests s REBOOT_WARM
+reset? It looks like we'd invoke a bogus SMC.
 
+Could we please add a preprocessor definition for SYSTEM_RESET_WARM so that
+it's clear that we're passing a parameter here?
+
+> +
+>  static void psci_sys_poweroff(void)
+>  {
+>  	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_OFF, 0, 0, 0);
+> @@ -564,6 +573,20 @@ static void __init psci_0_2_set_functions(void)
+>  	pm_power_off = psci_sys_poweroff;
+>  }
+>  
+> +static void __init psci_1_1_set_functions(void)
+> +{
+> +	int sys_reset2;
+> +	int feature;
+> +
+> +	sys_reset2 = PSCI_FN_NATIVE(1_1, SYSTEM_RESET2);
+> +	feature	= psci_features(sys_reset2);
+> +
+> +	if (feature != PSCI_RET_NOT_SUPPORTED) {
+> +		psci_function_id[PSCI_FN_SYSTEM_RESET2] = sys_reset2;
+> +		arm_pm_restart = psci_sys_reset2;
+> +	}
+> +}
+> +
+>  /*
+>   * Probe function for PSCI firmware versions >= 0.2
+>   */
+> @@ -588,6 +611,8 @@ static int __init psci_probe(void)
+>  		psci_init_smccc();
+>  		psci_init_cpu_suspend();
+>  		psci_init_system_suspend();
+> +		if (PSCI_VERSION_MINOR(ver) >= 1)
+> +			psci_1_1_set_functions();
+>  	}
+
+If we're going to add more things to this chain, can we please refactor this as:
+
+	if (ver < PSCI_VERSION(1, 0))
+		return;
+
+	/* PSCI 1.0 setup here */
+
+	if (ver < PSCI_VERSION(1,1))
+		return;
+
+	/* PSCI 1.1 setup here */
+
+... as that saves on indentation and is easier to extend in future.
+
+Thanks,
+Mark
