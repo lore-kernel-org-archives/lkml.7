@@ -2,79 +2,109 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584A7C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1536AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E39D206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B87206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eMKx8OvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfDCQw3 (ORCPT
+        id S1726948AbfDCQxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:52:29 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33480 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfDCQw2 (ORCPT
+        Wed, 3 Apr 2019 12:53:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49256 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbfDCQxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:52:28 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hBj7X-0003bq-AE; Wed, 03 Apr 2019 16:52:15 +0000
-Date:   Wed, 3 Apr 2019 17:52:15 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, willemb@google.com, edumazet@google.com,
-        fw@strlen.de, sagi@lightbitslabs.com, hch@lst.de,
-        pabeni@redhat.com, pctammela@gmail.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] iov_iter: Fix build error without CONFIG_CRYPTO
-Message-ID: <20190403165215.GQ2217@ZenIV.linux.org.uk>
-References: <20190403095031.11720-1-yuehaibing@huawei.com>
+        Wed, 3 Apr 2019 12:53:03 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33Ghk6g131470;
+        Wed, 3 Apr 2019 16:52:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=iGxxtIVqEzp1RVOI6u7Mj+o50/tLE0xJ0apojvzIrxc=;
+ b=eMKx8OvZ6FoDYDKsbasn8MIS6dsh0biicj8fxmGWOf8mjW29OUno93FDZ+rwFoQ85kYt
+ T/w9UyqLWqtHrhEhQ1YaB1x0M4THLsgjrYQYKu3hxaBpDSXmilQ9jphwop3MwmoeEu/L
+ rC5FLKD33mFhSnenXyKKUUiyDizZOeTD9lkgtKHC3kQJewpFfzX30mP1u3tJ9tbdJkEq
+ wtKkTB0L4y1OdbAyedKLuGO/ltNYiHEPNgQF1kXtWt94CUFtzgQtRVhNTqxnDmE3EP86
+ 7YuQtJEC/ZNWVS+2eBwZ2vAUB9yB1AhAbxmkfPuTXEkmQA2yyvagoaSwygzGz0FLI1UX NQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2rhyvtaa5s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 16:52:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33GqBLc168298;
+        Wed, 3 Apr 2019 16:52:41 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2rm8f579tn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 16:52:41 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x33GqcFo004355;
+        Wed, 3 Apr 2019 16:52:38 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Apr 2019 09:52:37 -0700
+Date:   Wed, 3 Apr 2019 12:52:57 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Steven Sistare <steven.sistare@oracle.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        akpm@linux-foundation.org, linux_lkml_grp@oracle.com,
+        Alan Tull <atull@kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] convert locked_vm from unsigned long to atomic64_t
+Message-ID: <20190403165257.prekuppqbcempuxo@ca-dmjordan1.us.oracle.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+ <abe31bae-1bdf-b763-c4d1-5e4ea2ccda13@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403095031.11720-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <abe31bae-1bdf-b763-c4d1-5e4ea2ccda13@oracle.com>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904030114
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904030114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 05:50:31PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
+On Wed, Apr 03, 2019 at 08:51:13AM -0400, Steven Sistare wrote:
+> On 4/2/2019 4:41 PM, Daniel Jordan wrote:
+> > [1] https://lore.kernel.org/linux-mm/20190211224437.25267-1-daniel.m.jordan@oracle.com/
 > 
-> If CONFIG_CRYPTO is not set or set to m,
-> gcc building warn this:
-> 
-> lib/iov_iter.o: In function `hash_and_copy_to_iter':
-> iov_iter.c:(.text+0x9129): undefined reference to `crypto_stats_get'
-> iov_iter.c:(.text+0x9152): undefined reference to `crypto_stats_ahash_update'
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: d05f443554b3 ("iov_iter: introduce hash_and_copy_to_iter helper")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>   You could clean all 6 patches up nicely with a common subroutine that
+> increases locked_vm subject to the rlimit.  Pass a bool arg that is true if
+> the  limit should be enforced, !dma->lock_cap for one call site, and
+> !capable(CAP_IPC_LOCK) for the rest.  Push the warnings and debug statements
+> to the subroutine as well.  One patch could refactor, and a second could
+> change the locking method.
 
-I'm not sure it's the right fix; might be better to have something like
-
-size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
-                struct iov_iter *i)
-{
-#ifdef CONFIG_CRYPTO
-        struct ahash_request *hash = hashp;
-        struct scatterlist sg;
-        size_t copied;
-
-        copied = copy_to_iter(addr, bytes, i);
-        sg_init_one(&sg, addr, copied);
-        ahash_request_set_crypt(hash, &sg, NULL, copied);
-        crypto_ahash_update(hash);
-        return copied;
-#else
-	return 0;
-#endif
-}
-EXPORT_SYMBOL(hash_and_copy_to_iter);
-
-instead.  Objections?
+Yes, I tried writing, but didn't end up including, such a subroutine for [1].
+The devil was in the details, but with the cmpxchg business, it's more
+worthwhile to iron all those out.  I'll give it a try.
