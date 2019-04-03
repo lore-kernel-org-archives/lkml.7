@@ -2,71 +2,74 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7516EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC2AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448EA2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C12214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554284467;
+	bh=NXyN6Su33fVYiNatkAtDtUCyzSWg58qHU+DgJyZ8oD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tOzy2emK34mpsqWegqbfUOK9MkJ7+C23D97Je+mcb5KSTBAgBtkcIslVL7xweBN0b
+	 qQi3wdEqFIEn99m+Ftsdgoxro5eAmMK02q5KR4LhdRCEXDokZFyiLiIya/AEel7Toy
+	 +gOEWUGuZpo4jwLfH/IuuhcvQAxd7/ecfJtllv8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfDCJk4 (ORCPT
+        id S1726549AbfDCJlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:40:56 -0400
-Received: from charybdis-ext.suse.de ([195.135.221.2]:44919 "EHLO suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbfDCJkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:40:55 -0400
-Received: by suse.de (Postfix, from userid 1000)
-        id A2A2647F0; Wed,  3 Apr 2019 11:40:54 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 11:40:54 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
- memory
-Message-ID: <20190403094054.jdr7lxm45htgcsk7@d104.suse.de>
-References: <20190329084547.5k37xjwvkgffwajo@d104.suse.de>
- <20190329134243.GA30026@dhcp22.suse.cz>
- <20190401075936.bjt2qsrhw77rib77@d104.suse.de>
- <20190401115306.GF28293@dhcp22.suse.cz>
- <20190402082812.fefamf7qlzulb7t2@d104.suse.de>
- <20190402124845.GD28293@dhcp22.suse.cz>
- <20190403080113.adj2m3szhhnvzu56@d104.suse.de>
- <20190403081232.GB15605@dhcp22.suse.cz>
- <d55aa259-56c0-9601-ffce-997ea1fb3ac5@redhat.com>
- <20190403083757.GC15605@dhcp22.suse.cz>
+        Wed, 3 Apr 2019 05:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfDCJlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:41:06 -0400
+Received: from X250 (unknown [147.50.13.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECA972082C;
+        Wed,  3 Apr 2019 09:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554284465;
+        bh=NXyN6Su33fVYiNatkAtDtUCyzSWg58qHU+DgJyZ8oD0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ab/UIeXqu4GmP/gjv9yfCRo2xIckGDdfgM3IhT5E0sYp6tmZhJSkjFsxKpM4KlOX8
+         0bVA3DGdZthF5DL7opaLgjL2W3jOF3j7Z9JVh0iQrFiUR9t/9tYHjHW8GTJRQ8gqdv
+         UwyhZA/RIlttF1KUbjOFujPUXb15RdHxpdEoHyj8=
+Date:   Wed, 3 Apr 2019 16:40:58 +0700
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: dts: imx7d: Specify viewport count for PCIE
+ block
+Message-ID: <20190403094057.GE7932@X250>
+References: <20190327063841.28350-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403083757.GC15605@dhcp22.suse.cz>
-User-Agent: NeoMutt/20170421 (1.8.2)
+In-Reply-To: <20190327063841.28350-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:37:57AM +0200, Michal Hocko wrote:
-> That being said it should be the caller of the hotplug code to tell
-> the vmemmap allocation strategy. For starter, I would only pack vmemmaps
-> for "regular" kernel zone memory. Movable zones should be more careful.
-> We can always re-evaluate later when there is a strong demand for huge
-> pages on movable zones but this is not the case now because those pages
-> are not really movable in practice.
+On Tue, Mar 26, 2019 at 11:38:40PM -0700, Andrey Smirnov wrote:
+> i.MX7D comes with 4 viewports, so configure PCIE node accordingly so
+> that the driver won't assume we only have 2.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 
-I agree that makes sense to let the caller specify if it wants to allocate
-vmemmaps per memblock or per memory-range, so we are more flexible when it
-comes to granularity in hot-add/hot-remove operations.
-
-But the thing is that the zones are picked at onling stage, while
-vmemmaps are created at hot-add stage, so I am not sure we can define
-the strategy depending on the zone.
-
--- 
-Oscar Salvador
-SUSE L3
+Applied both, thanks.
