@@ -2,99 +2,165 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EF3C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C228C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8CD20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A4F20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfDCJUl (ORCPT
+        id S1726530AbfDCJUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:20:41 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:2788 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725907AbfDCJUl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:20:41 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3397F3d015828;
-        Wed, 3 Apr 2019 11:20:30 +0200
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rmhar2tes-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 03 Apr 2019 11:20:30 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0801931;
-        Wed,  3 Apr 2019 09:20:30 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DBC641863;
-        Wed,  3 Apr 2019 09:20:29 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 3 Apr 2019
- 11:20:29 +0200
-Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019 11:20:29
- +0200
-From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/stm: ltdc: limit number of layer to avoid memory overflow
-Date:   Wed, 3 Apr 2019 11:20:16 +0200
-Message-ID: <1554283216-2700-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 3 Apr 2019 05:20:49 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5659 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725907AbfDCJUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:20:48 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [10.3.19.208])
+        by Forcepoint Email with ESMTP id 5741592185FE33C41F48;
+        Wed,  3 Apr 2019 17:20:46 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Wed, 3 Apr 2019
+ 17:20:39 +0800
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH] driver core: Postpone DMA tear-down until after devres
+ release for probe failure
+To:     Greg KH <gregkh@linuxfoundation.org>
+References: <1553767685-27077-1-git-send-email-john.garry@huawei.com>
+ <703aca1f-9475-b50d-624a-5f1ceea2c3b2@huawei.com>
+ <20190403081433.GA13222@kroah.com>
+CC:     <rafael@kernel.org>, <linuxarm@huawei.com>,
+        <chenxiang66@hisilicon.com>, <robin.murphy@arm.com>,
+        <geert@linux-m68k.org>, <linux-kernel@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh@kernel.org>,
+        <hch@lst.de>
+Message-ID: <3e1f3e2e-a1d3-ecaf-0931-44b4c10faffe@huawei.com>
+Date:   Wed, 3 Apr 2019 10:20:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.23.97]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_05:,,
- signatures=0
+In-Reply-To: <20190403081433.GA13222@kroah.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the number of layer is greater than LTDC_MAX_LAYER, we can have
-memory overflow when reading plane_fpsi[].
+On 03/04/2019 09:14, Greg KH wrote:
+> On Wed, Apr 03, 2019 at 09:02:36AM +0100, John Garry wrote:
+>> On 28/03/2019 10:08, John Garry wrote:
+>>> In commit 376991db4b64 ("driver core: Postpone DMA tear-down until after
+>>> devres release"), we changed the ordering of tearing down the device DMA
+>>> ops and releasing all the device's resources; this was because the DMA ops
+>>> should be maintained until we release the device's managed DMA memories.
+>>>
+>>
+>> Hi all,
+>>
+>> A friendly reminder on this patch... I didn't see any update.
+>>
+>> I thought that it had some importance.
+>>
+>> Thanks,
+>> John
+>>
+>>> However, we have seen another crash on an arm64 system when a
+>>> device driver probe fails:
+>>>
+>>>   hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 2
+>>>   scsi host1: hisi_sas_v3_hw
+>>>   BUG: Bad page state in process swapper/0  pfn:313f5
+>>>   page:ffff7e0000c4fd40 count:1 mapcount:0
+>>>   mapping:0000000000000000 index:0x0
+>>>   flags: 0xfffe00000001000(reserved)
+>>>   raw: 0fffe00000001000 ffff7e0000c4fd48 ffff7e0000c4fd48
+>>> 0000000000000000
+>>>   raw: 0000000000000000 0000000000000000 00000001ffffffff
+>>> 0000000000000000
+>>>   page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+>>>   bad because of flags: 0x1000(reserved)
+>>>   Modules linked in:
+>>>   CPU: 49 PID: 1 Comm: swapper/0 Not tainted
+>>> 5.1.0-rc1-43081-g22d97fd-dirty #1433
+>>>   Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
+>>> RC0 - V1.12.01 01/29/2019
+>>>   Call trace:
+>>>   dump_backtrace+0x0/0x118
+>>>   show_stack+0x14/0x1c
+>>>   dump_stack+0xa4/0xc8
+>>>   bad_page+0xe4/0x13c
+>>>   free_pages_check_bad+0x4c/0xc0
+>>>   __free_pages_ok+0x30c/0x340
+>>>   __free_pages+0x30/0x44
+>>>   __dma_direct_free_pages+0x30/0x38
+>>>   dma_direct_free+0x24/0x38
+>>>   dma_free_attrs+0x9c/0xd8
+>>>   dmam_release+0x20/0x28
+>>>   release_nodes+0x17c/0x220
+>>>   devres_release_all+0x34/0x54
+>>>   really_probe+0xc4/0x2c8
+>>>   driver_probe_device+0x58/0xfc
+>>>   device_driver_attach+0x68/0x70
+>>>   __driver_attach+0x94/0xdc
+>>>   bus_for_each_dev+0x5c/0xb4
+>>>   driver_attach+0x20/0x28
+>>>   bus_add_driver+0x14c/0x200
+>>>   driver_register+0x6c/0x124
+>>>   __pci_register_driver+0x48/0x50
+>>>   sas_v3_pci_driver_init+0x20/0x28
+>>>   do_one_initcall+0x40/0x25c
+>>>   kernel_init_freeable+0x2b8/0x3c0
+>>>   kernel_init+0x10/0x100
+>>>   ret_from_fork+0x10/0x18
+>>>   Disabling lock debugging due to kernel taint
+>>>   BUG: Bad page state in process swapper/0  pfn:313f6
+>>>   page:ffff7e0000c4fd80 count:1 mapcount:0
+>>> mapping:0000000000000000 index:0x0
+>>> [   89.322983] flags: 0xfffe00000001000(reserved)
+>>>   raw: 0fffe00000001000 ffff7e0000c4fd88 ffff7e0000c4fd88
+>>> 0000000000000000
+>>>   raw: 0000000000000000 0000000000000000 00000001ffffffff
+>>> 0000000000000000
+>>>
+>>> The crash occurs for the same reason.
+>>>
+>>> In this case, on the really_probe() failure path, we are still clearing
+>>> the DMA ops prior to releasing the device's managed memories.
+>>>
+>>> This patch fixes this issue by reordering the DMA ops teardown and the
+>>> call to devres_release_all() on the failure path.
+>>>
+>>> Reported-by: Xiang Chen <chenxiang66@hisilicon.com>
+>>> Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
+>>> Signed-off-by: John Garry <john.garry@huawei.com>
+>
+> So does this "fix" 376991db4b64?  If so, should this be added to the
+> patch and also backported to the stable trees?
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
----
- drivers/gpu/drm/stm/ltdc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Hi Greg,
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 32fd6a3..05bd4b6 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -1021,10 +1021,13 @@ static int ltdc_get_caps(struct drm_device *ddev)
- 	struct ltdc_device *ldev = ddev->dev_private;
- 	u32 bus_width_log2, lcr, gc2r;
- 
--	/* at least 1 layer must be managed */
-+	/*
-+	 * at least 1 layer must be managed & the number of layers
-+	 * must not exceed LTDC_MAX_LAYER
-+	 */
- 	lcr = reg_read(ldev->regs, LTDC_LCR);
- 
--	ldev->caps.nb_layers = max_t(int, lcr, 1);
-+	ldev->caps.nb_layers = clamp((int)lcr, 1, LTDC_MAX_LAYER);
- 
- 	/* set data bus width */
- 	gc2r = reg_read(ldev->regs, LTDC_GC2R);
--- 
-2.7.4
+No, I don't think so. I'd say it supplements it. Here I'm trying to fix 
+up another path in which we tear down the DMA ops prior to releasing the 
+device's resources.
+
+I didn't add a fixes tag as 376991db4b64 didn't have one either. It will 
+need to be backported to stable, I figure the same as 376991db4b64.
+
+Thanks,
+John
+
+>
+> thanks,
+>
+> greg k-h
+>
+> .
+>
+
 
