@@ -2,71 +2,92 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FCAC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EA5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17AEF20700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB0D2133D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:19:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RrnKrvC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfDCSSe (ORCPT
+        id S1726458AbfDCSTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 14:18:34 -0400
-Received: from mga01.intel.com ([192.55.52.88]:7393 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbfDCSSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 14:18:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 11:18:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,305,1549958400"; 
-   d="scan'208";a="131198217"
-Received: from oakcakay-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.254.144])
-  by orsmga008.jf.intel.com with ESMTP; 03 Apr 2019 11:18:28 -0700
-Date:   Wed, 3 Apr 2019 21:18:27 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, linux-kernel@microsoft.com, bryankel@microsoft.com,
-        thiruan@microsoft.com, suredd@microsoft.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 2/2] ftpm: firmware TPM running in TEE
-Message-ID: <20190403181827.GB17006@linux.intel.com>
-References: <20190402193316.15144-1-sashal@kernel.org>
- <20190402193316.15144-2-sashal@kernel.org>
+        Wed, 3 Apr 2019 14:19:33 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40582 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfDCSTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 14:19:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x33IJO6k060613;
+        Wed, 3 Apr 2019 13:19:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554315564;
+        bh=lIKnU3NDBCgql+RGCVa4BBUqTEy5yZRn3Jn1HUAz0tw=;
+        h=From:To:CC:Subject:Date;
+        b=RrnKrvC6SzlyrTuCWPsGfrfM8ziQObvsQqnNj5PsstZsU4EydkqSwSvtxs2PWEbIq
+         PwP+tgqnK+B9kYaULZR3i7LRe+/bYLSzbZGRHnDfG4JniQTU5EjhUPrtfR5JY7ByME
+         smx7dFB37FAoikcs+cPdMfzoNBEchU/fKXo85NaY=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x33IJO63003058
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 3 Apr 2019 13:19:24 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 3 Apr
+ 2019 13:19:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 3 Apr 2019 13:19:24 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x33IJOaQ010013;
+        Wed, 3 Apr 2019 13:19:24 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <rdunlap@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] leds: Small fixes for Flash class description
+Date:   Wed, 3 Apr 2019 13:19:22 -0500
+Message-ID: <20190403181922.21273-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.12.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402193316.15144-2-sashal@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 03:33:16PM -0400, Sasha Levin wrote:
-> This patch adds support for a software-only implementation of a TPM
-> running in TEE.
-> 
-> There is extensive documentation of the design here:
-> https://www.microsoft.com/en-us/research/publication/ftpm-software-implementation-tpm-chip/ .
-> 
-> As well as reference code for the firmware available here:
-> https://github.com/Microsoft/ms-tpm-20-ref/tree/master/Samples/ARM32-FirmwareTPM
-> 
-> Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix misspelling and capitalization of LED in the Kconfig.
 
-What is the context anyway? I mean tpm_crb already supports fTPM running
-in TZ.
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-/Jarkko
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a72f97fca57b..f24d31138471 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -23,8 +23,8 @@ config LEDS_CLASS_FLASH
+ 	tristate "LED Flash Class Support"
+ 	depends on LEDS_CLASS
+ 	help
+-	  This option enables the flash led sysfs class in /sys/class/leds.
+-	  It wrapps LED Class and adds flash LEDs specific sysfs attributes
++	  This option enables the flash LED sysfs class in /sys/class/leds.
++	  It wraps LED Class and adds flash LEDs specific sysfs attributes
+ 	  and kernel internal API to it. You'll need this to provide support
+ 	  for the flash related features of a LED device. It can be built
+ 	  as a module.
+-- 
+2.19.0
+
