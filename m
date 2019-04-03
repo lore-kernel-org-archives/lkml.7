@@ -2,424 +2,73 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1044EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D565C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86182063F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E6320830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfDCCs7 (ORCPT
+        id S1726836AbfDCCyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 22:48:59 -0400
-Received: from foss.arm.com ([217.140.101.70]:59386 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfDCCs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 22:48:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E8B0374;
-        Tue,  2 Apr 2019 19:48:58 -0700 (PDT)
-Received: from blommer (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75A9A3F68F;
-        Tue,  2 Apr 2019 19:48:53 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 03:48:43 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] arm64: implement ftrace with regs
-Message-ID: <20190403024842.drobymuwvx6hmwv7@blommer>
-References: <20190118163736.6A99268CEB@newverein.lst.de>
- <20190118163908.E338E68D93@newverein.lst.de>
+        Tue, 2 Apr 2019 22:54:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44438 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726411AbfDCCyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 22:54:39 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [10.3.19.208])
+        by Forcepoint Email with ESMTP id F22A69FEC65C9BC8944B;
+        Wed,  3 Apr 2019 10:54:36 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 3 Apr 2019 10:54:28 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <ard.biesheuvel@linaro.org>, <takahiro.akashi@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH 0/3] support reserving crashkernel above 4G on arm64 kdump
+Date:   Wed, 3 Apr 2019 11:05:43 +0800
+Message-ID: <20190403030546.23718-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190118163908.E338E68D93@newverein.lst.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Torsten,
+When crashkernel is reserved above 4G in memory, kernel should reserve
+some amount of low memory for swiotlb and some DMA buffers. So there may
+be two crash kernel regions, one is below 4G, the other is above 4G.
 
-Sorry for the long delay prior to this reply.
+Crash dump kernel reads more than one crash kernel regions via a dtb
+property under node /chosen,
+linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
 
-On Fri, Jan 18, 2019 at 05:39:08PM +0100, Torsten Duwe wrote:
-> Once gcc8 adds 2 NOPs at the beginning of each function, replace the
-> first NOP thus generated with a quick LR saver (move it to scratch reg
-> x9), so the 2nd replacement insn, the call to ftrace, does not clobber
-> the value. Ftrace will then generate the standard stack frames.
-> 
-> Note that patchable-function-entry in GCC disables IPA-RA, which means
-> ABI register calling conventions are obeyed *and* scratch registers
-> such as x9 are available.
-> 
-> Introduce and handle an ftrace_regs_trampoline for module PLTs, right
-> after ftrace_trampoline, and double the size of this special section.
-> 
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> 
-> ---
-> 
-> Mark, if you see your ftrace entry macro code being represented correctly
-> here, please add your sign-off, As I've initially copied it from your mail.
-> 
-> ---
->  arch/arm64/include/asm/ftrace.h  |   17 ++++-
->  arch/arm64/include/asm/module.h  |    3 
->  arch/arm64/kernel/entry-ftrace.S |  125 +++++++++++++++++++++++++++++++++++++--
->  arch/arm64/kernel/ftrace.c       |  114 ++++++++++++++++++++++++++---------
->  arch/arm64/kernel/module-plts.c  |    3 
->  arch/arm64/kernel/module.c       |    2 
->  6 files changed, 227 insertions(+), 37 deletions(-)
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -14,9 +14,24 @@
->  #include <asm/insn.h>
->  
->  #define HAVE_FUNCTION_GRAPH_FP_TEST
-> -#define MCOUNT_ADDR		((unsigned long)_mcount)
->  #define MCOUNT_INSN_SIZE	AARCH64_INSN_SIZE
->  
-> +/*
-> + * DYNAMIC_FTRACE_WITH_REGS is implemented by adding 2 NOPs at the beginning
-> + * of each function, with the second NOP actually calling ftrace. In contrary
-> + * to a classic _mcount call, the call instruction to be modified is thus
-> + * the second one, and not the only one.
-> + */
-> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-> +#define ARCH_SUPPORTS_FTRACE_OPS 1
-> +#define REC_IP_BRANCH_OFFSET AARCH64_INSN_SIZE
-> +/* All we need is some magic value. Simply use "_mCount:" */
-> +#define MCOUNT_ADDR		(0x5f6d436f756e743a)
+Besides, we need to modify kexec-tools:
+  arm64: support more than one crash kernel regions
 
-I'm really not keen on having a magic constant, and I'd really like to
-see MCOUNT_ADDR disappear entirely when the compiler doesn't generate an
-mcount call. I'm concerned that this is confusing and fragile.
+Chen Zhou (3):
+  arm64: kdump: support reserving crashkernel above 4G
+  arm64: kdump: support more than one crash kernel regions
+  kdump: update Documentation about crashkernel on arm64
 
-I think that it would be better to make the core ftrace API agnostic of
-mcount, and to teach it that there's a one-time initialization step for
-callsites (which is not necessarily patching a call with a NOP).
+ Documentation/admin-guide/kernel-parameters.txt |   4 +-
+ arch/arm64/kernel/setup.c                       |   3 +
+ arch/arm64/mm/init.c                            | 108 ++++++++++++++++++++----
+ include/linux/memblock.h                        |   1 +
+ mm/memblock.c                                   |  40 +++++++++
+ 5 files changed, 139 insertions(+), 17 deletions(-)
 
-We currently have:
+-- 
+2.7.4
 
-ftrace_make_nop(mod, rec, addr)
-ftrace_make_call(rec, addr)
-ftrace_modify_call(rec, old_addr, new_addr)
-
-... whereas we could have:
-
-ftrace_call_init(mod, rec)
-ftrace_call_enable(rec, addr)
-ftrace_call_disable(rec, addr)
-ftrace_call_modify(rec, old_addr, new_addr)
-
-... so we wouldn't need to special-case anything for initialization (and
-don't need MCOUNT_ADDR at all), and it would be clearer as to what was
-happening at each stage.
-
-> +#else
-> +#define REC_IP_BRANCH_OFFSET 0
-> +#define MCOUNT_ADDR		((unsigned long)_mcount)
-> +#endif
-> +
->  #ifndef __ASSEMBLY__
->  #include <linux/compat.h>
->  
-> --- a/arch/arm64/kernel/entry-ftrace.S
-> +++ b/arch/arm64/kernel/entry-ftrace.S
-> @@ -10,6 +10,7 @@
->   */
->  
->  #include <linux/linkage.h>
-> +#include <asm/asm-offsets.h>
->  #include <asm/assembler.h>
->  #include <asm/ftrace.h>
->  #include <asm/insn.h>
-> @@ -124,6 +125,7 @@ EXPORT_SYMBOL(_mcount)
->  NOKPROBE(_mcount)
->  
->  #else /* CONFIG_DYNAMIC_FTRACE */
-> +#ifndef CONFIG_DYNAMIC_FTRACE_WITH_REGS
->  /*
->   * _mcount() is used to build the kernel with -pg option, but all the branch
->   * instructions to _mcount() are replaced to NOP initially at kernel start up,
-> @@ -163,11 +165,6 @@ GLOBAL(ftrace_graph_call)		// ftrace_gra
->  
->  	mcount_exit
->  ENDPROC(ftrace_caller)
-> -#endif /* CONFIG_DYNAMIC_FTRACE */
-> -
-> -ENTRY(ftrace_stub)
-> -	ret
-> -ENDPROC(ftrace_stub)
->  
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  /*
-> @@ -187,7 +184,125 @@ ENTRY(ftrace_graph_caller)
->  
->  	mcount_exit
->  ENDPROC(ftrace_graph_caller)
-> +#endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-> +
-> +#else /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-> +
-> +	.macro  ftrace_regs_entry, allregs=0
-> +	/* make room for pt_regs, plus a callee frame */
-> +	sub	sp, sp, #(S_FRAME_SIZE + 16)
-> +
-> +	/* save function arguments */
-> +	stp	x0, x1, [sp, #S_X0]
-> +	stp	x2, x3, [sp, #S_X2]
-> +	stp	x4, x5, [sp, #S_X4]
-> +	stp	x6, x7, [sp, #S_X6]
-> +	stp	x8, x9, [sp, #S_X8]
->  
-> +	.if \allregs == 1
-> +	stp	x10, x11, [sp, #S_X10]
-> +	stp	x12, x13, [sp, #S_X12]
-> +	stp	x14, x15, [sp, #S_X14]
-> +	stp	x16, x17, [sp, #S_X16]
-> +	stp	x18, x19, [sp, #S_X18]
-> +	stp	x20, x21, [sp, #S_X20]
-> +	stp	x22, x23, [sp, #S_X22]
-> +	stp	x24, x25, [sp, #S_X24]
-> +	stp	x26, x27, [sp, #S_X26]
-> +	.endif
-> +
-> +	/* Save fp and x28, which is used in this function. */
-> +	stp	x28, x29, [sp, #S_X28]
-> +
-> +	/* The stack pointer as it was on ftrace_caller entry... */
-> +	add	x28, sp, #(S_FRAME_SIZE + 16)
-> +	/* ...and the link Register at callee entry */
-> +	stp	x9, x28, [sp, #S_LR]	/* to pt_regs.r[30] and .sp */
-> +
-> +	/* The program counter just after the ftrace call site */
-> +	str	lr, [sp, #S_PC]
-
-For consistency with the existing ftrace assembly, please use 'x30'
-rather than 'lr'.
-
-> +
-> +	/* Now fill in callee's preliminary stackframe. */
-> +	stp	x29, x9, [sp, #S_FRAME_SIZE]
-> +	/* Let FP point to it. */
-> +	add	x29, sp, #S_FRAME_SIZE
-> +
-> +	/* Our stackframe, stored inside pt_regs. */
-> +	stp	x29, x30, [sp, #S_STACKFRAME]
-> +	add	x29, sp, #S_STACKFRAME
-> +	.endm
-> +
-> +ENTRY(ftrace_regs_caller)
-> +	ftrace_regs_entry	1
-> +	b	ftrace_common
-> +ENDPROC(ftrace_regs_caller)
-> +
-> +ENTRY(ftrace_caller)
-> +	ftrace_regs_entry	0
-> +	b	ftrace_common
-> +ENDPROC(ftrace_caller)
-> +
-> +ENTRY(ftrace_common)
-> +
-> +	mov	x3, sp		/* pt_regs are @sp */
-> +	ldr_l	x2, function_trace_op, x0
-> +	mov	x1, x9		/* parent IP */
-> +	sub	x0, lr, #8	/* function entry == IP */
-
-Please use 'x30' rather than 'lr'.
-
-> +
-> +GLOBAL(ftrace_call)
-> +	bl	ftrace_stub
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +GLOBAL(ftrace_graph_call)		// ftrace_graph_caller();
-> +	nop				// If enabled, this will be replaced
-> +					// "b ftrace_graph_caller"
-> +#endif
-> +
-> +/*
-> + * GCC's patchable-function-entry implicitly disables IPA-RA,
-> + * so all non-argument registers are either scratch / dead
-> + * or callee-saved (within the ftrace framework). Function
-> + * arguments of the call we are intercepting right now however
-> + * need to be preserved in any case.
-> + */
-> +ftrace_common_return:
-> +	/* restore function args */
-> +	ldp	x0, x1, [sp]
-> +	ldp	x2, x3, [sp, #S_X2]
-> +	ldp	x4, x5, [sp, #S_X4]
-> +	ldp	x6, x7, [sp, #S_X6]
-> +	ldr	x8, [sp, #S_X8]
-> +
-> +	/* restore fp and x28 */
-> +	ldp	x28, x29, [sp, #S_X28]
-> +
-> +	ldr	lr, [sp, #S_LR]
-
-Please use 'x30' rather than 'lr'.
-
-> +	ldr	x9, [sp, #S_PC]
-> +	/* clean up both frames, ours and callee preliminary */
-> +	add	sp, sp, #S_FRAME_SIZE + 16
-> +
-> +	ret	x9
-> +ENDPROC(ftrace_common)
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +ENTRY(ftrace_graph_caller)
-> +	ldr	x0, [sp, #S_PC]		   /* pc */
-> +	sub	x0, x0, #8	/* start of the ftrace call site */
-> +	add	x1, sp, #S_LR		   /* &lr */
-> +	ldr	x2, [sp, #S_FRAME_SIZE]	   /* fp */
-> +	bl	prepare_ftrace_return
-> +	b	ftrace_common_return
-> +ENDPROC(ftrace_graph_caller)
-> +#endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-> +#endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-> +#endif /* CONFIG_DYNAMIC_FTRACE */
-> +
-> +ENTRY(ftrace_stub)
-> +	ret
-> +ENDPROC(ftrace_stub)
-> +
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  /*
->   * void return_to_handler(void)
->   *
-> --- a/arch/arm64/kernel/ftrace.c
-> +++ b/arch/arm64/kernel/ftrace.c
-> @@ -65,19 +65,67 @@ int ftrace_update_ftrace_func(ftrace_fun
->  	return ftrace_modify_code(pc, 0, new, false);
->  }
->  
-> +#ifdef CONFIG_ARM64_MODULE_PLTS
-> +static int install_ftrace_trampoline(struct module *mod, unsigned long *addr)
-> +{
-> +	struct plt_entry trampoline, *mod_trampoline;
-> +
-> +	/*
-> +	 * Iterate over
-> +	 * mod->arch.ftrace_trampolines[MOD_ARCH_NR_FTRACE_TRAMPOLINES]
-> +	 * The assignment to various ftrace functions happens here.
-> +	 */
-> +	if (*addr == FTRACE_ADDR)
-> +		mod_trampoline = &mod->arch.ftrace_trampolines[0];
-> +	else if (*addr == FTRACE_REGS_ADDR)
-> +		mod_trampoline = &mod->arch.ftrace_trampolines[1];
-> +	else
-> +		return -EINVAL;
-> +
-> +	trampoline = get_plt_entry(*addr, mod_trampoline);
-> +
-> +	if (!plt_entries_equal(mod_trampoline, &trampoline)) {
-> +		/* point the trampoline at our ftrace entry point */
-> +		module_disable_ro(mod);
-> +		*mod_trampoline = trampoline;
-> +		module_enable_ro(mod, true);
-> +
-> +		/* update trampoline before patching in the branch */
-> +		smp_wmb();
-> +	}
-> +	*addr = (unsigned long)(void *)mod_trampoline;
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +/*
-> + * Ftrace with regs generates the tracer calls as close as possible to
-> + * the function entry; no stack frame has been set up at that point.
-> + * In order to make another call e.g to ftrace_caller, the LR must be
-> + * saved from being overwritten.
-> + * Between two functions, and with IPA-RA turned off, the scratch registers
-> + * are available, so move the LR to x9 before calling into ftrace.
-> + * "mov x9, lr" is officially aliased from "orr x9, xzr, lr".
-> + */
-> +#define MOV_X9_X30 aarch64_insn_gen_logical_shifted_reg( \
-> +			AARCH64_INSN_REG_9, AARCH64_INSN_REG_ZR, \
-> +			AARCH64_INSN_REG_LR, 0, AARCH64_INSN_VARIANT_64BIT, \
-> +			AARCH64_INSN_LOGIC_ORR)
-> +
->  /*
->   * Turn on the call to ftrace_caller() in instrumented function
->   */
->  int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->  {
-> -	unsigned long pc = rec->ip;
-> +	unsigned long pc = rec->ip + REC_IP_BRANCH_OFFSET;
->  	u32 old, new;
->  	long offset = (long)pc - (long)addr;
->  
->  	if (offset < -SZ_128M || offset >= SZ_128M) {
->  #ifdef CONFIG_ARM64_MODULE_PLTS
-> -		struct plt_entry trampoline;
->  		struct module *mod;
-> +		int ret;
->  
->  		/*
->  		 * On kernels that support module PLTs, the offset between the
-> @@ -96,32 +144,14 @@ int ftrace_make_call(struct dyn_ftrace *
->  		if (WARN_ON(!mod))
->  			return -EINVAL;
->  
-> -		/*
-> -		 * There is only one ftrace trampoline per module. For now,
-> -		 * this is not a problem since on arm64, all dynamic ftrace
-> -		 * invocations are routed via ftrace_caller(). This will need
-> -		 * to be revisited if support for multiple ftrace entry points
-> -		 * is added in the future, but for now, the pr_err() below
-> -		 * deals with a theoretical issue only.
-> -		 */
-> -		trampoline = get_plt_entry(addr, mod->arch.ftrace_trampoline);
-> -		if (!plt_entries_equal(mod->arch.ftrace_trampoline,
-> -				       &trampoline)) {
-> -			if (!plt_entries_equal(mod->arch.ftrace_trampoline,
-> -					       &(struct plt_entry){})) {
-> -				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
-> -				return -EINVAL;
-> -			}
-> -
-> -			/* point the trampoline to our ftrace entry point */
-> -			module_disable_ro(mod);
-> -			*mod->arch.ftrace_trampoline = trampoline;
-> -			module_enable_ro(mod, true);
-> +		/* Check against our well-known list of ftrace entry points */
-> +		if (addr == FTRACE_ADDR || addr == FTRACE_REGS_ADDR) {
-
-These checks exist within install_ftrace_trampoline(), so we don't need
-to duplicate them here.
-
-> +			ret = install_ftrace_trampoline(mod, &addr);
-> +			if (ret < 0)
-> +				return ret;
-> +		} else
-> +			return -EINVAL;
-
-Per coding style, if either branch of an if-else has braces, the other
-side should too.
-
-However, as above, I think you can get rid of this entirely, and rely on
-install_ftrace_trampoline() to return an error for a bad addr.
-
-Thanks,
-Mark.
