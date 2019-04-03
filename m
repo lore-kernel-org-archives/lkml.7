@@ -2,117 +2,150 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AEFC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E7DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADBC206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23499206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WCrErmxY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="BTM3kLNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfDCPwO (ORCPT
+        id S1727527AbfDCPw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:52:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39439 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfDCPwO (ORCPT
+        Wed, 3 Apr 2019 11:52:27 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:34260 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDCPw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:52:14 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j9so22076938wrn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 08:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m7qplqu/2+oy26DB0Pm6tiDZFg+/RROap+cgmPWZPC8=;
-        b=WCrErmxYI+LrXDFsd+5LvTzh9uDixA+IxHshBjviGKEfGfnqqEengQsRlj01EY+UNL
-         wjvakVt+zUba41q0DCxNrSQ4A/5zcHIUeztvjyA5/CY/g2I/hKjQpAunt04p/2xZJu81
-         yNT3f2pz4+0H1ToVCdCyHo9g56lYNuer5atl2hUeADGRk46i2BFqGYYje9SiS8MwSG0x
-         w5rwDHiGkZMoMjX0eOWf0avt53qNXYjJ5wD+l5TZwyeYoAyQ9vi246mmSuKA9k/hjLrr
-         2FblCmMD+NjxOXEHpEcLLRPVxCHOh4uGD5xNWZ7Vy7x8JjwgpzHtf17YQzK5p5QzaDIx
-         tfdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m7qplqu/2+oy26DB0Pm6tiDZFg+/RROap+cgmPWZPC8=;
-        b=sCTySI01dnDojNw14V0+zMkkaZoD7wvObPBlughXB4SS/7RtlxPiOOVLIcOJQVK88G
-         pTTGNJVsqkOLn4OFXuCUUrsmcUMH5vnyj9IG465uIgaZGZeER50ZWSd83hDWs1qgiFtb
-         OiP3Yy2P8XD+my/6zuvdksElvBeKebcXhJlSJkTCfLxan5MsDS2trvD6dEYKLwEX13N7
-         PIh2uKkygp9DFrT2HW+fF8ayeNTg1/qiW+SKNOnZ4RYY5KGpzIzDndF0Y4np2Mof3hOZ
-         Lh7yM0VZr2fynIzJbsZSJC2Qbk5LzACRGRYfEorOe1q3ote3qpjxghbc+rXNKDZuQ4ZH
-         cNXA==
-X-Gm-Message-State: APjAAAUc5wOyflJvfHxqGgL989zXdS5stEctEKJb1lkDa31NDRuqwXV3
-        IOthtPmbjcnn7rdGnkknPhqug3eYdaUSMv0ZRYRuiQ==
-X-Google-Smtp-Source: APXvYqzuf0bnJVTeRGST9QEGrXNaCv0YJpyYQSmpz+mZTZTXSGlCyz5zX9Qv8HXWVBHDdom1zOW1h4HHDQ7p7XrqQCo=
-X-Received: by 2002:adf:f8c1:: with SMTP id f1mr169928wrq.151.1554306732143;
- Wed, 03 Apr 2019 08:52:12 -0700 (PDT)
+        Wed, 3 Apr 2019 11:52:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554306744; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hCtHr8Int/M+XOTrbONnCRwTC5/kxayL/eNDSpPX30k=;
+        b=BTM3kLNL280YmMRgmo/WpOVQs1mReDubNMw4sKiUkTOywFUEDXtqWvmu3k+z4K3HcvJj/q
+        sVgQ4iTYHcPwOdGoufakSVvtNzA+5w96aSuAcaVmGOBTlErBceVsWwaBZDUSbueJ+GxK7p
+        O4DNnbHvaM329V3wh36JNskkXOyyLvA=
+Date:   Wed, 03 Apr 2019 17:52:20 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] usb: musb: Force-disable pullup on shutdown
+To:     Bin Liu <b-liu@ti.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me
+Message-Id: <1554306740.1177.1@crapouillou.net>
+In-Reply-To: <20190403154654.GR25852@uda0271908>
+References: <20190321144246.3547-1-paul@crapouillou.net>
+        <20190401171725.GK25852@uda0271908> <1554140782.10471.0@crapouillou.net>
+        <20190401182008.GL25852@uda0271908> <1554235122.13181.0@crapouillou.net>
+        <20190403132600.GQ25852@uda0271908> <1554305491.1177.0@crapouillou.net>
+        <20190403154654.GR25852@uda0271908>
 MIME-Version: 1.0
-References: <20190403134915.6616-1-olivier.tilmans@nokia-bell-labs.com> <CADVnQy=m7REuTMd7kOs95DwaG8A6gR+hDRfMsSKcyvB4M+PWzQ@mail.gmail.com>
-In-Reply-To: <CADVnQy=m7REuTMd7kOs95DwaG8A6gR+hDRfMsSKcyvB4M+PWzQ@mail.gmail.com>
-From:   Yuchung Cheng <ycheng@google.com>
-Date:   Wed, 3 Apr 2019 08:51:35 -0700
-Message-ID: <CAK6E8=eB_GoMugQXSFDOmvUkM9Xm37Xd=1EYC0zei8VsE1R5+A@mail.gmail.com>
-Subject: Re: [PATCH net-next] tcp: Accept ECT on SYN in the presence of RFC8311
-To:     Neal Cardwell <ncardwell@google.com>
-Cc:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
-        <olivier.tilmans@nokia-bell-labs.com>,
-        Bob Briscoe <research@bobbriscoe.net>,
-        "De Schepper, Koen (Nokia - BE/Antwerp)" 
-        <koen.de_schepper@nokia-bell-labs.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 8:39 AM Neal Cardwell <ncardwell@google.com> wrote:
->
-> On Wed, Apr 3, 2019 at 9:50 AM Tilmans, Olivier (Nokia - BE/Antwerp)
-> <olivier.tilmans@nokia-bell-labs.com> wrote:
-> >
-> > Linux currently disable ECN for incoming connections when the SYN
-> > requests ECN and the IP header has ECT(0)/ECT(1) set, as some
-> > networks were reportedly mangling the ToS byte, hence could later
-> > trigger false congestion notifications.
-> >
-> > RFC8311 =C2=A74.3 relaxes RFC3168's requirements such that ECT can be s=
-et
-> > one TCP control packets (including SYNs). The main benefit of this
-> > is the decreased probability of losing a SYN in a congested
-> > ECN-capable network (i.e., it avoids the initial 1s timeout).
-> > Additionally, this allows the development of newer TCP extensions,
-> > such as AccECN.
-> >
-> > This patch relaxes the previous check, by enabling ECN on incoming
-> > connections using SYN+ECT if at least one bit of the reserved flags
-> > of the TCP header is set. Such bit would indicate that the sender of
-> > the SYN is using a newer TCP feature than what the host implements,
-> > such as AccECN, and is thus implementing RFC8311. This enables
-> > end-hosts not supporting such extensions to still negociate ECN, and
-> > to have some of the benefits of using ECN on control packets.
-> >
-> > Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
-> > Suggested-by: Bob Briscoe <research@bobbriscoe.net>
-> > Cc: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
->
-> Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
 
->
-> Thank you for this patch, Olivier and Bob.
->
-> thanks,
-> neal
+
+Le mer. 3 avril 2019 =E0 17:46, Bin Liu <b-liu@ti.com> a =E9crit :
+> On Wed, Apr 03, 2019 at 05:31:31PM +0200, Paul Cercueil wrote:
+>>=20
+>>=20
+>>  Le mer. 3 avril 2019 =E0 15:26, Bin Liu <b-liu@ti.com> a =E9crit :
+>>  >On Tue, Apr 02, 2019 at 09:58:42PM +0200, Paul Cercueil wrote:
+>>  >> Hi,
+>>  >>
+>>  >> Le lun. 1 avril 2019 =E0 20:20, Bin Liu <b-liu@ti.com> a =E9crit :
+>>  >> >On Mon, Apr 01, 2019 at 07:46:22PM +0200, Paul Cercueil wrote:
+>>  >> >>
+>>  >> >>
+>>  >> >> Le lun. 1 avril 2019 =E0 19:17, Bin Liu <b-liu@ti.com> a=20
+>> =E9crit :
+>>  >> >> >On Thu, Mar 21, 2019 at 03:42:46PM +0100, Paul Cercueil=20
+>> wrote:
+>>  >> >> >> When the musb is shutdown, for instance when the driver is
+>>  >> >>unloaded,
+>>  >> >> >> force-disable the pullup. Otherwise, the host will still=20
+>> see
+>>  >> >> >>the gadget
+>>  >> >> >> device even after the shutdown.
+>>  >> >> >
+>>  >> >> >how would this happen?
+>>  >> >> >
+>>  >> >> >when musb-hdrc driver is unloaded, udc core removes the bound
+>>  >> >>gadget
+>>  >> >> >driver which calls musb_gadget_pullup() to disable the=20
+>> pullup.
+>>  >> >>
+>>  >> >> I'm testing with the jz4740-musb driver. I don't unload the
+>>  >> >>module (it's
+>>  >> >> built-in) but unbind it from sysfs.
+>>  >> >
+>>  >> >I did unbind too.
+>>  >> >
+>>  >> >root@am335x-evm:/sys/bus/platform/drivers/musb-hdrc# echo
+>>  >> >musb-hdrc.0 > unbind
+>>  >> >
+>>  >> >or unbind the glue driver:
+>>  >> >
+>>  >> >root@am335x-evm:/sys/bus/platform/drivers/musb-dsps# echo
+>>  >> >47401400.usb > unbind
+>>  >> >
+>>  >> >musb_gadget_pullup() is called in both cases.
+>>  >> >
+>>  >> >[ 3880.597014] [<bf444ab0>] (musb_gadget_pullup [musb_hdrc])=20
+>> from
+>>  >> >[<bf402cbc>] (usb_gadget_disconnect+0x3c/0xf4 [udc_core])
+>>  >> >[ 3880.607959] [<bf402cbc>] (usb_gadget_disconnect [udc_core])
+>>  >> >from [<bf403b28>] (usb_gadget_remove_driver+0x4c/0x90=20
+>> [udc_core])
+>>  >> >[ 3880.619338] [<bf403b28>] (usb_gadget_remove_driver=20
+>> [udc_core])
+>>  >> >from [<bf403d20>] (usb_del_gadget_udc+0x5c/0xc0 [udc_core])
+>>  >>
+>>  >> In my case this stops here, usb_del_gadget_udc() does not call
+>>  >> usb_gadget_remove_driver(), that's why the pullup is never=20
+>> disabled.
+>>  >>
+>>  >> I guess that's because udc->driver is NULL; I'm testing with
+>>  >
+>>  >then the pullup should be disable by now.
+>>  >
+>>  >> CONFIG_USB_CONFIGFS,
+>>  >> and I don't configure anything in sysfs before unbinding the=20
+>> driver.
+>>  >
+>>  >I didn't check on this, but I could imagine that
+>>  >- when a configfs gadget is bound to the udc, .pullup() is called;
+>>  >- when the configfs gadget is unbound from the udc, .pullup should=20
+>> be
+>>  >  called again to disable the pullup.
+>>=20
+>>  An important thing that I did not mention, is that the SoC boots
+>>  from USB,
+>>  so the pullup is active before the musb driver loads. Since in my=20
+>> case a
+>=20
+> It sounds to me that the musb driver should disable the pullup during
+> init.  Isn't it?
+
+Yes. I can move it to musb_gadget_setup(). Should I still protect it=20
+with
+the spinlock then?
+
+>>  configfs gadget is never bound, then .pullup() is never called, and=20
+>> when
+>>  I unbind the driver the pullup is still enabled.
+>=20
+> Regards,
+> -Bin.
+
+=
+
