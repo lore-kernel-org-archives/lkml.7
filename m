@@ -2,91 +2,125 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6A7C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7652FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F40420700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA0020700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfDCQko (ORCPT
+        id S1726582AbfDCQk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:40:44 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41798 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfDCQkn (ORCPT
+        Wed, 3 Apr 2019 12:40:56 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.100]:36765 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726396AbfDCQkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:40:43 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 10so12207404lfr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 09:40:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6CCS6Ad8hengQYIK+Cs6KJNOx4zF8Nw+BXALVhaDako=;
-        b=mlJPeTc2jDuJpSpEPnm/GeQFtacsy4x+biA2/aEYmrIu8Yn+HM0SnFJymTWyi0l856
-         z56lrIdQhZPZCoOnY2FhLCaM29wJkGwns1EZvhm91Hiz0XthFinpF5fUKFtIdGUFsXM7
-         VglYbap32IE+wruB0+GVX8KeJ3Hr0XDyrmv+vvBTep2kQWPBbRwE5eNeQ6EdKrDu87jA
-         NJ7btCeHCMORaMSWctH8dxRRsMRMAxmRzpcNEWpAICB2Ya5+BBS63zG1E0l2Ff7ebmZm
-         8Tn8K3unp+q9AC1N5detSFjwGjyPAhz3vj8bgaEBBmQq/x+iF8SBTjWkuJSMkMzYIq1D
-         ANhw==
-X-Gm-Message-State: APjAAAUxKilvB79xBFIkJzc08K3wEknU2IILkXK3Kn2EcIiq/anPfOiJ
-        W0wbS1qNkgsoD0YNQZxTVfxNvomvyc2a9EpemsTrOw==
-X-Google-Smtp-Source: APXvYqzeKFs0m1phk5nTbqpL/DYA8AWXeIhEwJT6y1rWk1td8im/1Qr+4g5BvCyB4EM9DNfLUeq9CXUK6GwacfCt4uE=
-X-Received: by 2002:a19:9145:: with SMTP id y5mr402273lfj.35.1554309641709;
- Wed, 03 Apr 2019 09:40:41 -0700 (PDT)
+        Wed, 3 Apr 2019 12:40:55 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id ACAD110E67A
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 11:40:54 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BiwYh3khS90onBiwYhHRgp; Wed, 03 Apr 2019 11:40:54 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.114.183] (port=42224 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hBiwX-001ZIn-Lm; Wed, 03 Apr 2019 11:40:53 -0500
+Date:   Wed, 3 Apr 2019 11:40:52 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] mwifiex: use struct_size() in kzalloc()
+Message-ID: <20190403164052.GA26381@embeddedor>
 MIME-Version: 1.0
-References: <20190328130306.25384-1-mcroce@redhat.com> <20190403140203.qq37rgcikvoawb5f@brauner.io>
- <CAGnkfhx+igF579dez6qwAxrtT-JrGSSEn-QmK+92447qBqXPpg@mail.gmail.com> <20190403155108.GI22763@bombadil.infradead.org>
-In-Reply-To: <20190403155108.GI22763@bombadil.infradead.org>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Wed, 3 Apr 2019 18:40:04 +0200
-Message-ID: <CAGnkfhxBafq4KeR8Jp5XBd7yWrMiofmEwqsCpb_7eL+ddgWagw@mail.gmail.com>
-Subject: Re: [PATCH] kernel/sysctl.c: fix out of bounds access in fs.file-max
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Zev Weiss <zev@bewilderbeest.net>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.114.183
+X-Source-L: No
+X-Exim-ID: 1hBiwX-001ZIn-Lm
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.114.183]:42224
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 18
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 5:51 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Wed, Apr 03, 2019 at 05:24:26PM +0200, Matteo Croce wrote:
-> > On Wed, Apr 3, 2019 at 4:02 PM Christian Brauner <christian@brauner.io> wrote:
-> > > Yeah, maybe but it still feels cleaner and more obvious to just add:
-> > >
-> > > static long long_zero;
-> > >
-> > > given that most callers actually seem to want an (unsigned) int.
-> > >
-> > > I don't have a strong opinion though so if others feel that it's just a
-> > > waste of space consider it acked.
-> > >
-> >
-> > Well, given that the value is zero, in this expectional case we could
-> > avoid duplicating the symbol and save 4 bytes.
-> > What the maintainers think?
->
-> If we care about saving four bytes, we could just pass the address of
-> ZERO_PAGE(0).
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-That would work, work too, maybe it's a bit overkill.
-int zero is always there and it's static, so enlarging it to long
-should be a straightforward fix.
-Obviously we can't do it for other numbers, but we can alias it just
-for the zero case..
+struct foo {
+    int stuff;
+    struct boo entry[];
+};
 
-Regards,
+size = sizeof(struct foo) + count * sizeof(struct boo);
+instance = kzalloc(size, GFP_KERNEL)
 
---
-Matteo Croce
-per aspera ad upstream
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
+
+Notice that, in this case, variable regd_size is not necessary,
+hence it is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
+index 69e3b624adbb..24b33e20e7a9 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
+@@ -1025,17 +1025,14 @@ mwifiex_create_custom_regdomain(struct mwifiex_private *priv,
+ 	struct ieee80211_regdomain *regd;
+ 	struct ieee80211_reg_rule *rule;
+ 	bool new_rule;
+-	int regd_size, idx, freq, prev_freq = 0;
++	int idx, freq, prev_freq = 0;
+ 	u32 bw, prev_bw = 0;
+ 	u8 chflags, prev_chflags = 0, valid_rules = 0;
+ 
+ 	if (WARN_ON_ONCE(num_chan > NL80211_MAX_SUPP_REG_RULES))
+ 		return ERR_PTR(-EINVAL);
+ 
+-	regd_size = sizeof(struct ieee80211_regdomain) +
+-		    num_chan * sizeof(struct ieee80211_reg_rule);
+-
+-	regd = kzalloc(regd_size, GFP_KERNEL);
++	regd = kzalloc(struct_size(regd, reg_rules, num_chan), GFP_KERNEL);
+ 	if (!regd)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-- 
+2.21.0
+
