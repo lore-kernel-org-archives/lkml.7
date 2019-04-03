@@ -2,132 +2,124 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3AFC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DD2C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B8F206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A3A2054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:39:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oy1474TU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDCPhs (ORCPT
+        id S1726415AbfDCPj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:37:48 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.170]:20028 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726105AbfDCPhq (ORCPT
+        Wed, 3 Apr 2019 11:39:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41098 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfDCPj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:37:46 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id CA332E345
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 10:37:45 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BhxRh3qul2qH7BhxRhSGX4; Wed, 03 Apr 2019 10:37:45 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=41268 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hBhxR-000tLH-2O; Wed, 03 Apr 2019 10:37:45 -0500
-Date:   Wed, 3 Apr 2019 10:37:44 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] nl80211: Use struct_size() in kzalloc()
-Message-ID: <20190403153744.GA14333@embeddedor>
+        Wed, 3 Apr 2019 11:39:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 188so8345833pfd.8;
+        Wed, 03 Apr 2019 08:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4K7W0j8rTa+YRaaAstvUDc1uzqxpUCqMhMXLcqU75Hc=;
+        b=oy1474TUswjxugfN0Bu6CcbkHenxjvmFB5/KVpITrqwm3QTufVyDd8JTu8xFYegoWr
+         QeQGs/f8FknYLjzs2NQtUvZB1BkOrP0Lfu8GmYsii9D77HRx+PmeqmHG0FO2GyjaU2Tu
+         b6oog/NOgd8OI5PmYzPi0rEeMx+muDrHJIrx8buHEH79aZlRG8CvqlLncAtbw57UtAqm
+         1TKRhutqzb2GAVXggizw3AhvuXW4QRccQ8vMlcb7EfLBzgTQ3AMEWXTWUGMnBb7geBtX
+         /YXhebJCdjVcGVShGKW6F+4C7kEePemnsxzLXzWw1BXIWUdVV8/YgMV6fbH1b7i7Rv9P
+         qMDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4K7W0j8rTa+YRaaAstvUDc1uzqxpUCqMhMXLcqU75Hc=;
+        b=a76AM+7S5jbVbOQ/bw7WvhmShU2wbi9yOEAMDNzi0j4Wb8uR0RxiCkW4UWFZcQ3WRu
+         RuacvKCpzWlZHK//TNIRjRn4YwXXiNbt8dSvc9xqS9jscaC3aLz9ssLXXuH29okJbe3X
+         uLplB1Mef7VZEiCvf3dKLGPV7BZ2tNjiJ6P4WmI4M1I30nxDPa7RiluAHesSDTfcJhxs
+         0UqtT/pJgM3X8Uz8YXVQmSftLfGri8Q6qVJIvoaa8Q9d2bCj/gxocNehqU1gWAoUZXwc
+         PGw+Nf4SmMD9H7fSaoXAvWqz9QDcMD+aAYySL+3bsf8DpjuU7gtx5ap/QDN3hMQ/qiO2
+         0EEA==
+X-Gm-Message-State: APjAAAXZa6HgbWGuzMp7jAOPADwvBh/8dKbSREGkNmmDgJZKPLEYq7hG
+        oaj2eGHgbJAQeIjWL0y32xc=
+X-Google-Smtp-Source: APXvYqwPPcI2Q5taQ8Fbp4n8GiG8PnfWB+RprnDtY62cdNO1PArVojWfZfVbhTyAl4GDvwZKRwtz8w==
+X-Received: by 2002:aa7:80c8:: with SMTP id a8mr15488pfn.193.1554305965352;
+        Wed, 03 Apr 2019 08:39:25 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id z21sm23213491pfn.139.2019.04.03.08.39.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 08:39:24 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 23:39:19 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/12] Include linux PCI docs into Sphinx TOC tree
+Message-ID: <20190403153917.4r73hhzjp6anuyhj@mail.google.com>
+References: <20190329160413.4293-1-changbin.du@gmail.com>
+ <20190401230321.GB141706@google.com>
+ <20190402150852.juugbq7gripqbrmz@mail.google.com>
+ <20190402180744.GD141706@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hBhxR-000tLH-2O
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.114.183]:41268
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190402180744.GD141706@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Tue, Apr 02, 2019 at 01:07:44PM -0500, Bjorn Helgaas wrote:
+> On Tue, Apr 02, 2019 at 11:08:54PM +0800, Changbin Du wrote:
+> > On Mon, Apr 01, 2019 at 06:03:21PM -0500, Bjorn Helgaas wrote:
+> > > On Sat, Mar 30, 2019 at 12:04:01AM +0800, Changbin Du wrote:
+> > > > Changbin Du (12):
+> > > >   Documentation: add Linux PCI to Sphinx TOC tree
+> > > >   pci doc: convert PCI/pci.txt to rst format
+> > > >   pci doc: convert PCI/PCIEBUS-HOWTO.txt to rst format
+> > > >   pci doc: convert PCI/pci-iov-howto.txt to rst format
+> > > >   pci doc: convert PCI/MSI-HOWTO.txt to rst format
+> > > >   pci doc: convert PCI/acpi-info.txt to rst format
+> > > >   pci doc: convert PCI/pci-error-recovery.txt to rst format
+> > > >   pci doc: convert PCI/pcieaer-howto.txt to rst format
+> > > >   pci doc: convert PCI/endpoint/pci-endpoint.txt to rst format
+> > > >   pci doc: convert PCI/endpoint/pci-endpoint-cfs.txt to rst format
+> > > >   pci doc: convert PCI/endpoint/pci-test-function.txt to rst format
+> > > >   pci doc: convert PCI/endpoint/pci-test-howto.txt to rst format
+> > > 
+> > > Thanks for doing all this work!
+> > > 
+> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > 
+> > > There's not a real convention yet for subject lines in Documentation/,
+> > > but I would propose:
+> > > 
+> > >   Documentation: PCI: Convert pci.txt to reST
+> > >   Documentation: PCI: Convert endpoint/pci-endpoint.txt to reST
+> > > 
+> > > because that at least goes with some recent Documentation/PCI changes
+> > > and it identifies "reST" as something other than a plain English word
+> > > (RST or ReST would also work for me).
+> > > 
+> > I agree. I am just a little lazy to update all of them this time :)
+> > Thanks for your ACK!
+> 
+> Well, I guess I'm too lazy to fix them all for you, so I personally
+> wouldn't apply these.  But maybe Jonathan will be more accommodating.
+>
+ok, I will fix this serias since they do matter.
 
-struct foo {
-    int stuff;
-    struct boo entry[];
-};
+> Bjorn
 
-size = sizeof(struct foo) + count * sizeof(struct boo);
-instance = kzalloc(size, GFP_KERNEL)
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
-
-Notice that, in this case, variable size_of_regd is not necessary,
-hence it is removed.
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- net/wireless/nl80211.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index e7ee18ab6cb7..f8bca386c904 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -3843,8 +3843,7 @@ static struct cfg80211_acl_data *parse_acl_data(struct wiphy *wiphy,
- 	if (n_entries > wiphy->max_acl_mac_addrs)
- 		return ERR_PTR(-ENOTSUPP);
- 
--	acl = kzalloc(sizeof(*acl) + (sizeof(struct mac_address) * n_entries),
--		      GFP_KERNEL);
-+	acl = kzalloc(struct_size(acl, mac_addrs, n_entries), GFP_KERNEL);
- 	if (!acl)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -6882,7 +6881,7 @@ static int nl80211_set_reg(struct sk_buff *skb, struct genl_info *info)
- 	struct nlattr *nl_reg_rule;
- 	char *alpha2;
- 	int rem_reg_rules, r;
--	u32 num_rules = 0, rule_idx = 0, size_of_regd;
-+	u32 num_rules = 0, rule_idx = 0;
- 	enum nl80211_dfs_regions dfs_region = NL80211_DFS_UNSET;
- 	struct ieee80211_regdomain *rd;
- 
-@@ -6907,10 +6906,7 @@ static int nl80211_set_reg(struct sk_buff *skb, struct genl_info *info)
- 	if (!reg_is_valid_request(alpha2))
- 		return -EINVAL;
- 
--	size_of_regd = sizeof(struct ieee80211_regdomain) +
--		       num_rules * sizeof(struct ieee80211_reg_rule);
--
--	rd = kzalloc(size_of_regd, GFP_KERNEL);
-+	rd = kzalloc(struct_size(rd, reg_rules, num_rules), GFP_KERNEL);
- 	if (!rd)
- 		return -ENOMEM;
- 
 -- 
-2.21.0
-
+Cheers,
+Changbin Du
