@@ -2,86 +2,87 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215BDC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EEDC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFF7205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E04B8205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfDCTpH (ORCPT
+        id S1726544AbfDCTrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 15:45:07 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37522 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfDCTpH (ORCPT
+        Wed, 3 Apr 2019 15:47:31 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:35852 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfDCTrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 15:45:07 -0400
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <cascardo@canonical.com>)
-        id 1hBlom-00086b-Uf; Wed, 03 Apr 2019 19:45:05 +0000
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     songliubraving@fb.com, acme@kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Subject: [PATCH] perf annotate: Fix build on 32 bit for BPF annotation
-Date:   Wed,  3 Apr 2019 16:44:52 -0300
-Message-Id: <20190403194452.10845-1-cascardo@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 3 Apr 2019 15:47:31 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hBlqz-0007X3-3z; Wed, 03 Apr 2019 19:47:21 +0000
+Date:   Wed, 3 Apr 2019 20:47:21 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Neil Brown <neilb@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/24] Convert vfs.txt to vfs.rst
+Message-ID: <20190403194720.GY2217@ZenIV.linux.org.uk>
+References: <20190327051717.23225-1-tobin@kernel.org>
+ <20190402094934.5b242dc0@lwn.net>
+ <20190402164824.GK2217@ZenIV.linux.org.uk>
+ <20190402192520.GA6285@eros.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402192520.GA6285@eros.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 6987561c9e86 ("perf annotate: Enable annotation of BPF programs") adds
-support for BPF programs annotations but the new code does not build on 32-bit.
+On Wed, Apr 03, 2019 at 06:25:20AM +1100, Tobin C. Harding wrote:
+> On Tue, Apr 02, 2019 at 05:48:24PM +0100, Al Viro wrote:
+> > On Tue, Apr 02, 2019 at 09:49:34AM -0600, Jonathan Corbet wrote:
+> > > On Wed, 27 Mar 2019 16:16:53 +1100
+> > > "Tobin C. Harding" <tobin@kernel.org> wrote:
+> > > 
+> > > > Hi Al,
+> > > > 
+> > > > This series converts the VFS file Documentation/filesystems/vfs.txt to
+> > > > reStructuredText format.  Please consider taking this series through
+> > > > your tree as apposed to Jon's tree because this set makes a fair amount
+> > > > of changes to VFS files (and also the VFS tree and docs tree are out of
+> > > > sync right now with the recent work by Mauro and Neil).
+> > > 
+> > > Al, do you have any thoughts on how you want to handle this?  I was about
+> > > to apply Jeff Layton's vfs.txt update, but would rather not create
+> > > conflicts unnecessarily.  Let me know if you'd like me to pick this work
+> > > up.
+> > 
+> > Frankly, I would rather see that file be eventually replaced by something
+> > saner, and I'm not talking about the format.
+> 
+> Are you able to extrapolate on this comment please?  Is this something
+> someone new to the VFS (me) can do with a little nudge in the right
+> direction or is this something that needs thorough knowledge of the VFS? 
 
-Fixes: 6987561c9e86 ("perf annotate: Enable annotation of BPF programs")
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
----
- tools/perf/util/annotate.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index c8b01176c9e1..09762985c713 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1714,8 +1714,8 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 	if (dso->binary_type != DSO_BINARY_TYPE__BPF_PROG_INFO)
- 		return -1;
- 
--	pr_debug("%s: handling sym %s addr %lx len %lx\n", __func__,
--		 sym->name, sym->start, sym->end - sym->start);
-+	pr_debug("%s: handling sym %s addr %" PRIx64 " len %" PRIx64 "\n", __func__,
-+		  sym->name, sym->start, sym->end - sym->start);
- 
- 	memset(tpath, 0, sizeof(tpath));
- 	perf_exe(tpath, sizeof(tpath));
-@@ -1740,7 +1740,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 	info_linear = info_node->info_linear;
- 	sub_id = dso->bpf_prog.sub_id;
- 
--	info.buffer = (void *)(info_linear->info.jited_prog_insns);
-+	info.buffer = (void *)(uintptr_t)(info_linear->info.jited_prog_insns);
- 	info.buffer_length = info_linear->info.jited_prog_len;
- 
- 	if (info_linear->info.nr_line_info)
-@@ -1776,7 +1776,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 		const char *srcline;
- 		u64 addr;
- 
--		addr = pc + ((u64 *)(info_linear->info.jited_ksyms))[sub_id];
-+		addr = pc + ((u64 *)(uintptr_t)(info_linear->info.jited_ksyms))[sub_id];
- 		count = disassemble(pc, &info);
- 
- 		if (prog_linfo)
--- 
-2.20.1
-
+Put it that way - IMO the best way to do it is not a list of methods with
+explanations what each does, but a bunch of per-data structure documents
+describing their life cycles.  The fundamental ones for VFS would be
+	* inode
+	* dentry
+	* super_block
+	* (vfs)mount
+	* file
+	* files_struct
+Having a list of methods is nice, but those would be better off with short
+description along with "see <document> for details, including the locking,
+etc."; said short descriptions make little sense without the background...
