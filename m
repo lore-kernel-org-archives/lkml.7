@@ -2,157 +2,160 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B1C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CFAC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9A520830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E3820830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:54:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="bXJJZJw7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ul68qe+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfDCMuf (ORCPT
+        id S1726352AbfDCMyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:50:35 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34606 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfDCMuf (ORCPT
+        Wed, 3 Apr 2019 08:54:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36224 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfDCMyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:50:35 -0400
-Received: by mail-io1-f65.google.com with SMTP id n11so13950137ioh.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 05:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eBNtlZLQadO9S2XT/iY4Mfivp7agUEzDErrrS64Pf7w=;
-        b=bXJJZJw7nZuNdH4El+6DCIKrwEq7uAW0H4I3tBJcuf9lX6zvLOMnhZqoCEbbujJSov
-         x+C5C3C4fEkO6BRb6IAFK/+TrepqHk9DROAxYqZjd+VY5DVd9k2MCX1XKq6BoOTrEM/9
-         zISXNd4uSY6yxiu6w92ri6ZyFt74yMiNoSMFPZPiKmcldciC77fsPIAVZA6shse5SJr1
-         qnZI+Wkz4IkcOE3tLZ8h0Z38bxJLKbAZqf5Hhn0CUyj0Hi37nvhxluIE9Y3hEPzRDWRU
-         /cyoWU88so6plfMyRVVHM8R8o6H7Ic7maFA6931nvHhJBXWkj5XAdjuQ1udszpD3xu9y
-         QEBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eBNtlZLQadO9S2XT/iY4Mfivp7agUEzDErrrS64Pf7w=;
-        b=AO5+JxjYU+k4OBn0hGJtLeOLXmh54O0pQIEGV5smXENrDwVwz+7rE9Ifk6rtvXnra3
-         0cMI/oRv32C7CCz5bvhuCQd+EBRnvbtghOfvIEVBRtBZsqpZdFKeSXEpguygSNgDJomI
-         gp3Y4wTrC4MzRiJEhlNWdhDJjZvJqRU97MEWceQohKc9DdvygeIYWeC2YpUYIxwPHqKV
-         t7aW3VykYtMtnxZp+8lL1WUAhAE3KraNtkC4QNohyZqwoGR+muiePH7g4Lnwc64Ht3xM
-         elAJDa5AqJcu7T2u1MjAEl9JTDJT2GF1sfr7lVxJwJ1g7BpXsckvlq7FRYrcLoxe4S6M
-         rrSg==
-X-Gm-Message-State: APjAAAWF7PTZw97E5S2VhhUPCGvmXMdfSjr/5cmkHZVZCgnBrEZWxO25
-        gmQRSxjFcKzD/WawC+OWpnh0F5X5YqwVz5MTPsfsGw==
-X-Google-Smtp-Source: APXvYqwasBN0FWldjcStamNte3U0/QTjaZgi3ExR9SZtQRhuvXfKInDtTsGYfV23rUatDtxU+VFoqqxDDbvkPvNzthM=
-X-Received: by 2002:a6b:3b43:: with SMTP id i64mr10868653ioa.121.1554295834459;
- Wed, 03 Apr 2019 05:50:34 -0700 (PDT)
+        Wed, 3 Apr 2019 08:54:03 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33ChXe2100938;
+        Wed, 3 Apr 2019 12:51:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=NHT9PqacVbcb+iEdSEkiTY4KiJSA+ruLSKxJflNrU5g=;
+ b=Ul68qe+lCVRnB8QxIbkSLnknGO8ENEkGNFXBYcdNdl49HLsfdL7wxQGQtZVnqZxRnrHt
+ mOw3455ycB8dfibQLUWzKyx60JJCSBmHpcBd8VYj9vk2bbSpthszKkxhWxUTZJnAGavK
+ pr4/QDDvWxsSiDFQVVmeOJosIbw4NG1hl3h29ap6VBUGtu4AgJxL1ckkTTdVXdrb+d1p
+ EenRHGIcBO4W52S1FCoIoFgTJt9ubJ8eE8gg3I80gxVw3gHqLqHMSMscwfxVg73NczAP
+ ZqEoI5ilfojmvKUJ5yhSJzowimyc801vAD377rzf4zdeBlXz+bPq9kcK211+i4ZEcpkV 7g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2rhyvt8swk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 12:51:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33Co47M064129;
+        Wed, 3 Apr 2019 12:51:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2rm8f52vra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 12:51:22 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x33CpEC3031705;
+        Wed, 3 Apr 2019 12:51:15 GMT
+Received: from [10.152.35.85] (/10.152.35.85)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Apr 2019 05:51:14 -0700
+Subject: Re: [PATCH 0/6] convert locked_vm from unsigned long to atomic64_t
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     akpm@linux-foundation.org, linux_lkml_grp@oracle.com,
+        Alan Tull <atull@kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+From:   Steven Sistare <steven.sistare@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <abe31bae-1bdf-b763-c4d1-5e4ea2ccda13@oracle.com>
+Date:   Wed, 3 Apr 2019 08:51:13 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-2-brgl@bgdev.pl>
- <CAHCN7xJj_aA8XFR6=ZxO-WrfkJRY5fS6NgjHbeqpdfhUnn1apA@mail.gmail.com>
- <CAMpxmJVBTny7kzADSZHQXk_ZUjnRaNWu0Ly3WC8v+zPmR8Dizg@mail.gmail.com> <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com>
-In-Reply-To: <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 3 Apr 2019 14:50:23 +0200
-Message-ID: <CAMRc=MdYhaED30Xu8oJiJD7F9z=SPu6u+1p32mQnX0tEL=iOiA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on da850-evm
-To:     Sekhar Nori <nsekhar@ti.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Adam Ford <aford173@gmail.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904030088
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9215 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904030088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 27 mar 2019 o 12:14 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> Hi Bart,
->
-> On 26/03/19 11:21 PM, Bartosz Golaszewski wrote:
-> > wt., 26 mar 2019 o 15:00 Adam Ford <aford173@gmail.com> napisa=C5=82(a)=
-:
-> >>
-> >> On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> >>>
-> >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>
-> >>> The system_rev variable is never set on davinci and is always 0, so
-> >>> we're using the default max operating point of 300MHz. The cvdd suppl=
-y
-> >>> comes from the tps6507 pmic and the voltage can go all the way to 1.3=
-V
-> >>> so the maximum supported rate should be 456MHz.
-> >>
-> >> My understanding is that only certain revisions of the silicon can go
-> >> to 456MHz.   The L138's Datasheet lists both a 456 and 375 version.  I
-> >> cannot find a way to read a register to determine which version of the
-> >> silicon is available. Maybe Sekhar can confirm.
-> >>
-> >
-> > Commit 28bd2c341120 ("davinci: am18x/da850/omap-l138 evm: add support
-> > for higher speed grades") mentions the following:
-> >
-> > ---
-> > U-Boot on the EVM sets up ATAG_REVISION to inform the OS
-> > regarding the speed grade supported by the silicon. We use
-> > this information to pass on the speed grade information to
-> > the SoC code.
-> > ---
-> >
-> > Should the system_rev somehow reflect that revision? Any way I can chec=
-k it?
->
-> Can you check if the procedure in doc/README.davinci in U-Boot sources
-> still works?
->
-> Environment Variables
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> The DA850 EVM allows the user to specify the maximum cpu clock allowed by=
- the
-> silicon, in Hz, via an environment variable "maxcpuclk".
->
-> The maximum clock rate allowed depends on the silicon populated on the EV=
-M.
-> Please make sure you understand the restrictions placed on this clock in =
-the
-> device specific datasheet before setting up this variable. This informati=
-on is
-> passed to the Linux kernel using the ATAG_REVISION atag.
->
-> If "maxcpuclk" is not defined, the configuration CONFIG_DA850_EVM_MAX_CPU=
-_CLK
-> is used to obtain this information.
->
-> Thanks,
-> Sekhar
+On 4/2/2019 4:41 PM, Daniel Jordan wrote:
+> Hi,
+> 
+> From patch 1:
+> 
+>   Taking and dropping mmap_sem to modify a single counter, locked_vm, is
+>   overkill when the counter could be synchronized separately.
+>   
+>   Make mmap_sem a little less coarse by changing locked_vm to an atomic,
+>   the 64-bit variety to avoid issues with overflow on 32-bit systems.
+> 
+> This is a more conservative alternative to [1] with no user-visible
+> effects.  Thanks to Alexey Kardashevskiy for pointing out the racy
+> atomics and to Alex Williamson, Christoph Lameter, Ira Weiny, and Jason
+> Gunthorpe for their comments on [1].
+> 
+> Davidlohr Bueso recently did a similar conversion for pinned_vm[2].
+> 
+> Testing
+>  1. passes LTP mlock[all], munlock[all], fork, mmap, and mremap tests in an
+>     x86 kvm guest
+>  2. a VFIO-enabled x86 kvm guest shows the same VmLck in
+>     /proc/pid/status before and after this change
+>  3. cross-compiles on powerpc
+> 
+> The series is based on v5.1-rc3.  Please consider for 5.2.
+> 
+> Daniel
+> 
+> [1] https://lore.kernel.org/linux-mm/20190211224437.25267-1-daniel.m.jordan@oracle.com/
+> [2] https://lore.kernel.org/linux-mm/20190206175920.31082-1-dave@stgolabs.net/
+> 
+> Daniel Jordan (6):
+>   mm: change locked_vm's type from unsigned long to atomic64_t
+>   vfio/type1: drop mmap_sem now that locked_vm is atomic
+>   vfio/spapr_tce: drop mmap_sem now that locked_vm is atomic
+>   fpga/dlf/afu: drop mmap_sem now that locked_vm is atomic
+>   powerpc/mmu: drop mmap_sem now that locked_vm is atomic
+>   kvm/book3s: drop mmap_sem now that locked_vm is atomic
+> 
+>  arch/powerpc/kvm/book3s_64_vio.c    | 34 ++++++++++--------------
+>  arch/powerpc/mm/mmu_context_iommu.c | 28 +++++++++-----------
+>  drivers/fpga/dfl-afu-dma-region.c   | 40 ++++++++++++-----------------
+>  drivers/vfio/vfio_iommu_spapr_tce.c | 37 ++++++++++++--------------
+>  drivers/vfio/vfio_iommu_type1.c     | 31 +++++++++-------------
+>  fs/proc/task_mmu.c                  |  2 +-
+>  include/linux/mm_types.h            |  2 +-
+>  kernel/fork.c                       |  2 +-
+>  mm/debug.c                          |  5 ++--
+>  mm/mlock.c                          |  4 +--
+>  mm/mmap.c                           | 18 ++++++-------
+>  mm/mremap.c                         |  6 ++---
+>  12 files changed, 89 insertions(+), 120 deletions(-)
+> 
+> base-commit: 79a3aaa7b82e3106be97842dedfd8429248896e6
 
-Hi Sekhar,
+Hi Daniel,
+  You could clean all 6 patches up nicely with a common subroutine that
+increases locked_vm subject to the rlimit.  Pass a bool arg that is true if
+the  limit should be enforced, !dma->lock_cap for one call site, and
+!capable(CAP_IPC_LOCK) for the rest.  Push the warnings and debug statements
+to the subroutine as well.  One patch could refactor, and a second could
+change the locking method.
 
-I built the current upstream u-boot and the get_board_rev() function
-for da850-evm doesn't seem to be called at all. For instance the
-lego-ev3 platform does this:
-
-./lego/ev3/legoev3.c:108: board_rev =3D get_board_rev();
-
-but in davinci this function seems to be unused and I don't see it
-called from any other core u-boot component. I don't see any commit
-that would mention this function but there are a lot of commits
-removing get_board_rev() for other boards in git log. Is it possible
-it stopped being used at some point?
-
-Bart
+- Steve
