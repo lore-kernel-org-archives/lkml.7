@@ -2,316 +2,174 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B89CC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5E5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7222082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED66220657
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="N9aMsrUl";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="T6ndAK23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfDCVdu (ORCPT
+        id S1727097AbfDCVeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 17:33:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37312 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbfDCVaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 17:30:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 14:30:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
-   d="scan'208";a="334754286"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Apr 2019 14:30:13 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        "Michael Chan" <michael.chan@broadcom.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v6 19/20] x86/clearcpuid: Clear CPUID bit in CPUID faulting
-Date:   Wed,  3 Apr 2019 14:22:05 -0700
-Message-Id: <1554326526-172295-20-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+        Wed, 3 Apr 2019 17:34:11 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34848 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726672AbfDCVeJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 17:34:09 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33LN2AG020618;
+        Wed, 3 Apr 2019 14:34:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=ESH9tHX/O07Zu+mzoGeeTfHBqzmY+Ff5uFRZqdthync=;
+ b=N9aMsrUlH6T0t2xfPvMfGKX4tNGDbH+myhld1rzK2OW+j6A7capu2c9x1KXan4LLGWkV
+ R9KhJNN18rbSBABrxhpf9uFcfRE7VZqRFbS53Brwy+MX34OEV6+/hfIOUPiYYE3Ssvko
+ Hih4Yqu8ZwIYk2DAMVLQ19gT5yf0GTTgu88= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rn1e98vdv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 03 Apr 2019 14:34:05 -0700
+Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
+ prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 3 Apr 2019 14:34:04 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 3 Apr 2019 14:34:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ESH9tHX/O07Zu+mzoGeeTfHBqzmY+Ff5uFRZqdthync=;
+ b=T6ndAK236D0PK3cQaDxwBI+SE3Q/INF7h8jhW8MtRjzOzi57LNY1P5sLzUIPHt9rbw5hHkHhNfNXr4Fmwfwqur8s7aJkikXkygQ+Zqdqb21o/lczN8V6h4CoFMQtEZs6E5ZpOnTPO2eLUF+f/g80m1ds/Yr/McnCVs47c/aamug=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1295.namprd15.prod.outlook.com (10.175.3.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.16; Wed, 3 Apr 2019 21:34:02 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171%2]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
+ 21:34:02 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "acme@kernel.org" <acme@kernel.org>
+Subject: Re: [PATCH] perf annotate: Fix build on 32 bit for BPF annotation
+Thread-Topic: [PATCH] perf annotate: Fix build on 32 bit for BPF annotation
+Thread-Index: AQHU6lXFqqa7wYSVLECtJxWqgZqKp6Yq9TyA
+Date:   Wed, 3 Apr 2019 21:34:02 +0000
+Message-ID: <ABAEFCEA-E8C6-4246-B109-6D6A12AAB75B@fb.com>
+References: <20190403194452.10845-1-cascardo@canonical.com>
+In-Reply-To: <20190403194452.10845-1-cascardo@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:200::2:1b0d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5a9d0fd3-02e0-45b6-4935-08d6b87c175a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1295;
+x-ms-traffictypediagnostic: MWHPR15MB1295:
+x-microsoft-antispam-prvs: <MWHPR15MB1295A7EF87DD219065E828F6B3570@MWHPR15MB1295.namprd15.prod.outlook.com>
+x-forefront-prvs: 0996D1900D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(39860400002)(366004)(136003)(189003)(199004)(51914003)(46003)(76176011)(25786009)(14454004)(229853002)(305945005)(106356001)(82746002)(6486002)(8676002)(8936002)(68736007)(6436002)(50226002)(6512007)(6116002)(6916009)(2616005)(446003)(5660300002)(476003)(81156014)(81166006)(54906003)(316002)(71200400001)(6246003)(33656002)(7736002)(186003)(105586002)(256004)(83716004)(2906002)(11346002)(6506007)(53936002)(53546011)(86362001)(71190400001)(99286004)(486006)(57306001)(478600001)(4326008)(97736004)(36756003)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1295;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Ku36PQvIugRDvFJSqRT/zMGZc1lncR3UC3i9AMA92Y9S20/78PERxR+qwKP3JLVUGrdEcDX/NhqSFMwXjbKHsUfoanAELue1uXWSKHlA16ExrFo0/vIlO2w5aBO8hcbCtc/cC6EmrDAve7TQfOjNL0uqTvNyEFRfw1EtZKq0qu4yKZBq1Hto+Kbr9e55BCy1WkxfwwuUVfE5HIErRQrFBEq+56Nwjw56NwRjSjvU1DcgBMlWCQcYna0xCYsdDN54+bPr9rnF/BUjh69u+BlLU9I2IHJULAl/hDx+YgGB7m7zhsUpVUqWAos2pIPkcbCs9OEBzi0A7qOzmiXgRuuTIbt+hRd4b3+RcBIKss9+PSmkYjqZZFeonx+2yCM8tzl6Hc5vU5YWvT1dAqDhS7h4V2MngbbnuHlbx57f51dtpMQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7418A620AFE5894F87ED1220F5D59344@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a9d0fd3-02e0-45b6-4935-08d6b87c175a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 21:34:02.4800
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1295
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_13:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
 
-After kernel clears a CPUID bit through clearcpuid or other kernel options,
-CPUID instruction executed from user space should see the same value for
-the bit. The CPUID faulting handler returns the cleared bit to user.
 
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- arch/x86/include/asm/cpufeature.h |  4 +++
- arch/x86/kernel/cpu/common.c      |  2 ++
- arch/x86/kernel/cpu/cpuid-deps.c  | 52 ++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/intel.c       | 56 +++++++++++++++++++++++++++++--
- arch/x86/kernel/cpu/scattered.c   | 17 ++++++++++
- arch/x86/kernel/process.c         |  3 ++
- arch/x86/kernel/traps.c           | 11 ++++++
- 7 files changed, 142 insertions(+), 3 deletions(-)
+> On Apr 3, 2019, at 12:44 PM, Thadeu Lima de Souza Cascardo <cascardo@cano=
+nical.com> wrote:
+>=20
+> Commit 6987561c9e86 ("perf annotate: Enable annotation of BPF programs") =
+adds
+> support for BPF programs annotations but the new code does not build on 3=
+2-bit.
+>=20
+> Fixes: 6987561c9e86 ("perf annotate: Enable annotation of BPF programs")
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 823c4ab82e12..53875fd13f5a 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -228,5 +228,9 @@ static __always_inline __pure bool _static_cpu_has(u16 bit)
- #define CPU_FEATURE_TYPEVAL		boot_cpu_data.x86_vendor, boot_cpu_data.x86, \
- 					boot_cpu_data.x86_model
- 
-+extern int cpuid_fault;
-+u32 scattered_cpuid_mask(u32 leaf, u32 count, enum cpuid_regs_idx reg);
-+u32 cpuid_cap_mask(u32 leaf, u32 count, enum cpuid_regs_idx reg);
-+
- #endif /* defined(__KERNEL__) && !defined(__ASSEMBLY__) */
- #endif /* _ASM_X86_CPUFEATURE_H */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index e1d41405c27b..020597bca252 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1503,6 +1503,8 @@ void print_cpu_info(struct cpuinfo_x86 *c)
- 		pr_cont(")\n");
- }
- 
-+int cpuid_fault;
-+
- /*
-  * clearcpuid= was already parsed in fpu__init_parse_early_param.
-  * But we need to keep a dummy __setup around otherwise it would
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 1a71434f7b46..d42aa4fa3021 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -113,9 +113,61 @@ static void do_clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
- 
- void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
- {
-+	if (boot_cpu_has(feature))
-+		cpuid_fault = 1;
- 	do_clear_cpu_cap(c, feature);
- }
- 
-+u32 cpuid_cap_mask(u32 leaf, u32 count, enum cpuid_regs_idx reg)
-+{
-+	switch (leaf) {
-+	case 0x1:
-+		if (reg == CPUID_EDX)
-+			return ~cpu_caps_cleared[CPUID_1_EDX];
-+		if (reg == CPUID_ECX)
-+			return ~cpu_caps_cleared[CPUID_1_ECX];
-+		break;
-+
-+	case 0x6:
-+		if (reg == CPUID_EAX)
-+			return ~cpu_caps_cleared[CPUID_6_EAX];
-+		break;
-+
-+	case 0x7:
-+		if (reg == CPUID_EDX)
-+			return ~cpu_caps_cleared[CPUID_7_EDX];
-+		if (reg == CPUID_ECX)
-+			return ~cpu_caps_cleared[CPUID_7_ECX];
-+		if (reg == CPUID_EBX && count == 0)
-+			return ~cpu_caps_cleared[CPUID_7_0_EBX];
-+		break;
-+
-+	case 0xD:
-+		if (reg == CPUID_EAX)
-+			return ~cpu_caps_cleared[CPUID_D_1_EAX];
-+		break;
-+
-+	case 0xF:
-+		if (reg == CPUID_EDX) {
-+			if (count == 0)
-+				return ~cpu_caps_cleared[CPUID_F_0_EDX];
-+			if (count == 1)
-+				return ~cpu_caps_cleared[CPUID_F_0_EDX];
-+		}
-+		break;
-+
-+	case 0x80000007:
-+		if (reg == CPUID_EDX) {
-+			if (test_bit(X86_FEATURE_CONSTANT_TSC,
-+				     (unsigned long *)cpu_caps_cleared))
-+				return ~(1 << 8);
-+		}
-+		break;
-+	}
-+
-+	return scattered_cpuid_mask(leaf, count, reg);
-+}
-+
- void setup_clear_cpu_cap(unsigned int feature)
- {
- 	do_clear_cpu_cap(NULL, feature);
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 166033fa8423..aa1cfcc81323 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -19,6 +19,9 @@
- #include <asm/microcode_intel.h>
- #include <asm/hwcap2.h>
- #include <asm/elf.h>
-+#include <asm/insn.h>
-+#include <asm/insn-eval.h>
-+#include <asm/inat.h>
- 
- #ifdef CONFIG_X86_64
- #include <linux/topology.h>
-@@ -667,13 +670,60 @@ static void intel_bsp_resume(struct cpuinfo_x86 *c)
- 	init_intel_energy_perf(c);
- }
- 
-+bool fixup_cpuid_exception(struct pt_regs *regs)
-+{
-+	unsigned int leaf, count, eax, ebx, ecx, edx;
-+	unsigned long seg_base = 0;
-+	unsigned char buf[2];
-+	int not_copied;
-+
-+	if (!cpuid_fault)
-+		return false;
-+
-+	if (test_thread_flag(TIF_NOCPUID))
-+		return false;
-+
-+	if (!user_64bit_mode(regs))
-+		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
-+
-+	if (seg_base == -1L)
-+		return false;
-+
-+	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
-+				    sizeof(buf));
-+	if (not_copied)
-+		return false;
-+
-+	if (buf[0] != 0x0F || buf[1] != 0xA2) /* CPUID - OF A2 */
-+		return false;
-+
-+	leaf = regs->ax;
-+	count = regs->cx;
-+
-+	cpuid_count(leaf, count, &eax, &ebx, &ecx, &edx);
-+
-+	regs->ip += 2;
-+	regs->ax = eax & cpuid_cap_mask(leaf, count, CPUID_EAX);
-+	regs->bx = ebx & cpuid_cap_mask(leaf, count, CPUID_EBX);
-+	regs->cx = ecx & cpuid_cap_mask(leaf, count, CPUID_ECX);
-+	regs->dx = edx & cpuid_cap_mask(leaf, count, CPUID_EDX);
-+
-+	return true;
-+}
-+
- static void init_cpuid_fault(struct cpuinfo_x86 *c)
- {
- 	u64 msr;
- 
--	if (!rdmsrl_safe(MSR_PLATFORM_INFO, &msr)) {
--		if (msr & MSR_PLATFORM_INFO_CPUID_FAULT)
--			set_cpu_cap(c, X86_FEATURE_CPUID_FAULT);
-+	if (rdmsrl_safe(MSR_PLATFORM_INFO, &msr))
-+		return;
-+
-+	if (msr & MSR_PLATFORM_INFO_CPUID_FAULT) {
-+		set_cpu_cap(c, X86_FEATURE_CPUID_FAULT);
-+		if (cpuid_fault) {
-+			this_cpu_or(msr_misc_features_shadow,
-+				    MSR_MISC_FEATURES_ENABLES_CPUID_FAULT);
-+		}
- 	}
- }
- 
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 94aa1c72ca98..353756c27096 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -62,3 +62,20 @@ void init_scattered_cpuid_features(struct cpuinfo_x86 *c)
- 			set_cpu_cap(c, cb->feature);
- 	}
- }
-+
-+u32 scattered_cpuid_mask(u32 leaf, u32 count, enum cpuid_regs_idx reg)
-+{
-+	const struct cpuid_bit *cb;
-+	u32 mask = ~0U;
-+
-+	for (cb = cpuid_bits; cb->feature; cb++) {
-+		if (cb->level == leaf && cb->sub_leaf == count &&
-+		    cb->reg == reg) {
-+			if (test_bit(cb->feature,
-+				     (unsigned long *)cpu_caps_cleared))
-+				mask &= ~BIT(cb->bit);
-+		}
-+	}
-+
-+	return mask;
-+}
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 58ac7be52c7a..2b1dfd7ae65d 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -196,6 +196,9 @@ static void set_cpuid_faulting(bool on)
- {
- 	u64 msrval;
- 
-+	if (cpuid_fault)
-+		return;
-+
- 	msrval = this_cpu_read(msr_misc_features_shadow);
- 	msrval &= ~MSR_MISC_FEATURES_ENABLES_CPUID_FAULT;
- 	msrval |= (on << MSR_MISC_FEATURES_ENABLES_CPUID_FAULT_BIT);
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 0ac992bfa287..d887da1e8050 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -559,6 +559,12 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
- 	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
- }
- 
-+#ifdef CONFIG_CPU_SUP_INTEL
-+extern bool fixup_cpuid_exception(struct pt_regs *regs);
-+#else
-+static inline bool fixup_cpuid_exception(struct pt_regs *regs) { return false; }
-+#endif
-+
- dotraplinkage void
- do_general_protection(struct pt_regs *regs, long error_code)
- {
-@@ -573,6 +579,11 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 			return;
- 	}
- 
-+	if (static_cpu_has(X86_FEATURE_CPUID_FAULT)) {
-+		if (user_mode(regs) && fixup_cpuid_exception(regs))
-+			return;
-+	}
-+
- 	if (v8086_mode(regs)) {
- 		local_irq_enable();
- 		handle_vm86_fault((struct kernel_vm86_regs *) regs, error_code);
--- 
-2.19.1
+Acked-by: Song Liu <songliubraving@fb.com>
+
+Thanks for the fix!
+Song
+
+> ---
+> tools/perf/util/annotate.c | 8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index c8b01176c9e1..09762985c713 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -1714,8 +1714,8 @@ static int symbol__disassemble_bpf(struct symbol *s=
+ym,
+> 	if (dso->binary_type !=3D DSO_BINARY_TYPE__BPF_PROG_INFO)
+> 		return -1;
+>=20
+> -	pr_debug("%s: handling sym %s addr %lx len %lx\n", __func__,
+> -		 sym->name, sym->start, sym->end - sym->start);
+> +	pr_debug("%s: handling sym %s addr %" PRIx64 " len %" PRIx64 "\n", __fu=
+nc__,
+> +		  sym->name, sym->start, sym->end - sym->start);
+>=20
+> 	memset(tpath, 0, sizeof(tpath));
+> 	perf_exe(tpath, sizeof(tpath));
+> @@ -1740,7 +1740,7 @@ static int symbol__disassemble_bpf(struct symbol *s=
+ym,
+> 	info_linear =3D info_node->info_linear;
+> 	sub_id =3D dso->bpf_prog.sub_id;
+>=20
+> -	info.buffer =3D (void *)(info_linear->info.jited_prog_insns);
+> +	info.buffer =3D (void *)(uintptr_t)(info_linear->info.jited_prog_insns)=
+;
+> 	info.buffer_length =3D info_linear->info.jited_prog_len;
+>=20
+> 	if (info_linear->info.nr_line_info)
+> @@ -1776,7 +1776,7 @@ static int symbol__disassemble_bpf(struct symbol *s=
+ym,
+> 		const char *srcline;
+> 		u64 addr;
+>=20
+> -		addr =3D pc + ((u64 *)(info_linear->info.jited_ksyms))[sub_id];
+> +		addr =3D pc + ((u64 *)(uintptr_t)(info_linear->info.jited_ksyms))[sub_=
+id];
+> 		count =3D disassemble(pc, &info);
+>=20
+> 		if (prog_linfo)
+> --=20
+> 2.20.1
+>=20
 
