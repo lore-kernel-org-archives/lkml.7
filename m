@@ -2,266 +2,93 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0196DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28361C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B653E21734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E153820663
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AKthohw8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzvWKvfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfDCUcA (ORCPT
+        id S1726419AbfDCUk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:32:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40825 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfDCUb7 (ORCPT
+        Wed, 3 Apr 2019 16:40:27 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46906 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfDCUk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:31:59 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so5621030plr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 13:31:59 -0700 (PDT)
+        Wed, 3 Apr 2019 16:40:26 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 9so144888pfj.13;
+        Wed, 03 Apr 2019 13:40:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nWJ+Vwz2XfkYW4YDSSqdEowBMsZ5FJHJ4uxxibZlCx4=;
-        b=AKthohw8qhOUrxkjameaWH0q/X97A/pw7/H+V0BiLObHRflHg2fQSMKIbpWW1uFmrO
-         n06w8B84YfaVQZRiZaeXW5EToY4g4kZMIDBRyknZNcbTLKSPZ1cjVTPraESS9rPvtM04
-         hpEbaYq3H7r6dpqQ1dM24X2oCiIFfukTF0dpI=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R6sB+eZv5XDJt4LxJ3FxrEdpApWyYK/s4Yo72IFvtIA=;
+        b=DzvWKvfjC+lmj6tAE5Duu2sNOMET62H4Jz5tK92f3HqGS+pnG/sttt8t3jhWXaNjMa
+         yvufDGhH7xWMxmH/VzNLQjKOLVgu5nOLeTroJRCFwT9GnqgMTIT+C5h0QF51hnalVUIQ
+         /rwwKe+WOmyeD4NLDhSfUdwy/j/TD7OrxIvbImCk9kCcseG3FlGQOGZqsgGvJc3EfjeH
+         59y/Cjs5klm9GAQaoLtuPW7cwLWGKyuwytvI4EdLB2LEIc671f7LiJtPQrs2MvUPd9Ey
+         Ax+BhYFpPlo5CvZQ0RJ780Wnt/f0zoPIdK5FdJqWkNSjtYuJsHA4lhS2y9deKE8WhHGL
+         03cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nWJ+Vwz2XfkYW4YDSSqdEowBMsZ5FJHJ4uxxibZlCx4=;
-        b=huhP96Xvepsqct5V7Zm7Psx5kGdDxf0etosu7hTYM1E8pKyNyCCOzm2AyjfaCmkilE
-         lrjWJHRmrXVFNYNir1ogP63zMTOI3ZYohNYcT5BXVTnCSfTOAXDlnAHCH9IC3mYu/lIs
-         LKiN5P/weM92R3McxBtLRrow0MK+MY1lPiWbHAd7AJV8x6VPUlg9pnrbrTi2OWpCEWmi
-         QQvqHFLWSuaUxlf/7swJ05Hot0O81lmrw31zFaED/tHBPmoQKDaWcbLcM5vsdOveGD1s
-         LIbFAWEuVVPGyHgKQSSzLxDITrl87ft91Wbj8zQcv/ub0cGmVEZlTo/2fmNFqPxVugEU
-         eCEw==
-X-Gm-Message-State: APjAAAXssjhW7660v3uxwsz9DK3Qsz7VoVmb8wGV+jXLTvJ6k0XcURD2
-        nhSP4syGsbhy+RStM6TqlFbomA==
-X-Google-Smtp-Source: APXvYqwjRIFSet7IWPVmEEtAOlA47e5z8uXHxxb7F8r2X784s8XjuDT4DI7Di/ITtOh2wC4jqbPK0A==
-X-Received: by 2002:a17:902:2ac3:: with SMTP id j61mr2150618plb.112.1554323518731;
-        Wed, 03 Apr 2019 13:31:58 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id g73sm33476607pfd.185.2019.04.03.13.31.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 13:31:57 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     amstan@chromium.org, linux-rockchip@lists.infradead.org,
-        sjg@chromium.org, briannorris@chromium.org, groeck@chromium.org,
-        broonie@kernel.org, ryandcase@chromium.org, rspangler@chromium.org,
-        mka@chromium.org, heiko@sntech.de,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] platform/chrome: cros_ec_spi: Transfer messages at high priority
-Date:   Wed,  3 Apr 2019 13:31:37 -0700
-Message-Id: <20190403203137.203582-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R6sB+eZv5XDJt4LxJ3FxrEdpApWyYK/s4Yo72IFvtIA=;
+        b=r6J1UarRBsQqfpsplJvfZCay9Sh18L4RlfEv00UNiAxrSFEnDoO59hnBXV7WDC1tjA
+         WiCVfieCV57UhZ/SCCCN6JFyg8qL+hBdyuEaswCzusCIYgTUS0B7DOyNyfWWbXgdPenf
+         aUxBqzmH01NbfxdAqaoi84L0xu7DO0ub9zpotUL6FzeqOjszgU5/DB/QS8X84hfi4e3t
+         gE0a6KK/S4O3CU++famfCC0+aSfd8HO0WCBqhn7tLwHvltr+0UicXOhzEeZzBngiRcTy
+         BRRSLR9Ko+5q2jt3xRf2XC/qo7JHA0xtC1zVNndP9G92t3PZ5NAMNioReO3y9XB1hByV
+         1rlA==
+X-Gm-Message-State: APjAAAX5vOHnvVgJCGs7Ow5FrojjGizm8gT/QmKlUG0q95hDdY0H/VOM
+        2NHN5y5jITJ23a6TDTPXdOHFKsNkVWZKXg4Sid0=
+X-Google-Smtp-Source: APXvYqyiTPFlfAixvte0/t8Ou5Yn87RfiBQ4HY9qP6xIAR5qmWScF581epo0sXdGOdc+AR5evAVDpaqHmTwHOlbSexk=
+X-Received: by 2002:a65:6210:: with SMTP id d16mr1745509pgv.110.1554324025035;
+ Wed, 03 Apr 2019 13:40:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190329001135.15847-1-changbin.du@gmail.com> <CAJZ5v0gKX9E+U_9eKfTr7pWGH=jxMLz_Jr850-6BcbG3xBz5qg@mail.gmail.com>
+ <CAJZ5v0jbCi3Jgn5YXPCP+zgs-O7z-9_3p3XZGvm40_6RDsJqkQ@mail.gmail.com> <20190403133613.13f3fd75@lwn.net>
+In-Reply-To: <20190403133613.13f3fd75@lwn.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 3 Apr 2019 23:40:13 +0300
+Message-ID: <CAHp75VdXffhc+2YcFNOr2XwauTt08Bw75ao2ia7cNvAqhJnUQQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/24] Include linux ACPI docs into Sphinx TOC tree
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The software running on the Chrome OS Embedded Controller (cros_ec)
-handles SPI transfers in a bit of a wonky way.  Specifically if the EC
-sees too long of a delay in a SPI transfer it will give up and the
-transfer will be counted as failed.  Unfortunately the timeout is
-fairly short, though the actual number may be different for different
-EC codebases.
+On Wed, Apr 3, 2019 at 10:38 PM Jonathan Corbet <corbet@lwn.net> wrote:
+> On Tue, 2 Apr 2019 10:25:23 +0200
 
-We can end up tripping the timeout pretty easily if we happen to
-preempt the task running the SPI transfer and don't get back to it for
-a little while.
 
-Historically this hasn't been a _huge_ deal because:
-1. On old devices Chrome OS used to run PREEMPT_VOLUNTARY.  That meant
-   we were pretty unlikely to take a big break from the transfer.
-2. On recent devices we had faster / more processors.
-3. Recent devices didn't use "cros-ec-spi-pre-delay".  Using that
-   delay makes us more likely to trip this use case.
-4. For whatever reasons (I didn't dig) old kernels seem to be less
-   likely to trip this.
-5. For the most part it's kinda OK if a few transfers to the EC fail.
-   Mostly we're just polling the battery or doing some other task
-   where we'll try again.
+> Admin guide
+>         cppc_sysfs
 
-Even with the above things, this issue has reared its ugly head
-periodically.  We could solve this in a nice way by adding reliable
-retries to the EC protocol [1] or by re-designing the code in the EC
-codebase to allow it to wait longer, but that code doesn't ever seem
-to get changed.  ...and even if it did, it wouldn't help old devices.
+>         initrd_table_override
 
-It's now time to finally take a crack at making this a little better.
-This patch isn't guaranteed to make every cros_ec SPI transfer
-perfect, but it should improve things by a few orders of magnitude.
-Specifically you can try this on a rk3288-veyron Chromebook (which is
-slower and also _does_ need "cros-ec-spi-pre-delay"):
-  md5sum /dev/zero &
-  md5sum /dev/zero &
-  md5sum /dev/zero &
-  md5sum /dev/zero &
-  while true; do
-    cat /sys/class/power_supply/sbs-20-000b/charge_now > /dev/null;
-  done
-...before this patch you'll see boatloads of errors.  After this patch I
-don't see any in the testing I did.
+> other:
+>         dsdt-override: find another home for those five lines
 
-The way this patch works is by effectively boosting the priority of
-the cros_ec transfers.  As far as I know there is no simple way to
-just boost the priority of the current process temporarily so the way
-we accomplish this is by queuing the work on the system_highpri_wq.
+This is similar to initrd_table_override for some particular case, and
+sounds like Admin guide, indeed.
 
-NOTE: this patch relies on the fact that the SPI framework attempts to
-push the messages out on the calling context (which is the one that is
-boosted to high priority).  As I understand from earlier (long ago)
-discussions with Mark Brown this should be a fine assumption.  Even if
-it isn't true sometimes this patch will still not make things worse.
-
-[1] https://crbug.com/678675
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v3:
-- Use flush_work(), not a completion (Brian)
-
-Changes in v2:
-- Use system_highpri_wq + completion (Matthias)
-- Avoid duplication by using a function pointer (Matthias)
-
- drivers/platform/chrome/cros_ec_spi.c | 79 +++++++++++++++++++++++++--
- 1 file changed, 73 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-index ffc38f9d4829..29d2f7d24929 100644
---- a/drivers/platform/chrome/cros_ec_spi.c
-+++ b/drivers/platform/chrome/cros_ec_spi.c
-@@ -75,6 +75,27 @@ struct cros_ec_spi {
- 	unsigned int end_of_msg_delay;
- };
- 
-+typedef int (*cros_ec_xfer_fn_t) (struct cros_ec_device *ec_dev,
-+				  struct cros_ec_command *ec_msg);
-+
-+/**
-+ * struct cros_ec_xfer_work_params - params for our high priority workers
-+ *
-+ * @work: The work_struct needed to queue work
-+ * @fn: The function to use to transfer
-+ * @ec_dev: ChromeOS EC device
-+ * @ec_msg: Message to transfer
-+ * @ret: The return value of the function
-+ */
-+
-+struct cros_ec_xfer_work_params {
-+	struct work_struct work;
-+	cros_ec_xfer_fn_t fn;
-+	struct cros_ec_device *ec_dev;
-+	struct cros_ec_command *ec_msg;
-+	int ret;
-+};
-+
- static void debug_packet(struct device *dev, const char *name, u8 *ptr,
- 			 int len)
- {
-@@ -350,13 +371,13 @@ static int cros_ec_spi_receive_response(struct cros_ec_device *ec_dev,
- }
- 
- /**
-- * cros_ec_pkt_xfer_spi - Transfer a packet over SPI and receive the reply
-+ * do_cros_ec_pkt_xfer_spi - Transfer a packet over SPI and receive the reply
-  *
-  * @ec_dev: ChromeOS EC device
-  * @ec_msg: Message to transfer
-  */
--static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
--				struct cros_ec_command *ec_msg)
-+static int do_cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
-+				   struct cros_ec_command *ec_msg)
- {
- 	struct ec_host_response *response;
- 	struct cros_ec_spi *ec_spi = ec_dev->priv;
-@@ -493,13 +514,13 @@ static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
- }
- 
- /**
-- * cros_ec_cmd_xfer_spi - Transfer a message over SPI and receive the reply
-+ * do_cros_ec_cmd_xfer_spi - Transfer a message over SPI and receive the reply
-  *
-  * @ec_dev: ChromeOS EC device
-  * @ec_msg: Message to transfer
-  */
--static int cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
--				struct cros_ec_command *ec_msg)
-+static int do_cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
-+				   struct cros_ec_command *ec_msg)
- {
- 	struct cros_ec_spi *ec_spi = ec_dev->priv;
- 	struct spi_transfer trans;
-@@ -611,6 +632,52 @@ static int cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
- 	return ret;
- }
- 
-+static void cros_ec_xfer_high_pri_work(struct work_struct *work)
-+{
-+	struct cros_ec_xfer_work_params *params;
-+
-+	params = container_of(work, struct cros_ec_xfer_work_params, work);
-+	params->ret = params->fn(params->ec_dev, params->ec_msg);
-+}
-+
-+static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
-+				 struct cros_ec_command *ec_msg,
-+				 cros_ec_xfer_fn_t fn)
-+{
-+	struct cros_ec_xfer_work_params params;
-+
-+	INIT_WORK(&params.work, cros_ec_xfer_high_pri_work);
-+	params.ec_dev = ec_dev;
-+	params.ec_msg = ec_msg;
-+	params.fn = fn;
-+
-+	/*
-+	 * This looks a bit ridiculous.  Why do the work on a
-+	 * different thread if we're just going to block waiting for
-+	 * the thread to finish?  The key here is that the thread is
-+	 * running at high priority but the calling context might not
-+	 * be.  We need to be at high priority to avoid getting
-+	 * context switched out for too long and the EC giving up on
-+	 * the transfer.
-+	 */
-+	queue_work(system_highpri_wq, &params.work);
-+	flush_work(&params.work);
-+
-+	return params.ret;
-+}
-+
-+static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
-+				struct cros_ec_command *ec_msg)
-+{
-+	return cros_ec_xfer_high_pri(ec_dev, ec_msg, do_cros_ec_pkt_xfer_spi);
-+}
-+
-+static int cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
-+				struct cros_ec_command *ec_msg)
-+{
-+	return cros_ec_xfer_high_pri(ec_dev, ec_msg, do_cros_ec_cmd_xfer_spi);
-+}
-+
- static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
- {
- 	struct device_node *np = dev->of_node;
 -- 
-2.21.0.392.gf8f6787159e-goog
-
+With Best Regards,
+Andy Shevchenko
