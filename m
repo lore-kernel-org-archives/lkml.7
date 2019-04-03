@@ -2,146 +2,127 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F66C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF08C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5DE2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwXHHRv1"
+	by mail.kernel.org (Postfix) with ESMTP id C86502082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfDCQok (ORCPT
+        id S1726792AbfDCQmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:44:40 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:41795 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728640AbfDCQoi (ORCPT
+        Wed, 3 Apr 2019 12:42:18 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41869 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbfDCQmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:44:38 -0400
-Received: by mail-vs1-f68.google.com with SMTP id g187so10377497vsc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 09:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IZnHtpKJZJ2fuBkhwsJTbda3w/jemBvyjKtIF9cE10g=;
-        b=MwXHHRv1h5zn3S6HC6fai6jO3G3rtmj8JO8H6Jz+9C204Yu46Pn4cYIW9hPe8LoNhU
-         pMDb+l5gi2mKJHXkUc0nOJAzlnJWE321TkYYkHVYSWQBGZvdSpHv6W7qe8GZxSfhaztf
-         GNICr04ymwYTg4bAAtUjuSHkVveNkYvpIxTWJWD5il3RUyaao1KZIa23BSYNM8WFw7pX
-         iuMhTVdPn6uowS8IdDJ41TdWdHPr4yUbGYu4FC0Tp/BZypo9M6XTHGokazScv1T3N55d
-         8oC/HDkHHDusn9UdKmKYVHamkvad5Z+hE/JLU1SjwPHN4LemW54FPFVngMacgxIt1+fc
-         UTLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IZnHtpKJZJ2fuBkhwsJTbda3w/jemBvyjKtIF9cE10g=;
-        b=LlNUXb8N552B6rzb1QuJBY2/qm/SV92ONqiSATRMM9I4MFumE/n/Mzmzzb5VES0DsL
-         8/5TRS5QtWim+EKH11D5yrt7V7iB2g7OJazJ2S4oZHJC30XMwwiSuSk3Ol9HBE3ypfet
-         SiMAaci6cv1hGGUpYOLlbDSSWrYkj9DEFrcR2IUDrOqsb+8tY6LXg0F1tjHGqaPp/GgZ
-         7OxVZx68KX1Y0CxJHeHIRfnpSL2NRVXc80xEswBKjOX5nSZLHs1XEUmjzsKFuCQxEcRh
-         OApBeyF7ZM4UL7uSNg4+EcfXDf6hFdEd+aOo4IviNJ36kFWkIKgkwHwybzUYUyoQ6Hrc
-         kZ6g==
-X-Gm-Message-State: APjAAAUasYc/fLdQ6q5vqKfcSVLUB2tNVhtXFnmnUkMxs1hbvc4TdsDl
-        l8PREasEeS9bk6p5DNtRRk6DJNmSI2p9Qu3zqR8=
-X-Google-Smtp-Source: APXvYqz+W8X9zWW0hjnbKwAzSJIl89dxsHD/VXJbVa8vquq1YiaHmYUV7ColocxfIuqgoQxhKpKlTii1d+hleevuVy4=
-X-Received: by 2002:a67:e256:: with SMTP id w22mr972728vse.173.1554309877071;
- Wed, 03 Apr 2019 09:44:37 -0700 (PDT)
+        Wed, 3 Apr 2019 12:42:15 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hBixm-0004GO-0E; Wed, 03 Apr 2019 18:42:10 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 04/27] x86/fpu: Always init the `state' in fpu__clear()
+Date:   Wed,  3 Apr 2019 18:41:33 +0200
+Message-Id: <20190403164156.19645-5-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
+References: <20190403164156.19645-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-References: <20190314032047.15790-1-vichy.kuo@gmail.com> <20190319153114.GI59586@arrakis.emea.arm.com>
- <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
- <CAOVJa8Eefs7cEneNwV0VCrr8GLVb0AweJEb0Qo4TucgXTNuNWg@mail.gmail.com> <20190401153810.GC6884@fuggles.cambridge.arm.com>
-In-Reply-To: <20190401153810.GC6884@fuggles.cambridge.arm.com>
-From:   pierre kuo <vichy.kuo@gmail.com>
-Date:   Thu, 4 Apr 2019 00:44:25 +0800
-Message-ID: <CAOVJa8EcjQO2GuojwBxfFG25+T-z6BR6ytZBdcV2W2XusyW08g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] initrd: move initrd_start calculate within linear
- mapping range check
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        ard.biesheuvel@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Will:
->
-> [+Ard in case I'm missing something]
->
-> On Mon, Apr 01, 2019 at 10:59:53PM +0800, pierre kuo wrote:
-> > > > With CONFIG_RANDOMIZE_BASE we can get a further change to memstart_addr
-> > > > after the place where you moved the initrd_{start,end} setting, which
-> > > > would result in a different value for __phys_to_virt(phys_initrd_start).
-> > >
-> > > I found what you mean, since __phys_to_virt will use PHYS_OFFSET
-> > > (memstart_addr) for calculating.
-> > > How about moving CONFIG_RANDOMIZE_BASE part of code ahead of
-> > > CONFIG_BLK_DEV_INITRD checking?
-> > >
-> > > That means below (d) moving ahead of (c)
-> > > prvious:
-> > > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
-> > > if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
-> > > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
-> > > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
-> > >
-> > > now:
-> > > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) { ---(a)
-> > > if (memory_limit != PHYS_ADDR_MAX) {}              ----------------(b)
-> > > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}  --------------(d)
-> > > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}  ---(c)
-> > >
-> >
-> > After tracing the kernel code,
-> > is it even possible to move CONFIG_RANDOMIZE_BASE part of code ahead
-> > of memory_limit?
-> >
-> > that mean the flow may look like below:
-> > now2:
-> > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
-> > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
-> > if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
-> > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
-> >
-> > in (b), the result of __pa_symbol(_text), memory_limit,
-> > memblock_mem_limit_remove_map and  memblock_add
-> > are not depended on memsart_addr.
-> > So the now2 flow can grouping modification of memstart_address, put
-> > (a) and (d) together.
->
-> I'm afraid that you've lost me with this.
-welcome for ur kind suggestion ^^
+fpu__clear() only initializes the `state' if the FPU is present. This
+initialisation is also required for the FPU-less system and takes place
+in math_emulate(). Since fpu__initialize() only performs the
+initialization if ->initialized is zero it does not matter that it is
+invoked each time an opcode is emulated. It makes the removal of
+->initialized easier if the struct is also initialized in the FPU-less
+case at the same time.
 
->Why isn't it just as simple as
-> the diff below?
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index c29b17b520cd..ec3487c94b10 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -377,7 +377,7 @@ void __init arm64_memblock_init(void)
->                          base + size > memblock_start_of_DRAM() +
->                                        linear_region_size,
->                         "initrd not fully accessible via the linear mapping -- please check your bootloader ...\n")) {
-> -                       initrd_start = 0;
-> +                       phys_initrd_size = 0;
->                 } else {
->                         memblock_remove(base, size); /* clear MEMBLOCK_ flags */
->                         memblock_add(base, size);
+Move fpu__initialize() before the FPU check so it is also performed in
+the FPU-less case.
 
-This patch will also fix the issue, but it still needs 2 "if
-comparisions" for getting initrd_start/initrd_end.
-By possible grouping modification of memstart_address, and put
-initrd_start/initrd_end to be calculated only when linear mapping check
-pass. Maybe (just if) can let the code be more concise.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/fpu/internal.h | 1 -
+ arch/x86/kernel/fpu/core.c          | 5 ++---
+ arch/x86/math-emu/fpu_entry.c       | 3 ---
+ 3 files changed, 2 insertions(+), 7 deletions(-)
 
-Sincerely appreciate all of yours great comment.
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index 75a1d5f712ee7..70ecb7c032cb4 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -24,7 +24,6 @@
+ /*
+  * High level FPU state handling functions:
+  */
+-extern void fpu__initialize(struct fpu *fpu);
+ extern void fpu__prepare_read(struct fpu *fpu);
+ extern void fpu__prepare_write(struct fpu *fpu);
+ extern void fpu__save(struct fpu *fpu);
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 1940319268aef..e43296854e379 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -223,7 +223,7 @@ int fpu__copy(struct fpu *dst_fpu, struct fpu *src_fpu)
+  * Activate the current task's in-memory FPU context,
+  * if it has not been used before:
+  */
+-void fpu__initialize(struct fpu *fpu)
++static void fpu__initialize(struct fpu *fpu)
+ {
+ 	WARN_ON_FPU(fpu != &current->thread.fpu);
+ 
+@@ -236,7 +236,6 @@ void fpu__initialize(struct fpu *fpu)
+ 		fpu->initialized = 1;
+ 	}
+ }
+-EXPORT_SYMBOL_GPL(fpu__initialize);
+ 
+ /*
+  * This function must be called before we read a task's fpstate.
+@@ -365,8 +364,8 @@ void fpu__clear(struct fpu *fpu)
+ 	/*
+ 	 * Make sure fpstate is cleared and initialized.
+ 	 */
++	fpu__initialize(fpu);
+ 	if (static_cpu_has(X86_FEATURE_FPU)) {
+-		fpu__initialize(fpu);
+ 		user_fpu_begin();
+ 		copy_init_fpstate_to_fpregs();
+ 	}
+diff --git a/arch/x86/math-emu/fpu_entry.c b/arch/x86/math-emu/fpu_entry.c
+index 9e2ba7e667f61..a873da6b46d6b 100644
+--- a/arch/x86/math-emu/fpu_entry.c
++++ b/arch/x86/math-emu/fpu_entry.c
+@@ -113,9 +113,6 @@ void math_emulate(struct math_emu_info *info)
+ 	unsigned long code_base = 0;
+ 	unsigned long code_limit = 0;	/* Initialized to stop compiler warnings */
+ 	struct desc_struct code_descriptor;
+-	struct fpu *fpu = &current->thread.fpu;
+-
+-	fpu__initialize(fpu);
+ 
+ #ifdef RE_ENTRANT_CHECKING
+ 	if (emulating) {
+-- 
+2.20.1
+
