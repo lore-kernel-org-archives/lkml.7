@@ -6,138 +6,198 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF745C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E9AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8BC20651
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AE520651
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="gjK+L6uB"
+	dkim=pass (1024-bit key) header.d=foreca.com header.i=@foreca.com header.b="RNqPP9kA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbfDCO7g (ORCPT
+        id S1726680AbfDCPAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:59:36 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41379 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfDCO7f (ORCPT
+        Wed, 3 Apr 2019 11:00:21 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:35516 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfDCPAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:59:35 -0400
-Received: by mail-qk1-f196.google.com with SMTP id o129so10315176qke.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 07:59:34 -0700 (PDT)
+        Wed, 3 Apr 2019 11:00:20 -0400
+Received: by mail-yw1-f67.google.com with SMTP id d132so6032574ywa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 08:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
-        bh=uTCBiYjyTG9rHs7JaQZ3NGLTJi0/3lqoE44fjzggmZs=;
-        b=gjK+L6uBEUacclwAwrchXvl8dH3gbqg/VSC08h5RIWemEjKIQ8wohrkhc/hzLjfEa+
-         xamBQgblKpDq1G7vXkXMJgNe6HNeyy2FlbCfKfAgBgEwVLqRW1U1l9tqL20B+xUqnvG/
-         nkiBeDkXBdmNYDmXLaXEoRQE4HOc2FvHgUBUY=
+        d=foreca.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=i8NGOVapS1LkNfEWyO8DgxQCl8hJgoHPU0suMItL5/4=;
+        b=RNqPP9kAYBdNmIeKWtcLu614v+U+UC2Khg7wMlDEW/QAPy9VHQzvHGyKwcdqwflNbp
+         83dMjI5yApr/11jC92Fo1jqweXTcLVITxgocX8uj9R9JnmUE7WLO3sJCX4xPFPyuDckV
+         gXkQdz+WUDUb8usCODVvaWHnTrb0nkCqcQnBw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=uTCBiYjyTG9rHs7JaQZ3NGLTJi0/3lqoE44fjzggmZs=;
-        b=dw1QezCc16039XcXvfQBkRwIr8lXQOPqqkjujRDgoK1Z5XefEL5PJJQDKVZUUHzisX
-         lUcxRAhUsPj5qoQi/WKvsV4s9LY+3XmbLQlBjpgB2Mg7eMqhgnfTt2J+DB6gs9gt4CdN
-         5rTeQY9TVmcXHPOTTe9XV8As8Y4lavwfuv5YQC8J19WEEgMc8JPq8WQTK+VNHaQ0iqq5
-         YHnwTbpOKmPSI3K4ZchO38Y+pmMKktrHzIhEMxMkTah6RyWqQgGphUvavjqKMTtF7YI/
-         47awbOqr0/AD0xLl1PDCFpw+/G0lOKTPeCAHsX6c+hkbIomf5IiVmVdrQQxLZ8oPNZPL
-         Y4Jw==
-X-Gm-Message-State: APjAAAUcIObq9Unt7yrw7aB+IEqPHu6eWwDXMbxd3UPpT54BohNj1OcZ
-        13yF5NYb0m2I49WL0NoDEqHH9A==
-X-Google-Smtp-Source: APXvYqz5PKxd9DeOaTLLBVCRoOM5mvYql1shH2altkqnpblSYOErywYg9YY04K+DqKL8uQD3b6b92A==
-X-Received: by 2002:ae9:eb0b:: with SMTP id b11mr411785qkg.214.1554303574365;
-        Wed, 03 Apr 2019 07:59:34 -0700 (PDT)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id n5sm8796863qkk.4.2019.04.03.07.59.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 07:59:33 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Wed, 3 Apr 2019 10:59:32 -0400 (EDT)
-X-X-Sender: vince@macbook-air
-To:     Cyrill Gorcunov <gorcunov@gmail.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: perf: perf_fuzzer crashes on Pentium 4 systems
-Message-ID: <alpine.DEB.2.21.1904031043170.29188@macbook-air>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=i8NGOVapS1LkNfEWyO8DgxQCl8hJgoHPU0suMItL5/4=;
+        b=JP3JEOxOLcg8Gasb1bDGDNdxRjKLG4lfkF0CI8CwY1atQuTktVIRpL6+M+K9KztwDg
+         i+z1xSs7qUJLkLr+SR+NR41mG6XsEFHklDGqBvM6887WImbvQoUc8eK2X8higXEZ4g+e
+         QFUpkkC+ibEtvDWqD11oNjbJ84r4KZlzNsI4Lh8X/qNW/e33CLGgFpLQjxkGOj1tsFNE
+         m4/cr8WvE3T5mDskAgEnfPkHTdT/03ZT3Av2V1IhK/6lMAJ6p11V8W6cMj1n2bouP5l6
+         9PnKESP0ASdgLcajXHQVoMglzdml91/xbxbJVlP49zU4h7oCLoIVKd3+t9MUcHEVsYFr
+         GQ7A==
+X-Gm-Message-State: APjAAAXM6lj/IZkiXh6Wv44uPO9tEzc/aHh9cYAX3TTBV4TjIcfitoUj
+        tJFN4pi+ZUCgShHm82oV4hzuerJ3s4FkdDa2R59Rx0HK8BQ=
+X-Google-Smtp-Source: APXvYqzYNvuLqc6Pd1Pqx3jTgeH1KaBgvf00I7k6ppfqXeG4VNVgEGGZ4rH6lhuKvhEkZfJaQaQ9Q9LHoWNO3EOcBfM=
+X-Received: by 2002:a81:2f91:: with SMTP id v139mr1278567ywv.159.1554303619446;
+ Wed, 03 Apr 2019 08:00:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From:   Juha-Matti Tilli <juha-matti.tilli@foreca.com>
+Date:   Wed, 3 Apr 2019 18:00:08 +0300
+Message-ID: <CAA1_w39-q=8pcVVmwppyO81oBP0Pyn3pWr=4MKQbBvmcX=Ba5Q@mail.gmail.com>
+Subject: NFS hang, sk_drops increasing, segs_in not, pfmemalloc suspected
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     edumazet@google.com, juha-matti.tilli@foreca.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-so moving this to its own thread.
+Please CC me, I'm not on the lists.
 
-There was a two-part question asked.
-	1. Can the perf-fuzzer crash a Pentium 4 system
-	2. Does anyone care anymore?
+We at Foreca had an issue with NFS hangs in a heavily loaded jumbo frame
+environment. Specifically, TCP NFS connections occasionally stall
+irregardless of whether NFSv3 or NFSv4 is used. On closer inspection,
+the issue seems to be a TCP issue: the NFS TCP server doesn't accept
+data or ACKs from the client and continuously keeps on retransmitting
+the same segment the client has already seen. The client sends a DSACK,
+which the server doesn't see. On both ends, netstat shows unacked data
+in the send buffers. This NFS hang happens approximately once per day,
+and the problem goes away in 5-10 minutes. Often times, the existing TCP
+connection is discarded due to a timeout and a new one is opened from
+the same port.
 
-The answer to #1 turns out to be "yes"
-I'm not sure about #2 (but it's telling my p4 test system hadn't been 
-turned on in over 3 years).
+Log from dmesg:
 
-In any case the perf_fuzzer can crash my p4 system within an hour or so.  
-The debugging from this isn't great, I forget what the preferred debug 
-things to enable in the kernel hacking menu are.
+[1217343.872989] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873022] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873026] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873027] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873029] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873048] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873049] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873049] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873050] nfs: server 192.168.47.81 not responding, still trying
+[1217343.873052] nfs: server 192.168.47.81 not responding, still trying
+[1217591.216341] nfs: server 192.168.47.81 OK
+[1217591.216437] nfs: server 192.168.47.81 OK
+[1217591.216469] nfs: server 192.168.47.81 OK
+[1217591.216523] nfs: server 192.168.47.81 OK
+[1217591.216546] nfs: server 192.168.47.81 OK
+[1217591.216555] nfs: server 192.168.47.81 OK
+[1217591.216563] nfs: server 192.168.47.81 OK
+[1217591.216677] nfs: server 192.168.47.81 OK
+[1217591.216748] nfs: server 192.168.47.81 OK
+[1217591.216753] nfs: server 192.168.47.81 OK
 
-Here is one crash that just happened:
+The NICs are ixgbe, connected to a jumbo frame low-latency 10Gbps LAN
+that is very reliable and there shouldn't be any packet drops in this
+LAN. ICMP echo packets are responded to all the time; I have monitoring
+that pings through the network every second and there's absolutely no
+packet loss. The 2-node NUMA machines have 88 virtual CPU cores, and
+those aren't just idling; they are performing heavy computation nearly
+continuously.
 
-The instruction at RIP is unhelpfully
-	./arch/x86/include/asm/processor.h:400
-which is
-	DECLARE_PER_CPU_FIRST(union irq_stack_union, irq_stack_union) __visible;
+Some ixgbe driver information:
 
-Though looking at the assembly it looks like
-	p4_pmu_enable_event() is called with NULL as the paramater.
+$ ethtool -g eno2
+Ring parameters for eno2:
+Pre-set maximums:
+RX:        4096
+RX Mini:    0
+RX Jumbo:    0
+TX:        4096
+Current hardware settings:
+RX:        512
+RX Mini:    0
+RX Jumbo:    0
+TX:        512
 
-[ 1930.122902] BUG: unable to handle kernel NULL pointer dereference at 0000000000000158
-[ 1930.130715] #PF error: [normal kernel read fault]
-[ 1930.135402] PGD 0 P4D 0 
-[ 1930.137928] Oops: 0000 [#1] SMP PTI
-[ 1930.141405] CPU: 0 PID: 30179 Comm: perf_fuzzer Tainted: G        W         5.1.0-rc3+ #6
-[ 1930.149555] Hardware name: LENOVO 88088NU/LENOVO, BIOS 2JKT37AUS 07/12/2007
-[ 1930.156497] RIP: 0010:p4_pmu_enable_event+0x10/0x160
-[ 1930.161443] Code: 89 f0 0f 30 31 c0 8b 15 e6 2e 0f 01 85 d2 7f 01 c3 89 c2 89 cf e9 70 65 3b 00 0f 1f 44 00 00 41 56 41 55 41 54 49 89 fc 55 53 <48> 8b 9f 58 01 00 00 48 89 dd 48 89 da 48 c1 ed 20 48 c1 ea 3f 89
-[ 1930.180155] RSP: 0018:ffffc90001f57d50 EFLAGS: 00010017
-[ 1930.185361] RAX: 0000000000000000 RBX: 000000000000000c RCX: 0000000000000360
-[ 1930.192472] RDX: 0000000000000000 RSI: 0000000000000400 RDI: 0000000000000000
-[ 1930.199582] RBP: ffff88803e40f620 R08: 00000000ffffffff R09: 0000000c00000000
-[ 1930.206691] R10: 4801fe0000fc0000 R11: 8000000fce030200 R12: 0000000000000000
-[ 1930.213802] R13: ffff888035c4a0c0 R14: ffff88803e429300 R15: 0000000000000402
-[ 1930.220913] FS:  00007ff3b934a540(0000) GS:ffff88803e400000(0000) knlGS:0000000000000000
-[ 1930.228976] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1930.234700] CR2: 0000000000000158 CR3: 000000003a72e000 CR4: 00000000000007f0
-[ 1930.241811] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1930.248921] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000600
-[ 1930.256030] Call Trace:
-[ 1930.258472]  p4_pmu_enable_all+0x3c/0x50
-[ 1930.262384]  __perf_event_task_sched_in+0x174/0x1a0
-[ 1930.267247]  ? __switch_to_asm+0x34/0x70
-[ 1930.271155]  ? __switch_to_asm+0x40/0x70
-[ 1930.275064]  ? __switch_to_asm+0x34/0x70
-[ 1930.278971]  ? __switch_to_asm+0x40/0x70
-[ 1930.282882]  finish_task_switch+0x10a/0x290
-[ 1930.287053]  __schedule+0x207/0x800
-[ 1930.290530]  ? event_function_call+0x85/0x100
-[ 1930.294873]  ? ctx_resched+0xc0/0xc0
-[ 1930.298437]  preempt_schedule_common+0xa/0x20
-[ 1930.302777]  _cond_resched+0x1d/0x30
-[ 1930.306340]  mutex_lock+0xe/0x30
-[ 1930.309558]  perf_event_ctx_lock_nested.isra.89+0x46/0x90
-[ 1930.314939]  ? _perf_event_disable+0x40/0x40
-[ 1930.319193]  perf_event_task_enable+0x3f/0xa0
-[ 1930.323537]  __x64_sys_prctl+0x1b2/0x560
-[ 1930.327448]  do_syscall_64+0x4f/0xf0
-[ 1930.331011]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1930.336045] RIP: 0033:0x7ff3b928240a
+$ ethtool -l eno2
+Channel parameters for eno2:
+Pre-set maximums:
+RX:        0
+TX:        0
+Other:        1
+Combined:    63
+Current hardware settings:
+RX:        0
+TX:        0
+Other:        1
+Combined:    63
 
+ethtool -S eno2 shows (among other non-interesting information):
+alloc_rx_page_failed: 0
+alloc_rx_buff_failed: 0
+rx_no_dma_resources: 2239
+
+When debugging the issue, I found that sk_drops was increasing but
+segs_in was not. Closer inspection led me to believe that the SKB is
+allocated from pfmemalloc reserves, as there are not many other reasons
+for segs_in not incrementing at the same time sk_drops is incrementing.
+On this very specific kernel version, there is no counter for such
+dropped segments; recent kernels have LINUX_MIB_PFMEMALLOCDROP counter
+that Eric Dumazet added a couple of years ago.
+
+We found that vm.min_free_kbytes is only 90112 (90 megabytes) even
+though the machines have 128-256 gigabytes of RAM. We bumped up
+vm.min_free_kbytes by multiplying it by 10 and the NFS hang went away;
+the system has been stable for about a week, whereas before this bump
+NFS hangs happened approximately once per day. This, among my
+investigations of the Linux kernel source code, suggests that pfmemalloc
+is the cause of our NFS issues.
+
+The NFS server is under extremely heavy memory pressure all the time, as
+the machine is doing weather forecasting and weather service business,
+with data set being greater than RAM size. The NFS server isn't a
+dedicated NFS-only server, as we actually use the considerable CPU
+resources on the server. There is memory fragmentation and
+/proc/buddyinfo can easily show readings as bad as this (not during NFS
+hang, but during old vm.min_free_kbytes value):
+
+Node 0, zone      DMA      0      1      0      0      2      1      1
+     0      1      1      3
+Node 0, zone    DMA32    619    456    750   2890   1638    901    431
+   124      4      0      0
+Node 0, zone   Normal  13620      0      0      0      0      0      0
+     0      0      0      0
+Node 1, zone   Normal  25620 423610  91505   6636    573      1      0
+     0      0      0      0
+
+...so one NUMA node is nearly starved of memory, the remaining memory
+being fragmented. I suspect the node 0 normal memory can be even worse,
+but I didn't manage to capture /proc/buddyinfo during an NFS hang and
+don't want to reproduce a hang anymore as the machine is in production
+use (nearly immediately when I started to suspect memory issues, I
+bumped up vm.min_free_kbytes, so I have only limited logs at old
+vm.min_free_kbytes values).
+
+I have several questions:
+
+A) Is it enough to have a LINUX_MIB_PFMEMALLOCDROP counter for
+pfmemalloc drops? Shouldn't there be a big honking rate-limited warning
+printed to dmesg?  Something like "packet dropped due to out-of-memory
+condition, please bump up vm.min_free_kbytes"? I mean, if you run out of
+memory, surely the sysadmin should be notified. Most sysadmins aren't
+experienced enough to read every single netstat counter. We only see the
+issue as NFS hangs in dmesg; there is nothing that could direct the
+sysadmin to suspect memory issues.
+
+B) Why does the ixgbe driver keep on dropping packets for 5-10 minutes?
+Does this indicate that ixgbe is reusing the pfmemalloc pages? Should
+Intel be informed of this as the developer of the ixgbe driver? Or is
+the SKB allocated outside of ixgbe? The ixgbe driver version we use is
+the one that comes with CentOS 7.
+
+C) Why is the default vm.min_free_kbytes only 90 megabytes, even though
+there is plenty of RAM? Should vm.min_free_kbytes be bigger as default?
+
+BR, Juha-Matti
