@@ -2,148 +2,98 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0B3C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB6EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EA8206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4A520830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVrgZ8MM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfDCBBF (ORCPT
+        id S1726515AbfDCBEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 21:01:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45008 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726130AbfDCBBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 21:01:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7A2FBAF86;
-        Wed,  3 Apr 2019 01:01:02 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>, Jonathan Corbet <corbet@lwn.net>
-Date:   Wed, 03 Apr 2019 12:00:54 +1100
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] Convert vfs.txt to vfs.rst
-In-Reply-To: <20190402164824.GK2217@ZenIV.linux.org.uk>
-References: <20190327051717.23225-1-tobin@kernel.org> <20190402094934.5b242dc0@lwn.net> <20190402164824.GK2217@ZenIV.linux.org.uk>
-Message-ID: <87d0m32989.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Tue, 2 Apr 2019 21:04:32 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34438 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfDCBEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 21:04:31 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k2so17670810qtm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 18:04:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=VFsL0vLiPyehSrSGKfgAV/dOCLVxn5fde2IiJdtuRQI=;
+        b=YVrgZ8MMM+Gk1ZXQLCtfJOxdqiFoG4Y8F1P7Lwxpaf5swYu8qBzf/jlha8xU15Z1BG
+         uPZ5K8mqRz96jPRzNbRz/kUwoVFtGjNCi8kyKCnFJAollYTRbZCRK7YXVyS4Udt9UwtK
+         aVLrKneAgWZHWJwgyGmdgCrY7uif4H9NsVmoevVuRNNx8JKJ3VeJQmFsrg1aZZMAw7Co
+         a9y+zb5bFc0KoiRaynt/mcAscRSDqv1tGhjLwCrrg+WJ3t1aawTMiLXFt9PTO+s6M2D2
+         1573NEAry50+EyzYbA4Od5XIkBQqcwTT/E7SsP5IAnAqV4pkqQ/EOICScsTr3eoQBq0b
+         hYEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=VFsL0vLiPyehSrSGKfgAV/dOCLVxn5fde2IiJdtuRQI=;
+        b=lU20ddb7T3lVxq8zXo9wzWYZfKxQYXrqnrnJVh3a9n4nJfipXMwMpDBeGsqDIcw11C
+         5AbfTTJz0V18BJueh8llzRZxFQX4+I8EBJ5bMGusJvNomrL0feftyStmtyNvdtaa40L2
+         2PEK71Wx++X6v7MzoFHZ/YldVu1ZDADcM9Wf82wqHDuyaUBsCG5Qm454xc2Uhc7QEwXv
+         nwwwy+FfOoojAl0t9xs81J7gr0E4bRJ8d9zKUn0XGL+FvGeibmNy7W4nm1xZy1ZpYYL4
+         ZWGJ37f3osK3MxZuWfY++zgRyT4g0vnEsbCxaamN57f+jg37l5EuzIh9DK46YlRPNFWw
+         CslQ==
+X-Gm-Message-State: APjAAAXUADMvNhyRAvFIzvAT3x4N233eFOHfnVtl8oFNTPi6tHJM+6HY
+        38O5I0EgO7qNPhYINNmdMGs=
+X-Google-Smtp-Source: APXvYqzaDBrvpc6wLT1hS/+alRCd36Du7JEzai0P407eM+UbqR1RzIr/RMqkXgwvr1CLRpjBAnkDgw==
+X-Received: by 2002:ac8:33ad:: with SMTP id c42mr61714641qtb.318.1554253470843;
+        Tue, 02 Apr 2019 18:04:30 -0700 (PDT)
+Received: from sh4ck3r.ic.unicamp.br (wifi-177-220-84-91.wifi.ic.unicamp.br. [177.220.84.91])
+        by smtp.gmail.com with ESMTPSA id i63sm7523499qkd.82.2019.04.02.18.04.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 02 Apr 2019 18:04:30 -0700 (PDT)
+From:   Andre Dainez <andredainez@gmail.com>
+To:     lkcamp@lists.libreplanetbr.org, gregkh@linuxfoundation.org,
+        realwakka@gmail.com, straube.linux@gmail.com, hle@owl.eu.com,
+        rico.schrage@gmail.com, sophie.matter@web.de,
+        Valentin.Vidic@CARNet.hr, simon@nikanor.nu,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: gdm724x: Add parenthesis to Macro arguments
+Date:   Tue,  2 Apr 2019 22:04:05 -0300
+Message-Id: <1554253445-28635-1-git-send-email-andredainez@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Fix checkpatch errors:
 
-On Tue, Apr 02 2019, Al Viro wrote:
+CHECK: Macro argument 'len' may be better as '(len)' to avoid precedence issues
+CHECK: Macro argument 'nlh' may be better as '(nlh)' to avoid precedence issues
 
-> On Tue, Apr 02, 2019 at 09:49:34AM -0600, Jonathan Corbet wrote:
->> On Wed, 27 Mar 2019 16:16:53 +1100
->> "Tobin C. Harding" <tobin@kernel.org> wrote:
->>=20
->> > Hi Al,
->> >=20
->> > This series converts the VFS file Documentation/filesystems/vfs.txt to
->> > reStructuredText format.  Please consider taking this series through
->> > your tree as apposed to Jon's tree because this set makes a fair amount
->> > of changes to VFS files (and also the VFS tree and docs tree are out of
->> > sync right now with the recent work by Mauro and Neil).
->>=20
->> Al, do you have any thoughts on how you want to handle this?  I was about
->> to apply Jeff Layton's vfs.txt update, but would rather not create
->> conflicts unnecessarily.  Let me know if you'd like me to pick this work
->> up.
->
-> Frankly, I would rather see that file be eventually replaced by something
-> saner, and I'm not talking about the format.  Re Jeff's patch...=20
->
-> +  d_prune: called prior to pruning (i.e. unhashing and killing) a hashed
-> +       dentry from the dcache.
->
-> is flat-out misguiding.  First of all, it *is* called for unhashed dentri=
-es,
-> TYVM.  Furthermore, "prior to" is far too vague.
->
-> What really happens: there's a point in state diagram for dentries where
-> we commit to destroying a dentry and start taking it apart.  That transit=
-ion
-> happens with ->d_lock of dentry, ->i_lock of its inode (if any) and
-> ->d_lock of the parent (again, if any) held; ->d_prune() is the last
-> chance for filesystem to see the (now doomed) dentry still intact.
->
-> It doesn't matter whether it's hashed or not, etc.  The locks held
-> are sufficient to stabilize pretty much everything[1] in dentry and
-> nothing is destroyed yet.  The only apparent exception is ->d_count,
-> but that's not real - we are guaranteed that there had been no other
-> counted references to dentry at the decision point and that none
-> could've been added.  So this "oh, it's not 0 now, it's gone negative
-> after lockref_mark_dead() the caller has just done" is a red herring.
->
-> ->d_prune() must not drop/regain any of the locks held by caller.
-> It must _not_ free anything attached to dentry - that belongs
-> later in the shutdown sequence.  If anything, I'm tempted to
-> make it take const struct dentry * as argument, just to make
-> that clear.
->
-> No new (counted) references can be acquired by that point;
-> lockless dcache lookup might find our dentry a match, but
-> result of such lookup is not going to be legitimized - it's
-> doomed to be thrown out as stale.
->
-> It really makes more sense as part of struct dentry lifecycle
-> description...=20=20
+Signed-off-by: Andre Dainez <andredainez@gmail.com>
+---
+ drivers/staging/gdm724x/netlink_k.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I would find it useful if the documentation said something about why
-this API exists at all.  As you say, it cannot change the dentry - so
-what is it expected to do.
+diff --git a/drivers/staging/gdm724x/netlink_k.c b/drivers/staging/gdm724x/netlink_k.c
+index 92440c3..36d88f4 100644
+--- a/drivers/staging/gdm724x/netlink_k.c
++++ b/drivers/staging/gdm724x/netlink_k.c
+@@ -19,8 +19,8 @@ static DEFINE_MUTEX(netlink_mutex);
+ #define ND_NLMSG_SPACE(len)	(NLMSG_SPACE(len) + ND_IFINDEX_LEN)
+ #define ND_NLMSG_DATA(nlh)	((void *)((char *)NLMSG_DATA(nlh) + \
+ 						  ND_IFINDEX_LEN))
+-#define ND_NLMSG_S_LEN(len)	(len + ND_IFINDEX_LEN)
+-#define ND_NLMSG_R_LEN(nlh)	(nlh->nlmsg_len - ND_IFINDEX_LEN)
++#define ND_NLMSG_S_LEN(len)	((len) + ND_IFINDEX_LEN)
++#define ND_NLMSG_R_LEN(nlh)	((nlh)->nlmsg_len - ND_IFINDEX_LEN)
+ #define ND_NLMSG_IFIDX(nlh)	NLMSG_DATA(nlh)
+ #define ND_MAX_MSG_LEN		(1024 * 32)
+ 
+-- 
+2.7.4
 
-I had a look at the two in-tree users and my guess is that it can be
-useful if the filesystem caches some other information which would be
-invalidated by a dentry being removed.
-I *think* cephfs has a flag which records if "All entries in a directory
-are currently in the dcache".  When a dentry is pruned, that flag needs
-to be cleared.
-
-i.e. ->d_prune allows a filesystem to maintain summary state about what
-   is currently in the dcache.
-??
-
-Thanks,
-NeilBrown
-
->
-> [1] in theory, ->d_time might be changed by overlapping lockless
-> call of ->d_revalidate().  Up to filesystem - VFS doesn't touch
-> that field (and AFAICS only NFS uses it these days).
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlykBccACgkQOeye3VZi
-gbnY0w/+K3LsamZQld1Bpmrss0FtSfkjCHDDdn1D3dzMFizF+1CgCOOcZdr233Lk
-zRIGCXDNVVdJrDLL1CDuJVrQPF3euGZc1UljxS4p5cGNKRAZ9HPr3MyHIREyEcM8
-Qiq7+PFFf6UAIHAFjPyU1RPliHfLu+TGDdg5qi1OijXESEI4lq8Kdn0Q/a1iO0as
-Ky/DYoRnCZIExe98ziJfD4kd+HDmJkFD8Wdmo3vhk+4GglU4s38FP4xYv2ENo6QD
-uAvwfaU7LwG3edC1/tU+e8grnW9Nqj7mNGsFTklAKZ8HS0WCbuwG7oKp5u4yxjWK
-aRUzVYWYDD1XGShhQgA35l2ABvjpj41ADKu64qR/6tIwGzuqqT8odZiMdmWXML1t
-I5SALwY0/HcC2D0GIiAdRRUebhMsX0gRlmPf4OMM5Dv0r2M/UlQ6bqSJKE+AXlKt
-W7HlV+NufNJDjTLMPIFI/h25SOK5DZLmK0ZxA7oo1N4nNprTt2GU+M9AB3Gf+Xhg
-nXvd08zg996iJSTLzg8J3TJvmzQZVUacup9HbWlVtNKXZs1DoH7nz9+nTnKvyHkd
-goEpULSpLGINgDhD5337DNkcFmJIdFunxhK0G15bzeirfITvZDx7jnJN/IuZYY5V
-chKek4Ub9zJBaKHkPyubcUfEIYvQ1/foFtQ5h8tul2PeQPOQdnY=
-=a+5Z
------END PGP SIGNATURE-----
---=-=-=--
