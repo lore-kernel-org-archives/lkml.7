@@ -2,102 +2,81 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880E7C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09016C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578432084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05C82082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554299802;
+	bh=Uxridx6mLPI72ZCwRUeIg1oCtYd0ZThGlY0eYAaFEcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fuwRPEk0dnqIDirZShF9oGYMh6NIGjCQoxJSDLr9E5ZYe3hTP0svZyuzkjgP2YG7U
+	 HtE5uWU3Rxzvb2LAnRnCge0+umd7A/SZcFRZtpnA1kjBpSfijTL9teaQ17loQay/Zp
+	 SMa8tm9ptzb76k+Jc8fY/JlPZi4MjK85bavmCVwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDCNzl (ORCPT
+        id S1726531AbfDCN4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:55:41 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:52274 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725959AbfDCNzl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:55:41 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33DtW6n021944;
-        Wed, 3 Apr 2019 08:55:32 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2rm59s20yv-1;
-        Wed, 03 Apr 2019 08:55:32 -0500
-Received: from EX17.ad.cirrus.com (unknown [172.20.9.81])
-        by mail4.cirrus.com (Postfix) with ESMTP id 215E9611C8BE;
-        Wed,  3 Apr 2019 08:56:49 -0500 (CDT)
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EX17.ad.cirrus.com
- (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Wed, 3 Apr 2019
- 14:55:31 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com
- [198.61.86.93])        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 61B862DD;
-        Wed,  3 Apr 2019 14:55:31 +0100 (BST)
-Date:   Wed, 3 Apr 2019 14:55:31 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <broonie@kernel.org>, <digetx@gmail.com>, <l.stach@pengutronix.de>
-CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>
-Subject: Regulator Potential Deadlock
-Message-ID: <20190403135531.GB81578@ediswmail.ad.cirrus.com>
+        Wed, 3 Apr 2019 09:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfDCN4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:56:41 -0400
+Received: from localhost (217-101-180-136.cable.dynamic.v4.ziggo.nl [217.101.180.136])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112382084B;
+        Wed,  3 Apr 2019 13:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554299800;
+        bh=Uxridx6mLPI72ZCwRUeIg1oCtYd0ZThGlY0eYAaFEcQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VQIgZADDqoxCRLPUGFk1ksqmOcnOLNoIYoDn4uCI0w/QIG/QTLV7GAyqVmR4kn03V
+         wKxEGICk6P3Py1dy8JKG5YqTNsuuy8UtKvIzq4N3ls0PVrU0nE0cAgNip3VC3YO+zs
+         8d2jA9W3MV9ndg9LKuGG/kq2IcXJGSYdK0NrhE80=
+Date:   Wed, 3 Apr 2019 15:56:38 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sashal@kernel.org, Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 4.19 BACKPORT] arm64: debug: Don't propagate UNKNOWN FAR
+ into si_code for debug signals
+Message-ID: <20190403135638.GA8633@kroah.com>
+References: <20190403103408.29209-1-will.deacon@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904030096
+In-Reply-To: <20190403103408.29209-1-will.deacon@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guys,
+On Wed, Apr 03, 2019 at 11:34:08AM +0100, Will Deacon wrote:
+> Commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
+> 
+> FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
+> taking a hardware watchpoint. Unfortunately, if a debug handler returns
+> a non-zero value, then we will propagate the UNKNOWN FAR value to
+> userspace via the si_addr field of the SIGTRAP siginfo_t.
+> 
+> Instead, let's set si_addr to take on the PC of the faulting instruction,
+> which we have available in the current pt_regs.
+> 
+> Cc: <stable@vger.kernel.org> # 4.19.y
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>  arch/arm64/mm/fault.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 
-Was testing some of my hardware and hit this potential lockup:
+Thanks for all 5 of these patches, now queued up.
 
-Possible unsafe locking scenario:
-
-CPU0                    CPU1
-----                    ----
-lock((work_completion)(&(&rdev->disable_work)->work));
-                        lock(regulator_list_mutex);
-                        lock((work_completion)(&(&rdev->disable_work)->work));
-lock(regulator_list_mutex);
-
-***
-DEADLOCK
-***
-
-Looks like it comes from this patch:
-
-commit f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
-
-The basic problem appears to be that regulator_unregister takes
-the regulator_list_mutex and then calls flush_work on
-disable_work. But regulator_disable_work calls
-regulator_lock_dependent which will also take the
-regulator_list_mutex. Resulting in a deadlock if the flush_work
-call actually needs to flush the work.
-
-The locking appears to have got quite complex since last time I
-looked at it and I am having a little difficulty working out
-exactly is protecting what.
-
-I am wondering if the flush_work can just be moved outside the
-regulator_list_mutex in regulator_unregister since that mutex
-doesn't seem to protect the against the work being queued anyway?
-I will keep looking into this over the next couple of days,
-any pointers or ideas anyone has would be greatly appreciated.
-Finally, as it looks like it might take a couple of days to
-figure out the locking, I am leaving on holiday on Saturday
-so if you don't see a fix from my by then it might be a couple
-of weeks before I can look at it again.
-
-Thanks,
-Charles
+greg k-h
