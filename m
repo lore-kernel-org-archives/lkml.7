@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B315CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4957C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5817920830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0892147A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="P1x5x3hU"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dZh1TJMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbfDCLTQ (ORCPT
+        id S1726461AbfDCLTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 07:19:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43273 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfDCLTP (ORCPT
+        Wed, 3 Apr 2019 07:19:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40135 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfDCLTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 07:19:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k17so20758978wrx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 04:19:13 -0700 (PDT)
+        Wed, 3 Apr 2019 07:19:44 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so20763444wre.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 04:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=2VS0KnMA1xaoCRAYMv30BINx0WE9mFg/iEUV/oWtrbQ=;
-        b=P1x5x3hUZ1hoUKuJ2i5a6Rlzim3caeEOlW4qRQIRSn8Uhovf38HaaGk3MsRcSqAY9n
-         9CcA1YrXVfZkNogRbrQSGk0he+DEXCRXNQknBCT5iTuzx4BWi7ueOMcniglrlotwI6kY
-         GX3+FdYTe96ku5RKRSB0kT3ZS11FHA3RZAuwTiroGrikK3FRfVppjSU26KarGKnvJs6d
-         cT7xcK8vlCrNHta/vuAXWyzm/tZu06XqqKP0vuwPsi0ZWF0t3/IYMSF6iux4erk1tuQh
-         MXd2JHs4Suj0d8ztpxSTBzpo3x1s7SC2viuXIvlvm3oKmsxFbnc4tRE6KxaizRQH5zOw
-         UlRg==
+        bh=Y1hnaESTcgYoF0haxBIv7wrocYU/wH/BiXj68y9zO0Y=;
+        b=dZh1TJMNjqBWgVodrXLHQmQfqbvc+HISkBRjWEfW9k1c9ZODyInynuS5R+JbS6U8WR
+         R0OodqDA1cydWLKvMFHuSdEHVyjrf8E8axhp6irbm0gZFD4IqUEzjg2F5z6Lg4RWQ8F8
+         7ePah8+wEu1ktpP/zbg5FqfXlonCMx+fEXMgF5wPDrjBpjOXe3MMkiD9MX8nWcgnDMN2
+         lcxZVFSG0mAczx5+b0un/7xjH5ZnRQSjA4xdY7xbMDuUAcnDOwoEQLANY82LVSvOOq98
+         cR23CaCyqX9LZzyYSLB/zDpfp9lKfvLCnzA5Aoxlq6kp8b5weQJHq4sGwoc9xyQEqsZO
+         f4mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=2VS0KnMA1xaoCRAYMv30BINx0WE9mFg/iEUV/oWtrbQ=;
-        b=EtJNQm4ErvQ9/2fUS8czGUL1IBWRs8BiRoPfUZmQM6MEED3ziCxAS2sPENzecQubx+
-         RRwLA1KX51yGY7F0skFDA/FtkljnpD9Sj0UKplgWj5sAwAbmJrgO8HxfZNGaAPeW7Th6
-         Ybjdf1FxugAjBZ+G5WNx5lF040M0RPrs1NNN+XoztF0rtlMA4NhG0yy40B2HLtJ4gFsa
-         eYPXMCbQC8HbYDGh9tF8PD9eV3Do19txOMoRyiLN1m46kZ7kAgtyqxIsnZFqaqH5WX0y
-         hiVA5DpoJfnKKTuW4GL98vB4DVBXzVGwlj/IUN5n3RTQzfh/mBtuIarJSM+nzZGsZ5jk
-         TTNA==
-X-Gm-Message-State: APjAAAWfANTj0zlPOC+q4stE1UOh9yS3mKLMWXUvQWldA1n3MhieEy8d
-        EFzJhJjsTPC9y3dCBClhs+i7tA==
-X-Google-Smtp-Source: APXvYqyrsqgRxrddUmWTKdOx5H7mXERrgYBKCpQAPP5UWM6/7OOwJEE9pwNUXV2Oi0w0bzuG1FU1pA==
-X-Received: by 2002:a5d:494c:: with SMTP id r12mr37585207wrs.250.1554290353158;
-        Wed, 03 Apr 2019 04:19:13 -0700 (PDT)
+        bh=Y1hnaESTcgYoF0haxBIv7wrocYU/wH/BiXj68y9zO0Y=;
+        b=XIXhf94zoMIIInUJhn4dbvHq7PU8tAV773F/+0ZqkFLugGAm/uLq9vlBtWWWdLi4DA
+         Eg88bNOq3lkw+IBitiO8S2oOiSakk4wfuuocYrVF18MIIg31KVkQzG6ozV28/mph4jn8
+         cDOPBoeiG78h4xvHd37ialKujanoqmQL8+F5vq8ZHYd8mzSqX/uSl6/wSHRPvvLp1Xyx
+         /meMaheX50vP+tybEYYd+I3eHBY4Emg0RNH9YXh8TEkssCE0ge4H8laL0lsBvWYVOm+q
+         F6Al9KzU7hn25yKkYcsCl9GBHuBE2No3Jwpu1Bb+pwqaQuN2I+xFLQ5cEKFv5F6NF4IZ
+         H5cQ==
+X-Gm-Message-State: APjAAAVdhbwuB03R6bZSKYi/ZqH7zZeHkvIL1mzwwedUz4zMrV2oW8Mk
+        LwwoQjmFTqEVP/6I0AynBLnimw==
+X-Google-Smtp-Source: APXvYqwMc+S5JPgkKO9bCDC4qvinLLVDoHPha2/4MZZ9Xq45X4AH3EVrEa6FnKwVr9LkPzlpWWvkDQ==
+X-Received: by 2002:adf:e949:: with SMTP id m9mr17039848wrn.237.1554290382333;
+        Wed, 03 Apr 2019 04:19:42 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id d3sm20979444wmf.46.2019.04.03.04.19.12
+        by smtp.gmail.com with ESMTPSA id 11sm6111226wmk.17.2019.04.03.04.19.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 04:19:12 -0700 (PDT)
-Subject: Re: [PATCH 2/2] pwm: meson: don't disable pwm when setting duty
- repeatedly
+        Wed, 03 Apr 2019 04:19:41 -0700 (PDT)
+Subject: Re: [PATCH 1/2] pwm: meson: consider 128 a valid pre-divider
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
         linux-amlogic@lists.infradead.org
@@ -67,7 +66,7 @@ Cc:     jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de,
         bichao.zheng@amlogic.com
 References: <20190401181817.11999-1-martin.blumenstingl@googlemail.com>
- <20190401181817.11999-3-martin.blumenstingl@googlemail.com>
+ <20190401181817.11999-2-martin.blumenstingl@googlemail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -120,12 +119,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <7545ce1e-1e27-ca16-d762-5bf4b833defa@baylibre.com>
-Date:   Wed, 3 Apr 2019 13:19:11 +0200
+Message-ID: <c8b6856c-3d2c-c59a-b3e6-5cfacc44d0e9@baylibre.com>
+Date:   Wed, 3 Apr 2019 13:19:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190401181817.11999-3-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190401181817.11999-2-martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -135,36 +134,41 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 01/04/2019 20:18, Martin Blumenstingl wrote:
-> From: Bichao Zheng <bichao.zheng@amlogic.com>
+> The pre-divider allows configuring longer PWM periods compared to using
+> the input clock directly. The pre-divider is 7 bit wide, meaning it's
+> maximum value is 128 (the register value is off-by-one: 0x7f or 127).
 > 
-> There is an abnormally low about 20ms,when setting duty repeatedly.
-> Because setting the duty will disable pwm and then enable. Delete
-> this operation now.
+> Change the loop to also allow for the maximum possible value to be
+> considered valid.
 > 
 > Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
-> Signed-off-by: Bichao Zheng <bichao.zheng@amlogic.com>
-> [ Dropped code instead of hiding it behind a comment ]
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  drivers/pwm/pwm-meson.c | 5 -----
->  1 file changed, 5 deletions(-)
+>  drivers/pwm/pwm-meson.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 4b708c1fcb1d..e247ab632530 100644
+> index f6e738ad7bd9..4b708c1fcb1d 100644
 > --- a/drivers/pwm/pwm-meson.c
 > +++ b/drivers/pwm/pwm-meson.c
-> @@ -325,11 +325,6 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	if (state->period != channel->state.period ||
->  	    state->duty_cycle != channel->state.duty_cycle ||
->  	    state->polarity != channel->state.polarity) {
-> -		if (channel->state.enabled) {
-> -			meson_pwm_disable(meson, pwm->hwpwm);
-> -			channel->state.enabled = false;
-> -		}
-> -
->  		if (state->polarity != channel->state.polarity) {
->  			if (state->polarity == PWM_POLARITY_NORMAL)
->  				meson->inverter_mask |= BIT(pwm->hwpwm);
+> @@ -188,7 +188,7 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+>  	do_div(fin_ps, fin_freq);
+>  
+>  	/* Calc pre_div with the period */
+> -	for (pre_div = 0; pre_div < MISC_CLK_DIV_MASK; pre_div++) {
+> +	for (pre_div = 0; pre_div <= MISC_CLK_DIV_MASK; pre_div++) {
+>  		cnt = DIV_ROUND_CLOSEST_ULL((u64)period * 1000,
+>  					    fin_ps * (pre_div + 1));
+>  		dev_dbg(meson->chip.dev, "fin_ps=%llu pre_div=%u cnt=%u\n",
+> @@ -197,7 +197,7 @@ static int meson_pwm_calc(struct meson_pwm *meson,
+>  			break;
+>  	}
+>  
+> -	if (pre_div == MISC_CLK_DIV_MASK) {
+> +	if (pre_div > MISC_CLK_DIV_MASK) {
+>  		dev_err(meson->chip.dev, "unable to get period pre_div\n");
+>  		return -EINVAL;
+>  	}
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
