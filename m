@@ -2,267 +2,177 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9627C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD896C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678BC2148E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554267437;
-	bh=O2dWtnHMvIucSN9og0FGKl2+3z34XXj7gTmGiID9qk8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Tcwu1xmcZMmVDmrkCTB+hfhmXGEiz3TvKlSgjs7J8IX1B3XmPIZPNXgw002LBQUGY
-	 WS/0j7bDgXgXiTwVXIXMzOoaiKZuz5oGf2f80jb2gSvLbQYfaYD/KEQH9RTkhjubgt
-	 WXigh/AZMH2fHhq6qbXtTdE/7wq6J2zxkUNzHwaI=
+	by mail.kernel.org (Postfix) with ESMTP id 716EC2147A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:58:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="cee1tRDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfDCE5Q (ORCPT
+        id S1728698AbfDCE6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:57:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48028 "EHLO mail.kernel.org"
+        Wed, 3 Apr 2019 00:58:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:11910 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbfDCE5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:57:15 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 073F82148E
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 04:57:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554267434;
-        bh=O2dWtnHMvIucSN9og0FGKl2+3z34XXj7gTmGiID9qk8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YXO6WTzWL5SQ2sNq/Uvg9t/vqXg5D+gTAc4DnbIgIYxipxC1WAIueJuJO8bV91EA4
-         O0sCx/l9Z8dZw+3vlVzHPefkGnda6u9jx+5uBMkvtLmJ/wuqAcPKlDNcqwYcv2aJ3Y
-         6MkIf4kA5fgBLRR0tr0lYjueq+7yRhpcU2YE7jvg=
-Received: by mail-qt1-f175.google.com with SMTP id v20so17792682qtv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:57:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAX14sT2o4JEVaM4M+60ILqatVBqF1rJPG9TeNpchraxaQFN9ORD
-        0rIlXq7L+JHEdqhSxCB++94FLnC0CX0l+f/huw==
-X-Google-Smtp-Source: APXvYqwCpRpvs326uXX4jy7Nr4Dj8f+XYoaLcsF2rUa9OJATlj/OinpZAjqtW2thoDpU/6hw5NBn/iHQ9kXqQybAxJY=
-X-Received: by 2002:aed:3e3d:: with SMTP id l58mr62864866qtf.77.1554267433206;
- Tue, 02 Apr 2019 21:57:13 -0700 (PDT)
+        id S1727641AbfDCE6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 00:58:49 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44Yv462mQhz9v10H;
+        Wed,  3 Apr 2019 06:58:46 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=cee1tRDV; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id b0OESs7l_U4k; Wed,  3 Apr 2019 06:58:46 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Yv460ZLGz9v10G;
+        Wed,  3 Apr 2019 06:58:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1554267526; bh=5Xx4genmEdABRp8M8MXS027ZxRTOx9uvlqGNm1L1b1w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cee1tRDVuPk9wSU+tEnnQ/bqtnIB5O5LeGWg8FraP8t+qFAlORylURzsAbMcexA+8
+         rbq0YKaqgPsiURROfC97Dzbpi1QrJaIY8STSv1SrtJEOXOHVl4ivLJQtVHkBK/e0Si
+         TvHGEndf7CYwgGWe2XUMvsFHDZCQPBHUv3IGPccE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DD5C68B77E;
+        Wed,  3 Apr 2019 06:58:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id fYq4xKXsmjq7; Wed,  3 Apr 2019 06:58:46 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 455128B754;
+        Wed,  3 Apr 2019 06:58:46 +0200 (CEST)
+Subject: Re: [PATCH 5/6] powerpc/mmu: drop mmap_sem now that locked_vm is
+ atomic
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        akpm@linux-foundation.org
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Lameter <cl@linux.com>, linuxppc-dev@lists.ozlabs.org
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+ <20190402204158.27582-6-daniel.m.jordan@oracle.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <964bd5b0-f1e5-7bf0-5c58-18e75c550841@c-s.fr>
+Date:   Wed, 3 Apr 2019 06:58:45 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190401074730.12241-1-robh@kernel.org> <20190401074730.12241-4-robh@kernel.org>
- <6ce32759-ea83-ee79-33d3-237737f7b866@arm.com>
-In-Reply-To: <6ce32759-ea83-ee79-33d3-237737f7b866@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 2 Apr 2019 23:57:01 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKbqNDMx26Tkyrem-NXF_0iApcWaaEDphtfy6kX050Upg@mail.gmail.com>
-Message-ID: <CAL_JsqKbqNDMx26Tkyrem-NXF_0iApcWaaEDphtfy6kX050Upg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lyude Paul <lyude@redhat.com>, Eric Anholt <eric@anholt.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "Marty E . Plummer" <hanetzer@startmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190402204158.27582-6-daniel.m.jordan@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 2:12 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 01/04/2019 08:47, Rob Herring wrote:
-> > This adds the initial driver for panfrost which supports Arm Mali
-> > Midgard and Bifrost family of GPUs. Currently, only the T860 and
-> > T760 Midgard GPUs have been tested.
->
-> FWIW, on an antique T624 (Juno) it seems to work no worse than the kbase
-> driver plus panfrost-nondrm, which is to say it gets far enough to prove
-> that the userspace definitely doesn't support T624 (kmscube manages to
-> show a grey background, but the GPU is constantly falling over with page
-> faults trying to dereference address 0 - for obvious reasons I'm not
-> going to get any further involved in debugging that).
->
-> A couple of discoveries and general observations below.
->
-> > v2:
-> > - Add GPU reset on job hangs (Tomeu)
-> > - Add RuntimePM and devfreq support (Tomeu)
-> > - Fix T760 support (Tomeu)
-> > - Add a TODO file (Rob, Tomeu)
-> > - Support multiple in fences (Tomeu)
-> > - Drop support for shared fences (Tomeu)
-> > - Fill in MMU de-init (Rob)
-> > - Move register definitions back to single header (Rob)
-> > - Clean-up hardcoded job submit todos (Rob)
-> > - Implement feature setup based on features/issues (Rob)
-> > - Add remaining Midgard DT compatible strings (Rob)
-> >
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Cc: Sean Paul <sean@poorly.run>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > Cc: Lyude Paul <lyude@redhat.com>
-> > Cc: Eric Anholt <eric@anholt.net>
-> > Signed-off-by: Marty E. Plummer <hanetzer@startmail.com>
-> > Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> [...]
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-> > new file mode 100644
-> > index 000000000000..227ba5202a6f
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> > @@ -0,0 +1,227 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright 2018 Marty E. Plummer <hanetzer@startmail.com> */
-> > +/* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/regulator/consumer.h>
-> > +
-> > +#include "panfrost_device.h"
-> > +#include "panfrost_devfreq.h"
-> > +#include "panfrost_features.h"
-> > +#include "panfrost_gpu.h"
-> > +#include "panfrost_job.h"
-> > +#include "panfrost_mmu.h"
-> > +
-> > +static int panfrost_clk_init(struct panfrost_device *pfdev)
-> > +{
-> > +     int err;
-> > +     unsigned long rate;
-> > +
-> > +     pfdev->clock = devm_clk_get(pfdev->dev, NULL);
-> > +     if (IS_ERR(pfdev->clock)) {
->
-> The DT binding says clocks are optional, but this doesn't treat them as
-> such.
-
-Hum, I would think effectively clocks are always there and necessary
-for thermal reasons.
 
 
-> > +     spin_lock_init(&pfdev->mm_lock);
-> > +
-> > +     /* 4G enough for now. can be 48-bit */
-> > +     drm_mm_init(&pfdev->mm, SZ_32M >> PAGE_SHIFT, SZ_4G);
->
-> You probably want a dma_set_mask_and_coherent() call for your 'real'
-> output address size somewhere - the default 32-bit mask works out OK for
-> RK3399, but on systems with RAM above 4GB io-pgtable will get very
-> unhappy about DMA bounce-buffering.
+Le 02/04/2019 à 22:41, Daniel Jordan a écrit :
+> With locked_vm now an atomic, there is no need to take mmap_sem as
+> writer.  Delete and refactor accordingly.
 
-Yes, I have a todo for figuring out the # of physaddr bits in the mmu
-setup (as this call is just relevant to the input address side).
-Though maybe just calling dma_set_mask_and_coherent() is enough and I
-don't need to know the exact number of output bits for the io-pgtable
-setup?
+Could you please detail the change ? It looks like this is not the only 
+change. I'm wondering what the consequences are.
 
-> > +     return err;
-> > +}
-> > +
-> > +static int panfrost_remove(struct platform_device *pdev)
-> > +{
-> > +     struct panfrost_device *pfdev = platform_get_drvdata(pdev);
-> > +     struct drm_device *ddev = pfdev->ddev;
-> > +
-> > +     drm_dev_unregister(ddev);
-> > +     pm_runtime_get_sync(pfdev->dev);
-> > +     pm_runtime_put_sync_autosuspend(pfdev->dev);
-> > +     pm_runtime_disable(pfdev->dev);
-> > +     panfrost_device_fini(pfdev);
-> > +     drm_dev_put(ddev);
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct of_device_id dt_match[] = {
-> > +     { .compatible = "arm,mali-t604" },
-> > +     { .compatible = "arm,mali-t624" },
-> > +     { .compatible = "arm,mali-t628" },
-> > +     { .compatible = "arm,mali-t720" },
-> > +     { .compatible = "arm,mali-t760" },
-> > +     { .compatible = "arm,mali-t820" },
-> > +     { .compatible = "arm,mali-t830" },
-> > +     { .compatible = "arm,mali-t860" },
-> > +     { .compatible = "arm,mali-t880" },
->
-> Any chance of resurrecting the generic "arm,mali-midgard" compatible? :P
+Before we did:
+- lock
+- calculate future value
+- check the future value is acceptable
+- update value if future value acceptable
+- return error if future value non acceptable
+- unlock
 
-I wouldn't mind, but we still need all these and I don't think we'd be
-adding more. For bifrost, we're adding 'arm,mali-bifrost' from the
-start.
+Now we do:
+- atomic update with future (possibly too high) value
+- check the new value is acceptable
+- atomic update back with older value if new value not acceptable and 
+return error
 
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> > new file mode 100644
-> > index 000000000000..867e2ba3a761
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> [...]
+So if a concurrent action wants to increase locked_vm with an acceptable 
+step while another one has temporarily set it too high, it will now fail.
 
-> > +     /* Limit read & write ID width for AXI */
-> > +     if (panfrost_has_hw_feature(pfdev, HW_FEATURE_3BIT_EXT_RW_L2_MMU_CONFIG))
-> > +             quirks &= ~(L2_MMU_CONFIG_3BIT_LIMIT_EXTERNAL_READS |
-> > +                         L2_MMU_CONFIG_3BIT_LIMIT_EXTERNAL_WRITES);
-> > +     else
-> > +             quirks &= ~(L2_MMU_CONFIG_LIMIT_EXTERNAL_READS |
-> > +                         L2_MMU_CONFIG_LIMIT_EXTERNAL_WRITES);
-> > +
-> > +#if 0
-> > +     if (kbdev->system_coherency == COHERENCY_ACE) {
-> > +             /* Allow memory configuration disparity to be ignored, we
-> > +              * optimize the use of shared memory and thus we expect
-> > +              * some disparity in the memory configuration */
-> > +             quirks |= L2_MMU_CONFIG_ALLOW_SNOOP_DISPARITY;
->
-> Well that sounds terrifying; I rather wish my brain had preprocessed
-> that #if already.
+I think we should keep the previous approach and do a cmpxchg after 
+validating the new value.
 
-What can I say, copied from Arm's driver. I'm just going to drop for now.
+Christophe
 
->
-> > +     }
-> > +#endif
-> > +     gpu_write(pfdev, GPU_L2_MMU_CONFIG, quirks);
-> > +
-> > +     quirks = 0;
-> > +     if ((panfrost_model_eq(pfdev, 0x860) || panfrost_model_eq(pfdev, 0x880)) &&
-> > +         pfdev->features.revision >= 0x2000)
-> > +             quirks |= JM_MAX_JOB_THROTTLE_LIMIT << JM_JOB_THROTTLE_LIMIT_SHIFT;
-> > +     else if (panfrost_model_eq(pfdev, 0x6000) &&
-> > +              pfdev->features.coherency_features == COHERENCY_ACE)
-> > +             quirks |= (COHERENCY_ACE_LITE | COHERENCY_ACE) <<
-> > +                        JM_FORCE_COHERENCY_FEATURES_SHIFT;
->
-> Experience says you can never really trust what ID registers claim about
-> system integration stuff like coherency, because eventually someone will
-> get a tieoff wrong and make it all fall apart. If even the vendor driver
-> has a DT override for it you know you're on thin ice ;)
-
-Unlike the vendor driver, we only have to care about cases seen upstream...
-
-> Ultimately, most of your I/O coherency behaviour will be governed by
-> what the DMA API thinks (based on "dma-coherent"), so if you end up with
-> mismatched expectations at the point coherency_features gets set up then
-> you're liable to have a bad time. See the arm-smmu drivers for prior
-> examples of handling the equivalent thing.
-
-None of this matters til bifrost and a platform implementing this, so
-I'll worry about it then.
-
-Thanks for the review.
-
-Rob
+> 
+> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Cc: Alexey Kardashevskiy <aik@ozlabs.ru>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: <linux-mm@kvack.org>
+> Cc: <linuxppc-dev@lists.ozlabs.org>
+> Cc: <linux-kernel@vger.kernel.org>
+> ---
+>   arch/powerpc/mm/mmu_context_iommu.c | 27 +++++++++++----------------
+>   1 file changed, 11 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/mmu_context_iommu.c b/arch/powerpc/mm/mmu_context_iommu.c
+> index 8038ac24a312..a4ef22b67c07 100644
+> --- a/arch/powerpc/mm/mmu_context_iommu.c
+> +++ b/arch/powerpc/mm/mmu_context_iommu.c
+> @@ -54,34 +54,29 @@ struct mm_iommu_table_group_mem_t {
+>   static long mm_iommu_adjust_locked_vm(struct mm_struct *mm,
+>   		unsigned long npages, bool incr)
+>   {
+> -	long ret = 0, locked, lock_limit;
+> +	long ret = 0;
+> +	unsigned long lock_limit;
+>   	s64 locked_vm;
+>   
+>   	if (!npages)
+>   		return 0;
+>   
+> -	down_write(&mm->mmap_sem);
+> -	locked_vm = atomic64_read(&mm->locked_vm);
+>   	if (incr) {
+> -		locked = locked_vm + npages;
+>   		lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+> -		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
+> +		locked_vm = atomic64_add_return(npages, &mm->locked_vm);
+> +		if (locked_vm > lock_limit && !capable(CAP_IPC_LOCK)) {
+>   			ret = -ENOMEM;
+> -		else
+> -			atomic64_add(npages, &mm->locked_vm);
+> +			atomic64_sub(npages, &mm->locked_vm);
+> +		}
+>   	} else {
+> -		if (WARN_ON_ONCE(npages > locked_vm))
+> -			npages = locked_vm;
+> -		atomic64_sub(npages, &mm->locked_vm);
+> +		locked_vm = atomic64_sub_return(npages, &mm->locked_vm);
+> +		WARN_ON_ONCE(locked_vm < 0);
+>   	}
+>   
+> -	pr_debug("[%d] RLIMIT_MEMLOCK HASH64 %c%ld %ld/%ld\n",
+> -			current ? current->pid : 0,
+> -			incr ? '+' : '-',
+> -			npages << PAGE_SHIFT,
+> -			atomic64_read(&mm->locked_vm) << PAGE_SHIFT,
+> +	pr_debug("[%d] RLIMIT_MEMLOCK HASH64 %c%lu %lld/%lu\n",
+> +			current ? current->pid : 0, incr ? '+' : '-',
+> +			npages << PAGE_SHIFT, locked_vm << PAGE_SHIFT,
+>   			rlimit(RLIMIT_MEMLOCK));
+> -	up_write(&mm->mmap_sem);
+>   
+>   	return ret;
+>   }
+> 
