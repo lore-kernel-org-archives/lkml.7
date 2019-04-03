@@ -2,58 +2,60 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F364C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C861C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AECB2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD582146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CtS7/W27"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBBWQQvT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfDCEqX (ORCPT
+        id S1728741AbfDCEq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:46:23 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37462 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbfDCEqX (ORCPT
+        Wed, 3 Apr 2019 00:46:27 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38117 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727629AbfDCEqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:46:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id e6so3302800pgc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:46:23 -0700 (PDT)
+        Wed, 3 Apr 2019 00:46:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j26so7662081pgl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:46:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GujRPZuMwtaEM7TH+99GzvcY8K4c6i03TTC4G7ZR+GM=;
-        b=CtS7/W27tjpyziMmiO4FbkIsj9FhUFaJk0FXbIljCoiT+qNkI+24/nu4M9UP7z7dkb
-         7i9WonQ6pTPiVlarww49hpUO+Pp4vhkogHu8Iy9zixtkmJ6hUQUyUMu59OcBvHaFQHyP
-         Dfk/YqmmYAqMss9cbMNLwZBFDEHrXrXzT+YhjXmN6CuS+Y4NOBA3JlijfWb99gEIrkQ3
-         pT8EfWyj1LxpdRCOmnBZUrG5dmEPnyiHqIwwgua00VJK3/7Uw6HLO5WiNwhtsShOJ0G2
-         2LNf5Tclm/ISa2/tnk+Z7f0a1GZ8HJxVMtVvjJOOPV8n/M7cPBas/w9I2zxEO8bO16FG
-         rV0g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=BpQ5JnHFhm/XOtfo9JCD7gouq+byLriEfEIfrkae1uk=;
+        b=NBBWQQvT0ybh3NIMpdWHunwoGcZ2bkAfk6a+qERcan3JC1Y9A0CP+ylB+lki9YB4j4
+         K06vdRbFWd/fU1sfKWlkBXm1JLghQcqD1Gfr5H0poOorNHJYT4ZlXM1SRCLoRl/wm9UV
+         +6p3olK+qwrt8lpWmiNDgcJX8uTkIlYV/SebA+CFXDPU5HGnBhp/+7xJFozdRx628/Nu
+         VWhhYGXx5/FeqPJXR2Apu05HX+aKrhPIXJKCSbT9ttigHXWEaH0diibiZW2xyJ+BkUWY
+         qO5qWzACHF7pkIA39vAV8cHpwgnjLULwjRYDqo0oBi3fmLfILK8cYw0UgV82dRI/H3DK
+         JUcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GujRPZuMwtaEM7TH+99GzvcY8K4c6i03TTC4G7ZR+GM=;
-        b=JRwPH5RlUo1TfvgA9Q3RvLiF9xaCjzs3hsSUjIIj/B4g9wPHnsF304+I1Mw1fYBGlN
-         7avpLojElhj6B3ERMJfk7QzxLXxmPrcwM+qW5LnXIDMbqIZeGRafNiOEyOMVQTuiaMUz
-         0fcAjrljCIkfSZAqFG5ECT5cwnC7+FLrztW/tvDsLyR8/fDiH27Q+vrx42QeYjbCKN7C
-         abfer7u92OpcLaJeAlffjlURnS983Z6BQ3h2D79+FIHcp1DOvykoCWR58x7kFkxDLbKV
-         royNPDqHAa6XMwC7qmJZEegKiNQIx+zzgPN8rgsDV7mmKqdGaF/qTqWsc/PnBUGrhQxc
-         91Vg==
-X-Gm-Message-State: APjAAAWz6zhgjLlVn71W/S+EMPF2IwHqFFeFSKLGuqm/HK5i8g7Q0V57
-        3lbZrh6rZuqnD2lCIr40nRY=
-X-Google-Smtp-Source: APXvYqwSR2TopIvMi7KoX/HezawDVpdmZP8blshAfBCbXLN3kpdq6wikarK22edNzHj7sIBcN+1B9g==
-X-Received: by 2002:a63:6f0a:: with SMTP id k10mr48047260pgc.78.1554266782585;
-        Tue, 02 Apr 2019 21:46:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=BpQ5JnHFhm/XOtfo9JCD7gouq+byLriEfEIfrkae1uk=;
+        b=sEYuydQ5+4JpAGxJGsvuXwuOo0Tg3deNkFykDBqKH6gaOKnVeJnzMdaUQwIe+mQpdT
+         BoSSaXDVfSpMyKsiweo0w/DigI8q0CzFGFkdwsaOZXByplYjQIKcIuCsGtzdNLGOXfwv
+         G5TpTMgztKjV6OOAvu3AEqyn4Vkypodncz9V4ZZzKEzo8vswc+WGY3syQGziPO8BgJ0P
+         12fviEFFN719dTn5JssfmZftUKpiBLGc9aWlXDv4TsbVgzvumEKm05Q1ft85v2tQ91e3
+         Q2tQ3QhIrr9e8Lsr4ooeLNPPQMm0h+ZWb/h9TVzIynwvrZPXDNLaEWiL0xMNd13Fzod3
+         qLmw==
+X-Gm-Message-State: APjAAAUrURRXsNo0tgr85hCp7U5u7HHzy4RT7KR2vWU8tnKG1p0UYcnZ
+        UAekBPSLY2msVhSNH2mWV1Q=
+X-Google-Smtp-Source: APXvYqyeg2o/cCQS+4wqSJ8mHGFAGLF/n7b7N4rBGdL2VB/GYnh2NZHc0IwndHZ07E2+dB5F+OYEkw==
+X-Received: by 2002:a63:2b03:: with SMTP id r3mr23372693pgr.105.1554266784147;
+        Tue, 02 Apr 2019 21:46:24 -0700 (PDT)
 Received: from localhost (c-71-202-79-220.hsd1.ca.comcast.net. [71.202.79.220])
-        by smtp.gmail.com with ESMTPSA id 4sm20143156pfn.159.2019.04.02.21.46.21
+        by smtp.gmail.com with ESMTPSA id o67sm18759490pga.55.2019.04.02.21.46.23
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 21:46:21 -0700 (PDT)
+        Tue, 02 Apr 2019 21:46:23 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 X-Google-Original-From: Yury Norov <ynorov@marvell.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -66,48 +68,73 @@ To:     Andrew Morton <akpm@linux-foundation.org>,
         Mike Travis <travis@sgi.com>
 Cc:     Yury Norov <ynorov@marvell.com>, Yury Norov <yury.norov@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/5] lib: rework bitmap_parselist and tests
-Date:   Wed,  3 Apr 2019 07:45:35 +0300
-Message-Id: <20190403044540.16322-1-ynorov@marvell.com>
+Subject: [PATCH 1/5] lib: make bitmap_parselist_user() a wrapper on bitmap_parselist()
+Date:   Wed,  3 Apr 2019 07:45:36 +0300
+Message-Id: <20190403044540.16322-2-ynorov@marvell.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190403044540.16322-1-ynorov@marvell.com>
+References: <20190403044540.16322-1-ynorov@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bitmap_parselist has been evolved from a pretty simple idea for long and
-now lacks for refactoring. It is not structured, has nested loops and a
-set of opaque-named variables.
+Currently we parse user data byte after byte which leads to
+overcomplification of parsing algorithm. The only user of
+bitmap_parselist_user() is not performance-critical, and so we
+can copy user data to kernel buffer and simply call
+bitmap_parselist(). This rework lets us unify and simplify
+bitmap_parselist() and bitmap_parselist_user(), which is done
+in the following patch.
 
-Things are more complicated because bitmap_parselist() is a part of user
-interface, and its behavior should not change.
+Signed-off-by: Yury Norov <ynorov@marvell.com>
+---
+ lib/bitmap.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-In this patchset
- - bitmap_parselist_user() made a wrapper on bitmap_parselist();
- - bitmap_parselist() reworked (patch 2);
- - time measurement in test_bitmap_parselist switched to ktime_get
-   (patch 3);
- - new tests introduced (patch 4), and
- - bitmap_parselist_user() testing enabled with the same testset as
-   bitmap_parselist() (patch 5).
-
-v1: https://lkml.org/lkml/2018/12/23/50
-v2: https://www.spinics.net/lists/kernel/msg3048976.html
-v3: Implementation of an approach with copying the data to
-    kernel space in bitmap_parselist_user() instead of parsing
-    user data byte by byte. For me, it looks better than v2.
-
-Yury Norov (5):
-  lib: make bitmap_parselist_user() a wrapper on bitmap_parselist()
-  lib: rework bitmap_parselist
-  lib/test_bitmap: switch test_bitmap_parselist to ktime_get()
-  lib/test_bitmap: add testcases for bitmap_parselist
-  lib/test_bitmap: add tests for bitmap_parselist_user
-
- lib/bitmap.c      | 285 ++++++++++++++++++++++++++--------------------
- lib/test_bitmap.c |  67 ++++++++---
- 2 files changed, 218 insertions(+), 134 deletions(-)
-
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 98872e9025da..ce9ea804d06d 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -632,19 +632,30 @@ EXPORT_SYMBOL(bitmap_parselist);
+  * @nmaskbits: size of bitmap, in bits.
+  *
+  * Wrapper for bitmap_parselist(), providing it with user buffer.
+- *
+- * We cannot have this as an inline function in bitmap.h because it needs
+- * linux/uaccess.h to get the access_ok() declaration and this causes
+- * cyclic dependencies.
+  */
+ int bitmap_parselist_user(const char __user *ubuf,
+ 			unsigned int ulen, unsigned long *maskp,
+ 			int nmaskbits)
+ {
+-	if (!access_ok(ubuf, ulen))
+-		return -EFAULT;
+-	return __bitmap_parselist((const char __force *)ubuf,
+-					ulen, 1, maskp, nmaskbits);
++	char *buf;
++	int ret;
++
++	buf = kmalloc(ulen + 1, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	buf[ulen] = 0;
++
++	ret = copy_from_user(buf, ubuf, ulen);
++	if (ret)
++		goto out;
++
++	ret = bitmap_parselist(buf, maskp, nmaskbits);
++
++out:
++	kfree(buf);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(bitmap_parselist_user);
+ 
 -- 
 2.17.1
 
