@@ -3,41 +3,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83755C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B16C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8D02084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175AA2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfDCN0b (ORCPT
+        id S1726874AbfDCN0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:26:31 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55946 "EHLO
+        Wed, 3 Apr 2019 09:26:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30426 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726269AbfDCN03 (ORCPT
+        by vger.kernel.org with ESMTP id S1726615AbfDCN0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:26:29 -0400
+        Wed, 3 Apr 2019 09:26:07 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33DL2Uo012281;
-        Wed, 3 Apr 2019 15:23:45 +0200
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33DL6lL012288;
+        Wed, 3 Apr 2019 15:23:48 +0200
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rmgmx44j5-1
+        by mx07-00178001.pphosted.com with ESMTP id 2rmgmx44jq-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 03 Apr 2019 15:23:45 +0200
+        Wed, 03 Apr 2019 15:23:48 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3B91E34;
-        Wed,  3 Apr 2019 13:23:45 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1E03729C1;
-        Wed,  3 Apr 2019 13:23:45 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 3 Apr 2019
- 15:23:45 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 704F931;
+        Wed,  3 Apr 2019 13:23:47 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2B10729C0;
+        Wed,  3 Apr 2019 13:23:47 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019
+ 15:23:47 +0200
 Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019 15:23:44
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019 15:23:46
  +0200
 From:   Olivier Moysan <olivier.moysan@st.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
@@ -50,9 +50,9 @@ To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
         <arnaud.pouliquen@st.com>, <benjamin.gaignard@st.com>,
         <apatard@mandriva.com>
-Subject: [PATCH 3/7] ASoC: cs42l51: add reset management
-Date:   Wed, 3 Apr 2019 15:23:33 +0200
-Message-ID: <1554297817-14154-4-git-send-email-olivier.moysan@st.com>
+Subject: [PATCH 5/7] ASoC: cs42l51: change mic bias DAPM
+Date:   Wed, 3 Apr 2019 15:23:35 +0200
+Message-ID: <1554297817-14154-6-git-send-email-olivier.moysan@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554297817-14154-1-git-send-email-olivier.moysan@st.com>
 References: <1554297817-14154-1-git-send-email-olivier.moysan@st.com>
@@ -66,60 +66,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Manage cs42l51 audio codec reset pin.
+Use SND_SOC_DAPM_SUPPLY for mic bias DAPM
+instead of deprecated SND_SOC_DAPM_MICBIAS.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
- sound/soc/codecs/cs42l51.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ sound/soc/codecs/cs42l51.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
-index f43eb51d2d8d..9b3ffa16b204 100644
+index 397b68901d1c..33298a7a8aab 100644
 --- a/sound/soc/codecs/cs42l51.c
 +++ b/sound/soc/codecs/cs42l51.c
-@@ -30,6 +30,7 @@
- #include <sound/initval.h>
- #include <sound/pcm_params.h>
- #include <sound/pcm.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
+@@ -206,7 +206,8 @@ static const struct snd_kcontrol_new cs42l51_adcr_mux_controls =
+ 	SOC_DAPM_ENUM("Route", cs42l51_adcr_mux_enum);
  
-@@ -54,6 +55,7 @@ struct cs42l51_private {
- 	unsigned int audio_mode;	/* The mode (I2S or left-justified) */
- 	enum master_slave_mode func;
- 	struct regulator_bulk_data supplies[ARRAY_SIZE(cs42l51_supply_names)];
-+	struct gpio_desc *reset_gpio;
- };
- 
- #define CS42L51_FORMATS ( \
-@@ -595,6 +597,17 @@ int cs42l51_probe(struct device *dev, struct regmap *regmap)
- 		return ret;
- 	}
- 
-+	cs42l51->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-+						      GPIOD_OUT_LOW);
-+	if (IS_ERR(cs42l51->reset_gpio))
-+		return PTR_ERR(cs42l51->reset_gpio);
-+
-+	if (cs42l51->reset_gpio) {
-+		dev_dbg(dev, "Release reset gpio\n");
-+		gpiod_set_value_cansleep(cs42l51->reset_gpio, 0);
-+		mdelay(2);
-+	}
-+
- 	/* Verify that we have a CS42L51 */
- 	ret = regmap_read(regmap, CS42L51_CHIP_REV_ID, &val);
- 	if (ret < 0) {
-@@ -629,6 +642,8 @@ int cs42l51_remove(struct device *dev)
- {
- 	struct cs42l51_private *cs42l51 = dev_get_drvdata(dev);
- 
-+	gpiod_set_value_cansleep(cs42l51->reset_gpio, 1);
-+
- 	return regulator_bulk_disable(ARRAY_SIZE(cs42l51->supplies),
- 				      cs42l51->supplies);
- }
+ static const struct snd_soc_dapm_widget cs42l51_dapm_widgets[] = {
+-	SND_SOC_DAPM_MICBIAS("Mic Bias", CS42L51_MIC_POWER_CTL, 1, 1),
++	SND_SOC_DAPM_SUPPLY("Mic Bias", CS42L51_MIC_POWER_CTL, 1, 1, NULL,
++			    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
+ 	SND_SOC_DAPM_PGA_E("Left PGA", CS42L51_POWER_CTL1, 3, 1, NULL, 0,
+ 		cs42l51_pdn_event, SND_SOC_DAPM_PRE_POST_PMD),
+ 	SND_SOC_DAPM_PGA_E("Right PGA", CS42L51_POWER_CTL1, 4, 1, NULL, 0,
 -- 
 2.7.4
 
