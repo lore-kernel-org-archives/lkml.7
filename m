@@ -2,106 +2,92 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAE7C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20484C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D6D206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1849206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:22:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OeKYjaxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfDCQU5 convert rfc822-to-8bit (ORCPT
+        id S1726582AbfDCQWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:20:57 -0400
-Received: from smtp.asem.it ([151.1.184.197]:62030 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfDCQU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:20:57 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003789809.MSG 
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 18:20:51 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 3
- Apr 2019 18:20:51 +0200
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1261.035; Wed, 3 Apr 2019 18:20:51 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Thread-Topic: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Thread-Index: AQHU6izzDrhx33Rd2E28nY3Qp112E6YqaEkAgAAhzmD//+S2gIAAI/HA///jGACAACKDsP//4q6AAARKisA=
-Date:   Wed, 3 Apr 2019 16:20:51 +0000
-Message-ID: <c7b5ccba38ee423a816d481cac151688@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
- <20190403150824.GO22216@piout.net> <452a4cf1410a41c8b6f767ac6258482e@asem.it>
- <20190403153143.GQ22216@piout.net> <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
- <20190403155654.GR22216@piout.net> <8367f68a023d468f8235810b0cf583bc@asem.it>
- <20190403161529.GS22216@piout.net>
-In-Reply-To: <20190403161529.GS22216@piout.net>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 3 Apr 2019 12:22:02 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:40492 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfDCQWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:22:02 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33GJ1bW114342;
+        Wed, 3 Apr 2019 16:21:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=rjwBe8nJXu9SNBhKYDwJ/ahxe69oGl7wuunLYAn9owc=;
+ b=OeKYjaxMatQpDdYCThEnQ6SIqYCwa7EnNbk45xHkJX3+mLofSlpSAkwo+f/ih1y8hJkP
+ D3/B452nVoSiRGAkmUQfO9vHGyACbvIF+zXGzcNu94mlsVFj+3Skmmr7M0GM75YQuvTS
+ aR9XTZ15yL+40GTvr+5VgcY+QlYuFBB5LYwW1DUbU2QPqw9y0lKH2ODIgQTA2tLGEbqk
+ gCEURfB0m0abCJEefehj96IPcA9HxdkkYmKUsAQ8Dk54jgvsZDnCCdUg0+8APDgqitNI
+ p1ulhGTJJ5SYW7ujyIGQgaGhn5eIYBcsAo6YvYdhX5d5DIRkFZO2Ylmj9a+EcJ0lqNcC Uw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2rhwyda9mh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 16:21:57 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33GK9BU054525;
+        Wed, 3 Apr 2019 16:21:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2rm8f56jps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 16:21:56 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x33GLtSe027321;
+        Wed, 3 Apr 2019 16:21:55 GMT
+Received: from kadam (/41.202.241.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Apr 2019 09:21:54 -0700
+Date:   Wed, 3 Apr 2019 19:21:45 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtlwifi: Remove unwanted parentheses
+Message-ID: <20190403162145.GK32613@kadam>
+References: <20190403160445.11110-1-madhumithabiw@gmail.com>
+ <20190403161803.GE32590@kadam>
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B0208.5CA4DD63.007B,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403161803.GE32590@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=780
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904030110
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=831 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904030111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 03/04/2019 16:09:14+0000, Flavio Suligoi wrote:
-> > Hi,
-> >
-> > > On 03/04/2019 15:49:03+0000, Flavio Suligoi wrote:
-> > > > > Then, you should probably not enable BLIE because this will cause
-> > > issues
-> > > > > with the alarm functionnality.. It is certainly enough to use
-> > > > > RTC_VL_READ periodically.
-> > > >
-> > > > We use the nINT signaling solution because of this pin, in addition
-> > > > to be used by the CPU, can be also connected to an external
-> connector,
-> > > > available for the final user.
-> > > > Anyway, even if the BLIE is set, the sw low voltage alarm works,
-> > > > with the message (displayed about every 12 minutes):
-> > > >
-> > >
-> > > I agree the DT property makes sense when the nINT pin is not connected
-> > > to the CPU. But if it is, then you have an issue that nINT will be
-> > > pulled low until the user changes the battery, meaning that you will
-> > > not get any alarm interrupt anymore, possibly leading to a system that
-> > > is not waking up anymore.
-> >
-> > Ah, ok, thanks for the info.
-> > I know this, but in our specific case, this is not a problem,
-> > since we don't use the nINT for other purposes, but only for
-> > a battery low indicator. On the contrary, in our case, it's better
-> > that the alarm signal remains low until the battery is changed.
-> >
-> > Anyway, I can specify this collateral effect in a specific file for the
-> > Pcf2127 in the DT bindings Documentation. What do you think?
-> >
-> 
-> This is fine as-is, I'll handle that in my series adding alarm support
-> because there will be no issues until then.
+On Wed, Apr 03, 2019 at 07:18:03PM +0300, Dan Carpenter wrote:
+> 		data_bit  = (data & BIT(i)) ? 1 : 0;
 
-Ok, thanks
+I quite like the !! idiom also...
 
-Flavio Suligoi
+		data_bit = !!(data & BIT(i));
+
+regards,
+dan carpenter
