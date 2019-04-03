@@ -2,117 +2,121 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC98C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14224C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745222075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88DC2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTDYYIfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfDCPKu (ORCPT
+        id S1726716AbfDCPK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:10:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41327 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDCPKt (ORCPT
+        Wed, 3 Apr 2019 11:10:59 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43743 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDCPK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:10:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33FAEQv1897596
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 08:10:14 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33FAB231897584;
-        Wed, 3 Apr 2019 08:10:11 -0700
-Date:   Wed, 3 Apr 2019 08:10:11 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jann Horn <tipbot@zytor.com>
-Message-ID: <tip-a6cbfbe6677efb5ca47bb7958c2718236c25126e@git.kernel.org>
-Cc:     qiaowei.ren@intel.com, will.deacon@arm.com, hpa@zytor.com,
-        luto@kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, bp@suse.de,
-        akpm@linux-foundation.org, mingo@kernel.org, mojha@codeaurora.org,
-        x86@kernel.org, jannh@google.com, rppt@linux.ibm.com
-Reply-To: luto@kernel.org, mingo@redhat.com, tglx@linutronix.de,
-          hpa@zytor.com, qiaowei.ren@intel.com, will.deacon@arm.com,
-          rppt@linux.ibm.com, mojha@codeaurora.org, mingo@kernel.org,
-          x86@kernel.org, jannh@google.com, linux-kernel@vger.kernel.org,
-          akpm@linux-foundation.org, bp@suse.de
-In-Reply-To: <20190329214652.258477-4-jannh@google.com>
-References: <20190329214652.258477-4-jannh@google.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/asm] x86/uaccess: Fix implicit cast of __user pointer
-Git-Commit-ID: a6cbfbe6677efb5ca47bb7958c2718236c25126e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Apr 2019 11:10:59 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t81so13842797oig.10;
+        Wed, 03 Apr 2019 08:10:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lzMC/mhjUzU/UXzu/tSBRxO/Evzp7DFktBGaL6e8F80=;
+        b=FTDYYIfmX4y9hQWp0spmoFLZjG6v0D6uhxL6DkPLopyJ8pbdurmr76l1d25e77JBxs
+         0skYQWrj1rp0EyEfpbGQ5q8mU2vKIfxmbvnlItl+u7cW7/53RY2lGeZwpg10nbliJ81i
+         W3dFtdJYVaB6mhi9WVOaAEEbuk+RIfw+aUPBYCo5DbPeiP3C+zUSjy9Eh1ivyTmMOwT9
+         vmm7YQZAI54BZx0cBbHuKl9ukWVq6pdH1a4AHv0lG35SdaZ8iG7qX3k0LX2ALTN0d66C
+         Zd2JutXylxcWSRUOamU5a5QGkbroEPbaoLbZsUlD3lzO+yB0QWMzCAEohXigcDQ2OrDA
+         qk5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lzMC/mhjUzU/UXzu/tSBRxO/Evzp7DFktBGaL6e8F80=;
+        b=e/glger+RR3+E+LlNsR7hQ+/TXz8R45VDrX05sp3iTuaO01wS6tMtfCCZ55xq/6LWm
+         JaNHosn+O5lOcch/UsWdbmjABbWbIkhRLbw+SwpJFelnV/e3TPz+g3EV6mDul7PSaUz9
+         zxIdFztrIvZUj+2aUJtMqfSooGGcKb7L76aePp1iaT0aC2f/eO/gjeO3baI8b2TPDHvb
+         pD+GTluPjx7I2hREubovkR7VagJrTk6fjL1OwF0YCkIB3J8p8Kud6WYxDN+A4Nqv7kAN
+         YcdS7ajbk82uMhZeWB3FqxqXnmIE11JdlxElQVnp9n9e6bupiA4heSyRhczIPDdNISCM
+         N3IA==
+X-Gm-Message-State: APjAAAW73seo/gNAJnRetJzCbdtF0Dn7PLDN5Dy447X1uz84YCcWYyyi
+        xkziWhd7DVfFla1LpgJMNjA=
+X-Google-Smtp-Source: APXvYqwW7j9UAmgEZNGEF/veC1bcL7KXYkgSi+A+kjoMY9vK15wT0/p1m4gq6eWx3+aRFYVCfL75Fg==
+X-Received: by 2002:aca:bb07:: with SMTP id l7mr619839oif.142.1554304258469;
+        Wed, 03 Apr 2019 08:10:58 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
+        by smtp.gmail.com with ESMTPSA id u22sm6579965otk.49.2019.04.03.08.10.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 08:10:57 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: Convert to use devm_platform_ioremap_resource
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Wan ZongShun <mcuos.com@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>, Barry Song <baohua@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+References: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <b0500cb2-c07b-34e1-5eec-88e24e711085@gmail.com>
+Date:   Wed, 3 Apr 2019 08:10:51 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a6cbfbe6677efb5ca47bb7958c2718236c25126e
-Gitweb:     https://git.kernel.org/tip/a6cbfbe6677efb5ca47bb7958c2718236c25126e
-Author:     Jann Horn <jannh@google.com>
-AuthorDate: Fri, 29 Mar 2019 22:46:52 +0100
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 3 Apr 2019 16:26:17 +0200
 
-x86/uaccess: Fix implicit cast of __user pointer
 
-The first two arguments of __user_atomic_cmpxchg_inatomic() are:
+On 4/2/2019 12:01 PM, Guenter Roeck wrote:
+> Use devm_platform_ioremap_resource to reduce source code size,
+> improve readability, and reduce the likelyhood of bugs.
+> 
+> The conversion was done automatically with coccinelle using the
+> following semantic patch.
+> 
+[snip]
 
- - @uval is a kernel pointer into which the old value should be stored
- - @ptr is the user pointer on which the cmpxchg should operate
+For:
 
-This means that casting @uval to __typeof__(ptr) is wrong. Since @uval
-is only used once inside the macro, just get rid of __uval and use
-(uval) directly.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Qiaowei Ren <qiaowei.ren@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190329214652.258477-4-jannh@google.com
----
- arch/x86/include/asm/uaccess.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 1954dd5552a2..a21f2a2f17bf 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -585,7 +585,6 @@ extern void __cmpxchg_wrong_size(void)
- #define __user_atomic_cmpxchg_inatomic(uval, ptr, old, new, size)	\
- ({									\
- 	int __ret = 0;							\
--	__typeof__(ptr) __uval = (uval);				\
- 	__typeof__(*(ptr)) __old = (old);				\
- 	__typeof__(*(ptr)) __new = (new);				\
- 	__uaccess_begin_nospec();					\
-@@ -661,7 +660,7 @@ extern void __cmpxchg_wrong_size(void)
- 		__cmpxchg_wrong_size();					\
- 	}								\
- 	__uaccess_end();						\
--	*__uval = __old;						\
-+	*(uval) = __old;						\
- 	__ret;								\
- })
- 
+>  drivers/watchdog/bcm7038_wdt.c    | 4 +---
+>  drivers/watchdog/bcm_kona_wdt.c   | 4 +---
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
