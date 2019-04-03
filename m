@@ -2,148 +2,83 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2328DC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418DAC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE80620830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1048120830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:37:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BdNGNGrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfDCDh1 (ORCPT
+        id S1727242AbfDCDhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:37:27 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44746 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726130AbfDCDh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:37:27 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [10.3.19.212])
-        by Forcepoint Email with ESMTP id 9E91A2A3071AFDF7CE0D;
-        Wed,  3 Apr 2019 11:37:24 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Wed, 3 Apr 2019
- 11:37:16 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <tim@cyberelk.net>, <axboe@kernel.dk>, <rdunlap@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] paride/pf: Fix potential NULL pointer dereference
-Date:   Wed, 3 Apr 2019 11:37:07 +0800
-Message-ID: <20190403033707.8840-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 2 Apr 2019 23:37:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37768 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfDCDhe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 23:37:34 -0400
+Received: by mail-lf1-f68.google.com with SMTP id o19so212945lfl.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=snI+7je57/RSvL0LvzU2B2WLbbihGABJQIazIEJj4fo=;
+        b=BdNGNGrzMsETOwx24TOiFitnJq/no9gM0N3nyjdI8tTCSDjqIR4mTSwmp7JpLo+R6u
+         F4T22poyvPj8zywXGDnueNEQ/Juti01a9rNoyLnOFWe2dhpjWeMbC3tdJ78JjXE97QCw
+         Wmip6Lk4uqPDBLHfPOPWjKBvHYtaeTdNOyWpnWpxVwbI10KeHQ2EwehDiSA1oKU9+df/
+         3II+qBrknEw03fJ5DbTerh86almhAvkDEsvyzucShNVWrYcQbQCCMK4ABejT/qyLg9Q+
+         LrazvnzaVJ3db/4ZX/cGRsnufN7pwgrzzzV8/ykvwvcZZCrgwWOjCWqZU3w1/U5sAp2T
+         fGoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=snI+7je57/RSvL0LvzU2B2WLbbihGABJQIazIEJj4fo=;
+        b=to+Q4zRW4nZ+tPHXtbuLJLSc4vca6uHg91j3tzHonAXtJgHQAK3+8aOkWyCoEmzqn6
+         NRrlhNx2xwh7QFxB/TXNkvMYWw8/VQC6gLCGY2rVTKEtuRZ96Qi5YBwYyYZCPlTX63Ex
+         2Abqvhe4CFCNim/VuFyd2tHlGBXG38fGmMQ7d5yk68lAXKrpZR/x7RyraZFtGY/u1pBF
+         TSy0nGlKjKn20DmGJF7DEw3X5ORVzmWk8gopHRv8WGLjdHCArQVaFDUNamkjksTMB56O
+         E6ig6p1Fak+d+9CaQYFY5k5SeYZQGSi++ZXU7lHzVnvCunGnb4z694H3AFMF9okjN/8p
+         DWHg==
+X-Gm-Message-State: APjAAAXWq/8HxC/jkYPp0atOCMRBEuhTN0yyWTYidn8+ZEnUF56zYIzC
+        DZ5OCeo3dDYZq68RTN0PpIlDBohJuhc+3/VcNADuhQ==
+X-Google-Smtp-Source: APXvYqzINru2dIM0vAUoq8UjORczdZUxvRGCM8BcT2bj8R11Up1mNZbaKxvourP9a+v4g1Jf4JBby4Vw8x6U5gRRlmw=
+X-Received: by 2002:ac2:485a:: with SMTP id 26mr37537835lfy.128.1554262652232;
+ Tue, 02 Apr 2019 20:37:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
+References: <1552382374-28789-1-git-send-email-info@metux.net> <1552382374-28789-8-git-send-email-info@metux.net>
+In-Reply-To: <1552382374-28789-8-git-send-email-info@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Apr 2019 10:37:20 +0700
+Message-ID: <CACRpkdYVCTzQJ+pXH6qzaB3mu9=-LVNhp04Wxxgd=R4r7hkePg@mail.gmail.com>
+Subject: Re: [PATCH 8/9] drivers: ata: sata_gemini: use devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Tue, Mar 12, 2019 at 4:19 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
-Syzkaller report this:
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-pf: pf version 1.04, major 47, cluster 64, nice 0
-pf: No ATAPI disk detected
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 9887 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:pf_init+0x7af/0x1000 [pf]
-Code: 46 77 d2 48 89 d8 48 c1 e8 03 80 3c 28 00 74 08 48 89 df e8 03 25 a6 d2 4c 8b 23 49 8d bc 24 80 05 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 74 05 e8 e6 24 a6 d2 49 8b bc 24 80 05 00 00 e8 79 34
-RSP: 0018:ffff8881abcbf998 EFLAGS: 00010202
-RAX: 00000000000000b0 RBX: ffffffffc1e4a8a8 RCX: ffffffffaec50788
-RDX: 0000000000039b10 RSI: ffffc9000153c000 RDI: 0000000000000580
-RBP: dffffc0000000000 R08: ffffed103ee44e59 R09: ffffed103ee44e59
-R10: 0000000000000001 R11: ffffed103ee44e58 R12: 0000000000000000
-R13: ffffffffc1e4b028 R14: 0000000000000000 R15: 0000000000000020
-FS:  00007f1b78a91700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6d72b207f8 CR3: 00000001d5790004 CR4: 00000000007606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- ? 0xffffffffc1e50000
- do_one_initcall+0xbc/0x47d init/main.c:901
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f1b78a90c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007f1b78a90c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1b78a916bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-Modules linked in: pf(+) paride gpio_tps65218 tps65218 i2c_cht_wc ati_remote dc395x act_meta_skbtcindex act_ife ife ecdh_generic rc_xbox_dvd sky81452_regulator v4l2_fwnode leds_blinkm snd_usb_hiface comedi(C) aes_ti slhc cfi_cmdset_0020 mtd cfi_util sx8654 mdio_gpio of_mdio fixed_phy mdio_bitbang libphy alcor_pci matrix_keymap hid_uclogic usbhid scsi_transport_fc videobuf2_v4l2 videobuf2_dma_sg snd_soc_pcm179x_spi snd_soc_pcm179x_codec i2c_demux_pinctrl mdev snd_indigodj isl6405 mii enc28j60 cmac adt7316_i2c(C) adt7316(C) fmc_trivial fmc nf_reject_ipv4 authenc rc_dtt200u rtc_ds1672 dvb_usb_dibusb_mc dvb_usb_dibusb_mc_common dib3000mc dibx000_common dvb_usb_dibusb_common dvb_usb dvb_core videobuf2_common videobuf2_vmalloc videobuf2_memops regulator_haptic adf7242 mac802154 ieee802154 s5h1409 da9034_ts snd_intel8x0m wmi cx24120 usbcore sdhci_cadence sdhci_pltfm sdhci mmc_core joydev i2c_algo_bit scsi_transport_iscsi iscsi_boot_sysfs ves1820 lockd grace nfs_acl auth_rpcgss sunrp
- c
- ip_vs snd_soc_adau7002 snd_cs4281 snd_rawmidi gameport snd_opl3_lib snd_seq_device snd_hwdep snd_ac97_codec ad7418 hid_primax hid snd_soc_cs4265 snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer ac97_bus snd_compress snd soundcore ti_adc108s102 eeprom_93cx6 i2c_algo_pca mlxreg_hotplug st_pressure st_sensors industrialio_triggered_buffer kfifo_buf industrialio v4l2_common videodev media snd_soc_adau_utils rc_pinnacle_grey rc_core pps_gpio leds_lm3692x nandcore ledtrig_pattern iptable_security iptable_raw iptable_mangle iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun mousedev ppdev tpm kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel aesni_intel ide_pci_generic aes_x86_64 piix crypto_simd input_leds psmouse cryp
- td
- glue_helper ide_core intel_agp serio_raw intel_gtt agpgart ata_generic i2c_piix4 pata_acpi parport_pc parport rtc_cmos floppy sch_fq_codel ip_tables x_tables sha1_ssse3 sha1_generic ipv6 [last unloaded: paride]
-Dumping ftrace buffer:
-  (ftrace buffer empty)
----[ end trace 7a818cf5f210d79e ]---
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-If alloc_disk fails in pf_init_units, pf->disk will be
-NULL, however in pf_detect and pf_exit, it's not check
-this before free.It may result a NULL pointer dereference.
-
-Also when register_blkdev failed, blk_cleanup_queue() and
-blk_mq_free_tag_set() should be called to free resources.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 6ce59025f118 ("paride/pf: cleanup queues when detection fails")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/block/paride/pf.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/block/paride/pf.c b/drivers/block/paride/pf.c
-index 103b617c..f027247 100644
---- a/drivers/block/paride/pf.c
-+++ b/drivers/block/paride/pf.c
-@@ -762,6 +762,8 @@ static int pf_detect(void)
- 
- 	printk("%s: No ATAPI disk detected\n", name);
- 	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-+		if (!pf->disk)
-+			continue;
- 		blk_cleanup_queue(pf->disk->queue);
- 		pf->disk->queue = NULL;
- 		blk_mq_free_tag_set(&pf->tag_set);
-@@ -1029,8 +1031,13 @@ static int __init pf_init(void)
- 	pf_busy = 0;
- 
- 	if (register_blkdev(major, name)) {
--		for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++)
-+		for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-+			if (!pf->disk)
-+				continue;
-+			blk_cleanup_queue(pf->disk->queue);
-+			blk_mq_free_tag_set(&pf->tag_set);
- 			put_disk(pf->disk);
-+		}
- 		return -EBUSY;
- 	}
- 
-@@ -1051,6 +1058,9 @@ static void __exit pf_exit(void)
- 	int unit;
- 	unregister_blkdev(major, name);
- 	for (pf = units, unit = 0; unit < PF_UNITS; pf++, unit++) {
-+		if (!pf->disk)
-+			continue;
-+
- 		if (pf->present)
- 			del_gendisk(pf->disk);
- 
--- 
-2.7.0
-
-
+Yours,
+Linus Walleij
