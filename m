@@ -2,100 +2,122 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AEDC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D79C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D87B2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438632084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:22:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+wIlQAm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuO0KSxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfDCCNB (ORCPT
+        id S1726738AbfDCCW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 22:13:01 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35044 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfDCCNB (ORCPT
+        Tue, 2 Apr 2019 22:22:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43426 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfDCCW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 22:13:01 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m10so14065278otp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:13:01 -0700 (PDT)
+        Tue, 2 Apr 2019 22:22:57 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m10so7218078plt.10;
+        Tue, 02 Apr 2019 19:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JqnDfPlbwAm5Ic60Ql1GXZctCzHFOF1c/VrpB6kjlMI=;
-        b=C+wIlQAmOK5v9iPkSgMjOEucrx/XpzHQUTPb+dhaw7UZ8aGoy6gP8xhC0rWXmt0esY
-         qyJeuqjSiu6+15RmVU3jGdepH2ugSxRfKLFSLvVRXu4w/N4bawAKx/7OOX5DzK3nQX0z
-         TAJA+irdgqz/wgHqo/I8dCnReb9l62msGaODnyCXYHSYWp2Uff1rM8p6efgy/6SNz1wT
-         Aq5W2RAY5s4kBfH5O5jPzCNErAOU5UPcl7dXqQUpv5tqwiKnfS5fQd2LGy4/ukkV7896
-         vsCqYFhdFpOCELIxiq0F6fzb3XJsxzCMecyjLQUCDSACs0rGMH5hujxbvBV3y6x/lN8u
-         Z0kg==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yGuGt7gPQpz7uRjDb5DlB6RTu9FU3pXiVkPZr38mKsg=;
+        b=uuO0KSxcOGMDLe4jjokmZqnEWPcB6xxrz/wM0pd0FgPS+oKz+gRYhdYTogtiD5n8by
+         RM4CojuagGH8llDGer84Lehh8xXDHBJpc1+6MhVkV3Uj8hP10Xil13DN5Z9mLMTVS0cR
+         KzfqAM9c+cw8pN/ayGrNvGLEQE0NnlrIRW9ClZDw8c4UPuWTRft1uVg8zEcq8R/hI4ou
+         DBzsw7HSUNFs16MlBQM56dzJNkFfUyoduZQLPW+42UQ7vpNPuE5nbX0qjDE/uNG1ztiV
+         dDE+iVcHWDEiQNu0fV4bynyCm8obEVcJbG8O9zY+Vk3nLCdf0W32UwiYC32avyB8Yy4X
+         08/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JqnDfPlbwAm5Ic60Ql1GXZctCzHFOF1c/VrpB6kjlMI=;
-        b=R4K7SZ2EBAN5EVkzffFwUP3ySVj0QhvJhR0jwHcxsIygRudmnvH0L4UL2o/Hvd/a1c
-         kfOD02TIMokGGb+2V/fhN3grW1qcTs9E7Jv0CCBJzRIufHqQE9MzbaxQHkzQZQqgZNM2
-         3BIkWNkfBIrFITRSK8ZVXzS/O6J0taQ57rQfi/3yAzNlqwiqrHochrBl1exXxA85NxNc
-         puqqu1lsONhxxpf9mSoSfRoRhhUzTJfYyMlPpaoMhOmr9wgyD6F9iuTSIOR4KevQtaOQ
-         yrcYNrrxtIJFmw78VFdFt4NWt1rji0wJ4a87D3z3cA0f8IKZQ+Rci99py36wpos7weM8
-         v7Pg==
-X-Gm-Message-State: APjAAAUK5Y17uFM2tp9tf+JTPn8Z4R1SgMGkdFnkdBGv6oL60GtVcTuT
-        3qvGfkoI4K9v93IhXInaIg+IK0i5ZoZsznemlKFhCA==
-X-Google-Smtp-Source: APXvYqzRlAKLgF40ajHuftImIPOxwS2cpW+uIFlmDA+ZO7nP309vkFl+dmnIG8bWsIHYtu8mygdm5I4VPYfL+DmLX+A=
-X-Received: by 2002:a05:6830:1310:: with SMTP id p16mr42981919otq.110.1554257580770;
- Tue, 02 Apr 2019 19:13:00 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yGuGt7gPQpz7uRjDb5DlB6RTu9FU3pXiVkPZr38mKsg=;
+        b=eClWHzpwcolFrBaMmNZmYX8NyemQKMsOyHjGlXSHlvvyUqFKfbwqV1MUf7kdanVG7B
+         Yk/L4E0ky2gO2XOoipktbcTb3RnZSXhfmZtc23ot2rOROpay1KmxUJw21QNIStzxYWmI
+         iSOPKVFDJdFCH/9TaqcoVr1ZASOHAl8I/sD3bUodq3dHMjBBjNhsikdykVZBQEjB8K7F
+         GUvl7KLo89CuXSJ5U/nWOX8C8LWtyixHWMpZ89LcxiJm3cZ8AorPMwTIdtj/98+wOHqc
+         24vaa6Yw+GCDF1x7JUlpvSk8AkCUMqm/mibATXUlVLLmNPgHfhDiKYSMxKrMYXn0y8c0
+         BJdg==
+X-Gm-Message-State: APjAAAW6sCVclhQJLJG6yW34nVoOG6NlsWQosAXfRYipsiiOK8MaDzoe
+        IMQprWqdpyBbJO3P3h6x2GkEhqCe
+X-Google-Smtp-Source: APXvYqzyNIBeFr6PzcT/i+gnSMxGnZctEUgjtYlG+hfK7vbAettVqWdcQGjYPCm37+H4QXSZJLOwyQ==
+X-Received: by 2002:a17:902:8349:: with SMTP id z9mr53111875pln.144.1554258176483;
+        Tue, 02 Apr 2019 19:22:56 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o76sm41405268pfa.156.2019.04.02.19.22.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 19:22:54 -0700 (PDT)
+Subject: Re: [PATCH 3.16 00/99] 3.16.65-rc1 review
+To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+References: <lsq.1554212307.17110877@decadent.org.uk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <af7bb5af-f0d1-d499-98b9-4c49d11aa39d@roeck-us.net>
+Date:   Tue, 2 Apr 2019 19:22:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190403111108.2ff4a309@canb.auug.org.au>
-In-Reply-To: <20190403111108.2ff4a309@canb.auug.org.au>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Wed, 3 Apr 2019 10:12:47 +0800
-Message-ID: <CAMz4ku+17HAZfh-03+y=WUy1NdsL7sQHK_XyzeToBh5-RAUSQg@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the sound-asoc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yintang Ren <yintang.ren@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <lsq.1554212307.17110877@decadent.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 4/2/19 6:38 AM, Ben Hutchings wrote:
+> This is the start of the stable review cycle for the 3.16.65 release.
+> There are 99 patches in this series, which will be posted as responses
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu Apr 04 13:38:27 UTC 2019.
+> Anything received after that time might be too late.
+> 
 
-On Wed, 3 Apr 2019 at 08:11, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the sound-asoc tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> ERROR: "sprd_platform_compr_ops" [sound/soc/sprd/sprd-pcm-dma.ko] undefined!
->
-> Caused by commit
->
->   cce1396936ef ("ASoC: sprd: Add Spreadtrum audio compress offload support")
->
-> I have used the sound-asoc tree from next-20190402 for today.
->
+For v3.16.64-99-gfff72cd6bb56:
 
-Thanks for pointing this out. I think I should fix the Makefile like this
+Build results:
+	total: 137 pass: 132 fail: 5
+Failed builds:
+	arm:allmodconfig
+	i386:tools/perf
+	powerpc:ppc64e_defconfig
+	powerpc:cell_defconfig
+	powerpc:maple_defconfig
+Qemu test results:
+	total: 222 pass: 210 fail: 12
+Failed tests:
+	ppc64:mac99:ppc64_book3s_defconfig:nosmp:initrd
+	ppc64:mac99:ppc64_book3s_defconfig:smp:initrd
+	ppc64:mac99:ppc64_book3s_defconfig:smp:ide:rootfs
+	ppc64:mac99:ppc64_book3s_defconfig:smp:mmc:rootfs
+	ppc64:mac99:ppc64_book3s_defconfig:smp:nvme:rootfs
+	ppc64:mpc8544ds:ppc64_e5500_defconfig:nosmp:initrd
+	ppc64:mpc8544ds:ppc64_e5500_defconfig:smp:initrd
+	ppc64:ppce500:corenet64_smp_defconfig:e5500:initrd
+	ppc64:ppce500:corenet64_smp_defconfig:e5500:nvme:rootfs
+	ppc64:ppce500:corenet64_smp_defconfig:e5500:mmc:rootfs
+	ppc64:ppce500:corenet64_smp_defconfig:e5500:scsi[53C895A]:rootfs
+	ppc64:ppce500:corenet64_smp_defconfig:e5500:sata-sii3112:rootfs
 
-snd-soc-sprd-platform-objs := sprd-pcm-dma.o sprd-pcm-compress.o
 
-obj-$(CONFIG_SND_SOC_SPRD) += snd-soc-sprd-platform.o
+sound/pci/hda/hda_tegra.c: In function 'hda_tegra_suspend':
+sound/pci/hda/hda_tegra.c:256:25: error: implicit declaration of function 'azx_bus'
 
-I will send out one incremental patch to fix this issue after my
-business trip. Thanks.
--- 
-Baolin Wang
-Best Regards
+arch/powerpc/kernel/signal_64.c: In function 'sys_rt_sigreturn':
+arch/powerpc/kernel/signal_64.c:713:7: error: 'msr' undeclared
+
+Guenter
