@@ -2,367 +2,533 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A73C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398E5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A52C20700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049F52084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfDCMjA (ORCPT
+        id S1726458AbfDCMkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:39:00 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39220 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfDCMjA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:39:00 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l7so14698420ljg.6;
-        Wed, 03 Apr 2019 05:38:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YuwDeLOu7J+9yvpF4B79wIauJ4Zld+23zPVisqEDNJY=;
-        b=tNnrHkSCfA+djkW/+67x3NoJV9rQNPhFbDkdZvCMVwENvePCStwEB5Rwugjbs9DEOK
-         j3O8dWxQI4esL3VRykbfnV2xbHkVYS16YP0rGXBC9sp2R6RFdVaSKdH3+k3h62HVmoLM
-         uidT9prDYPhMvYuDV5NfIa1eCk1fbuFT7x7X+yL7f6/V9JOjrqyJqGpI/HlupsJusL7e
-         1iEMVGTpfVfmN6DA0AYFi4wVoIu05W+70REuCQ0mTNBA9pajHm5dF4iIm4uh0SdIZ6L9
-         RBQFgGKKD/VH2VsWbD8JFVY0vCDKfC/0gsmYG3xrEU/Buz9YkM6Afh0FS/1ip+LmYDbL
-         A39Q==
-X-Gm-Message-State: APjAAAUjoA32vAg15zPJbvyFDAaAywcs/jsh3sbOUKjIHntV1vvT/AcZ
-        K2tlczm7dYIcVBa+UWarJWI=
-X-Google-Smtp-Source: APXvYqxckxFH0CkOlcOKe6jD7yQtZeH61n8F4HxdqpZzndegfy7jn9gWoyzy5TJuvylt17uftrTKnw==
-X-Received: by 2002:a2e:1245:: with SMTP id t66mr42736851lje.18.1554295135775;
-        Wed, 03 Apr 2019 05:38:55 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id u1sm2975011lfm.4.2019.04.03.05.38.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 05:38:55 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 15:38:40 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: [PATCH v12 1/8] mfd: regulator: clk: split rohm-bd718x7.h
-Message-ID: <81d7136a77a2786c122a1cbf3289c96c51ded79f.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 3 Apr 2019 08:40:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54694 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfDCMkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:40:17 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 02F9CF74D9;
+        Wed,  3 Apr 2019 12:40:16 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E133E608DD;
+        Wed,  3 Apr 2019 12:40:14 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 61EDB4ED24;
+        Wed,  3 Apr 2019 12:40:14 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 08:40:13 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Yuval Shaia <yuval.shaia@oracle.com>
+Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
+        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        riel@surriel.com, stefanha@redhat.com,
+        dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
+Message-ID: <519445273.17181191.1554295213412.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190403114328.GA17696@lap1>
+References: <20190403104018.23947-1-pagupta@redhat.com> <20190403104018.23947-3-pagupta@redhat.com> <20190403114328.GA17696@lap1>
+Subject: Re: [Qemu-devel] [PATCH v4 2/5] virtio-pmem: Add virtio pmem driver
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.55, 10.4.195.22]
+Thread-Topic: virtio-pmem: Add virtio pmem driver
+Thread-Index: aBn1bLyZjrM2lXTv3C6ATL2LWD3PdQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 03 Apr 2019 12:40:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split the bd718x7.h to ROHM common and bd718x7 specific parts
-so that we do not need to add same things in every new ROHM
-PMIC header. Please note that this change requires changes also
-in bd718x7 sub-device drivers for regulators and clk.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/clk/clk-bd718x7.c             |  6 +++---
- drivers/mfd/rohm-bd718x7.c            | 23 ++++++++++++-----------
- drivers/regulator/bd718x7-regulator.c | 25 +++++++++++++------------
- include/linux/mfd/rohm-bd718x7.h      | 22 ++++++++--------------
- include/linux/mfd/rohm-generic.h      | 20 ++++++++++++++++++++
- 5 files changed, 56 insertions(+), 40 deletions(-)
- create mode 100644 include/linux/mfd/rohm-generic.h
+> Subject: Re: [Qemu-devel] [PATCH v4 2/5] virtio-pmem: Add virtio pmem driver
+> 
+> On Wed, Apr 03, 2019 at 04:10:15PM +0530, Pankaj Gupta wrote:
+> > This patch adds virtio-pmem driver for KVM guest.
+> > 
+> > Guest reads the persistent memory range information from
+> > Qemu over VIRTIO and registers it on nvdimm_bus. It also
+> > creates a nd_region object with the persistent memory
+> > range information so that existing 'nvdimm/pmem' driver
+> > can reserve this into system memory map. This way
+> > 'virtio-pmem' driver uses existing functionality of pmem
+> > driver to register persistent memory compatible for DAX
+> > capable filesystems.
+> > 
+> > This also provides function to perform guest flush over
+> > VIRTIO from 'pmem' driver when userspace performs flush
+> > on DAX memory range.
+> > 
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > ---
+> >  drivers/nvdimm/virtio_pmem.c     |  84 +++++++++++++++++++++
+> >  drivers/virtio/Kconfig           |  10 +++
+> >  drivers/virtio/Makefile          |   1 +
+> >  drivers/virtio/pmem.c            | 125 +++++++++++++++++++++++++++++++
+> >  include/linux/virtio_pmem.h      |  60 +++++++++++++++
+> >  include/uapi/linux/virtio_ids.h  |   1 +
+> >  include/uapi/linux/virtio_pmem.h |  10 +++
+> >  7 files changed, 291 insertions(+)
+> >  create mode 100644 drivers/nvdimm/virtio_pmem.c
+> >  create mode 100644 drivers/virtio/pmem.c
+> >  create mode 100644 include/linux/virtio_pmem.h
+> >  create mode 100644 include/uapi/linux/virtio_pmem.h
+> > 
+> > diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+> > new file mode 100644
+> > index 000000000000..2a1b1ba2c1ff
+> > --- /dev/null
+> > +++ b/drivers/nvdimm/virtio_pmem.c
+> > @@ -0,0 +1,84 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> Is this comment stile (//) acceptable?
 
-diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-index 60422c72d142..461228ebf703 100644
---- a/drivers/clk/clk-bd718x7.c
-+++ b/drivers/clk/clk-bd718x7.c
-@@ -17,7 +17,7 @@ struct bd718xx_clk {
- 	u8 reg;
- 	u8 mask;
- 	struct platform_device *pdev;
--	struct bd718xx *mfd;
-+	struct rohm_regmap_dev *mfd;
- };
- 
- static int bd71837_clk_set(struct clk_hw *hw, int status)
-@@ -68,7 +68,7 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 	int rval = -ENOMEM;
- 	const char *parent_clk;
- 	struct device *parent = pdev->dev.parent;
--	struct bd718xx *mfd = dev_get_drvdata(parent);
-+	struct rohm_regmap_dev *mfd = dev_get_drvdata(parent);
- 	struct clk_init_data init = {
- 		.name = "bd718xx-32k-out",
- 		.ops = &bd71837_clk_ops,
-@@ -119,5 +119,5 @@ static struct platform_driver bd71837_clk = {
- module_platform_driver(bd71837_clk);
- 
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
--MODULE_DESCRIPTION("BD71837 chip clk driver");
-+MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index a29d529a96f4..7beb444a57cb 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -98,18 +98,19 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 		return -ENOMEM;
- 
- 	bd718xx->chip_irq = i2c->irq;
--	bd718xx->chip_type = (unsigned int)(uintptr_t)
-+	bd718xx->chip.chip_type = (unsigned int)(uintptr_t)
- 				of_device_get_match_data(&i2c->dev);
--	bd718xx->dev = &i2c->dev;
-+	bd718xx->chip.dev = &i2c->dev;
- 	dev_set_drvdata(&i2c->dev, bd718xx);
- 
--	bd718xx->regmap = devm_regmap_init_i2c(i2c, &bd718xx_regmap_config);
--	if (IS_ERR(bd718xx->regmap)) {
-+	bd718xx->chip.regmap = devm_regmap_init_i2c(i2c,
-+						    &bd718xx_regmap_config);
-+	if (IS_ERR(bd718xx->chip.regmap)) {
- 		dev_err(&i2c->dev, "regmap initialization failed\n");
--		return PTR_ERR(bd718xx->regmap);
-+		return PTR_ERR(bd718xx->chip.regmap);
- 	}
- 
--	ret = devm_regmap_add_irq_chip(&i2c->dev, bd718xx->regmap,
-+	ret = devm_regmap_add_irq_chip(&i2c->dev, bd718xx->chip.regmap,
- 				       bd718xx->chip_irq, IRQF_ONESHOT, 0,
- 				       &bd718xx_irq_chip, &bd718xx->irq_data);
- 	if (ret) {
-@@ -118,7 +119,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	}
- 
- 	/* Configure short press to 10 milliseconds */
--	ret = regmap_update_bits(bd718xx->regmap,
-+	ret = regmap_update_bits(bd718xx->chip.regmap,
- 				 BD718XX_REG_PWRONCONFIG0,
- 				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
- 				 BD718XX_PWRBTN_SHORT_PRESS_10MS);
-@@ -129,7 +130,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 	}
- 
- 	/* Configure long press to 10 seconds */
--	ret = regmap_update_bits(bd718xx->regmap,
-+	ret = regmap_update_bits(bd718xx->chip.regmap,
- 				 BD718XX_REG_PWRONCONFIG1,
- 				 BD718XX_PWRBTN_PRESS_DURATION_MASK,
- 				 BD718XX_PWRBTN_LONG_PRESS_10S);
-@@ -149,7 +150,7 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- 
- 	button.irq = ret;
- 
--	ret = devm_mfd_add_devices(bd718xx->dev, PLATFORM_DEVID_AUTO,
-+	ret = devm_mfd_add_devices(bd718xx->chip.dev, PLATFORM_DEVID_AUTO,
- 				   bd718xx_mfd_cells,
- 				   ARRAY_SIZE(bd718xx_mfd_cells), NULL, 0,
- 				   regmap_irq_get_domain(bd718xx->irq_data));
-@@ -162,11 +163,11 @@ static int bd718xx_i2c_probe(struct i2c_client *i2c,
- static const struct of_device_id bd718xx_of_match[] = {
- 	{
- 		.compatible = "rohm,bd71837",
--		.data = (void *)BD718XX_TYPE_BD71837,
-+		.data = (void *)ROHM_CHIP_TYPE_BD71837,
- 	},
- 	{
- 		.compatible = "rohm,bd71847",
--		.data = (void *)BD718XX_TYPE_BD71847,
-+		.data = (void *)ROHM_CHIP_TYPE_BD71847,
- 	},
- 	{ }
- };
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index b2191be49670..1c8c8497ac0a 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -1152,12 +1152,12 @@ static int bd718xx_probe(struct platform_device *pdev)
- {
- 	struct bd718xx *mfd;
- 	struct regulator_config config = { 0 };
--	struct bd718xx_pmic_inits pmic_regulators[] = {
--		[BD718XX_TYPE_BD71837] = {
-+	struct bd718xx_pmic_inits pmic_regulators[ROHM_CHIP_TYPE_AMOUNT] = {
-+		[ROHM_CHIP_TYPE_BD71837] = {
- 			.r_datas = bd71837_regulators,
- 			.r_amount = ARRAY_SIZE(bd71837_regulators),
- 		},
--		[BD718XX_TYPE_BD71847] = {
-+		[ROHM_CHIP_TYPE_BD71847] = {
- 			.r_datas = bd71847_regulators,
- 			.r_amount = ARRAY_SIZE(bd71847_regulators),
- 		},
-@@ -1173,15 +1173,15 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	if (mfd->chip_type >= BD718XX_TYPE_AMOUNT ||
--	    !pmic_regulators[mfd->chip_type].r_datas) {
-+	if (mfd->chip.chip_type >= ROHM_CHIP_TYPE_AMOUNT ||
-+	    !pmic_regulators[mfd->chip.chip_type].r_datas) {
- 		dev_err(&pdev->dev, "Unsupported chip type\n");
- 		err = -EINVAL;
- 		goto err;
- 	}
- 
- 	/* Register LOCK release */
--	err = regmap_update_bits(mfd->regmap, BD718XX_REG_REGLOCK,
-+	err = regmap_update_bits(mfd->chip.regmap, BD718XX_REG_REGLOCK,
- 				 (REGLOCK_PWRSEQ | REGLOCK_VREG), 0);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to unlock PMIC (%d)\n", err);
-@@ -1200,7 +1200,8 @@ static int bd718xx_probe(struct platform_device *pdev)
- 	 * bit allowing HW defaults for power rails to be used
- 	 */
- 	if (!use_snvs) {
--		err = regmap_update_bits(mfd->regmap, BD718XX_REG_TRANS_COND1,
-+		err = regmap_update_bits(mfd->chip.regmap,
-+					 BD718XX_REG_TRANS_COND1,
- 					 BD718XX_ON_REQ_POWEROFF_MASK |
- 					 BD718XX_SWRESET_POWEROFF_MASK |
- 					 BD718XX_WDOG_POWEROFF_MASK |
-@@ -1215,17 +1216,17 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	for (i = 0; i < pmic_regulators[mfd->chip_type].r_amount; i++) {
-+	for (i = 0; i < pmic_regulators[mfd->chip.chip_type].r_amount; i++) {
- 
- 		const struct regulator_desc *desc;
- 		struct regulator_dev *rdev;
- 		const struct bd718xx_regulator_data *r;
- 
--		r = &pmic_regulators[mfd->chip_type].r_datas[i];
-+		r = &pmic_regulators[mfd->chip.chip_type].r_datas[i];
- 		desc = &r->desc;
- 
- 		config.dev = pdev->dev.parent;
--		config.regmap = mfd->regmap;
-+		config.regmap = mfd->chip.regmap;
- 
- 		rdev = devm_regulator_register(&pdev->dev, desc, &config);
- 		if (IS_ERR(rdev)) {
-@@ -1254,7 +1255,7 @@ static int bd718xx_probe(struct platform_device *pdev)
- 		 */
- 		if (!use_snvs || !rdev->constraints->always_on ||
- 		    !rdev->constraints->boot_on) {
--			err = regmap_update_bits(mfd->regmap, r->init.reg,
-+			err = regmap_update_bits(mfd->chip.regmap, r->init.reg,
- 						 r->init.mask, r->init.val);
- 			if (err) {
- 				dev_err(&pdev->dev,
-@@ -1264,7 +1265,7 @@ static int bd718xx_probe(struct platform_device *pdev)
- 			}
- 		}
- 		for (j = 0; j < r->additional_init_amnt; j++) {
--			err = regmap_update_bits(mfd->regmap,
-+			err = regmap_update_bits(mfd->chip.regmap,
- 						 r->additional_inits[j].reg,
- 						 r->additional_inits[j].mask,
- 						 r->additional_inits[j].val);
-diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
-index fd194bfc836f..7f2dbde402a1 100644
---- a/include/linux/mfd/rohm-bd718x7.h
-+++ b/include/linux/mfd/rohm-bd718x7.h
-@@ -4,14 +4,9 @@
- #ifndef __LINUX_MFD_BD718XX_H__
- #define __LINUX_MFD_BD718XX_H__
- 
-+#include <linux/mfd/rohm-generic.h>
- #include <linux/regmap.h>
- 
--enum {
--	BD718XX_TYPE_BD71837 = 0,
--	BD718XX_TYPE_BD71847,
--	BD718XX_TYPE_AMOUNT
--};
--
- enum {
- 	BD718XX_BUCK1 = 0,
- 	BD718XX_BUCK2,
-@@ -321,18 +316,17 @@ enum {
- 	BD718XX_PWRBTN_LONG_PRESS_15S
- };
- 
--struct bd718xx_clk;
--
- struct bd718xx {
--	unsigned int chip_type;
--	struct device *dev;
--	struct regmap *regmap;
--	unsigned long int id;
-+	/*
-+	 * Please keep this as the first member here as some
-+	 * drivers (clk) supporting more than one chip may only know this
-+	 * generic struct 'struct rohm_regmap_dev' and assume it is
-+	 * the first chunk of parent device's private data.
-+	 */
-+	struct rohm_regmap_dev chip;
- 
- 	int chip_irq;
- 	struct regmap_irq_chip_data *irq_data;
--
--	struct bd718xx_clk *clk;
- };
- 
- #endif /* __LINUX_MFD_BD718XX_H__ */
-diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-new file mode 100644
-index 000000000000..bff15ac26f2c
---- /dev/null
-+++ b/include/linux/mfd/rohm-generic.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* Copyright (C) 2018 ROHM Semiconductors */
-+
-+#ifndef __LINUX_MFD_ROHM_H__
-+#define __LINUX_MFD_ROHM_H__
-+
-+enum {
-+	ROHM_CHIP_TYPE_BD71837 = 0,
-+	ROHM_CHIP_TYPE_BD71847,
-+	ROHM_CHIP_TYPE_BD70528,
-+	ROHM_CHIP_TYPE_AMOUNT
-+};
-+
-+struct rohm_regmap_dev {
-+	unsigned int chip_type;
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+#endif
--- 
-2.17.2
+In existing code, i can see same comment
+pattern for license at some places.
 
+> 
+> > +/*
+> > + * virtio_pmem.c: Virtio pmem Driver
+> > + *
+> > + * Discovers persistent memory range information
+> > + * from host and provides a virtio based flushing
+> > + * interface.
+> > + */
+> > +#include <linux/virtio_pmem.h>
+> > +#include "nd.h"
+> > +
+> > + /* The interrupt handler */
+> > +void host_ack(struct virtqueue *vq)
+> > +{
+> > +	unsigned int len;
+> > +	unsigned long flags;
+> > +	struct virtio_pmem_request *req, *req_buf;
+> > +	struct virtio_pmem *vpmem = vq->vdev->priv;
+> > +
+> > +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > +	while ((req = virtqueue_get_buf(vq, &len)) != NULL) {
+> > +		req->done = true;
+> > +		wake_up(&req->host_acked);
+> > +
+> > +		if (!list_empty(&vpmem->req_list)) {
+> > +			req_buf = list_first_entry(&vpmem->req_list,
+> > +					struct virtio_pmem_request, list);
+> > +			list_del(&vpmem->req_list);
+> > +			req_buf->wq_buf_avail = true;
+> > +			wake_up(&req_buf->wq_buf);
+> > +		}
+> > +	}
+> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +}
+> > +EXPORT_SYMBOL_GPL(host_ack);
+> > +
+> > + /* The request submission function */
+> > +int virtio_pmem_flush(struct nd_region *nd_region)
+> > +{
+> > +	int err;
+> > +	unsigned long flags;
+> > +	struct scatterlist *sgs[2], sg, ret;
+> > +	struct virtio_device *vdev = nd_region->provider_data;
+> > +	struct virtio_pmem *vpmem = vdev->priv;
+> > +	struct virtio_pmem_request *req;
+> > +
+> > +	might_sleep();
+> 
+> [1]
+> 
+> > +	req = kmalloc(sizeof(*req), GFP_KERNEL);
+> > +	if (!req)
+> > +		return -ENOMEM;
+> > +
+> > +	req->done = req->wq_buf_avail = false;
+> > +	strcpy(req->name, "FLUSH");
+> > +	init_waitqueue_head(&req->host_acked);
+> > +	init_waitqueue_head(&req->wq_buf);
+> > +	sg_init_one(&sg, req->name, strlen(req->name));
+> > +	sgs[0] = &sg;
+> > +	sg_init_one(&ret, &req->ret, sizeof(req->ret));
+> > +	sgs[1] = &ret;
+> > +
+> > +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > +	err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req, GFP_ATOMIC);
+> 
+> Is it okay to use GFP_ATOMIC in a might-sleep ([1]) function?
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+might sleep will give us a warning if we try to sleep from non-sleepable
+context. 
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+We are doing it other way, i.e might_sleep is not inside GFP_ATOMIC. 
+
+> 
+> > +	if (err) {
+> > +		dev_err(&vdev->dev, "failed to send command to virtio pmem device\n");
+> > +
+> > +		list_add_tail(&vpmem->req_list, &req->list);
+> > +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +
+> > +		/* When host has read buffer, this completes via host_ack */
+> > +		wait_event(req->wq_buf, req->wq_buf_avail);
+> > +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
+> > +	}
+> > +	virtqueue_kick(vpmem->req_vq);
+> 
+> You probably want to check return value here.
+
+Don't think it will matter in this case?
+
+> 
+> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
+> > +
+> > +	/* When host has read buffer, this completes via host_ack */
+> > +	wait_event(req->host_acked, req->done);
+> > +	err = req->ret;
+> > +	kfree(req);
+> > +
+> > +	return err;
+> > +};
+> > +EXPORT_SYMBOL_GPL(virtio_pmem_flush);
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> > index 35897649c24f..9f634a2ed638 100644
+> > --- a/drivers/virtio/Kconfig
+> > +++ b/drivers/virtio/Kconfig
+> > @@ -42,6 +42,16 @@ config VIRTIO_PCI_LEGACY
+> >  
+> >  	  If unsure, say Y.
+> >  
+> > +config VIRTIO_PMEM
+> > +	tristate "Support for virtio pmem driver"
+> > +	depends on VIRTIO
+> > +	depends on LIBNVDIMM
+> > +	help
+> > +	This driver provides support for virtio based flushing interface
+> > +	for persistent memory range.
+> > +
+> > +	If unsure, say M.
+> > +
+> >  config VIRTIO_BALLOON
+> >  	tristate "Virtio balloon driver"
+> >  	depends on VIRTIO
+> > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> > index 3a2b5c5dcf46..143ce91eabe9 100644
+> > --- a/drivers/virtio/Makefile
+> > +++ b/drivers/virtio/Makefile
+> > @@ -6,3 +6,4 @@ virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+> >  virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) += virtio_pci_legacy.o
+> >  obj-$(CONFIG_VIRTIO_BALLOON) += virtio_balloon.o
+> >  obj-$(CONFIG_VIRTIO_INPUT) += virtio_input.o
+> > +obj-$(CONFIG_VIRTIO_PMEM) += pmem.o ../nvdimm/virtio_pmem.o
+> > diff --git a/drivers/virtio/pmem.c b/drivers/virtio/pmem.c
+> > new file mode 100644
+> > index 000000000000..52f74064f67e
+> > --- /dev/null
+> > +++ b/drivers/virtio/pmem.c
+> > @@ -0,0 +1,125 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> Ditto
+> 
+> > +/*
+> > + * virtio_pmem.c: Virtio pmem Driver
+> > + *
+> > + * Discovers persistent memory range information
+> > + * from host and registers the virtual pmem device
+> > + * with libnvdimm core.
+> > + */
+> > +#include <linux/virtio_pmem.h>
+> > +#include <../../drivers/nvdimm/nd.h>
+> 
+> Should this file be moved to include/ directory?
+
+We are not touching the directory structure of nd & nd_pmem
+kernel driver.
+
+> 
+> > +
+> > +static struct virtio_device_id id_table[] = {
+> > +	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
+> > +	{ 0 },
+> > +};
+> > +
+> > + /* Initialize virt queue */
+> > +static int init_vq(struct virtio_pmem *vpmem)
+> > +{
+> > +	struct virtqueue *vq;
+> > +
+> > +	/* single vq */
+> > +	vpmem->req_vq = vq = virtio_find_single_vq(vpmem->vdev,
+> > +				host_ack, "flush_queue");
+> > +	if (IS_ERR(vq))
+> > +		return PTR_ERR(vq);
+> > +
+> > +	spin_lock_init(&vpmem->pmem_lock);
+> > +	INIT_LIST_HEAD(&vpmem->req_list);
+> > +
+> > +	return 0;
+> > +};
+> > +
+> > +static int virtio_pmem_probe(struct virtio_device *vdev)
+> > +{
+> > +	int err = 0;
+> > +	struct resource res;
+> > +	struct virtio_pmem *vpmem;
+> > +	struct nvdimm_bus *nvdimm_bus;
+> > +	struct nd_region_desc ndr_desc;
+> > +	int nid = dev_to_node(&vdev->dev);
+> > +	struct nd_region *nd_region;
+> > +
+> > +	if (!vdev->config->get) {
+> > +		dev_err(&vdev->dev, "%s failure: config disabled\n",
+> > +			__func__);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	vdev->priv = vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem),
+> > +			GFP_KERNEL);
+> 
+> Suggesting to indent it right so it will be under &vdev
+
+o.k
+
+> 
+> > +	if (!vpmem) {
+> > +		err = -ENOMEM;
+> > +		goto out_err;
+> > +	}
+> > +
+> > +	vpmem->vdev = vdev;
+> > +	err = init_vq(vpmem);
+> > +	if (err)
+> > +		goto out_err;
+> 
+> No need to free vpmem here?
+
+No. devm_kzalloc will take care of it.
+
+> 
+> > +
+> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> > +			start, &vpmem->start);
+> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
+> > +			size, &vpmem->size);
+> > +
+> > +	res.start = vpmem->start;
+> > +	res.end   = vpmem->start + vpmem->size-1;
+> > +	vpmem->nd_desc.provider_name = "virtio-pmem";
+> > +	vpmem->nd_desc.module = THIS_MODULE;
+> > +
+> > +	vpmem->nvdimm_bus = nvdimm_bus = nvdimm_bus_register(&vdev->dev,
+> > +						&vpmem->nd_desc);
+> > +	if (!nvdimm_bus)
+> > +		goto out_vq;
+> 
+> Ditto (i'm probably missing something here)
+> 
+> > +
+> > +	dev_set_drvdata(&vdev->dev, nvdimm_bus);
+> > +	memset(&ndr_desc, 0, sizeof(ndr_desc));
+> 
+> Any reason not to use compiler initialization?
+> i.e.
+> 	struct nd_region_desc ndr_desc = {};
+
+will change.
+
+> 
+> > +
+> > +	ndr_desc.res = &res;
+> > +	ndr_desc.numa_node = nid;
+> > +	ndr_desc.flush = virtio_pmem_flush;
+> > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
+> > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
+> > +	nd_region = nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc);
+> > +	nd_region->provider_data =  dev_to_virtio
+> > +					(nd_region->dev.parent->parent);
+> > +
+> > +	if (!nd_region)
+> > +		goto out_nd;
+> > +
+> > +	//virtio_device_ready(vdev);
+> 
+> Left over
+
+o.k
+
+> 
+> > +	return 0;
+> > +out_nd:
+> > +	err = -ENXIO;
+> > +	nvdimm_bus_unregister(nvdimm_bus);
+> > +out_vq:
+> > +	vdev->config->del_vqs(vdev);
+> > +out_err:
+> > +	dev_err(&vdev->dev, "failed to register virtio pmem memory\n");
+> > +	return err;
+> > +}
+> > +
+> > +static void virtio_pmem_remove(struct virtio_device *vdev)
+> > +{
+> > +	struct virtio_pmem *vpmem = vdev->priv;
+> > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
+> > +
+> > +	nvdimm_bus_unregister(nvdimm_bus);
+> > +	vdev->config->del_vqs(vdev);
+> 
+> I think you should also call vdev->config->reset
+
+o.k. Here device will be removed completely, still its required?
+
+> 
+> > +	kfree(vpmem);
+> > +}
+> > +
+> > +static struct virtio_driver virtio_pmem_driver = {
+> > +	.driver.name		= KBUILD_MODNAME,
+> > +	.driver.owner		= THIS_MODULE,
+> > +	.id_table		= id_table,
+> > +	.probe			= virtio_pmem_probe,
+> > +	.remove			= virtio_pmem_remove,
+> > +};
+> > +
+> > +module_virtio_driver(virtio_pmem_driver);
+> > +MODULE_DEVICE_TABLE(virtio, id_table);
+> > +MODULE_DESCRIPTION("Virtio pmem driver");
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/virtio_pmem.h b/include/linux/virtio_pmem.h
+> > new file mode 100644
+> > index 000000000000..224f9d934be6
+> > --- /dev/null
+> > +++ b/include/linux/virtio_pmem.h
+> > @@ -0,0 +1,60 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * virtio_pmem.h: virtio pmem Driver
+> > + *
+> > + * Discovers persistent memory range information
+> > + * from host and provides a virtio based flushing
+> > + * interface.
+> > + **/
+> > +
+> > +#ifndef _LINUX_VIRTIO_PMEM_H
+> > +#define _LINUX_VIRTIO_PMEM_H
+> > +
+> > +#include <linux/virtio_ids.h>
+> > +#include <linux/module.h>
+> > +#include <linux/virtio_config.h>
+> > +#include <uapi/linux/virtio_pmem.h>
+> > +#include <linux/libnvdimm.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +struct virtio_pmem_request {
+> > +	/* Host return status corresponding to flush request */
+> > +	int ret;
+> > +
+> > +	/* command name*/
+> > +	char name[16];
+> > +
+> > +	/* Wait queue to process deferred work after ack from host */
+> > +	wait_queue_head_t host_acked;
+> > +	bool done;
+> > +
+> > +	/* Wait queue to process deferred work after virt queue buffer avail */
+> > +	wait_queue_head_t wq_buf;
+> > +	bool wq_buf_avail;
+> > +	struct list_head list;
+> > +};
+> > +
+> > +struct virtio_pmem {
+> > +	struct virtio_device *vdev;
+> > +
+> > +	/* Virtio pmem request queue */
+> > +	struct virtqueue *req_vq;
+> > +
+> > +	/* nvdimm bus registers virtio pmem device */
+> > +	struct nvdimm_bus *nvdimm_bus;
+> > +	struct nvdimm_bus_descriptor nd_desc;
+> > +
+> > +	/* List to store deferred work if virtqueue is full */
+> > +	struct list_head req_list;
+> > +
+> > +	/* Synchronize virtqueue data */
+> > +	spinlock_t pmem_lock;
+> > +
+> > +	/* Memory region information */
+> > +	uint64_t start;
+> > +	uint64_t size;
+> > +};
+> > +
+> > +void host_ack(struct virtqueue *vq);
+> > +int virtio_pmem_flush(struct nd_region *nd_region);
+> > +#endif
+> > diff --git a/include/uapi/linux/virtio_ids.h
+> > b/include/uapi/linux/virtio_ids.h
+> > index 6d5c3b2d4f4d..346389565ac1 100644
+> > --- a/include/uapi/linux/virtio_ids.h
+> > +++ b/include/uapi/linux/virtio_ids.h
+> > @@ -43,5 +43,6 @@
+> >  #define VIRTIO_ID_INPUT        18 /* virtio input */
+> >  #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
+> >  #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
+> > +#define VIRTIO_ID_PMEM         25 /* virtio pmem */
+> 
+> Any reason for the jump here? are 21 to 24 already taken or you just
+> want to be on the safe side?
+
+They are already reserved.
+
+Thanks,
+Pankaj
+
+> 
+> >  
+> >  #endif /* _LINUX_VIRTIO_IDS_H */
+> > diff --git a/include/uapi/linux/virtio_pmem.h
+> > b/include/uapi/linux/virtio_pmem.h
+> > new file mode 100644
+> > index 000000000000..fa3f7d52717a
+> > --- /dev/null
+> > +++ b/include/uapi/linux/virtio_pmem.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +#ifndef _UAPI_LINUX_VIRTIO_PMEM_H
+> > +#define _UAPI_LINUX_VIRTIO_PMEM_H
+> > +
+> > +struct virtio_pmem_config {
+> > +	__le64 start;
+> > +	__le64 size;
+> > +};
+> > +#endif
+> > --
+> > 2.20.1
+> > 
+> > 
+> 
+> 
