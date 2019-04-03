@@ -2,119 +2,127 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B7EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D27C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3612133D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8CB2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="CsIBJnWf"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CQ68c4Uc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfDCU4z (ORCPT
+        id S1726565AbfDCU5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:56:55 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41370 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfDCU4z (ORCPT
+        Wed, 3 Apr 2019 16:57:00 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34375 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbfDCU47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:56:55 -0400
-Received: by mail-qk1-f194.google.com with SMTP id o129so298367qke.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 13:56:54 -0700 (PDT)
+        Wed, 3 Apr 2019 16:56:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v12so87368pgq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 13:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=stZxDD4/RlpqPkI85AH0c96rqP0StTYiJpkpgjsDnoM=;
-        b=CsIBJnWfJpPzyCqAIU5cny97i2F+R4Pvkgtm/DLuMfzm8QWHgmOwdSoXe+HyphN1w3
-         eR8ny5zi+qW9kOpCPm0SaEldAEVlW9Cy7YTtMOSETbAtuF7U+uluKgEFTmEkAX/6K8RS
-         RktcO9ETfx2gWHWMHtJUc6fcCjml6p+hbgTIfHv5ORI7Mtz3GkUOIzRSgdgTM+w2cadV
-         ch9o/Bkh/8Cid3zkvm2ZgQYzmybO205fjkIKvQaI+4K89SfYckKPUEGwaAIwuNsHDTFY
-         7+/CCH/20Z78eXbzAjz51G/cqjRV/AVvj7rdaegd1nlfY5oCkA4G//kEdoGI16b7mqDi
-         CSTQ==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5Hw1RdLC48PlY+lGZch7dM+23TqqAuAY/QZopAMVcnQ=;
+        b=CQ68c4UcKrgU0CvkR84+nhHjX2paop8yXIs6js68qPYFPzp7Tk/Ze80ofspH5OCRas
+         kafRwD94zIvISuFd90/xnLJxn4gbBqGili3pEMnDVmaPPyalJDoVI5jJWTPY/pcyYRjL
+         wzKLdVd8D50p1tfSc//SGfb6/z4HFoDeNr7rI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=stZxDD4/RlpqPkI85AH0c96rqP0StTYiJpkpgjsDnoM=;
-        b=fnnIM4+884X2WE/99pjQ52ugvgl7Sue+n/Bghoor6BGk7faxP5vjLaiUrzNjgdCDFJ
-         tSNtBDrhu5HuHTFQp9B3WrPMi9hZNAvSf746xXIboEH+iNWmklIFSGwhVUlahpu5vrWI
-         pulL5TXg2ljrUdioEimreK+wYkTQ6pn1JuGW0q5UfM1C5AMXv9iH1XwCMkJ+/UJgJkbo
-         36wsb8mM7vI6M2qVA7r9u6ZE+4hdAgPFJlh3Reb5XoBqGYjppLCck2+TTHG65LHr0XVH
-         mfmjcqpbyC2HbGNGQhsf1Eqyie+NnvcTYYPW2wQASfjzopUKjZu3CaQVfMRylDs/EILc
-         55Jg==
-X-Gm-Message-State: APjAAAWBrUkkh3z178INf2Shp94KwetS8kHEOYqe/EZaPzCiEez8/JF4
-        nn6ZcvYYG5TmPrnwKU2gSlkNhw==
-X-Google-Smtp-Source: APXvYqxcCCYV8i8I/W0oj0Xa6OjIg2fMiNWDfgZbUxTeFZcC5XsWhn8KbYqES02wedrCevgpiTmKCQ==
-X-Received: by 2002:a05:620a:1244:: with SMTP id a4mr1889868qkl.282.1554325014312;
-        Wed, 03 Apr 2019 13:56:54 -0700 (PDT)
-Received: from rosewood.cam.corp.google.com ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id s54sm10662373qtb.83.2019.04.03.13.56.53
+        bh=5Hw1RdLC48PlY+lGZch7dM+23TqqAuAY/QZopAMVcnQ=;
+        b=jCEJ9HeiJg1JG3oJsxs3pwxkQFervsVQDirkWSWh9jqtI4xgwYK6Ib31ZkH7Ce6wOH
+         91PsksMU68OE9YUGkfV+88ely5r0S2ZMNCXimM/kgAmntyd33+W5AE3fP3QoyJpWeJ4I
+         heqCfBPBHYghWc0vo3DMaa7NOcHnI6Buw1i28MQTmzGPSjfjgTXwXaX9UPUiYWGcv2F5
+         CsJRpiZHYGkgH2x0lfwyUqVlSyfWlJT96OZa0Km4QJ5uHh8kVUH9780ggAvJtQIYBQcI
+         Zs/ok01LnyQjfUEJJzQidqs9ye9MPJAETyAL3b5EYyTMlrOj3PCqPGu/YkJ04/1awkL/
+         ULhg==
+X-Gm-Message-State: APjAAAVnt1KeWhZOO2Sb+jYdoUcwTqYXFErKFcmyJNvxjf64wNbmYyON
+        aE94wK8xBd/ls8RdIR1bLrkMnw==
+X-Google-Smtp-Source: APXvYqyGwrX1IAAoA+sSw3Ty5He3L7IQvEYql8lyChrR8rp6TrlLTEuc+bT0nbjP6i5udcUyNVJEEw==
+X-Received: by 2002:a65:4108:: with SMTP id w8mr1839285pgp.236.1554325018477;
+        Wed, 03 Apr 2019 13:56:58 -0700 (PDT)
+Received: from [10.136.8.252] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id 10sm24798222pft.83.2019.04.03.13.56.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 13:56:53 -0700 (PDT)
-From:   Sean Paul <sean@poorly.run>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <seanpaul@chromium.org>,
-        Maxime Jourdan <mjourdan@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation/gpu/meson: Remove link to meson_canvas.c
-Date:   Wed,  3 Apr 2019 16:56:45 -0400
-Message-Id: <20190403205652.183496-1-sean@poorly.run>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        Wed, 03 Apr 2019 13:56:57 -0700 (PDT)
+Subject: Re: [PATCH v6 0/9] iProc I2C slave mode and NIC mode
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+References: <20190403011830.3254-1-ray.jui@broadcom.com>
+ <20190403204423.btgtke3tmt7pkr3j@ninjato>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <a34e914a-ac8e-421e-f75c-f595bc678219@broadcom.com>
+Date:   Wed, 3 Apr 2019 13:56:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190403204423.btgtke3tmt7pkr3j@ninjato>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+Hi Wolfram,
 
-The file was removed in the below patch and is causing this error:
-WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno -function Canvas ../drivers/gpu/drm/meson/meson_canvas.c' failed with return code
+On 4/3/2019 1:44 PM, Wolfram Sang wrote:
+> On Tue, Apr 02, 2019 at 06:18:21PM -0700, Ray Jui wrote:
+>> This patch series adds the following support to the iProc I2C driver:
+>> - Increase maximum read transfer size to 255 bytes
+>> - I2C slave mode
+>> - Polling mode
+>> - NIC I2C mode
+>>
+>> This patch series is based on kernel v5.1-rc3 and available at:
+>> https://github.com/Broadcom/arm64-linux.git
+>> branch: i2c-slave-v6
+>>
+>> Changes from v5:
+>>  - Address various comments from Wolfram
+> 
+> In the future, please write in detail what you changed. I review so many
+> patches that I can't recall all my comments on every patch.
+> 
 
-Fixes: 2bf6b5b0e374 ("drm/meson: exclusively use the canvas provider module")
-Cc: Maxime Jourdan <mjourdan@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-amlogic@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
----
- Documentation/gpu/meson.rst | 6 ------
- 1 file changed, 6 deletions(-)
+Sure will do next time.
 
-diff --git a/Documentation/gpu/meson.rst b/Documentation/gpu/meson.rst
-index 479f6f51a13b..b9e2f9aa3bd8 100644
---- a/Documentation/gpu/meson.rst
-+++ b/Documentation/gpu/meson.rst
-@@ -42,12 +42,6 @@ Video Encoder
- .. kernel-doc:: drivers/gpu/drm/meson/meson_venc.c
-    :doc: Video Encoder
- 
--Video Canvas Management
--=======================
--
--.. kernel-doc:: drivers/gpu/drm/meson/meson_canvas.c
--   :doc: Canvas
--
- Video Clocks
- ============
- 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+> That being said, all patches applied to for-next, thanks!
+> 
 
+Thanks!
+
+> Can be fixed incrementally, my code checkers complain about:
+> 
+>     CPPCHECK
+> drivers/i2c/busses/i2c-bcm-iproc.c:720:14: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>     val |= 1 << M_TX_WR_STATUS_SHIFT;
+>              ^
+> drivers/i2c/busses/i2c-bcm-iproc.c:847:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
+>             ^
+> drivers/i2c/busses/i2c-bcm-iproc.c:998:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
+> 
+
+I'll submit an incremental patch to fix the above warnings. I think we
+can convert all '1 << XXX' syntax in this driver to 'BIT(XXX)'. It will
+fix all of the above warnings and make the code more readable.
+
+Thanks,
+
+Ray
