@@ -2,120 +2,135 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D71C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD85AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD2F2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF6D206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRbXW7b3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfDCPeP (ORCPT
+        id S1726451AbfDCPfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:34:15 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43208 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfDCPeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:34:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 645A880D;
-        Wed,  3 Apr 2019 08:34:14 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 52EF93F68F;
-        Wed,  3 Apr 2019 08:34:13 -0700 (PDT)
-From:   Will Deacon <will.deacon@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] kernel/sysctl.c: Fix out-of-bounds access when setting file-max
-Date:   Wed,  3 Apr 2019 16:34:09 +0100
-Message-Id: <20190403153409.17307-1-will.deacon@arm.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 3 Apr 2019 11:35:31 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:46463 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDCPfa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 11:35:30 -0400
+Received: by mail-wr1-f49.google.com with SMTP id t17so8949419wrw.13;
+        Wed, 03 Apr 2019 08:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yAxJMOE1x3To24t2R0ABLokGVCW7S0c85+BdF2GgpYo=;
+        b=YRbXW7b3UDrIcmBVWLMeeISLGT4zKE9q4xrpsuOQmKqLZLFf7g/9DVLXjzC2TdUFuE
+         bDSc9BRZht9F5mlWVxzMTJyY5L3wpHcXWruYDSPemHx5FhUK9UJutlMChSEInEPz3MAA
+         FtaQ/x3Du99DgFmZSrZPF6bUwDLSyJ4PFlXK0IZKTJYEuOi18RfUcW8ip7dTlNID5lh2
+         2iVYtfUtIEJEOyvOROxVaIHIWqUE835UyCGna8uAeCEaYl+xdxvJJ2Zyc7z2fiMxx4Up
+         sE8YgjUlzNJeg4loX10hHGA5TOQZBHzfSN6gcqsXyClN5DqKd53O5lR+uyxkh17YxV24
+         z5bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yAxJMOE1x3To24t2R0ABLokGVCW7S0c85+BdF2GgpYo=;
+        b=YqRYdJqukaRT0L4DaIRto1WUSAD+6CpqrioooIrtmZmdkBae4irXFr6vc+I/icUMm0
+         YY6JNJA69Bh3KU9ltCz3cZUk9DKckhSjSUbi7cs+vSfmhdD1oB6zKkA2fW6DnT290e8+
+         ILzKPn417OL1uFRaVmlNLbTeCP8rDkHtNCKSl07zHo43OZoyBU/OwXuLF/mFSmsCWqKv
+         kWcWYAhE/Edrx8F+zPi/Ei5CMYGfaB9fqWYvt9Lg+JrbPvtpC7LDCJmhMBBLwi6chHmd
+         X/HlvPCxP2FnfzBUh/NPkD3ucqWlRyprh2rvvGb+K7l2aK/mSAV6Vam5T01ZEbWGXBOc
+         X5iA==
+X-Gm-Message-State: APjAAAUmmkogRERJK+3HBJtoeG6gZSf59CzcjJRLX3ae92AXJwLyn0hx
+        18KfnqB6p568ZtPSfVPMQNE=
+X-Google-Smtp-Source: APXvYqz3JM5FO9pe7qTmq1bmbom6/QelC3GGtfaxVE3/aLZwPUlOp8fHV/AuXmwl/d/p3KN1QT/vPA==
+X-Received: by 2002:adf:e951:: with SMTP id m17mr87551wrn.287.1554305729287;
+        Wed, 03 Apr 2019 08:35:29 -0700 (PDT)
+Received: from X555LD ([2a02:85f:510:b900:d5bf:dcd8:8640:a2fe])
+        by smtp.gmail.com with ESMTPSA id l12sm21808368wrt.31.2019.04.03.08.35.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 03 Apr 2019 08:35:28 -0700 (PDT)
+Date:   Wed, 03 Apr 2019 18:35:21 +0300
+From:   "Leonidas P. Papadakos" <papadakospan@gmail.com>
+Subject: RE: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
+ offload for rockchip devices
+To:     Jose Abreu <jose.abreu@synopsys.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>,
+        Christoph =?iso-8859-1?q?M=FCllner?= 
+        <christoph.muellner@theobroma-systems.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>
+Message-Id: <1554305721.1328.0@gmail.com>
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
+References: <20190401181840.31255-1-papadakospan@gmail.com>
+        <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
+        <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
+        <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
+        <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
+        <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
+        <c45d05f1-47b0-89d5-886d-d456d0111b7a@arm.com> <1554245296.1271.0@gmail.com>
+        <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
+X-Mailer: geary/3.32.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 32a5ad9c2285 ("sysctl: handle overflow for file-max") hooked
-up min/max values for the file-max sysctl parameter via the .extra1
-and .extra2 fields in the corresponding struct ctl_table entry.
 
-Unfortunately, the minimum value points at the global 'zero' variable,
-which is an int. This results in a KASAN splat when accessed as a long
-by proc_doulongvec_minmax on 64-bit architectures:
 
-  | BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x5d8/0x6a0
-  | Read of size 8 at addr ffff2000133d1c20 by task systemd/1
-  |
-  | CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc3-00012-g40b114779944 #2
-  | Hardware name: linux,dummy-virt (DT)
-  | Call trace:
-  |  dump_backtrace+0x0/0x228
-  |  show_stack+0x14/0x20
-  |  dump_stack+0xe8/0x124
-  |  print_address_description+0x60/0x258
-  |  kasan_report+0x140/0x1a0
-  |  __asan_report_load8_noabort+0x18/0x20
-  |  __do_proc_doulongvec_minmax+0x5d8/0x6a0
-  |  proc_doulongvec_minmax+0x4c/0x78
-  |  proc_sys_call_handler.isra.19+0x144/0x1d8
-  |  proc_sys_write+0x34/0x58
-  |  __vfs_write+0x54/0xe8
-  |  vfs_write+0x124/0x3c0
-  |  ksys_write+0xbc/0x168
-  |  __arm64_sys_write+0x68/0x98
-  |  el0_svc_common+0x100/0x258
-  |  el0_svc_handler+0x48/0xc0
-  |  el0_svc+0x8/0xc
-  |
-  | The buggy address belongs to the variable:
-  |  zero+0x0/0x40
-  |
-  | Memory state around the buggy address:
-  |  ffff2000133d1b00: 00 00 00 00 00 00 00 00 fa fa fa fa 04 fa fa fa
-  |  ffff2000133d1b80: fa fa fa fa 04 fa fa fa fa fa fa fa 04 fa fa fa
-  | >ffff2000133d1c00: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 00 00
-  |                                ^
-  |  ffff2000133d1c80: fa fa fa fa 00 fa fa fa fa fa fa fa 00 00 00 00
-  |  ffff2000133d1d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=CE=A3=CF=84=CE=B9=CF=82 =CE=A4=CE=B5=CF=84, 3 =CE=91=CF=80=CF=81, 2019 at =
+10:55 =CE=A0=CE=9C, =CE=BF/=CE=B7 Jose Abreu=20
+<jose.abreu@synopsys.com> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
+> From: Leonidas P. Papadakos <papadakospan@gmail.com>
+> Date: Tue, Apr 02, 2019 at 23:48:16
+>=20
+>>  I can confirm that snps,no-pbl-x8, currently set by uboot for the=20
+>> fdt
+>>  basically fixes the tx-checksumming issue.
+>>  I get 700~800 Mbps myself but that might come down to the setup.
+>>  You could say it affects performance slightly, as I saw in a=20
+>> previous
+>>  email.
+>>=20
+>>  Without the setting The rate consistently drops to 0.
+>>  ethtool reports tx-checksumming is on in both cases
+>>=20
+>>  Pretty cool!
+>>  Does that give you guys an idea on how to tackle it "officially"?
+>>=20
+>>=20
+>>=20
+>=20
+> Thank you all for testing !
+>=20
+> It's been on my todo list to cook up a patch that limits PBL=20
+> according to
+> FIFO size but I didn't manage to have the time yet so for now it would
+> be better if you fix it by submitting the DT bindings changes.
+>=20
+> Thanks,
+> Jose Miguel Abreu
 
-Fix the splat by introducing a unsigned long 'zero_ul' and using that
-instead.
+If snps,no-pbl-x8 does indeed have a performace hit, should the=20
+workaround be to
+a) turn tx checksumming off or
+b) snps,no-pbl-x8 set?
 
-Fixes: 32a5ad9c2285 ("sysctl: handle overflow for file-max")
-Cc: Christian Brauner <christian@brauner.io>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
----
- kernel/sysctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I'll test to see the difference
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index e5da394d1ca3..c9ec050bcf46 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -128,6 +128,7 @@ static int zero;
- static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
- static int __maybe_unused four = 4;
-+static unsigned long zero_ul;
- static unsigned long one_ul = 1;
- static unsigned long long_max = LONG_MAX;
- static int one_hundred = 100;
-@@ -1750,7 +1751,7 @@ static struct ctl_table fs_table[] = {
- 		.maxlen		= sizeof(files_stat.max_files),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= &zero,
-+		.extra1		= &zero_ul,
- 		.extra2		= &long_max,
- 	},
- 	{
--- 
-2.11.0
+=
 
