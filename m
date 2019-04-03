@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B05C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A051FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD4F2133D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7817A2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfDCVcL (ORCPT
+        id S1726676AbfDCVaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 17:32:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37323 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfDCVaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 17:30:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37312 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbfDCVaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 17:30:18 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 14:30:11 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 14:30:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
-   d="scan'208";a="334754232"
+   d="scan'208";a="334754277"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Apr 2019 14:30:10 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 03 Apr 2019 14:30:12 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -44,9 +44,9 @@ Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, kvm@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v6 02/20] drivers/net/b44: Align pwol_mask to unsigned long for better performance
-Date:   Wed,  3 Apr 2019 14:21:48 -0700
-Message-Id: <1554326526-172295-3-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v6 17/20] x86/clearcpuid: Support feature flag string in kernel option clearcpuid
+Date:   Wed,  3 Apr 2019 14:22:03 -0700
+Message-Id: <1554326526-172295-18-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
 References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
@@ -55,48 +55,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+The kernel option clearcpuid currently only takes feature bit which
+can be changed from kernel to kernel.
 
-A bit in pwol_mask is set in b44_magic_pattern by atomic set_bit.
-But since pwol_mask is local and never exposed to concurrency, there is
-no need to set bit in pwol_mask atomically.
+Extend clearcpuid to use cap flag string, which is defined in
+x86_cap_flags[] and won't be changed from kernel to kernel.
+And user can easily get the cap flag string from /proc/cpuinfo.
 
-set_bit sets the bit in a single unsigned long location. Because pwol_mask
-may not be aligned to unsigned long, the location may cross two cache
-lines. On x86, accessing two cache lines in locked instruction in set_bit
-is called split lock and can cause overall performance degradation.
-
-So use non atomic __set_bit to set pwol_mask bits. __set_bit won't hit
-split lock issue on x86.
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/net/ethernet/broadcom/b44.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/cpufeature.h |  1 +
+ arch/x86/kernel/cpu/cpuid-deps.c  | 26 ++++++++++++++++++++++++++
+ arch/x86/kernel/fpu/init.c        |  3 ++-
+ 3 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-index 97ab0dd25552..5738ab963dfb 100644
---- a/drivers/net/ethernet/broadcom/b44.c
-+++ b/drivers/net/ethernet/broadcom/b44.c
-@@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 0e56ff7e4848..823c4ab82e12 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -133,6 +133,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
  
- 	memset(ppattern + offset, 0xff, magicsync);
- 	for (j = 0; j < magicsync; j++)
--		set_bit(len++, (unsigned long *) pmask);
-+		__set_bit(len++, (unsigned long *)pmask);
+ extern void setup_clear_cpu_cap(unsigned int bit);
+ extern void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int bit);
++bool find_cpu_cap(char *cap_flag, unsigned int *pfeature);
  
- 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
- 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
-@@ -1532,7 +1532,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 		for (k = 0; k< ethaddr_bytes; k++) {
- 			ppattern[offset + magicsync +
- 				(j * ETH_ALEN) + k] = macaddr[k];
--			set_bit(len++, (unsigned long *) pmask);
-+			__set_bit(len++, (unsigned long *)pmask);
- 		}
+ #define setup_force_cpu_cap(bit) do { \
+ 	set_cpu_cap(&boot_cpu_data, bit);	\
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index 3d633f67fbd7..1a71434f7b46 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -120,3 +120,29 @@ void setup_clear_cpu_cap(unsigned int feature)
+ {
+ 	do_clear_cpu_cap(NULL, feature);
+ }
++
++/**
++ * find_cpu_cap - Given a cap flag string, find its corresponding feature bit.
++ * @cap_flag:	cap flag string as defined in x86_cap_flags[]
++ * @pfeature:	feature bit
++ *
++ * Return: true if the feature is found. false if not found
++ */
++bool find_cpu_cap(char *cap_flag, unsigned int *pfeature)
++{
++#ifdef CONFIG_X86_FEATURE_NAMES
++	unsigned int feature;
++
++	for (feature = 0; feature < NCAPINTS * 32; feature++) {
++		if (!x86_cap_flags[feature])
++			continue;
++
++		if (strcmp(cap_flag, x86_cap_flags[feature]) == 0) {
++			*pfeature = feature;
++
++			return true;
++		}
++	}
++#endif
++	return false;
++}
+diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
+index 88bbba7ee96a..99b895eea166 100644
+--- a/arch/x86/kernel/fpu/init.c
++++ b/arch/x86/kernel/fpu/init.c
+@@ -256,7 +256,8 @@ static void __init clear_cpuid(void)
+ 		/* Chang command line range for next search. */
+ 		cmdline_size = option_pos - boot_command_line + 1;
+ 		argptr = arg;
+-		if (get_option(&argptr, &bit) &&
++		/* cpu cap can be specified by either feature bit or string */
++		if ((get_option(&argptr, &bit) || find_cpu_cap(arg, &bit)) &&
+ 		    bit >= 0 && bit < NCAPINTS * 32)
+ 			setup_clear_cpu_cap(bit);
  	}
- 	return len - 1;
 -- 
 2.19.1
 
