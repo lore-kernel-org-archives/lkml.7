@@ -2,103 +2,59 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10971C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E5BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB0A206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C59206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="aLGJ9mTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfDCPsj (ORCPT
+        id S1727006AbfDCPso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:48:39 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.85]:33555 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726184AbfDCPsj (ORCPT
+        Wed, 3 Apr 2019 11:48:44 -0400
+Received: from a9-46.smtp-out.amazonses.com ([54.240.9.46]:33190 "EHLO
+        a9-46.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726184AbfDCPsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:48:39 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 5AA39B9EAC1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 10:48:38 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Bi7yhXw9qiQerBi7yhIwoZ; Wed, 03 Apr 2019 10:48:38 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=41732 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hBi7x-0010gn-7E; Wed, 03 Apr 2019 10:48:37 -0500
-Date:   Wed, 3 Apr 2019 10:48:35 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] ath6kl: debug: Use struct_size() helper
-Message-ID: <20190403154835.GA20955@embeddedor>
+        Wed, 3 Apr 2019 11:48:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1554306522;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=4v128Tp+ktDAhV/qENqEBuzjLJBLhHo3lzR/qUMTRlo=;
+        b=aLGJ9mTdOIRbGejut86wsSoihvyWLiKCMoKGatxbO2GGbt0rgmrk1u/IZHSnOqaI
+        9q6he+SwBYm0IBVF3FfhF0iw8p1u0huggAQh8Ajdj81qHKdVBq8aeZbCqixT6d+8hF5
+        vRSMboQSBPUXNruZYO+UV7UfVgto6s/J40j8SZwo=
+Date:   Wed, 3 Apr 2019 15:48:42 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     "Tobin C. Harding" <tobin@kernel.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 6/7] slab: Use slab_list instead of lru
+In-Reply-To: <20190402230545.2929-7-tobin@kernel.org>
+Message-ID: <01000169e3e35d91-7a8b7b63-dd87-4d0f-bcff-e7f1031abbe9-000000@email.amazonses.com>
+References: <20190402230545.2929-1-tobin@kernel.org> <20190402230545.2929-7-tobin@kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hBi7x-0010gn-7E
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.114.183]:41732
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.04.03-54.240.9.46
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
 
-So, change the following form:
+Acked-by: Christoph Lameter <cl@linux.com>
 
-sizeof(*tbl) + num_entries * sizeof(struct wmi_bss_roam_info)
-
- to :
-
-struct_size(tbl, info, num_entries)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/ath/ath6kl/debug.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath6kl/debug.c b/drivers/net/wireless/ath/ath6kl/debug.c
-index 4e94b22eaada..54337d60f288 100644
---- a/drivers/net/wireless/ath/ath6kl/debug.c
-+++ b/drivers/net/wireless/ath/ath6kl/debug.c
-@@ -1132,8 +1132,7 @@ int ath6kl_debug_roam_tbl_event(struct ath6kl *ar, const void *buf,
- 
- 	tbl = (const struct wmi_target_roam_tbl *) buf;
- 	num_entries = le16_to_cpu(tbl->num_entries);
--	if (sizeof(*tbl) + num_entries * sizeof(struct wmi_bss_roam_info) >
--	    len)
-+	if (struct_size(tbl, info, num_entries) > len)
- 		return -EINVAL;
- 
- 	if (ar->debug.roam_tbl == NULL ||
--- 
-2.21.0
 
