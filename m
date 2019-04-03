@@ -2,144 +2,87 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173F4C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15DCC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA58F206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gp+FtYfG"
+	by mail.kernel.org (Postfix) with ESMTP id 75CDC206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfDCE2Y (ORCPT
+        id S1726724AbfDCEaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:28:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44318 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfDCE2X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:28:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i2so7629262pgj.11;
-        Tue, 02 Apr 2019 21:28:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=okQiFa1LucnY9MvnxTQta/a/jKxZN0Lx4xzIHtSBdfk=;
-        b=gp+FtYfG89oTn0cjPZgm29E/rVv0nns0d/TVCFbygFk1U65bgu8hIFVOivuOQ6evJX
-         8j5XrJpkkcIfApXGTMqGPG9dLC3wK0DgE2rPVs+4jD6tvuc03KvfBAoaaI1RJBTZwsgk
-         21qoEKE96HpFMz0HxbMfPY/0c1KpAP83N7PXXh8QKVsa+8dgUg4LNukLi1QuQ1kt1Cuk
-         aUdEUs7LVrjdJ+GLFk0Nwcp/1avGs44YLG9X/aVCdM75Z58w/rAOpVimAkXPFDg8teFE
-         c3VzVoElVAwZWS7PvwbzdC5fcfUfFRgQzg+kUVrmt1Wb7clQpiKmu2+CxIFPN5ZBRf+x
-         O+og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=okQiFa1LucnY9MvnxTQta/a/jKxZN0Lx4xzIHtSBdfk=;
-        b=cTywPip9p250CEzeVnU0X6Gibrz21pAAvFwEmOpIXR3+88LA8WYzDFW0CnWCVkdwXU
-         uHIJWHbzfiKOX1d8Ub90BpQSlFwY8P/HQKwndJzLRjGVI4rGSzJ42zx86z1oUgbxEQzp
-         41i3b63ZveCvc77CDNGiVz4BBfiWhzyovmw4lAgAqswqXu1d7QsIkOh6M6ergiYw62PN
-         w25DpCCcGaAVl5miv1P91hO6ELTA3AVzr7ww6cLpOB1158TKLzMXgb8Uk57s+z7I2jbC
-         17/2JUKCsAvOmSef+Kz0IB+KkZXHhOM6jAIqOIYzb4Af1WZiZtaypa4sMrJb5rWJaaR0
-         5hrA==
-X-Gm-Message-State: APjAAAX2mAiCiagwBoxEyUtabD/e+fW570BAz/t4UekQ2y0slhSXPFhZ
-        5/oTasNEdAmM/Pfl8agNbss=
-X-Google-Smtp-Source: APXvYqy/VCfgtRfYQVJPgR6QYFvCt+pHfm0O4I3h7G9OHoh6fqdo7YLngUFBRN2mvE9bufudlCe+kA==
-X-Received: by 2002:a65:5685:: with SMTP id v5mr68870041pgs.365.1554265702855;
-        Tue, 02 Apr 2019 21:28:22 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id r145sm7138450pgr.84.2019.04.02.21.28.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 21:28:21 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (iio_hwmon) Simplify attr.name generation in iio_hwmon_probe()
-Date:   Tue,  2 Apr 2019 21:28:11 -0700
-Message-Id: <20190403042812.26357-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 3 Apr 2019 00:30:13 -0400
+Received: from foss.arm.com ([217.140.101.70]:60198 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbfDCEaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 00:30:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E40380D;
+        Tue,  2 Apr 2019 21:30:12 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BE65E3F721;
+        Tue,  2 Apr 2019 21:30:06 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com
+Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
+        mark.rutland@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        logang@deltatee.com, pasha.tatashin@oracle.com, david@redhat.com,
+        cai@lca.pw
+Subject: [PATCH 0/6] arm64/mm: Enable memory hot remove and ZONE_DEVICE
+Date:   Wed,  3 Apr 2019 10:00:00 +0530
+Message-Id: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since every call to devm_kasprintf() in the switch statement is mostly
-the same, we can move all of the shared code outside and capture
-differencies with two helper variables. No functional change intended.
+This series enables memory hot remove on arm64, fixes a memblock removal
+ordering problem in generic __remove_memory(), enables sysfs memory probe
+interface on arm64. It also enables ZONE_DEVICE with struct vmem_altmap
+support.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/hwmon/iio_hwmon.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+Testing:
 
-diff --git a/drivers/hwmon/iio_hwmon.c b/drivers/hwmon/iio_hwmon.c
-index 5c3c08449de7..1770423f7a80 100644
---- a/drivers/hwmon/iio_hwmon.c
-+++ b/drivers/hwmon/iio_hwmon.c
-@@ -92,6 +92,9 @@ static int iio_hwmon_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < st->num_channels; i++) {
-+		const char *prefix;
-+		int n;
-+
- 		a = devm_kzalloc(dev, sizeof(*a), GFP_KERNEL);
- 		if (a == NULL)
- 			return -ENOMEM;
-@@ -103,28 +106,28 @@ static int iio_hwmon_probe(struct platform_device *pdev)
- 
- 		switch (type) {
- 		case IIO_VOLTAGE:
--			a->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
--							       "in%d_input",
--							       in_i++);
-+			n = in_i++;
-+			prefix = "in";
- 			break;
- 		case IIO_TEMP:
--			a->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
--							       "temp%d_input",
--							       temp_i++);
-+			n = temp_i++;
-+			prefix = "temp";
- 			break;
- 		case IIO_CURRENT:
--			a->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
--							       "curr%d_input",
--							       curr_i++);
-+			n = curr_i++;
-+			prefix = "curr";
- 			break;
- 		case IIO_HUMIDITYRELATIVE:
--			a->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
--							       "humidity%d_input",
--							       humidity_i++);
-+			n = humidity_i++;
-+			prefix = "humidity";
- 			break;
- 		default:
- 			return -EINVAL;
- 		}
-+
-+		a->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
-+						       "%s%d_input",
-+						       prefix, n);
- 		if (a->dev_attr.attr.name == NULL)
- 			return -ENOMEM;
- 
+Tested hot remove on arm64 for all 4K, 16K, 64K page config options with
+all possible VA_BITS and PGTABLE_LEVELS combinations. Tested ZONE_DEVICE
+with ARM64_4K_PAGES through a dummy driver.
+
+Build tested on non arm64 platforms. I will appreciate if folks can test
+arch_remove_memory() re-ordering in __remove_memory() on other platforms.
+
+Dependency:
+
+V5 series in the thread (https://lkml.org/lkml/2019/2/14/1096) will make
+kernel linear mapping loose pgtable_page_ctor() init. When this happens
+the proposed functions free_pte|pmd|pud_table() in [PATCH 2/6] will have
+to stop calling pgtable_page_dtor().
+
+Anshuman Khandual (5):
+  arm64/mm: Enable sysfs based memory hot add interface
+  arm64/mm: Enable memory hot remove
+  arm64/mm: Enable struct page allocation from device memory
+  mm/hotplug: Reorder arch_remove_memory() call in __remove_memory()
+  arm64/mm: Enable ZONE_DEVICE
+
+Robin Murphy (1):
+  mm/memremap: Rename and consolidate SECTION_SIZE
+
+ arch/arm64/Kconfig               |  13 +++
+ arch/arm64/include/asm/pgtable.h |  14 +++
+ arch/arm64/mm/mmu.c              | 242 ++++++++++++++++++++++++++++++++++++++-
+ include/linux/mmzone.h           |   1 +
+ kernel/memremap.c                |  10 +-
+ mm/hmm.c                         |   2 -
+ mm/memory_hotplug.c              |   3 +-
+ 7 files changed, 271 insertions(+), 14 deletions(-)
+
 -- 
-2.20.1
+2.7.4
 
