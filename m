@@ -2,109 +2,146 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52319C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F66C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204522082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5DE2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GS21Jzjg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwXHHRv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfDCQog (ORCPT
+        id S1728803AbfDCQok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:44:36 -0400
-Received: from smtprelay4.synopsys.com ([198.182.47.9]:50886 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfDCQod (ORCPT
+        Wed, 3 Apr 2019 12:44:40 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41795 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728640AbfDCQoi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:44:33 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 9E8D424E13BD;
-        Wed,  3 Apr 2019 09:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1554309873; bh=o4JBa4XfHADSW2XV1UBcJpH0rGqp9fsnCl5YRIKQZjs=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=GS21JzjgQdVC20SakmIc6FTS9LDB8UOqFvH11Rns2ZB2lDDcpIW0MyVkLkT8SY+8G
-         LvZeJafo1eTI92WdN3mybm/Lk7D1y8rummAqIZDnZAwUbxhnGoQhJWGXQyXEslW1o4
-         JbslkM+LdYJIHkISk5CfdyegV+yIsf6LqNtlwrrydc20EP/YmT38/day1fELukbcAt
-         oGPxAb9o7ZZF7tX/ob6b5NuHrmG5YA04SkZ9pyKxLSenuQufgwL1cy/eM7FayeJThv
-         coKODeN6sQav3s2SoEmk+TKnct3xbp2kdxmHQCVE/Rdj7DpLJRdiX2aUuLJSIdXM+U
-         9cdA4APB678uA==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 91191A0062;
-        Wed,  3 Apr 2019 16:44:33 +0000 (UTC)
-Received: from US01WEMBX2.internal.synopsys.com ([fe80::e4b6:5520:9c0d:250b])
- by us01wehtc1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
- 3 Apr 2019 09:44:33 -0700
-From:   Vineet Gupta <vineet.gupta1@synopsys.com>
-To:     Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "robh@kernel.org" <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARC: [hsdk] Make it easier to add PAE40 region to DTB
-Thread-Topic: [PATCH] ARC: [hsdk] Make it easier to add PAE40 region to DTB
-Thread-Index: AQHU6YjWxx0Wxr9B3kK5/52+iXhnUg==
-Date:   Wed, 3 Apr 2019 16:44:32 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA230750146440077@US01WEMBX2.internal.synopsys.com>
-References: <1554232683-8173-1-git-send-email-vgupta@synopsys.com>
- <1554309241.2797.20.camel@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.13.184.20]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Apr 2019 12:44:38 -0400
+Received: by mail-vs1-f68.google.com with SMTP id g187so10377497vsc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 09:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IZnHtpKJZJ2fuBkhwsJTbda3w/jemBvyjKtIF9cE10g=;
+        b=MwXHHRv1h5zn3S6HC6fai6jO3G3rtmj8JO8H6Jz+9C204Yu46Pn4cYIW9hPe8LoNhU
+         pMDb+l5gi2mKJHXkUc0nOJAzlnJWE321TkYYkHVYSWQBGZvdSpHv6W7qe8GZxSfhaztf
+         GNICr04ymwYTg4bAAtUjuSHkVveNkYvpIxTWJWD5il3RUyaao1KZIa23BSYNM8WFw7pX
+         iuMhTVdPn6uowS8IdDJ41TdWdHPr4yUbGYu4FC0Tp/BZypo9M6XTHGokazScv1T3N55d
+         8oC/HDkHHDusn9UdKmKYVHamkvad5Z+hE/JLU1SjwPHN4LemW54FPFVngMacgxIt1+fc
+         UTLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IZnHtpKJZJ2fuBkhwsJTbda3w/jemBvyjKtIF9cE10g=;
+        b=LlNUXb8N552B6rzb1QuJBY2/qm/SV92ONqiSATRMM9I4MFumE/n/Mzmzzb5VES0DsL
+         8/5TRS5QtWim+EKH11D5yrt7V7iB2g7OJazJ2S4oZHJC30XMwwiSuSk3Ol9HBE3ypfet
+         SiMAaci6cv1hGGUpYOLlbDSSWrYkj9DEFrcR2IUDrOqsb+8tY6LXg0F1tjHGqaPp/GgZ
+         7OxVZx68KX1Y0CxJHeHIRfnpSL2NRVXc80xEswBKjOX5nSZLHs1XEUmjzsKFuCQxEcRh
+         OApBeyF7ZM4UL7uSNg4+EcfXDf6hFdEd+aOo4IviNJ36kFWkIKgkwHwybzUYUyoQ6Hrc
+         kZ6g==
+X-Gm-Message-State: APjAAAUasYc/fLdQ6q5vqKfcSVLUB2tNVhtXFnmnUkMxs1hbvc4TdsDl
+        l8PREasEeS9bk6p5DNtRRk6DJNmSI2p9Qu3zqR8=
+X-Google-Smtp-Source: APXvYqz+W8X9zWW0hjnbKwAzSJIl89dxsHD/VXJbVa8vquq1YiaHmYUV7ColocxfIuqgoQxhKpKlTii1d+hleevuVy4=
+X-Received: by 2002:a67:e256:: with SMTP id w22mr972728vse.173.1554309877071;
+ Wed, 03 Apr 2019 09:44:37 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190314032047.15790-1-vichy.kuo@gmail.com> <20190319153114.GI59586@arrakis.emea.arm.com>
+ <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
+ <CAOVJa8Eefs7cEneNwV0VCrr8GLVb0AweJEb0Qo4TucgXTNuNWg@mail.gmail.com> <20190401153810.GC6884@fuggles.cambridge.arm.com>
+In-Reply-To: <20190401153810.GC6884@fuggles.cambridge.arm.com>
+From:   pierre kuo <vichy.kuo@gmail.com>
+Date:   Thu, 4 Apr 2019 00:44:25 +0800
+Message-ID: <CAOVJa8EcjQO2GuojwBxfFG25+T-z6BR6ytZBdcV2W2XusyW08g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] initrd: move initrd_start calculate within linear
+ mapping range check
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        ard.biesheuvel@linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/19 9:34 AM, Eugeniy Paltsev wrote:=0A=
->> -		reg =3D <0x80000000 0x40000000>;  /* 1 GiB */=0A=
->> +		reg =3D <0x0 0x80000000 0x0 0x40000000>;  /* 1 GB lowmem */=0A=
->> +		/*     0x1 0x00000000 0x0 0x40000000>;     1 GB highmem */=0A=
-> Could you please get rid of comment with reference for PAE40/HIGHMEM regi=
-on in this patch?=0A=
-> It gives wrong expectations that if we uncomment it and enable PAE40 in c=
-onfig we'll get working system.=0A=
-> But it isn't true - we also need to remap AXI apertures appropriately.=0A=
-=0A=
-Well I didn't have to do any remapping for successfully running a cross gli=
-bc=0A=
-testsuite over ssh.=0A=
-This was v5.1-rc1 + HIGHMEM+ PAE + patch to disable ioc + this patch for DT=
- update.=0A=
-=0A=
-Perhaps the remapping is needed when you are remapping DDR to 0 (for HIGHME=
-M + !PAE)=0A=
-=0A=
-> Otherwise kernel will crush somewhere. Moreover kernel will crush for dif=
-ferent reasons in case of launch=0A=
-> via U-boot and via MDB (because we remap AXI apertures in U-boot for inte=
-rnal purposes).=0A=
-=0A=
-This was all via mdb !=0A=
-=0A=
-> If you really want to keep this - I can send you patch with AXI apertures=
- remapping we need to apply firstly.=0A=
-=0A=
-Well I can drop the last commented line but I don't want to do wholesale ch=
-anges=0A=
-to DT for enabling DT, so would liek to keep the rest of the patch anyways.=
-=0A=
-=0A=
-But sure send over the AXI remapping stuff - is that described in hsdk spec=
-s ?=0A=
-=0A=
--Vineet=0A=
+hi Will:
+>
+> [+Ard in case I'm missing something]
+>
+> On Mon, Apr 01, 2019 at 10:59:53PM +0800, pierre kuo wrote:
+> > > > With CONFIG_RANDOMIZE_BASE we can get a further change to memstart_addr
+> > > > after the place where you moved the initrd_{start,end} setting, which
+> > > > would result in a different value for __phys_to_virt(phys_initrd_start).
+> > >
+> > > I found what you mean, since __phys_to_virt will use PHYS_OFFSET
+> > > (memstart_addr) for calculating.
+> > > How about moving CONFIG_RANDOMIZE_BASE part of code ahead of
+> > > CONFIG_BLK_DEV_INITRD checking?
+> > >
+> > > That means below (d) moving ahead of (c)
+> > > prvious:
+> > > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
+> > > if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
+> > > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
+> > > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
+> > >
+> > > now:
+> > > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) { ---(a)
+> > > if (memory_limit != PHYS_ADDR_MAX) {}              ----------------(b)
+> > > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}  --------------(d)
+> > > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}  ---(c)
+> > >
+> >
+> > After tracing the kernel code,
+> > is it even possible to move CONFIG_RANDOMIZE_BASE part of code ahead
+> > of memory_limit?
+> >
+> > that mean the flow may look like below:
+> > now2:
+> > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
+> > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
+> > if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
+> > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
+> >
+> > in (b), the result of __pa_symbol(_text), memory_limit,
+> > memblock_mem_limit_remove_map and  memblock_add
+> > are not depended on memsart_addr.
+> > So the now2 flow can grouping modification of memstart_address, put
+> > (a) and (d) together.
+>
+> I'm afraid that you've lost me with this.
+welcome for ur kind suggestion ^^
+
+>Why isn't it just as simple as
+> the diff below?
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index c29b17b520cd..ec3487c94b10 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -377,7 +377,7 @@ void __init arm64_memblock_init(void)
+>                          base + size > memblock_start_of_DRAM() +
+>                                        linear_region_size,
+>                         "initrd not fully accessible via the linear mapping -- please check your bootloader ...\n")) {
+> -                       initrd_start = 0;
+> +                       phys_initrd_size = 0;
+>                 } else {
+>                         memblock_remove(base, size); /* clear MEMBLOCK_ flags */
+>                         memblock_add(base, size);
+
+This patch will also fix the issue, but it still needs 2 "if
+comparisions" for getting initrd_start/initrd_end.
+By possible grouping modification of memstart_address, and put
+initrd_start/initrd_end to be calculated only when linear mapping check
+pass. Maybe (just if) can let the code be more concise.
+
+Sincerely appreciate all of yours great comment.
