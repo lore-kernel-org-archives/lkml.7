@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124DDC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57858C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AD12082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2DD2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726064AbfDCQnx (ORCPT
+        id S1728746AbfDCQoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:43:53 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41953 "EHLO
+        Wed, 3 Apr 2019 12:44:11 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41939 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfDCQm0 (ORCPT
+        with ESMTP id S1726994AbfDCQmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:42:26 -0400
+        Wed, 3 Apr 2019 12:42:24 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hBixx-0004GO-I3; Wed, 03 Apr 2019 18:42:21 +0200
+        id 1hBixt-0004GO-MI; Wed, 03 Apr 2019 18:42:18 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 16/27] x86/entry: Add TIF_NEED_FPU_LOAD
-Date:   Wed,  3 Apr 2019 18:41:45 +0200
-Message-Id: <20190403164156.19645-17-bigeasy@linutronix.de>
+Subject: [PATCH 13/27] x86/fpu: Only write PKRU if it is different from current
+Date:   Wed,  3 Apr 2019 18:41:42 +0200
+Message-Id: <20190403164156.19645-14-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
 References: <20190403164156.19645-1-bigeasy@linutronix.de>
@@ -46,62 +46,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add TIF_NEED_FPU_LOAD. This is reserved for loading the FPU registers
-before returning to userland. This flag must not be set for systems
-without a FPU.
-If this flag is cleared, the CPU's FPU register hold the current content
-of current()'s FPU register. The in-memory copy (union fpregs_state) is
-not valid.
-If this flag is set, then all of CPU's FPU register may hold a random
-value (except for PKRU) and it is required to load the content of the
-FPU register on return to userland.
+Dave Hansen says that the `wrpkru' is more expensive than `rdpkru'. It
+has a higher cycle cost and it's also practically a (light) speculation
+barrier.
 
-It is introduced now, so we can add code handling it now before adding
-the main feature.
+As an optimisation read the current PKRU value and only write the new
+one if it is different.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/include/asm/fpu/internal.h | 6 ++++++
- arch/x86/include/asm/thread_info.h  | 2 ++
- 2 files changed, 8 insertions(+)
+ arch/x86/include/asm/special_insns.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 82ff84a4c4ab7..b12874b7cf0cf 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -507,6 +507,12 @@ static inline void __fpregs_load_activate(struct fpu *fpu, int cpu)
-  *
-  * The FPU context is only stored/restore for user task and ->mm is used to
-  * distinguish between kernel and user threads.
-+ *
-+ * If TIF_NEED_FPU_LOAD is cleared then the CPU's FPU registers are saved in
-+ * the current thread's FPU registers state.
-+ * If TIF_NEED_FPU_LOAD is set then CPU's FPU registers may not hold current()'s
-+ * FPU registers. It is required to load the registers before returning to
-+ * userland or using the content otherwise.
-  */
- static inline void
- switch_fpu_prepare(struct fpu *old_fpu, int cpu)
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index e0eccbcb8447d..f9453536f9bbc 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -88,6 +88,7 @@ struct thread_info {
- #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
- #define TIF_UPROBE		12	/* breakpointed or singlestepping */
- #define TIF_PATCH_PENDING	13	/* pending live patching update */
-+#define TIF_NEED_FPU_LOAD	14	/* load FPU on return to userspace */
- #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
- #define TIF_NOTSC		16	/* TSC is not accessible in userland */
- #define TIF_IA32		17	/* IA32 compatibility process */
-@@ -117,6 +118,7 @@ struct thread_info {
- #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
- #define _TIF_UPROBE		(1 << TIF_UPROBE)
- #define _TIF_PATCH_PENDING	(1 << TIF_PATCH_PENDING)
-+#define _TIF_NEED_FPU_LOAD	(1 << TIF_NEED_FPU_LOAD)
- #define _TIF_NOCPUID		(1 << TIF_NOCPUID)
- #define _TIF_NOTSC		(1 << TIF_NOTSC)
- #define _TIF_IA32		(1 << TIF_IA32)
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 27328606ff687..28ffdf0c1add4 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -121,6 +121,12 @@ static inline void __write_pkru_ins(u32 pkru)
+ 
+ static inline void __write_pkru(u32 pkru)
+ {
++	/*
++	 * WRPKRU is relatively expensive compared to RDPKRU.
++	 * Avoid WRPKRU when it would not change the value.
++	 */
++	if (pkru == __read_pkru_ins())
++		return;
+ 	__write_pkru_ins(pkru);
+ }
+ 
 -- 
 2.20.1
 
