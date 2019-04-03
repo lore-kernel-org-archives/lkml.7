@@ -2,150 +2,99 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14ED0C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EF3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E4620830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:19:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="OMe71v5C"
+	by mail.kernel.org (Postfix) with ESMTP id 9F8CD20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDCJTp (ORCPT
+        id S1726468AbfDCJUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:19:45 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:35586 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfDCJTo (ORCPT
+        Wed, 3 Apr 2019 05:20:41 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:2788 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725907AbfDCJUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:19:44 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id D731D25B820;
-        Wed,  3 Apr 2019 20:19:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
-        t=1554283182; bh=EhCRip9ZHFZIRxTpZn1wcHNuuwjs+DgwLETK8x2aTLI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OMe71v5CaTWJpuIIMeqwQInz13lpRkgRIdO8qEN6Kjv96BxPo0Wy58Xz9BQ1xO8vV
-         ISbH+gGjmDlIyLWWyNaj5VrROthQFrRhgW8Vjyt6GRwQe2RInFq9prxvvJ81Iyfd7g
-         KVcJirctg/8Lwr7+Vos8r06XR4FnJAbQjqSFkPto=
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id DE8DB940361; Wed,  3 Apr 2019 11:19:39 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 11:19:39 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 3/3] phy: renesas: rcar-gen3-usb2: enable/disable
- independent irqs
-Message-ID: <20190403091939.qguys2dftombenpb@verge.net.au>
-References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1554120083-29990-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Wed, 3 Apr 2019 05:20:41 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3397F3d015828;
+        Wed, 3 Apr 2019 11:20:30 +0200
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rmhar2tes-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 03 Apr 2019 11:20:30 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0801931;
+        Wed,  3 Apr 2019 09:20:30 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DBC641863;
+        Wed,  3 Apr 2019 09:20:29 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 3 Apr 2019
+ 11:20:29 +0200
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019 11:20:29
+ +0200
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: ltdc: limit number of layer to avoid memory overflow
+Date:   Wed, 3 Apr 2019 11:20:16 +0200
+Message-ID: <1554283216-2700-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554120083-29990-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shimoda-san,
+If the number of layer is greater than LTDC_MAX_LAYER, we can have
+memory overflow when reading plane_fpsi[].
 
-On Mon, Apr 01, 2019 at 09:01:23PM +0900, Yoshihiro Shimoda wrote:
-> Since the previous code enabled/disabled the irqs both OHCI and EHCI,
-> it is possible to cause unexpected interruptions. To avoid this,
-> this patch creates multiple phy instances from phandle and
-> enables/disables independent irqs by the instances.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+---
+ drivers/gpu/drm/stm/ltdc.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-I noted a few nits below but overall this looks good to me.
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 32fd6a3..05bd4b6 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -1021,10 +1021,13 @@ static int ltdc_get_caps(struct drm_device *ddev)
+ 	struct ltdc_device *ldev = ddev->dev_private;
+ 	u32 bus_width_log2, lcr, gc2r;
+ 
+-	/* at least 1 layer must be managed */
++	/*
++	 * at least 1 layer must be managed & the number of layers
++	 * must not exceed LTDC_MAX_LAYER
++	 */
+ 	lcr = reg_read(ldev->regs, LTDC_LCR);
+ 
+-	ldev->caps.nb_layers = max_t(int, lcr, 1);
++	ldev->caps.nb_layers = clamp((int)lcr, 1, LTDC_MAX_LAYER);
+ 
+ 	/* set data bus width */
+ 	gc2r = reg_read(ldev->regs, LTDC_GC2R);
+-- 
+2.7.4
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-> ---
->  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 181 ++++++++++++++++++++++++++-----
->  1 file changed, 156 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> index 4bdb2ed..bbe0fe5 100644
-> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> @@ -37,11 +37,8 @@
->  
->  /* INT_ENABLE */
->  #define USB2_INT_ENABLE_UCOM_INTEN	BIT(3)
-> -#define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)
-> -#define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)
-> -#define USB2_INT_ENABLE_INIT		(USB2_INT_ENABLE_UCOM_INTEN | \
-> -					 USB2_INT_ENABLE_USBH_INTB_EN | \
-> -					 USB2_INT_ENABLE_USBH_INTA_EN)
-> +#define USB2_INT_ENABLE_USBH_INTB_EN	BIT(2)	/* For EHCI */
-> +#define USB2_INT_ENABLE_USBH_INTA_EN	BIT(1)	/* For OHCI */
->  
->  /* USBCTR */
->  #define USB2_USBCTR_DIRPD	BIT(2)
-> @@ -78,11 +75,33 @@
->  #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
->  #define USB2_ADPCTRL_DRVVBUS		BIT(4)
->  
-> +#define NUM_OF_PHYS			4
-> +#define PHY_INDEX_BOTH_HC		0
-> +#define PHY_INDEX_OHCI			1
-> +#define PHY_INDEX_EHCI			2
-> +#define PHY_INDEX_HSUSB			3
-
-nit: I think the above #defines would be better expressed as an enum.
-
-...
-
-> +static struct phy *rcar_gen3_phy_usb2_xlate(struct device *dev,
-> +					    struct of_phandle_args *args)
-> +{
-> +	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
-> +
-> +	if (args->args_count == 0)	/* For old version dts */
-> +		return ch->rphys[PHY_INDEX_BOTH_HC].phy;
-> +	else if (args->args_count > 1)	/* Prevent invalid args count */
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	if (args->args[0] >= NUM_OF_PHYS)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return ch->rphys[args->args[0]].phy;
-> +}
-> +
-> +static enum usb_dr_mode rcar_gen3_get_dr_mode(struct device_node *np)
-> +{
-> +	enum usb_dr_mode candidate = USB_DR_MODE_UNKNOWN, tmp;
-
-nit: I think that there could be a better name for tmp, f.e. mode
-nit: The scope of tmp could be limited to inside the for loop.
-
-> +	int i;
-> +
-> +	/*
-> +	 * If one of device nodes has other dr_mode except UNKNOWN,
-> +	 * this function returns UNKNOWN.
-> +	 */
-> +	for (i = 0; i < NUM_OF_PHYS; i++) {
-> +		tmp = of_usb_get_dr_mode_by_phy(np, i);
-> +		if (tmp != USB_DR_MODE_UNKNOWN) {
-> +			if (candidate == USB_DR_MODE_UNKNOWN)
-> +				candidate = tmp;
-> +			else if (candidate != tmp)
-> +				return USB_DR_MODE_UNKNOWN;
-> +		}
-> +	}
-> +
-> +	return candidate;
-> +}
-
-...
