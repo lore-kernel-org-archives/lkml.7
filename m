@@ -2,94 +2,88 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BBBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381DFC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1002082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:58:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lQxxN/HW";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lQxxN/HW"
+	by mail.kernel.org (Postfix) with ESMTP id 1210220830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfDCF64 (ORCPT
+        id S1728830AbfDCGAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 01:58:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38102 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfDCF64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 01:58:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AB933609D4; Wed,  3 Apr 2019 05:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554271135;
-        bh=uuSYTyz7mm/ToHFKa9hdTlKmu72P3FgW+DmjCgy4KRE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lQxxN/HWph457HJvZQ9GQP5K1RYzP1qqcjj2a0+RdtRIMXtDK4YO6KYDoaErpfKc1
-         Uu6beMpuWhyqZzIVjC5YdFcK7OgKYUcs66fftG0Xl0PldYDpv7XC1Z89IAgj620y6s
-         WdFEibfVnlfyt5/wzSPTaSaN1rtMBPiJ6OLTID2o=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60C9A602F2;
-        Wed,  3 Apr 2019 05:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554271135;
-        bh=uuSYTyz7mm/ToHFKa9hdTlKmu72P3FgW+DmjCgy4KRE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lQxxN/HWph457HJvZQ9GQP5K1RYzP1qqcjj2a0+RdtRIMXtDK4YO6KYDoaErpfKc1
-         Uu6beMpuWhyqZzIVjC5YdFcK7OgKYUcs66fftG0Xl0PldYDpv7XC1Z89IAgj620y6s
-         WdFEibfVnlfyt5/wzSPTaSaN1rtMBPiJ6OLTID2o=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60C9A602F2
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH v2 1/3] habanalabs: remove extra semicolon
-To:     Oded Gabbay <oded.gabbay@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-References: <20190402170709.29562-1-oded.gabbay@gmail.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <74f65488-9516-f2b5-61a7-1067529d1379@codeaurora.org>
-Date:   Wed, 3 Apr 2019 11:28:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Apr 2019 02:00:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50670 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728763AbfDCGAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 02:00:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3EA13ACE3;
+        Wed,  3 Apr 2019 06:00:11 +0000 (UTC)
+Subject: Re: [PATCH] xen: use struct_size() helper in kzalloc()
+To:     Andrea Righi <andrea.righi@canonical.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+References: <20190403052636.GC21532@xps-13>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <86ebff84-6fe5-1f1f-d827-abcfb674cbf7@suse.com>
+Date:   Wed, 3 Apr 2019 08:00:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190402170709.29562-1-oded.gabbay@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190403052636.GC21532@xps-13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/04/2019 07:26, Andrea Righi wrote:
+> struct privcmd_buf_vma_private has a zero-sized array at the end
+> (pages), use the new struct_size() helper to determine the proper
+> allocation size and avoid potential type mistakes.
+> 
+> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
 
-On 4/2/2019 10:37 PM, Oded Gabbay wrote:
-> This patch removes an extra ; after the closing brackets of a while loop.
->
-> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
-Cheers,
--Mukesh
-> ---
->   drivers/misc/habanalabs/device.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-> index e3797f582436..6cbfd560721e 100644
-> --- a/drivers/misc/habanalabs/device.c
-> +++ b/drivers/misc/habanalabs/device.c
-> @@ -1044,7 +1044,7 @@ void hl_device_fini(struct hl_device *hdev)
->   			WARN(1, "Failed to remove device because reset function did not finish\n");
->   			return;
->   		}
-> -	};
-> +	}
->   
->   	/* Mark device as disabled */
->   	hdev->disabled = true;
+
+Juergen
