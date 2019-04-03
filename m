@@ -2,83 +2,90 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8AAC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA247C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31252171F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF82214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfDCTmc (ORCPT
+        id S1726636AbfDCTmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 15:42:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:35263 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfDCTmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 15:42:32 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 605FD68AFE; Wed,  3 Apr 2019 21:42:20 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 21:42:20 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, x86@kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: remove NULL struct device support in the DMA API
-Message-ID: <20190403194220.GA30376@lst.de>
-References: <20190321225235.30648-1-hch@lst.de> <20190403182640.2ca6w2hngjqp35mt@shell.armlinux.org.uk>
+        Wed, 3 Apr 2019 15:42:46 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42647 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfDCTmp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 15:42:45 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hBlmU-0007ql-Lj; Wed, 03 Apr 2019 21:42:42 +0200
+Date:   Wed, 3 Apr 2019 21:42:41 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@amacapital.net>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [patch 15/14] x86/dumpstack/64: Speedup in_exception_stack()
+In-Reply-To: <alpine.DEB.2.21.1904031823100.1967@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1904032038500.1833@nanos.tec.linutronix.de>
+References: <20190331214020.836098943@linutronix.de> <20190331215136.039902969@linutronix.de> <alpine.DEB.2.21.1904021214340.1676@nanos.tec.linutronix.de> <20190402154329.scp7i7uqevubgwrz@treble> <alpine.DEB.2.21.1904021746080.1676@nanos.tec.linutronix.de>
+ <7789E14E-C623-4DB7-B076-76B931957C9C@amacapital.net> <alpine.DEB.2.21.1904022027170.1812@nanos.tec.linutronix.de> <alpine.DEB.2.21.1904022127210.1812@nanos.tec.linutronix.de> <6205D576-694A-4C7D-B1B7-A9FF2E1F9E77@amacapital.net>
+ <alpine.DEB.2.21.1904031823100.1967@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403182640.2ca6w2hngjqp35mt@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/mixed; BOUNDARY="8323329-1964072614-1554316784=:1833"
+Content-ID: <alpine.DEB.2.21.1904032040110.1833@nanos.tec.linutronix.de>
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 07:26:40PM +0100, Russell King - ARM Linux admin wrote:
-> On Thu, Mar 21, 2019 at 03:52:28PM -0700, Christoph Hellwig wrote:
-> > We still have a few drivers which pass a NULL struct device pointer
-> > to DMA API functions, which generally is a bad idea as the API
-> > implementations rely on the device not only for ops selection, but
-> > also the dma mask and various other attributes, and many implementations
-> > have been broken for NULL device support for a while.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1964072614-1554316784=:1833
+Content-Type: text/plain; CHARSET=ISO-8859-7
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.DEB.2.21.1904032040111.1833@nanos.tec.linutronix.de>
+
+On Wed, 3 Apr 2019, Thomas Gleixner wrote:
+> On Tue, 2 Apr 2019, Andy Lutomirski wrote:
+> > > On Apr 2, 2019, at 1:29 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >>> How about a much better fix: make the DB stack be the same size as all
+> > >>> the others and just have 4 of them (DB0, DB1, DB2, and DB3.  After all,
+> > >>> overflowing from one debug stack into another is just as much of a bug as
+> > >>> overflowing into a different IST stack.
+> > >> 
+> > >> That makes sense.
+> > > 
+> > > Except that we just have two not four.
+> > > 
+> > > It needs some tweaking of the ist_shift stuff in entry_64.S but that's not
+> > > rocket science. Famous last words....
+> > > 
+> > 
+> > The ist_shift mess should probably be in C, but that¢s a big can of
+> > worms. That being said, why do we have it at all?  Once upon a time, we¢d
+> > do ICEBP from user mode (or a legit breakpoint), then send a signal and
+> > hit a data breakpoint, and we¢d recurse.  But we don¢t run user debug
+> > handlers on the IST stack at all anymore.
+> >
+> > Maybe we can convince ourselves it¢s safe?
 > 
-> I think I must be missing something, but...
-> 
-> My understanding is that ISA DMA is normally limited to 24 bits of
-> address
+> Maybe. Need to think about it for a while.
 
-Yes.
+What about kprobes. It has nasty reentrancy stuff as well...
 
-> - indeed, the x86 version only programs 24 bits of DMA address.
-> Looking through this series, it appears that the conversions mean that
-> the DMA mask for ISA becomes the full all-ones DMA mask, which would
-> of course lead to memory corruption if only 24 bits of the address end
-> up being programmed into the hardware.
+Thanks,
 
-In the generic dma mapping code no struct device has always meant a
-32-bit DMA mask - take a look at the dma_get_mask() function.
-
-> Maybe you could say why you think this series is safe in regard to ISA
-> DMA?
-
-ISA DMA has always been rather painful in a myriad of ways, and the
-DMA API so far hasn't helped, given that we don't do bounce buffering
-for the 24-bit limit, but just the higher limits.  So far even if you
-do use the DMA API and pass a device ISA DMA so far always meant
-that the higher layers had to assure things are addressable, either
-by using GFP_DMA allocation in the drivers, or mid-layer hacks like
-the unchecked_isa_dma flag in SCSI and/or BLK_BOUNCE_ISA in the
-block layer.
-
-This series doesn't change those facts at all.  I have some half
-started series to clean some of this up but it isn't high up on
-the priority list.
+	tglx
+--8323329-1964072614-1554316784=:1833--
