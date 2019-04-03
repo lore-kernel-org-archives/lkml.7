@@ -2,533 +2,111 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398E5C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761AFC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049F52084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BFE2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfDCMkS (ORCPT
+        id S1726547AbfDCMkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:40:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54694 "EHLO mx1.redhat.com"
+        Wed, 3 Apr 2019 08:40:37 -0400
+Received: from sauhun.de ([88.99.104.3]:48284 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfDCMkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:40:17 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 02F9CF74D9;
-        Wed,  3 Apr 2019 12:40:16 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E133E608DD;
-        Wed,  3 Apr 2019 12:40:14 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 61EDB4ED24;
-        Wed,  3 Apr 2019 12:40:14 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 08:40:13 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Yuval Shaia <yuval.shaia@oracle.com>
-Cc:     cohuck@redhat.com, jack@suse.cz, kvm@vger.kernel.org,
-        mst@redhat.com, jasowang@redhat.com, david@fromorbit.com,
-        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
-        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
-        linux-nvdimm@lists.01.org,
-        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
-        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
-        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
-        riel@surriel.com, stefanha@redhat.com,
-        dan j williams <dan.j.williams@intel.com>,
-        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
-        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
-Message-ID: <519445273.17181191.1554295213412.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190403114328.GA17696@lap1>
-References: <20190403104018.23947-1-pagupta@redhat.com> <20190403104018.23947-3-pagupta@redhat.com> <20190403114328.GA17696@lap1>
-Subject: Re: [Qemu-devel] [PATCH v4 2/5] virtio-pmem: Add virtio pmem driver
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.55, 10.4.195.22]
-Thread-Topic: virtio-pmem: Add virtio pmem driver
-Thread-Index: aBn1bLyZjrM2lXTv3C6ATL2LWD3PdQ==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 03 Apr 2019 12:40:16 +0000 (UTC)
+        id S1726206AbfDCMkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:40:36 -0400
+Received: from localhost (p54B3311F.dip0.t-ipconnect.de [84.179.49.31])
+        by pokefinder.org (Postfix) with ESMTPSA id F11803E604C;
+        Wed,  3 Apr 2019 14:40:34 +0200 (CEST)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Peter Rosin <peda@axentia.se>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH 01/12] i2c: remove use of in_atomic()
+Date:   Wed,  3 Apr 2019 14:40:08 +0200
+Message-Id: <20190403124019.8947-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit cea443a81c9c ("i2c: Support i2c_transfer in atomic contexts")
+added in_atomic() to the I2C core. However, the use of in_atomic()
+outside of core kernel code is discouraged and was already[1] when this
+code was added in early 2008. The above commit was a preparation for
+commit b7a3670131c7 ("i2c-pxa: Add polling transfer"). Its commit
+message says explicitly it was added "for cases where I2C transactions
+have to occur at times interrup[t]s are disabled". So, the intention was
+'disabled interrupts'. This matches the use cases for atomic I2C
+transfers I have seen so far: very late communication (mostly to a PMIC)
+to powerdown or reboot the system. For those cases, interrupts are
+disabled then. It doesn't seem that in_atomic() adds value.
 
-> Subject: Re: [Qemu-devel] [PATCH v4 2/5] virtio-pmem: Add virtio pmem driver
-> 
-> On Wed, Apr 03, 2019 at 04:10:15PM +0530, Pankaj Gupta wrote:
-> > This patch adds virtio-pmem driver for KVM guest.
-> > 
-> > Guest reads the persistent memory range information from
-> > Qemu over VIRTIO and registers it on nvdimm_bus. It also
-> > creates a nd_region object with the persistent memory
-> > range information so that existing 'nvdimm/pmem' driver
-> > can reserve this into system memory map. This way
-> > 'virtio-pmem' driver uses existing functionality of pmem
-> > driver to register persistent memory compatible for DAX
-> > capable filesystems.
-> > 
-> > This also provides function to perform guest flush over
-> > VIRTIO from 'pmem' driver when userspace performs flush
-> > on DAX memory range.
-> > 
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  drivers/nvdimm/virtio_pmem.c     |  84 +++++++++++++++++++++
-> >  drivers/virtio/Kconfig           |  10 +++
-> >  drivers/virtio/Makefile          |   1 +
-> >  drivers/virtio/pmem.c            | 125 +++++++++++++++++++++++++++++++
-> >  include/linux/virtio_pmem.h      |  60 +++++++++++++++
-> >  include/uapi/linux/virtio_ids.h  |   1 +
-> >  include/uapi/linux/virtio_pmem.h |  10 +++
-> >  7 files changed, 291 insertions(+)
-> >  create mode 100644 drivers/nvdimm/virtio_pmem.c
-> >  create mode 100644 drivers/virtio/pmem.c
-> >  create mode 100644 include/linux/virtio_pmem.h
-> >  create mode 100644 include/uapi/linux/virtio_pmem.h
-> > 
-> > diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
-> > new file mode 100644
-> > index 000000000000..2a1b1ba2c1ff
-> > --- /dev/null
-> > +++ b/drivers/nvdimm/virtio_pmem.c
-> > @@ -0,0 +1,84 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> Is this comment stile (//) acceptable?
+After a discussion with Peter Zijlstra[2], we came up with a better set
+of conditionals to match the use case.
 
-In existing code, i can see same comment
-pattern for license at some places.
+The I2C core will soon gain an extra callback into bus drivers
+especially for atomic transfers to make them more generic. The code
+deciding which transfer to use (atomic/non-atomic) should mimic the
+behaviour which locking to use (trylock/lock). This is why we add a
+helper for it.
 
-> 
-> > +/*
-> > + * virtio_pmem.c: Virtio pmem Driver
-> > + *
-> > + * Discovers persistent memory range information
-> > + * from host and provides a virtio based flushing
-> > + * interface.
-> > + */
-> > +#include <linux/virtio_pmem.h>
-> > +#include "nd.h"
-> > +
-> > + /* The interrupt handler */
-> > +void host_ack(struct virtqueue *vq)
-> > +{
-> > +	unsigned int len;
-> > +	unsigned long flags;
-> > +	struct virtio_pmem_request *req, *req_buf;
-> > +	struct virtio_pmem *vpmem = vq->vdev->priv;
-> > +
-> > +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
-> > +	while ((req = virtqueue_get_buf(vq, &len)) != NULL) {
-> > +		req->done = true;
-> > +		wake_up(&req->host_acked);
-> > +
-> > +		if (!list_empty(&vpmem->req_list)) {
-> > +			req_buf = list_first_entry(&vpmem->req_list,
-> > +					struct virtio_pmem_request, list);
-> > +			list_del(&vpmem->req_list);
-> > +			req_buf->wq_buf_avail = true;
-> > +			wake_up(&req_buf->wq_buf);
-> > +		}
-> > +	}
-> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> > +}
-> > +EXPORT_SYMBOL_GPL(host_ack);
-> > +
-> > + /* The request submission function */
-> > +int virtio_pmem_flush(struct nd_region *nd_region)
-> > +{
-> > +	int err;
-> > +	unsigned long flags;
-> > +	struct scatterlist *sgs[2], sg, ret;
-> > +	struct virtio_device *vdev = nd_region->provider_data;
-> > +	struct virtio_pmem *vpmem = vdev->priv;
-> > +	struct virtio_pmem_request *req;
-> > +
-> > +	might_sleep();
-> 
-> [1]
-> 
-> > +	req = kmalloc(sizeof(*req), GFP_KERNEL);
-> > +	if (!req)
-> > +		return -ENOMEM;
-> > +
-> > +	req->done = req->wq_buf_avail = false;
-> > +	strcpy(req->name, "FLUSH");
-> > +	init_waitqueue_head(&req->host_acked);
-> > +	init_waitqueue_head(&req->wq_buf);
-> > +	sg_init_one(&sg, req->name, strlen(req->name));
-> > +	sgs[0] = &sg;
-> > +	sg_init_one(&ret, &req->ret, sizeof(req->ret));
-> > +	sgs[1] = &ret;
-> > +
-> > +	spin_lock_irqsave(&vpmem->pmem_lock, flags);
-> > +	err = virtqueue_add_sgs(vpmem->req_vq, sgs, 1, 1, req, GFP_ATOMIC);
-> 
-> Is it okay to use GFP_ATOMIC in a might-sleep ([1]) function?
+[1] https://lwn.net/Articles/274695/
+[2] http://patchwork.ozlabs.org/patch/1067437/
 
-might sleep will give us a warning if we try to sleep from non-sleepable
-context. 
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/i2c/i2c-core-base.c |  2 +-
+ drivers/i2c/i2c-core.h      | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-We are doing it other way, i.e might_sleep is not inside GFP_ATOMIC. 
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 38af18645133..f8502064cd6b 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -1946,7 +1946,7 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+ 	 *    one (discarding status on the second message) or errno
+ 	 *    (discarding status on the first one).
+ 	 */
+-	if (in_atomic() || irqs_disabled()) {
++	if (i2c_in_atomic_xfer_mode()) {
+ 		ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT);
+ 		if (!ret)
+ 			/* I2C activity is ongoing. */
+diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+index 37576f50fe20..9d8526415b26 100644
+--- a/drivers/i2c/i2c-core.h
++++ b/drivers/i2c/i2c-core.h
+@@ -29,6 +29,16 @@ extern int		__i2c_first_dynamic_bus_num;
+ 
+ int i2c_check_7bit_addr_validity_strict(unsigned short addr);
+ 
++/*
++ * We only allow atomic transfers for very late communication, e.g. to send
++ * the powerdown command to a PMIC. Atomic transfers are a corner case and not
++ * for generic use!
++ */
++static inline bool i2c_in_atomic_xfer_mode(void)
++{
++	return system_state > SYSTEM_RUNNING && irqs_disabled();
++}
++
+ #ifdef CONFIG_ACPI
+ const struct acpi_device_id *
+ i2c_acpi_match_device(const struct acpi_device_id *matches,
+-- 
+2.11.0
 
-> 
-> > +	if (err) {
-> > +		dev_err(&vdev->dev, "failed to send command to virtio pmem device\n");
-> > +
-> > +		list_add_tail(&vpmem->req_list, &req->list);
-> > +		spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> > +
-> > +		/* When host has read buffer, this completes via host_ack */
-> > +		wait_event(req->wq_buf, req->wq_buf_avail);
-> > +		spin_lock_irqsave(&vpmem->pmem_lock, flags);
-> > +	}
-> > +	virtqueue_kick(vpmem->req_vq);
-> 
-> You probably want to check return value here.
-
-Don't think it will matter in this case?
-
-> 
-> > +	spin_unlock_irqrestore(&vpmem->pmem_lock, flags);
-> > +
-> > +	/* When host has read buffer, this completes via host_ack */
-> > +	wait_event(req->host_acked, req->done);
-> > +	err = req->ret;
-> > +	kfree(req);
-> > +
-> > +	return err;
-> > +};
-> > +EXPORT_SYMBOL_GPL(virtio_pmem_flush);
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> > index 35897649c24f..9f634a2ed638 100644
-> > --- a/drivers/virtio/Kconfig
-> > +++ b/drivers/virtio/Kconfig
-> > @@ -42,6 +42,16 @@ config VIRTIO_PCI_LEGACY
-> >  
-> >  	  If unsure, say Y.
-> >  
-> > +config VIRTIO_PMEM
-> > +	tristate "Support for virtio pmem driver"
-> > +	depends on VIRTIO
-> > +	depends on LIBNVDIMM
-> > +	help
-> > +	This driver provides support for virtio based flushing interface
-> > +	for persistent memory range.
-> > +
-> > +	If unsure, say M.
-> > +
-> >  config VIRTIO_BALLOON
-> >  	tristate "Virtio balloon driver"
-> >  	depends on VIRTIO
-> > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-> > index 3a2b5c5dcf46..143ce91eabe9 100644
-> > --- a/drivers/virtio/Makefile
-> > +++ b/drivers/virtio/Makefile
-> > @@ -6,3 +6,4 @@ virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
-> >  virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) += virtio_pci_legacy.o
-> >  obj-$(CONFIG_VIRTIO_BALLOON) += virtio_balloon.o
-> >  obj-$(CONFIG_VIRTIO_INPUT) += virtio_input.o
-> > +obj-$(CONFIG_VIRTIO_PMEM) += pmem.o ../nvdimm/virtio_pmem.o
-> > diff --git a/drivers/virtio/pmem.c b/drivers/virtio/pmem.c
-> > new file mode 100644
-> > index 000000000000..52f74064f67e
-> > --- /dev/null
-> > +++ b/drivers/virtio/pmem.c
-> > @@ -0,0 +1,125 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> Ditto
-> 
-> > +/*
-> > + * virtio_pmem.c: Virtio pmem Driver
-> > + *
-> > + * Discovers persistent memory range information
-> > + * from host and registers the virtual pmem device
-> > + * with libnvdimm core.
-> > + */
-> > +#include <linux/virtio_pmem.h>
-> > +#include <../../drivers/nvdimm/nd.h>
-> 
-> Should this file be moved to include/ directory?
-
-We are not touching the directory structure of nd & nd_pmem
-kernel driver.
-
-> 
-> > +
-> > +static struct virtio_device_id id_table[] = {
-> > +	{ VIRTIO_ID_PMEM, VIRTIO_DEV_ANY_ID },
-> > +	{ 0 },
-> > +};
-> > +
-> > + /* Initialize virt queue */
-> > +static int init_vq(struct virtio_pmem *vpmem)
-> > +{
-> > +	struct virtqueue *vq;
-> > +
-> > +	/* single vq */
-> > +	vpmem->req_vq = vq = virtio_find_single_vq(vpmem->vdev,
-> > +				host_ack, "flush_queue");
-> > +	if (IS_ERR(vq))
-> > +		return PTR_ERR(vq);
-> > +
-> > +	spin_lock_init(&vpmem->pmem_lock);
-> > +	INIT_LIST_HEAD(&vpmem->req_list);
-> > +
-> > +	return 0;
-> > +};
-> > +
-> > +static int virtio_pmem_probe(struct virtio_device *vdev)
-> > +{
-> > +	int err = 0;
-> > +	struct resource res;
-> > +	struct virtio_pmem *vpmem;
-> > +	struct nvdimm_bus *nvdimm_bus;
-> > +	struct nd_region_desc ndr_desc;
-> > +	int nid = dev_to_node(&vdev->dev);
-> > +	struct nd_region *nd_region;
-> > +
-> > +	if (!vdev->config->get) {
-> > +		dev_err(&vdev->dev, "%s failure: config disabled\n",
-> > +			__func__);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	vdev->priv = vpmem = devm_kzalloc(&vdev->dev, sizeof(*vpmem),
-> > +			GFP_KERNEL);
-> 
-> Suggesting to indent it right so it will be under &vdev
-
-o.k
-
-> 
-> > +	if (!vpmem) {
-> > +		err = -ENOMEM;
-> > +		goto out_err;
-> > +	}
-> > +
-> > +	vpmem->vdev = vdev;
-> > +	err = init_vq(vpmem);
-> > +	if (err)
-> > +		goto out_err;
-> 
-> No need to free vpmem here?
-
-No. devm_kzalloc will take care of it.
-
-> 
-> > +
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			start, &vpmem->start);
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			size, &vpmem->size);
-> > +
-> > +	res.start = vpmem->start;
-> > +	res.end   = vpmem->start + vpmem->size-1;
-> > +	vpmem->nd_desc.provider_name = "virtio-pmem";
-> > +	vpmem->nd_desc.module = THIS_MODULE;
-> > +
-> > +	vpmem->nvdimm_bus = nvdimm_bus = nvdimm_bus_register(&vdev->dev,
-> > +						&vpmem->nd_desc);
-> > +	if (!nvdimm_bus)
-> > +		goto out_vq;
-> 
-> Ditto (i'm probably missing something here)
-> 
-> > +
-> > +	dev_set_drvdata(&vdev->dev, nvdimm_bus);
-> > +	memset(&ndr_desc, 0, sizeof(ndr_desc));
-> 
-> Any reason not to use compiler initialization?
-> i.e.
-> 	struct nd_region_desc ndr_desc = {};
-
-will change.
-
-> 
-> > +
-> > +	ndr_desc.res = &res;
-> > +	ndr_desc.numa_node = nid;
-> > +	ndr_desc.flush = virtio_pmem_flush;
-> > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
-> > +	nd_region = nvdimm_pmem_region_create(nvdimm_bus, &ndr_desc);
-> > +	nd_region->provider_data =  dev_to_virtio
-> > +					(nd_region->dev.parent->parent);
-> > +
-> > +	if (!nd_region)
-> > +		goto out_nd;
-> > +
-> > +	//virtio_device_ready(vdev);
-> 
-> Left over
-
-o.k
-
-> 
-> > +	return 0;
-> > +out_nd:
-> > +	err = -ENXIO;
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> > +out_vq:
-> > +	vdev->config->del_vqs(vdev);
-> > +out_err:
-> > +	dev_err(&vdev->dev, "failed to register virtio pmem memory\n");
-> > +	return err;
-> > +}
-> > +
-> > +static void virtio_pmem_remove(struct virtio_device *vdev)
-> > +{
-> > +	struct virtio_pmem *vpmem = vdev->priv;
-> > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
-> > +
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> > +	vdev->config->del_vqs(vdev);
-> 
-> I think you should also call vdev->config->reset
-
-o.k. Here device will be removed completely, still its required?
-
-> 
-> > +	kfree(vpmem);
-> > +}
-> > +
-> > +static struct virtio_driver virtio_pmem_driver = {
-> > +	.driver.name		= KBUILD_MODNAME,
-> > +	.driver.owner		= THIS_MODULE,
-> > +	.id_table		= id_table,
-> > +	.probe			= virtio_pmem_probe,
-> > +	.remove			= virtio_pmem_remove,
-> > +};
-> > +
-> > +module_virtio_driver(virtio_pmem_driver);
-> > +MODULE_DEVICE_TABLE(virtio, id_table);
-> > +MODULE_DESCRIPTION("Virtio pmem driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/include/linux/virtio_pmem.h b/include/linux/virtio_pmem.h
-> > new file mode 100644
-> > index 000000000000..224f9d934be6
-> > --- /dev/null
-> > +++ b/include/linux/virtio_pmem.h
-> > @@ -0,0 +1,60 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * virtio_pmem.h: virtio pmem Driver
-> > + *
-> > + * Discovers persistent memory range information
-> > + * from host and provides a virtio based flushing
-> > + * interface.
-> > + **/
-> > +
-> > +#ifndef _LINUX_VIRTIO_PMEM_H
-> > +#define _LINUX_VIRTIO_PMEM_H
-> > +
-> > +#include <linux/virtio_ids.h>
-> > +#include <linux/module.h>
-> > +#include <linux/virtio_config.h>
-> > +#include <uapi/linux/virtio_pmem.h>
-> > +#include <linux/libnvdimm.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +struct virtio_pmem_request {
-> > +	/* Host return status corresponding to flush request */
-> > +	int ret;
-> > +
-> > +	/* command name*/
-> > +	char name[16];
-> > +
-> > +	/* Wait queue to process deferred work after ack from host */
-> > +	wait_queue_head_t host_acked;
-> > +	bool done;
-> > +
-> > +	/* Wait queue to process deferred work after virt queue buffer avail */
-> > +	wait_queue_head_t wq_buf;
-> > +	bool wq_buf_avail;
-> > +	struct list_head list;
-> > +};
-> > +
-> > +struct virtio_pmem {
-> > +	struct virtio_device *vdev;
-> > +
-> > +	/* Virtio pmem request queue */
-> > +	struct virtqueue *req_vq;
-> > +
-> > +	/* nvdimm bus registers virtio pmem device */
-> > +	struct nvdimm_bus *nvdimm_bus;
-> > +	struct nvdimm_bus_descriptor nd_desc;
-> > +
-> > +	/* List to store deferred work if virtqueue is full */
-> > +	struct list_head req_list;
-> > +
-> > +	/* Synchronize virtqueue data */
-> > +	spinlock_t pmem_lock;
-> > +
-> > +	/* Memory region information */
-> > +	uint64_t start;
-> > +	uint64_t size;
-> > +};
-> > +
-> > +void host_ack(struct virtqueue *vq);
-> > +int virtio_pmem_flush(struct nd_region *nd_region);
-> > +#endif
-> > diff --git a/include/uapi/linux/virtio_ids.h
-> > b/include/uapi/linux/virtio_ids.h
-> > index 6d5c3b2d4f4d..346389565ac1 100644
-> > --- a/include/uapi/linux/virtio_ids.h
-> > +++ b/include/uapi/linux/virtio_ids.h
-> > @@ -43,5 +43,6 @@
-> >  #define VIRTIO_ID_INPUT        18 /* virtio input */
-> >  #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
-> >  #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
-> > +#define VIRTIO_ID_PMEM         25 /* virtio pmem */
-> 
-> Any reason for the jump here? are 21 to 24 already taken or you just
-> want to be on the safe side?
-
-They are already reserved.
-
-Thanks,
-Pankaj
-
-> 
-> >  
-> >  #endif /* _LINUX_VIRTIO_IDS_H */
-> > diff --git a/include/uapi/linux/virtio_pmem.h
-> > b/include/uapi/linux/virtio_pmem.h
-> > new file mode 100644
-> > index 000000000000..fa3f7d52717a
-> > --- /dev/null
-> > +++ b/include/uapi/linux/virtio_pmem.h
-> > @@ -0,0 +1,10 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +#ifndef _UAPI_LINUX_VIRTIO_PMEM_H
-> > +#define _UAPI_LINUX_VIRTIO_PMEM_H
-> > +
-> > +struct virtio_pmem_config {
-> > +	__le64 start;
-> > +	__le64 size;
-> > +};
-> > +#endif
-> > --
-> > 2.20.1
-> > 
-> > 
-> 
-> 
