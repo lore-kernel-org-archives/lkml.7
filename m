@@ -2,94 +2,114 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AC8C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CF2C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF40206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DAC206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554308169;
+	bh=m7lFOUM4c3MvB1yjd1lFh6kMBfBqzE5Tns8BLLH1vqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M2Q9nS4aMd90/7onmAf6QaAKBa5/mcoeobM5qIMyZtjyO6ktbPGIlDNTTfz7/8sup
+	 0FXUGWI4T+bY8+bVGGkXcrUnkwzyZU7X7720Yaf823sr14js5HOquynq0YCAnSOX4e
+	 SgM0vyS/wbDlx0pP611tk+XivdqRVP2p9viL0+Qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfDCQPd (ORCPT
+        id S1726574AbfDCQQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:15:33 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36919 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDCQPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:15:33 -0400
-X-Originating-IP: 109.213.83.19
-Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6F6F71BF21A;
-        Wed,  3 Apr 2019 16:15:30 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 18:15:29 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Message-ID: <20190403161529.GS22216@piout.net>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
- <20190403150824.GO22216@piout.net>
- <452a4cf1410a41c8b6f767ac6258482e@asem.it>
- <20190403153143.GQ22216@piout.net>
- <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
- <20190403155654.GR22216@piout.net>
- <8367f68a023d468f8235810b0cf583bc@asem.it>
+        Wed, 3 Apr 2019 12:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfDCQQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:16:08 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BEC8206B7;
+        Wed,  3 Apr 2019 16:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554308167;
+        bh=m7lFOUM4c3MvB1yjd1lFh6kMBfBqzE5Tns8BLLH1vqs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nuBzjPPXVtjwxtWsz6k18Ic1+FJN26PrjM9FBGcDWazbD2xnjSJYVn8xl2Q+7g9oX
+         gE7VuT2InZG3ub4Hu4c5c33SFiquKoWW2hQDltaoBlkukf5L82xaKmj92HBmJtnhnG
+         oxgTdZI3pdII8uEz4+b0JqAb3AFsS+1eICwkC/Vc=
+Date:   Wed, 3 Apr 2019 12:16:06 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH AUTOSEL 4.19 40/57] kvm: properly check debugfs dentry
+ before using it
+Message-ID: <20190403161606.GB16241@sasha-vm>
+References: <20190330012854.32212-1-sashal@kernel.org>
+ <20190330012854.32212-40-sashal@kernel.org>
+ <20190330054350.GB23655@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <8367f68a023d468f8235810b0cf583bc@asem.it>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190330054350.GB23655@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 16:09:14+0000, Flavio Suligoi wrote:
-> Hi,
-> 
-> > On 03/04/2019 15:49:03+0000, Flavio Suligoi wrote:
-> > > > Then, you should probably not enable BLIE because this will cause
-> > issues
-> > > > with the alarm functionnality.. It is certainly enough to use
-> > > > RTC_VL_READ periodically.
-> > >
-> > > We use the nINT signaling solution because of this pin, in addition
-> > > to be used by the CPU, can be also connected to an external connector,
-> > > available for the final user.
-> > > Anyway, even if the BLIE is set, the sw low voltage alarm works,
-> > > with the message (displayed about every 12 minutes):
-> > >
-> > 
-> > I agree the DT property makes sense when the nINT pin is not connected
-> > to the CPU. But if it is, then you have an issue that nINT will be
-> > pulled low until the user changes the battery, meaning that you will
-> > not get any alarm interrupt anymore, possibly leading to a system that
-> > is not waking up anymore.
-> 
-> Ah, ok, thanks for the info. 
-> I know this, but in our specific case, this is not a problem,
-> since we don't use the nINT for other purposes, but only for
-> a battery low indicator. On the contrary, in our case, it's better
-> that the alarm signal remains low until the battery is changed.
-> 
-> Anyway, I can specify this collateral effect in a specific file for the
-> Pcf2127 in the DT bindings Documentation. What do you think?
-> 
+On Sat, Mar 30, 2019 at 06:43:50AM +0100, Greg Kroah-Hartman wrote:
+>On Fri, Mar 29, 2019 at 09:28:33PM -0400, Sasha Levin wrote:
+>> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>
+>> [ Upstream commit 8ed0579c12b2fe56a1fac2f712f58fc26c1dc49b ]
+>>
+>> debugfs can now report an error code if something went wrong instead of
+>> just NULL.  So if the return value is to be used as a "real" dentry, it
+>> needs to be checked if it is an error before dereferencing it.
+>>
+>> This is now happening because of ff9fb72bc077 ("debugfs: return error
+>> values, not NULL").  syzbot has found a way to trigger multiple debugfs
+>> files attempting to be created, which fails, and then the error code
+>> gets passed to dentry_path_raw() which obviously does not like it.
+>>
+>> Reported-by: Eric Biggers <ebiggers@kernel.org>
+>> Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
+>> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+>> Cc: kvm@vger.kernel.org
+>> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  virt/kvm/kvm_main.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+>> index c436d95fd7aa..fb74f994cb63 100644
+>> --- a/virt/kvm/kvm_main.c
+>> +++ b/virt/kvm/kvm_main.c
+>> @@ -3912,7 +3912,7 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
+>>  	}
+>>  	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
+>>
+>> -	if (kvm->debugfs_dentry) {
+>> +	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
+>>  		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
+>>
+>>  		if (p) {
+>> --
+>> 2.19.1
+>>
+>
+>Same thing here, this was a 5.0-only thing, no need for it to be
+>backported, please drop it from all trees.
 
-This is fine as-is, I'll handle that in my series adding alarm support
-because there will be no issues until then.
+Dropped, thanks!
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--
+Thanks,
+Sasha
