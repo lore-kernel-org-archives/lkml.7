@@ -2,104 +2,141 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CA7C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C97CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1ED20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:30:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nc2KCtC4"
+	by mail.kernel.org (Postfix) with ESMTP id 50A9E2133D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfDCSaM (ORCPT
+        id S1726607AbfDCSaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 14:30:12 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39021 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfDCSaM (ORCPT
+        Wed, 3 Apr 2019 14:30:16 -0400
+Received: from gateway30.websitewelcome.com ([50.116.127.1]:25513 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbfDCSaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 14:30:12 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i17so5266pfo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 11:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ellWbfx2w0aKPBVUSIPgN4qdAkwi8uM8AI8wwl8IslE=;
-        b=nc2KCtC4Q7QP7Xdf/PhbnttEdyGaENHrX53dqq5nh9VDhmQjFVpQoWgURHMkM8tBvz
-         EBWKNXxAgZhNPvBXLEUxJ4lBsPIfORcF2BaCp0W92b2we09I5T0yUaqJ6FL33/0efORS
-         uLR6fRjFgqIMvc+O6eYKp167H7RsgH6al1w44=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ellWbfx2w0aKPBVUSIPgN4qdAkwi8uM8AI8wwl8IslE=;
-        b=pmG+GBz1WBvl9KWdQW6lgtq2hwHpU61OEzvQPdeB21fL11B/fiR5jUAN0UWmkqkT2V
-         UvY/dKviojnZ1kiL6fg4Na3fDfUXo3QDvFCytealM7lhDiwtIdk/gGG5wkJpAwpQMVNt
-         vTtOcqtSJL41DHG2mobSs3MzxgBTkdhJ/WNUyRmLEYEjwBtlcLgRzfYLKggVo4dYVyhQ
-         o81DvzvD25xdv18WwPNVxjzSSXpY8n10lo3j/w4ws9t8tiMsDByGRTnM2golltdEXYBh
-         LHMlSUSGfrCFB/ubTpDR9NKLsptoBm1jue19FZgZ47knlyfUIhvQc7pneJNqymVR3eer
-         ZOCA==
-X-Gm-Message-State: APjAAAUmThDzPuhCWn4hyS8rrYCcDlSkjiPCrYA7efeXj/InHXn+T5Qo
-        jeQnSyJi5o6dOTz6GayE1+V9XA==
-X-Google-Smtp-Source: APXvYqxKxq8iNoJHxYkV0ua8gzyMvGiz8ijwKSRHjJLwm9kRkeaY1DeH2l6JP5v4bWIDKq3dx0qyOg==
-X-Received: by 2002:a63:1749:: with SMTP id 9mr1180822pgx.94.1554316211520;
-        Wed, 03 Apr 2019 11:30:11 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id x9sm30351502pfn.60.2019.04.03.11.30.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 11:30:11 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 11:30:10 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Alexandru M Stan <amstan@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Simon Glass <sjg@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Randall Spangler <rspangler@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_spi: Transfer messages at
- high priority
-Message-ID: <20190403183010.GR112750@google.com>
-References: <20190403160526.257088-1-dianders@chromium.org>
- <CA+ASDXN-4Ya6cK5wsmARXxP0bJCGpMkoyu1t_fS7hqVFKF0ZBw@mail.gmail.com>
- <20190403181415.GQ112750@google.com>
- <CAD=FV=UC6MpTgmir+nwUy4hWk8Vvz97M5G45=-r5JAg_=z6vQQ@mail.gmail.com>
+        Wed, 3 Apr 2019 14:30:13 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id D9B47208539
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 13:23:36 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BkXwhLk8iYTGMBkXwhVnIT; Wed, 03 Apr 2019 13:23:36 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.114.183] (port=45402 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hBkXv-002dnW-HT; Wed, 03 Apr 2019 13:23:36 -0500
+Date:   Wed, 3 Apr 2019 13:23:34 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jussi Kivilinna <jussi.kivilinna@iki.fi>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] cfg80211: use struct_size() helper
+Message-ID: <20190403182334.GA3986@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=UC6MpTgmir+nwUy4hWk8Vvz97M5G45=-r5JAg_=z6vQQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.114.183
+X-Source-L: No
+X-Exim-ID: 1hBkXv-002dnW-HT
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.114.183]:45402
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 11:17:27AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, Apr 3, 2019 at 11:14 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > Each transfer has it's own work struct (allocated on the stack), hence
-> > a) does not occur. b) is still true, but shouldn't be a problem on
-> > its own.
-> 
-> Actually, it could be much worse _because_ it's on the stack.  The
-> worker could write something back to the work after the work has been
-> de-allocated.  That's bad.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes, in particular in the
+context in which this code is being used.
 
-Sure, I said "not a problem on its own."
-                            ~~~~~~~~~~
+So, replace code of the following form:
 
-The worker is owned by this driver and supposedly we know what we are
-doing. Changing a member in the struct after calling complete() would
-likely be a bug anyway (though not necessarily a fatal one).
+sizeof(*pmkids) + max_pmkids * sizeof(pmkids->bssid_info[0])
+
+with:
+
+struct_size(pmkids, bssid_info, num_pmkids)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/rndis_wlan.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wireless/rndis_wlan.c b/drivers/net/wireless/rndis_wlan.c
+index 51e4e92d95a0..e07a1152cec1 100644
+--- a/drivers/net/wireless/rndis_wlan.c
++++ b/drivers/net/wireless/rndis_wlan.c
+@@ -1707,7 +1707,7 @@ static struct ndis_80211_pmkid *get_device_pmkids(struct usbnet *usbdev)
+ 	int len, ret, max_pmkids;
+ 
+ 	max_pmkids = priv->wdev.wiphy->max_num_pmkids;
+-	len = sizeof(*pmkids) + max_pmkids * sizeof(pmkids->bssid_info[0]);
++	len = struct_size(pmkids, bssid_info, max_pmkids);
+ 
+ 	pmkids = kzalloc(len, GFP_KERNEL);
+ 	if (!pmkids)
+@@ -1740,7 +1740,7 @@ static int set_device_pmkids(struct usbnet *usbdev,
+ 	int ret, len, num_pmkids;
+ 
+ 	num_pmkids = le32_to_cpu(pmkids->bssid_info_count);
+-	len = sizeof(*pmkids) + num_pmkids * sizeof(pmkids->bssid_info[0]);
++	len = struct_size(pmkids, bssid_info, num_pmkids);
+ 	pmkids->length = cpu_to_le32(len);
+ 
+ 	debug_print_pmkids(usbdev, pmkids, __func__);
+@@ -1761,7 +1761,7 @@ static struct ndis_80211_pmkid *remove_pmkid(struct usbnet *usbdev,
+ 						struct cfg80211_pmksa *pmksa,
+ 						int max_pmkids)
+ {
+-	int i, newlen, err;
++	int i, err;
+ 	unsigned int count;
+ 
+ 	count = le32_to_cpu(pmkids->bssid_info_count);
+@@ -1786,9 +1786,7 @@ static struct ndis_80211_pmkid *remove_pmkid(struct usbnet *usbdev,
+ 		pmkids->bssid_info[i] = pmkids->bssid_info[i + 1];
+ 
+ 	count--;
+-	newlen = sizeof(*pmkids) + count * sizeof(pmkids->bssid_info[0]);
+-
+-	pmkids->length = cpu_to_le32(newlen);
++	pmkids->length = cpu_to_le32(struct_size(pmkids, bssid_info, count));
+ 	pmkids->bssid_info_count = cpu_to_le32(count);
+ 
+ 	return pmkids;
+@@ -1831,7 +1829,7 @@ static struct ndis_80211_pmkid *update_pmkid(struct usbnet *usbdev,
+ 	}
+ 
+ 	/* add new pmkid */
+-	newlen = sizeof(*pmkids) + (count + 1) * sizeof(pmkids->bssid_info[0]);
++	newlen = struct_size(pmkids, bssid_info, count + 1);
+ 
+ 	new_pmkids = krealloc(pmkids, newlen, GFP_KERNEL);
+ 	if (!new_pmkids) {
+-- 
+2.21.0
+
