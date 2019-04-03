@@ -2,84 +2,163 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B77C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E63C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB02206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DF120643
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ohy1m45p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfDCPwg (ORCPT
+        id S1726562AbfDCPyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:52:36 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39311 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfDCPwf (ORCPT
+        Wed, 3 Apr 2019 11:54:14 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:38254 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfDCPyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:52:35 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c189so10458982qke.6
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 08:52:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=IFbEaZvNrzXqdsFVxntTHzvbKfbVDaen34px36fcNTU=;
-        b=T9Xxf9fSr8XNfw7Xm09RPfRqK5xq8gv/ldmSS96/J3uguu9geWRtrhFLO+KrWa+rRa
-         oLjeYB6WD43LL3LXh9knzidNrpfRSZ0Udj5s5FkoMZ1VCIr5/I+oawhC4IybzZOh+N1e
-         jI5nkXPx3nlz0K61d9lSoJwPGkirdwEDQ4ebJOTdQ8Y4t+bSgTH7wRxWkfTQ4O0XWJVz
-         nDLhLEph2Xj03rpskbTpkxS4INKisnMwd2Bjozwok1/VW0v8GeT5Nik+nZ4jXFg3GQld
-         TQPOuxEbW6aLcpoWXYu7158tYoGBdWo1CwgQO+JzyO5PVd4kjhUvJBlGWz2lfgN22FBM
-         /7pQ==
-X-Gm-Message-State: APjAAAVKiXbvxxF+LEa4JR375cxmkNtEz7kIXUyGeO4QbjtOkteGO0ao
-        B2FT5mS9pWrZhCW83r1RHJ1Gdw==
-X-Google-Smtp-Source: APXvYqzjlw+C4YsSyZo0xegWH2Ejd5eS0sNyS9InzJ2sSWpBcV4y+L4y+V0jrIAKriqF2sRS9MiMSg==
-X-Received: by 2002:ae9:c310:: with SMTP id n16mr720495qkg.8.1554306754849;
-        Wed, 03 Apr 2019 08:52:34 -0700 (PDT)
-Received: from dhcp-10-20-1-165.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id w18sm13148268qta.2.2019.04.03.08.52.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 08:52:33 -0700 (PDT)
-Message-ID: <eba84e1ed570908acdf65a2683b77718ff585e99.camel@redhat.com>
-Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
-From:   Adam Jackson <ajax@redhat.com>
-To:     Daniel Stone <daniel@fooishbar.org>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Dave Airlie <airlied@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>
-Date:   Wed, 03 Apr 2019 11:52:31 -0400
-In-Reply-To: <CAPj87rOE2K9nxV2p+KrMTDnijdKpmNP8BGSUJyK9YtFueJpkqw@mail.gmail.com>
-References: <20190403072318.31507-1-kraxel@redhat.com>
-         <85ba308177f4e9ddee336d5110cb6df7a447cebf.camel@redhat.com>
-         <CAPj87rOE2K9nxV2p+KrMTDnijdKpmNP8BGSUJyK9YtFueJpkqw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Apr 2019 11:54:14 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33FmlQx086647;
+        Wed, 3 Apr 2019 15:53:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=qReBWK8TFnnRJ4GgchFv6RlNPNP9puAXnouaEBsFg1Q=;
+ b=Ohy1m45pvk9TJdKhCLWgta9Nf0uVuyy9XMgjoQXvQjQ2jL2F/A8ohKSeOmaPqQPVKDa0
+ 3cKD/ZNj9n7TMWUFz3j4F7+Ud0GRExJAW2iyvq6c7VKZ0UmtGuiTUN1gFz7ov+cs7Vnf
+ 012u6zZ7SVLBUzlTSBM5sVr+RFajQJ8UpwF+R3EpPhoJd5SORBTS54GiiJqoBlhd9xKH
+ 0OxrZlINEGwdESzy4I4yuLtSfoHMnfiEtYfnk1otaeHEzxW7YbIhz3M/rlXoabBwtarM
+ F8uga9R9BfgjSpDGQP0vCBYH8G3vEPw6Vg7Jb/vvfap9KeKzSytw/nYFKabMa6cFJVFy 0Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2rhwyda4jq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 15:53:43 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33FqWhG165584;
+        Wed, 3 Apr 2019 15:53:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2rm8f560v0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 15:53:42 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x33Frekr030517;
+        Wed, 3 Apr 2019 15:53:41 GMT
+Received: from [10.11.111.157] (/10.11.111.157)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Apr 2019 08:53:40 -0700
+Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+From:   Alex Kogan <alex.kogan@oracle.com>
+In-Reply-To: <20190401093345.GA14281@hirez.programming.kicks-ass.net>
+Date:   Wed, 3 Apr 2019 11:53:53 -0400
+Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
+        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
+        dave.dice@oracle.com, rahul.x.yadav@oracle.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7A8A6827-BF79-47FC-99A1-C9EE00D9C3B1@oracle.com>
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <20190401090653.GF11158@hirez.programming.kicks-ass.net>
+ <20190401093345.GA14281@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3259)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904030108
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904030107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-04-03 at 16:15 +0100, Daniel Stone wrote:
 
-> There's already a list of supported formats for each DRM plane, which
-> you can get via drmModeGetPlane (being careful to enable universal
-> planes so you can discover the primary plane). The same information is
-> present in the 'IN_FORMATS' property, which is more difficult to parse
-> but also tells you about modifiers.
-> 
-> modesetting already pulls all this out (at least in the atomic path)
-> so we can reason about acceptable modifiers.
+> On Apr 1, 2019, at 5:33 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>=20
+> On Mon, Apr 01, 2019 at 11:06:53AM +0200, Peter Zijlstra wrote:
+>> On Fri, Mar 29, 2019 at 11:20:04AM -0400, Alex Kogan wrote:
+>>> diff --git a/kernel/locking/mcs_spinlock.h =
+b/kernel/locking/mcs_spinlock.h
+>>> index bc6d3244e1af..71ee4b64c5d4 100644
+>>> --- a/kernel/locking/mcs_spinlock.h
+>>> +++ b/kernel/locking/mcs_spinlock.h
+>>> @@ -17,8 +17,18 @@
+>>>=20
+>>> struct mcs_spinlock {
+>>> 	struct mcs_spinlock *next;
+>>> +#ifndef CONFIG_NUMA_AWARE_SPINLOCKS
+>>> 	int locked; /* 1 if lock acquired */
+>>> 	int count;  /* nesting count, see qspinlock.c */
+>>> +#else /* CONFIG_NUMA_AWARE_SPINLOCKS */
+>>> +	uintptr_t locked; /* 1 if lock acquired, 0 if not, other values =
+*/
+>>> +			  /* represent a pointer to the secondary queue =
+head */
+>>> +	u32 node_and_count;	/* node id on which this thread is =
+running */
+>>> +				/* with two lower bits reserved for =
+nesting */
+>>> +				/* count, see qspinlock.c */
+>>> +	u32 encoded_tail; /* encoding of this node as the main queue =
+tail */
+>>> +	struct mcs_spinlock *tail;    /* points to the secondary queue =
+tail */
+>>> +#endif /* CONFIG_NUMA_AWARE_SPINLOCKS */
+>>> };
+>>=20
+>> Please, have another look at the paravirt code, in particular at =
+struct
+>> pv_node and its usage. This is horrible.
+>=20
+> Thing is, this turns into a right mess when you also have PV spinlocks
+> on.
+>=20
+> One thing we could maybe do is change locked and count to u8, then =
+your
+> overlay structure could be something like:
+>=20
+> struct mcs_spinlock {
+> 	struct mcs_spinlock *next;
+> 	u8 locked;
+> 	u8 count;
+> };
+I was trying to keep the size of the mcs_spinlock structure for the =
+non-NUMA variant unchanged.
+If this is not a huge concern, changing the fields as above would indeed =
+simplify a few things.
 
-D'oh, I knew that. The problem then is modesetting isn't pulling that
-info out early enough in PreInit. I'll consider that another case of
-xorg/xserver#9 then.
+=E2=80=94 Alex=20
 
-- ajax
+>=20
+> struct cna_node {
+> 	/* struct mcs_spinlock overlay */
+> 	struct mcs_spinlock *next;
+> 	u8 locked;
+> 	u8 count;
+>=20
+> 	/* our CNA bits, consuming the slack and PV space */
+> 	u16 node;
+> 	u32 encoded_tail;
+> 	struct mcs_spinlock *head;
+> 	struct mcs_spinlock *tail;
+> };
+>=20
+> Then you also don't need the first two patches.
 
