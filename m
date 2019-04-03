@@ -2,103 +2,146 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51725C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BC2C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F992084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E7320830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfDCRJ0 (ORCPT
+        id S1726468AbfDCRKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:09:26 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33325 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfDCRJZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:09:25 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f23so15570959ljc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:09:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Cq9CBaduQuj7NgUAXJeMrHFaQrt7z/WdHtdJMnSf0w=;
-        b=kosP0Prqtlo/7Z7GBj06ApU8a7kOUDcakamOXAPe+0esGiWfE1ozddpj3IwBAMfj95
-         Gk8fcTgp03HDvf5BhwzKxq7cYt4DhnB06NrAvmgdcdhtsmeqQGjDIDXscaGTjEXnVpUK
-         KyJWUxav6M9ZzIy5rYotzsHNMfnk18QNdDY1XwDdnDOH2NoMpXZ0JITnqCyM+qHBclSn
-         RRjAiLRY/We/SrTVrxHQzD0jBK8+jfATBQkCuGhxL2Rp8lfW5bymaByfivOxNh9hQrE5
-         w6u2cn4MzJ1hq4mgz9RYE/rGrdN0tFG78oo83JXKmFG9yuTgz7nMaj5RQu8HhghBaTmi
-         MQiQ==
-X-Gm-Message-State: APjAAAUNqm+s8oGNTIWh7Ye5nrL/AV3iWKH9sL1ihCE0LyyG70XL6kH8
-        KSmH1Ar/G/ghQJr42wqTW/tS1QH9NWMtqcOgFPIDyw==
-X-Google-Smtp-Source: APXvYqwpyCkn3kKefFE1KSaPRCPV2k+QAtxVpyUZOFEjnF/9YhL82OgcZ0BEWcZFcT5rX/fmuXFZ66L4e9Gkt30P6CY=
-X-Received: by 2002:a2e:3c0a:: with SMTP id j10mr509719lja.164.1554311363718;
- Wed, 03 Apr 2019 10:09:23 -0700 (PDT)
+        Wed, 3 Apr 2019 13:10:38 -0400
+Received: from foss.arm.com ([217.140.101.70]:45264 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfDCRKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:10:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D19FA80D;
+        Wed,  3 Apr 2019 10:10:37 -0700 (PDT)
+Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 10F0D3F68F;
+        Wed,  3 Apr 2019 10:10:35 -0700 (PDT)
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     will.deacon@arm.com
+Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        suzuki.poulose@arm.com, bigeasy@linutronix.de,
+        peterz@infradead.org, clabbe.montjoie@gmail.com,
+        Meng.Li@windriver.com
+Subject: [PATCH v2 2/2] perf/arm-ccn: Remove broken race mitigation
+Date:   Wed,  3 Apr 2019 18:10:32 +0100
+Message-Id: <49087b08f2685bed112dfc90b97ae59b8de8f6cf.1554310292.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.21.0.dirty
+In-Reply-To: <cover.1554310292.git.robin.murphy@arm.com>
+References: <cover.1554310292.git.robin.murphy@arm.com>
 MIME-Version: 1.0
-References: <20190328130306.25384-1-mcroce@redhat.com> <20190403140203.qq37rgcikvoawb5f@brauner.io>
- <CAGnkfhx+igF579dez6qwAxrtT-JrGSSEn-QmK+92447qBqXPpg@mail.gmail.com>
- <20190403155108.GI22763@bombadil.infradead.org> <CAGnkfhxBafq4KeR8Jp5XBd7yWrMiofmEwqsCpb_7eL+ddgWagw@mail.gmail.com>
-In-Reply-To: <CAGnkfhxBafq4KeR8Jp5XBd7yWrMiofmEwqsCpb_7eL+ddgWagw@mail.gmail.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Wed, 3 Apr 2019 19:08:47 +0200
-Message-ID: <CAGnkfhyY7QmrGEk-YF9w-X78dHSDOPQMYtxBkVnpb0MS8DkVhQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel/sysctl.c: fix out of bounds access in fs.file-max
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Zev Weiss <zev@bewilderbeest.net>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 6:40 PM Matteo Croce <mcroce@redhat.com> wrote:
->
-> On Wed, Apr 3, 2019 at 5:51 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Wed, Apr 03, 2019 at 05:24:26PM +0200, Matteo Croce wrote:
-> > > On Wed, Apr 3, 2019 at 4:02 PM Christian Brauner <christian@brauner.io> wrote:
-> > > > Yeah, maybe but it still feels cleaner and more obvious to just add:
-> > > >
-> > > > static long long_zero;
-> > > >
-> > > > given that most callers actually seem to want an (unsigned) int.
-> > > >
-> > > > I don't have a strong opinion though so if others feel that it's just a
-> > > > waste of space consider it acked.
-> > > >
-> > >
-> > > Well, given that the value is zero, in this expectional case we could
-> > > avoid duplicating the symbol and save 4 bytes.
-> > > What the maintainers think?
-> >
-> > If we care about saving four bytes, we could just pass the address of
-> > ZERO_PAGE(0).
->
-> That would work, work too, maybe it's a bit overkill.
-> int zero is always there and it's static, so enlarging it to long
-> should be a straightforward fix.
-> Obviously we can't do it for other numbers, but we can alias it just
-> for the zero case..
->
-> Regards,
->
-> --
-> Matteo Croce
-> per aspera ad upstream
+Like arm-cci, arm-ccn has the same issue of disabling preemption around
+operations which can take mutexes. Again, remove the definite bug by
+simply not trying to fight the theoretical races. And since we are
+touching the hotplug handling code, take the opportunity to streamline
+it, as there's really no need to store a full-sized cpumask to keep
+track of a single CPU ID.
 
-Anyway, I'm fine with both solutions, as I have other patches in the
-queue which depends on this fix.
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-ccn.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-Regards,
+diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
+index 2ae76026e947..a0214308b0cd 100644
+--- a/drivers/perf/arm-ccn.c
++++ b/drivers/perf/arm-ccn.c
+@@ -167,7 +167,7 @@ struct arm_ccn_dt {
+ 
+ 	struct hrtimer hrtimer;
+ 
+-	cpumask_t cpu;
++	unsigned int cpu;
+ 	struct hlist_node node;
+ 
+ 	struct pmu pmu;
+@@ -559,7 +559,7 @@ static ssize_t arm_ccn_pmu_cpumask_show(struct device *dev,
+ {
+ 	struct arm_ccn *ccn = pmu_to_arm_ccn(dev_get_drvdata(dev));
+ 
+-	return cpumap_print_to_pagebuf(true, buf, &ccn->dt.cpu);
++	return cpumap_print_to_pagebuf(true, buf, cpumask_of(ccn->dt.cpu));
+ }
+ 
+ static struct device_attribute arm_ccn_pmu_cpumask_attr =
+@@ -759,7 +759,7 @@ static int arm_ccn_pmu_event_init(struct perf_event *event)
+ 	 * mitigate this, we enforce CPU assignment to one, selected
+ 	 * processor (the one described in the "cpumask" attribute).
+ 	 */
+-	event->cpu = cpumask_first(&ccn->dt.cpu);
++	event->cpu = ccn->dt.cpu;
+ 
+ 	node_xp = CCN_CONFIG_NODE(event->attr.config);
+ 	type = CCN_CONFIG_TYPE(event->attr.config);
+@@ -1215,15 +1215,15 @@ static int arm_ccn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
+ 	struct arm_ccn *ccn = container_of(dt, struct arm_ccn, dt);
+ 	unsigned int target;
+ 
+-	if (!cpumask_test_and_clear_cpu(cpu, &dt->cpu))
++	if (cpu != dt->cpu)
+ 		return 0;
+ 	target = cpumask_any_but(cpu_online_mask, cpu);
+ 	if (target >= nr_cpu_ids)
+ 		return 0;
+ 	perf_pmu_migrate_context(&dt->pmu, cpu, target);
+-	cpumask_set_cpu(target, &dt->cpu);
++	dt->cpu = target;
+ 	if (ccn->irq)
+-		WARN_ON(irq_set_affinity_hint(ccn->irq, &dt->cpu) != 0);
++		WARN_ON(irq_set_affinity_hint(ccn->irq, cpumask_of(dt->cpu)));
+ 	return 0;
+ }
+ 
+@@ -1299,29 +1299,28 @@ static int arm_ccn_pmu_init(struct arm_ccn *ccn)
+ 	}
+ 
+ 	/* Pick one CPU which we will use to collect data from CCN... */
+-	cpumask_set_cpu(get_cpu(), &ccn->dt.cpu);
++	ccn->dt.cpu = raw_smp_processor_id();
+ 
+ 	/* Also make sure that the overflow interrupt is handled by this CPU */
+ 	if (ccn->irq) {
+-		err = irq_set_affinity_hint(ccn->irq, &ccn->dt.cpu);
++		err = irq_set_affinity_hint(ccn->irq, cpumask_of(ccn->dt.cpu));
+ 		if (err) {
+ 			dev_err(ccn->dev, "Failed to set interrupt affinity!\n");
+ 			goto error_set_affinity;
+ 		}
+ 	}
+ 
++	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
++					 &ccn->dt.node);
++
+ 	err = perf_pmu_register(&ccn->dt.pmu, name, -1);
+ 	if (err)
+ 		goto error_pmu_register;
+ 
+-	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
+-					 &ccn->dt.node);
+-	put_cpu();
+ 	return 0;
+ 
+ error_pmu_register:
+ error_set_affinity:
+-	put_cpu();
+ error_choose_name:
+ 	ida_simple_remove(&arm_ccn_pmu_ida, ccn->dt.id);
+ 	for (i = 0; i < ccn->num_xps; i++)
 -- 
-Matteo Croce
-per aspera ad upstream
+2.21.0.dirty
+
