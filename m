@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95846C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC24AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687A12082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8498C2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfDCQnZ (ORCPT
+        id S1727489AbfDCQma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:43:25 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41991 "EHLO
+        Wed, 3 Apr 2019 12:42:30 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41943 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727403AbfDCQmb (ORCPT
+        with ESMTP id S1727021AbfDCQmY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:42:31 -0400
+        Wed, 3 Apr 2019 12:42:24 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hBiy1-0004GO-1M; Wed, 03 Apr 2019 18:42:25 +0200
+        id 1hBixv-0004GO-0K; Wed, 03 Apr 2019 18:42:19 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 20/27] x86/fpu: Inline copy_user_to_fpregs_zeroing()
-Date:   Wed,  3 Apr 2019 18:41:49 +0200
-Message-Id: <20190403164156.19645-21-bigeasy@linutronix.de>
+Subject: [PATCH 14/27] x86/pkeys: Don't check if PKRU is zero before writting it
+Date:   Wed,  3 Apr 2019 18:41:43 +0200
+Message-Id: <20190403164156.19645-15-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
 References: <20190403164156.19645-1-bigeasy@linutronix.de>
@@ -46,50 +46,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Start refactoring __fpu__restore_sig() by inlining
-copy_user_to_fpregs_zeroing(). The orignal function remains and will be
-used to restore from userland memory if possible.
+write_pkru() checks if the current value is the same as the expected
+value. So instead just checking if the current and new value is zero
+(and skip the write in such a case) we can benefit from that.
+
+Remove the zero check of PKRU, write_pkru() provides a similar check.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/kernel/fpu/signal.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ arch/x86/mm/pkeys.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
-index c98c7bca13bc0..f733425c66d8d 100644
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -337,11 +337,29 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
- 		kfree(tmp);
- 		return err;
- 	} else {
-+		int ret;
-+
- 		/*
- 		 * For 64-bit frames and 32-bit fsave frames, restore the user
- 		 * state to the registers directly (with exceptions handled).
- 		 */
--		if (copy_user_to_fpregs_zeroing(buf_fx, xfeatures, fx_only)) {
-+		if (use_xsave()) {
-+			if ((unsigned long)buf_fx % 64 || fx_only) {
-+				u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
-+				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
-+				ret = copy_user_to_fxregs(buf_fx);
-+			} else {
-+				u64 init_bv = xfeatures_mask & ~xfeatures;
-+				if (unlikely(init_bv))
-+					copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
-+				ret = copy_user_to_xregs(buf_fx, xfeatures);
-+			}
-+		} else if (use_fxsr()) {
-+			ret = copy_user_to_fxregs(buf_fx);
-+		} else
-+			ret = copy_user_to_fregs(buf_fx);
-+
-+		if (ret) {
- 			fpu__clear(fpu);
- 			return -1;
- 		}
+diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
+index 05bb9a44eb1c3..50f65fc1b9a3f 100644
+--- a/arch/x86/mm/pkeys.c
++++ b/arch/x86/mm/pkeys.c
+@@ -142,13 +142,6 @@ u32 init_pkru_value = PKRU_AD_KEY( 1) | PKRU_AD_KEY( 2) | PKRU_AD_KEY( 3) |
+ void copy_init_pkru_to_fpregs(void)
+ {
+ 	u32 init_pkru_value_snapshot = READ_ONCE(init_pkru_value);
+-	/*
+-	 * Any write to PKRU takes it out of the XSAVE 'init
+-	 * state' which increases context switch cost.  Avoid
+-	 * writing 0 when PKRU was already 0.
+-	 */
+-	if (!init_pkru_value_snapshot && !read_pkru())
+-		return;
+ 	/*
+ 	 * Override the PKRU state that came from 'init_fpstate'
+ 	 * with the baseline from the process.
 -- 
 2.20.1
 
