@@ -2,76 +2,166 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAA8C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EC6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746DB2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374B42082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfDCQpp (ORCPT
+        id S1726633AbfDCQr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:45:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:21215 "EHLO mga11.intel.com"
+        Wed, 3 Apr 2019 12:47:26 -0400
+Received: from mga09.intel.com ([134.134.136.24]:42684 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbfDCQpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:45:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726155AbfDCQrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:47:25 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 09:45:42 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 09:47:24 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,305,1549958400"; 
-   d="scan'208";a="161077282"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2019 09:45:40 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 01/11] software node: Allow node creation without properties
-Date:   Wed,  3 Apr 2019 19:45:27 +0300
-Message-Id: <20190403164537.24643-2-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190403164537.24643-1-heikki.krogerus@linux.intel.com>
-References: <20190403164537.24643-1-heikki.krogerus@linux.intel.com>
+   d="scan'208";a="132687041"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga006.jf.intel.com with ESMTP; 03 Apr 2019 09:47:22 -0700
+Date:   Thu, 4 Apr 2019 00:31:47 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     atull@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Luwei Kang <luwei.kang@intel.com>,
+        Russ Weight <russell.h.weight@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH 14/17] fpga: dfl: fme: add thermal management support
+Message-ID: <20190403163147.GA28570@hao-dev>
+References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
+ <1553483264-5379-15-git-send-email-hao.wu@intel.com>
+ <20190402145925.GA15773@archbook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402145925.GA15773@archbook>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Software nodes are not forced to have device properties.
-Adding check to property_entries_dup() to make it possible
-to create software nodes that don't have any properties.
+On Tue, Apr 02, 2019 at 07:59:25AM -0700, Moritz Fischer wrote:
+> Hi Wu,
+> 
+> On Mon, Mar 25, 2019 at 11:07:41AM +0800, Wu Hao wrote:
+> > This patch adds support to thermal management private feature for DFL
+> > FPGA Management Engine (FME). As thermal throttling is handled by
+> > hardware automatically per pre-defined thresholds, this private
+> > feature driver only provides read-only sysfs interfaces for user
+> > to read temperature, thresholds, threshold policy and other info.
+> > 
+> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++++
+> >  drivers/fpga/dfl-fme-main.c                      | 202 +++++++++++++++++++++++
+> >  2 files changed, 258 insertions(+)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > index b8327e9..d3aeb88 100644
+> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> > @@ -44,3 +44,59 @@ Description:	Read-only. It returns socket_id to indicate which socket
+> >  		this FPGA belongs to, only valid for integrated solution.
+> >  		User only needs this information, in case standard numa node
+> >  		can't provide correct information.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/temperature
+> > +Date:		March 2019
+> > +KernelVersion:  5.2
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. It returns temperature (in Celsius) of this FPGA
+> > +		device.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1
+> > +Date:		March 2019
+> > +KernelVersion:  5.2
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. Read this file to get the temperature threshold1
+> > +		(in Celsius).
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2
+> > +Date:		March 2019
+> > +KernelVersion:  5.2
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. Read this file to get the temperature threshold2
+> > +		(in Celsius).
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/trip_threshold
+> > +Date:		March 2019
+> > +KernelVersion:  5.2
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. It returns trip threshold (in Celsius), once FPGA
+> > +		temperature reaches trip threshold, it triggers a fatal event
+> > +		to board management controller (BMC) to shutdown FPGA.
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_status
+> > +Date:		March 2019
+> > +KernelVersion:  5.2
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. It returns 1 if temperature reaches threshold1,
+> > +		otherwise 0. Once temperature reaches threshold1, hardware
+> > +		will automatically enter throttling state (AP1 - 50%
+> > +		or AP2 - 90% throttling, see 'threshold1_policy').
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2_status
+> > +Date:		March 2019
+> > +KernelVersion:  5.2
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. It returns 1 if temperature reaches threshold2,
+> > +		otherwise 0. Once temperature reaches threshold2, hardware
+> > +		will automatically enter the deepest throttling state (AP6
+> > +		- 100% throttling).
+> > +
+> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_policy
+> > +Date:		March 2019
+> > +KernelVersion:  5.2
+> > +Contact:	Wu Hao <hao.wu@intel.com>
+> > +Description:	Read-only. Read this file to get the policy of temperature
+> > +		threshold1. It only supports two value (policy):
+> > +		    0 - AP2 state (90% throttling)
+> > +		    1 - AP1 state (50% throttling)
+> 
+> These look like they could directly map to the linux thermal framework,
+> any reason you can't use the thermal framework?
+> 
+> The trip stuff literally maps 1:1 to what a thermal driver does, I think
+> that's something you'd wanna consider.
+> 
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/swnode.c | 3 +++
- 1 file changed, 3 insertions(+)
+Hi Moritz,
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 7fc5a18e02ad..30077454eb68 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -383,6 +383,9 @@ property_entries_dup(const struct property_entry *properties)
- 	int i, n = 0;
- 	int ret;
- 
-+	if (!properties)
-+		return NULL;
-+
- 	while (properties[n].name)
- 		n++;
- 
--- 
-2.20.1
+Thanks a lot for the suggestion, actually I feel that the trip points in thermal
+zone are used to indicate cooling actions required for thermal software either
+in kernel or userspace. But in this case, such FPGA hardware handles cooling
+automatically (yes, driver only expose Read-only sysfs for information), so
+software doesn't need to take care of this at all. For this purpose, it seems
+that we don't have to put these thresholds as trip points. And per my
+understanding, if people use such FPGA device, then they may need to know
+what's the current hardware throttling behavior, e.g. 50% vs 90%. These
+information can't be provided by standard thermal zone sysfs, so anyway user
+needs these sysfs interfaces to know it. But it seems that we still could
+create a thermal zone without trip points, it could help if user wants to
+connect some external cooling devices via userspace thermal daemon, they can
+define whatever trip points they like to activate the external cooling 
+device. I will consider this further more and come up with a new patch in
+v2 patchset.
 
+Thanks
+Hao
+
+> Cheers,
+> Moritz
