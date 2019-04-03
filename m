@@ -2,132 +2,108 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5D8C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A070C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC922147A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QI5qSAZJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4CAD7206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfDCKlJ (ORCPT
+        id S1726790AbfDCKlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:41:09 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56212 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbfDCKlH (ORCPT
+        Wed, 3 Apr 2019 06:41:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42319 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfDCKlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:41:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HOqA3G6fAyIiMpTLMLBhRjQF/GEAu7CsNovS/oe9CVU=; b=QI5qSAZJxnd2V4dLaP+BEQzM9
-        Hab3Xr5RDHoZ3JnZUX1NlcgVJD/xDHjUkxPzV/9MPHZha6kMIJZ22t8GulN8MrvlpZG3oSSc7t9DT
-        TMLmwEsttFxI3Lo2o9BHsCzHlZMViYK3alGqjNt+d4wHDowDdEX/Evs0Gf8wqNoPwaoOp+I16q5K+
-        skrYdXwWhbr+nlNmGOuMBQnqd8XgfIBdSfw+KZT0OE0o+ZPs0/rIuez9ql2EajzQK4v+HGeis7qBx
-        TA7iKmVs0eUd00JrXCD2v63yKIXX2jVhoyggH835HidG0evW5ddWaJIeB08gp3iDYX9HKHx3cBYBN
-        s8IL9ljAw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hBdKL-0006OS-3C; Wed, 03 Apr 2019 10:41:05 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 263E8202194EC; Wed,  3 Apr 2019 12:41:03 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 12:41:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas-Mich Richter <tmricht@linux.ibm.com>
-Cc:     acme@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
-Message-ID: <20190403104103.GE4038@hirez.programming.kicks-ass.net>
-References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+        Wed, 3 Apr 2019 06:41:15 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33AenBm1812191
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Apr 2019 03:40:49 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33AemDJ1812187;
+        Wed, 3 Apr 2019 03:40:48 -0700
+Date:   Wed, 3 Apr 2019 03:40:48 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
+Message-ID: <tip-d7262457e35dbe239659e62654e56f8ddb814bed@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        peterz@infradead.org, jolsa@redhat.com, nelson.dsouza@intel.com,
+        acme@redhat.com, tglx@linutronix.de, eranian@google.com,
+        vincent.weaver@maine.edu, hpa@zytor.com,
+        torvalds@linux-foundation.org, mingo@kernel.org
+Reply-To: nelson.dsouza@intel.com, jolsa@redhat.com,
+          linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+          peterz@infradead.org, tglx@linutronix.de,
+          vincent.weaver@maine.edu, eranian@google.com, hpa@zytor.com,
+          mingo@kernel.org, torvalds@linux-foundation.org, acme@redhat.com
+In-Reply-To: <20190321123849.GN6521@hirez.programming.kicks-ass.net>
+References: <20190321123849.GN6521@hirez.programming.kicks-ass.net>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf/x86/intel: Initialize TFA MSR
+Git-Commit-ID: d7262457e35dbe239659e62654e56f8ddb814bed
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 11:47:00AM +0200, Thomas-Mich Richter wrote:
-> I use linux 5.1.0-rc3 on s390 and got this WARN_ON_ONCE message:
-> 
-> WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
->                 event_function_local.constprop.79+0xe2/0xe8
-> 
-> which was introduced with
->    commit cca2094605ef ("perf/core: Fix event_function_local()").
-> 
-> This is the WARN_ON_ONCE message, which sometimes shows up in the kernel
-> log:
->  [ 4598.316519] WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
->                 event_function_local.constprop.79+0xe2/0xe8
->  [ 4598.316524] Kernel panic - not syncing: panic_on_warn set ...
->  [ 4598.316527] CPU: 15 PID: 0 Comm: swapper/15 Tainted: G           OE
->                 5.1.0-20190402.rc3.git0.5e7a8ca31926.300.fc29.s390x+git #1
->  [ 4598.316529] Hardware name: IBM 2964 NC9 712 (LPAR)
->  [ 4598.316531] Call Trace:
->  [ 4598.316534] ([<0000000000112eb8>] show_stack+0x58/0x70)
->  [ 4598.316538]  [<0000000000a820aa>] dump_stack+0x7a/0xa8
->  [ 4598.316541]  [<0000000000143b52>] panic+0x11a/0x2d0
->  [ 4598.316543]  [<00000000001439b0>] __warn+0xf8/0x118
->  [ 4598.316545]  [<0000000000a811a8>] report_bug+0xd8/0x150
->  [ 4598.316547]  [<00000000001014ac>] do_report_trap+0xc4/0xe0
->  [ 4598.316549]  [<0000000000101680>] illegal_op+0x138/0x150
->  [ 4598.316552]  [<0000000000aa233c>] pgm_check_handler+0x1cc/0x220
->  [ 4598.316554]  [<00000000002a6d02>] event_function_local.constprop.79+
->                                                 0xe2/0xe8
->  [ 4598.316556] ([<00000000002a6c7a>] event_function_local.constprop.79+
->                                                 0x5a/0xe8)
->  [ 4598.316559]  [<00000000002aa400>] perf_pending_event+0x88/0xb0
->  [ 4598.316561]  [<0000000000271a8c>] irq_work_run_list+0x8c/0xb8
->  [ 4598.316563]  [<0000000000271d78>] irq_work_tick+0x48/0x68
->  [ 4598.316566]  [<00000000001d6058>] update_process_times+0x68/0x80
->  [ 4598.316568]  [<00000000001e6c10>] tick_sched_handle.isra.6+0x50/0x60
->  [ 4598.316570]  [<00000000001e6c7e>] tick_sched_timer+0x5e/0xb8
->  [ 4598.316573]  [<00000000001d6b6a>] __hrtimer_run_queues+0x10a/0x2c0
->  [ 4598.316575]  [<00000000001d7a88>] hrtimer_interrupt+0x138/0x2a8
->  [ 4598.316577]  [<000000000010c3e4>] do_IRQ+0xac/0xb0
->  [ 4598.316597]  [<0000000000aa2744>] ext_int_handler+0x128/0x12c
->  [ 4598.316600]  [<00000000001034f6>] enabled_wait+0x46/0xd0
->  [ 4598.316602] ([<000003e000d2fe10>] 0x3e000d2fe10)
->  [ 4598.316604]  [<0000000000103842>] arch_cpu_idle+0x3a/0x50
->  [ 4598.316606]  [<000000000017b808>] do_idle+0x180/0x1b0
->  [ 4598.316608]  [<000000000017ba06>] cpu_startup_entry+0x36/0x40
->  [ 4598.316611]  [<0000000000115d16>] smp_init_secondary+0xd6/0xf0
->  [ 4598.316613]  [<000000000011521e>] smp_start_secondary+0x86/0x98
-> 
-> Any ideas or hints who to avoid/fix this warning?
+Commit-ID:  d7262457e35dbe239659e62654e56f8ddb814bed
+Gitweb:     https://git.kernel.org/tip/d7262457e35dbe239659e62654e56f8ddb814bed
+Author:     Peter Zijlstra <peterz@infradead.org>
+AuthorDate: Thu, 21 Mar 2019 13:38:49 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 3 Apr 2019 11:40:32 +0200
 
-Some thoughts here:
+perf/x86/intel: Initialize TFA MSR
 
-  https://lkml.kernel.org/r/20190213101644.GN32534@hirez.programming.kicks-ass.net
+Stephane reported that the TFA MSR is not initialized by the kernel,
+but the TFA bit could set by firmware or as a leftover from a kexec,
+which makes the state inconsistent.
 
-tl;dr, I've no frigging clue.
+Reported-by: Stephane Eranian <eranian@google.com>
+Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: tonyj@suse.com
+Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/intel/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> I ran a user space program which uses
-> 
->   1. perf_event_open() system call with type HARDWARE
->      and PERF_COUNT_HW_CPU_CYCLES in sampling mode.
->   2. Assigns signal SIGIO to the file descriptor returned from
->      perf_event_open() using:
->        rc = fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC);
->        rc |= fcntl(fd, F_SETSIG, signo);
->        rc |= fcntl(fd, F_SETOWN, getpid());
-> 
->   3. The signal handler increments some variables and issues
->        ioctl(fd, PERF_EVENT_IOC_REFRESH, 1);
->      to restart signal delivery.
-> 
-> I can send you the test program if needed.
-
-Does it reproduce on x86 without virt on? I don't have a PPC LPAR to
-test things on.
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 1539647ea39d..f61dcbef20ff 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3575,6 +3575,12 @@ static void intel_pmu_cpu_starting(int cpu)
+ 
+ 	cpuc->lbr_sel = NULL;
+ 
++	if (x86_pmu.flags & PMU_FL_TFA) {
++		WARN_ON_ONCE(cpuc->tfa_shadow);
++		cpuc->tfa_shadow = ~0ULL;
++		intel_set_tfa(cpuc, false);
++	}
++
+ 	if (x86_pmu.version > 1)
+ 		flip_smm_bit(&x86_pmu.attr_freeze_on_smi);
+ 
