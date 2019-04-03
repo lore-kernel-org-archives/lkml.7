@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F377C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B153CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9892084A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E79C2084A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfDCDKg (ORCPT
+        id S1728040AbfDCDJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:10:36 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33832 "EHLO huawei.com"
+        Tue, 2 Apr 2019 23:09:20 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33828 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726534AbfDCDJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:09:21 -0400
+        id S1726770AbfDCDJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 23:09:20 -0400
 Received: from DGGEMS411-HUB.china.huawei.com (unknown [10.3.19.211])
-        by Forcepoint Email with ESMTP id 0EE53322695A5584133B;
+        by Forcepoint Email with ESMTP id 19E9D11A3E44648AF7A1;
         Wed,  3 Apr 2019 11:09:18 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 3 Apr 2019 11:09:09 +0800
+ 14.3.408.0; Wed, 3 Apr 2019 11:09:08 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH net-next 07/12] net: hns3: simplify hclgevf_cmd_csq_clean
-Date:   Wed, 3 Apr 2019 11:07:56 +0800
-Message-ID: <1554260881-44948-8-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 04/12] net: hns3: return 0 and print warning when hit duplicate MAC
+Date:   Wed, 3 Apr 2019 11:07:53 +0800
+Message-ID: <1554260881-44948-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554260881-44948-1-git-send-email-tanhuazhong@huawei.com>
 References: <1554260881-44948-1-git-send-email-tanhuazhong@huawei.com>
@@ -45,71 +45,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-csq is used as a ring buffer, the value of the desc will be replaced
-in next use. This patch removes the unnecessary memset, and just
-updates the next_to_clean.
+From: Peng Li <lipeng321@huawei.com>
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+When set 2 same MAC to different function of one port, IMP
+will return error as the later one may modify the origin one.
+This will cause bond fail for 2 VFs of one port.
+
+Driver just print warning and return 0 with this patch, so
+if set same MAC address, it will return 0 but do not really
+configure to HW.
+
 Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   | 35 +++++++++++++++-------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 9441b45..930b175 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -27,26 +27,39 @@ static int hclgevf_ring_space(struct hclgevf_cmq_ring *ring)
- 	return ring->desc_num - used - 1;
- }
- 
-+static int hclgevf_is_valid_csq_clean_head(struct hclgevf_cmq_ring *ring,
-+					   int head)
-+{
-+	int ntu = ring->next_to_use;
-+	int ntc = ring->next_to_clean;
-+
-+	if (ntu > ntc)
-+		return head >= ntc && head <= ntu;
-+
-+	return head >= ntc || head <= ntu;
-+}
-+
- static int hclgevf_cmd_csq_clean(struct hclgevf_hw *hw)
- {
-+	struct hclgevf_dev *hdev = container_of(hw, struct hclgevf_dev, hw);
- 	struct hclgevf_cmq_ring *csq = &hw->cmq.csq;
--	u16 ntc = csq->next_to_clean;
--	struct hclgevf_desc *desc;
- 	int clean = 0;
- 	u32 head;
- 
--	desc = &csq->desc[ntc];
- 	head = hclgevf_read_dev(hw, HCLGEVF_NIC_CSQ_HEAD_REG);
--	while (head != ntc) {
--		memset(desc, 0, sizeof(*desc));
--		ntc++;
--		if (ntc == csq->desc_num)
--			ntc = 0;
--		desc = &csq->desc[ntc];
--		clean++;
-+	rmb(); /* Make sure head is ready before touch any data */
-+
-+	if (!hclgevf_is_valid_csq_clean_head(csq, head)) {
-+		dev_warn(&hdev->pdev->dev, "wrong cmd head (%d, %d-%d)\n", head,
-+			 csq->next_to_use, csq->next_to_clean);
-+		dev_warn(&hdev->pdev->dev,
-+			 "Disabling any further commands to IMP firmware\n");
-+		set_bit(HCLGEVF_STATE_CMD_DISABLE, &hdev->state);
-+		return -EIO;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index e742a05..d45789e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5962,8 +5962,11 @@ int hclge_add_uc_addr_common(struct hclge_vport *vport,
  	}
--	csq->next_to_clean = ntc;
  
-+	clean = (head - csq->next_to_clean + csq->desc_num) % csq->desc_num;
-+	csq->next_to_clean = head;
- 	return clean;
- }
+ 	/* check if we just hit the duplicate */
+-	if (!ret)
+-		ret = -EINVAL;
++	if (!ret) {
++		dev_warn(&hdev->pdev->dev, "VF %d mac(%pM) has been existed\n",
++			 vport->vport_id, addr);
++		return 0;
++	}
  
+ 	dev_err(&hdev->pdev->dev,
+ 		"PF failed to add unicast entry(%pM) in the MAC table\n",
 -- 
 2.7.4
 
