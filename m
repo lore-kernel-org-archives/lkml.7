@@ -6,36 +6,42 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D401CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC16CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FE22075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8AE2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfDCN72 (ORCPT
+        id S1726499AbfDCOBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:59:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56548 "EHLO mx1.redhat.com"
+        Wed, 3 Apr 2019 10:01:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37408 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfDCN71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:59:27 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726193AbfDCOBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:01:09 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 16FA991FC0;
-        Wed,  3 Apr 2019 13:59:27 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id A0BB431688E3;
+        Wed,  3 Apr 2019 14:01:08 +0000 (UTC)
 Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DF96F60BE0;
-        Wed,  3 Apr 2019 13:59:25 +0000 (UTC)
-Subject: Re: [PATCH] psi: Clarify the units used in pressure files
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>
-References: <20190402193810.3450-1-longman@redhat.com>
- <20190402211825.GA16779@cmpxchg.org>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1B325C8AB;
+        Wed,  3 Apr 2019 14:01:04 +0000 (UTC)
+Subject: Re: [RESEND PATCH 2/3] ipc: Conserve sequence numbers in
+ ipcmni_extend mode
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
+        Manfred Spraul <manfred@colorfullife.com>
+References: <20190329204930.21620-1-longman@redhat.com>
+ <20190329204930.21620-2-longman@redhat.com>
+ <20190402142210.ba29c7dfc10d5a315a1c39dd@linux-foundation.org>
 From:   Waiman Long <longman@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
@@ -82,38 +88,44 @@ Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
  wGA5uquIgb8p3/ENgYpDPrsZ72CxVC2NEJjJwwnRBStjJOGQX4lV1uhN1XsZjBbRHdKF2W9g
  weim8xU=
 Organization: Red Hat
-Message-ID: <86482e87-c255-d4e6-9779-6cea2724dcea@redhat.com>
-Date:   Wed, 3 Apr 2019 09:59:25 -0400
+Message-ID: <cd36d33a-900e-e6a5-343c-7977040420be@redhat.com>
+Date:   Wed, 3 Apr 2019 10:01:04 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190402211825.GA16779@cmpxchg.org>
+In-Reply-To: <20190402142210.ba29c7dfc10d5a315a1c39dd@linux-foundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 03 Apr 2019 13:59:27 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 03 Apr 2019 14:01:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/2019 05:18 PM, Johannes Weiner wrote:
-> On Tue, Apr 02, 2019 at 03:38:10PM -0400, Waiman Long wrote:
->> The output of the PSI files show a bunch of numbers with no unit.
->> The psi.txt documentation file also does not indicate what units
->> are used.  One can only find out by looking at the source code. The
->> units are percentage for the averages and useconds for the total.
->> Make the information easier to find by documenting the units in psi.txt.
->>
->> Signed-off-by: Waiman Long <longman@redhat.com>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+On 04/02/2019 05:22 PM, Andrew Morton wrote:
+> On Fri, 29 Mar 2019 16:49:29 -0400 Waiman Long <longman@redhat.com> wrote:
 >
-> Thanks Waiman!
+>> From: Manfred Spraul <manfred@colorfullife.com>
+>>
+>> Rewrite, based on the patch from Waiman Long:
+>>
+>> ...
+>>
+>> Suggested-by: Matthew Wilcox <willy@infradead.org>
+>> Original-patch-from: Waiman Long <longman@redhat.com>
+>> Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+>> Acked-by: Waiman Long <longman@redhat.com>
+> I added your Signed-off-by: to this.  Because you contributed and
+> because you were on the patch delivery path (either of these require a
+> SOB).
+>
+> And I removed the Original-patch-from line.  The changelog already says
+> that and Original-patch-from isn't a standard changelog tag.
 
-I had thought about changing the message to show the units somehow, but
-that may break existing applications that have dependency on the current
-format. So documenting them in psi.txt is the best I can think of.
+Thanks for including those patches in your tree. Hopefully they can make
+5.2.
 
 Cheers,
 Longman
