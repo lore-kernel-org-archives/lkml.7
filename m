@@ -2,118 +2,101 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA84C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41EEC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47A221473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:43:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ba67k8zi"
+	by mail.kernel.org (Postfix) with ESMTP id A1E5221473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554281034;
+	bh=sNDtqsQEANsZW0US1SoDin5P4RdBQeE6mWB5C5qDp78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s6vo+Os7O18WtC6iIsoN+Vro9WWQUCTj8RAtYhNCGydaYDnTc7KXMu2WKIB11Uu+S
+	 eelrNo9a4q/mjC370T1wD2AdTTW/gz1s2dzIFHmwbFFbOIFU0EZre/Rc6idrSRMLiF
+	 ML88Lu8S4xwZI+bMk2u1WhJU4o8UcjL+Un7XrQDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfDCInw (ORCPT
+        id S1729118AbfDCInx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 3 Apr 2019 04:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729037AbfDCInw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 04:43:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44154 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbfDCInv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:43:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y7so20134148wrn.11;
-        Wed, 03 Apr 2019 01:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dz/LxYLvdS1T0JAVoNkRhUUKZqB3gzQBaljPyU4T67k=;
-        b=Ba67k8zid+iiTXak1I+DRajUxeEFRgBGdepHcIKOQEi04UKgzRCkBMHZ25csm0nSSS
-         pGzMysmW+B2atEQTE5gqGOzspzaFTdLboBiRYlFX8HaG0H1bInySOqLkLzJI/Eg28Ual
-         +EiRi9R1meaq/UtvL6x+ctdeR5S6g1BmL9qMqlLjrweGAvHjWUdIvlcvEDpsiARcRzL4
-         HNtj+8v+owtM4b2AXL6XuY4TpKUbqF0o7OAMTWLwCDpBMu9jDwaHzq+mroKbnAwnKuKS
-         NRLSAJkDgbBaQd12icKoRfYgCKkruksoNG0pthaNobBa4wmOjR879IFy0YBapgxv+cef
-         Xy1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dz/LxYLvdS1T0JAVoNkRhUUKZqB3gzQBaljPyU4T67k=;
-        b=fnbwNRDBsaUrFMZSnOyMtedWXKVp1N/fZr8Fut+WJCxEFcOwduZ5fqya7C0gIYpl0z
-         HoCRf9Upz6k3ZCerRgxvqiET7UghFd+WKfCysmQcfBQDQafe21dXaqEipcFcyPgAuyaf
-         Fv6MBdqGo98vo8ToDmNABR+a0uPXjv3RLmuJeF4DZs5m0I36MqeRw0MMaU5DWLmzv2mv
-         d63t83X065K0z853M0W/3ptsGLE64A/nF89A4Jv+9mwQ5z8phFDK16ldAX+6pp/n8XHH
-         DkjfKEglzJwNCycE5cHpGtYXyN8VAiQj4vOSsboTpNAXihOGpW6N7OQCCuRFfnYz+K/L
-         ZChw==
-X-Gm-Message-State: APjAAAXSRyFAZleRXd/looMcykvgiBkzX5yuKtweHemZ8TUFc4GMPHZt
-        RMRLut5+HnO5Vq+p0s/ndDA=
-X-Google-Smtp-Source: APXvYqwYV0K6vHkByf5GsGj1bolEW6CfAHvcVVp+EGiuEin7x/pDacNCe6bHFAD0GjdWKEritkV+wg==
-X-Received: by 2002:a05:6000:14a:: with SMTP id r10mr22286150wrx.107.1554281029072;
-        Wed, 03 Apr 2019 01:43:49 -0700 (PDT)
-Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id z20sm3276449wmf.34.2019.04.03.01.43.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 01:43:48 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 10:43:47 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] iommu/tegra-smmu: Properly release domain
- resources
-Message-ID: <20190403084347.GB5238@ulmo>
-References: <20190306225009.3391-1-digetx@gmail.com>
- <20190306225009.3391-3-digetx@gmail.com>
+Received: from X250 (unknown [147.50.13.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF8CE20830;
+        Wed,  3 Apr 2019 08:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554281031;
+        bh=sNDtqsQEANsZW0US1SoDin5P4RdBQeE6mWB5C5qDp78=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r1TjIGdnr8eYkvsnqi5TFy75xfB3hMevWhxGuCF56P4e2rUpoFs3fuTAxwd8v/EG0
+         pgfru7Rq16C4xe1H0qa6UpnhBWazEc4lLfSAc1E75tywxTtk2x83gnEg5eaUOgS8TH
+         ZUXtY1M+vo6YPiXAM7b5pag6+AuNTcLyqBe4ju80=
+Date:   Wed, 3 Apr 2019 15:43:43 +0700
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     linus.walleij@linaro.org,
+        VI1PR04MB42227AA158BA1FCBF314AA27807B0@VI1PR04MB4222.eurprd04.prod.outlook.com
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, stefan@agner.ch,
+        kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Christina Quast <cquast@hanoverdisplays.com>
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: imx7d: Fix PAD_CTL_DSE_X*
+Message-ID: <20190403084341.GA4636@X250>
+References: <20190313142040.26694-1-cquast@hanoverdisplays.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190306225009.3391-3-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190313142040.26694-1-cquast@hanoverdisplays.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---nVMJ2NtxeReIH9PS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I assume this will go via your tree.  Let me know if you think
+differently.
 
-On Thu, Mar 07, 2019 at 01:50:08AM +0300, Dmitry Osipenko wrote:
-> Release all memory allocations associated with a released domain and emit
-> warning if domain is in-use at the time of destruction.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Shawn
+
+On Wed, Mar 13, 2019 at 03:20:40PM +0100, Christina Quast wrote:
+> In the iMX7d datasheet, the PAD_CTL_DSE_X* values are different from
+> the documentation.
+> 
+> Changes since v2:
+> * Changed patch title to 'dt-bindings: pinctrl: imx7d:'
+> 
+> Signed-off-by: Christina Quast <cquast@hanoverdisplays.com>
 > ---
->  drivers/iommu/tegra-smmu.c | 3 +++
->  1 file changed, 3 insertions(+)
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---nVMJ2NtxeReIH9PS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlykckMACgkQ3SOs138+
-s6GSzg//cVlslOgK1ZaY2ZafDCO60gxqAHS8eLwbT0IXpDfdAcd51IWQwI9zvv4f
-AY+eNqVuzrwccsL6gYnyZuIcp6v1zryeab/2VP7QySfoYTF4AXLXsZKI1bEBeT7H
-fyq0Vg16P8BrIuzptVQH2H1ElgpRVjrsfIJsV33pqN8rn7VRMQYRPMXhXY1sC5zP
-+7zXyg8RYKVtFhbFXuzm88QNk19DZ1kXgfIVbLD7cQ800MqE7eurwOwwxIOQlWup
-61xgQHRWyRRgEKniYUR+nBxtf5MMvwmWNVXuHIqIpKrU5qt6WF4fSsea3eXeOIHV
-Ubbu48yHrYHogZbH+GXPWZKAb75tapqqc0VbDbB7KVP2y85GnHHa4TPO7DOKLDv9
-Uv6HPaDatWts7Es1XWkHdNFG+yhiMe+43bC3dKwfWfNnGSoBQ+WjSDOUr/zjMAZs
-TNuGaO2C51H40LKxxmDYU3Aq1Mo9n9hgGnyANBK7F7PrV58QCzwVRNuX8CfXXdKu
-DagdnXExfZqPTvXtE7UXqC6wR6KhRk/goEuboZ2TwBFqFPU5VcNSmbabv8vGRFnW
-gUccLURShcs8OKfmTOymI7FHQQGkmI1U8JNT0KZGi4DgeC1/ZSyS8Rrz1GwXOdpA
-wkwHMFstN4rfiKH2FTzwToaUHKHeXVKqeKgX6tXPSdBakDP58xs=
-=51+Y
------END PGP SIGNATURE-----
-
---nVMJ2NtxeReIH9PS--
+>  .../devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt       | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> index 6666277c3acb..8ac1d0851a0f 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
+> @@ -48,9 +48,9 @@ PAD_CTL_HYS                     (1 << 3)
+>  PAD_CTL_SRE_SLOW                (1 << 2)
+>  PAD_CTL_SRE_FAST                (0 << 2)
+>  PAD_CTL_DSE_X1                  (0 << 0)
+> -PAD_CTL_DSE_X2                  (1 << 0)
+> -PAD_CTL_DSE_X3                  (2 << 0)
+> -PAD_CTL_DSE_X4                  (3 << 0)
+> +PAD_CTL_DSE_X4                  (1 << 0)
+> +PAD_CTL_DSE_X2                  (2 << 0)
+> +PAD_CTL_DSE_X6                  (3 << 0)
+>  
+>  Examples:
+>  While iomuxc-lpsr is intended to be used by dedicated peripherals to take
+> -- 
+> 2.20.1
+> 
