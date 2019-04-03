@@ -2,189 +2,361 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A629DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 411FEC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386E020700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:53:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hv/Jmibv"
+	by mail.kernel.org (Postfix) with ESMTP id 0ED6D20700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfDCNxz (ORCPT
+        id S1726654AbfDCNyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:53:55 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:56528 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDCNxy (ORCPT
+        Wed, 3 Apr 2019 09:54:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50502 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDCNyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:53:54 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190403135352euoutp01e2f033006b576f9608811c77a46f3799~R_0fmhGDf2214122141euoutp01I
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 13:53:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190403135352euoutp01e2f033006b576f9608811c77a46f3799~R_0fmhGDf2214122141euoutp01I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554299632;
-        bh=qf0xaaW1pFSY6bCAKm8dMd4djT9c9aATrqm5DPM+kXc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=hv/JmibvYB/A9tjlkeUIR9nyaXxz/HDVo6cUq51spI4Ryc8d2C27JUYkjeQcaR/2e
-         qgm/8eKBMQxJAD8IBUYyBSDL15NbtBLovg2m4elfVoO9OdLmbIhQFUxKubrRn59oQJ
-         JETxHVVRuAvO6R+m2iGN4K6EXmJCTiLZxDAixHJc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190403135352eucas1p2a145c688a51a03a314b8a5d0bc78bdb4~R_0fC19EW1883418834eucas1p2Z;
-        Wed,  3 Apr 2019 13:53:52 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id A8.A5.04298.FEAB4AC5; Wed,  3
-        Apr 2019 14:53:51 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190403135351eucas1p211f27a7f1ea77e83b6dfe8657b73c2e8~R_0eS9rJT2976529765eucas1p2S;
-        Wed,  3 Apr 2019 13:53:51 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190403135351eusmtrp205793af612a9d8c4cec3b3e61874042d~R_0eE1krV2171621716eusmtrp2H;
-        Wed,  3 Apr 2019 13:53:51 +0000 (GMT)
-X-AuditID: cbfec7f2-f2dff700000010ca-e3-5ca4baefa28e
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 47.70.04140.EEAB4AC5; Wed,  3
-        Apr 2019 14:53:50 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190403135350eusmtip1b92e92553450409f23b79546f63295d1~R_0dxfuja1027810278eusmtip17;
-        Wed,  3 Apr 2019 13:53:50 +0000 (GMT)
-Subject: Re: [PATCH v2 7/7] MAINTAINERS: sm712fb: list myself as one
- maintainer.
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Tom Li <tomli@tomli.me>
-Cc:     Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        LFBDEV <linux-fbdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <9c99beba-813d-e82a-6ce5-fd1ffec45022@samsung.com>
-Date:   Wed, 3 Apr 2019 15:53:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Wed, 3 Apr 2019 09:54:12 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A9F6628264F
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gwendal@chromium.org, jflat@chromium.org, kernel@collabora.com,
+        lee.jones@linaro.org, bleung@chromium.org, groeck@chromium.org,
+        rajatja@google.com, dtor@chromium.org
+Subject: [PATCH 1/2] platform/chrome: Add CrOS USB PD logging driver
+Date:   Wed,  3 Apr 2019 15:54:02 +0200
+Message-Id: <20190403135403.9472-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CADVatmPtQAfSC=UkYWHKUx98JK=PMcSZB29ULeQKTBLD9iPnkw@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOKsWRmVeSWpSXmKPExsWy7djPc7rvdy2JMfi/Vdviytf3bBYn+j6w
-        WlzeNYfN4sDpKcwWa5bsYbSYNjPHgc1j56y77B73u48zeTy//5TNY/buXlaPz5vkAlijuGxS
-        UnMyy1KL9O0SuDJWfZzLWvBbrOLi13dsDYwHhboYOTkkBEwkzl6/yg5iCwmsYJQ4v9YUwv7C
-        KLH3XGQXIxeQ/ZlR4sCHr4xdjBxgDU1bRSDiyxklXh18zgzhvGWUaDi7mQ2kW1ggSOLm1/ks
-        ILaIgKfEjZ4pTCBFzAIbGSWmT30Oto5NwEpiYvsqRhCbV8BOYs2bi2ANLAIqEiv+NLOBbBMV
-        iJDoP6MOUSIocXLmE7ASToFAicvXZzOB2MwC8hLb384BO0JCYBG7xNv1f1khXnORmPHtKTOE
-        LSzx6vgWdghbRuL/zvlMEA3rGCX+dryA6t7OKLF88j82iCpricPHL7KCXMEsoCmxfpc+RNhR
-        Ytq/FWyQoOCTuPFWEOIIPolJ26YzQ4R5JTraoKGrJrFh2QY2mLVdO1dCneMhca3/IOMERsVZ
-        SF6bheSdWQh7FzAyr2IUTy0tzk1PLTbMSy3XK07MLS7NS9dLzs/dxAhMLqf/Hf+0g/HrpaRD
-        jAIcjEo8vD9WL4kRYk0sK67MPcQowcGsJMJ7pn9BjBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHe
-        aoYH0UIC6YklqdmpqQWpRTBZJg5OqQZGlj1fdle9eLPa49jRm7vZVzCmz63ym7/Q69e+JTa7
-        cvIWhlj1dDzxOi2zZabdSt7sCansiVf3zrtca83s0fPpXe6RWp4WrW3dKSLFS6MVBda48axP
-        NyncNX+PXVFFxv4dKQW2UwKvMD/lzdi7P3tPCts5gZPnxCY//bXymqUqx/U9SZ1H1sUIK7EU
-        ZyQaajEXFScCAO9BZ+YqAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsVy+t/xu7rvdi2JMbh4y9riytf3bBYn+j6w
-        WlzeNYfN4sDpKcwWa5bsYbSYNjPHgc1j56y77B73u48zeTy//5TNY/buXlaPz5vkAlij9GyK
-        8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DJWfZzLWvBb
-        rOLi13dsDYwHhboYOTgkBEwkmraKdDFycQgJLGWUODX9IyNEXEbi+PqyLkZOIFNY4s+1LjYQ
-        W0jgNaPEn/euILawQJDEza/zWUBsEQFPiRs9U5gg5lxhkpgyt4kRxGEW2MwocejFfCaQKjYB
-        K4mJ7asYQWxeATuJNW8ugnWzCKhIrPjTDLZBVCBC4tbDDhaIGkGJkzOfgNmcAoESl6/PBpvD
-        LKAu8WfeJWYIW15i+9s5zBMYBWchaZmFpGwWkrIFjMyrGEVSS4tz03OLjfSKE3OLS/PS9ZLz
-        czcxAuNm27GfW3Ywdr0LPsQowMGoxMP7Y/WSGCHWxLLiytxDjBIczEoivGf6F8QI8aYkVlal
-        FuXHF5XmpBYfYjQFemIis5Rocj4wpvNK4g1NDc0tLA3Njc2NzSyUxHnPG1RGCQmkJ5akZqem
-        FqQWwfQxcXBKNTBu/rr9r0nO74XRbNxPNixgVp81XWrSH70InYlSEQnbkiU/7Ttw3+GlipPi
-        /cxyViafzLPCi2rr569ONFw54dv+5PNZB0OdFmolxyzZmLVN5da2pAOhyuUhN3f7G5jJMhqe
-        2PM+aOkD/xXLmt2FJIU4DPNFt34UM0l+c+r06R/JS96FzT4ur7pdiaU4I9FQi7moOBEAXyTr
-        urECAAA=
-X-CMS-MailID: 20190403135351eucas1p211f27a7f1ea77e83b6dfe8657b73c2e8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190402211010epcas2p3721fd8da621ee64c2b1a373d41cc89e7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190402211010epcas2p3721fd8da621ee64c2b1a373d41cc89e7
-References: <20190322051759.15007-1-tomli@tomli.me>
-        <20190322051759.15007-8-tomli@tomli.me>
-        <20190331190801.hxl57om56jskku5s@debian>
-        <20190401174103.GF15736@localhost.localdomain>
-        <CGME20190402211010epcas2p3721fd8da621ee64c2b1a373d41cc89e7@epcas2p3.samsung.com>
-        <CADVatmPtQAfSC=UkYWHKUx98JK=PMcSZB29ULeQKTBLD9iPnkw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Guenter Roeck <groeck@chromium.org>
 
-On 04/02/2019 11:09 PM, Sudip Mukherjee wrote:
-> On Mon, Apr 1, 2019 at 6:41 PM Tom Li <tomli@tomli.me> wrote:
->>
->> On Sun, Mar 31, 2019 at 08:08:01PM +0100, Sudip Mukherjee wrote:
->>> Technically I donot have any problem with this, you seem to know more
->>> about SM712 than I know. But Teddy Wang is also an existing maintainer
->>> and I think there should be an ack from him before this is accepted.
->>
->> Okay, I'll write a personal mail to Teddy. I think it could be a separate
->> patch to allow more time for communication, but the problem is that, if
+The CrOS USB PD logging feature is logically separate functionality of
+the charge manager, hence has its own driver. The driver logs the event
+data for the USB PD charger available in some ChromeOS Embedded
+Controllers.
 
-The first version of the patchset was posted on 2nd February and
-Teddy was on Cc:. Unless there is an explicit NACK (with valid
-rationale) from him lets assume that he is fine with having another
-co-maintainer.
+Signed-off-by: Guenter Roeck <groeck@chromium.org>
+[remove APPEND_STRING macro and minor cleanups]
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
->> the MAINTAINERS and the new changes are not merged at the same time, users
->> who have problems may unable to see my name and E-mail address for reporting
->> problems.
-> 
-> git will not forget that you have done the changes. :)
-> So anyone who has a problem only needs to do a "git blame" to see who
-> has done it and the user will get your name and email to contact you.
-> If that is the only reason you think your name is added as a
+ drivers/platform/chrome/Kconfig             |  12 +
+ drivers/platform/chrome/Makefile            |   1 +
+ drivers/platform/chrome/cros_usbpd_logger.c | 260 ++++++++++++++++++++
+ 3 files changed, 273 insertions(+)
+ create mode 100644 drivers/platform/chrome/cros_usbpd_logger.c
 
-The original patch description suggests that there is more than
-that:
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 9186d81a51cc..4313a8bcf0ab 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -152,6 +152,18 @@ config CROS_EC_SYSFS
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cros_ec_sysfs.
+ 
++config CROS_USBPD_LOGGER
++	tristate "Logging driver for USB PD charger"
++	depends on CHARGER_CROS_USBPD
++	default y
++	select RTC_LIB
++	help
++	  This option enables support for logging event data for the USB PD charger
++	  available in the Embedded Controller on ChromeOS systems.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called cros_usbpd_logger.
++
+ source "drivers/platform/chrome/wilco_ec/Kconfig"
+ 
+ endif # CHROMEOS_PLATFORMS
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index 1e2f0029b597..0bee2e44748e 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -14,5 +14,6 @@ obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+ obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
+ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+ obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
++obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
+ 
+ obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
+diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platform/chrome/cros_usbpd_logger.c
+new file mode 100644
+index 000000000000..2091ad7c2afa
+--- /dev/null
++++ b/drivers/platform/chrome/cros_usbpd_logger.c
+@@ -0,0 +1,260 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Logging driver for ChromeOS EC based USBPD Charger.
++ *
++ * Copyright 2018 Google LLC.
++ */
++
++#include <linux/ktime.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/mfd/cros_ec_commands.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/rtc.h>
++
++#define DRV_NAME "cros-usbpd-logger"
++
++#define CROS_USBPD_MAX_LOG_ENTRIES	30
++#define CROS_USBPD_LOG_UPDATE_DELAY	msecs_to_jiffies(60000)
++#define CROS_USBPD_DATA_SIZE		16
++#define CROS_USBPD_LOG_RESP_SIZE	(sizeof(struct ec_response_pd_log) + \
++					 CROS_USBPD_DATA_SIZE)
++#define CROS_USBPD_BUFFER_SIZE		(sizeof(struct cros_ec_command) + \
++					 CROS_USBPD_LOG_RESP_SIZE)
++/* Buffer for building the PDLOG string */
++#define BUF_SIZE	80
++
++struct logger_data {
++	struct device *dev;
++	struct cros_ec_dev *ec_dev;
++	u8 ec_buffer[CROS_USBPD_BUFFER_SIZE];
++	struct delayed_work log_work;
++	struct workqueue_struct *log_workqueue;
++};
++
++static const char * const chg_type_names[] = {
++	"None", "PD", "Type-C", "Proprietary", "DCP", "CDP", "SDP",
++	"Other", "VBUS"
++};
++
++static const char * const role_names[] = {
++	"Disconnected", "SRC", "SNK", "SNK (not charging)"
++};
++
++static const char * const fault_names[] = {
++	"---", "OCP", "fast OCP", "OVP", "Discharge"
++};
++
++static int append_str(char *buf, int pos, const char *fmt, ...)
++{
++	va_list args;
++	int i;
++
++	va_start(args, fmt);
++	i = vsnprintf(buf + pos, BUF_SIZE - pos, fmt, args);
++	va_end(args);
++
++	return i;
++}
++
++static struct ec_response_pd_log *ec_get_log_entry(struct logger_data *logger)
++{
++	struct cros_ec_dev *ec_dev = logger->ec_dev;
++	struct cros_ec_command *msg;
++	int ret;
++
++	msg = (struct cros_ec_command *)logger->ec_buffer;
++
++	msg->command = ec_dev->cmd_offset + EC_CMD_PD_GET_LOG_ENTRY;
++	msg->insize = CROS_USBPD_LOG_RESP_SIZE;
++
++	ret = cros_ec_cmd_xfer_status(ec_dev->ec_dev, msg);
++	if (ret < 0)
++		return ERR_PTR(ret);
++
++	return (struct ec_response_pd_log *)msg->data;
++}
++
++static void cros_usbpd_print_log_entry(struct ec_response_pd_log *r,
++				       ktime_t tstamp)
++{
++	const char *fault, *role, *chg_type;
++	struct usb_chg_measures *meas;
++	struct mcdp_info *minfo;
++	int role_idx, type_idx;
++	char buf[BUF_SIZE + 1];
++	struct rtc_time rt;
++	int len = 0;
++	int i;
++
++	/* The timestamp is the number of 1024th of seconds in the past */
++	tstamp = ktime_sub_us(tstamp, r->timestamp << PD_LOG_TIMESTAMP_SHIFT);
++	rt = rtc_ktime_to_tm(tstamp);
++
++	switch (r->type) {
++	case PD_EVENT_MCU_CHARGE:
++		if (r->data & CHARGE_FLAGS_OVERRIDE)
++			len += append_str(buf, len, "override ");
++
++		if (r->data & CHARGE_FLAGS_DELAYED_OVERRIDE)
++			len += append_str(buf, len, "pending_override ");
++
++		role_idx = r->data & CHARGE_FLAGS_ROLE_MASK;
++		role = role_idx < ARRAY_SIZE(role_names) ?
++			role_names[role_idx] : "Unknown";
++
++		type_idx = (r->data & CHARGE_FLAGS_TYPE_MASK)
++			 >> CHARGE_FLAGS_TYPE_SHIFT;
++
++		chg_type = type_idx < ARRAY_SIZE(chg_type_names) ?
++			chg_type_names[type_idx] : "???";
++
++		if (role_idx == USB_PD_PORT_POWER_DISCONNECTED ||
++		    role_idx == USB_PD_PORT_POWER_SOURCE) {
++			len += append_str(buf, len, "%s", role);
++			break;
++		}
++
++		meas = (struct usb_chg_measures *)r->payload;
++		len += append_str(buf, len, "%s %s %s %dmV max %dmV / %dmA",
++				  role,	r->data & CHARGE_FLAGS_DUAL_ROLE ?
++				  "DRP" : "Charger",
++				  chg_type, meas->voltage_now,
++				  meas->voltage_max, meas->current_max);
++		break;
++	case PD_EVENT_ACC_RW_FAIL:
++		len += append_str(buf, len, "RW signature check failed");
++		break;
++	case PD_EVENT_PS_FAULT:
++		fault = r->data < ARRAY_SIZE(fault_names) ? fault_names[r->data]
++							  : "???";
++		len += append_str(buf, len, "Power supply fault: %s", fault);
++		break;
++	case PD_EVENT_VIDEO_DP_MODE:
++		len += append_str(buf, len, "DP mode %sabled", r->data == 1 ?
++				  "en" : "dis");
++		break;
++	case PD_EVENT_VIDEO_CODEC:
++		minfo = (struct mcdp_info *)r->payload;
++		len += append_str(buf, len, "HDMI info: family:%04x chipid:%04x"
++				  MCDP_FAMILY(minfo->family),
++				  MCDP_CHIPID(minfo->chipid));
++		len += append_str(buf, len, " irom:%d.%d.%d fw:%d.%d.%d",
++				  minfo->irom.major, minfo->irom.minor,
++				  minfo->irom.build, minfo->fw.major,
++				  minfo->fw.minor, minfo->fw.build);
++		break;
++	default:
++		len += append_str(buf, len, "Event %02x (%04x) [", r->type,
++				  r->data);
++
++		for (i = 0; i < PD_LOG_SIZE(r->size_port); i++)
++			len += append_str(buf, len, "%02x ", r->payload[i]);
++
++		len += append_str(buf, len, "]");
++		break;
++	}
++
++	pr_info("PDLOG %d/%02d/%02d %02d:%02d:%02d.%03lld P%d %s\n",
++		rt.tm_year + 1900, rt.tm_mon + 1, rt.tm_mday,
++		rt.tm_hour, rt.tm_min, rt.tm_sec,
++		ktime_to_ms(tstamp) % MSEC_PER_SEC,
++		PD_LOG_PORT(r->size_port), buf);
++}
++
++static void cros_usbpd_log_check(struct work_struct *work)
++{
++	struct logger_data *logger = container_of(to_delayed_work(work),
++						  struct logger_data,
++						  log_work);
++	struct device *dev = logger->dev;
++	struct ec_response_pd_log *r;
++	int entries = 0;
++	ktime_t now;
++
++	while (entries++ < CROS_USBPD_MAX_LOG_ENTRIES) {
++		r = ec_get_log_entry(logger);
++		now = ktime_get_real();
++		if (IS_ERR(r)) {
++			dev_dbg(dev, "Cannot get PD log %ld\n", PTR_ERR(r));
++			break;
++		}
++		if (r->type == PD_EVENT_NO_ENTRY)
++			break;
++
++		cros_usbpd_print_log_entry(r, now);
++	}
++
++	queue_delayed_work(logger->log_workqueue, &logger->log_work,
++			   CROS_USBPD_LOG_UPDATE_DELAY);
++}
++
++static int cros_usbpd_logger_probe(struct platform_device *pd)
++{
++	struct cros_ec_dev *ec_dev = dev_get_drvdata(pd->dev.parent);
++	struct device *dev = &pd->dev;
++	struct logger_data *logger;
++
++	logger = devm_kzalloc(dev, sizeof(*logger), GFP_KERNEL);
++	if (!logger)
++		return -ENOMEM;
++
++	logger->dev = dev;
++	logger->ec_dev = ec_dev;
++
++	platform_set_drvdata(pd, logger);
++
++	/* Retrieve PD event logs periodically */
++	INIT_DELAYED_WORK(&logger->log_work, cros_usbpd_log_check);
++	logger->log_workqueue =	create_singlethread_workqueue("cros_usbpd_log");
++	queue_delayed_work(logger->log_workqueue, &logger->log_work,
++			   CROS_USBPD_LOG_UPDATE_DELAY);
++
++	return 0;
++}
++
++static int cros_usbpd_logger_remove(struct platform_device *pd)
++{
++	struct logger_data *logger = platform_get_drvdata(pd);
++
++	cancel_delayed_work_sync(&logger->log_work);
++
++	return 0;
++}
++
++static int __maybe_unused cros_usbpd_logger_resume(struct device *dev)
++{
++	struct logger_data *logger = dev_get_drvdata(dev);
++
++	queue_delayed_work(logger->log_workqueue, &logger->log_work,
++			   CROS_USBPD_LOG_UPDATE_DELAY);
++
++	return 0;
++}
++
++static int __maybe_unused cros_usbpd_logger_suspend(struct device *dev)
++{
++	struct logger_data *logger = dev_get_drvdata(dev);
++
++	cancel_delayed_work_sync(&logger->log_work);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(cros_usbpd_logger_pm_ops, cros_usbpd_logger_suspend,
++			 cros_usbpd_logger_resume);
++
++static struct platform_driver cros_usbpd_logger_driver = {
++	.driver = {
++		.name = DRV_NAME,
++		.pm = &cros_usbpd_logger_pm_ops,
++	},
++	.probe = cros_usbpd_logger_probe,
++	.remove = cros_usbpd_logger_remove,
++};
++
++module_platform_driver(cros_usbpd_logger_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Logging driver for ChromeOS EC USBPD Charger.");
++MODULE_ALIAS("platform:" DRV_NAME);
+-- 
+2.20.1
 
-"I have working on the sm712fb driver for a while and have some
-familiarity with this hardware, I'll be helping working on and
-testing problems of this driver, so add myself to the MAINTAINERS
-file."
-
-> maintainer then I guess that is not a valid concern and then in that
-> case I am not seeing any need to add your name in maintainer.
-> 
-> Bartlomiej can you advise please.
-
-2D acceleration seems to be an important contribution to the driver
-(functionality wise and code wise -> it grows the driver source code
-by ~25%) and it shows that Yifeng knows the driver well.
-
-He has also access to SM720 (you have SM712 only) to verify potential
-issues with the future driver changes (I assume that he don't mind
-getting Cc:ed on all driver related patches, not that there should be
-much of them).
-
-Thus I think that it would be beneficial to add him as the driver
-co-maintainer but I would prefer to keep the current ordering in
-the MAINTAINERS file, IOW something like this:
-
-Index: b/MAINTAINERS
-===================================================================
---- a/MAINTAINERS	2019-04-01 13:12:10.607271933 +0200
-+++ b/MAINTAINERS	2019-04-03 15:39:54.404646279 +0200
-@@ -14143,6 +14143,7 @@ SILICON MOTION SM712 FRAME BUFFER DRIVER
- M:	Sudip Mukherjee <sudipm.mukherjee@gmail.com>
- M:	Teddy Wang <teddy.wang@siliconmotion.com>
- M:	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>
-+M:	Yifeng Li <tomli@tomli.me>
- L:	linux-fbdev@vger.kernel.org
- S:	Maintained
- F:	drivers/video/fbdev/sm712*
-
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
