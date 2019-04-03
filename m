@@ -2,124 +2,152 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DD2C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F79C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A3A2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF352054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oy1474TU"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ah96NVmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfDCPj0 (ORCPT
+        id S1726580AbfDCPjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:39:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41098 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfDCPj0 (ORCPT
+        Wed, 3 Apr 2019 11:39:31 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3550 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfDCPjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:39:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so8345833pfd.8;
-        Wed, 03 Apr 2019 08:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4K7W0j8rTa+YRaaAstvUDc1uzqxpUCqMhMXLcqU75Hc=;
-        b=oy1474TUswjxugfN0Bu6CcbkHenxjvmFB5/KVpITrqwm3QTufVyDd8JTu8xFYegoWr
-         QeQGs/f8FknYLjzs2NQtUvZB1BkOrP0Lfu8GmYsii9D77HRx+PmeqmHG0FO2GyjaU2Tu
-         b6oog/NOgd8OI5PmYzPi0rEeMx+muDrHJIrx8buHEH79aZlRG8CvqlLncAtbw57UtAqm
-         1TKRhutqzb2GAVXggizw3AhvuXW4QRccQ8vMlcb7EfLBzgTQ3AMEWXTWUGMnBb7geBtX
-         /YXhebJCdjVcGVShGKW6F+4C7kEePemnsxzLXzWw1BXIWUdVV8/YgMV6fbH1b7i7Rv9P
-         qMDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4K7W0j8rTa+YRaaAstvUDc1uzqxpUCqMhMXLcqU75Hc=;
-        b=a76AM+7S5jbVbOQ/bw7WvhmShU2wbi9yOEAMDNzi0j4Wb8uR0RxiCkW4UWFZcQ3WRu
-         RuacvKCpzWlZHK//TNIRjRn4YwXXiNbt8dSvc9xqS9jscaC3aLz9ssLXXuH29okJbe3X
-         uLplB1Mef7VZEiCvf3dKLGPV7BZ2tNjiJ6P4WmI4M1I30nxDPa7RiluAHesSDTfcJhxs
-         0UqtT/pJgM3X8Uz8YXVQmSftLfGri8Q6qVJIvoaa8Q9d2bCj/gxocNehqU1gWAoUZXwc
-         PGw+Nf4SmMD9H7fSaoXAvWqz9QDcMD+aAYySL+3bsf8DpjuU7gtx5ap/QDN3hMQ/qiO2
-         0EEA==
-X-Gm-Message-State: APjAAAXZa6HgbWGuzMp7jAOPADwvBh/8dKbSREGkNmmDgJZKPLEYq7hG
-        oaj2eGHgbJAQeIjWL0y32xc=
-X-Google-Smtp-Source: APXvYqwPPcI2Q5taQ8Fbp4n8GiG8PnfWB+RprnDtY62cdNO1PArVojWfZfVbhTyAl4GDvwZKRwtz8w==
-X-Received: by 2002:aa7:80c8:: with SMTP id a8mr15488pfn.193.1554305965352;
-        Wed, 03 Apr 2019 08:39:25 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id z21sm23213491pfn.139.2019.04.03.08.39.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 08:39:24 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 23:39:19 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/12] Include linux PCI docs into Sphinx TOC tree
-Message-ID: <20190403153917.4r73hhzjp6anuyhj@mail.google.com>
-References: <20190329160413.4293-1-changbin.du@gmail.com>
- <20190401230321.GB141706@google.com>
- <20190402150852.juugbq7gripqbrmz@mail.google.com>
- <20190402180744.GD141706@google.com>
+        Wed, 3 Apr 2019 11:39:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ca4d3b60001>; Wed, 03 Apr 2019 08:39:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 03 Apr 2019 08:39:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 03 Apr 2019 08:39:30 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Apr
+ 2019 15:39:30 +0000
+Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Apr
+ 2019 15:39:29 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 3 Apr 2019 15:39:30 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.169.19]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ca4d3af0001>; Wed, 03 Apr 2019 08:39:29 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <skomatineni@nvidia.com>, <talho@nvidia.com>, <anrao@nvidia.com>,
+        <bbiswas@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+Subject: [PATCH V3] mmc: tegra: add sdhci tegra suspend and resume
+Date:   Wed, 3 Apr 2019 08:39:24 -0700
+Message-ID: <1554305964-19347-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402180744.GD141706@google.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1554305974; bh=SSlnae89R0RhREWQiIwKN7r3U/EHQ9ruK9X8dp69CZ4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=ah96NVmFNxlfFzBmu3eXWyfinz0Kt3gpJG3g4GOYp6WfHDKcGrpPIGMKSlEer73QN
+         /u1sxWbSWxmink3+mUwCIV5iaDkpJfTsbg6uj0F0AoEOO9rA9cpamZ2jjIfUamtID5
+         TWha7X6iqaxaEIqfarwRLPcoctLIlWpiQKSlcIAP1lExjZs0PMsuRzQpKXMjNuHu8C
+         N4r592YquLkPvFLw/kqEu4/bXZ9iunubG/SWj+zXMdwxCNmm/LfOwziL3LNN9TvEcI
+         oc5zxutJp3EFK9q7h2yILB3J0UUDg+i4fIOJ1Tm5luIRNdJvpu4w+tPnKQp6eoeRHc
+         8KFzHdR1F1I0A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 01:07:44PM -0500, Bjorn Helgaas wrote:
-> On Tue, Apr 02, 2019 at 11:08:54PM +0800, Changbin Du wrote:
-> > On Mon, Apr 01, 2019 at 06:03:21PM -0500, Bjorn Helgaas wrote:
-> > > On Sat, Mar 30, 2019 at 12:04:01AM +0800, Changbin Du wrote:
-> > > > Changbin Du (12):
-> > > >   Documentation: add Linux PCI to Sphinx TOC tree
-> > > >   pci doc: convert PCI/pci.txt to rst format
-> > > >   pci doc: convert PCI/PCIEBUS-HOWTO.txt to rst format
-> > > >   pci doc: convert PCI/pci-iov-howto.txt to rst format
-> > > >   pci doc: convert PCI/MSI-HOWTO.txt to rst format
-> > > >   pci doc: convert PCI/acpi-info.txt to rst format
-> > > >   pci doc: convert PCI/pci-error-recovery.txt to rst format
-> > > >   pci doc: convert PCI/pcieaer-howto.txt to rst format
-> > > >   pci doc: convert PCI/endpoint/pci-endpoint.txt to rst format
-> > > >   pci doc: convert PCI/endpoint/pci-endpoint-cfs.txt to rst format
-> > > >   pci doc: convert PCI/endpoint/pci-test-function.txt to rst format
-> > > >   pci doc: convert PCI/endpoint/pci-test-howto.txt to rst format
-> > > 
-> > > Thanks for doing all this work!
-> > > 
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > 
-> > > There's not a real convention yet for subject lines in Documentation/,
-> > > but I would propose:
-> > > 
-> > >   Documentation: PCI: Convert pci.txt to reST
-> > >   Documentation: PCI: Convert endpoint/pci-endpoint.txt to reST
-> > > 
-> > > because that at least goes with some recent Documentation/PCI changes
-> > > and it identifies "reST" as something other than a plain English word
-> > > (RST or ReST would also work for me).
-> > > 
-> > I agree. I am just a little lazy to update all of them this time :)
-> > Thanks for your ACK!
-> 
-> Well, I guess I'm too lazy to fix them all for you, so I personally
-> wouldn't apply these.  But maybe Jonathan will be more accommodating.
->
-ok, I will fix this serias since they do matter.
+This patch adds suspend and resume PM ops for tegra SDHCI.
 
-> Bjorn
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 56 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index eafaaefab4a6..5ec304166566 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -1611,11 +1611,65 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	int ret;
++
++	if (host->mmc->caps2 & MMC_CAP2_CQE) {
++		ret = cqhci_suspend(host->mmc);
++		if (ret)
++			return ret;
++	}
++
++	ret = sdhci_suspend_host(host);
++	if (ret) {
++		cqhci_resume(host->mmc);
++		return ret;
++	}
++
++	clk_disable_unprepare(pltfm_host->clk);
++	return 0;
++}
++
++static int __maybe_unused sdhci_tegra_resume(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	int ret;
++
++	ret = clk_prepare_enable(pltfm_host->clk);
++	if (ret)
++		return ret;
++
++	ret = sdhci_resume_host(host);
++	if (ret)
++		goto disable_clk;
++
++	if (host->mmc->caps2 & MMC_CAP2_CQE) {
++		ret = cqhci_resume(host->mmc);
++		if (ret)
++			goto suspend_host;
++	}
++
++	return 0;
++
++suspend_host:
++	sdhci_suspend_host(host);
++disable_clk:
++	clk_disable_unprepare(pltfm_host->clk);
++	return ret;
++}
++
++static SIMPLE_DEV_PM_OPS(sdhci_tegra_dev_pm_ops, sdhci_tegra_suspend,
++			 sdhci_tegra_resume);
++
+ static struct platform_driver sdhci_tegra_driver = {
+ 	.driver		= {
+ 		.name	= "sdhci-tegra",
+ 		.of_match_table = sdhci_tegra_dt_match,
+-		.pm	= &sdhci_pltfm_pmops,
++		.pm	= &sdhci_tegra_dev_pm_ops,
+ 	},
+ 	.probe		= sdhci_tegra_probe,
+ 	.remove		= sdhci_tegra_remove,
 -- 
-Cheers,
-Changbin Du
+2.7.4
+
