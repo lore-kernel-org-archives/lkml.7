@@ -2,257 +2,131 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDB6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7113DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 984BA206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEFF20700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfDCRiF (ORCPT
+        id S1726329AbfDCRkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:38:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35764 "EHLO mx1.redhat.com"
+        Wed, 3 Apr 2019 13:40:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57786 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfDCRiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:38:05 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S1726074AbfDCRkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:40:22 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 82AA223E6D1;
-        Wed,  3 Apr 2019 17:38:04 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 460085C21A;
-        Wed,  3 Apr 2019 17:38:01 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 11:38:00 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        jacob.jun.pan@linux.intel.com, yi.l.liu@linux.intel.com,
-        jean-philippe.brucker@arm.com, will.deacon@arm.com,
-        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
-        marc.zyngier@arm.com, christoffer.dall@arm.com,
-        peter.maydell@linaro.org, vincent.stehle@arm.com
-Subject: Re: [PATCH v6 09/22] vfio: VFIO_IOMMU_BIND/UNBIND_MSI
-Message-ID: <20190403113800.51503693@x1.home>
-In-Reply-To: <b47128de-88d0-1971-1fbc-86e43439c7ee@redhat.com>
-References: <20190317172232.1068-1-eric.auger@redhat.com>
-        <20190317172232.1068-10-eric.auger@redhat.com>
-        <20190321170159.38358f38@x1.home>
-        <16931d58-9c88-8cfb-a392-408ea7afdf16@redhat.com>
-        <20190322160947.3f8dacdb@x1.home>
-        <b47128de-88d0-1971-1fbc-86e43439c7ee@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 60DF081E16;
+        Wed,  3 Apr 2019 17:40:21 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 843A66B2C8;
+        Wed,  3 Apr 2019 17:40:19 +0000 (UTC)
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, steven.sistare@oracle.com,
+        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+References: <20190329152006.110370-1-alex.kogan@oracle.com>
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
+ <20190402094320.GM11158@hirez.programming.kicks-ass.net>
+ <9ec3d8dc-d1e0-1b8a-5e00-ba92b9756c58@redhat.com>
+ <20190403171635.GM4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
 Organization: Red Hat
+Message-ID: <063622f7-6aab-9824-afce-ea5de103e1f6@redhat.com>
+Date:   Wed, 3 Apr 2019 13:40:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 03 Apr 2019 17:38:05 +0000 (UTC)
+In-Reply-To: <20190403171635.GM4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 03 Apr 2019 17:40:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019 16:30:15 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
+On 04/03/2019 01:16 PM, Peter Zijlstra wrote:
+> On Wed, Apr 03, 2019 at 12:33:20PM -0400, Waiman Long wrote:
+>> static inline void queued_spin_lock_slowpath(struct qspinlock *lock, u32
+>> val)
+>> {
+>>         if (static_branch_unlikely(&use_numa_spinlock))
+>>                 numa_queued_spin_lock_slowpath(lock, val);
+>>         else   
+>>                 native_queued_spin_lock_slowpath(lock, val);
+>> }
+> That's horrible for the exact reason you state.
+>
+>> Alternatively, we can also call numa_queued_spin_lock_slowpath() in
+>> native_queued_spin_lock_slowpath() if we don't want to increase the code
+>> size of spinlock call sites.
+> Yeah, still don't much like that though, we're littering the fast path
+> of that slow path with all sorts of crap.
 
-> Hi Alex,
-> 
-> On 3/22/19 11:09 PM, Alex Williamson wrote:
-> > On Fri, 22 Mar 2019 10:30:02 +0100
-> > Auger Eric <eric.auger@redhat.com> wrote:
-> >   
-> >> Hi Alex,
-> >> On 3/22/19 12:01 AM, Alex Williamson wrote:  
-> >>> On Sun, 17 Mar 2019 18:22:19 +0100
-> >>> Eric Auger <eric.auger@redhat.com> wrote:
-> >>>     
-> >>>> This patch adds the VFIO_IOMMU_BIND/UNBIND_MSI ioctl which aim
-> >>>> to pass/withdraw the guest MSI binding to/from the host.
-> >>>>
-> >>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> >>>>
-> >>>> ---
-> >>>> v3 -> v4:
-> >>>> - add UNBIND
-> >>>> - unwind on BIND error
-> >>>>
-> >>>> v2 -> v3:
-> >>>> - adapt to new proto of bind_guest_msi
-> >>>> - directly use vfio_iommu_for_each_dev
-> >>>>
-> >>>> v1 -> v2:
-> >>>> - s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
-> >>>> ---
-> >>>>  drivers/vfio/vfio_iommu_type1.c | 58 +++++++++++++++++++++++++++++++++
-> >>>>  include/uapi/linux/vfio.h       | 29 +++++++++++++++++
-> >>>>  2 files changed, 87 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> >>>> index 12a40b9db6aa..66513679081b 100644
-> >>>> --- a/drivers/vfio/vfio_iommu_type1.c
-> >>>> +++ b/drivers/vfio/vfio_iommu_type1.c
-> >>>> @@ -1710,6 +1710,25 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
-> >>>>  	return iommu_cache_invalidate(d, dev, &ustruct->info);
-> >>>>  }
-> >>>>  
-> >>>> +static int vfio_bind_msi_fn(struct device *dev, void *data)
-> >>>> +{
-> >>>> +	struct vfio_iommu_type1_bind_msi *ustruct =
-> >>>> +		(struct vfio_iommu_type1_bind_msi *)data;
-> >>>> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
-> >>>> +
-> >>>> +	return iommu_bind_guest_msi(d, dev, ustruct->iova,
-> >>>> +				    ustruct->gpa, ustruct->size);
-> >>>> +}
-> >>>> +
-> >>>> +static int vfio_unbind_msi_fn(struct device *dev, void *data)
-> >>>> +{
-> >>>> +	dma_addr_t *iova = (dma_addr_t *)data;
-> >>>> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);    
-> >>>
-> >>> Same as previous, we can encapsulate domain in our own struct to avoid
-> >>> a lookup.
-> >>>     
-> >>>> +
-> >>>> +	iommu_unbind_guest_msi(d, dev, *iova);    
-> >>>
-> >>> Is it strange that iommu-core is exposing these interfaces at a device
-> >>> level if every one of them requires us to walk all the devices?  Thanks,    
-> >>
-> >> Hum this per device API was devised in response of Robin's comments on
-> >>
-> >> [RFC v2 12/20] dma-iommu: Implement NESTED_MSI cookie.
-> >>
-> >> "
-> >> But that then seems to reveal a somewhat bigger problem - if the callers
-> >> are simply registering IPAs, and relying on the ITS driver to grab an
-> >> entry and fill in a PA later, then how does either one know *which* PA
-> >> is supposed to belong to a given IPA in the case where you have multiple
-> >> devices with different ITS targets assigned to the same guest? (and if
-> >> it's possible to assume a guest will use per-device stage 1 mappings and
-> >> present it with a single vITS backed by multiple pITSes, I think things
-> >> start breaking even harder.)
-> >> "
-> >>
-> >> However looking back into the problem I wonder if there was an issue
-> >> with the iommu_domain based API.
-> >>
-> >> If my understanding is correct, when assigned devices are protected by a
-> >> vIOMMU then they necessarily end up in separate host iommu domains even
-> >> if they belong to the same iommu_domain on the guest. And there can only
-> >> be a single device in this iommu_domain.  
-> > 
-> > Don't forget that a container represents the IOMMU context in a vfio
-> > environment, groups are associated with containers and a group may
-> > contain one or more devices.  When a vIOMMU comes into play, we still
-> > only have an IOMMU context per container.  If we have multiple devices
-> > in a group, we run into problems with vIOMMU.  We can resolve this by
-> > requiring that the user ignore all but one device in the group,
-> > or making sure that the devices in the group have the same IOMMU
-> > context.  The latter we could do in QEMU if PCIe-to-PCI bridges there
-> > masked the per-device address space as it does on real hardware (ie.
-> > there is no requester ID on conventional PCI, all transactions appear to
-> > the IOMMU with the bridge requester ID).  So I raise this question
-> > because vfio's minimum domain granularity is a group.
-> >   
-> >> If this is confirmed, there is a non ambiguous association between 1
-> >> physical iommu_domain, 1 device, 1 S1 mapping and 1 physical MSI
-> >> controller.
-> >>
-> >> I added the device handle handle to disambiguate those associations. The
-> >> gIOVA ->gDB mapping is associated with a device handle. Then when the
-> >> host needs a stage 1 mapping for this device, to build the nested
-> >> mapping towards the physical DB it can easily grab the gIOVA->gDB stage
-> >> 1 mapping registered for this device.
-> >>
-> >> The correctness looks more obvious to me, at least.  
-> > 
-> > Except all devices within all groups within the same container
-> > necessarily share the same IOMMU context, so from that perspective, it
-> > appears to impose non-trivial redundancy on the caller.  Thanks,  
-> 
-> Taking into consideration the case where we could have several devices
-> attached to the same host iommu group, each of them possibly using
-> different host MSI doorbells, I think I am in trouble.
-> 
-> Let's assume that using the pcie-to-pci bridge trick on guest side they
-> end up in the same container and in the same guest iommu group.
-> 
-> At the moment there is a single MSI controller on guest, so the same
-> gIOVA/gDB S1 mapping is going to be created by the guest iommu dommain
-> and both devices are programmed with gIOVA. If dev0 and dev1 are
-> attached to different host MSI controllers, I would need to build the 2
-> nested bindings:
-> dev0: MSI nested binding: gIOVA -> gDB -> hDB0
-> dev1: MSI nested binding: gIOVA -> gDB -> hDB1
-> (on guest there is a single MSI controller at the moment)
-> 
-> which is not possible as the devices belong to the same host iommu group
-> and share the same mapping.
-> 
-> The solution would be to instantiate 2 MSI controllers on guest side, in
-> which case we would end up with
-> dev0: gIOVA0 -> gDB0 -> hDB0
-> dev1: gIOVA1 -> gDB1 -> hDB1
-> 
-> Isn't it somehow what we do with the IOMMU RID topology. We need to take
-> into account the host topology (2 devices belonging to the same group)
-> to force the same on guest by introducing a PCIe-to-PCI bridge. Here we
-> would need to say, those assigned devices are attached to different MSI
-> domains on host, so we need the same on guest.
-> 
-> Anyway, the current container based IOCTL would fail to implement that
-> because I would register gIOVA0 -> gDB0 and gIOVA1 -> gDB1 for each
-> device within the container which would definitively fail to build the
-> correct association. So I think I would need anyway a device based IOTCL
-> that would aim to tell: this assigned device uses this S1 MSI binding.
-> All the notification mechanism we have in qemu is based on container, so
-> this would obliged to have device based notification mechanism.
-> 
-> So I wonder whether it wouldn't be sensible to restrict this use case
-> and say we support nested mode only if we have a single assigned device
-> within the container?
-> 
-> Thoughts?
+Yes, I know it is less than ideal, but that is probably the only option
+if we don't have static_call or paravirt. On the other hand, I am
+perfectly fine with making CNA depends on PARAVIRT_SPINLOCKS for now
+until static_call is available.
 
-We've essentially done that with vIOMMU up to this point already, it's
-not been possible to assign multiple devices from the same group to a
-VM with intel-iommu, amd-iommu, or smmu due to the requirement of
-separate address spaces per device.  It's only when we introduce
-address space aliasing with bridges that we can even consider this
-possibility, and it's a configuration which smmu doesn't properly
-support even on bare metal.  I hope we can consider that to be simply a
-gap in the implementation that will get fixed and not an architectural
-problem.
+Cheers,
+Longman
 
-As we discussed offline though, I wonder if we're attempting to support
-more than necessary with your scenarios above.  If devices within the
-same group can be verified to share a host MSI controller, do we still
-have an issue mapping them to a single guest MSI controller?  When we
-talked we were headed down a path that if a group is necessarily
-associated to a single IOMMU, perhaps that necessarily means that a
-group is also associated to a single MSI controller.  I've since
-thought of a configuration where a group could span physical IOMMU
-devices, NVLink.  As essentially a secondary bus interface for a
-device, NVLink can cause devices with arbitrary PCI hierarchy
-connections to be non-isolated, and ideally our grouping would
-understand to account for that.  However, if it could be determined
-that a group associates to a single MSI controller, do we still have an
-issue with multiple devices within the group?
-
-My issue with the per device interface for what is fundamentally an
-IOVA mapping is that vfio does not support per device mappings.  We
-support mappings at the container level, where the minimum set of
-devices we can attach to a container is a group.  Therefore to create
-an interface that purports to support device level mappings is not
-accurate.  Maybe MSI controllers will restrict our configuration but
-I'd rather not design the interface around the wrong level of mapping
-granularity.  Thanks,
-
-Alex
