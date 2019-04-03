@@ -2,94 +2,92 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B26FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB91C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58FE206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D22206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tuttDmrJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sM2WgBUU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfDCE1f (ORCPT
+        id S1727370AbfDCE2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:27:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43156 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfDCE1f (ORCPT
+        Wed, 3 Apr 2019 00:28:05 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36780 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfDCE2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:27:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z9so7628488pgu.10;
-        Tue, 02 Apr 2019 21:27:34 -0700 (PDT)
+        Wed, 3 Apr 2019 00:28:05 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o74so14257599ota.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PdkoXEhApTwhfvj0n2bSA4MraR0FOtrJZZg+GexoHbk=;
-        b=tuttDmrJasaKT8xGu/mMu631Y1yABCj8LdKfoRf85VzfRkNwdiyY+8JCqjyo6KHqpr
-         S+Yhk6UjrY5XKeBO82keGuPbY5HFaQWs/F91M16qsjy/1NJRmVIABonT4YmnI4nobHWr
-         1KjqUyJgq6bagu/MZUG2clyFk+Y6a8k+I9+g6rStdzXmQC1IAFW1MnRDkwjslwlVPPs7
-         uUH04x2PIE3kSoO8wcertubgHi2b3ZMWFHdyuLXZtVmyT9tj9Zws2FaUV5jUF0Z9SLys
-         l9jzoo3pwDg0zOs9pMLbPFT6/nNncZOI7uBXlw0u97UckR2F6xr8OBNDfxNqsUrFGvvs
-         UI2g==
+        bh=xWQPucjki5PAvBUykdibUbjnXNzSh8OpfroliNXG7Ss=;
+        b=sM2WgBUUWWM7hDZwzjSQzfa/OYKoKF4YdFf5Z2dplbCGYCqIwWsnoOHKrNH+XYNry2
+         je+Oh/Xxtru0ojxRJeP2wVnSiupqxuEvID/hzqNj3ylG9sG6PA88h20LPFUvbpN5uITK
+         galNIb+9Q4sklX0D5VFuR3MRDSsC1HI/gcwAxfDsZwonDvyQe2PYI2rafOgcsilTlR6t
+         TwXdyDBElydIQ8MXAVG+4IplFORV6jdU7Ctra5JzkUjw3C/Wz/qk9lzjsElmDxLMvjnN
+         MR6wbMHJoFnTy0VGvb73ix5pElPtGKg+6RxowAUhqnnIjUyCUXkE/Chizlpdm5tKbLRL
+         /oTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PdkoXEhApTwhfvj0n2bSA4MraR0FOtrJZZg+GexoHbk=;
-        b=KNn01O0VWLJBSJj1FyPBCF15UnScxspX0vuzX0JuRnZSQryZgOSUnhME2Uay+IoZJj
-         No7GaLOWa1TteKiZebCdXdxdO+69nHDUp+nEgDLDFAUeAjS9jQC2wxZBY8oZO1k0nxeD
-         jn1dl2e3IzWYXO5uFLSbqaYgB1Rv0TvlqOahaKYuP6w0xoUdrdg7FkETmh2cSdp7u4zM
-         qjTWElYMJTiMCY/RBRptCeAfcX0RoGhvnAA+3c23lRwcRo7gRKaC+GMZ/TI/ylVbhj1I
-         MS+wxM+UqOiG4S04HoWcFe3a+2tYoGC2HsTrfB8Ui8kK9PxRpfn3mchNetaRBOZC/T6N
-         AxiQ==
-X-Gm-Message-State: APjAAAUhoC7q9qhm7TYy4mL/cM/C0RglXunD80pX6Y9h1TcYQosUWq+i
-        qSXvcjcvglTWLgRh0POFvN7FB39rfvxPBkbxa8E=
-X-Google-Smtp-Source: APXvYqzZsppQAQVjntqhwpSnlg5kvy5/w8vuxP3FiXBp0U483ch6C3OilhyWnzFul/kBvKppajLNzjIbBp9m1qK0m5Q=
-X-Received: by 2002:a63:5f05:: with SMTP id t5mr19848906pgb.176.1554265654072;
- Tue, 02 Apr 2019 21:27:34 -0700 (PDT)
+        bh=xWQPucjki5PAvBUykdibUbjnXNzSh8OpfroliNXG7Ss=;
+        b=MS7FCF0keWy3Nl/BJzfZI5GKKMj1DEM63gtQ5i7lRBM6Pa4neaGvsIqgcuggZOh4vL
+         tCiCyPBjBqD2/nNBgAckZmWyo0mtHFIy9ynFf1J+D/nzbRKV9rGeNPzjbFcfF88saVJT
+         yTYO51+xc04hOiQ6NiCZRUWTcFe3X81xNLQ9n89f0LmaHfrc7CbtGUudD38lLhAVEznA
+         XciapxMCgmFVgcwGa83321tqI2oSWuPVFBUI5Dd4VQuMSQ3n/Phlfzbxh46XS+JdU37N
+         Xpo+qtATh2wZQ7N//Qq1N1yOHIWeBurX32Iez1vy48seMdS8JzrOY083jHqGzwf0Krzc
+         6UtA==
+X-Gm-Message-State: APjAAAXeDdECpeuPt9uIWp7TBu8c73Y6jiqszuDjk1fTcNugTHcItq1p
+        peUf0eXZ8RPEhikngre6Zf08shPNmk/kaAMDHj65Vw==
+X-Google-Smtp-Source: APXvYqyE9vkQBdneTX1KT6m1tc2kehhtE90YhBmiE2ZMSfYtd2xfqD5u6rNTX8i6fo17zqonCyNNaflXaq1GsC+8ZCE=
+X-Received: by 2002:a9d:730f:: with SMTP id e15mr21459402otk.22.1554265684396;
+ Tue, 02 Apr 2019 21:28:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190403074039.7c7af691@canb.auug.org.au>
-In-Reply-To: <20190403074039.7c7af691@canb.auug.org.au>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 2 Apr 2019 23:27:22 -0500
-Message-ID: <CAH2r5mtrpLk4OO-T1texGVx8cjMtNaRbSHKXgzxTqqFFga-kSA@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
+References: <20190403111108.2ff4a309@canb.auug.org.au> <CAMz4ku+17HAZfh-03+y=WUy1NdsL7sQHK_XyzeToBh5-RAUSQg@mail.gmail.com>
+ <20190403033518.GI2059@sirena.org.uk>
+In-Reply-To: <20190403033518.GI2059@sirena.org.uk>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 3 Apr 2019 12:27:53 +0800
+Message-ID: <CAMz4kuLyAKwRLWu3+cfpDsLwCtJS21BN0xmL-DNxfmPYXC_tZA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the sound-asoc tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        "Kenneth D'souza" <kdsouza@redhat.com>
+        Yintang Ren <yintang.ren@unisoc.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed - Updated author to match signed off line
+On Wed, 3 Apr 2019 at 11:35, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Apr 03, 2019 at 10:12:47AM +0800, Baolin Wang wrote:
+>
+> > snd-soc-sprd-platform-objs := sprd-pcm-dma.o sprd-pcm-compress.o
+>
+> > obj-$(CONFIG_SND_SOC_SPRD) += snd-soc-sprd-platform.o
+>
+> > I will send out one incremental patch to fix this issue after my
+> > business trip. Thanks.
+>
+> We can't leave this broken in -next for that long, can you please post
+> the patch now if you've already got it?
 
-On Tue, Apr 2, 2019 at 3:40 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   d0cb257cb7b0 ("Show locallease in /proc/mounts for cifs shares mounted with locallease feature.")
->
-> is missing a Signed-off-by from its author.
->
-> --
-> Cheers,
-> Stephen Rothwell
-
-
+OK, but I need some time to setup my environment to send this patch
+and I'll try to fix this ASAP. Thanks.
 
 -- 
-Thanks,
-
-Steve
+Baolin Wang
+Best Regards
