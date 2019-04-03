@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BC2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C01C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E7320830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A07E20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfDCRKi (ORCPT
+        id S1726607AbfDCRLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:10:38 -0400
-Received: from foss.arm.com ([217.140.101.70]:45264 "EHLO foss.arm.com"
+        Wed, 3 Apr 2019 13:11:02 -0400
+Received: from foss.arm.com ([217.140.101.70]:45296 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfDCRKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:10:38 -0400
+        id S1726097AbfDCRLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:11:01 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D19FA80D;
-        Wed,  3 Apr 2019 10:10:37 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09D8C80D;
+        Wed,  3 Apr 2019 10:11:01 -0700 (PDT)
 Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 10F0D3F68F;
-        Wed,  3 Apr 2019 10:10:35 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3D6393F68F;
+        Wed,  3 Apr 2019 10:10:59 -0700 (PDT)
 From:   Robin Murphy <robin.murphy@arm.com>
 To:     will.deacon@arm.com
 Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
@@ -32,9 +32,9 @@ Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
         suzuki.poulose@arm.com, bigeasy@linutronix.de,
         peterz@infradead.org, clabbe.montjoie@gmail.com,
         Meng.Li@windriver.com
-Subject: [PATCH v2 2/2] perf/arm-ccn: Remove broken race mitigation
-Date:   Wed,  3 Apr 2019 18:10:32 +0100
-Message-Id: <49087b08f2685bed112dfc90b97ae59b8de8f6cf.1554310292.git.robin.murphy@arm.com>
+Subject: [PATCH v2 1/2] perf/arm-cci: Remove broken race mitigation
+Date:   Wed,  3 Apr 2019 18:10:53 +0100
+Message-Id: <cf67c49058e3913540df1ebbb765c006f5205ec1.1554310292.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.21.0.dirty
 In-Reply-To: <cover.1554310292.git.robin.murphy@arm.com>
 References: <cover.1554310292.git.robin.murphy@arm.com>
@@ -45,103 +45,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like arm-cci, arm-ccn has the same issue of disabling preemption around
-operations which can take mutexes. Again, remove the definite bug by
-simply not trying to fight the theoretical races. And since we are
-touching the hotplug handling code, take the opportunity to streamline
-it, as there's really no need to store a full-sized cpumask to keep
-track of a single CPU ID.
+Uncore PMU drivers face an awkward cyclic dependency wherein:
 
+ - They have to pick a valid online CPU to associate with before
+   registering the PMU device, since it will get exposed to userspace
+   immediately.
+ - The PMU registration has to be be at least partly complete before
+   hotplug events can be handled, since trying to migrate an
+   uninitialised context would be bad.
+ - The hotplug handler has to be ready as soon as a CPU is chosen, lest
+   it go offline without the user-visible cpumask value getting updated.
+
+The arm-cci driver has tried to solve this by using get_cpu() to pick
+the current CPU and prevent it from disappearing while both
+registrations are performed, but that results in taking mutexes with
+preemption disabled, which makes certain configurations very unhappy:
+
+[ 1.983337] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:2004
+[ 1.983340] in_atomic(): 1, irqs_disabled(): 0, pid: 1, name: swapper/0
+[ 1.983342] Preemption disabled at:
+[ 1.983353] [<ffffff80089801f4>] cci_pmu_probe+0x1dc/0x488
+[ 1.983360] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.20-rt8-yocto-preempt-rt #1
+[ 1.983362] Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
+[ 1.983364] Call trace:
+[ 1.983369] dump_backtrace+0x0/0x158
+[ 1.983372] show_stack+0x24/0x30
+[ 1.983378] dump_stack+0x80/0xa4
+[ 1.983383] ___might_sleep+0x138/0x160
+[ 1.983386] __might_sleep+0x58/0x90
+[ 1.983391] __rt_mutex_lock_state+0x30/0xc0
+[ 1.983395] _mutex_lock+0x24/0x30
+[ 1.983400] perf_pmu_register+0x2c/0x388
+[ 1.983404] cci_pmu_probe+0x2bc/0x488
+[ 1.983409] platform_drv_probe+0x58/0xa8
+
+It is not feasible to resolve all the possible races outside of the perf
+core itself, so address the immediate bug by following the example of
+nearly every other PMU driver and not even trying to do so. Registering
+the hotplug notifier first should minimise the window in which things
+can go wrong, so that's about as much as we can reasonably do here. This
+also revealed an additional race in assigning the global pointer too
+late relative to the hotplug notifier, which gets fixed in the process.
+
+Reported-by: "Li, Meng" <Meng.Li@windriver.com>
+Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/perf/arm-ccn.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/perf/arm-cci.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 2ae76026e947..a0214308b0cd 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -167,7 +167,7 @@ struct arm_ccn_dt {
+diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
+index bfd03e023308..7a29ed88bd4f 100644
+--- a/drivers/perf/arm-cci.c
++++ b/drivers/perf/arm-cci.c
+@@ -1684,19 +1684,17 @@ static int cci_pmu_probe(struct platform_device *pdev)
+ 	raw_spin_lock_init(&cci_pmu->hw_events.pmu_lock);
+ 	mutex_init(&cci_pmu->reserve_mutex);
+ 	atomic_set(&cci_pmu->active_events, 0);
+-	cci_pmu->cpu = get_cpu();
+-
+-	ret = cci_pmu_init(cci_pmu, pdev);
+-	if (ret) {
+-		put_cpu();
+-		return ret;
+-	}
  
- 	struct hrtimer hrtimer;
- 
--	cpumask_t cpu;
-+	unsigned int cpu;
- 	struct hlist_node node;
- 
- 	struct pmu pmu;
-@@ -559,7 +559,7 @@ static ssize_t arm_ccn_pmu_cpumask_show(struct device *dev,
- {
- 	struct arm_ccn *ccn = pmu_to_arm_ccn(dev_get_drvdata(dev));
- 
--	return cpumap_print_to_pagebuf(true, buf, &ccn->dt.cpu);
-+	return cpumap_print_to_pagebuf(true, buf, cpumask_of(ccn->dt.cpu));
- }
- 
- static struct device_attribute arm_ccn_pmu_cpumask_attr =
-@@ -759,7 +759,7 @@ static int arm_ccn_pmu_event_init(struct perf_event *event)
- 	 * mitigate this, we enforce CPU assignment to one, selected
- 	 * processor (the one described in the "cpumask" attribute).
- 	 */
--	event->cpu = cpumask_first(&ccn->dt.cpu);
-+	event->cpu = ccn->dt.cpu;
- 
- 	node_xp = CCN_CONFIG_NODE(event->attr.config);
- 	type = CCN_CONFIG_TYPE(event->attr.config);
-@@ -1215,15 +1215,15 @@ static int arm_ccn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
- 	struct arm_ccn *ccn = container_of(dt, struct arm_ccn, dt);
- 	unsigned int target;
- 
--	if (!cpumask_test_and_clear_cpu(cpu, &dt->cpu))
-+	if (cpu != dt->cpu)
- 		return 0;
- 	target = cpumask_any_but(cpu_online_mask, cpu);
- 	if (target >= nr_cpu_ids)
- 		return 0;
- 	perf_pmu_migrate_context(&dt->pmu, cpu, target);
--	cpumask_set_cpu(target, &dt->cpu);
-+	dt->cpu = target;
- 	if (ccn->irq)
--		WARN_ON(irq_set_affinity_hint(ccn->irq, &dt->cpu) != 0);
-+		WARN_ON(irq_set_affinity_hint(ccn->irq, cpumask_of(dt->cpu)));
- 	return 0;
- }
- 
-@@ -1299,29 +1299,28 @@ static int arm_ccn_pmu_init(struct arm_ccn *ccn)
- 	}
- 
- 	/* Pick one CPU which we will use to collect data from CCN... */
--	cpumask_set_cpu(get_cpu(), &ccn->dt.cpu);
-+	ccn->dt.cpu = raw_smp_processor_id();
- 
- 	/* Also make sure that the overflow interrupt is handled by this CPU */
- 	if (ccn->irq) {
--		err = irq_set_affinity_hint(ccn->irq, &ccn->dt.cpu);
-+		err = irq_set_affinity_hint(ccn->irq, cpumask_of(ccn->dt.cpu));
- 		if (err) {
- 			dev_err(ccn->dev, "Failed to set interrupt affinity!\n");
- 			goto error_set_affinity;
- 		}
- 	}
- 
-+	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
-+					 &ccn->dt.node);
++	cci_pmu->cpu = raw_smp_processor_id();
++	g_cci_pmu = cci_pmu;
+ 	cpuhp_setup_state_nocalls(CPUHP_AP_PERF_ARM_CCI_ONLINE,
+ 				  "perf/arm/cci:online", NULL,
+ 				  cci_pmu_offline_cpu);
+-	put_cpu();
+-	g_cci_pmu = cci_pmu;
 +
- 	err = perf_pmu_register(&ccn->dt.pmu, name, -1);
- 	if (err)
- 		goto error_pmu_register;
- 
--	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
--					 &ccn->dt.node);
--	put_cpu();
++	ret = cci_pmu_init(cci_pmu, pdev);
++	if (ret)
++		return ret;
++
+ 	pr_info("ARM %s PMU driver probed", cci_pmu->model->name);
  	return 0;
- 
- error_pmu_register:
- error_set_affinity:
--	put_cpu();
- error_choose_name:
- 	ida_simple_remove(&arm_ccn_pmu_ida, ccn->dt.id);
- 	for (i = 0; i < ccn->num_xps; i++)
+ }
 -- 
 2.21.0.dirty
 
