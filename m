@@ -2,115 +2,119 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F6BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B7EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857992133D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554324877;
-	bh=eIdJhARtDbQsSMGOl0+VyK9vQxyJt9OnI2DZG/S1G2Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KIVXj9S/7RP2xv1HqKk8T8iE+BLlfVfX/qGMMLrBEEwzWAnh+XBIVujlpa3+nScv0
-	 bOCKZr/tg6CI6xTTiEhXxvORyb/qfxmHYylcLx748yeIlI3JdyjVz19dd/LhZ1RGQz
-	 7acrIsvLiurdo2MFvjqu98r0xsc1zXkE4eRZlW/g=
+	by mail.kernel.org (Postfix) with ESMTP id 9C3612133D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:56:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="CsIBJnWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfDCUyf (ORCPT
+        id S1726399AbfDCU4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:54:35 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41099 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfDCUyf (ORCPT
+        Wed, 3 Apr 2019 16:56:55 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41370 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfDCU4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:54:35 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 64so280136otb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 13:54:35 -0700 (PDT)
+        Wed, 3 Apr 2019 16:56:55 -0400
+Received: by mail-qk1-f194.google.com with SMTP id o129so298367qke.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 13:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stZxDD4/RlpqPkI85AH0c96rqP0StTYiJpkpgjsDnoM=;
+        b=CsIBJnWfJpPzyCqAIU5cny97i2F+R4Pvkgtm/DLuMfzm8QWHgmOwdSoXe+HyphN1w3
+         eR8ny5zi+qW9kOpCPm0SaEldAEVlW9Cy7YTtMOSETbAtuF7U+uluKgEFTmEkAX/6K8RS
+         RktcO9ETfx2gWHWMHtJUc6fcCjml6p+hbgTIfHv5ORI7Mtz3GkUOIzRSgdgTM+w2cadV
+         ch9o/Bkh/8Cid3zkvm2ZgQYzmybO205fjkIKvQaI+4K89SfYckKPUEGwaAIwuNsHDTFY
+         7+/CCH/20Z78eXbzAjz51G/cqjRV/AVvj7rdaegd1nlfY5oCkA4G//kEdoGI16b7mqDi
+         CSTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pMNiQJpCYrgsSJq4y5K2SgmqoiP0YH+pXeQN305Fal8=;
-        b=j9eYCbsrZS8M+dypggedBMIX5ZhxUmMqBdEjlqD50din7ID8YaXhzhms01ofgEecfa
-         0QaxAbX6iD/cQn2otbmVAHu4ZNrTq2ioq0R93RqcQcqCOnEdkR4EXrwq6NNVN9GvhBWl
-         cJwn2lnUoy3JbEGlF4no3G5WfydE+7makpnwqGTzQGIAPoHJYx3NX2skXiEWzz48sOcQ
-         FfcVOHOnJyFJ5/L+Ow9q0NYfBWNHObPfPSYotwNs6R7bhGqGqBByfWBH6nglj3zQY6Ay
-         Nwn9qm/OOXyO5sv62Y1GFX9xZC7caqTBzz5Ky7WSVBkIsg3Y9Ba7MfUEgqPw2X6S+qB/
-         z+bQ==
-X-Gm-Message-State: APjAAAX82qhwyFhWKiDR5BNrOozXBT3JUe0iiNFEy8jDJxxu0ow2XEEu
-        Qw6ApzFHoy4gKBm8UXIv0JlVpCGJfgoHHlMUTog=
-X-Google-Smtp-Source: APXvYqzsdpOLd5tyMa1zzmXpjZ8t/avhmb1tNr/Fw42nQqhPdVI0AtgrekWw567uRS1SSAXwlxHM0hAQQDzRD3m7Aus=
-X-Received: by 2002:a9d:6646:: with SMTP id q6mr1410546otm.20.1554324874414;
- Wed, 03 Apr 2019 13:54:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=stZxDD4/RlpqPkI85AH0c96rqP0StTYiJpkpgjsDnoM=;
+        b=fnnIM4+884X2WE/99pjQ52ugvgl7Sue+n/Bghoor6BGk7faxP5vjLaiUrzNjgdCDFJ
+         tSNtBDrhu5HuHTFQp9B3WrPMi9hZNAvSf746xXIboEH+iNWmklIFSGwhVUlahpu5vrWI
+         pulL5TXg2ljrUdioEimreK+wYkTQ6pn1JuGW0q5UfM1C5AMXv9iH1XwCMkJ+/UJgJkbo
+         36wsb8mM7vI6M2qVA7r9u6ZE+4hdAgPFJlh3Reb5XoBqGYjppLCck2+TTHG65LHr0XVH
+         mfmjcqpbyC2HbGNGQhsf1Eqyie+NnvcTYYPW2wQASfjzopUKjZu3CaQVfMRylDs/EILc
+         55Jg==
+X-Gm-Message-State: APjAAAWBrUkkh3z178INf2Shp94KwetS8kHEOYqe/EZaPzCiEez8/JF4
+        nn6ZcvYYG5TmPrnwKU2gSlkNhw==
+X-Google-Smtp-Source: APXvYqxcCCYV8i8I/W0oj0Xa6OjIg2fMiNWDfgZbUxTeFZcC5XsWhn8KbYqES02wedrCevgpiTmKCQ==
+X-Received: by 2002:a05:620a:1244:: with SMTP id a4mr1889868qkl.282.1554325014312;
+        Wed, 03 Apr 2019 13:56:54 -0700 (PDT)
+Received: from rosewood.cam.corp.google.com ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id s54sm10662373qtb.83.2019.04.03.13.56.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 13:56:53 -0700 (PDT)
+From:   Sean Paul <sean@poorly.run>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Sean Paul <seanpaul@chromium.org>,
+        Maxime Jourdan <mjourdan@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation/gpu/meson: Remove link to meson_canvas.c
+Date:   Wed,  3 Apr 2019 16:56:45 -0400
+Message-Id: <20190403205652.183496-1-sean@poorly.run>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-References: <20190402155914.78166-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0hCrpyxJzMOQXthHkqLBaYBH44f_XsHy-YUfxxUU_o41w@mail.gmail.com> <20190403112923.GV9224@smile.fi.intel.com>
-In-Reply-To: <20190403112923.GV9224@smile.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Apr 2019 22:54:22 +0200
-Message-ID: <CAJZ5v0hR_0Do+jv79wxA4BRgrUKDfes2K5gYud9-2SoWOOEf0g@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: platform: Propagate error from insert_resource()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 1:29 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Apr 02, 2019 at 06:02:40PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Apr 2, 2019 at 5:59 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > Since insert_resource() might return an error we don't need
-> > > to shadow its error code and would safely propagate to the user.
->
-> > > -               if (p && insert_resource(p, r)) {
-> > > +               if (p && (ret = insert_resource(p, r))) {
-> >
-> > I would put the assignment here.
-> >
-> > >                         dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
-> > > -                       ret = -EBUSY;
-> > >                         goto failed;
-> > >                 }
->
-> Something like this?
+From: Sean Paul <seanpaul@chromium.org>
 
-Yes.
+The file was removed in the below patch and is causing this error:
+WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno -function Canvas ../drivers/gpu/drm/meson/meson_canvas.c' failed with return code
 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index dab0a5abc391..9cf9e2af9efd 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -438,10 +438,12 @@ int platform_device_add(struct platform_device *pdev)
->                                 p = &ioport_resource;
->                 }
->
-> -               if (p && insert_resource(p, r)) {
-> -                       dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
-> -                       ret = -EBUSY;
-> -                       goto failed;
-> +               if (p) {
-> +                       ret = insert_resource(p, r);
-> +                       if (ret) {
-> +                               dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
-> +                               goto failed;
-> +                       }
->                 }
->         }
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Fixes: 2bf6b5b0e374 ("drm/meson: exclusively use the canvas provider module")
+Cc: Maxime Jourdan <mjourdan@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-amlogic@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+---
+ Documentation/gpu/meson.rst | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/Documentation/gpu/meson.rst b/Documentation/gpu/meson.rst
+index 479f6f51a13b..b9e2f9aa3bd8 100644
+--- a/Documentation/gpu/meson.rst
++++ b/Documentation/gpu/meson.rst
+@@ -42,12 +42,6 @@ Video Encoder
+ .. kernel-doc:: drivers/gpu/drm/meson/meson_venc.c
+    :doc: Video Encoder
+ 
+-Video Canvas Management
+-=======================
+-
+-.. kernel-doc:: drivers/gpu/drm/meson/meson_canvas.c
+-   :doc: Canvas
+-
+ Video Clocks
+ ============
+ 
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
+
