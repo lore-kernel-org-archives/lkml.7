@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5548C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB476C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46422084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B699B20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7j6MPR7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uifbI/QX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfDCEB4 (ORCPT
+        id S1726862AbfDCECA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:01:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45032 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfDCEBy (ORCPT
+        Wed, 3 Apr 2019 00:02:00 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41732 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfDCEB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:01:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y13so7441246pfm.11;
-        Tue, 02 Apr 2019 21:01:53 -0700 (PDT)
+        Wed, 3 Apr 2019 00:01:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 188so7451790pfd.8;
+        Tue, 02 Apr 2019 21:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VXdsa+2KWn8DAZgbfHHYyO+0se1bIoGL2CFNu28TrmY=;
-        b=a7j6MPR7XLKdGlqUQuEnwGPzcOTUBmf9eLl0p5ceJwDl6DF/dLwa0iON/Wo3bHD8IJ
-         pt/YCBBNjrtSySM76empw64qwzk8JBfOryyse3zj5mO2t7Vhrf4laSF6EOKU3UhLGLUY
-         o6Pzb9TqXD5Plj9H25j3UDQmVopFjcdB2UU7An7VJtsvsNIG7FGEveIG3uSv79eYmZYi
-         q0WPUq3MyW3N271Rs5erfJTnDhMslZTN7DrRkizvY4C5B2fMbSxsOzyill+hGRUgXni5
-         aqzxeDSPk038NcvYNYIJsB+78UyRXFC7/g4UEckMgzjWLKJPczhUnR7BgSntSM2GvKFT
-         slww==
+        bh=dLfVSAt3KtcR71MR0EBWnUHcnDCLOACqvXbjCjoihCk=;
+        b=uifbI/QXjzTmlNBZBYOK5jyrhzsTCeGJJwETGxfRuOvyBUzcpxQpY2IKQszNHsrXpd
+         jx9eM/cJUL0CXL8Om39dMQhH+FM8zK/Y+Qwtvr7Qhei7Al/cBamq3JmNm7HipE3NO8sz
+         M4yMEWb49hVkklCiYWd92GcTj/rEQzb225Y43XVxCOkmWb/hTcVt+0X6vc/vaQuSIQrp
+         Bux9FnT3wnEyoWOMHoVfx0f6lwa3PqagOo3T3HuZY7CoKteDHS3V/US6vJ2Q0hVm3Qby
+         S5bjkgCaLyErTB7+H1ORZEJ4kSUG4JAeIm3cz138o3RGp+QNYBM/8R6ngHzWkSGiYj28
+         pPaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VXdsa+2KWn8DAZgbfHHYyO+0se1bIoGL2CFNu28TrmY=;
-        b=auaUOU/PsaBKnXxToe26xw3WfvdoUBuEzq4r7kFR9RKucC9rDk3dvjGH9TUIIibHTn
-         4Da4gr4Ns3HypZ8HaQIaUd3zCGU0lAx1lSt9AD95JdRg+eBHIipDZHxHNybvMaKd/1r2
-         j5vbvqhtEA6PFbwo9VQUCcU4jGwM9yIXfBkQH83GmO0kt13M3/FCZCE9cbKIH03P6A7s
-         J2I4e9pnLv2dMeJ8ILzAd4DZ8Psl16CivZVciBxAwpyDcuJQFd7zEXAESaOYAnykYELr
-         bR6dXdOaexUTE79OD8Lszo4N7q8RHdZXepciNgqXZmJrlTRU4vz6DQl0g9MarBN+SzjV
-         GJ7A==
-X-Gm-Message-State: APjAAAWNLHo7IGE9/7b88+udivnBFd+29lOGO5F8/LG+7ZUtuzCxPM+J
-        B/9FkNYwwvMT+3fA2Sd0404S6z7n
-X-Google-Smtp-Source: APXvYqx/JygKJndt7MjAfGuoPWrbcrV+adfQo/TrlVGGlJvLtg1o+1mtz7iqwqukMbay6Mdy+GOSBA==
-X-Received: by 2002:a63:5e43:: with SMTP id s64mr9729024pgb.15.1554264112696;
-        Tue, 02 Apr 2019 21:01:52 -0700 (PDT)
+        bh=dLfVSAt3KtcR71MR0EBWnUHcnDCLOACqvXbjCjoihCk=;
+        b=iIwLiQyaVlO6JXhw1iUrCKdG1rULgjFlZbl/jwt5zQbJMJkshEz7m8OFVK7ROoaehl
+         X5TO3Kej6wAqq4V/QVzvx9l7y+mbjjYfhs2EM7uZhd8GXVLF2Ryp3tAcEYDjxbwF58yy
+         Tg0gt7D1kXP4Z+Rz5KN1dGLutVKauEIfwBR8QnY85ve8dJEQdSw+UsFySMAKQGsKh3I6
+         vK9mGcQpBlHXsfvGIF1oICpOp+O9bVG3xm18aaN7ttoq/X0Ue6PpiZNsgTqbI1PAaZbF
+         JTJClqHzCjqc0lZkqeLK5AlrMe6dq45cc0LhbqH3w7rG+fhDUFYRMRl1Kkxjav3kQLp0
+         yxng==
+X-Gm-Message-State: APjAAAV09aghtBUaL38GyCgGlIr6sAb3LGq9KqVhOJcnH2KIz0LpW0QR
+        q7ZLEolNAZbLKgwa3RTiEqnSmo2/
+X-Google-Smtp-Source: APXvYqwOmOY7Fj6lcVIr2+RYH5XWq9tndFXJr0zQh76ISErXHVz5Fu/Ef3TT5H2ozmmUxJwmFbYAyg==
+X-Received: by 2002:a65:524a:: with SMTP id q10mr58023109pgp.224.1554264115251;
+        Tue, 02 Apr 2019 21:01:55 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id k14sm16278064pfb.125.2019.04.02.21.01.51
+        by smtp.gmail.com with ESMTPSA id k14sm16278064pfb.125.2019.04.02.21.01.53
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 21:01:51 -0700 (PDT)
+        Tue, 02 Apr 2019 21:01:54 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-spi@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/12] spi: gpio: Add local struct device pointer in spi_gpio_probe()
-Date:   Tue,  2 Apr 2019 21:01:23 -0700
-Message-Id: <20190403040133.1459-3-andrew.smirnov@gmail.com>
+Subject: [PATCH 04/12] spi: gpio: Simplify SPI_MASTER_NO_TX check in spi_gpio_probe()
+Date:   Tue,  2 Apr 2019 21:01:25 -0700
+Message-Id: <20190403040133.1459-5-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403040133.1459-1-andrew.smirnov@gmail.com>
 References: <20190403040133.1459-1-andrew.smirnov@gmail.com>
@@ -74,8 +74,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a local "struct device *dev" in spi_gpio_probe() for brevity. No
-functional change intended.
+Swap branches of the if statement in order to simplify it's logical
+condition being checked. No functional change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>
@@ -83,62 +83,36 @@ Cc: Chris Healy <cphealy@gmail.com>
 Cc: linux-spi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/spi/spi-gpio.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/spi/spi-gpio.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 675fd65ebf1d..2869af5ff936 100644
+index ca97b861c625..137f47e271dc 100644
 --- a/drivers/spi/spi-gpio.c
 +++ b/drivers/spi/spi-gpio.c
-@@ -379,6 +379,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	struct spi_master		*master;
- 	struct spi_gpio			*spi_gpio;
- 	struct spi_gpio_platform_data	*pdata;
-+	struct device			*dev = &pdev->dev;
- 	u16 master_flags = 0;
- 	bool use_of = 0;
+@@ -440,16 +440,16 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	bb->chipselect = spi_gpio_chipselect;
+ 	bb->set_line_direction = spi_gpio_set_direction;
  
-@@ -388,19 +389,19 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	if (status > 0)
- 		use_of = 1;
+-	if ((master_flags & SPI_MASTER_NO_TX) == 0) {
+-		bb->txrx_word[SPI_MODE_0] = spi_gpio_txrx_word_mode0;
+-		bb->txrx_word[SPI_MODE_1] = spi_gpio_txrx_word_mode1;
+-		bb->txrx_word[SPI_MODE_2] = spi_gpio_txrx_word_mode2;
+-		bb->txrx_word[SPI_MODE_3] = spi_gpio_txrx_word_mode3;
+-	} else {
++	if (master_flags & SPI_MASTER_NO_TX) {
+ 		bb->txrx_word[SPI_MODE_0] = spi_gpio_spec_txrx_word_mode0;
+ 		bb->txrx_word[SPI_MODE_1] = spi_gpio_spec_txrx_word_mode1;
+ 		bb->txrx_word[SPI_MODE_2] = spi_gpio_spec_txrx_word_mode2;
+ 		bb->txrx_word[SPI_MODE_3] = spi_gpio_spec_txrx_word_mode3;
++	} else {
++		bb->txrx_word[SPI_MODE_0] = spi_gpio_txrx_word_mode0;
++		bb->txrx_word[SPI_MODE_1] = spi_gpio_txrx_word_mode1;
++		bb->txrx_word[SPI_MODE_2] = spi_gpio_txrx_word_mode2;
++		bb->txrx_word[SPI_MODE_3] = spi_gpio_txrx_word_mode3;
+ 	}
+ 	bb->setup_transfer = spi_bitbang_setup_transfer;
  
--	pdata = dev_get_platdata(&pdev->dev);
-+	pdata = dev_get_platdata(dev);
- #ifdef GENERIC_BITBANG
- 	if (!pdata || (!use_of && !pdata->num_chipselect))
- 		return -ENODEV;
- #endif
- 
--	master = spi_alloc_master(&pdev->dev, sizeof(*spi_gpio));
-+	master = spi_alloc_master(dev, sizeof(*spi_gpio));
- 	if (!master)
- 		return -ENOMEM;
- 
- 	spi_gpio = spi_master_get_devdata(master);
- 
--	spi_gpio->cs_gpios = devm_kcalloc(&pdev->dev,
-+	spi_gpio->cs_gpios = devm_kcalloc(dev,
- 				pdata->num_chipselect,
- 				sizeof(*spi_gpio->cs_gpios),
- 				GFP_KERNEL);
-@@ -416,7 +417,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	if (pdata)
- 		spi_gpio->pdata = *pdata;
- 
--	status = spi_gpio_request(&pdev->dev, spi_gpio,
-+	status = spi_gpio_request(dev, spi_gpio,
- 				  pdata->num_chipselect, &master_flags);
- 	if (status)
- 		return status;
-@@ -431,7 +432,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	master->setup = spi_gpio_setup;
- 	master->cleanup = spi_gpio_cleanup;
- #ifdef CONFIG_OF
--	master->dev.of_node = pdev->dev.of_node;
-+	master->dev.of_node = dev->of_node;
- #endif
- 
- 	spi_gpio->bitbang.master = master;
 -- 
 2.20.1
 
