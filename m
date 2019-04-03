@@ -2,219 +2,107 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E4BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B50DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D2C20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:57:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yNirPcDg"
+	by mail.kernel.org (Postfix) with ESMTP id 071252133D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfDCR5A (ORCPT
+        id S1726792AbfDCR5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:57:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43098 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfDCR45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:56:57 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c8so8516201pfd.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0plGmtWPxMrVsvJ147H7O6RF7OpndiONXD2KZz+fZDg=;
-        b=yNirPcDgTk9QIm/n7OXSAK0CuWqAhNunSvCnfXOvxwFd9zCoUROJ+g+A3YZUI/vVoZ
-         Tl4eQcn8B5gzAN0yzyuNWHqhQdnk1nWvKSEJDIORBxIOBFeW+2L3QEOUokG9BAwo8SQZ
-         HmZg+iWGW9wUQyrYvcTKAXJg0+h9CAYPrX8dM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0plGmtWPxMrVsvJ147H7O6RF7OpndiONXD2KZz+fZDg=;
-        b=JEZvdaaWffMu1NlR5EI57TtY8FnLSe85DOLMH3lrxK0SgxNOnNvO21h2GkgQ0eNxB2
-         NwFlWoy96aZfEr7yX9UABUwD8udtePSOs7KwBr5Ci7iYoU2/xL+d2Pt4GCGEm2kD/Gjx
-         YMpPf1071072E8Tk3Xrepi7mVxwR3Z4HfQ9ko/fGdYbsfyo9LKNZTbyeSjMsSWS/7vex
-         XwU+RODUgUxLFxpXcv4LdK8xLzIzFKR6AzduatGO8z1hzA/20XRWuMuvlhPMBFZ3Sex9
-         xY3njGalzJMz9N6oKfmsz7wRwRGLU1+a7yVJMz3v4XuO7O6p5g3mDI5rSVMDr386fKvu
-         5fzQ==
-X-Gm-Message-State: APjAAAWO26Gan+sHeXd2fTCZglZhEHtAB22+wp77zRU98KN2Z4DQ040x
-        q10DXnJbeVOdWbJa7OlVIhBrNA==
-X-Google-Smtp-Source: APXvYqzgMLvNYjdtx3ptZnJaa7HIcSN/xdmsOiNm34JGTFThCPJ2KSubkpPFSY3esUVTsdymKwLN7Q==
-X-Received: by 2002:a63:550d:: with SMTP id j13mr1072028pgb.18.1554314215558;
-        Wed, 03 Apr 2019 10:56:55 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id e1sm19604283pfn.187.2019.04.03.10.56.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 10:56:54 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 13:56:53 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190403175653.GA60809@google.com>
-References: <20190211143600.15021-1-joel@joelfernandes.org>
- <20190215031926.ljzluy2cfxp64u6o@ast-mbp>
- <20190325134947.GA187133@google.com>
- <20190327173103.GA205980@google.com>
- <CAK7LNARcaVtgHvco-Q=E5jhOXduk=55g9AC7nFn2esFxnk9Naw@mail.gmail.com>
- <20190403172031.GA260189@google.com>
- <CAKOZueszGpij1ZLqQfNggY-7t7BV+SksApVvmWE+kuExYvv+aA@mail.gmail.com>
+        Wed, 3 Apr 2019 13:57:08 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45988 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbfDCR5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:57:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF8DA80D;
+        Wed,  3 Apr 2019 10:57:07 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AC263F721;
+        Wed,  3 Apr 2019 10:57:04 -0700 (PDT)
+Subject: Re: [PATCH 2/6] arm64/mm: Enable memory hot remove
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com
+Cc:     mark.rutland@arm.com, mhocko@suse.com, david@redhat.com,
+        cai@lca.pw, pasha.tatashin@oracle.com,
+        Stephen Bates <sbates@raithlin.com>, james.morse@arm.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
+ <f2ea761c-49b2-88f6-14fa-5aaec57952cb@deltatee.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <85fbfe49-d49e-fd6e-21dd-ff4d9808610b@arm.com>
+Date:   Wed, 3 Apr 2019 18:57:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKOZueszGpij1ZLqQfNggY-7t7BV+SksApVvmWE+kuExYvv+aA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f2ea761c-49b2-88f6-14fa-5aaec57952cb@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:46:01AM -0700, Daniel Colascione wrote:
-> On Wed, Apr 3, 2019 at 10:20 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Wed, Apr 03, 2019 at 04:48:37PM +0900, Masahiro Yamada wrote:
-> > > On Thu, Mar 28, 2019 at 2:32 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > >
-> > > > On Mon, Mar 25, 2019 at 09:49:47AM -0400, Joel Fernandes wrote:
-> > > > > On Thu, Feb 14, 2019 at 07:19:29PM -0800, Alexei Starovoitov wrote:
-> > > > > > On Mon, Feb 11, 2019 at 09:35:59AM -0500, Joel Fernandes (Google) wrote:
-> > > > > > > Introduce in-kernel headers and other artifacts which are made available
-> > > > > > > as an archive through proc (/proc/kheaders.txz file). This archive makes
-> > > > > > > it possible to build kernel modules, run eBPF programs, and other
-> > > > > > > tracing programs that need to extend the kernel for tracing purposes
-> > > > > > > without any dependency on the file system having headers and build
-> > > > > > > artifacts.
-> > > > > > >
-> > > > > > > On Android and embedded systems, it is common to switch kernels but not
-> > > > > > > have kernel headers available on the file system. Raw kernel headers
-> > > > > > > also cannot be copied into the filesystem like they can be on other
-> > > > > > > distros, due to licensing and other issues. There's no linux-headers
-> > > > > > > package on Android. Further once a different kernel is booted, any
-> > > > > > > headers stored on the file system will no longer be useful. By storing
-> > > > > > > the headers as a compressed archive within the kernel, we can avoid these
-> > > > > > > issues that have been a hindrance for a long time.
-> > > > > >
-> > > > > > The set looks good to me and since the main use case is building bpf progs
-> > > > > > I can route it via bpf-next tree if there are no objections.
-> > > > > > Masahiro, could you please ack it?
-> > > > >
-> > > > > FYI, Masahiro's comments were all address by v5:
-> > > > > https://lore.kernel.org/patchwork/project/lkml/list/?series=387311
-> > > > >
-> > > > > I believe aren't more outstanding concerns. Could we consider it for v5.2?
-> > > >
-> > > > Just to highlight the problem, today I booted v5.0 on an emulated Android
-> > > > device for some testing, that didn't have a set of prebuilt headers that we
-> > > > have been packaging on well known kernels, to get around this issue. This
-> > > > caused great pain and issues with what I was doing. I know me and many others
-> > > > really want this. With this I can boot an emulated Android device with
-> > > > IKCONFIG_PROC=y and run BCC with that that. Also I want to do the BCC side of
-> > > > the development, but first want to know if we can merge this upstream.
-> > > >
-> > > > Masahiro, I believe due diligence has been done in solidifying it as posted
-> > > > in the v5.  Anything else we need to do here? Are you with the patches?
-> > >
-> > >
-> > > As you said, these updates are "cosmetic".
-> > > Nobody is worried about (or interested in) them.
-> > > Even if we miss something, they are fixable later.
-> > >
-> > > I accept embedding headers in the kernel,
-> > > but I do not like the part about external module build.
-> > >  - kernel embeds build artifacts that depend on a
-> > >    particular host-arch
-> > >  - users do not know which compiler to use
-> > > Perhaps, you may remember my concerns.
-> > > https://lore.kernel.org/patchwork/patch/1046307/#1239501
-> >
-> > Masahiro,
-> > I think we already discussed this right. The compiler issue is a user-issue -
-> > it is not a problem that has arisen because this patch. Anyone can build a
-> > kernel module today without this patch - using a compiler that is different
-> > from the running kernel. So I did not fully understand your concern. This
-> > patch does not ship a compiler in the archive. The compiler is upto the user
-> > based on user environment. They can already shoot themself in foot without
-> > this patch.
-> >
-> > Greg,
-> > Would be great to get your thoughts here as well about Masami's concern.
-> >
-> > Honestly, the "kernel module building artifacts" bit is a bonus with this
-> > patch. The main thing we are adding or that we need is really the headers
-> > (for BCC). I just thought shipping the kernel build artifacts would also be
-> > awesome because people can now build kernel modules without needing a kernel
-> > tree at all.
-> >
-> > But I also want this stuff merged so if folks are really unhappy with the
-> > module build artifacts and only want headers - then that's also fine with me
-> > and I can yank them - that would also mean though that this work cannot be a
-> > replacement for linux-headers package on distros, so that would be sad.
-> >
-> > thanks!
+On 03/04/2019 18:32, Logan Gunthorpe wrote:
 > 
-> IMHO, including the module build stuff is fine, and the stuff that
-> Masahiro mentions doesn't matter much. To be specific about the
-> concerns:
 > 
-> >> > >  - kernel embeds build artifacts that depend on a
-> > >    particular host-arch
+> On 2019-04-02 10:30 p.m., Anshuman Khandual wrote:
+>> Memory removal from an arch perspective involves tearing down two different
+>> kernel based mappings i.e vmemmap and linear while releasing related page
+>> table pages allocated for the physical memory range to be removed.
+>>
+>> Define a common kernel page table tear down helper remove_pagetable() which
+>> can be used to unmap given kernel virtual address range. In effect it can
+>> tear down both vmemap or kernel linear mappings. This new helper is called
+>> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
+>> The argument 'direct' here identifies kernel linear mappings.
+>>
+>> Vmemmap mappings page table pages are allocated through sparse mem helper
+>> functions like vmemmap_alloc_block() which does not cycle the pages through
+>> pgtable_page_ctor() constructs. Hence while removing it skips corresponding
+>> destructor construct pgtable_page_dtor().
+>>
+>> While here update arch_add_mempory() to handle __add_pages() failures by
+>> just unmapping recently added kernel linear mapping. Now enable memory hot
+>> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
+>>
+>> This implementation is overall inspired from kernel page table tear down
+>> procedure on X86 architecture.
 > 
-> What are these artifacts? We build the kernel as a standalone system.
-> It's not as if we statically link host glibc into it or something.
-
-There are some scripts/ that are built in the host-arch ABI. These are also put
-in the archive because they are needed to build modules. So if you
-cross-compile then the archive will have scripts/ that are in the host arch,
-not the target arch. This makes it not possible to build modules on the
-target using the archive. This is not much of an issue because I already
-proved that such kernel modules can be built using a chroot in this thread:
-https://lkml.org/lkml/2019/2/28/1313
-And in the non cross-compile case, it will be immensely useful for distros..
-
-> > >  - users do not know which compiler to use
+> I've been working on very similar things for RISC-V. In fact, I'm
+> currently in progress on a very similar stripped down version of
+> remove_pagetable(). (Though I'm fairly certain I've done a bunch of
+> stuff wrong.)
 > 
-> Does that matter much? Do things ever break if the kernel proper is
-> built with GCC x.y.z and we build a module with GCC x.y.(z+1)? Why
-> would it? Structure layout is invariant across compiler version, or at
-> least ought to be.  And don't we have exactly the same problem with
-> any kernel headers package? I don't think it'd hurt to include the
-> output of $(CC) --version though.
+> Would it be possible to move this work into common code that can be used
+> by all arches? Seems like, to start, we should be able to support both
+> arm64 and RISC-V... and maybe even x86 too.
+> 
+> I'd be happy to help integrate and test such functions in RISC-V.
 
-Apparently there were some issues in some posting where Greg said we don't
-support anything but modules built with the same compiler as the kernel its
-being loaded into, even if such modules do work in practice. I don't recall
-the details, I can dig up that thread if you want. My point is, whether
-that's an issue or not - it is not an issue introduced by this patch. That's
-just a module building issue which we neither solve here, nor introduce.
+Indeed, I had hoped we might be able to piggyback off generic code for 
+this anyway, given that we have generic pagetable code which knows how 
+to free process pagetables, and kernel pagetables are also pagetables.
 
-> Like Joel, I'd like to see this change merged. It'll make life easier
-> for a lot of people.
+I did actually hack up such a patch[1], and other than 
+p?d_none_or_clear_bad() being loud it does actually appear to function 
+OK in terms of withstanding repeated add/remove cycles and not crashing, 
+but all the pagetable accounting and other stuff I don't really know 
+about mean it's probably not viable without a lot more core work.
 
-Thanks.
+Robin.
 
-- Joel
-
+[1] 
+http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=75934a2c4f737ad9f26903861108d5b0658e86bb
