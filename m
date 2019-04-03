@@ -2,109 +2,86 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E534FC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EB6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32EB2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZdnyAbZ"
+	by mail.kernel.org (Postfix) with ESMTP id 12B992084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfDCUpR (ORCPT
+        id S1726444AbfDCUr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:45:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36045 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfDCUpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:45:16 -0400
-Received: by mail-qt1-f193.google.com with SMTP id s15so702512qtn.3;
-        Wed, 03 Apr 2019 13:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4plFhU/Zqm1lqkeMfe6JXmo9VfvB6FCCzNZE6pU1PLM=;
-        b=RZdnyAbZAe72wW1u3aA0oNToW7AA59ns5xNeWjpmsonQqA8bwlPOEfRplx50mdhXGn
-         GJTAsah4ir8S2SkVEOazY2/kNgUd3jHTALG+PkkZX8O4ivExlYbtS1lidbPnH5I3XsPL
-         LMZuH43xs5zN5w6Jy4lzcMhG2WSe8SGezsJYj2zczs2NGAev1YtZ7OBicuioJHo+xDjo
-         CoAQY21DzuemKNLQCTL0wEQGljkBItO3QGMkejrOcjvKSRdfSI3WnZJf/x+KoN8cePul
-         NSkABzOODdZaFjo/Mm+YbN6vSQqckr6Lc8HkjK3GZbiXS4egsGwWAX/BDuAOqA+1bu5+
-         qTiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4plFhU/Zqm1lqkeMfe6JXmo9VfvB6FCCzNZE6pU1PLM=;
-        b=WV7BNhKQ7l9HtMzLxgvnG2YXuybHaXyO8oU+ace9/8l4h5M1W89M8N6vO2KfouiOVw
-         nCTjBw1wdt/Na1hrYwPeDMllrtDfMNeK2bO3PQAds0QwW2RU54W93hV4Tglv6kySb0+Z
-         4byY8N0v/sNSWNDnv2y4Rr9QrmoVNUSBVId8Q/vSQz1FOGQ3PDscMi6vEygcxIcHlEP5
-         zKw74Em971MVL4mOsPyHQoD722HwuOHi/cIms6Q/N5la7j0cJEhmYqp9jSp23q1Yode+
-         uUs0V8a7cMXWovVFTcV+aTT/LpctM2wUSGjQ/+HZhHXbuKlEk2QMPN+YlrKzzhX1PQtj
-         Uu9Q==
-X-Gm-Message-State: APjAAAVjiYepVvNfpBqR6bN/b+oUEszajcX9sTouZ3hIdx3tuKt0qXl0
-        qmmpNk6E25fwfaVc3ORSUv4=
-X-Google-Smtp-Source: APXvYqxi7qwM1qJhpgRBCPF8OaODWX32KhU6/r0sNZS1PbNMhJySFh43tMrPBxpaAAaUYNDWiV7tag==
-X-Received: by 2002:aed:356e:: with SMTP id b43mr2012818qte.161.1554324315856;
-        Wed, 03 Apr 2019 13:45:15 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:32:a2b6::2])
-        by smtp.gmail.com with ESMTPSA id d21sm11673184qtc.91.2019.04.03.13.45.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 13:45:15 -0700 (PDT)
-From:   Lucas Oshiro <lucasseikioshiro@gmail.com>
-To:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, jic23@kernel.org, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, gregkh@linuxfoundation.org
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH] staging: iio: cdc: ad7746: Replace bitshift by BIT
-Date:   Wed,  3 Apr 2019 17:45:02 -0300
-Message-Id: <20190403204502.28917-1-lucasseikioshiro@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 3 Apr 2019 16:47:59 -0400
+Received: from sauhun.de ([88.99.104.3]:51544 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfDCUr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 16:47:58 -0400
+Received: from localhost (p54B3311F.dip0.t-ipconnect.de [84.179.49.31])
+        by pokefinder.org (Postfix) with ESMTPSA id 9DC1E2C282F;
+        Wed,  3 Apr 2019 22:47:56 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 22:47:56 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     laurentiu.tudor@nxp.com
+Cc:     u.kleine-koenig@pengutronix.de, mojha@codeaurora.org,
+        linux-i2c@vger.kernel.org, wsa+renesas@sang-engineering.com,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        leoyang.li@nxp.com
+Subject: Re: [PATCH v2] i2c: imx: don't leak the i2c adapter on error
+Message-ID: <20190403204756.mbc7zc5klfd5zydg@ninjato>
+References: <20190401101437.9626-1-laurentiu.tudor@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e5bv5jrwovk4okep"
+Content-Disposition: inline
+In-Reply-To: <20190401101437.9626-1-laurentiu.tudor@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace bitshifts on lines 54, 56 and 78 of ad7746.c.
 
-Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
----
- drivers/staging/iio/cdc/ad7746.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+--e5bv5jrwovk4okep
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/staging/iio/cdc/ad7746.c b/drivers/staging/iio/cdc/ad7746.c
-index 0eb28fea876e..ea48b14cee72 100644
---- a/drivers/staging/iio/cdc/ad7746.c
-+++ b/drivers/staging/iio/cdc/ad7746.c
-@@ -51,9 +51,9 @@
- #define AD7746_CAPSETUP_CACHOP		BIT(0)
- 
- /* Voltage/Temperature Setup Register Bit Designations (AD7746_REG_VT_SETUP) */
--#define AD7746_VTSETUP_VTEN		(1 << 7)
-+#define AD7746_VTSETUP_VTEN		BIT(7)
- #define AD7746_VTSETUP_VTMD_INT_TEMP	(0 << 5)
--#define AD7746_VTSETUP_VTMD_EXT_TEMP	(1 << 5)
-+#define AD7746_VTSETUP_VTMD_EXT_TEMP	BIT(5)
- #define AD7746_VTSETUP_VTMD_VDD_MON	(2 << 5)
- #define AD7746_VTSETUP_VTMD_EXT_VIN	(3 << 5)
- #define AD7746_VTSETUP_EXTREF		BIT(4)
-@@ -75,7 +75,7 @@
- #define AD7746_CONF_VTFS_MASK		GENMASK(7, 6)
- #define AD7746_CONF_CAPFS_MASK		GENMASK(5, 3)
- #define AD7746_CONF_MODE_IDLE		(0 << 0)
--#define AD7746_CONF_MODE_CONT_CONV	(1 << 0)
-+#define AD7746_CONF_MODE_CONT_CONV	BIT(0)
- #define AD7746_CONF_MODE_SINGLE_CONV	(2 << 0)
- #define AD7746_CONF_MODE_PWRDN		(3 << 0)
- #define AD7746_CONF_MODE_OFFS_CAL	(5 << 0)
--- 
-2.21.0
+On Mon, Apr 01, 2019 at 01:14:37PM +0300, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>=20
+> Make sure to free the i2c adapter on the error exit path.
+>=20
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Reviewed-by: Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+> Fixes: e1ab9a468e3b ("i2c: imx: improve the error handling in i2c_imx_dma=
+_request()")
 
+Applied to for-current, thanks!
+
+
+--e5bv5jrwovk4okep
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlylG/sACgkQFA3kzBSg
+KbY7NA/+OYTlxmIrzeQ96oMeThGobNltt9M5/8SMQzFO/sx9hUKRDFH2whp2ZVHB
+UOFKvbfGUQUd1M24eRxqsrvqAQDxjfrOHRzZgxiCzCbGYdcgHeIr+IJjb9O7xxAm
+ImAFZaTfsVxr0r6pwRLxmo/e7ID9rvq4uRDyu5k3u/CW0RZ1iT09/NbuiUFWV2Lr
+yJYHNpHKz+kr1dAkxMGTOMUpdxSmQpHaNa89mPnPzgP6O8vdanJod+7kun6NGDTU
+hAFO0HosTwbnVR2WySVLPITryXSpwg69oaaGyKkntjBwxbsulvP3olkk/+2d4+8N
+GDkjOmEtfoTXMYdOEmzX5Il5ATjs1BSwoEKDjSBM2+VwzKWgioOQlwfh2xdKHZpp
+oQp5Ug9Xt4bPsXJkZA13/BCBkR79JzdTJZZwAB+GoYIYAiPBtmg4vNcEIwjTqCSS
+RhowyLiadlKtBBFl4/x6Bre4XS4m77mzl+U9RV5mqqFIqYnWjgRCzKxg6c5IsHTZ
+9VU1w9Q2FGFqktNqMyRKJkj82RRI+xhaOI5J62GlNsnKJZ03lrzma9fUSkrZHV0d
+FTOjWjIktcP+oBW0v1jRBahuDhTOfdEq2pqIIbHTi7Sa0eN8q1/8yuNRc9+yLEXq
+GgH6i7jlC/V7rbi+vOxp7G/vIeo0b+AfUJAtC9r4jq3rZjW9Pj8=
+=Oe0l
+-----END PGP SIGNATURE-----
+
+--e5bv5jrwovk4okep--
