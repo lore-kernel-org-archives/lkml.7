@@ -2,235 +2,123 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13C4C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DA9C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798C62084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B562084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfDCJr4 (ORCPT
+        id S1726337AbfDCJu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:47:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37112 "EHLO mx1.suse.de"
+        Wed, 3 Apr 2019 05:50:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5660 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbfDCJr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:47:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D1D64AEF6;
-        Wed,  3 Apr 2019 09:47:53 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     "Yan\, Zheng" <ukernel@gmail.com>
-Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
-References: <20190315111107.15154-1-lhenriques@suse.com>
-        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
-        <87r2b4zd2q.fsf@suse.com>
-        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
-        <87lg1c17b2.fsf@suse.com>
-        <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
-        <87a7hr19v7.fsf@suse.com> <87o963jkcj.fsf@suse.com>
-        <CAAM7YAko8qnfjWEdEqX=XE3azDZLpO_+egxDEsqowK9ByYZxwg@mail.gmail.com>
-Date:   Wed, 03 Apr 2019 10:47:52 +0100
-In-Reply-To: <CAAM7YAko8qnfjWEdEqX=XE3azDZLpO_+egxDEsqowK9ByYZxwg@mail.gmail.com>
-        (Zheng Yan's message of "Wed, 3 Apr 2019 10:54:51 +0800")
-Message-ID: <878swre7xz.fsf@suse.com>
+        id S1726097AbfDCJu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:50:59 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [10.3.19.208])
+        by Forcepoint Email with ESMTP id B476C2BA2CE7B8344C7F;
+        Wed,  3 Apr 2019 17:50:56 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Wed, 3 Apr 2019
+ 17:50:49 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <viro@zeniv.linux.org.uk>,
+        <willemb@google.com>, <edumazet@google.com>, <fw@strlen.de>,
+        <sagi@lightbitslabs.com>, <hch@lst.de>, <pabeni@redhat.com>,
+        <pctammela@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] iov_iter: Fix build error without CONFIG_CRYPTO
+Date:   Wed, 3 Apr 2019 17:50:31 +0800
+Message-ID: <20190403095031.11720-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Yan, Zheng" <ukernel@gmail.com> writes:
+From: YueHaibing <yuehaibing@huawei.com>
 
-> On Fri, Mar 22, 2019 at 6:04 PM Luis Henriques <lhenriques@suse.com> wrote:
->>
->> Luis Henriques <lhenriques@suse.com> writes:
->>
->> > "Yan, Zheng" <ukernel@gmail.com> writes:
->> >
->> >> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
->> >>>
->> >>> "Yan, Zheng" <ukernel@gmail.com> writes:
->> >>>
->> >>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
->> >>> >>
->> >>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
->> >>> >>
->> >>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
->> >>> >> >>
->> >>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
->> >>> >> >>
->> >>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
->> >>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
->> >>> >> >>   hex dump (first 32 bytes):
->> >>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
->> >>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->> >>> >> >>   backtrace:
->> >>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
->> >>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
->> >>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
->> >>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
->> >>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
->> >>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
->> >>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
->> >>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
->> >>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
->> >>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
->> >>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
->> >>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
->> >>> >> >>
->> >>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
->> >>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
->> >>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
->> >>> >> >>
->> >>> >> >> Link: https://tracker.ceph.com/issues/38224
->> >>> >> >> Cc: stable@vger.kernel.org
->> >>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> >>> >> >> ---
->> >>> >> >>  fs/ceph/caps.c | 7 +++++++
->> >>> >> >>  1 file changed, 7 insertions(+)
->> >>> >> >>
->> >>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->> >>> >> >> index 36a8dc699448..208f4dc6f574 100644
->> >>> >> >> --- a/fs/ceph/caps.c
->> >>> >> >> +++ b/fs/ceph/caps.c
->> >>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
->> >>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->> >>> >> >>  {
->> >>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
->> >>> >> >> +
->> >>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
->> >>> >> >>         list_del_init(&ci->i_snap_realm_item);
->> >>> >> >>         ci->i_snap_realm_counter++;
->> >>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->> >>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
->> >>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
->> >>> >> >>                             realm);
->> >>> >> >> +       /*
->> >>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
->> >>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
->> >>> >> >> +        * ceph_snap_context and we need to drop it.
->> >>> >> >> +        */
->> >>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
->> >>> >> >>  }
->> >>> >> >>
->> >>> >> >>  /*
->> >>> >> >
->> >>> >> > This does not seem right.  i_head_snapc is cleared when
->> >>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
->> >>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
->> >>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
->> >>> >> > should be in iterate_session_caps()
->> >>> >> >
->> >>> >>
->> >>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
->> >>> >> seems to execute fine, except from the memory leak.
->> >>> >>
->> >>> >> It's very difficult to reproduce this issue, but last time I managed to
->> >>> >> get this memory leak to trigger I actually had some debugging code in
->> >>> >> drop_inode_snap_realm, something like:
->> >>> >>
->> >>> >>   if (ci->i_head_snapc)
->> >>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
->> >>> >
->> >>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
->> >>> > i_flushing_caps. and try reproducing it again.
->> >>> >
->> >>>
->> >>> Ok, it took me a few hours, but I managed to reproduce the bug, with
->> >>> those extra printks.  All those values are set to 0 when the bug
->> >>> triggers (and i_head_snapc != NULL).
->> >>>
->> >>
->> >> Thanks, which test triggers this bug?
->> >
->> > That's generic/013.  It usually triggers after a few hours of running it
->> > in a loop (I'm using a vstart cluster for that).
->> >
->> >>
->> >> I searched that code, found we may fail to cleanup i_head_snap in two
->> >> places. One is in ceph_queue_cap_snap, Another is in
->> >> remove_session_caps_cb().
->> >
->> > Ah, great!  I spent a lot of time looking but I couldn't really find it.
->> > My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
->> > and that the corresponding ceph_put_snap_context would be done in
->> > handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
->> > MDS.
->>
->> Something that I didn't said explicitly is that I *know* that the
->> unbalanced ceph_get_snap_context() is the one in function
->> ceph_queue_cap_snap().  I know this for sure because I've managed to
->> reproduce the issue several times with an instrumented kernel (with
->> tracepoints) that allowed me to keep track of all ceph_snap_context
->> operations (create, get, put, delete).
->>
->
-> Sorry for the delay. please try
+If CONFIG_CRYPTO is not set or set to m,
+gcc building warn this:
 
-Thank you, I'll try the test with your patch applied and see if I still
-see the issue (obviously, this will take some time as it takes several
-hours for the bug to trigger).
+lib/iov_iter.o: In function `hash_and_copy_to_iter':
+iov_iter.c:(.text+0x9129): undefined reference to `crypto_stats_get'
+iov_iter.c:(.text+0x9152): undefined reference to `crypto_stats_ahash_update'
 
-Cheers,
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: d05f443554b3 ("iov_iter: introduce hash_and_copy_to_iter helper")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ include/linux/skbuff.h | 2 ++
+ lib/iov_iter.c         | 2 ++
+ net/core/datagram.c    | 2 ++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 9027a8c..3999112 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -3396,9 +3396,11 @@ static inline int skb_copy_datagram_msg(const struct sk_buff *from, int offset,
+ }
+ int skb_copy_and_csum_datagram_msg(struct sk_buff *skb, int hlen,
+ 				   struct msghdr *msg);
++#ifdef CONFIG_CRYPTO
+ int skb_copy_and_hash_datagram_iter(const struct sk_buff *skb, int offset,
+ 			   struct iov_iter *to, int len,
+ 			   struct ahash_request *hash);
++#endif
+ int skb_copy_datagram_from_iter(struct sk_buff *skb, int offset,
+ 				 struct iov_iter *from, int len);
+ int zerocopy_sg_from_iter(struct sk_buff *skb, struct iov_iter *frm);
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 50e77ec..ed02f74 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1528,6 +1528,7 @@ size_t csum_and_copy_to_iter(const void *addr, size_t bytes, void *csump,
+ }
+ EXPORT_SYMBOL(csum_and_copy_to_iter);
+ 
++#ifdef CONFIG_CRYPTO
+ size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
+ 		struct iov_iter *i)
+ {
+@@ -1542,6 +1543,7 @@ size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
+ 	return copied;
+ }
+ EXPORT_SYMBOL(hash_and_copy_to_iter);
++#endif
+ 
+ int iov_iter_npages(const struct iov_iter *i, int maxpages)
+ {
+diff --git a/net/core/datagram.c b/net/core/datagram.c
+index 91bb5a0..8815ec2 100644
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -494,6 +494,7 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_CRYPTO
+ /**
+  *	skb_copy_and_hash_datagram_iter - Copy datagram to an iovec iterator
+  *          and update a hash.
+@@ -511,6 +512,7 @@ int skb_copy_and_hash_datagram_iter(const struct sk_buff *skb, int offset,
+ 			hash_and_copy_to_iter, hash);
+ }
+ EXPORT_SYMBOL(skb_copy_and_hash_datagram_iter);
++#endif
+ 
+ static size_t simple_copy_to_iter(const void *addr, size_t bytes,
+ 		void *data __always_unused, struct iov_iter *i)
 -- 
-Luis
+2.7.4
 
 
->
-> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> index 45f061e47721..5bc30e0d252a 100644
-> --- a/fs/ceph/mds_client.c
-> +++ b/fs/ceph/mds_client.c
-> @@ -1420,6 +1420,15 @@ static int remove_session_caps_cb(struct inode
-> *inode, struct ceph_cap *cap,
->                         list_add(&ci->i_prealloc_cap_flush->i_list, &to_remove);
->                         ci->i_prealloc_cap_flush = NULL;
->                 }
-> +
-> +               if (drop &&
-> +                  ci->i_wrbuffer_ref_head == 0 &&
-> +                  ci->i_wr_ref == 0 &&
-> +                  ci->i_dirty_caps == 0 &&
-> +                  ci->i_flushing_caps == 0) {
-> +                      ceph_put_snap_context(ci->i_head_snapc);
-> +                      ci->i_head_snapc = NULL;
-> +               }
->         }
->         spin_unlock(&ci->i_ceph_lock);
->         while (!list_empty(&to_remove)) {
-> diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
-> index 89aa37fa0f84..0af4b3d32122 100644
-> --- a/fs/ceph/snap.c
-> +++ b/fs/ceph/snap.c
-> @@ -572,7 +572,12 @@ void ceph_queue_cap_snap(struct ceph_inode_info *ci)
->         old_snapc = NULL;
->
->  update_snapc:
-> -       if (ci->i_head_snapc) {
-> +       if (ci->i_wrbuffer_ref_head == 0 &&
-> +           ci->i_wr_ref == 0 &&
-> +           ci->i_dirty_caps == 0 &&
-> +           ci->i_flushing_caps == 0) {
-> +               ci->i_head_snapc = NULL;
-> +       } else {
->                 ci->i_head_snapc = ceph_get_snap_context(new_snapc);
->                 dout(" new snapc is %p\n", new_snapc);
->         }
->
->
->
->> Cheers,
->> --
->> Luis
->
