@@ -2,112 +2,86 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED08FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEBDC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45D82084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80042133D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IuO71o9k"
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ECT6lpn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfDCRzm (ORCPT
+        id S1726559AbfDCR43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:55:42 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45881 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfDCRzl (ORCPT
+        Wed, 3 Apr 2019 13:56:29 -0400
+Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:48858 "EHLO
+        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726084AbfDCR43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:55:41 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y6so15656220ljd.12
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:55:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cDlJ0cv1qPh9d6Dl0gXApBvvRslFQ7alCD7k+kZyWqE=;
-        b=IuO71o9k9yQaM8o8VZv9UauLopdPUrOU+V/wkukv7UK7s+qS2Vt+PE/CdtHO3X9VXa
-         cvIOFJvmkOSVK716zXWDM7drXM4+o3L0fWYaZxRUSxnM3cAyzHsJfRFrF74v6I8dFIdp
-         ELWeW4EOHtqAemqWD4/qm3xQJv+RwZ8Jip6eM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cDlJ0cv1qPh9d6Dl0gXApBvvRslFQ7alCD7k+kZyWqE=;
-        b=jyPW1pYxSChLI+r3heIi1+m9HRVUxX4Z1dTT9OXqQolAIWtfRubvvQMfeNuXth8DOq
-         vO+c19/yihG5QmH9fq8rsCMRwg+L+XGxVpZ+HXCQQHeVV6lhS59ucqEvI/5nBmTpUuUQ
-         NumaitZczEvcJ/opBNmwL8JUlURFH9nuce+OWRhEZQc7KmnR113IRaVT9mlA9WnSl93T
-         NtO+TGOtNpzalRd/C0tihmlIw+kHyW6Fck3mOJW7HS97itH6fhyq7o45ZnPjb1L5FmME
-         Dd2P8uShvnTOfSNZEOAV9PKn7NIB/JdjxvvmwARdbyuLSQU4Zy0zlWdWY8uSaNbBPlWI
-         /0LA==
-X-Gm-Message-State: APjAAAWrf9HrwpR9+VvyAzskXbk5FRnpKoE9rU8JmpombX9TDp8YMKaR
-        znxgcUIv1Nt8JGrtMbf9o2wSYWAH5d8=
-X-Google-Smtp-Source: APXvYqwC8EFkTOi3mJsFEQUrqR1rN840+Z2N0od2RjBp2tDQgpLhilSuXrxta62CHqB2+CuYowGFvA==
-X-Received: by 2002:a05:651c:157:: with SMTP id c23mr615544ljd.151.1554314139336;
-        Wed, 03 Apr 2019 10:55:39 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id u2sm3433690lje.74.2019.04.03.10.55.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 10:55:35 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id k8so7288654lja.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:55:35 -0700 (PDT)
-X-Received: by 2002:a2e:84ce:: with SMTP id q14mr645356ljh.80.1554314134582;
- Wed, 03 Apr 2019 10:55:34 -0700 (PDT)
+        Wed, 3 Apr 2019 13:56:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1554314187;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=Wyd/86VQr4yB+T3sAKBmvWlFZRyqyhljETAB3MKNVBw=;
+        b=ECT6lpn36hcc5RiE9hxy2iLqLJPNP+ceZdI1xVdCLGsleGlkdonBVCwBaMVznKj4
+        9CTvSAAFdKBjZ5hY26du2Zk6Bwpjfzk1DQnCiRgMlrd7d6F9fC1XJwzxF8Lb0VLl5iT
+        ZVRQU9YU3p/X/L7Wsb55owNa6j6s7KblS1qdWtJ0=
+Date:   Wed, 3 Apr 2019 17:56:27 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Al Viro <viro@zeniv.linux.org.uk>
+cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 14/14] dcache: Implement object migration
+In-Reply-To: <20190403170811.GR2217@ZenIV.linux.org.uk>
+Message-ID: <01000169e458534a-3c6a5d6f-3054-4c64-b5f9-7f46c811eeac-000000@email.amazonses.com>
+References: <20190403042127.18755-1-tobin@kernel.org> <20190403042127.18755-15-tobin@kernel.org> <20190403170811.GR2217@ZenIV.linux.org.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190403160526.257088-1-dianders@chromium.org>
- <CA+ASDXN-4Ya6cK5wsmARXxP0bJCGpMkoyu1t_fS7hqVFKF0ZBw@mail.gmail.com> <CAD=FV=UZCUp=Tq4DhKGJQm7bPvvM1Q=EUovWeBdoHVvQeu4eUA@mail.gmail.com>
-In-Reply-To: <CAD=FV=UZCUp=Tq4DhKGJQm7bPvvM1Q=EUovWeBdoHVvQeu4eUA@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Wed, 3 Apr 2019 10:55:22 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMpk=QsTxeAmL-Eir242HC2fzbi8ENACMi3H27o63KOGA@mail.gmail.com>
-Message-ID: <CA+ASDXMpk=QsTxeAmL-Eir242HC2fzbi8ENACMi3H27o63KOGA@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_spi: Transfer messages at
- high priority
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Alexandru M Stan <amstan@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Simon Glass <sjg@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Randall Spangler <rspangler@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.04.03-54.240.9.30
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 10:49 AM Doug Anderson <dianders@chromium.org> wrote:
-> On Wed, Apr 3, 2019 at 10:04 AM Brian Norris <briannorris@chromium.org> wrote:
-> > Does anybody know what the definition of "too long" is for the phrase
-> > "Don't queue works which can run for too long" in the documentation?
-...
-> So I think the summary is that I'm back to being convinced that the
-> "system_highpri_wq" should be OK.
+On Wed, 3 Apr 2019, Al Viro wrote:
 
-Makes sense.
+> Let's do d_invalidate() on random dentries and hope they go away.
+> With convoluted and brittle logics for deciding which ones to
+> spare, which is actually wrong.  This will pick mountpoints
+> and tear them out, to start with.
+>
+> NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
+>
+> And this is a NAK for the entire approach; if it has a positive refcount,
+> LEAVE IT ALONE.  Period.  Don't play this kind of games, they are wrong.
+> d_invalidate() is not something that can be done to an arbitrary dentry.
 
-> > > +       wait_for_completion(&params.completion);
-> >
-> > I think flush_workqueue() was discussed and rejected, but what about
-> > flush_work()? Then you don't have to worry about the rest of the
-> > contents of the workqueue -- just your own work--and I think you could
-> > avoid the 'completion'.
-...
-> Thanks, I'll do that in v3 assuming someone doesn't convince me to
-> switch back to a private workqueue.
+Well could you help us figure out how to do it the right way? We (the MM
+guys) are having a hard time not being familiar with the filesystem stuff.
 
-You can do flush_work() in either case :) Then, if for some reason you
-start queueing up other work on your private workqueue, you still
-won't have to worry about inter-'work' dependencies.
+This is an RFC and we want to know how to do this right.
 
-Brian
