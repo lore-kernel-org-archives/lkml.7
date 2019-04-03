@@ -2,86 +2,88 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FBAC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56074C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493782084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20ED521872
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=in.bosch.com header.i=@in.bosch.com header.b="rHTFE/AY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=in.bosch.com header.i=@in.bosch.com header.b="C6U+4ig9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfDCNZt (ORCPT
+        id S1726527AbfDCNZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:25:49 -0400
-Received: from de-deferred1.bosch-org.com ([139.15.180.216]:41768 "EHLO
-        de-deferred1.bosch-org.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbfDCNZp (ORCPT
+        Wed, 3 Apr 2019 09:25:48 -0400
+Received: from de-deferred2.bosch-org.com ([139.15.180.217]:46226 "EHLO
+        de-deferred2.bosch-org.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725959AbfDCNZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:25:45 -0400
-X-Greylist: delayed 593 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Apr 2019 09:25:42 EDT
+        Wed, 3 Apr 2019 09:25:42 -0400
+X-Greylist: delayed 590 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Apr 2019 09:25:39 EDT
 Received: from de-out1.bosch-org.com (unknown [139.15.180.215])
-        by si0vms0224.rbdmz01.com (Postfix) with ESMTPS id 44Z65b6D5Vz27W;
-        Wed,  3 Apr 2019 15:15:47 +0200 (CEST)
-Received: from si0vm1947.rbesz01.com (unknown [139.15.230.188])
-        by fe0vms0186.rbdmz01.com (Postfix) with ESMTPS id 44Z65Y5xc8z1XLFk0;
-        Wed,  3 Apr 2019 15:15:45 +0200 (CEST)
+        by fe0vms0193.rbdmz01.com (Postfix) with ESMTPS id 44Z65l3CvMz1rb;
+        Wed,  3 Apr 2019 15:15:55 +0200 (CEST)
+Received: from fe0vm1650.rbesz01.com (unknown [139.15.230.188])
+        by si0vms0216.rbdmz01.com (Postfix) with ESMTPS id 44Z65j5SmHz1XLG78;
+        Wed,  3 Apr 2019 15:15:53 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=in.bosch.com;
-        s=2015-01-21; t=1554297345;
+        s=2015-01-21; t=1554297353;
         bh=5JmXTCA8402bhLcSZ4Bm03a+Df0e1eFcN7hmyjl8vSI=; l=10;
         h=From:From:Reply-To:Sender;
-        b=rHTFE/AY8tcQA0PDs1XzSr3a0ADUMDG36Ch055y8SHKxCFbJbpGkBUj+Xk/RJc5mP
-         3rMmT/rA1Tn0TB4zNczgWxbd90YcIDlr9Qk8k4rQ2bmiLxtstGqVutsmAi6xFSatl9
-         JZYAr046sVcCf7MzfSSuAqP2LUdtuqSyjnLyOPxs=
-Received: from fe0vm02900.rbesz01.com (unknown [10.58.172.176])
-        by si0vm1947.rbesz01.com (Postfix) with ESMTPS id 44Z65Y5bYtz6CjQSM;
-        Wed,  3 Apr 2019 15:15:45 +0200 (CEST)
-X-AuditID: 0a3aad0c-d19ff700000039d6-24-5ca4b2018399
-Received: from si0vm1949.rbesz01.com ( [10.58.173.29])
+        b=C6U+4ig9Ag3M8aIOEaX8p3mPVvZt9bLkdnmEFGOnF9EjeUrHyxLS9SQA0slyp4a6t
+         jM82o2sm5jjQiozHRP4jes9xwHYTf9BXozVKeig1Jy6E92CYlSdBM9AujaCX++RU/t
+         Mbzm9oi8Qh+5QE84Dxar9m9PacWtOvT+wpgw9LFU=
+Received: from fe0vm1741.rbesz01.com (unknown [10.58.172.176])
+        by fe0vm1650.rbesz01.com (Postfix) with ESMTPS id 44Z65j53Jjz1Ct;
+        Wed,  3 Apr 2019 15:15:53 +0200 (CEST)
+X-AuditID: 0a3aad15-c71ff70000001b94-1a-5ca4b209b20b
+Received: from fe0vm1652.rbesz01.com ( [10.58.173.29])
         (using TLS with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by fe0vm02900.rbesz01.com (SMG Outbound) with SMTP id 1D.AF.14806.102B4AC5; Wed,  3 Apr 2019 15:15:45 +0200 (CEST)
+        by fe0vm1741.rbesz01.com (SMG Outbound) with SMTP id 91.A7.07060.902B4AC5; Wed,  3 Apr 2019 15:15:53 +0200 (CEST)
 Received: from SI-HUB2000.de.bosch.com (si-hub2000.de.bosch.com [10.4.103.108])
-        by si0vm1949.rbesz01.com (Postfix) with ESMTPS id 44Z65Y3cpVz6CjZqt;
-        Wed,  3 Apr 2019 15:15:45 +0200 (CEST)
+        by fe0vm1652.rbesz01.com (Postfix) with ESMTPS id 44Z65j3gKvzVv7;
+        Wed,  3 Apr 2019 15:15:53 +0200 (CEST)
 Received: from localhost.localdomain (10.47.103.88) by SI-HUB2000.de.bosch.com
  (10.4.103.108) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 3 Apr 2019
- 15:15:44 +0200
+ 15:15:51 +0200
 From:   <VenkataRajesh.Kalakodima@in.bosch.com>
 To:     <linux-renesas-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
         <dri-devel@lists.freedesktop.org>
-CC:     kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
-Subject: [PATCH 0/8] v4.19.0 Added Color Management Module
-Date:   Wed, 3 Apr 2019 18:44:36 +0530
-Message-ID: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+CC:     kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>,
+        Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
+Subject: [PATCH 4/8] drm: rcar-du: Refactor the code with new functions
+Date:   Wed, 3 Apr 2019 18:44:40 +0530
+Message-ID: <1554297284-14009-5-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="n"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Originating-IP: [10.47.103.88]
-X-Brightmail-Tracker: H4sIAAAAAAAAA22SbUxTVxzGe+5tL5fKHbeXin8KRXJhy6Yi1QoWncZ9ML4u8kG3ZGkyL+PS
-        NlJKelsCbjOsbJiCopJI0toIRj6Idgo3Ksh8wW7qNI4gouJGqDFoFDd8KSzgC9ktBdsP+/Y/
-        z/P/nSfnySFxpi1OQ1pKHby9lCthCaVcueJnbTYSW4w6/68fGZp+61EY+sefE4aXe4YUhttd
-        PsJw5ukotkaxPlh3DVsfEtMLsK+UnxbxJZZy3p6zervSPNX6Bisb0VacHfqiCg0n16J4Euhl
-        0OV5TtQiJcnQHgw6HrsUkcMlBEMHj6HI4W8EwZtXURgh6Gy41N4eFzbUdCuCutEOLGzg9Fqo
-        PuGbXkqiV4BrtGZ6ltNZ4Ho2Nj1T9DZwnb5DRLLT4X6PG4/oKrjuGZZH7vkQgv6TM/N8qD5z
-        SNohpf0MOHeE2I8SvTGEN4bwxhDNCD+Okot5XblVtzRfp1tsL+SFnboli7+xWUUU6TOhE11p
-        MQUQTSI2gXrlaTEyCq5cqLQGUC6JsXOpvF2S9EGhrajSzAnmr+3OEl5gNVRa70Yjk/ReFpyF
-        VosgWGylAQQkzqqpm/uajQxVxFXu5O22CBZAqaScnUeZyC1GhjZxDn4Hz5fx9ll3JUmyQKnb
-        pUCVnTfxFcWWEseszWopJJPJmORYJzYWI+MDSE8mSNlY+ApKKOOsgsU0g6dEcGZWjaI30HLN
-        PKogzNBh1+wsfZ+qSaNkjw4bmbkxRpQcQQNI6i2JendKghOkrxrNAyo1XJFqRoxCS1skhn4X
-        D27/Lni6uwrB4c5xBCHfOA4vnlxVQH3vEQKGL4sE7HOfJ6CvyxsH/e6zc2Dywq1EuDLcpQLx
-        3h41uEMNahj8vS0Z/uoJpsCfE22pIN6YTAPxj38yoO/10UzodT3MhKm7tVlwztWXBf7zvk/g
-        hHhxAQx4Hi6EsTeti0A8MJ4DU43+ZVDv68yFH0PVeXCyrTFvROoSk7o0OJvCXTo4x/90OaNG
-        H6epQmk1fRObG57guf75p9dd3/ty07bQl59bsn8q4LoPZfzSI3d02ww1dId+a82/4qr8lEWO
-        2uP3F2rWERMjmintZMPY8ms/eFS7gxe83cLFipwDsm8VGYX1/W8fyJs+e1uXPpj5sX7iVTFv
-        ve0a0H/fPqi/5wys/G7StEEbh+e/HtyKrWXlgplbsgC3C9x/LgzJWkMEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA21Sa0xTZxjmO71wWjnzcCjzXQXmTjBLzOioq9KI8fbDGX4ocZEtpiiHcaAN
+        bSE9bQN4SZfIDGCVWDUbYmGmghqm0A2sKMganeUSN4VFIUQdwyjEotycJDN6DgXbH/v3fs/l
+        e77vyYuLqEvRStxgtrIWM2OkpXKxfN3PiSkyr0eXOn55pbbu5h2JdmD2hVQ7eeShRNvfXivV
+        to5NYJsk2x5V3ca2TXuTMrHd8vV5rNFgZy2fb8iR6385Xi4pHlla8vL3QZED3SIqEY4DqYHO
+        8zmVSIZT5A8YVJaLKpGcn68j+Oc/BxY6PEfQ/OuoVFBJyRS40dISLRAK8gKCqokrmECIyP3g
+        dHmihTmO/BI6W/+dx8VkMrh6ZuZngtwFrSNN8xogk2DwToVImGVkFtQFQgEUr6l7PSUJ6WOh
+        +8dRceh+gN+ePROFXr0Crv4krUZkTYSqJkJVj7CLKD6fTbWb1GkatcqSy3JlqWrVt0UmLwq1
+        Ge9DL8fy/YjEER1DuE55dJSEsXOlJj9ag2N0PLH2IA99kFuUV6pnOP1ei83IcrSSSPgzQ0fF
+        vYc5W67JwHGGIrMfAS6iFUTfsXodReQxpWWspShk86PluJheRhTgO3QUWcBY2UKWLWYti2w6
+        jtNAKFr4wFgLW8CW5BuM1kWaTiRQVFQU9WEkExmL4TI/+gKP4bMx4QqCK2ZMnKFgwf5RyE4t
+        omFrD0pTLiMyBQ8psHqb+X2qMoGIeuLWUfERRNg5jh4gvrc44s1l3hzDL2o4D4jlQkWxC2DY
+        tNrDe8gmCQSaS2HssAOB2zeL4Oa1UxJ4NNgmg4GKtiXQNO2kwHXyqQK8PXMJMNHm/RhGhh2f
+        gK/WTYO7/RYNd4/20+C717sSAo+n1TB391Ia/H1tKB0mpwY2wPSF9o0w3BLcCAMu32aYCc5t
+        5lfWnQE1zqfb4cREcAec7Ti7E44GDmdB90yDDo4732SDd/JQDvQ97GLG+S4xvkutrU7o0spY
+        /6fLBTT8OaUDHeiocL4lTAc3/VVYXfj4nOJF8u2s/G/2XByqrb7yZGirJrivK3F4/ZY/gp3Z
+        p+mq5Krxeo9CZWg2vhWvKinO7k83lwS/03xdNvtqqkFlf92bdLV5r/Wzr4x+3+q+6N33s9Ia
+        PSpVh6a8MdCtsduYdWfM91wnRo9M7vk+09lbP+b+lBZzeka9SmThmHcOimVFQQQAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,64 +91,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
 
-This patchset adds rcar- display unit color management module (CMM) function feature, Which allows correction and adjustment of the display data, through updating Look up table (gamma) and  Cubic look up table (CTM)  property values 
+   - Introduce new functions for queueing clu and lut events.
+   - Functionality remains same, only some code is moved to
+     new functions.
 
-Base color management module reference code taken from below link,
-https://github.com/renesas-rcar/du_cmm .
--	In above code, modified variable namingâ€™s and removed un used functionalities.
--	Introduce new functions for queueing cubic look up table and look up table events.
+Signed-off-by: Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
 
--	Implemented interfaces in color management module to set CLU /LUT table using standard DRM data structures as input.
-	Look up table is a 1D-LUT that converts each of three-color components by using a lookup table. LUT is used for gamma correction.							
-	Cubic look up table is a three-dimensional LUT (3D-LUT) that converts the input three-color-component data into desired three color Components by using a lookup table
+      - Resolved checkpatch errors
+      - Resolved merge conflicts according to latest version
 
--	Implemented atomic check helper functions for enable/disable LUT and CLU (Gamma and Color Transformation Matrix properties).
--	Allocated memory necessary for cubic look up table and look up table and added mode fix up callback function
--	Added update gamma and color transformation matrix properties in commit tail function, If any change in property values.
+Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
+---
+ drivers/gpu/drm/rcar-du/rcar_du_cmm.c | 38 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-kalakodima venkata rajesh (8):
-  drm: Add DU CMM support functions
-  drm: Add DU CMM support boot and clk changes
-  drm: rcar-du: Give a name to clu table samples
-  drm: rcar-du: Refactor the code with new functions
-  drm: rcar-du: Implement interfaces to set clu and lut using drm data
-    structures
-  drm: rcar-du: Implement atomic_check to check for gamma and ctm
-    properties
-  drm: rcar-du: update gamma and ctm properties in commit tail
-  drm: rcar-du: Add shutdown callback function in platform_driver
-
- .../boot/dts/renesas/r8a7795-es1-salvator-x.dts    |    5 +
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |    5 +
- .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts |    5 +
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           |   29 +-
- arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |    6 +-
- .../arm64/boot/dts/renesas/r8a7796-salvator-xs.dts |    4 +
- arch/arm64/boot/dts/renesas/r8a7796.dtsi           |   25 +-
- .../arm64/boot/dts/renesas/r8a77965-salvator-x.dts |    7 +-
- .../boot/dts/renesas/r8a77965-salvator-xs.dts      |    7 +-
- arch/arm64/boot/dts/renesas/r8a77965.dtsi          |   27 +-
- drivers/clk/renesas/r8a7795-cpg-mssr.c             |    4 +
- drivers/clk/renesas/r8a7796-cpg-mssr.c             |    3 +
- drivers/clk/renesas/r8a77965-cpg-mssr.c            |  106 +-
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |   35 +
- drivers/gpu/drm/rcar-du/Makefile                   |    2 +
- drivers/gpu/drm/rcar-du/rcar_du_cmm.c              | 1470 ++++++++++++++++++++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.c             |   82 ++
- drivers/gpu/drm/rcar-du/rcar_du_crtc.h             |   28 +
- drivers/gpu/drm/rcar-du/rcar_du_drv.c              |   85 +-
- drivers/gpu/drm/rcar-du/rcar_du_drv.h              |   16 +-
- drivers/gpu/drm/rcar-du/rcar_du_encoder.c          |    2 +-
- drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |    1 +
- drivers/gpu/drm/rcar-du/rcar_du_group.c            |    5 +
- drivers/gpu/drm/rcar-du/rcar_du_kms.c              |   25 +
- drivers/gpu/drm/rcar-du/rcar_du_regs.h             |   92 ++
- include/drm/bridge/dw_hdmi.h                       |    1 +
- include/drm/drm_atomic.h                           |   25 +
- include/drm/drm_ioctl.h                            |    7 +
- 28 files changed, 2082 insertions(+), 27 deletions(-)
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
+index d380dd9..7983039 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_cmm.c
+@@ -246,6 +246,44 @@ static void du_cmm_clk(struct rcar_du_cmm *du_cmm, bool on)
+ 		clk_disable_unprepare(du_cmm->clock);
+ }
+ 
++static void rcar_du_cmm_queue_lut_update(struct rcar_du_cmm_pending_event *p)
++{
++	mutex_lock(&cmm_event_lock);
++
++	list_add_tail(&p->link, &p->du_cmm->lut.list);
++
++	if (p->fpriv)
++		list_add_tail(&p->fpriv_link, &p->fpriv->list);
++
++	event_prev_cancel_locked(&p->du_cmm->lut);
++
++	if (p->du_cmm->direct)
++		queue_work(p->du_cmm->workqueue, &p->du_cmm->work);
++
++	mutex_unlock(&cmm_event_lock);
++
++	drm_crtc_vblank_get(&p->du_cmm->rcrtc->crtc);
++}
++
++static void rcar_du_cmm_queue_clu_update(struct rcar_du_cmm_pending_event *p)
++{
++	mutex_lock(&cmm_event_lock);
++
++	list_add_tail(&p->link, &p->du_cmm->clu.list);
++
++	if (p->fpriv)
++		list_add_tail(&p->fpriv_link, &p->fpriv->list);
++
++	event_prev_cancel_locked(&p->du_cmm->clu);
++
++	if (p->du_cmm->direct)
++		queue_work(p->du_cmm->workqueue, &p->du_cmm->work);
++
++	mutex_unlock(&cmm_event_lock);
++
++	drm_crtc_vblank_get(&p->du_cmm->rcrtc->crtc);
++}
++
+ int rcar_du_cmm_start_stop(struct rcar_du_crtc *rcrtc, bool on)
+ {
+ 	struct rcar_du_cmm *du_cmm = rcrtc->cmm_handle;
 -- 
 2.7.4
 
