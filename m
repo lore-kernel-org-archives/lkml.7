@@ -2,124 +2,159 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5455C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D32C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F56620830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="VxB1WByo"
+	by mail.kernel.org (Postfix) with ESMTP id B0FB42147C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554283080;
+	bh=QjenIQVzHgC0V9RyVgdQ9R7jLh7TMXjB4cBlcoASQWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hFsmtWOzOQXhRJn7HLg5nwWccy6uxpLqnNrVTOlf6iwV46INQG4tgYW2ErqnDNXeu
+	 pJfxgEeOle0Gw10jBpvOrpCndLx4d87cur9TB0ohsqwnNRxr4Qs2vyGNeHQgo22DI/
+	 SGwqQs9FH3CKGdy6+QfQMsZSEbFtKWZN1ejHHDUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfDCJQW (ORCPT
+        id S1726213AbfDCJR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:16:22 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38121 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfDCJQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:16:22 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a6so11165676lfl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 02:16:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4NRHrwD8OfEj2OriyZsAce/RXryE17FV/2DoIYmW/uU=;
-        b=VxB1WByoBY2oHz4sb27RF2dBGHfIwQR71NqPLQnhUI2vRXPdyAu8IronZR4/ibGPRE
-         hdkwMJXlF9+U+aPDMHToYHu5mAbKZ4tW6/HPa7O2b0jMfn5jz4yd0+A/n3zWQwGd0IPx
-         1rHKPANKARbh1s+4z2mVEBGFnNKupDoyTNouCogDQm6aeqDCgv1i6l1NsV5yKxdzJkMB
-         bAyHcmecvvvDVPXV6zD3aqzIo2PkQ/FT6DuD25TtsaOs1cFVG/S+/QV1Qdsn1wb390aW
-         AEV4++bBReKrbPiTM9i7GOK+C0w0LqPH/ws5hVKosq7lIdn2Elf81A+1eapv8PIh3Hvm
-         EnvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4NRHrwD8OfEj2OriyZsAce/RXryE17FV/2DoIYmW/uU=;
-        b=sDDb1lJeKAvTrGKHal/W81tMqqQoges/owXEQkOlHJfqn25FFQPaMacXd/MWOaMZJp
-         YxjpQbVhoAH7gKeIkggHdmsJd7GWv74qdwXlqMBNSyjHVK1eaPcG/b7TgzvrhXrEnxez
-         4JE5lyUJDbaXMilUeGwZAxbR3DLe86lqWgkcd8VLNqnrGyHvGbzyZRB+kII6tXMmrb4J
-         VCbou3bKRvhmqz64Gzlx60uDA/+pbA5wIZekDI6ORaPU8hTp+tJSeoq/3WvwWIrc4Ge8
-         X7VlLgJeyJwdK6NNYqug2MkZdwxr965NbZcTy0LeH2tO4qn4FFiOYgFp1HVVk5j/91ha
-         +Yjg==
-X-Gm-Message-State: APjAAAWPS00eJs9TWsWhT0H+kEDPu8SXfXDvtOdoGtdsJ2S48iJMI+6m
-        +lt9RqDhAbKL4GY5cxN+LAxZxQ==
-X-Google-Smtp-Source: APXvYqxfT+QcKs9T7IOfT3eHWhUNUiBheTe7uwUg0RsgaLnHe4yLPGoerv8fl7EtAT4tnGfQDR27bA==
-X-Received: by 2002:ac2:4561:: with SMTP id k1mr33847684lfm.95.1554282980031;
-        Wed, 03 Apr 2019 02:16:20 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.84.175])
-        by smtp.gmail.com with ESMTPSA id e2sm2851712lfc.75.2019.04.03.02.16.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 02:16:19 -0700 (PDT)
-Subject: Re: [PATCH net-next 04/12] net: hns3: return 0 and print warning when
- hit duplicate MAC
-To:     Huazhong Tan <tanhuazhong@huawei.com>, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com, Peng Li <lipeng321@huawei.com>
-References: <1554260881-44948-1-git-send-email-tanhuazhong@huawei.com>
- <1554260881-44948-5-git-send-email-tanhuazhong@huawei.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <4b40bd6e-a732-bc8b-4085-56520677b6ea@cogentembedded.com>
-Date:   Wed, 3 Apr 2019 12:15:44 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Apr 2019 05:17:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57580 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725941AbfDCJR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:17:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B8FE1ADE7;
+        Wed,  3 Apr 2019 09:17:56 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 11:17:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, mgorman@techsingularity.net,
+        james.morse@arm.com, mark.rutland@arm.com, robin.murphy@arm.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, osalvador@suse.de, logang@deltatee.com,
+        pasha.tatashin@oracle.com, david@redhat.com, cai@lca.pw
+Subject: Re: [PATCH 4/6] mm/hotplug: Reorder arch_remove_memory() call in
+ __remove_memory()
+Message-ID: <20190403091755.GG15605@dhcp22.suse.cz>
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-5-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1554260881-44948-5-git-send-email-tanhuazhong@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554265806-11501-5-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.04.2019 6:07, Huazhong Tan wrote:
-
-> From: Peng Li <lipeng321@huawei.com>
+On Wed 03-04-19 10:00:04, Anshuman Khandual wrote:
+> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
+> entries between memory block and node. It first checks pfn validity with
+> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
+> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
 > 
-> When set 2 same MAC to different function of one port, IMP
-> will return error as the later one may modify the origin one.
-> This will cause bond fail for 2 VFs of one port.
+> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
+> which scans all mapped memblock regions with memblock_is_map_memory(). This
+> creates a problem in memory hot remove path which has already removed given
+> memory range from memory block with memblock_[remove|free] before arriving
+> at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
+> skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
+> sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
+> of existing sysfs entries.
 > 
-> Driver just print warning and return 0 with this patch, so
-> if set same MAC address, it will return 0 but do not really
-> configure to HW.
+> [   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
+> [   62.052517] ------------[ cut here ]------------
+> [   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
+> [   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> [   62.054589] Modules linked in:
+> [   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
+> [   62.056274] Hardware name: linux,dummy-virt (DT)
+> [   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
+> [   62.058083] pc : add_memory_resource+0x1cc/0x1d8
+> [   62.058961] lr : add_memory_resource+0x10c/0x1d8
+> [   62.059842] sp : ffff0000168b3ce0
+> [   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
+> [   62.061501] x27: 0000000000000000 x26: 0000000000000000
+> [   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
+> [   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
+> [   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
+> [   62.065558] x19: 0000000000680000 x18: 0000000000000024
+> [   62.066566] x17: 0000000000000000 x16: 0000000000000000
+> [   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
+> [   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
+> [   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
+> [   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
+> [   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
+> [   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
+> [   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
+> [   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
+> [   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
+> [   62.076930] Call trace:
+> [   62.077411]  add_memory_resource+0x1cc/0x1d8
+> [   62.078227]  __add_memory+0x70/0xa8
+> [   62.078901]  probe_store+0xa4/0xc8
+> [   62.079561]  dev_attr_store+0x18/0x28
+> [   62.080270]  sysfs_kf_write+0x40/0x58
+> [   62.080992]  kernfs_fop_write+0xcc/0x1d8
+> [   62.081744]  __vfs_write+0x18/0x40
+> [   62.082400]  vfs_write+0xa4/0x1b0
+> [   62.083037]  ksys_write+0x5c/0xc0
+> [   62.083681]  __arm64_sys_write+0x18/0x20
+> [   62.084432]  el0_svc_handler+0x88/0x100
+> [   62.085177]  el0_svc+0x8/0xc
+> 
+> Re-ordering arch_remove_memory() with memblock_[free|remove] solves the
+> problem on arm64 as pfn_valid() behaves correctly and returns positive
+> as memblock for the address range still exists. arch_remove_memory()
+> removes applicable memory sections from zone with __remove_pages() and
+> tears down kernel linear mapping. Removing memblock regions afterwards
+> is consistent.
 
-    "To" not needed here.
+consistent with what? Anyway, I believe you wanted to mention that this
+is safe because there is no other memblock (bootmem) allocator user that
+late. So nobody is going to allocate from the removed range just to blow
+up later. Also nobody should be using the bootmem allocated range else
+we wouldn't allow to remove it. So reordering is indeed safe.
+ 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-> Signed-off-by: Peng Li <lipeng321@huawei.com>
-> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+With a changelog updated to explain why this is safe
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
->   drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+>  mm/memory_hotplug.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> index e742a05..d45789e 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-> @@ -5962,8 +5962,11 @@ int hclge_add_uc_addr_common(struct hclge_vport *vport,
->   	}
->   
->   	/* check if we just hit the duplicate */
-> -	if (!ret)
-> -		ret = -EINVAL;
-> +	if (!ret) {
-> +		dev_warn(&hdev->pdev->dev, "VF %d mac(%pM) has been existed\n",
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 0082d69..71d0d79 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1872,11 +1872,10 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+>  
+>  	/* remove memmap entry */
+>  	firmware_map_remove(start, start + size, "System RAM");
+> +	arch_remove_memory(nid, start, size, NULL);
+>  	memblock_free(start, size);
+>  	memblock_remove(start, size);
+>  
+> -	arch_remove_memory(nid, start, size, NULL);
+> -
+>  	try_offline_node(nid);
+>  
+>  	mem_hotplug_done();
+> -- 
+> 2.7.4
+> 
 
-    Maybe just "exists"? The grammar is certainly wrong as is. :-)
-
-> +			 vport->vport_id, addr);
-> +		return 0;
-> +	}
->   
->   	dev_err(&hdev->pdev->dev,
->   		"PF failed to add unicast entry(%pM) in the MAC table\n",
-
-MBR, Sergei
+-- 
+Michal Hocko
+SUSE Labs
