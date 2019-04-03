@@ -2,111 +2,91 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFA6C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11646C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A094214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD772084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:09:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gj3d2dIg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q1I3tQIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfDCNHx (ORCPT
+        id S1726337AbfDCNJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:07:53 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36882 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDCNHx (ORCPT
+        Wed, 3 Apr 2019 09:09:46 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40474 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDCNJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:07:53 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z16so19410799qtn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 06:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6TbXx470gB2/L327MHubCCa9FGqzdEttkYRsItRZ/js=;
-        b=gj3d2dIgyS1juous1+rrj5kPXgzLNcDgCTr0MjFUCmXxbywzvPEbuXfBhNfDjC1N61
-         CMGh6M7pxGvStFupFAXAL40cY305TZmNYiylRnPoXmCIzQGxiPbCnqdVKmF24zamew3f
-         wUNbwizEnVexKfzbEK/xTornjseE5OAqSvInI36+WiWJB1fsyhjYID9AR9MV9LOsoKGH
-         mIgaeq/jub+ukXx0pZt8vkjbglYCRAVr8KrhLWylg0RElkC5hZ6AkIu1V18C4/vWsdtO
-         A0FjzOj2TDtxxN4Yz0HfwFkvJVZOvGGedSsWJ5PR0iuS44JwO4BYQQrIY6V2DiSCXipQ
-         JIoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6TbXx470gB2/L327MHubCCa9FGqzdEttkYRsItRZ/js=;
-        b=KdhzH/SKug4q7rOhK1TUXepYeRUWUp7HQyapRIJ60jQ+1p8t7IKlP1noc6fjJmUu05
-         NmtXeWoaATlUXBqqsnEqlDOA/gygJSZbMXjZUmTkJOeygiiV+0LdYPImEWuGgUHdS178
-         IGySlPPE/7D0EQGCSI/8yWym7wwDcBCA8+DGOW9Izo1NlJr7CU8POii47InhKcCX1drF
-         VPxUgiWLZaBch1FM1rmz2t0Zn2CXOSsgqERm2/3gAmZ9n/oZLMTBY+AEQ3QNAqJSosz5
-         pWS/jd+Hnrcn5wvBaFeGGqOHi0tTKOmmz63+lH7zt4s3NbK6CBnMSIA4lQYF3aaxmBmx
-         he4w==
-X-Gm-Message-State: APjAAAWUEsBqo9Turz18Gi3VQualV2P4RMRdfwgCh26QviaXE20Me7Aw
-        oBxvd+09Jm2RaUt9bIydZ3XRQQ==
-X-Google-Smtp-Source: APXvYqzEEHgsgkai8JhpGANOP06QXmX0CP1vzaNNrNU61AclZARASaHB8UoGll4tCJ6GJGEk51f24A==
-X-Received: by 2002:ac8:66d0:: with SMTP id m16mr53517935qtp.215.1554296872208;
-        Wed, 03 Apr 2019 06:07:52 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id h2sm7013076qkl.3.2019.04.03.06.07.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 06:07:51 -0700 (PDT)
-Message-ID: <1554296870.26196.32.camel@lca.pw>
-Subject: Re: [PATCH] slab: store tagged freelist for off-slab slabmgmt
-From:   Qian Cai <cai@lca.pw>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 03 Apr 2019 09:07:50 -0400
-In-Reply-To: <CAAeHK+y25S6GYMrGUEQJJ5AU1LZ7T-jWrwoDsLXdxuk_E+q5BQ@mail.gmail.com>
-References: <20190403022858.97584-1-cai@lca.pw>
-         <CAAeHK+y25S6GYMrGUEQJJ5AU1LZ7T-jWrwoDsLXdxuk_E+q5BQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Apr 2019 09:09:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=E9y2bwtmtm5RPATkV8LMjdYfqram9n2UMCK0AZeny7g=; b=Q1I3tQIXkVqa7pzP6vMxeJYUv
+        Gk662DcScrjCK6wSQzG/quILczFu/FRbV3UcfmjUnPPYrXE9iR1p+bnYrOfPbeX/ylsEMJ96Ax2Cm
+        DMR18RgK4QabVZDB6IFv4aioYyRno1AGq5+pCcjV/RtY33KX0mogrq5RNLaI1AEfBsU06mEdUznYx
+        OwL5+WyARuKZK+ksWD5QZEd27oH1v1Fo2R+k0r46jx8oG3YYoYyh4LXER0Ej0qVd+glmFPDeSNePz
+        hWsfvuLivBdcnsqHlMiU+sw9WrX9hMACh3/etF2fAhGAEV2DTmW3yoYtt5yiC/FYJxkMQ6ESnWJdT
+        b2Nh7XCSA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBfe3-0002Ta-Q6; Wed, 03 Apr 2019 13:09:36 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 874BF2038C24B; Wed,  3 Apr 2019 15:09:34 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 15:09:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Subject: Re: [PATCH-tip v3 06/11] locking/rwsem: Enhance
+ DEBUG_RWSEMS_WARN_ON() macro
+Message-ID: <20190403130934.GH4038@hirez.programming.kicks-ass.net>
+References: <1551380981-3113-1-git-send-email-longman@redhat.com>
+ <1551380981-3113-7-git-send-email-longman@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551380981-3113-7-git-send-email-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-04-03 at 13:23 +0200, Andrey Konovalov wrote:
-> On Wed, Apr 3, 2019 at 4:29 AM Qian Cai <cai@lca.pw> wrote:
-> > 
-> > The commit 51dedad06b5f ("kasan, slab: make freelist stored without
-> > tags") calls kasan_reset_tag() for off-slab slab management object
-> > leading to freelist being stored non-tagged. However, cache_grow_begin()
-> > -> alloc_slabmgmt() -> kmem_cache_alloc_node() which assigns a tag for
-> > the address and stores in the shadow address. As the result, it causes
-> > endless errors below during boot due to drain_freelist() ->
-> > slab_destroy() -> kasan_slab_free() which compares already untagged
-> > freelist against the stored tag in the shadow address. Since off-slab
-> > slab management object freelist is such a special case, so just store it
-> > tagged. Non-off-slab management object freelist is still stored untagged
-> > which has not been assigned a tag and should not cause any other
-> > troubles with this inconsistency.
-> 
-> Hi Qian,
-> 
-> Could you share the config (or other steps) you used to reproduce this?
+On Thu, Feb 28, 2019 at 02:09:36PM -0500, Waiman Long wrote:
+> diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
+> index 1d8f722..c8fd3f1 100644
+> --- a/kernel/locking/rwsem.h
+> +++ b/kernel/locking/rwsem.h
+> @@ -27,9 +27,13 @@
+>  #define RWSEM_ANONYMOUSLY_OWNED	(1UL << 1)
+>  
+>  #ifdef CONFIG_DEBUG_RWSEMS
+> -# define DEBUG_RWSEMS_WARN_ON(c)	DEBUG_LOCKS_WARN_ON(c)
+> +# define DEBUG_RWSEMS_WARN_ON(c, sem)				\
+> +	WARN_ONCE(c, "DEBUG_RWSEMS_WARN_ON(%s): count = 0x%lx, owner = 0x%lx, curr 0x%lx, list %sempty\n",\
+> +		#c, atomic_long_read(&(sem)->count),		\
+> +		(long)((sem)->owner), (long)current,		\
+> +		list_empty(&(sem)->wait_list) ? "" : "not ")
 
-https://git.sr.ht/~cai/linux-debug/blob/master/config
+This changes DEBUG_LOCKS_WARN_ON() to WARN_ONCE(), the difference being
+that you now fail to kill lockdep on a rwsem error, which seems
+unfortunate.
 
-Additional command-line option to boot:
-
-page_poison=on crashkernel=768M earlycon page_owner=on numa_balancing=enable
-systemd.unified_cgroup_hierarchy=1 debug_guardpage_minorder=1
-
+>  #else
+> -# define DEBUG_RWSEMS_WARN_ON(c)
+> +# define DEBUG_RWSEMS_WARN_ON(c, sem)
+>  #endif
