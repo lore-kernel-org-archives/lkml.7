@@ -2,86 +2,112 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEBDC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04773C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80042133D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07F82084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ECT6lpn3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGxyIads"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfDCR43 (ORCPT
+        id S1726630AbfDCR4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:56:29 -0400
-Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:48858 "EHLO
-        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726084AbfDCR43 (ORCPT
+        Wed, 3 Apr 2019 13:56:53 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36764 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfDCR4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:56:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1554314187;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=Wyd/86VQr4yB+T3sAKBmvWlFZRyqyhljETAB3MKNVBw=;
-        b=ECT6lpn36hcc5RiE9hxy2iLqLJPNP+ceZdI1xVdCLGsleGlkdonBVCwBaMVznKj4
-        9CTvSAAFdKBjZ5hY26du2Zk6Bwpjfzk1DQnCiRgMlrd7d6F9fC1XJwzxF8Lb0VLl5iT
-        ZVRQU9YU3p/X/L7Wsb55owNa6j6s7KblS1qdWtJ0=
-Date:   Wed, 3 Apr 2019 17:56:27 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Al Viro <viro@zeniv.linux.org.uk>
-cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH v2 14/14] dcache: Implement object migration
-In-Reply-To: <20190403170811.GR2217@ZenIV.linux.org.uk>
-Message-ID: <01000169e458534a-3c6a5d6f-3054-4c64-b5f9-7f46c811eeac-000000@email.amazonses.com>
-References: <20190403042127.18755-1-tobin@kernel.org> <20190403042127.18755-15-tobin@kernel.org> <20190403170811.GR2217@ZenIV.linux.org.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.04.03-54.240.9.30
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+        Wed, 3 Apr 2019 13:56:53 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z5so7502683pfn.3;
+        Wed, 03 Apr 2019 10:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pJq7AT0WkNCUqmu8i8FA6gz6eLWpTDQYNZ++cpLRooQ=;
+        b=VGxyIadstbN8FEH1sVb8RLCqg8xO3ElX7KgnuUEH9wf9YAI8cg2ipb1Up8NtX7jowv
+         nHdJJY17KmWHGpWl09IDsqHv+ayt5C+FjslsVFbUsg/CFfB39H4yvJsvaH7ri0HNlZhE
+         XmijD2/4zBYpkhmxs3E7TxsfO31nLvYPDsDT5cCIjV2urLptK4WZXiEx/GuPNNMILBX0
+         bUe1P0diEKZvpxBZwNEcH39coVC52sdNTkEZ2F7Uj+SnteVd0Ojqis3nRB7MuzTYv/oD
+         /O0yN1g8gHSVviFunp5pG6k6VOuxg+C9hZ2PNKnKhpeVi06pdMtDxiVnW1DrmY9i6ywD
+         QbsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pJq7AT0WkNCUqmu8i8FA6gz6eLWpTDQYNZ++cpLRooQ=;
+        b=Ldxo82+EgDjX0oqyPbxLJl1/c7c2GkrI3IOdRcou4r4tTc9Kqe7rDnDp+4e4XeqogG
+         fVk5kSidvd5VAdJq8iVPd/KFQ3AsuPddxMKd9v9VaVu+oSyXWNZt/+nxFY16zmRr3uJT
+         FCWu/tpmXQo1He2BwphwvvINTYiMe8081Sim7lRq1czTtqv9aDNGnHeXCOgHCbiGijVr
+         yqeR1js4QpLzYBq9qb4TgVLQ0HbFSvu8rDBUzDy4/YeFvOcebNPQl8J+Wk6yfBmS72oG
+         lpWyx/bog6yMoWsHEBSXj5R5CV2OEGnJk1/vtm3y6huI3UUjw4/DJ9BaJqaYeqv2xhfp
+         JUmA==
+X-Gm-Message-State: APjAAAVd29mepMUu9b8hAZzJ7mZubgbcQnv0UsKcpt81EnGAPDo/2epm
+        nh3ZG1u0mlP7NjzmEns+SrAFIUfH
+X-Google-Smtp-Source: APXvYqwIbjHymjMnGhxzYoSKiCZwf28T6Evi5Q/KKCspdelICuYVPlFMqCEufHfvJVDdNAbcuT6tCA==
+X-Received: by 2002:a63:7141:: with SMTP id b1mr969032pgn.331.1554314212037;
+        Wed, 03 Apr 2019 10:56:52 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id v19sm31852836pfa.138.2019.04.03.10.56.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 10:56:51 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE)
+Subject: [PATCH] of: Improve of_phandle_iterator_next() error message
+Date:   Wed,  3 Apr 2019 10:56:33 -0700
+Message-Id: <20190403175633.1839-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019, Al Viro wrote:
+Understanding why of_phandle_iterator_next() returns an error can
+sometimes be hard to decipher based solely on the error message, a
+typical error example is that #foo-cells = <X> and the phandle property
+used has a smaller number of cells specified, e.g.:
 
-> Let's do d_invalidate() on random dentries and hope they go away.
-> With convoluted and brittle logics for deciding which ones to
-> spare, which is actually wrong.  This will pick mountpoints
-> and tear them out, to start with.
->
-> NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
->
-> And this is a NAK for the entire approach; if it has a positive refcount,
-> LEAVE IT ALONE.  Period.  Don't play this kind of games, they are wrong.
-> d_invalidate() is not something that can be done to an arbitrary dentry.
+	#thermal-sensor-cells = <1>;
+	phandle = <&scmi_sensor>
 
-Well could you help us figure out how to do it the right way? We (the MM
-guys) are having a hard time not being familiar with the filesystem stuff.
+instead of:
 
-This is an RFC and we want to know how to do this right.
+	phandle <&scmi_sensor 0>;
+
+Instead, make it clear what the expectations are towards debugging
+incorrect Device Tree faster:
+
+OF: /thermal-zones/scmi-thermal: #thermal-sensor-cells = 1, found 0 instead
+
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/of/base.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 5226e898476e..20e0e7ee4edf 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1350,8 +1350,9 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
+ 		 * property data length
+ 		 */
+ 		if (it->cur + count > it->list_end) {
+-			pr_err("%pOF: arguments longer than property\n",
+-			       it->parent);
++			pr_err("%pOF: %s = %d found %d\n",
++			       it->parent, it->cells_name,
++			       count, it->cell_count);
+ 			goto err;
+ 		}
+ 	}
+-- 
+2.17.1
 
