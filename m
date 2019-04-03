@@ -2,81 +2,101 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04427C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B660EC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC7920882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845A820882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tlSNg+kT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfDCHqC (ORCPT
+        id S1728743AbfDCHqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 03:46:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37770 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbfDCHqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 03:46:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B4B96AE21;
-        Wed,  3 Apr 2019 07:46:00 +0000 (UTC)
-Subject: Re: [PATCH] mm: __pagevec_lru_add_fn: typo fix
-To:     Peng Fan <peng.fan@nxp.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "rppt@linux.vnet.ibm.com" <rppt@linux.vnet.ibm.com>,
-        "arunks@codeaurora.org" <arunks@codeaurora.org>,
-        "nborisov@suse.com" <nborisov@suse.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "aryabinin@virtuozzo.com" <aryabinin@virtuozzo.com>,
-        "ldr709@gmail.com" <ldr709@gmail.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>
-References: <20190402095609.27181-1-peng.fan@nxp.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <38b6976a-9529-5ce5-f0f8-03dbf7548437@suse.cz>
-Date:   Wed, 3 Apr 2019 09:45:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Wed, 3 Apr 2019 03:46:34 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39997 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfDCHqd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 03:46:33 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so4630266plr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 00:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=cld4RhZn5TnQ5gVtif4Sk3V8APHdjBBFec+kPImys0s=;
+        b=tlSNg+kTC49DC/j/sOTza0pWRoE021Yg1u2TXlmBwfk8Jl4k/ZjaKb9RiZpRzeWjnM
+         yTaIr9ypOCxazcwCIBic5qYzoXfR+UV9qKROHNlNxdbp/7nSpb5e6KhDISl4Qsv6UGeX
+         kdbRXynNefCSyjMoiQ/UesiWfIxzCt1zeR5QcPQGeQwVxp/TCp7yFIUCTeihJ/Jlz4QC
+         ZOUnV+NDzGidQvjjXpUsSF664EqBDFfnBGAo80vkL9bFE13AZ8GBnCjy0r/L9hUYuprc
+         6bpHsanE1IWt8Wkg/sNAvKrbFLoeHxLLTQK00ARWA6tkrMf+oLicbxzkL5Frf8GY8E1W
+         6n5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cld4RhZn5TnQ5gVtif4Sk3V8APHdjBBFec+kPImys0s=;
+        b=BDCZ8jpxbLAvIhvYFSwUhgSIwJG2zEcOIj5UQMFHFSUFFj5veP6cOFdCSQc4w87YbQ
+         I+VX/g+QtOKsu1ZgbcwKS5v8yeOtuMlzX9vgRPO4l2JMglyyhD81YVenyCl5gT1evH6l
+         dBW0VZzUj9QaqcJF4gAG94ruwhCH+WtVxcNWbB/4A743Y3rYEr4+527Y+e3YOdmDWn1H
+         nqzfQtPI3Dm6A52sjze9KKxU+Bghbgjj9GE9lug6wdqQn1GzY086+tiy5BPsJ5cIGVbQ
+         OpHb3zLM+feFUfDIkzf4vK0bLWoR3aecv2s8f6JQYkqDYRkk3gqi7eZl5+BNohRn/xVh
+         kkjQ==
+X-Gm-Message-State: APjAAAWAjPd9wj0PRpdcwJlhHwggsbZBCwIVouVONx3WzXbcW1BmZ+HA
+        KKMGgeJ+Nnoj+74Hq47NnMcXRg==
+X-Google-Smtp-Source: APXvYqzaB66xqtTS1PASDFpgTEJmoI+dIOZ+E8wM/vaYNJkuOHnvKhkII2l0fLA0+/zKK+TDUf+dGg==
+X-Received: by 2002:a17:902:b60d:: with SMTP id b13mr22534693pls.100.1554277592924;
+        Wed, 03 Apr 2019 00:46:32 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id a129sm45468814pfa.152.2019.04.03.00.46.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 00:46:31 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 08:46:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Re: [PATCH 1/4] mfd: da9063: convert headers to SPDX
+Message-ID: <20190403074627.GC11301@dell>
+References: <20190318155728.28365-1-wsa+renesas@sang-engineering.com>
+ <20190318155728.28365-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-In-Reply-To: <20190402095609.27181-1-peng.fan@nxp.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190318155728.28365-2-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/19 11:43 AM, Peng Fan wrote:
-> There is no function named munlock_vma_pages, correct it to
-> munlock_vma_page.
+On Mon, 18 Mar 2019, Wolfram Sang wrote:
+
+> Covnert the headers of the source and include files to SPDX.
+> And fix some typos in the descriptions ("interrupt" instead of "I2C").
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  mm/swap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 301ed4e04320..3a75722e68a9 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -867,7 +867,7 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
->  	SetPageLRU(page);
->  	/*
->  	 * Page becomes evictable in two ways:
-> -	 * 1) Within LRU lock [munlock_vma_pages() and __munlock_pagevec()].
-> +	 * 1) Within LRU lock [munlock_vma_page() and __munlock_pagevec()].
->  	 * 2) Before acquiring LRU lock to put the page to correct LRU and then
->  	 *   a) do PageLRU check with lock [check_move_unevictable_pages]
->  	 *   b) do PageLRU check before lock [clear_page_mlock]
-> 
+>  drivers/mfd/da9063-core.c            | 8 ++------
+>  drivers/mfd/da9063-i2c.c             | 9 ++-------
+>  drivers/mfd/da9063-irq.c             | 9 ++-------
+>  include/linux/mfd/da9063/core.h      | 7 +------
+>  include/linux/mfd/da9063/registers.h | 7 +------
+>  5 files changed, 8 insertions(+), 32 deletions(-)
 
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
