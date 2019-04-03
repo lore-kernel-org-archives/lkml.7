@@ -2,208 +2,111 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6561EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158EDC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25ED0206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="G16/4bcl";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="HB2kCROa"
+	by mail.kernel.org (Postfix) with ESMTP id E1423206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfDCVRT (ORCPT
+        id S1726471AbfDCVR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 17:17:19 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49952 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbfDCVRT (ORCPT
+        Wed, 3 Apr 2019 17:17:58 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42849 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDCVR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 17:17:19 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33LFZE4008359;
-        Wed, 3 Apr 2019 14:16:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=yMSHUAGOc8xPTYbjOLszOfE79ayRLFWYphU/fwtGWes=;
- b=G16/4bclIhRv7sDTLlomJwG+x12SDa+vcllv8iTWutuXwCN3kt5PNjgop2AYcDCMT6mG
- BIHD7lC0lSi8ZTX275ytcjyhsKikIx2l4qwg2+yGSzvQQVLyPUTSL26xajjaPmtS8kB/
- fYV4eEYprA0FHyC8PJGH+rYP4C/Ex0TgqOg= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2rn4kd8032-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 03 Apr 2019 14:16:25 -0700
-Received: from frc-mbx05.TheFacebook.com (2620:10d:c0a1:f82::29) by
- frc-hub06.TheFacebook.com (2620:10d:c021:18::176) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 3 Apr 2019 14:15:51 -0700
-Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
- frc-mbx05.TheFacebook.com (2620:10d:c0a1:f82::29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 3 Apr 2019 14:15:51 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 3 Apr 2019 14:15:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yMSHUAGOc8xPTYbjOLszOfE79ayRLFWYphU/fwtGWes=;
- b=HB2kCROaU6X1BlFj85skXoHyOO8qQq//oBjZ1/QCXjxUSbu/X0y8HdhAsmDKty2l9GfJyBUgmrGExNBLeJmEgNOvnh6Jgs3kbgf4Uekavpnj+iYQu8Ww/RDsQ2qC7u0VxLE2IgT0jbct4zc8vMJ8UOGTWpr4CDD4xhqziu9vZL0=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3047.namprd15.prod.outlook.com (20.178.238.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.22; Wed, 3 Apr 2019 21:15:44 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded%3]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
- 21:15:44 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: Re: [RESEND PATCH 2/3] mm/vmap: add DEBUG_AUGMENT_PROPAGATE_CHECK
- macro
-Thread-Topic: [RESEND PATCH 2/3] mm/vmap: add DEBUG_AUGMENT_PROPAGATE_CHECK
- macro
-Thread-Index: AQHU6XC/snrJ8Ur+cUCmvX5DYASOrqYq8eaA
-Date:   Wed, 3 Apr 2019 21:15:44 +0000
-Message-ID: <20190403211540.GJ6778@tower.DHCP.thefacebook.com>
-References: <20190402162531.10888-1-urezki@gmail.com>
- <20190402162531.10888-3-urezki@gmail.com>
-In-Reply-To: <20190402162531.10888-3-urezki@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MW2PR16CA0002.namprd16.prod.outlook.com (2603:10b6:907::15)
- To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:9220]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db2e13a4-d8ef-42fd-48f6-08d6b87988c4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3047;
-x-ms-traffictypediagnostic: BYAPR15MB3047:
-x-microsoft-antispam-prvs: <BYAPR15MB3047F945C1986C7A87B230FCBE570@BYAPR15MB3047.namprd15.prod.outlook.com>
-x-forefront-prvs: 0996D1900D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(136003)(346002)(376002)(396003)(189003)(199004)(46003)(1411001)(105586002)(5660300002)(6506007)(102836004)(2906002)(54906003)(71190400001)(386003)(33656002)(229853002)(14454004)(71200400001)(106356001)(25786009)(446003)(86362001)(7736002)(6486002)(7416002)(99286004)(186003)(6116002)(476003)(97736004)(11346002)(316002)(1076003)(478600001)(305945005)(6246003)(6436002)(6512007)(486006)(68736007)(256004)(8936002)(9686003)(6916009)(53936002)(14444005)(81166006)(4326008)(81156014)(52116002)(76176011)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3047;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sAfwE7KuSIm727q7QqyR1oRwz98c12PYJPcIKYhQbTEv1Gf7UjgHM5nvpZ2bxBpYpdJPYv2qXNaWvtmHlzHa4gtv7gEuUrVUlg4kfwWmfX2W6d1umnyNM1Zd41d+UNA7+IM4PnwDbSAQ5B4EiiKunNYtEDzcAFVlwaIbk4T/oGWTL4GWxAjwABuyG2Uqguncieymo/387xq4W70s5CUPJTu8h7E745I/IHxz+UR9wcVuM+2i816SiLgYc8DplS3mXXu9nR/j6dLo9Oz4QdXaRFQzPZmWP1FFzvp+4vI3EbRVTdQvlWcid2YU8pqqgm22wzuuMlr03IHPvtFGXADgO145KaYglV2kEo+QqzqiFAvgM7jy2QwOGnotbeXBqk8BVh9IEMPAT6kwdL9uGad6/TsTU0qFSpnvcD5BrKk5M34=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3C933796509DFD49A841B366184840E0@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Apr 2019 17:17:58 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hBnGb-0000v4-B1; Wed, 03 Apr 2019 23:17:53 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de
+Subject: Re: [PATCH] sched: Document that RT task priorities are
+ =?utf-8?Q?1=E2=80=A699?=
+References: <20190403210821.10916-1-bigeasy@linutronix.de>
+Date:   Wed, 03 Apr 2019 23:17:52 +0200
+In-Reply-To: <20190403210821.10916-1-bigeasy@linutronix.de> (Sebastian Andrzej
+        Siewior's message of "Wed, 3 Apr 2019 23:08:21 +0200")
+Message-ID: <87sguypz3z.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: db2e13a4-d8ef-42fd-48f6-08d6b87988c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 21:15:44.7434
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3047
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_13:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 06:25:30PM +0200, Uladzislau Rezki (Sony) wrote:
-> This macro adds some debug code to check that the augment tree
-> is maintained correctly, meaning that every node contains valid
-> subtree_max_size value.
->=20
-> By default this option is set to 0 and not active. It requires
-> recompilation of the kernel to activate it. Set to 1, compile
-> the kernel.
->=20
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+On 2019-04-03, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> John identified three files which claim that RT task priorities start at
+> zero. As far as I understand, 0 is used for DL and has nothing to do
+> wihich RT priorities as identified by the RT policy.
+>
+> Correct the comment, valid RT priorities are in the range from 1 to 99.
+>
+> Reported-by: John Ogness <john.ogness@linutronix.de>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
->  mm/vmalloc.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->=20
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 3adbad3fb6c1..1449a8c43aa2 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -322,6 +322,8 @@ unsigned long vmalloc_to_pfn(const void *vmalloc_addr=
-)
->  EXPORT_SYMBOL(vmalloc_to_pfn);
-> =20
->  /*** Global kva allocator ***/
-> +#define DEBUG_AUGMENT_PROPAGATE_CHECK 0
-> +
->  #define VM_LAZY_FREE	0x02
->  #define VM_VM_AREA	0x04
-> =20
-> @@ -544,6 +546,53 @@ __unlink_va(struct vmap_area *va, struct rb_root *ro=
-ot)
->  	}
->  }
-> =20
-> +#if DEBUG_AUGMENT_PROPAGATE_CHECK
-> +static void
-> +augment_tree_propagate_do_check(struct rb_node *n)
-> +{
-> +	struct vmap_area *va;
-> +	struct rb_node *node;
-> +	unsigned long size;
-> +	bool found =3D false;
-> +
-> +	if (n =3D=3D NULL)
-> +		return;
-> +
-> +	va =3D rb_entry(n, struct vmap_area, rb_node);
-> +	size =3D va->subtree_max_size;
-> +	node =3D n;
-> +
-> +	while (node) {
-> +		va =3D rb_entry(node, struct vmap_area, rb_node);
-> +
-> +		if (get_subtree_max_size(node->rb_left) =3D=3D size) {
-> +			node =3D node->rb_left;
-> +		} else {
-> +			if (__va_size(va) =3D=3D size) {
-> +				found =3D true;
-> +				break;
-> +			}
-> +
-> +			node =3D node->rb_right;
-> +		}
-> +	}
-> +
-> +	if (!found) {
-> +		va =3D rb_entry(n, struct vmap_area, rb_node);
-> +		pr_emerg("tree is corrupted: %lu, %lu\n",
-> +			__va_size(va), va->subtree_max_size);
-> +	}
-> +
-> +	augment_tree_propagate_do_check(n->rb_left);
-> +	augment_tree_propagate_do_check(n->rb_right);
-> +}
-> +
-> +static void augment_tree_propagate_from_check(void)
+>  Documentation/scheduler/sched-rt-group.txt | 2 +-
+>  include/linux/sched/prio.h                 | 2 +-
+>  kernel/sched/cpupri.h                      | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/scheduler/sched-rt-group.txt b/Documentation/scheduler/sched-rt-group.txt
+> index d8fce3e784574..23f8f8465a775 100644
+> --- a/Documentation/scheduler/sched-rt-group.txt
+> +++ b/Documentation/scheduler/sched-rt-group.txt
+> @@ -175,7 +175,7 @@ get their allocated time.
+>  
+>  Implementing SCHED_EDF might take a while to complete. Priority Inheritance is
+>  the biggest challenge as the current linux PI infrastructure is geared towards
+> -the limited static priority levels 0-99. With deadline scheduling you need to
+> +the limited static priority levels 1-99. With deadline scheduling you need to
+>  do deadline inheritance (since priority is inversely proportional to the
+>  deadline delta (deadline - now)).
+>  
+> diff --git a/include/linux/sched/prio.h b/include/linux/sched/prio.h
+> index 7d64feafc408e..6986c32356842 100644
+> --- a/include/linux/sched/prio.h
+> +++ b/include/linux/sched/prio.h
+> @@ -8,7 +8,7 @@
+>  
+>  /*
+>   * Priority of a process goes from 0..MAX_PRIO-1, valid RT
+> - * priority is 0..MAX_RT_PRIO-1, and SCHED_NORMAL/SCHED_BATCH
+> + * priority is 1..MAX_RT_PRIO-1, and SCHED_NORMAL/SCHED_BATCH
 
-Why do you need this intermediate function?
+Actually, valid RT priority is 0..MAX_RT_PRIO-2 (0-98). This comment is
+talking about the kernel representation, not the userspace one.
 
-Other than that looks good to me, please free to use
-Reviewed-by: Roman Gushchin <guro@fb.com>
+>   * tasks are in the range MAX_RT_PRIO..MAX_PRIO-1. Priority
+>   * values are inverted: lower p->prio value means higher priority.
+>   *
+> diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
+> index 7dc20a3232e72..40257a97fb8f2 100644
+> --- a/kernel/sched/cpupri.h
+> +++ b/kernel/sched/cpupri.h
+> @@ -5,7 +5,7 @@
+>  #define CPUPRI_INVALID		-1
+>  #define CPUPRI_IDLE		 0
+>  #define CPUPRI_NORMAL		 1
+> -/* values 2-101 are RT priorities 0-99 */
+> +/* values 2-101 are RT priorities 1-99 */
 
-Thank you!
+I suppose this also should be 0-98.
+
+>  
+>  struct cpupri_vec {
+>  	atomic_t		count;
+
+IMHO it is a bit crazy that userspace RT prio 99 maps to kernel prio
+0. This leaves a hole at kernel prio 99. Wouldn't it be better just to
+map userspace RT prio 1-99 to kernel prio 99-1?
+
+John Ogness
