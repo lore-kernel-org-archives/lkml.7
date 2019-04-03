@@ -2,246 +2,131 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD38C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041FBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287982148E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C191B2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGGzdKoy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SowecZhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfDCCzF (ORCPT
+        id S1726890AbfDCC6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 22:55:05 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39029 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfDCCzF (ORCPT
+        Tue, 2 Apr 2019 22:58:41 -0400
+Received: from mail-it1-f176.google.com ([209.85.166.176]:55300 "EHLO
+        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfDCC6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 22:55:05 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t28so17836552qte.6;
-        Tue, 02 Apr 2019 19:55:04 -0700 (PDT)
+        Tue, 2 Apr 2019 22:58:41 -0400
+Received: by mail-it1-f176.google.com with SMTP id z126so8698670itd.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:58:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=eKelixOSe2DiHbodegTi3JJbyphsCM3fp2oZSGXUKhw=;
-        b=bGGzdKoyz0x/RH1ldXcpVkZx8NGFxJD5FHlmGatEodEOsctamvqiFg+aSiGI3f96XT
-         SqI3G3MdSNfIwtnQtPtP+IX/tYMC9VU4R4ZsaPGDtOCV4M6IrbRNLvH70QxXKD/UcRCM
-         YFuXi7qllcPCcegfPe+EjYOjLko+hCXdlTBY/p7R9RpXx83k4YXUmQHLrtGHeu2E3BNV
-         p+BYgtAF6N3A6GYZ/cZgKN3nyuZVeUBUQNXYf7kNPwPpFk7Hs6ztTLBuk2kqyO0xfdjP
-         1i7QjPdm+JR8xr57g/TFUzuJiWmaVcTODhGaLeqASJq8UKNbmxE9r3v93sl4VF/JrvK0
-         SxXg==
+        bh=pDAlw57SiOhCqoHDQpobUVdPGLSt30DBZUBllkvzPEw=;
+        b=SowecZhSxDaI5B+UH8e7HZ0QxnBjbsD8p43QAGMTIgEeUbPDoEif8nGW3Wj1fLQFRp
+         u7Z1SiAnqpP1YFWJWmstSpse9Ssosy8bdU5grGrm9rHImZHpPNt1DD2FMngiljkG5scA
+         5aVDi+GKxaJheC5+XWGtFBo7XSQAdKfX7Givr2tNDWC+2r+WS/cbjUzSE0xEJaF1tGfl
+         vhOj7qHFQ29RNMwgYJmscgBPFKCN0XpPFwwSINysR0w4ZYiP48wS6mhAhsEcTpJtsp0u
+         QTyk1SKJIgOynEwJiA5LEchR0Wc+yhSF9VZTtQTO7uFXf7gLzVE6ukU8Hdx3Gw94bHSX
+         wIIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eKelixOSe2DiHbodegTi3JJbyphsCM3fp2oZSGXUKhw=;
-        b=j93J+7oc1ECZ86RBBvijre3SYdyzgmD71ky2i+Hi/strwEWLR+C3YURjnv2Q8DREom
-         aKSqXVCknhWvn0CIoxp2U6Q2VyKXDyQi8nJvUARw17pfWOyyoIlGsLzUI865pKh7Sp3u
-         /eX/BzYyfXNGXAY45iJhn/Cxkd8DhKh1PPT+N3zvJmllwHxeqzYckXbCyGAE8HVNpR9G
-         Vq10V64MYCuiuRXUzQu2J3EKPUkyYSSk94mSjOq6yAhq2usFHIRLi3jsArbyiQhdmexM
-         6lxj7dn9ER4SVHLLs7RtQ3I5GmyFnCgtZCwxptuyKuQpi72NlfjENNZRSPZszU8KHby6
-         UfIw==
-X-Gm-Message-State: APjAAAVY+TMKk6TbU+Gko+VbSppET4tYJSYa6Y7Z6fd2RHqN8fokqICj
-        ohp6535H+bkex8aaj9DGbm5SQrSiENJy/SYYDCc=
-X-Google-Smtp-Source: APXvYqxVjhV9xmc9kWaPaG5luvdhKXXh7dxSoJ6VLEh4K8HId4RRXTdINJckBqSp0JDhU6B6ZjErbGitYiT2ntwMc6E=
-X-Received: by 2002:ac8:262c:: with SMTP id u41mr5383757qtu.198.1554260103770;
- Tue, 02 Apr 2019 19:55:03 -0700 (PDT)
+        bh=pDAlw57SiOhCqoHDQpobUVdPGLSt30DBZUBllkvzPEw=;
+        b=HgbXHE28bWhscF+KXXqU7XabxggCzFqYJ1936iqEB4kuxZ2ywrI0sWezwABlSchkT+
+         65S8ri/aCosShKRaWnC6ZWPt1U7aczpGDAW0SjTtHjjuyDSxC1TBcA+OtUYhNNre13ar
+         k75w4f+YCCx/I7Tmy/4e+jgphCTeZyek/wTYm1JMkeW0RN9WA1nGUb+rEWxG7cvDSBnh
+         ddUSYZxrjNCuon2Yjuvw24K/zPiLRYz9bG33HY9emo1LriW0PThMIL1TM8c5j41Vut27
+         YLHd3aB8V92YAVUhsHgAOi2L9K0u0dGj+GR8/2YPkpLpYRFLhbpxGd/jYHLco/gO9+IB
+         40Sg==
+X-Gm-Message-State: APjAAAXKGiRh0HtYnkbkXvD4ZoH+47hRfXcyfOhljVEAEnoUW5SGYy2B
+        Wn6y1K8nSGsYLByzVWHHDhrTunDJuZnda/ki1g==
+X-Google-Smtp-Source: APXvYqzoi+rBjVVEIoA3EuddeaHKg8I3We5VfmXj2d+aezVVkSVtRsGvdwq9/DcZI9+QcPyaygd4frU6xRSsgTpCeGs=
+X-Received: by 2002:a02:ac14:: with SMTP id a20mr55863492jao.130.1554260319988;
+ Tue, 02 Apr 2019 19:58:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190315111107.15154-1-lhenriques@suse.com> <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
- <87r2b4zd2q.fsf@suse.com> <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
- <87lg1c17b2.fsf@suse.com> <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
- <87a7hr19v7.fsf@suse.com> <87o963jkcj.fsf@suse.com>
-In-Reply-To: <87o963jkcj.fsf@suse.com>
-From:   "Yan, Zheng" <ukernel@gmail.com>
-Date:   Wed, 3 Apr 2019 10:54:51 +0800
-Message-ID: <CAAM7YAko8qnfjWEdEqX=XE3azDZLpO_+egxDEsqowK9ByYZxwg@mail.gmail.com>
-Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
+References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com> <20190402080811.GO7627@MiWiFi-R3L-srv>
+In-Reply-To: <20190402080811.GO7627@MiWiFi-R3L-srv>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Wed, 3 Apr 2019 10:58:28 +0800
+Message-ID: <CAFgQCTtYLVS8Mfztg8=PWEn8cxDm9Lm1p=zXDR1YG8Oo0MLx0Q@mail.gmail.com>
+Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
+To:     Baoquan He <bhe@redhat.com>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 22, 2019 at 6:04 PM Luis Henriques <lhenriques@suse.com> wrote:
+On Tue, Apr 2, 2019 at 4:08 PM Baoquan He <bhe@redhat.com> wrote:
 >
-> Luis Henriques <lhenriques@suse.com> writes:
+> > +/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
+> > +static void mem_avoid_specified_crashkernel_region(char *option)
+> > +{
+> > +     unsigned long long crash_size, crash_base = 0;
+> > +     char    *first_colon, *first_space, *cur = option;
+> > +
 >
-> > "Yan, Zheng" <ukernel@gmail.com> writes:
-> >
-> >> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
-> >>>
-> >>> "Yan, Zheng" <ukernel@gmail.com> writes:
-> >>>
-> >>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >>> >>
-> >>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
-> >>> >>
-> >>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
-> >>> >> >>
-> >>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
-> >>> >> >>
-> >>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
-> >>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
-> >>> >> >>   hex dump (first 32 bytes):
-> >>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-> >>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >>> >> >>   backtrace:
-> >>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
-> >>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
-> >>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
-> >>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
-> >>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
-> >>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
-> >>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
-> >>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
-> >>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
-> >>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
-> >>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
-> >>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
-> >>> >> >>
-> >>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
-> >>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
-> >>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
-> >>> >> >>
-> >>> >> >> Link: https://tracker.ceph.com/issues/38224
-> >>> >> >> Cc: stable@vger.kernel.org
-> >>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> >>> >> >> ---
-> >>> >> >>  fs/ceph/caps.c | 7 +++++++
-> >>> >> >>  1 file changed, 7 insertions(+)
-> >>> >> >>
-> >>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> >>> >> >> index 36a8dc699448..208f4dc6f574 100644
-> >>> >> >> --- a/fs/ceph/caps.c
-> >>> >> >> +++ b/fs/ceph/caps.c
-> >>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
-> >>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
-> >>> >> >>  {
-> >>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
-> >>> >> >> +
-> >>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
-> >>> >> >>         list_del_init(&ci->i_snap_realm_item);
-> >>> >> >>         ci->i_snap_realm_counter++;
-> >>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
-> >>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
-> >>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
-> >>> >> >>                             realm);
-> >>> >> >> +       /*
-> >>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
-> >>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
-> >>> >> >> +        * ceph_snap_context and we need to drop it.
-> >>> >> >> +        */
-> >>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
-> >>> >> >>  }
-> >>> >> >>
-> >>> >> >>  /*
-> >>> >> >
-> >>> >> > This does not seem right.  i_head_snapc is cleared when
-> >>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
-> >>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
-> >>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
-> >>> >> > should be in iterate_session_caps()
-> >>> >> >
-> >>> >>
-> >>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
-> >>> >> seems to execute fine, except from the memory leak.
-> >>> >>
-> >>> >> It's very difficult to reproduce this issue, but last time I managed to
-> >>> >> get this memory leak to trigger I actually had some debugging code in
-> >>> >> drop_inode_snap_realm, something like:
-> >>> >>
-> >>> >>   if (ci->i_head_snapc)
-> >>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
-> >>> >
-> >>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
-> >>> > i_flushing_caps. and try reproducing it again.
-> >>> >
-> >>>
-> >>> Ok, it took me a few hours, but I managed to reproduce the bug, with
-> >>> those extra printks.  All those values are set to 0 when the bug
-> >>> triggers (and i_head_snapc != NULL).
-> >>>
-> >>
-> >> Thanks, which test triggers this bug?
-> >
-> > That's generic/013.  It usually triggers after a few hours of running it
-> > in a loop (I'm using a vstart cluster for that).
-> >
-> >>
-> >> I searched that code, found we may fail to cleanup i_head_snap in two
-> >> places. One is in ceph_queue_cap_snap, Another is in
-> >> remove_session_caps_cb().
-> >
-> > Ah, great!  I spent a lot of time looking but I couldn't really find it.
-> > My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
-> > and that the corresponding ceph_put_snap_context would be done in
-> > handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
-> > MDS.
+> Another thing which need be noticed is that you may only need to handle
+> when '@' is found. Otherwise just let it go. Right?
 >
-> Something that I didn't said explicitly is that I *know* that the
-> unbalanced ceph_get_snap_context() is the one in function
-> ceph_queue_cap_snap().  I know this for sure because I've managed to
-> reproduce the issue several times with an instrumented kernel (with
-> tracepoints) that allowed me to keep track of all ceph_snap_context
-> operations (create, get, put, delete).
->
+According to kernel's behavior, only the last "crashkernel=" option
+takes effect. Hence if no '@', then clearing mem_avoid
 
-Sorry for the delay. please try
-
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 45f061e47721..5bc30e0d252a 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -1420,6 +1420,15 @@ static int remove_session_caps_cb(struct inode
-*inode, struct ceph_cap *cap,
-                        list_add(&ci->i_prealloc_cap_flush->i_list, &to_remove);
-                        ci->i_prealloc_cap_flush = NULL;
-                }
-+
-+               if (drop &&
-+                  ci->i_wrbuffer_ref_head == 0 &&
-+                  ci->i_wr_ref == 0 &&
-+                  ci->i_dirty_caps == 0 &&
-+                  ci->i_flushing_caps == 0) {
-+                      ceph_put_snap_context(ci->i_head_snapc);
-+                      ci->i_head_snapc = NULL;
-+               }
-        }
-        spin_unlock(&ci->i_ceph_lock);
-        while (!list_empty(&to_remove)) {
-diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
-index 89aa37fa0f84..0af4b3d32122 100644
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -572,7 +572,12 @@ void ceph_queue_cap_snap(struct ceph_inode_info *ci)
-        old_snapc = NULL;
-
- update_snapc:
--       if (ci->i_head_snapc) {
-+       if (ci->i_wrbuffer_ref_head == 0 &&
-+           ci->i_wr_ref == 0 &&
-+           ci->i_dirty_caps == 0 &&
-+           ci->i_flushing_caps == 0) {
-+               ci->i_head_snapc = NULL;
-+       } else {
-                ci->i_head_snapc = ceph_get_snap_context(new_snapc);
-                dout(" new snapc is %p\n", new_snapc);
-        }
-
-
-
-> Cheers,
-> --
-> Luis
+> > +     first_colon = strchr(option, ':');
+> > +     first_space = strchr(option, ' ');
+> > +     /* if contain ":" */
+> > +     if (first_colon && (!first_space || first_colon < first_space)) {
+> > +             int i;
+> > +             u64 total_sz = 0;
+> > +             struct boot_e820_entry *entry;
+> > +
+> > +             for (i = 0; i < boot_params->e820_entries; i++) {
+> > +                     entry = &boot_params->e820_table[i];
+> > +                     /* Skip non-RAM entries. */
+> > +                     if (entry->type != E820_TYPE_RAM)
+> > +                             continue;
+> > +                     total_sz += entry->size;
+> > +             }
+> > +             handle_crashkernel_mem(option, total_sz, &crash_size,
+> > +                     &crash_base);
+> > +     } else {
+> > +             crash_size = memparse(option, &cur);
+> > +             if (option == cur)
+> > +                     return;
+> > +             while (*cur && *cur != ' ' && *cur != '@')
+> > +                     cur++;
+> > +             if (*cur == '@') {
+> > +                     option = cur + 1;
+> > +                     crash_base = memparse(option, &cur);
+> > +             }
+> > +     }
+> > +     if (crash_base) {
+> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
+> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
+> > +     } else {
+> > +             /*
+> > +              * Clearing mem_avoid if no offset is given. This is consistent
+> > +              * with kernel, which uses the last crashkernel= option.
+> > +              */
+> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
+> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
+> > +     }
+> > +}
