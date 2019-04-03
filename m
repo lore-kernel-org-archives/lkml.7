@@ -2,122 +2,150 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFAAC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D00C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462E6206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6GyP2on"
+	by mail.kernel.org (Postfix) with ESMTP id 9351F206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfDCVsq (ORCPT
+        id S1726585AbfDCVsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 17:48:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38553 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfDCVsp (ORCPT
+        Wed, 3 Apr 2019 17:48:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38900 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726535AbfDCVsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 17:48:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id j26so135282pgl.5;
-        Wed, 03 Apr 2019 14:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mefDxBoY6SHqSsgjKwgG2ujnOfgIpSAFiSRrCr9D8aM=;
-        b=e6GyP2onWGtCr20hs+YIzz+Glia9JV0m18J8bd7WPIYAXWqnPggZDg3sAqrDmR7vb8
-         fnmKpfCeMjWWc/Gk0M0gFdyKOCuL7Mgyldipr24p7NLmL/HZRoT9fhVEmGkEi5Jyjt7r
-         Wc10g8tXIIH9ZipahIHzFPz8AQwYv28YHETv8Zb9T+9PtoBtBvLZo3Cz+9MbirkTPQC7
-         9JYUlkJvx9JXrV+7Z6bBQaMpycncJkscY4y19mGHQb0br9DddG0niHhg5CNbUqIAjHqa
-         46/LzJBtJlOX25UcFRXyrsLbE68yoPqZPEOE8b6i34YqdmHh6H6WUBNqgS4vHBU+e2vB
-         MbTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mefDxBoY6SHqSsgjKwgG2ujnOfgIpSAFiSRrCr9D8aM=;
-        b=HZ3jRXFDwmv1M2gOaBEOqAM3jh6cuL8PxDQL4Bk4ERAFB2h38n9i4A5mSOYmH6ZXJm
-         7IW9VXXcc/TMNe7R230MNZX8QdgprGwgbqSut3LZLz5MzLiP0+gEq+rApi+D/RESuPCM
-         hiQZnZ6RJnn3KwZmS5kYwpib/HnsPKxTCK4UyXLMeq8rr1BsrD8ofvHfKAaca+H+MyDH
-         R17TkbEh08Rkd5Mgo8tmV4SlGHAFOyg86VFWtsdEloO1ASC5P9DcMozqnNZWTKm0qcBk
-         h1jTerW0Hjd5ChnBvkZvEdn2lMywncx8Xpxv+wOpB3lXH63A34XAxY9YioWh//A/UFHN
-         gGwQ==
-X-Gm-Message-State: APjAAAVdhTz32AzJT/YtEfeQlb/ZiTn8a2qQ7MG3OlXMYKWl3c7uPV/I
-        Pi9XJMCuszwHyynj6wo4cn0=
-X-Google-Smtp-Source: APXvYqwpa5OZNRVGUquf6ICWNa++Pl3MkX7X4TdX2zBhgAQ65FuO1ULmf7ca9MIwcsy8k3FqZv+/EA==
-X-Received: by 2002:a63:5e43:: with SMTP id s64mr1959818pgb.15.1554328124712;
-        Wed, 03 Apr 2019 14:48:44 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 20sm23119449pfn.131.2019.04.03.14.48.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 14:48:43 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 14:48:42 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/2] input: keyboard: imx: no need to control interrupt
- status in event check
-Message-ID: <20190403214842.GD53104@dtor-ws>
-References: <1553842562-8481-1-git-send-email-Anson.Huang@nxp.com>
+        Wed, 3 Apr 2019 17:48:51 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33LPHbs103878
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 17:48:49 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rn465tag4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:48:48 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <cclaudio@linux.ibm.com>;
+        Wed, 3 Apr 2019 22:48:47 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Apr 2019 22:48:43 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x33LmgcQ23855318
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Apr 2019 21:48:42 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72014AE05C;
+        Wed,  3 Apr 2019 21:48:42 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C770BAE05F;
+        Wed,  3 Apr 2019 21:48:40 +0000 (GMT)
+Received: from [9.18.235.111] (unknown [9.18.235.111])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Apr 2019 21:48:40 +0000 (GMT)
+Subject: Re: [PATCH 0/4] Enabling secure boot on PowerNV systems
+To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+ <87r2aj1ayf.fsf@concordia.ellerman.id.au>
+From:   Claudio Carvalho <cclaudio@linux.ibm.com>
+Date:   Wed, 3 Apr 2019 18:48:39 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553842562-8481-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87r2aj1ayf.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19040321-0060-0000-0000-00000328157A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010869; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01183908; UDB=6.00619853; IPR=6.00964659;
+ MB=3.00026284; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-03 21:48:46
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040321-0061-0000-0000-000048D370DC
+Message-Id: <3befcee7-0b65-c312-1f14-daa56afeb176@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904030141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
 
-On Fri, Mar 29, 2019 at 07:00:43AM +0000, Anson Huang wrote:
-> There is no need to enable release interrupt and disable depress
-> interrupt in event check, as a timer is setup for checking these
-> events rather than interrupts.
+On 4/3/19 10:21 AM, Michael Ellerman wrote:
+> Hi Claudio,
+>
+> Thanks for posting this.
+>
+> Claudio Carvalho <cclaudio@linux.ibm.com> writes:
+>> This patch set is part of a series that implements secure boot on
+>> PowerNV systems.
+>>
+>> In order to verify the OS kernel on PowerNV, secure boot requires X.509
+>> certificates trusted by the platform, the secure boot modes, and several
+>> other pieces of information. These are stored in secure variables
+>> controlled by OPAL, also known as OPAL secure variables.
+>>
+>> This patch set adds the following features:
+>>
+>> 1. Enable efivarfs by selecting CONFIG_EFI in the CONFIG_OPAL_SECVAR
+>>    introduced in this patch set. With CONFIG_EFIVAR_FS, userspace tools can
+>>    be used to manage the secure variables.
+>> 2. Add support for OPAL secure variables by overwriting the EFI hooks
+>>    (get_variable, get_next_variable, set_variable and query_variable_info)
+>>    with OPAL call wrappers. There is probably a better way to add this
+>>    support, for example, we are investigating if we could register the
+>>    efivar_operations rather than overwriting the EFI hooks. In this patch
+>>    set, CONFIG_OPAL_SECVAR selects CONFIG_EFI. If, instead, we registered
+>>    efivar_operations, CONFIG_EFIVAR_FS would need to depend on
+>>    CONFIG_EFI|| CONFIG_OPAL_SECVAR. Comments or suggestions on the
+>>    preferred technique would be greatly appreciated.
+> I am *very* reluctant to start selecting CONFIG_EFI on powerpc.
+>
+> Simply because we don't actually have EFI, and I worry we're going to
+> both break assumptions in the EFI code as well as impose requirements on
+> the powerpc code that aren't really necessary.
 
-But won't using release interrupt allow signalling key release earlier?
+Yes, we agree. We are working on the v2 and it is not going to depend on
+CONFIG_EFI. Rather, the IMA arch policies will make the OPAL calls directly.
 
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/input/keyboard/imx_keypad.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
-> index 539cb67..7e32c36 100644
-> --- a/drivers/input/keyboard/imx_keypad.c
-> +++ b/drivers/input/keyboard/imx_keypad.c
-> @@ -276,11 +276,6 @@ static void imx_keypad_check_for_events(struct timer_list *t)
->  		reg_val = readw(keypad->mmio_base + KPSR);
->  		reg_val |= KBD_STAT_KPKR | KBD_STAT_KRSS;
->  		writew(reg_val, keypad->mmio_base + KPSR);
-> -
-> -		reg_val = readw(keypad->mmio_base + KPSR);
-> -		reg_val |= KBD_STAT_KRIE;
-> -		reg_val &= ~KBD_STAT_KDIE;
-> -		writew(reg_val, keypad->mmio_base + KPSR);
->  	}
->  }
->  
-> -- 
-> 2.7.4
-> 
 
-Thanks.
+>
+> So I'd definitely prefer we go the route of enabling efivarfs with an
+> alternate backend.
 
--- 
-Dmitry
+Right, I'm investigating how we can do that, but it looks like we should
+post that as a separate patchset to avoid delaying upstreaming signature
+verification based on the secure boot variables.
+
+Thanks,
+Claudio
+
+
+>
+> Better still would be a generic secure variable interface as Matt
+> suggests, if the userspace tools can be relatively easily adapted to use
+> that interface.
+>
+> cheers
+>
+
