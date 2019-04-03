@@ -2,104 +2,96 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE28C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E492C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82752084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B23C206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:04:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="unEY+XY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbfDCQEL (ORCPT
+        id S1728634AbfDCQEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:04:11 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:50774 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbfDCQDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:03:48 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id A8913A98208A1D92FB00;
-        Thu,  4 Apr 2019 00:03:42 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x33G3Xaq028658;
-        Thu, 4 Apr 2019 00:03:33 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019040400040020-7533733 ;
-          Thu, 4 Apr 2019 00:04:00 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH 4/7] drm/omap: fix possible object reference leak
-Date:   Thu, 4 Apr 2019 00:04:12 +0800
-Message-Id: <1554307455-40361-5-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1554307455-40361-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1554307455-40361-1-git-send-email-wen.yang99@zte.com.cn>
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-04-04 00:04:00,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-04-04 00:03:26,
-        Serialize complete at 2019-04-04 00:03:26
-X-MAIL: mse01.zte.com.cn x33G3Xaq028658
+        Wed, 3 Apr 2019 12:04:49 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42532 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfDCQEt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:04:49 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 103so15856498otd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 09:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fThzfm/a7c6EB2K1/Wy30MMxdASyeayvFiL8HhwazfY=;
+        b=unEY+XY07+QBsUubkYjk4tAmuD5byOL2sqWwEREvrkJp8897pK0y8gH09MibXeJ1TL
+         hMKb78QrA1znBaQbduso8TbYPv4auj8zbCxlhMPMAKtlPwAAf4f4ywGHc4IrOsjkLYI4
+         lpNm6yiPOHuuiS9UEEVrLdDI/l0Zn8wFFAyjXvJPhVxdfQtflj7se2dltJA7fhmwenjR
+         SzbP81thPQMNuGv5LYOuuf+ppPItRtumk0pjL+oazPOn8pJOl3T6Tsgx+4zw8up4E2In
+         dqi9rdlBSIMxYHuun4xBhvljW3OEVmai8H7bitcMJS0IZpO0+iI7gsTuBoKniLFj8oIh
+         2zVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fThzfm/a7c6EB2K1/Wy30MMxdASyeayvFiL8HhwazfY=;
+        b=A5xa0VsCQ4d+EQibWrEfrHTjq4Rqhqpz0kXsniNBBRC1G+hMM6QmKcwEn2nrDFrTGk
+         wfOs0MMehyuh/Kjt6ltqAJfagCCnOSoJYI8qxxao3egUbEvWdKtcCv9avlXZUEMUj4an
+         IUZKv7NJOOpECRE7CZfZIxksnBzikz+Te+mGSe1q0guyKhV2abYkjumyBbLm8gm4iM30
+         XB0Lhd8iwFAxUXefNuT0CtrQx4x5NlLB+ElyF/+tkA6MqB/9LxFZWzyn4TY5IwQQO3+B
+         /KihDuJ6IS4OedW7LpGegs5ayIb554xZ5zJQz07fXDfuDZXbD/k2a8B136/6HKjrYVFH
+         eS6g==
+X-Gm-Message-State: APjAAAXBCAqpPcCZzI8ZYig2xeoDXbEx5Enk0xTry8nhuIpawzkEwmJr
+        5aueUpUApAlvRkCWL7BC5Ho=
+X-Google-Smtp-Source: APXvYqyFJLDeoXwqWbpl9pvZeODiGZO/EZOvlqYOBEPfLNkRaCJ1T+wxiWnh7JyiewzwEGNReLuKLw==
+X-Received: by 2002:a9d:4c8d:: with SMTP id m13mr188504otf.145.1554307488164;
+        Wed, 03 Apr 2019 09:04:48 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:1876:bc0b:8981:17be])
+        by smtp.gmail.com with ESMTPSA id s124sm6521160oia.24.2019.04.03.09.04.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 09:04:47 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH] Staging: rtlwifi: Remove unwanted parentheses
+Date:   Wed,  3 Apr 2019 11:04:45 -0500
+Message-Id: <20190403160445.11110-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_find_matching_node returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Remove unwanted parentheses around right hand side of an assignment to
+make code better and more understandable.
 
-Detected by coccinelle with the following warnings:
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:212:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
-drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:237:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 209, but without a corresponding object release within this function.
+Issue found by Coccinelle.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
 ---
- drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/staging/rtlwifi/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-index 2b41c75..60067e8 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c
-@@ -208,8 +208,10 @@ static int __init omapdss_boot_init(void)
+diff --git a/drivers/staging/rtlwifi/core.c b/drivers/staging/rtlwifi/core.c
+index a9902818ae7e..970343048b69 100644
+--- a/drivers/staging/rtlwifi/core.c
++++ b/drivers/staging/rtlwifi/core.c
+@@ -341,8 +341,8 @@ static u16 crc16_ccitt(u8 data, u16 crc)
+ 	u16 result;
  
- 	dss = of_find_matching_node(NULL, omapdss_of_match);
+ 	for (i = 0; i < 8; i++) {
+-		crc_bit15 = ((crc & BIT(15)) ? 1 : 0);
+-		data_bit  = (data & (BIT(0) << i) ? 1 : 0);
++		crc_bit15 = (crc & BIT(15)) ? 1 : 0;
++		data_bit  = data & (BIT(0) << i) ? 1 : 0;
+ 		shift_in = crc_bit15 ^ data_bit;
  
--	if (dss == NULL || !of_device_is_available(dss))
-+	if (dss == NULL || !of_device_is_available(dss)) {
-+		of_node_put(dss);
- 		return 0;
-+	}
- 
- 	omapdss_walk_device(dss, true);
- 
-@@ -234,6 +236,7 @@ static int __init omapdss_boot_init(void)
- 		kfree(n);
- 	}
- 
-+	of_node_put(dss);
- 	return 0;
- }
- 
+ 		result = crc << 1;
 -- 
-2.9.5
+2.17.1
 
