@@ -4,47 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C323CC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E700C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A1B20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6F021473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554265874;
-	bh=/OOpqSWFY/bFgm/i9pvQoSH8tbdaigbn6JlHf0k/aD4=;
+	s=default; t=1554265877;
+	bh=wU5DmPT9SXcqNBnSGjyTLFCjfL9dJ/fUH+pZZoLyrSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgYYIzxyVlwCtsYFE6JIusFBcw3hR9O6giaP1s5mflP2e/643fsBiaJjd7nVJvLkW
-	 ofDHk5eoj11JctkzACQMimN2YHUj/8+OiZgBg6qr+nCeCAv2r7xB5mVdCtK5Iu93wz
-	 C8MTDMOHmlL0y9u7artzZVxtOLCJ84ow8NpthEA0=
+	b=zOObnXHmOudeypkV1Cf2MVgkBzkPZt43o9TQobItcFupBtgdP/lhYw38VV/zEBA/L
+	 tOGyZw91r2v7wqH8vbXe5DUyXlFE/tX61m4jIs9a5Z17YRzFzK6QtJV5fwDkq+N+gr
+	 zoas6XwyyuZdPLvwF/RfK8mPfBuoKJpORxfHTU80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbfDCEbN (ORCPT
+        id S1728763AbfDCEbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:31:13 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:34905 "EHLO
+        Wed, 3 Apr 2019 00:31:15 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:37059 "EHLO
         out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728656AbfDCEbI (ORCPT
+        by vger.kernel.org with ESMTP id S1728657AbfDCEbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 00:31:08 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id BFAF521B62;
-        Wed,  3 Apr 2019 00:23:13 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 2063D21E65;
+        Wed,  3 Apr 2019 00:24:00 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 00:23:13 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 00:24:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=7KCR/bG3UyviFO0P3mTQEntswZ73LUL6n099eGv7Rtc=; b=ax3tkqcr
-        iE4NZNVHdVUciAmuuOOB8VSlg3Mk0WNyGBebOUJrR1kFO5Sz44KarnJn7qrwZ++e
-        Q2UdjGlbCqPXOQmABUNXts7ejIpcJLxZNWmMffBQvHmsUlfkMy7a58iVl/sOBEYd
-        JXmWe8juapFbQkEwIGyAAxMjgccuNUZ2TeX7rxHU3bRVdVjQFgXY0lLt+3pzqCJU
-        Uvfa+rRg71shL9MJOqzAVv93sqKmMzcBhlYyX2H2HG/wUBBicTfnHO1V3PhFINhH
-        +qsabvZ3pcJTzvx26z0/F4yWtJCJTBV37iCSxzuqWmcD1cXhaxhvoGDFqDVFt27Z
-        OsPqMol0Oi4P1A==
-X-ME-Sender: <xms:MTWkXFoHwJkPMKSzIG0os5rdBL9UI-CN_Y9d9FJIHGO35vZzZ1UgCQ>
+        fm2; bh=K23AG6kPeiLizgBxJZXoFVpxoNhX/Z2JwBtP24yd/wE=; b=ZLjFmVPc
+        uFn07xt2EXbinYN6llUG0QEjaIi3wr2dZiGZF4j8TwtA4AshpAEgA7xPhxbPcHpB
+        x83ISJhNskBGJ0YiWUMUnw/aSYAKXvgWvbMv24+SHHtaPQfyz9nInO2rwVmCa+xH
+        VA2HjXG+GxmdwAcecLJyYXlvHPQFFX3AjpXJ+73aIv+9AcCHwZ1xG9MNQXSqczuv
+        8M0WomHfwYqG+HWQni461sG7HneqZuOZjozJlvB6IrmI/btF2Gzj/PRVgKUiqVwa
+        Y5+1koLJgjVbP7fPD54FEbziXd96+emuuJsefJJJqlRJCRj1jQg7jyheNzTeaSXT
+        mSMK6evUnkOfow==
+X-ME-Sender: <xms:XzWkXAjnKq8BmDnX4uSb5TPFP1IZ9REw4D-liOfhkRYATGLd_hMyZA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdektdculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
@@ -52,14 +51,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdektdculddtuddrgedutd
     ucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrh
     hnvghlrdhorhhgqeenucfkphepuddvgedrudeiledrvdejrddvtdeknecurfgrrhgrmhep
     mhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
-    hiiigvpeef
-X-ME-Proxy: <xmx:MTWkXDeFp-TOiOffCjBhOkVncqNb4CsSLo2vq8ocG_rsK7BSGddeqw>
-    <xmx:MTWkXHtgPT2ckf-MXdmAP6ocMmYRsnJsDGLHPj7hXK5p_rSF3LjC_Q>
-    <xmx:MTWkXDWyMElFLwUZUCH5bMz8J8vQRXev2J1M0YcR8vQl3FNIiWjMnQ>
-    <xmx:MTWkXBBZ91ZjOJp6V8PDqgPXjNdF91NGdEEYoG8jlR7AWykz_XVk8w>
+    hiiigvpeel
+X-ME-Proxy: <xmx:XzWkXNSDWq0JTqq9MLccRKKxxaylqogHW0L0ZJPXzTm6sV5T6XxlOA>
+    <xmx:XzWkXDGGFUNdu367r1hDG93FCd8Yd-lb_RxAJlqiivawU4c509DqWA>
+    <xmx:XzWkXFky5Sg-YwhiZnnP91nubM1EAYbulb4zUP35Di5flkkcQFqWWQ>
+    <xmx:YDWkXNTwULLWBhutD-3kM93qQGHgHNHkT5c9utvRJJCjZv1Xq9Sgzg>
 Received: from eros.localdomain (124-169-27-208.dyn.iinet.net.au [124.169.27.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B3851100E5;
-        Wed,  3 Apr 2019 00:23:06 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 214AB100E5;
+        Wed,  3 Apr 2019 00:23:52 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -81,9 +80,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Rik van Riel <riel@redhat.com>,
         Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 04/14] slub: Slab defrag core
-Date:   Wed,  3 Apr 2019 15:21:17 +1100
-Message-Id: <20190403042127.18755-5-tobin@kernel.org>
+Subject: [RFC PATCH v2 10/14] tools/testing/slab: Add XArray movable objects tests
+Date:   Wed,  3 Apr 2019 15:21:23 +1100
+Message-Id: <20190403042127.18755-11-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190403042127.18755-1-tobin@kernel.org>
 References: <20190403042127.18755-1-tobin@kernel.org>
@@ -94,571 +93,319 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Internal fragmentation can occur within pages used by the slub
-allocator.  Under some workloads large numbers of pages can be used by
-partial slab pages.  This under-utilisation is bad simply because it
-wastes memory but also because if the system is under memory pressure
-higher order allocations may become difficult to satisfy.  If we can
-defrag slab caches we can alleviate these problems.
+We just implemented movable objects for the XArray.  Let's test it
+intree.
 
-Implement Slab Movable Objects in order to defragment slab caches.
+Add test module for the XArray's movable objects implementation.
 
-Slab defragmentation may occur:
+Functionality of the XArray Slab Movable Object implementation can
+usually be seen by simply by using `slabinfo` on a running machine since
+the radix tree is typically in use on a running machine and will have
+partial slabs.  For repeated testing we can use the test module to run
+to simulate a workload on the XArray then use `slabinfo` to test object
+migration is functioning.
 
-1. Unconditionally when __kmem_cache_shrink() is called on a slab cache
-   by the kernel calling kmem_cache_shrink().
+If testing on freshly spun up VM (low radix tree workload) it may be
+necessary to load/unload the module a number of times to create partial
+slabs.
 
-2. Unconditionally through the use of the slabinfo command.
+Example test session
+--------------------
 
-	slabinfo <cache> -s
+Relevant /proc/slabinfo column headers:
 
-3. Conditionally via the use of kmem_cache_defrag()
+  name   <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab>
 
-- Use Slab Movable Objects when shrinking cache.
+Prior to testing slabinfo report for radix_tree_node:
 
-Currently when the kernel calls kmem_cache_shrink() we curate the
-partial slabs list.  If object migration is not enabled for the cache we
-still do this, if however, SMO is enabled we attempt to move objects in
-partially full slabs in order to defragment the cache.  Shrink attempts
-to move all objects in order to reduce the cache to a single partial
-slab for each node.
+  # slabinfo radix_tree_node --report
 
-- Add conditional per node defrag via new function:
+  Slabcache: radix_tree_node  Aliases:  0 Order :  2 Objects: 8352
+  ** Reclaim accounting active
+  ** Defragmentation at 30%
 
-	kmem_defrag_slabs(int node).
+  Sizes (bytes)     Slabs              Debug                Memory
+  ------------------------------------------------------------------------
+  Object :     576  Total  :     497   Sanity Checks : On   Total: 8142848
+  SlabObj:     912  Full   :     473   Redzoning     : On   Used : 4810752
+  SlabSiz:   16384  Partial:      24   Poisoning     : On   Loss : 3332096
+  Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 2806272
+  Align  :       8  Objects:      17   Tracing       : Off  Lpadd:  437360
 
-kmem_defrag_slabs() attempts to defragment all slab caches for node.
- Defragmentation is done conditionally dependent on MAX_PARTIAL _AND_
- defrag_used_ratio.
+Here you can see the kernel was built with Slab Movable Objects enabled
+for the XArray (XArray uses the radix tree below the surface).
 
-   Caches are only considered for defragmentation if the number of
-   partial slabs exceeds MAX_PARTIAL (per node).
+After inserting the test module (note we have triggered allocation of a
+number of radix tree nodes increasing the object count but decreasing the
+number of partial slabs):
 
-   Also, defragmentation only occurs if the usage ratio of the slab is
-   lower than the configured percentage (sysfs field added in this
-   patch).  Fragmentation ratios are measured by calculating the
-   percentage of objects in use compared to the total number of objects
-   that the slab page can accommodate.
+  # slabinfo radix_tree_node --report
 
-   The scanning of slab caches is optimized because the defragmentable
-   slabs come first on the list. Thus we can terminate scans on the
-   first slab encountered that does not support defragmentation.
+  Slabcache: radix_tree_node  Aliases:  0 Order :  2 Objects: 8442
+  ** Reclaim accounting active
+  ** Defragmentation at 30%
 
-   kmem_defrag_slabs() takes a node parameter. This can either be -1 if
-   defragmentation should be performed on all nodes, or a node number.
+  Sizes (bytes)     Slabs              Debug                Memory
+  ------------------------------------------------------------------------
+  Object :     576  Total  :     499   Sanity Checks : On   Total: 8175616
+  SlabObj:     912  Full   :     484   Redzoning     : On   Used : 4862592
+  SlabSiz:   16384  Partial:      15   Poisoning     : On   Loss : 3313024
+  Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 2836512
+  Align  :       8  Objects:      17   Tracing       : Off  Lpadd:  439120
 
-   Defragmentation may be disabled by setting defrag ratio to 0
+Now we can shrink the radix_tree_node cache:
 
-	echo 0 > /sys/kernel/slab/<cache>/defrag_used_ratio
+  # slabinfo radix_tree_node --shrink
+  # slabinfo radix_tree_node --report
 
-- Add a defrag ratio sysfs field and set it to 30% by default. A limit
-of 30% specifies that more than 3 out of 10 available slots for objects
-need to be in use otherwise slab defragmentation will be attempted on
-the remaining objects.
+  Slabcache: radix_tree_node  Aliases:  0 Order :  2 Objects: 8515
+  ** Reclaim accounting active
+  ** Defragmentation at 30%
 
-In order for a cache to be defragmentable the cache must support object
-migration (SMO).  Enabling SMO for a cache is done via a call to the
-recently added function:
+  Sizes (bytes)     Slabs              Debug                Memory
+  ------------------------------------------------------------------------
+  Object :     576  Total  :     501   Sanity Checks : On   Total: 8208384
+  SlabObj:     912  Full   :     500   Redzoning     : On   Used : 4904640
+  SlabSiz:   16384  Partial:       1   Poisoning     : On   Loss : 3303744
+  Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 2861040
+  Align  :       8  Objects:      17   Tracing       : Off  Lpadd:  440880
 
-	void kmem_cache_setup_mobility(struct kmem_cache *,
-				       kmem_cache_isolate_func,
-			               kmem_cache_migrate_func);
+Note the single remaining partial slab.
 
-Co-developed-by: Christoph Lameter <cl@linux.com>
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-kernel-slab |  14 +
- include/linux/slab.h                        |   1 +
- include/linux/slub_def.h                    |   7 +
- mm/slub.c                                   | 385 ++++++++++++++++----
- 4 files changed, 334 insertions(+), 73 deletions(-)
+ tools/testing/slab/Makefile             |   2 +-
+ tools/testing/slab/slub_defrag_xarray.c | 211 ++++++++++++++++++++++++
+ 2 files changed, 212 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/slab/slub_defrag_xarray.c
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-slab b/Documentation/ABI/testing/sysfs-kernel-slab
-index 29601d93a1c2..7770c03be6b4 100644
---- a/Documentation/ABI/testing/sysfs-kernel-slab
-+++ b/Documentation/ABI/testing/sysfs-kernel-slab
-@@ -180,6 +180,20 @@ Description:
- 		list.  It can be written to clear the current count.
- 		Available when CONFIG_SLUB_STATS is enabled.
+diff --git a/tools/testing/slab/Makefile b/tools/testing/slab/Makefile
+index 440c2e3e356f..44c18d9a4d52 100644
+--- a/tools/testing/slab/Makefile
++++ b/tools/testing/slab/Makefile
+@@ -1,4 +1,4 @@
+-obj-m += slub_defrag.o
++obj-m += slub_defrag.o slub_defrag_xarray.o
  
-+What:		/sys/kernel/slab/cache/defrag_used_ratio
-+Date:		February 2019
-+KernelVersion:	5.0
-+Contact:	Christoph Lameter <cl@linux-foundation.org>
-+		Pekka Enberg <penberg@cs.helsinki.fi>,
-+Description:
-+		The defrag_used_ratio file allows the control of how aggressive
-+		slab fragmentation reduction works at reclaiming objects from
-+		sparsely populated slabs. This is a percentage. If a slab has
-+		less than this percentage of objects allocated then reclaim will
-+		attempt to reclaim objects so that the whole slab page can be
-+		freed. 0% specifies no reclaim attempt (defrag disabled), 100%
-+		specifies attempt to reclaim all pages.  The default is 30%.
+ KTREE=../../..
+ 
+diff --git a/tools/testing/slab/slub_defrag_xarray.c b/tools/testing/slab/slub_defrag_xarray.c
+new file mode 100644
+index 000000000000..41143f73256c
+--- /dev/null
++++ b/tools/testing/slab/slub_defrag_xarray.c
+@@ -0,0 +1,211 @@
++// SPDX-License-Identifier: GPL-2.0+
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/uaccess.h>
++#include <linux/list.h>
++#include <linux/gfp.h>
++#include <linux/xarray.h>
 +
- What:		/sys/kernel/slab/cache/deactivate_to_tail
- Date:		February 2008
- KernelVersion:	2.6.25
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 886fc130334d..4bf381b34829 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -149,6 +149,7 @@ struct kmem_cache *kmem_cache_create_usercopy(const char *name,
- 			void (*ctor)(void *));
- void kmem_cache_destroy(struct kmem_cache *);
- int kmem_cache_shrink(struct kmem_cache *);
-+unsigned long kmem_defrag_slabs(int node);
- 
- void memcg_create_kmem_cache(struct mem_cgroup *, struct kmem_cache *);
- void memcg_deactivate_kmem_caches(struct mem_cgroup *);
-diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
-index 2879a2f5f8eb..34c6f1250652 100644
---- a/include/linux/slub_def.h
-+++ b/include/linux/slub_def.h
-@@ -107,6 +107,13 @@ struct kmem_cache {
- 	unsigned int red_left_pad;	/* Left redzone padding size */
- 	const char *name;	/* Name (only for display!) */
- 	struct list_head list;	/* List of slab caches */
-+	int defrag_used_ratio;	/*
-+				 * Ratio used to check against the
-+				 * percentage of objects allocated in a
-+				 * slab page.  If less than this ratio
-+				 * is allocated then reclaim attempts
-+				 * are made.
-+				 */
- #ifdef CONFIG_SYSFS
- 	struct kobject kobj;	/* For sysfs */
- 	struct work_struct kobj_remove_work;
-diff --git a/mm/slub.c b/mm/slub.c
-index f6b0e4a395ef..e601c804ed79 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -354,6 +354,12 @@ static __always_inline void slab_lock(struct page *page)
- 	bit_spin_lock(PG_locked, &page->flags);
- }
- 
-+static __always_inline int slab_trylock(struct page *page)
++#define SMOX_CACHE_NAME "smox_test"
++static struct kmem_cache *cachep;
++
++/*
++ * Declare XArrays globally so we can clean them up on module unload.
++ */
++
++/* Used by test_smo_xarray()*/
++DEFINE_XARRAY(things);
++
++/* Thing to store pointers to in the XArray */
++struct smox_thing {
++	long id;
++};
++
++/* It's up to the caller to ensure id is unique */
++static struct smox_thing *alloc_thing(int id)
 +{
-+	VM_BUG_ON_PAGE(PageTail(page), page);
-+	return bit_spin_trylock(PG_locked, &page->flags);
++	struct smox_thing *thing;
++
++	thing = kmem_cache_alloc(cachep, GFP_KERNEL);
++	if (!thing)
++		return ERR_PTR(-ENOMEM);
++
++	thing->id = id;
++	return thing;
 +}
 +
- static __always_inline void slab_unlock(struct page *page)
- {
- 	VM_BUG_ON_PAGE(PageTail(page), page);
-@@ -3643,6 +3649,7 @@ static int kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
- 
- 	set_cpu_partial(s);
- 
-+	s->defrag_used_ratio = 30;
- #ifdef CONFIG_NUMA
- 	s->remote_node_defrag_ratio = 1000;
- #endif
-@@ -3959,79 +3966,6 @@ void kfree(const void *x)
- }
- EXPORT_SYMBOL(kfree);
- 
--#define SHRINK_PROMOTE_MAX 32
--
--/*
-- * kmem_cache_shrink discards empty slabs and promotes the slabs filled
-- * up most to the head of the partial lists. New allocations will then
-- * fill those up and thus they can be removed from the partial lists.
-- *
-- * The slabs with the least items are placed last. This results in them
-- * being allocated from last increasing the chance that the last objects
-- * are freed in them.
-- */
--int __kmem_cache_shrink(struct kmem_cache *s)
--{
--	int node;
--	int i;
--	struct kmem_cache_node *n;
--	struct page *page;
--	struct page *t;
--	struct list_head discard;
--	struct list_head promote[SHRINK_PROMOTE_MAX];
--	unsigned long flags;
--	int ret = 0;
--
--	flush_all(s);
--	for_each_kmem_cache_node(s, node, n) {
--		INIT_LIST_HEAD(&discard);
--		for (i = 0; i < SHRINK_PROMOTE_MAX; i++)
--			INIT_LIST_HEAD(promote + i);
--
--		spin_lock_irqsave(&n->list_lock, flags);
--
--		/*
--		 * Build lists of slabs to discard or promote.
--		 *
--		 * Note that concurrent frees may occur while we hold the
--		 * list_lock. page->inuse here is the upper limit.
--		 */
--		list_for_each_entry_safe(page, t, &n->partial, lru) {
--			int free = page->objects - page->inuse;
--
--			/* Do not reread page->inuse */
--			barrier();
--
--			/* We do not keep full slabs on the list */
--			BUG_ON(free <= 0);
--
--			if (free == page->objects) {
--				list_move(&page->lru, &discard);
--				n->nr_partial--;
--			} else if (free <= SHRINK_PROMOTE_MAX)
--				list_move(&page->lru, promote + free - 1);
--		}
--
--		/*
--		 * Promote the slabs filled up most to the head of the
--		 * partial list.
--		 */
--		for (i = SHRINK_PROMOTE_MAX - 1; i >= 0; i--)
--			list_splice(promote + i, &n->partial);
--
--		spin_unlock_irqrestore(&n->list_lock, flags);
--
--		/* Release empty slabs */
--		list_for_each_entry_safe(page, t, &discard, lru)
--			discard_slab(s, page);
--
--		if (slabs_node(s, node))
--			ret = 1;
--	}
--
--	return ret;
--}
--
- #ifdef CONFIG_MEMCG
- static void kmemcg_cache_deact_after_rcu(struct kmem_cache *s)
- {
-@@ -4326,6 +4260,287 @@ int __kmem_cache_create(struct kmem_cache *s, slab_flags_t flags)
- 	return err;
- }
- 
-+/*
-+ * Allocate a slab scratch space that is sufficient to keep pointers to
-+ * individual objects for all objects in cache and also a bitmap for the
-+ * objects (used to mark which objects are active).
++/**
++ * smox_object_ctor() - SMO object constructor function.
++ * @ptr: Pointer to memory where the object should be constructed.
 + */
-+static inline void *alloc_scratch(struct kmem_cache *s)
++void smox_object_ctor(void *ptr)
 +{
-+	unsigned int size = oo_objects(s->max);
++	struct smox_thing *thing = ptr;
 +
-+	return kmalloc(size * sizeof(void *) +
-+		       BITS_TO_LONGS(size) * sizeof(unsigned long),
-+		       GFP_KERNEL);
++	thing->id = -1;
++}
++
++/**
++ * smox_cache_migrate() - kmem_cache migrate function.
++ * @cp: kmem_cache pointer.
++ * @objs: Array of pointers to objects to migrate.
++ * @size: Number of objects in @objs.
++ * @node: NUMA node where the object should be allocated.
++ * @private: Pointer returned by kmem_cache_isolate_func().
++ */
++void smox_cache_migrate(struct kmem_cache *cp, void **objs, int size,
++			int node, void *private)
++{
++	struct smox_thing **ptrs = (struct smox_thing **)objs;
++	struct smox_thing *old, *new;
++	struct smox_thing *thing;
++	unsigned long index;
++	void *entry;
++	int i;
++
++	for (i = 0; i < size; i++) {
++		old = ptrs[i];
++
++		new = kmem_cache_alloc(cachep, GFP_KERNEL);
++		if (!new) {
++			pr_debug("kmem_cache_alloc failed\n");
++			return;
++		}
++
++		new->id = old->id;
++
++		/* Update reference the brain dead way */
++		xa_for_each(&things, index, thing) {
++			if (thing == old) {
++				entry = xa_store(&things, index, new, GFP_KERNEL);
++				if (entry != old) {
++					pr_err("failed to exchange new/old\n");
++					return;
++				}
++			}
++		}
++		kmem_cache_free(cachep, old);
++	}
 +}
 +
 +/*
-+ * move_slab_page() - Move all objects in the given slab.
-+ * @page: The slab we are working on.
-+ * @scratch: Pointer to scratch space.
-+ * @node: The target node to move objects to.
-+ *
-+ * If the target node is not the current node then the object is moved
-+ * to the target node.  If the target node is the current node then this
-+ * is an effective way of defragmentation since the current slab page
-+ * with its object is exempt from allocation.
++ * test_smo_xarray() - Run some tests using an XArray.
 + */
-+static void move_slab_page(struct page *page, void *scratch, int node)
++static int test_smo_xarray(void)
 +{
-+	unsigned long objects;
-+	struct kmem_cache *s;
-+	unsigned long flags;
-+	unsigned long *map;
-+	void *private;
-+	int count;
-+	void *p;
-+	void **vector = scratch;
-+	void *addr = page_address(page);
-+
-+	local_irq_save(flags);
-+	slab_lock(page);
-+
-+	BUG_ON(!PageSlab(page)); /* Must be a slab page */
-+	BUG_ON(!page->frozen);	 /* Slab must have been frozen earlier */
-+
-+	s = page->slab_cache;
-+	objects = page->objects;
-+	map = scratch + objects * sizeof(void **);
-+
-+	/* Determine used objects */
-+	bitmap_fill(map, objects);
-+	for (p = page->freelist; p; p = get_freepointer(s, p))
-+		__clear_bit(slab_index(p, s, addr), map);
-+
-+	/* Build vector of pointers to objects */
-+	count = 0;
-+	memset(vector, 0, objects * sizeof(void **));
-+	for_each_object(p, s, addr, objects)
-+		if (test_bit(slab_index(p, s, addr), map))
-+			vector[count++] = p;
-+
-+	if (s->isolate)
-+		private = s->isolate(s, vector, count);
-+	else
-+		/* Objects do not need to be isolated */
-+		private = NULL;
++	const int keep = 6; /* Free 5 out of 6 items */
++	const int nr_items = 10000;
++	struct smox_thing *thing;
++	unsigned long index;
++	void *entry;
++	int expected;
++	int i;
 +
 +	/*
-+	 * Pinned the objects. Now we can drop the slab lock. The slab
-+	 * is frozen so it cannot vanish from under us nor will
-+	 * allocations be performed on the slab. However, unlocking the
-+	 * slab will allow concurrent slab_frees to proceed. So the
-+	 * subsystem must have a way to tell from the content of the
-+	 * object that it was freed.
++	 * Populate XArray, this adds to the radix_tree_node cache as
++	 * well as the smox_test cache.
++	 */
++	for (i = 0; i < nr_items; i++) {
++		thing = alloc_thing(i);
++		entry = xa_store(&things, i, thing, GFP_KERNEL);
++		if (xa_is_err(entry)) {
++			pr_err("smox: failed to allocate entry: %d\n", i);
++			return -ENOMEM;
++		}
++	}
++
++	/* Now free  items, putting holes in both caches. */
++	for (i = 0; i < nr_items; i++) {
++		if (i % keep == 0)
++			continue;
++
++		thing = xa_erase(&things, i);
++		if (xa_is_err(thing))
++			pr_err("smox: error erasing entry: %d\n", i);
++		kmem_cache_free(cachep, thing);
++	}
++
++	expected = 0;
++	xa_for_each(&things, index, thing) {
++		if (thing->id != expected || index != expected) {
++			pr_err("smox: error; got %ld want %d at %ld\n",
++			       thing->id, expected, index);
++			return -1;
++		}
++		expected += keep;
++	}
++
++	/*
++	 * Leave caches sparsely allocated.  Shrink caches manually with:
 +	 *
-+	 * If neither RCU nor ctor is being used then the object may be
-+	 * modified by the allocator after being freed which may disrupt
-+	 * the ability of the migrate function to tell if the object is
-+	 * free or not.
++	 *   slabinfo radix_tree_node --shrink
++	 *   slabinfo smox_test --shrink
 +	 */
-+	slab_unlock(page);
-+	local_irq_restore(flags);
 +
-+	/* Perform callback to move the objects */
-+	s->migrate(s, vector, count, node, private);
++	return 0;
 +}
 +
-+/*
-+ * kmem_cache_defrag() - Defragment node.
-+ * @s: cache we are working on.
-+ * @node: The node to move objects from.
-+ * @target_node: The node to move objects to.
-+ * @ratio: The defrag ratio (percentage, between 0 and 100).
-+ *
-+ * Release slabs with zero objects and try to call the migration function
-+ * for slabs with less than the 'ratio' percentage of objects allocated.
-+ *
-+ * Moved objects are allocated on @target_node.
-+ *
-+ * Return: The number of partial slabs left on @node after the
-+ *         operation.
-+ */
-+static unsigned long kmem_cache_defrag(struct kmem_cache *s,
-+				       int node, int target_node, int ratio)
++static int __init smox_cache_init(void)
 +{
-+	struct kmem_cache_node *n = get_node(s, node);
-+	struct page *page, *page2;
-+	LIST_HEAD(move_list);
-+	unsigned long flags;
++	cachep = kmem_cache_create(SMOX_CACHE_NAME,
++				   sizeof(struct smox_thing),
++				   0, 0, smox_object_ctor);
++	if (!cachep)
++		return -1;
 +
-+	if (node == target_node && n->nr_partial <= 1) {
-+		/*
-+		 * Trying to reduce fragmentation on a node but there is
-+		 * only a single or no partial slab page. This is already
-+		 * the optimal object density that we can reach.
-+		 */
-+		return n->nr_partial;
-+	}
-+
-+	spin_lock_irqsave(&n->list_lock, flags);
-+	list_for_each_entry_safe(page, page2, &n->partial, lru) {
-+		if (!slab_trylock(page))
-+			/* Busy slab. Get out of the way */
-+			continue;
-+
-+		if (page->inuse) {
-+			if (page->inuse > ratio * page->objects / 100) {
-+				slab_unlock(page);
-+				/*
-+				 * Skip slab because the object density
-+				 * in the slab page is high enough.
-+				 */
-+				continue;
-+			}
-+
-+			list_move(&page->lru, &move_list);
-+			if (s->migrate) {
-+				/* Stop page being considered for allocations */
-+				n->nr_partial--;
-+				page->frozen = 1;
-+			}
-+			slab_unlock(page);
-+		} else {	/* Empty slab page */
-+			list_del(&page->lru);
-+			n->nr_partial--;
-+			slab_unlock(page);
-+			discard_slab(s, page);
-+		}
-+	}
-+
-+	if (!s->migrate) {
-+		/*
-+		 * No defrag method. By simply putting the zaplist at
-+		 * the end of the partial list we can let them simmer
-+		 * longer and thus increase the chance of all objects
-+		 * being reclaimed.
-+		 */
-+		list_splice(&move_list, n->partial.prev);
-+	}
-+
-+	spin_unlock_irqrestore(&n->list_lock, flags);
-+
-+	if (s->migrate && !list_empty(&move_list)) {
-+		void **scratch = alloc_scratch(s);
-+		if (scratch) {
-+			/* Try to remove / move the objects left */
-+			list_for_each_entry(page, &move_list, lru) {
-+				if (page->inuse)
-+					move_slab_page(page, scratch, target_node);
-+			}
-+			kfree(scratch);
-+		}
-+
-+		/* Inspect results and dispose of pages */
-+		spin_lock_irqsave(&n->list_lock, flags);
-+		list_for_each_entry_safe(page, page2, &move_list, lru) {
-+			list_del(&page->lru);
-+			slab_lock(page);
-+			page->frozen = 0;
-+
-+			if (page->inuse) {
-+				/*
-+				 * Objects left in slab page, move it to the
-+				 * tail of the partial list to increase the
-+				 * chance that the freeing of the remaining
-+				 * objects will free the slab page.
-+				 */
-+				n->nr_partial++;
-+				list_add_tail(&page->lru, &n->partial);
-+				slab_unlock(page);
-+			} else {
-+				slab_unlock(page);
-+				discard_slab(s, page);
-+			}
-+		}
-+		spin_unlock_irqrestore(&n->list_lock, flags);
-+	}
-+
-+	return n->nr_partial;
++	return 0;
 +}
 +
-+/**
-+ * kmem_defrag_slabs() - Defrag slab caches.
-+ * @node: The node to defrag or -1 for all nodes.
-+ *
-+ * Defrag slabs conditional on the amount of fragmentation in a page.
-+ *
-+ * Return: The total number of partial slabs in migratable caches left
-+ *         on @node after the operation.
-+ */
-+unsigned long kmem_defrag_slabs(int node)
++static void __exit smox_cache_cleanup(void)
 +{
-+	struct kmem_cache *s;
-+	unsigned long left = 0;
-+	int nid;
++	struct smox_thing *thing;
++	unsigned long i;
 +
-+	if (node >= MAX_NUMNODES)
-+		return -EINVAL;
++	xa_for_each(&things, i, thing) {
++		kmem_cache_free(cachep, thing);
++	}
++	xa_destroy(&things);
++	kmem_cache_destroy(cachep);
++}
++
++static int __init smox_init(void)
++{
++	int ret;
++
++	ret = smox_cache_init();
++	if (ret) {
++		pr_err("smo_xarray: failed to create cache\n");
++		return ret;
++	}
++	pr_info("smo_xarray: created kmem_cache: %s\n", SMOX_CACHE_NAME);
++
++	kmem_cache_setup_mobility(cachep, NULL, smox_cache_migrate);
++	pr_info("smo_xarray: kmem_cache %s defrag enabled\n", SMOX_CACHE_NAME);
 +
 +	/*
-+	 * kmem_defrag_slabs() may be called from the reclaim path which
-+	 * may be called for any page allocator alloc. So there is the
-+	 * danger that we get called in a situation where slub already
-+	 * acquired the slub_lock for other purposes.
++	 * Running this test consumes memory unless you shrink the
++	 * radix_tree_node cache manually with `slabinfo`.
 +	 */
-+	if (!mutex_trylock(&slab_mutex))
-+		return 0;
++	ret = test_smo_xarray();
++	if (ret)
++		pr_warn("test_smo_xarray failed: %d\n", ret);
 +
-+	list_for_each_entry(s, &slab_caches, list) {
-+		/*
-+		 * Defragmentable caches come first. If the slab cache is
-+		 * not defragmentable then we can stop traversing the list.
-+		 */
-+		if (!s->migrate)
-+			break;
-+
-+		if (node >= 0) {
-+			if (s->node[node]->nr_partial > MAX_PARTIAL) {
-+				left += kmem_cache_defrag(s, node, node,
-+							  s->defrag_used_ratio);
-+			}
-+			continue;
-+		}
-+
-+		for_each_node_state(nid, N_NORMAL_MEMORY) {
-+			if (s->node[nid]->nr_partial > MAX_PARTIAL) {
-+				left += kmem_cache_defrag(s, nid, nid,
-+							  s->defrag_used_ratio);
-+			}
-+		}
-+	}
-+	mutex_unlock(&slab_mutex);
-+	return left;
++	pr_info("smo_xarray: module loaded successfully\n");
++	return 0;
 +}
-+EXPORT_SYMBOL(kmem_defrag_slabs);
++module_init(smox_init);
 +
-+/**
-+ * __kmem_cache_shrink() - Shrink a cache.
-+ * @s: The cache to shrink.
-+ *
-+ * Reduces the memory footprint of a slab cache by as much as possible.
-+ *
-+ * This works by:
-+ *  1. Removing empty slabs from the partial list.
-+ *  2. Migrating slab objects to denser slab pages if the slab cache
-+ *  supports migration.  If not, reorganizing the partial list so that
-+ *  more densely allocated slab pages come first.
-+ *
-+ * Not called directly, called by kmem_cache_shrink().
-+ */
-+int __kmem_cache_shrink(struct kmem_cache *s)
++static void __exit smox_exit(void)
 +{
-+	int node;
-+	int left = 0;
++	smox_cache_cleanup();
 +
-+	flush_all(s);
-+	for_each_node_state(node, N_NORMAL_MEMORY)
-+		left += kmem_cache_defrag(s, node, node, 100);
-+
-+	return left;
++	pr_info("smo_xarray: module removed\n");
 +}
-+EXPORT_SYMBOL(__kmem_cache_shrink);
++module_exit(smox_exit);
 +
- void kmem_cache_setup_mobility(struct kmem_cache *s,
- 			       kmem_cache_isolate_func isolate,
- 			       kmem_cache_migrate_func migrate)
-@@ -5177,6 +5392,29 @@ static ssize_t destroy_by_rcu_show(struct kmem_cache *s, char *buf)
- }
- SLAB_ATTR_RO(destroy_by_rcu);
- 
-+static ssize_t defrag_used_ratio_show(struct kmem_cache *s, char *buf)
-+{
-+	return sprintf(buf, "%d\n", s->defrag_used_ratio);
-+}
-+
-+static ssize_t defrag_used_ratio_store(struct kmem_cache *s,
-+				       const char *buf, size_t length)
-+{
-+	unsigned long ratio;
-+	int err;
-+
-+	err = kstrtoul(buf, 10, &ratio);
-+	if (err)
-+		return err;
-+
-+	if (ratio > 100)
-+		return -EINVAL;
-+
-+	s->defrag_used_ratio = ratio;
-+	return length;
-+}
-+SLAB_ATTR(defrag_used_ratio);
-+
- #ifdef CONFIG_SLUB_DEBUG
- static ssize_t slabs_show(struct kmem_cache *s, char *buf)
- {
-@@ -5501,6 +5739,7 @@ static struct attribute *slab_attrs[] = {
- 	&validate_attr.attr,
- 	&alloc_calls_attr.attr,
- 	&free_calls_attr.attr,
-+	&defrag_used_ratio_attr.attr,
- #endif
- #ifdef CONFIG_ZONE_DMA
- 	&cache_dma_attr.attr,
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Tobin C. Harding");
++MODULE_DESCRIPTION("SMO XArray test module.");
 -- 
 2.21.0
 
