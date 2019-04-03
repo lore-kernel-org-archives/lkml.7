@@ -2,320 +2,219 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9ADC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24C5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFFB206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554250649;
-	bh=o3KQeEbWSEKh22UHIwdXd1F+CYKgbGZaAcCG1OliqM4=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=ELwYUEZbzylNYFk/5RNBIIiweu2cK7OWWYd73HD+4D0RFq/12m3J1JYOv+vQ0+TNy
-	 GsZagbZgSLU0crdTT+Mq7ncC8H1WMUe24ZKA+w/+ul2UE9GDtLpxuyyRCPCAgJlQ2g
-	 WWLdbLgtxXWg4yCGRBLpgi8intpQJDuycOSZisKs=
+	by mail.kernel.org (Postfix) with ESMTP id 5FFC0206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bkCVl9QZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725965AbfDCAR2 (ORCPT
+        id S1726425AbfDCAVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 20:17:28 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:59334 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfDCAR1 (ORCPT
+        Tue, 2 Apr 2019 20:21:20 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37155 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfDCAVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 20:17:27 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id B9AF2DAB;
-        Wed,  3 Apr 2019 00:17:25 +0000 (UTC)
-Date:   Tue, 02 Apr 2019 17:17:24 -0700
-From:   akpm@linux-foundation.org
-To:     broonie@kernel.org, mhocko@suse.cz, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        mm-commits@vger.kernel.org
-Subject:  mmotm 2019-04-02-17-16 uploaded
-Message-ID: <20190403001724.OGyls%akpm@linux-foundation.org>
-User-Agent: s-nail v14.9.10
+        Tue, 2 Apr 2019 20:21:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 8so7208063pfr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 17:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6Beg9ddRo3IZVhHPYaCoCFNyOggeWTISKeyfx6HoYpA=;
+        b=bkCVl9QZ9FvaqL8ndLjYP5NiXNLVGePweXLsRL8v0po2seFZhHK06OJ9WI5I8igmt4
+         1/vDoylcC9ewGtWc/dCw7gE5Zw0uHbQzJHdW61Yw6iQiY4xRk09l7vSqH3msJonZ0T7N
+         mNbfkxkeTdJP/DhKO4DuAqbcUQiDJayOHdlkM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6Beg9ddRo3IZVhHPYaCoCFNyOggeWTISKeyfx6HoYpA=;
+        b=I2H0nwJjEGTdu2/2dsexrHVD9LMptDx/mXpM4W/5CEt7XSjSuVcdaoZmUPlAe0LVNj
+         bmfpJgaMxANAfU27eBOIoKO8/rREr2UlkM5ogpJOfyVyLe0cG2vD199aQXBllb+WQLHZ
+         o5hsQo++E/2hY54A6705C2IsZMxsKkHtnCBJn4A/aFBxuQfOV4IgpJqVkc5Hcxuy3zPY
+         3kfJZiP5KF8EX7WIWN5oQWhf3przmTA5lopykueika7255kowbBvtnX3oOgXW8ryI8wL
+         adv+sful+QOaBLnku5fh+Y5Iv+lNndfxifRr2ADGR3VnvioEqj9pn+fxU26JvKsqsset
+         iQbA==
+X-Gm-Message-State: APjAAAW9VKL2RykOYB7aCC+diTkiQrCa6/c0VItka487ws/EzLAcIKGL
+        bpIf11VEy4gtwRHkPmHTmx403A==
+X-Google-Smtp-Source: APXvYqwY93byBivcqsBnkAKabJmLVQY6Yy/+Kh7oGGF3epn0W/usoZKfZecsn5OATuUNUIJvg0FrKQ==
+X-Received: by 2002:a63:e051:: with SMTP id n17mr69209276pgj.19.1554250879146;
+        Tue, 02 Apr 2019 17:21:19 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id j67sm8253517pfc.72.2019.04.02.17.21.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 17:21:18 -0700 (PDT)
+Date:   Tue, 2 Apr 2019 17:21:17 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Alexandru M Stan <amstan@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Simon Glass <sjg@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Randall Spangler <rspangler@chromium.org>,
+        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/chrome: cros_ec_spi: Transfer messages at high
+ priority
+Message-ID: <20190403002117.GM112750@google.com>
+References: <20190402224445.64823-1-dianders@chromium.org>
+ <20190402231917.GL112750@google.com>
+ <CAD=FV=V3S7=GNrA8JnUE+wHin8UwFTeL22EBMuDr4AFTu1nKsw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=V3S7=GNrA8JnUE+wHin8UwFTeL22EBMuDr4AFTu1nKsw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mm-of-the-moment snapshot 2019-04-02-17-16 has been uploaded to
+On Tue, Apr 02, 2019 at 04:38:29PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Apr 2, 2019 at 4:19 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > Hi Doug,
+> >
+> > On Tue, Apr 02, 2019 at 03:44:44PM -0700, Douglas Anderson wrote:
+> > > The software running on the Chrome OS Embedded Controller (cros_ec)
+> > > handles SPI transfers in a bit of a wonky way.  Specifically if the EC
+> > > sees too long of a delay in a SPI transfer it will give up and the
+> > > transfer will be counted as failed.  Unfortunately the timeout is
+> > > fairly short, though the actual number may be different for different
+> > > EC codebases.
+> > >
+> > > We can end up tripping the timeout pretty easily if we happen to
+> > > preempt the task running the SPI transfer and don't get back to it for
+> > > a little while.
+> > >
+> > > Historically this hasn't been a _huge_ deal because:
+> > > 1. On old devices Chrome OS used to run PREEMPT_VOLUNTARY.  That meant
+> > >    we were pretty unlikely to take a big break from the transfer.
+> > > 2. On recent devices we had faster / more processors.
+> > > 3. Recent devices didn't use "cros-ec-spi-pre-delay".  Using that
+> > >    delay makes us more likely to trip this use case.
+> > > 4. For whatever reasons (I didn't dig) old kernels seem to be less
+> > >    likely to trip this.
+> > > 5. For the most part it's kinda OK if a few transfers to the EC fail.
+> > >    Mostly we're just polling the battery or doing some other task
+> > >    where we'll try again.
+> > >
+> > > Even with the above things, this issue has reared its ugly head
+> > > periodically.  We could solve this in a nice way by adding reliable
+> > > retries to the EC protocol [1] or by re-designing the code in the EC
+> > > codebase to allow it to wait longer, but that code doesn't ever seem
+> > > to get changed.  ...and even if it did, it wouldn't help old devices.
+> > >
+> > > It's now time to finally take a crack at making this a little better.
+> > > This patch isn't guaranteed to make every cros_ec SPI transfer
+> > > perfect, but it should improve things by a few orders of magnitude.
+> > > Specifically you can try this on a rk3288-veyron Chromebook (which is
+> > > slower and also _does_ need "cros-ec-spi-pre-delay"):
+> > >   md5sum /dev/zero &
+> > >   md5sum /dev/zero &
+> > >   md5sum /dev/zero &
+> > >   md5sum /dev/zero &
+> > >   while true; do
+> > >     cat /sys/class/power_supply/sbs-20-000b/charge_now > /dev/null;
+> > >   done
+> > > ...before this patch you'll see boatloads of errors.  After this patch I
+> > > don't see any in the testing I did.
+> > >
+> > > The way this patch works is by effectively boosting the priority of
+> > > the cros_ec transfers.  As far as I know there is no simple way to
+> > > just boost the priority of the current process temporarily so the way
+> > > we accomplish this is by creating a "WQ_HIGHPRI" workqueue and doing
+> > > the transfers there.
+> > >
+> > > NOTE: this patch relies on the fact that the SPI framework attempts to
+> > > push the messages out on the calling context (which is the one that is
+> > > boosted to high priority).  As I understand from earlier (long ago)
+> > > discussions with Mark Brown this should be a fine assumption.  Even if
+> > > it isn't true sometimes this patch will still not make things worse.
+> > >
+> > > [1] https://crbug.com/678675
+> > >
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > >
+> > >  drivers/platform/chrome/cros_ec_spi.c | 107 ++++++++++++++++++++++++--
+> > >  1 file changed, 101 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+> > > index ffc38f9d4829..101f2deb7d3c 100644
+> > > --- a/drivers/platform/chrome/cros_ec_spi.c
+> > > +++ b/drivers/platform/chrome/cros_ec_spi.c
+> > >
+> > > ...
+> > >
+> > > +static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
+> > > +                             struct cros_ec_command *ec_msg)
+> > > +{
+> > > +     struct cros_ec_spi *ec_spi = ec_dev->priv;
+> > > +     struct cros_ec_xfer_work_params params;
+> > > +
+> > > +     INIT_WORK(&params.work, cros_ec_pkt_xfer_spi_work);
+> > > +     params.ec_dev = ec_dev;
+> > > +     params.ec_msg = ec_msg;
+> > > +
+> > > +     queue_work(ec_spi->high_pri_wq, &params.work);
+> > > +     flush_workqueue(ec_spi->high_pri_wq);
+> >
+> > IIRC dedicated workqueues should be avoided unless they are needed. In
+> > this case it seems you could use system_highpri_wq + a
+> > completion. This would add a few extra lines to deal with the
+> > completion, in exchange the code to create the workqueue could be
+> > removed.
+> 
+> I'm not convinced using the "system_highpri_wq" is a great idea here.
+> Using flush_workqueue() on the "system_highpri_wq" seems like a recipe
+> for deadlock but I need to flush to get the result back.  See the
+> comments in flush_scheduled_work() for some discussion here.
+> 
+> I guess you're suggesting using a completion instead of the flush but
+> I think the deadlock potentials are the same.  If we're currently
+> running on the "system_highpri_wq" (because one of our callers
+> happened to be on it) or there are some shared resources between
+> another user of the "system_highpri_wq" and us then we'll just sitting
+> waiting for the completion, won't we?
 
-   http://www.ozlabs.org/~akpm/mmotm/
+I'm no workqueue expert, but I think the deadlock potential isn't the same:
 
-mmotm-readme.txt says
+With flush_workqueue() the deadlock would occur when running as work
+item of the the same workqueue, i.e. the work is waiting for itself.
 
-README for mm-of-the-moment:
+If we are running on "system_highpri_wq", schedule a new work on this
+workqueue and wait for it, the Concurrency Managed Workqueue (cmwq)
+will launch a worker for our work, which can run while we are waiting
+for the work and be woken up when it is done.
 
-http://www.ozlabs.org/~akpm/mmotm/
+(https://www.kernel.org/doc/html/v5.0/core-api/workqueue.html)
 
-This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-more than once a week.
+Other users of "system_highpri_wq" shouldn't cause long delays, unless
+they are CPU hogs, which could/should be considered a bug.
 
-You will need quilt to apply these patches to the latest Linus release (5.x
-or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-http://ozlabs.org/~akpm/mmotm/series
+> I would bet that currently nobody actually ends up in this situation
+> because there aren't lots of users of the "system_highpri_wq", but it
+> still doesn't seem like a good design.  Is it really that expensive to
+> have our own workqueue?
 
-The file broken-out.tar.gz contains two datestamp files: .DATE and
-.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-followed by the base kernel version against which this patch series is to
-be applied.
-
-This tree is partially included in linux-next.  To see which patches are
-included in linux-next, consult the `series' file.  Only the patches
-within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-linux-next.
-
-
-A full copy of the full kernel tree with the linux-next and mmotm patches
-already applied is available through git within an hour of the mmotm
-release.  Individual mmotm releases are tagged.  The master branch always
-points to the latest release, so it's constantly rebasing.
-
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/
-
-
-
-The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-contains daily snapshots of the -mm tree.  It is updated more frequently
-than mmotm, and is untested.
-
-A git copy of this tree is available at
-
-	http://git.cmpxchg.org/cgit.cgi/linux-mmots.git/
-
-and use of this tree is similar to
-http://git.cmpxchg.org/cgit.cgi/linux-mmotm.git/, described above.
-
-
-This mmotm tree contains the following patches against 5.1-rc3:
-(patches marked "*" will be included in linux-next)
-
-  origin.patch
-* checkpatch-dont-interpret-stack-dumps-as-commit-ids.patch
-* lib-stringc-implement-a-basic-bcmp.patch
-* kmemleak-powerpc-skip-scanning-holes-in-the-bss-section.patch
-* bitrev-fix-constant-bitrev.patch
-* lib-lzo-fix-bugs-for-very-short-or-empty-input.patch
-* mm-fix-vm_fault_t-cast-in-vm_fault_get_hindex.patch
-* correct-zone-boundary-handling-when-resetting-pageblock-skip-hints.patch
-* hugetlbfs-fix-memory-leak-for-resv_map.patch
-* mm-add-sys-kernel-slab-cache-cache_dma32.patch
-* mm-compaction-abort-search-if-isolation-fails-v2.patch
-* coredump-fix-race-condition-between-mmget_not_zero-get_task_mm-and-core-dumping.patch
-* userfaultfd-use-rcu-to-free-the-task-struct-when-fork-fails.patch
-* mm-fix-modifying-of-page-protection-by-insert_pfn_pmd.patch
-* psi-clarify-the-units-used-in-pressure-files.patch
-* writeback-use-exact-memcg-dirty-counts.patch
-* maintainers-fix-bad-pattern-in-arm-nuvoton-npcm.patch
-* maintainers-add-maintainer-and-replacing-reviewer-arm-nuvoton-npcm.patch
-* sh-fix-multiple-function-definition-build-errors.patch
-* scripts-spellingtxt-add-more-typos-to-spellingtxt-and-sort.patch
-* arch-sh-boards-mach-dreamcast-irqc-remove-duplicate-header.patch
-* debugobjects-move-printk-out-of-db-lock-critical-sections.patch
-* ocfs2-use-common-file-type-conversion.patch
-* ocfs2-clear-zero-in-unaligned-direct-io.patch
-* ocfs2-clear-zero-in-unaligned-direct-io-checkpatch-fixes.patch
-* ocfs2-wait-for-recovering-done-after-direct-unlock-request.patch
-* ocfs2-checkpoint-appending-truncate-log-transaction-before-flushing.patch
-* ramfs-support-o_tmpfile.patch
-  mm.patch
-* list-add-function-list_rotate_to_front.patch
-* slob-respect-list_head-abstraction-layer.patch
-* slob-use-slab_list-instead-of-lru.patch
-* slob-only-use-list-functions-when-safe-to-do-so.patch
-* slub-add-comments-to-endif-pre-processor-macros.patch
-* slub-use-slab_list-instead-of-lru.patch
-* slab-use-slab_list-instead-of-lru.patch
-* mm-remove-stale-comment-from-page-struct.patch
-* slub-remove-useless-kmem_cache_debug-before-remove_full.patch
-* mm-slab-remove-unneed-check-in-cpuup_canceled.patch
-* slub-update-the-comment-about-slab-frozen.patch
-* mm-vmscan-drop-zone-id-from-kswapd-tracepoints.patch
-* mm-cma_debugc-fix-the-break-condition-in-cma_maxchunk_get.patch
-* userfaultfd-sysctl-add-vmunprivileged_userfaultfd.patch
-* userfaultfd-sysctl-add-vmunprivileged_userfaultfd-fix.patch
-* page-cache-store-only-head-pages-in-i_pages.patch
-* page-cache-store-only-head-pages-in-i_pages-fix.patch
-* mm-page_alloc-disallow-__gfp_comp-in-alloc_pages_exact.patch
-* mm-move-recent_rotated-pages-calculation-to-shrink_inactive_list.patch
-* mm-move-nr_deactivate-accounting-to-shrink_active_list.patch
-* mm-move-nr_deactivate-accounting-to-shrink_active_list-fix.patch
-* mm-remove-pages_to_free-argument-of-move_active_pages_to_lru.patch
-* mm-generalize-putback-scan-functions.patch
-* mm-gup-replace-get_user_pages_longterm-with-foll_longterm.patch
-* mm-gup-change-write-parameter-to-flags-in-fast-walk.patch
-* mm-gup-change-gup-fast-to-use-flags-rather-than-a-write-bool.patch
-* mm-gup-add-foll_longterm-capability-to-gup-fast.patch
-* ib-hfi1-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* ib-qib-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* ib-mthca-use-the-new-foll_longterm-flag-to-get_user_pages_fast.patch
-* mmmemory_hotplug-unlock-1gb-hugetlb-on-x86_64.patch
-* mmmemory_hotplug-drop-redundant-hugepage_migration_supported-check.patch
-* mm-memory_hotplug-fix-the-wrong-usage-of-n_high_memory.patch
-* mm-compaction-fix-an-undefined-behaviour.patch
-* mm-compaction-fix-an-undefined-behaviour-fix.patch
-* mm-cma-fix-the-bitmap-status-to-show-failed-allocation-reason.patch
-* mm-compaction-show-gfp-flag-names-in-try_to_compact_pages-tracepoint.patch
-* mm-compaction-some-tracepoints-should-be-defined-only-when-config_compaction-is-set.patch
-* mm-change-mm_update_next_owner-to-update-mm-owner-with-write_once.patch
-* mm-isolation-remove-redundant-pfn_valid_within-in-__first_valid_page.patch
-* mm-vmscan-add-tracepoints-for-node-reclaim.patch
-* mm-memcontrol-track-lru-counts-in-the-vmstats-array.patch
-* mm-memcontrol-replace-zone-summing-with-lruvec_page_state.patch
-* mm-memcontrol-replace-node-summing-with-memcg_page_state.patch
-* mm-memcontrol-push-down-mem_cgroup_node_nr_lru_pages.patch
-* mm-memcontrol-push-down-mem_cgroup_nr_lru_pages.patch
-* mm-memcontrol-quarantine-the-mem_cgroup_nr_lru_pages-api.patch
-* mm-cma-fix-crash-on-cma-allocation-if-bitmap-allocation-fails.patch
-* initramfs-free-initrd-memory-if-opening-initrdimage-fails.patch
-* initramfs-cleanup-initrd-freeing.patch
-* initramfs-factor-out-a-helper-to-populate-the-initrd-image.patch
-* initramfs-cleanup-populate_rootfs.patch
-* initramfs-cleanup-populate_rootfs-fix.patch
-* initramfs-move-the-legacy-keepinitrd-parameter-to-core-code.patch
-* initramfs-proide-a-generic-free_initrd_mem-implementation.patch
-* initramfs-poison-freed-initrd-memory.patch
-* init-provide-a-generic-free_initmem-implementation.patch
-* hexagon-switch-over-to-generic-free_initmem.patch
-* init-free_initmem-poison-freed-init-memory.patch
-* riscv-switch-over-to-generic-free_initmem.patch
-* sh-advertise-gigantic-page-support.patch
-* sparc-advertise-gigantic-page-support.patch
-* mm-simplify-memory_isolation-compaction-cma-into-contig_alloc.patch
-* hugetlb-allow-to-free-gigantic-pages-regardless-of-the-configuration.patch
-* mm-introduce-put_user_page-placeholder-versions.patch
-* mm-page_mkclean-vs-madv_dontneed-race.patch
-* mm-vmscan-drop-may_writepage-and-classzone_idx-from-direct-reclaim-begin-template.patch
-* mem-hotplug-fix-node-spanned-pages-when-we-have-a-node-with-only-zone_movable.patch
-* hugetlbfs-fix-potential-over-underflow-setting-node-specific-nr_hugepages.patch
-* mm-hugetlb-get-rid-of-nodemask_alloc.patch
-* mm-__pagevec_lru_add_fn-typo-fix.patch
-* mm-balloon-drop-unused-function-stubs.patch
-* mm-sparse-clean-up-the-obsolete-code-comment.patch
-* drivers-base-memoryc-clean-up-relicts-in-function-parameters.patch
-* huegtlbfs-on-restore-reserve-error-path-retain-subpool-reservation.patch
-* hugetlb-use-same-fault-hash-key-for-shared-and-private-mappings.patch
-* memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work.patch
-* memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-* psi-introduce-state_mask-to-represent-stalled-psi-states.patch
-* psi-make-psi_enable-static.patch
-* psi-rename-psi-fields-in-preparation-for-psi-trigger-addition.patch
-* psi-rename-psi-fields-in-preparation-for-psi-trigger-addition-v6.patch
-* psi-split-update_stats-into-parts.patch
-* psi-track-changed-states.patch
-* refactor-header-includes-to-allow-kthreadh-inclusion-in-psi_typesh.patch
-* psi-introduce-psi-monitor.patch
-* mm-add-priority-threshold-to-__purge_vmap_area_lazy.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation.patch
-* mm-vmap-keep-track-of-free-blocks-for-vmap-allocation-v3.patch
-* mm-vmap-add-debug_augment_propagate_check-macro.patch
-* mm-vmap-add-debug_augment_lowest_match_check-macro.patch
-* mm-proportional-memorylowmin-reclaim.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination.patch
-* mm-make-memoryemin-the-baseline-for-utilisation-determination-fix.patch
-* mm-add-probe_user_read.patch
-* mm-add-probe_user_read-fix.patch
-* powerpc-use-probe_user_read.patch
-* mm-vmalloc-convert-vmap_lazy_nr-to-atomic_long_t.patch
-* mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization.patch
-* mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization-fix.patch
-* mm-move-buddy-list-manipulations-into-helpers.patch
-* mm-move-buddy-list-manipulations-into-helpers-fix.patch
-* mm-move-buddy-list-manipulations-into-helpers-fix2.patch
-* mm-maintain-randomization-of-page-free-lists.patch
-* mm-maintain-randomization-of-page-free-lists-checkpatch-fixes.patch
-* mm-vmscan-remove-unused-lru_pages-argument.patch
-* mm-mincore-make-mincore-more-conservative.patch
-* mm-mincore-make-mincore-more-conservative-v2.patch
-* mm-dont-expose-page-to-fast-gup-before-its-ready.patch
-* info-task-hung-in-generic_file_write_iter.patch
-* info-task-hung-in-generic_file_write-fix.patch
-* fs-select-avoid-clang-stack-usage-warning.patch
-* kdb-get-rid-of-broken-attempt-to-print-ccversion-in-kdb-summary.patch
-* remove-spdx-with-linux-syscall-note-from-kernel-space-headers.patch
-* notifiers-double-register-detection.patch
-* lib-bitmapc-remove-unused-export_symbols.patch
-* lib-bitmapc-guard-exotic-bitmap-functions-by-config_numa.patch
-* lib-genallocc-export-symbol-addr_in_gen_pool.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr.patch
-* lib-genallocc-rename-addr_in_gen_pool-to-gen_pool_has_addr-fix.patch
-* lib-plist-rename-debug_pi_list-to-debug_plist.patch
-* lib-sort-make-swap-functions-more-generic.patch
-* lib-sort-use-more-efficient-bottom-up-heapsort-variant.patch
-* lib-sort-avoid-indirect-calls-to-built-in-swap.patch
-* lib-list_sort-simplify-and-remove-max_list_length_bits.patch
-* lib-list_sort-optimize-number-of-calls-to-comparison-function.patch
-* bitmap_parselist-dont-calculate-length-of-the-input-string.patch
-* bitmap_parselist-move-non-parser-logic-to-helpers.patch
-* bitmap_parselist-move-non-parser-logic-to-helpers-fix.patch
-* bitmap_parselist-rework-input-string-parser.patch
-* lib-test_bitmap-switch-test_bitmap_parselist-to-ktime_get.patch
-* lib-test_bitmap-add-testcases-for-bitmap_parselist.patch
-* lib-test_bitmap-add-tests-for-bitmap_parselist_user.patch
-* lib-move-mathematic-helpers-to-separate-folder.patch
-* lib-math-move-int_pow-from-pwm_blc-for-wider-use.patch
-* lib-fix-possible-incorrect-result-from-rational-fractions-helper.patch
-* checkpatch-fix-something.patch
-* fs-binfmt_elfc-remove-unneeded-initialization-of-mm-start_stack.patch
-* elf-make-scope-of-pos-variable-smaller.patch
-* elf-free-pt_interp-filename-asap.patch
-* elf-free-pt_interp-filename-asap-fix.patch
-* elf-delete-trailing-return-in-functions-returning-void.patch
-* autofs-fix-some-word-usage-odities-in-autofstxt.patch
-* autofs-update-autofstxt-for-strictexpire-mount-option.patch
-* autofs-update-autofs_exp_leaves-description.patch
-* autofs-update-mount-control-expire-desription-with-autofs_exp_forced.patch
-* autofs-add-description-of-ignore-pseudo-mount-option.patch
-* signal-annotate-implicit-fall-through.patch
-* rapidio-fix-a-null-pointer-derefenrece-when-create_workqueue-fails.patch
-* sysctl-return-einval-if-val-violates-minmax.patch
-* convert-struct-pid-count-to-refcount_t.patch
-* convert-struct-pid-count-to-refcount_t-fix.patch
-* eventfd-prepare-id-to-userspace-via-fdinfo.patch
-* gcov-clang-move-common-gcc-code-into-gcc_basec.patch
-* gcov-clang-support.patch
-* gcov-clang-support-fix.patch
-* gcov-docs-add-a-note-on-gcc-vs-clang-differences.patch
-* pps-descriptor-based-gpio.patch
-* dt-bindings-pps-pps-gpio-pps-echo-implementation.patch
-* pps-pps-gpio-pps-echo-implementation.patch
-* scripts-gdb-find-vmlinux-where-it-was-before.patch
-* scripts-gdb-add-kernel-config-dumping-command.patch
-* scripts-gdb-add-kernel-config-dumping-command-v2.patch
-* scripts-gdb-add-rb-tree-iterating-utilities.patch
-* scripts-gdb-add-rb-tree-iterating-utilities-v2.patch
-* scripts-gdb-add-a-timer-list-command.patch
-* scripts-gdb-add-a-timer-list-command-v2.patch
-* scripts-gdb-silence-pep8-checks.patch
-* ipc-prevent-lockup-on-alloc_msg-and-free_msg.patch
-* ipc-allow-boot-time-extension-of-ipcmni-from-32k-to-16m.patch
-* ipc-conserve-sequence-numbers-in-ipcmni_extend-mode.patch
-* ipc-do-cyclic-id-allocation-for-the-ipc-object.patch
-  linux-next.patch
-  linux-next-rejects.patch
-* pinctrl-fix-pxa2xxc-build-warnings.patch
-* scripts-atomic-check-atomicssh-dont-assume-that-scripts-are-executable.patch
-* fs-coda-psdevc-remove-duplicate-header.patch
-* include-replace-tsk-to-task-in-linux-sched-signalh.patch
-* fs-cachefiles-nameic-remove-duplicate-header.patch
-* fs-block_devc-remove-duplicate-header.patch
-* kernel-resource-use-resource_overlaps-to-simplify-region_intersects.patch
-* treewide-replace-include-asm-sizesh-with-include-linux-sizesh.patch
-* arch-remove-asm-sizesh-amd-asm-generic-sizesh.patch
-* mm-rename-ambiguously-named-memorystat-counters-and-functions.patch
-* mm-rename-ambiguously-named-memorystat-counters-and-functions-fix.patch
-* mm-consider-subtrees-in-memoryevents.patch
-* fix-read-buffer-overflow-in-delta-ipc.patch
-  make-sure-nobodys-leaking-resources.patch
-  releasing-resources-with-children.patch
-  mutex-subsystem-synchro-test-module.patch
-  kernel-forkc-export-kernel_thread-to-modules.patch
-  slab-leaks3-default-y.patch
-  workaround-for-a-pci-restoring-bug.patch
+I don't think it's excessively expensive, but why use the extra
+resources and lifetime management code if it doesn't provide any
+significant advantages? In terms of deadlocks I even have the
+impression the wq + completion is a more robust solution.
