@@ -2,289 +2,426 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879ACC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773F6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4452A2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC2C2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfDCMhw (ORCPT
+        id S1726562AbfDCMiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:37:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45970 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfDCMhv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:37:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y6so14671976ljd.12;
-        Wed, 03 Apr 2019 05:37:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ORyNxg9GRH3w44oAofzkIU3DiTW/AUO69cPsh1ANcKU=;
-        b=jENNpYERN8DDWAs4ddVmWnhX2XdTbkTd3IaWDIYfbR2Iq2flP+2QCCJc3FB//qbJRh
-         /fVQpmI2pP0/xYawCN6X6ZEBGwFwQhEXPNMGBiJPfAakGldmO6krWc6RXnDG41vNvQNy
-         447c6Qw4ubi6w7lmQK9z4XZLpoOlbEYMdxI3SjbtqIe3+LqUp8vS2iMUW1sN8fGTFz3Z
-         10zHO6ebZgYO/9Tr+qj50ridXxN4D+wi8al5Z7hwhTtI/gSJuYs2WlNoxXKBu0mDkPlx
-         I6aQ+IpYtPl3Kbt3BGOh+eeuDAKEkYD6zA8zW/6TzuoyQSLq3D96zOKYZa6bJE2fP5v+
-         EdMw==
-X-Gm-Message-State: APjAAAWz17BKSYPRAy6yxDRMhoKW8bdaoRJumZJeNf7WKlSp/kXlvcUO
-        nmwUmm8OrJNix6HJxUslkxY=
-X-Google-Smtp-Source: APXvYqym6JWAPnL4s2+cJDN6b5KTxVKZEgovljvIri9UwDbB1eAfp8512sL2Z6ABNphLzXeUYDKYmA==
-X-Received: by 2002:a2e:85d2:: with SMTP id h18mr5533858ljj.128.1554295067336;
-        Wed, 03 Apr 2019 05:37:47 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 7sm3582213lju.27.2019.04.03.05.37.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 05:37:46 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 15:37:20 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: [PATCH v12 0/8] support ROHM BD70528 PMIC
-Message-ID: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 3 Apr 2019 08:38:02 -0400
+Received: from foss.arm.com ([217.140.101.70]:39122 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfDCMiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:38:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CD35374;
+        Wed,  3 Apr 2019 05:38:00 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E26993F59C;
+        Wed,  3 Apr 2019 05:37:56 -0700 (PDT)
+Subject: Re: [PATCH 2/6] arm64/mm: Enable memory hot remove
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com
+Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
+        mark.rutland@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        logang@deltatee.com, pasha.tatashin@oracle.com, david@redhat.com,
+        cai@lca.pw, Steven Price <steven.price@arm.com>
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <ed4ceac4-b92c-47f4-33b0-ed1d0833b40d@arm.com>
+Date:   Wed, 3 Apr 2019 13:37:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch series introducing support for ROHM BD70528 PMIC
+[ +Steve ]
 
-ROHM BD70528 is a programmable Power Management IC for battery
-powered 'ultra low power' systems like the pre-announced NXP
-i.MX7 ULP. This patch series introduces support for the PMIC. Please
-note that this driver only supports HW setup where PMIC is connected
-to I2C on A7 core. The other scenario is to use M4 as a power manager
-and connect pmic to M4. On such setups the A7 can only access pmic
-via M4 core using RPMSG virtio. Such setup depends on RPMSG
-implementation on M4 core and is currently not supported by this
-patch series.
+Hi Anshuman,
 
-RTC block of the bd70528 can support 'wake' irq which wakes PMIC
-from standby state. Wake irq's can be armed to wake up system up
-to 24 hours from arming. bd70528 can also generate alarm interrupts
-which can be armed to occur years after triggering. The RTC driver
-does always arm both the waker and alarm irqs and does not utilize
-longer period of alarm interrupts. All the RTC timers are limited
-to occur within the next 24 hours. Any suggestions on more elegant
-timer support are welcome =)
+On 03/04/2019 05:30, Anshuman Khandual wrote:
+> Memory removal from an arch perspective involves tearing down two different
+> kernel based mappings i.e vmemmap and linear while releasing related page
+> table pages allocated for the physical memory range to be removed.
+> 
+> Define a common kernel page table tear down helper remove_pagetable() which
+> can be used to unmap given kernel virtual address range. In effect it can
+> tear down both vmemap or kernel linear mappings. This new helper is called
+> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
+> The argument 'direct' here identifies kernel linear mappings.
+> 
+> Vmemmap mappings page table pages are allocated through sparse mem helper
+> functions like vmemmap_alloc_block() which does not cycle the pages through
+> pgtable_page_ctor() constructs. Hence while removing it skips corresponding
+> destructor construct pgtable_page_dtor().
+> 
+> While here update arch_add_mempory() to handle __add_pages() failures by
+> just unmapping recently added kernel linear mapping. Now enable memory hot
+> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
+> 
+> This implementation is overall inspired from kernel page table tear down
+> procedure on X86 architecture.
 
-GPIO portion of bd70528 driver adds I/O support for driving GPIO
-pins or reading the state. The interrupt functionality is provided
-by regmap-irq. Current GPIO driver is not aware of whether the pin(s)
-are used for I/O or interrupts and it is up-to driver user to
-ensure there is no misconfiguration or "double use".
+A bit of a nit, but since this depends on at least patch #4 to work 
+properly, it would be good to reorder the series appropriately.
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>   arch/arm64/Kconfig               |   3 +
+>   arch/arm64/include/asm/pgtable.h |  14 +++
+>   arch/arm64/mm/mmu.c              | 227 ++++++++++++++++++++++++++++++++++++++-
+>   3 files changed, 241 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index a2418fb..db3e625 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -266,6 +266,9 @@ config HAVE_GENERIC_GUP
+>   config ARCH_ENABLE_MEMORY_HOTPLUG
+>   	def_bool y
+>   
+> +config ARCH_ENABLE_MEMORY_HOTREMOVE
+> +	def_bool y
+> +
+>   config ARCH_MEMORY_PROBE
+>   	bool "Enable /sys/devices/system/memory/probe interface"
+>   	depends on MEMORY_HOTPLUG
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index de70c1e..858098e 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -355,6 +355,18 @@ static inline int pmd_protnone(pmd_t pmd)
+>   }
+>   #endif
+>   
+> +#if (CONFIG_PGTABLE_LEVELS > 2)
+> +#define pmd_large(pmd)	(pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT))
+> +#else
+> +#define pmd_large(pmd) 0
+> +#endif
+> +
+> +#if (CONFIG_PGTABLE_LEVELS > 3)
+> +#define pud_large(pud)	(pud_val(pud) && !(pud_val(pud) & PUD_TABLE_BIT))
+> +#else
+> +#define pud_large(pmd) 0
+> +#endif
 
-The power-supply patch included in series is only poorly tested as I
-lack of hardware with real battery connected. Reset and ADC are not
-supported by this series.
+These seem rather different from the versions that Steve is proposing in 
+the generic pagewalk series - can you reach an agreement on which 
+implementation is preferred?
 
-Changelog v12:
-- No functional changes
-- Fixed styling issues pointed by Lee Jones
-- Fixed styling issues pointed by Alexandre Belloni
-- Fixed various styling issues
+> +
+>   /*
+>    * THP definitions.
+>    */
+> @@ -555,6 +567,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
+>   
+>   #else
+>   
+> +#define pmd_index(addr) 0
+>   #define pud_page_paddr(pud)	({ BUILD_BUG(); 0; })
+>   
+>   /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
+> @@ -612,6 +625,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
+>   
+>   #else
+>   
+> +#define pud_index(adrr)	0
+>   #define pgd_page_paddr(pgd)	({ BUILD_BUG(); 0;})
+>   
+>   /* Match pud_offset folding in <asm/generic/pgtable-nopud.h> */
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index e97f018..ae0777b 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -714,6 +714,198 @@ int kern_addr_valid(unsigned long addr)
+>   
+>   	return pfn_valid(pte_pfn(pte));
+>   }
+> +
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +static void __meminit free_pagetable(struct page *page, int order)
 
-Changelog v11:
-- No functional changes
-- Rebased on linux 5.1-rc2
-- Dropped patch 9 which was already applied by Mark
-- renamed dt-bindings patch as suggested by Rob
-  
-Changelog v10:
-- Exported locking functions for RTC lock and as a result dropped hid
-  the struct bd70528 from sub-devices who no longer needed it.
-- removed linux/gpio.h header from GPIO driver.
+Do these need to be __meminit? AFAICS it's effectively redundant with 
+the containing #ifdef, and removal feels like it's inherently a 
+later-than-init thing anyway.
 
-Changelog v9: Changes suggested by Lee Jones
-- MFD, DT-binding, RTC and WDT changed
-- DT-bindings: Spelling fixes
-- RTC and WDT: Use exported function instead of function pointer for WDT
-  arming/disarming
-- MFD: Export WDT arming/disarming function instead of providing a
-  pointer to it.
-- Various styling fixes.
+> +{
+> +	unsigned long magic;
+> +	unsigned int nr_pages = 1 << order;
+> +
+> +	if (PageReserved(page)) {
+> +		__ClearPageReserved(page);
+> +
+> +		magic = (unsigned long)page->freelist;
+> +		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
+> +			while (nr_pages--)
+> +				put_page_bootmem(page++);
+> +		} else
+> +			while (nr_pages--)
+> +				free_reserved_page(page++);
+> +	} else
+> +		free_pages((unsigned long)page_address(page), order);
+> +}
+> +
+> +#if (CONFIG_PGTABLE_LEVELS > 2)
+> +static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd, bool direct)
+> +{
+> +	pte_t *pte;
+> +	int i;
+> +
+> +	for (i = 0; i < PTRS_PER_PTE; i++) {
+> +		pte = pte_start + i;
+> +		if (!pte_none(*pte))
+> +			return;
+> +	}
+> +
+> +	if (direct)
+> +		pgtable_page_dtor(pmd_page(*pmd));
+> +	free_pagetable(pmd_page(*pmd), 0);
+> +	spin_lock(&init_mm.page_table_lock);
+> +	pmd_clear(pmd);
+> +	spin_unlock(&init_mm.page_table_lock);
+> +}
+> +#else
+> +static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd, bool direct)
+> +{
+> +}
+> +#endif
+> +
+> +#if (CONFIG_PGTABLE_LEVELS > 3)
+> +static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud, bool direct)
+> +{
+> +	pmd_t *pmd;
+> +	int i;
+> +
+> +	for (i = 0; i < PTRS_PER_PMD; i++) {
+> +		pmd = pmd_start + i;
+> +		if (!pmd_none(*pmd))
+> +			return;
+> +	}
+> +
+> +	if (direct)
+> +		pgtable_page_dtor(pud_page(*pud));
+> +	free_pagetable(pud_page(*pud), 0);
+> +	spin_lock(&init_mm.page_table_lock);
+> +	pud_clear(pud);
+> +	spin_unlock(&init_mm.page_table_lock);
+> +}
+> +
+> +static void __meminit free_pud_table(pud_t *pud_start, pgd_t *pgd, bool direct)
+> +{
+> +	pud_t *pud;
+> +	int i;
+> +
+> +	for (i = 0; i < PTRS_PER_PUD; i++) {
+> +		pud = pud_start + i;
+> +		if (!pud_none(*pud))
+> +			return;
+> +	}
+> +
+> +	if (direct)
+> +		pgtable_page_dtor(pgd_page(*pgd));
+> +	free_pagetable(pgd_page(*pgd), 0);
+> +	spin_lock(&init_mm.page_table_lock);
+> +	pgd_clear(pgd);
+> +	spin_unlock(&init_mm.page_table_lock);
+> +}
+> +#else
+> +static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud, bool direct)
+> +{
+> +}
+> +
+> +static void __meminit free_pud_table(pud_t *pud_start, pgd_t *pgd, bool direct)
+> +{
+> +}
+> +#endif
+> +
+> +static void __meminit
+> +remove_pte_table(pte_t *pte_start, unsigned long addr,
+> +			unsigned long end, bool direct)
+> +{
+> +	pte_t *pte;
+> +
+> +	pte = pte_start + pte_index(addr);
+> +	for (; addr < end; addr += PAGE_SIZE, pte++) {
+> +		if (!pte_present(*pte))
+> +			continue;
+> +
+> +		if (!direct)
+> +			free_pagetable(pte_page(*pte), 0);
+> +		spin_lock(&init_mm.page_table_lock);
+> +		pte_clear(&init_mm, addr, pte);
+> +		spin_unlock(&init_mm.page_table_lock);
+> +	}
+> +}
+> +
+> +static void __meminit
+> +remove_pmd_table(pmd_t *pmd_start, unsigned long addr,
+> +			unsigned long end, bool direct)
+> +{
+> +	unsigned long next;
+> +	pte_t *pte_base;
+> +	pmd_t *pmd;
+> +
+> +	pmd = pmd_start + pmd_index(addr);
+> +	for (; addr < end; addr = next, pmd++) {
+> +		next = pmd_addr_end(addr, end);
+> +		if (!pmd_present(*pmd))
+> +			continue;
+> +
+> +		if (pmd_large(*pmd)) {
+> +			if (!direct)
+> +				free_pagetable(pmd_page(*pmd),
+> +						get_order(PMD_SIZE));
+> +			spin_lock(&init_mm.page_table_lock);
+> +			pmd_clear(pmd);
+> +			spin_unlock(&init_mm.page_table_lock);
+> +			continue;
+> +		}
+> +		pte_base = pte_offset_kernel(pmd, 0UL);
+> +		remove_pte_table(pte_base, addr, next, direct);
+> +		free_pte_table(pte_base, pmd, direct);
+> +	}
+> +}
+> +
+> +static void __meminit
+> +remove_pud_table(pud_t *pud_start, unsigned long addr,
+> +			unsigned long end, bool direct)
+> +{
+> +	unsigned long next;
+> +	pmd_t *pmd_base;
+> +	pud_t *pud;
+> +
+> +	pud = pud_start + pud_index(addr);
+> +	for (; addr < end; addr = next, pud++) {
+> +		next = pud_addr_end(addr, end);
+> +		if (!pud_present(*pud))
+> +			continue;
+> +
+> +		if (pud_large(*pud)) {
+> +			if (!direct)
+> +				free_pagetable(pud_page(*pud),
+> +						get_order(PUD_SIZE));
+> +			spin_lock(&init_mm.page_table_lock);
+> +			pud_clear(pud);
+> +			spin_unlock(&init_mm.page_table_lock);
+> +			continue;
+> +		}
+> +		pmd_base = pmd_offset(pud, 0UL);
+> +		remove_pmd_table(pmd_base, addr, next, direct);
+> +		free_pmd_table(pmd_base, pud, direct);
+> +	}
+> +}
+> +
+> +static void __meminit
+> +remove_pagetable(unsigned long start, unsigned long end, bool direct)
+> +{
+> +	unsigned long addr, next;
+> +	pud_t *pud_base;
+> +	pgd_t *pgd;
+> +
+> +	for (addr = start; addr < end; addr = next) {
+> +		next = pgd_addr_end(addr, end);
+> +		pgd = pgd_offset_k(addr);
+> +		if (!pgd_present(*pgd))
+> +			continue;
+> +
+> +		pud_base = pud_offset(pgd, 0UL);
+> +		remove_pud_table(pud_base, addr, next, direct);
+> +		free_pud_table(pud_base, pgd, direct);
+> +	}
+> +	flush_tlb_kernel_range(start, end);
+> +}
+> +#endif
+> +
+>   #ifdef CONFIG_SPARSEMEM_VMEMMAP
+>   #if !ARM64_SWAPPER_USES_SECTION_MAPS
+>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+> @@ -758,9 +950,12 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   	return 0;
+>   }
+>   #endif	/* CONFIG_ARM64_64K_PAGES */
+> -void vmemmap_free(unsigned long start, unsigned long end,
+> +void __ref vmemmap_free(unsigned long start, unsigned long end,
 
-Changelog v8:
-- regulators(*), wdt, gpio, rtc, mfd(*) and dt-bindings unchanged.
-  (*)Patches 1-3 squashed to not break bisecting.
+Why is the __ref needed? Presumably it's avoidable by addressing the 
+__meminit thing above.
 
-- removed unnecessary newline from clk
-- fixed possible use of uninitialized 'reg' from power-supply.
-  Found by 0-day tests and reported by Dan Carpenter.
+>   		struct vmem_altmap *altmap)
+>   {
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +	remove_pagetable(start, end, false);
+> +#endif
+>   }
+>   #endif	/* CONFIG_SPARSEMEM_VMEMMAP */
+>   
+> @@ -1046,10 +1241,16 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+>   }
+>   
+>   #ifdef CONFIG_MEMORY_HOTPLUG
+> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
+> +{
+> +	WARN_ON(pgdir != init_mm.pgd);
+> +	remove_pagetable(start, start + size, true);
+> +}
+> +
+>   int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+>   		    bool want_memblock)
+>   {
+> -	int flags = 0;
+> +	int flags = 0, ret = 0;
 
-Changelog v7:
-Only patch 2 changed.
-- Avoid out-of-array-bounds access at regulator probe if unsupported
-  chip type is passed to bd718x7 regulator driver.
+Initialising ret here is unnecessary.
 
-Changelog v6:
-Only patch 10 changed.
-- styling fixes pointed by Gunter Roeck
-- dropped RFC tag
+Robin.
 
-Changelog v5 (RFC):
-Only patch 7 changed.
-- Explained why lock is not needed at GPIO value getting
-- removed ampersands from function pointer assignments.
-
-Changelog v4 (RFC):
-patches 1,2,3,4,5,10 are unchanged from v3
-DT-binding fixes suggested by Rob Herring:
-- drop interrupt-parent
-- drop clock-frequency
-- change pmic node name to a generic one
-RTC:
-- enable RTC block's irqs before registering rtc
-GPIO fixes after initial testing:
-- fix getting GPIO value when direction is output
-POWER:
-- Add ASCII art intended to clarify the charger HW state machine
-
-Changelog v3 (RFC):
-patches 1,2,3,4,5,6,7,8 and 10 are unchanged from v2
-RTC fixups suggested by Guenter Roeck:
-- create bd70528_set_time_locked function in order to simplify
-  error handling and to make mutex lock/unlock path more obvious
-- don't ignore errors on bd70528_set_time_locked
-- simplify bd70528_read_alarm enabled condition setting
-- add __packed to structs where members are mapped to HW registers
-- remove unnecessary brackets from enable condition in set_wake
-RTC: fixups suggested by Alessandro Belloni
-- don't use deprecated devm_rtc_device_register
-- add alarm_irq_enable callback
-- add range_min and range_max
-WDT:
-- add regmap and mutex pointers to WDT data so that they can be accessed
-  without dereferencing the parent data
-- remove parent data pointer from WDT data
-- embed struct watchdog_device into WDT data in order to avoid double
-  allocation.
-GPIO:
-- remove unused header as pointed by Linus Walleij
-POWER:
-- do not copy the whole MFD data (especially the mutex to avoid
-  all possibilities of accidentally using the copy of a mutex)
-
-Changelog v2 (RFC): Mainly feedback from Guenter Roeck:
-- patches 1, 2, 3, 4, 5, 9 are unchanged.
-- mfd: own mutex for each bd70528 instance - embed in struct bd70528
-- watchdog: do not copy parent device data
-- watchdog: fix deadlock caused by double locked mutex
-- watchdog: set initial timeouts and WDT parent information
-- watchdog: remove unnecessary ping function from ops
-- watchdog: and the comment regarding it
-- watchdog: allocate watchdog struct in order to allow multiple WDG
-  instances
-- rtc: bd70528 fix the order of mutex unlock and re-enabling RTC based
-  timers
-- rtc: fix the irq mask register address
-- power: fix the irq mask register address
-- regulator/regmap-irq: Drop the patches 1, 8 and 9 from original series
-  as those were already applied by Mark 
-
-Patch 1:
-	split the bd718x7.h to generic and chip specific portions.
-	(breaks compilation without patch 2 and 3)
-	- adapt bd718x7.h changes to bd718x7 regulator driver
-	- adapt bd718x7.h changes to bd718x7 clk driver
-Patch 2:
-	add MFD core support for bd70528
-Patch 3:
-	support bd70528 clk using bd718x7 clk driver
-Patch 4:
-	document DT bindings for BD70528
-Patch 5:
-	support BD70528 GPIO block
-Patch 6:
-	support BD70528 RTC
-Patch 7:
-	support BD70528 battery charger
-Patch 8:
-	support BD70528 watchdog
-
-This patch series is based on Linus' v5.1-rc2 tag.
-
----
-
-Matti Vaittinen (8):
-  mfd: regulator: clk: split rohm-bd718x7.h
-  mfd: bd70528: Support ROHM bd70528 PMIC - core
-  clk: bd718x7: Support ROHM BD70528 clk block
-  dt-bindings: mfd: Document first ROHM BD70528 bindings
-  gpio: Initial support for ROHM bd70528 GPIO block
-  rtc: bd70528: Initial support for ROHM bd70528 RTC
-  power: supply: Initial support for ROHM BD70528 PMIC charger block
-  watchdog: bd70528: Initial support for ROHM BD70528 watchdog block
-
- .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 +++
- drivers/clk/Kconfig                           |   6 +-
- drivers/clk/clk-bd718x7.c                     |  24 +-
- drivers/gpio/Kconfig                          |  11 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-bd70528.c                   | 232 ++++++
- drivers/mfd/Kconfig                           |  17 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/rohm-bd70528.c                    | 429 ++++++++++
- drivers/mfd/rohm-bd718x7.c                    |  23 +-
- drivers/power/supply/Kconfig                  |   9 +
- drivers/power/supply/Makefile                 |   1 +
- drivers/power/supply/bd70528-charger.c        | 742 ++++++++++++++++++
- drivers/regulator/bd718x7-regulator.c         |  25 +-
- drivers/rtc/Kconfig                           |   8 +
- drivers/rtc/Makefile                          |   1 +
- drivers/rtc/rtc-bd70528.c                     | 500 ++++++++++++
- drivers/watchdog/Kconfig                      |  12 +
- drivers/watchdog/Makefile                     |   1 +
- drivers/watchdog/bd70528_wdt.c                | 188 +++++
- include/linux/mfd/rohm-bd70528.h              | 383 +++++++++
- include/linux/mfd/rohm-bd718x7.h              |  22 +-
- include/linux/mfd/rohm-generic.h              |  20 +
- 23 files changed, 2712 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
- create mode 100644 drivers/gpio/gpio-bd70528.c
- create mode 100644 drivers/mfd/rohm-bd70528.c
- create mode 100644 drivers/power/supply/bd70528-charger.c
- create mode 100644 drivers/rtc/rtc-bd70528.c
- create mode 100644 drivers/watchdog/bd70528_wdt.c
- create mode 100644 include/linux/mfd/rohm-bd70528.h
- create mode 100644 include/linux/mfd/rohm-generic.h
-
--- 
-2.17.2
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+>   
+>   	if (rodata_full || debug_pagealloc_enabled())
+>   		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+> @@ -1057,7 +1258,27 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+>   	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
+>   			     size, PAGE_KERNEL, pgd_pgtable_alloc, flags);
+>   
+> -	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+> +	ret = __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+>   			   altmap, want_memblock);
+> +	if (ret)
+> +		__remove_pgd_mapping(swapper_pg_dir,
+> +					__phys_to_virt(start), size);
+> +	return ret;
+>   }
+> +
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +int arch_remove_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap)
+> +{
+> +	unsigned long start_pfn = start >> PAGE_SHIFT;
+> +	unsigned long nr_pages = size >> PAGE_SHIFT;
+> +	struct zone *zone = page_zone(pfn_to_page(start_pfn));
+> +	int ret;
+> +
+> +	ret = __remove_pages(zone, start_pfn, nr_pages, altmap);
+> +	if (!ret)
+> +		__remove_pgd_mapping(swapper_pg_dir,
+> +					__phys_to_virt(start), size);
+> +	return ret;
+> +}
+> +#endif
+>   #endif
+> 
