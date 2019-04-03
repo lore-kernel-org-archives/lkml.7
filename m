@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1721C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262EAC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEEAB2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81C820700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfDCKnT (ORCPT
+        id S1726404AbfDCKpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:43:19 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47247 "EHLO
+        Wed, 3 Apr 2019 06:45:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51877 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfDCKnS (ORCPT
+        with ESMTP id S1726097AbfDCKpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:43:18 -0400
+        Wed, 3 Apr 2019 06:45:34 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33Agph91812992
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33AipVX1814718
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 03:42:51 -0700
+        Wed, 3 Apr 2019 03:44:51 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33AgooD1812985;
-        Wed, 3 Apr 2019 03:42:50 -0700
-Date:   Wed, 3 Apr 2019 03:42:50 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33Aip8e1814714;
+        Wed, 3 Apr 2019 03:44:51 -0700
+Date:   Wed, 3 Apr 2019 03:44:51 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   "tip-bot for Lendacky, Thomas" <tipbot@zytor.com>
-Message-ID: <tip-60f52ab61c7dc0a991125903ae06a35d1812698c@git.kernel.org>
-Cc:     acme@redhat.com, hpa@zytor.com, tglx@linutronix.de,
-        jolsa@redhat.com, Thomas.Lendacky@amd.com, acme@kernel.org,
-        eranian@google.com, vincent.weaver@maine.edu, bp@alien8.de,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        thomas.lendacky@amd.com, namhyung@kernel.org, mingo@kernel.org,
-        alexander.shishkin@linux.intel.com, peterz@infradead.org
-Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          thomas.lendacky@amd.com, eranian@google.com,
-          vincent.weaver@maine.edu, bp@alien8.de, peterz@infradead.org,
-          namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-          mingo@kernel.org, jolsa@redhat.com, Thomas.Lendacky@amd.com,
-          acme@redhat.com, hpa@zytor.com, tglx@linutronix.de,
-          acme@kernel.org
-In-Reply-To: <Message-ID:>
-References: <Message-ID:>
+From:   tip-bot for Waiman Long <tipbot@zytor.com>
+Message-ID: <tip-79407a77fe0ea11c0d38c5f4a3936bf35a994965@git.kernel.org>
+Cc:     torvalds@linux-foundation.org, tglx@linutronix.de, arnd@arndb.de,
+        bp@alien8.de, hpa@zytor.com, will.deacon@arm.com,
+        dave@stgolabs.net, tim.c.chen@linux.intel.com,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@kernel.org, longman@redhat.com,
+        paulmck@linux.vnet.ibm.com
+Reply-To: longman@redhat.com, paulmck@linux.vnet.ibm.com,
+          peterz@infradead.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com,
+          akpm@linux-foundation.org, will.deacon@arm.com,
+          dave@stgolabs.net, tim.c.chen@linux.intel.com,
+          tglx@linutronix.de, torvalds@linux-foundation.org, bp@alien8.de,
+          arnd@arndb.de
+In-Reply-To: <20190322143008.21313-3-longman@redhat.com>
+References: <20190322143008.21313-3-longman@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] x86/perf/amd: Remove need to check "running" bit
- in NMI handler
-Git-Commit-ID: 60f52ab61c7dc0a991125903ae06a35d1812698c
+Subject: [tip:locking/core] locking/rwsem: Remove rwsem-spinlock.c & use
+ rwsem-xadd.c for all archs
+Git-Commit-ID: 79407a77fe0ea11c0d38c5f4a3936bf35a994965
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -64,120 +64,963 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  60f52ab61c7dc0a991125903ae06a35d1812698c
-Gitweb:     https://git.kernel.org/tip/60f52ab61c7dc0a991125903ae06a35d1812698c
-Author:     Lendacky, Thomas <Thomas.Lendacky@amd.com>
-AuthorDate: Tue, 2 Apr 2019 15:21:18 +0000
+Commit-ID:  79407a77fe0ea11c0d38c5f4a3936bf35a994965
+Gitweb:     https://git.kernel.org/tip/79407a77fe0ea11c0d38c5f4a3936bf35a994965
+Author:     Waiman Long <longman@redhat.com>
+AuthorDate: Fri, 22 Mar 2019 10:30:07 -0400
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 3 Apr 2019 11:40:32 +0200
+CommitDate: Wed, 3 Apr 2019 11:42:34 +0200
 
-x86/perf/amd: Remove need to check "running" bit in NMI handler
+locking/rwsem: Remove rwsem-spinlock.c & use rwsem-xadd.c for all archs
 
-Spurious interrupt support was adding to perf in:
-commit 63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
+Currently, we have two different implementation of rwsem:
 
-The two previous patches (resolving the race condition when disabling a
-PMC and NMI latency mitigation) allow for the removal of this older
-spurious interrupt support.
+ 1) CONFIG_RWSEM_GENERIC_SPINLOCK (rwsem-spinlock.c)
+ 2) CONFIG_RWSEM_XCHGADD_ALGORITHM (rwsem-xadd.c)
 
-Currently in x86_pmu_stop(), the bit for the PMC in the active_mask bitmap
-is cleared before disabling the PMC, which sets up a race condition. This
-race condition was mitigated by introducing the running bitmap. That race
-condition can be eliminated by first disabling the PMC, waiting for PMC
-reset on overflow and then clearing the bit for the PMC in the active_mask
-bitmap. The NMI handler will not re-enable a disabled counter.
+As we are going to use a single generic implementation for rwsem-xadd.c
+and no architecture-specific code will be needed, there is no point
+in keeping two different implementations of rwsem. In most cases, the
+performance of rwsem-spinlock.c will be worse. It also doesn't get all
+the performance tuning and optimizations that had been implemented in
+rwsem-xadd.c over the years.
 
-If x86_pmu_stop() is called from the perf NMI handler, the NMI latency
-mitigation support will guard against any unhandled NMI messages.
+For simplication, we are going to remove rwsem-spinlock.c and make all
+architectures use a single implementation of rwsem - rwsem-xadd.c.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+All references to RWSEM_GENERIC_SPINLOCK and RWSEM_XCHGADD_ALGORITHM
+in the code are removed.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org> # 4.14.x-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/Message-ID:
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-c6x-dev@linux-c6x.org
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-um@lists.infradead.org
+Cc: linux-xtensa@linux-xtensa.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: nios2-dev@lists.rocketboards.org
+Cc: openrisc@lists.librecores.org
+Cc: uclinux-h8-devel@lists.sourceforge.jp
+Link: https://lkml.kernel.org/r/20190322143008.21313-3-longman@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/amd/core.c | 19 ++++++++++++++++++-
- arch/x86/events/core.c     | 13 +++----------
- 2 files changed, 21 insertions(+), 11 deletions(-)
+ arch/alpha/Kconfig              |   7 -
+ arch/arc/Kconfig                |   3 -
+ arch/arm/Kconfig                |   4 -
+ arch/arm64/Kconfig              |   3 -
+ arch/c6x/Kconfig                |   3 -
+ arch/csky/Kconfig               |   3 -
+ arch/h8300/Kconfig              |   3 -
+ arch/hexagon/Kconfig            |   6 -
+ arch/ia64/Kconfig               |   4 -
+ arch/m68k/Kconfig               |   7 -
+ arch/microblaze/Kconfig         |   6 -
+ arch/mips/Kconfig               |   7 -
+ arch/nds32/Kconfig              |   3 -
+ arch/nios2/Kconfig              |   3 -
+ arch/openrisc/Kconfig           |   6 -
+ arch/parisc/Kconfig             |   6 -
+ arch/powerpc/Kconfig            |   7 -
+ arch/riscv/Kconfig              |   3 -
+ arch/s390/Kconfig               |   6 -
+ arch/sh/Kconfig                 |   6 -
+ arch/sparc/Kconfig              |   8 -
+ arch/unicore32/Kconfig          |   6 -
+ arch/x86/Kconfig                |   3 -
+ arch/x86/um/Kconfig             |   6 -
+ arch/xtensa/Kconfig             |   3 -
+ include/linux/rwsem-spinlock.h  |  47 ------
+ include/linux/rwsem.h           |   5 -
+ kernel/Kconfig.locks            |   2 +-
+ kernel/locking/Makefile         |   4 +-
+ kernel/locking/rwsem-spinlock.c | 339 ----------------------------------------
+ kernel/locking/rwsem.h          |   3 -
+ 31 files changed, 2 insertions(+), 520 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 34c191453ce3..5d423653f744 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -491,6 +491,23 @@ static void amd_pmu_disable_all(void)
- 	}
+diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
+index 584a6e114853..27c871227eee 100644
+--- a/arch/alpha/Kconfig
++++ b/arch/alpha/Kconfig
+@@ -49,13 +49,6 @@ config MMU
+ 	bool
+ 	default y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	bool
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-	default y
+-
+ config ARCH_HAS_ILOG2_U32
+ 	bool
+ 	default n
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index c781e45d1d99..23e063df5d2c 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -63,9 +63,6 @@ config SCHED_OMIT_FRAME_POINTER
+ config GENERIC_CSUM
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config ARCH_DISCONTIGMEM_ENABLE
+ 	def_bool n
+ 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 850b4805e2d1..c8b03e1c6c2a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -178,10 +178,6 @@ config TRACE_IRQFLAGS_SUPPORT
+ 	bool
+ 	default !CPU_V7M
+ 
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-	default y
+-
+ config ARCH_HAS_ILOG2_U32
+ 	bool
+ 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 7e34b9eba5de..c62b9db2b5e8 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -237,9 +237,6 @@ config LOCKDEP_SUPPORT
+ config TRACE_IRQFLAGS_SUPPORT
+ 	def_bool y
+ 
+-config RWSEM_XCHGADD_ALGORITHM
+-	def_bool y
+-
+ config GENERIC_BUG
+ 	def_bool y
+ 	depends on BUG
+diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
+index e5cd3c5f8399..ed92b5840c0a 100644
+--- a/arch/c6x/Kconfig
++++ b/arch/c6x/Kconfig
+@@ -27,9 +27,6 @@ config MMU
+ config FPU
+ 	def_bool n
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
+ 
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index 725a115759c9..6555d1781132 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -92,9 +92,6 @@ config GENERIC_HWEIGHT
+ config MMU
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config STACKTRACE_SUPPORT
+ 	def_bool y
+ 
+diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
+index c071da34e081..61c01db6c292 100644
+--- a/arch/h8300/Kconfig
++++ b/arch/h8300/Kconfig
+@@ -27,9 +27,6 @@ config H8300
+ config CPU_BIG_ENDIAN
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config GENERIC_HWEIGHT
+ 	def_bool y
+ 
+diff --git a/arch/hexagon/Kconfig b/arch/hexagon/Kconfig
+index ac441680dcc0..3e54a53208d5 100644
+--- a/arch/hexagon/Kconfig
++++ b/arch/hexagon/Kconfig
+@@ -65,12 +65,6 @@ config GENERIC_CSUM
+ config GENERIC_IRQ_PROBE
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool n
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	def_bool y
+-
+ config GENERIC_HWEIGHT
+ 	def_bool y
+ 
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 8d7396bd1790..73a26f04644e 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -83,10 +83,6 @@ config STACKTRACE_SUPPORT
+ config GENERIC_LOCKBREAK
+ 	def_bool n
+ 
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-	default y
+-
+ config HUGETLB_PAGE_SIZE_VARIABLE
+ 	bool
+ 	depends on HUGETLB_PAGE
+diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+index b54206408f91..f5661f48019c 100644
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@ -32,13 +32,6 @@ config M68K
+ config CPU_BIG_ENDIAN
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	bool
+-	default y
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-
+ config ARCH_HAS_ILOG2_U32
+ 	bool
+ 
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index a51b965b3b82..a7a9a9d59f65 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -58,15 +58,9 @@ config CPU_LITTLE_ENDIAN
+ 
+ endchoice
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config ZONE_DMA
+ 	def_bool y
+ 
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-
+ config ARCH_HAS_ILOG2_U32
+ 	def_bool n
+ 
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 4a5f5b0ee9a9..b9c48b27162d 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1037,13 +1037,6 @@ source "arch/mips/paravirt/Kconfig"
+ 
+ endmenu
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	bool
+-	default y
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-
+ config GENERIC_HWEIGHT
+ 	bool
+ 	default y
+diff --git a/arch/nds32/Kconfig b/arch/nds32/Kconfig
+index addb7f5f5264..55559ca0efe4 100644
+--- a/arch/nds32/Kconfig
++++ b/arch/nds32/Kconfig
+@@ -60,9 +60,6 @@ config GENERIC_LOCKBREAK
+         def_bool y
+ 	depends on PREEMPT
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config TRACE_IRQFLAGS_SUPPORT
+ 	def_bool y
+ 
+diff --git a/arch/nios2/Kconfig b/arch/nios2/Kconfig
+index 4ef15a61b7bc..56685fd45ed0 100644
+--- a/arch/nios2/Kconfig
++++ b/arch/nios2/Kconfig
+@@ -40,9 +40,6 @@ config NO_IOPORT_MAP
+ config FPU
+ 	def_bool n
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config TRACE_IRQFLAGS_SUPPORT
+ 	def_bool n
+ 
+diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+index a5e361fbb75a..683511b8c9df 100644
+--- a/arch/openrisc/Kconfig
++++ b/arch/openrisc/Kconfig
+@@ -43,12 +43,6 @@ config CPU_BIG_ENDIAN
+ config MMU
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	def_bool n
+-
+ config GENERIC_HWEIGHT
+ 	def_bool y
+ 
+diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+index c8e621296092..f1ed8ddfe486 100644
+--- a/arch/parisc/Kconfig
++++ b/arch/parisc/Kconfig
+@@ -75,12 +75,6 @@ config GENERIC_LOCKBREAK
+ 	default y
+ 	depends on SMP && PREEMPT
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-
+ config ARCH_HAS_ILOG2_U32
+ 	bool
+ 	default n
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 2d0be82c3061..e5dd6aafaf68 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -103,13 +103,6 @@ config LOCKDEP_SUPPORT
+ 	bool
+ 	default y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	bool
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-	default y
+-
+ config GENERIC_LOCKBREAK
+ 	bool
+ 	default y
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index eb56c82d8aa1..0582260fb6c2 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -69,9 +69,6 @@ config STACKTRACE_SUPPORT
+ config TRACE_IRQFLAGS_SUPPORT
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+ config GENERIC_BUG
+ 	def_bool y
+ 	depends on BUG
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index b6e3d0653002..c9300b437195 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -14,12 +14,6 @@ config LOCKDEP_SUPPORT
+ config STACKTRACE_SUPPORT
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	bool
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	def_bool y
+-
+ config ARCH_HAS_ILOG2_U32
+ 	def_bool n
+ 
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index b1c91ea9a958..0be08d586d40 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -90,12 +90,6 @@ config ARCH_DEFCONFIG
+ 	default "arch/sh/configs/shx3_defconfig" if SUPERH32
+ 	default "arch/sh/configs/cayman_defconfig" if SUPERH64
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-
+ config GENERIC_BUG
+ 	def_bool y
+ 	depends on BUG && SUPERH32
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index 40f8f4f73fe8..16b620237816 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -191,14 +191,6 @@ config NR_CPUS
+ 
+ source "kernel/Kconfig.hz"
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	bool
+-	default y if SPARC32
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-	default y if SPARC64
+-
+ config GENERIC_HWEIGHT
+ 	bool
+ 	default y
+diff --git a/arch/unicore32/Kconfig b/arch/unicore32/Kconfig
+index 817d82608712..0d5869c9bf03 100644
+--- a/arch/unicore32/Kconfig
++++ b/arch/unicore32/Kconfig
+@@ -38,12 +38,6 @@ config STACKTRACE_SUPPORT
+ config LOCKDEP_SUPPORT
+ 	def_bool y
+ 
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool y
+-
+-config RWSEM_XCHGADD_ALGORITHM
+-	bool
+-
+ config ARCH_HAS_ILOG2_U32
+ 	bool
+ 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5ad92419be19..84b184e016cd 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -268,9 +268,6 @@ config ARCH_MAY_HAVE_PC_FDC
+ 	def_bool y
+ 	depends on ISA_DMA_API
+ 
+-config RWSEM_XCHGADD_ALGORITHM
+-	def_bool y
+-
+ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
+ 
+diff --git a/arch/x86/um/Kconfig b/arch/x86/um/Kconfig
+index a9e80e44178c..a8985e1f7432 100644
+--- a/arch/x86/um/Kconfig
++++ b/arch/x86/um/Kconfig
+@@ -32,12 +32,6 @@ config ARCH_DEFCONFIG
+ 	default "arch/um/configs/i386_defconfig" if X86_32
+ 	default "arch/um/configs/x86_64_defconfig" if X86_64
+ 
+-config RWSEM_XCHGADD_ALGORITHM
+-	def_bool 64BIT
+-
+-config RWSEM_GENERIC_SPINLOCK
+-	def_bool !RWSEM_XCHGADD_ALGORITHM
+-
+ config 3_LEVEL_PGTABLES
+ 	bool "Three-level pagetables" if !64BIT
+ 	default 64BIT
+diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+index 4b9aafe766c5..35c8d91e6106 100644
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -46,9 +46,6 @@ config XTENSA
+ 	  with reasonable minimum requirements.  The Xtensa Linux project has
+ 	  a home page at <http://www.linux-xtensa.org/>.
+ 
+-config RWSEM_XCHGADD_ALGORITHM
+-	def_bool y
+-
+ config GENERIC_HWEIGHT
+ 	def_bool y
+ 
+diff --git a/include/linux/rwsem-spinlock.h b/include/linux/rwsem-spinlock.h
+deleted file mode 100644
+index e47568363e5e..000000000000
+--- a/include/linux/rwsem-spinlock.h
++++ /dev/null
+@@ -1,47 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/* rwsem-spinlock.h: fallback C implementation
+- *
+- * Copyright (c) 2001   David Howells (dhowells@redhat.com).
+- * - Derived partially from ideas by Andrea Arcangeli <andrea@suse.de>
+- * - Derived also from comments by Linus
+- */
+-
+-#ifndef _LINUX_RWSEM_SPINLOCK_H
+-#define _LINUX_RWSEM_SPINLOCK_H
+-
+-#ifndef _LINUX_RWSEM_H
+-#error "please don't include linux/rwsem-spinlock.h directly, use linux/rwsem.h instead"
+-#endif
+-
+-#ifdef __KERNEL__
+-/*
+- * the rw-semaphore definition
+- * - if count is 0 then there are no active readers or writers
+- * - if count is +ve then that is the number of active readers
+- * - if count is -1 then there is one active writer
+- * - if wait_list is not empty, then there are processes waiting for the semaphore
+- */
+-struct rw_semaphore {
+-	__s32			count;
+-	raw_spinlock_t		wait_lock;
+-	struct list_head	wait_list;
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	struct lockdep_map dep_map;
+-#endif
+-};
+-
+-#define RWSEM_UNLOCKED_VALUE		0x00000000
+-
+-extern void __down_read(struct rw_semaphore *sem);
+-extern int __must_check __down_read_killable(struct rw_semaphore *sem);
+-extern int __down_read_trylock(struct rw_semaphore *sem);
+-extern void __down_write(struct rw_semaphore *sem);
+-extern int __must_check __down_write_killable(struct rw_semaphore *sem);
+-extern int __down_write_trylock(struct rw_semaphore *sem);
+-extern void __up_read(struct rw_semaphore *sem);
+-extern void __up_write(struct rw_semaphore *sem);
+-extern void __downgrade_write(struct rw_semaphore *sem);
+-extern int rwsem_is_locked(struct rw_semaphore *sem);
+-
+-#endif /* __KERNEL__ */
+-#endif /* _LINUX_RWSEM_SPINLOCK_H */
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index 6e56006b2cb6..0fc41062c649 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -22,10 +22,6 @@
+ 
+ struct rw_semaphore;
+ 
+-#ifdef CONFIG_RWSEM_GENERIC_SPINLOCK
+-#include <linux/rwsem-spinlock.h> /* use a generic implementation */
+-#define __RWSEM_INIT_COUNT(name)	.count = RWSEM_UNLOCKED_VALUE
+-#else
+ /* All arch specific implementations share the same struct */
+ struct rw_semaphore {
+ 	atomic_long_t count;
+@@ -65,7 +61,6 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ 
+ #define RWSEM_UNLOCKED_VALUE		0L
+ #define __RWSEM_INIT_COUNT(name)	.count = ATOMIC_LONG_INIT(RWSEM_UNLOCKED_VALUE)
+-#endif
+ 
+ /* Common initializer macros and functions */
+ 
+diff --git a/kernel/Kconfig.locks b/kernel/Kconfig.locks
+index fbba478ae522..e335953fa704 100644
+--- a/kernel/Kconfig.locks
++++ b/kernel/Kconfig.locks
+@@ -229,7 +229,7 @@ config MUTEX_SPIN_ON_OWNER
+ 
+ config RWSEM_SPIN_ON_OWNER
+        def_bool y
+-       depends on SMP && RWSEM_XCHGADD_ALGORITHM && ARCH_SUPPORTS_ATOMIC_RMW
++       depends on SMP && ARCH_SUPPORTS_ATOMIC_RMW
+ 
+ config LOCK_SPIN_ON_OWNER
+        def_bool y
+diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+index 392c7f23af76..1af83e9ce57d 100644
+--- a/kernel/locking/Makefile
++++ b/kernel/locking/Makefile
+@@ -3,7 +3,7 @@
+ # and is generally not a function of system call inputs.
+ KCOV_INSTRUMENT		:= n
+ 
+-obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
++obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o rwsem-xadd.o
+ 
+ ifdef CONFIG_FUNCTION_TRACER
+ CFLAGS_REMOVE_lockdep.o = $(CC_FLAGS_FTRACE)
+@@ -25,8 +25,6 @@ obj-$(CONFIG_RT_MUTEXES) += rtmutex.o
+ obj-$(CONFIG_DEBUG_RT_MUTEXES) += rtmutex-debug.o
+ obj-$(CONFIG_DEBUG_SPINLOCK) += spinlock.o
+ obj-$(CONFIG_DEBUG_SPINLOCK) += spinlock_debug.o
+-obj-$(CONFIG_RWSEM_GENERIC_SPINLOCK) += rwsem-spinlock.o
+-obj-$(CONFIG_RWSEM_XCHGADD_ALGORITHM) += rwsem-xadd.o
+ obj-$(CONFIG_QUEUED_RWLOCKS) += qrwlock.o
+ obj-$(CONFIG_LOCK_TORTURE_TEST) += locktorture.o
+ obj-$(CONFIG_WW_MUTEX_SELFTEST) += test-ww_mutex.o
+diff --git a/kernel/locking/rwsem-spinlock.c b/kernel/locking/rwsem-spinlock.c
+deleted file mode 100644
+index a7ffb2a96ede..000000000000
+--- a/kernel/locking/rwsem-spinlock.c
++++ /dev/null
+@@ -1,339 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/* rwsem-spinlock.c: R/W semaphores: contention handling functions for
+- * generic spinlock implementation
+- *
+- * Copyright (c) 2001   David Howells (dhowells@redhat.com).
+- * - Derived partially from idea by Andrea Arcangeli <andrea@suse.de>
+- * - Derived also from comments by Linus
+- */
+-#include <linux/rwsem.h>
+-#include <linux/sched/signal.h>
+-#include <linux/sched/debug.h>
+-#include <linux/export.h>
+-
+-enum rwsem_waiter_type {
+-	RWSEM_WAITING_FOR_WRITE,
+-	RWSEM_WAITING_FOR_READ
+-};
+-
+-struct rwsem_waiter {
+-	struct list_head list;
+-	struct task_struct *task;
+-	enum rwsem_waiter_type type;
+-};
+-
+-int rwsem_is_locked(struct rw_semaphore *sem)
+-{
+-	int ret = 1;
+-	unsigned long flags;
+-
+-	if (raw_spin_trylock_irqsave(&sem->wait_lock, flags)) {
+-		ret = (sem->count != 0);
+-		raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-	}
+-	return ret;
+-}
+-EXPORT_SYMBOL(rwsem_is_locked);
+-
+-/*
+- * initialise the semaphore
+- */
+-void __init_rwsem(struct rw_semaphore *sem, const char *name,
+-		  struct lock_class_key *key)
+-{
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	/*
+-	 * Make sure we are not reinitializing a held semaphore:
+-	 */
+-	debug_check_no_locks_freed((void *)sem, sizeof(*sem));
+-	lockdep_init_map(&sem->dep_map, name, key, 0);
+-#endif
+-	sem->count = 0;
+-	raw_spin_lock_init(&sem->wait_lock);
+-	INIT_LIST_HEAD(&sem->wait_list);
+-}
+-EXPORT_SYMBOL(__init_rwsem);
+-
+-/*
+- * handle the lock release when processes blocked on it that can now run
+- * - if we come here, then:
+- *   - the 'active count' _reached_ zero
+- *   - the 'waiting count' is non-zero
+- * - the spinlock must be held by the caller
+- * - woken process blocks are discarded from the list after having task zeroed
+- * - writers are only woken if wakewrite is non-zero
+- */
+-static inline struct rw_semaphore *
+-__rwsem_do_wake(struct rw_semaphore *sem, int wakewrite)
+-{
+-	struct rwsem_waiter *waiter;
+-	struct task_struct *tsk;
+-	int woken;
+-
+-	waiter = list_entry(sem->wait_list.next, struct rwsem_waiter, list);
+-
+-	if (waiter->type == RWSEM_WAITING_FOR_WRITE) {
+-		if (wakewrite)
+-			/* Wake up a writer. Note that we do not grant it the
+-			 * lock - it will have to acquire it when it runs. */
+-			wake_up_process(waiter->task);
+-		goto out;
+-	}
+-
+-	/* grant an infinite number of read locks to the front of the queue */
+-	woken = 0;
+-	do {
+-		struct list_head *next = waiter->list.next;
+-
+-		list_del(&waiter->list);
+-		tsk = waiter->task;
+-		/*
+-		 * Make sure we do not wakeup the next reader before
+-		 * setting the nil condition to grant the next reader;
+-		 * otherwise we could miss the wakeup on the other
+-		 * side and end up sleeping again. See the pairing
+-		 * in rwsem_down_read_failed().
+-		 */
+-		smp_mb();
+-		waiter->task = NULL;
+-		wake_up_process(tsk);
+-		put_task_struct(tsk);
+-		woken++;
+-		if (next == &sem->wait_list)
+-			break;
+-		waiter = list_entry(next, struct rwsem_waiter, list);
+-	} while (waiter->type != RWSEM_WAITING_FOR_WRITE);
+-
+-	sem->count += woken;
+-
+- out:
+-	return sem;
+-}
+-
+-/*
+- * wake a single writer
+- */
+-static inline struct rw_semaphore *
+-__rwsem_wake_one_writer(struct rw_semaphore *sem)
+-{
+-	struct rwsem_waiter *waiter;
+-
+-	waiter = list_entry(sem->wait_list.next, struct rwsem_waiter, list);
+-	wake_up_process(waiter->task);
+-
+-	return sem;
+-}
+-
+-/*
+- * get a read lock on the semaphore
+- */
+-int __sched __down_read_common(struct rw_semaphore *sem, int state)
+-{
+-	struct rwsem_waiter waiter;
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-
+-	if (sem->count >= 0 && list_empty(&sem->wait_list)) {
+-		/* granted */
+-		sem->count++;
+-		raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-		goto out;
+-	}
+-
+-	/* set up my own style of waitqueue */
+-	waiter.task = current;
+-	waiter.type = RWSEM_WAITING_FOR_READ;
+-	get_task_struct(current);
+-
+-	list_add_tail(&waiter.list, &sem->wait_list);
+-
+-	/* wait to be given the lock */
+-	for (;;) {
+-		if (!waiter.task)
+-			break;
+-		if (signal_pending_state(state, current))
+-			goto out_nolock;
+-		set_current_state(state);
+-		raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-		schedule();
+-		raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-	}
+-
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+- out:
+-	return 0;
+-
+-out_nolock:
+-	/*
+-	 * We didn't take the lock, so that there is a writer, which
+-	 * is owner or the first waiter of the sem. If it's a waiter,
+-	 * it will be woken by current owner. Not need to wake anybody.
+-	 */
+-	list_del(&waiter.list);
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-	return -EINTR;
+-}
+-
+-void __sched __down_read(struct rw_semaphore *sem)
+-{
+-	__down_read_common(sem, TASK_UNINTERRUPTIBLE);
+-}
+-
+-int __sched __down_read_killable(struct rw_semaphore *sem)
+-{
+-	return __down_read_common(sem, TASK_KILLABLE);
+-}
+-
+-/*
+- * trylock for reading -- returns 1 if successful, 0 if contention
+- */
+-int __down_read_trylock(struct rw_semaphore *sem)
+-{
+-	unsigned long flags;
+-	int ret = 0;
+-
+-
+-	raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-
+-	if (sem->count >= 0 && list_empty(&sem->wait_list)) {
+-		/* granted */
+-		sem->count++;
+-		ret = 1;
+-	}
+-
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-
+-	return ret;
+-}
+-
+-/*
+- * get a write lock on the semaphore
+- */
+-int __sched __down_write_common(struct rw_semaphore *sem, int state)
+-{
+-	struct rwsem_waiter waiter;
+-	unsigned long flags;
+-	int ret = 0;
+-
+-	raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-
+-	/* set up my own style of waitqueue */
+-	waiter.task = current;
+-	waiter.type = RWSEM_WAITING_FOR_WRITE;
+-	list_add_tail(&waiter.list, &sem->wait_list);
+-
+-	/* wait for someone to release the lock */
+-	for (;;) {
+-		/*
+-		 * That is the key to support write lock stealing: allows the
+-		 * task already on CPU to get the lock soon rather than put
+-		 * itself into sleep and waiting for system woke it or someone
+-		 * else in the head of the wait list up.
+-		 */
+-		if (sem->count == 0)
+-			break;
+-		if (signal_pending_state(state, current))
+-			goto out_nolock;
+-
+-		set_current_state(state);
+-		raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-		schedule();
+-		raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-	}
+-	/* got the lock */
+-	sem->count = -1;
+-	list_del(&waiter.list);
+-
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-
+-	return ret;
+-
+-out_nolock:
+-	list_del(&waiter.list);
+-	if (!list_empty(&sem->wait_list) && sem->count >= 0)
+-		__rwsem_do_wake(sem, 0);
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-
+-	return -EINTR;
+-}
+-
+-void __sched __down_write(struct rw_semaphore *sem)
+-{
+-	__down_write_common(sem, TASK_UNINTERRUPTIBLE);
+-}
+-
+-int __sched __down_write_killable(struct rw_semaphore *sem)
+-{
+-	return __down_write_common(sem, TASK_KILLABLE);
+-}
+-
+-/*
+- * trylock for writing -- returns 1 if successful, 0 if contention
+- */
+-int __down_write_trylock(struct rw_semaphore *sem)
+-{
+-	unsigned long flags;
+-	int ret = 0;
+-
+-	raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-
+-	if (sem->count == 0) {
+-		/* got the lock */
+-		sem->count = -1;
+-		ret = 1;
+-	}
+-
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-
+-	return ret;
+-}
+-
+-/*
+- * release a read lock on the semaphore
+- */
+-void __up_read(struct rw_semaphore *sem)
+-{
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-
+-	if (--sem->count == 0 && !list_empty(&sem->wait_list))
+-		sem = __rwsem_wake_one_writer(sem);
+-
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-}
+-
+-/*
+- * release a write lock on the semaphore
+- */
+-void __up_write(struct rw_semaphore *sem)
+-{
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-
+-	sem->count = 0;
+-	if (!list_empty(&sem->wait_list))
+-		sem = __rwsem_do_wake(sem, 1);
+-
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-}
+-
+-/*
+- * downgrade a write lock into a read lock
+- * - just wake up any readers at the front of the queue
+- */
+-void __downgrade_write(struct rw_semaphore *sem)
+-{
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&sem->wait_lock, flags);
+-
+-	sem->count = 1;
+-	if (!list_empty(&sem->wait_list))
+-		sem = __rwsem_do_wake(sem, 0);
+-
+-	raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+-}
+-
+diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
+index 067e265fa5c1..45ee00236e03 100644
+--- a/kernel/locking/rwsem.h
++++ b/kernel/locking/rwsem.h
+@@ -153,7 +153,6 @@ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
  }
+ #endif
  
-+static void amd_pmu_disable_event(struct perf_event *event)
-+{
-+	x86_pmu_disable_event(event);
-+
-+	/*
-+	 * This can be called from NMI context (via x86_pmu_stop). The counter
-+	 * may have overflowed, but either way, we'll never see it get reset
-+	 * by the NMI if we're already in the NMI. And the NMI latency support
-+	 * below will take care of any pending NMI that might have been
-+	 * generated by the overflow.
-+	 */
-+	if (in_nmi())
-+		return;
-+
-+	amd_pmu_wait_on_overflow(event->hw.idx);
-+}
-+
+-#ifdef CONFIG_RWSEM_XCHGADD_ALGORITHM
  /*
-  * Because of NMI latency, if multiple PMC counters are active or other sources
-  * of NMIs are received, the perf NMI handler can handle one or more overflowed
-@@ -738,7 +755,7 @@ static __initconst const struct x86_pmu amd_pmu = {
- 	.disable_all		= amd_pmu_disable_all,
- 	.enable_all		= x86_pmu_enable_all,
- 	.enable			= x86_pmu_enable_event,
--	.disable		= x86_pmu_disable_event,
-+	.disable		= amd_pmu_disable_event,
- 	.hw_config		= amd_pmu_hw_config,
- 	.schedule_events	= x86_schedule_events,
- 	.eventsel		= MSR_K7_EVNTSEL0,
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e2b1447192a8..81911e11a15d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1349,8 +1349,9 @@ void x86_pmu_stop(struct perf_event *event, int flags)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (__test_and_clear_bit(hwc->idx, cpuc->active_mask)) {
-+	if (test_bit(hwc->idx, cpuc->active_mask)) {
- 		x86_pmu.disable(event);
-+		__clear_bit(hwc->idx, cpuc->active_mask);
- 		cpuc->events[hwc->idx] = NULL;
- 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
- 		hwc->state |= PERF_HES_STOPPED;
-@@ -1447,16 +1448,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 	apic_write(APIC_LVTPC, APIC_DM_NMI);
- 
- 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
--		if (!test_bit(idx, cpuc->active_mask)) {
--			/*
--			 * Though we deactivated the counter some cpus
--			 * might still deliver spurious interrupts still
--			 * in flight. Catch them:
--			 */
--			if (__test_and_clear_bit(idx, cpuc->running))
--				handled++;
-+		if (!test_bit(idx, cpuc->active_mask))
- 			continue;
--		}
- 
- 		event = cpuc->events[idx];
- 
+  * lock for reading
+  */
+@@ -260,5 +259,3 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
+ 	if (tmp < 0)
+ 		rwsem_downgrade_wake(sem);
+ }
+-
+-#endif /* CONFIG_RWSEM_XCHGADD_ALGORITHM */
