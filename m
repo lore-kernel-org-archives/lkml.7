@@ -2,87 +2,111 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9423C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B362FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C6C20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554281786;
-	bh=6zVS517b6cpZbWt4JwRUOIKdicoZMA2pSFqenMsFkyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WDAZYSS/OjMWMa47ZPpgMDwg3Ubc7YDwLNwMlu2gfxcTZhxys6nR01iNg0IRiQJ9V
-	 hYeCAa7OZ4Suotm0Lc/6pHJEQRivJhXuLn8fC/3fYBUIS7eLBqR1NxRBIzlhVaf2qD
-	 TjlFY2Q4CH9HMQFIvu9P8ek+KqF5kIMvo1Tvi0fk=
+	by mail.kernel.org (Postfix) with ESMTP id 817CC20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:59:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZmyutuHe";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Wjua8/Sx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfDCI4Z (ORCPT
+        id S1726155AbfDCI7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfDCI4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:56:25 -0400
-Received: from localhost (unknown [195.134.171.12])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 3 Apr 2019 04:59:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43550 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfDCI7L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 04:59:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3360D6155F; Wed,  3 Apr 2019 08:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554281950;
+        bh=fW4jmanjES6ir5RgWoO84NJy4jTJHtyauuRXo5lBlos=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZmyutuHeOaWzBqRMYq7I0OeYMVLSM1T3rFt8gjEe+/0vrxKSJzuZDqybL+kvJPGla
+         Axd36kfJJmLBsJVDgPL+RvL9Ackgn+0OD/Mk2uejciNZEzBjeEBgukwIMNcTapo3Y/
+         p2Q5jJEu+Vnw5+VGJZtKeWhXSoLb2ZX+5gMAkl9c=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5554D206B7;
-        Wed,  3 Apr 2019 08:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554281785;
-        bh=6zVS517b6cpZbWt4JwRUOIKdicoZMA2pSFqenMsFkyg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U2sPhNrOxLAvXJuUTHl5Um98KTXMJHQZ5GjBeYNCjkp7LhqKN28nJv6WfMLXOz/Gj
-         Z4HEf48NLi/kmQ4ha2iE3kowwtW70+FeoFyiMPZL3Bwaa/fbQKjZwGdUlruOD05vGk
-         SO5BQiqjAN7KUTTbArJVALYlnpCRvg+AuBQ4MWno=
-Date:   Wed, 3 Apr 2019 10:56:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.0 000/146] 5.0.6-stable review
-Message-ID: <20190403085622.GB4601@kroah.com>
-References: <20190401170048.449559024@linuxfoundation.org>
- <e28284ac-f72a-113f-dbf9-0eb48aabb26a@kernel.org>
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 054F061214;
+        Wed,  3 Apr 2019 08:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554281940;
+        bh=fW4jmanjES6ir5RgWoO84NJy4jTJHtyauuRXo5lBlos=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Wjua8/SxfCkRoThkQxnC7Al64hkaAO5QEBK+kXoOXMXsMy/iU3HLWf/laZZToFBuE
+         IfUusLI9DPEzQzZh/9mdmE86DpaM8J3VNHK86FpRsnA37BUyd/bAsc42S1rK6Naxux
+         Y72seXOtJUltDBKw++s6Vrm8GVTOCWxq3wZwyuMs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 054F061214
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] drm/msm/a6xx: Fix build with !CONFIG_DEBUG_FS
+To:     Yue Haibing <yuehaibing@huawei.com>, robdclark@gmail.com,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        jcrouse@codeaurora.org
+Cc:     linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+References: <20190403064811.25832-1-yuehaibing@huawei.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <58fdea0d-6c6c-e7dc-0be7-80df9f565250@codeaurora.org>
+Date:   Wed, 3 Apr 2019 14:28:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e28284ac-f72a-113f-dbf9-0eb48aabb26a@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190403064811.25832-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 05:34:16PM -0600, shuah wrote:
-> On 4/1/19 11:00 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.0.6 release.
-> > There are 146 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Wed Apr  3 16:59:21 UTC 2019.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.6-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> 
-> Compiled and booted on my test system. No dmesg regressions.
 
-Thanks for testing all of these and letting me know.
+On 4/3/2019 12:18 PM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> When building CONFIG_DEBUG_FS is not set
+> gcc warn this:
+>
+> drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c: In function a6xx_show:
+> drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c:1124:2: error: implicit declaration of function adreno_show; did you mean adreno_dump? [-Werror=implicit-function-declaration]
+>    adreno_show(gpu, state, p);
+>    ^~~~~~~~~~~
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 1707add81551 ("drm/msm/a6xx: Add a6xx gpu state")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-greg k-h
+
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+
+Cheers,
+-Mukesh
+
+> ---
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> index e686331..d327eb5 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c
+> @@ -1121,7 +1121,9 @@ void a6xx_show(struct msm_gpu *gpu, struct msm_gpu_state *state,
+>   	if (IS_ERR_OR_NULL(state))
+>   		return;
+>   
+> +#if defined(CONFIG_DEBUG_FS) || defined(CONFIG_DEV_COREDUMP)
+>   	adreno_show(gpu, state, p);
+> +#endif
+>   
+>   	drm_puts(p, "registers:\n");
+>   	for (i = 0; i < a6xx_state->nr_registers; i++) {
