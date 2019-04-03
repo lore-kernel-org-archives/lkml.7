@@ -2,118 +2,77 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E6DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB51C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1AB20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEFD2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDCWJT (ORCPT
+        id S1726544AbfDCWKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 18:09:19 -0400
-Received: from ipmail03.adl6.internode.on.net ([150.101.137.143]:44905 "EHLO
-        ipmail03.adl6.internode.on.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726316AbfDCWJS (ORCPT
+        Wed, 3 Apr 2019 18:10:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41564 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDCWKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 18:09:18 -0400
-Received: from ppp59-167-129-252.static.internode.on.net (HELO dastard) ([59.167.129.252])
-  by ipmail03.adl6.internode.on.net with ESMTP; 04 Apr 2019 08:39:14 +1030
-Received: from dave by dastard with local (Exim 4.80)
-        (envelope-from <david@fromorbit.com>)
-        id 1hBo4G-0008N8-Ip; Thu, 04 Apr 2019 09:09:12 +1100
-Date:   Thu, 4 Apr 2019 09:09:12 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
-        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
-        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
-        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
-        david@redhat.com, cohuck@redhat.com, xiaoguangrong.eric@gmail.com
-Subject: Re: [PATCH v4 5/5] xfs: disable map_sync for async flush
-Message-ID: <20190403220912.GB26298@dastard>
-References: <20190403104018.23947-1-pagupta@redhat.com>
- <20190403104018.23947-6-pagupta@redhat.com>
+        Wed, 3 Apr 2019 18:10:34 -0400
+Received: from 79.184.254.219.ipv4.supernova.orange.pl (79.184.254.219) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 8aca4a233a5e8d07; Thu, 4 Apr 2019 00:10:32 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH 4/4] admin-guide: pm: intel_epb: Add SPDX license tag and copyright notice
+Date:   Thu, 04 Apr 2019 00:08:18 +0200
+Message-ID: <8068055.vE1LsT4ZeF@aspire.rjw.lan>
+In-Reply-To: <4546107.fVFrecLk33@aspire.rjw.lan>
+References: <4546107.fVFrecLk33@aspire.rjw.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403104018.23947-6-pagupta@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 04:10:18PM +0530, Pankaj Gupta wrote:
-> Virtio pmem provides asynchronous host page cache flush
-> mechanism. we don't support 'MAP_SYNC' with virtio pmem 
-> and xfs.
-> 
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  fs/xfs/xfs_file.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 1f2e2845eb76..dced2eb8c91a 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -1203,6 +1203,14 @@ xfs_file_mmap(
->  	if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
->  		return -EOPNOTSUPP;
->  
-> +	/* We don't support synchronous mappings with DAX files if
-> +	 * dax_device is not synchronous.
-> +	 */
-> +	if (IS_DAX(file_inode(filp)) && !dax_synchronous(
-> +		xfs_find_daxdev_for_inode(file_inode(filp))) &&
-> +					(vma->vm_flags & VM_SYNC))
-> +		return -EOPNOTSUPP;
-> +
->  	file_accessed(filp);
->  	vma->vm_ops = &xfs_file_vm_ops;
->  	if (IS_DAX(file_inode(filp)))
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-All this ad hoc IS_DAX conditional logic is getting pretty nasty.
+Add an SPDX license tag and a copyright notice to the intel_epb.rst
+file under Documentation/admin-quide/pm.
 
-xfs_file_mmap(
-....
-{
-	struct inode	*inode = file_inode(filp);
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ Documentation/admin-guide/pm/intel_epb.rst |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-	if (vma->vm_flags & VM_SYNC) {
-		if (!IS_DAX(inode))
-			return -EOPNOTSUPP;
-		if (!dax_synchronous(xfs_find_daxdev_for_inode(inode))
-			return -EOPNOTSUPP;
-	}
+Index: linux-pm/Documentation/admin-guide/pm/intel_epb.rst
+===================================================================
+--- linux-pm.orig/Documentation/admin-guide/pm/intel_epb.rst
++++ linux-pm/Documentation/admin-guide/pm/intel_epb.rst
+@@ -1,7 +1,15 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
++
+ ======================================
+ Intel Performance and Energy Bias Hint
+ ======================================
+ 
++:Copyright: |copy| 2019 Intel Corporation
++
++:Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
++
++
+ .. kernel-doc:: arch/x86/kernel/cpu/intel_epb.c
+    :doc: overview
+ 
 
-	file_accessed(filp);
-	vma->vm_ops = &xfs_file_vm_ops;
-	if (IS_DAX(inode))
-		vma->vm_flags |= VM_HUGEPAGE;
-	return 0;
-}
-
-
-Even better, factor out all the "MAP_SYNC supported" checks into a
-helper so that the filesystem code just doesn't have to care about
-the details of checking for DAX+MAP_SYNC support....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
