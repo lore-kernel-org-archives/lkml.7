@@ -2,165 +2,151 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93504C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EED7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68BE320830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 278D820830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfDCMm4 (ORCPT
+        id S1726471AbfDCMnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:42:56 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46789 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbfDCMmz (ORCPT
+        Wed, 3 Apr 2019 08:43:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56297 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfDCMnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:42:55 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r25so11581562lfn.13;
-        Wed, 03 Apr 2019 05:42:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xPUCMe1wedD3mJ/hN2Qprojga5iPAW9GSHN+HKSNLC0=;
-        b=dvxzFKOoCfKzXFmB26vb/hQp487kgkQGN5DOqxgChPlAnPb0rewavLz8o00AHn2tFD
-         /w2zYiCVqZysGxho+i/ahxeN8sSC+lFcOQlrd3smT4YDYWRoiNMg3LP0woHlAEkOaE7d
-         BYP/r0gey5cRtxCcheV73k4eDJP4gzeOJu8WOALi+7TEq/v3hz2i3L91rXiqJoFgAteT
-         1L//Usw/b+6VePeIfuJvwe3+BA8pchhN1j/UGRO6rhcWVK8CZdiJtrQQDzjyQcNVqBYi
-         ZydGuGkOkEP7QNUq0C55a0n0CyvSOTPYHykl0FKhGzgad0RDOEaEGzAaaoBq84Z/ZM77
-         4esw==
-X-Gm-Message-State: APjAAAUL9fmHueKncAb/pOO0DNQ1qc1V6IttgNMBC/qBH8+8OksKFqlI
-        WabxJCgectUSL4K6AGnmATU=
-X-Google-Smtp-Source: APXvYqzzLhiDpSUXGoQcMwGEKVPY8a9JMsTB7xPeOcqqRhj9WWClkBHqQldKemvihjOLku/6pmas5w==
-X-Received: by 2002:a19:4b14:: with SMTP id y20mr38154452lfa.36.1554295372570;
-        Wed, 03 Apr 2019 05:42:52 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id a29sm2989030lfi.19.2019.04.03.05.42.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 05:42:52 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 15:42:45 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: [PATCH v12 3/8] clk: bd718x7: Support ROHM BD70528 clk block
-Message-ID: <b9ebc239654ca9546954ff662fb93d53e789f16e.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 3 Apr 2019 08:43:49 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33ChB681849664
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Apr 2019 05:43:11 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33ChBxC1849661;
+        Wed, 3 Apr 2019 05:43:11 -0700
+Date:   Wed, 3 Apr 2019 05:43:11 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jann Horn <tipbot@zytor.com>
+Message-ID: <tip-89833fab15d6017ba006a45b5af68caa067171a7@git.kernel.org>
+Cc:     x86@kernel.org, qiaowei.ren@intel.com, bigeasy@linutronix.de,
+        mojha@codeaurora.org, mathieu.desnoyers@efficios.com,
+        jannh@google.com, hpa@zytor.com, bp@suse.de, mingo@redhat.com,
+        mingo@kernel.org, linux-kernel@vger.kernel.org,
+        will.deacon@arm.com, luto@kernel.org, tglx@linutronix.de
+Reply-To: luto@kernel.org, linux-kernel@vger.kernel.org,
+          will.deacon@arm.com, mingo@kernel.org, mingo@redhat.com,
+          tglx@linutronix.de, mojha@codeaurora.org, qiaowei.ren@intel.com,
+          bigeasy@linutronix.de, x86@kernel.org, bp@suse.de, hpa@zytor.com,
+          jannh@google.com, mathieu.desnoyers@efficios.com
+In-Reply-To: <20190329214652.258477-3-jannh@google.com>
+References: <20190329214652.258477-3-jannh@google.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/fpu] x86/fpu: Fix __user annotations
+Git-Commit-ID: 89833fab15d6017ba006a45b5af68caa067171a7
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD70528 is an ultra low power PMIC with similar 32K clk as
-bd718x7. Only difference (from clk perspective) is register address.
-Add support for controlling BD70528 clk using bd718x7 driver.
+Commit-ID:  89833fab15d6017ba006a45b5af68caa067171a7
+Gitweb:     https://git.kernel.org/tip/89833fab15d6017ba006a45b5af68caa067171a7
+Author:     Jann Horn <jannh@google.com>
+AuthorDate: Fri, 29 Mar 2019 22:46:51 +0100
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 3 Apr 2019 14:12:40 +0200
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+x86/fpu: Fix __user annotations
+
+In save_xstate_epilog(), use __user when type-casting userspace
+pointers.
+
+In setup_sigcontext() and x32_setup_rt_frame(), cast the userspace
+pointers to 'unsigned long __user *' before writing into them. These
+pointers are originally '__u32 __user *' or '__u64 __user *', causing
+sparse to complain when a userspace pointer is written into them. The
+casts are okay because the pointers always point to pointer-sized
+values.
+
+Thanks to Luc Van Oostenryck and Al Viro for explaining this to me.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Qiaowei Ren <qiaowei.ren@intel.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190329214652.258477-3-jannh@google.com
 ---
+ arch/x86/kernel/fpu/signal.c | 6 +++---
+ arch/x86/kernel/signal.c     | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Changelog v12:
-- No changes
-
- drivers/clk/Kconfig       |  6 +++---
- drivers/clk/clk-bd718x7.c | 20 ++++++++++++++++----
- 2 files changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index e705aab9e38b..86828939d095 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -285,10 +285,10 @@ config COMMON_CLK_STM32H7
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index f6a1d299627c..55b80de13ea5 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -92,13 +92,13 @@ static inline int save_xstate_epilog(void __user *buf, int ia32_frame)
+ 		return err;
  
- config COMMON_CLK_BD718XX
- 	tristate "Clock driver for ROHM BD718x7 PMIC"
--	depends on MFD_ROHM_BD718XX
-+	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
- 	help
--	  This driver supports ROHM BD71837 and ROHM BD71847
--	  PMICs clock gates.
-+	  This driver supports ROHM BD71837, ROHM BD71847 and
-+	  ROHM BD70528 PMICs clock gates.
+ 	err |= __put_user(FP_XSTATE_MAGIC2,
+-			  (__u32 *)(buf + fpu_user_xstate_size));
++			  (__u32 __user *)(buf + fpu_user_xstate_size));
  
- config COMMON_CLK_FIXED_MMIO
- 	bool "Clock driver for Memory Mapped Fixed values"
-diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
-index 461228ebf703..ae6e5baee330 100644
---- a/drivers/clk/clk-bd718x7.c
-+++ b/drivers/clk/clk-bd718x7.c
-@@ -8,6 +8,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/mfd/rohm-bd718x7.h>
-+#include <linux/mfd/rohm-bd70528.h>
- #include <linux/clk-provider.h>
- #include <linux/clkdev.h>
- #include <linux/regmap.h>
-@@ -86,9 +87,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "No parent clk found\n");
- 		return -EINVAL;
- 	}
--
--	c->reg = BD718XX_REG_OUT32K;
--	c->mask = BD718XX_OUT32K_EN;
-+	switch (mfd->chip_type) {
-+	case ROHM_CHIP_TYPE_BD71837:
-+	case ROHM_CHIP_TYPE_BD71847:
-+		c->reg = BD718XX_REG_OUT32K;
-+		c->mask = BD718XX_OUT32K_EN;
-+		break;
-+	case ROHM_CHIP_TYPE_BD70528:
-+		c->reg = BD70528_REG_CLK_OUT;
-+		c->mask = BD70528_CLK_OUT_EN_MASK;
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unknown clk chip\n");
-+		return -EINVAL;
-+	}
- 	c->mfd = mfd;
- 	c->pdev = pdev;
- 	c->hw.init = &init;
-@@ -119,5 +131,5 @@ static struct platform_driver bd71837_clk = {
- module_platform_driver(bd71837_clk);
+ 	/*
+ 	 * Read the xfeatures which we copied (directly from the cpu or
+ 	 * from the state in task struct) to the user buffers.
+ 	 */
+-	err |= __get_user(xfeatures, (__u32 *)&x->header.xfeatures);
++	err |= __get_user(xfeatures, (__u32 __user *)&x->header.xfeatures);
  
- MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
--MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
-+MODULE_DESCRIPTION("BD71837/BD71847/BD70528 chip clk driver");
- MODULE_LICENSE("GPL");
--- 
-2.17.2
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+ 	/*
+ 	 * For legacy compatible, we always set FP/SSE bits in the bit
+@@ -113,7 +113,7 @@ static inline int save_xstate_epilog(void __user *buf, int ia32_frame)
+ 	 */
+ 	xfeatures |= XFEATURE_MASK_FPSSE;
+ 
+-	err |= __put_user(xfeatures, (__u32 *)&x->header.xfeatures);
++	err |= __put_user(xfeatures, (__u32 __user *)&x->header.xfeatures);
+ 
+ 	return err;
+ }
+diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
+index 08dfd4c1a4f9..b419e1a1a0ce 100644
+--- a/arch/x86/kernel/signal.c
++++ b/arch/x86/kernel/signal.c
+@@ -206,7 +206,7 @@ int setup_sigcontext(struct sigcontext __user *sc, void __user *fpstate,
+ 		put_user_ex(regs->ss, &sc->ss);
+ #endif /* CONFIG_X86_32 */
+ 
+-		put_user_ex(fpstate, &sc->fpstate);
++		put_user_ex(fpstate, (unsigned long __user *)&sc->fpstate);
+ 
+ 		/* non-iBCS2 extensions.. */
+ 		put_user_ex(mask, &sc->oldmask);
+@@ -569,7 +569,7 @@ static int x32_setup_rt_frame(struct ksignal *ksig,
+ 			restorer = NULL;
+ 			err |= -EFAULT;
+ 		}
+-		put_user_ex(restorer, &frame->pretcode);
++		put_user_ex(restorer, (unsigned long __user *)&frame->pretcode);
+ 	} put_user_catch(err);
+ 
+ 	err |= setup_sigcontext(&frame->uc.uc_mcontext, fpstate,
