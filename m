@@ -2,296 +2,106 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A055FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAE7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602FF206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D6D206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfDCQUu (ORCPT
+        id S1726640AbfDCQU5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:20:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37472 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725990AbfDCQUt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:20:49 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33GF9NA007822
-        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 12:20:48 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rmxqvw9f7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 12:20:47 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 3 Apr 2019 17:20:46 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 3 Apr 2019 17:20:41 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x33GKeN422020310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Apr 2019 16:20:40 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3FF20B2065;
-        Wed,  3 Apr 2019 16:20:40 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E00B5B205F;
-        Wed,  3 Apr 2019 16:20:39 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.202.55])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  3 Apr 2019 16:20:39 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id C026816C2664; Wed,  3 Apr 2019 09:20:39 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 09:20:39 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     rcu <rcu@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        dipankar <dipankar@in.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rostedt <rostedt@goodmis.org>,
-        David Howells <dhowells@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
-Reply-To: paulmck@linux.ibm.com
-References: <20190402142816.GA13084@linux.ibm.com>
- <886051277.1395.1554218080591.JavaMail.zimbra@efficios.com>
- <20190402152334.GC4102@linux.ibm.com>
- <161156422.1435.1554219247444.JavaMail.zimbra@efficios.com>
- <20190403133243.GE4102@linux.ibm.com>
- <1028306587.504.1554301662374.JavaMail.zimbra@efficios.com>
+        Wed, 3 Apr 2019 12:20:57 -0400
+Received: from smtp.asem.it ([151.1.184.197]:62030 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfDCQU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:20:57 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003789809.MSG 
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 18:20:51 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 3
+ Apr 2019 18:20:51 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1261.035; Wed, 3 Apr 2019 18:20:51 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Thread-Topic: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Thread-Index: AQHU6izzDrhx33Rd2E28nY3Qp112E6YqaEkAgAAhzmD//+S2gIAAI/HA///jGACAACKDsP//4q6AAARKisA=
+Date:   Wed, 3 Apr 2019 16:20:51 +0000
+Message-ID: <c7b5ccba38ee423a816d481cac151688@asem.it>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+ <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
+ <20190403150824.GO22216@piout.net> <452a4cf1410a41c8b6f767ac6258482e@asem.it>
+ <20190403153143.GQ22216@piout.net> <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
+ <20190403155654.GR22216@piout.net> <8367f68a023d468f8235810b0cf583bc@asem.it>
+ <20190403161529.GS22216@piout.net>
+In-Reply-To: <20190403161529.GS22216@piout.net>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1028306587.504.1554301662374.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040316-0064-0000-0000-000003C5F4CA
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010867; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01183798; UDB=6.00619788; IPR=6.00964550;
- MB=3.00026279; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-03 16:20:46
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040316-0065-0000-0000-00003CEFB2BB
-Message-Id: <20190403162039.GA14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904030110
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B0208.5CA4DD63.007B,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:27:42AM -0400, Mathieu Desnoyers wrote:
-> ----- On Apr 3, 2019, at 9:32 AM, paulmck paulmck@linux.ibm.com wrote:
+> On 03/04/2019 16:09:14+0000, Flavio Suligoi wrote:
+> > Hi,
+> >
+> > > On 03/04/2019 15:49:03+0000, Flavio Suligoi wrote:
+> > > > > Then, you should probably not enable BLIE because this will cause
+> > > issues
+> > > > > with the alarm functionnality.. It is certainly enough to use
+> > > > > RTC_VL_READ periodically.
+> > > >
+> > > > We use the nINT signaling solution because of this pin, in addition
+> > > > to be used by the CPU, can be also connected to an external
+> connector,
+> > > > available for the final user.
+> > > > Anyway, even if the BLIE is set, the sw low voltage alarm works,
+> > > > with the message (displayed about every 12 minutes):
+> > > >
+> > >
+> > > I agree the DT property makes sense when the nINT pin is not connected
+> > > to the CPU. But if it is, then you have an issue that nINT will be
+> > > pulled low until the user changes the battery, meaning that you will
+> > > not get any alarm interrupt anymore, possibly leading to a system that
+> > > is not waking up anymore.
+> >
+> > Ah, ok, thanks for the info.
+> > I know this, but in our specific case, this is not a problem,
+> > since we don't use the nINT for other purposes, but only for
+> > a battery low indicator. On the contrary, in our case, it's better
+> > that the alarm signal remains low until the battery is changed.
+> >
+> > Anyway, I can specify this collateral effect in a specific file for the
+> > Pcf2127 in the DT bindings Documentation. What do you think?
+> >
 > 
-> > On Tue, Apr 02, 2019 at 11:34:07AM -0400, Mathieu Desnoyers wrote:
-> >> ----- On Apr 2, 2019, at 11:23 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> 
-> >> > On Tue, Apr 02, 2019 at 11:14:40AM -0400, Mathieu Desnoyers wrote:
-> >> >> ----- On Apr 2, 2019, at 10:28 AM, paulmck paulmck@linux.ibm.com wrote:
-> >> >> 
-> >> >> > Hello!
-> >> >> > 
-> >> >> > This series prohibits use of DEFINE_SRCU() and DEFINE_STATIC_SRCU()
-> >> >> > by loadable modules.  The reason for this prohibition is the fact
-> >> >> > that using these two macros within modules requires that the size of
-> >> >> > the reserved region be increased, which is not something we want to
-> >> >> > be doing all that often.  Instead, loadable modules should define an
-> >> >> > srcu_struct and invoke init_srcu_struct() from their module_init function
-> >> >> > and cleanup_srcu_struct() from their module_exit function.  Note that
-> >> >> > modules using call_srcu() will also need to invoke srcu_barrier() from
-> >> >> > their module_exit function.
-> >> >> 
-> >> >> This arbitrary API limitation seems weird.
-> >> >> 
-> >> >> Isn't there a way to allow modules to use DEFINE_SRCU and DEFINE_STATIC_SRCU
-> >> >> while implementing them with dynamic allocation under the hood ?
-> >> > 
-> >> > Although call_srcu() already has initialization hooks, some would
-> >> > also be required in srcu_read_lock(), and I am concerned about adding
-> >> > memory allocation at that point, especially given the possibility
-> >> > of memory-allocation failure.  And the possibility that the first
-> >> > srcu_read_lock() happens in an interrupt handler or similar.
-> >> > 
-> >> > Or am I missing a trick here?
-> >> 
-> >> I was more thinking that under #ifdef MODULE, both DEFINE_SRCU and
-> >> DEFINE_STATIC_SRCU could append data in a dedicated section. module.c
-> >> would additionally lookup that section on module load, and deal with
-> >> those statically defined SRCU entries as if they were dynamically
-> >> allocated ones. It would of course cleanup those resources on module
-> >> unload.
-> >> 
-> >> Am I missing some subtlety there ?
-> > 
-> > If I understand you correctly, that is actually what is already done.  The
-> > size of this dedicated section is currently set by PERCPU_MODULE_RESERVE,
-> > and the additions of DEFINE{_STATIC}_SRCU() in modules was requiring that
-> > this to be increased frequently.  That led to a request that something
-> > be done, in turn leading to this patch series.
-> 
-> I think we are not expressing quite the same idea.
-> 
-> AFAIU, yours is to have DEFINE*_SRCU directly define per-cpu data within modules,
-> which ends up using percpu module reserved memory.
-> 
-> My idea is to make DEFINE*_SRCU have a different behavior under #ifdef MODULE.
-> It could emit a _global variable_ (_not_ per-cpu) within a new section. That
-> section would then be used by module init/exit code to figure out what "srcu
-> descriptors" are present in the modules. It would therefore rely on dynamic
-> allocation for those, therefore removing the need to involve the percpu module
-> reserved pool at all.
-> 
-> > 
-> > I don't see a way around this short of changing module loading to do
-> > alloc_percpu() and then updating the relocation based on this result.
-> > Which would admittedly be far more convenient.  I was assuming that
-> > this would be difficult due to varying CPU offsets or the like.
-> > 
-> > But if it can be done reasonably, it would be quite a bit nicer than
-> > forcing dynamic allocation in cases where it is not otherwise needed.
-> 
-> Hopefully my explanation above helps clear out what I have in mind.
-> 
-> You can find similar tricks performed by include/linux/tracepoint.h:
-> 
-> #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-> static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-> {
->         return offset_to_ptr(p);
-> }
-> 
-> #define __TRACEPOINT_ENTRY(name)                                        \
->         asm("   .section \"__tracepoints_ptrs\", \"a\"          \n"     \
->             "   .balign 4                                       \n"     \
->             "   .long   __tracepoint_" #name " - .              \n"     \
->             "   .previous                                       \n")
-> #else
-> static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-> {
->         return *p;
-> }
-> 
-> #define __TRACEPOINT_ENTRY(name)                                         \
->         static tracepoint_ptr_t __tracepoint_ptr_##name __used           \
->         __attribute__((section("__tracepoints_ptrs"))) =                 \
->                 &__tracepoint_##name
-> #endif
-> 
-> [...]
-> 
-> #define DEFINE_TRACE_FN(name, reg, unreg)                                \
->         static const char __tpstrtab_##name[]                            \
->         __attribute__((section("__tracepoints_strings"))) = #name;       \
->         struct tracepoint __tracepoint_##name                            \
->         __attribute__((section("__tracepoints"), used)) =                \
->                 { __tpstrtab_##name, STATIC_KEY_INIT_FALSE, reg, unreg, NULL };\
->         __TRACEPOINT_ENTRY(name);
-> 
-> And kernel/module.c:
-> 
-> find_module_sections():
-> 
-> #ifdef CONFIG_TRACEPOINTS
->         mod->tracepoints_ptrs = section_objs(info, "__tracepoints_ptrs",
->                                              sizeof(*mod->tracepoints_ptrs),
->                                              &mod->num_tracepoints);
-> #endif
-> 
-> And kernel/tracepoint.c:tracepoint_module_notify() for the module coming/going
-> notifier.
-> 
-> Basically you would want to have your own structure within your own section of
-> the module which describes the srcu domain, and have a module coming/going
-> notifier responsible for dynamically allocating the srcu domain on "coming", and
-> doing a srcu barrier and cleanup the domain on "going".
+> This is fine as-is, I'll handle that in my series adding alarm support
+> because there will be no issues until then.
 
-Ah, sounds like an excellent approach!  I will give it a shot, thank you!
+Ok, thanks
 
-							Thanx, Paul
-
-> Thanks,
-> 
-> Mathieu
-> 
-> 
-> > 
-> >							Thanx, Paul
-> > 
-> >> Thanks,
-> >> 
-> >> Mathieu
-> >> 
-> >> 
-> >> > 
-> >> >							Thanx, Paul
-> >> > 
-> >> >> Thanks,
-> >> >> 
-> >> >> Mathieu
-> >> >> 
-> >> >> 
-> >> >> > 
-> >> >> > This series consist of the following:
-> >> >> > 
-> >> >> > 1.	Dynamically allocate dax_srcu.
-> >> >> > 
-> >> >> > 2.	Dynamically allocate drm_unplug_srcu.
-> >> >> > 
-> >> >> > 3.	Dynamically allocate kfd_processes_srcu.
-> >> >> > 
-> >> >> > These build and have been subjected to 0day testing, but might also need
-> >> >> > testing by someone having the requisite hardware.
-> >> >> > 
-> >> >> >							Thanx, Paul
-> >> >> > 
-> >> >> > ------------------------------------------------------------------------
-> >> >> > 
-> >> >> > drivers/dax/super.c                        |   10 +++++-
-> >> >> > drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c |    5 +++
-> >> >> > drivers/gpu/drm/amd/amdkfd/kfd_process.c   |    2 -
-> >> >> > drivers/gpu/drm/drm_drv.c                  |    8 ++++
-> >> >> > include/linux/srcutree.h                   |   19 +++++++++--
-> >> >> > kernel/rcu/rcuperf.c                       |   40 +++++++++++++++++++-----
-> >> >> > kernel/rcu/rcutorture.c                    |   48 +++++++++++++++++++++--------
-> >> >> >  7 files changed, 105 insertions(+), 27 deletions(-)
-> >> >> 
-> >> >> --
-> >> >> Mathieu Desnoyers
-> >> >> EfficiOS Inc.
-> >> >> http://www.efficios.com
-> >> 
-> >> --
-> >> Mathieu Desnoyers
-> >> EfficiOS Inc.
-> >> http://www.efficios.com
-> 
-> -- 
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
-> 
-
+Flavio Suligoi
