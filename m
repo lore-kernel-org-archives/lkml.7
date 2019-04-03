@@ -2,119 +2,78 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED672C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A36C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B186820643
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="UuYxKhpy"
+	by mail.kernel.org (Postfix) with ESMTP id 4D4AC20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfDCMYA (ORCPT
+        id S1726388AbfDCMaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:24:00 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40943 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbfDCMX7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:23:59 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x12so19185142qts.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 05:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=msxtIHAtJz4OY5Sv8/Ja7X44EEFN0Z54zKL8t5s+a1A=;
-        b=UuYxKhpyzwNXizySpmvdMrgOGMuu+8jYEU3E4FzENoIsoEYOZoVz100zTI2besjFKa
-         W2D+rzw2OcLaWStcOgorwbS6sztHvPezDZrrq7gJ2nFqSewNYCY1V9LsQW4vbjlK5nnp
-         fVZLAH4O6uf7LZ2+zbqtNYShEdiGS3oInzW/4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=msxtIHAtJz4OY5Sv8/Ja7X44EEFN0Z54zKL8t5s+a1A=;
-        b=PpLCZVWNC9LTMgPJ/CPggAxDLuA9xYM7YaNgAkLQdDYSGmAYxGokzb4Okh+C+3nmD0
-         O5MdLeYnokNvZ87O0iFQ6BFT9auQpttabYAsaDQ7Bp2KM8F7Vup/FFQ5L5S9jhr2jFi5
-         URwIA/FeIRrOTIZZ9VvJBy1AmGc631Sh0YW/v5T3n3t2mHEaDAIApmJR71SVSkfHSB2j
-         Rw8iGR3pwQBEABIjC1JRRmc44LJ/buEe6TWX/xPAwgEN9KxsXR3JPZJLHllGvmOwUzQC
-         4c6N192lwyBGVp5a6e32tXFSNhFJ6QGbX5ULRsaIOTqo+DU4omuAQfwyqqqW99pxFRBV
-         pDjg==
-X-Gm-Message-State: APjAAAWKOs+nPGiVVJtN1Ulc2QGvay0CWqvSsDA4Y5TsCYRMSVJhFbL2
-        Aiigz931FHZZ03pLwhFQZA7nug==
-X-Google-Smtp-Source: APXvYqyqNvmtb6PJRvTNthZo3Avx9Soy5BGJOj63KReQJj9m6VSyefDcK/b3rPrYZGf8mv+GyDPl9g==
-X-Received: by 2002:a0c:b8aa:: with SMTP id y42mr61217214qvf.66.1554294238476;
-        Wed, 03 Apr 2019 05:23:58 -0700 (PDT)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id b37sm13576985qtb.92.2019.04.03.05.23.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 05:23:57 -0700 (PDT)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Wed, 3 Apr 2019 08:23:52 -0400 (EDT)
-X-X-Sender: vince@macbook-air
-To:     Thomas Gleixner <tglx@linutronix.de>
-cc:     nelson.dsouza@intel.com, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        peterz@infradead.org, vincent.weaver@maine.edu, eranian@google.com,
-        hpa@zytor.com, mingo@kernel.org, torvalds@linux-foundation.org,
-        acme@redhat.com, linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:perf/urgent] perf/x86/intel: Initialize TFA MSR
-In-Reply-To: <alpine.DEB.2.21.1904031330060.1967@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1904030823020.29082@macbook-air>
-References: <20190321123849.GN6521@hirez.programming.kicks-ass.net> <tip-d7262457e35dbe239659e62654e56f8ddb814bed@git.kernel.org> <alpine.DEB.2.21.1904031330060.1967@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 3 Apr 2019 08:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbfDCMaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:30:22 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9D1F2084C;
+        Wed,  3 Apr 2019 12:30:20 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 08:30:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Torsten Duwe <duwe@lst.de>, Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH v7 2/3] arm64: implement ftrace with regs
+Message-ID: <20190403083019.29f5fd9b@gandalf.local.home>
+In-Reply-To: <20190403024842.drobymuwvx6hmwv7@blommer>
+References: <20190118163736.6A99268CEB@newverein.lst.de>
+        <20190118163908.E338E68D93@newverein.lst.de>
+        <20190403024842.drobymuwvx6hmwv7@blommer>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019, Thomas Gleixner wrote:
+On Wed, 3 Apr 2019 03:48:43 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-> On Wed, 3 Apr 2019, tip-bot for Peter Zijlstra wrote:
+> We currently have:
 > 
-> > Commit-ID:  d7262457e35dbe239659e62654e56f8ddb814bed
-> > Gitweb:     https://git.kernel.org/tip/d7262457e35dbe239659e62654e56f8ddb814bed
-> > Author:     Peter Zijlstra <peterz@infradead.org>
-> > AuthorDate: Thu, 21 Mar 2019 13:38:49 +0100
-> > Committer:  Ingo Molnar <mingo@kernel.org>
-> > CommitDate: Wed, 3 Apr 2019 11:40:32 +0200
-> > 
-> > perf/x86/intel: Initialize TFA MSR
-> > 
-> > Stephane reported that the TFA MSR is not initialized by the kernel,
-> > but the TFA bit could set by firmware or as a leftover from a kexec,
-> > which makes the state inconsistent.
-> > 
-> > Reported-by: Stephane Eranian <eranian@google.com>
-> > Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Vince Weaver <vincent.weaver@maine.edu>
-> > Cc: tonyj@suse.com
-> > Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ftrace_make_nop(mod, rec, addr)
+> ftrace_make_call(rec, addr)
+> ftrace_modify_call(rec, old_addr, new_addr)
 > 
-> This lacks:
+> ... whereas we could have:
 > 
->  1) Fixes tag
+> ftrace_call_init(mod, rec)
+> ftrace_call_enable(rec, addr)
+> ftrace_call_disable(rec, addr)
+> ftrace_call_modify(rec, old_addr, new_addr)
 > 
->  2) Cc: stable ....
-> 
-> Sigh.
+> ... so we wouldn't need to special-case anything for initialization (and
+> don't need MCOUNT_ADDR at all), and it would be clearer as to what was
+> happening at each stage.
 
-It would also be nice to know what a "TFA" bit is without having to go 
-find a copy of the Intel documentation.
+Just a note. I would be OK if someone wants to work in changing the
+ftrace interface to be this. I'll review the code, but I don't have the
+cycles to implement such a change.
 
-Vince
+-- Steve
