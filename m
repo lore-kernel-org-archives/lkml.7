@@ -2,205 +2,125 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6B2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22A4C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A85206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:46:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="TJfndTNu"
+	by mail.kernel.org (Postfix) with ESMTP id 9FDF4206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfDCFqB (ORCPT
+        id S1728782AbfDCFxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 01:46:01 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:35510 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbfDCFqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 01:46:00 -0400
-Received: by mail-ua1-f66.google.com with SMTP id a46so89254uae.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 22:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nFrxupJk5QN98j8QXG4Je1vJrfpdR68KS8rbFbTabe0=;
-        b=TJfndTNugNUfYxz9RgcKXLIY6gzPVxi8mOKeOAQu5HqImmHnbdO1oNLNplklUp6NHW
-         6T7caTphXrSVkr/w9jPejbX6XsZurgsA9HBonZT+g1sOX5zLRtAfgPsiCGnM2huH+KKA
-         JbjIn42xJHZoIl+SKPx6QAjnowT+3hBznTlQz/sEgkgb5x8IdtIReGeVoe4pEMOI+V/2
-         F8yJrvCTU9JPBRxGLUQDCouK7CBXLI/PoVA1fwM2DpMLT6ZJMZ6EEWFiJoXgnPn263to
-         QVwHI7waIb7UhCHWZu4yxvNhFaaODNlN7TmTWEiZqKuhJdxUbuKDc8w3tg7pS8eDZ2p6
-         SA0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nFrxupJk5QN98j8QXG4Je1vJrfpdR68KS8rbFbTabe0=;
-        b=Yp30EQd9xkQpwJRGaUfk9sEGWhKcxx2WG79KdyWkISgDutMMDiP/MBUI3Hf2PrYpzh
-         eXuEEQXRER83f9Afi1iFGhxWRaOUfwXH+HiPtF5Oj0ny+RnhoKx9UnHtHEAG5hRgbydP
-         AzqnG4u61w+id5zaT2XsB5u28/QQQidYNybrU59JqZwrPXaBo9BJVe9gYwGZncTONmM4
-         +N8ipnpFo1PnDHyNqEWdy8ThRn40URp+fsNizre7uZL2mbxCz/Av0+n3olYGzONj3BSd
-         gnVHVrxco4YAXH3VgDe7EeR1O45A5E/AJG/b/n5kra1bK1ED+J8+EyGUa3WX8vP41jhv
-         E86Q==
-X-Gm-Message-State: APjAAAVvKJMLwC6bVd0myFcFNher1JKNjY4H9OW2Rjx0N0ioyHc46G/5
-        RnfjpkZZo9xx40A7lkKmgD0xQO7NH19d3WMX/P+XyA==
-X-Google-Smtp-Source: APXvYqzHGvJwiX/fdXxXEbQ9nw04ftftboAIcDEzw5XUfWYl5fSyrKNxgWlMIsv3+kkAGkJhPVHyho4X8bETTLnJ4Z0=
-X-Received: by 2002:ab0:6947:: with SMTP id c7mr26293252uas.51.1554270358658;
- Tue, 02 Apr 2019 22:45:58 -0700 (PDT)
+        Wed, 3 Apr 2019 01:53:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53428 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfDCFxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 01:53:48 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3270283F40;
+        Wed,  3 Apr 2019 05:53:48 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-192.pek2.redhat.com [10.72.12.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A2D205E7BB;
+        Wed,  3 Apr 2019 05:53:44 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 13:53:40 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+References: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic>
+ <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+ <20190403053459.GD1555@localhost.localdomain>
 MIME-Version: 1.0
-References: <20190401032425.18647-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20190401032425.18647-1-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 3 Apr 2019 12:45:47 +0700
-Message-ID: <CAHLCerNx6vM_H72mWA14Avg9WcE6ugOcaxw1C1hQHeTaPsY21w@mail.gmail.com>
-Subject: Re: [PATCH] thermal/drivers/core: Remove the module Kconfig's option
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, Guan Xuetao <gxt@pku.edu.cn>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Guenter Roeck <groeck@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403053459.GD1555@localhost.localdomain>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 03 Apr 2019 05:53:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 10:24 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> The module support for the thermal subsystem does have a little sense:
->  - some subsystems relying on it are not modules, thus forcing the
->    framework to be compiled in
->  - it is compiled in for almost every configs, the remaining ones
->    are a few platforms where I don't see why we can not switch the thermal
->    to 'y'. The drivers can stay in tristate.
->  - platforms need the thermal to be ready as soon as possible at boot time
->    in order to mitigate
->
-> Usually the subsystems framework are compiled-in and the plugs are as module.
->
-> Remove the module option. The removal of the module related dead code will
-> come after this patch gets in or is acked.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+On 04/03/19 at 01:35pm, Chao Fan wrote:
+> On Tue, Apr 02, 2019 at 08:03:19PM +0800, Dave Young wrote:
+> >On 04/01/19 at 12:08am, Junichi Nomura wrote:
+> >> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+> >> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+> >> in the early parsing code tries to search RSDP from EFI table but
+> >> that will crash because the table address is virtual when the kernel
+> >> was booted by kexec.
+> >> 
+> >> In the case of kexec, physical address of EFI tables is provided
+> >> via efi_setup_data in boot_params, which is set up by kexec(1).
+> >> 
+> >> Factor out the table parsing code and use different pointers depending
+> >> on whether the kernel is booted by kexec or not.
+> >> 
+> >> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> >> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+> >> Acked-by: Baoquan He <bhe@redhat.com>
+> >> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> >> Cc: Borislav Petkov <bp@suse.de>
+> >> Cc: Dave Young <dyoung@redhat.com>
+> [...]
+> >
+> >I failed to kexec reboot on my laptop, kernel panics too quick,  I'm not sure this is
+> >caused by your patch though.
+> >
+> >Actually there are something probably i915 changes break kexec,  the
+> >above test is with "nomodeset" which should work.
+> >
+> >Let me do more testing and update here tomorrow.
+> >
+> 
+> Hi Dave,
+> 
+> Last day I was testing the normal kexec, today I have tested the kdump
+> issue. Since the kdump has set "nokaslr" to cmdline, so I drop from
+> KDUMP_COMMANDLINE_APPEND
+> And it booted OK, so the PATCH works in both normal kexec and kdump.
+> 
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Actually I got some different kexec test results.
 
-> ---
->  arch/arm/configs/mini2440_defconfig        | 2 +-
->  arch/arm/configs/pxa_defconfig             | 2 +-
->  arch/mips/configs/ip22_defconfig           | 2 +-
->  arch/mips/configs/ip27_defconfig           | 2 +-
->  arch/unicore32/configs/unicore32_defconfig | 2 +-
->  drivers/thermal/Kconfig                    | 4 ++--
->  6 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/arm/configs/mini2440_defconfig b/arch/arm/configs/mini2440_defconfig
-> index d95a8059d30b..0cf1c120c4bb 100644
-> --- a/arch/arm/configs/mini2440_defconfig
-> +++ b/arch/arm/configs/mini2440_defconfig
-> @@ -152,7 +152,7 @@ CONFIG_SPI_S3C24XX=y
->  CONFIG_SPI_SPIDEV=y
->  CONFIG_GPIO_SYSFS=y
->  CONFIG_SENSORS_LM75=y
-> -CONFIG_THERMAL=m
-> +CONFIG_THERMAL=y
->  CONFIG_WATCHDOG=y
->  CONFIG_S3C2410_WATCHDOG=y
->  CONFIG_FB=y
-> diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-> index d4654755b09c..d4f9dda3a52f 100644
-> --- a/arch/arm/configs/pxa_defconfig
-> +++ b/arch/arm/configs/pxa_defconfig
-> @@ -387,7 +387,7 @@ CONFIG_SENSORS_LM75=m
->  CONFIG_SENSORS_LM90=m
->  CONFIG_SENSORS_LM95245=m
->  CONFIG_SENSORS_NTC_THERMISTOR=m
-> -CONFIG_THERMAL=m
-> +CONFIG_THERMAL=y
->  CONFIG_WATCHDOG=y
->  CONFIG_XILINX_WATCHDOG=m
->  CONFIG_SA1100_WATCHDOG=m
-> diff --git a/arch/mips/configs/ip22_defconfig b/arch/mips/configs/ip22_defconfig
-> index ff40fbc2f439..21a1168ae301 100644
-> --- a/arch/mips/configs/ip22_defconfig
-> +++ b/arch/mips/configs/ip22_defconfig
-> @@ -228,7 +228,7 @@ CONFIG_SERIAL_IP22_ZILOG=m
->  # CONFIG_HW_RANDOM is not set
->  CONFIG_RAW_DRIVER=m
->  # CONFIG_HWMON is not set
-> -CONFIG_THERMAL=m
-> +CONFIG_THERMAL=y
->  CONFIG_WATCHDOG=y
->  CONFIG_INDYDOG=m
->  # CONFIG_VGA_CONSOLE is not set
-> diff --git a/arch/mips/configs/ip27_defconfig b/arch/mips/configs/ip27_defconfig
-> index 81c47e18131b..54db5dedf776 100644
-> --- a/arch/mips/configs/ip27_defconfig
-> +++ b/arch/mips/configs/ip27_defconfig
-> @@ -271,7 +271,7 @@ CONFIG_I2C_PARPORT_LIGHT=m
->  CONFIG_I2C_TAOS_EVM=m
->  CONFIG_I2C_STUB=m
->  # CONFIG_HWMON is not set
-> -CONFIG_THERMAL=m
-> +CONFIG_THERMAL=y
->  CONFIG_MFD_PCF50633=m
->  CONFIG_PCF50633_ADC=m
->  CONFIG_PCF50633_GPIO=m
-> diff --git a/arch/unicore32/configs/unicore32_defconfig b/arch/unicore32/configs/unicore32_defconfig
-> index aebd01fc28e5..360cc9abcdb0 100644
-> --- a/arch/unicore32/configs/unicore32_defconfig
-> +++ b/arch/unicore32/configs/unicore32_defconfig
-> @@ -119,7 +119,7 @@ CONFIG_I2C_PUV3=y
->  #      Hardware Monitoring support
->  #CONFIG_SENSORS_LM75=m
->  #      Generic Thermal sysfs driver
-> -#CONFIG_THERMAL=m
-> +#CONFIG_THERMAL=y
->  #CONFIG_THERMAL_HWMON=y
->
->  #      Multimedia support
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 653aa27a25a4..ccf5b9408d7a 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -3,7 +3,7 @@
->  #
->
->  menuconfig THERMAL
-> -       tristate "Generic Thermal sysfs driver"
-> +       bool "Generic Thermal sysfs driver"
->         help
->           Generic Thermal Sysfs driver offers a generic mechanism for
->           thermal management. Usually it's made up of one or more thermal
-> @@ -11,7 +11,7 @@ menuconfig THERMAL
->           Each thermal zone contains its own temperature, trip points,
->           cooling devices.
->           All platforms with ACPI thermal support can use this driver.
-> -         If you want this support, you should say Y or M here.
-> +         If you want this support, you should say Y here.
->
->  if THERMAL
->
-> --
-> 2.17.1
->
+Yesterday, with my installed kernel (based on git head several weeks
+ago), kexec kernel panics.
+
+Then I tried latest mainline with git pull, everything works, (with or
+without the patch, and can not reproduce the bug this patch is fixing)
+
+Today, test again, kexec reboot hangs (with or without your patch), but
+kdump works always (with or without the patch)
+
+It is weird to me. Probably I need find out why I can not reproduce the
+bug this patch is addressing first.
+
+earlyprintk seems not working for me anymore, it is not easy to debug on
+laptop now.
+
+But the patch itself is clear, I think it should be good.  There might be
+other things broken.
+
+Thanks
+Dave
