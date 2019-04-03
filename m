@@ -2,135 +2,136 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88F0C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC916C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED142147C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAC32084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:26:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cqKNvNBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfDCN0R (ORCPT
+        id S1726756AbfDCN0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 3 Apr 2019 09:26:17 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7214 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726624AbfDCN0H (ORCPT
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60396 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfDCN0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 09:26:07 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33DLSS7019129;
-        Wed, 3 Apr 2019 15:23:47 +0200
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rmgev46js-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 03 Apr 2019 15:23:47 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6656C31;
-        Wed,  3 Apr 2019 13:23:46 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3A9B429C0;
-        Wed,  3 Apr 2019 13:23:46 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 3 Apr 2019
- 15:23:46 +0200
-Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019 15:23:45
- +0200
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <robh@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
-        <arnaud.pouliquen@st.com>, <benjamin.gaignard@st.com>,
-        <apatard@mandriva.com>
-Subject: [PATCH 4/7] ASoC: cs42l51: add support of master mode
-Date:   Wed, 3 Apr 2019 15:23:34 +0200
-Message-ID: <1554297817-14154-5-git-send-email-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554297817-14154-1-git-send-email-olivier.moysan@st.com>
-References: <1554297817-14154-1-git-send-email-olivier.moysan@st.com>
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x33DQ0gX113931;
+        Wed, 3 Apr 2019 08:26:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554297960;
+        bh=30SzqplYVs7grg6I7qfHiMDOVncG2UIO899Trs/gO7M=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=cqKNvNBaQKLpQsp0d5c+H0XKX2kXLloO39KqsxVxm6ByProFacmnycRHCA89PHTzR
+         +uKROseX5fNu8ybdO+9xvHIIJ1WpT3Hxw6+sFTa4IhFw+HXdy9VXJHhAw2yeAcbja8
+         4CM+skBUzNV1SBVj7dinG/juN1OQOIsJIrPWfXNg=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x33DQ0jN021432
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 3 Apr 2019 08:26:00 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 3 Apr
+ 2019 08:26:00 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 3 Apr 2019 08:26:00 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x33DQ0Te068053;
+        Wed, 3 Apr 2019 08:26:00 -0500
+Date:   Wed, 3 Apr 2019 08:26:00 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <od@zcrc.me>
+Subject: Re: [PATCH] usb: musb: Force-disable pullup on shutdown
+Message-ID: <20190403132600.GQ25852@uda0271908>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Paul Cercueil <paul@crapouillou.net>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me
+References: <20190321144246.3547-1-paul@crapouillou.net>
+ <20190401171725.GK25852@uda0271908>
+ <1554140782.10471.0@crapouillou.net>
+ <20190401182008.GL25852@uda0271908>
+ <1554235122.13181.0@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.16]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_08:,,
- signatures=0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1554235122.13181.0@crapouillou.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support of master mode for cs42l51 cirrus audio codec.
+On Tue, Apr 02, 2019 at 09:58:42PM +0200, Paul Cercueil wrote:
+> Hi,
+> 
+> Le lun. 1 avril 2019 à 20:20, Bin Liu <b-liu@ti.com> a écrit :
+> >On Mon, Apr 01, 2019 at 07:46:22PM +0200, Paul Cercueil wrote:
+> >>
+> >>
+> >> Le lun. 1 avril 2019 à 19:17, Bin Liu <b-liu@ti.com> a écrit :
+> >> >On Thu, Mar 21, 2019 at 03:42:46PM +0100, Paul Cercueil wrote:
+> >> >> When the musb is shutdown, for instance when the driver is
+> >>unloaded,
+> >> >> force-disable the pullup. Otherwise, the host will still see
+> >> >>the gadget
+> >> >> device even after the shutdown.
+> >> >
+> >> >how would this happen?
+> >> >
+> >> >when musb-hdrc driver is unloaded, udc core removes the bound
+> >>gadget
+> >> >driver which calls musb_gadget_pullup() to disable the pullup.
+> >>
+> >> I'm testing with the jz4740-musb driver. I don't unload the
+> >>module (it's
+> >> built-in) but unbind it from sysfs.
+> >
+> >I did unbind too.
+> >
+> >root@am335x-evm:/sys/bus/platform/drivers/musb-hdrc# echo
+> >musb-hdrc.0 > unbind
+> >
+> >or unbind the glue driver:
+> >
+> >root@am335x-evm:/sys/bus/platform/drivers/musb-dsps# echo
+> >47401400.usb > unbind
+> >
+> >musb_gadget_pullup() is called in both cases.
+> >
+> >[ 3880.597014] [<bf444ab0>] (musb_gadget_pullup [musb_hdrc]) from
+> >[<bf402cbc>] (usb_gadget_disconnect+0x3c/0xf4 [udc_core])
+> >[ 3880.607959] [<bf402cbc>] (usb_gadget_disconnect [udc_core])
+> >from [<bf403b28>] (usb_gadget_remove_driver+0x4c/0x90 [udc_core])
+> >[ 3880.619338] [<bf403b28>] (usb_gadget_remove_driver [udc_core])
+> >from [<bf403d20>] (usb_del_gadget_udc+0x5c/0xc0 [udc_core])
+> 
+> In my case this stops here, usb_del_gadget_udc() does not call
+> usb_gadget_remove_driver(), that's why the pullup is never disabled.
+> 
+> I guess that's because udc->driver is NULL; I'm testing with
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/codecs/cs42l51.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+then the pullup should be disable by now.
 
-diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
-index 9b3ffa16b204..397b68901d1c 100644
---- a/sound/soc/codecs/cs42l51.c
-+++ b/sound/soc/codecs/cs42l51.c
-@@ -340,6 +340,19 @@ static struct cs42l51_ratios slave_auto_ratios[] = {
- 	{  256, CS42L51_DSM_MODE, 1 }, {  384, CS42L51_DSM_MODE, 1 },
- };
- 
-+/*
-+ * Master mode mclk/fs ratios.
-+ * Recommended configurations are SSM for 4-50khz and DSM for 50-100kHz ranges
-+ * The table below provides support of following ratios:
-+ * 128: SSM (%128) with div2 disabled
-+ * 256: SSM (%128) with div2 enabled
-+ * In both cases, if sampling rate is above 50kHz, SSM is overridden
-+ * with DSM (%128) configuration
-+ */
-+static struct cs42l51_ratios master_ratios[] = {
-+	{ 128, CS42L51_SSM_MODE, 0 }, { 256, CS42L51_SSM_MODE, 1 },
-+};
-+
- static int cs42l51_set_dai_sysclk(struct snd_soc_dai *codec_dai,
- 		int clk_id, unsigned int freq, int dir)
- {
-@@ -362,11 +375,13 @@ static int cs42l51_hw_params(struct snd_pcm_substream *substream,
- 	unsigned int ratio;
- 	struct cs42l51_ratios *ratios = NULL;
- 	int nr_ratios = 0;
--	int intf_ctl, power_ctl, fmt;
-+	int intf_ctl, power_ctl, fmt, mode;
- 
- 	switch (cs42l51->func) {
- 	case MODE_MASTER:
--		return -EINVAL;
-+		ratios = master_ratios;
-+		nr_ratios = ARRAY_SIZE(master_ratios);
-+		break;
- 	case MODE_SLAVE:
- 		ratios = slave_ratios;
- 		nr_ratios = ARRAY_SIZE(slave_ratios);
-@@ -402,7 +417,16 @@ static int cs42l51_hw_params(struct snd_pcm_substream *substream,
- 	switch (cs42l51->func) {
- 	case MODE_MASTER:
- 		intf_ctl |= CS42L51_INTF_CTL_MASTER;
--		power_ctl |= CS42L51_MIC_POWER_CTL_SPEED(ratios[i].speed_mode);
-+		mode = ratios[i].speed_mode;
-+		/* Force DSM mode if sampling rate is above 50kHz */
-+		if (rate > 50000)
-+			mode = CS42L51_DSM_MODE;
-+		power_ctl |= CS42L51_MIC_POWER_CTL_SPEED(mode);
-+		/*
-+		 * Auto detect mode is not applicable for master mode and has to
-+		 * be disabled. Otherwise SPEED[1:0] bits will be ignored.
-+		 */
-+		power_ctl &= ~CS42L51_MIC_POWER_CTL_AUTO;
- 		break;
- 	case MODE_SLAVE:
- 		power_ctl |= CS42L51_MIC_POWER_CTL_SPEED(ratios[i].speed_mode);
--- 
-2.7.4
+> CONFIG_USB_CONFIGFS,
+> and I don't configure anything in sysfs before unbinding the driver.
 
+I didn't check on this, but I could imagine that
+- when a configfs gadget is bound to the udc, .pullup() is called;
+- when the configfs gadget is unbound from the udc, .pullup should be
+  called again to disable the pullup.
+
+-Bin.
