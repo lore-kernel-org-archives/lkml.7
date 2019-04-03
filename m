@@ -2,108 +2,112 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3BEC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B8BC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07DF4206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD00D206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727583AbfDCQDt (ORCPT
+        id S1728067AbfDCQDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:03:49 -0400
-Received: from gateway24.websitewelcome.com ([192.185.50.252]:44600 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727027AbfDCQDp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:03:45 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 376A2A3441D
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 11:03:44 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BiMahl1044FKpBiMahGoTE; Wed, 03 Apr 2019 11:03:44 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=41784 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hBiMZ-001C6T-Be; Wed, 03 Apr 2019 11:03:43 -0500
-Date:   Wed, 3 Apr 2019 11:03:42 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] iwlwifi: d3: Use struct_size() helper
-Message-ID: <20190403160342.GA24396@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hBiMZ-001C6T-Be
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.114.183]:41784
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Wed, 3 Apr 2019 12:03:53 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:50882 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbfDCQDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:03:53 -0400
+Received: from mse01.zte.com.cn (unknown [10.30.3.20])
+        by Forcepoint Email with ESMTPS id 149B52EFD05E1E357149;
+        Thu,  4 Apr 2019 00:03:49 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse01.zte.com.cn with ESMTP id x33G3YG3028683;
+        Thu, 4 Apr 2019 00:03:34 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019040400040063-7533734 ;
+          Thu, 4 Apr 2019 00:04:00 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Subject: [PATCH 5/7] drm/pl111: fix possible object reference leak
+Date:   Thu, 4 Apr 2019 00:04:13 +0800
+Message-Id: <1554307455-40361-6-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1554307455-40361-1-git-send-email-wen.yang99@zte.com.cn>
+References: <1554307455-40361-1-git-send-email-wen.yang99@zte.com.cn>
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-04-04 00:04:00,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-04-04 00:03:26,
+        Serialize complete at 2019-04-04 00:03:26
+X-MAIL: mse01.zte.com.cn x33G3YG3028683
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
+The call to of_find_matching_node_and_match returns a node pointer with
+refcount incremented thus it must be explicitly decremented after the
+last usage.
 
-So, change the following form:
+Detected by coccinelle with the following warnings:
+drivers/gpu/drm/pl111/pl111_versatile.c:333:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:340:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:346:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:354:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:395:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
+drivers/gpu/drm/pl111/pl111_versatile.c:402:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 317, but without a corresponding object release within this function.
 
-sizeof(*pattern_cmd) +
-               wowlan->n_patterns * sizeof(struct iwlagn_wowlan_pattern)
-
- to :
-
-struct_size(pattern_cmd, patterns, wowlan->n_patterns)
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Eric Anholt <eric@anholt.net> (supporter:DRM DRIVER FOR ARM PL111 CLCD)
+Cc: David Airlie <airlied@linux.ie> (maintainer:DRM DRIVERS)
+Cc: Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
+Cc: dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Cc: linux-kernel@vger.kernel.org (open list)
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/pl111/pl111_versatile.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-index 83fd7f93d9f5..99589b910bce 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-@@ -398,8 +398,7 @@ static int iwl_mvm_send_patterns(struct iwl_mvm *mvm,
- 	if (!wowlan->n_patterns)
- 		return 0;
+diff --git a/drivers/gpu/drm/pl111/pl111_versatile.c b/drivers/gpu/drm/pl111/pl111_versatile.c
+index b9baefd..1c318ad 100644
+--- a/drivers/gpu/drm/pl111/pl111_versatile.c
++++ b/drivers/gpu/drm/pl111/pl111_versatile.c
+@@ -330,6 +330,7 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
+ 		ret = vexpress_muxfpga_init();
+ 		if (ret) {
+ 			dev_err(dev, "unable to initialize muxfpga driver\n");
++			of_node_put(np);
+ 			return ret;
+ 		}
  
--	cmd.len[0] = sizeof(*pattern_cmd) +
--		wowlan->n_patterns * sizeof(struct iwl_wowlan_pattern);
-+	cmd.len[0] = struct_size(pattern_cmd, patterns, wowlan->n_patterns);
+@@ -337,17 +338,20 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
+ 		pdev = of_find_device_by_node(np);
+ 		if (!pdev) {
+ 			dev_err(dev, "can't find the sysreg device, deferring\n");
++			of_node_put(np);
+ 			return -EPROBE_DEFER;
+ 		}
+ 		map = dev_get_drvdata(&pdev->dev);
+ 		if (!map) {
+ 			dev_err(dev, "sysreg has not yet probed\n");
+ 			platform_device_put(pdev);
++			of_node_put(np);
+ 			return -EPROBE_DEFER;
+ 		}
+ 	} else {
+ 		map = syscon_node_to_regmap(np);
+ 	}
++	of_node_put(np);
  
- 	pattern_cmd = kmalloc(cmd.len[0], GFP_KERNEL);
- 	if (!pattern_cmd)
+ 	if (IS_ERR(map)) {
+ 		dev_err(dev, "no Versatile syscon regmap\n");
 -- 
-2.21.0
+2.9.5
 
