@@ -2,86 +2,98 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AA6C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7024C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21FD20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF3B20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rfHNYrLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfDCIBS (ORCPT
+        id S1728836AbfDCICJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:01:18 -0400
-Received: from charybdis-ext.suse.de ([195.135.221.2]:24274 "EHLO suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726360AbfDCIBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:01:18 -0400
-Received: by suse.de (Postfix, from userid 1000)
-        id A8CEC47E0; Wed,  3 Apr 2019 10:01:16 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 10:01:16 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
- memory
-Message-ID: <20190403080113.adj2m3szhhnvzu56@d104.suse.de>
-References: <20190328134320.13232-1-osalvador@suse.de>
- <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
- <efb08377-ca5d-4110-d7ae-04a0d61ac294@redhat.com>
- <20190329084547.5k37xjwvkgffwajo@d104.suse.de>
- <20190329134243.GA30026@dhcp22.suse.cz>
- <20190401075936.bjt2qsrhw77rib77@d104.suse.de>
- <20190401115306.GF28293@dhcp22.suse.cz>
- <20190402082812.fefamf7qlzulb7t2@d104.suse.de>
- <20190402124845.GD28293@dhcp22.suse.cz>
+        Wed, 3 Apr 2019 04:02:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46815 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfDCICI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 04:02:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 9so7728438pfj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ZyFTbAeR477CeiGmus7+YTiUbAe2PCQXI3FX5QeFFHM=;
+        b=rfHNYrLur7QeAHOxaFD1cP9NQI0ShZfJPQEw109CxZn8fbblOd1LWkTbz3+LkAOb1u
+         ZFw7SpjCqdy7vH16Z7fhTz7D29EMAQmfWeNLrQRr4CpqRkjAY/p3G5gWq0cMj5C8xJ4r
+         uoUt5vomIWn1NJPSLSJ5nnOZFyS7QzIoTNeoY/CshMiVQbLo4G3GDm0NqH42rqKhX8X4
+         P4+KjD6tul4El11fye0Sr5PgjTTdb77fBgxZhrpBizdMGeGo5BOXg8zMiQg1c9dZjYe5
+         slOF/zApW6IDya7DlDPvUaHmumlsi7t2Y28XvzOnp60VFVXfJ6rnMUO5tKl2sAJRp+82
+         jkEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ZyFTbAeR477CeiGmus7+YTiUbAe2PCQXI3FX5QeFFHM=;
+        b=sWfVgG7PyOWA3/9Kk+rI5lMO0wnlP/9HjeqxQcl9CD998IYa6YUbf+6hCw9KCIoXzp
+         ytHOE64UuViUsdd34FFStfy+K9tyAmKEr/+28SH5A4aWyUJI5tIrIMq+DQhHFAgZi6Er
+         dJ3CqGVNmOJehrVQNs8JNKI5LEsCegBOT/PagbInDy4kawKG6OSstLNwhmBu1PnKYq9t
+         MQFQctPvvUPiNnP9BNJ+qsceiXOBcjWlt9jydcTP9+n91ivKP8K29Nu1clYpVHPxTFdA
+         xgF37yDwZV1znJSOcjrO4Gvds8mIlyTX+IShurT5Jq190JPlp3Xecsy+h3/gjbqRNEAC
+         fNWw==
+X-Gm-Message-State: APjAAAU30yX6snqPLfuROKHxgPQ5T/Mg5coozi4HVifqUZzdEmr6zAva
+        rXAau0dvuWSP3bBTaXI7V8+7bw==
+X-Google-Smtp-Source: APXvYqygHpxPYotVgE+wF4RtI1W9U3n7qhQGh8jJsQ3kDxfiG66+QIopat+CZUWo1Erd+yH5Y+ZeIw==
+X-Received: by 2002:a63:5c53:: with SMTP id n19mr5786832pgm.193.1554278527993;
+        Wed, 03 Apr 2019 01:02:07 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id b26sm34802593pgn.4.2019.04.03.01.02.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 01:02:07 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 09:02:03 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Re: [PATCH 3/6] mfd: da9063: remove platform_data support
+Message-ID: <20190403080203.GE11301@dell>
+References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+ <20190318154759.21978-4-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190402124845.GD28293@dhcp22.suse.cz>
-User-Agent: NeoMutt/20170421 (1.8.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190318154759.21978-4-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 02:48:45PM +0200, Michal Hocko wrote:
-> So what is going to happen when you hotadd two memblocks. The first one
-> holds memmaps and then you want to hotremove (not just offline) it?
+On Mon, 18 Mar 2019, Wolfram Sang wrote:
 
-If you hot-add two memblocks, this means that either:
+> There are no in-kernel users anymore, so remove this outdated interface.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/mfd/da9063-core.c | 20 ++------------------
+>  drivers/mfd/da9063-i2c.c  |  1 -
+>  drivers/mfd/da9063-irq.c  |  1 -
+>  3 files changed, 2 insertions(+), 20 deletions(-)
 
-a) you hot-add a 256MB-memory-device (128MB per memblock)
-b) you hot-add two 128MB-memory-device
-
-Either way, hot-removing only works for memory-device as a whole, so
-there is no problem.
-
-Vmemmaps are created per hot-added operations, this means that
-vmemmaps will be created for the hot-added range.
-And since hot-add/hot-remove operations works with the same granularity,
-there is no problem.
-
-E.g:
-
-# (qemu) object_add memory-backend-ram,id=ram0,size=128M
-# (qemu) device_add pc-dimm,id=dimm0,memdev=ram0,node=1
-
-# (qemu) object_add memory-backend-ram,id=ram1,size=512M
-# (qemu) device_add pc-dimm,id=dimm1,memdev=ram1,node=1
-
-# (qemu) object_add memory-backend-ram,id=ram2,size=1G
-# (qemu) device_add pc-dimm,id=dimm2,memdev=ram2,node=1
-
-These are three hot-add operations.
-Each hot-add operation will create use vmemmaps to hold the memmap for
-its hot-added sections.
+Applied, thanks.
 
 -- 
-Oscar Salvador
-SUSE L3
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
