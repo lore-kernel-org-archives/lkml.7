@@ -2,334 +2,153 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30658C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA61C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A7A2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEB52084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfDCJo1 (ORCPT
+        id S1726155AbfDCJrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:44:27 -0400
-Received: from regular1.263xmail.com ([211.150.70.196]:46258 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfDCJo1 (ORCPT
+        Wed, 3 Apr 2019 05:47:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43832 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725857AbfDCJrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:44:27 -0400
-Received: from zhangqing?rock-chips.com (unknown [192.168.167.129])
-        by regular1.263xmail.com (Postfix) with ESMTP id 8CAC675C;
-        Wed,  3 Apr 2019 17:44:22 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P26871T139922146150144S1554284659844462_;
-        Wed, 03 Apr 2019 17:44:22 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <3f014b76466a981cf48f8baaa8ddc16e>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Elaine Zhang <zhangqing@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
-        Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v1 6/6] clk: rockchip: support pll setting by auto
-Date:   Wed,  3 Apr 2019 17:44:23 +0800
-Message-Id: <1554284663-28570-1-git-send-email-zhangqing@rock-chips.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1554284549-24916-1-git-send-email-zhangqing@rock-chips.com>
-References: <1554284549-24916-1-git-send-email-zhangqing@rock-chips.com>
+        Wed, 3 Apr 2019 05:47:07 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x339j1cN008489
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 05:47:06 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmsyf1eth-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 05:47:05 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Wed, 3 Apr 2019 10:47:03 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Apr 2019 10:47:01 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x339l0T351052790
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Apr 2019 09:47:00 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 597B94C052;
+        Wed,  3 Apr 2019 09:47:00 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31C9B4C046;
+        Wed,  3 Apr 2019 09:47:00 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.152.212.134])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Apr 2019 09:47:00 +0000 (GMT)
+To:     peterz@infradead.org
+Cc:     acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Thomas-Mich Richter <tmricht@linux.ibm.com>
+Subject: WARN_ON_ONCE() hit at kernel/events/core.c:330
+Organization: IBM
+Date:   Wed, 3 Apr 2019 11:47:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19040309-0008-0000-0000-000002D5BEAF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040309-0009-0000-0000-00002241C5EF
+Message-Id: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904030067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If setting freq is not support in rockchip_pll_rate_table,
-It can calculate and set pll params by auto.
+I use linux 5.1.0-rc3 on s390 and got this WARN_ON_ONCE message:
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- drivers/clk/rockchip/clk-pll.c | 215 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 200 insertions(+), 15 deletions(-)
+WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
+                event_function_local.constprop.79+0xe2/0xe8
 
-diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
-index 9fe1227e77e9..e718a791b8c2 100644
---- a/drivers/clk/rockchip/clk-pll.c
-+++ b/drivers/clk/rockchip/clk-pll.c
-@@ -23,6 +23,7 @@
- #include <linux/clk-provider.h>
- #include <linux/regmap.h>
- #include <linux/clk.h>
-+#include <linux/gcd.h>
- #include "clk.h"
- 
- #define PLL_MODE_MASK		0x3
-@@ -55,6 +56,198 @@ struct rockchip_clk_pll {
- #define to_rockchip_clk_pll_nb(nb) \
- 			container_of(nb, struct rockchip_clk_pll, clk_nb)
- 
-+#define MHZ			(1000UL * 1000UL)
-+#define KHZ			(1000UL)
-+
-+/* CLK_PLL_TYPE_RK3066_AUTO type ops */
-+#define PLL_FREF_MIN		(269 * KHZ)
-+#define PLL_FREF_MAX		(2200 * MHZ)
-+
-+#define PLL_FVCO_MIN		(440 * MHZ)
-+#define PLL_FVCO_MAX		(2200 * MHZ)
-+
-+#define PLL_FOUT_MIN		(27500 * KHZ)
-+#define PLL_FOUT_MAX		(2200 * MHZ)
-+
-+#define PLL_NF_MAX		(4096)
-+#define PLL_NR_MAX		(64)
-+#define PLL_NO_MAX		(16)
-+
-+/* CLK_PLL_TYPE_RK3036/3366/3399_AUTO type ops */
-+#define MIN_FOUTVCO_FREQ	(800 * MHZ)
-+#define MAX_FOUTVCO_FREQ	(2000 * MHZ)
-+
-+static struct rockchip_pll_rate_table auto_table;
-+
-+static struct rockchip_pll_rate_table *rk_pll_rate_table_get(void)
-+{
-+	return &auto_table;
-+}
-+
-+static int rockchip_pll_clk_set_postdiv(unsigned long fout_hz,
-+					u32 *postdiv1,
-+					u32 *postdiv2,
-+					u32 *foutvco)
-+{
-+	unsigned long freq;
-+
-+	if (fout_hz < MIN_FOUTVCO_FREQ) {
-+		for (*postdiv1 = 1; *postdiv1 <= 7; (*postdiv1)++) {
-+			for (*postdiv2 = 1; *postdiv2 <= 7; (*postdiv2)++) {
-+				freq = fout_hz * (*postdiv1) * (*postdiv2);
-+				if (freq >= MIN_FOUTVCO_FREQ &&
-+				    freq <= MAX_FOUTVCO_FREQ) {
-+					*foutvco = freq;
-+					return 0;
-+				}
-+			}
-+		}
-+		pr_err("CANNOT FIND postdiv1/2 to make fout in range from 800M to 2000M,fout = %lu\n",
-+		       fout_hz);
-+	} else {
-+		*postdiv1 = 1;
-+		*postdiv2 = 1;
-+	}
-+	return 0;
-+}
-+
-+static struct rockchip_pll_rate_table *
-+rockchip_pll_clk_set_by_auto(struct rockchip_clk_pll *pll,
-+			     unsigned long fin_hz,
-+			     unsigned long fout_hz)
-+{
-+	struct rockchip_pll_rate_table *rate_table = rk_pll_rate_table_get();
-+	/* FIXME set postdiv1/2 always 1*/
-+	u32 foutvco = fout_hz;
-+	u64 fin_64, frac_64;
-+	u32 f_frac, postdiv1, postdiv2;
-+	unsigned long clk_gcd = 0;
-+
-+	if (fin_hz == 0 || fout_hz == 0 || fout_hz == fin_hz)
-+		return NULL;
-+
-+	rockchip_pll_clk_set_postdiv(fout_hz, &postdiv1, &postdiv2, &foutvco);
-+	rate_table->postdiv1 = postdiv1;
-+	rate_table->postdiv2 = postdiv2;
-+	rate_table->dsmpd = 1;
-+
-+	if (fin_hz / MHZ * MHZ == fin_hz && fout_hz / MHZ * MHZ == fout_hz) {
-+		fin_hz /= MHZ;
-+		foutvco /= MHZ;
-+		clk_gcd = gcd(fin_hz, foutvco);
-+		rate_table->refdiv = fin_hz / clk_gcd;
-+		rate_table->fbdiv = foutvco / clk_gcd;
-+
-+		rate_table->frac = 0;
-+
-+		pr_debug("fin = %lu, fout = %lu, clk_gcd = %lu, refdiv = %u, fbdiv = %u, postdiv1 = %u, postdiv2 = %u, frac = %u\n",
-+			 fin_hz, fout_hz, clk_gcd, rate_table->refdiv,
-+			 rate_table->fbdiv, rate_table->postdiv1,
-+			 rate_table->postdiv2, rate_table->frac);
-+	} else {
-+		pr_debug("frac div running, fin_hz = %lu, fout_hz = %lu, fin_INT_mhz = %lu, fout_INT_mhz = %lu\n",
-+			 fin_hz, fout_hz,
-+			 fin_hz / MHZ * MHZ,
-+			 fout_hz / MHZ * MHZ);
-+		pr_debug("frac get postdiv1 = %u,  postdiv2 = %u, foutvco = %u\n",
-+			 rate_table->postdiv1, rate_table->postdiv2, foutvco);
-+		clk_gcd = gcd(fin_hz / MHZ, foutvco / MHZ);
-+		rate_table->refdiv = fin_hz / MHZ / clk_gcd;
-+		rate_table->fbdiv = foutvco / MHZ / clk_gcd;
-+		pr_debug("frac get refdiv = %u,  fbdiv = %u\n",
-+			 rate_table->refdiv, rate_table->fbdiv);
-+
-+		rate_table->frac = 0;
-+
-+		f_frac = (foutvco % MHZ);
-+		fin_64 = fin_hz;
-+		do_div(fin_64, (u64)rate_table->refdiv);
-+		frac_64 = (u64)f_frac << 24;
-+		do_div(frac_64, fin_64);
-+		rate_table->frac = (u32)frac_64;
-+		if (rate_table->frac > 0)
-+			rate_table->dsmpd = 0;
-+		pr_debug("frac = %x\n", rate_table->frac);
-+	}
-+	return rate_table;
-+}
-+
-+static struct rockchip_pll_rate_table *
-+rockchip_rk3066_pll_clk_set_by_auto(struct rockchip_clk_pll *pll,
-+				    unsigned long fin_hz,
-+				    unsigned long fout_hz)
-+{
-+	struct rockchip_pll_rate_table *rate_table = rk_pll_rate_table_get();
-+	u32 nr, nf, no, nonr;
-+	u32 nr_out, nf_out, no_out;
-+	u32 n;
-+	u32 numerator, denominator;
-+	u64 fref, fvco, fout;
-+	unsigned long clk_gcd = 0;
-+
-+	nr_out = PLL_NR_MAX + 1;
-+	no_out = 0;
-+	nf_out = 0;
-+
-+	if (fin_hz == 0 || fout_hz == 0 || fout_hz == fin_hz)
-+		return NULL;
-+
-+	clk_gcd = gcd(fin_hz, fout_hz);
-+
-+	numerator = fout_hz / clk_gcd;
-+	denominator = fin_hz / clk_gcd;
-+
-+	for (n = 1;; n++) {
-+		nf = numerator * n;
-+		nonr = denominator * n;
-+		if (nf > PLL_NF_MAX || nonr > (PLL_NO_MAX * PLL_NR_MAX))
-+			break;
-+
-+		for (no = 1; no <= PLL_NO_MAX; no++) {
-+			if (!(no == 1 || !(no % 2)))
-+				continue;
-+
-+			if (nonr % no)
-+				continue;
-+			nr = nonr / no;
-+
-+			if (nr > PLL_NR_MAX)
-+				continue;
-+
-+			fref = fin_hz / nr;
-+			if (fref < PLL_FREF_MIN || fref > PLL_FREF_MAX)
-+				continue;
-+
-+			fvco = fref * nf;
-+			if (fvco < PLL_FVCO_MIN || fvco > PLL_FVCO_MAX)
-+				continue;
-+
-+			fout = fvco / no;
-+			if (fout < PLL_FOUT_MIN || fout > PLL_FOUT_MAX)
-+				continue;
-+
-+			/* select the best from all available PLL settings */
-+			if ((no > no_out) ||
-+			    ((no == no_out) && (nr < nr_out))) {
-+				nr_out = nr;
-+				nf_out = nf;
-+				no_out = no;
-+			}
-+		}
-+	}
-+
-+	/* output the best PLL setting */
-+	if ((nr_out <= PLL_NR_MAX) && (no_out > 0)) {
-+		rate_table->nr = nr_out;
-+		rate_table->nf = nf_out;
-+		rate_table->no = no_out;
-+	} else {
-+		return NULL;
-+	}
-+
-+	return rate_table;
-+}
-+
- static const struct rockchip_pll_rate_table *rockchip_get_pll_settings(
- 			    struct rockchip_clk_pll *pll, unsigned long rate)
- {
-@@ -66,24 +259,16 @@ static const struct rockchip_pll_rate_table *rockchip_get_pll_settings(
- 			return &rate_table[i];
- 	}
- 
--	return NULL;
-+	if (pll->type == pll_rk3066)
-+		return rockchip_rk3066_pll_clk_set_by_auto(pll, 24 * MHZ, rate);
-+	else
-+		return rockchip_pll_clk_set_by_auto(pll, 24 * MHZ, rate);
- }
- 
- static long rockchip_pll_round_rate(struct clk_hw *hw,
- 			    unsigned long drate, unsigned long *prate)
- {
--	struct rockchip_clk_pll *pll = to_rockchip_clk_pll(hw);
--	const struct rockchip_pll_rate_table *rate_table = pll->rate_table;
--	int i;
--
--	/* Assumming rate_table is in descending order */
--	for (i = 0; i < pll->rate_count; i++) {
--		if (drate >= rate_table[i].rate)
--			return rate_table[i].rate;
--	}
--
--	/* return minimum supported value */
--	return rate_table[i - 1].rate;
-+	return drate;
- }
- 
- /*
-@@ -163,7 +348,7 @@ static unsigned long rockchip_rk3036_pll_recalc_rate(struct clk_hw *hw,
- {
- 	struct rockchip_clk_pll *pll = to_rockchip_clk_pll(hw);
- 	struct rockchip_pll_rate_table cur;
--	u64 rate64 = prate;
-+	u64 rate64 = prate, frac_rate64 = prate;
- 
- 	rockchip_rk3036_pll_get_params(pll, &cur);
- 
-@@ -172,7 +357,7 @@ static unsigned long rockchip_rk3036_pll_recalc_rate(struct clk_hw *hw,
- 
- 	if (cur.dsmpd == 0) {
- 		/* fractional mode */
--		u64 frac_rate64 = prate * cur.frac;
-+		frac_rate64 *= cur.frac;
- 
- 		do_div(frac_rate64, cur.refdiv);
- 		rate64 += frac_rate64 >> 24;
+which was introduced with
+   commit cca2094605ef ("perf/core: Fix event_function_local()").
+
+This is the WARN_ON_ONCE message, which sometimes shows up in the kernel
+log:
+ [ 4598.316519] WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
+                event_function_local.constprop.79+0xe2/0xe8
+ [ 4598.316524] Kernel panic - not syncing: panic_on_warn set ...
+ [ 4598.316527] CPU: 15 PID: 0 Comm: swapper/15 Tainted: G           OE
+                5.1.0-20190402.rc3.git0.5e7a8ca31926.300.fc29.s390x+git #1
+ [ 4598.316529] Hardware name: IBM 2964 NC9 712 (LPAR)
+ [ 4598.316531] Call Trace:
+ [ 4598.316534] ([<0000000000112eb8>] show_stack+0x58/0x70)
+ [ 4598.316538]  [<0000000000a820aa>] dump_stack+0x7a/0xa8
+ [ 4598.316541]  [<0000000000143b52>] panic+0x11a/0x2d0
+ [ 4598.316543]  [<00000000001439b0>] __warn+0xf8/0x118
+ [ 4598.316545]  [<0000000000a811a8>] report_bug+0xd8/0x150
+ [ 4598.316547]  [<00000000001014ac>] do_report_trap+0xc4/0xe0
+ [ 4598.316549]  [<0000000000101680>] illegal_op+0x138/0x150
+ [ 4598.316552]  [<0000000000aa233c>] pgm_check_handler+0x1cc/0x220
+ [ 4598.316554]  [<00000000002a6d02>] event_function_local.constprop.79+
+                                                0xe2/0xe8
+ [ 4598.316556] ([<00000000002a6c7a>] event_function_local.constprop.79+
+                                                0x5a/0xe8)
+ [ 4598.316559]  [<00000000002aa400>] perf_pending_event+0x88/0xb0
+ [ 4598.316561]  [<0000000000271a8c>] irq_work_run_list+0x8c/0xb8
+ [ 4598.316563]  [<0000000000271d78>] irq_work_tick+0x48/0x68
+ [ 4598.316566]  [<00000000001d6058>] update_process_times+0x68/0x80
+ [ 4598.316568]  [<00000000001e6c10>] tick_sched_handle.isra.6+0x50/0x60
+ [ 4598.316570]  [<00000000001e6c7e>] tick_sched_timer+0x5e/0xb8
+ [ 4598.316573]  [<00000000001d6b6a>] __hrtimer_run_queues+0x10a/0x2c0
+ [ 4598.316575]  [<00000000001d7a88>] hrtimer_interrupt+0x138/0x2a8
+ [ 4598.316577]  [<000000000010c3e4>] do_IRQ+0xac/0xb0
+ [ 4598.316597]  [<0000000000aa2744>] ext_int_handler+0x128/0x12c
+ [ 4598.316600]  [<00000000001034f6>] enabled_wait+0x46/0xd0
+ [ 4598.316602] ([<000003e000d2fe10>] 0x3e000d2fe10)
+ [ 4598.316604]  [<0000000000103842>] arch_cpu_idle+0x3a/0x50
+ [ 4598.316606]  [<000000000017b808>] do_idle+0x180/0x1b0
+ [ 4598.316608]  [<000000000017ba06>] cpu_startup_entry+0x36/0x40
+ [ 4598.316611]  [<0000000000115d16>] smp_init_secondary+0xd6/0xf0
+ [ 4598.316613]  [<000000000011521e>] smp_start_secondary+0x86/0x98
+
+Any ideas or hints who to avoid/fix this warning?
+
+I ran a user space program which uses
+
+  1. perf_event_open() system call with type HARDWARE
+     and PERF_COUNT_HW_CPU_CYCLES in sampling mode.
+  2. Assigns signal SIGIO to the file descriptor returned from
+     perf_event_open() using:
+       rc = fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC);
+       rc |= fcntl(fd, F_SETSIG, signo);
+       rc |= fcntl(fd, F_SETOWN, getpid());
+
+  3. The signal handler increments some variables and issues
+       ioctl(fd, PERF_EVENT_IOC_REFRESH, 1);
+     to restart signal delivery.
+
+I can send you the test program if needed.
+
+Thanks a lot for your help.
+
+
 -- 
-1.9.1
-
-
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
