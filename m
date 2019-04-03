@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 672F6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9B1C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417D420830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7366F2171F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfDCORd (ORCPT
+        id S1726968AbfDCORi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:17:33 -0400
-Received: from foss.arm.com ([217.140.101.70]:41530 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfDCORc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:17:32 -0400
+        Wed, 3 Apr 2019 10:17:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41572 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfDCORg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:17:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A197EBD;
-        Wed,  3 Apr 2019 07:17:32 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 358D41596;
+        Wed,  3 Apr 2019 07:17:36 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F06A03F68F;
-        Wed,  3 Apr 2019 07:17:27 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A3383F68F;
+        Wed,  3 Apr 2019 07:17:32 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     linux-mm@kvack.org
 Cc:     Steven Price <steven.price@arm.com>,
@@ -44,13 +44,12 @@ Cc:     Steven Price <steven.price@arm.com>,
         Mark Rutland <Mark.Rutland@arm.com>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@ozlabs.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v8 05/20] KVM: PPC: Book3S HV: Remove pmd_is_leaf()
-Date:   Wed,  3 Apr 2019 15:16:12 +0100
-Message-Id: <20190403141627.11664-6-steven.price@arm.com>
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v8 06/20] riscv: mm: Add p?d_large() definitions
+Date:   Wed,  3 Apr 2019 15:16:13 +0100
+Message-Id: <20190403141627.11664-7-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403141627.11664-1-steven.price@arm.com>
 References: <20190403141627.11664-1-steven.price@arm.com>
@@ -61,63 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since pmd_large() is now always available, pmd_is_leaf() is redundant.
-Replace all uses with calls to pmd_large().
+walk_page_range() is going to be allowed to walk page tables other than
+those of user space. For this it needs to know when it has reached a
+'leaf' entry in the page tables. This information is provided by the
+p?d_large() functions/macros.
 
-CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-CC: Michael Ellerman <mpe@ellerman.id.au>
-CC: Paul Mackerras <paulus@ozlabs.org>
-CC: kvm-ppc@vger.kernel.org
-CC: linuxppc-dev@lists.ozlabs.org
+For riscv a page is large when it has a read, write or execute bit
+set on it.
+
+CC: Palmer Dabbelt <palmer@sifive.com>
+CC: Albert Ou <aou@eecs.berkeley.edu>
+CC: linux-riscv@lists.infradead.org
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- arch/powerpc/kvm/book3s_64_mmu_radix.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ arch/riscv/include/asm/pgtable-64.h | 7 +++++++
+ arch/riscv/include/asm/pgtable.h    | 7 +++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index f55ef071883f..1b57b4e3f819 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -363,12 +363,6 @@ static void kvmppc_pte_free(pte_t *ptep)
- 	kmem_cache_free(kvm_pte_cache, ptep);
+diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+index 7aa0ea9bd8bb..73747d9d7c66 100644
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -51,6 +51,13 @@ static inline int pud_bad(pud_t pud)
+ 	return !pud_present(pud);
  }
  
--/* Like pmd_huge() and pmd_large(), but works regardless of config options */
--static inline int pmd_is_leaf(pmd_t pmd)
--{
--	return !!(pmd_val(pmd) & _PAGE_PTE);
--}
--
- static pmd_t *kvmppc_pmd_alloc(void)
++#define pud_large	pud_large
++static inline int pud_large(pud_t pud)
++{
++	return pud_present(pud)
++		&& (pud_val(pud) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
++}
++
+ static inline void set_pud(pud_t *pudp, pud_t pud)
  {
- 	return kmem_cache_alloc(kvm_pmd_cache, GFP_KERNEL);
-@@ -460,7 +454,7 @@ static void kvmppc_unmap_free_pmd(struct kvm *kvm, pmd_t *pmd, bool full,
- 	for (im = 0; im < PTRS_PER_PMD; ++im, ++p) {
- 		if (!pmd_present(*p))
- 			continue;
--		if (pmd_is_leaf(*p)) {
-+		if (pmd_large(*p)) {
- 			if (full) {
- 				pmd_clear(p);
- 			} else {
-@@ -593,7 +587,7 @@ int kvmppc_create_pte(struct kvm *kvm, pgd_t *pgtable, pte_t pte,
- 	else if (level <= 1)
- 		new_pmd = kvmppc_pmd_alloc();
+ 	*pudp = pud;
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 1141364d990e..9570883c79e7 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -111,6 +111,13 @@ static inline int pmd_bad(pmd_t pmd)
+ 	return !pmd_present(pmd);
+ }
  
--	if (level == 0 && !(pmd && pmd_present(*pmd) && !pmd_is_leaf(*pmd)))
-+	if (level == 0 && !(pmd && pmd_present(*pmd) && !pmd_large(*pmd)))
- 		new_ptep = kvmppc_pte_alloc();
- 
- 	/* Check if we might have been invalidated; let the guest retry if so */
-@@ -662,7 +656,7 @@ int kvmppc_create_pte(struct kvm *kvm, pgd_t *pgtable, pte_t pte,
- 		new_pmd = NULL;
- 	}
- 	pmd = pmd_offset(pud, gpa);
--	if (pmd_is_leaf(*pmd)) {
-+	if (pmd_large(*pmd)) {
- 		unsigned long lgpa = gpa & PMD_MASK;
- 
- 		/* Check if we raced and someone else has set the same thing */
++#define pmd_large	pmd_large
++static inline int pmd_large(pmd_t pmd)
++{
++	return pmd_present(pmd)
++		&& (pmd_val(pmd) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
++}
++
+ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+ {
+ 	*pmdp = pmd;
 -- 
 2.20.1
 
