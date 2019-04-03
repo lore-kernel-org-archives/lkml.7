@@ -2,142 +2,158 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE8CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF77206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45232064A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="JhCsoiHO"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="LyiATcFV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B9dIoUPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfDCXXp (ORCPT
+        id S1726409AbfDCX27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 19:23:45 -0400
-Received: from mail-eopbgr700106.outbound.protection.outlook.com ([40.107.70.106]:37822
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbfDCXXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 19:23:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D+Sjez4Ddvk1hEli42OqP5azO2I11L2I0zu8TosAzfg=;
- b=JhCsoiHOYfEpJvu/9n8o0pa7C834hkf/ATqbWqnoonSjkSQgsM+ys385N7okzusTMvXzQcKy8I9uAtYTUvBoDm2kdaJKZ9f9NV+yx7H0Emn1KDLMMiTB6zh2wfgvSSCCbgVIjdf1fZcUSJtOnyoh1K9qgIAajNaupuWMSpUCWyI=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1136.namprd22.prod.outlook.com (10.174.171.38) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.17; Wed, 3 Apr 2019 23:23:40 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765%6]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
- 23:23:40 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] MIPS: generic: Add switchdev, pinctrl and fit to
- ocelot_defconfig
-Thread-Topic: [PATCH net-next] MIPS: generic: Add switchdev, pinctrl and fit
- to ocelot_defconfig
-Thread-Index: AQHU6jH1855jdykjrkiwYTkluuuwSaYrFB8A
-Date:   Wed, 3 Apr 2019 23:23:39 +0000
-Message-ID: <20190403232334.7joxmw2a3qrhy2nf@pburton-laptop>
-References: <1554305256-32702-1-git-send-email-horatiu.vultur@microchip.com>
-In-Reply-To: <1554305256-32702-1-git-send-email-horatiu.vultur@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR08CA0053.namprd08.prod.outlook.com
- (2603:10b6:a03:117::30) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [67.207.99.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 40ec7b10-3ba4-40fe-7858-08d6b88b676d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1136;
-x-ms-traffictypediagnostic: MWHPR2201MB1136:
-x-microsoft-antispam-prvs: <MWHPR2201MB11365F12B39218E3AE876585C1570@MWHPR2201MB1136.namprd22.prod.outlook.com>
-x-forefront-prvs: 0996D1900D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(136003)(366004)(39850400004)(396003)(376002)(346002)(199004)(189003)(1076003)(71200400001)(58126008)(256004)(42882007)(71190400001)(2906002)(102836004)(386003)(44832011)(54906003)(25786009)(106356001)(81166006)(11346002)(76176011)(478600001)(6506007)(7736002)(8936002)(6116002)(446003)(6916009)(316002)(33716001)(476003)(305945005)(4326008)(14444005)(186003)(6512007)(105586002)(5660300002)(97736004)(99286004)(68736007)(66066001)(6436002)(6246003)(53936002)(229853002)(6486002)(14454004)(486006)(8676002)(81156014)(9686003)(26005)(52116002)(3846002)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1136;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /b4CyPsuCIV/0sX3d0c236h5QV3LWzJSnlrmTz6NjfFNa+QZQ2+0a14gnofDxI7BoMjIbpFMv0Pf23W2yS5ejXyv2fGq13td8Au2G263dKqOJeg0HqJUXyY3VS2P0mKD5pcx/kHxM93sV2IX8Hcr/1v+HB+kQ8FlqP3he1Zd0r2mtODmPSz97JW+B5IN3jNbSaVhU/Vj6u2domYD5gtpO47YeNra5kruGgSLZfhlutrSga0c58/hha7N7vQdflQabq6UGKdd21HQovqNnBXLf4ybMsBIXSxuaeCEAONV9ZNWCy79gQOoO2zbpn/nM7cgw1D5dtn9kL33VjhI9ZyyUqAFUz4iHurWkpeICl/DYIX4iYP0e4Os6EN2UuOkKsLCzxCb071quBsral6K1VjC/+nI7NxiWVWy4u+ZYW5h7iw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1319EAE0211D67469C35922C52AC9897@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40ec7b10-3ba4-40fe-7858-08d6b88b676d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 23:23:39.9380
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1136
+        Wed, 3 Apr 2019 19:28:59 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:33549 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbfDCX26 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 19:28:58 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 39B91222BA;
+        Wed,  3 Apr 2019 19:28:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 03 Apr 2019 19:28:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        ++5CMhroEuAjazs1tO09H63zbBQ5nzJdJ5d+2RHIrNc=; b=LyiATcFVKqYDfMIb
+        snYj1Mt7Ispou1aZOmkyr1bFymLsYr6VeyKcm49DUxj84YSe/rq7xG23WiuMF6gn
+        C5bKEgLToCWroLCUG6qp78PYRzL0BGfqOwxYnLgQ712a1V4t2te9ZMXmVP5AH+IU
+        QelN435IgpRL8w7tNGcpyD/Q5B5woa0J4aS5nP4v/a3+RB74zQfYagmFcajMEraA
+        Bx0gjbGUkYZZsMB6foeTihXloPSIaZmpxGyfw0vKw2/LkZMG/+R/0Od0VSxTQTwP
+        gyrsAKhNcCS1B0ix59rpuUyQ4ObJOwXyJpcMvAQ8GR0SVHoM4wyRY/UUXmU5EEp1
+        DkVRCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=++5CMhroEuAjazs1tO09H63zbBQ5nzJdJ5d+2RHIr
+        Nc=; b=B9dIoUPRAOVsLitQsTbmXna7UnkdDQvXapQk6TvX08Q99NQQAgMJK/alF
+        bs9x0hNl0tkKHndC5VNaG+zLpn+1gyhco16EPCKeQ51EY+B3o2N9YtWBc3WvD+Io
+        TSNUT09h9ZQoxP/0ZoPcbZYKylQ9tDBbZjRdXeIw4gmJxzT1RWZRHQS+sUcHkyRt
+        d6ruTIsLvWyQq1mJ3rQqpc+cPmzTOzdgxFtMEcstRaZxC91yjs45r/3WcIWsP5/3
+        IqdRx5ORAtQrWQ1Ovwa1g9ajNrhZ7UWUjt7mj9AGtk9qBAVQCmjFb7bdW15jR2qG
+        Y9vdsPfdZt/ShS5U6/1+FoW3U1B9g==
+X-ME-Sender: <xms:uEGlXDbzki7zwxvSd2jqXaCH9jSyQv0PiT_df9mSAX8Y4Wyejb_Rjw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggddvudculddtuddrgedutddrtddtmd
+    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkuffhvfffjghftgfoggfgsehtjeertdertdej
+    necuhfhrohhmpefkrghnucfmvghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqne
+    cukfhppeduudekrddvtdekrdeifedrvdefvdenucfrrghrrghmpehmrghilhhfrhhomhep
+    rhgrvhgvnhesthhhvghmrgifrdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:uEGlXLUGjspAqIABHMI6S1Yg7-_yA7WYvkvLh_N6qu7ESIH73TRBFQ>
+    <xmx:uEGlXOue12PNRolHcIYy_miuKNbE118XhUINEZRcl2ML09oPA65JUQ>
+    <xmx:uEGlXMzmw7B3nRGQSvzfdzGDiSyPI9E1uz_BKYLvCXXc2nZ4K1Tr0A>
+    <xmx:uUGlXOjdnp-vtUSfY9olDEQ00f71nSImOm56G34HJKNgwp-62QU8HA>
+Received: from pluto.themaw.net (unknown [118.208.63.232])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CD566E43A3;
+        Wed,  3 Apr 2019 19:28:55 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by pluto.themaw.net (Postfix) with ESMTP id 61F711C0079;
+        Thu,  4 Apr 2019 07:28:52 +0800 (AWST)
+Message-ID: <894091e9742896e4bc810458a9f71f3f59a48860.camel@themaw.net>
+Subject: Re: [PATCH v3 00/24] Convert vfs.txt to vfs.rst
+From:   Ian Kent <raven@themaw.net>
+To:     NeilBrown <neilb@suse.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 04 Apr 2019 07:28:52 +0800
+In-Reply-To: <87ftqz29i2.fsf@notabene.neil.brown.name>
+References: <20190327051717.23225-1-tobin@kernel.org>
+         <20190402094934.5b242dc0@lwn.net>
+         <20190402164824.GK2217@ZenIV.linux.org.uk>
+         <20190402175401.GL2217@ZenIV.linux.org.uk>
+         <20190402190811.GM2217@ZenIV.linux.org.uk>
+         <5c5e02f8b8add4aa2fc24ba2a0880652529588af.camel@themaw.net>
+         <87ftqz29i2.fsf@notabene.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu,
+On Wed, 2019-04-03 at 11:55 +1100, NeilBrown wrote:
+> On Wed, Apr 03 2019, Ian Kent wrote:
+> 
+> > On Tue, 2019-04-02 at 20:08 +0100, Al Viro wrote:
+> > > On Tue, Apr 02, 2019 at 06:54:01PM +0100, Al Viro wrote:
+> > > > static void autofs_dentry_release(struct dentry *de)
+> > > > {
+> > > >         struct autofs_info *ino = autofs_dentry_ino(de);
+> > > >         struct autofs_sb_info *sbi = autofs_sbi(de->d_sb);
+> > > > 
+> > > >         pr_debug("releasing %p\n", de);
+> > > > 
+> > > >         if (!ino)
+> > > >                 return;
+> > > > ...
+> > > >         autofs_free_ino(ino);
+> > > > }
+> > > > with autofs_free_ino() being straight kfree().  Which means
+> > > > that the lockless case of autofs_d_manage() can run into
+> > > > autofs_dentry_ino(dentry) getting freed right under it.
+> > > > 
+> > > > And there we do have this reachable:
+> > > > int autofs_expire_wait(const struct path *path, int rcu_walk)
+> > > > {
+> > > >         struct dentry *dentry = path->dentry;
+> > > >         struct autofs_sb_info *sbi = autofs_sbi(dentry->d_sb);
+> > > >         struct autofs_info *ino = autofs_dentry_ino(dentry);
+> > > >         int status;
+> > > >         int state;
+> > > > 
+> > > >         /* Block on any pending expire */
+> > > >         if (!(ino->flags & AUTOFS_INF_WANT_EXPIRE))
+> > 
+> > Oh yes, this is saying the dentry hasn't been selected
+> > for expire on the first pass, there's a second pass at
+> > expire selection so there's a delay there and both flags
+> > (this one and the expiring flag) are kept throughout the
+> > expire operation if dentry is selected.
+> > 
+> > That might be partly why an oops has never been seen but
+> > path walks can occur at any time so it's a bit puzzling.
+> > 
+> > LOL, and Neil probably can't remember the deeper detail
+> > on what he did there now either.
+> 
+> It seems very likely that this was just a subtlety that I missed.
+> I doesn't help that "ino" isn't actually and inode and isn't freed like
+> an inode, but that is no excuse.
 
-On Wed, Apr 03, 2019 at 05:27:36PM +0200, Horatiu Vultur wrote:
-> diff --git a/arch/mips/configs/generic/board-ocelot.config b/arch/mips/co=
-nfigs/generic/board-ocelot.config
-> index f607888..3215741 100644
-> --- a/arch/mips/configs/generic/board-ocelot.config
-> +++ b/arch/mips/configs/generic/board-ocelot.config
->%
-> +# CONFIG_HID is not set
-> +# CONFIG_USB_SUPPORT is not set
-> +# CONFIG_VIRTIO_MENU is not set
-> +# CONFIG_SCSI is not set
+I've become accustom to the naming so that doesn't occur to
+me, ;)
 
-Unfortunately this part won't work so well. If board-ocelot.config
-disables these things, then what should happen if another board that's
-also included in a generic kernel enables them?
+> 
+> When we add the rcu_head linkage to 'struct autofs_info', we might as
+> well remove the 'struct inode' from there - it doesn't seem to have been
+> used for years.
 
-eg. if you run 'make ARCH=3Dmips 32r2el_defconfig' then we merge all of
-the following:
+That's a good point, I've thought about doing so several
+times but haven't got around to it.
 
-  board-boston.config enables USB
-  board-sead-3.config enables USB
-  board-ocelot.config disables USB
+Ian
 
-These are mutually exclusive, and it seems that on my system we
-currently end up disabling USB due to board-ocelot.config. That will of
-course break USB support for Boston or SEAD-3 which are also supported
-by the same kernel binary. In practice which one 'wins' will depend on
-the order the files are listed by make's wildcard function - so far as
-I'm aware that doesn't guarantee any particular order so if it ends up
-depending on the order the filesystem lists the files or something like
-that then configurations might even differ when used on different
-machines.
-
-So to avoid that the best we can do is leave these enabled and the
-general rule is that board-*.config files can only enable extra things,
-not disable them.
-
-You might be tempted to disable the options in generic_defconfig &
-update any board configs that actually need them to enable them, but
-that doesn't work too well for things which are 'default y' because
-kconfig then warns about the conflict between generic_defconfig & the
-board config being merged with it. That applies to the first 3 of the
-entries you disable, leaving only CONFIG_SCSI that could potentially be
-dealt with that way...
-
-Thanks,
-    Paul
