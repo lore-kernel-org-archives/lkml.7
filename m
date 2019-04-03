@@ -2,104 +2,102 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5501FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A59C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0272147A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EBD20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="xQHHDT8y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfDCLYT (ORCPT
+        id S1726545AbfDCLYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 07:24:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:11381 "EHLO mga04.intel.com"
+        Wed, 3 Apr 2019 07:24:31 -0400
+Received: from cock.li ([185.100.85.212]:41702 "EHLO cock.li"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfDCLYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 07:24:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 04:24:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
-   d="scan'208";a="220143863"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga001.jf.intel.com with ESMTP; 03 Apr 2019 04:24:15 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hBe06-0001eP-Bu; Wed, 03 Apr 2019 14:24:14 +0300
-Date:   Wed, 3 Apr 2019 14:24:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Mike Travis <travis@sgi.com>, Yury Norov <ynorov@marvell.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] lib: rework bitmap_parselist and tests
-Message-ID: <20190403112414.GT9224@smile.fi.intel.com>
-References: <20190403044540.16322-1-ynorov@marvell.com>
+        id S1725935AbfDCLYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 07:24:30 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403044540.16322-1-ynorov@marvell.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1554290667; bh=45bvdyLfGpzypB/QzrUMFJvAvnMqRNIWkW1pumQtoMA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xQHHDT8yjYRgds47U6oKLPzcJCjN4x17avV1DjQQUh9bveleSgJuC2R69HpeRyuvn
+         EFImFoPqxpgHgrf/fdebv51tKEyrzMVHR0Lq0iCxjHtv6+5cFmSuoSgxTM7tZl2w/6
+         j5MvySnKeCicNoFDxwtH8n5WtIQZ5MH/8GpZqFyLKmCgXM4FLX8j7vltzGCebiiPhb
+         YWsZpQnZNwC+VCoA/+anzl1OCT9QoCk6aEpZeYI2fgXdlF6UAJaQ5M7Six2r7b39A+
+         v0k/qlRbeHCxji9AAlqyQH3aXwVQqMuqEs6ZvkY/+enDSzWNuQ9AiUA/U83c0yb1Eo
+         GgVWexdEx3ahw==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 03 Apr 2019 11:24:26 +0000
+From:   mikeeusa@redchan.it
+To:     GitHub Staff <support@github.com>
+Cc:     linux-kernel@vger.kernel.org, esr@thyrsus.com, misc@openbsd.org
+Subject: License revocation from GitHub and GitHub Staff (regarding GPC-Slots
+ 2) Re: DMCA takedown notice
+In-Reply-To: <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5870232@github.com>
+References: <5c51daed7c023_2fcf3fe7576d45c417207b@github-lowworker-89d05ac.cp1-iad.github.net.mail>
+ <5c51ee838b18f_74e53fd6ff0d45c41780e2@github-lowworker-5909e27.cp1-iad.github.net.mail>
+ <5c522f5b6cb8a_60733fc5256d45b412831@github-lowworker-39ccb07.cp1-iad.github.net.mail>
+ <5c534f0336ca6_19ae3fcbf5cd45b4186161@github-lowworker-e55e3e3.cp1-iad.github.net.mail>
+ <5c535110f0f30_3aa13fafe46d45c4222962@github-lowworker-dcc078e.cp1-iad.github.net.mail>
+ <061a28afa26cf5ad7d11f8074353a9cf@redchan.it>
+ <5c5489478eb20_56f33fd9e9ad45b43146ec@github-lowworker-4f62d42.cp1-iad.github.net.mail>
+ <5c55ecdcb298_3a283fd6dfcd45c4309246@github-lowworker-63e61ec.cp1-iad.github.net.mail>
+ <5c563190ae6cc_18c33fcb464d45bc1523b0@github-lowworker-39ccb07.cp1-iad.github.net.mail>
+ <5c586b095281b_4c6d3ffba28d45b8120450@github-lowworker-e51511d.cp1-iad.github.net.mail>
+ <5c58a56f8ded7_36e93f9cb4ad45b8932e7@github-lowworker-e55e3e3.cp1-iad.github.net.mail>
+ <312c3d91f6c4a71c34b96728a2efb385@redchan.it>
+ <5c5b1609a1561_1ac23fbe2d6d45b88762d0@github-lowworker-dcc078e.cp1-iad.github.net.mail>
+ <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5812163@github.com>
+ <d6326acd7a9a52a5cf4de2bd3841fc5c@redchan.it>
+ <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5851873@github.com>
+ <1ad00463db02ac58f89c4ac99b2299e4@redchan.it>
+ <CAKSHBJW4qkrozz0HrWvXnbpHicSBRoRKycC7xBoK0uWZJx5NkQ@mail.gmail.com>
+ <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5870232@github.com>
+Message-ID: <4d888cf10279eee33b6f4a3b2e7c40a6@redchan.it>
+X-Sender: mikeeusa@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 07:45:35AM +0300, Yury Norov wrote:
-> bitmap_parselist has been evolved from a pretty simple idea for long and
-> now lacks for refactoring. It is not structured, has nested loops and a
-> set of opaque-named variables.
-> 
-> Things are more complicated because bitmap_parselist() is a part of user
-> interface, and its behavior should not change.
-> 
-> In this patchset
->  - bitmap_parselist_user() made a wrapper on bitmap_parselist();
->  - bitmap_parselist() reworked (patch 2);
->  - time measurement in test_bitmap_parselist switched to ktime_get
->    (patch 3);
->  - new tests introduced (patch 4), and
->  - bitmap_parselist_user() testing enabled with the same testset as
->    bitmap_parselist() (patch 5).
+I have, at this moment, chosen to terminate any permissions GitHub and
+the GitHub Staff have enjoyed regarding my protected work (GPC-Slots 2).
 
-Thanks for an update. Result looks good, though few comments per individual patches.
+Any allowances GitHub (GH) and the GitHub Staff (staff) had regarding 
+GPC-Slots 2
+(the work) is hereby revocated, rescinded, and made null.
 
-> 
-> v1: https://lkml.org/lkml/2018/12/23/50
-> v2: https://www.spinics.net/lists/kernel/msg3048976.html
-> v3: Implementation of an approach with copying the data to
->     kernel space in bitmap_parselist_user() instead of parsing
->     user data byte by byte. For me, it looks better than v2.
-> 
-> Yury Norov (5):
->   lib: make bitmap_parselist_user() a wrapper on bitmap_parselist()
->   lib: rework bitmap_parselist
->   lib/test_bitmap: switch test_bitmap_parselist to ktime_get()
->   lib/test_bitmap: add testcases for bitmap_parselist
->   lib/test_bitmap: add tests for bitmap_parselist_user
-> 
->  lib/bitmap.c      | 285 ++++++++++++++++++++++++++--------------------
->  lib/test_bitmap.c |  67 ++++++++---
->  2 files changed, 218 insertions(+), 134 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+The allowances memorialized in the writing known as the "GPL" are
+rescinded from GitHub and the GitHub staff.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I am not in privity of contract regarding the licensing and
+distribution of GPC-Slots 2 with GitHub nor any of the GitHub staff,
+nor have I ever been.
+
+I have not been paid any good, value, or consideration for the
+dispensation of the permissions.
+
+The permissions are freely revocable by me, the Copyright Holder, in
+furtherance of my pursuit of my various exclusive rights regarding the
+work, none of which I have transferred or contracted away for value.
+
+Should Git Hub or any member of the Git Hub Staff choose to defy my
+wishes, regarding the work, I will seek remedy at my pleasure: both
+against the corporate person and in their individual capacities.
+
+Signed;
+--MikeeUSA--
+
+Note: I have posted this notice at the original place of download, of
+the work, lest there be any contrived confusion regarding veracity of
+person or pleasure.
 
 
