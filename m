@@ -2,91 +2,114 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111B9C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4073C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B812075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8279D2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCy7AnfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfDCPMI (ORCPT
+        id S1726489AbfDCPNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:12:08 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35961 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDCPMI (ORCPT
+        Wed, 3 Apr 2019 11:13:21 -0400
+Received: from mail-lj1-f176.google.com ([209.85.208.176]:36969 "EHLO
+        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDCPNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:12:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id s15so19979042qtn.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 08:12:07 -0700 (PDT)
+        Wed, 3 Apr 2019 11:13:21 -0400
+Received: by mail-lj1-f176.google.com with SMTP id v13so15235376ljk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 08:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q4+ELUeI9XqzsIFrW1Yov7j70MDy7sYet0rClq9sbIU=;
+        b=BCy7AnfSEpoggVO2Kb9VPO0zsSDtEMfdzt3phhnTSynkec8yszAqxGNS1JdPxZALzb
+         Lnci3wkRhnyUkzGdu+bXygB4/PqRmFhsctSbmqMxXyL5ISLfM1US6IOgWKfSvkkrCqWm
+         7UFKvxNTU89x3GGaLr1eqt0yyZ0G1hZKqsAYBs+anAAxt1+mZV26Lf9xjosT20jMQpb5
+         q1euvDSkH92flbqdY6iiazouIesdo69o5CKBGv26nmyA4SuTG9Cg2sidB/p5kNg34ojd
+         TgCoHbvDVhyvey/cPvNknCHhhMOsDLWrBxxvvggTOCKWez9D5s/WPtyM4Q6NMU5zTaiC
+         nKBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=6KcqSgR7jQvYI3ZqGHsc9dGy3zUjE0GqrmZH44wkq+A=;
-        b=EdNcq0LO1pBZy2CIpZ0CgxmJTVBTQJpf6HcCcGLqBlUavq0y8ODM4RX5r4sLelQ/gD
-         rshNxgE/kbWTcn5OrHF5AO93NXwzYD+UPgxx9G9sO54ZGT4PibEDa0BJCkMzE8FrH+Sy
-         fvKHX3nfnZCxnk5TwwT5LDJEpgih40b3V59sxdJcOJsX8tL4TcFi5gYNHw5O6x7xKT/t
-         oy25kiijuajWocxopS5wd4bdpakT38RQ/1B6oCAmhsLf+EI3ySm7bnobSEhRDf6j3vzr
-         b6MbnckEAMqsv6VnVIL8WIb8tnIB7YBV//Hcbgm1wR8C376+GCKvbXufEL7DbW7hW2ry
-         p/ZQ==
-X-Gm-Message-State: APjAAAUv5HSPTLO1zjIKxwDMnkc619uGZY6iuoUj7lRSYS9jX/kTrPUe
-        INmmOMsfaj2SOTKbmLXHI08T68nqT4c=
-X-Google-Smtp-Source: APXvYqx9Te0vvS+7ASHu3/bHss1DMNV64kAp0juLh0fAK86Os2ftyN6aZnUrn2tMcgJDxOy2BnGy4A==
-X-Received: by 2002:ac8:3feb:: with SMTP id v40mr429083qtk.102.1554304327126;
-        Wed, 03 Apr 2019 08:12:07 -0700 (PDT)
-Received: from dhcp-10-20-1-165.bss.redhat.com ([144.121.20.162])
-        by smtp.gmail.com with ESMTPSA id t129sm8712446qkc.24.2019.04.03.08.12.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q4+ELUeI9XqzsIFrW1Yov7j70MDy7sYet0rClq9sbIU=;
+        b=MkRsY1uuu61MU8sbQWfSIZNc9LLDlGooLb4BX4CjwfZy5f2U2x/aoYiMmQgPePwVeX
+         2ChxYm2F2Rp6+JTNqTOEQXxtvA6O48IWZIrX8ePQKJg1n4jhSpOkKAC5egZo/Lu060r+
+         f/KPBLsONHk/Gs+ltNT7Djgm+1XIbrEpzaSwJvCNOAit8Xk+NyStTnJzWF+W1jDXGr+X
+         /+YkyzgMTibAfyTN6sR/ff2ezlVjUkkedx4GKbfwRhy5KOzZfBS7WJNHy7u0ceUTkO8I
+         Qi7FXcI6HXJ2coy2wjkJBNXatuKHlw3V+9GTttqmKE9KB9TgEX3YohdcmZvWj5gCfdrX
+         GYmQ==
+X-Gm-Message-State: APjAAAXjktAi3HAi3TqpDxbso+ZEaEi7gp/y5zMatNMFpgT2jVS2TpXd
+        FDJ7gul/YCzHJXCKG90eKb8=
+X-Google-Smtp-Source: APXvYqzsurfdl5eSpzhnaAMrIUtR5Hu2xi7qBbbI+QuQ/HkQaf6sFuGTVJuCPa3YK6YgsX2BxlPn8g==
+X-Received: by 2002:a2e:810d:: with SMTP id d13mr160427ljg.93.1554304399374;
+        Wed, 03 Apr 2019 08:13:19 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id j28sm3260865lfh.81.2019.04.03.08.13.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 08:12:06 -0700 (PDT)
-Message-ID: <85ba308177f4e9ddee336d5110cb6df7a447cebf.camel@redhat.com>
-Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
-From:   Adam Jackson <ajax@redhat.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>
-Date:   Wed, 03 Apr 2019 11:12:05 -0400
-In-Reply-To: <20190403072318.31507-1-kraxel@redhat.com>
-References: <20190403072318.31507-1-kraxel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 03 Apr 2019 08:13:18 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 1178246041B; Wed,  3 Apr 2019 18:13:18 +0300 (MSK)
+Date:   Wed, 3 Apr 2019 18:13:18 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: perf: perf_fuzzer crashes on Pentium 4 systems
+Message-ID: <20190403151317.GG1421@uranus.lan>
+References: <alpine.DEB.2.21.1904031043170.29188@macbook-air>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904031043170.29188@macbook-air>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-04-03 at 09:23 +0200, Gerd Hoffmann wrote:
+On Wed, Apr 03, 2019 at 10:59:32AM -0400, Vince Weaver wrote:
+> 
+> so moving this to its own thread.
+> 
+> There was a two-part question asked.
+> 	1. Can the perf-fuzzer crash a Pentium 4 system
+> 	2. Does anyone care anymore?
+> 
+> The answer to #1 turns out to be "yes"
+> I'm not sure about #2 (but it's telling my p4 test system hadn't been 
+> turned on in over 3 years).
+> 
+> In any case the perf_fuzzer can crash my p4 system within an hour or so.  
+> The debugging from this isn't great, I forget what the preferred debug 
+> things to enable in the kernel hacking menu are.
+> 
+> Here is one crash that just happened:
+> 
+> The instruction at RIP is unhelpfully
+> 	./arch/x86/include/asm/processor.h:400
+> which is
+> 	DECLARE_PER_CPU_FIRST(union irq_stack_union, irq_stack_union) __visible;
+> 
+> Though looking at the assembly it looks like
+> 	p4_pmu_enable_event() is called with NULL as the paramater.
+>
 
->  - Only DRM_FORMAT_RGB565 (depth 16) is supported.  The old driver does
->    that too by default.  There was a module parameter which enables 24/32
->    bpp support and disables higher resolutions (due to cirrus hardware
->    constrains).  That parameter wasn't reimplemented.
-
-One slightly annoying aspect of this (well, initially of the patch to
-clamp the default to 16bpp, but this too) is that we only have a way to
-ask the driver which format it prefers, not which ones it supports at
-all. For X's modesetting driver (and yes some of this is because X is
-awful) this creates the following failure mode:
-
-1: user sets up xorg.conf for depth 24
-2: user upgrades kernel, reboots
-3: X driver detects that depth 16 is preferred, but
-4: X core respects user's xorg.conf and tries depth 24, which
-5: throws -EINVAL and X won't start.
-
-Possibly X should work around this by transparently setting up a shadow
-framebuffer at the user's requested depth. The problem there is, if 565
-is preferred but 8888 works, you're adding a format-conversion blit in
-the middle for no reason. If I could ask the kernel for the entire list
-of supported formats, I could only set up the shadow if it was
-necessary.
-
-- ajax
-
+Interesting! I'll look more carefully at evening. As far as I remember we
+rely on active_mask bit set completely, not sure how it could happen that
+we get nil here. Thanks for pointing!
