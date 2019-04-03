@@ -2,229 +2,125 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C1BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2532C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8C3206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976EE206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCTJnmsp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eF7UAwlP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfDCQOm (ORCPT
+        id S1726471AbfDCQPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:14:42 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38737 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDCQOk (ORCPT
+        Wed, 3 Apr 2019 12:15:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37971 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDCQPV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:14:40 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g37so8270473plb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 09:14:40 -0700 (PDT)
+        Wed, 3 Apr 2019 12:15:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k11so22212567wro.5;
+        Wed, 03 Apr 2019 09:15:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QFAVM/mNerAOQUYPu6O7fK8QWnOS3NyCPws9tC7s7jI=;
-        b=GCTJnmspKgfDv7DdM7FAIJbo41O3X4t0lMt+BWjFqFeYDkcBzVPRDXM4Pw/JOGa8gh
-         0ft6PJtcQSHhtPSwsCkL7s5D3XJJ/ODIv7Q1aYtOh/dogmkQ3O8iIDD8lhqovkC8q74W
-         6oHfTqG3nUP/wFgNUUGi03yqlOjgW4Fso/vvI=
+        bh=mibXejhkTt3HczjfIawcvoFcD+Z22ProgZ/81SwqvDw=;
+        b=eF7UAwlPbC4rhMnc+PT2kD6K5ltbjbw0IVURvRDdXyNNRFfozaJEZF7rBjySd1CO3v
+         XUFCPPQ016wKJIqm6Cql/IDFKGkB9vTiRygDb/cjPJPbAGPMrB8yXUp8C9dkQ8dZbSRU
+         MMmGstZIQ4IJ3SGHmf+uFc7HhR+EcQGLSLWy4lyBvqkmQ9d+C0le3uGNoJ4FckEdzGXH
+         7+4fhQQdkBL/YaKH1IWHDrfv9xgUFAAHPlR6W1d7JJptpA2GPF/PwZB1tgmUC0juhyKK
+         rKeIeDTRWBdid6fXOTBdItyjsRDjIgRTS9pHLwisurgWmooI4oxzgyRWyerNiUre8kb/
+         +60Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QFAVM/mNerAOQUYPu6O7fK8QWnOS3NyCPws9tC7s7jI=;
-        b=AGQQgO/0bY07MBwA5H5scBTstoh94rNBYHnA192kHVp8j8hEtiZ7tpCUsSOPYRitAD
-         QBLl9QKkiFLML/uvSoXAFc0UYPMM7A/sZoZPWK6orQm0cN+KM5ps0UuBG2u9Ipn1PfL+
-         YRRfAbZ6ZgvSH44nnSfFTefvwTDpNX/pAhjVieLy4elbX2Jl1DKlJg+06SJKzawDmnrM
-         oesoicyDzJKegFLU/uQJ83SKLqVOZuztbirXQQaNlM43C2aVw1yG5G3GL3tOLWkTRO+c
-         Py2cxR3yL4quLTQoGPQpxJiy5ZJ8tQ8uz5gJuTfkW6JhtRuKNvxS7qr1OifSJhfvfY/E
-         15KQ==
-X-Gm-Message-State: APjAAAUKMWYCDj1LD3W23QTwrKi8Dq+wGZwNETnQRcNOjRs/M6CxDw8e
-        LOaiXpb8e3UkMLFhY5LMW/rwFA==
-X-Google-Smtp-Source: APXvYqzWfv+BMg03+exFQz1F9vvGsXfrV36uO9csdbzn0aMA+WryzAEgzZyYpk7nJZpz8jyeqNLd0w==
-X-Received: by 2002:a17:902:2d01:: with SMTP id o1mr786127plb.155.1554308079634;
-        Wed, 03 Apr 2019 09:14:39 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id r76sm8350284pfa.39.2019.04.03.09.14.38
+        bh=mibXejhkTt3HczjfIawcvoFcD+Z22ProgZ/81SwqvDw=;
+        b=l42u3xYFwLmnMfCkMvciJw+iwgpc1V+DPSpuslo2+DhxVSEYeGiHMH/oQ0/61OZdLs
+         FTAL76EhKlPI5hhoSxvj+DT4Grre3Hj1i5QfzjulhY/AddZh3QcTCuU0RjA4oWiqsE33
+         YFpqqy6AIftKsTzvP/yCidqWgI9kh0C0fKppRMjJTP67zagEZfgGDqXNEC93SWDrK7hk
+         ha0mZnau6ZJARPeQylLCI3VMls5srGuCkpQoYQolk3J+aXPgxLdUjzfiUQpWCZQJoR4w
+         NLLejzFM3YVo8ZDCglo8CKDa3ULRTK/aRfPfoSDkqu6I6eEmWZZNRIcK+JwbS1P8/Rdf
+         tl6Q==
+X-Gm-Message-State: APjAAAWk7FkjdYMETYARIKIs0NE8SiUv+DlWTpQ6Y9yyYhrKfgbbttPz
+        902ffigOA+WRePuP0a2X/bo=
+X-Google-Smtp-Source: APXvYqzF3q9yfL8z7Kl9fMKeQ/ZjTBkQwwTHW0ld9TqnGlqaUsS6/1CsGLZHjUcRf7c0Eypjnz3rgA==
+X-Received: by 2002:adf:f14e:: with SMTP id y14mr299213wro.276.1554308119230;
+        Wed, 03 Apr 2019 09:15:19 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id r16sm11575764wrx.37.2019.04.03.09.15.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 09:14:38 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 09:14:38 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc:     c-hbandi@codeaurora.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hemantg <hemantg@codeaurora.org>
-Subject: Re: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change
- vendor event
-Message-ID: <20190403161438.GN112750@google.com>
-References: <20190307004041.38059-3-mka@chromium.org>
- <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
- <20190307182009.GB138592@google.com>
- <20190307233039.GA69116@google.com>
- <c985a6712f91930d7c710ca4abb42e80@codeaurora.org>
- <a03acbdc6bfad172fdd65f428ffbe4cf@codeaurora.org>
- <20190401171202.GH112750@google.com>
- <1bebaf0766988a9f27cbbcb9bb35e26f@codeaurora.org>
- <20190402180501.GK112750@google.com>
- <1200f5c32e029c603667d66a4c62a634@codeaurora.org>
+        Wed, 03 Apr 2019 09:15:18 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 18:15:17 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] dt-bindings: display/panel: Add missing unit names
+Message-ID: <20190403161517.GM5238@ulmo>
+References: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DXTueXWT3Da08pik"
 Content-Disposition: inline
-In-Reply-To: <1200f5c32e029c603667d66a4c62a634@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 11:53:26AM +0530, Balakrishna Godavarthi wrote:
-> + Harish to update his findings on wcn3998.
-> Mean time i will perform a regression to detect the failure.
 
-On my system it typically reproduces within a few dozen
-iterations. Make sure your tree doesn't contain any custom BT patches,
-even if they just add logging or fix the timeout during
-initialization. Since this problem is timing sensitive it might get
-masked. My tree is based on 4.19 LTS with all QCA BT related changes
-on top: https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19
+--DXTueXWT3Da08pik
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I found some problems during initialization easier to reproduce
-when binding and unbinding the device through sysfs, instead of
-doing hciconfig up/down, this resembles more the initialization at
-boot time.
+On Mon, Mar 25, 2019 at 05:08:10PM +0100, Guido G=C3=BCnther wrote:
+> Some examples were missing the unit names triggering
+>=20
+>  Warning (unit_address_vs_reg): .../panel: node has a reg or ranges prope=
+rty, but no unit name
+>=20
+> warnings when used verbatim in DTs and running dtc with W=3D1.
+>=20
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> ---
+>  .../devicetree/bindings/display/panel/innolux,p079zca.txt       | 2 +-
+>  .../devicetree/bindings/display/panel/innolux,p097pfg.txt       | 2 +-
+>  .../devicetree/bindings/display/panel/kingdisplay,kd097d04.txt  | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
-> On 2019-04-02 23:35, Matthias Kaehlcke wrote:
-> > On Tue, Apr 02, 2019 at 05:32:54PM +0530, Balakrishna Godavarthi wrote:
-> > > Hi Matthias,
-> > > 
-> > > On 2019-04-01 22:42, Matthias Kaehlcke wrote:
-> > > > On Mon, Apr 01, 2019 at 01:48:23PM +0530, Balakrishna Godavarthi wrote:
-> > > > > Hi Matthias,
-> > > > >
-> > > > > On 2019-04-01 13:29, Balakrishna Godavarthi wrote:
-> > > > > > Hi Matthias,
-> > > > > >
-> > > > > > Sorry for the late reply i was on vacation.
-> > > > > >
-> > > > > > On 2019-03-08 05:00, Matthias Kaehlcke wrote:
-> > > > > > > On Thu, Mar 07, 2019 at 10:20:09AM -0800, Matthias Kaehlcke wrote:
-> > > > > > > > Hi Balakrishna,
-> > > > > > > >
-> > > > > > > > On Thu, Mar 07, 2019 at 10:35:08AM +0530, Balakrishna Godavarthi
-> > > > > > > > wrote:
-> > > > > > > > > hi Matthias,
-> > > > > > > > >
-> > > > > > > > > On 2019-03-07 06:10, Matthias Kaehlcke wrote:
-> > > > > > > > > > Firmware download to the WCN3990 often fails with a 'TLV response size
-> > > > > > > > > > mismatch' error:
-> > > > > > > > > >
-> > > > > > > > > > [  133.064659] Bluetooth: hci0: setting up wcn3990
-> > > > > > > > > > [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
-> > > > > > > > > > [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
-> > > > > > > > > > [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
-> > > > > > > > > > [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
-> > > > > > > > > >
-> > > > > > > > > > This is caused by a vendor event that corresponds to an earlier command
-> > > > > > > > > > to change the baudrate. The event is not processed in the context of the
-> > > > > > > > > > baudrate change and later interpreted as response to the firmware
-> > > > > > > > > > download command (which is also a vendor command), but the driver
-> > > > > > > > > > detects
-> > > > > > > > > > that the event doesn't have the expected amount of associated data.
-> > > > > > > > > >
-> > > > > > > > > > More details:
-> > > > > > > > > >
-> > > > > > > > > > For the WCN3990 the vendor command for a baudrate change isn't sent as
-> > > > > > > > > > synchronous HCI command, because the controller sends the corresponding
-> > > > > > > > > > vendor event with the new baudrate. The event is received and decoded
-> > > > > > > > > > after the baudrate change of the host port.
-> > > > > > > > > >
-> > > > > > > > > > Identify the 'unused' event when it is received and don't add it to
-> > > > > > > > > > the queue of RX frames.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > > > > > > ---
-> > > > > > > > >
-> > > > > > > > > ...
-> > > > > > > > >
-> > > > > > > > > Can you test by reverting this change "94d6671473924".
-> > > > > > > >
-> > > > > > > > The issue is still reproducible.
-> > > > > > > >
-> > > > > > > > > We need at least 15ms minimum delay for the soc to change its baud rate and
-> > > > > > > > > respond to the with command complete event.
-> > > > > > > >
-> > > > > > > > The baudrate change has clearly been successful when the problem is
-> > > > > > > > observed, since the host receives the vendor event with the new
-> > > > > > > > baudrate.
-> > > > > > >
-> > > > > > > I forgot to mention this earlier: the controller doesn't send a
-> > > > > > > command complete event for the command, or at least not a correct
-> > > > > > > one.
-> > > > > > >
-> > > > > > > That's the data that is received:
-> > > > > > >
-> > > > > > > 04 0e 04 01 00 00 00
-> > > > > > >             ~~ ~~
-> > > > > > >
-> > > > > > [Bala]: can you share me the command sent and event recevied.
-> > > > > >  I see that we receive a command complete event for the baud rate
-> > > > > > change command.
-> > > > > >
-> > > > > > command sent: 01 48 fc 01 11
-> > > > > > vendor specific event: 04 ff 02 92 01
-> > > > > > command complete event: 04 0e 04 01 00 00 00.
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > > This is *a* command complete event, but the opcode is 0x0000 instead
-> > > > > > > of the earlier command. The same happens for the firmware
-> > > > > > > download/read version command, which is the reason why the command
-> > > > > > > complete injection mess
-> > > > > > > (https://lore.kernel.org/patchwork/patch/1027955/) is needed in one
-> > > > > > > way or another.
-> > > > > > >
-> > > > > > [Bala]: fw download approach is different where we use
-> > > > > > __hci_cmd_sync() where as here we use hci_uart_tx_wakeup()
-> > > > > >         which directly calls the hci_uart_write_work(). so even we
-> > > > > > send an valid opcode or not for baudrate change will bot matter.
-> > > > > >
-> > > > > [Bala]: i miss understood the comment. Yes your true. in the all
-> > > > > vendor
-> > > > > commands SoC responds with an 0x0000 opcode.
-> > > >
-> > > > And IIUC this is not compliant with the spec, or at least the BT core
-> > > > expects the actual opcode to consider the command to be completed.
-> > > 
-> > > [Bala]: Did you try increasing the the baud rate change timeout to
-> > > 50ms
-> > > instead of 10ms.
-> > 
-> > It is even reproducible with the ROME timeout of 300ms.
-> > 
-> > The timeout doesn't help here. With 78e8fa2972e5 ("Bluetooth: hci_qca:
-> > Deassert RTS while baudrate change command") RTS is deasserted during
-> > the baudrate change, hence the controller only sends the response when
-> > RTS is asserted again. Before the event resulted in a frame reassembly
-> > error and the data was discarded.
-> > 
-> > >         i suspect it is an timing issue.
-> > 
-> > Timing is certainly also a factor here (the problem isn't seen
-> > always), but I don't think 'timing issue' is a proper description of
-> > this issue. The problem is an event that the Bluetooth core doesn't
-> > expect due to the hack of sending a raw command behind the core's back
-> > to work around the firmware 'feature' of sending the command response
-> > with the new baudrate.
-> > 
-> > Maybe a delay after re-asserting RTS can address is reliably, I don't
-> > remember if I already experimented with that in the past. If a delay
-> > can 'fix' the issue reliably I'm open to consider it for the sake of
-> > simplicity, but only with a detailed comment that describes the
-> > problem.
-> 
+Applied, thanks.
+
+Thierry
+
+--DXTueXWT3Da08pik
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyk3BUACgkQ3SOs138+
+s6EUSBAAg+iye7nrVWW3qKP9BoY9lnhQAewxgvMoVktvxT+7+GOMKSOeGyjJGhxw
+GluTb2Nqv3wGBq6EPv7qm6Fw+3Dlt4x7fkXw6AgEYn/9Aee+VmaXEq6TtqBy36r1
+zNWa7LSyHjNT2mMfwE8qltlOPaESocjActvzziGRHlLLS6X0kZB9irDlOBbCSlP+
+NXqAipfD7wnHRt0Kl5qnhn27vtsVBEpSiAW8gmqkvJANDlLeW2p4r6aK31Z1B+jR
+Lc1+6V5Jb9nQgEhDbW+JD5cJdvesvXv3K5c0Hk2e+4XkR5+2HfLdNvQIF2Kijfcp
+mAv7x8JblSIn5c4scD3RBVZaSfI6nJl3BmtdFkCAIU8QT6Jdr3mKPkudh8Ip9WsO
+I3xPtLbnJ78bwnLvVx5ZFaM9LJkrocHBc1GioVk6VmfsvEz75HtdUPKc9Hsnq9tD
+3WxHrEZzBoKxrBq7JO1BqvJdz0RhTs9WYBHUazDO5wdGqCN6Utr2k8JJL8R+VvZz
++DsBD44EJFkEfKBcL/SBbwlzJCo11qw2midN9jXJYxZoExY+7J2RWxLtPpEMZLH4
+rFmDUTlU9wNwPqtWsLdBsANyRTnWwvF4NMvMpwWAfO5MD6IUXvs98F/lnqeTVM7i
+Pp/wnFKMPxU36SUXI5KA0CBpks3dBoVGUjqy3MkG0Xy0DHZupYM=
+=SpyK
+-----END PGP SIGNATURE-----
+
+--DXTueXWT3Da08pik--
