@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2310DC10F00
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24245C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B4E20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0092C20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfDCCyp (ORCPT
+        id S1727370AbfDCCyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 22:54:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6217 "EHLO huawei.com"
+        Tue, 2 Apr 2019 22:54:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6218 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726411AbfDCCyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 22:54:44 -0400
+        id S1726411AbfDCCyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 22:54:50 -0400
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [10.3.19.208])
-        by Forcepoint Email with ESMTP id 3DFD7EFA4B81E6ED553E;
-        Wed,  3 Apr 2019 10:54:42 +0800 (CST)
+        by Forcepoint Email with ESMTP id 2330B9790E51A53BD62C;
+        Wed,  3 Apr 2019 10:54:47 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 3 Apr 2019 10:54:34 +0800
+ 14.3.408.0; Wed, 3 Apr 2019 10:54:36 +0800
 From:   Chen Zhou <chenzhou10@huawei.com>
 To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
         <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
@@ -33,9 +33,9 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
         <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
         Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH 2/3] arm64: kdump: support more than one crash kernel regions
-Date:   Wed, 3 Apr 2019 11:05:45 +0800
-Message-ID: <20190403030546.23718-3-chenzhou10@huawei.com>
+Subject: [PATCH 3/3] kdump: update Documentation about crashkernel on arm64
+Date:   Wed, 3 Apr 2019 11:05:46 +0800
+Message-ID: <20190403030546.23718-4-chenzhou10@huawei.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403030546.23718-1-chenzhou10@huawei.com>
 References: <20190403030546.23718-1-chenzhou10@huawei.com>
@@ -48,152 +48,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit (arm64: kdump: support reserving crashkernel above 4G),
-there may be two crash kernel regions, one is below 4G, the other is
-above 4G.
-
-Crash dump kernel reads more than one crash kernel regions via a dtb
-property under node /chosen,
-linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+Now we support crashkernel=X,[high,low] on arm64, update the
+Documentation.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- arch/arm64/mm/init.c     | 37 +++++++++++++++++++++++++------------
- include/linux/memblock.h |  1 +
- mm/memblock.c            | 40 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 66 insertions(+), 12 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index ceb2a25..769c77a 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -64,6 +64,8 @@ EXPORT_SYMBOL(memstart_addr);
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 27a5f8c..6772f4f 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -715,14 +715,14 @@
+ 			Documentation/kdump/kdump.txt for an example.
  
- #ifdef CONFIG_KEXEC_CORE
-+# define CRASH_MAX_USABLE_RANGES        2
-+
- static int __init reserve_crashkernel_low(void)
- {
- 	unsigned long long base, low_base = 0, low_size = 0;
-@@ -346,8 +348,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
- 		const char *uname, int depth, void *data)
- {
- 	struct memblock_region *usablemem = data;
--	const __be32 *reg;
--	int len;
-+	const __be32 *reg, *endp;
-+	int len, nr = 0;
- 
- 	if (depth != 1 || strcmp(uname, "chosen") != 0)
- 		return 0;
-@@ -356,22 +358,33 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
- 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
- 		return 1;
- 
--	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
--	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+	endp = reg + (len / sizeof(__be32));
-+	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+		if (++nr >= CRASH_MAX_USABLE_RANGES)
-+			break;
-+	}
- 
- 	return 1;
- }
- 
- static void __init fdt_enforce_memory_region(void)
- {
--	struct memblock_region reg = {
--		.size = 0,
--	};
--
--	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
--
--	if (reg.size)
--		memblock_cap_memory_range(reg.base, reg.size);
-+	int i, cnt = 0;
-+	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
-+
-+	memset(regs, 0, sizeof(regs));
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
-+
-+	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
-+		if (regs[i].size)
-+			cnt++;
-+		else
-+			break;
-+	if (cnt)
-+		memblock_cap_memory_ranges(regs, cnt);
- }
- 
- void __init arm64_memblock_init(void)
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 47e3c06..aeade34 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -446,6 +446,7 @@ phys_addr_t memblock_start_of_DRAM(void);
- phys_addr_t memblock_end_of_DRAM(void);
- void memblock_enforce_memory_limit(phys_addr_t memory_limit);
- void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
-+void memblock_cap_memory_ranges(struct memblock_region *regs, int cnt);
- void memblock_mem_limit_remove_map(phys_addr_t limit);
- bool memblock_is_memory(phys_addr_t addr);
- bool memblock_is_map_memory(phys_addr_t addr);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 28fa8926..1a7f4ee7c 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1697,6 +1697,46 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
- 			base + size, PHYS_ADDR_MAX);
- }
- 
-+void __init memblock_cap_memory_ranges(struct memblock_region *regs, int cnt)
-+{
-+	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
-+	int i, j, ret, nr = 0;
-+
-+	for (i = 0; i < cnt; i++) {
-+		ret = memblock_isolate_range(&memblock.memory, regs[i].base,
-+				regs[i].size, &start_rgn[i], &end_rgn[i]);
-+		if (ret)
-+			break;
-+		nr++;
-+	}
-+	if (!nr)
-+		return;
-+
-+	/* remove all the MAP regions */
-+	for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
-+		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-+			memblock_remove_region(&memblock.memory, i);
-+
-+	for (i = nr - 1; i > 0; i--)
-+		for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
-+			if (!memblock_is_nomap(&memblock.memory.regions[j]))
-+				memblock_remove_region(&memblock.memory, j);
-+
-+	for (i = start_rgn[0] - 1; i >= 0; i--)
-+		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-+			memblock_remove_region(&memblock.memory, i);
-+
-+	/* truncate the reserved regions */
-+	memblock_remove_range(&memblock.reserved, 0, regs[0].base);
-+
-+	for (i = nr - 1; i > 0; i--)
-+		memblock_remove_range(&memblock.reserved,
-+				regs[i].base, regs[i - 1].base + regs[i - 1].size);
-+
-+	memblock_remove_range(&memblock.reserved,
-+			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
-+}
-+
- void __init memblock_mem_limit_remove_map(phys_addr_t limit)
- {
- 	phys_addr_t max_addr;
+ 	crashkernel=size[KMG],high
+-			[KNL, x86_64] range could be above 4G. Allow kernel
++			[KNL, x86_64, arm64] range could be above 4G. Allow kernel
+ 			to allocate physical memory region from top, so could
+ 			be above 4G if system have more than 4G ram installed.
+ 			Otherwise memory region will be allocated below 4G, if
+ 			available.
+ 			It will be ignored if crashkernel=X is specified.
+ 	crashkernel=size[KMG],low
+-			[KNL, x86_64] range under 4G. When crashkernel=X,high
++			[KNL, x86_64, arm64] range under 4G. When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+ 			above 4G, that cause second kernel crash on system
+ 			that require some amount of low memory, e.g. swiotlb
 -- 
 2.7.4
 
