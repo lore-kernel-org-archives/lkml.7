@@ -2,135 +2,119 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD85AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C608C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF6D206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:35:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRbXW7b3"
+	by mail.kernel.org (Postfix) with ESMTP id 75363206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDCPfb (ORCPT
+        id S1726535AbfDCPgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:35:31 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:46463 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDCPfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:35:30 -0400
-Received: by mail-wr1-f49.google.com with SMTP id t17so8949419wrw.13;
-        Wed, 03 Apr 2019 08:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yAxJMOE1x3To24t2R0ABLokGVCW7S0c85+BdF2GgpYo=;
-        b=YRbXW7b3UDrIcmBVWLMeeISLGT4zKE9q4xrpsuOQmKqLZLFf7g/9DVLXjzC2TdUFuE
-         bDSc9BRZht9F5mlWVxzMTJyY5L3wpHcXWruYDSPemHx5FhUK9UJutlMChSEInEPz3MAA
-         FtaQ/x3Du99DgFmZSrZPF6bUwDLSyJ4PFlXK0IZKTJYEuOi18RfUcW8ip7dTlNID5lh2
-         2iVYtfUtIEJEOyvOROxVaIHIWqUE835UyCGna8uAeCEaYl+xdxvJJ2Zyc7z2fiMxx4Up
-         sE8YgjUlzNJeg4loX10hHGA5TOQZBHzfSN6gcqsXyClN5DqKd53O5lR+uyxkh17YxV24
-         z5bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yAxJMOE1x3To24t2R0ABLokGVCW7S0c85+BdF2GgpYo=;
-        b=YqRYdJqukaRT0L4DaIRto1WUSAD+6CpqrioooIrtmZmdkBae4irXFr6vc+I/icUMm0
-         YY6JNJA69Bh3KU9ltCz3cZUk9DKckhSjSUbi7cs+vSfmhdD1oB6zKkA2fW6DnT290e8+
-         ILzKPn417OL1uFRaVmlNLbTeCP8rDkHtNCKSl07zHo43OZoyBU/OwXuLF/mFSmsCWqKv
-         kWcWYAhE/Edrx8F+zPi/Ei5CMYGfaB9fqWYvt9Lg+JrbPvtpC7LDCJmhMBBLwi6chHmd
-         X/HlvPCxP2FnfzBUh/NPkD3ucqWlRyprh2rvvGb+K7l2aK/mSAV6Vam5T01ZEbWGXBOc
-         X5iA==
-X-Gm-Message-State: APjAAAUmmkogRERJK+3HBJtoeG6gZSf59CzcjJRLX3ae92AXJwLyn0hx
-        18KfnqB6p568ZtPSfVPMQNE=
-X-Google-Smtp-Source: APXvYqz3JM5FO9pe7qTmq1bmbom6/QelC3GGtfaxVE3/aLZwPUlOp8fHV/AuXmwl/d/p3KN1QT/vPA==
-X-Received: by 2002:adf:e951:: with SMTP id m17mr87551wrn.287.1554305729287;
-        Wed, 03 Apr 2019 08:35:29 -0700 (PDT)
-Received: from X555LD ([2a02:85f:510:b900:d5bf:dcd8:8640:a2fe])
-        by smtp.gmail.com with ESMTPSA id l12sm21808368wrt.31.2019.04.03.08.35.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 03 Apr 2019 08:35:28 -0700 (PDT)
-Date:   Wed, 03 Apr 2019 18:35:21 +0300
-From:   "Leonidas P. Papadakos" <papadakospan@gmail.com>
-Subject: RE: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-To:     Jose Abreu <jose.abreu@synopsys.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>,
-        Christoph =?iso-8859-1?q?M=FCllner?= 
-        <christoph.muellner@theobroma-systems.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>
-Message-Id: <1554305721.1328.0@gmail.com>
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
-References: <20190401181840.31255-1-papadakospan@gmail.com>
-        <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
-        <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
-        <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
-        <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
-        <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
-        <c45d05f1-47b0-89d5-886d-d456d0111b7a@arm.com> <1554245296.1271.0@gmail.com>
-        <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
-X-Mailer: geary/3.32.0
+        Wed, 3 Apr 2019 11:36:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46518 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbfDCPgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 11:36:00 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CEA78C130704;
+        Wed,  3 Apr 2019 15:35:59 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7679360BE0;
+        Wed,  3 Apr 2019 15:35:56 +0000 (UTC)
+Subject: Re: [PATCH-tip v3 11/11] locking/rwsem: Optimize rwsem structure for
+ uncontended lock acquisition
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+References: <1551380981-3113-1-git-send-email-longman@redhat.com>
+ <1551380981-3113-12-git-send-email-longman@redhat.com>
+ <20190403131228.GI4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <a4daec7d-5e76-9e40-a4ed-522c6ccc89a4@redhat.com>
+Date:   Wed, 3 Apr 2019 11:35:55 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190403131228.GI4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 03 Apr 2019 15:36:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/03/2019 09:12 AM, Peter Zijlstra wrote:
+> On Thu, Feb 28, 2019 at 02:09:41PM -0500, Waiman Long wrote:
+>> For an uncontended rwsem, count and owner are the only fields a task
+>> needs to touch when acquiring the rwsem. So they are put next to each
+>> other to increase the chance that they will share the same cacheline.
+> Did you try and micro-bench this?
+>
+I haven't tried to micro-bench that as the one that I used will have
+both owner and count in the same cacheline. I need to construct one with
+all sort of different cacheline offfset to see if that makes a
+difference. I will do so.
 
-
-=CE=A3=CF=84=CE=B9=CF=82 =CE=A4=CE=B5=CF=84, 3 =CE=91=CF=80=CF=81, 2019 at =
-10:55 =CE=A0=CE=9C, =CE=BF/=CE=B7 Jose Abreu=20
-<jose.abreu@synopsys.com> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
-> From: Leonidas P. Papadakos <papadakospan@gmail.com>
-> Date: Tue, Apr 02, 2019 at 23:48:16
->=20
->>  I can confirm that snps,no-pbl-x8, currently set by uboot for the=20
->> fdt
->>  basically fixes the tx-checksumming issue.
->>  I get 700~800 Mbps myself but that might come down to the setup.
->>  You could say it affects performance slightly, as I saw in a=20
->> previous
->>  email.
->>=20
->>  Without the setting The rate consistently drops to 0.
->>  ethtool reports tx-checksumming is on in both cases
->>=20
->>  Pretty cool!
->>  Does that give you guys an idea on how to tackle it "officially"?
->>=20
->>=20
->>=20
->=20
-> Thank you all for testing !
->=20
-> It's been on my todo list to cook up a patch that limits PBL=20
-> according to
-> FIFO size but I didn't manage to have the time yet so for now it would
-> be better if you fix it by submitting the DT bindings changes.
->=20
-> Thanks,
-> Jose Miguel Abreu
-
-If snps,no-pbl-x8 does indeed have a performace hit, should the=20
-workaround be to
-a) turn tx checksumming off or
-b) snps,no-pbl-x8 set?
-
-I'll test to see the difference
-
-=
+Thanks,
+Longman
 
