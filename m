@@ -2,130 +2,77 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7699BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEA0C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508AE20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFF220882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554282400;
+	bh=A6Nm0q7HTaFHeoEbxeJ31deY+pAB4tvx7dB1m9NOa2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LkDUFlU66vMIrcBDcOyqaA4vAM7N7r5UNYtIO78NIgy0NvxKxUn4OTiqDomKaH2LE
+	 SiKgimYBkRNsCT7jmZtMxxR7CcdqLT7aZSUloFjy7lMNn1pDChYgXoDv6GONrpMSxj
+	 NCu3k/2xexmWJGvi/6VQIHlCU2Hg3F5TH3JXfg3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfDCJEN (ORCPT
+        id S1726183AbfDCJGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:04:13 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39462 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfDCJEM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:04:12 -0400
-Received: by mail-lf1-f65.google.com with SMTP id m13so11108515lfb.6;
-        Wed, 03 Apr 2019 02:04:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yvh8D9pqYZ7qDKwQ/mIum3pVVgIu4bmSWSk7/XWJxNc=;
-        b=WRvcgda/DfhYFi40Sq9q7RiViIapFaYOXp9Wdq3XuZDULD6BdvMeQYXljTKE5/8d9w
-         apHNH0KRmU5ExbTJxnYB7efLph6XOMzJvHAOqnN+w6Ouo+Ayli4hoA7NsQjzDBiqjaRk
-         NP8Zh/VhWs2ldG4WoyHZ2fBe8eyBkT6EP6+1IL0gW5ACvB8hMvKk7onBIjkIIszHqFlH
-         tE2dH+g3Vx3hdPbDCOMGUHp8Hx2Du5GOE08yFtekJ7BAlNvwhGCLlG64+hFWrK4rXOUU
-         sxomtrebidwYDzwaIPPFtNB73hvD7757I2Cj1U+t5P9J+dPvRHOw8jzF6czILNKIJz/d
-         2tyA==
-X-Gm-Message-State: APjAAAULkqybtfROocorWzcDbZSZHEYzFx1+eqEh6dTu72B7AGHTxCOm
-        qlKvKtWb7mxqJgjJQHRG8fQ=
-X-Google-Smtp-Source: APXvYqzU0fUqMBL8w2QcSyeInGNqfOMwSdoWEeL8Jio4DxpxmYEcSrrT/evMdYpEte58h35Awx0RVQ==
-X-Received: by 2002:ac2:5479:: with SMTP id e25mr2584442lfn.121.1554282249501;
-        Wed, 03 Apr 2019 02:04:09 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id i24sm2844879lfl.73.2019.04.03.02.04.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 02:04:08 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 12:04:06 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: Re: [PATCH v11 4/8] dt-bindings: mfd: Document first ROHM BD70528
- bindings
-Message-ID: <20190403090406.GB3493@localhost.localdomain>
-References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <c674ef76ca0a3298e6b13ade4ab29775edf36a76.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <20190403073426.GN4187@dell>
+        Wed, 3 Apr 2019 05:06:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfDCJGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:06:38 -0400
+Received: from localhost (unknown [195.134.171.12])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA90A20882;
+        Wed,  3 Apr 2019 09:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554282398;
+        bh=A6Nm0q7HTaFHeoEbxeJ31deY+pAB4tvx7dB1m9NOa2U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bf+Jj6BV3L031DDOYZq+48N9LxToiNVDHPIu/iuLiOwPmnXCYamrXZlYZLFpUKj1W
+         /M+jAFSAjC4+5tcWEr655Da6J18qTBhjkCeq8qiF9ZrNHBo+A+oHCiEuJMk5kpMt96
+         lGeCcpyem6bVBuS8Q4oiAQE0iMqVvwKA22Gmduzs=
+Date:   Wed, 3 Apr 2019 11:06:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mukesh Ojha <mojha@codeaurora.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/16] staging: add missing SPDX lines to Makefile files
+Message-ID: <20190403090635.GA23934@kroah.com>
+References: <20190402103203.14959-1-gregkh@linuxfoundation.org>
+ <20190402103203.14959-3-gregkh@linuxfoundation.org>
+ <78c7ffbe-0e2b-8dbd-021a-d05a84d3f88c@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403073426.GN4187@dell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <78c7ffbe-0e2b-8dbd-021a-d05a84d3f88c@codeaurora.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And thanks again for fixing the language. Appreciated!
-
-On Wed, Apr 03, 2019 at 08:34:26AM +0100, Lee Jones wrote:
-> On Mon, 25 Mar 2019, Matti Vaittinen wrote:
+On Tue, Apr 02, 2019 at 05:36:20PM +0530, Mukesh Ojha wrote:
 > 
-> > Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
-> > drivers) and 4 GPIO pins which can be configured for I/O or
-> > as interrupt sources withe configurable trigger levels.
+> On 4/2/2019 4:01 PM, Greg Kroah-Hartman wrote:
+> > There are a few remaining drivers/staging/*/Makefile files that do not
+> > have SPDX identifiers in them.  Add the correct GPL-2.0 identifier to
+> > them to make scanning tools happy.
 > > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> >  .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 ++++++++++++++++++
-> >  1 file changed, 102 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > new file mode 100644
-> > index 000000000000..120462c17904
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > @@ -0,0 +1,102 @@
-> > +* ROHM BD70528 Power Management Integrated Circuit bindings
-> > +
-> > +BD70528MWV is an ultra-low quiescet current general purpose single-chip
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > 
-> What does 'quiescet' mean?
+> Lesson learnt :-)
 
-I guess you knew what I meant =) Quiescent - I'll fix the typo.
+Heh :)
 
-> "general purpose, single-chip,"
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Rules for using commas are far beyond my skills. I was bad in it at
-Finnish classes. Not to even mention English. Actually, the teacher
-suggested us to rather leave out the commas than trying to place them
-correctly in English sentences. Guess the rules are not that simple =)
+thanks for the review.
 
-So I'll just add them as you suggested =)
-
-Br,
-	Matti Vaittinen
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+greg k-h
