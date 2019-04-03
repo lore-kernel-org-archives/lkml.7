@@ -2,158 +2,190 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93C3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45232064A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="LyiATcFV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B9dIoUPR"
+	by mail.kernel.org (Postfix) with ESMTP id B6EFF2133D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfDCX27 (ORCPT
+        id S1726376AbfDCXgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 19:28:59 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:33549 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbfDCX26 (ORCPT
+        Wed, 3 Apr 2019 19:36:02 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36155 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfDCXgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 19:28:58 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 39B91222BA;
-        Wed,  3 Apr 2019 19:28:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 03 Apr 2019 19:28:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        ++5CMhroEuAjazs1tO09H63zbBQ5nzJdJ5d+2RHIrNc=; b=LyiATcFVKqYDfMIb
-        snYj1Mt7Ispou1aZOmkyr1bFymLsYr6VeyKcm49DUxj84YSe/rq7xG23WiuMF6gn
-        C5bKEgLToCWroLCUG6qp78PYRzL0BGfqOwxYnLgQ712a1V4t2te9ZMXmVP5AH+IU
-        QelN435IgpRL8w7tNGcpyD/Q5B5woa0J4aS5nP4v/a3+RB74zQfYagmFcajMEraA
-        Bx0gjbGUkYZZsMB6foeTihXloPSIaZmpxGyfw0vKw2/LkZMG/+R/0Od0VSxTQTwP
-        gyrsAKhNcCS1B0ix59rpuUyQ4ObJOwXyJpcMvAQ8GR0SVHoM4wyRY/UUXmU5EEp1
-        DkVRCQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=++5CMhroEuAjazs1tO09H63zbBQ5nzJdJ5d+2RHIr
-        Nc=; b=B9dIoUPRAOVsLitQsTbmXna7UnkdDQvXapQk6TvX08Q99NQQAgMJK/alF
-        bs9x0hNl0tkKHndC5VNaG+zLpn+1gyhco16EPCKeQ51EY+B3o2N9YtWBc3WvD+Io
-        TSNUT09h9ZQoxP/0ZoPcbZYKylQ9tDBbZjRdXeIw4gmJxzT1RWZRHQS+sUcHkyRt
-        d6ruTIsLvWyQq1mJ3rQqpc+cPmzTOzdgxFtMEcstRaZxC91yjs45r/3WcIWsP5/3
-        IqdRx5ORAtQrWQ1Ovwa1g9ajNrhZ7UWUjt7mj9AGtk9qBAVQCmjFb7bdW15jR2qG
-        Y9vdsPfdZt/ShS5U6/1+FoW3U1B9g==
-X-ME-Sender: <xms:uEGlXDbzki7zwxvSd2jqXaCH9jSyQv0PiT_df9mSAX8Y4Wyejb_Rjw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggddvudculddtuddrgedutddrtddtmd
-    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkuffhvfffjghftgfoggfgsehtjeertdertdej
-    necuhfhrohhmpefkrghnucfmvghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqne
-    cukfhppeduudekrddvtdekrdeifedrvdefvdenucfrrghrrghmpehmrghilhhfrhhomhep
-    rhgrvhgvnhesthhhvghmrgifrdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:uEGlXLUGjspAqIABHMI6S1Yg7-_yA7WYvkvLh_N6qu7ESIH73TRBFQ>
-    <xmx:uEGlXOue12PNRolHcIYy_miuKNbE118XhUINEZRcl2ML09oPA65JUQ>
-    <xmx:uEGlXMzmw7B3nRGQSvzfdzGDiSyPI9E1uz_BKYLvCXXc2nZ4K1Tr0A>
-    <xmx:uUGlXOjdnp-vtUSfY9olDEQ00f71nSImOm56G34HJKNgwp-62QU8HA>
-Received: from pluto.themaw.net (unknown [118.208.63.232])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CD566E43A3;
-        Wed,  3 Apr 2019 19:28:55 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by pluto.themaw.net (Postfix) with ESMTP id 61F711C0079;
-        Thu,  4 Apr 2019 07:28:52 +0800 (AWST)
-Message-ID: <894091e9742896e4bc810458a9f71f3f59a48860.camel@themaw.net>
-Subject: Re: [PATCH v3 00/24] Convert vfs.txt to vfs.rst
-From:   Ian Kent <raven@themaw.net>
-To:     NeilBrown <neilb@suse.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 04 Apr 2019 07:28:52 +0800
-In-Reply-To: <87ftqz29i2.fsf@notabene.neil.brown.name>
-References: <20190327051717.23225-1-tobin@kernel.org>
-         <20190402094934.5b242dc0@lwn.net>
-         <20190402164824.GK2217@ZenIV.linux.org.uk>
-         <20190402175401.GL2217@ZenIV.linux.org.uk>
-         <20190402190811.GM2217@ZenIV.linux.org.uk>
-         <5c5e02f8b8add4aa2fc24ba2a0880652529588af.camel@themaw.net>
-         <87ftqz29i2.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Apr 2019 19:36:01 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 85so249444pgc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 16:36:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6wSWdteryIht7SGYUv4BhXiv8EN7o7YuAXEUrHblfX8=;
+        b=AmiyS9ATgXpGVTM+Z5b4DE0PyOPfjb0YZbhnCg5ixItMIZsZeTXBSxaNMl1VBpzN9k
+         RIceUvfWed8TZk497oc08X1nqLz1DoCeCLCzWj5bx4h2jV7EKHW76G3hfUWpaO7us21S
+         HUARKu5ekN+RDZ0uxzAKe/IJrvMwe3mDa/opdosZh3tAI1lsYcWHq0JxyZckGw5Tc0Rf
+         qAY8WL9n6ueMb2fvkIsQnHln+RV9dfwVzL0W+1Q6VBWztRorBmQEtF0KbP1yduv6stNa
+         1K8JdjYmP9QogKw7G7JeyipCCLzhs00AvKujHGusk/sy/EDe/F8UfYNg+3VA3nic733C
+         g7vQ==
+X-Gm-Message-State: APjAAAVCuD/xVNscDa6JZhm0kJnNIPRojJioSemDgWgwiuexUnRehkIM
+        Tgkkby0chYV2mtxMAMJO/mY=
+X-Google-Smtp-Source: APXvYqycqo70yFuNWWN3n97nXmMi4dixPTWMzhObbtO+RAUOlC336nME0cpmEZjvGXbVB5ikwJ2d5A==
+X-Received: by 2002:a65:6283:: with SMTP id f3mr2420670pgv.125.1554334560583;
+        Wed, 03 Apr 2019 16:36:00 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id l1sm16664082pgo.13.2019.04.03.16.35.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 16:35:59 -0700 (PDT)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Waiman Long <longman@redhat.com>, shenghui <shhuiw@foxmail.com>
+Subject: [PATCH v2] locking/lockdep: Zap lock classes even with lock debugging disabled
+Date:   Wed,  3 Apr 2019 16:35:52 -0700
+Message-Id: <20190403233552.124673-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.20.GIT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-04-03 at 11:55 +1100, NeilBrown wrote:
-> On Wed, Apr 03 2019, Ian Kent wrote:
-> 
-> > On Tue, 2019-04-02 at 20:08 +0100, Al Viro wrote:
-> > > On Tue, Apr 02, 2019 at 06:54:01PM +0100, Al Viro wrote:
-> > > > static void autofs_dentry_release(struct dentry *de)
-> > > > {
-> > > >         struct autofs_info *ino = autofs_dentry_ino(de);
-> > > >         struct autofs_sb_info *sbi = autofs_sbi(de->d_sb);
-> > > > 
-> > > >         pr_debug("releasing %p\n", de);
-> > > > 
-> > > >         if (!ino)
-> > > >                 return;
-> > > > ...
-> > > >         autofs_free_ino(ino);
-> > > > }
-> > > > with autofs_free_ino() being straight kfree().  Which means
-> > > > that the lockless case of autofs_d_manage() can run into
-> > > > autofs_dentry_ino(dentry) getting freed right under it.
-> > > > 
-> > > > And there we do have this reachable:
-> > > > int autofs_expire_wait(const struct path *path, int rcu_walk)
-> > > > {
-> > > >         struct dentry *dentry = path->dentry;
-> > > >         struct autofs_sb_info *sbi = autofs_sbi(dentry->d_sb);
-> > > >         struct autofs_info *ino = autofs_dentry_ino(dentry);
-> > > >         int status;
-> > > >         int state;
-> > > > 
-> > > >         /* Block on any pending expire */
-> > > >         if (!(ino->flags & AUTOFS_INF_WANT_EXPIRE))
-> > 
-> > Oh yes, this is saying the dentry hasn't been selected
-> > for expire on the first pass, there's a second pass at
-> > expire selection so there's a delay there and both flags
-> > (this one and the expiring flag) are kept throughout the
-> > expire operation if dentry is selected.
-> > 
-> > That might be partly why an oops has never been seen but
-> > path walks can occur at any time so it's a bit puzzling.
-> > 
-> > LOL, and Neil probably can't remember the deeper detail
-> > on what he did there now either.
-> 
-> It seems very likely that this was just a subtlety that I missed.
-> I doesn't help that "ino" isn't actually and inode and isn't freed like
-> an inode, but that is no excuse.
+Commit a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer
+in use") changed the behavior of lockdep_free_key_range() from
+unconditionally zapping lock classes into only zapping lock classes if
+debug_lock == true. Not zapping lock classes if debug_lock == false leaves
+dangling pointers in several lockdep datastructures, e.g. lock_class::name
+in the all_lock_classes list. The shell command "cat /proc/lockdep" causes
+the kernel to iterate the all_lock_classes list. Hence the "unable to
+handle kernel paging request" issue that Shenghui encountered by running
+cat /proc/lockdep. Since the new behavior can cause cat /proc/lockdep to
+crash, restore the pre-v5.1 behavior.
 
-I've become accustom to the naming so that doesn't occur to
-me, ;)
+This patch avoids that cat /proc/lockdep triggers the following crash
+with debug_lock == false:
 
-> 
-> When we add the rcu_head linkage to 'struct autofs_info', we might as
-> well remove the 'struct inode' from there - it doesn't seem to have been
-> used for years.
+BUG: unable to handle kernel paging request at fffffbfff40ca448
+PGD 13bfde067 P4D 13bfde067 PUD 13bf7a067 PMD 1167d3067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 4 PID: 4529 Comm: cat Tainted: G    B   W  O      5.1.0-rc1-dbg+ #4
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+RIP: 0010:__asan_load1+0x28/0x50
+Call Trace:
+ string+0xac/0x180
+ vsnprintf+0x23e/0x820
+ seq_vprintf+0x82/0xc0
+ seq_printf+0x92/0xb0
+ print_name+0x34/0xb0
+ l_show+0x184/0x200
+ seq_read+0x59e/0x6c0
+ proc_reg_read+0x11f/0x170
+ __vfs_read+0x4d/0x90
+ vfs_read+0xc5/0x1f0
+ ksys_read+0xab/0x130
+ __x64_sys_read+0x43/0x50
+ do_syscall_64+0x71/0x210
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-That's a good point, I've thought about doing so several
-times but haven't got around to it.
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Waiman Long <longman@redhat.com>
+Cc: shenghui <shhuiw@foxmail.com>
+Reported-by: shenghui <shhuiw@foxmail.com>
+Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use") # v5.1-rc1.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+Changes compared to v1:
+- Restored lockdep recursion protection.
+- Made patch description more detailed.
 
-Ian
+ kernel/locking/lockdep.c | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 34cdcbedda49..e16766ff184b 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -4689,8 +4689,8 @@ static void free_zapped_rcu(struct rcu_head *ch)
+ 		return;
+ 
+ 	raw_local_irq_save(flags);
+-	if (!graph_lock())
+-		goto out_irq;
++	arch_spin_lock(&lockdep_lock);
++	current->lockdep_recursion = 1;
+ 
+ 	/* closed head */
+ 	pf = delayed_free.pf + (delayed_free.index ^ 1);
+@@ -4702,8 +4702,8 @@ static void free_zapped_rcu(struct rcu_head *ch)
+ 	 */
+ 	call_rcu_zapped(delayed_free.pf + delayed_free.index);
+ 
+-	graph_unlock();
+-out_irq:
++	current->lockdep_recursion = 0;
++	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
+ }
+ 
+@@ -4744,21 +4744,17 @@ static void lockdep_free_key_range_reg(void *start, unsigned long size)
+ {
+ 	struct pending_free *pf;
+ 	unsigned long flags;
+-	int locked;
+ 
+ 	init_data_structures_once();
+ 
+ 	raw_local_irq_save(flags);
+-	locked = graph_lock();
+-	if (!locked)
+-		goto out_irq;
+-
++	arch_spin_lock(&lockdep_lock);
++	current->lockdep_recursion = 1;
+ 	pf = get_pending_free();
+ 	__lockdep_free_key_range(pf, start, size);
+ 	call_rcu_zapped(pf);
+-
+-	graph_unlock();
+-out_irq:
++	current->lockdep_recursion = 0;
++	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
+ 
+ 	/*
+@@ -4911,9 +4907,8 @@ void lockdep_unregister_key(struct lock_class_key *key)
+ 		return;
+ 
+ 	raw_local_irq_save(flags);
+-	if (!graph_lock())
+-		goto out_irq;
+-
++	arch_spin_lock(&lockdep_lock);
++	current->lockdep_recursion = 1;
+ 	pf = get_pending_free();
+ 	hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
+ 		if (k == key) {
+@@ -4925,8 +4920,8 @@ void lockdep_unregister_key(struct lock_class_key *key)
+ 	WARN_ON_ONCE(!found);
+ 	__lockdep_free_key_range(pf, key, 1);
+ 	call_rcu_zapped(pf);
+-	graph_unlock();
+-out_irq:
++	current->lockdep_recursion = 0;
++	arch_spin_unlock(&lockdep_lock);
+ 	raw_local_irq_restore(flags);
+ 
+ 	/* Wait until is_dynamic_key() has finished accessing k->hash_entry. */
+-- 
+2.21.0.196.g041f5ea1cf98
 
