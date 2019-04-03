@@ -2,170 +2,254 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144D6C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D200C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C882A2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED55E2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="C2HGrofr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GB8s71Z/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfDCDL7 (ORCPT
+        id S1726775AbfDCDRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:11:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38448 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfDCDL6 (ORCPT
+        Tue, 2 Apr 2019 23:17:17 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:35582 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDCDRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:11:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w15so6219676wmc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:11:57 -0700 (PDT)
+        Tue, 2 Apr 2019 23:17:17 -0400
+Received: by mail-yb1-f196.google.com with SMTP id e12so4421566ybq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sOsg6KbhYLxtnJPk5ktRy/YMbya5ZDgO5Ntlax/ZgsU=;
-        b=C2HGrofr582q+vezNcaNw/4zOoTI5MWaXuCAluzImLKp0lErO51V+YalVuBu1zM03m
-         mN4TleLkwdPFMXstCbC3aO8JzajwM+0MqMkg3VYKpmJ1TxuVI5Z4ShTK6YnTA9Ge0o1r
-         FW2nhIssagGZwQb3+Upi2P5sughC43y2SAP5o=
+        bh=HKx+9BbYM96+pN0GaaJOun7EEEWOEK5tyeeJF2xiZp0=;
+        b=GB8s71Z/u6JpRwrpKfWbQqTeezjkWY6QPQtELoqMkt30gziod2d9MhLV4qIJhV0+K5
+         js0fPBCLYMpbj9zu8XQzD96ErfsYfCqT/CGKOpdr+0wKSpJHuSfHhQs/OBkjUwPQ5C5Q
+         gmttGKRPnR2aqrFuLf6JeuTuhFKgJhbK6Y29p0hAozvkruzaLQrF0ZU1M8Dzn6k1yJ/W
+         zBu3UELRT6WSEO+qG70e2ju5hqcL2M9L19zHnog9qjO8EvoXYk1E1nhlFnYFjStLMK0I
+         UcEdMiwUfT1rIb/Yuadp0kEdRj5KgEZF++5eNlbgdAsqTp18JFdpv8VfEDKnisX5QnB/
+         EigQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sOsg6KbhYLxtnJPk5ktRy/YMbya5ZDgO5Ntlax/ZgsU=;
-        b=Qrs2LkwqJMOUXq0u4DQMOI9TzFYyUXw57OtgS5YK2JrI4V5ddqTDUkiYnDApXJOXAD
-         /JDu/AKSAzZPnxcHLbFWtWxvWXgwqsaLFoJp6U9vaHcB/uC4MkLF3IPASF1f3DiBknVI
-         NJC7O7dTdx9csy0zUVR9yeNRhG4IUkUnyJNQPydXKtOQ8djWezKwIA2i7JSEEN0Tdiw8
-         5YuFDmdbCCgk/8nKlzRdyKw6VsZWxcF+T2XcxH/Ogl5KsC2xSvFiOmuKkveY5RufbQ81
-         Ual/3wXEiK/+oZyNOscmQhH5ouw1ok71GseWgnw6g1Q3lyTHkiUiSbrAt52XLB27nHU8
-         GuUg==
-X-Gm-Message-State: APjAAAW5giseBffIHZu+YDOB/OTkKLeddf8+HtVIpTiKfi3QjIz/sVUa
-        uKD6Pujrs55YJefxJ8tHaC1/MPMnEFWwQmAsvppIKQ==
-X-Google-Smtp-Source: APXvYqzIg/sbwKb0idpuZU0QB4hz/btIbr64An3MA7txpWoQtJj9Bb4+5XKcf8G/tdEOQZ0yw5k5VW/USYtnY+TFMyk=
-X-Received: by 2002:a1c:9e96:: with SMTP id h144mr219884wme.33.1554261116396;
- Tue, 02 Apr 2019 20:11:56 -0700 (PDT)
+        bh=HKx+9BbYM96+pN0GaaJOun7EEEWOEK5tyeeJF2xiZp0=;
+        b=Rl5jEv5rwF/7E3kBnbG053PmhE0zbjaS37x63gb0HbLnAVmSj8TSc9epBPo+EAhNWP
+         2nsOzgId/CmFlBUIoO728t+3LZzq/ju0iXjzCecQqwkz0zCkYYwXs3Y3YbFt5T3g+pTz
+         25T4LHk62IgYYNKUcJiVFgOJMatIHPUTTYT3fxMMfX42Jz1D8DDJQyEDwJyST80CNcUI
+         7ejhyGJWMgcUy45yT0yR49t2asOYaIQTe0Gj7dke4NefUwjNg+8jlR56D5lG7vKYmL5S
+         YTXn5DyeSLnbBhAH8TQaaQ88Kwbi8GdYWFn9oLGnrj0rIGd/FW+oN7fqH66evdU0TjL4
+         YNvA==
+X-Gm-Message-State: APjAAAWVtvUP6THFdR1gQyjt7lN41/Yn4a8LX272sjAEZxkqjx/dXj48
+        ivLo5dhfkkkcgLn7BlSTqVd32TNiN5Y2LjjnROGYcQ==
+X-Google-Smtp-Source: APXvYqyaRjd8+VnbeGYaIcVnqqss2GLyWZCTmhBRxzSRu2ICscKi9GPL2ylO94JOxWDaHCQqd+cDpFLAp0VlEwd6IMk=
+X-Received: by 2002:a25:e54a:: with SMTP id c71mr60101233ybh.336.1554261436047;
+ Tue, 02 Apr 2019 20:17:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
- <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com>
- <20190329173515.GA10367@e107981-ln.cambridge.arm.com> <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
- <20190401164416.GA8616@e107981-ln.cambridge.arm.com> <e7d3e5a1-db5c-8438-f10f-81b87aba0e03@broadcom.com>
- <CABe79T7uLo+68P0Yr7jpgn1+4H01qhoPRjX05gszin3FXkBZ5w@mail.gmail.com>
- <20190402102639.GB22708@e107981-ln.cambridge.arm.com> <CABe79T5O-1EWVrR1vZ27LWuxTBqN4_x37bkpfKxfm1ZB+oDUvA@mail.gmail.com>
- <20190402133851.GA26122@e107981-ln.cambridge.arm.com>
-In-Reply-To: <20190402133851.GA26122@e107981-ln.cambridge.arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Wed, 3 Apr 2019 08:41:44 +0530
-Message-ID: <CABe79T7JdOh0Lpr2vhWX5QPE5nuP9hZeviSB9E3tVteeAX89fw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
- I/O region
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Ray Jui <ray.jui@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abhishek Shah <abhishek.shah@broadcom.com>
+References: <20190402224445.64823-1-dianders@chromium.org> <20190402231917.GL112750@google.com>
+ <CAD=FV=V3S7=GNrA8JnUE+wHin8UwFTeL22EBMuDr4AFTu1nKsw@mail.gmail.com>
+In-Reply-To: <CAD=FV=V3S7=GNrA8JnUE+wHin8UwFTeL22EBMuDr4AFTu1nKsw@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Tue, 2 Apr 2019 20:17:03 -0700
+Message-ID: <CABXOdTcE1d2mURSkTAUQda9vcYZhGnmT+Y_NH6xQU9begDh+Qw@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_spi: Transfer messages at high priority
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Alexandru M Stan <amstan@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Simon Glass <sjg@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Randall Spangler <rspangler@chromium.org>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
-
-Please see my reply below,
-
-On Tue, Apr 2, 2019 at 7:08 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
+On Tue, Apr 2, 2019 at 4:38 PM Doug Anderson <dianders@chromium.org> wrote:
 >
-> On Tue, Apr 02, 2019 at 04:16:13PM +0530, Srinath Mannam wrote:
+> Hi,
 >
-> [...]
->
-> > > Ok - I start to understand. What does it mean in HW terms that your
-> > > 32bit AXI address region size is 32MB ? Please explain to me in details.
+> On Tue, Apr 2, 2019 at 4:19 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > Hi Doug,
+> >
+> > On Tue, Apr 02, 2019 at 03:44:44PM -0700, Douglas Anderson wrote:
+> > > The software running on the Chrome OS Embedded Controller (cros_ec)
+> > > handles SPI transfers in a bit of a wonky way.  Specifically if the EC
+> > > sees too long of a delay in a SPI transfer it will give up and the
+> > > transfer will be counted as failed.  Unfortunately the timeout is
+> > > fairly short, though the actual number may be different for different
+> > > EC codebases.
 > > >
-> > In our PCIe controller HW, AXI address from 0x42000000 to 0x44000000
-> > of 32MB size and .
-> > AXI address from 0x400000000 to 0x480000000 of 2GB size are provided
-> > to map ob address.
-> > First IO region is inside 32bit address and second IO region is
-> > outside 32bit address.
-> > This code change is to map first IO region(0x42000000 to 0x44000000).
+> > > We can end up tripping the timeout pretty easily if we happen to
+> > > preempt the task running the SPI transfer and don't get back to it for
+> > > a little while.
+> > >
+> > > Historically this hasn't been a _huge_ deal because:
+> > > 1. On old devices Chrome OS used to run PREEMPT_VOLUNTARY.  That meant
+> > >    we were pretty unlikely to take a big break from the transfer.
+> > > 2. On recent devices we had faster / more processors.
+> > > 3. Recent devices didn't use "cros-ec-spi-pre-delay".  Using that
+> > >    delay makes us more likely to trip this use case.
+> > > 4. For whatever reasons (I didn't dig) old kernels seem to be less
+> > >    likely to trip this.
+> > > 5. For the most part it's kinda OK if a few transfers to the EC fail.
+> > >    Mostly we're just polling the battery or doing some other task
+> > >    where we'll try again.
+> > >
+> > > Even with the above things, this issue has reared its ugly head
+> > > periodically.  We could solve this in a nice way by adding reliable
+> > > retries to the EC protocol [1] or by re-designing the code in the EC
+> > > codebase to allow it to wait longer, but that code doesn't ever seem
+> > > to get changed.  ...and even if it did, it wouldn't help old devices.
+> > >
+> > > It's now time to finally take a crack at making this a little better.
+> > > This patch isn't guaranteed to make every cros_ec SPI transfer
+> > > perfect, but it should improve things by a few orders of magnitude.
+> > > Specifically you can try this on a rk3288-veyron Chromebook (which is
+> > > slower and also _does_ need "cros-ec-spi-pre-delay"):
+> > >   md5sum /dev/zero &
+> > >   md5sum /dev/zero &
+> > >   md5sum /dev/zero &
+> > >   md5sum /dev/zero &
+> > >   while true; do
+> > >     cat /sys/class/power_supply/sbs-20-000b/charge_now > /dev/null;
+> > >   done
+> > > ...before this patch you'll see boatloads of errors.  After this patch I
+> > > don't see any in the testing I did.
+> > >
+> > > The way this patch works is by effectively boosting the priority of
+> > > the cros_ec transfers.  As far as I know there is no simple way to
+> > > just boost the priority of the current process temporarily so the way
+> > > we accomplish this is by creating a "WQ_HIGHPRI" workqueue and doing
+> > > the transfers there.
+> > >
+> > > NOTE: this patch relies on the fact that the SPI framework attempts to
+> > > push the messages out on the calling context (which is the one that is
+> > > boosted to high priority).  As I understand from earlier (long ago)
+> > > discussions with Mark Brown this should be a fine assumption.  Even if
+> > > it isn't true sometimes this patch will still not make things worse.
+> > >
+> > > [1] https://crbug.com/678675
+> > >
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > >
+> > >  drivers/platform/chrome/cros_ec_spi.c | 107 ++++++++++++++++++++++++--
+> > >  1 file changed, 101 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+> > > index ffc38f9d4829..101f2deb7d3c 100644
+> > > --- a/drivers/platform/chrome/cros_ec_spi.c
+> > > +++ b/drivers/platform/chrome/cros_ec_spi.c
+> > >
+> > > ...
+> > >
+> > > +static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
+> > > +                             struct cros_ec_command *ec_msg)
+> > > +{
+> > > +     struct cros_ec_spi *ec_spi = ec_dev->priv;
+> > > +     struct cros_ec_xfer_work_params params;
+> > > +
+> > > +     INIT_WORK(&params.work, cros_ec_pkt_xfer_spi_work);
+> > > +     params.ec_dev = ec_dev;
+> > > +     params.ec_msg = ec_msg;
+> > > +
+> > > +     queue_work(ec_spi->high_pri_wq, &params.work);
+> > > +     flush_workqueue(ec_spi->high_pri_wq);
 > >
-> > > IIUC you are using an OARR0 of 128MB in size to map a 32MB address
-> > > region, that's what I understand this patch does (and the lowest index
-> > > corresponds to the smallest possible size - it is far from clear by
-> > > looking at the patch).
-> > Yes, lowest index corresponds to smallest possible size (128MB).
-> > In our controller we have multiple windows like OARR0, OARR1, OARR2,
-> > OARR3 all supports multiple sizes from 128MB to 1024MB.
-> > These details are given at the top of this driver file, as shown
-> > below. all windows supports 128MB size still we must use OARR0 window
-> > to configure first IO region(0x42000000 to 0x44000000).
-> >
-> > static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
-> >         {
-> >                 /* OARR0/OMAP0 */
-> >                 .window_sizes = { 128, 256 },
-> >                 .nr_sizes = 2,
-> >         },
-> >         {
-> >                 /* OARR1/OMAP1 */
-> >                 .window_sizes = { 128, 256 },
-> >                 .nr_sizes = 2,
-> >         },
-> >         {
-> >                 /* OARR2/OMAP2 */
-> >                 .window_sizes = { 128, 256, 512, 1024 },
-> >                 .nr_sizes = 4,
-> >         },
-> >         {
-> >                 /* OARR3/OMAP3 */
-> >                 .window_sizes = { 128, 256, 512, 1024 },
-> >                 .nr_sizes = 4,
-> >         },
-> > };
+> > IIRC dedicated workqueues should be avoided unless they are needed. In
+> > this case it seems you could use system_highpri_wq + a
+> > completion. This would add a few extra lines to deal with the
+> > completion, in exchange the code to create the workqueue could be
+> > removed.
 >
-> Ok so this patch allows mapping an AXI I/O window that is smaller
-> than OARR possible sizes, why it was not done from the beginning
-> I really do not know.
+> I'm not convinced using the "system_highpri_wq" is a great idea here.
+> Using flush_workqueue() on the "system_highpri_wq" seems like a recipe
+> for deadlock but I need to flush to get the result back.  See the
+> comments in flush_scheduled_work() for some discussion here.
 >
-Same Iproc driver we use for multiple SOCs, in previous SOCs does not
-have 32-bit AXI address region to map ob.
-In the present SOC, 32-bit AXI address region is available so that
-this change is added.
 
-> Now explain this to me please:
->
-> > This patch add outbound window configuration to map below 32-bit I/O range
-> > with corresponding PCI memory, which helps to access I/O region in ARM
-> > 32-bit and one to one mapping of I/O region to PCI memory.
-> >
-> > Ex:
-> > 1. ranges DT property given for current driver is,
-> >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
-> >     I/O region address is 0x400000000
-> > 2. ranges DT property can be given after this patch,
-> >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
-> >     I/O region address is 0x42000000
->
-> Why 1:1 AXI<->PCI address mapping is not possible in (1), how does the
-> current code works on 32-bit systems and what's the benefit your change
-> is bringing.
-non-prefetchable memory range can only support 32-bit addresses, so
-that we have taken 32-bit PCI bus address in (1).
-current code does not work in 32-bit systems. In the present SOC with
-this new change we can access from 32-bit CPU.
+Given that high priority workqueues are used all over the place, and
+system_highpri_wq is only rarely used, hijacking the latter doesn't
+seem to be such a good idea to me either. I also recall that we had to
+drop using system qorkqueues at a previous company and replace them
+with local workqueues because we got into timing trouble when using
+system workqueues.
 
-Regards,
-Srinath.
+Having said that, the combination of queue_work() immediately followed
+by flush_workqueue() seems odd and appears to violate the wole idea of
+work _queues_. I wonder if there is a better solution available to
+solve problems like this. I also wonder if we solve a problem here, or
+if we work around its symptoms. AFAICS, the delay translates into a
+udelay(), meaning an active wait loop. Has anyone an understanding why
+this translates into a spi transfer error, and how using a workqueue
+(which I guess may offload the active wait to another CPU) solves that
+problem ? Also, are we sure that this isn't a problem with the SPI
+driver ?
+
+Guenter
+
+> I guess you're suggesting using a completion instead of the flush but
+> I think the deadlock potentials are the same.  If we're currently
+> running on the "system_highpri_wq" (because one of our callers
+> happened to be on it) or there are some shared resources between
+> another user of the "system_highpri_wq" and us then we'll just sitting
+> waiting for the completion, won't we?
 >
-> Thanks,
-> Lorenzo
+> I would bet that currently nobody actually ends up in this situation
+> because there aren't lots of users of the "system_highpri_wq", but it
+> still doesn't seem like a good design.  Is it really that expensive to
+> have our own workqueue?
+>
+>
+> > > +     return params.ret;
+> > > +}
+> > > +
+> > > +static void cros_ec_cmd_xfer_spi_work(struct work_struct *work)
+> > > +{
+> > > +     struct cros_ec_xfer_work_params *params;
+> > > +
+> > > +     params = container_of(work, struct cros_ec_xfer_work_params, work);
+> > > +     params->ret = do_cros_ec_cmd_xfer_spi(params->ec_dev, params->ec_msg);
+> > > +}
+> > > +
+> > > +static int cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
+> > > +                             struct cros_ec_command *ec_msg)
+> > > +{
+> > > +     struct cros_ec_spi *ec_spi = ec_dev->priv;
+> > > +     struct cros_ec_xfer_work_params params;
+> > > +
+> > > +     INIT_WORK(&params.work, cros_ec_cmd_xfer_spi_work);
+> > > +     params.ec_dev = ec_dev;
+> > > +     params.ec_msg = ec_msg;
+> > > +
+> > > +     queue_work(ec_spi->high_pri_wq, &params.work);
+> > > +     flush_workqueue(ec_spi->high_pri_wq);
+> > > +
+> > > +     return params.ret;
+> > > +}
+> >
+> > This is essentially a copy of cros_ec_pkt_xfer_spi() above. You
+> > could add a wrapper that receives the work function to avoid the
+> > duplicate code.
+>
+> Good point.  I'll wait a day or two for more feedback and then post a
+> new version with that change.
+>
+> -Doug
