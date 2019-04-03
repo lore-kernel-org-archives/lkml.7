@@ -2,179 +2,221 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AC9C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F46C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F07C2147C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="b0iUyxFN"
+	by mail.kernel.org (Postfix) with ESMTP id 2B2CA206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfDCKhC (ORCPT
+        id S1726511AbfDCKko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:37:02 -0400
-Received: from mail-eopbgr1400114.outbound.protection.outlook.com ([40.107.140.114]:33632
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726263AbfDCKhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:37:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vnziTkeurCieu0T4zQ8GL2S6efHkESvnj+aBcPEfkTM=;
- b=b0iUyxFN+zjt6yNHBTHhgERc2mEZhbr0yNq3m6MWpwHOEgUPhfYzisO/v1qxykeZh7DiyU+dLFiVNO/0hE5OUhIMyHqPCDb00qhtFBOHWMuIZOrNqDutq6J43BDc4OyDF05VEgA9+8DUq+FgX8kRkdMkIJM5otjw4yESbkTXx3k=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.147) by
- TY1PR01MB1593.jpnprd01.prod.outlook.com (52.133.163.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.22; Wed, 3 Apr 2019 10:36:57 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::b593:2e3c:aa50:2273]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::b593:2e3c:aa50:2273%4]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
- 10:36:57 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/3] phy: renesas: rcar-gen3-usb2: Use pdev's device
- pointer on dev_vdbg()
-Thread-Topic: [PATCH 2/3] phy: renesas: rcar-gen3-usb2: Use pdev's device
- pointer on dev_vdbg()
-Thread-Index: AQHU6IMxuqCpHsux6Eat45uJvbsB+aYqQRLQ
-Date:   Wed, 3 Apr 2019 10:36:57 +0000
-Message-ID: <TY1PR01MB1770A0BBFF5253357A15AA61C0570@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1554120083-29990-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1554120083-29990-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1554120083-29990-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: aba18cde-7475-4057-9d23-08d6b8204c53
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TY1PR01MB1593;
-x-ms-traffictypediagnostic: TY1PR01MB1593:
-x-microsoft-antispam-prvs: <TY1PR01MB1593DC1AD733A8F4FB630515C0570@TY1PR01MB1593.jpnprd01.prod.outlook.com>
-x-forefront-prvs: 0996D1900D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(136003)(39860400002)(346002)(366004)(189003)(199004)(97736004)(54906003)(476003)(106356001)(99286004)(74316002)(53936002)(44832011)(7696005)(25786009)(52536014)(2501003)(107886003)(5660300002)(55016002)(9686003)(66066001)(486006)(86362001)(4326008)(68736007)(446003)(3846002)(6116002)(186003)(6246003)(6436002)(26005)(105586002)(11346002)(110136005)(305945005)(316002)(7736002)(81166006)(256004)(8676002)(102836004)(8936002)(478600001)(6506007)(71200400001)(71190400001)(14454004)(2906002)(76176011)(33656002)(229853002)(53546011)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1593;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3uFvhxnTek+GzTPHVq6P95hBdnyecxt+5jIWRv+OK5UmWE2ZQkFzcdKCmDJLjU6tpxnp6yx7fzbWed0MHgphcC6H7aqsHU5RxLLNBZ3Fh46R9PVTPPuRD2a2/rpNycvA1+EL5Qb6rSlTnu6JTC7x/F6eQaJk78NGWJqWQaXfySOJRDOzHBVNV39bGd9Th/Eqjqc04SHscQM2BpuiB28dUqI58IRiM4b7zIvZMP/pP+5KoLc+qfNtMx69zMv+m/5sJlsLJKYDXfJ6VEvu8RBQfzdBzBNhB7vSC/j1PUX97Uj4pE841mqtMT4xM6dldiq6tIY7PoHo3S7wm2KSAf9VNpTDhrP7I+IKc2VuLUqQsXIaPaeMz9QpyfWgWtDhWMTA6ZgzF0JrJpQ+ZurJ9JUSzk55uGu6pP3fIw/bC/jveCY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Apr 2019 06:40:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55720 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbfDCKko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 06:40:44 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4D5CA3082141;
+        Wed,  3 Apr 2019 10:40:43 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (dhcp-10-65-161-59.pnq.redhat.com [10.65.161.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E5C619731;
+        Wed,  3 Apr 2019 10:40:21 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pagupta@redhat.com
+Subject: [PATCH v4 0/5] virtio pmem driver 
+Date:   Wed,  3 Apr 2019 16:10:13 +0530
+Message-Id: <20190403104018.23947-1-pagupta@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aba18cde-7475-4057-9d23-08d6b8204c53
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 10:36:57.6945
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1593
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 03 Apr 2019 10:40:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yoshihiro-san,
+ This patch series has implementation for "virtio pmem". 
+ "virtio pmem" is fake persistent memory(nvdimm) in guest 
+ which allows to bypass the guest page cache. This also
+ implements a VIRTIO based asynchronous flush mechanism.  
+ 
+ Sharing guest kernel driver in this patchset with the 
+ changes suggested in v3. Tested with Qemu side device 
+ emulation [6] for virtio-pmem. 
 
-Thank you for your patch!
+ We have incorporated all the suggestions in V3. Documented 
+ the impact of possible page cache side channel attacks with 
+ suggested countermeasures.
+ 
+ Details of project idea for 'virtio pmem' flushing interface 
+ is shared [3] & [4].
 
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.=
-org> On Behalf Of Yoshihiro Shimoda
-> Sent: 01 April 2019 13:01
-> Subject: [PATCH 2/3] phy: renesas: rcar-gen3-usb2: Use pdev's device poin=
-ter on dev_vdbg()
->=20
-> To implement multiple phy instances in the future, this patch uses
-> pdev's device pointer on dev_vdbg() instead of the phy's device
-> pointer.
->=20
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+ Implementation is divided into two parts:
+ New virtio pmem guest driver and qemu code changes for new 
+ virtio pmem paravirtualized device.
 
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+1. Guest virtio-pmem kernel driver
+---------------------------------
+   - Reads persistent memory range from paravirt device and 
+     registers with 'nvdimm_bus'.  
+   - 'nvdimm/pmem' driver uses this information to allocate 
+     persistent memory region and setup filesystem operations 
+     to the allocated memory. 
+   - virtio pmem driver implements asynchronous flushing 
+     interface to flush from guest to host.
 
-> ---
->  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renes=
-as/phy-rcar-gen3-usb2.c
-> index 0a34782..4bdb2ed 100644
-> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> @@ -80,6 +80,7 @@
->=20
->  struct rcar_gen3_chan {
->  	void __iomem *base;
-> +	struct device *dev;	/* platform_device's device */
->  	struct extcon_dev *extcon;
->  	struct phy *phy;
->  	struct regulator *vbus;
-> @@ -120,7 +121,7 @@ static void rcar_gen3_set_host_mode(struct rcar_gen3_=
-chan *ch, int host)
->  	void __iomem *usb2_base =3D ch->base;
->  	u32 val =3D readl(usb2_base + USB2_COMMCTRL);
->=20
-> -	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, host);
-> +	dev_vdbg(ch->dev, "%s: %08x, %d\n", __func__, val, host);
->  	if (host)
->  		val &=3D ~USB2_COMMCTRL_OTG_PERI;
->  	else
-> @@ -133,7 +134,7 @@ static void rcar_gen3_set_linectrl(struct rcar_gen3_c=
-han *ch, int dp, int dm)
->  	void __iomem *usb2_base =3D ch->base;
->  	u32 val =3D readl(usb2_base + USB2_LINECTRL1);
->=20
-> -	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
-> +	dev_vdbg(ch->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
->  	val &=3D ~(USB2_LINECTRL1_DP_RPD | USB2_LINECTRL1_DM_RPD);
->  	if (dp)
->  		val |=3D USB2_LINECTRL1_DP_RPD;
-> @@ -147,7 +148,7 @@ static void rcar_gen3_enable_vbus_ctrl(struct rcar_ge=
-n3_chan *ch, int vbus)
->  	void __iomem *usb2_base =3D ch->base;
->  	u32 val =3D readl(usb2_base + USB2_ADPCTRL);
->=20
-> -	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, vbus);
-> +	dev_vdbg(ch->dev, "%s: %08x, %d\n", __func__, val, vbus);
->  	if (vbus)
->  		val |=3D USB2_ADPCTRL_DRVVBUS;
->  	else
-> @@ -401,7 +402,7 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, vo=
-id *_ch)
->  	irqreturn_t ret =3D IRQ_NONE;
->=20
->  	if (status & USB2_OBINT_BITS) {
-> -		dev_vdbg(&ch->phy->dev, "%s: %08x\n", __func__, status);
-> +		dev_vdbg(ch->dev, "%s: %08x\n", __func__, status);
->  		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
->  		rcar_gen3_device_recognition(ch);
->  		ret =3D IRQ_HANDLED;
-> @@ -499,6 +500,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_d=
-evice *pdev)
->=20
->  	platform_set_drvdata(pdev, channel);
->  	phy_set_drvdata(channel->phy, channel);
-> +	channel->dev =3D dev;
->=20
->  	provider =3D devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->  	if (IS_ERR(provider)) {
-> --
-> 2.7.4
+2. Qemu virtio-pmem device
+---------------------------------
+   - Creates virtio pmem device and exposes a memory range to 
+     KVM guest. 
+   - At host side this is file backed memory which acts as 
+     persistent memory. 
+   - Qemu side flush uses aio thread pool API's and virtio 
+     for asynchronous guest multi request handling. 
 
+   David Hildenbrand CCed also posted a modified version[7] of 
+   qemu virtio-pmem code based on updated Qemu memory device API. 
+
+ Virtio-pmem security implications and countermeasures:
+ -----------------------------------------------------
+
+ In previous posting of kernel driver, there was discussion [9]
+ on possible implications of page cache side channel attacks with 
+ virtio pmem. After thorough analysis of details of known side 
+ channel attacks, below are the suggestions:
+
+ - Depends entirely on how host backing image file is mapped 
+   into guest address space. 
+
+ - virtio-pmem device emulation, by default shared mapping is used
+   to map host backing file. It is recommended to use separate
+   backing file at host side for every guest. This will prevent
+   any possibility of executing common code from multiple guests
+   and any chance of inferring guest local data based based on 
+   execution time.
+
+ - If backing file is required to be shared among multiple guests 
+   it is recommended to don't support host page cache eviction 
+   commands from the guest driver. This will avoid any possibility
+   of inferring guest local data or host data from another guest. 
+
+ - Proposed device specification [8] for virtio-pmem device with 
+   details of possible security implications and suggested 
+   countermeasures for device emulation.
+
+ Virtio-pmem errors handling:
+ ----------------------------------------
+  Checked behaviour of virtio-pmem for below types of errors
+  Need suggestions on expected behaviour for handling these errors?
+
+  - Hardware Errors: Uncorrectable recoverable Errors: 
+  a] virtio-pmem: 
+    - As per current logic if error page belongs to Qemu process, 
+      host MCE handler isolates(hwpoison) that page and send SIGBUS. 
+      Qemu SIGBUS handler injects exception to KVM guest. 
+    - KVM guest then isolates the page and send SIGBUS to guest 
+      userspace process which has mapped the page. 
+  
+  b] Existing implementation for ACPI pmem driver: 
+    - Handles such errors with MCE notifier and creates a list 
+      of bad blocks. Read/direct access DAX operation return EIO 
+      if accessed memory page fall in bad block list.
+    - It also starts backgound scrubbing.  
+    - Similar functionality can be reused in virtio-pmem with MCE 
+      notifier but without scrubbing(no ACPI/ARS)? Need inputs to 
+      confirm if this behaviour is ok or needs any change?
+
+Changes from PATCH v3: [1]
+
+- Use generic dax_synchronous() helper to check for DAXDEV_SYNC 
+  flag - [Dan, Darrick, Jan]
+- Add 'is_nvdimm_async' function
+- Document page cache side channel attacks implications & 
+  countermeasures - [Dave Chinner, Michael]
+
+Changes from PATCH v2: [2]
+- Disable MAP_SYNC for ext4 & XFS filesystems - [Dan] 
+- Use name 'virtio pmem' in place of 'fake dax' 
+
+Changes from PATCH v1: 
+- 0-day build test for build dependency on libnvdimm 
+
+ Changes suggested by - [Dan Williams]
+- Split the driver into two parts virtio & pmem  
+- Move queuing of async block request to block layer
+- Add "sync" parameter in nvdimm_flush function
+- Use indirect call for nvdimm_flush
+- Don’t move declarations to common global header e.g nd.h
+- nvdimm_flush() return 0 or -EIO if it fails
+- Teach nsio_rw_bytes() that the flush can fail
+- Rename nvdimm_flush() to generic_nvdimm_flush()
+- Use 'nd_region->provider_data' for long dereferencing
+- Remove virtio_pmem_freeze/restore functions
+- Remove BSD license text with SPDX license text
+
+- Add might_sleep() in virtio_pmem_flush - [Luiz]
+- Make spin_lock_irqsave() narrow
+
+Changes from RFC v3
+- Rebase to latest upstream - Luiz
+- Call ndregion->flush in place of nvdimm_flush- Luiz
+- kmalloc return check - Luiz
+- virtqueue full handling - Stefan
+- Don't map entire virtio_pmem_req to device - Stefan
+- request leak, correct sizeof req- Stefan
+- Move declaration to virtio_pmem.c
+
+Changes from RFC v2:
+- Add flush function in the nd_region in place of switching
+  on a flag - Dan & Stefan
+- Add flush completion function with proper locking and wait
+  for host side flush completion - Stefan & Dan
+- Keep userspace API in uapi header file - Stefan, MST
+- Use LE fields & New device id - MST
+- Indentation & spacing suggestions - MST & Eric
+- Remove extra header files & add licensing - Stefan
+
+Changes from RFC v1:
+- Reuse existing 'pmem' code for registering persistent 
+  memory and other operations instead of creating an entirely 
+  new block driver.
+- Use VIRTIO driver to register memory information with 
+  nvdimm_bus and create region_type accordingly. 
+- Call VIRTIO flush from existing pmem driver.
+
+Pankaj Gupta (5):
+   libnvdimm: nd_region flush callback support
+   virtio-pmem: Add virtio-pmem guest driver
+   libnvdimm: add nd_region buffered dax_dev flag
+   ext4: disable map_sync for virtio pmem
+   xfs: disable map_sync for virtio pmem
+
+[1] https://lkml.org/lkml/2019/1/9/471
+[2] https://lkml.org/lkml/2018/10/13/117
+[3] https://www.spinics.net/lists/kvm/msg149761.html
+[4] https://www.spinics.net/lists/kvm/msg153095.html  
+[5] https://lkml.org/lkml/2018/8/31/413
+[6] https://marc.info/?l=linux-kernel&m=153572228719237&w=2 
+[7] https://marc.info/?l=qemu-devel&m=153555721901824&w=2
+[8] https://lists.oasis-open.org/archives/virtio-dev/201903/msg00083.html
