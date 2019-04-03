@@ -2,89 +2,102 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B98FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDF9C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31BC20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698EB214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uvpQS/sO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfDCXDT (ORCPT
+        id S1726436AbfDCXEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 19:03:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:50167 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfDCXDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 19:03:19 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 16:03:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
-   d="scan'208";a="137394331"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2019 16:03:17 -0700
-Date:   Wed, 3 Apr 2019 16:03:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Dr . Greg Wettstein" <greg@enjellic.com>
-Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add
- __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
-Message-ID: <20190403230317.GD4682@linux.intel.com>
-References: <20190322215903.GE12666@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
- <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
- <20190325180349.GF31069@linux.intel.com>
- <CALCETrXqb3CHefN-RLudC61jwdbLFS8cXuS4V5OJ6HTuf_arYw@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E85FABF@ORSMSX116.amr.corp.intel.com>
- <CALCETrVcR_etAHSVZxvCz7CcPnF4ajpcWiRCtFrOckVWVJByHA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E860C69@ORSMSX116.amr.corp.intel.com>
- <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 3 Apr 2019 19:04:12 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:39152 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDCXEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 19:04:11 -0400
+Received: by mail-ua1-f74.google.com with SMTP id v5so112531ual.6
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 16:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=FIYtD+2JyCBUBuNMFC53VJ5k0K3Im0wqDkI3BMTr5U0=;
+        b=uvpQS/sOp0F4/7auZRIGbkWQpb4Wu8lNLSbaYPYCQuDPuIIctcQEg03f3TKnxmS6oc
+         HIFMCKzdOSuYNWqcl4Q5VsHjWov71kLFC/b63Qv6PAQ8+ff4JsaOWb7nhC6oOs/yMv3m
+         7ptIBR4Elsi28SMZ4ujXt9e1T/lE8er+N6aJiBgec0jowELLZWn8CsCciFPO29CUehhO
+         QE93VHLSn35s1N/muma+UvtJHhlXyABdQl4DR6Xtkuzl/4S93zPjUMak0/M9thzI8WB4
+         dxZ5+ezMY/TZeQ+EUFqedh6wDmNDeB+acwnkx9cmnwd6R4un0VFKkASUgPCboUcbwYX7
+         bFBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=FIYtD+2JyCBUBuNMFC53VJ5k0K3Im0wqDkI3BMTr5U0=;
+        b=HB1o/gFGIEmLTAJVUBS/4lKohh7PfRpDLV9jz2wXf36svloaCaR1SIeQw4mq3PHPmp
+         pIcPfbVVkfWc93UYaeFpAFNqEpEFujKbTMBRlWzwlQwKEjMwVGPmL+L7eswHG6XGKM1x
+         BQcgIEM08b4nrJqeMKkVCTNkYm3J3w9//P09gx4NArEBW+4S67PhSUUZmS9F5ndudDH5
+         FtnRO3LL3x+NQ/01WdOPOgbfD0EhRYBDNvvRC5E3FwlkndtzQ3cZC+mZ7e3UsUrtM4uQ
+         7ooKu8V3Gju7uHLdCrNKDRaNxjfhOoHpHj5lmnuotEvyMcv+NH3Q7nCczshWRhslEVHL
+         SJRQ==
+X-Gm-Message-State: APjAAAWE9Cj5TQeS6aZoeTF9QO0R81HN02KQRXtDTV7Dp5taSZSxx9GE
+        QfpUE1EfyXj9gFR2jrDNjy+O3epImz5Cdg==
+X-Google-Smtp-Source: APXvYqy1PMXMI6wCgoB3VtttZE7088hUGNlmYgd43KczFB7Djpq0uyuRl6RMQbtubKmtTmjoiFdpGn7FvVzx5A==
+X-Received: by 2002:a1f:318f:: with SMTP id x137mr330065vkx.9.1554332650639;
+ Wed, 03 Apr 2019 16:04:10 -0700 (PDT)
+Date:   Wed,  3 Apr 2019 16:03:54 -0700
+Message-Id: <20190403230354.117915-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH] cgroup: remove extra cgroup_migrate_finish() call
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 28, 2019 at 12:18:40PM -0700, Andy Lutomirski wrote:
-> Finally, why does the vDSO code bother checking whether the leaf is valid?
+The callers of cgroup_migrate_prepare_dst() correctly call
+cgroup_migrate_finish() for success and failure cases both. No need to
+call it in cgroup_migrate_prepare_dst() in failure case.
 
-To sanity check the input to ensure the caller is attempting to enter an
-enclave, i.e. the function is named __vdso_sgx_enter_enclave(), not
-__vsgx_enclu().  And if the caller does pass the wrong leaf, EINVAL will
-be easier to debug than EFAULT, especially on SGX1 hardware where the #GP
-could be misconstrued as a loss of EPC.
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+---
+ kernel/cgroup/cgroup.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-I'm not dead set on the checks by any means, but it does seem appropriate.
-And the cost is all of 3 uops and a few bytes of a code.
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 3f2b4bde0f9c..f219c195a9a5 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -2602,7 +2602,7 @@ int cgroup_migrate_prepare_dst(struct cgroup_mgctx *mgctx)
+ 
+ 		dst_cset = find_css_set(src_cset, src_cset->mg_dst_cgrp);
+ 		if (!dst_cset)
+-			goto err;
++			return -ENOMEM;
+ 
+ 		WARN_ON_ONCE(src_cset->mg_dst_cset || dst_cset->mg_dst_cset);
+ 
+@@ -2634,9 +2634,6 @@ int cgroup_migrate_prepare_dst(struct cgroup_mgctx *mgctx)
+ 	}
+ 
+ 	return 0;
+-err:
+-	cgroup_migrate_finish(mgctx);
+-	return -ENOMEM;
+ }
+ 
+ /**
+-- 
+2.21.0.392.gf8f6787159e-goog
+
