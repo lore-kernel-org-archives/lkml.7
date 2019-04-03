@@ -2,107 +2,74 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFF2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 675A7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D9F2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3157D2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:12:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2Ufi061f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfDCNM2 (ORCPT
+        id S1726425AbfDCNMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:12:28 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39912 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbfDCNM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:12:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEB58A78;
-        Wed,  3 Apr 2019 06:12:27 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCED23F59C;
-        Wed,  3 Apr 2019 06:12:24 -0700 (PDT)
-Subject: Re: [PATCH 1/6] arm64/mm: Enable sysfs based memory hot add interface
-To:     David Hildenbrand <david@redhat.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com
-Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
-        mark.rutland@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        logang@deltatee.com, cai@lca.pw
-References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
- <1554265806-11501-2-git-send-email-anshuman.khandual@arm.com>
- <4b9dd2b0-3b11-608c-1a40-9a3d203dd904@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e5665673-60ab-eee8-bc05-53dafb941039@arm.com>
-Date:   Wed, 3 Apr 2019 14:12:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 3 Apr 2019 09:12:39 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:40516 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDCNMj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:12:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=90c11Nh1d8+GkEJhmfFaluZa0qNebHyc1nBO4nMBHWc=; b=2Ufi061f4J7lr2hhQeijZrAr9
+        bwugzvs/K4fEAehfuwLiiyl5BHD0bRN3+y9FE8WIPFOMxv45I2tM+colZJ/YSdR/5dPZ4QAVhwOAw
+        vaLCOdI6mHeHCgHFqeXFGTXs6E8KzoOcu1oGknSGtfdjCwWc3IsU0VyfKZWauNli/pNRlnKP7v+L6
+        sd/taGFQd9jxCNsJdaVOC0IGIv7Nm53FBqu3CcX2LH8boOG5APJkhmuqNFIr8PGBcK+yogczlnH7C
+        Knacu0MWy9z1RQS1Z+hdk+FQ5zftkSM/ug1yvtoNMEn30c/g3iCElOhR5WPWr2sIGi7DM9Fb1jb5I
+        sgxcLZH1w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBfgr-0002VJ-VF; Wed, 03 Apr 2019 13:12:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B59622038C24C; Wed,  3 Apr 2019 15:12:28 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 15:12:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Subject: Re: [PATCH-tip v3 11/11] locking/rwsem: Optimize rwsem structure for
+ uncontended lock acquisition
+Message-ID: <20190403131228.GI4038@hirez.programming.kicks-ass.net>
+References: <1551380981-3113-1-git-send-email-longman@redhat.com>
+ <1551380981-3113-12-git-send-email-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <4b9dd2b0-3b11-608c-1a40-9a3d203dd904@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551380981-3113-12-git-send-email-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 09:20, David Hildenbrand wrote:
-> On 03.04.19 06:30, Anshuman Khandual wrote:
->> Sysfs memory probe interface (/sys/devices/system/memory/probe) can accept
->> starting physical address of an entire memory block to be hot added into
->> the kernel. This is in addition to the existing ACPI based interface. This
->> just enables it with the required config CONFIG_ARCH_MEMORY_PROBE.
->>
-> 
-> We recently discussed that the similar interface for removal should
-> rather be moved to a debug/test module
-> 
-> I wonder if we should try to do the same for the sysfs probing
-> interface. Rather try to get rid of it than open the doors for more users.
+On Thu, Feb 28, 2019 at 02:09:41PM -0500, Waiman Long wrote:
+> For an uncontended rwsem, count and owner are the only fields a task
+> needs to touch when acquiring the rwsem. So they are put next to each
+> other to increase the chance that they will share the same cacheline.
 
-Agreed - if this option even exists in a released kernel, there's a risk 
-that distros will turn it on for the sake of it, and at that point arm64 
-is stuck carrying the same ABI baggage as well.
+Did you try and micro-bench this?
 
-If users turn up in future with a desperate and unavoidable need for the 
-legacy half-an-API on arm64, we can always reconsider adding it at that 
-point. It was very much deliberate that my original hot-add support did 
-not include a patch like this one.
-
-Robin.
-
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>   arch/arm64/Kconfig | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 7e34b9e..a2418fb 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -266,6 +266,15 @@ config HAVE_GENERIC_GUP
->>   config ARCH_ENABLE_MEMORY_HOTPLUG
->>   	def_bool y
->>   
->> +config ARCH_MEMORY_PROBE
->> +	bool "Enable /sys/devices/system/memory/probe interface"
->> +	depends on MEMORY_HOTPLUG
->> +	help
->> +	  This option enables a sysfs /sys/devices/system/memory/probe
->> +	  interface for testing. See Documentation/memory-hotplug.txt
->> +	  for more information. If you are unsure how to answer this
->> +	  question, answer N.
->> +
->>   config SMP
->>   	def_bool y
->>   
->>
-> 
-> 
