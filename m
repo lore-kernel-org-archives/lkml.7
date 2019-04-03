@@ -2,90 +2,70 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81E0C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50526C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7864520830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA4520882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J6iyJ5oQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDCOm5 (ORCPT
+        id S1726451AbfDCOqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:42:57 -0400
-Received: from mailoutvs11.siol.net ([185.57.226.202]:41349 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726151AbfDCOm4 (ORCPT
+        Wed, 3 Apr 2019 10:46:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35074 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfDCOqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:42:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 9DD64522607;
-        Wed,  3 Apr 2019 16:42:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 2mcf2bfoh02e; Wed,  3 Apr 2019 16:42:48 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 4FB225226A7;
-        Wed,  3 Apr 2019 16:42:48 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net [86.58.52.202])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id D0198522607;
-        Wed,  3 Apr 2019 16:42:47 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] clk: sunxi-ng: h6: Allow video & vpu clocks to change parent rate
-Date:   Wed, 03 Apr 2019 16:42:47 +0200
-Message-ID: <2186906.YMnZ6ufn7o@jernej-laptop>
-In-Reply-To: <CAGb2v67dDAun7rnvOEFzGiqY-xpxRm=oe99ktq_+MORxp0Wteg@mail.gmail.com>
-References: <20190402210623.14988-1-jernej.skrabec@siol.net> <20190403075430.4j7sw5vxqop6ptkj@flea> <CAGb2v67dDAun7rnvOEFzGiqY-xpxRm=oe99ktq_+MORxp0Wteg@mail.gmail.com>
+        Wed, 3 Apr 2019 10:46:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GYAGuk0O3D2BLdcy+4PiyrPExV3e9t7xumPWKaDT0ko=; b=J6iyJ5oQR/ztl7SwiyktghPL9
+        cSy9wHJPlKCidbWYW6VxktWTK10RXKcPi9w/objorltCTeHZ9K1kyNQGxh+ST8I1Y8Dhlui8xyKGA
+        maezubdQbP7FAfLOuzewgjMFaMthn42UnFJDnhqDRXhTQzvjs23lsUNhB8RNWJC+1XUrcDAH8L/uR
+        s1cbkcLi6UGZ2qpiYOEGb3eWHtgvkLB3VLPFOfLEbG0ruITHcv+QCNKX+YiMPmtD5Wz+ZhMADkAE8
+        Cdy/9Hzk8eH55U76vc5jX9DWM4rUX1wKwYtFPcpIiPQGf24K1n0bMDhnmApnK9gmqT9jPrDxP8ss1
+        F0eGOjHzg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBh9P-0003c2-6w; Wed, 03 Apr 2019 14:46:03 +0000
+Date:   Wed, 3 Apr 2019 07:46:03 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] RISC-V: Fix Maximum Physical Memory 2GiB option for
+ 64bit systems
+Message-ID: <20190403144603.GB8397@infradead.org>
+References: <20190402091741.11298-1-anup.patel@wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402091741.11298-1-anup.patel@wdc.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne sreda, 03. april 2019 ob 15:22:52 CEST je Chen-Yu Tsai napisal(a):
-> On Wed, Apr 3, 2019 at 3:54 PM Maxime Ripard <maxime.ripard@bootlin.com> 
-wrote:
-> > On Tue, Apr 02, 2019 at 11:06:23PM +0200, Jernej Skrabec wrote:
-> > > Video related clocks need to set rate as close as possible to the
-> > > requested one, so they should be able to change parent clock rate.
-> > > 
-> > > VPU clock sometimes has to be set to higher than default parent clock
-> > > rate. This is requ
-> 
-> The commit log looks unfinished. Can you and Jernej fix this up?
+> +			if ((reg->base + mem_size) < end)
 
-Ah, sorry. I will send v2 with this commit message fixed and additional patch 
-as requested by Maxime.
+No need for the braces.
 
-Best regards,
-Jernej
+Otherwise looks fine:
 
-> 
-> > > Add CLK_SET_RATE_PARENT flag to tcon-lcd0, tcon-tv0 and ve.
-> > > 
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > 
-> > Applied, thanks!
-> > Maxime
-> > 
-> > --
-> > Maxime Ripard, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-
-
-
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
