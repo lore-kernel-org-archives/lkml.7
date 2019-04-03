@@ -2,87 +2,94 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAACC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB00C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB622146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554249914;
-	bh=s89EkJxEhR0LZf/UxyEO4KX3PKLHtqenRSHjj9vE7Uo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=mLO5jB8/W1smbVXntnFiCOz+OHqgvOXQVMd4YpWo8MtmkSTwBjQPoTWiqXIw6bChm
-	 FoSq422ByKpXLx5hHiL3B0HfOXNoMPj7/38ldiI+opvrOHVY+OoUUF3OfnGZ2OSEVM
-	 evgxfDLyjTAxSkwXCS7vDhO0gTfj6zH2z6JiYXEs=
+	by mail.kernel.org (Postfix) with ESMTP id B3B6920882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:11:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MHzoDWlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDCAFN (ORCPT
+        id S1726463AbfDCALO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 20:05:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41582 "EHLO mail.kernel.org"
+        Tue, 2 Apr 2019 20:11:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:43475 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfDCAFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 20:05:13 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725842AbfDCALN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 20:11:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3048C20882;
-        Wed,  3 Apr 2019 00:05:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554249912;
-        bh=s89EkJxEhR0LZf/UxyEO4KX3PKLHtqenRSHjj9vE7Uo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=tqf9mIkUbK8vws1uYuUNCnUn7dpSo/CFd4JD1oCnayEpNiu/07cgnVHkrjTKcwbuv
-         dRHitlpbeW8UKBBKz6XNVK5sL1h5FVd8kjpUzBm8H0+Aab/sejhXP5LS6iEnTaIchR
-         IKoYVC0WFHGHUHQ5RKciKT9j+f8lL+ulSUJbi1rU=
-Subject: Re: [PATCH 3.18 00/50] 3.18.138-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190401170041.257273804@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <d68c6b56-fa2f-70a5-67fd-055767946168@kernel.org>
-Date:   Tue, 2 Apr 2019 18:05:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44YmhD6FL3z9s9y;
+        Wed,  3 Apr 2019 11:11:08 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554250270;
+        bh=GPzXue+buKSOIE35c/YyueAIkyfL268BtFgifQLZH8A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MHzoDWlxwxFZJmXdDJ6yw+InfqD32Wnu695DCFla9Xuih2toE+K1IvaYQaRFIzPlA
+         9psQY3i6Q//x+aubHDAyAMOAXsQlVOn6FDQwkuYX6xn20+r+NwNuhQ0fid/S7lVVjL
+         cmtsZFtd+908EwdItOc6YEB1gfol/89h7SticIvWKolTzF3CIV0gvx/uMyHVQrE2jZ
+         7NjpGFgo3XdQ9L5QKWiXOuSOA/3HJy/6EE08HZSjqSdDLiCwnr1sUDeKTWiPXHfPm4
+         RRrzIJWteTNPxgMRK0tIRToLuLpr6iKDe3AsYb8R7+zqNWBWppaOsdKiF5kfRUycBt
+         A1zvcvc1bZL4A==
+Date:   Wed, 3 Apr 2019 11:11:08 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Yintang Ren <yintang.ren@unisoc.com>
+Subject: linux-next: build failure after merge of the sound-asoc tree
+Message-ID: <20190403111108.2ff4a309@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190401170041.257273804@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/6t9BxO+vh_Iinn.Ler=0s8I"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/19 11:02 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 3.18.138 release.
-> There are 50 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed Apr  3 16:59:36 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v3.x/stable-review/patch-3.18.138-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-3.18.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+--Sig_/6t9BxO+vh_Iinn.Ler=0s8I
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Compiled and booted on my test system. No dmesg regressions.
+Hi all,
 
-thanks,
--- Shuah
+After merging the sound-asoc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
+ERROR: "sprd_platform_compr_ops" [sound/soc/sprd/sprd-pcm-dma.ko] undefined!
+
+Caused by commit
+
+  cce1396936ef ("ASoC: sprd: Add Spreadtrum audio compress offload support")
+
+I have used the sound-asoc tree from next-20190402 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6t9BxO+vh_Iinn.Ler=0s8I
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyj+hwACgkQAVBC80lX
+0GyCYQf7BZL46LGn/rTF50AUMMp64FHZ0xYx9y/OxC7qQWWiyQp2eB9HfNpL2C1t
+awMnUzhyOznGLoejS5mahDyAPCJTfX3EXVgzShLQk30bnS57euTA4Z5wFpPIliq/
+CXcJ7kbhBBw+1ZmwJIJeG8cJHxtdElei43M8+PIIhqZLgBADIEzakEn9ZsKDyRt7
+WacWAlgjq9kfVzMaIeEVv7y/Mbq+c0gu/GW9xLgRli1kbpPr+hP+qnihfl5HLxdG
+NkCQSnVg1eDZVioDGH+xafoypgV0mC7UpElCdf26puSK5PRDs/NGmGqcFbFN5E66
+m7PVVuQD3UZv46Kls40vH9XZu1zh5w==
+=LM/B
+-----END PGP SIGNATURE-----
+
+--Sig_/6t9BxO+vh_Iinn.Ler=0s8I--
