@@ -2,115 +2,124 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD18FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33669C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17832084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554322085;
-	bh=wLZvqLFb2mqbCiNkhhfs9ysDj66aLkShU9dTVSCzsUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XpIGGrP2/lRvqumUV7X4BayG+F6Aybk2HjPPBlc8VQim6X+vLPJvrV8i0rug33iVQ
-	 fDTBOvhtOU2Ahio5siQZ8y8BmTCBI/PVFlAq+lOOhbenQtoF7BiGp/fhFihcSfk93+
-	 BjIzYZ7GBMfBxoI17mj7qVxOZ0pn8Y3NLJuZJabY=
+	by mail.kernel.org (Postfix) with ESMTP id E5C2C2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:08:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htiG74DB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfDCUIE (ORCPT
+        id S1726968AbfDCUIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:08:04 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:45381 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDCUID (ORCPT
+        Wed, 3 Apr 2019 16:08:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54530 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDCUIP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:08:03 -0400
-Received: by mail-ot1-f54.google.com with SMTP id e5so133323otk.12;
-        Wed, 03 Apr 2019 13:08:03 -0700 (PDT)
+        Wed, 3 Apr 2019 16:08:15 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c1so231104wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 13:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=4+9EzKS2xxXNQGSpxxfbuRUr2AmzKqruYi2N7NneNlg=;
+        b=htiG74DBFTQY6xPiUpUXKImSQaj+J+3IxROkQXvJ8WQRFwcE5GaAlruSXdzIWQI0Yg
+         03awMUffq5Q2Zv7ty3QEfdVyywPtH+JbswLfTRmkQP4oZxpeE9O+Itdd8F7By036DT0W
+         hmcTKPuO6Vns06csGjvJS2h+v6MCyqSgFcQ5rc2R9dJ94xc+ikyJe5KOVCJBEuvn5c/U
+         npQsPRlUme4w1CVSkUOks4sAy+Zt3RbdaTDS5Cl6SS9XFk9nbRc7Ymg+pwRQe5zT+YaB
+         yqLAssFQ8DuKLw30j2qIrvubc9icth79Oh//rdw9+OPLj3qJe5VStywmh/i3WXEurrWA
+         hJ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uHKSmpJ6TEB5Q5rJL9DUphvSnMeX0tQN907vAl1IddE=;
-        b=hvLHTcuAgVVOsICWnJiewXBqX8y7qnB7xDPF/YK2mYjqXlXKppWDoRp1lR93bjbrRU
-         WwcxuImNhdRW4/Qr8XY7UkatMC2hih0JXYnUelM6QXgJZtbz50KlHV2LC9moC7yg8bg6
-         KTKNLwZLAj9XPCNjBE45Xga53VxQBT64uVcuQezzmbfHLffAJQXEPpBj7LYsQYSK/zz2
-         pSPa++zn8CeQmuThXX/Ch1GlASxitYzLxV35oOb5hAYYLdgv6dhT8lIIr20dh6oC96TV
-         P4KLQNgJBUOedkQRy+26gzzD/JCC+FUklAl/BDzXNxFua2fLem/PqAhT5jotD2qo7pPS
-         160Q==
-X-Gm-Message-State: APjAAAXCBeCt99t5ZPWGjIXWQm8Yz6N7S6eb8ohMIz7JHspt6tC/GoV+
-        yZm+tANB3vQ/bkxc99c0QRM=
-X-Google-Smtp-Source: APXvYqxNZDUZaOrTjZ05D/QrtkgIbNst4LSaq/eB0gnXEu84xRycUpiIo6WBqP5GHbcu8yNDu8JrZw==
-X-Received: by 2002:a9d:600d:: with SMTP id h13mr1326807otj.114.1554322082589;
-        Wed, 03 Apr 2019 13:08:02 -0700 (PDT)
-Received: from localhost ([130.164.62.212])
-        by smtp.gmail.com with ESMTPSA id m124sm7111978oia.3.2019.04.03.13.08.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 13:08:01 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 13:08:00 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Alan Tull <atull@kernel.org>
-Cc:     Moritz Fischer <mdf@kernel.org>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv1] fpga: mgr: add FPGA configuration log
-Message-ID: <20190403200800.GE5752@archbook>
-References: <1554243943-25507-1-git-send-email-richard.gong@linux.intel.com>
- <20190403142022.GB5752@archbook>
- <ee94981a-6562-9d26-ddc2-967596589599@linux.intel.com>
- <20190403164742.GC5752@archbook>
- <CANk1AXSoF3bhiO=t-XJRLhBH20emWYaZ+2LCPtqJsKyh4b+9KQ@mail.gmail.com>
- <CANk1AXSJ31Q7X3J6NOsqVkQoJkjJz=xka0XiWvuYC36s1HiBuA@mail.gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=4+9EzKS2xxXNQGSpxxfbuRUr2AmzKqruYi2N7NneNlg=;
+        b=MyG9io8UL1z2ZMOZ+MHlp4N/Icn0/Q84+BHozVR4vK3GPgKJuydyN7E1clLF8FMC+t
+         irthgFjxnNidiWOn8Tkhuy/ytmTqiU+ucIPLCgAmmTuZ6zCx8s7sJTTJNL83wPInMUpL
+         pbeThfGwUwOmtsyqsTXH/uDXwzKlfZLBkRRVNWIHdfVSYA6nhxA50vArxyYYa8nJpyiH
+         6lioJxpYxmGuLodIxe3lKDP3aSIi63jrESba4TjMN9R5UqFIsRWeOLwGemyzkhOH1ZEy
+         RS6/bGUtUc3QrzK/hvU3XejtMhy/rTcVoGEvPuAx+0UYhCOAn4ylz5VJU6Qe8KbdJHys
+         AnKg==
+X-Gm-Message-State: APjAAAWyN6Ty6c9lKT/WzKuZNnTQkQm89T+E+7qwcDaBXAE+nf69r+b7
+        lhDFzJ+k4hUm6KVIMNmilA==
+X-Google-Smtp-Source: APXvYqxt6h23Q+HgG8D4Cv7wjhbZtoPTg1+Mex45zc+1TnfuhlqMQYBv76XMN9mBwtw6Z2GkcEc2bA==
+X-Received: by 2002:a1c:14:: with SMTP id 20mr1194206wma.66.1554322092874;
+        Wed, 03 Apr 2019 13:08:12 -0700 (PDT)
+Received: from avx2 ([46.53.245.231])
+        by smtp.gmail.com with ESMTPSA id 7sm60007196wrc.81.2019.04.03.13.08.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 13:08:11 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 23:08:09 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] sched/core: expand sched_getaffinity(2) to return number of
+ CPUs
+Message-ID: <20190403200809.GA13876@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANk1AXSJ31Q7X3J6NOsqVkQoJkjJz=xka0XiWvuYC36s1HiBuA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 01:37:51PM -0500, Alan Tull wrote:
-> >
-> > it's state, not status for most fpga manager drivers.  It should
-> > return 'operating' if everything went well.
+Currently there is no easy way to get the number of CPUs on the system.
+Applications are divided into 2 groups:
+One group allocates buffer and call sched_getaffinity(2) once. It works
+but either underallocate or overallocates and in the future such application
+will become buggy as Linux will start working on even more SMP-ier systems.
 
-Yeah, sorry :)
+Glibc in particular shipped with 1024 CPUs support maximum at some point
+which is quite surprising as glibc maitainers should know better.
 
-> > It seems like there's a possible scenario where the FPGA starts up
-> > with the FPGA in 'operating' mode and the user messes up early enough
-> > that the state doesn't change.
+Another group dynamically grow buffer until cpumask fits. This is
+inefficient as multiple system calls are done.
 
-Huh, then we should fix that instead? :)
-> >
-> > >
-> > > Personally not in favor of extra messages, but if we do it we should
-> > > change the message to "Sucessfully programmed FPGA".
-> > >
-> > > I think making it a dbg message is a good trade-off ...
-> 
-> dbg vs info... On the one hand, it is a usually a message the
-> developer wants to see so the developer would turn on debug messages.
-> But then again FPGA programming doesn't happen that often and it is a
-> kind of significant event since it is your hardware changing i.e. it
-> won't add a lot messages, but it is sort of an important one if it
-> happens.   If the system crashes after a FPGA reprogramming event, it
-> would be good to have this in the log by default.  I don't want to
-> argue too powerfully for adding extra messages though.  Is this a case
-> where info is worth it since fpga programming is significant?
+Nobody seems to parse "/sys/devices/system/cpu/possible".
+Even if someone does, parsing sysfs is much slower than necessary.
 
-In the current setup, it doesn't happen often. Going forward people
-might have use-cases where this happens a lot more often.
+Patch overloads sched_getaffinity(len=0) to simply return "nr_cpu_ids".
+This will make gettting CPU mask require at most 2 system calls
+and will eliminate unnecessary code.
 
-I mean if y'all feel like this is required, sure, I still feel people
-shouldn't rely on dmesg output for functional verification :)
+len=0 is chosen so that
+* passing zeroes is the simplest thing
 
-I don't wanna guarantee that this message is gonna be there always ...
+	syscall(__NR_sched_getaffinity, 0, 0, NULL)
 
-Cheers,
-Moritz
+  will simply do the right thing,
+
+* old kernels returned -EINVAL unconditionally.
+
+Note: glibc segfaults upon exiting from system call because it tries to
+clear the rest of the buffer if return value is positive, so
+applications will have to use syscall(3).
+Good news is that it proves noone uses sched_getaffinity(pid, 0, NULL).
+
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
+
+ kernel/sched/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4942,6 +4942,9 @@ SYSCALL_DEFINE3(sched_getaffinity, pid_t, pid, unsigned int, len,
+ 	int ret;
+ 	cpumask_var_t mask;
+ 
++	if (len == 0)
++		return nr_cpu_ids;
++
+ 	if ((len * BITS_PER_BYTE) < nr_cpu_ids)
+ 		return -EINVAL;
+ 	if (len & (sizeof(unsigned long)-1))
