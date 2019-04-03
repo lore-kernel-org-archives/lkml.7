@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8601C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE14C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC3920700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 448ED20700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfDCUNj (ORCPT
+        id S1726694AbfDCUNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:13:39 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51986 "EHLO
+        Wed, 3 Apr 2019 16:13:43 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52002 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbfDCUNh (ORCPT
+        with ESMTP id S1726531AbfDCUNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:13:37 -0400
+        Wed, 3 Apr 2019 16:13:40 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id ED3132827FB
+        with ESMTPSA id E46BC2827FC
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>,
@@ -32,9 +32,9 @@ Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
         dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv6 1/4] drm/omap: use DRM_DEBUG_DRIVER instead of CORE
-Date:   Wed,  3 Apr 2019 22:13:23 +0200
-Message-Id: <20190403201326.3127-2-sebastian.reichel@collabora.com>
+Subject: [PATCHv6 2/4] drm/omap: don't check dispc timings for DSI
+Date:   Wed,  3 Apr 2019 22:13:24 +0200
+Message-Id: <20190403201326.3127-3-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403201326.3127-1-sebastian.reichel@collabora.com>
 References: <20190403195413.djfrgzuj7povdksi@earth.universe>
@@ -46,33 +46,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro is only used by omapdrm, which should print
-debug messages using the DRIVER category instead of the
-default CORE category.
+While most display types only forward their VM to the DISPC, this
+is not true for DSI. DSI calculates the VM for DISPC based on its
+own, but it's not identical. Actually the DSI VM is not even a valid
+DISPC VM making this check fail. Let's restore the old behaviour
+and avoid checking the DISPC VM for DSI here.
 
+Fixes: 7c27fa57ef31 ("drm/omap: Call dispc timings check operation directly")
 Acked-by: Pavel Machek <pavel@ucw.cz>
 Tested-by: Tony Lindgren <tony@atomide.com>
 Tested-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/gpu/drm/omapdrm/omap_drv.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/omapdrm/omap_crtc.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.h b/drivers/gpu/drm/omapdrm/omap_drv.h
-index 3cca45cb25f3..896aa12f09b2 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.h
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.h
-@@ -37,8 +37,8 @@
- #include "omap_irq.h"
- #include "omap_plane.h"
+diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
+index 5a29bf01c0e8..86827a061b0b 100644
+--- a/drivers/gpu/drm/omapdrm/omap_crtc.c
++++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
+@@ -395,10 +395,20 @@ static enum drm_mode_status omap_crtc_mode_valid(struct drm_crtc *crtc,
+ 	int r;
  
--#define DBG(fmt, ...) DRM_DEBUG(fmt"\n", ##__VA_ARGS__)
--#define VERB(fmt, ...) if (0) DRM_DEBUG(fmt, ##__VA_ARGS__) /* verbose debug */
-+#define DBG(fmt, ...) DRM_DEBUG_DRIVER(fmt"\n", ##__VA_ARGS__)
-+#define VERB(fmt, ...) if (0) DRM_DEBUG_DRIVER(fmt, ##__VA_ARGS__) /* verbose debug */
+ 	drm_display_mode_to_videomode(mode, &vm);
+-	r = priv->dispc_ops->mgr_check_timings(priv->dispc, omap_crtc->channel,
+-					       &vm);
+-	if (r)
+-		return r;
++
++	/*
++	 * DSI might not call this, since the supplied mode is not a
++	 * valid DISPC mode. DSI will calculate and configure the
++	 * proper DISPC mode later.
++	 */
++	if (omap_crtc->pipe->output->next == NULL ||
++	    omap_crtc->pipe->output->next->type != OMAP_DISPLAY_TYPE_DSI) {
++		r = priv->dispc_ops->mgr_check_timings(priv->dispc,
++						       omap_crtc->channel,
++						       &vm);
++		if (r)
++			return r;
++	}
  
- #define MODULE_NAME     "omapdrm"
- 
+ 	/* Check for bandwidth limit */
+ 	if (priv->max_bandwidth) {
 -- 
 2.20.1
 
