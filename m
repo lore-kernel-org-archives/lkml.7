@@ -2,161 +2,94 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FE2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5371C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDE2206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EB6206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:39:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="cyHmttOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfDCIjB (ORCPT
+        id S1729013AbfDCIjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:39:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49111 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfDCIjA (ORCPT
+        Wed, 3 Apr 2019 04:39:09 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33104 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfDCIjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:39:00 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x338cd751774771
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 01:38:40 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x338cd9x1774768;
-        Wed, 3 Apr 2019 01:38:39 -0700
-Date:   Wed, 3 Apr 2019 01:38:39 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Phil Auld <tipbot@zytor.com>
-Message-ID: <tip-06ec5d30e8d57b820d44df6340dcb25010d6d0fa@git.kernel.org>
-Cc:     mingo@kernel.org, pauld@redhat.com, efault@gmx.de,
-        tglx@linutronix.de, peterz@infradead.org, anton@ozlabs.org,
-        bsegall@google.com, torvalds@linux-foundation.org,
-        stable@vger.kernel.org, hpa@zytor.com, linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-          hpa@zytor.com, peterz@infradead.org, bsegall@google.com,
-          torvalds@linux-foundation.org, anton@ozlabs.org, efault@gmx.de,
-          mingo@kernel.org, pauld@redhat.com, tglx@linutronix.de
-In-Reply-To: <20190319130005.25492-1-pauld@redhat.com>
-References: <20190319130005.25492-1-pauld@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/fair: Limit sched_cfs_period_timer loop to
- avoid hard lockup
-Git-Commit-ID: 06ec5d30e8d57b820d44df6340dcb25010d6d0fa
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Apr 2019 04:39:09 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z6so4269797wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OE9kvuQABo+Xh1cKw3S624QNJBKsiiBfWEGL0hJqlvE=;
+        b=cyHmttOdjwIYlQ2XnmH9lLCA6j3ZfsvfNFh2wrMEUsd2kFJEsFX/mNia9es9DswBfJ
+         AOR9zbhl/rXv9tJTgXKH5NZNMl6rHm48iLbb0JpfNiJ1T4oNzM9ism0PIdkGr4XhnMYJ
+         wmqJzMcOhTFt71KRHF9/XnA5hy/ElWyQgxMtoWRVs5uVo0aJOsSB4let61ZS8hDb8O0G
+         Z/LAkHnJSpRAMR3sOGeykfTNDLmAPdkN6nIMUaLNoTxAcm7nEdxEhNwpaG3qrRJ2jmj4
+         F22+1JI8tLQk8/HJta63IOk5YXsHmYo1qJrbwhIye5joDnsxfGzlVwPTq3uNKSvAF1Mj
+         ppaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OE9kvuQABo+Xh1cKw3S624QNJBKsiiBfWEGL0hJqlvE=;
+        b=bVwKvLaouLmC2ClvKvagQ6ZC+zPng0xTxxBYVG+QAx+yGbztB5DFI79senMxRZ6Q8Y
+         d8O6itSN9g7LZTzNpGK2SPHcUw2DybnQBbeXwO3fhYDNMvEE0bsizFnH4o+uHhTvKEmp
+         GBtjeCZXZuOXpcU0SkyzS8o5xz2ze0dIPUljr2S+EqevjnANkRvXIeFthUIOzZHOxzqC
+         0kJUCnt1svSb+wwLZa0fQRrOUBbPGRB6+fynNfF1ztswRfHzmHZgO89fFSJGiBH06yb8
+         87bg18zP+pPp/cZZASN/9QZwSkAhIPi9h4UuyRhdvoEmZf6L93ZKR5FiXpxKYfU3Ok9C
+         zrrA==
+X-Gm-Message-State: APjAAAXcYhJWepDww35jpm4FGhUeWiQnU9Gt/u6NUAsh1QdKBXN25yIu
+        ZscQi35gJ0hWLe6NwCuj3+ptuw==
+X-Google-Smtp-Source: APXvYqzM0neknGGeh7/l3IU8cRd+G10v1tGZRRCEUycxnarn1/X6HpBhGVG0sIGpU3ghcLhae+dlXw==
+X-Received: by 2002:a1c:b646:: with SMTP id g67mr1215020wmf.125.1554280747665;
+        Wed, 03 Apr 2019 01:39:07 -0700 (PDT)
+Received: from localhost.localdomain (aputeaux-684-1-29-77.w90-86.abo.wanadoo.fr. [90.86.254.77])
+        by smtp.gmail.com with ESMTPSA id v192sm23655771wme.24.2019.04.03.01.39.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 01:39:07 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [RESEND PATCH 0/4] um: build and irq fixes
+Date:   Wed,  3 Apr 2019 10:38:58 +0200
+Message-Id: <20190403083902.3975-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  06ec5d30e8d57b820d44df6340dcb25010d6d0fa
-Gitweb:     https://git.kernel.org/tip/06ec5d30e8d57b820d44df6340dcb25010d6d0fa
-Author:     Phil Auld <pauld@redhat.com>
-AuthorDate: Tue, 19 Mar 2019 09:00:05 -0400
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 3 Apr 2019 09:50:23 +0200
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-sched/fair: Limit sched_cfs_period_timer loop to avoid hard lockup
+I've previously sent these patches separately. I still don't see them
+in next and I don't know what the policy is for picking up uml patches
+but I thought I'd resend them rebased together on top of v5.1-rc3.
 
-With extremely short cfs_period_us setting on a parent task group with a large
-number of children the for loop in sched_cfs_period_timer can run until the
-watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
-will ever return 0.  The large number of children can make
-do_sched_cfs_period_timer() take longer than the period.
+Bartosz Golaszewski (4):
+  um: remove unused variable
+  um: remove uses of variable length arrays
+  um: define set_pte_at() as a static inline function, not a macro
+  um: irq: don't set the chip for all irqs
 
- NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
- RIP: 0010:tg_nop+0x0/0x10
-  <IRQ>
-  walk_tg_tree_from+0x29/0xb0
-  unthrottle_cfs_rq+0xe0/0x1a0
-  distribute_cfs_runtime+0xd3/0xf0
-  sched_cfs_period_timer+0xcb/0x160
-  ? sched_cfs_slack_timer+0xd0/0xd0
-  __hrtimer_run_queues+0xfb/0x270
-  hrtimer_interrupt+0x122/0x270
-  smp_apic_timer_interrupt+0x6a/0x140
-  apic_timer_interrupt+0xf/0x20
-  </IRQ>
+ arch/um/include/asm/pgtable.h |  7 ++++++-
+ arch/um/kernel/irq.c          |  2 +-
+ arch/um/kernel/skas/uaccess.c |  1 -
+ arch/um/os-Linux/umid.c       | 36 ++++++++++++++++++++++++++---------
+ 4 files changed, 34 insertions(+), 12 deletions(-)
 
-To prevent this we add protection to the loop that detects when the loop has run
-too many times and scales the period and quota up, proportionally, so that the timer
-can complete before then next period expires.  This preserves the relative runtime
-quota while preventing the hard lockup.
+-- 
+2.21.0
 
-A warning is issued reporting this state and the new values.
-
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190319130005.25492-1-pauld@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/fair.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 40bd1e27b1b7..d4cce633eac8 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4885,6 +4885,8 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
-+extern const u64 max_cfs_quota_period;
-+
- static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- {
- 	struct cfs_bandwidth *cfs_b =
-@@ -4892,6 +4894,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 	unsigned long flags;
- 	int overrun;
- 	int idle = 0;
-+	int count = 0;
- 
- 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
- 	for (;;) {
-@@ -4899,6 +4902,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (!overrun)
- 			break;
- 
-+		if (++count > 3) {
-+			u64 new, old = ktime_to_ns(cfs_b->period);
-+
-+			new = (old * 147) / 128; /* ~115% */
-+			new = min(new, max_cfs_quota_period);
-+
-+			cfs_b->period = ns_to_ktime(new);
-+
-+			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-+			cfs_b->quota *= new;
-+			cfs_b->quota /= old;
-+
-+			pr_warn_ratelimited(
-+	"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-+				smp_processor_id(),
-+				new/NSEC_PER_USEC,
-+				cfs_b->quota/NSEC_PER_USEC);
-+
-+			/* reset count so we don't come right back in here */
-+			count = 0;
-+		}
-+
- 		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
- 	}
- 	if (idle)
