@@ -2,104 +2,349 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1482C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CE4C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9879E2133D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43FD620700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SW6YQrZ2";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZFXPEZnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfDCS7I (ORCPT
+        id S1726654AbfDCTA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 14:59:08 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.234]:36596 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726064AbfDCS7H (ORCPT
+        Wed, 3 Apr 2019 15:00:26 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50042 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726151AbfDCTAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 14:59:07 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 77D605E419B
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 13:59:07 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Bl6Jh6ctI90onBl6JhKImj; Wed, 03 Apr 2019 13:59:07 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=47806 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hBl6I-002xx9-Ow; Wed, 03 Apr 2019 13:59:06 -0500
-Date:   Wed, 3 Apr 2019 13:59:05 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] zd1211rw: use struct_size() helper
-Message-ID: <20190403185905.GA8650@embeddedor>
+        Wed, 3 Apr 2019 15:00:25 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x33IvTQT003541;
+        Wed, 3 Apr 2019 11:59:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=PY3EXouGJ78tX7x5aXB4Qi26HUs5pGMd3X/RquKsWSE=;
+ b=SW6YQrZ2s4YaLqz/1Q5m0R5DmCrgtzsmh3emD8S7CXOblg2/OISSlFupJEUhXqdS2eCR
+ gYIaxWmIanQygYe1w6U0jZ+M9zvgLVziKJAdgjJBCoegFy8tvA8eIQqJSTy6yUuWQesP
+ khgLCxwt3xYJjMx4hqoHdg/aAql0Vl/a9CA= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by m0001303.ppops.net with ESMTP id 2rmgr8kjct-11
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 03 Apr 2019 11:59:56 -0700
+Received: from frc-mbx06.TheFacebook.com (2620:10d:c0a1:f82::30) by
+ frc-hub03.TheFacebook.com (2620:10d:c021:18::173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 3 Apr 2019 11:59:53 -0700
+Received: from frc-hub05.TheFacebook.com (2620:10d:c021:18::175) by
+ frc-mbx06.TheFacebook.com (2620:10d:c0a1:f82::30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 3 Apr 2019 11:59:53 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 3 Apr 2019 11:59:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PY3EXouGJ78tX7x5aXB4Qi26HUs5pGMd3X/RquKsWSE=;
+ b=ZFXPEZnuugGnmpgLdq5Ts4WxKJSY47UpyGfG85lCjHhp48TUTo0SX50FcjPIyiLfEriVgDOvqFwERhHqIh/PluzGpORMvYwFwC4nxfSYYQbFLHIlJdL9DVC/y31jNGSzK9kIKDGNoe/A5+BHVN0lHCiG3uRRD4AE3W3sUHBmNfw=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1824.namprd15.prod.outlook.com (10.174.255.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.16; Wed, 3 Apr 2019 18:59:51 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171%2]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
+ 18:59:51 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [BUG] perf: intel_pt won't display kernel function
+Thread-Topic: [BUG] perf: intel_pt won't display kernel function
+Thread-Index: AQHU6irWpD85AOHzLkautxj0S1Vk3aYqhcaAgAAGHwCAABQngIAAJ/GAgAABOgCAAAFHAA==
+Date:   Wed, 3 Apr 2019 18:59:51 +0000
+Message-ID: <425141B8-8908-4D48-90FD-8806BA9E9E12@fb.com>
+References: <20190403143738.GB32001@krava> <20190403145353.GE32553@kernel.org>
+ <20190403151548.GF32553@kernel.org>
+ <B07CAAC3-D085-443D-BB0C-05E9A8F3AFB2@fb.com>
+ <20190403185053.GH32553@kernel.org>
+ <124332A9-146A-446F-A82A-910C8319170E@fb.com>
+In-Reply-To: <124332A9-146A-446F-A82A-910C8319170E@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:200::2:1b0d]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 24c146b2-adbf-4a4c-c805-08d6b8668d53
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1824;
+x-ms-traffictypediagnostic: MWHPR15MB1824:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <MWHPR15MB18240925DE8711919C02D6BEB3570@MWHPR15MB1824.namprd15.prod.outlook.com>
+x-forefront-prvs: 0996D1900D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(346002)(136003)(376002)(366004)(199004)(189003)(93886005)(476003)(256004)(316002)(83716004)(54906003)(2616005)(81166006)(71200400001)(478600001)(11346002)(71190400001)(68736007)(186003)(6916009)(6116002)(99286004)(46003)(14444005)(97736004)(8676002)(81156014)(8936002)(6486002)(57306001)(6436002)(486006)(50226002)(53936002)(102836004)(14454004)(305945005)(33656002)(25786009)(86362001)(7736002)(82746002)(229853002)(6246003)(6506007)(446003)(53546011)(106356001)(2906002)(5660300002)(36756003)(966005)(6306002)(6512007)(105586002)(4326008)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1824;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jHuZzu7w8UDDK48ooShQF1uHqLUsjNcNcYO8wg2Mu0c/KheJ98zv3OR8jWa04HF/qzO9qPMpcZOYu9fufB5WFVxfdc1O+ib6UDPdyDSOsraorjEf08WGwk+FKJMkHDo1hPnWTkPULNhwlYY3AL2+cWM75DtsdUqbMIR78ykAMp13fB7vVCkbc2uJpLP6rTY9lb7y0zxzSa97Vu++p/Bp7cOiYhYjgFKbgEpJT6uGAX3yrDw06WFJf7aLepux70CXMRsnxqgLJtWzET7f5k/fPXy+isPDZBmG9K3nm98EjyPr4zPsQp0i53Y18M2EOpHbb+jml5L0K4uyd8YCOUgtazlDFZyyIZdm7XI5mXYk7+SoTQ++ENCoR5iMvv2yFGmNjgy2CxkUoLfzNlIQmxUhEZOwtRyHrazTyu60z3ozwgU=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <548D2E056D721F49BDB858F1DD886E8E@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hBl6I-002xx9-Ow
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.114.183]:47806
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 23
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24c146b2-adbf-4a4c-c805-08d6b8668d53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 18:59:51.4495
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1824
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_10:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
 
-So, replace code of the following form:
 
-sizeof(struct usb_req_write_regs) + count * sizeof(struct reg_data)
+> On Apr 3, 2019, at 11:55 AM, Song Liu <songliubraving@fb.com> wrote:
+>=20
+>=20
+>=20
+>> On Apr 3, 2019, at 11:50 AM, Arnaldo Carvalho de Melo <arnaldo.melo@gmai=
+l.com> wrote:
+>>=20
+>> Em Wed, Apr 03, 2019 at 04:27:56PM +0000, Song Liu escreveu:
+>>>=20
+>>>=20
+>>>> On Apr 3, 2019, at 8:15 AM, Arnaldo Carvalho de Melo <arnaldo.melo@gma=
+il.com> wrote:
+>>>>=20
+>>>> Em Wed, Apr 03, 2019 at 11:53:53AM -0300, Arnaldo Carvalho de Melo esc=
+reveu:
+>>>>> Em Wed, Apr 03, 2019 at 04:37:38PM +0200, Jiri Olsa escreveu:
+>>>>>> hi,
+>>>>>> perf script --call-trace stop working for me recently,
+>>>>>> and displays only user space functions
+>>>>>>=20
+>>>>>> I bisected that to:
+>>>>>> 7b612e291a5a perf tools: Synthesize PERF_RECORD_* for loaded BPF pro=
+grams
+>>>>>>=20
+>>>>>> data from following comands will display user space functions only:
+>>>>>> # perf-with-kcore record pt -e intel_pt// -- ls
+>>>>>> # perf-with-kcore script pt --call-trace
+>>>>>>=20
+>>>>>> when I disable the bpf synthesizing (patch below), kernel functions =
+are back
+>>>>>>=20
+>>>>>> I guess the new events mess up with intel_pt decoder somehow
+>>>>>=20
+>>>>> I.e. I'm adding the patch below to my perf/urgent branch.
+>>>>=20
+>>>> Song, that is what I have, can I have your Acked-by and please conside=
+r
+>>>> taking a look at the bug Jiri reported,
+>>>>=20
+>>>> Thanks,
+>>>>=20
+>>>> - Arnaldo
+>>>=20
+>>> Current logic with --no-bpf-event is to generate PERF_RECORD_KSYMBOL, b=
+ut not
+>>> PERF_RECORD_BPF_EVENT:
+>>=20
+>> I see... The opts is done later, after querying the kernel for existing
+>> BPF programs so that at least the KSYMBOL ones can be generated. So I'll
+>> keep it as is, no need for this patch.
+>>=20
+>>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__elixir.bootlin.c=
+om_linux_v5.1-2Drc3_source_tools_perf_util_bpf-2Devent.c-23L254&d=3DDwIBAg&=
+c=3D5VD0RTtNlTh3ycd41b3MUw&r=3DdR8692q0_uaizy0jkrBJQM5k2hfm4CiFxYT8KaysFrg&=
+m=3D8ITYgIrqFBIy1uQFQPHrsX5kBX5RlmhwcknKYJa2eGs&s=3DMdB2zA9JstwC93qKEonsfTQ=
+eQYiw-yeOLbPxm3QMRo8&e=3D
+>>>=20
+>>> I will look into the intel_pt problem.=20
+>>=20
+>> Ok.
+>>=20
+>>> In the meanwhile, let's fix it for now.=20
+>>=20
+>> I'll wait a bit.
+>=20
+> I guess something like this might be a better fix? (Sorry for missing=20
+> commit message):
+>=20
+> diff --git i/tools/perf/util/map.c w/tools/perf/util/map.c
+> index e32628cd20a7..741430a35dca 100644
+> --- i/tools/perf/util/map.c
+> +++ w/tools/perf/util/map.c
+> @@ -261,6 +261,12 @@ bool __map__is_extra_kernel_map(const struct map *ma=
+p)
+>        return kmap && kmap->name[0];
+> }
+>=20
+> +bool __map__is_bpf_prog(const struct map *map)
+> +{
+> +       const char *name =3D map->dso->short_name;
+> +       return name && (strstr(name, "bpf_prog_") =3D=3D name);
+> +}
+> +
+> bool map__has_symbols(const struct map *map)
+> {
+>        return dso__has_symbols(map->dso);
+> diff --git i/tools/perf/util/map.h w/tools/perf/util/map.h
+> index 0e20749f2c55..01079f1f4375 100644
+> --- i/tools/perf/util/map.h
+> +++ w/tools/perf/util/map.h
+> @@ -159,10 +159,12 @@ int map__set_kallsyms_ref_reloc_sym(struct map *map=
+, const char *symbol_name,
+>=20
+> bool __map__is_kernel(const struct map *map);
+> bool __map__is_extra_kernel_map(const struct map *map);
+> +bool __map__is_bpf_prog(const struct map *map);
+>=20
+> static inline bool __map__is_kmodule(const struct map *map)
+> {
+> -       return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map)=
+;
+> +       return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map)=
+ &&
+> +               !__map__is_bpf_prog(map);
+> }
+>=20
+> bool map__has_symbols(const struct map *map);
+>=20
+> Thanks,
+> Song
 
-with:
+Actually, it should be something like this:
 
-struct_size(req, reg_writes, count)
+diff --git i/tools/perf/util/map.c w/tools/perf/util/map.c
+index e32628cd20a7..31cd23612529 100644
+--- i/tools/perf/util/map.c
++++ w/tools/perf/util/map.c
+@@ -261,6 +261,11 @@ bool __map__is_extra_kernel_map(const struct map *map)
+        return kmap && kmap->name[0];
+ }
 
-This code was detected with the help of Coccinelle.
++bool __map__is_bpf_prog(const struct map *map)
++{
++       return map->dso->binary_type =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO;
++}
++
+ bool map__has_symbols(const struct map *map)
+ {
+        return dso__has_symbols(map->dso);
+diff --git i/tools/perf/util/map.h w/tools/perf/util/map.h
+index 0e20749f2c55..01079f1f4375 100644
+--- i/tools/perf/util/map.h
++++ w/tools/perf/util/map.h
+@@ -159,10 +159,12 @@ int map__set_kallsyms_ref_reloc_sym(struct map *map, =
+const char *symbol_name,
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/zydas/zd1211rw/zd_usb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ bool __map__is_kernel(const struct map *map);
+ bool __map__is_extra_kernel_map(const struct map *map);
++bool __map__is_bpf_prog(const struct map *map);
 
-diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-index c2cda3acd4af..a094d5b3383c 100644
---- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-+++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
-@@ -1917,8 +1917,7 @@ int zd_usb_iowrite16v_async(struct zd_usb *usb, const struct zd_ioreq16 *ioreqs,
- 	if (!urb)
- 		return -ENOMEM;
- 
--	req_len = sizeof(struct usb_req_write_regs) +
--		  count * sizeof(struct reg_data);
-+	req_len = struct_size(req, reg_writes, count);
- 	req = kmalloc(req_len, GFP_KERNEL);
- 	if (!req) {
- 		r = -ENOMEM;
--- 
-2.21.0
+ static inline bool __map__is_kmodule(const struct map *map)
+ {
+-       return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map);
++       return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map) &=
+&
++               !__map__is_bpf_prog(map);
+ }
+
+ bool map__has_symbols(const struct map *map);
+
+
+>=20
+>>=20
+>>> Acked-by: Song Liu <songliubraving@fb.com>
+>>>=20
+>>> Thanks,=20
+>>> Song
+>>>=20
+>>>=20
+>>>> commit 011318ccc2024ba03e96c32a06f74ca5d6ab5503
+>>>> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>>> Date:   Wed Apr 3 12:05:15 2019 -0300
+>>>>=20
+>>>>  perf record: Do not synthesize BPF records when --no-bpf-event is use=
+d
+>>>>=20
+>>>>  By default we synthesize and ask the kernel for BPF events, having a
+>>>>  --no-bpf-event option to disable that, which can be useful, for
+>>>>  instance, if there are still bugs in that code, which seems to be the
+>>>>  case as reported by Jiri Olsa in:
+>>>>=20
+>>>>    "[BUG] perf: intel_pt won't display kernel function"
+>>>>    https://lore.kernel.org/lkml/20190403143738.GB32001@krava
+>>>>=20
+>>>>  So add the check for record_opts.no_bpf_event when considering
+>>>>  synthesizing BPF events for pre-existing BPF programs in 'perf record=
+'.
+>>>>=20
+>>>>  The reported bug needs further analysis and is a separate matter.
+>>>>=20
+>>>>  Cc: Adrian Hunter <adrian.hunter@intel.com>
+>>>>  Cc: Alexei Starovoitov <ast@kernel.org>
+>>>>  Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+>>>>  Cc: Daniel Borkmann <daniel@iogearbox.net>
+>>>>  Cc: Jiri Olsa <jolsa@kernel.org>
+>>>>  Cc: Martin KaFai Lau <kafai@fb.com>
+>>>>  Cc: Namhyung Kim <namhyung@kernel.org>
+>>>>  Cc: Peter Zijlstra <peterz@infradead.org>
+>>>>  Cc: Song Liu <songliubraving@fb.com>
+>>>>  Cc: Yonghong Song <yhs@fb.com>
+>>>>  Fixes: 7b612e291a5a ("perf tools: Synthesize PERF_RECORD_* for loaded=
+ BPF programs")
+>>>>  Link: https://lore.kernel.org/lkml/20190403145353.GE32553@kernel.org
+>>>>  Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>>>=20
+>>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>>>> index 4e2d953d4bc5..17d772f192ad 100644
+>>>> --- a/tools/perf/builtin-record.c
+>>>> +++ b/tools/perf/builtin-record.c
+>>>> @@ -1114,10 +1114,11 @@ static int record__synthesize(struct record *r=
+ec, bool tail)
+>>>> 		return err;
+>>>> 	}
+>>>>=20
+>>>> -	err =3D perf_event__synthesize_bpf_events(session, process_synthesiz=
+ed_event,
+>>>> -						machine, opts);
+>>>> -	if (err < 0)
+>>>> -		pr_warning("Couldn't synthesize bpf events.\n");
+>>>> +	if (!opts->no_bpf_event) {
+>>>> +		err =3D perf_event__synthesize_bpf_events(session, process_synthesi=
+zed_event, machine, opts);
+>>>> +		if (err < 0)
+>>>> +			pr_warning("Couldn't synthesize bpf events.\n");
+>>>> +	}
+>>>>=20
+>>>> 	err =3D __machine__synthesize_threads(machine, tool, &opts->target, r=
+ec->evlist->threads,
+>>>> 					    process_synthesized_event, opts->sample_address,
+>>=20
+>> --=20
+>>=20
+>> - Arnaldo
 
