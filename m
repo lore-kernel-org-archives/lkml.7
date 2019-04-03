@@ -2,126 +2,149 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98259C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F369C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E41206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675D021473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfDCIrM (ORCPT
+        id S1728922AbfDCIrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:47:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35889 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfDCIrM (ORCPT
+        Wed, 3 Apr 2019 04:47:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33264 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728696AbfDCIrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:47:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y13so20203419wrd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:47:10 -0700 (PDT)
+        Wed, 3 Apr 2019 04:47:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q1so20198420wrp.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:47:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qrDUSDgGGS/5qX5PNBTtzmEP+L0tAtfFiAMhnD/UW2g=;
-        b=kOsGHJeL5iEPUoklEHEIafVR7oUewpGHsqakmqmoAaTLwtRtDMyBrBP8KSr6spG0nd
-         bTfj+Q94hap5q1fx9FYriGD5AQRRGSQz7suL61yWDqovsfYVwwIe+Rwox2ZBlDK6RoiO
-         KgmXsxMXoz0FbofJU6/YMxub+4pLK5LXg0UY5WF/uU2bZXZq2q0hiYM/x+89MUFJE+Gd
-         +1pJ/t6UuyOAg40pgBkEAivsAGFsbRXFb0PZY4oi3LGsX0ph2YzZF4cNexdTcceoLwe4
-         jysr5pYP6OCFaCjHYlb9OkjO6IFOyANmTSKOClo+KMz+3JGOMwalf0un5PxwfuGGzAPf
-         +Dzg==
-X-Gm-Message-State: APjAAAVAp+cGFejGxW7M6XODCQii0TdX+xrHmzZvliNPZtPAuzKc/MvI
-        t+L+JLFHiT0Q5m1cQygGn1iiTQgEmpA=
-X-Google-Smtp-Source: APXvYqxZ40vibQmGdAZrFHfXZmz3oArszmiPb5lwFM/dRtnnbY2unQrt94n2W4rYGU2pQ8IZsi0y2A==
-X-Received: by 2002:adf:efc3:: with SMTP id i3mr47217204wrp.92.1554281230253;
-        Wed, 03 Apr 2019 01:47:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=L4zmx41iw1KumQPxCRIW2sBgEknaPog+5Lq3b2W35Co=;
+        b=bG9Uwj+1FfBsIqpsxmdGk51NbXKd2GTpsSYNsaAdKMnomW1y4zTYZuQW96CYo31uhb
+         wgxce7GeR1PZwXRGR2ymtv2kpb5RqKykyNB1BFlexqwhImyqL+AzJIQ03r09biQB7YvF
+         pjs2feytpg9K0BwQJq9kcQJ43GMyPKiXxs57JS06KCZ40HWEjeMy2YdQ9C4IrdcfB7I4
+         PDjKYbLbSdz1FLXMeARjdCW0rbbmK4gernkfi/uxx2RZA1LI8Gcwn69xf5VgYDMkJ/I8
+         98f1w5LjaV95seSoMEDwlvm0DZbAJB7SwIICPXydg3KCPare8gylb7QVGOrMqfpIwTny
+         iv1w==
+X-Gm-Message-State: APjAAAWpBYcqup/7qhcX018YwQ85Mb6KQ8ZY+DHTYJghGrqP1u9IWuU/
+        YgB46449CcdSlnn3ubChadEIpw==
+X-Google-Smtp-Source: APXvYqx2sqF1ALjK/4/RFVRSIYr52LB+RLoqBwSCqlpWsa481F6FNXJjbxQhUIq3KclPkg/rx2xVqg==
+X-Received: by 2002:adf:b6a4:: with SMTP id j36mr27046494wre.55.1554281231568;
+        Wed, 03 Apr 2019 01:47:11 -0700 (PDT)
 Received: from localhost.localdomain.com ([151.29.174.33])
-        by smtp.gmail.com with ESMTPSA id o2sm12258081wrs.89.2019.04.03.01.47.07
+        by smtp.gmail.com with ESMTPSA id o2sm12258081wrs.89.2019.04.03.01.47.10
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 01:47:09 -0700 (PDT)
+        Wed, 03 Apr 2019 01:47:10 -0700 (PDT)
 From:   Juri Lelli <juri.lelli@redhat.com>
 To:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
         tj@kernel.org
 Cc:     linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
         claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
         bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
-        cgroups@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v7 0/7]  sched/deadline: fix cpusets bandwidth accounting
-Date:   Wed,  3 Apr 2019 10:46:43 +0200
-Message-Id: <20190403084650.4414-1-juri.lelli@redhat.com>
+        cgroups@vger.kernel.org
+Subject: [PATCH v7 1/7] sched/topology: Adding function partition_sched_domains_locked()
+Date:   Wed,  3 Apr 2019 10:46:44 +0200
+Message-Id: <20190403084650.4414-2-juri.lelli@redhat.com>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190403084650.4414-1-juri.lelli@redhat.com>
+References: <20190403084650.4414-1-juri.lelli@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-v7 of a series of patches, originally authored by Mathieu, with the intent
-of fixing a long standing issue of SCHED_DEADLINE bandwidth accounting.
-As originally reported by Steve [1], when hotplug and/or (certain)
-cpuset reconfiguration operations take place, DEADLINE bandwidth
-accounting information is lost since root domains are destroyed and
-recreated.
+Introducing function partition_sched_domains_locked() by taking
+the mutex locking code out of the original function.  That way
+the work done by partition_sched_domains_locked() can be reused
+without dropping the mutex lock.
 
-Mathieu's approach is based on restoring bandwidth accounting info on
-the newly created root domains by iterating through the (DEADLINE) tasks
-belonging to the configured cpuset(s).
+No change of functionality is introduced by this patch.
 
-Apart from the usual rebase on top of cgroup/for-next, changes worth of
-notice are:
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+ include/linux/sched/topology.h | 10 ++++++++++
+ kernel/sched/topology.c        | 17 +++++++++++++----
+ 2 files changed, 23 insertions(+), 4 deletions(-)
 
- - commented about potential problems w.r.t. userspace operations that
-   grabs callback_lock (03/07 - peterz)
- - take cpuset_read_only_lock() before rq an pi locks, as to not
-   introduce a dependency between the former and the latters; on !CONFIG_
-   CPUSET cpuset_read_only(un)lock() (dis/en)ables irqs and preemption
-   (04/07 - peterz)
- - make dl_add_task_root_domain() use !_irqsave (un)lock functions
- - also use __dl_add() to update root domain total_bw
- - 06/07 new patch; seq_show operations can be guarded by cpuset_mutex
-   (peterz)
- - 07/07 new patch; deals with offline migrations (noticed the problem
-   while testing)
-
-Set also available at
-
- https://github.com/jlelli/linux.git fixes/deadline/root-domain-accounting-v7
-
-Thanks,
-
-- Juri
-
-[1] https://lkml.org/lkml/2016/2/3/966
-
-Juri Lelli (5):
-  cgroup/cpuset: make callback_lock raw
-  sched/core: Prevent race condition between cpuset and
-    __sched_setscheduler()
-  cpuset: Rebuild root domain deadline accounting information
-  cgroup/cpuset: Use cpuset_mutex to protect seq_show operations
-  sched/deadline: Fix bandwidth accounting at all levels after offline
-    migration
-
-Mathieu Poirier (2):
-  sched/topology: Adding function partition_sched_domains_locked()
-  sched/core: Streamlining calls to task_rq_unlock()
-
- include/linux/cgroup.h         |   1 +
- include/linux/cpuset.h         |  14 +++
- include/linux/sched.h          |   5 +
- include/linux/sched/deadline.h |   8 ++
- include/linux/sched/topology.h |  10 ++
- kernel/cgroup/cgroup.c         |   2 +-
- kernel/cgroup/cpuset.c         | 161 +++++++++++++++++++++++++--------
- kernel/sched/core.c            |  49 +++++++---
- kernel/sched/deadline.c        |  63 +++++++++++++
- kernel/sched/sched.h           |   3 -
- kernel/sched/topology.c        |  30 +++++-
- 11 files changed, 286 insertions(+), 60 deletions(-)
-
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index 57c7ed3fe465..e7db602e898c 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -161,6 +161,10 @@ static inline struct cpumask *sched_domain_span(struct sched_domain *sd)
+ 	return to_cpumask(sd->span);
+ }
+ 
++extern void partition_sched_domains_locked(int ndoms_new,
++					   cpumask_var_t doms_new[],
++					   struct sched_domain_attr *dattr_new);
++
+ extern void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+ 				    struct sched_domain_attr *dattr_new);
+ 
+@@ -213,6 +217,12 @@ unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
+ 
+ struct sched_domain_attr;
+ 
++static inline void
++partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
++			       struct sched_domain_attr *dattr_new)
++{
++}
++
+ static inline void
+ partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+ 			struct sched_domain_attr *dattr_new)
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index ab7f371a3a17..b63ac11d0831 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -2154,16 +2154,16 @@ static int dattrs_equal(struct sched_domain_attr *cur, int idx_cur,
+  * ndoms_new == 0 is a special case for destroying existing domains,
+  * and it will not create the default domain.
+  *
+- * Call with hotplug lock held
++ * Call with hotplug lock and sched_domains_mutex held
+  */
+-void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+-			     struct sched_domain_attr *dattr_new)
++void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
++				    struct sched_domain_attr *dattr_new)
+ {
+ 	bool __maybe_unused has_eas = false;
+ 	int i, j, n;
+ 	int new_topology;
+ 
+-	mutex_lock(&sched_domains_mutex);
++	lockdep_assert_held(&sched_domains_mutex);
+ 
+ 	/* Always unregister in case we don't destroy any domains: */
+ 	unregister_sched_domain_sysctl();
+@@ -2246,6 +2246,15 @@ void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
+ 	ndoms_cur = ndoms_new;
+ 
+ 	register_sched_domain_sysctl();
++}
+ 
++/*
++ * Call with hotplug lock held
++ */
++void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
++			     struct sched_domain_attr *dattr_new)
++{
++	mutex_lock(&sched_domains_mutex);
++	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
+ 	mutex_unlock(&sched_domains_mutex);
+ }
 -- 
 2.17.2
 
