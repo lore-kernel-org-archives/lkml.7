@@ -2,110 +2,104 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53666C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8663C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236B7206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B52206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 00:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="dl06ZL/z"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="vF2Td1PZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="5hG0UCwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfDCAXH (ORCPT
+        id S1726532AbfDCAYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 20:23:07 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42367 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfDCAXH (ORCPT
+        Tue, 2 Apr 2019 20:24:43 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:45077 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725842AbfDCAYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 20:23:07 -0400
-Received: by mail-qt1-f195.google.com with SMTP id p20so17280699qtc.9;
-        Tue, 02 Apr 2019 17:23:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AQU0UmSUQjCjWhQD0cwp3WsrLbAxYZS7pwvflPfeqwk=;
-        b=dl06ZL/zBEfP9CYuwbaChO0p+5sshlqKT+3sb8LKjtyPy/lUtUTLnDdzVYKiLRy28y
-         8YgRlwETZAlLD4q+kFuO7qBCW1U6wIZORuj4o9KegsjCBPUgMgcFyA4w9AhCxr0n/p9h
-         gKAH7tEBQqh/G43amUrbghj5K7vrK2hZ1Xkhs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AQU0UmSUQjCjWhQD0cwp3WsrLbAxYZS7pwvflPfeqwk=;
-        b=klGMu2XQIAPrGZHn8w/WPD1gGmSTz5QGYh0J0liT98VC8mP0baGOetdq/FoK3QHBdH
-         zqqit5+1K2XQlWkELnXby9RjdU9ZGFv2tBhxkCCxeVSH8pKtDzvdxEK9jwEgLvdEN4dY
-         SKxsNkHhZbxsHpYf/olQCfzlf3ib23Vpk0a9GNvt0hP1alCbtsFDpZFKlNMxYxSCg1jW
-         qGnSEwecIGwmh4Vg3JbdLGENcppOpEN4oyOvLpy58g/tN6WA3+VbAUwZ0Ev7awxkaFUa
-         o+pLkGTv6MFE5yltnuayftxaDWpXQjJ8IN9qKd88uo01g77p1Mcn7YaQi1WlvLFeTBN+
-         WWfg==
-X-Gm-Message-State: APjAAAWbWCcH9qtdPOVUvoFJF014+VcTS5qZ9Mz/7/fZYr3GrQEOTsjg
-        4BM62HpGUKX2uufEDTibqjjwsWl4/ZrSoRImRRw=
-X-Google-Smtp-Source: APXvYqzEKjU95VCL3aBh7dQGGLkH45xy4YG02E4zYFPVw0Qb4b89lLs5Y78yrKQe218KtEnZXcFVyf8aG45TR7v8DYQ=
-X-Received: by 2002:a0c:d155:: with SMTP id c21mr60573834qvh.64.1554250985938;
- Tue, 02 Apr 2019 17:23:05 -0700 (PDT)
+        Tue, 2 Apr 2019 20:24:43 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id DC39421FD3;
+        Tue,  2 Apr 2019 20:24:41 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Tue, 02 Apr 2019 20:24:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=LqrPwreEhQW2o7wMDwPxrwAVDt6
+        UAhrtd1oi8LwyhSM=; b=vF2Td1PZH1kHdjbA9EhBy4fDW5LEN6mVIoOpCNJMx0R
+        OWn6DIzALeu+gQcGKeDnMhxedZlrDeMAsHx8IIGD/eicQI7Ec1TbpBslKZ4rirRG
+        HxGhvqt0NdAPFcxnhd7ZZS9iXd1n9m9mcBT8d8nz3lqTtoSDLpKSqI9116qTOfmA
+        2uc380NFHd0uDT7eo8tkC1C0IdPXAmVgjlmWQMBkUuGfo66AyR50CP3ylPKe2lsn
+        hMc0jdaKDwlrGj5lWL8aq7mNrxCbctO+NuNNT3n1DvyvNFe59XozBURCvR9qgmZh
+        Ra34w4+WV8xpQc8bFUEwrCXd2vq6p+8p62TQwt3ueCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=LqrPwr
+        eEhQW2o7wMDwPxrwAVDt6UAhrtd1oi8LwyhSM=; b=5hG0UCwA4kNiJeD9VYP+Nq
+        35uNghqu+hCp0LOZSioZmOmbQ4RCvHP4Ks1kyd+5jqb0PaYVQwqFXQXYxIoWXUxl
+        z1PoXcrFlSUSrPZo9IqNTM1ZE+tlp0b3v+lwMfFhlP+RBVb1amdKeiD4+netFS1O
+        +irHX9Blq0Po20Q5n6/U3sH4wVqptSbGFM4okd06vjUrzlYVbL/e62hNyBvyJw8L
+        CbJZNRyxJQNlIx9RPzBjQQSKlpEt9V9KYenToeC7Xq23ScGDpvecri/Jlboh6MgV
+        i81RSRTUY82jDZlZl/5E3XqF6qTY8/vDxh8QRoDvAEt6ZRxrw8mygXauag03SnUw
+        ==
+X-ME-Sender: <xms:Sf2jXIm8K9zGInYGK9xLhEu4po1ZHrnj1AEIySdXug8GxekBEdIwQQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdefvdculddtuddrgedutddrtddtmd
+    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenfghrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhf
+    gggtuggjofgfsehttdertdforedvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrug
+    hinhhgfdcuoehmvgesthhosghinhdrtggtqeenucfkphepuddvgedrudeiledrvdejrddv
+    tdeknecurfgrrhgrmhepmhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluh
+    hsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:Sf2jXNV77fDkxuyv8St-Bf5mK3cfdqyA2PW61mmAkhY9NTJdLwnSow>
+    <xmx:Sf2jXO-u1TKfX9QYS4o6j31G7diWqsf5IKhurykPydhwzaD-vqsWew>
+    <xmx:Sf2jXCr1MMLaYFvsUsAxuZ7PQ9v7RjefAUQBZAH_CauD-UzLrKCyaQ>
+    <xmx:Sf2jXERipD-84XfB-Uk3a2dm20GXlIzTIWVRirD31DBKCdrFokTQHg>
+Received: from localhost (124-169-27-208.dyn.iinet.net.au [124.169.27.208])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 86FFFE408B;
+        Tue,  2 Apr 2019 20:24:40 -0400 (EDT)
+Date:   Wed, 3 Apr 2019 11:23:55 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3.1] selftests: Clean up module testing shell script
+Message-ID: <20190403002355.GA29296@eros.localdomain>
+References: <20190402222610.GA15100@beast>
 MIME-Version: 1.0
-References: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
-In-Reply-To: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 3 Apr 2019 00:22:54 +0000
-Message-ID: <CACPK8XfXxVa-XszCAp=uYyZF38BRXH=ugutFEmKoiq7DeapsiA@mail.gmail.com>
-Subject: Re: [PATCH] watchdog: Convert to use devm_platform_ioremap_resource
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Wan ZongShun <mcuos.com@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Kukjin Kim <kgene@kernel.org>, Barry Song <baohua@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402222610.GA15100@beast>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Apr 2019 at 19:02, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> Use devm_platform_ioremap_resource to reduce source code size,
+On Tue, Apr 02, 2019 at 03:26:10PM -0700, Kees Cook wrote:
+> This adjusts kselftest_module.sh to take an option "args" argument for
+> modprobe arguments, removes bash-isms (since some system's /bin/sh may
+> not be bash), and refactors the lib/ scripts into a shorter calling
+> convention.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> This is my suggested clean-up for the module testing script for the
+> strscpy_pad() series...
 
-This is a strange name for a function that doesn't take nor return a
-'struct resource'.
+You are seriously at risk of being the most awesome code reviewer on
+LKML.  Beer is on me next time I see you.
 
-However, the intent is welcome as many drivers do redundant checking
-of the platform_get_resource result before passing to
-devm_ioremap_resource.
+I will roll this into a v4 for the strscpy_pad() set.  Would you like a
+Co-developed-by tag or just a mention in the commit log?
 
-> improve readability, and reduce the likelyhood of bugs.
-
->  drivers/watchdog/aspeed_wdt.c     | 4 +---
-
-Acked-by: Joel Stanley <joel@jms.id.au>
-
-Cheers,
-
-Joel
+thanks,
+Tobin.
