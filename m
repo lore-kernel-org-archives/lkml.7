@@ -2,209 +2,211 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605DBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C108C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227B620882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E89821473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JgIOBVnO";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OMBSM89Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHLa4m5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfDCGX3 (ORCPT
+        id S1726615AbfDCG0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 02:23:29 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47976 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfDCGX2 (ORCPT
+        Wed, 3 Apr 2019 02:26:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44201 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfDCG0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 02:23:28 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3FD8D609EF; Wed,  3 Apr 2019 06:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554272607;
-        bh=6AQngCmrRNLvLhHqstHqh7bOMbauH/DZ91cJ4U/0UyU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JgIOBVnO82ydWNm/pU9HsQR2YcBjHP7aadxfYXHICCjQE5Bm+yorMcrxx0MRlejuF
-         gMEVYB6QLDdunY8kHP14n0a0WdPvEuphiPxz0PyK8xvTrI7Bb8cVbqobfMtDwzyXz9
-         unvTkxNfz0f8wDybNERzodnWmuVyQRIFOfe9VtTw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 4CB6F60721;
-        Wed,  3 Apr 2019 06:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554272606;
-        bh=6AQngCmrRNLvLhHqstHqh7bOMbauH/DZ91cJ4U/0UyU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OMBSM89QlLQ9Wz6nQkf0D5Sn7pzFVe7vC4sgNATS/GlrDiFdLSZzkzOnI8a4BbuiP
-         fudvJ2Xa/pnlAN9QYSSuQeeU1+IHVybHd7VdT/d5IFKcjUudPQQDo+H2kSTQQcDStM
-         t/hdt4zNq/3004Eenq1zriqVOP8yaVQ1/1cLXEKA=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Apr 2019 11:53:26 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Matthias Kaehlcke <mka@chromium.org>, c-hbandi@codeaurora.org
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hemantg <hemantg@codeaurora.org>
-Subject: Re: [PATCH 2/2] Bluetooth: hci_qca: wcn3990: Drop baudrate change
- vendor event
-In-Reply-To: <20190402180501.GK112750@google.com>
-References: <20190307004041.38059-1-mka@chromium.org>
- <20190307004041.38059-3-mka@chromium.org>
- <ff905fac1e57bcca78c74f1bc3349645@codeaurora.org>
- <20190307182009.GB138592@google.com> <20190307233039.GA69116@google.com>
- <c985a6712f91930d7c710ca4abb42e80@codeaurora.org>
- <a03acbdc6bfad172fdd65f428ffbe4cf@codeaurora.org>
- <20190401171202.GH112750@google.com>
- <1bebaf0766988a9f27cbbcb9bb35e26f@codeaurora.org>
- <20190402180501.GK112750@google.com>
-Message-ID: <1200f5c32e029c603667d66a4c62a634@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Wed, 3 Apr 2019 02:26:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g12so7506626pll.11;
+        Tue, 02 Apr 2019 23:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=DFRXXvHkZNBSc8cdxXqUjOY/AaTObOXefR9xJkuW0V0=;
+        b=KHLa4m5VeTO4h55SzyPBnJV0PdTaLdANl+zJmkltmvIsVOUVcGUOjls7wNXdlnd9Zs
+         ZlvGl6VQokSuyRVGkoDEhTbYxqf68gyIOT8qXBNWdh+OaFeMOzvImjD1Pt+rNQzBeWTy
+         0LZfYkauEz5hI2ysCb3AOqQiVDG504Gwf3UswW9i5lIQs0WURqqXMmfn5u6WxeuVFKFo
+         nMj3P7Kf74VAlPHZN7+O6/l+jV/B1x8jU6yanZ+QCVdWl+p7L67ROwWDlOciIruNxUTI
+         44nrJ85EA+tGmUcse1go8sngrEzV2BAtymG3584v9hLtkVQSYRbTfNoIo4Bp7bYdR8Xz
+         vCbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DFRXXvHkZNBSc8cdxXqUjOY/AaTObOXefR9xJkuW0V0=;
+        b=tiNFv7k7+la61x0aJUKUdJbb4Cs9ZVFQFO6+SeCDtIDR5ceFXTyFAdS3bIn625qKTO
+         5te5q3YxzHYx4NEJPzWDva/KTPFQduVfTFaw5WLE8ShMUh6vYBWDIiK5qnnC/4KB7VnU
+         HATd4d2gjM+67zLHGJrSiHaWq9U3zkjXNew/GafMq7ehaoi3GnoLjmchpw9fIr8446O7
+         s8Tg9Yq4tn8RDyPNcVrCous0V79lE0jHswHgdYhntRnKxFUYy833iTcKOhPiqMY2HVrZ
+         LEq9wpwwsteG2RB1JYYEoFBikX8voPuKQ2ya37fyDaYa6J1izXSFLnF917wDKrXCHGHA
+         St0w==
+X-Gm-Message-State: APjAAAV5YTOowxYWiz05bB5rPRmgWikUUVQty/9UY9eZlw2nnVoHT9m9
+        T8L4xJWAIqkiracihiZ5lWE=
+X-Google-Smtp-Source: APXvYqz8hSwvwlWHPaBUQgUU3njEL5oODYDOeaCPaddxJ9Lu47rmSicBqTtZGNYh+h84XlZLTVfBEw==
+X-Received: by 2002:a17:902:e912:: with SMTP id cs18mr75409336plb.130.1554272800175;
+        Tue, 02 Apr 2019 23:26:40 -0700 (PDT)
+Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id j28sm33842276pgb.46.2019.04.02.23.26.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 23:26:39 -0700 (PDT)
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+To:     peter_hong@fintek.com.tw, johan@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH V5 1/3] USB: serial: f81232: clear overrun flag
+Date:   Wed,  3 Apr 2019 14:26:28 +0800
+Message-Id: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Harish to update his findings on wcn3998.
-Mean time i will perform a regression to detect the failure.
+The F81232 will report data and LSR with bulk like following format:
+bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
 
-On 2019-04-02 23:35, Matthias Kaehlcke wrote:
-> On Tue, Apr 02, 2019 at 05:32:54PM +0530, Balakrishna Godavarthi wrote:
->> Hi Matthias,
->> 
->> On 2019-04-01 22:42, Matthias Kaehlcke wrote:
->> > On Mon, Apr 01, 2019 at 01:48:23PM +0530, Balakrishna Godavarthi wrote:
->> > > Hi Matthias,
->> > >
->> > > On 2019-04-01 13:29, Balakrishna Godavarthi wrote:
->> > > > Hi Matthias,
->> > > >
->> > > > Sorry for the late reply i was on vacation.
->> > > >
->> > > > On 2019-03-08 05:00, Matthias Kaehlcke wrote:
->> > > > > On Thu, Mar 07, 2019 at 10:20:09AM -0800, Matthias Kaehlcke wrote:
->> > > > > > Hi Balakrishna,
->> > > > > >
->> > > > > > On Thu, Mar 07, 2019 at 10:35:08AM +0530, Balakrishna Godavarthi
->> > > > > > wrote:
->> > > > > > > hi Matthias,
->> > > > > > >
->> > > > > > > On 2019-03-07 06:10, Matthias Kaehlcke wrote:
->> > > > > > > > Firmware download to the WCN3990 often fails with a 'TLV response size
->> > > > > > > > mismatch' error:
->> > > > > > > >
->> > > > > > > > [  133.064659] Bluetooth: hci0: setting up wcn3990
->> > > > > > > > [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
->> > > > > > > > [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
->> > > > > > > > [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
->> > > > > > > > [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
->> > > > > > > >
->> > > > > > > > This is caused by a vendor event that corresponds to an earlier command
->> > > > > > > > to change the baudrate. The event is not processed in the context of the
->> > > > > > > > baudrate change and later interpreted as response to the firmware
->> > > > > > > > download command (which is also a vendor command), but the driver
->> > > > > > > > detects
->> > > > > > > > that the event doesn't have the expected amount of associated data.
->> > > > > > > >
->> > > > > > > > More details:
->> > > > > > > >
->> > > > > > > > For the WCN3990 the vendor command for a baudrate change isn't sent as
->> > > > > > > > synchronous HCI command, because the controller sends the corresponding
->> > > > > > > > vendor event with the new baudrate. The event is received and decoded
->> > > > > > > > after the baudrate change of the host port.
->> > > > > > > >
->> > > > > > > > Identify the 'unused' event when it is received and don't add it to
->> > > > > > > > the queue of RX frames.
->> > > > > > > >
->> > > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
->> > > > > > > > ---
->> > > > > > >
->> > > > > > > ...
->> > > > > > >
->> > > > > > > Can you test by reverting this change "94d6671473924".
->> > > > > >
->> > > > > > The issue is still reproducible.
->> > > > > >
->> > > > > > > We need at least 15ms minimum delay for the soc to change its baud rate and
->> > > > > > > respond to the with command complete event.
->> > > > > >
->> > > > > > The baudrate change has clearly been successful when the problem is
->> > > > > > observed, since the host receives the vendor event with the new
->> > > > > > baudrate.
->> > > > >
->> > > > > I forgot to mention this earlier: the controller doesn't send a
->> > > > > command complete event for the command, or at least not a correct
->> > > > > one.
->> > > > >
->> > > > > That's the data that is received:
->> > > > >
->> > > > > 04 0e 04 01 00 00 00
->> > > > >             ~~ ~~
->> > > > >
->> > > > [Bala]: can you share me the command sent and event recevied.
->> > > >  I see that we receive a command complete event for the baud rate
->> > > > change command.
->> > > >
->> > > > command sent: 01 48 fc 01 11
->> > > > vendor specific event: 04 ff 02 92 01
->> > > > command complete event: 04 0e 04 01 00 00 00.
->> > > >
->> > > >
->> > > >
->> > > > > This is *a* command complete event, but the opcode is 0x0000 instead
->> > > > > of the earlier command. The same happens for the firmware
->> > > > > download/read version command, which is the reason why the command
->> > > > > complete injection mess
->> > > > > (https://lore.kernel.org/patchwork/patch/1027955/) is needed in one
->> > > > > way or another.
->> > > > >
->> > > > [Bala]: fw download approach is different where we use
->> > > > __hci_cmd_sync() where as here we use hci_uart_tx_wakeup()
->> > > >         which directly calls the hci_uart_write_work(). so even we
->> > > > send an valid opcode or not for baudrate change will bot matter.
->> > > >
->> > > [Bala]: i miss understood the comment. Yes your true. in the all
->> > > vendor
->> > > commands SoC responds with an 0x0000 opcode.
->> >
->> > And IIUC this is not compliant with the spec, or at least the BT core
->> > expects the actual opcode to consider the command to be completed.
->> 
->> [Bala]: Did you try increasing the the baud rate change timeout to 
->> 50ms
->> instead of 10ms.
-> 
-> It is even reproducible with the ROME timeout of 300ms.
-> 
-> The timeout doesn't help here. With 78e8fa2972e5 ("Bluetooth: hci_qca:
-> Deassert RTS while baudrate change command") RTS is deasserted during
-> the baudrate change, hence the controller only sends the response when
-> RTS is asserted again. Before the event resulted in a frame reassembly
-> error and the data was discarded.
-> 
->>         i suspect it is an timing issue.
-> 
-> Timing is certainly also a factor here (the problem isn't seen
-> always), but I don't think 'timing issue' is a proper description of
-> this issue. The problem is an event that the Bluetooth core doesn't
-> expect due to the hack of sending a raw command behind the core's back
-> to work around the firmware 'feature' of sending the command response
-> with the new baudrate.
-> 
-> Maybe a delay after re-asserting RTS can address is reliably, I don't
-> remember if I already experimented with that in the past. If a delay
-> can 'fix' the issue reliably I'm open to consider it for the sake of
-> simplicity, but only with a detailed comment that describes the
-> problem.
+LSR will auto clear frame/parity/break error flag when reading by H/W,
+but overrrun will only cleared when reading LSR. So this patch add a
+worker to read LSR when overrun and flush the worker on close() &
+suspend().
 
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+---
+v5:
+	1: Source code base revert to v3 and remove all v4 changes.
+	2: Add serial->suspending check in f81232_process_read_urb()
+	   before schedule_work(&priv->lsr_work) to avoid race condition.
+
+v4:
+	1: Add serial->suspending check in f81232_lsr_worker() to avoid
+	   re-trigger
+	2: Add port_priv-lsr_work_resched to re-trigger LSR worker
+
+v3:
+	1: Add flush_work(&port_priv->lsr_work) in f81232_suspend().
+
+v2:
+	1: Add flush_work(&port_priv->lsr_work) in f81232_close().
+
+ drivers/usb/serial/f81232.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
+index 0dcdcb4b2cde..d8a0bb7a41f0 100644
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -41,12 +41,14 @@ MODULE_DEVICE_TABLE(usb, id_table);
+ #define FIFO_CONTROL_REGISTER		(0x02 + SERIAL_BASE_ADDRESS)
+ #define LINE_CONTROL_REGISTER		(0x03 + SERIAL_BASE_ADDRESS)
+ #define MODEM_CONTROL_REGISTER		(0x04 + SERIAL_BASE_ADDRESS)
++#define LINE_STATUS_REGISTER		(0x05 + SERIAL_BASE_ADDRESS)
+ #define MODEM_STATUS_REGISTER		(0x06 + SERIAL_BASE_ADDRESS)
+ 
+ struct f81232_private {
+ 	struct mutex lock;
+ 	u8 modem_control;
+ 	u8 modem_status;
++	struct work_struct lsr_work;
+ 	struct work_struct interrupt_work;
+ 	struct usb_serial_port *port;
+ };
+@@ -282,6 +284,8 @@ static void f81232_read_int_callback(struct urb *urb)
+ static void f81232_process_read_urb(struct urb *urb)
+ {
+ 	struct usb_serial_port *port = urb->context;
++	struct usb_serial *serial = port->serial;
++	struct f81232_private *priv = usb_get_serial_port_data(port);
+ 	unsigned char *data = urb->transfer_buffer;
+ 	char tty_flag;
+ 	unsigned int i;
+@@ -315,6 +319,9 @@ static void f81232_process_read_urb(struct urb *urb)
+ 
+ 			if (lsr & UART_LSR_OE) {
+ 				port->icount.overrun++;
++
++				if (!serial->suspending)
++					schedule_work(&priv->lsr_work);
+ 				tty_insert_flip_char(&port->port, 0,
+ 						TTY_OVERRUN);
+ 			}
+@@ -556,9 +563,12 @@ static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
+ 
+ static void f81232_close(struct usb_serial_port *port)
+ {
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++
+ 	f81232_port_disable(port);
+ 	usb_serial_generic_close(port);
+ 	usb_kill_urb(port->interrupt_in_urb);
++	flush_work(&port_priv->lsr_work);
+ }
+ 
+ static void f81232_dtr_rts(struct usb_serial_port *port, int on)
+@@ -603,6 +613,21 @@ static void  f81232_interrupt_work(struct work_struct *work)
+ 	f81232_read_msr(priv->port);
+ }
+ 
++static void f81232_lsr_worker(struct work_struct *work)
++{
++	struct f81232_private *priv;
++	struct usb_serial_port *port;
++	int status;
++	u8 tmp;
++
++	priv = container_of(work, struct f81232_private, lsr_work);
++	port = priv->port;
++
++	status = f81232_get_register(port, LINE_STATUS_REGISTER, &tmp);
++	if (status)
++		dev_warn(&port->dev, "read LSR failed: %d\n", status);
++}
++
+ static int f81232_port_probe(struct usb_serial_port *port)
+ {
+ 	struct f81232_private *priv;
+@@ -613,6 +638,7 @@ static int f81232_port_probe(struct usb_serial_port *port)
+ 
+ 	mutex_init(&priv->lock);
+ 	INIT_WORK(&priv->interrupt_work,  f81232_interrupt_work);
++	INIT_WORK(&priv->lsr_work, f81232_lsr_worker);
+ 
+ 	usb_set_serial_port_data(port, priv);
+ 
+@@ -632,6 +658,16 @@ static int f81232_port_remove(struct usb_serial_port *port)
+ 	return 0;
+ }
+ 
++static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
++{
++	struct f81232_private *port_priv;
++
++	port_priv = usb_get_serial_port_data(serial->port[0]);
++	flush_work(&port_priv->lsr_work);
++
++	return 0;
++}
++
+ static struct usb_serial_driver f81232_device = {
+ 	.driver = {
+ 		.owner =	THIS_MODULE,
+@@ -655,6 +691,7 @@ static struct usb_serial_driver f81232_device = {
+ 	.read_int_callback =	f81232_read_int_callback,
+ 	.port_probe =		f81232_port_probe,
+ 	.port_remove =		f81232_port_remove,
++	.suspend =		f81232_suspend,
+ };
+ 
+ static struct usb_serial_driver * const serial_drivers[] = {
 -- 
-Regards
-Balakrishna.
+2.7.4
+
