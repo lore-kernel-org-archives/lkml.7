@@ -2,98 +2,96 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D218C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B09C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D792082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332DD206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ds/bF1Nx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9uq1pgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbfDDQK4 (ORCPT
+        id S1728735AbfDDQNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:10:56 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50172 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbfDDQK4 (ORCPT
+        Thu, 4 Apr 2019 12:13:11 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40021 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbfDDQNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:10:56 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x34GAko6116493;
-        Thu, 4 Apr 2019 11:10:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554394246;
-        bh=jXUbV4eD3j30XaY7hpzKJGJyJUCbnzSUHew47Go2unE=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=ds/bF1Nxmfp+QwYQ/r/dfqYkvRItzGXL7Be7QNSf9lSl3q/KTAKdD9bsKcmH9WCEI
-         RYtovKCiteUlde3TbWM17UL0BxoPyRr5u9NVK53gK57spV3yKCAAPKSRxK/yl4HmrH
-         /TfzSi/C+AakHm+aP8BpCg/11o9LGudhcowsU1Io=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x34GAkA2078836
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Apr 2019 11:10:46 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
- 2019 11:10:46 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 4 Apr 2019 11:10:46 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x34GAkxl108146;
-        Thu, 4 Apr 2019 11:10:46 -0500
-Date:   Thu, 4 Apr 2019 11:10:46 -0500
-From:   Bin Liu <b-liu@ti.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     <od@zcrc.me>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: musb: Disable pullup in gadget setup
-Message-ID: <20190404161046.GA30182@uda0271908>
-Mail-Followup-To: Bin Liu <b-liu@ti.com>,
-        Paul Cercueil <paul@crapouillou.net>, od@zcrc.me,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190404093743.6470-1-paul@crapouillou.net>
+        Thu, 4 Apr 2019 12:13:11 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c207so1600290pfc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:13:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TYyeiQLL73tEM/u50L/tx+FHr1FUO0o/H2RVwcC12A0=;
+        b=E9uq1pgMKWm6hxKKCzFDwA8icMbuzNd/D7sKhUDXQ/BDu79Odyz+1dWRAZ1rlcgrv7
+         PwQXAx251zhxWx5dPpSjVvBF95ymHXS855YoOZ7B0KQEsxdbdMUebEqfDacC4NG6INtg
+         P6Qons//YqdYx8sUjTo+SvlLlQapTqB8HYRT2qfIBxtaIf3cgy8CSzWr9je5+SMDGxPJ
+         Pj7vTP7/ciw5k86VV7Z/BmVWg678iEJXm/+MQfBPrWTBKXorOn9hO1VBeEdLMGdbnqEo
+         QcGv/1RTgY4XpVJN+ZjYs0uJq4v36/r1noldIGrK2TDDKhMt7FlksDJi0s7Ma18SuGcy
+         x0Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TYyeiQLL73tEM/u50L/tx+FHr1FUO0o/H2RVwcC12A0=;
+        b=a2/k1EUF5JIoSG2CJII7oP6g3rUw856KW4jU8+9BcfCWBtpTGaCwq3Ij+05addNgr6
+         sR2MChemH7Ol1EWkRMfCurnACKCj3UnT/Z2O8oMD1DuyzM1acB7dUj8pxT/xp8AcJT+b
+         VMJcEK2M2YD8T1ptB8LSVgeyd/2yvGCiYvwVI/cS31a9OOTb3oJm8wOfGH/EPnrvVLSH
+         XgjiXatVPNHqVEoNlhehE+g+Wf6Vry7VNjr5pjbWIyyX24jKOztTm1xtMaO93gHOxddf
+         /GBcZiKN+rPrcJA5Rjx4mKaQv6trvA3QlIaJgLs2vnl/ADHZXSNKkx41hB4tM+zBt7xI
+         Wlqg==
+X-Gm-Message-State: APjAAAWzm50PDecggPdaAd64f8MUW6ELCRJ7yWOr/ozqtkRs4JMBMlKR
+        1hVe3xa3a0gbarpIEcqho/U=
+X-Google-Smtp-Source: APXvYqymu8xV98295h044l/TmWIuGnlvH5wX/hIriNKRBYKHx3vda37Ev7l/oBw9UBFwZ1/woz3zDg==
+X-Received: by 2002:a62:62c3:: with SMTP id w186mr6728151pfb.73.1554394390701;
+        Thu, 04 Apr 2019 09:13:10 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:9681:c7ba:deef:ba65:b868:9005])
+        by smtp.gmail.com with ESMTPSA id c17sm28507738pfd.76.2019.04.04.09.13.09
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 04 Apr 2019 09:13:10 -0700 (PDT)
+From:   Nilesh Hase <nilhase25@gmail.com>
+To:     matthias.bgg@gmail.com
+Cc:     gregkh@linuxfoundation.org, neil@brown.name, sr@denx.de,
+        sankalpnegi2310@gmail.com, gch981213@gmail.com,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nilesh Hase <nilhase25@gmail.com>
+Subject: [PATCH] MT7621-SPI: spi-mt7621: Fix alignment and style problems     Fixed Coding function and style issues
+Date:   Thu,  4 Apr 2019 01:01:07 +0530
+Message-Id: <20190403193107.23873-1-nilhase25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190404093743.6470-1-paul@crapouillou.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 11:37:43AM +0200, Paul Cercueil wrote:
-> The pullup may be already enabled before the driver is initialized.
-> It has to be disabled at init time, as we cannot guarantee that a gadget
-> driver will be bound to the UDC.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/usb/musb/musb_gadget.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
-> index ffe462a657b1..094dc59c834c 100644
-> --- a/drivers/usb/musb/musb_gadget.c
-> +++ b/drivers/usb/musb/musb_gadget.c
-> @@ -1794,6 +1794,7 @@ int musb_gadget_setup(struct musb *musb)
->  
->  	musb->is_active = 0;
->  	musb_platform_try_idle(musb, 0);
-> +	musb_pullup(musb, 0);
->  
->  	status = usb_add_gadget_udc(musb->controller, &musb->g);
->  	if (status)
+Signed-off-by: Nilesh Hase <nilhase25@gmail.com>
+---
+ drivers/staging/mt7621-spi/spi-mt7621.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied.
+diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
+index b509f9fe3346..6fa9876f5a92 100644
+--- a/drivers/staging/mt7621-spi/spi-mt7621.c
++++ b/drivers/staging/mt7621-spi/spi-mt7621.c
+@@ -303,7 +303,7 @@ static int mt7621_spi_setup(struct spi_device *spi)
+ 	struct mt7621_spi *rs = spidev_to_mt7621_spi(spi);
+ 
+ 	if ((spi->max_speed_hz == 0) ||
+-		(spi->max_speed_hz > (rs->sys_freq / 2)))
++	    (spi->max_speed_hz > (rs->sys_freq / 2)))
+ 		spi->max_speed_hz = (rs->sys_freq / 2);
+ 
+ 	if (spi->max_speed_hz < (rs->sys_freq / 4097)) {
+-- 
+2.20.1
 
-Thanks,
--Bin.
