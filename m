@@ -2,107 +2,154 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C90C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8E72147C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFE52084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfDCNPH (ORCPT
+        id S1726495AbfDCNPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:15:07 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39974 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbfDCNPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:15:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1C92A78;
-        Wed,  3 Apr 2019 06:15:06 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 407743F59C;
-        Wed,  3 Apr 2019 06:15:03 -0700 (PDT)
-Subject: Re: [PATCH 2/6] arm64/mm: Enable memory hot remove
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Wed, 3 Apr 2019 09:15:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:44506 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfDCNPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:15:15 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 06:15:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
+   d="scan'208";a="334627151"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga005.fm.intel.com with ESMTP; 03 Apr 2019 06:15:11 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hBfjS-0002qL-IF; Wed, 03 Apr 2019 16:15:10 +0300
+Date:   Wed, 3 Apr 2019 16:15:10 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com
-Cc:     mark.rutland@arm.com, mhocko@suse.com, david@redhat.com,
-        logang@deltatee.com, cai@lca.pw, pasha.tatashin@oracle.com,
-        james.morse@arm.com, cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de
-References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
- <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
- <ed4ceac4-b92c-47f4-33b0-ed1d0833b40d@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <e191ddcb-271c-57f3-091f-eacaac2e86e0@arm.com>
-Date:   Wed, 3 Apr 2019 14:15:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Peter Rosin <peda@axentia.se>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 00/12] i2c: core: introduce atomic transfers
+Message-ID: <20190403131510.GE9224@smile.fi.intel.com>
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-In-Reply-To: <ed4ceac4-b92c-47f4-33b0-ed1d0833b40d@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 13:37, Robin Murphy wrote:
-> [ +Steve ]
+On Wed, Apr 03, 2019 at 02:40:07PM +0200, Wolfram Sang wrote:
+> This series adds support for very late atomic transfers to the I2C subsystem.
+> It finally reached a state which I think is ready-to-apply. This is mainly
+> because of two things:
 > 
-> Hi Anshuman,
+> a) we decided to respect the current locking scheme and to not give atomic
+> transfers a priority. The code needed for that would have been either
+> incomplete or very invasive. And we cannot guarantee successful transfers
+> anyhow. See [1] for the discussion and other write-ups for design choices.
 > 
-> On 03/04/2019 05:30, Anshuman Khandual wrote:
-
-<snip>
-
->> diff --git a/arch/arm64/include/asm/pgtable.h
->> b/arch/arm64/include/asm/pgtable.h
->> index de70c1e..858098e 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -355,6 +355,18 @@ static inline int pmd_protnone(pmd_t pmd)
->>   }
->>   #endif
->>   +#if (CONFIG_PGTABLE_LEVELS > 2)
->> +#define pmd_large(pmd)    (pmd_val(pmd) && !(pmd_val(pmd) &
->> PMD_TABLE_BIT))
->> +#else
->> +#define pmd_large(pmd) 0
->> +#endif
->> +
->> +#if (CONFIG_PGTABLE_LEVELS > 3)
->> +#define pud_large(pud)    (pud_val(pud) && !(pud_val(pud) &
->> PUD_TABLE_BIT))
->> +#else
->> +#define pud_large(pmd) 0
->> +#endif
+> b) thanks to a discussion with Peter Zijlstra[2], the conditions when to allow
+> atomic transfers became much clearer. The new helper i2c_in_atomic_xfer_mode()
+> adds readability, too.
 > 
-> These seem rather different from the versions that Steve is proposing in
-> the generic pagewalk series - can you reach an agreement on which
-> implementation is preferred?
+> In detail, changes since RFC v2:
+> 
+> * dropped coding style patch because already applied
+> * added new patch 1 to drop in_atomic() and have better conditions when
+>   to enter the atomic path
+> * added support to the mux-core
+> * simplified omap conversion a little
+> * added new conversions for ocores, stu300, and algo-bit/gpio
+> * typo corrections found by Simon and Stefan
+> * added tags to drivers
+> * dropped tags from core patches because that part changed too much
+> 
+> All tested on a Renesas Lager board (R-Car H2). Sadly, the i2c-sh_mobile driver
+> cannot be converted now because of other work needed first. I tested with the
+> i2c-gpio driver, though. The other driver patches are build tested. A branch
+> can be found here:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/atomic_xfer
+> 
+> I am happy for reviews and comments. Please note if you review (especially the
+> core parts), I'd like to have a short summary of your review even if there is
+> no proposed change. Like what you did, what you think about it, etc. Some stuff
+> in here is subtle, so if you went through the effort to double check my
+> assumptions you should name it :)
+> 
 
-Indeed this doesn't match the version in my series although is quite
-similar.
+Thank you!
 
-My desire is that p?d_large represents the hardware architectural
-definition of large page/huge page/section (pick your naming). Although
-now I look more closely this is actually broken in my series (I'll fix
-that up and send a new version shortly) - p?d_sect() is similarly
-conditional.
+FWIW,
 
-Is there a good reason not to use the existing p?d_sect() macros
-available on arm64?
+Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I'm also surprised by the CONFIG_PGTABLE_LEVEL conditions as they don't
-match the existing conditions for p?d_sect(). Might be worth double
-checking it actually does what you expect.
+for patches 1-5,12.
 
-Steve
+Indeed, atomic condition sounds clear now.
+
+> 
+> Finally, a big thank you and credit to Renesas for funding this work, of course!
+> 
+> Happy hacking,
+> 
+>    Wolfram
+> 
+> [1] https://lkml.org/lkml/2019/3/2/76
+> [2] http://patchwork.ozlabs.org/patch/1067437/
+> 
+> Wolfram Sang (12):
+>   i2c: remove use of in_atomic()
+>   i2c: core: use I2C locking behaviour also for SMBUS
+>   i2c: core: introduce callbacks for atomic transfers
+>   i2c: mux: populate the new *_atomic callbacks
+>   i2c: demux: handle the new atomic callbacks
+>   i2c: omap: Add the master_xfer_irqless hook
+>   i2c: tegra-bpmp: convert to use new atomic callbacks
+>   i2c: ocores: refactor setup for polling
+>   i2c: ocores: enable atomic xfers
+>   i2c: stu300: use xfer_atomic callback to bail out early
+>   i2c: algo: bit: add flag to whitelist atomic transfers
+>   i2c: gpio: flag atomic capability if possible
+> 
+>  drivers/i2c/algos/i2c-algo-bit.c      | 22 +++++++++-
+>  drivers/i2c/busses/i2c-gpio.c         |  2 +
+>  drivers/i2c/busses/i2c-ocores.c       | 16 +++-----
+>  drivers/i2c/busses/i2c-omap.c         | 76 +++++++++++++++++++++++++++++------
+>  drivers/i2c/busses/i2c-stu300.c       | 25 +++++-------
+>  drivers/i2c/busses/i2c-tegra-bpmp.c   | 25 +++++++++---
+>  drivers/i2c/i2c-core-base.c           | 17 ++++----
+>  drivers/i2c/i2c-core-smbus.c          | 25 +++++++++---
+>  drivers/i2c/i2c-core.h                | 25 ++++++++++++
+>  drivers/i2c/i2c-mux.c                 |  6 +++
+>  drivers/i2c/muxes/i2c-demux-pinctrl.c |  2 +
+>  include/linux/i2c-algo-bit.h          |  1 +
+>  include/linux/i2c.h                   | 15 +++++--
+>  13 files changed, 194 insertions(+), 63 deletions(-)
+> 
+> -- 
+> 2.11.0
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
