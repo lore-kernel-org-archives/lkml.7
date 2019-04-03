@@ -2,221 +2,110 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F46C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279D7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2CA206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFEB3206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfDCKko (ORCPT
+        id S1726580AbfDCKkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:40:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55720 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfDCKko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:40:44 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4D5CA3082141;
-        Wed,  3 Apr 2019 10:40:43 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (dhcp-10-65-161-59.pnq.redhat.com [10.65.161.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E5C619731;
-        Wed,  3 Apr 2019 10:40:21 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com
-Subject: [PATCH v4 0/5] virtio pmem driver 
-Date:   Wed,  3 Apr 2019 16:10:13 +0530
-Message-Id: <20190403104018.23947-1-pagupta@redhat.com>
+        Wed, 3 Apr 2019 06:40:53 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43421 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfDCKkx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 06:40:53 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33Ae93W1812139
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Apr 2019 03:40:09 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33Ae8rk1812136;
+        Wed, 3 Apr 2019 03:40:08 -0700
+Date:   Wed, 3 Apr 2019 03:40:08 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Shaokun Zhang <tipbot@zytor.com>
+Message-ID: <tip-1279e41d535e28cc3b56fa4a09e71a709641cae6@git.kernel.org>
+Cc:     vincent.weaver@maine.edu, jolsa@redhat.com, songliubraving@fb.com,
+        torvalds@linux-foundation.org, acme@redhat.com, eranian@google.com,
+        linux-kernel@vger.kernel.org, zhangshaokun@hisilicon.com,
+        acme@kernel.org, tglx@linutronix.de, peterz@infradead.org,
+        hpa@zytor.com, alexander.shishkin@linux.intel.com, mingo@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          zhangshaokun@hisilicon.com, acme@kernel.org, acme@redhat.com,
+          eranian@google.com, mingo@kernel.org,
+          alexander.shishkin@linux.intel.com, hpa@zytor.com,
+          peterz@infradead.org, vincent.weaver@maine.edu,
+          torvalds@linux-foundation.org, songliubraving@fb.com,
+          jolsa@redhat.com
+In-Reply-To: <1554274464-5739-1-git-send-email-zhangshaokun@hisilicon.com>
+References: <1554274464-5739-1-git-send-email-zhangshaokun@hisilicon.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf/headers: Fix stale comment for struct
+ perf_addr_filter
+Git-Commit-ID: 1279e41d535e28cc3b56fa4a09e71a709641cae6
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 03 Apr 2019 10:40:43 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- This patch series has implementation for "virtio pmem". 
- "virtio pmem" is fake persistent memory(nvdimm) in guest 
- which allows to bypass the guest page cache. This also
- implements a VIRTIO based asynchronous flush mechanism.  
- 
- Sharing guest kernel driver in this patchset with the 
- changes suggested in v3. Tested with Qemu side device 
- emulation [6] for virtio-pmem. 
+Commit-ID:  1279e41d535e28cc3b56fa4a09e71a709641cae6
+Gitweb:     https://git.kernel.org/tip/1279e41d535e28cc3b56fa4a09e71a709641cae6
+Author:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+AuthorDate: Wed, 3 Apr 2019 14:54:24 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 3 Apr 2019 11:40:02 +0200
 
- We have incorporated all the suggestions in V3. Documented 
- the impact of possible page cache side channel attacks with 
- suggested countermeasures.
- 
- Details of project idea for 'virtio pmem' flushing interface 
- is shared [3] & [4].
+perf/headers: Fix stale comment for struct perf_addr_filter
 
- Implementation is divided into two parts:
- New virtio pmem guest driver and qemu code changes for new 
- virtio pmem paravirtualized device.
+The @inode field has been removed after:
 
-1. Guest virtio-pmem kernel driver
----------------------------------
-   - Reads persistent memory range from paravirt device and 
-     registers with 'nvdimm_bus'.  
-   - 'nvdimm/pmem' driver uses this information to allocate 
-     persistent memory region and setup filesystem operations 
-     to the allocated memory. 
-   - virtio pmem driver implements asynchronous flushing 
-     interface to flush from guest to host.
+  9511bce9fe8e ("perf/core: Fix bad use of igrab()")
 
-2. Qemu virtio-pmem device
----------------------------------
-   - Creates virtio pmem device and exposes a memory range to 
-     KVM guest. 
-   - At host side this is file backed memory which acts as 
-     persistent memory. 
-   - Qemu side flush uses aio thread pool API's and virtio 
-     for asynchronous guest multi request handling. 
+Update the description.
 
-   David Hildenbrand CCed also posted a modified version[7] of 
-   qemu virtio-pmem code based on updated Qemu memory device API. 
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/1554274464-5739-1-git-send-email-zhangshaokun@hisilicon.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Virtio-pmem security implications and countermeasures:
- -----------------------------------------------------
-
- In previous posting of kernel driver, there was discussion [9]
- on possible implications of page cache side channel attacks with 
- virtio pmem. After thorough analysis of details of known side 
- channel attacks, below are the suggestions:
-
- - Depends entirely on how host backing image file is mapped 
-   into guest address space. 
-
- - virtio-pmem device emulation, by default shared mapping is used
-   to map host backing file. It is recommended to use separate
-   backing file at host side for every guest. This will prevent
-   any possibility of executing common code from multiple guests
-   and any chance of inferring guest local data based based on 
-   execution time.
-
- - If backing file is required to be shared among multiple guests 
-   it is recommended to don't support host page cache eviction 
-   commands from the guest driver. This will avoid any possibility
-   of inferring guest local data or host data from another guest. 
-
- - Proposed device specification [8] for virtio-pmem device with 
-   details of possible security implications and suggested 
-   countermeasures for device emulation.
-
- Virtio-pmem errors handling:
- ----------------------------------------
-  Checked behaviour of virtio-pmem for below types of errors
-  Need suggestions on expected behaviour for handling these errors?
-
-  - Hardware Errors: Uncorrectable recoverable Errors: 
-  a] virtio-pmem: 
-    - As per current logic if error page belongs to Qemu process, 
-      host MCE handler isolates(hwpoison) that page and send SIGBUS. 
-      Qemu SIGBUS handler injects exception to KVM guest. 
-    - KVM guest then isolates the page and send SIGBUS to guest 
-      userspace process which has mapped the page. 
-  
-  b] Existing implementation for ACPI pmem driver: 
-    - Handles such errors with MCE notifier and creates a list 
-      of bad blocks. Read/direct access DAX operation return EIO 
-      if accessed memory page fall in bad block list.
-    - It also starts backgound scrubbing.  
-    - Similar functionality can be reused in virtio-pmem with MCE 
-      notifier but without scrubbing(no ACPI/ARS)? Need inputs to 
-      confirm if this behaviour is ok or needs any change?
-
-Changes from PATCH v3: [1]
-
-- Use generic dax_synchronous() helper to check for DAXDEV_SYNC 
-  flag - [Dan, Darrick, Jan]
-- Add 'is_nvdimm_async' function
-- Document page cache side channel attacks implications & 
-  countermeasures - [Dave Chinner, Michael]
-
-Changes from PATCH v2: [2]
-- Disable MAP_SYNC for ext4 & XFS filesystems - [Dan] 
-- Use name 'virtio pmem' in place of 'fake dax' 
-
-Changes from PATCH v1: 
-- 0-day build test for build dependency on libnvdimm 
-
- Changes suggested by - [Dan Williams]
-- Split the driver into two parts virtio & pmem  
-- Move queuing of async block request to block layer
-- Add "sync" parameter in nvdimm_flush function
-- Use indirect call for nvdimm_flush
-- Don’t move declarations to common global header e.g nd.h
-- nvdimm_flush() return 0 or -EIO if it fails
-- Teach nsio_rw_bytes() that the flush can fail
-- Rename nvdimm_flush() to generic_nvdimm_flush()
-- Use 'nd_region->provider_data' for long dereferencing
-- Remove virtio_pmem_freeze/restore functions
-- Remove BSD license text with SPDX license text
-
-- Add might_sleep() in virtio_pmem_flush - [Luiz]
-- Make spin_lock_irqsave() narrow
-
-Changes from RFC v3
-- Rebase to latest upstream - Luiz
-- Call ndregion->flush in place of nvdimm_flush- Luiz
-- kmalloc return check - Luiz
-- virtqueue full handling - Stefan
-- Don't map entire virtio_pmem_req to device - Stefan
-- request leak, correct sizeof req- Stefan
-- Move declaration to virtio_pmem.c
-
-Changes from RFC v2:
-- Add flush function in the nd_region in place of switching
-  on a flag - Dan & Stefan
-- Add flush completion function with proper locking and wait
-  for host side flush completion - Stefan & Dan
-- Keep userspace API in uapi header file - Stefan, MST
-- Use LE fields & New device id - MST
-- Indentation & spacing suggestions - MST & Eric
-- Remove extra header files & add licensing - Stefan
-
-Changes from RFC v1:
-- Reuse existing 'pmem' code for registering persistent 
-  memory and other operations instead of creating an entirely 
-  new block driver.
-- Use VIRTIO driver to register memory information with 
-  nvdimm_bus and create region_type accordingly. 
-- Call VIRTIO flush from existing pmem driver.
-
-Pankaj Gupta (5):
-   libnvdimm: nd_region flush callback support
-   virtio-pmem: Add virtio-pmem guest driver
-   libnvdimm: add nd_region buffered dax_dev flag
-   ext4: disable map_sync for virtio pmem
-   xfs: disable map_sync for virtio pmem
-
-[1] https://lkml.org/lkml/2019/1/9/471
-[2] https://lkml.org/lkml/2018/10/13/117
-[3] https://www.spinics.net/lists/kvm/msg149761.html
-[4] https://www.spinics.net/lists/kvm/msg153095.html  
-[5] https://lkml.org/lkml/2018/8/31/413
-[6] https://marc.info/?l=linux-kernel&m=153572228719237&w=2 
-[7] https://marc.info/?l=qemu-devel&m=153555721901824&w=2
-[8] https://lists.oasis-open.org/archives/virtio-dev/201903/msg00083.html
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index e47ef764f613..085a95e2582a 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -464,7 +464,7 @@ enum perf_addr_filter_action_t {
+ /**
+  * struct perf_addr_filter - address range filter definition
+  * @entry:	event's filter list linkage
+- * @inode:	object file's inode for file-based filters
++ * @path:	object file's path for file-based filters
+  * @offset:	filter range offset
+  * @size:	filter range size (size==0 means single address trigger)
+  * @action:	filter/start/stop
