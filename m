@@ -2,124 +2,136 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB9AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E37C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4850206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F14B206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfDCPtL convert rfc822-to-8bit (ORCPT
+        id S1727153AbfDCPtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 3 Apr 2019 11:49:15 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43510 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbfDCPtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 11:49:11 -0400
-Received: from smtp.asem.it ([151.1.184.197]:62577 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfDCPtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:49:10 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003789739.MSG 
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:49:03 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 3
- Apr 2019 17:49:03 +0200
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1261.035; Wed, 3 Apr 2019 17:49:03 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Thread-Topic: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Thread-Index: AQHU6izzDrhx33Rd2E28nY3Qp112E6YqaEkAgAAhzmD//+S2gIAAI/HA
-Date:   Wed, 3 Apr 2019 15:49:03 +0000
-Message-ID: <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
- <20190403150824.GO22216@piout.net> <452a4cf1410a41c8b6f767ac6258482e@asem.it>
- <20190403153143.GQ22216@piout.net>
-In-Reply-To: <20190403153143.GQ22216@piout.net>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFD1380D;
+        Wed,  3 Apr 2019 08:49:10 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1BC33F68F;
+        Wed,  3 Apr 2019 08:49:04 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 16:49:02 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Firoz Khan <firoz.khan@linaro.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH 2/2] arch: add pidfd and io_uring syscalls everywhere
+Message-ID: <20190403154902.GB16866@fuggles.cambridge.arm.com>
+References: <20190325143521.34928-1-arnd@arndb.de>
+ <20190325144737.703921-1-arnd@arndb.de>
+ <87tvff24a1.fsf@concordia.ellerman.id.au>
+ <20190403111134.GA7159@fuggles.cambridge.arm.com>
+ <9d673dfd-0051-3676-653e-6376430d73dd@kernel.dk>
+ <20190403151932.GA16866@fuggles.cambridge.arm.com>
+ <032faa2f-6317-75b6-8514-076ef1a244e8@kernel.dk>
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B0210.5CA4D5F0.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <032faa2f-6317-75b6-8514-076ef1a244e8@kernel.dk>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > On 03/04/2019 16:52:45+0200, Flavio Suligoi wrote:
-> > > > The pcf2127 has an automatic battery-low detection function.
-> > > >
-> > > > In case of battery-low event, an interrupt generation through
-> > > > the pin INTn (active low) can be enabled, setting the flag BLIE
-> > > > in the register Control_3.
-> > > >
-> > > > This function is activated by the "battery-low-hw-alarm" DT
-> property.
-> > > >
-> > > > Example of use for an NXP i.MX7D board:
-> > > >
-> > > > &i2c3 {
-> > > > 	clock-frequency = <100000>;
-> > > > 	pinctrl-names = "default";
-> > > > 	pinctrl-0 = <&pinctrl_i2c3>;
-> > > > 	status = "okay";
-> > > >
-> > > > 	pcf2127@51 {
-> > > > 		compatible = "nxp,pcf2127";
-> > > > 		reg = <0x51>;
-> > > > 		battery-low-hw-alarm;
-> > > > 		status = "okay";
-> > > > 	};
-> > > > };
-> > > >
-> > >
-> > > So I'm curious, how do you then use that signal? I have a (not yet
-> sent)
-> > > series adding alarm support for the pcf2127. The issue having BLIE is
-> > > that then this will prevent the alarm to work properly.
-> > >
-> > > So my guess is that you have nINT connected to an LED or something
-> that
-> > > the user can see?
-> > >
-> >
-> > I'm working on our custom embedded board with an NXP i.MX7D,
-> > developed here, in Asem (www.asem.it).
-> > The nINT pin is connected to a GPIO of the MX7 and then
-> > used by an applicative sw, to generate an alarm for the user.
-> >
+On Wed, Apr 03, 2019 at 09:39:52AM -0600, Jens Axboe wrote:
+> On 4/3/19 9:19 AM, Will Deacon wrote:
+> > On Wed, Apr 03, 2019 at 07:49:26AM -0600, Jens Axboe wrote:
+> >> On 4/3/19 5:11 AM, Will Deacon wrote:
+> >>> will@autoplooker:~/liburing/test$ ./io_uring_register 
+> >>> RELIMIT_MEMLOCK: 67108864 (67108864)
+> >>> [   35.477875] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000070
+> >>> [   35.478969] Mem abort info:
+> >>> [   35.479296]   ESR = 0x96000004
+> >>> [   35.479785]   Exception class = DABT (current EL), IL = 32 bits
+> >>> [   35.480528]   SET = 0, FnV = 0
+> >>> [   35.480980]   EA = 0, S1PTW = 0
+> >>> [   35.481345] Data abort info:
+> >>> [   35.481680]   ISV = 0, ISS = 0x00000004
+> >>> [   35.482267]   CM = 0, WnR = 0
+> >>> [   35.482618] user pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+> >>> [   35.483486] [0000000000000070] pgd=0000000000000000
+> >>> [   35.484041] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> >>> [   35.484788] Modules linked in:
+> >>> [   35.485311] CPU: 113 PID: 3973 Comm: io_uring_regist Not tainted 5.1.0-rc3-00012-g40b114779944 #1
+> >>> [   35.486712] Hardware name: linux,dummy-virt (DT)
+> >>> [   35.487450] pstate: 20400005 (nzCv daif +PAN -UAO)
+> >>> [   35.488228] pc : link_pwq+0x10/0x60
+> >>> [   35.488794] lr : apply_wqattrs_commit+0xe0/0x118
+> >>> [   35.489550] sp : ffff000017e2bbc0
+> >>
+> >> Huh, this looks odd, it's crashing inside the wq setup.
+> > 
+> > Enabling KASAN seems to indicate a double-free, which may well be related.
 > 
-> Then, you should probably not enable BLIE because this will cause issues
-> with the alarm functionnality.. It is certainly enough to use
-> RTC_VL_READ periodically.
+> Does this help?
 
-We use the nINT signaling solution because of this pin, in addition
-to be used by the CPU, can be also connected to an external connector,
-available for the final user.
-Anyway, even if the BLIE is set, the sw low voltage alarm works,
-with the message (displayed about every 12 minutes):
+Yes, thanks for the quick patch. Feel free to add:
 
-rtc-pcf2127-i2c 2-0051: low voltage detected, check/replace RTC battery.
+Reported-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Will Deacon <will.deacon@arm.com>
 
-What kind of issues did you find with BLIE enabled?
+if you spin a proper patch.
 
-Flavio
+Will
 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index bbdbd56cf2ac..07d6ef195d05 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2215,6 +2215,7 @@ static int io_sqe_files_register(struct io_ring_ctx *ctx, void __user *arg,
+>  			fput(ctx->user_files[i]);
+>  
+>  		kfree(ctx->user_files);
+> +		ctx->user_files = NULL;
+>  		ctx->nr_user_files = 0;
+>  		return ret;
+>  	}
+> 
+> -- 
+> Jens Axboe
+> 
