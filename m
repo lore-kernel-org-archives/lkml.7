@@ -2,133 +2,116 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10406C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE4AC10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56B1204EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554314765;
-	bh=wmTHRlA1FDuWPhkE7qB7k8OSMIkejqOEp4johXdaXyk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aOZmb5IRa1484I2fe/Tk7tcHffriVteynttcIvuvt8d3/Y6pKg2t2D4cobcjub8oW
-	 9shYErT2skip5YTV6n7YFt/4ki6+Wh9CdrQAM1I9i2Zx2wz5cPgeDMp3oP8BXNXsRd
-	 BomsHJLCFQjGrMY/Cw+9nq+h6j/haqw8ha/MNBKc=
+	by mail.kernel.org (Postfix) with ESMTP id 111042082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="z8K+qZbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbfDCSGE (ORCPT
+        id S1726310AbfDCSJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 14:06:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfDCSGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 14:06:04 -0400
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CD68204EC;
-        Wed,  3 Apr 2019 18:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554314763;
-        bh=wmTHRlA1FDuWPhkE7qB7k8OSMIkejqOEp4johXdaXyk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iCgbiV9zLknNhqc67xIePSUyRnF0OnR/Xn7AdcG3X3fZKV5k+13PBpqNS1No0vnv+
-         Rsg1V2CBnC8ZnWUO9uQidCSBMcGA9bTMV9+mPwGEcpgdzIIRJ+3HOVyGs9yngEDGsj
-         9hA0O8TCELTuLLUte+U24XtzpGaIIMKNS/ApFRuw=
-Received: by mail-ed1-f53.google.com with SMTP id p20so15752235eds.6;
-        Wed, 03 Apr 2019 11:06:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAU2iTxJyPZx3uzhPmnH79Df4MBMKuPBCJB8tYYOtCaohD8StDvo
-        8Z1HtAAhARfQqNolgt8bkT427qq/rMRnbzwv278=
-X-Google-Smtp-Source: APXvYqyi5SiIXCC/KgMlRcs1pLw+9mv7Ye6mmc1wOtP+YjCtibfEnr2oXQWC0qz9mtnWCEtYkRiBr4FmrRB8cv3K2IE=
-X-Received: by 2002:a50:a515:: with SMTP id y21mr644682edb.135.1554314761632;
- Wed, 03 Apr 2019 11:06:01 -0700 (PDT)
+        Wed, 3 Apr 2019 14:09:06 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34624 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfDCSJF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 14:09:05 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v10so14394924oib.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 11:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WLfeTHYa0RD16P6+TGw1835NRm1Z2mjwVm5mp+9PwC4=;
+        b=z8K+qZbKKB0CPbds0ctgzT6yvbDSyne4jzF+g9MQDqHCPB5OPh0qk2XXWxoiT8uT9G
+         zzAZBBgiwvP3s3WO+yER7TdXgooNtVJn+bJrYtKWk0AUmM4gMN9g2NYXSa+GjS+RD4qh
+         8xENTTZm8SgBjQ9esMCmbOP5N89LgbdkK2DEsHPY7bvoNzu4jgR80ZG3HLSzPxh0WrY5
+         S0JNoxdJG64cPYngeWk+znmXW9+iCzcbLOjAVOekrPZVxNPgEekx0LW/gdB8hbrAEi1G
+         xsvjGauCjnbGtT2gFDUKoUQw5H1XawOs5hYrgAV4dxTSwt6qZz7tP5wZXt4VslUi4kvi
+         mGuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WLfeTHYa0RD16P6+TGw1835NRm1Z2mjwVm5mp+9PwC4=;
+        b=oPEO4b5T3LBLSft58XQWsWOr/U9pn1eLhla2PLqseS2+k4YdLS4j8rXiO2npvFdJkZ
+         kMNbIsxely8ALouyOTfsUjx1veZu96wgcVHsrJU4qj6OKxqSjU/zaV+LfyuyE3UvhwiI
+         J33PAq/rZBwYIzvTkexNHr2X7YkW79vhwO6xkHMh6SVpx7RZgG3Yl4ILINITGQMMoH0y
+         p5d8EyU05oOI2u+GP1Gpu4OabN/Vdv+wH+jTV15esnbPlM3gu3Oi8KQzrsuDbla60OO0
+         S1mY8UOgzs/D3ZuH5cZ4cmIKu2c1IMLL02MyH6ZEeGe9qqeRMTpkXrc3Dx5u3qBSjzj5
+         54ww==
+X-Gm-Message-State: APjAAAVaZVOxdsMh8vzfP0uZlDvNdgzwnk2XoQvbDbKrAXm40ex/e9W1
+        /h8UYW2El5rV7+RLkHPEmqPkmUgzgx+KmsJnm1N/Cw==
+X-Google-Smtp-Source: APXvYqzusb0p4qiWWjm2CpnwMPhzr5akGYhKWUDDAJTvVOvkzYZTem1qs/kZxvPv4FWYtmfE1KTFPIoKblD2l9anuTo=
+X-Received: by 2002:aca:f581:: with SMTP id t123mr589000oih.0.1554314944750;
+ Wed, 03 Apr 2019 11:09:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554243943-25507-1-git-send-email-richard.gong@linux.intel.com>
- <20190403142022.GB5752@archbook> <ee94981a-6562-9d26-ddc2-967596589599@linux.intel.com>
- <20190403164742.GC5752@archbook>
-In-Reply-To: <20190403164742.GC5752@archbook>
-From:   Alan Tull <atull@kernel.org>
-Date:   Wed, 3 Apr 2019 13:05:25 -0500
-X-Gmail-Original-Message-ID: <CANk1AXSoF3bhiO=t-XJRLhBH20emWYaZ+2LCPtqJsKyh4b+9KQ@mail.gmail.com>
-Message-ID: <CANk1AXSoF3bhiO=t-XJRLhBH20emWYaZ+2LCPtqJsKyh4b+9KQ@mail.gmail.com>
-Subject: Re: [PATCHv1] fpga: mgr: add FPGA configuration log
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     Richard Gong <richard.gong@linux.intel.com>,
-        linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Richard Gong <richard.gong@intel.com>
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 3 Apr 2019 11:08:53 -0700
+Message-ID: <CAPcyv4gdz7L20nSMEBNLDWgUzr-GjaBhecF3i8Q4D_O=ug0qNw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] arm64/mm: Enable memory hot remove and ZONE_DEVICE
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>, james.morse@arm.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>, cpandya@codeaurora.org,
+        arunks@codeaurora.org, osalvador@suse.de,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        David Hildenbrand <david@redhat.com>, cai@lca.pw
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 11:47 AM Moritz Fischer <mdf@kernel.org> wrote:
+On Tue, Apr 2, 2019 at 9:30 PM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
 >
-> Hi Richard,
+> This series enables memory hot remove on arm64, fixes a memblock removal
+> ordering problem in generic __remove_memory(), enables sysfs memory probe
+> interface on arm64. It also enables ZONE_DEVICE with struct vmem_altmap
+> support.
 >
-> On Wed, Apr 03, 2019 at 11:43:26AM -0500, Richard Gong wrote:
-> > Hi Moritz,
-> >
-> >
-> > On 4/3/19 9:20 AM, Moritz Fischer wrote:
-> > > Hi Richard,
-> > >
-> > > On Tue, Apr 02, 2019 at 05:25:43PM -0500, richard.gong@linux.intel.com wrote:
-> > > > From: Richard Gong <richard.gong@intel.com>
-> > > >
-> > > > Add a log for user to know FPGA configuration is successful
-> > > >
-> > > > Signed-off-by: Richard Gong <richard.gong@intel.com>
-> > > > ---
-> > > >   drivers/fpga/fpga-mgr.c | 1 +
-> > > >   1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
-> > > > index c386681..559e046 100644
-> > > > --- a/drivers/fpga/fpga-mgr.c
-> > > > +++ b/drivers/fpga/fpga-mgr.c
-> > > > @@ -151,6 +151,7 @@ static int fpga_mgr_write_complete(struct fpga_manager *mgr,
-> > > >           }
-> > > >           mgr->state = FPGA_MGR_STATE_OPERATING;
-> > > > + dev_info(&mgr->dev, "Successfully programming FPGA\n");
-> > >
-> > > That info is available in FPGA manager's sysfs status entry, if at all
-> > > I'd make this a dev_dbg().
-> > >
-> > >  From my end I don't see how we need this really.
-> >
-> > We got requests from the field and they want to see a log to get know if
-> > FPGA configuration is successfully completed. They don't want use any
-> > additional command to get status.
-> >
-> > This log is useful for the user who performs FPGA configuration.
-> >
-> > I think we need use dev_info, since dev_dbg is not enabled by fault for most
-> > build.
+> Testing:
 >
-> Well basically it boils down to:
+> Tested hot remove on arm64 for all 4K, 16K, 64K page config options with
+> all possible VA_BITS and PGTABLE_LEVELS combinations. Tested ZONE_DEVICE
+> with ARM64_4K_PAGES through a dummy driver.
 >
-> $ dmesg | grep "Sucessfully"
+> Build tested on non arm64 platforms. I will appreciate if folks can test
+> arch_remove_memory() re-ordering in __remove_memory() on other platforms.
 >
-> vs
+> Dependency:
 >
-> $ cat /sys/class/fpga.../status
+> V5 series in the thread (https://lkml.org/lkml/2019/2/14/1096) will make
+> kernel linear mapping loose pgtable_page_ctor() init. When this happens
+> the proposed functions free_pte|pmd|pud_table() in [PATCH 2/6] will have
+> to stop calling pgtable_page_dtor().
 
-it's state, not status for most fpga manager drivers.  It should
-return 'operating' if everything went well.
+Hi Anshuman,
 
-It seems like there's a possible scenario where the FPGA starts up
-with the FPGA in 'operating' mode and the user messes up early enough
-that the state doesn't change.
+I'd be interested to integrate this with the sub-section hotplug
+support [1]. Otherwise the padding implementation in libnvdimm can't
+be removed unless all ZONE_DEVICE capable archs also agree on the
+minimum arch_add_memory() granularity. I'd prefer not to special case
+which archs support which granularity, but it unfortunately
+complicates what you're trying to achieve.
 
->
-> Personally not in favor of extra messages, but if we do it we should
-> change the message to "Sucessfully programmed FPGA".
->
-> I think making it a dbg message is a good trade-off ...
->
-> Moritz
+I think at a minimum we, mm hotplug co-travellers, need to come to a
+consensus on whether sub-section support is viable for v5.2 and / or a
+pre-requisite for new arch-ZONE_DEVICE implementations.
