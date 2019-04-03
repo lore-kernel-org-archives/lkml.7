@@ -2,109 +2,96 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04430C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530F5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C755221473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2971420830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfDCJYa (ORCPT
+        id S1726584AbfDCJYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:24:30 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22852 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725954AbfDCJYa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:24:30 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x339L3vM025652;
-        Wed, 3 Apr 2019 11:24:19 +0200
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rmgmx2wjn-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 03 Apr 2019 11:24:19 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 12A0434;
-        Wed,  3 Apr 2019 09:24:19 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E4BB71AE1;
-        Wed,  3 Apr 2019 09:24:18 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019
- 11:24:19 +0200
-Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019 11:24:18
- +0200
-From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/stm: ltdc: reset controller to avoid partial refresh
-Date:   Wed, 3 Apr 2019 11:24:13 +0200
-Message-ID: <1554283453-2879-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 3 Apr 2019 05:24:36 -0400
+Received: from sauhun.de ([88.99.104.3]:46958 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbfDCJYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:24:35 -0400
+Received: from localhost (p54B3311F.dip0.t-ipconnect.de [84.179.49.31])
+        by pokefinder.org (Postfix) with ESMTPSA id 70C9D2C282F;
+        Wed,  3 Apr 2019 11:24:33 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 11:24:33 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Steve Twiss <stwiss.opensource@diasemi.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/6] input: da9063_onkey: remove platform_data support
+Message-ID: <20190403092432.qofl5szh5zpfhvlm@ninjato>
+References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+ <20190318154759.21978-3-wsa+renesas@sang-engineering.com>
+ <VI1PR10MB2352701871983EF8677C5CB8FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.23.97]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_05:,,
- signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xnv5sx6mtiqadw4j"
+Content-Disposition: inline
+In-Reply-To: <VI1PR10MB2352701871983EF8677C5CB8FE5A0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Display controller reset must be done as soon as possible after enable
-the clock to avoid partial refresh on screen.
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
----
- drivers/gpu/drm/stm/ltdc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+--xnv5sx6mtiqadw4j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 32fd6a3..7bbe61c 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -1134,6 +1134,12 @@ int ltdc_load(struct drm_device *ddev)
- 		return -ENODEV;
- 	}
- 
-+	if (!IS_ERR(rstc)) {
-+		reset_control_assert(rstc);
-+		usleep_range(10, 20);
-+		reset_control_deassert(rstc);
-+	}
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	ldev->regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(ldev->regs)) {
-@@ -1156,12 +1162,6 @@ int ltdc_load(struct drm_device *ddev)
- 		}
- 	}
- 
--	if (!IS_ERR(rstc)) {
--		reset_control_assert(rstc);
--		usleep_range(10, 20);
--		reset_control_deassert(rstc);
--	}
--
- 	/* Disable interrupts */
- 	reg_clear(ldev->regs, LTDC_IER,
- 		  IER_LIE | IER_RRIE | IER_FUIE | IER_TERRIE);
--- 
-2.7.4
 
+> > Subject: [PATCH 2/6] input: da9063_onkey: remove platform_data support
+> >=20
+> > There are no in-kernel users anymore, so remove this outdated interface.
+> >=20
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > ---
+> >  drivers/input/misc/da9063_onkey.c | 11 ++---------
+> >  1 file changed, 2 insertions(+), 9 deletions(-)
+>=20
+> Thanks!
+> Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
+Dmitry, if you are OK with the series going in via MFD, could you ack
+this patch? As you see, Steve is fine with the patch and tested it, too.
+
+
+--xnv5sx6mtiqadw4j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyke9AACgkQFA3kzBSg
+KbamOw/+K6NXMZKR1ZgBFZvMQleB6Xj97G7Qk7mAdxbjTO3hXMUI1G1rHVqAjuy+
+Tp0G0nJvb/ZeuDxHSGckXcHQ2C4OJEq5mWyQI1ZOGmNOGPyuJ/r4JsutQLkWIi1y
+yfBMV+MXkx/sVPP2z4FTk2DEO2VTRMtyzRFd2zNV+yTcE8NpWmzW1TP7zlYy/eiK
+1Qa4yPZWXwiGhVrn5erZywkjxhAgfPuoGNOxodMLNpjmyELbA8eztvc/dHbBkjwj
+/2I2pLVUWAswS2iYc29re6YUtUMLlxatggHxYxLr/a8jMciAfvy3SmGtDZ2Uo+s9
+79D/wEjsPCBOwdV/KS9ZbGRw8DhaUwso7nNaYB//twjfQpqz0QrvEIDQXZ6sQF+P
+iKdg1gh+GkltCvg6Oas3HLBuXNFedebAjF5hcxEIYSpjCbmF/Pb+DTg2BIPb3fwz
+qVCZgAU7XZBR4HsEJIlCaYq2K2FC9RB1LUSQEuHmLJBLa7eGnu8I8GjKmW64vvKO
+JSHNxTnN8Ns00zWKlNpCH3g4GtynaFB70Iebyvd65wSgkH29Sky4MzocyuU5Yy67
+hcoOTz1CwNLYzw76ZrejEz6/AG9c7jD6hLTgluJVpEvxH26NcPFtn5A1P9v4IOUW
+IHztBBXwmDxlnE90Xnk467DCQ3jynzBOS3N91JdevyGYcPvP3Kc=
+=flns
+-----END PGP SIGNATURE-----
+
+--xnv5sx6mtiqadw4j--
