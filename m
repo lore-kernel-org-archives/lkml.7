@@ -2,159 +2,201 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C51EC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A08FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490F82082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259CB2147C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="15cjfyuJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfDCLbd (ORCPT
+        id S1726630AbfDCLbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 07:31:33 -0400
-Received: from foss.arm.com ([217.140.101.70]:38424 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfDCLbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 07:31:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53E8B80D;
-        Wed,  3 Apr 2019 04:31:32 -0700 (PDT)
-Received: from e107981-ln.cambridge.arm.com (e107981-ln.cambridge.arm.com [10.1.197.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 879B03F59C;
-        Wed,  3 Apr 2019 04:31:30 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 12:31:24 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Ray Jui <ray.jui@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abhishek Shah <abhishek.shah@broadcom.com>
-Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
- I/O region
-Message-ID: <20190403113124.GA16233@e107981-ln.cambridge.arm.com>
-References: <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com>
- <20190329173515.GA10367@e107981-ln.cambridge.arm.com>
- <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
- <20190401164416.GA8616@e107981-ln.cambridge.arm.com>
- <e7d3e5a1-db5c-8438-f10f-81b87aba0e03@broadcom.com>
- <CABe79T7uLo+68P0Yr7jpgn1+4H01qhoPRjX05gszin3FXkBZ5w@mail.gmail.com>
- <20190402102639.GB22708@e107981-ln.cambridge.arm.com>
- <CABe79T5O-1EWVrR1vZ27LWuxTBqN4_x37bkpfKxfm1ZB+oDUvA@mail.gmail.com>
- <20190402133851.GA26122@e107981-ln.cambridge.arm.com>
- <CABe79T7JdOh0Lpr2vhWX5QPE5nuP9hZeviSB9E3tVteeAX89fw@mail.gmail.com>
+        Wed, 3 Apr 2019 07:31:37 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:53481 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfDCLbf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 07:31:35 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x33BVWNr014492;
+        Wed, 3 Apr 2019 20:31:33 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x33BVWNr014492
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1554291093;
+        bh=vpMvTkZ3zjKetPMWRIiMdWOr7NlF5E+vS3OXn39zX/k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=15cjfyuJX00T0a7K9NCQH6VmjhnADhDUDM7nyCrG0fosqVwSFST1wLipCMhb+GTLt
+         9v008DKwMu7seOgYdfnYfvJTZJfwiWItXym01fh1bfHxoZ2GiSb4NTK+pjO4Chh6wr
+         p+QTjMLGkK6Qy7SPnerdFt9eS+goYLP7253g4YWlqziAHe4qhUiad0gnvXQuwnruNu
+         j9Gh1VWnTETqtN9JoS7leSW+CaL3YlyWOaq4JeJE7cRCSyRYxzTnL2LxfgwBs3kXFV
+         /dvjY6Nd3UWfeRcp+jf73RTp6EK9IGQ9RkbG1fJJ8Myw3ekYRMkiSqe9YU4fA4DuGo
+         zDD57DG/t1Jww==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id f22so9727125vso.7;
+        Wed, 03 Apr 2019 04:31:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAWYHDRa2353VyWVHzyfR9lrze8cwN51ATBFIQ9Hzx77B1asC5QJ
+        Yo95f97tBSaV9F2n8joa6x3cRmhliCerVgv29bI=
+X-Google-Smtp-Source: APXvYqzhIT1XfHzesgWzKxa3o/0v7RNvJmzH3ZeEddhUo1s8Dft7BnEw/uF1YZwinPOsujK/Wvmod0gbiGFhaQso+wA=
+X-Received: by 2002:a67:c29e:: with SMTP id k30mr46049859vsj.203.1554291091691;
+ Wed, 03 Apr 2019 04:31:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABe79T7JdOh0Lpr2vhWX5QPE5nuP9hZeviSB9E3tVteeAX89fw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190315101013.GN8455@Legion-PC.fortress> <CAK7LNATsm23e_CuyfFw7_CR8xZQ3HnwNHCXhEm_zQZU2PUGK5A@mail.gmail.com>
+ <20190326172411.GA15936@Legion-PC.fortress> <20190327154025.GB23293@linux-8ccs>
+ <20190327160440.GE15936@Legion-PC.fortress>
+In-Reply-To: <20190327160440.GE15936@Legion-PC.fortress>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 3 Apr 2019 20:30:55 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARAMXmoWw=ZUSRSYoH=gCsHhXiN9m_yPoH+mMMhW93bxw@mail.gmail.com>
+Message-ID: <CAK7LNARAMXmoWw=ZUSRSYoH=gCsHhXiN9m_yPoH+mMMhW93bxw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1] moduleparam: Save information about built-in
+ modules in separate file
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Gleb Fotengauer-Malinovskiy <glebfm@altlinux.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 08:41:44AM +0530, Srinath Mannam wrote:
-> Hi Lorenzo,
-> 
-> Please see my reply below,
-> 
-> On Tue, Apr 2, 2019 at 7:08 PM Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
+On Thu, Mar 28, 2019 at 1:04 AM Alexey Gladkov <gladkov.alexey@gmail.com> w=
+rote:
+>
+> On Wed, Mar 27, 2019 at 04:40:25PM +0100, Jessica Yu wrote:
+> > +++ Alexey Gladkov [26/03/19 18:24 +0100]:
+> > >On Fri, Mar 22, 2019 at 02:34:12PM +0900, Masahiro Yamada wrote:
+> > >> Hi.
+> > >>
+> > >> (added some people to CC)
 > >
-> > On Tue, Apr 02, 2019 at 04:16:13PM +0530, Srinath Mannam wrote:
+> > (Thanks Masahiro for the CC!)
 > >
-> > [...]
-> >
-> > > > Ok - I start to understand. What does it mean in HW terms that your
-> > > > 32bit AXI address region size is 32MB ? Please explain to me in details.
-> > > >
-> > > In our PCIe controller HW, AXI address from 0x42000000 to 0x44000000
-> > > of 32MB size and .
-> > > AXI address from 0x400000000 to 0x480000000 of 2GB size are provided
-> > > to map ob address.
-> > > First IO region is inside 32bit address and second IO region is
-> > > outside 32bit address.
-> > > This code change is to map first IO region(0x42000000 to 0x44000000).
+> > >>
+> > >> On Fri, Mar 15, 2019 at 7:10 PM Alexey Gladkov <gladkov.alexey@gmail=
+.com> wrote:
+> > >> >
+> > >> > Problem:
+> > >> >
+> > >> > When a kernel module is compiled as a separate module, some import=
+ant
+> > >> > information about the kernel module is available via .modinfo sect=
+ion of
+> > >> > the module.  In contrast, when the kernel module is compiled into =
+the
+> > >> > kernel, that information is not available.
+> > >>
+> > >>
+> > >> I might be missing something, but
+> > >> vmlinux provides info of builtin modules
+> > >> in /sys/module/.
 > > >
-> > > > IIUC you are using an OARR0 of 128MB in size to map a 32MB address
-> > > > region, that's what I understand this patch does (and the lowest index
-> > > > corresponds to the smallest possible size - it is far from clear by
-> > > > looking at the patch).
-> > > Yes, lowest index corresponds to smallest possible size (128MB).
-> > > In our controller we have multiple windows like OARR0, OARR1, OARR2,
-> > > OARR3 all supports multiple sizes from 128MB to 1024MB.
-> > > These details are given at the top of this driver file, as shown
-> > > below. all windows supports 128MB size still we must use OARR0 window
-> > > to configure first IO region(0x42000000 to 0x44000000).
+> > >No. There are definitely not all modules. I have a builtin sha256_gene=
+ric,
+> > >but I can't find him in the /sys/module.
+> >
+> > Yeah, you'll only find builtin modules under /sys/module/ if it has any=
+ module
+> > parameters, otherwise you won't find it there. As Masahiro already ment=
+ioned,
+> > if a builtin module has any parameters, they would be accessible under =
+/sys/module/.
+> >
+> > >> (Looks like currently only module_param and MODULE_VERSION)
+> > >>
+> > >> This patch is not exactly the same, but I see a kind of overwrap.
+> > >> I'd like to be sure if we want this new scheme.
 > > >
-> > > static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
-> > >         {
-> > >                 /* OARR0/OMAP0 */
-> > >                 .window_sizes = { 128, 256 },
-> > >                 .nr_sizes = 2,
-> > >         },
-> > >         {
-> > >                 /* OARR1/OMAP1 */
-> > >                 .window_sizes = { 128, 256 },
-> > >                 .nr_sizes = 2,
-> > >         },
-> > >         {
-> > >                 /* OARR2/OMAP2 */
-> > >                 .window_sizes = { 128, 256, 512, 1024 },
-> > >                 .nr_sizes = 4,
-> > >         },
-> > >         {
-> > >                 /* OARR3/OMAP3 */
-> > >                 .window_sizes = { 128, 256, 512, 1024 },
-> > >                 .nr_sizes = 4,
-> > >         },
-> > > };
-> >
-> > Ok so this patch allows mapping an AXI I/O window that is smaller
-> > than OARR possible sizes, why it was not done from the beginning
-> > I really do not know.
-> >
-> Same Iproc driver we use for multiple SOCs, in previous SOCs does not
-> have 32-bit AXI address region to map ob.
-> In the present SOC, 32-bit AXI address region is available so that
-> this change is added.
-> 
-> > Now explain this to me please:
-> >
-> > > This patch add outbound window configuration to map below 32-bit I/O range
-> > > with corresponding PCI memory, which helps to access I/O region in ARM
-> > > 32-bit and one to one mapping of I/O region to PCI memory.
+> > >The /sys/module is only for running kernel. One of my use cases is
+> > >to create an initrd for a new kernel.
 > > >
-> > > Ex:
-> > > 1. ranges DT property given for current driver is,
-> > >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
-> > >     I/O region address is 0x400000000
-> > > 2. ranges DT property can be given after this patch,
-> > >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
-> > >     I/O region address is 0x42000000
+> > >>
+> > >> > Information about built-in modules is necessary in the following c=
+ases:
+> > >> >
+> > >> > 1. When it is necessary to find out what additional parameters can=
+ be
+> > >> > passed to the kernel at boot time.
+> > >>
+> > >>
+> > >> Actually, /sys/module/<module>/parameters/
+> > >> exposes this information.
+> > >>
+> > >> Doesn't it work for your purpose?
+> > >
+> > >No, since creating an initrd needs to know all the modalias before
+> > >I get the sysfs for new kernel. Also there are no modalias at all.
+> > >
+> > >> > 2. When you need to know which module names and their aliases are =
+in
+> > >> > the kernel. This is very useful for creating an initrd image.
+> > >> >
 > >
-> > Why 1:1 AXI<->PCI address mapping is not possible in (1), how does the
-> > current code works on 32-bit systems and what's the benefit your change
-> > is bringing.
-> non-prefetchable memory range can only support 32-bit addresses, so
-> that we have taken 32-bit PCI bus address in (1).
-> current code does not work in 32-bit systems. In the present SOC with
-> this new change we can access from 32-bit CPU.
+> > Hm, I do see one possible additional use-case for preserving module ali=
+as
+> > information for built-in modules - modprobe will currently error (I thi=
+nk,
+> > correct me if I'm wrong) if we try invoking modprobe with an alias of a
+> > built-in module, simply because this information is not in modules.buil=
+tin or
+> > modules.alias.
+>
+> Yes. Patch for modprobe in my todo list. The reason I didn=E2=80=99t do i=
+t was
+> because I wasn=E2=80=99t sure that the file format was final.
+>
+> > Since kbuild already outputs modules.builtin, I would suggest outputtin=
+g
+> > something like a modules.builtin.alias file (and I guess maybe a module=
+s.builtin.param
+> > file too if that's deemed useful), in a format that is consumable by km=
+od/modprobe,
+> > so that modprobing an alias of a built-in module doesn't produce an err=
+or. I
+> > think this should be easy to do if we keep and parse the resulting .mod=
+info for
+> > builtin modules. This is just an idea, opinions welcome. I've added Luc=
+as to CC
+> > in case he has any thoughts.
+>
+> You don't like kernel.builtin.modinfo ?
 
-Thank you. I rewrote the log and pushed patches to pci/iproc, please
-have a look (Ray/Scott please do have a look too) and report back
-if that's fine.
 
-Do you agree that the initial commit was lacking _significant_
-information ? Please remember that the commit log plays a fundamental
-part in understanding a change and this one is a very important one
-so I am being pedantic on it.
+Naming is often the most difficult thing. :)
 
-Thanks,
-Lorenzo
+IMHO, 'kernel' and 'builtin' have a similar meaning here.
+Is 'kernel.builtin' unnecessarily too long?
+
+
+Perhaps, another idea is:
+
+'builtin.alias' instead of 'modules.builtin.alias'
+if we want a separate file in the same format.
+
+
+In hindsight, 'modules.builtin' should have been
+'builtin.order', I think.
+
+
+
+
+> It is much easier to create and it has almost the same format as the
+> modules. So I think it will be easier to parse in kmod.
+
+--=20
+Best Regards
+Masahiro Yamada
