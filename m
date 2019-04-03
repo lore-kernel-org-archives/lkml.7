@@ -2,133 +2,85 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A051FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3F9C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7817A2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0F12082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:32:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k6LWMqWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfDCVaU (ORCPT
+        id S1727254AbfDCVch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 17:30:20 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37312 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbfDCVaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 17:30:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 14:30:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
-   d="scan'208";a="334754277"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Apr 2019 14:30:12 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        "Michael Chan" <michael.chan@broadcom.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v6 17/20] x86/clearcpuid: Support feature flag string in kernel option clearcpuid
-Date:   Wed,  3 Apr 2019 14:22:03 -0700
-Message-Id: <1554326526-172295-18-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+        Wed, 3 Apr 2019 17:32:37 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33201 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfDCVcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 17:32:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q1so797628wrp.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 14:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ByAw7ZR6ppOZoPxGHhqQr9zSGZ2le3CNmTXxN67arNE=;
+        b=k6LWMqWifaDFU8lghK1viRjprgiM3hWpKvBbTJGuVS3gn/61rRG/TCssLrlB0sW0By
+         a+NsC46DmL7ZjsnfHJUmjEvl/MrmevNvM1+y9aY4KFZJg2/x02PJqqjnkOV71iuc1mJj
+         His7QmshItXwiQTX1IotZuIM/5BOjxv0UAJ8Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ByAw7ZR6ppOZoPxGHhqQr9zSGZ2le3CNmTXxN67arNE=;
+        b=QQHxYv1TwK3ZxvPQHbrjqxHiFgam59t7X1FhhEOf7f+SKL8zBxwlC5BdSud8tnnEiW
+         P82LdCISpomXP0JsTWYksUUfGxUiy2uHor1WvrQa4UiDIrXtj1dC0C/fyEu69nHONkqY
+         vwtfMP6KBBctEkOfMMoqLeZTdMtJTlvDTrzJRCU7Ngjoi57qJcuocjbIxosfxLwmacqA
+         aV4t/qIXDrs07vRTNnR7X5gOkpPF4qAAulnmbQJEMqpfvO111QGp98gbDacoDmoyt7y8
+         ftUFzLx+BBrgi/yCbFfqJywZZxSJFTvmNhJkbWmwZWImhEFXDa5TIE0XHj6KbM3Km+C0
+         u6oA==
+X-Gm-Message-State: APjAAAX+YdYMhCBAb7m5aHoGvkOWVc+IOqCQsqAWjAvhSr/z7wceSAmj
+        bxSuWrUiIucVO7XtBiFUPVEiqTSvYeZ2crpqocZWrA==
+X-Google-Smtp-Source: APXvYqyybHIqkh2pKYvOzXs92i+nVJC9d95oCIe9e8S+Tn8H//cilWwXV/q7QEupZ2w8oWKjXec4J3hAi1xvEui/RTQ=
+X-Received: by 2002:adf:f30b:: with SMTP id i11mr1285926wro.297.1554327150593;
+ Wed, 03 Apr 2019 14:32:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190401205519.34023-1-fletcherw@chromium.org> <20190402050236.GV2059@sirena.org.uk>
+In-Reply-To: <20190402050236.GV2059@sirena.org.uk>
+From:   Fletcher Woodruff <fletcherw@chromium.org>
+Date:   Wed, 3 Apr 2019 15:32:04 -0600
+Message-ID: <CAN-6NYaO0bah_vFgTGrnU5_pUM95B+voDxsUR6K6o5wj5ZRD6w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ASoC: rt5677: allow multiple interrupt sources
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
+        Bard Liao <bardliao@realtek.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        alsa-devel@alsa-project.org, Ross Zwisler <zwisler@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel option clearcpuid currently only takes feature bit which
-can be changed from kernel to kernel.
+On Mon, Apr 1, 2019 at 11:02 PM Mark Brown <broonie@kernel.org> wrote:
+> regmap-irq should support active high/low, and if it doesn't it can't be
+> a unique thing that only this device wants to implement so the common
+> code should be improved.
 
-Extend clearcpuid to use cap flag string, which is defined in
-x86_cap_flags[] and won't be changed from kernel to kernel.
-And user can easily get the cap flag string from /proc/cpuinfo.
+The rt5677 driver needs its own irq regardless for hotword detection.
+If we implemented this in regmap-irq, we wouldn't be able to use it.
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- arch/x86/include/asm/cpufeature.h |  1 +
- arch/x86/kernel/cpu/cpuid-deps.c  | 26 ++++++++++++++++++++++++++
- arch/x86/kernel/fpu/init.c        |  3 ++-
- 3 files changed, 29 insertions(+), 1 deletion(-)
+> This looks unrelated to the polarity of the interupt?
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 0e56ff7e4848..823c4ab82e12 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -133,6 +133,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- 
- extern void setup_clear_cpu_cap(unsigned int bit);
- extern void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int bit);
-+bool find_cpu_cap(char *cap_flag, unsigned int *pfeature);
- 
- #define setup_force_cpu_cap(bit) do { \
- 	set_cpu_cap(&boot_cpu_data, bit);	\
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 3d633f67fbd7..1a71434f7b46 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -120,3 +120,29 @@ void setup_clear_cpu_cap(unsigned int feature)
- {
- 	do_clear_cpu_cap(NULL, feature);
- }
-+
-+/**
-+ * find_cpu_cap - Given a cap flag string, find its corresponding feature bit.
-+ * @cap_flag:	cap flag string as defined in x86_cap_flags[]
-+ * @pfeature:	feature bit
-+ *
-+ * Return: true if the feature is found. false if not found
-+ */
-+bool find_cpu_cap(char *cap_flag, unsigned int *pfeature)
-+{
-+#ifdef CONFIG_X86_FEATURE_NAMES
-+	unsigned int feature;
-+
-+	for (feature = 0; feature < NCAPINTS * 32; feature++) {
-+		if (!x86_cap_flags[feature])
-+			continue;
-+
-+		if (strcmp(cap_flag, x86_cap_flags[feature]) == 0) {
-+			*pfeature = feature;
-+
-+			return true;
-+		}
-+	}
-+#endif
-+	return false;
-+}
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 88bbba7ee96a..99b895eea166 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -256,7 +256,8 @@ static void __init clear_cpuid(void)
- 		/* Chang command line range for next search. */
- 		cmdline_size = option_pos - boot_command_line + 1;
- 		argptr = arg;
--		if (get_option(&argptr, &bit) &&
-+		/* cpu cap can be specified by either feature bit or string */
-+		if ((get_option(&argptr, &bit) || find_cpu_cap(arg, &bit)) &&
- 		    bit >= 0 && bit < NCAPINTS * 32)
- 			setup_clear_cpu_cap(bit);
- 	}
--- 
-2.19.1
-
+Yes this is separate. If a plug/unplug happens after regmap_read and
+before regmap_write, it will not be registered, so we loop to make
+sure that it's caught in a later iteration. I can clarify this in the
+patch notes.
