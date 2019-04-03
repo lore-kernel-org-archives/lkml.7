@@ -2,66 +2,66 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A6EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA61C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FBD20657
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0EA20657
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="D4A9+Cb2";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Quey626e"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="FK513RHT";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="LA0XP2cm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfDCR6U (ORCPT
+        id S1726372AbfDCSAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:58:20 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57072 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726151AbfDCR6U (ORCPT
+        Wed, 3 Apr 2019 14:00:49 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:33254 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726084AbfDCSAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:58:20 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33Hqpow001589;
-        Wed, 3 Apr 2019 10:57:57 -0700
+        Wed, 3 Apr 2019 14:00:48 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33Hxl0b012148;
+        Wed, 3 Apr 2019 11:00:34 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : references : in-reply-to : content-type : content-id
  : content-transfer-encoding : mime-version; s=facebook;
- bh=szVyQXzqNWFLz55J/ZpIrcml3NcRugE0hUK+gSoqhVQ=;
- b=D4A9+Cb2q+yHlJw+MNGM50mCNehKtmxAFZ2rDBqYP6i/widC0ggiZ0+ENI1HSFxpAPm9
- fa9LfN0/8sEe4z48uRRgSfEKLmjLs99UWnM6T/ldsNv5hpsuBRyAw9xLSibszMxotRm4
- IVAnhrh8LP1b5oCELhQ9N0UjDf51zw3oLcc= 
+ bh=o+c+bA8MO26B8kHENhutu/5MRQhebutrzZgxv/ZEKVk=;
+ b=FK513RHTEuWDb5BZKa/nzYUAWPlijjXzW5H2o0OjnVYotvcCyqQ05Y2On1FpX4F981/i
+ 8mzHRHu/iNtgrV3NZpdl/mIYkccBWr0ZeKeK90p6zOZGV5irnDk5pzfTT3Jnp32d0tL5
+ nm+404Vgf5et+97kG5RKB3ZUQiDAy7L8oLM= 
 Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2rn1hvg1dv-8
+        by mx0a-00082601.pphosted.com with ESMTP id 2rmx9t8y8e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 03 Apr 2019 10:57:57 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+        Wed, 03 Apr 2019 11:00:33 -0700
+Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
+ prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 3 Apr 2019 10:57:53 -0700
-Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
+ 15.1.1713.5; Wed, 3 Apr 2019 11:00:32 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 3 Apr 2019 10:57:45 -0700
+ 15.1.1713.5; Wed, 3 Apr 2019 11:00:32 -0700
 Received: from NAM03-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 3 Apr 2019 10:57:45 -0700
+ via Frontend Transport; Wed, 3 Apr 2019 11:00:32 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
  s=selector1-fb-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=szVyQXzqNWFLz55J/ZpIrcml3NcRugE0hUK+gSoqhVQ=;
- b=Quey626ebiTBxmyhI0+PVUiCsNnGs/iLpDJVZr+fr3cqDhMianAKQiPpX19z5Xe0ULVy74LZwcdCMEdKEOs5ktNwx7EdcohGJFQybiiUmVTQNvxYX49xkDCf9eFMh1lcxMszypEv50Dnywo/8yMLP+GwvLkEJW/OWJjIj6Hxh4E=
+ bh=o+c+bA8MO26B8kHENhutu/5MRQhebutrzZgxv/ZEKVk=;
+ b=LA0XP2cmh0RrbUphdabVb3tecIorin9IjLWCHCuJF9lSZ8dcOI33bh7MxHyBncAPsWAMYvu7SSootMqsg6WAXYnl/cwPH9RMjmxZwHIneym/hXIUSyncgVFa3rHaL1Fo9gSFcyp2jiJaKRF3AZstDtdnF0v9K9OJsjMrb66ipnw=
 Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
  BYAPR15MB2231.namprd15.prod.outlook.com (52.135.196.158) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.20; Wed, 3 Apr 2019 17:57:43 +0000
+ 15.20.1750.20; Wed, 3 Apr 2019 18:00:30 +0000
 Received: from BYAPR15MB2631.namprd15.prod.outlook.com
  ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
  ([fe80::790e:7294:b086:9ded%3]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
- 17:57:43 +0000
+ 18:00:30 +0000
 From:   Roman Gushchin <guro@fb.com>
 To:     "Tobin C. Harding" <tobin@kernel.org>
 CC:     Andrew Morton <akpm@linux-foundation.org>,
@@ -72,40 +72,39 @@ CC:     Andrew Morton <akpm@linux-foundation.org>,
         Matthew Wilcox <willy@infradead.org>,
         "linux-mm@kvack.org" <linux-mm@kvack.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/7] list: Add function list_rotate_to_front()
-Thread-Topic: [PATCH v5 1/7] list: Add function list_rotate_to_front()
-Thread-Index: AQHU6ai/hRRVJsHCh0Ws9dfflaiJBKYquiKA
-Date:   Wed, 3 Apr 2019 17:57:42 +0000
-Message-ID: <20190403175739.GB6778@tower.DHCP.thefacebook.com>
+Subject: Re: [PATCH v5 2/7] slob: Respect list_head abstraction layer
+Thread-Topic: [PATCH v5 2/7] slob: Respect list_head abstraction layer
+Thread-Index: AQHU6ajAyy6khhqQC0Sp/NoP4ahiCKYquukA
+Date:   Wed, 3 Apr 2019 18:00:30 +0000
+Message-ID: <20190403180026.GC6778@tower.DHCP.thefacebook.com>
 References: <20190402230545.2929-1-tobin@kernel.org>
- <20190402230545.2929-2-tobin@kernel.org>
-In-Reply-To: <20190402230545.2929-2-tobin@kernel.org>
+ <20190402230545.2929-3-tobin@kernel.org>
+In-Reply-To: <20190402230545.2929-3-tobin@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO1PR15CA0085.namprd15.prod.outlook.com
- (2603:10b6:101:20::29) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
+x-clientproxiedby: MWHPR10CA0006.namprd10.prod.outlook.com (2603:10b6:301::16)
+ To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:152::24)
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [2620:10d:c090:200::1:9220]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a106cac7-85a9-43f6-e12a-08d6b85dde9d
+x-ms-office365-filtering-correlation-id: d235e346-69f5-41f7-3089-08d6b85e427a
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR15MB2231;
 x-ms-traffictypediagnostic: BYAPR15MB2231:
-x-microsoft-antispam-prvs: <BYAPR15MB2231D9DC7E65A43F17277132BE570@BYAPR15MB2231.namprd15.prod.outlook.com>
+x-microsoft-antispam-prvs: <BYAPR15MB223120194BF5A32BC0248DDEBE570@BYAPR15MB2231.namprd15.prod.outlook.com>
 x-forefront-prvs: 0996D1900D
 x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(39860400002)(346002)(136003)(376002)(199004)(189003)(6246003)(86362001)(25786009)(46003)(486006)(81166006)(186003)(81156014)(2906002)(305945005)(6512007)(7736002)(6436002)(1076003)(102836004)(6506007)(76176011)(9686003)(105586002)(6116002)(386003)(6916009)(8936002)(106356001)(14444005)(8676002)(4326008)(53936002)(99286004)(6486002)(14454004)(478600001)(52116002)(5660300002)(71190400001)(71200400001)(256004)(33656002)(68736007)(446003)(476003)(229853002)(11346002)(316002)(97736004)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2231;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: fb.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sHSjdRnrnJck4csKcNDUt05UUmEkRZ6JRXUpgdY2ivdycWiocae+N18jlYYUVTPJNIdPt9z0w7fBdt8e2ZFLrE6zGgPi7EOATv0wRDhO2T0M8kAMDnMs2/pYU9hCh9//+cB3N+fd/pAhiX0s501CcJyHirdawEG7vRs+qfkviGzjIa/SB9gm9IwQZOcRm3CxhevQGRRwrz+EeP3kl8zxlWCetSMUg3/9QZnO9mWiLlueRccKIbTjspYHWaxLPaRpTivCDDMeiDu6Hx+L8/WorhIIvfNZ4ZvoMmDCpeEJGeNdg2RtSr2BFDGmbiyydC/tDS6eUCwaeNAFVijXvlPKe+PNYrigEo883wbv1/po9Jxe7OwoowJaElcTNAKZx4HqvsMiAu90rol/KqYXWDTOq+JZids4bGNbB4q4XcvKnqA=
+x-microsoft-antispam-message-info: 8Ptqtd1re9v8y96NFBVGf432dZJ7x+1P8ju1RmqOWZ9RQ+ODP4qfCOHZGADPD/nHSFiddMEm3BjKk0qCxAEB7noF7DkHWKpijG9QX7v2bE7zHtIKngJDeoVSSxigv7Gupu/mpZ/y0KyYhiE43g5Wufm6+rxFhkYfNuoYtcajEpFyGjYIxwou3lHfegJLYkNLGAQrZgBDsJ4nbenmITBFjmNGd3hPNmRPsCilNydNX6Cxd+6S25H7U4TqRtxRa4RiIvK3OFe8ArGF8btztX0DIZ8yyfDQT9AxYLC48mGJanwY+N9JsqdR1ts6jSNeof8YkK75fWSOHAkmLFXPOF+A9ssUWas3Sr5jg5pZCIWAGsG3IyJb+Hz6uSzfJdW5tmDvnb1YuRjIvOPvXonkXBJxNgfojcQvlcDL3/XQx0oHxSU=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <088A820733D4244DA401E5CE186B29A6@namprd15.prod.outlook.com>
+Content-ID: <2236E267A6A29A4AB52D175EC07527B4@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a106cac7-85a9-43f6-e12a-08d6b85dde9d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 17:57:42.9005
+X-MS-Exchange-CrossTenant-Network-Message-Id: d235e346-69f5-41f7-3089-08d6b85e427a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 18:00:30.4586
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
@@ -121,25 +120,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:05:39AM +1100, Tobin C. Harding wrote:
-> Currently if we wish to rotate a list until a specific item is at the
-> front of the list we can call list_move_tail(head, list).  Note that the
-> arguments are the reverse way to the usual use of list_move_tail(list,
-> head).  This is a hack, it depends on the developer knowing how the
-> list_head operates internally which violates the layer of abstraction
-> offered by the list_head.  Also, it is not intuitive so the next
-> developer to come along must study list.h in order to fully understand
-> what is meant by the call, while this is 'good for' the developer it
-> makes reading the code harder.  We should have an function appropriately
-> named that does this if there are users for it intree.
+On Wed, Apr 03, 2019 at 10:05:40AM +1100, Tobin C. Harding wrote:
+> Currently we reach inside the list_head.  This is a violation of the
+> layer of abstraction provided by the list_head.  It makes the code
+> fragile.  More importantly it makes the code wicked hard to understand.
 >=20
-> By grep'ing the tree for list_move_tail() and list_tail() and attempting
-> to guess the argument order from the names it seems there is only one
-> place currently in the tree that does this - the slob allocatator.
+> The code reaches into the list_head structure to counteract the fact
+> that the list _may_ have been changed during slob_page_alloc().  Instead
+> of this we can add a return parameter to slob_page_alloc() to signal
+> that the list was modified (list_del() called with page->lru to remove
+> page from the freelist).
 >=20
-> Add function list_rotate_to_front() to rotate a list until the specified
-> item is at the front of the list.
+> This code is concerned with an optimisation that counters the tendency
+> for first fit allocation algorithm to fragment memory into many small
+> chunks at the front of the memory pool.  Since the page is only removed
+> from the list when an allocation uses _all_ the remaining memory in the
+> page then in this special case fragmentation does not occur and we
+> therefore do not need the optimisation.
+>=20
+> Add a return parameter to slob_page_alloc() to signal that the
+> allocation used up the whole page and that the page was removed from the
+> free list.  After calling slob_page_alloc() check the return value just
+> added and only attempt optimisation if the page is still on the list.
+>=20
+> Use list_head API instead of reaching into the list_head structure to
+> check if sp is at the front of the list.
 >=20
 > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> ---
+>  mm/slob.c | 51 +++++++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 37 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/mm/slob.c b/mm/slob.c
+> index 307c2c9feb44..07356e9feaaa 100644
+> --- a/mm/slob.c
+> +++ b/mm/slob.c
+> @@ -213,13 +213,26 @@ static void slob_free_pages(void *b, int order)
+>  }
+> =20
+>  /*
+> - * Allocate a slob block within a given slob_page sp.
+> + * slob_page_alloc() - Allocate a slob block within a given slob_page sp=
+.
+> + * @sp: Page to look in.
+> + * @size: Size of the allocation.
+> + * @align: Allocation alignment.
+> + * @page_removed_from_list: Return parameter.
+> + *
+> + * Tries to find a chunk of memory at least @size bytes big within @page=
+.
+> + *
+> + * Return: Pointer to memory if allocated, %NULL otherwise.  If the
+> + *         allocation fills up @page then the page is removed from the
+> + *         freelist, in this case @page_removed_from_list will be set to
+> + *         true (set to false otherwise).
+>   */
+> -static void *slob_page_alloc(struct page *sp, size_t size, int align)
+> +static void *slob_page_alloc(struct page *sp, size_t size, int align,
+> +			     bool *page_removed_from_list)
 
-Reviewed-by: Roman Gushchin <guro@fb.com>
+Hi Tobin!
+
+Isn't it better to make slob_page_alloc() return a bool value?
+Then it's easier to ignore the returned value, no need to introduce "_unuse=
+d".
+
+Thanks!
+
+>  {
+>  	slob_t *prev, *cur, *aligned =3D NULL;
+>  	int delta =3D 0, units =3D SLOB_UNITS(size);
+> =20
+> +	*page_removed_from_list =3D false;
+>  	for (prev =3D NULL, cur =3D sp->freelist; ; prev =3D cur, cur =3D slob_=
+next(cur)) {
+>  		slobidx_t avail =3D slob_units(cur);
+> =20
+> @@ -254,8 +267,10 @@ static void *slob_page_alloc(struct page *sp, size_t=
+ size, int align)
+>  			}
+> =20
+>  			sp->units -=3D units;
+> -			if (!sp->units)
+> +			if (!sp->units) {
+>  				clear_slob_page_free(sp);
+> +				*page_removed_from_list =3D true;
+> +			}
+>  			return cur;
+>  		}
+>  		if (slob_last(cur))
+> @@ -269,10 +284,10 @@ static void *slob_page_alloc(struct page *sp, size_=
+t size, int align)
+>  static void *slob_alloc(size_t size, gfp_t gfp, int align, int node)
+>  {
+>  	struct page *sp;
+> -	struct list_head *prev;
+>  	struct list_head *slob_list;
+>  	slob_t *b =3D NULL;
+>  	unsigned long flags;
+> +	bool _unused;
+> =20
+>  	if (size < SLOB_BREAK1)
+>  		slob_list =3D &free_slob_small;
+> @@ -284,6 +299,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int a=
+lign, int node)
+>  	spin_lock_irqsave(&slob_lock, flags);
+>  	/* Iterate through each partially free page, try to find room */
+>  	list_for_each_entry(sp, slob_list, lru) {
+> +		bool page_removed_from_list =3D false;
+>  #ifdef CONFIG_NUMA
+>  		/*
+>  		 * If there's a node specification, search for a partial
+> @@ -296,18 +312,25 @@ static void *slob_alloc(size_t size, gfp_t gfp, int=
+ align, int node)
+>  		if (sp->units < SLOB_UNITS(size))
+>  			continue;
+> =20
+> -		/* Attempt to alloc */
+> -		prev =3D sp->lru.prev;
+> -		b =3D slob_page_alloc(sp, size, align);
+> +		b =3D slob_page_alloc(sp, size, align, &page_removed_from_list);
+>  		if (!b)
+>  			continue;
+> =20
+> -		/* Improve fragment distribution and reduce our average
+> -		 * search time by starting our next search here. (see
+> -		 * Knuth vol 1, sec 2.5, pg 449) */
+> -		if (prev !=3D slob_list->prev &&
+> -				slob_list->next !=3D prev->next)
+> -			list_move_tail(slob_list, prev->next);
+> +		/*
+> +		 * If slob_page_alloc() removed sp from the list then we
+> +		 * cannot call list functions on sp.  If so allocation
+> +		 * did not fragment the page anyway so optimisation is
+> +		 * unnecessary.
+> +		 */
+> +		if (!page_removed_from_list) {
+> +			/*
+> +			 * Improve fragment distribution and reduce our average
+> +			 * search time by starting our next search here. (see
+> +			 * Knuth vol 1, sec 2.5, pg 449)
+> +			 */
+> +			if (!list_is_first(&sp->lru, slob_list))
+> +				list_rotate_to_front(&sp->lru, slob_list);
+> +		}
+>  		break;
+>  	}
+>  	spin_unlock_irqrestore(&slob_lock, flags);
+> @@ -326,7 +349,7 @@ static void *slob_alloc(size_t size, gfp_t gfp, int a=
+lign, int node)
+>  		INIT_LIST_HEAD(&sp->lru);
+>  		set_slob(b, SLOB_UNITS(PAGE_SIZE), b + SLOB_UNITS(PAGE_SIZE));
+>  		set_slob_page_free(sp, slob_list);
+> -		b =3D slob_page_alloc(sp, size, align);
+> +		b =3D slob_page_alloc(sp, size, align, &_unused);
+>  		BUG_ON(!b);
+>  		spin_unlock_irqrestore(&slob_lock, flags);
+>  	}
+> --=20
+> 2.21.0
+>=20
