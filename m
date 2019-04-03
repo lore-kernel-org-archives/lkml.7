@@ -2,169 +2,118 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CC8C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC80C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2767A2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF97206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="B1dKCqi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfDCQdY convert rfc822-to-8bit (ORCPT
+        id S1726818AbfDCQeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:33:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbfDCQdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:33:23 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 3 Apr 2019 12:34:06 -0400
+Received: from smtprelay2.synopsys.com ([198.182.60.111]:57344 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfDCQeG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:34:06 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8EEBB5946B;
-        Wed,  3 Apr 2019 16:33:22 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CCDC6012C;
-        Wed,  3 Apr 2019 16:33:20 +0000 (UTC)
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, steven.sistare@oracle.com,
-        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <9ec3d8dc-d1e0-1b8a-5e00-ba92b9756c58@redhat.com>
-Date:   Wed, 3 Apr 2019 12:33:20 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190402094320.GM11158@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id D9FA110C1B04;
+        Wed,  3 Apr 2019 09:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1554309245; bh=KMPaJnKdpeECMMTWpSAagOQwbWS5+N/nJVWgI2pIBRM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=B1dKCqi/wfHkauziyTHv3Lyg7VzHzNJsYbQ+8Y9JpCCKbkQ2ObaTMINCE167xK5tY
+         cEcoet/6LghnyXP9e6zDfQPvrSixmBu/Gb175IGCH9u2dRK1R+VgXE0ri7hvLhKVhQ
+         HvshsCOUcvihH94wIhJcBXWCncgKH/fdkduiGZDpoQADleCuLsjeMOXI9vTMPrLQqH
+         YpDW6iqqbiw5tPDFnFzWW8/IwQ0nVubb9lXSSEdq3BFiQKb1v3d2To4hIO0Uq6mqt5
+         YSKUcAhKQGjJaSHrg9Q4iQXCMzIZEcnLmJQFHDAo54TrrxptGT3ovjh1/FFg3IU6Kq
+         z2PztkVv+JE7Q==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 942CFA0062;
+        Wed,  3 Apr 2019 16:34:05 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 3 Apr 2019 09:34:05 -0700
+Received: from DE02WEMBXA.internal.synopsys.com ([fe80::a014:7216:77d:d55c])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
+ 3 Apr 2019 18:34:02 +0200
+From:   Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+To:     Vineet Gupta <vineet.gupta1@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "robh@kernel.org" <robh@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARC: [hsdk] Make it easier to add PAE40 region to DTB
+Thread-Topic: [PATCH] ARC: [hsdk] Make it easier to add PAE40 region to DTB
+Thread-Index: AQHU6YjVkC3kTPTpzkiiVHKQ83ImE6YqgX2A
+Date:   Wed, 3 Apr 2019 16:34:02 +0000
+Message-ID: <1554309241.2797.20.camel@synopsys.com>
+References: <1554232683-8173-1-git-send-email-vgupta@synopsys.com>
+In-Reply-To: <1554232683-8173-1-git-send-email-vgupta@synopsys.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 03 Apr 2019 16:33:22 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.121.8.106]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B51DCB34F108974F94658F970DA928EC@internal.synopsys.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/02/2019 05:43 AM, Peter Zijlstra wrote:
-> On Mon, Apr 01, 2019 at 10:36:19AM -0400, Waiman Long wrote:
->> On 03/29/2019 11:20 AM, Alex Kogan wrote:
->>> +config NUMA_AWARE_SPINLOCKS
->>> +	bool "Numa-aware spinlocks"
->>> +	depends on NUMA
->>> +	default y
->>> +	help
->>> +	  Introduce NUMA (Non Uniform Memory Access) awareness into
->>> +	  the slow path of spinlocks.
->>> +
->>> +	  The kernel will try to keep the lock on the same node,
->>> +	  thus reducing the number of remote cache misses, while
->>> +	  trading some of the short term fairness for better performance.
->>> +
->>> +	  Say N if you want absolute first come first serve fairness.
->>> +
->> The patch that I am looking for is to have a separate
->> numa_queued_spinlock_slowpath() that coexists with
->> native_queued_spinlock_slowpath() and
->> paravirt_queued_spinlock_slowpath(). At boot time, we select the most
->> appropriate one for the system at hand.
-> Agreed; and until we have static_call, I think we can abuse the paravirt
-> stuff for this.
-
-I haven't checked Josh's patch to see if it is doing. The availability
-of static_call will certainly make thing easier for this case.
-
-> By the time we patch the paravirt stuff:
->
->   check_bugs()
->     alternative_instructions()
->       apply_paravirt()
->
-> we should already have enumerated the NODE topology and so nr_node_ids()
-> should be set.
->
-> So if we frob pv_ops.lock.queued_spin_lock_slowpath to
-> numa_queued_spin_lock_slowpath before that, it should all get patched
-> just right.
->
-> That of course means the whole NUMA_AWARE_SPINLOCKS thing depends on
-> PARAVIRT_SPINLOCK, which is a bit awkward...
-
-Yes, this is one way of doing it. Another way to use static key to
-switch between the native and numa version. So if PARAVIRT_SPINLOCK is
-defined, we use the paravirt patching to point to the right function. If
-PARAVIRT_SPINLOCK isn't enabled, we can do something like
-
-static inline void queued_spin_lock_slowpath(struct qspinlock *lock, u32
-val)
-{
-        if (static_branch_unlikely(&use_numa_spinlock))
-                numa_queued_spin_lock_slowpath(lock, val);
-        else   
-                native_queued_spin_lock_slowpath(lock, val);
-}
-
-Alternatively, we can also call numa_queued_spin_lock_slowpath() in
-native_queued_spin_lock_slowpath() if we don't want to increase the code
-size of spinlock call sites.
-
-Cheers,
-Longman
-
-
+SGkgVmluZWV0LA0KDQpPbiBUdWUsIDIwMTktMDQtMDIgYXQgMTI6MTggLTA3MDAsIFZpbmVldCBH
+dXB0YSB3cm90ZToNCj4gMS4gQnVtcCB0b3AgbGV2ZWwgYWRkcmVzcy1jZWxscy9zaXplLWNlbGxz
+IG5vZGVzIHRvIDIgKHRvIGVuc3VyZSBhbGwNCj4gICAgZG93biBzdHJlYW0gYWRkcmVzc2VzIGFy
+ZSA2NC1iaXRzLCB1bmxlc3MgZXhwbGljaXRseSBzcGVjaWZpZWQNCj4gICAgb3RoZXJ3aXNlIChp
+biAic29jIiBidXMgd2l0aCBhbGwgcGVyaXBoZXJhbHMpDQo+IA0KPiAyLiAibWVtb3J5IiBhbHNv
+IHNwZWNpZmllZCB3aXRoIGFkZHJlc3Mvc2l6ZSAyDQo+IA0KPiAzLiBBZGQgYSBjb21tZW50ZWQg
+cmVmZXJlbmNlIGZvciBQQUU0MCByZWdpb24gYmV5b25kIDRHQiBwaHlzaWNhbA0KPiAgICBhZGRy
+ZXNzIHNwYWNlDQoNCltzZWUgYmVsb3ddDQoNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFZpbmVldCBH
+dXB0YSA8dmd1cHRhQHN5bm9wc3lzLmNvbT4NCj4gLS0tDQo+ICBhcmNoL2FyYy9ib290L2R0cy9o
+c2RrLmR0cyB8IDEzICsrKysrKystLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlv
+bnMoKyksIDYgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcmMvYm9vdC9k
+dHMvaHNkay5kdHMgYi9hcmNoL2FyYy9ib290L2R0cy9oc2RrLmR0cw0KPiBpbmRleCA2OWJjMWM5
+ZThlNTAuLjc0MjViYjBmMmQxYiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcmMvYm9vdC9kdHMvaHNk
+ay5kdHMNCj4gKysrIGIvYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMNCj4gQEAgLTE4LDggKzE4
+LDggQEANCj4gIAltb2RlbCA9ICJzbnBzLGhzZGsiOw0KPiAgCWNvbXBhdGlibGUgPSAic25wcyxo
+c2RrIjsNCj4gIA0KPiAtCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAtCSNzaXplLWNlbGxzID0g
+PDE+Ow0KPiArCSNhZGRyZXNzLWNlbGxzID0gPDI+Ow0KPiArCSNzaXplLWNlbGxzID0gPDI+Ow0K
+PiAgDQo+ICAJY2hvc2VuIHsNCj4gIAkJYm9vdGFyZ3MgPSAiZWFybHljb249dWFydDgyNTAsbW1p
+bzMyLDB4ZjAwMDUwMDAsMTE1MjAwbjggY29uc29sZT10dHlTMCwxMTUyMDBuOCBkZWJ1ZyBwcmlu
+dC1mYXRhbC1zaWduYWxzPTEiOw0KPiBAQCAtMTA1LDcgKzEwNSw3IEBADQo+ICAJCSNzaXplLWNl
+bGxzID0gPDE+Ow0KPiAgCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZpZHVfaW50Yz47DQo+ICANCj4g
+LQkJcmFuZ2VzID0gPDB4MDAwMDAwMDAgMHhmMDAwMDAwMCAweDEwMDAwMDAwPjsNCj4gKwkJcmFu
+Z2VzID0gPDB4MDAwMDAwMDAgMHgwIDB4ZjAwMDAwMDAgMHgxMDAwMDAwMD47DQo+ICANCj4gIAkJ
+Y2d1X3JzdDogcmVzZXQtY29udHJvbGxlckA4YTAgew0KPiAgCQkJY29tcGF0aWJsZSA9ICJzbnBz
+LGhzZGstcmVzZXQiOw0KPiBAQCAtMjY5LDkgKzI2OSwxMCBAQA0KPiAgCX07DQo+ICANCj4gIAlt
+ZW1vcnlAODAwMDAwMDAgew0KPiAtCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gLQkJI3NpemUt
+Y2VsbHMgPSA8MT47DQo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDI+Ow0KPiArCQkjc2l6ZS1jZWxs
+cyA9IDwyPjsNCj4gIAkJZGV2aWNlX3R5cGUgPSAibWVtb3J5IjsNCj4gLQkJcmVnID0gPDB4ODAw
+MDAwMDAgMHg0MDAwMDAwMD47ICAvKiAxIEdpQiAqLw0KPiArCQlyZWcgPSA8MHgwIDB4ODAwMDAw
+MDAgMHgwIDB4NDAwMDAwMDA+OyAgLyogMSBHQiBsb3dtZW0gKi8NCj4gKwkJLyogICAgIDB4MSAw
+eDAwMDAwMDAwIDB4MCAweDQwMDAwMDAwPjsgICAgIDEgR0IgaGlnaG1lbSAqLw0KDQpDb3VsZCB5
+b3UgcGxlYXNlIGdldCByaWQgb2YgY29tbWVudCB3aXRoIHJlZmVyZW5jZSBmb3IgUEFFNDAvSElH
+SE1FTSByZWdpb24gaW4gdGhpcyBwYXRjaD8NCkl0IGdpdmVzIHdyb25nIGV4cGVjdGF0aW9ucyB0
+aGF0IGlmIHdlIHVuY29tbWVudCBpdCBhbmQgZW5hYmxlIFBBRTQwIGluIGNvbmZpZyB3ZSdsbCBn
+ZXQgd29ya2luZyBzeXN0ZW0uDQpCdXQgaXQgaXNuJ3QgdHJ1ZSAtIHdlIGFsc28gbmVlZCB0byBy
+ZW1hcCBBWEkgYXBlcnR1cmVzIGFwcHJvcHJpYXRlbHkuDQoNCk90aGVyd2lzZSBrZXJuZWwgd2ls
+bCBjcnVzaCBzb21ld2hlcmUuIE1vcmVvdmVyIGtlcm5lbCB3aWxsIGNydXNoIGZvciBkaWZmZXJl
+bnQgcmVhc29ucyBpbiBjYXNlIG9mIGxhdW5jaA0KdmlhIFUtYm9vdCBhbmQgdmlhIE1EQiAoYmVj
+YXVzZSB3ZSByZW1hcCBBWEkgYXBlcnR1cmVzIGluIFUtYm9vdCBmb3IgaW50ZXJuYWwgcHVycG9z
+ZXMpLg0KDQpJZiB5b3UgcmVhbGx5IHdhbnQgdG8ga2VlcCB0aGlzIC0gSSBjYW4gc2VuZCB5b3Ug
+cGF0Y2ggd2l0aCBBWEkgYXBlcnR1cmVzIHJlbWFwcGluZyB3ZSBuZWVkIHRvIGFwcGx5IGZpcnN0
+bHkuDQoNClRoYW5rcy4NCg0KPiAgCX07DQo+ICB9Ow0KLS0gDQogRXVnZW5peSBQYWx0c2V2
