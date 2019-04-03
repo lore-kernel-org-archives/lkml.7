@@ -2,112 +2,104 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC87C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51047C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3FF2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="csIaxlo0"
+	by mail.kernel.org (Postfix) with ESMTP id 279BD2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfDCMgG (ORCPT
+        id S1726530AbfDCMgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:36:06 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:3759 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfDCMgB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:36:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1554294960; x=1585830960;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=DvRHBQJQh5aPyQRkoJui/bmQxXtf6YrC3CVrZRN4uh8=;
-  b=csIaxlo0wmwtnLZGt+AqieSGIwcQCpBb/Q04AWesoknwzxf5p8JH7P/T
-   Z9LXGleI69Nza/v0zPQC6hl6NJxfDF1PM3ALnwVyGsLON8SXWN2YE2ZS6
-   4TlfVoervRLB8tuxLPN+tNs/I60yycm3NCq/brWqvfHwIrxGQCKews9Bd
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.60,304,1549929600"; 
-   d="scan'208";a="792315462"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 03 Apr 2019 12:35:49 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x33CZi4I045777
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Wed, 3 Apr 2019 12:35:44 GMT
-Received: from EX13D18EUA002.ant.amazon.com (10.43.165.184) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 3 Apr 2019 12:35:44 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D18EUA002.ant.amazon.com (10.43.165.184) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 3 Apr 2019 12:35:43 +0000
-Received: from dev-dsk-mheyne-60001.pdx1.corp.amazon.com (10.184.85.242) by
- mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Wed, 3 Apr 2019 12:35:41 +0000
-Received: by dev-dsk-mheyne-60001.pdx1.corp.amazon.com (Postfix, from userid 5466572)
-        id A312424A25; Wed,  3 Apr 2019 12:35:41 +0000 (UTC)
-From:   Maximilian Heyne <mheyne@amazon.de>
-CC:     David Woodhouse <dwmw2@infradead.org>, Amit Shah <aams@amazon.de>,
-        Maximilian Heyne <mheyne@amazon.de>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        James Smart <james.smart@broadcom.com>,
-        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 0/2] Adding per-controller timeout support to nvme
-Date:   Wed, 3 Apr 2019 12:35:04 +0000
-Message-ID: <20190403123506.122904-1-mheyne@amazon.de>
-X-Mailer: git-send-email 2.16.5
+        Wed, 3 Apr 2019 08:36:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:12809 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfDCMgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:36:55 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 05:36:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
+   d="scan'208";a="139641380"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga003.jf.intel.com with ESMTP; 03 Apr 2019 05:36:49 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hBf8K-0002Pk-1D; Wed, 03 Apr 2019 15:36:48 +0300
+Date:   Wed, 3 Apr 2019 15:36:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Yury Norov <yury.norov@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Mike Travis <travis@sgi.com>, Yury Norov <ynorov@marvell.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] lib: make bitmap_parselist_user() a wrapper on
+ bitmap_parselist()
+Message-ID: <20190403123648.GC9224@smile.fi.intel.com>
+References: <20190403044540.16322-1-ynorov@marvell.com>
+ <20190403044540.16322-2-ynorov@marvell.com>
+ <20190403111522.GP9224@smile.fi.intel.com>
+ <20190403111745.GQ9224@smile.fi.intel.com>
+ <8408fada-5fcc-9a45-9631-685505ed14f0@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8408fada-5fcc-9a45-9631-685505ed14f0@rasmusvillemoes.dk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As different nvme controllers are connect via different fabrics, some require
-different timeout settings than others. This series implements per-controller
-timeouts in the nvme subsystem which can be set via sysfs.
+On Wed, Apr 03, 2019 at 02:17:39PM +0200, Rasmus Villemoes wrote:
+> On 03/04/2019 13.17, Andy Shevchenko wrote:
+> > On Wed, Apr 03, 2019 at 02:15:22PM +0300, Andy Shevchenko wrote:
+> >> On Wed, Apr 03, 2019 at 07:45:36AM +0300, Yury Norov wrote:
+> >>> Currently we parse user data byte after byte which leads to
+> >>> overcomplification of parsing algorithm. The only user of
+> >>> bitmap_parselist_user() is not performance-critical, and so we
+> >>> can copy user data to kernel buffer and simply call
+> >>> bitmap_parselist(). This rework lets us unify and simplify
+> >>> bitmap_parselist() and bitmap_parselist_user(), which is done
+> >>> in the following patch.
+> >>
+> >>> +	buf = kmalloc(ulen + 1, GFP_KERNEL);
+> >>> +	if (!buf)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>> +	buf[ulen] = 0;
+> >>> +
+> >>> +	ret = copy_from_user(buf, ubuf, ulen);
+> >>> +	if (ret)
+> >>> +		goto out;
+> >>
+> >> Why not memdup_user() ?
+> > 
+> > Even more precisely (for strings) strndup_user().
+> > 
+> 
+> But the user buffer is not nul-terminated, i.e. it's not a string. 
 
-We have reached out to the NVMe working group to implement per-controller
-timeout values. These patches are paving the way for this.
+Missed that. I stand corrected.
 
-Changes since v1:
-- implement the change not only for the pci NVMe driver but also for fc,
-  lightnvm, rdma, tcp and loop.
-- add an additional check when updating timeouts to not race with controller
-  creation or deletion
+> What
+> you want is memdup_user_nul() - take a length-delimited user buffer and
+> turn it into a nul-terminated string in kernel memory.
 
-Maximilian Heyne (2):
-  nvme: add per-controller io and admin timeouts
-  nvme: add sysfs controls for io and admin timeouts
-
- drivers/nvme/host/core.c     | 123 +++++++++++++++++++++++++++++++++++++++++--
- drivers/nvme/host/fc.c       |   2 +-
- drivers/nvme/host/lightnvm.c |   2 +-
- drivers/nvme/host/nvme.h     |   2 +
- drivers/nvme/host/pci.c      |  13 ++---
- drivers/nvme/host/rdma.c     |   4 +-
- drivers/nvme/host/tcp.c      |   4 +-
- drivers/nvme/target/loop.c   |   4 +-
- 8 files changed, 136 insertions(+), 18 deletions(-)
+Good, we have a helper.
 
 -- 
-2.16.5
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-Ust-ID: DE 289 237 879
-Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
+With Best Regards,
+Andy Shevchenko
 
 
