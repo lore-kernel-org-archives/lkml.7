@@ -2,188 +2,237 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1402CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14E1C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB14E2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC28E2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfDCLd1 (ORCPT
+        id S1726436AbfDCLdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 07:33:27 -0400
-Received: from mga03.intel.com ([134.134.136.65]:47506 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfDCLd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 07:33:27 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 04:33:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
-   d="scan'208";a="146236271"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Apr 2019 04:33:19 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hBe8p-0001jQ-Nk; Wed, 03 Apr 2019 14:33:15 +0300
-Date:   Wed, 3 Apr 2019 14:33:15 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andrey Abramov <st5pub@yandex.ru>
-Cc:     vgupta <vgupta@synopsys.com>, benh <benh@kernel.crashing.org>,
-        paulus <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>,
-        tglx <tglx@linutronix.de>, mingo <mingo@redhat.com>,
-        bp <bp@alien8.de>, hpa <hpa@zytor.com>, x86 <x86@kernel.org>,
-        mark <mark@fasheh.com>, jlbec <jlbec@evilplan.org>,
-        richard <richard@nod.at>, dedekind1 <dedekind1@gmail.com>,
-        "adrian.hunter" <adrian.hunter@intel.com>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "naveen.n.rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        jpoimboe <jpoimboe@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "darrick.wong" <darrick.wong@oracle.com>,
-        "ard.biesheuvel" <ard.biesheuvel@linaro.org>,
-        George Spelvin <lkml@sdf.org>,
-        linux-snps-arc <linux-snps-arc@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        ocfs2-devel <ocfs2-devel@oss.oracle.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        sfr <sfr@canb.auug.org.au>, jannh <jannh@google.com>,
-        jslaby <jslaby@suse.cz>, peterz <peterz@infradead.org>,
-        "yamada.masahiro" <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Morton Andrew <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 5/5] Lib: sort.h: remove the size argument from the
- swap function
-Message-ID: <20190403113315.GW9224@smile.fi.intel.com>
-References: <824481554237711@sas1-23a37bc8251c.qloud-c.yandex.net>
- <793311554238525@sas1-87f9feb8d943.qloud-c.yandex.net>
+        Wed, 3 Apr 2019 07:33:39 -0400
+Received: from bastet.se.axis.com ([195.60.68.11]:38969 "EHLO
+        bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfDCLdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 07:33:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bastet.se.axis.com (Postfix) with ESMTP id D1D98184FB;
+        Wed,  3 Apr 2019 13:33:35 +0200 (CEST)
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+        by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id z_6qmRebuE7i; Wed,  3 Apr 2019 13:33:34 +0200 (CEST)
+Received: from boulder02.se.axis.com (boulder02.se.axis.com [10.0.8.16])
+        by bastet.se.axis.com (Postfix) with ESMTPS id C948E185BE;
+        Wed,  3 Apr 2019 13:33:34 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AFCED1A08E;
+        Wed,  3 Apr 2019 13:33:34 +0200 (CEST)
+Received: from boulder02.se.axis.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A49671A066;
+        Wed,  3 Apr 2019 13:33:34 +0200 (CEST)
+Received: from thoth.se.axis.com (unknown [10.0.2.173])
+        by boulder02.se.axis.com (Postfix) with ESMTP;
+        Wed,  3 Apr 2019 13:33:34 +0200 (CEST)
+Received: from lnxartpec.se.axis.com (lnxartpec.se.axis.com [10.88.4.9])
+        by thoth.se.axis.com (Postfix) with ESMTP id 986CC212A;
+        Wed,  3 Apr 2019 13:33:34 +0200 (CEST)
+Received: by lnxartpec.se.axis.com (Postfix, from userid 10564)
+        id 9526580D28; Wed,  3 Apr 2019 13:33:34 +0200 (CEST)
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com
+Cc:     linux-kernel@vger.kernel.org, Vincent Whitchurch <rabinv@axis.com>
+Subject: [PATCH] tty: Add NULL TTY driver
+Date:   Wed,  3 Apr 2019 13:33:27 +0200
+Message-Id: <20190403113327.3628-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <793311554238525@sas1-87f9feb8d943.qloud-c.yandex.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 11:55:25PM +0300, Andrey Abramov wrote:
-> Removes size argument from the swap function because:
-> 	1) It wasn't used.
-> 	2) Custom swap function knows what kind of objects it swaps,
-> 		so it already knows their sizes.
-> 
-> Signed-off-by: Andrey Abramov <st5pub@yandex.ru>
-> Reviewed by: George Spelvin <lkml@sdf.org>
+If no console driver is enabled (or if a non-present driver is selected
+with something like console=null in an attempt to disable the console),
+opening /dev/console errors out, and init scripts and other userspace
+code that relies on the existence of a console will fail.  Symlinking
+/dev/null to /dev/console does not solve the problem since /dev/null
+does not behave like a real TTY.
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To just provide a dummy console to userspace when no console driver is
+available or desired, add a ttynull driver which simply discards all
+writes.  It can be chosen on the command line in the standard way, i.e.
+with console=ttynull.
 
-> ---
->  arch/x86/kernel/unwind_orc.c | 2 +-
->  include/linux/sort.h         | 2 +-
->  kernel/jump_label.c          | 2 +-
->  lib/extable.c                | 2 +-
->  lib/sort.c                   | 7 +++----
->  5 files changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index 89be1be1790c..dc410b567189 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -176,7 +176,7 @@ static struct orc_entry *orc_find(unsigned long ip)
->  	return orc_ftrace_find(ip);
->  }
->  
-> -static void orc_sort_swap(void *_a, void *_b, int size)
-> +static void orc_sort_swap(void *_a, void *_b)
->  {
->  	struct orc_entry *orc_a, *orc_b;
->  	struct orc_entry orc_tmp;
-> diff --git a/include/linux/sort.h b/include/linux/sort.h
-> index 2b99a5dd073d..13bb4635b5f1 100644
-> --- a/include/linux/sort.h
-> +++ b/include/linux/sort.h
-> @@ -6,6 +6,6 @@
->  
->  void sort(void *base, size_t num, size_t size,
->  	  int (*cmp)(const void *, const void *),
-> -	  void (*swap)(void *, void *, int));
-> +	  void (*swap)(void *, void *));
->  
->  #endif
-> diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-> index bad96b476eb6..6b1187b8a060 100644
-> --- a/kernel/jump_label.c
-> +++ b/kernel/jump_label.c
-> @@ -45,7 +45,7 @@ static int jump_label_cmp(const void *a, const void *b)
->  	return 0;
->  }
->  
-> -static void jump_label_swap(void *a, void *b, int size)
-> +static void jump_label_swap(void *a, void *b)
->  {
->  	long delta = (unsigned long)a - (unsigned long)b;
->  	struct jump_entry *jea = a;
-> diff --git a/lib/extable.c b/lib/extable.c
-> index f54996fdd0b8..0515a94538ca 100644
-> --- a/lib/extable.c
-> +++ b/lib/extable.c
-> @@ -28,7 +28,7 @@ static inline unsigned long ex_to_insn(const struct exception_table_entry *x)
->  #ifndef ARCH_HAS_RELATIVE_EXTABLE
->  #define swap_ex		NULL
->  #else
-> -static void swap_ex(void *a, void *b, int size)
-> +static void swap_ex(void *a, void *b)
->  {
->  	struct exception_table_entry *x = a, *y = b, tmp;
->  	int delta = b - a;
-> diff --git a/lib/sort.c b/lib/sort.c
-> index 50855ea8c262..8704750e6bde 100644
-> --- a/lib/sort.c
-> +++ b/lib/sort.c
-> @@ -114,7 +114,7 @@ static void swap_bytes(void *a, void *b, size_t n)
->  	} while (n);
->  }
->  
-> -typedef void (*swap_func_t)(void *a, void *b, int size);
-> +typedef void (*swap_func_t)(void *a, void *b);
->  
->  /*
->   * The values are arbitrary as long as they can't be confused with
-> @@ -138,7 +138,7 @@ static void do_swap(void *a, void *b, size_t size, swap_func_t swap_func)
->  	else if (swap_func == SWAP_BYTES)
->  		swap_bytes(a, b, size);
->  	else
-> -		swap_func(a, b, (int)size);
-> +		swap_func(a, b);
->  }
->  
->  /**
-> @@ -186,8 +186,7 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
->   * it less suitable for kernel use.
->   */
->  void sort(void *base, size_t num, size_t size,
-> -	  int (*cmp_func)(const void *, const void *),
-> -	  void (*swap_func)(void *, void *, int size))
-> +	  int (*cmp_func)(const void *, const void *), swap_func_t swap_func)
->  {
->  	/* pre-scale counters for performance */
->  	size_t n = num * size, a = (num/2) * size;
-> -- 
-> 2.21.0
-> 
-> 
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ drivers/tty/Kconfig   |  14 ++++++
+ drivers/tty/Makefile  |   1 +
+ drivers/tty/ttynull.c | 109 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 124 insertions(+)
+ create mode 100644 drivers/tty/ttynull.c
 
+diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+index e0a04bfc873e..d862f442f389 100644
+--- a/drivers/tty/Kconfig
++++ b/drivers/tty/Kconfig
+@@ -376,6 +376,20 @@ config PPC_EARLY_DEBUG_EHV_BC_HANDLE
+ 	  there simply will be no early console output.  This is true also
+ 	  if you don't boot under a hypervisor at all.
+ 
++config NULL_TTY
++	tristate "NULL TTY driver"
++	help
++	  Say Y here if you want a NULL TTY which simply discards messages.
++
++	  This is useful to allow userspace applications which expect a console
++	  device to work without modifications even when no console is
++	  available or desired.
++
++	  In order to use this driver, you should redirect the console to this
++	  TTY, or boot the kernel with console=ttynull.
++
++	  If unsure, say N.
++
+ config GOLDFISH_TTY
+ 	tristate "Goldfish TTY Driver"
+ 	depends on GOLDFISH
+diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+index c72cafdf32b4..020b1cd9294f 100644
+--- a/drivers/tty/Makefile
++++ b/drivers/tty/Makefile
+@@ -25,6 +25,7 @@ obj-$(CONFIG_ISI)		+= isicom.o
+ obj-$(CONFIG_MOXA_INTELLIO)	+= moxa.o
+ obj-$(CONFIG_MOXA_SMARTIO)	+= mxser.o
+ obj-$(CONFIG_NOZOMI)		+= nozomi.o
++obj-$(CONFIG_NULL_TTY)	        += ttynull.o
+ obj-$(CONFIG_ROCKETPORT)	+= rocket.o
+ obj-$(CONFIG_SYNCLINK_GT)	+= synclink_gt.o
+ obj-$(CONFIG_SYNCLINKMP)	+= synclinkmp.o
+diff --git a/drivers/tty/ttynull.c b/drivers/tty/ttynull.c
+new file mode 100644
+index 000000000000..17f05b7eb6d3
+--- /dev/null
++++ b/drivers/tty/ttynull.c
+@@ -0,0 +1,109 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Axis Communications AB
++ *
++ * Based on ttyprintk.c:
++ *  Copyright (C) 2010 Samo Pogacnik
++ */
++
++#include <linux/console.h>
++#include <linux/module.h>
++#include <linux/tty.h>
++
++static const struct tty_port_operations ttynull_port_ops;
++static struct tty_driver *ttynull_driver;
++static struct tty_port ttynull_port;
++
++static int ttynull_open(struct tty_struct *tty, struct file *filp)
++{
++	return tty_port_open(&ttynull_port, tty, filp);
++}
++
++static void ttynull_close(struct tty_struct *tty, struct file *filp)
++{
++	tty_port_close(&ttynull_port, tty, filp);
++}
++
++static void ttynull_hangup(struct tty_struct *tty)
++{
++	tty_port_hangup(&ttynull_port);
++}
++
++static int ttynull_write(struct tty_struct *tty, const unsigned char *buf,
++			 int count)
++{
++	return count;
++}
++
++static int ttynull_write_room(struct tty_struct *tty)
++{
++	return 65536;
++}
++
++static const struct tty_operations ttynull_ops = {
++	.open = ttynull_open,
++	.close = ttynull_close,
++	.hangup = ttynull_hangup,
++	.write = ttynull_write,
++	.write_room = ttynull_write_room,
++};
++
++static struct tty_driver *ttynull_device(struct console *c, int *index)
++{
++	*index = 0;
++	return ttynull_driver;
++}
++
++static struct console ttynull_console = {
++	.name = "ttynull",
++	.device = ttynull_device,
++};
++
++static int __init ttynull_init(void)
++{
++	struct tty_driver *driver;
++	int ret;
++
++	driver = tty_alloc_driver(1,
++		TTY_DRIVER_RESET_TERMIOS |
++		TTY_DRIVER_REAL_RAW |
++		TTY_DRIVER_UNNUMBERED_NODE);
++	if (IS_ERR(driver))
++		return PTR_ERR(driver);
++
++	tty_port_init(&ttynull_port);
++	ttynull_port.ops = &ttynull_port_ops;
++
++	driver->driver_name = "ttynull";
++	driver->name = "ttynull";
++	driver->type = TTY_DRIVER_TYPE_CONSOLE;
++	driver->init_termios = tty_std_termios;
++	driver->init_termios.c_oflag = OPOST | OCRNL | ONOCR | ONLRET;
++	tty_set_operations(driver, &ttynull_ops);
++	tty_port_link_device(&ttynull_port, driver, 0);
++
++	ret = tty_register_driver(driver);
++	if (ret < 0) {
++		put_tty_driver(driver);
++		tty_port_destroy(&ttynull_port);
++		return ret;
++	}
++
++	ttynull_driver = driver;
++	register_console(&ttynull_console);
++
++	return 0;
++}
++
++static void __exit ttynull_exit(void)
++{
++	unregister_console(&ttynull_console);
++	tty_unregister_driver(ttynull_driver);
++	put_tty_driver(ttynull_driver);
++	tty_port_destroy(&ttynull_port);
++}
++
++module_init(ttynull_init);
++module_exit(ttynull_exit);
++
++MODULE_LICENSE("GPL v2");
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.0
 
