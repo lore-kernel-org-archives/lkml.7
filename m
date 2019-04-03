@@ -2,152 +2,116 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F1C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EDAC10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6766205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822EC20693
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SzCa4MQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfDCRWo (ORCPT
+        id S1726489AbfDCRXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:22:44 -0400
-Received: from gateway20.websitewelcome.com ([192.185.60.19]:26933 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725959AbfDCRWo (ORCPT
+        Wed, 3 Apr 2019 13:23:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44240 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726097AbfDCRXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:22:44 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 91EB6400D88A6
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 12:02:39 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BjHbhN2nwdnCeBjHbhCQlt; Wed, 03 Apr 2019 12:02:39 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=42380 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hBjHa-001mt9-Am; Wed, 03 Apr 2019 12:02:38 -0500
-Date:   Wed, 3 Apr 2019 12:02:36 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] qtnfmac: replace qtnf_cmd_acl_data_size() with
- struct_size()
-Message-ID: <20190403170236.GA31637@embeddedor>
+        Wed, 3 Apr 2019 13:23:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0JzrFPO7aOe+Az8le0qY0Q15I7o1B6VXCKgN/GjAWHI=; b=SzCa4MQHkoG8AMhwPjhlI9FFD
+        CBq7iyWi+DgHYZoEnO/vvMW+dZm0VDmvM6NU1rOonmI+t5sI+/gunTjzzdp1ZLWKERtFdnDKDrVMf
+        imWx/KUE9Ddk43bw8ecIhoQCRrcxfatW+XBBGPE1wpRru+MpQWD1wFobP3U4NLKaxOdhHElHwLxK0
+        gOIgzY52s+2qaP4YgaDJowKLZI+sga77VoGx20BNd7/VqDt7E3ALtoRLsuHcC+Slcz7ZTCLBEtfDi
+        AjfYcgbbvnep1jEVpoYnvcdEtP6V1h9hmXUYXijzAxijnqgB5QIYP1cdb+XD/RPso9W7AmVuN0VWq
+        dojc7s4gA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBjbi-000465-Iu; Wed, 03 Apr 2019 17:23:26 +0000
+Date:   Wed, 3 Apr 2019 10:23:26 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 09/14] xarray: Implement migration function for
+ objects
+Message-ID: <20190403172326.GJ22763@bombadil.infradead.org>
+References: <20190403042127.18755-1-tobin@kernel.org>
+ <20190403042127.18755-10-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hBjHa-001mt9-Am
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.114.183]:42380
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190403042127.18755-10-tobin@kernel.org>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Wed, Apr 03, 2019 at 03:21:22PM +1100, Tobin C. Harding wrote:
+> +void xa_object_migrate(struct xa_node *node, int numa_node)
+> +{
+> +	struct xarray *xa = READ_ONCE(node->array);
+> +	void __rcu **slot;
+> +	struct xa_node *new_node;
+> +	int i;
+> +
+> +	/* Freed or not yet in tree then skip */
+> +	if (!xa || xa == XA_RCU_FREE)
+> +		return;
+> +
+> +	new_node = kmem_cache_alloc_node(radix_tree_node_cachep,
+> +					 GFP_KERNEL, numa_node);
+> +	if (!new_node)
+> +		return;
+> +
+> +	xa_lock_irq(xa);
+> +
+> +	/* Check again..... */
+> +	if (xa != node->array || !list_empty(&node->private_list)) {
+> +		node = new_node;
+> +		goto unlock;
+> +	}
+> +
+> +	memcpy(new_node, node, sizeof(struct xa_node));
+> +
+> +	/* Move pointers to new node */
+> +	INIT_LIST_HEAD(&new_node->private_list);
 
-struct foo {
-    int stuff;
-    struct boo entry[];
-};
+Surely we can do something more clever, like ...
 
-size = sizeof(struct foo) + count * sizeof(struct boo);
-instance = kzalloc(size, GFP_KERNEL)
+	if (xa != node->array) {
+...
+	if (list_empty(&node->private_list))
+		INIT_LIST_HEAD(&new_node->private_list);
+	else
+		list_replace(&node->private_list, &new_node->private_list);
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
 
-size = struct_size(instance, entry, count);
-
-or
-
-instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
-
-Based on the above, replace qtnf_cmd_acl_data_size() with the
-new struct_size() helper.
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/quantenna/qtnfmac/commands.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/wireless/quantenna/qtnfmac/commands.c b/drivers/net/wireless/quantenna/qtnfmac/commands.c
-index 85a2a58f4c16..534d5a4d06fb 100644
---- a/drivers/net/wireless/quantenna/qtnfmac/commands.c
-+++ b/drivers/net/wireless/quantenna/qtnfmac/commands.c
-@@ -177,14 +177,6 @@ static void qtnf_cmd_tlv_ie_set_add(struct sk_buff *cmd_skb, u8 frame_type,
- 		memcpy(tlv->ie_data, buf, len);
- }
- 
--static inline size_t qtnf_cmd_acl_data_size(const struct cfg80211_acl_data *acl)
--{
--	size_t size = sizeof(struct qlink_acl_data) +
--		      acl->n_acl_entries * sizeof(struct qlink_mac_address);
--
--	return size;
--}
--
- static bool qtnf_cmd_start_ap_can_fit(const struct qtnf_vif *vif,
- 				      const struct cfg80211_ap_settings *s)
- {
-@@ -203,7 +195,7 @@ static bool qtnf_cmd_start_ap_can_fit(const struct qtnf_vif *vif,
- 
- 	if (s->acl)
- 		len += sizeof(struct qlink_tlv_hdr) +
--		       qtnf_cmd_acl_data_size(s->acl);
-+		       struct_size(s->acl, mac_addrs, s->acl->n_acl_entries);
- 
- 	if (len > (sizeof(struct qlink_cmd) + QTNF_MAX_CMD_BUF_SIZE)) {
- 		pr_err("VIF%u.%u: can not fit AP settings: %u\n",
-@@ -310,7 +302,8 @@ int qtnf_cmd_send_start_ap(struct qtnf_vif *vif,
- 	}
- 
- 	if (s->acl) {
--		size_t acl_size = qtnf_cmd_acl_data_size(s->acl);
-+		size_t acl_size = struct_size(s->acl, mac_addrs,
-+					      s->acl->n_acl_entries);
- 		struct qlink_tlv_hdr *tlv =
- 			skb_put(cmd_skb, sizeof(*tlv) + acl_size);
- 
-@@ -2592,7 +2585,7 @@ int qtnf_cmd_set_mac_acl(const struct qtnf_vif *vif,
- 	struct qtnf_bus *bus = vif->mac->bus;
- 	struct sk_buff *cmd_skb;
- 	struct qlink_tlv_hdr *tlv;
--	size_t acl_size = qtnf_cmd_acl_data_size(params);
-+	size_t acl_size = struct_size(params, mac_addrs, params->n_acl_entries);
- 	int ret;
- 
- 	cmd_skb = qtnf_cmd_alloc_new_cmdskb(vif->mac->macid, vif->vifid,
--- 
-2.21.0
-
+BTW, the raidx tree nodes / xa_nodes share the same slab cache; we need
+to finish converting all radix tree & IDR users to the XArray before
+this series can go in.
