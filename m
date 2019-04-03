@@ -2,74 +2,97 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4601FC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BCEC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B212147C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606A821473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfDCIuo (ORCPT
+        id S1726425AbfDCIuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:50:44 -0400
-Received: from nat.nue.novell.com ([195.135.221.2]:21968 "EHLO suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725940AbfDCIuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:50:44 -0400
-Received: by suse.de (Postfix, from userid 1000)
-        id EE81C47ED; Wed,  3 Apr 2019 10:50:42 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 10:50:42 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
-        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
- memory
-Message-ID: <20190403085042.t5wcyvaolxiw65rr@d104.suse.de>
-References: <20190329134243.GA30026@dhcp22.suse.cz>
- <20190401075936.bjt2qsrhw77rib77@d104.suse.de>
- <20190401115306.GF28293@dhcp22.suse.cz>
- <20190402082812.fefamf7qlzulb7t2@d104.suse.de>
- <20190402124845.GD28293@dhcp22.suse.cz>
- <20190403080113.adj2m3szhhnvzu56@d104.suse.de>
- <20190403081232.GB15605@dhcp22.suse.cz>
- <d55aa259-56c0-9601-ffce-997ea1fb3ac5@redhat.com>
- <20190403083757.GC15605@dhcp22.suse.cz>
- <04a5b856-c8e0-937b-72bb-b9d17a12ccc7@redhat.com>
+        Wed, 3 Apr 2019 04:50:55 -0400
+Received: from sauhun.de ([88.99.104.3]:46706 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbfDCIuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 04:50:54 -0400
+Received: from localhost (p54B3311F.dip0.t-ipconnect.de [84.179.49.31])
+        by pokefinder.org (Postfix) with ESMTPSA id B5CE02C282F;
+        Wed,  3 Apr 2019 10:50:52 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 10:50:49 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Re: [PATCH 5/6] mfd: da9063: remove leftover platform_data
+ definitions
+Message-ID: <20190403085049.4clchelp4tgslikg@ninjato>
+References: <20190318154759.21978-1-wsa+renesas@sang-engineering.com>
+ <20190318154759.21978-6-wsa+renesas@sang-engineering.com>
+ <20190403080758.GF11301@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e7f37usrgqshnalg"
 Content-Disposition: inline
-In-Reply-To: <04a5b856-c8e0-937b-72bb-b9d17a12ccc7@redhat.com>
-User-Agent: NeoMutt/20170421 (1.8.2)
+In-Reply-To: <20190403080758.GF11301@dell>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:41:35AM +0200, David Hildenbrand wrote:
-> > That being said it should be the caller of the hotplug code to tell
-> > the vmemmap allocation strategy. For starter, I would only pack vmemmaps
-> > for "regular" kernel zone memory. Movable zones should be more careful.
-> > We can always re-evaluate later when there is a strong demand for huge
-> > pages on movable zones but this is not the case now because those pages
-> > are not really movable in practice.
-> 
-> Remains the issue with potential different user trying to remove memory
-> it didn't add in some other granularity. We then really have to identify
-> and isolate that case.
 
-If we let the caller specify whether it wants vmemmaps per memblock or range,
-I would trust that caller to do the correct thing and specify one thing or
-another depending on what it wants to do in the future.
+--e7f37usrgqshnalg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So, say a driver adds 512MB memory and it specifies that it wants vmemmaps per
-memblock because later on it will like to hot-remove in chunks of 128MB.
+On Wed, Apr 03, 2019 at 09:07:58AM +0100, Lee Jones wrote:
+> On Mon, 18 Mar 2019, Wolfram Sang wrote:
+>=20
+> > Not used, not needed, remove them.
+> >=20
+> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > ---
+> >  include/linux/mfd/da9063/pdata.h | 65 --------------------------------=
+--------
+> >  1 file changed, 65 deletions(-)
+> >  delete mode 100644 include/linux/mfd/da9063/pdata.h
+>=20
+> Can't take this until the last user has been removed.
+>=20
+> But for now:
+>=20
+> For my own reference:
+>   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
--- 
-Oscar Salvador
-SUSE L3
+As I wrote in the cover-letter, I'd vote for all patches going in via
+MFD. Is that fine with you? Then I'll ping other maintainers for acks.
+
+
+--e7f37usrgqshnalg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlykc+UACgkQFA3kzBSg
+KbbSCg/+MMeSoOkTVYVUQZ/GYTc/J/yEmpkmKv5SsQRFoQ3RdPU278fh0o5AOe5d
+kUwojAz0VXrKfIldAyTw2js5bx05HEd3iKJWMtx/Shss1VhM8JyIPxypbYXLf5wO
+sKuJ8h1dSDdR5NPmSG3JnkVL0due64aNBBClaAsBcnzZKSZkniwqyEGoYTLbo6iH
+oROq50RNPAN66ZjrITgSKsB7wq4dTDD+4tKWW7HDU0nsvZEN+3G4Y+eIUylFKpnQ
+qMKlR9M35wLleHBXdKFUQZ6pqaz+UVjowc17r/wFTmfszgf/jA6pXvp5wX5MDBZK
+l4R1pqmAtXbQP6ypbH/h0gHOeYAElF4XbtjdEEgCUoNhCAr2K9zfmiujx5Gtmaeq
+jiisc3Td7SCwPecuPX1QaF+V6xd3KNp7uRSYtcP9SmJmnDnDjKOhfCpqrEljjMMq
+zGfpqJjB24Oxc+QrLzUGSPMYcXn5LWp6HyxBN/Pn0VbwT6WBiE52s4AJdap2jM1U
+61oFGOvQhT/pEIzsu6f6S+aflPSKWxk/1WNnNZx9r6bru7fZaeAG8ygs9A0KWfe+
+6oFdsRRxR5Y27uESmEZ+brp3D3sKB727WfLoeD2k18OG6dwXiil6pcRaa4bqBhEY
+8uPgGU2/CBdcq3KHEReZ+FVhgiTkGBMQ+1ArxpFS4gxv/AfYSGQ=
+=VbCW
+-----END PGP SIGNATURE-----
+
+--e7f37usrgqshnalg--
