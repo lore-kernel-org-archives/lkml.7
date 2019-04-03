@@ -2,139 +2,270 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E266C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2B7C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47B62075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FA12084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:27:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ElYrKIgt"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jJslqNuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfDCOYH (ORCPT
+        id S1726461AbfDCO1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:24:07 -0400
-Received: from mout.web.de ([217.72.192.78]:33181 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbfDCOYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:24:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1554301437;
-        bh=yLanSsWQDAbT24V98EHzftp/emW8dqpvJFH9gryEI5g=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=ElYrKIgtWaQ78PLG0JgrOyMzHn8jefeAnkzInCPiBbffl7JCVMwqs0jbwNsjbHgcD
-         PhLTetAzJEN7bZkODGFZB/s+UlQKIsYoqPI+9/zstpr4x4wBu6fAweKtw5/ozODc4n
-         5MCjgjlcvXvHUNlFN+yr8VNz0o1DR2iH33Shwxt0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.115.60]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MNcV4-1hIrnr2KWQ-007FNl; Wed, 03
- Apr 2019 16:23:57 +0200
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Yi Wang <wang.yi59@zte.com.cn>
-References: <1554082674-2049-6-git-send-email-wen.yang99@zte.com.cn>
-Subject: Re: [5/7] cpufreq/pasemi: Checking implementation of
- pas_cpufreq_cpu_init()
-To:     Wen Yang <wen.yang99@zte.com.cn>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c0c9c429-a09f-41ba-611d-123b64e410c8@web.de>
-Date:   Wed, 3 Apr 2019 16:23:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Apr 2019 10:27:45 -0400
+Received: from mail.efficios.com ([167.114.142.138]:48194 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDCO1p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:27:45 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 25E401C95FF;
+        Wed,  3 Apr 2019 10:27:43 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id Yhv-95cKJqNH; Wed,  3 Apr 2019 10:27:42 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 9D5C51C95F9;
+        Wed,  3 Apr 2019 10:27:42 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9D5C51C95F9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1554301662;
+        bh=hXjb2AzbdrxoFfMXtmPO/n1fKrHYdHrvnztPcjhCjd0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=jJslqNucE80t304/yG0ENCUAgGBvR+7/5A3Cp+UKBZOCQfqw84gBeb68iZW9zYQzd
+         swAAroq4xCRUJQS7CoUxw4OzRcMLeGZ6bjlsEzsg4S7damFe3L5R2+YM6INjw+A8vg
+         CkDuK/+oTR9YUp/UcUBgqLHSrcyQO+oV4lG/1p6IdyozaZYNLP9Z4jFavAv5/yikNy
+         oS0kYJ2D8HJXjGGoUZXID4T6j2NT87AMps/aD4NG8xuWR+zA5d9yNtXoJzvt1WrD1j
+         MZOwcTYLRrsvHxPg8zuskL6FZxV+K1audG19BHEKRXx7db/mNPl6heWtfAEMTg0jfS
+         v3DFt4Ri+eeQA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id vJ_-fPnc-Ixk; Wed,  3 Apr 2019 10:27:42 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 773361C95F3;
+        Wed,  3 Apr 2019 10:27:42 -0400 (EDT)
+Date:   Wed, 3 Apr 2019 10:27:42 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     paulmck <paulmck@linux.ibm.com>
+Cc:     rcu <rcu@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        dipankar <dipankar@in.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        fweisbec <fweisbec@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx <amd-gfx@lists.freedesktop.org>
+Message-ID: <1028306587.504.1554301662374.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190403133243.GE4102@linux.ibm.com>
+References: <20190402142816.GA13084@linux.ibm.com> <886051277.1395.1554218080591.JavaMail.zimbra@efficios.com> <20190402152334.GC4102@linux.ibm.com> <161156422.1435.1554219247444.JavaMail.zimbra@efficios.com> <20190403133243.GE4102@linux.ibm.com>
+Subject: Re: [PATCH RFC tip/core/rcu 0/4] Forbid static SRCU use in modules
 MIME-Version: 1.0
-In-Reply-To: <1554082674-2049-6-git-send-email-wen.yang99@zte.com.cn>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3s/asdTdcxZ1lSGA/kR668i/m0CEywgCZlQOwvwZo4Hh9XSQCuY
- mJvCUhPpP9MraubGwRF8XG8Z2ugPn5bgLOs5u9/GXtrwlnaT83mV3KcURPdf+fiGPtenD7b
- ObletnjW3BV7lQvWMVm+PXYS2k3Iok3yU3+QTr+g9191FtnIrhjlubdZB4UR2jGbojVvP7V
- p8+7Bcz7HULFySZacWJ/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ugs3oOaf2Ks=:HwHOeR6CzdEDi/wSqFl/bn
- A3cV+cEK6cbXnwVPT/HElW1p2AebmK/tsHAqtgyao++eTetRgkIkVQbKAt923wk+DOGUrPAEx
- TxMlPj2UbgsPUd2wmmrDdfJO+II46axGQiuohcGMhGO62yL8NYzF3tpBPvgReyXh8lp8/s862
- pHeK3j7z8mSJCxAxWJw+eDSy//vmD5b7XcLrDOMVMOBLuZmL8MPaBfvXW8TT81iqXp2OUjCBp
- //0eygb50sOsSXnIq+yZ4hlv70Nu1Nexb2112JkiZC5r2YLGioWtaf1/LqU4goX5oYY4wQXy7
- Kx/pLGoq0mcIoIK8CYZymKe70dPRMIov5+a5uAN7t/zZ7HTJfEZewSlTuoD+eb2FvAD3uw8fw
- RO2DRUXXgBzjgRFyr5yQxu0sAxi54WWGKqpwmvP7njEkQOS36hXBbAIwmn8SqemEyB27zo61I
- BJ4s/HBKZ6plttc2xxMxNwtZWtDXM/2hGYiezpvFpLC/RKLDj5aL170B9JTvv02c7u+Q/S4J2
- 6QTJoVrJW/sNpqCPffGAIjbSvITwnFuVbZElBbnFtdxftrCVu3qASXjyrUsRxBMu/9gz0Hp05
- 3NDcNkBbJGCw3RFI8UB6kcy+HPsFDlOV6bhEYHQXYlR0dlsNWMK5tKS7zopSsKtfifxzuLe0N
- TPSmOzouoYhGEkGXUmLiMGRZeF6U8JbeEFiGYB8OdF2lF4vyqjIIdYuESnvRqhHy7N92UgrmS
- ZrQCsrpRE/1XT61IVZKQwtrzoHkAf6wULlImfUuceKdT0UBob3pWx9YbA+p+uGQeXNbucrDhP
- ngr+oTXHMmGqL53G0ikXqMJxfpspdE2dXvUfPUll+f8kcImH82HgJTe2ZE4rZm6gidMmxhuBG
- u2Ntb+aiedPbTiXcv6RdV+AZUE5V4rQ7ikQQCP1Q7M+zeC83fGHyLfV1Tk22bvPi7hRmh82Vv
- buMouKU8zdg==
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF65 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Forbid static SRCU use in modules
+Thread-Index: H5zwsFEp+EEV2IWdP7NtWraSNlphJw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -146,6 +146,7 @@  static int pas_cpufreq_cpu_init(struct cpufreq_poli=
-cy *policy)
->
->  	cpu =3D of_get_cpu_node(policy->cpu, NULL);
->
-> +	of_node_put(cpu);
->  	if (!cpu)
->  		goto out;
+----- On Apr 3, 2019, at 9:32 AM, paulmck paulmck@linux.ibm.com wrote:
 
-Can the statement =E2=80=9Creturn -ENODEV=E2=80=9D be nicer as exception h=
-andling
-in the if branch of this source code place?
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/d=
-rivers/cpufreq/pasemi-cpufreq.c?id=3Dbf97b82f37c6d90e16de001d0659644c57fa4=
-90d#n137
+> On Tue, Apr 02, 2019 at 11:34:07AM -0400, Mathieu Desnoyers wrote:
+>> ----- On Apr 2, 2019, at 11:23 AM, paulmck paulmck@linux.ibm.com wrote:
+>> 
+>> > On Tue, Apr 02, 2019 at 11:14:40AM -0400, Mathieu Desnoyers wrote:
+>> >> ----- On Apr 2, 2019, at 10:28 AM, paulmck paulmck@linux.ibm.com wrote:
+>> >> 
+>> >> > Hello!
+>> >> > 
+>> >> > This series prohibits use of DEFINE_SRCU() and DEFINE_STATIC_SRCU()
+>> >> > by loadable modules.  The reason for this prohibition is the fact
+>> >> > that using these two macros within modules requires that the size of
+>> >> > the reserved region be increased, which is not something we want to
+>> >> > be doing all that often.  Instead, loadable modules should define an
+>> >> > srcu_struct and invoke init_srcu_struct() from their module_init function
+>> >> > and cleanup_srcu_struct() from their module_exit function.  Note that
+>> >> > modules using call_srcu() will also need to invoke srcu_barrier() from
+>> >> > their module_exit function.
+>> >> 
+>> >> This arbitrary API limitation seems weird.
+>> >> 
+>> >> Isn't there a way to allow modules to use DEFINE_SRCU and DEFINE_STATIC_SRCU
+>> >> while implementing them with dynamic allocation under the hood ?
+>> > 
+>> > Although call_srcu() already has initialization hooks, some would
+>> > also be required in srcu_read_lock(), and I am concerned about adding
+>> > memory allocation at that point, especially given the possibility
+>> > of memory-allocation failure.  And the possibility that the first
+>> > srcu_read_lock() happens in an interrupt handler or similar.
+>> > 
+>> > Or am I missing a trick here?
+>> 
+>> I was more thinking that under #ifdef MODULE, both DEFINE_SRCU and
+>> DEFINE_STATIC_SRCU could append data in a dedicated section. module.c
+>> would additionally lookup that section on module load, and deal with
+>> those statically defined SRCU entries as if they were dynamically
+>> allocated ones. It would of course cleanup those resources on module
+>> unload.
+>> 
+>> Am I missing some subtlety there ?
+> 
+> If I understand you correctly, that is actually what is already done.  The
+> size of this dedicated section is currently set by PERCPU_MODULE_RESERVE,
+> and the additions of DEFINE{_STATIC}_SRCU() in modules was requiring that
+> this to be increased frequently.  That led to a request that something
+> be done, in turn leading to this patch series.
 
-Regards,
-Markus
+I think we are not expressing quite the same idea.
+
+AFAIU, yours is to have DEFINE*_SRCU directly define per-cpu data within modules,
+which ends up using percpu module reserved memory.
+
+My idea is to make DEFINE*_SRCU have a different behavior under #ifdef MODULE.
+It could emit a _global variable_ (_not_ per-cpu) within a new section. That
+section would then be used by module init/exit code to figure out what "srcu
+descriptors" are present in the modules. It would therefore rely on dynamic
+allocation for those, therefore removing the need to involve the percpu module
+reserved pool at all.
+
+> 
+> I don't see a way around this short of changing module loading to do
+> alloc_percpu() and then updating the relocation based on this result.
+> Which would admittedly be far more convenient.  I was assuming that
+> this would be difficult due to varying CPU offsets or the like.
+> 
+> But if it can be done reasonably, it would be quite a bit nicer than
+> forcing dynamic allocation in cases where it is not otherwise needed.
+
+Hopefully my explanation above helps clear out what I have in mind.
+
+You can find similar tricks performed by include/linux/tracepoint.h:
+
+#ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+{
+        return offset_to_ptr(p);
+}
+
+#define __TRACEPOINT_ENTRY(name)                                        \
+        asm("   .section \"__tracepoints_ptrs\", \"a\"          \n"     \
+            "   .balign 4                                       \n"     \
+            "   .long   __tracepoint_" #name " - .              \n"     \
+            "   .previous                                       \n")
+#else
+static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+{
+        return *p;
+}
+
+#define __TRACEPOINT_ENTRY(name)                                         \
+        static tracepoint_ptr_t __tracepoint_ptr_##name __used           \
+        __attribute__((section("__tracepoints_ptrs"))) =                 \
+                &__tracepoint_##name
+#endif
+
+[...]
+
+#define DEFINE_TRACE_FN(name, reg, unreg)                                \
+        static const char __tpstrtab_##name[]                            \
+        __attribute__((section("__tracepoints_strings"))) = #name;       \
+        struct tracepoint __tracepoint_##name                            \
+        __attribute__((section("__tracepoints"), used)) =                \
+                { __tpstrtab_##name, STATIC_KEY_INIT_FALSE, reg, unreg, NULL };\
+        __TRACEPOINT_ENTRY(name);
+
+And kernel/module.c:
+
+find_module_sections():
+
+#ifdef CONFIG_TRACEPOINTS
+        mod->tracepoints_ptrs = section_objs(info, "__tracepoints_ptrs",
+                                             sizeof(*mod->tracepoints_ptrs),
+                                             &mod->num_tracepoints);
+#endif
+
+And kernel/tracepoint.c:tracepoint_module_notify() for the module coming/going
+notifier.
+
+Basically you would want to have your own structure within your own section of
+the module which describes the srcu domain, and have a module coming/going
+notifier responsible for dynamically allocating the srcu domain on "coming", and
+doing a srcu barrier and cleanup the domain on "going".
+
+Thanks,
+
+Mathieu
+
+
+> 
+>							Thanx, Paul
+> 
+>> Thanks,
+>> 
+>> Mathieu
+>> 
+>> 
+>> > 
+>> >							Thanx, Paul
+>> > 
+>> >> Thanks,
+>> >> 
+>> >> Mathieu
+>> >> 
+>> >> 
+>> >> > 
+>> >> > This series consist of the following:
+>> >> > 
+>> >> > 1.	Dynamically allocate dax_srcu.
+>> >> > 
+>> >> > 2.	Dynamically allocate drm_unplug_srcu.
+>> >> > 
+>> >> > 3.	Dynamically allocate kfd_processes_srcu.
+>> >> > 
+>> >> > These build and have been subjected to 0day testing, but might also need
+>> >> > testing by someone having the requisite hardware.
+>> >> > 
+>> >> >							Thanx, Paul
+>> >> > 
+>> >> > ------------------------------------------------------------------------
+>> >> > 
+>> >> > drivers/dax/super.c                        |   10 +++++-
+>> >> > drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c |    5 +++
+>> >> > drivers/gpu/drm/amd/amdkfd/kfd_process.c   |    2 -
+>> >> > drivers/gpu/drm/drm_drv.c                  |    8 ++++
+>> >> > include/linux/srcutree.h                   |   19 +++++++++--
+>> >> > kernel/rcu/rcuperf.c                       |   40 +++++++++++++++++++-----
+>> >> > kernel/rcu/rcutorture.c                    |   48 +++++++++++++++++++++--------
+>> >> >  7 files changed, 105 insertions(+), 27 deletions(-)
+>> >> 
+>> >> --
+>> >> Mathieu Desnoyers
+>> >> EfficiOS Inc.
+>> >> http://www.efficios.com
+>> 
+>> --
+>> Mathieu Desnoyers
+>> EfficiOS Inc.
+>> http://www.efficios.com
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
