@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0148FC4360F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C4FC10F06
 	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C076F2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAAA2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfDCUwd (ORCPT
+        id S1726633AbfDCUwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:52:33 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37765 "EHLO
+        Wed, 3 Apr 2019 16:52:34 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:34145 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbfDCUwa (ORCPT
+        with ESMTP id S1726515AbfDCUwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:52:30 -0400
+        Wed, 3 Apr 2019 16:52:32 -0400
 X-Originating-IP: 86.202.231.219
 Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7E09020005;
-        Wed,  3 Apr 2019 20:52:27 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id EBA1820007;
+        Wed,  3 Apr 2019 20:52:29 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>
 Cc:     Gregory Clement <gregory.clement@bootlin.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 2/4] ARM: dts: at91sam9xe: use SPDX-License-Identifier
-Date:   Wed,  3 Apr 2019 22:52:17 +0200
-Message-Id: <20190403205219.26098-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 4/4] ARM: dts: at91-vinco: use SPDX-License-Identifier
+Date:   Wed,  3 Apr 2019 22:52:19 +0200
+Message-Id: <20190403205219.26098-4-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
 References: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
@@ -53,20 +53,21 @@ current DT files claim.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- arch/arm/boot/dts/at91sam9xe.dtsi | 39 +------------------------------
+ arch/arm/boot/dts/at91-vinco.dts | 39 +-------------------------------
  1 file changed, 1 insertion(+), 38 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9xe.dtsi b/arch/arm/boot/dts/at91sam9xe.dtsi
-index 1304452f0fae..3f9d8caf8b0a 100644
---- a/arch/arm/boot/dts/at91sam9xe.dtsi
-+++ b/arch/arm/boot/dts/at91sam9xe.dtsi
-@@ -1,46 +1,9 @@
+diff --git a/arch/arm/boot/dts/at91-vinco.dts b/arch/arm/boot/dts/at91-vinco.dts
+index 430277291e02..15050fdd479d 100644
+--- a/arch/arm/boot/dts/at91-vinco.dts
++++ b/arch/arm/boot/dts/at91-vinco.dts
+@@ -1,47 +1,10 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
  /*
-  * at91sam9xe.dtsi - Device Tree Include file for AT91SAM9XE family SoC
+  * Device Tree file for VInCo platform
   *
-  *  Copyright (C) 2015 Atmel,
-  *                2015 Alexandre Belloni <alexandre.Belloni@free-electrons.com>
+  *  Copyright (C) 2014 Atmel,
+  *                2014 Nicolas Ferre <nicolas.ferre@atmel.com>
+  *   2015 Gregory CLEMENT <gregory.clement@free-electrons.com>
 - *
 - * This file is dual-licensed: you can use it either under the terms
 - * of the GPL or the X11 license, at your option. Note that this dual
@@ -106,8 +107,8 @@ index 1304452f0fae..3f9d8caf8b0a 100644
 - *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 - *     OTHER DEALINGS IN THE SOFTWARE.
   */
- 
- #include "at91sam9260.dtsi"
+ /dts-v1/;
+ #include "sama5d4.dtsi"
 -- 
 2.20.1
 
