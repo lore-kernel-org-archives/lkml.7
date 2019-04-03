@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B1C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E99C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DA020882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D6E20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554266550;
-	bh=/R5IO1TdFWA671UnKlDpoFYgFK9Bb6pLWqB9NcCRtiE=;
+	s=default; t=1554266553;
+	bh=KClv/qLSq37fJQn9YzcKBcnkiJTMz+OIuadpUf41jw8=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=nSgw6YFfeVHjyxJEw52YHlm0BFsI4w0+QSO02s5JzxC3TFENUtg9UVFbRj9u5pVd9
-	 GB9EnoMbN1WyvS17AcYQ7ZTJvHR/VEDXQkPZA9vcvoj6DMX+I3uFnCanlV7FoByUgF
-	 TRxTm10EVb6H2DFqUCobXMwPbFui3P9zAj163ddc=
+	b=TxzPpSgeFB7H7u0PhUd57lCdoRtRvLgkY1gW+RwaE47xYqlA+8B55mpeewPW7YwV1
+	 bli95x7rjN+/ugHN3LYAxmgOjmqx0f/9FhEw/Gpn+mDFY6Z+eSTH0CcGqagqdqbwqP
+	 a0ZDQ7GIBUlKvWRZsPlgN6ck2aTMzjHy1cpTPzyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfDCEma (ORCPT
+        id S1728824AbfDCEmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:42:30 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40584 "EHLO
+        Wed, 3 Apr 2019 00:42:32 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40646 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728764AbfDCEm3 (ORCPT
+        with ESMTP id S1727065AbfDCEma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:42:29 -0400
+        Wed, 3 Apr 2019 00:42:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=NPeduGz+9mec+3IumoCAqAM0ew2GTeDpO/fBBwD4BzI=; b=va9nuMp87KKl
-        H9Oyv7t5rWCetz87+yn7B6tUwChLvcGOmJPoTSrKx5RJ0UeE24xUXPcVwdYr0Srzwl+RwpH5zqlkz
-        nNtjEC22Oj4kdugBPdjSiVlc0E744J2/f9yhm6cTkbJFoOXmELTalWItoOE6XD2Sg0T81JG6x6r/v
-        2UJuE=;
+        List-Archive; bh=go7ph3JnU9PONBzlMM8im0yKe6VYBcKsU+9wWKNXBo4=; b=R5HWLfhya1oJ
+        Ez4Mm+oXdQx7ZrzsdserZsrqwnmhxAjxpueV9wUfiwUjR7k4E3WWxwVdVKbU/y+Wq7Z6g8dyM+B9I
+        /OsEKl6xtKuASTNCEk1Rzx9SssFoWWdH12RWbwvbzAFljtSD8a0/j/oUoT0vJFma9sJTiLUmEvvb2
+        qV8rY=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hBXjE-00040V-L9; Wed, 03 Apr 2019 04:42:24 +0000
+        id 1hBXjH-00040e-Ch; Wed, 03 Apr 2019 04:42:27 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id E7247440083; Wed,  3 Apr 2019 05:42:21 +0100 (BST)
+        id 6EE43440082; Wed,  3 Apr 2019 05:42:24 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Clark Wang <xiaoning.wang@nxp.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, Chris Healy <cphealy@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org
-Subject: Applied "spi: lpspi: add missing complete in abort func at dma mode" to the spi tree
-In-Reply-To:  <20190402124609.22157-1-xiaoning.wang@nxp.com>
+Subject: Applied "spi: gpio: Drop unused pdata copy in struct spi_gpio" to the spi tree
+In-Reply-To:  <20190403040133.1459-6-andrew.smirnov@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190403044221.E7247440083@finisterre.ee.mobilebroadband>
-Date:   Wed,  3 Apr 2019 05:42:21 +0100 (BST)
+Message-Id: <20190403044224.6EE43440082@finisterre.ee.mobilebroadband>
+Date:   Wed,  3 Apr 2019 05:42:24 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: lpspi: add missing complete in abort func at dma mode
+   spi: gpio: Drop unused pdata copy in struct spi_gpio
 
 has been applied to the spi tree at
 
@@ -89,40 +90,45 @@ to this mail.
 Thanks,
 Mark
 
-From 8863eca8c46affaa91ae35390b00358b925483eb Mon Sep 17 00:00:00 2001
-From: Clark Wang <xiaoning.wang@nxp.com>
-Date: Tue, 2 Apr 2019 12:45:53 +0000
-Subject: [PATCH] spi: lpspi: add missing complete in abort func at dma mode
+From 703b476695237dda54233d2dadb37d2d49de23cf Mon Sep 17 00:00:00 2001
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Date: Tue, 2 Apr 2019 21:01:26 -0700
+Subject: [PATCH] spi: gpio: Drop unused pdata copy in struct spi_gpio
 
-Add the missing complete operations for dma_completion to fix the
-problem of blocking at the wait_for_completion_interruptible()
-function when use spi_slave_abort().
+Drop unused pdata copy in struct spi_gpio. No functional change
+intended.
 
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: linux-spi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-fsl-lpspi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/spi/spi-gpio.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 4de8eb378752..2ad9d6262c2b 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -482,7 +482,13 @@ static int fsl_lpspi_slave_abort(struct spi_controller *controller)
- 				spi_controller_get_devdata(controller);
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 137f47e271dc..1cff30adc836 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -42,7 +42,6 @@
  
- 	fsl_lpspi->slave_aborted = true;
--	complete(&fsl_lpspi->xfer_done);
-+	if (!fsl_lpspi->usedma)
-+		complete(&fsl_lpspi->xfer_done);
-+	else {
-+		complete(&fsl_lpspi->dma_tx_completion);
-+		complete(&fsl_lpspi->dma_rx_completion);
-+	}
-+
- 	return 0;
- }
+ struct spi_gpio {
+ 	struct spi_bitbang		bitbang;
+-	struct spi_gpio_platform_data	pdata;
+ 	struct platform_device		*pdev;
+ 	struct gpio_desc		*sck;
+ 	struct gpio_desc		*miso;
+@@ -415,8 +414,6 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 	spi_gpio->has_cs = !!pdata->num_chipselect;
  
+ 	spi_gpio->pdev = pdev;
+-	if (pdata)
+-		spi_gpio->pdata = *pdata;
+ 
+ 	status = spi_gpio_request(dev, spi_gpio,
+ 				  pdata->num_chipselect, &master_flags);
 -- 
 2.20.1
 
