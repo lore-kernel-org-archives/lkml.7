@@ -2,125 +2,132 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3F5C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A49AC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2620320657
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0B9206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbfDCRYe (ORCPT
+        id S1726315AbfDCR12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:24:34 -0400
-Received: from foss.arm.com ([217.140.101.70]:45550 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfDCRYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:24:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0BBF80D;
-        Wed,  3 Apr 2019 10:24:33 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A6F23F68F;
-        Wed,  3 Apr 2019 10:24:32 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 18:24:29 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     pierre kuo <vichy.kuo@gmail.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        ard.biesheuvel@linaro.org
-Subject: Re: [PATCH v2 1/1] initrd: move initrd_start calculate within linear
- mapping range check
-Message-ID: <20190403172429.GE17500@fuggles.cambridge.arm.com>
-References: <20190314032047.15790-1-vichy.kuo@gmail.com>
- <20190319153114.GI59586@arrakis.emea.arm.com>
- <CAOVJa8HSB34ggku=96KAb6qju3G5-uGYFxCE6O2eQRMwU4bd1A@mail.gmail.com>
- <CAOVJa8Eefs7cEneNwV0VCrr8GLVb0AweJEb0Qo4TucgXTNuNWg@mail.gmail.com>
- <20190401153810.GC6884@fuggles.cambridge.arm.com>
- <CAOVJa8EcjQO2GuojwBxfFG25+T-z6BR6ytZBdcV2W2XusyW08g@mail.gmail.com>
+        Wed, 3 Apr 2019 13:27:28 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46184 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfDCR12 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:27:28 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z17so20251598qts.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:27:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=wJ3eRVwwNTD1aB1PgrPxgoJVqOyTqVWt3zOiEecpA4s=;
+        b=dqyNzZG6G7jr81ypgpZ1/FYDdt3ERrrMUVTERpJfIvFZFnwNMNgtKhpMbkv9gWKwoi
+         t9BUwegBOO0PMvhp2D/OsaeBTlRvGojrYdCi6Jqp6IWoj5IYavOYFD3ZpHphtfDjSMNb
+         Z7osVJse6s82DX5PrTuws8LtCCdUV9Xgio09Oj0lmBn5b2qXMh5u0xAJu4cm8t2t9Fav
+         QxF5Av1sbBNJix4B48tskmA0hywWCYlHssugOrlK7MER1VGCaNJMezgT1HJGsgVT+7Cn
+         +dRn12vM6enzMuW2lEcQa/UhtJ/DSParJ/AQ3yZkX20KF4iVV9F8ZWjv9k/NBSm+WJmw
+         Wg4Q==
+X-Gm-Message-State: APjAAAUYP+PmXQTscldb8cF8AQd+M2JVGL1uVeLyqgVmyzG1RTLnbT4f
+        WORGkThR+houswl51VIRZ2L8mw==
+X-Google-Smtp-Source: APXvYqzITGCsugUHGz+COp1O8x6jIA4JLT8xkIoIL11ybl4wtnj4VxmmcSG9ZXHfdo2jr6gnd+nzEQ==
+X-Received: by 2002:ac8:247c:: with SMTP id d57mr1076131qtd.308.1554312447404;
+        Wed, 03 Apr 2019 10:27:27 -0700 (PDT)
+Received: from dhcp-10-20-1-11.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id b37sm14186564qtb.92.2019.04.03.10.27.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 10:27:26 -0700 (PDT)
+Message-ID: <59dbed40fc0fad4a945cbfe09c9f622b81c7bd94.camel@redhat.com>
+Subject: Re: [PATCH] pci/quirks: Add quirk to reset nvgpu at boot for the
+ Lenovo ThinkPad P50
+From:   Lyude Paul <lyude@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     David Ober <dober@lenovo.com>, linux-pci@vger.kernel.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <skeggsb@gmail.com>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Date:   Wed, 03 Apr 2019 13:27:25 -0400
+In-Reply-To: <20190322113015.GM251185@google.com>
+References: <20190212220230.1568-1-lyude@redhat.com>
+         <20190215004329.GR96272@google.com>
+         <2fca9a9feafcd17b27bc71994a71ebc241a93e9a.camel@redhat.com>
+         <52b17f8cb24e179e9661d75548d193843ae87b4c.camel@redhat.com>
+         <20190321224819.GK251185@google.com> <20190322113015.GM251185@google.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOVJa8EcjQO2GuojwBxfFG25+T-z6BR6ytZBdcV2W2XusyW08g@mail.gmail.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 12:44:25AM +0800, pierre kuo wrote:
-> > On Mon, Apr 01, 2019 at 10:59:53PM +0800, pierre kuo wrote:
-> > > > > With CONFIG_RANDOMIZE_BASE we can get a further change to memstart_addr
-> > > > > after the place where you moved the initrd_{start,end} setting, which
-> > > > > would result in a different value for __phys_to_virt(phys_initrd_start).
-> > > >
-> > > > I found what you mean, since __phys_to_virt will use PHYS_OFFSET
-> > > > (memstart_addr) for calculating.
-> > > > How about moving CONFIG_RANDOMIZE_BASE part of code ahead of
-> > > > CONFIG_BLK_DEV_INITRD checking?
-> > > >
-> > > > That means below (d) moving ahead of (c)
-> > > > prvious:
-> > > > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
-> > > > if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
-> > > > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
-> > > > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
-> > > >
-> > > > now:
-> > > > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) { ---(a)
-> > > > if (memory_limit != PHYS_ADDR_MAX) {}              ----------------(b)
-> > > > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}  --------------(d)
-> > > > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}  ---(c)
-> > > >
-> > >
-> > > After tracing the kernel code,
-> > > is it even possible to move CONFIG_RANDOMIZE_BASE part of code ahead
-> > > of memory_limit?
-> > >
-> > > that mean the flow may look like below:
-> > > now2:
-> > > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} ---(a)
-> > > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {} ---(d)
-> > > if (memory_limit != PHYS_ADDR_MAX) {}            ---(b)
-> > > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {} ---(c)
-> > >
-> > > in (b), the result of __pa_symbol(_text), memory_limit,
-> > > memblock_mem_limit_remove_map and  memblock_add
-> > > are not depended on memsart_addr.
-> > > So the now2 flow can grouping modification of memstart_address, put
-> > > (a) and (d) together.
-> >
-> > I'm afraid that you've lost me with this.
-> welcome for ur kind suggestion ^^
-> 
-> >Why isn't it just as simple as
-> > the diff below?
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index c29b17b520cd..ec3487c94b10 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -377,7 +377,7 @@ void __init arm64_memblock_init(void)
-> >                          base + size > memblock_start_of_DRAM() +
-> >                                        linear_region_size,
-> >                         "initrd not fully accessible via the linear mapping -- please check your bootloader ...\n")) {
-> > -                       initrd_start = 0;
-> > +                       phys_initrd_size = 0;
-> >                 } else {
-> >                         memblock_remove(base, size); /* clear MEMBLOCK_ flags */
-> >                         memblock_add(base, size);
-> 
-> This patch will also fix the issue, but it still needs 2 "if
-> comparisions" for getting initrd_start/initrd_end.
-> By possible grouping modification of memstart_address, and put
-> initrd_start/initrd_end to be calculated only when linear mapping check
-> pass. Maybe (just if) can let the code be more concise.
+Hi, any update on this/do you guys need any more information here? Would very
+much like to get this upstream
 
-Maybe, but I don't think we've seen a patch which accomplishes that. I think
-I'll go ahead and commit the basic one-liner, then we can always improve it
-afterwards if somebody sends a patch. It's not like this is a fastpath.
+On Fri, 2019-03-22 at 06:30 -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 21, 2019 at 05:48:19PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Mar 13, 2019 at 06:25:02PM -0400, Lyude Paul wrote:
+> > > On Fri, 2019-02-15 at 16:17 -0500, Lyude Paul wrote:
+> > > > On Thu, 2019-02-14 at 18:43 -0600, Bjorn Helgaas wrote:
+> > > > > On Tue, Feb 12, 2019 at 05:02:30PM -0500, Lyude Paul wrote:
+> > > > > > On a very specific subset of ThinkPad P50 SKUs, particularly
+> > > > > > ones that come with a Quadro M1000M chip instead of the M2000M
+> > > > > > variant, the BIOS seems to have a very nasty habit of not
+> > > > > > always resetting the secondary Nvidia GPU between full reboots
+> > > > > > if the laptop is configured in Hybrid Graphics mode. The
+> > > > > > reason for this happening is unknown, but the following steps
+> > > > > > and possibly a good bit of patience will reproduce the issue:
+> > > > > > 
+> > > > > > 1. Boot up the laptop normally in Hybrid graphics mode
+> > > > > > 2. Make sure nouveau is loaded and that the GPU is awake
+> > > > > > 2. Allow the nvidia GPU to runtime suspend itself after being idle
+> > > > > > 3. Reboot the machine, the more sudden the better (e.g sysrq-b may
+> > > > > > help)
+> > > > > > 4. If nouveau loads up properly, reboot the machine again and go
+> > > > > > back to
+> > > > > > step 2 until you reproduce the issue
+> > > > > > 
+> > > > > > This results in some very strange behavior: the GPU will quite
+> > > > > > literally be left in exactly the same state it was in when the
+> > > > > > previously booted kernel started the reboot. This has all
+> > > > > > sorts of bad sideaffects: for starters, this completely breaks
+> > > > > > nouveau starting with a mysterious EVO channel failure that
+> > > > > > happens well before we've actually used the EVO channel for
+> > > > > > anything:
+> > 
+> > Thanks for the hybrid tutorial (snipped from this response).  IIUC,
+> > what you said was that in hybrid mode, the Intel GPU drives the
+> > built-in display and the Nvidia GPU drives any external displays and
+> > may be used for DRI PRIME rendering (whatever that is).  But since you
+> > say the Nvidia device gets runtime suspended, I assume there's no
+> > external display here and you're not using DRI PRIME.
+> > 
+> > I wonder if it's related to the fact that the Nvidia GPU has been
+> > runtime suspended before you do the reboot.  Can you try turning of
+> > runtime power management for the GPU by setting the runpm module
+> > parameter to 0?  I *think* this would be booting with
+> > "nouveau.runpm=0".
+> 
+> Sorry, I wasn't really thinking here.  You already *said* this is
+> related to runtime suspend.  It only happens when the Nvidia GPU has
+> been suspended.
+> 
+> I don't know that much about suspend, but ISTR seeing comments about
+> resuming devices before we shutdown.  If we do that, maybe there's
+> some kind of race between that resume and the reboot?
+> 
+> Bjorn
+-- 
+Cheers,
+	Lyude Paul
 
-Will
