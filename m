@@ -2,79 +2,111 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B22CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9366C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D95205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5847D205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfDCRQ5 (ORCPT
+        id S1726388AbfDCRTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:16:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42608 "EHLO mail.kernel.org"
+        Wed, 3 Apr 2019 13:19:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:45458 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbfDCRQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:16:57 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38C07205C9;
-        Wed,  3 Apr 2019 17:16:56 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 13:16:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <tzanussi@gmail.com>
-Cc:     Mario.Limonciello@dell.com, pali.rohar@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: dell_smbios KASAN bug
-Message-ID: <20190403131654.7379a991@gandalf.local.home>
-In-Reply-To: <1553530847.6114.0.camel@gmail.com>
-References: <1553106560.2080.5.camel@gmail.com>
-        <20190320144146.08ecd5e4@gandalf.local.home>
-        <1553108749.2079.1.camel@gmail.com>
-        <20190320151353.1a223c0e@gandalf.local.home>
-        <9541737623f942e49e9310aef963ffbf@ausx13mpc120.AMER.DELL.COM>
-        <20190325101731.3558ecda@gandalf.local.home>
-        <1553530847.6114.0.camel@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726084AbfDCRTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:19:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCDC680D;
+        Wed,  3 Apr 2019 10:19:07 -0700 (PDT)
+Received: from red-moon (red-moon.cambridge.arm.com [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EE503F68F;
+        Wed,  3 Apr 2019 10:19:06 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 18:19:03 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Murali Karicheri <m-karicheri2@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 8/8] PCI: dwc: Do not write to MSI control registers
+ if the platform doesn't use it
+Message-ID: <20190403171902.GB3783@red-moon>
+References: <20190321095927.7058-1-kishon@ti.com>
+ <20190321095927.7058-9-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321095927.7058-9-kishon@ti.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 11:20:47 -0500
-Tom Zanussi <tzanussi@gmail.com> wrote:
-
-> > Is it OK if I add the following tags to that patch?
-> > 
-> > Reported-by: Tom Zanussi <tzanussi@gmail.com>
-> > Tested-by: Tom Zanussi <tzanussi@gmail.com>
-> >   
+On Thu, Mar 21, 2019 at 03:29:27PM +0530, Kishon Vijay Abraham I wrote:
+> Platforms which populate msi_host_init, has it's own MSI controller
+> logic. Writing to MSI control registers on platforms which doesn't use
+> Designware's MSI controller logic might have side effects. To
+> be safe, do not write to MSI control registers if the platform uses
+> it's own MSI controller logic instead of Designware's MSI controller
+> logic.
 > 
-> Yep, fine with me.
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-host.c | 24 ++++++++++---------
+>  1 file changed, 13 insertions(+), 11 deletions(-)
 
-I modified the patch slightly. Can you test this too. There should be
-no reason that it wont work as this is "safer" but I don't want to put
-your tested-by if you haven't tested it ;-)
+This patch is needed regardless of the rest of the series, correct ?
+A.k.a. it is fixing an issue already in the mainline.
 
--- Steve
+Just to make sure we are not _introducing_ a bisection issue with this
+series up to this patch, in which case I will squash this patch into one
+of the previous ones, please let me know.
 
-diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
-index 0537d44d45a6..a74c0df25b15 100644
---- a/drivers/platform/x86/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell-smbios-base.c
-@@ -625,6 +625,8 @@ static int __init dell_smbios_init(void)
- 
- fail_platform_driver:
- 	kfree(da_tokens);
-+	da_tokens = NULL;
-+	da_num_tokens = 0;
- 	return ret;
- }
- 
+Thanks,
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 498422397609..7e0ff7d428a9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -626,17 +626,19 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  
+>  	dw_pcie_setup(pci);
+>  
+> -	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> -
+> -	/* Initialize IRQ Status array */
+> -	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
+> -		pp->irq_mask[ctrl] = ~0;
+> -		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_MASK +
+> -					(ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> -				    4, pp->irq_mask[ctrl]);
+> -		dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE +
+> -					(ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> -				    4, ~0);
+> +	if (!pp->ops->msi_host_init) {
+> +		num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> +
+> +		/* Initialize IRQ Status array */
+> +		for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
+> +			pp->irq_mask[ctrl] = ~0;
+> +			dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_MASK +
+> +					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> +					    4, pp->irq_mask[ctrl]);
+> +			dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE +
+> +					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
+> +					    4, ~0);
+> +		}
+>  	}
+>  
+>  	/* Setup RC BARs */
+> -- 
+> 2.17.1
+> 
