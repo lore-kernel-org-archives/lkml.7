@@ -2,99 +2,137 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C140C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE924C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509A9206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="akTNQy9T"
+	by mail.kernel.org (Postfix) with ESMTP id A7B2A206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfDCIkL (ORCPT
+        id S1729077AbfDCIkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:40:11 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37999 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfDCIkK (ORCPT
+        Wed, 3 Apr 2019 04:40:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53601 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfDCIkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:40:10 -0400
-Received: by mail-io1-f65.google.com with SMTP id v4so13375535ioj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HY0jHOs4R0jG9qXTPfUn1bzB6wZ72lVP8wBuOgvgubA=;
-        b=akTNQy9Tg3McxpPEtOSD3thA5yBhYEk4BYKr3SOlLutARVkpxsvC7Zi4San8LYaY+x
-         CJKW1KGOg76mPzo4+Doln1HwXtVzWUFP4ZzgbVr1uVcD35kSHfeZMS3/yPdGi02hyPQ+
-         tyLdfpC7tvxgzxXg3JuTIKHT0TwD9UQRaDx8kDj0YdpH1daRvNAblNonKS73RDKtVA3N
-         mblj5Dgc7tggww2t7EQ3q/NsC6e/bpjYygxRonbOnLJWTakvWQTR9as1iBYnWqGTs4q/
-         3vNt0f1gCcCorGX/P6hCrDIXWytO1C4G7PSg2qKo3NxDNsAWbsT4J33fxkuuKvsIgVJk
-         AKVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HY0jHOs4R0jG9qXTPfUn1bzB6wZ72lVP8wBuOgvgubA=;
-        b=gM1hs7AOuHx8MDi5bvG/5UEzwLLum9IWt0egTkogeXZloX+g1HT1yhvRv5nEK5Nxk6
-         q+BjkYQobktuxmaE+9ip4acyRivY6OJoW9mOw9Twe1yriky5Nm5qqLzbOK5ISz9QJ8cZ
-         FS7uvBggoilYwIsIgS/HFL8Em6U1VmaS0syJK8MBb568VdFWhyNuTMI5ixXpbznWboOP
-         tlfIYkyczufUM/vSSIv2F7MYAaraL/ChhsAY322szgf43e7iObKe3WgPH41OQo+EJavL
-         BzpiNQCOZD7paHsW2aEAkGh0hdZSP71j1oOPXK9QsjGyLsDsBDxhFwteH7LXbdjTkutL
-         Ng6w==
-X-Gm-Message-State: APjAAAXbD+Ml2bNQ2GpIZNvadDq+sJrrhXmUP97S+XLBCoiDhyahCGUX
-        fVNX8tDix+tu2gS2vb6Goec1sib2qnP9Oly42mlxsg==
-X-Google-Smtp-Source: APXvYqyKz2tFsFN5oKSg8pKKWfo639Q4KbRnoX4HTjlkBUzXUq4UktxheM0F/iXcSXalg/7xHW6WQRJqtDaPdE6Qba4=
-X-Received: by 2002:a6b:4e17:: with SMTP id c23mr3267974iob.212.1554280810140;
- Wed, 03 Apr 2019 01:40:10 -0700 (PDT)
+        Wed, 3 Apr 2019 04:40:16 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x338dJS21775068
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Apr 2019 01:39:19 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x338dJbd1775065;
+        Wed, 3 Apr 2019 01:39:19 -0700
+Date:   Wed, 3 Apr 2019 01:39:19 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for Joel Fernandes (Google)" <tipbot@zytor.com>
+Message-ID: <tip-8f9affdf4094bde418a0dbd8b52bb503ee486469@git.kernel.org>
+Cc:     morten.rasmussen@arm.com, josh@joshtriplett.org,
+        jiangshanlai@gmail.com, mingo@kernel.org,
+        torvalds@linux-foundation.org, joel@joelfernandes.org,
+        rostedt@goodmis.org, linux-kernel@vger.kernel.org, efault@gmx.de,
+        mathieu.desnoyers@efficios.com, hpa@zytor.com, tglx@linutronix.de,
+        peterz@infradead.org, luc.vanoostenryck@gmail.com,
+        paulmck@linux.ibm.com
+Reply-To: morten.rasmussen@arm.com, mingo@kernel.org,
+          jiangshanlai@gmail.com, josh@joshtriplett.org,
+          torvalds@linux-foundation.org, tglx@linutronix.de, efault@gmx.de,
+          hpa@zytor.com, mathieu.desnoyers@efficios.com,
+          linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+          joel@joelfernandes.org, peterz@infradead.org,
+          luc.vanoostenryck@gmail.com, paulmck@linux.ibm.com
+In-Reply-To: <20190321003426.160260-2-joel@joelfernandes.org>
+References: <20190321003426.160260-2-joel@joelfernandes.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/cpufreq: Annotate cpufreq_update_util_data
+ pointer with __rcu
+Git-Commit-ID: 8f9affdf4094bde418a0dbd8b52bb503ee486469
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190403083902.3975-1-brgl@bgdev.pl>
-In-Reply-To: <20190403083902.3975-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 3 Apr 2019 10:39:59 +0200
-Message-ID: <CAMRc=MdBVwYiHLPRAJFVaS2OKx-006+P8R8VEfe+x6W_3uq37w@mail.gmail.com>
-Subject: Re: [RESEND PATCH 0/4] um: build and irq fixes
-To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-um@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 3 kwi 2019 o 10:39 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
-=82(a):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> I've previously sent these patches separately. I still don't see them
-> in next and I don't know what the policy is for picking up uml patches
-> but I thought I'd resend them rebased together on top of v5.1-rc3.
->
+Commit-ID:  8f9affdf4094bde418a0dbd8b52bb503ee486469
+Gitweb:     https://git.kernel.org/tip/8f9affdf4094bde418a0dbd8b52bb503ee486469
+Author:     Joel Fernandes (Google) <joel@joelfernandes.org>
+AuthorDate: Wed, 20 Mar 2019 20:34:23 -0400
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 3 Apr 2019 09:51:01 +0200
 
-And of course I forgot to pick up acks from Anton...
+sched/cpufreq: Annotate cpufreq_update_util_data pointer with __rcu
 
-> Bartosz Golaszewski (4):
->   um: remove unused variable
->   um: remove uses of variable length arrays
->   um: define set_pte_at() as a static inline function, not a macro
->   um: irq: don't set the chip for all irqs
->
->  arch/um/include/asm/pgtable.h |  7 ++++++-
->  arch/um/kernel/irq.c          |  2 +-
->  arch/um/kernel/skas/uaccess.c |  1 -
->  arch/um/os-Linux/umid.c       | 36 ++++++++++++++++++++++++++---------
->  4 files changed, 34 insertions(+), 12 deletions(-)
->
-> --
-> 2.21.0
->
+Recently I added an RCU annotation check to rcu_assign_pointer(). All
+pointers assigned to RCU protected data are to be annotated with __rcu
+inorder to be able to use rcu_assign_pointer() similar to checks in
+other RCU APIs.
+
+This resulted in a sparse error:
+
+  kernel//sched/cpufreq.c:41:9: sparse: error: incompatible types in comparison expression (different address spaces)
+
+Fix this by annotating cpufreq_update_util_data pointer with __rcu. This
+will also help sparse catch any future RCU misuage bugs.
+
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+[ From an RCU perspective. ]
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: keescook@chromium.org
+Cc: kernel-hardening@lists.openwall.com
+Cc: kernel-team@android.com
+Link: https://lkml.kernel.org/r/20190321003426.160260-2-joel@joelfernandes.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/cpufreq.c | 2 +-
+ kernel/sched/sched.h   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/sched/cpufreq.c b/kernel/sched/cpufreq.c
+index 835671f0f917..b5dcd1d83c7f 100644
+--- a/kernel/sched/cpufreq.c
++++ b/kernel/sched/cpufreq.c
+@@ -7,7 +7,7 @@
+  */
+ #include "sched.h"
+ 
+-DEFINE_PER_CPU(struct update_util_data *, cpufreq_update_util_data);
++DEFINE_PER_CPU(struct update_util_data __rcu *, cpufreq_update_util_data);
+ 
+ /**
+  * cpufreq_add_update_util_hook - Populate the CPU's update_util_data pointer.
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index efa686eeff26..713715dd00cf 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2185,7 +2185,7 @@ static inline u64 irq_time_read(int cpu)
+ #endif /* CONFIG_IRQ_TIME_ACCOUNTING */
+ 
+ #ifdef CONFIG_CPU_FREQ
+-DECLARE_PER_CPU(struct update_util_data *, cpufreq_update_util_data);
++DECLARE_PER_CPU(struct update_util_data __rcu *, cpufreq_update_util_data);
+ 
+ /**
+  * cpufreq_update_util - Take a note about CPU utilization changes.
