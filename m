@@ -2,92 +2,197 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70417C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF119C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1482084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E0F2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=in.bosch.com header.i=@in.bosch.com header.b="KsSr5mfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfDCNXI (ORCPT
+        id S1726388AbfDCNZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:23:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:32986 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDCNXI (ORCPT
+        Wed, 3 Apr 2019 09:25:42 -0400
+Received: from de-deferred2.bosch-org.com ([139.15.180.217]:46288 "EHLO
+        de-deferred2.bosch-org.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726099AbfDCNZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:23:08 -0400
-Received: by mail-ed1-f68.google.com with SMTP id q3so14925525edg.0;
-        Wed, 03 Apr 2019 06:23:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0SkHx9g3PHF3+4TbNqzZuzU3mCLyBnN10YljkHABBKI=;
-        b=tlXB/yx4vPC9m3PVSDcCmo92oMynXxBOpUj0EBFscMpIyyWReD179MwnjiDjQrzT0w
-         ZcdNXIZ0MBhswagtKtUk4sCJJTHs+Ywq8KZd9meorhnLD4C862gtibhKJ2H3TYGVEHUT
-         xb4pOIR9OyJygONdoxGG7UWV+H9rZYEAgxUoAZZ9otJ69kpuHwwrp+S4UqYzekCoQHj6
-         VjM8m4aqJ0YRX5Kg/wB0Xf5FcDviA4/Snsulko6n8s9Otc3WcXC/md2drl6dr0tq82U6
-         Pn3R+mW17PEMF0ksF5KUDLMjIJdvvocyAom3x2wrHeHykW2i47OzPgmYrKqP/uX9AAvb
-         Ks4A==
-X-Gm-Message-State: APjAAAW0isxA52KMY3zSPQ8YPxs/P/SQTOYEm6tsrhMybPXvxZ3v8DUB
-        7F5VCx0Em6DRjQoJR7OFsacq86kmKBA=
-X-Google-Smtp-Source: APXvYqyjQIiMu+sqLD+3iOO42mru9KltFPnPI/U5vHFuJteS5GuizErj4w0LuU8bb8dFNEstTTK0cQ==
-X-Received: by 2002:a50:8854:: with SMTP id c20mr50458483edc.167.1554297785605;
-        Wed, 03 Apr 2019 06:23:05 -0700 (PDT)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id l20sm3008899ejb.30.2019.04.03.06.23.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 06:23:05 -0700 (PDT)
-Received: by mail-wm1-f42.google.com with SMTP id y197so8231663wmd.0;
-        Wed, 03 Apr 2019 06:23:04 -0700 (PDT)
-X-Received: by 2002:a1c:dfc5:: with SMTP id w188mr15773wmg.79.1554297784756;
- Wed, 03 Apr 2019 06:23:04 -0700 (PDT)
+        Wed, 3 Apr 2019 09:25:41 -0400
+Received: from de-out1.bosch-org.com (unknown [139.15.180.215])
+        by fe0vms0193.rbdmz01.com (Postfix) with ESMTPS id 44Z65q10h0z2Zt;
+        Wed,  3 Apr 2019 15:15:59 +0200 (CEST)
+Received: from si0vm1947.rbesz01.com (unknown [139.15.230.188])
+        by fe0vms0187.rbdmz01.com (Postfix) with ESMTPS id 44Z65n3R47z1XLDQt;
+        Wed,  3 Apr 2019 15:15:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=in.bosch.com;
+        s=2015-01-21; t=1554297357;
+        bh=5JmXTCA8402bhLcSZ4Bm03a+Df0e1eFcN7hmyjl8vSI=; l=10;
+        h=From:From:Reply-To:Sender;
+        b=KsSr5mfZkWC84xy343neKHvYjnHU2ZDc0SrPG3doa1ZabNcvuZ6zwN+afLtGaTfO0
+         HUCBcfrjmBLT+dMMaxG/+5u37sztMO4g5rJL0x0gT2H/UHLVwTol6W3apedsquw822
+         ZH05RnQPtngcH3/QeSgbm/Z/LsbpT3kjj2FElSwk=
+Received: from fe0vm7918.rbesz01.com (unknown [10.58.172.176])
+        by si0vm1947.rbesz01.com (Postfix) with ESMTPS id 44Z65n2q3fz6CjQSN;
+        Wed,  3 Apr 2019 15:15:57 +0200 (CEST)
+X-AuditID: 0a3aad10-03fff70000007f88-86-5ca4b20d2a59
+Received: from fe0vm1652.rbesz01.com ( [10.58.173.29])
+        (using TLS with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by fe0vm7918.rbesz01.com (SMG Outbound) with SMTP id C1.BF.32648.D02B4AC5; Wed,  3 Apr 2019 15:15:57 +0200 (CEST)
+Received: from SI-HUB2000.de.bosch.com (si-hub2000.de.bosch.com [10.4.103.108])
+        by fe0vm1652.rbesz01.com (Postfix) with ESMTPS id 44Z65n0R74zVv1;
+        Wed,  3 Apr 2019 15:15:57 +0200 (CEST)
+Received: from localhost.localdomain (10.47.103.88) by SI-HUB2000.de.bosch.com
+ (10.4.103.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 3 Apr 2019
+ 15:15:55 +0200
+From:   <VenkataRajesh.Kalakodima@in.bosch.com>
+To:     <linux-renesas-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>
+CC:     kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>,
+        Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
+Subject: [PATCH 6/8] drm: rcar-du: Implement atomic_check to check for gamma and ctm properties
+Date:   Wed, 3 Apr 2019 18:44:42 +0530
+Message-ID: <1554297284-14009-7-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
+References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
 MIME-Version: 1.0
-References: <20190402210623.14988-1-jernej.skrabec@siol.net>
- <20190402210623.14988-4-jernej.skrabec@siol.net> <20190403075430.4j7sw5vxqop6ptkj@flea>
-In-Reply-To: <20190403075430.4j7sw5vxqop6ptkj@flea>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 3 Apr 2019 21:22:52 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67dDAun7rnvOEFzGiqY-xpxRm=oe99ktq_+MORxp0Wteg@mail.gmail.com>
-Message-ID: <CAGb2v67dDAun7rnvOEFzGiqY-xpxRm=oe99ktq_+MORxp0Wteg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] clk: sunxi-ng: h6: Allow video & vpu clocks to change
- parent rate
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.47.103.88]
+X-Brightmail-Tracker: H4sIAAAAAAAAA22Sb0xTVxjGObf/bjuOOVwovBZqzA2OZBEHDMfdnyzbPqhZtmkyXRbThd3C
+        hXZSSnpbIsyYus2RYakuZkYqaYGx+ScYoHNCcYHQKU7sCKIfwCywISaFMdQBCS4Bd68F2w/7
+        9ub5ned9znlyaAXToTHQ1kqn4KjkK1i1Tql79aIxFwfbTHm9D3Vc4Oqwiruz9EDNPfJMqLjb
+        vU1q7qeZeepN1a7JY9epXQvBTXuo/brXS4UKa7XgePGNT3SWxSYvqvom82BPw4rKjfrT65GW
+        BlIIRwO/oHqkoxlymoL2kRWFDBjyM4I+z6cxMIcgWOdXykBNcqG/q0sjgzRyHsGx+W5KBgpy
+        CBpOtmnkOZUUQ4unRS3PSpINkbN3pK00jck+GDtSGEveBOPDXz8N05IPIfDrtDoWvA8Cy/+o
+        5BmTFLjROK2MrQcYiEafrgGyGUIt6hOI+BJO+RJONSPqAtKXCXnVtqJX8rltDrMg1ublbyux
+        24Io1ibpQaGhsjAiNGKT8URjm4lR8dVijS2MttMUq8cvH5akDWZ7aY2FFy3FDleFILIGnDXy
+        jolJfSaLLrPNKopWe2UYAa1g03DkeLOJwaV8Ta3gsMdsYZRJK9kMXE7vNjGknHcKBwShSnCs
+        09domgWc1iUFpjiEcuFgmbXCuY5ZI0ZJSUlMeiJJjKVobRi9RCdL2aEOaQUWq3ibaC1fs2+M
+        2Zl1NW4dQkWGDPxcp+QhMrW4Kp+lGrJw0n2/idEngLhzFo0jqbdUvCIHJksfNZ4HOFOuKGVN
+        jJsKvpc85LwWZurcCBY8Ywj8PUsIlqe+pGB1epYC/93PlTDa69PAwsUlDXhb/TRMjl/WwsNz
+        DRguzV7H0H92joHTS0/SoO+rBj0Ehx5nwfyNR0bw915j4Zb3NgvRPk829Ize3ALewboc6Dh5
+        LgciPw7mQHRxPgd+H/FvhcblK1sh9GQ0FyYenMmDK981F8DqqfZC6Qa+olmpTEoqk3MF5DKd
+        vPN/ylxT468zuNF2pTFzgGwuee/jel/y4cvRqx+8u3Pli8BMRmtZcMO/5v3dd4883/hXraeE
+        DhVX7XyMplbv2Rdr9kx1csY/WgcK718am9vtm/7MPKz3uE/s/XsyZUdJtDb6NlX354DG2546
+        Gck+dO/9Ld0fcQU/HP3t2qmbM+4db7k6jx/41tp0azCSvpFVihY+/wWFQ+T/A3Fq90ZCBAAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 3:54 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Tue, Apr 02, 2019 at 11:06:23PM +0200, Jernej Skrabec wrote:
-> > Video related clocks need to set rate as close as possible to the
-> > requested one, so they should be able to change parent clock rate.
-> >
-> > VPU clock sometimes has to be set to higher than default parent clock
-> > rate. This is requ
+From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
 
-The commit log looks unfinished. Can you and Jernej fix this up?
+    Implement atomic helper check and allocate memory necessary for
+    lut and clu tables
 
-> > Add CLK_SET_RATE_PARENT flag to tcon-lcd0, tcon-tv0 and ve.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->
-> Applied, thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Signed-off-by: Harsha M M <harsha.manjulamallikarjun@in.bosch.com>
+
+      - Resolved checkpatch errors
+      - Resolved merge conflicts according to latest version
+Signed-off-by: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
+---
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 58 ++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  3 +-
+ 2 files changed, 60 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+index 864fb94..a00b7a7 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
++++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+@@ -622,6 +622,63 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
+  * CRTC Functions
+  */
+ 
++static bool rcar_du_crtc_is_ctm_updated(struct drm_crtc *crtc,
++					struct drm_crtc_state *state)
++{
++	return (state->color_mgmt_changed && state->ctm &&
++		crtc->state->ctm &&
++		(crtc->state->ctm->base.id != state->ctm->base.id));
++}
++
++static bool rcar_du_crtc_is_gamma_updated(struct drm_crtc *crtc,
++					  struct drm_crtc_state *state)
++{
++	return (state->color_mgmt_changed && state->gamma_lut &&
++		crtc->state->gamma_lut &&
++		(crtc->state->gamma_lut->base.id != state->gamma_lut->base.id));
++}
++
++static int rcar_du_crtc_cmm_atomic_check(struct drm_crtc *crtc,
++					 struct drm_crtc_state *state)
++{
++	int ret = 0;
++	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
++
++	/*Check gamma update and allocate memory*/
++	if (rcar_du_crtc_is_gamma_updated(crtc, state) &&
++	    !rcrtc->lut_handle) {
++		ret = rcar_du_cmm_lut_valid((crtc->state->gamma_lut->length /
++					     sizeof(struct drm_color_lut)));
++		if (ret >= 0) {
++			rcrtc->lut_handle =
++				rcar_du_cmm_alloc_lut(rcrtc->cmm_handle);
++			if (!rcrtc->lut_handle)
++				ret = -ENOMEM;
++		}
++	}
++
++	/*Check update of ctm and allocate memory*/
++	if (ret >= 0 && rcar_du_crtc_is_ctm_updated(crtc, state) &&
++	    !rcrtc->clu_handle) {
++		rcrtc->clu_handle = rcar_du_cmm_alloc_clu(rcrtc->cmm_handle);
++		if (!rcrtc->clu_handle) {
++			if (!rcrtc->lut_handle) {
++				rcar_du_cmm_free_lut(rcrtc->lut_handle);
++				rcrtc->lut_handle = NULL;
++			}
++			ret = -ENOMEM;
++		}
++	}
++
++	return ret;
++}
++
++static int rcar_du_crtc_atomic_check(struct drm_crtc *crtc,
++				     struct drm_crtc_state *state)
++{
++	return rcar_du_crtc_cmm_atomic_check(crtc, state);
++}
++
+ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
+ 				       struct drm_crtc_state *old_state)
+ {
+@@ -708,6 +765,7 @@ static const struct drm_crtc_helper_funcs crtc_helper_funcs = {
+ 	.atomic_flush = rcar_du_crtc_atomic_flush,
+ 	.atomic_enable = rcar_du_crtc_atomic_enable,
+ 	.atomic_disable = rcar_du_crtc_atomic_disable,
++	.atomic_check = rcar_du_crtc_atomic_check,
+ };
+ 
+ static struct drm_crtc_state *
+diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+index 5b85de4..b79080e 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
++++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
+@@ -70,7 +70,8 @@ struct rcar_du_crtc {
+ 	int lvds_ch;
+ 
+ 	void *cmm_handle;
+-
++	void *lut_handle;
++	void *clu_handle;
+ };
+ 
+ #define to_rcar_crtc(c)	container_of(c, struct rcar_du_crtc, crtc)
+-- 
+2.7.4
+
