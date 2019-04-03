@@ -2,180 +2,147 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17830C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D120AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC9F20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9056D20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DXRKn7fK"
+	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="CgpntOIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfDCRtc (ORCPT
+        id S1726592AbfDCRuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:49:32 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:41632 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfDCRtc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:49:32 -0400
-Received: by mail-vk1-f196.google.com with SMTP id d15so4028213vka.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:49:31 -0700 (PDT)
+        Wed, 3 Apr 2019 13:50:13 -0400
+Received: from mail-eopbgr800112.outbound.protection.outlook.com ([40.107.80.112]:6334
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726084AbfDCRuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:50:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vCLqupSs0GSF2d2ZT9+/jc576jztuWdhBICQz+0TmXs=;
-        b=DXRKn7fKN/vLq9RxOQRAlGej0mJ5IbRb4oqfwM+WO1RCqRn7NTT32/U9VzH56ugmEi
-         +B0G8+z7hVibQnNqXdmkrQu8J9hw+pNrULrXbYlMxs0kYjXAjEVAHLC7LIH+SqZxMRon
-         E2NsIoGLBwsBhjlF0z0uKpOc62VeNoZIK2REQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vCLqupSs0GSF2d2ZT9+/jc576jztuWdhBICQz+0TmXs=;
-        b=XR3o1R+ELdFbWI2N7+8cMI4xapPWobTBAhTMeWx3LdkoayJOZy1MfZSwr1gBiB98g8
-         K6aeehE2LovD2lUBqjI19QfQ3DhX/sq2kwjHhBtwKfafj0siEwtU+vuyXwqVH24MkNmS
-         3c0IVNv8N31MFp38Amzf3oCrxuQpiJsDNJd3xBHSDv+NMz6DA7dDuZZuuShq30xzFYwV
-         G81qCnazXCSfApx2VM3owruVQqIstaGirEzNyxbENwBYoQi2i3CoRKy1AyWzKeUglSEN
-         UImH8pu3u1ZD0DP1Y+njex+YhQAKu08dC6gr5tLfO1AiFsM6b5Hd6qGEGY1SSp1GRS9t
-         wV7Q==
-X-Gm-Message-State: APjAAAXUl0oUwvwzbnoYcANuseAJ6RcECdR2ZVPoZpKBtKZONc31emzL
-        MI0LgLXN6+Z/6rnqVPfDcVvKgz354MU=
-X-Google-Smtp-Source: APXvYqyIDtcMBOLyHlwCRLXfmx6gr7X3u6h5Q2oI6D6noeVHcv4RKam+KpJUcYCPH0XiP2Ad52Nr+A==
-X-Received: by 2002:a1f:32c7:: with SMTP id y190mr1099996vky.15.1554313770613;
-        Wed, 03 Apr 2019 10:49:30 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id b9sm2928201vkb.23.2019.04.03.10.49.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 10:49:29 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id w13so9479301vsc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:49:29 -0700 (PDT)
-X-Received: by 2002:a67:7f44:: with SMTP id a65mr1160133vsd.179.1554313768863;
- Wed, 03 Apr 2019 10:49:28 -0700 (PDT)
+ d=aampusa.onmicrosoft.com; s=selector1-aampglobal-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aLaUTHaEJoJ+lvFyUMO0Nzo17KMFGZ/COyY0TOUh7qQ=;
+ b=CgpntOIi36I7PWDFeGt0bUW4ycd2mBQp3Ao/GlujiNbvupqFRxSNzd1L/YKh4KMzlZBO2kBV+suB8ye6BrRf7AmZvepEg2hzBD7D8nl6P60oASVWtYaK9cl489QODOv4ao9Zvg+Ub64ONLSPB4EQYTUFxdWenpf529+mScSrC4w=
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
+ BL0PR07MB4931.namprd07.prod.outlook.com (10.167.172.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.22; Wed, 3 Apr 2019 17:50:09 +0000
+Received: from BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::e4fd:8f53:2484:46eb]) by BL0PR07MB4115.namprd07.prod.outlook.com
+ ([fe80::e4fd:8f53:2484:46eb%5]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
+ 17:50:09 +0000
+From:   Ken Sloat <KSloat@aampglobal.com>
+To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+CC:     "josephl@nvidia.com" <josephl@nvidia.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ken Sloat <KSloat@aampglobal.com>
+Subject: [BUG REPORT] linux-input: keyboard: gpio_keys: False Button Press
+ Event on Wake
+Thread-Topic: [BUG REPORT] linux-input: keyboard: gpio_keys: False Button
+ Press Event on Wake
+Thread-Index: AdTqRLEh6tFvQPs7RTO9HSBOJGH4Ww==
+Date:   Wed, 3 Apr 2019 17:50:09 +0000
+Message-ID: <BL0PR07MB41151EC4B770F6A7396C152EAD570@BL0PR07MB4115.namprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=KSloat@aampglobal.com; 
+x-originating-ip: [100.3.71.115]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a7ab2680-adc5-45fd-441e-08d6b85cd086
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BL0PR07MB4931;
+x-ms-traffictypediagnostic: BL0PR07MB4931:
+x-microsoft-antispam-prvs: <BL0PR07MB49316380A69EDCE2C972C17FAD570@BL0PR07MB4931.namprd07.prod.outlook.com>
+x-forefront-prvs: 0996D1900D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(39850400004)(376002)(366004)(199004)(189003)(5640700003)(9686003)(478600001)(99286004)(6116002)(55016002)(68736007)(71200400001)(3846002)(14454004)(53936002)(66066001)(4326008)(26005)(6506007)(107886003)(102836004)(6916009)(2501003)(476003)(186003)(7696005)(54906003)(1361003)(6436002)(52536014)(71190400001)(316002)(305945005)(486006)(2906002)(97736004)(7736002)(5660300002)(86362001)(106356001)(105586002)(72206003)(81166006)(80792005)(81156014)(8936002)(25786009)(8676002)(256004)(2351001)(14444005)(33656002)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB4931;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: aampglobal.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nW0HNUNNUsG/X/jfLYdmgFPPv0ACgpOMpjwemQkBqHNtSM6fG7sU2KLry8dm0BsLRd5zBSnsjTRb5CuRm+bCczL0tIyY8rbeivU5TCVHY9VnU0uQHwLWcYYlfVEKHViWQAwBMR42pEGFPQAdHoUCsupCvkqAf5vtxNRH4YgBiJPoI4qMaQA9empe9/CekX/I6pdSkLDYBGZC6KuHlmt2GeJ+AqQl7hE3A3Mt3J+ohF0S993b4cOkNrX+bcLDzsnJQ55oe4OHuu4KkGgl+TvZNiqOxgGFY5iDjXHhbbJScAqlzgBepSKZEWOXELX1kbqQ0WZM24dloakJmalDpCfPd32TRyIwsAdDjxwKDEgpBZQmaDVp/TIBpeyNHPnRGLg4yf4CqiYNtOg9Y341yxykVQEOWZRt614oNMBZbowbuOk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190403160526.257088-1-dianders@chromium.org> <CA+ASDXN-4Ya6cK5wsmARXxP0bJCGpMkoyu1t_fS7hqVFKF0ZBw@mail.gmail.com>
-In-Reply-To: <CA+ASDXN-4Ya6cK5wsmARXxP0bJCGpMkoyu1t_fS7hqVFKF0ZBw@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 3 Apr 2019 10:49:15 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UZCUp=Tq4DhKGJQm7bPvvM1Q=EUovWeBdoHVvQeu4eUA@mail.gmail.com>
-Message-ID: <CAD=FV=UZCUp=Tq4DhKGJQm7bPvvM1Q=EUovWeBdoHVvQeu4eUA@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_spi: Transfer messages at
- high priority
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Alexandru M Stan <amstan@chromium.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Simon Glass <sjg@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Randall Spangler <rspangler@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: aampglobal.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7ab2680-adc5-45fd-441e-08d6b85cd086
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 17:50:09.2794
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB4931
+X-MS-Exchange-CrossPremises-AuthAs: Internal
+X-MS-Exchange-CrossPremises-AuthMechanism: 04
+X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
+X-MS-Exchange-CrossPremises-TransportTrafficType: Email
+X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
+X-MS-Exchange-CrossPremises-SCL: 1
+X-MS-Exchange-CrossPremises-messagesource: StoreDriver
+X-MS-Exchange-CrossPremises-BCC: 
+X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
+X-MS-Exchange-CrossPremises-transporttraffictype: Email
+X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
+X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
+X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
+X-OrganizationHeadersPreserved: BL0PR07MB4931.namprd07.prod.outlook.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello Dmitry,
 
-On Wed, Apr 3, 2019 at 10:04 AM Brian Norris <briannorris@chromium.org> wrote:
->
-> I know some of this was hashed out last night, but I wasn't reading my
-> email then to interject ;)
->
-> On Wed, Apr 3, 2019 at 9:05 AM Douglas Anderson <dianders@chromium.org> wrote:
-> > +static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
-> > +                                struct cros_ec_command *ec_msg,
-> > +                                cros_ec_xfer_fn_t fn)
-> > +{
-> > +       struct cros_ec_xfer_work_params params;
-> > +
-> > +       INIT_WORK(&params.work, cros_ec_xfer_high_pri_work);
-> > +       params.ec_dev = ec_dev;
-> > +       params.ec_msg = ec_msg;
-> > +       params.fn = fn;
-> > +       init_completion(&params.completion);
-> > +
-> > +       /*
-> > +        * This looks a bit ridiculous.  Why do the work on a
-> > +        * different thread if we're just going to block waiting for
-> > +        * the thread to finish?  The key here is that the thread is
-> > +        * running at high priority but the calling context might not
-> > +        * be.  We need to be at high priority to avoid getting
-> > +        * context switched out for too long and the EC giving up on
-> > +        * the transfer.
-> > +        */
-> > +       queue_work(system_highpri_wq, &params.work);
->
-> Does anybody know what the definition of "too long" is for the phrase
-> "Don't queue works which can run for too long" in the documentation?
+I may have found a potential bug in the "gpio_keys" driver. FYI, I am runni=
+ng the 4.14 LTS kernel on my system, but from my understanding of the issue=
+, it seems that this would still occur in the latest version of the kernel.
 
-Using the docs that Matthias pointed at:
+The problem:
+In the 4.14 LTS kernel, both key press and release events can generate a wa=
+ke event. In the 5.x kernel, wake events are configurable for press only, r=
+elease only or "both" (see "wakeup-event-action" binding). The issue can oc=
+cur in the "both" case or release/deasserted case. Let's imagine that a sys=
+tem is suspended when a gpio key button is pressed, and subsequently resume=
+d when the button is released. If we look at the sequence of actions and ev=
+ents reported by the input system, we can see the potential problem:
 
-https://www.kernel.org/doc/html/v5.0/core-api/workqueue.html
+Button Pressed
+Event Value 1
+System Suspend
+Button Released
+System Wake & Resume
+Event Value 0
+Event Value 1
+Event Value 0
 
-...take a look at the "Example Execution Scenarios".  They show tasks
-that burn CPU cycles for 5 ms and this seems to be illustrating tasks
-that workqueues are designed for.  That makes me feel like 5 ms is not
-too long.
+As you can see the input system will report an extra button event/press. Th=
+is appears to be caused in gpio_keys_gpio_isr by the following statement:
 
-I don't think we'll be running for that long in our case.  While a few
-tegra device trees have a big delay of 2000 for
-"google,cros-ec-spi-msg-delay", I've always been of the opinion that
-delay was added to work around other bugs and is probably not really
-needed, so if somehow this regresses performance there we could try
-tuning that down.  ...but even in that case we're only delaying for
-2000 us = 2ms.  The "google,cros-ec-spi-pre-delay" on rk3288-veyron
-chromebooks is 30 us.  There are some other delays hardcoded in the
-driver but those are all expressed in terms of nanoseconds.
+if (bdata->suspended  &&
+    (button->type =3D=3D 0 || button->type =3D=3D EV_KEY)) {
+        /*
+         * Simulate wakeup key press in case the key has
+         * already released by the time we got interrupt
+         * handler to run.
+         */
+        input_report_key(bdata->input, button->code, 1);
+}
 
-It looks like in the extreme case, though, we still could end up
-having our work take 200 ms for completion as per the comments in
-"EC_MSG_DEADLINE_MS".  IIRC this is a super uncommon case and only
-happened on a few systems when the battery was in a particularly wonky
-state and decided to do clock stretching.  Also: we shouldn't even be
-busy-waiting during this time since most of it will be sitting
-(presumably blocked) waiting for SPI bytes to come in.
+This code does not seem to take into account that the wake event may have b=
+een caused by a button release action, and just assumes we must have a butt=
+on press.
 
+This can obviously be problematic in the use case I mentioned, as the syste=
+m would be put in a constant loop between waking and sleeping. While there =
+are other ways to deal with or react to this issue in the userspace, it see=
+ms that the driver should probably take this into account.
 
-So I think the summary is that I'm back to being convinced that the
-"system_highpri_wq" should be OK.  Running lots of work with no
-blocking in the system high priority workqueue can truly block other
-work items there, but it seems like the amount of time we're running
-is within the time bounds expected.  The work also isn't going to
-fully block other workers--they will be able to run on other CPUs
-still and (if they are already running) presumably they can still be
-scheduled back in.
+Thoughts?
 
-
-> > +       wait_for_completion(&params.completion);
->
-> I think flush_workqueue() was discussed and rejected, but what about
-> flush_work()? Then you don't have to worry about the rest of the
-> contents of the workqueue -- just your own work--and I think you could
-> avoid the 'completion'.
->
-> You might also have a tiny race in the current implementation, since
-> (a) you can't queue the same work item twice and
-> (b) technically, the complete() call is still while the work item is
-> running -- you don't really guarantee the work item has finished
-> before you continue.
-> So the combination of (a) and (b) means that moving from one xfer to
-> the next, you might not successfully queue your work at all. You could
-> probably test this by checking the return value of queue_work() under
-> a heavy EC workload. Avoiding the completion would also avoid this
-> race.
-
-Thanks, I'll do that in v3 assuming someone doesn't convince me to
-switch back to a private workqueue.
-
--Doug
+Thanks,
+Ken Sloat=20
