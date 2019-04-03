@@ -2,80 +2,136 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FADC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348C7C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7B521473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026F4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbfDCIeD (ORCPT
+        id S1728782AbfDCIgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:34:03 -0400
-Received: from skyboo.net ([94.40.87.198]:40828 "EHLO skyboo.net"
+        Wed, 3 Apr 2019 04:36:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42628 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728696AbfDCIeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:34:02 -0400
-Received: from [10.1.0.1] (helo=nemesis.skyboo.net)
-        by skyboo.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.91)
-        (envelope-from <manio@skyboo.net>)
-        id 1hBbLF-0005Km-KL; Wed, 03 Apr 2019 10:34:00 +0200
-Date:   Wed, 3 Apr 2019 10:33:52 +0200
-From:   Mariusz Bialonczyk <manio@skyboo.net>
-To:     Greg Kroah-Hartman <greg@kroah.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Message-Id: <20190403103352.4f36cfee5e577ef017607527@skyboo.net>
-In-Reply-To: <49DF2FF4-FB5E-4FB8-94E3-BE14E5C2DEAF@gmail.com>
-References: <20190318092737.8170-1-manio@skyboo.net>
-        <20190318092737.8170-2-manio@skyboo.net>
-        <10244730-36A8-4DAC-95E5-AD7BDEA32F43@gmail.com>
-        <20190327165317.GA3137@kroah.com>
-        <49DF2FF4-FB5E-4FB8-94E3-BE14E5C2DEAF@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 10.1.0.1
-X-SA-Exim-Rcpt-To: greg@kroah.com, linux-kernel@vger.kernel.org, jeff.dagenais@gmail.com
-X-SA-Exim-Mail-From: manio@skyboo.net
-Subject: Re: [PATCH v2] w1: ds2408: reset on output_write retry with
- readback
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on skyboo.net)
+        id S1726004AbfDCIgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 04:36:08 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5D46981F10;
+        Wed,  3 Apr 2019 08:36:07 +0000 (UTC)
+Received: from [10.36.117.246] (ovpn-117-246.ams2.redhat.com [10.36.117.246])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0C1C60240;
+        Wed,  3 Apr 2019 08:36:05 +0000 (UTC)
+Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
+ memory
+To:     Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
+ <efb08377-ca5d-4110-d7ae-04a0d61ac294@redhat.com>
+ <20190329084547.5k37xjwvkgffwajo@d104.suse.de>
+ <20190329134243.GA30026@dhcp22.suse.cz>
+ <20190401075936.bjt2qsrhw77rib77@d104.suse.de>
+ <20190401115306.GF28293@dhcp22.suse.cz>
+ <20190402082812.fefamf7qlzulb7t2@d104.suse.de>
+ <20190402124845.GD28293@dhcp22.suse.cz>
+ <20190403080113.adj2m3szhhnvzu56@d104.suse.de>
+ <20190403081232.GB15605@dhcp22.suse.cz>
+ <20190403083359.vqbzy5krjfzfjedx@d104.suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <a2ebe8c0-916e-1117-acfd-0ac2300a7dfd@redhat.com>
+Date:   Wed, 3 Apr 2019 10:36:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190403083359.vqbzy5krjfzfjedx@d104.suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 03 Apr 2019 08:36:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-Exactly as Jean-Francois stated:
-> Mariusz can chime in but I believe although it was the same exercise
-> that led to his discoveries, each patch can stand alone and be applied
-> in any order.
+On 03.04.19 10:34, Oscar Salvador wrote:
+> On Wed, Apr 03, 2019 at 10:12:32AM +0200, Michal Hocko wrote:
+>> What does prevent calling somebody arch_add_memory for a range spanning
+>> multiple memblocks from a driver directly. In other words aren't you
+>> making  assumptions about a future usage based on the qemu usecase?
 > 
-> I will send a v3 without a reply-to-id. Mariusz' patch "[PATCH v2] w1:
-> fix the resume command API" can be applied as is unless you need it
-> changed or resent.
+> Well, right now they cannot as it is not exported.
+> But if we want to do it in the future, then yes, I would have to
+> be more careful because I made the assumption that hot-add/hot-remove
+> are working with the same granularity, which is the case right now.
+> 
+> Given said this, I think that something like you said before, giving
+> the option to the caller to specify whether it wants vmemmaps per the
+> whole hot-added range or per memblock is a reasonable thing to do.
+> That way, there will not be a problem working with different granularities
+> in hot-add/hot-remove operations and we would be on safe side.
 
-To sum it all - patches order is irrelevant and the patches to merge are:
+There might still be an issue if the person adding memory might be
+somebody else removing memory. I am not yet sure if we should even allow
+add_memory/remove_memory with different granularity. But as I noted,
+ACPI and powernv.
 
-mine latest one:
-Subject: [PATCH v2] w1: fix the resume command API
-Date: Thu, 21 Mar 2019 11:52:55 +0100
-Message-ID: <20190321105255.19126-1-manio@skyboo.net>
 
-and Jean's latest one:
-Subject: [PATCH v4] w1: ds2408: reset on output_write retry with readback
-Date:   Thu, 28 Mar 2019 12:41:11 -0400
-Message-Id: <20190328164111.24041-1-jeff.dagenais@gmail.com>
-
-regards,
 -- 
-Mariusz Białończyk | xmpp/e-mail: manio@skyboo.net
-http://manio.skyboo.net | https://github.com/manio
+
+Thanks,
+
+David / dhildenb
