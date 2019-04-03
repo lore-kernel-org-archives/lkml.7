@@ -2,109 +2,141 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	URIBL_RHS_DOB,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1536AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D619C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B87206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eMKx8OvZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4AD2620663
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:59:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554310742;
+	bh=3g36jHGdFK5MyjOcqtR8XuXiOCEx1C8Ty2LeBYG1sBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h6y4TPVPX5q0/zp69lZhCyekHQkoyOSqRirKf90NogLHS4nZsY0a2PhGedWy1yVOF
+	 62mqx6xVz/Y27to7gz7JgxHe2N3doY2cYJGD8dlrvapn+ddHz/jEcQ6FY4QfFZL7ea
+	 q3B81au5RJjGUw90vBSFs1JC6vnJyIuPJkJdF0Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfDCQxD (ORCPT
+        id S1726471AbfDCQ7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:53:03 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49256 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbfDCQxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:53:03 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33Ghk6g131470;
-        Wed, 3 Apr 2019 16:52:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=iGxxtIVqEzp1RVOI6u7Mj+o50/tLE0xJ0apojvzIrxc=;
- b=eMKx8OvZ6FoDYDKsbasn8MIS6dsh0biicj8fxmGWOf8mjW29OUno93FDZ+rwFoQ85kYt
- T/w9UyqLWqtHrhEhQ1YaB1x0M4THLsgjrYQYKu3hxaBpDSXmilQ9jphwop3MwmoeEu/L
- rC5FLKD33mFhSnenXyKKUUiyDizZOeTD9lkgtKHC3kQJewpFfzX30mP1u3tJ9tbdJkEq
- wtKkTB0L4y1OdbAyedKLuGO/ltNYiHEPNgQF1kXtWt94CUFtzgQtRVhNTqxnDmE3EP86
- 7YuQtJEC/ZNWVS+2eBwZ2vAUB9yB1AhAbxmkfPuTXEkmQA2yyvagoaSwygzGz0FLI1UX NQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2rhyvtaa5s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Apr 2019 16:52:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33GqBLc168298;
-        Wed, 3 Apr 2019 16:52:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2rm8f579tn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Apr 2019 16:52:41 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x33GqcFo004355;
-        Wed, 3 Apr 2019 16:52:38 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Apr 2019 09:52:37 -0700
-Date:   Wed, 3 Apr 2019 12:52:57 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Steven Sistare <steven.sistare@oracle.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        akpm@linux-foundation.org, linux_lkml_grp@oracle.com,
-        Alan Tull <atull@kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] convert locked_vm from unsigned long to atomic64_t
-Message-ID: <20190403165257.prekuppqbcempuxo@ca-dmjordan1.us.oracle.com>
-References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
- <abe31bae-1bdf-b763-c4d1-5e4ea2ccda13@oracle.com>
+        Wed, 3 Apr 2019 12:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbfDCQ7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:59:01 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBA0C20663;
+        Wed,  3 Apr 2019 16:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554310740;
+        bh=3g36jHGdFK5MyjOcqtR8XuXiOCEx1C8Ty2LeBYG1sBQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AOlbrkzDWcVxsFibt7o+a3B7plj9hTBSED1NZkefzoUWgGFDvFib4F7kBSSJIZORT
+         f5l1zaN2Px8aDGiu/OJmObwlNRgaj1LmVgSXDeFBYlJMUvZV6/pmzftH69NzM45TFa
+         LgV0PzXuXruSwL1ab78x2vut1QbEi7UbuCT0xyfw=
+Date:   Wed, 3 Apr 2019 11:58:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] Include linux PCI docs into Sphinx TOC tree
+Message-ID: <20190403165858.GA67241@google.com>
+References: <20190403154955.12096-1-changbin.du@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <abe31bae-1bdf-b763-c4d1-5e4ea2ccda13@oracle.com>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904030114
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904030114
+In-Reply-To: <20190403154955.12096-1-changbin.du@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 08:51:13AM -0400, Steven Sistare wrote:
-> On 4/2/2019 4:41 PM, Daniel Jordan wrote:
-> > [1] https://lore.kernel.org/linux-mm/20190211224437.25267-1-daniel.m.jordan@oracle.com/
+On Wed, Apr 03, 2019 at 11:49:43PM +0800, Changbin Du wrote:
+> Hi all,
 > 
->   You could clean all 6 patches up nicely with a common subroutine that
-> increases locked_vm subject to the rlimit.  Pass a bool arg that is true if
-> the  limit should be enforced, !dma->lock_cap for one call site, and
-> !capable(CAP_IPC_LOCK) for the rest.  Push the warnings and debug statements
-> to the subroutine as well.  One patch could refactor, and a second could
-> change the locking method.
+> The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> from reStructuredText files. I converted most of the Linux PCI docs to rst
+> format in this serias.
+> 
+> For you to preview, please visit below url:
+> http://www.bytemem.com:8080/kernel-doc/PCI/index.html
+> 
+> Thank you!
+> 
+> v2: trivial style update.
+> 
+> Changbin Du (12):
+>   Documentation: add Linux PCI to Sphinx TOC tree
+>   Documentation: PCI: convert PCI/pci.txt to reST format
+>   Documentation: PCI: convert PCI/PCIEBUS-HOWTO.txt to reST format
+>   Documentation: PCI: convert PCI/pci-iov-howto.txt to reST format
+>   Documentation: PCI: convert PCI/MSI-HOWTO.txt to reST format
+>   Documentation: PCI: convert PCI/acpi-info.txt to reST format
+>   Documentation: PCI: convert PCI/pci-error-recovery.txt to reST format
+>   Documentation: PCI: convert PCI/pcieaer-howto.txt to reST format
+>   Documentation: PCI: convert PCI/endpoint/pci-endpoint.txt to reST
+>     format
+>   Documentation: PCI: convert PCI/endpoint/pci-endpoint-cfs.txt to reST
+>     format
+>   Documentation: PCI: convert PCI/endpoint/pci-test-function.txt to reST
+>     format
+>   Documentation: PCI: convert PCI/endpoint/pci-test-howto.txt to reST
+>     format
 
-Yes, I tried writing, but didn't end up including, such a subroutine for [1].
-The devil was in the details, but with the cmpxchg business, it's more
-worthwhile to iron all those out.  I'll give it a try.
+Thanks for doing that!  If you have occasion to revise this for any
+other reason, I actually suggested this:
+
+  Documentation: PCI: Convert pci.txt to reST
+  Documentation: PCI: Convert endpoint/pci-endpoint.txt to reST
+
+which (a) Capitalizes the "Convert" and (b) omits the "PCI/" prefix
+because it seems redundant.
+
+By coincidence I happened across this post that talks about why I care
+about these seemingly trivial things:
+
+  https://chris.beams.io/posts/git-commit/
+
+But with or without that change, for the whole series:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+>  .../PCI/{MSI-HOWTO.txt => MSI-HOWTO.rst}      |  83 +++---
+>  .../{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst}  | 140 +++++----
+>  .../PCI/{acpi-info.txt => acpi-info.rst}      |  11 +-
+>  Documentation/PCI/endpoint/index.rst          |  13 +
+>  ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++++---
+>  .../{pci-endpoint.txt => pci-endpoint.rst}    |  95 ++++---
+>  ...est-function.txt => pci-test-function.rst} |  32 ++-
+>  ...{pci-test-howto.txt => pci-test-howto.rst} |  81 ++++--
+>  Documentation/PCI/index.rst                   |  18 ++
+>  ...or-recovery.txt => pci-error-recovery.rst} | 178 ++++++------
+>  .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++++-----
+>  Documentation/PCI/{pci.txt => pci.rst}        | 267 +++++++++---------
+>  .../{pcieaer-howto.txt => pcieaer-howto.rst}  | 110 +++++---
+>  Documentation/index.rst                       |   1 +
+>  MAINTAINERS                                   |   2 +-
+>  15 files changed, 754 insertions(+), 537 deletions(-)
+>  rename Documentation/PCI/{MSI-HOWTO.txt => MSI-HOWTO.rst} (88%)
+>  rename Documentation/PCI/{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst} (70%)
+>  rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (97%)
+>  create mode 100644 Documentation/PCI/endpoint/index.rst
+>  rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
+>  rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (82%)
+>  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
+>  rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+>  create mode 100644 Documentation/PCI/index.rst
+>  rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (80%)
+>  rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
+>  rename Documentation/PCI/{pci.txt => pci.rst} (78%)
+>  rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (81%)
+> 
+> -- 
+> 2.20.1
+> 
