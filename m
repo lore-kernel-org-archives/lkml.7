@@ -2,144 +2,153 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25805C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FE9C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F056C20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24D721473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554283610;
+	bh=tfdIUtLGYKCaCqgO9Ezcj/35gv6Qyf9WI+WDqlh7CjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dfTngJTnfFGnmXRjt3U47wqQH82J1Pl/aYQT9JHBs4MxQGAwWkW8Iz4Pk5z1wimCS
+	 P6VnWxo5Um8fiURXIiURQtsTsOgGi5L0ye6oUjXRoG55CsFEfmmFSOYYEupIXwWMU9
+	 btRjaZcYPCLnvWEh937eMylP6YH8j0XVgdEwbnv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbfDCJZ3 (ORCPT
+        id S1726316AbfDCJ0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:25:29 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:43750 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbfDCJZ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:25:29 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x339LXDn029080;
-        Wed, 3 Apr 2019 11:25:20 +0200
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rmh5yaw3r-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 03 Apr 2019 11:25:20 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8BE4D34;
-        Wed,  3 Apr 2019 09:25:19 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5328A1752;
-        Wed,  3 Apr 2019 09:25:19 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 3 Apr 2019
- 11:25:19 +0200
-Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.435.0; Wed, 3 Apr 2019 11:25:16
- +0200
-From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/stm: ltdc: add modifier support
-Date:   Wed, 3 Apr 2019 11:25:14 +0200
-Message-ID: <1554283514-2960-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 3 Apr 2019 05:26:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59174 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725940AbfDCJ0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:26:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E3EE1AD62;
+        Wed,  3 Apr 2019 09:26:46 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 11:26:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, mgorman@techsingularity.net,
+        james.morse@arm.com, mark.rutland@arm.com, robin.murphy@arm.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, osalvador@suse.de, logang@deltatee.com,
+        pasha.tatashin@oracle.com, david@redhat.com, cai@lca.pw
+Subject: Re: [PATCH 5/6] mm/memremap: Rename and consolidate SECTION_SIZE
+Message-ID: <20190403092644.GH15605@dhcp22.suse.cz>
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-6-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.23.97]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_05:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554265806-11501-6-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Mickael Reulier <mickael.reulier@st.com>
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
----
- drivers/gpu/drm/stm/ltdc.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+On Wed 03-04-19 10:00:05, Anshuman Khandual wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
+> 
+> Enabling ZONE_DEVICE (through ARCH_HAS_ZONE_DEVICE) for arm64 reveals that
+> memremap's internal helpers for sparsemem sections conflict with arm64's
+> definitions for hugepages which inherit the name of "sections" from earlier
+> versions of the ARM architecture.
+> 
+> Disambiguate memremap by propagating sparsemem's PA_ prefix, to clarify
+> that these values are in terms of addresses rather than PFNs (and
+> because it's a heck of a lot easier than changing all the arch code).
+> SECTION_MASK is unused, so it can just go. While here consolidate single
+> instance of PA_SECTION_SIZE from mm/hmm.c as well.
+> 
+> [anshuman: Consolidated mm/hmm.c instance and updated the commit message]
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index b1741a9..6fa8fbc 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -232,6 +232,11 @@ static const enum ltdc_pix_fmt ltdc_pix_fmt_a1[NB_PF] = {
- 	PF_ARGB4444		/* 0x07 */
- };
- 
-+static const u64 ltdc_format_modifiers[] = {
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID
-+};
-+
- static inline u32 reg_read(void __iomem *base, u32 reg)
- {
- 	return readl_relaxed(base + reg);
-@@ -864,6 +869,16 @@ static void ltdc_plane_atomic_print_state(struct drm_printer *p,
- 	fpsi->counter = 0;
- }
- 
-+static bool ltdc_plane_format_mod_supported(struct drm_plane *plane,
-+					    u32 format,
-+					    u64 modifier)
-+{
-+	if (modifier == DRM_FORMAT_MOD_LINEAR)
-+		return true;
-+
-+	return false;
-+}
-+
- static const struct drm_plane_funcs ltdc_plane_funcs = {
- 	.update_plane = drm_atomic_helper_update_plane,
- 	.disable_plane = drm_atomic_helper_disable_plane,
-@@ -872,6 +887,7 @@ static const struct drm_plane_funcs ltdc_plane_funcs = {
- 	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
- 	.atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
- 	.atomic_print_state = ltdc_plane_atomic_print_state,
-+	.format_mod_supported = ltdc_plane_format_mod_supported,
- };
- 
- static const struct drm_plane_helper_funcs ltdc_plane_helper_funcs = {
-@@ -890,6 +906,7 @@ static struct drm_plane *ltdc_plane_create(struct drm_device *ddev,
- 	unsigned int i, nb_fmt = 0;
- 	u32 formats[NB_PF * 2];
- 	u32 drm_fmt, drm_fmt_no_alpha;
-+	const u64 *modifiers = ltdc_format_modifiers;
- 	int ret;
- 
- 	/* Get supported pixel formats */
-@@ -918,7 +935,7 @@ static struct drm_plane *ltdc_plane_create(struct drm_device *ddev,
- 
- 	ret = drm_universal_plane_init(ddev, plane, possible_crtcs,
- 				       &ltdc_plane_funcs, formats, nb_fmt,
--				       NULL, type, NULL);
-+				       modifiers, type, NULL);
- 	if (ret < 0)
- 		return NULL;
- 
-@@ -1179,6 +1196,8 @@ int ltdc_load(struct drm_device *ddev)
- 		goto err;
- 	}
- 
-+	ddev->mode_config.allow_fb_modifiers = true;
-+
- 	ret = ltdc_crtc_init(ddev, crtc);
- 	if (ret) {
- 		DRM_ERROR("Failed to init crtc\n");
+Agreed. mremap shouldn't have redefined SECTION_SIZE in the first place.
+This just adds a confusion.
+
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  include/linux/mmzone.h |  1 +
+>  kernel/memremap.c      | 10 ++++------
+>  mm/hmm.c               |  2 --
+>  3 files changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index fba7741..ed7dd27 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1081,6 +1081,7 @@ static inline unsigned long early_pfn_to_nid(unsigned long pfn)
+>   * PFN_SECTION_SHIFT		pfn to/from section number
+>   */
+>  #define PA_SECTION_SHIFT	(SECTION_SIZE_BITS)
+> +#define PA_SECTION_SIZE		(1UL << PA_SECTION_SHIFT)
+>  #define PFN_SECTION_SHIFT	(SECTION_SIZE_BITS - PAGE_SHIFT)
+>  
+>  #define NR_MEM_SECTIONS		(1UL << SECTIONS_SHIFT)
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index a856cb5..dda1367 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -14,8 +14,6 @@
+>  #include <linux/hmm.h>
+>  
+>  static DEFINE_XARRAY(pgmap_array);
+> -#define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
+> -#define SECTION_SIZE (1UL << PA_SECTION_SHIFT)
+>  
+>  #if IS_ENABLED(CONFIG_DEVICE_PRIVATE)
+>  vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
+> @@ -98,8 +96,8 @@ static void devm_memremap_pages_release(void *data)
+>  		put_page(pfn_to_page(pfn));
+>  
+>  	/* pages are dead and unused, undo the arch mapping */
+> -	align_start = res->start & ~(SECTION_SIZE - 1);
+> -	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
+> +	align_start = res->start & ~(PA_SECTION_SIZE - 1);
+> +	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
+>  		- align_start;
+>  
+>  	nid = page_to_nid(pfn_to_page(align_start >> PAGE_SHIFT));
+> @@ -154,8 +152,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  	if (!pgmap->ref || !pgmap->kill)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	align_start = res->start & ~(SECTION_SIZE - 1);
+> -	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
+> +	align_start = res->start & ~(PA_SECTION_SIZE - 1);
+> +	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
+>  		- align_start;
+>  	align_end = align_start + align_size - 1;
+>  
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index fe1cd87..ef9e4e6 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -33,8 +33,6 @@
+>  #include <linux/mmu_notifier.h>
+>  #include <linux/memory_hotplug.h>
+>  
+> -#define PA_SECTION_SIZE (1UL << PA_SECTION_SHIFT)
+> -
+>  #if IS_ENABLED(CONFIG_HMM_MIRROR)
+>  static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
+>  
+> -- 
+> 2.7.4
+> 
+
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
