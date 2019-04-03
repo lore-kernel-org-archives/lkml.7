@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E700C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C358C10F0C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6F021473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FBE214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554265877;
-	bh=wU5DmPT9SXcqNBnSGjyTLFCjfL9dJ/fUH+pZZoLyrSs=;
+	s=default; t=1554265878;
+	bh=dl0XbJb3kHtD0aJFJ4vIldCLadWBwplqsLzKqrJW3z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOObnXHmOudeypkV1Cf2MVgkBzkPZt43o9TQobItcFupBtgdP/lhYw38VV/zEBA/L
-	 tOGyZw91r2v7wqH8vbXe5DUyXlFE/tX61m4jIs9a5Z17YRzFzK6QtJV5fwDkq+N+gr
-	 zoas6XwyyuZdPLvwF/RfK8mPfBuoKJpORxfHTU80=
+	b=rXBZUg9JKXC9f2j3NpUW5KMDnVkxwBln+lKxJ+TjjGM0MA9mLLSF9P18wph7BpwU5
+	 VA6yRrfrcwncMSHC7XJwknHxE++Q63MMgiSD5r0hkMmqUI03DqP9R2Q7dxDzjGIImq
+	 A74XCyQhdwd1vs5ENEFXKlot87FWQECLzOXLGgYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbfDCEbP (ORCPT
+        id S1728786AbfDCEbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:31:15 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:37059 "EHLO
+        Wed, 3 Apr 2019 00:31:16 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:38161 "EHLO
         out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728657AbfDCEbI (ORCPT
+        by vger.kernel.org with ESMTP id S1728655AbfDCEbL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:31:08 -0400
+        Wed, 3 Apr 2019 00:31:11 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2063D21E65;
-        Wed,  3 Apr 2019 00:24:00 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id E23B621FAE;
+        Wed,  3 Apr 2019 00:24:29 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 00:24:00 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 00:24:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=K23AG6kPeiLizgBxJZXoFVpxoNhX/Z2JwBtP24yd/wE=; b=ZLjFmVPc
-        uFn07xt2EXbinYN6llUG0QEjaIi3wr2dZiGZF4j8TwtA4AshpAEgA7xPhxbPcHpB
-        x83ISJhNskBGJ0YiWUMUnw/aSYAKXvgWvbMv24+SHHtaPQfyz9nInO2rwVmCa+xH
-        VA2HjXG+GxmdwAcecLJyYXlvHPQFFX3AjpXJ+73aIv+9AcCHwZ1xG9MNQXSqczuv
-        8M0WomHfwYqG+HWQni461sG7HneqZuOZjozJlvB6IrmI/btF2Gzj/PRVgKUiqVwa
-        Y5+1koLJgjVbP7fPD54FEbziXd96+emuuJsefJJJqlRJCRj1jQg7jyheNzTeaSXT
-        mSMK6evUnkOfow==
-X-ME-Sender: <xms:XzWkXAjnKq8BmDnX4uSb5TPFP1IZ9REw4D-liOfhkRYATGLd_hMyZA>
+        fm2; bh=3CgZchYLd16ww3/LiD/mAfG7GXA+RJSG10+pHsLIDks=; b=wY4kIaUF
+        bKeyoZ1pX1nCWrBGHGHId2HQJ7fpODFRyw9W9hbVgEBM2F+znekZY9/Ya6bpkQLx
+        g4bxXkC0jILJxfUFw+Xp/nP9yTQgozkM4b4uJR7dSeJn7Du55PXTCh12806jtLbw
+        ZZtzaSMa5mrjyPZji51A8vd+/ku4ZVL5Qd4QTYWu6LVgY3XDelhAATeQIwGLJEeb
+        QLOnXlctXLmYy9UVB2VQXXHy3Vce14hsYi8KLRqRXNOdpfUzNHOb/opiGiwyMH4x
+        NkPSYl8X0PHNA6n6iOzmg96i85YHVOD3FW9jf9WsUSTJx9TKvaAriKhZyw0pb5db
+        fRyyTYkfF5tEDg==
+X-ME-Sender: <xms:fTWkXJ1HmSTc0NWQ09l2pitFB5VEPfcu0zy0mThfRuP5raBiya01rw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdektdculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
@@ -51,14 +51,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdektdculddtuddrgedutd
     ucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrh
     hnvghlrdhorhhgqeenucfkphepuddvgedrudeiledrvdejrddvtdeknecurfgrrhgrmhep
     mhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
-    hiiigvpeel
-X-ME-Proxy: <xmx:XzWkXNSDWq0JTqq9MLccRKKxxaylqogHW0L0ZJPXzTm6sV5T6XxlOA>
-    <xmx:XzWkXDGGFUNdu367r1hDG93FCd8Yd-lb_RxAJlqiivawU4c509DqWA>
-    <xmx:XzWkXFky5Sg-YwhiZnnP91nubM1EAYbulb4zUP35Di5flkkcQFqWWQ>
-    <xmx:YDWkXNTwULLWBhutD-3kM93qQGHgHNHkT5c9utvRJJCjZv1Xq9Sgzg>
+    hiiigvpedufe
+X-ME-Proxy: <xmx:fTWkXEWBexcOAxb392Gqp6hyOG49Ztf-_U-rHA-Ki1tgG_EXiz3SFw>
+    <xmx:fTWkXE71ALl-nmH_kBAHCYj0V9luUF7MdvkNuNAvN2vb3BaTTEJHgA>
+    <xmx:fTWkXLKPs3hYiX2DVAR1NpMEGBeVt946yGWKOEB5mD5Fa_gWKvPFRA>
+    <xmx:fTWkXOk_bHrx8S3koLe_9eTZGaPPkor3nTsEOKI-tg__FRSGz1lR4w>
 Received: from eros.localdomain (124-169-27-208.dyn.iinet.net.au [124.169.27.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 214AB100E5;
-        Wed,  3 Apr 2019 00:23:52 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0A2BB10319;
+        Wed,  3 Apr 2019 00:24:22 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "Tobin C. Harding" <tobin@kernel.org>,
@@ -80,9 +80,9 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Rik van Riel <riel@redhat.com>,
         Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 10/14] tools/testing/slab: Add XArray movable objects tests
-Date:   Wed,  3 Apr 2019 15:21:23 +1100
-Message-Id: <20190403042127.18755-11-tobin@kernel.org>
+Subject: [RFC PATCH v2 14/14] dcache: Implement object migration
+Date:   Wed,  3 Apr 2019 15:21:27 +1100
+Message-Id: <20190403042127.18755-15-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190403042127.18755-1-tobin@kernel.org>
 References: <20190403042127.18755-1-tobin@kernel.org>
@@ -93,319 +93,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We just implemented movable objects for the XArray.  Let's test it
-intree.
+The dentry slab cache is susceptible to internal fragmentation.  Now
+that we have Slab Movable Objects we can defragment the dcache.  Object
+migration is only possible for dentry objects that are not currently
+referenced by anyone, i.e. we are using the object migration
+infrastructure to free unused dentries.
 
-Add test module for the XArray's movable objects implementation.
-
-Functionality of the XArray Slab Movable Object implementation can
-usually be seen by simply by using `slabinfo` on a running machine since
-the radix tree is typically in use on a running machine and will have
-partial slabs.  For repeated testing we can use the test module to run
-to simulate a workload on the XArray then use `slabinfo` to test object
-migration is functioning.
-
-If testing on freshly spun up VM (low radix tree workload) it may be
-necessary to load/unload the module a number of times to create partial
-slabs.
-
-Example test session
---------------------
-
-Relevant /proc/slabinfo column headers:
-
-  name   <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab>
-
-Prior to testing slabinfo report for radix_tree_node:
-
-  # slabinfo radix_tree_node --report
-
-  Slabcache: radix_tree_node  Aliases:  0 Order :  2 Objects: 8352
-  ** Reclaim accounting active
-  ** Defragmentation at 30%
-
-  Sizes (bytes)     Slabs              Debug                Memory
-  ------------------------------------------------------------------------
-  Object :     576  Total  :     497   Sanity Checks : On   Total: 8142848
-  SlabObj:     912  Full   :     473   Redzoning     : On   Used : 4810752
-  SlabSiz:   16384  Partial:      24   Poisoning     : On   Loss : 3332096
-  Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 2806272
-  Align  :       8  Objects:      17   Tracing       : Off  Lpadd:  437360
-
-Here you can see the kernel was built with Slab Movable Objects enabled
-for the XArray (XArray uses the radix tree below the surface).
-
-After inserting the test module (note we have triggered allocation of a
-number of radix tree nodes increasing the object count but decreasing the
-number of partial slabs):
-
-  # slabinfo radix_tree_node --report
-
-  Slabcache: radix_tree_node  Aliases:  0 Order :  2 Objects: 8442
-  ** Reclaim accounting active
-  ** Defragmentation at 30%
-
-  Sizes (bytes)     Slabs              Debug                Memory
-  ------------------------------------------------------------------------
-  Object :     576  Total  :     499   Sanity Checks : On   Total: 8175616
-  SlabObj:     912  Full   :     484   Redzoning     : On   Used : 4862592
-  SlabSiz:   16384  Partial:      15   Poisoning     : On   Loss : 3313024
-  Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 2836512
-  Align  :       8  Objects:      17   Tracing       : Off  Lpadd:  439120
-
-Now we can shrink the radix_tree_node cache:
-
-  # slabinfo radix_tree_node --shrink
-  # slabinfo radix_tree_node --report
-
-  Slabcache: radix_tree_node  Aliases:  0 Order :  2 Objects: 8515
-  ** Reclaim accounting active
-  ** Defragmentation at 30%
-
-  Sizes (bytes)     Slabs              Debug                Memory
-  ------------------------------------------------------------------------
-  Object :     576  Total  :     501   Sanity Checks : On   Total: 8208384
-  SlabObj:     912  Full   :     500   Redzoning     : On   Used : 4904640
-  SlabSiz:   16384  Partial:       1   Poisoning     : On   Loss : 3303744
-  Loss   :     336  CpuSlab:       0   Tracking      : On   Lalig: 2861040
-  Align  :       8  Objects:      17   Tracing       : Off  Lpadd:  440880
-
-Note the single remaining partial slab.
+Implement isolate and migrate functions for the dentry slab cache.
 
 Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- tools/testing/slab/Makefile             |   2 +-
- tools/testing/slab/slub_defrag_xarray.c | 211 ++++++++++++++++++++++++
- 2 files changed, 212 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/slab/slub_defrag_xarray.c
+ fs/dcache.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-diff --git a/tools/testing/slab/Makefile b/tools/testing/slab/Makefile
-index 440c2e3e356f..44c18d9a4d52 100644
---- a/tools/testing/slab/Makefile
-+++ b/tools/testing/slab/Makefile
-@@ -1,4 +1,4 @@
--obj-m += slub_defrag.o
-+obj-m += slub_defrag.o slub_defrag_xarray.o
+diff --git a/fs/dcache.c b/fs/dcache.c
+index 606844ad5171..4387715b7ebb 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -30,6 +30,7 @@
+ #include <linux/bit_spinlock.h>
+ #include <linux/rculist_bl.h>
+ #include <linux/list_lru.h>
++#include <linux/backing-dev.h>
+ #include "internal.h"
+ #include "mount.h"
  
- KTREE=../../..
+@@ -3074,6 +3075,90 @@ void d_tmpfile(struct dentry *dentry, struct inode *inode)
+ }
+ EXPORT_SYMBOL(d_tmpfile);
  
-diff --git a/tools/testing/slab/slub_defrag_xarray.c b/tools/testing/slab/slub_defrag_xarray.c
-new file mode 100644
-index 000000000000..41143f73256c
---- /dev/null
-+++ b/tools/testing/slab/slub_defrag_xarray.c
-@@ -0,0 +1,211 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/uaccess.h>
-+#include <linux/list.h>
-+#include <linux/gfp.h>
-+#include <linux/xarray.h>
-+
-+#define SMOX_CACHE_NAME "smox_test"
-+static struct kmem_cache *cachep;
-+
 +/*
-+ * Declare XArrays globally so we can clean them up on module unload.
++ * d_isolate() - Dentry isolation callback function.
++ * @s: The dentry cache.
++ * @v: Vector of pointers to the objects to migrate.
++ * @nr: Number of objects in @v.
++ *
++ * The slab allocator is holding off frees. We can safely examine
++ * the object without the danger of it vanishing from under us.
 + */
-+
-+/* Used by test_smo_xarray()*/
-+DEFINE_XARRAY(things);
-+
-+/* Thing to store pointers to in the XArray */
-+struct smox_thing {
-+	long id;
-+};
-+
-+/* It's up to the caller to ensure id is unique */
-+static struct smox_thing *alloc_thing(int id)
++static void *d_isolate(struct kmem_cache *s, void **v, int nr)
 +{
-+	struct smox_thing *thing;
-+
-+	thing = kmem_cache_alloc(cachep, GFP_KERNEL);
-+	if (!thing)
-+		return ERR_PTR(-ENOMEM);
-+
-+	thing->id = id;
-+	return thing;
-+}
-+
-+/**
-+ * smox_object_ctor() - SMO object constructor function.
-+ * @ptr: Pointer to memory where the object should be constructed.
-+ */
-+void smox_object_ctor(void *ptr)
-+{
-+	struct smox_thing *thing = ptr;
-+
-+	thing->id = -1;
-+}
-+
-+/**
-+ * smox_cache_migrate() - kmem_cache migrate function.
-+ * @cp: kmem_cache pointer.
-+ * @objs: Array of pointers to objects to migrate.
-+ * @size: Number of objects in @objs.
-+ * @node: NUMA node where the object should be allocated.
-+ * @private: Pointer returned by kmem_cache_isolate_func().
-+ */
-+void smox_cache_migrate(struct kmem_cache *cp, void **objs, int size,
-+			int node, void *private)
-+{
-+	struct smox_thing **ptrs = (struct smox_thing **)objs;
-+	struct smox_thing *old, *new;
-+	struct smox_thing *thing;
-+	unsigned long index;
-+	void *entry;
++	struct dentry *dentry;
 +	int i;
 +
-+	for (i = 0; i < size; i++) {
-+		old = ptrs[i];
-+
-+		new = kmem_cache_alloc(cachep, GFP_KERNEL);
-+		if (!new) {
-+			pr_debug("kmem_cache_alloc failed\n");
-+			return;
++	for (i = 0; i < nr; i++) {
++		dentry = v[i];
++		spin_lock(&dentry->d_lock);
++		/*
++		 * Three sorts of dentries cannot be reclaimed:
++		 *
++		 * 1. dentries that are in the process of being allocated
++		 *    or being freed. In that case the dentry is neither
++		 *    on the LRU nor hashed.
++		 *
++		 * 2. Fake hashed entries as used for anonymous dentries
++		 *    and pipe I/O. The fake hashed entries have d_flags
++		 *    set to indicate a hashed entry. However, the
++		 *    d_hash field indicates that the entry is not hashed.
++		 *
++		 * 3. dentries that have a backing store that is not
++		 *    writable. This is true for tmpsfs and other in
++		 *    memory filesystems. Removing dentries from them
++		 *    would loose dentries for good.
++		 */
++		if ((d_unhashed(dentry) && list_empty(&dentry->d_lru)) ||
++		    (!d_unhashed(dentry) && hlist_bl_unhashed(&dentry->d_hash)) ||
++		    (dentry->d_inode &&
++		     !mapping_cap_writeback_dirty(dentry->d_inode->i_mapping))) {
++			/* Ignore this dentry */
++			v[i] = NULL;
++		} else {
++			__dget_dlock(dentry);
 +		}
-+
-+		new->id = old->id;
-+
-+		/* Update reference the brain dead way */
-+		xa_for_each(&things, index, thing) {
-+			if (thing == old) {
-+				entry = xa_store(&things, index, new, GFP_KERNEL);
-+				if (entry != old) {
-+					pr_err("failed to exchange new/old\n");
-+					return;
-+				}
-+			}
-+		}
-+		kmem_cache_free(cachep, old);
++		spin_unlock(&dentry->d_lock);
 +	}
++	return NULL;		/* No need for private data */
 +}
 +
 +/*
-+ * test_smo_xarray() - Run some tests using an XArray.
++ * d_migrate() - Dentry migration callback function.
++ * @s: The dentry cache.
++ * @v: Vector of pointers to the objects to migrate.
++ * @nr: Number of objects in @v.
++ * @node: The NUMA node where new object should be allocated.
++ * @private: Returned by d_isolate() (currently %NULL).
++ *
++ * Slab has dropped all the locks. Get rid of the refcount obtained
++ * earlier and also free the object.
 + */
-+static int test_smo_xarray(void)
++static void d_migrate(struct kmem_cache *s, void **v, int nr,
++		      int node, void *_unused)
 +{
-+	const int keep = 6; /* Free 5 out of 6 items */
-+	const int nr_items = 10000;
-+	struct smox_thing *thing;
-+	unsigned long index;
-+	void *entry;
-+	int expected;
++	struct dentry *dentry;
 +	int i;
 +
-+	/*
-+	 * Populate XArray, this adds to the radix_tree_node cache as
-+	 * well as the smox_test cache.
-+	 */
-+	for (i = 0; i < nr_items; i++) {
-+		thing = alloc_thing(i);
-+		entry = xa_store(&things, i, thing, GFP_KERNEL);
-+		if (xa_is_err(entry)) {
-+			pr_err("smox: failed to allocate entry: %d\n", i);
-+			return -ENOMEM;
-+		}
++	for (i = 0; i < nr; i++) {
++		dentry = v[i];
++		if (dentry)
++			d_invalidate(dentry);
 +	}
 +
-+	/* Now free  items, putting holes in both caches. */
-+	for (i = 0; i < nr_items; i++) {
-+		if (i % keep == 0)
-+			continue;
-+
-+		thing = xa_erase(&things, i);
-+		if (xa_is_err(thing))
-+			pr_err("smox: error erasing entry: %d\n", i);
-+		kmem_cache_free(cachep, thing);
-+	}
-+
-+	expected = 0;
-+	xa_for_each(&things, index, thing) {
-+		if (thing->id != expected || index != expected) {
-+			pr_err("smox: error; got %ld want %d at %ld\n",
-+			       thing->id, expected, index);
-+			return -1;
-+		}
-+		expected += keep;
++	for (i = 0; i < nr; i++) {
++		dentry = v[i];
++		if (dentry)
++			dput(dentry);
 +	}
 +
 +	/*
-+	 * Leave caches sparsely allocated.  Shrink caches manually with:
-+	 *
-+	 *   slabinfo radix_tree_node --shrink
-+	 *   slabinfo smox_test --shrink
++	 * dentries are freed using RCU so we need to wait until RCU
++	 * operations are complete.
 +	 */
-+
-+	return 0;
++	synchronize_rcu();
 +}
 +
-+static int __init smox_cache_init(void)
-+{
-+	cachep = kmem_cache_create(SMOX_CACHE_NAME,
-+				   sizeof(struct smox_thing),
-+				   0, 0, smox_object_ctor);
-+	if (!cachep)
-+		return -1;
+ static __initdata unsigned long dhash_entries;
+ static int __init set_dhash_entries(char *str)
+ {
+@@ -3119,6 +3204,8 @@ static void __init dcache_init(void)
+ 					   sizeof_field(struct dentry, d_iname),
+ 					   dcache_ctor);
+ 
++	kmem_cache_setup_mobility(dentry_cache, d_isolate, d_migrate);
 +
-+	return 0;
-+}
-+
-+static void __exit smox_cache_cleanup(void)
-+{
-+	struct smox_thing *thing;
-+	unsigned long i;
-+
-+	xa_for_each(&things, i, thing) {
-+		kmem_cache_free(cachep, thing);
-+	}
-+	xa_destroy(&things);
-+	kmem_cache_destroy(cachep);
-+}
-+
-+static int __init smox_init(void)
-+{
-+	int ret;
-+
-+	ret = smox_cache_init();
-+	if (ret) {
-+		pr_err("smo_xarray: failed to create cache\n");
-+		return ret;
-+	}
-+	pr_info("smo_xarray: created kmem_cache: %s\n", SMOX_CACHE_NAME);
-+
-+	kmem_cache_setup_mobility(cachep, NULL, smox_cache_migrate);
-+	pr_info("smo_xarray: kmem_cache %s defrag enabled\n", SMOX_CACHE_NAME);
-+
-+	/*
-+	 * Running this test consumes memory unless you shrink the
-+	 * radix_tree_node cache manually with `slabinfo`.
-+	 */
-+	ret = test_smo_xarray();
-+	if (ret)
-+		pr_warn("test_smo_xarray failed: %d\n", ret);
-+
-+	pr_info("smo_xarray: module loaded successfully\n");
-+	return 0;
-+}
-+module_init(smox_init);
-+
-+static void __exit smox_exit(void)
-+{
-+	smox_cache_cleanup();
-+
-+	pr_info("smo_xarray: module removed\n");
-+}
-+module_exit(smox_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Tobin C. Harding");
-+MODULE_DESCRIPTION("SMO XArray test module.");
+ 	/* Hash may have been set up in dcache_init_early */
+ 	if (!hashdist)
+ 		return;
 -- 
 2.21.0
 
