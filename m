@@ -2,104 +2,161 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8FAC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F55C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036F02084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044E920830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfuQdVW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbfDCMGy (ORCPT
+        id S1726316AbfDCMIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:06:54 -0400
-Received: from foss.arm.com ([217.140.101.70]:38776 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbfDCMGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:06:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 803C880D;
-        Wed,  3 Apr 2019 05:06:53 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C2213F59C;
-        Wed,  3 Apr 2019 05:06:52 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 13:06:49 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: ptrace: Add function argument access API
-Message-ID: <20190403120649.GB29409@fuggles.cambridge.arm.com>
-References: <155289594227.10570.1879705446198840331.stgit@devnote2>
+        Wed, 3 Apr 2019 08:08:17 -0400
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:35508 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfDCMIR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:08:17 -0400
+Received: by mail-wr1-f48.google.com with SMTP id w1so21025595wrp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 05:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=GguOis0TNjEhCnveF9SJU+/OKkeHIxndz0Sf1FaMQ5o=;
+        b=cfuQdVW94oYWdXo6ayWx7w7K9MVFwINBTtTxHiu2pbVYcyZha5Aw+DdFaS4Cr8XQkv
+         71p/D5Ym/boo+1zNIxYnQYaIM2lDo5CeHd1PS7zRhTPF65Td3WL0Z3QF0UnIFOlSbO0t
+         ZOr+/p1eLZQ63fduf6K8snmQU92ICZpX+5AwvV0yWKxD8h+BNjOl/ZqmDCXdVYlUbs4x
+         7junRXMJiM70G2PIfjNRgEGqVJv7SEN8IjxGwTJ6p6Se07DSBc/KB9c44GcCDrahNzMy
+         5EsJshrgvSihHeuA1e3onQG7DbIpJeBTZ+EDQd4Ni2dXrg9T7tSl5gnrTrFUaeX2fYIj
+         0p8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=GguOis0TNjEhCnveF9SJU+/OKkeHIxndz0Sf1FaMQ5o=;
+        b=mpFllcposgHhmGMEZ+6kWau+vs4N6yxelzo/rWCQNr74bewUwjxf5criWejYNLgYQg
+         vOgZPt+4dyKNBXNKeB+oyBW9ItxQmdt8/PL9bWVYLfTLvkjtAUVUAWBujFk8WSumB/EW
+         ACwklkLeu0ipliIFbKuH1TPg8auu35eVX6oK79gkHl2pN6acqyDYyGcSstF8LMbfFsmy
+         BxfkWmJDX7JvrEteZmHYYlW5kZ6+pkK0YYheLZ2Odbe59HDhFsR7VbR1FB0vVe/RvrLv
+         TbJKopbCIY/JkBCT1vkyXB+UTV45Wiz5O85sfuedVEcWA5YwHstZr9abiuPUaeMh0nrk
+         PAwQ==
+X-Gm-Message-State: APjAAAXE5PWn4gCy7Em72x4K1AeWnywAqF+TUnlqV8KW15vxvu42tldw
+        TO4Wg9/jUxnZZo/oYnAAArGYDaWo
+X-Google-Smtp-Source: APXvYqxvh8SIWsnDtfmU/rMwn1LEtlqBolldMlo+yENKdyGizTVbn8uySaZNU7hgAPHmQVvZKVpxhQ==
+X-Received: by 2002:adf:f7cc:: with SMTP id a12mr3172521wrq.87.1554293294037;
+        Wed, 03 Apr 2019 05:08:14 -0700 (PDT)
+Received: from [192.168.107.155] (x4d0b13a0.dyn.telefonica.de. [77.11.19.160])
+        by smtp.gmail.com with ESMTPSA id g19sm16116369wmh.17.2019.04.03.05.08.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 05:08:13 -0700 (PDT)
+From:   Oliver Henning <oliver.henning@gmail.com>
+Subject: Unchecked kmalloc() calls
+To:     linux-kernel@vger.kernel.org
+Message-ID: <9f3ba19b-70cb-7631-9426-7aabacc1fdb6@gmail.com>
+Date:   Wed, 3 Apr 2019 14:08:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155289594227.10570.1879705446198840331.stgit@devnote2>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 18, 2019 at 04:59:02PM +0900, Masami Hiramatsu wrote:
-> Add regs_get_argument() which returns N th argument of the function
-> call. On arm64, it supports up to 8th argument.
-> Note that this chooses most probably assignment, in some case
-> it can be incorrect (e.g. passing data structure or floating
-> point etc.)
-> 
-> This enables ftrace kprobe events to access kernel function
-> arguments via $argN syntax.
-> 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  arch/arm64/Kconfig              |    1 +
->  arch/arm64/include/asm/ptrace.h |   18 ++++++++++++++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 117b2541ef3d..6ba0da4be73c 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -148,6 +148,7 @@ config ARM64
->  	select HAVE_PERF_REGS
->  	select HAVE_PERF_USER_STACK_DUMP
->  	select HAVE_REGS_AND_STACK_ACCESS_API
-> +	select HAVE_FUNCTION_ARG_ACCESS_API
->  	select HAVE_RCU_TABLE_FREE
->  	select HAVE_RCU_TABLE_INVALIDATE
->  	select HAVE_RSEQ
-> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-> index ec60174c8c18..cfa1bc9b8b70 100644
-> --- a/arch/arm64/include/asm/ptrace.h
-> +++ b/arch/arm64/include/asm/ptrace.h
-> @@ -305,6 +305,24 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
->  	return regs->regs[0];
->  }
->  
-> +/**
-> + * regs_get_kernel_argument() - get Nth function argument in kernel
-> + * @regs:	pt_regs of that context
-> + * @n:		function argument number (start from 0)
-> + *
-> + * regs_get_argument() returns @n th argument of the function call.
-> + * Note that this chooses most probably assignment, in some case
-> + * it can be incorrect.
+Hello
 
-In which cases would it be incorrect? I can imagine varargs causing
-problems, but are there others?
+I have written a Python script to scan the kernel for unchecked kmalloc() calls. It found the following instances. I checked them manually, too. I would like to fix them myself but I do not how to do a proper failure handling. So maybe someone else can have a look.
 
-> +static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
-> +						     unsigned int n)
-> +{
-> +#define NR_REG_ARGUMENTS 8
-> +	if (n < NR_REG_ARGUMENTS)
-> +		return regs_get_register(regs, n << 3);
+Oliver
 
-You can use pt_regs_read_reg() to avoid the shift here.
 
-Will
+drivers/net/wireless/rsi/rsi_91x_mac80211.c:199
+             channels = kmalloc(sizeof(rsi_2ghz_channels), GFP_KERNEL);
+             memcpy(channels,
+                    rsi_2ghz_channels,
+                    sizeof(rsi_2ghz_channels));
+---
+drivers/net/wireless/rsi/rsi_91x_mac80211.c:208
+             channels = kmalloc(sizeof(rsi_5ghz_channels), GFP_KERNEL);
+             memcpy(channels,
+                    rsi_5ghz_channels,
+                    sizeof(rsi_5ghz_channels));
+---
+arch/mips/pmcs-msp71xx/msp_prom.c:378
+          argv = kmalloc(len, GFP_KERNEL);
+          ptr = (char *) &argv[prom_argc + 1];    /* strings follow array */
+    
+          for (argc = 0; argc < prom_argc; argc++) {
+               argv[argc] = ptr;
+               strcpy(ptr, prom_argv[argc]);
+               ptr += strlen(prom_argv[argc]) + 1;
+          }
+---
+arch/mips/pmcs-msp71xx/msp_prom.c:399
+          envp = kmalloc(len, GFP_KERNEL);
+          ptr = (char *) &envp[i+1];
+    
+          for (argc = 0; argc < i; argc++) {
+               envp[argc] = ptr;
+               strcpy(ptr, prom_envp[argc]);
+               ptr += strlen(prom_envp[argc]) + 1;
+          }
+---
+arch/powerpc/platforms/pseries/dlpar.c:389
+          hp_errlog_copy = kmalloc(sizeof(struct pseries_hp_errorlog),
+                          GFP_KERNEL);
+          memcpy(hp_errlog_copy, hp_errlog, sizeof(struct pseries_hp_errorlog));
+---
+drivers/media/pci/cx23885/cx23885-dvb.c:1477
+                    fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
+                    memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
+---
+/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/misc/lkdtm/perms.c:135
+          u32 *kmalloc_area = kmalloc(EXEC_SIZE, GFP_KERNEL);
+          execute_location(kmalloc_area, CODE_WRITE);
+          kfree(kmalloc_area);
+     }
+---
+/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:113
+          new_compat = kmalloc(new_len, GFP_KERNEL);
+    
+          omapdss_prefix_strcpy(new_compat, new_len, prop->value, prop->length);
+    
+          omapdss_update_prop(node, new_compat, new_len);
+     }
+---
+/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/staging/media/davinci_vpfe/dm365_ipipe.c:1267
+               params = kmalloc(sizeof(struct ipipe_module_params),
+                          GFP_KERNEL);
+               to = (void *)params + module_if->param_offset;
+               size = module_if->param_size;
+    
+               if (to && from && size) {
+                    if (copy_from_user(to, (void __user *)from, size)) {
+                         rval = -EFAULT;
+                         break;
+                    }
+---
+/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/staging/media/davinci_vpfe/dm365_ipipe.c:1309
+               params = kmalloc(sizeof(struct ipipe_module_params),
+                          GFP_KERNEL);
+               from = (void *)params + module_if->param_offset;
+               size = module_if->param_size;
+    
+               if (to && from && size) {
+                    rval = module_if->get(ipipe, from);
+                    if (rval)
+                         goto error;
+                    if (copy_to_user((void __user *)to, from, size)) {
+---
+
