@@ -2,28 +2,29 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6F0C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFFCC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0648E20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE4A2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfDCQmO (ORCPT
+        id S1728173AbfDCQpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:42:14 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41862 "EHLO
+        Wed, 3 Apr 2019 12:45:24 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41856 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfDCQmO (ORCPT
+        with ESMTP id S1726155AbfDCQmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:42:14 -0400
+        Wed, 3 Apr 2019 12:42:13 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hBixk-0004GO-Cw; Wed, 03 Apr 2019 18:42:08 +0200
+        id 1hBixj-0004GO-9K; Wed, 03 Apr 2019 18:42:07 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -31,124 +32,229 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
         kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
         Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 02/27] x86/fpu: Remove fpu__restore()
-Date:   Wed,  3 Apr 2019 18:41:31 +0200
-Message-Id: <20190403164156.19645-3-bigeasy@linutronix.de>
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH v9 00/27] x86: load FPU registers on return to userland
+Date:   Wed,  3 Apr 2019 18:41:29 +0200
+Message-Id: <20190403164156.19645-1-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
-References: <20190403164156.19645-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no users of fpu__restore() so it is time to remove it.
-The comment regarding fpu__restore() and TS bit is stale since commit
-  b3b0870ef3ffe ("i387: do not preload FPU state at task switch time")
-and has no meaning since.
+This is a refurbished series originally started by by Rik van Riel. The
+goal is load the FPU registers on return to userland and not on every
+context switch. By this optimisation we can:
+- avoid loading the registers if the task stays in kernel and does
+  not return to userland
+- make kernel_fpu_begin() cheaper: it only saves the registers on the
+  first invocation. The second invocation does not need save them again.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- Documentation/preempt-locking.txt   |  1 -
- arch/x86/include/asm/fpu/internal.h |  1 -
- arch/x86/kernel/fpu/core.c          | 24 ------------------------
- arch/x86/kernel/process_32.c        |  4 +---
- arch/x86/kernel/process_64.c        |  4 +---
- 5 files changed, 2 insertions(+), 32 deletions(-)
+To access the FPU registers in kernel we need:
+- disable preemption to avoid that the scheduler switches tasks. By
+  doing so it would set TIF_NEED_FPU_LOAD and the FPU registers would be
+  not valid.
+- disable BH because the softirq might use kernel_fpu_begin() and then
+  set TIF_NEED_FPU_LOAD instead loading the FPU registers on completion.
 
-diff --git a/Documentation/preempt-locking.txt b/Documentation/preempt-locking.txt
-index 509f5a422d571..dce336134e54a 100644
---- a/Documentation/preempt-locking.txt
-+++ b/Documentation/preempt-locking.txt
-@@ -52,7 +52,6 @@ preemption must be disabled around such regions.
- 
- Note, some FPU functions are already explicitly preempt safe.  For example,
- kernel_fpu_begin and kernel_fpu_end will disable and enable preemption.
--However, fpu__restore() must be called with preemption disabled.
- 
- 
- RULE #3: Lock acquire and release must be performed by same task
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index fb04a3ded7ddb..75a1d5f712ee7 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -28,7 +28,6 @@ extern void fpu__initialize(struct fpu *fpu);
- extern void fpu__prepare_read(struct fpu *fpu);
- extern void fpu__prepare_write(struct fpu *fpu);
- extern void fpu__save(struct fpu *fpu);
--extern void fpu__restore(struct fpu *fpu);
- extern int  fpu__restore_sig(void __user *buf, int ia32_frame);
- extern void fpu__drop(struct fpu *fpu);
- extern int  fpu__copy(struct fpu *dst_fpu, struct fpu *src_fpu);
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 2e5003fef51a9..1d3ae7988f7f2 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -303,30 +303,6 @@ void fpu__prepare_write(struct fpu *fpu)
- 	}
- }
- 
--/*
-- * 'fpu__restore()' is called to copy FPU registers from
-- * the FPU fpstate to the live hw registers and to activate
-- * access to the hardware registers, so that FPU instructions
-- * can be used afterwards.
-- *
-- * Must be called with kernel preemption disabled (for example
-- * with local interrupts disabled, as it is in the case of
-- * do_device_not_available()).
-- */
--void fpu__restore(struct fpu *fpu)
--{
--	fpu__initialize(fpu);
--
--	/* Avoid __kernel_fpu_begin() right after fpregs_activate() */
--	kernel_fpu_disable();
--	trace_x86_fpu_before_restore(fpu);
--	fpregs_activate(fpu);
--	copy_kernel_to_fpregs(&fpu->state);
--	trace_x86_fpu_after_restore(fpu);
--	kernel_fpu_enable();
--}
--EXPORT_SYMBOL_GPL(fpu__restore);
--
- /*
-  * Drops current FPU state: deactivates the fpregs and
-  * the fpstate. NOTE: it still leaves previous contents
-diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-index e471d8e6f0b24..7888a41a03cdb 100644
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -267,9 +267,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 	/*
- 	 * Leave lazy mode, flushing any hypercalls made here.
- 	 * This must be done before restoring TLS segments so
--	 * the GDT and LDT are properly updated, and must be
--	 * done before fpu__restore(), so the TS bit is up
--	 * to date.
-+	 * the GDT and LDT are properly updated.
- 	 */
- 	arch_end_context_switch(next_p);
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 6a62f4af9fcf7..e1983b3a16c43 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -538,9 +538,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 	/*
- 	 * Leave lazy mode, flushing any hypercalls made here.  This
- 	 * must be done after loading TLS entries in the GDT but before
--	 * loading segments that might reference them, and and it must
--	 * be done before fpu__restore(), so the TS bit is up to
--	 * date.
-+	 * loading segments that might reference them.
- 	 */
- 	arch_end_context_switch(next_p);
- 
--- 
-2.20.1
+v8…v9:
+Rebased on top of v5.1-rc3 plus:
+- using the proper register pointer in __fpu__restore_sig() for the
+  fsave case.
+
+- dropped a WARN_ON() from switch_fpu_finish() if the PKRU state is
+  missing. On a preemptible kernel this warning will trigger if the
+  task gets preempted in fpstate_init() during memset() and
+  fpstate_init_xstate().
+
+- Adding a fastpath to __fpu__restore_sig() and
+  copy_fpstate_to_sigframe() save/restore FPU state to/from userland.
+  Thomas Gleixner asked for this. The series first does the slowpath and
+  then the last few patches add/enable the fast path. This ensures that
+  the slow works correctly (during a bisect) and then it should be
+  rarely used.
+
+Some numbers generated by 
+     taskset 2 lat_sig -P 1 -W 64 -N 5000 catch
+
+v5.1-rc3
+ catch 64
+ Signal handler overhead: 1.7531 microseconds
+ Signal handler overhead: 1.7547 microseconds
+ Signal handler overhead: 1.7362 microseconds
+ catch 32
+ Signal handler overhead: 2.4044 microseconds
+ Signal handler overhead: 2.3732 microseconds
+ Signal handler overhead: 2.3979 microseconds
+
+up to x86/fpu: Defer FPU state load until return to userspace
+ catch 64
+ Signal handler overhead: 2.7556 microseconds
+ Signal handler overhead: 2.7878 microseconds
+ Signal handler overhead: 2.7664 microseconds
+ catch 32
+ Signal handler overhead: 2.5961 microseconds
+ Signal handler overhead: 2.5916 microseconds
+ Signal handler overhead: 2.6091 microseconds
+
+up to x86/fpu: Add a fastpath to copy_fpstate_to_sigframe()
+ catch 64
+ Signal handler overhead: 1.8573 microseconds
+ Signal handler overhead: 1.8469 microseconds
+ Signal handler overhead: 1.8554 microseconds
+ catch 32
+ Signal handler overhead: 2.4875 microseconds
+ Signal handler overhead: 2.4822 microseconds
+ Signal handler overhead: 2.4806 microseconds
+ ----
+complete series
+ catch 64
+ Signal handler overhead: 1.8463 microseconds
+ Signal handler overhead: 1.8431 microseconds
+ Signal handler overhead: 1.8609 microseconds
+ catch 32
+ Signal handler overhead: 2.4907 microseconds
+ Signal handler overhead: 2.4771 microseconds
+ Signal handler overhead: 2.4939 microseconds
+
+v7…v8:
+Rebased on top of v5.1-rc1. And then:
+- Remove a WARN_ON() in switch_fpu_finish. Turns out it can trigger
+  during a preemption while the xstate is initialized.
+
+- Provide __read_pkru_ins() and __write_pkru_ins which are symmetrical.
+  __write_pkru() does the "write only if the value is different from
+  current" check.
+
+- The kernel threads now load `init_pkru_value' instead of `0' for the
+  PKRU value.
+
+- The PKRU value is also written into its xsave area of init_fpstate.
+
+v6…v7:
+Rebased on top of v5.0-rc7 and addressed Borislav Petkov's review.
+
+v5…v6:
+Rebased on top of v5.0-rc1. Integrated a few fixes which I noticed while
+looking over the patches, dropped the first few patches which were
+already applied.
+
+v4…v5:
+Rebased on top of a fix, noticed a problem with XSAVES and then redid
+the restore on sig return (patch #26 to #28).
+
+I don't like very much the sig save+restore thing that we are doing. It
+has been always like that. I *think* that this is just because we have
+nowhere to stash the FPU state while we are handling the signal. We
+could add another fpu->state for the signal handler and avoid the thing.
+Debian code-search revealed that `criu' is using it (and I didn't
+figure out why). Nothing else (that is packaged in Debian). Maybe we
+could get rid of this and if `criu' would then use a dedicated interface
+for its needs rather the signal interface that happen to do what it
+wants :)
+
+v3…v4:
+It has been suggested to remove the `initialized' member of the struct
+fpu because it should not required be needed with lazy-FPU-restore and
+would make the review easier. This is the first part of the series, the
+second is basically the rebase of the v3 queue. As a result, the
+diffstat became negative (which wasn't the case in previous version) :)
+I tried to incorporate all the review comments that came up, some of
+them were "outdated" after the removal of the `initialized' member. I'm
+sorry should I missed any.
+
+v1…v3:
+v2 was never posted. I followed the idea to completely decouple PKRU
+from xstate. This didn't quite work and made a few things complicated. 
+One obvious required fixup is copy_fpstate_to_sigframe() where the PKRU
+state needs to be fiddled into xstate. This required another
+xfeatures_mask so that the sanity checks were performed and
+xstate_offsets would be computed. Additionally ptrace also reads/sets
+xstate in order to get/set the register and PKRU is one of them. So this
+would need some fiddle, too.
+In v3 I dropped that decouple idea. I also learned that the wrpkru
+instruction is not privileged and so caching it in kernel does not work.
+Instead I keep PKRU in xstate area and load it at context switch time
+while the remaining registers are deferred (until return to userland).
+The offset of PKRU within xstate is enumerated at boot time so why not
+use it.
+
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
+
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git x86_fpu_rtu_v9
+
+for you to fetch changes up to c5265b05d167b3be19c787ebb913dc138485fa25:
+
+  x86/pkeys: add PKRU value to init_fpstate (2019-04-03 18:19:10 +0200)
+
+----------------------------------------------------------------
+Rik van Riel (5):
+      x86/fpu: Add (__)make_fpregs_active helpers
+      x86/fpu: Eager switch PKRU state
+      x86/fpu: Always store the registers in copy_fpstate_to_sigframe()
+      x86/fpu: Prepare copy_fpstate_to_sigframe() for TIF_NEED_FPU_LOAD
+      x86/fpu: Defer FPU state load until return to userspace
+
+Sebastian Andrzej Siewior (22):
+      x86/fpu: Remove fpu->initialized usage in __fpu__restore_sig()
+      x86/fpu: Remove fpu__restore()
+      x86/fpu: Remove preempt_disable() in fpu__clear()
+      x86/fpu: Always init the `state' in fpu__clear()
+      x86/fpu: Remove fpu->initialized usage in copy_fpstate_to_sigframe()
+      x86/fpu: Don't save fxregs for ia32 frames in copy_fpstate_to_sigframe()
+      x86/fpu: Remove fpu->initialized
+      x86/fpu: Remove user_fpu_begin()
+      x86/fpu: Make __raw_xsave_addr() use feature number instead of mask
+      x86/fpu: Make get_xsave_field_ptr() and get_xsave_addr() use feature number instead of mask
+      x86/pkru: Provide .*_pkru_ins() functions
+      x86/fpu: Only write PKRU if it is different from current
+      x86/pkeys: Don't check if PKRU is zero before writting it
+      x86/entry: Add TIF_NEED_FPU_LOAD
+      x86/fpu: Update xstate's PKRU value on write_pkru()
+      x86/fpu: Inline copy_user_to_fpregs_zeroing()
+      x86/fpu: Let __fpu__restore_sig() restore the !32bit+fxsr frame from kernel memory
+      x86/fpu: Merge the two code paths in __fpu__restore_sig()
+      x86/fpu: Add a fastpath to __fpu__restore_sig()
+      x86/fpu: Add a fastpath to copy_fpstate_to_sigframe()
+      x86/fpu: Restore FPU register in copy_fpstate_to_sigframe() in order to use the fastpath
+      x86/pkeys: add PKRU value to init_fpstate
+
+ Documentation/preempt-locking.txt    |   1 -
+ arch/x86/entry/common.c              |   8 ++
+ arch/x86/ia32/ia32_signal.c          |  17 ++-
+ arch/x86/include/asm/fpu/api.h       |  31 ++++++
+ arch/x86/include/asm/fpu/internal.h  | 130 ++++++++++++++++------
+ arch/x86/include/asm/fpu/signal.h    |   2 +-
+ arch/x86/include/asm/fpu/types.h     |   9 --
+ arch/x86/include/asm/fpu/xstate.h    |   5 +-
+ arch/x86/include/asm/pgtable.h       |  28 ++++-
+ arch/x86/include/asm/special_insns.h |  18 +++-
+ arch/x86/include/asm/thread_info.h   |   2 +
+ arch/x86/include/asm/trace/fpu.h     |   8 +-
+ arch/x86/kernel/cpu/common.c         |   5 +
+ arch/x86/kernel/fpu/core.c           | 194 ++++++++++++++++-----------------
+ arch/x86/kernel/fpu/init.c           |   2 -
+ arch/x86/kernel/fpu/regset.c         |  24 ++---
+ arch/x86/kernel/fpu/signal.c         | 202 +++++++++++++++++++++--------------
+ arch/x86/kernel/fpu/xstate.c         |  42 ++++----
+ arch/x86/kernel/process.c            |   2 +-
+ arch/x86/kernel/process_32.c         |  11 +-
+ arch/x86/kernel/process_64.c         |  11 +-
+ arch/x86/kernel/signal.c             |  17 ++-
+ arch/x86/kernel/traps.c              |   2 +-
+ arch/x86/kvm/vmx/vmx.c               |   2 +-
+ arch/x86/kvm/x86.c                   |  48 +++++----
+ arch/x86/math-emu/fpu_entry.c        |   3 -
+ arch/x86/mm/mpx.c                    |   6 +-
+ arch/x86/mm/pkeys.c                  |  21 ++--
+ 28 files changed, 496 insertions(+), 355 deletions(-)
+
+Sebastian
 
