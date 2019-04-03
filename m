@@ -2,139 +2,107 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1894AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8759DC10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C3B20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5644420882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:33:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Nwz9MxVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfDCDdW (ORCPT
+        id S1728134AbfDCDd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:33:22 -0400
-Received: from foss.arm.com ([217.140.101.70]:59780 "EHLO foss.arm.com"
+        Tue, 2 Apr 2019 23:33:28 -0400
+Received: from ozlabs.org ([203.11.71.1]:38623 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfDCDdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:33:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE52A80D;
-        Tue,  2 Apr 2019 20:33:21 -0700 (PDT)
-Received: from blommer (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFBD03F721;
-        Tue,  2 Apr 2019 20:33:19 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 04:33:15 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>
-Subject: Re: [PATCH] drivers: firmware: psci: add support for warm reset
-Message-ID: <20190403033314.k2wqxkm5c7imhtu5@blommer>
-References: <20190401181443.6459-1-aaro.koskinen@iki.fi>
+        id S1726760AbfDCDd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 23:33:27 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Ys9b6TVHz9sNy;
+        Wed,  3 Apr 2019 14:33:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1554262404;
+        bh=+/8lmXRpSo6uj6ay2fjaSnbCUIFjfYJHvenvLkb8u4A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Nwz9MxVzY9f8pETJe3ESaYyn99OWfUuz45V5cBgt9MQkUQ6WPIxHdmB+aqiOSvsMc
+         Op2VCAddpFkR3CT1eV3musTBbp0OvIu5r2NxuWajck70Ph10EVwT9y+aEZlvna7kao
+         xiJpZ15lbWS5HwH1le2cVdc4opISsD3WaUZ8g87Jf9Vg4Fy6xBKKpuIqkZmzzwj5vb
+         IfovXaMoafGbjU57cWA8HomyvvZrBwrtKoDexWuJ+Z0VKQyydY2zsgTdHkaWkmQqiS
+         8bDtAhpQQhDBsVbw2heHNlRU1iKlrzhCU3vyeSmoqBwRz2pzQObM0TXXn7OyrAAKrv
+         3RVoghpEoCysg==
+Date:   Wed, 3 Apr 2019 14:33:23 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Corey Minyard <cminyard@mvista.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Subject: linux-next: build failure after merge of the ipmi tree
+Message-ID: <20190403143323.156ac503@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190401181443.6459-1-aaro.koskinen@iki.fi>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/BnlIDobU0SIz0QG2QJvEgqf"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 09:14:43PM +0300, Aaro Koskinen wrote:
-> From: Aaro Koskinen <aaro.koskinen@nokia.com>
-> 
-> Add support for warm reset using SYSTEM_RESET2 introduced in PSCI
-> 1.1 specification.
+--Sig_/BnlIDobU0SIz0QG2QJvEgqf
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For reference, how do you intend to use this?
+Hi Corey,
 
-> 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-> ---
->  drivers/firmware/psci.c   | 25 +++++++++++++++++++++++++
->  include/uapi/linux/psci.h |  3 +++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
-> index c80ec1d03274..1d95b5f6d403 100644
-> --- a/drivers/firmware/psci.c
-> +++ b/drivers/firmware/psci.c
-> @@ -73,6 +73,7 @@ enum psci_function {
->  	PSCI_FN_CPU_ON,
->  	PSCI_FN_CPU_OFF,
->  	PSCI_FN_MIGRATE,
-> +	PSCI_FN_SYSTEM_RESET2,
->  	PSCI_FN_MAX,
->  };
->  
-> @@ -256,6 +257,14 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
->  	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
->  }
->  
-> +static void psci_sys_reset2(enum reboot_mode reboot_mode, const char *cmd)
-> +{
-> +	if (reboot_mode == REBOOT_WARM)
-> +		invoke_psci_fn(psci_function_id[PSCI_FN_SYSTEM_RESET2], 0, 0, 0);
-> +	else
-> +		psci_sys_reset(reboot_mode, cmd);
-> +}
+After merging the ipmi tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-What happens when RESET2 isn't available, but the user requests s REBOOT_WARM
-reset? It looks like we'd invoke a bogus SMC.
+drivers/char/ipmi/ipmi_msghandler.c: In function 'free_user':
+drivers/char/ipmi/ipmi_msghandler.c:1268:2: error: implicit declaration of =
+function 'cleanup_srcu_struct_quiesced'; did you mean 'cleanup_srcu_struct'=
+? [-Werror=3Dimplicit-function-declaration]
+  cleanup_srcu_struct_quiesced(&user->release_barrier);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cleanup_srcu_struct
 
-Could we please add a preprocessor definition for SYSTEM_RESET_WARM so that
-it's clear that we're passing a parameter here?
+Caused by commit
 
-> +
->  static void psci_sys_poweroff(void)
->  {
->  	invoke_psci_fn(PSCI_0_2_FN_SYSTEM_OFF, 0, 0, 0);
-> @@ -564,6 +573,20 @@ static void __init psci_0_2_set_functions(void)
->  	pm_power_off = psci_sys_poweroff;
->  }
->  
-> +static void __init psci_1_1_set_functions(void)
-> +{
-> +	int sys_reset2;
-> +	int feature;
-> +
-> +	sys_reset2 = PSCI_FN_NATIVE(1_1, SYSTEM_RESET2);
-> +	feature	= psci_features(sys_reset2);
-> +
-> +	if (feature != PSCI_RET_NOT_SUPPORTED) {
-> +		psci_function_id[PSCI_FN_SYSTEM_RESET2] = sys_reset2;
-> +		arm_pm_restart = psci_sys_reset2;
-> +	}
-> +}
-> +
->  /*
->   * Probe function for PSCI firmware versions >= 0.2
->   */
-> @@ -588,6 +611,8 @@ static int __init psci_probe(void)
->  		psci_init_smccc();
->  		psci_init_cpu_suspend();
->  		psci_init_system_suspend();
-> +		if (PSCI_VERSION_MINOR(ver) >= 1)
-> +			psci_1_1_set_functions();
->  	}
+  487ecb21fa66 ("ipmi: fix sleep-in-atomic in free_user at cleanup SRCU use=
+r->release_barrier")
 
-If we're going to add more things to this chain, can we please refactor this as:
+interacting with commit
 
-	if (ver < PSCI_VERSION(1, 0))
-		return;
+  f5ad3991493c ("srcu: Remove cleanup_srcu_struct_quiesced()")
 
-	/* PSCI 1.0 setup here */
+from the rcu tree.
 
-	if (ver < PSCI_VERSION(1,1))
-		return;
+Based on the comments in the rcu tree commit, I have reverted the impi
+tree commit for today.
 
-	/* PSCI 1.1 setup here */
+--=20
+Cheers,
+Stephen Rothwell
 
-... as that saves on indentation and is easier to extend in future.
+--Sig_/BnlIDobU0SIz0QG2QJvEgqf
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Thanks,
-Mark
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlykKYMACgkQAVBC80lX
+0GytbAgAisVFy0Bi0kM7OKJyg+fnkwkMvQbe5+NUPeDrbznizmOQPrv4u0iqieHa
+Zmdt0jireZLstdD/th9E6Ln3kQLQqeR8VgO1x21/3CBTvFYr4JW5BhzhQsiFfhPu
+c76Bt20P9dkqIdc+XEjbviTcCGumiB0aoLl8nBM9KjohrqGBu98DKIqfui0ZmqfL
+QK9RHlFKnaC6KuAnpyM+cuU4lZdGDyKJ3V0PkWec0hHkfB51zLlMxnk1EZNTGFAV
+6bWE/pH9lzmLPBPm5VE4YqwaQZrt7+CCeeFHDmeMCjARdVUnNnZ4TrsBnVt6sEQH
+YaLa/3d3IwIIXeSH7Zv9Ac7dzfGdUg==
+=vMn7
+-----END PGP SIGNATURE-----
+
+--Sig_/BnlIDobU0SIz0QG2QJvEgqf--
