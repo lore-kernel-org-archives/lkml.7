@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E370EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933E2C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D872084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B27820882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvhzMUAR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9KUxFX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfDCECj (ORCPT
+        id S1726499AbfDCEBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:02:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35133 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfDCEB5 (ORCPT
+        Wed, 3 Apr 2019 00:01:55 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38237 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfDCEBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:01:57 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w24so939960plp.2;
-        Tue, 02 Apr 2019 21:01:57 -0700 (PDT)
+        Wed, 3 Apr 2019 00:01:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j26so7609521pgl.5;
+        Tue, 02 Apr 2019 21:01:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iJNmAhM2XNyQoO7XUgJsBxESauSJO4qHq5kgj9WqMZU=;
-        b=KvhzMUAR2lSW4esbyEYh5b4AsJIl8g7BeQPj98AU4WWMcL4wNMILvGwUp+cvFXv19i
-         6GUMKfW7YYTeWKt9t8ZrkjpERjfz95eYwjhslLA19flayKrpd2WU1QG+SdR3LX0EMK1I
-         BTdMJb7ilpe41gOaYpbA0cgnxNUJS1ABHSohXp++WfHuTcYOJeNn0OMee38LBKkAOSsc
-         Y9zJUdHe2SRrdWz6eWbtuSLv0r64mCGa6F7maJsNTvzFGQs8MYuNSJ81HrEyWvoNhmO5
-         LCLszeHOAlz1FT7ngANz7ze8+jMloroG++86ElnFHq3VMmgwXO0GV4o/m4OIiyYpXJE+
-         Bj2g==
+        bh=ktalrU7lzEY152yeF8ZuBQGbifejPdnTZhkabhS1hK4=;
+        b=t9KUxFX0gu4WSgsOITBpSRXx2mZvjAXkPDLjwtp3bh7igjgCsK4jWa/YYyP4GPYliR
+         3qSce8Em6Rma/t1/80OQH+tqAMjsBav6eHHn0KOK2Ge6ZJsSDjRogQl2X6KDrDtgsLTD
+         XuVf8wLfWPzkBaPX3ANZ162rs3txZI7ZGjlLgMff9RkNp0FpZ/yD4rNnOaWfZe9EHWFJ
+         5jtmdcJF5Z71FnR7Hiz0ZP64cyx36TDPCHUdT9I+h27z1sCzoQPacAZG6NE333sYjWTi
+         8SxRfHqoawoAXkO1c1PCh7tqov274XKELvrR49QmGOBqBr03IZ1b9Hc632j9bhk2WvRH
+         7XLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iJNmAhM2XNyQoO7XUgJsBxESauSJO4qHq5kgj9WqMZU=;
-        b=GbC9UMZxdjbduzlHWisfF77rz9mU2CMRPs7KZ9DESZmGA1A26y+6cy4FxM6dVxklhK
-         WfnOswHA//ldnVvlq6Jfd6vR1r4+BOLZgl+WnXGmuyeZqcHPJaYdsgLqRQatfkGHAsfv
-         QPxEaBheyaPsGFvg/M1wFS7XnT71uOA574iXijPTLFdhdUyz8dXe1Up4zGSDPyF35O14
-         6d3x7NJpl8365tI2KP0S7Oe7GN9GL+yhCMrPzQUZuwMQ54+zdr1tFOqmFNMP9fe7WP07
-         AcMVVN62ONX9TBjFpK0LUltAFHI0MkYYfmP2Ra34h3CmMaRkCIG6gnAjMKXADzhY7mKC
-         8YeQ==
-X-Gm-Message-State: APjAAAXhzVcMPZhorDzD0NJ1G+RLsiBuxgaEjoQJBTFd+ptlnd5rrtow
-        xYwYpfqctJdub9PtULB7ZzqQIPF8
-X-Google-Smtp-Source: APXvYqyrdZ271nYyFVZz+2ECRLdtBpFfP4Wa5aB4PcONyIjEHRUVzCkrDIhb2nYD9G9ppwl4+Rc+yg==
-X-Received: by 2002:a17:902:868e:: with SMTP id g14mr9916862plo.183.1554264116609;
-        Tue, 02 Apr 2019 21:01:56 -0700 (PDT)
+        bh=ktalrU7lzEY152yeF8ZuBQGbifejPdnTZhkabhS1hK4=;
+        b=STZ6O8CE88w/4imD6rfEab5J8yKCir0E9YfhxDF/Fl/nQoM0Fbw8z/7DTMy2pbR+3/
+         8iIQv0iqfuNYWv66m52isdWm41rOsXBjUb/VPqiDpZFBSJzeBbcJKFJUQ6DboJgE+eXB
+         Y63en5evLOdanIcZM5pXdrQtSxCXPGpuwz8/LIGPfZufw/XZQhXVKfnZIHIyVMaNZkFZ
+         MDEj5nyElSGoaxe7XVV/4cqamenYgz9PWNviPk9DjJQaHUI8kTqbVqxvXhZ4wHErB8zw
+         6FQK54RmEULslObojGkVGDy97mp+Qgz5gtvFPJDMkLamoHS+cMgLFdhDAITuF6CfQ3ZT
+         vAvQ==
+X-Gm-Message-State: APjAAAWLB4zCaOK3+fnmZQlIP00GtZJ2baWnnYQCFFk+5G51vCiH6g7s
+        uao6J3uDti4wZsPV/9epeaol1LZ7
+X-Google-Smtp-Source: APXvYqwC39yYkO3uLgjz1mDhkVoRIUCGwX+dkYpHqzFoVEsB0FkIRIlQF/mhfNwxRJzQKPCKqWSllQ==
+X-Received: by 2002:aa7:8ac8:: with SMTP id b8mr10430910pfd.234.1554264111336;
+        Tue, 02 Apr 2019 21:01:51 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id k14sm16278064pfb.125.2019.04.02.21.01.55
+        by smtp.gmail.com with ESMTPSA id k14sm16278064pfb.125.2019.04.02.21.01.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 21:01:55 -0700 (PDT)
+        Tue, 02 Apr 2019 21:01:50 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-spi@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 05/12] spi: gpio: Drop unused pdata copy in struct spi_gpio
-Date:   Tue,  2 Apr 2019 21:01:26 -0700
-Message-Id: <20190403040133.1459-6-andrew.smirnov@gmail.com>
+Subject: [PATCH 01/12] spi: gpio: Drop unused spi_to_pdata()
+Date:   Tue,  2 Apr 2019 21:01:22 -0700
+Message-Id: <20190403040133.1459-2-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403040133.1459-1-andrew.smirnov@gmail.com>
 References: <20190403040133.1459-1-andrew.smirnov@gmail.com>
@@ -74,8 +74,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop unused pdata copy in struct spi_gpio. No functional change
-intended.
+Spi_to_pdata() is not used anywhere in the code. Drop it.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>
@@ -83,30 +82,26 @@ Cc: Chris Healy <cphealy@gmail.com>
 Cc: linux-spi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/spi/spi-gpio.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/spi/spi-gpio.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 137f47e271dc..1cff30adc836 100644
+index 53b35c56a557..675fd65ebf1d 100644
 --- a/drivers/spi/spi-gpio.c
 +++ b/drivers/spi/spi-gpio.c
-@@ -42,7 +42,6 @@
+@@ -96,12 +96,6 @@ spi_to_spi_gpio(const struct spi_device *spi)
+ 	return spi_gpio;
+ }
  
- struct spi_gpio {
- 	struct spi_bitbang		bitbang;
--	struct spi_gpio_platform_data	pdata;
- 	struct platform_device		*pdev;
- 	struct gpio_desc		*sck;
- 	struct gpio_desc		*miso;
-@@ -415,8 +414,6 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	spi_gpio->has_cs = !!pdata->num_chipselect;
- 
- 	spi_gpio->pdev = pdev;
--	if (pdata)
--		spi_gpio->pdata = *pdata;
- 
- 	status = spi_gpio_request(dev, spi_gpio,
- 				  pdata->num_chipselect, &master_flags);
+-static inline struct spi_gpio_platform_data *__pure
+-spi_to_pdata(const struct spi_device *spi)
+-{
+-	return &spi_to_spi_gpio(spi)->pdata;
+-}
+-
+ /* These helpers are in turn called by the bitbang inlines */
+ static inline void setsck(const struct spi_device *spi, int is_on)
+ {
 -- 
 2.20.1
 
