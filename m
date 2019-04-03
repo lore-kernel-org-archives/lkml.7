@@ -2,108 +2,92 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EE6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC6EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739892084A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665F52084A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:07:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGPOKmfA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8boMO/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfDCDFP (ORCPT
+        id S1727032AbfDCDHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:05:15 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42077 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfDCDFO (ORCPT
+        Tue, 2 Apr 2019 23:07:19 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41365 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfDCDHS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:05:14 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v22so8774419lje.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:05:13 -0700 (PDT)
+        Tue, 2 Apr 2019 23:07:18 -0400
+Received: by mail-qk1-f195.google.com with SMTP id o129so9269519qke.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:07:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2ancDZQ4xixL2Du0VM8ghYyMl2kD4SmkUdQ4EQ8sBZI=;
-        b=kGPOKmfA3nAi1al0eD0+aEb/wR7UTXtFaTA61s0L/mWZ43rJVaTkBqCEwRVXpLTVYM
-         VHkD52qGVRdZXZ/F0kXq0f+zWqsmuoExmqM+v7Ezh1HQbxMuf31j+ApIyga1h9WZMrOt
-         hYSStVsAzehx7kWXjnYhultVVFAfV3M/ko14kPJ8hMTRG3uWLI42DgT3C2EQcDK1UNwk
-         bmF1HF7RWRpGWsjiGb1anLPZkerKCuwb3amM/76jCDYiu6AWryhWi+De0naIhthXOHFD
-         3rxBCGsH3a5g43a1JoQbiDRcyHkTsU1HOyWSguf/W+bGPvsWhsWwGU06rwwBNxqbzBEZ
-         Xy6Q==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=ymadMwZvEEr5LBPD1He8IUIyOikvCUz7L1ddXnMtYUQ=;
+        b=X8boMO/kAIG9TLBhy5S+24HZ6b8sVbaoIUfRjrmm3HmigsKl3jsu1f9ZkY9yyk3Wgt
+         E7j4RSdQ2fyFPXXNkO7JXQtgLLOurg90eZZSTZcxlit7dc5QDgSnB3dTcfr9LDPJm3GM
+         tGPOiAzjM5cNow7O2+pQmyFP6z8vCYguLFPmce8c6EOD7iWZbjqGJT6M/B3KjUs1guCp
+         Wgv6M5KwZmYEm9VqsGgpG1J3P6YjOtOQ68hoP8wAUUza7F/QjGa/OQ37HsuJWTEd/lYS
+         wm4S8ruzF2toNHGC3UWjVFwqupPUQtsjuL1yY/9wvr7xnXuWcK0L+29guib0OcXjAVi1
+         87gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2ancDZQ4xixL2Du0VM8ghYyMl2kD4SmkUdQ4EQ8sBZI=;
-        b=K2WHROb1srOo+0O1E97OWcvQiCyKGe9OK1Rq9r1WvZv0fJfVjYhk43xhbHQ/aG4eR+
-         BVv8VfU+IoN5NSx/d5aleSMHa5GrRBuRV3YjmCHvXLc4hPe1quGlSR0ginNSRlEV6yzN
-         79SNLF0y0/G3KJX+VC9PLAQunOxa8DGH4xE6SwzhO+o3W7kSpJkhROxbcNHou6MVLMng
-         2Sy4pLklRicebJe05PFG/K/8R+CIarWqyWrgsfGKkP2zxg0ezXZcnhZkHdfsri5deWCQ
-         hYAtQMYW2VqSDgHcEuBYKKYJHiIYWRwwYl0XTCyOczXg+ROjCqmhhnbLwjfaXpdKdGE0
-         Sj2A==
-X-Gm-Message-State: APjAAAVtq9aaCSOiriUMasRx2yi9P3QcbHNwZTjCx91tfWtHID2fmJ2z
-        nNTUciSHn+lKzIK4EgY94QOONg==
-X-Google-Smtp-Source: APXvYqx70dd7TTJX6o1znFNPQdCD5tqI7b3YVMr+Mo0A/SzongecYOnCGBBs1FilschRPquiWiqJWQ==
-X-Received: by 2002:a2e:8ece:: with SMTP id e14mr26492025ljl.66.1554260712515;
-        Tue, 02 Apr 2019 20:05:12 -0700 (PDT)
-Received: from localhost (c-573670d5.07-21-73746f28.bbcust.telenor.se. [213.112.54.87])
-        by smtp.gmail.com with ESMTPSA id d1sm2701968lfa.15.2019.04.02.20.05.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 20:05:11 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, matthias.bgg@gmail.com
-Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] ASoC: Mediatek: MT8183: TS3A227: fix build error
-Date:   Wed,  3 Apr 2019 05:05:01 +0200
-Message-Id: <20190403030501.25140-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=ymadMwZvEEr5LBPD1He8IUIyOikvCUz7L1ddXnMtYUQ=;
+        b=ccqawkpDkAnJwssfgXvpoePn+ykSjCRwBGhMUB+JFd/c9/S/DIVk38hqdwGWZwIabz
+         cYsgsMdWviLBa4B8wVCiuwL6jS5zvSMwOFRykXlG1UIxUpZq+/Xumqs/A6Dfl2qaK8V9
+         F++VBwPqXB3dKaR9PReyxM08joIBcxf4tHGRO+r/c6PwQtNIbX75tvq+lAA/NBkwfkFR
+         j/Hx1Z9kAQsoso7Sop7XNBstI9pYejQIjSOaXryLskirfns3NJ2O7Vg4p3x3/yvHqeUa
+         l4+mAfUgWg0i9Y+eiEvXclkOlvpnd++5mekefyZ0VBzhgsN1MJlLrWa8Egxs3NQVA6xp
+         A/eg==
+X-Gm-Message-State: APjAAAVsMschkAgLBaXWotW8qRnQrLUhdQyjrljPMDTUkescg101Hvod
+        663fNBVqIUM2LW718OWkAgk=
+X-Google-Smtp-Source: APXvYqzwZa5ZdnEa6twDRflTPqoH1sBw7D1JtyIk10BPZfuXDAU310JtszNDcDmVAF2+lzMM96Jisw==
+X-Received: by 2002:a37:ac12:: with SMTP id e18mr56532266qkm.195.1554260837738;
+        Tue, 02 Apr 2019 20:07:17 -0700 (PDT)
+Received: from localhost.localdomain ([201.82.74.151])
+        by smtp.gmail.com with ESMTPSA id i24sm8045007qtm.3.2019.04.02.20.07.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Apr 2019 20:07:16 -0700 (PDT)
+From:   Mario Balan <mario.balan@gmail.com>
+To:     eric@anholt.net, stefan.wahren@i2se.com,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Subject: [PATCH] staging: vchiq_arm: remove space after open '('
+Date:   Wed,  3 Apr 2019 00:07:13 -0300
+Message-Id: <20190403030713.19280-1-mario.balan@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building CONFIG_SND_SOC_MT8183_MT6358_TS3A227E_MAX98357A=m the
-following error pops up:
+Fix checkpatch error "ERROR: space prohibited after that open
+parenthesis '('" in vchiq_arm.c:563.
 
-../sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c: In function ‘mt8183_mt6358_ts3a227_max98357_dev_probe’:
-../sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c:325:13: error: ‘struct snd_soc_dai_link’ has no member named ‘platform’; did you mean ‘platforms’?
-   dai_link->platform = NULL;
-             ^~~~~~~~
-             platforms
-
-Rework to use 'dai_link->platforms' instead of 'dai_link->platform'.
-
-Fixes: 11c0269017b2 ("ASoC: Mediatek: MT8183: Add machine driver with TS3A227")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Mario Balan <mario.balan@gmail.com>
 ---
- sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c | 2 +-
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c b/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
-index 2da56232a9e1..a50c6af5c945 100644
---- a/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
-+++ b/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
-@@ -322,7 +322,7 @@ mt8183_mt6358_ts3a227_max98357_dev_probe(struct platform_device *pdev)
- 		 * the "platform" will not null when probe is trying
- 		 * again. It's not expected normally.
- 		 */
--		dai_link->platform = NULL;
-+		dai_link->platforms = NULL;
- 
- 		if (dai_link->platform_name)
- 			continue;
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+index 6dad624d0e49..a3eb99664a1c 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+@@ -560,7 +560,7 @@ add_completion(VCHIQ_INSTANCE_T instance, VCHIQ_REASON_T reason,
+ 		vchiq_log_trace(vchiq_arm_log_level,
+ 			"%s - completion queue full", __func__);
+ 		DEBUG_COUNT(COMPLETION_QUEUE_FULL_COUNT);
+-		if (wait_for_completion_killable( &instance->remove_event)) {
++		if (wait_for_completion_killable(&instance->remove_event)) {
+ 			vchiq_log_info(vchiq_arm_log_level,
+ 				"service_callback interrupted");
+ 			return VCHIQ_RETRY;
 -- 
-2.20.1
+2.11.0
 
