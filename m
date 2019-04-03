@@ -2,108 +2,189 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3529DC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4E8C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0259F2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:21:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="pSuIzhiE"
+	by mail.kernel.org (Postfix) with ESMTP id 256172075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbfDCOVC (ORCPT
+        id S1726535AbfDCOWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:21:02 -0400
-Received: from mail-eopbgr1300078.outbound.protection.outlook.com ([40.107.130.78]:16807
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726144AbfDCOVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:21:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KCY4n+634QN8idCFBL5iZU2uBgOMbKGR8cnYVsDTH5o=;
- b=pSuIzhiEn5+vI5n+qGRXGqHdJ8SkMPUdPpItjNEdT4zMJUscmzVONncOe3oOk61N7K0EoInkSabiz1tAbB80mXKtdlBlUF7MSfMZVT6gSffEPW0p6wKuJZlICO56nWx3Z2AIQlgBb+odqkPkYsVAprAFBhsNoGCtY5jv+mHJB/E=
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
- SG2PR02MB3417.apcprd02.prod.outlook.com (20.177.84.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.22; Wed, 3 Apr 2019 14:20:57 +0000
-Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
- ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
- 14:20:57 +0000
-From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-To:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: How to calculate instruction executed for function
-Thread-Topic: How to calculate instruction executed for function
-Thread-Index: AQHU6igi0LAQURcEFkafVLmNd6QLnw==
-Date:   Wed, 3 Apr 2019 14:20:56 +0000
-Message-ID: <SG2PR02MB3098EF270AE08CB19E96C5C4E8570@SG2PR02MB3098.apcprd02.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
-x-originating-ip: [14.98.130.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7eae1c02-83f5-4a98-0731-08d6b83f96c9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SG2PR02MB3417;
-x-ms-traffictypediagnostic: SG2PR02MB3417:
-x-microsoft-antispam-prvs: <SG2PR02MB3417D5DF95A689D10124AA3BE8570@SG2PR02MB3417.apcprd02.prod.outlook.com>
-x-forefront-prvs: 0996D1900D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39850400004)(396003)(346002)(376002)(136003)(199004)(189003)(74316002)(2906002)(97736004)(66066001)(6506007)(78486014)(55236004)(14444005)(68736007)(33656002)(102836004)(3846002)(6116002)(6436002)(71200400001)(5024004)(66574012)(478600001)(71190400001)(256004)(25786009)(105586002)(106356001)(9686003)(7696005)(53936002)(476003)(14454004)(486006)(86362001)(316002)(186003)(2501003)(99286004)(5660300002)(8676002)(55016002)(81166006)(7736002)(81156014)(110136005)(52536014)(305945005)(44832011)(8936002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB3417;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: einfochips.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Z4LmI8dq9T2xKqNft2Val+QuaCUq5qsIpPpr6gjF76UQyqS1Vc8+0yyW+te4OSD4Z2canVuR+kIaZ8Iq0WE79sqTduBaxUFOtbS8KoWlUCfqTtch4e+Vk76ytMjS4c9FhhJTgxntWwBxnsX5LHaK0eej2o9R540I2Wsi3LRfeh9Nfhxvet0nrm4n8PLi0LdzXWbVEpbX7xVJXpxBWNKDHGLxCITkESt55ZMB+PmoXHfsgoEm9j380l5gBVLKS/8QMJQcIq3TdOH4Ayk6L0tZ7WP3QKhJ06uCHHacg37hS5yoo2AGHCgD5ynVW7oi2egDcgucsHsw9XapfcoDuBe9X1KSWxVjlGl2ctgmUKibjsvPKEXcrFeZ1N1vch5jXX7hnw5sh5unK26mI140N7qJYQXyx3AR/igezMQwGZeExjo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Apr 2019 10:22:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47712 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726144AbfDCOWs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:22:48 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33EFBtV133797
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 10:22:47 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmwf53u7j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:22:46 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <walling@linux.ibm.com>;
+        Wed, 3 Apr 2019 15:22:46 +0100
+Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Apr 2019 15:22:42 +0100
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x33EMdHk60031212
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Apr 2019 14:22:39 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B11FB136051;
+        Wed,  3 Apr 2019 14:22:39 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DFD38136053;
+        Wed,  3 Apr 2019 14:22:38 +0000 (GMT)
+Received: from [9.56.58.47] (unknown [9.56.58.47])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Apr 2019 14:22:38 +0000 (GMT)
+Subject: Re: [PATCH v3 1/2] s390/setup: diag318: remove bit check and refactor
+ struct
+To:     Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     pbonzini@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
+References: <20190402174636.15175-1-walling@linux.ibm.com>
+ <20190402174636.15175-2-walling@linux.ibm.com>
+ <599addd3-a4f8-d4e7-5898-dc45f52cd7a6@redhat.com>
+ <20190403143333.2a3db681.cohuck@redhat.com>
+From:   Collin Walling <walling@linux.ibm.com>
+Date:   Wed, 3 Apr 2019 10:22:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: einfochips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7eae1c02-83f5-4a98-0731-08d6b83f96c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 14:20:56.9859
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB3417
+In-Reply-To: <20190403143333.2a3db681.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19040314-8235-0000-0000-00000E78E889
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010867; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01183759; UDB=6.00619764; IPR=6.00964510;
+ MB=3.00026276; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-03 14:22:44
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040314-8236-0000-0000-00004502BD8A
+Message-Id: <bce6e8cf-6f45-7549-8ada-ba4f77059487@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904030097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 4/3/19 8:33 AM, Cornelia Huck wrote:
+> On Wed, 3 Apr 2019 14:03:21 +0200
+> David Hildenbrand <david@redhat.com> wrote:
+> 
+>> On 02.04.19 19:46, Collin Walling wrote:
+>>> Execution of DIAGNOSE 0x318 is fenced by checking an SCLP bit
+>>> for the availability of hardware support for the instruction.
+>>>
+>>> In order to support this instruction for a KVM/QEMU guest, we
+>>> would need to provide modifications to the SCLP Read SCP Info
+>>> data, which will in turn reduce the maximum number of CPUs that
+>>> may be provided to the guest. This issue introduces compatability
+>>> and legacy concerns.
+>>>
+>>> Let's circumvent this issue by removing the bit check and blindly
+>>> executing the instruction. An exception table rule is in place to
+>>> catch the case where hardware does not support this instruction.
+>>>
+>>> While we're at it, let's condense the version code fields in the
+>>> diag318_info struct until we can determine how it will be used.
+>>>
+>>> This modifies commit 4ad78b8651aacf26b3ab6d1e784952eb70469c43
+>>>
+>>> Signed-off-by: Collin Walling <walling@linux.ibm.com>
+>>> ---
+>>>   arch/s390/include/asm/diag.h |  6 ++----
+>>>   arch/s390/kernel/setup.c     | 12 ++++++------
+>>>   2 files changed, 8 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/arch/s390/include/asm/diag.h b/arch/s390/include/asm/diag.h
+>>> index 19562be22b7e..215516284175 100644
+>>> --- a/arch/s390/include/asm/diag.h
+>>> +++ b/arch/s390/include/asm/diag.h
+>>> @@ -298,10 +298,8 @@ struct diag26c_mac_resp {
+>>>   union diag318_info {
+>>>   	unsigned long val;
+>>>   	struct {
+>>> -		unsigned int cpnc : 8;
+>>> -		unsigned int cpvc_linux : 24;
+>>> -		unsigned char cpvc_distro[3];
+>>> -		unsigned char zero;
+>>> +		unsigned long cpnc : 8;
+>>> +		unsigned long cpvc : 56;
+> 
+> That part looks reasonable (we don't have a proper convention yet, have
+> we?)
+> 
+>>>   	};
+>>>   };
+>>>   
+>>> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+>>> index 2c642af526ce..fe70201f8b5d 100644
+>>> --- a/arch/s390/kernel/setup.c
+>>> +++ b/arch/s390/kernel/setup.c
+>>> @@ -1011,15 +1011,15 @@ static void __init setup_control_program_code(void)
+>>>   {
+>>>   	union diag318_info diag318_info = {
+>>>   		.cpnc = CPNC_LINUX,
+>>> -		.cpvc_linux = 0,
+>>> -		.cpvc_distro = {0},
+>>> +		.cpvc = 0,
+>>>   	};
+>>>   
+>>> -	if (!sclp.has_diag318)
+>>> -		return;
+>>> -
+>>>   	diag_stat_inc(DIAG_STAT_X318);
+>>> -	asm volatile("diag %0,0,0x318\n" : : "d" (diag318_info.val));
+>>> +	asm volatile(
+>>> +		"	diag	%0,0,0x318\n"
+>>> +		"0:	nopr	%%r7\n"
+>>> +		EX_TABLE(0b,0b)
+>>> +		: : "d" (diag318_info.val));
+>>>   }
+>>>   
+>>>   /*
+>>>    
+>>
+>> That smells like a nasty hack to not expose new features in QEMU and
+>> deal with the issue of handling CPU limits. No, I don't like this.
+>>
+>> Fix QEMU, not the kernel.
+>>
+> 
+> I agree. The compat handling is a bit annoying, but I don't think we
+> can get around it.
+> 
 
-How to calculate instruction executed for function ?
+Thanks for the feedback, everyone.
 
-For eg.
+The consensus here is to keep the bit check, so I'll throw that back in.
+I'll squeeze in a "clean-up" patch for the diag318_info struct in v4.
 
-I need to calculate instruction executed for CMA_ALLOC function.
-How many instruction executed for cma_alloc ?
+I'll see that QEMU 4.1 has a max cpu limit of at most 247 (one less than
+the current max). If anyone has a suggestion on a better limit
+(Christian mentioned 240), please let me know. Otherwise we can discuss
+that value in the next version.
 
-Any help would be appreciated.
-
-Regards,
-Pankaj
-***************************************************************************=
-***************************************************************************=
-******* eInfochips Business Disclaimer: This e-mail message and all attachm=
-ents transmitted with it are intended solely for the use of the addressee a=
-nd may contain legally privileged and confidential information. If the read=
-er of this message is not the intended recipient, or an employee or agent r=
-esponsible for delivering this message to the intended recipient, you are h=
-ereby notified that any dissemination, distribution, copying, or other use =
-of this message or its attachments is strictly prohibited. If you have rece=
-ived this message in error, please notify the sender immediately by replyin=
-g to this message and please delete it from your computer. Any views expres=
-sed in this message are those of the individual sender unless otherwise sta=
-ted. Company has taken enough precautions to prevent the spread of viruses.=
- However the company accepts no liability for any damage caused by any viru=
-s transmitted by this email. **********************************************=
-***************************************************************************=
-************************************
