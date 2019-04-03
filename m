@@ -5,208 +5,275 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C108C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B66CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E89821473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F0021473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHLa4m5V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETU39y/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbfDCG0l (ORCPT
+        id S1728359AbfDCG0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 02:26:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44201 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfDCG0l (ORCPT
+        Wed, 3 Apr 2019 02:26:45 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46142 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbfDCG0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 02:26:41 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g12so7506626pll.11;
-        Tue, 02 Apr 2019 23:26:40 -0700 (PDT)
+        Wed, 3 Apr 2019 02:26:43 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y6so7502657pll.13;
+        Tue, 02 Apr 2019 23:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DFRXXvHkZNBSc8cdxXqUjOY/AaTObOXefR9xJkuW0V0=;
-        b=KHLa4m5VeTO4h55SzyPBnJV0PdTaLdANl+zJmkltmvIsVOUVcGUOjls7wNXdlnd9Zs
-         ZlvGl6VQokSuyRVGkoDEhTbYxqf68gyIOT8qXBNWdh+OaFeMOzvImjD1Pt+rNQzBeWTy
-         0LZfYkauEz5hI2ysCb3AOqQiVDG504Gwf3UswW9i5lIQs0WURqqXMmfn5u6WxeuVFKFo
-         nMj3P7Kf74VAlPHZN7+O6/l+jV/B1x8jU6yanZ+QCVdWl+p7L67ROwWDlOciIruNxUTI
-         44nrJ85EA+tGmUcse1go8sngrEzV2BAtymG3584v9hLtkVQSYRbTfNoIo4Bp7bYdR8Xz
-         vCbA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=KpyUlTtCPDXPCptqsdtE2VC4bY/0TzrOm6bvZ79h+y4=;
+        b=ETU39y/J8MMSySgKFMh5VrbxH4tiw0K27HW92Nj9FLuwuPK8tu6NbVwWplHwxxQf6W
+         0t7ngUxMTKLDHxz139pdxkHUyKGCr//rPgF7KcftnhZsdF6YnrzxLA/3V8iBPhqFk3vB
+         hdFI7UCIAEAy4w5EBJAMH8BBiDWlcls6yAwXtHKhm92mdQ63PwEhqbEoB9iDt4EPNgKg
+         TPGwizd9LTIKM0UyjZog64JLAobI+SKSE7DKKCGuoTdF/lQDYg31t8qaVudscbUttqo1
+         49ilgaE6Jq21m4DSdapz0QmNWEVjZjACGas45EA/KL9WYmBHGju4w17T15op9bi8mNvJ
+         1qiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DFRXXvHkZNBSc8cdxXqUjOY/AaTObOXefR9xJkuW0V0=;
-        b=tiNFv7k7+la61x0aJUKUdJbb4Cs9ZVFQFO6+SeCDtIDR5ceFXTyFAdS3bIn625qKTO
-         5te5q3YxzHYx4NEJPzWDva/KTPFQduVfTFaw5WLE8ShMUh6vYBWDIiK5qnnC/4KB7VnU
-         HATd4d2gjM+67zLHGJrSiHaWq9U3zkjXNew/GafMq7ehaoi3GnoLjmchpw9fIr8446O7
-         s8Tg9Yq4tn8RDyPNcVrCous0V79lE0jHswHgdYhntRnKxFUYy833iTcKOhPiqMY2HVrZ
-         LEq9wpwwsteG2RB1JYYEoFBikX8voPuKQ2ya37fyDaYa6J1izXSFLnF917wDKrXCHGHA
-         St0w==
-X-Gm-Message-State: APjAAAV5YTOowxYWiz05bB5rPRmgWikUUVQty/9UY9eZlw2nnVoHT9m9
-        T8L4xJWAIqkiracihiZ5lWE=
-X-Google-Smtp-Source: APXvYqz8hSwvwlWHPaBUQgUU3njEL5oODYDOeaCPaddxJ9Lu47rmSicBqTtZGNYh+h84XlZLTVfBEw==
-X-Received: by 2002:a17:902:e912:: with SMTP id cs18mr75409336plb.130.1554272800175;
-        Tue, 02 Apr 2019 23:26:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=KpyUlTtCPDXPCptqsdtE2VC4bY/0TzrOm6bvZ79h+y4=;
+        b=Gb0MIzVvsUCTBXW72C3CQ3y2KGrCsCLq0NmJbJfF8kGPsvEG9j0YUiIR/D68tOYgeD
+         puUbH83w/FABbDEb3wRCTr+IY1DXNQ39x2fyKjc4Nscjz/926sTRWarRkgwOO23GFPKH
+         O9QgOPE/GU9DqiUOGBxJ/RCmopyHiKD7YDH8otUe6UDAnCE0Jrjt5D3g+otg98uikm78
+         UWTKMxaYzsNqA4CaOqiANlw98o73M1A9dV6xhneCp7g+Ubo+W4QaOhpXa1x08wr2mG16
+         OTlBLc3JDBGNTcJgK3G8T/cQ4Bca4DNX86qlWMR5RY1GMwMdmzEB8bmffdu9bBwDHXjq
+         er0w==
+X-Gm-Message-State: APjAAAUWN/onfWeqTGVajODgh5MFdqL/f8FvEfgLOEgazTtvNna9oZLw
+        kK8iD9qtwRXetQYRATd42Lo=
+X-Google-Smtp-Source: APXvYqxydML28zvXij3H1chQ14BR3qZ2dBUhO6S+qQxSa+Oi6Ih0IDithvdwlyOk/Zv/8uGy1VCdmg==
+X-Received: by 2002:a17:902:8643:: with SMTP id y3mr7274587plt.187.1554272802366;
+        Tue, 02 Apr 2019 23:26:42 -0700 (PDT)
 Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id j28sm33842276pgb.46.2019.04.02.23.26.39
+        by smtp.gmail.com with ESMTPSA id g64sm35035003pfg.13.2019.04.02.23.26.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 23:26:39 -0700 (PDT)
+        Tue, 02 Apr 2019 23:26:41 -0700 (PDT)
 From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
 X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
 To:     peter_hong@fintek.com.tw, johan@kernel.org,
         gregkh@linuxfoundation.org
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH V5 1/3] USB: serial: f81232: clear overrun flag
-Date:   Wed,  3 Apr 2019 14:26:28 +0800
-Message-Id: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+Subject: [PATCH V5 2/3] USB: serial: f81232: add high baud rate support
+Date:   Wed,  3 Apr 2019 14:26:29 +0800
+Message-Id: <1554272790-26747-2-git-send-email-hpeter+linux_kernel@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
+References: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The F81232 will report data and LSR with bulk like following format:
-bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
+The F81232 had 4 clocksource 1.846/18.46/14.77/24MHz and baud rates
+can be up to 1.5Mbits with 24MHz.
 
-LSR will auto clear frame/parity/break error flag when reading by H/W,
-but overrrun will only cleared when reading LSR. So this patch add a
-worker to read LSR when overrun and flush the worker on close() &
-suspend().
+F81232 Clock registers (106h)
 
-Cc: Oliver Neukum <oneukum@suse.com>
+Bit1-0:     Clock source selector
+                    00: 1.846MHz.
+                    01: 18.46MHz.
+                    10: 24MHz.
+                    11: 14.77MHz.
+
 Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
 ---
 v5:
-	1: Source code base revert to v3 and remove all v4 changes.
-	2: Add serial->suspending check in f81232_process_read_urb()
-	   before schedule_work(&priv->lsr_work) to avoid race condition.
+	1: no change
 
 v4:
-	1: Add serial->suspending check in f81232_lsr_worker() to avoid
-	   re-trigger
-	2: Add port_priv-lsr_work_resched to re-trigger LSR worker
+	1: no change
 
 v3:
-	1: Add flush_work(&port_priv->lsr_work) in f81232_suspend().
+	1: change the baud_base in f81232_get_serial_info()
 
-v2:
-	1: Add flush_work(&port_priv->lsr_work) in f81232_close().
-
- drivers/usb/serial/f81232.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/usb/serial/f81232.c | 105 +++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 94 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-index 0dcdcb4b2cde..d8a0bb7a41f0 100644
+index d8a0bb7a41f0..32eff8fad56a 100644
 --- a/drivers/usb/serial/f81232.c
 +++ b/drivers/usb/serial/f81232.c
-@@ -41,12 +41,14 @@ MODULE_DEVICE_TABLE(usb, id_table);
- #define FIFO_CONTROL_REGISTER		(0x02 + SERIAL_BASE_ADDRESS)
- #define LINE_CONTROL_REGISTER		(0x03 + SERIAL_BASE_ADDRESS)
- #define MODEM_CONTROL_REGISTER		(0x04 + SERIAL_BASE_ADDRESS)
-+#define LINE_STATUS_REGISTER		(0x05 + SERIAL_BASE_ADDRESS)
+@@ -28,7 +28,8 @@ static const struct usb_device_id id_table[] = {
+ MODULE_DEVICE_TABLE(usb, id_table);
+ 
+ /* Maximum baudrate for F81232 */
+-#define F81232_MAX_BAUDRATE		115200
++#define F81232_MAX_BAUDRATE		1500000
++#define F81232_DEF_BAUDRATE		9600
+ 
+ /* USB Control EP parameter */
+ #define F81232_REGISTER_REQUEST		0xa0
+@@ -44,18 +45,42 @@ MODULE_DEVICE_TABLE(usb, id_table);
+ #define LINE_STATUS_REGISTER		(0x05 + SERIAL_BASE_ADDRESS)
  #define MODEM_STATUS_REGISTER		(0x06 + SERIAL_BASE_ADDRESS)
  
++/*
++ * F81232 Clock registers (106h)
++ *
++ * Bit1-0:	Clock source selector
++ *			00: 1.846MHz.
++ *			01: 18.46MHz.
++ *			10: 24MHz.
++ *			11: 14.77MHz.
++ */
++#define F81232_CLK_REGISTER		0x106
++#define F81232_CLK_1_846_MHZ		0
++#define F81232_CLK_18_46_MHZ		BIT(0)
++#define F81232_CLK_24_MHZ		BIT(1)
++#define F81232_CLK_14_77_MHZ		(BIT(1) | BIT(0))
++#define F81232_CLK_MASK			GENMASK(1, 0)
++
  struct f81232_private {
  	struct mutex lock;
  	u8 modem_control;
  	u8 modem_status;
-+	struct work_struct lsr_work;
++	speed_t baud_base;
+ 	struct work_struct lsr_work;
  	struct work_struct interrupt_work;
  	struct usb_serial_port *port;
  };
-@@ -282,6 +284,8 @@ static void f81232_read_int_callback(struct urb *urb)
- static void f81232_process_read_urb(struct urb *urb)
- {
- 	struct usb_serial_port *port = urb->context;
-+	struct usb_serial *serial = port->serial;
-+	struct f81232_private *priv = usb_get_serial_port_data(port);
- 	unsigned char *data = urb->transfer_buffer;
- 	char tty_flag;
- 	unsigned int i;
-@@ -315,6 +319,9 @@ static void f81232_process_read_urb(struct urb *urb)
  
- 			if (lsr & UART_LSR_OE) {
- 				port->icount.overrun++;
+-static int calc_baud_divisor(speed_t baudrate)
++static u32 const baudrate_table[] = { 115200, 921600, 1152000, 1500000 };
++static u8 const clock_table[] = { F81232_CLK_1_846_MHZ, F81232_CLK_14_77_MHZ,
++				F81232_CLK_18_46_MHZ, F81232_CLK_24_MHZ };
 +
-+				if (!serial->suspending)
-+					schedule_work(&priv->lsr_work);
- 				tty_insert_flip_char(&port->port, 0,
- 						TTY_OVERRUN);
- 			}
-@@ -556,9 +563,12 @@ static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
- 
- static void f81232_close(struct usb_serial_port *port)
++static int calc_baud_divisor(speed_t baudrate, speed_t clockrate)
  {
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
+-	return DIV_ROUND_CLOSEST(F81232_MAX_BAUDRATE, baudrate);
++	if (!baudrate)
++		return 0;
 +
- 	f81232_port_disable(port);
- 	usb_serial_generic_close(port);
- 	usb_kill_urb(port->interrupt_in_urb);
-+	flush_work(&port_priv->lsr_work);
++	return DIV_ROUND_CLOSEST(clockrate, baudrate);
  }
  
- static void f81232_dtr_rts(struct usb_serial_port *port, int on)
-@@ -603,6 +613,21 @@ static void  f81232_interrupt_work(struct work_struct *work)
- 	f81232_read_msr(priv->port);
+ static int f81232_get_register(struct usb_serial_port *port, u16 reg, u8 *val)
+@@ -129,6 +154,21 @@ static int f81232_set_register(struct usb_serial_port *port, u16 reg, u8 val)
+ 	return status;
  }
  
-+static void f81232_lsr_worker(struct work_struct *work)
++static int f81232_set_mask_register(struct usb_serial_port *port, u16 reg,
++					u8 mask, u8 val)
 +{
-+	struct f81232_private *priv;
-+	struct usb_serial_port *port;
 +	int status;
 +	u8 tmp;
 +
-+	priv = container_of(work, struct f81232_private, lsr_work);
-+	port = priv->port;
-+
-+	status = f81232_get_register(port, LINE_STATUS_REGISTER, &tmp);
++	status = f81232_get_register(port, reg, &tmp);
 +	if (status)
-+		dev_warn(&port->dev, "read LSR failed: %d\n", status);
++		return status;
++
++	tmp = (tmp & ~mask) | (val & mask);
++
++	return f81232_set_register(port, reg, tmp);
 +}
 +
- static int f81232_port_probe(struct usb_serial_port *port)
+ static void f81232_read_msr(struct usb_serial_port *port)
  {
- 	struct f81232_private *priv;
-@@ -613,6 +638,7 @@ static int f81232_port_probe(struct usb_serial_port *port)
+ 	int status;
+@@ -349,13 +389,53 @@ static void f81232_break_ctl(struct tty_struct *tty, int break_state)
+ 	 */
+ }
  
- 	mutex_init(&priv->lock);
- 	INIT_WORK(&priv->interrupt_work,  f81232_interrupt_work);
-+	INIT_WORK(&priv->lsr_work, f81232_lsr_worker);
+-static void f81232_set_baudrate(struct usb_serial_port *port, speed_t baudrate)
++static int f81232_find_clk(speed_t baudrate)
++{
++	int idx;
++
++	for (idx = 0; idx < ARRAY_SIZE(baudrate_table); ++idx) {
++		if (baudrate <= baudrate_table[idx] &&
++				baudrate_table[idx] % baudrate == 0)
++			return idx;
++	}
++
++	return -EINVAL;
++}
++
++static void f81232_set_baudrate(struct tty_struct *tty,
++				struct usb_serial_port *port, speed_t baudrate,
++				speed_t old_baudrate)
+ {
++	struct f81232_private *priv = usb_get_serial_port_data(port);
+ 	u8 lcr;
+ 	int divisor;
+ 	int status = 0;
++	int i;
++	int idx;
++	speed_t baud_list[] = {baudrate, old_baudrate, F81232_DEF_BAUDRATE};
++
++	for (i = 0; i < ARRAY_SIZE(baud_list); ++i) {
++		idx = f81232_find_clk(baud_list[i]);
++		if (idx >= 0) {
++			baudrate = baud_list[i];
++			tty_encode_baud_rate(tty, baudrate, baudrate);
++			break;
++		}
++	}
  
- 	usb_set_serial_port_data(port, priv);
+-	divisor = calc_baud_divisor(baudrate);
++	if (idx < 0)
++		return;
++
++	priv->baud_base = baudrate_table[idx];
++	divisor = calc_baud_divisor(baudrate, priv->baud_base);
++
++	status = f81232_set_mask_register(port, F81232_CLK_REGISTER,
++			F81232_CLK_MASK, clock_table[idx]);
++	if (status) {
++		dev_err(&port->dev, "%s failed to set CLK_REG: %d\n",
++			__func__, status);
++		return;
++	}
  
-@@ -632,6 +658,16 @@ static int f81232_port_remove(struct usb_serial_port *port)
+ 	status = f81232_get_register(port, LINE_CONTROL_REGISTER,
+ 			 &lcr); /* get LCR */
+@@ -445,6 +525,7 @@ static void f81232_set_termios(struct tty_struct *tty,
+ 	u8 new_lcr = 0;
+ 	int status = 0;
+ 	speed_t baudrate;
++	speed_t old_baud;
+ 
+ 	/* Don't change anything if nothing has changed */
+ 	if (old_termios && !tty_termios_hw_change(&tty->termios, old_termios))
+@@ -457,11 +538,12 @@ static void f81232_set_termios(struct tty_struct *tty,
+ 
+ 	baudrate = tty_get_baud_rate(tty);
+ 	if (baudrate > 0) {
+-		if (baudrate > F81232_MAX_BAUDRATE) {
+-			baudrate = F81232_MAX_BAUDRATE;
+-			tty_encode_baud_rate(tty, baudrate, baudrate);
+-		}
+-		f81232_set_baudrate(port, baudrate);
++		if (old_termios)
++			old_baud = tty_termios_baud_rate(old_termios);
++		else
++			old_baud = F81232_DEF_BAUDRATE;
++
++		f81232_set_baudrate(tty, port, baudrate, old_baud);
+ 	}
+ 
+ 	if (C_PARENB(tty)) {
+@@ -597,11 +679,12 @@ static int f81232_get_serial_info(struct tty_struct *tty,
+ 		struct serial_struct *ss)
+ {
+ 	struct usb_serial_port *port = tty->driver_data;
++	struct f81232_private *priv = usb_get_serial_port_data(port);
+ 
+ 	ss->type = PORT_16550A;
+ 	ss->line = port->minor;
+ 	ss->port = port->port_number;
+-	ss->baud_base = F81232_MAX_BAUDRATE;
++	ss->baud_base = priv->baud_base;
  	return 0;
  }
  
-+static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
-+{
-+	struct f81232_private *port_priv;
-+
-+	port_priv = usb_get_serial_port_data(serial->port[0]);
-+	flush_work(&port_priv->lsr_work);
-+
-+	return 0;
-+}
-+
- static struct usb_serial_driver f81232_device = {
- 	.driver = {
- 		.owner =	THIS_MODULE,
-@@ -655,6 +691,7 @@ static struct usb_serial_driver f81232_device = {
- 	.read_int_callback =	f81232_read_int_callback,
- 	.port_probe =		f81232_port_probe,
- 	.port_remove =		f81232_port_remove,
-+	.suspend =		f81232_suspend,
- };
- 
- static struct usb_serial_driver * const serial_drivers[] = {
 -- 
 2.7.4
 
