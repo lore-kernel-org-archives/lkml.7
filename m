@@ -2,138 +2,357 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBA7C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA64C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A0420830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16B620830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="b6lyq6M6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfDCOxX (ORCPT
+        id S1726614AbfDCOxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:53:23 -0400
-Received: from smtp.asem.it ([151.1.184.197]:61517 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfDCOxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:53:19 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003789494.MSG 
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 16:53:09 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 3
- Apr 2019 16:53:08 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
- Transport; Wed, 3 Apr 2019 16:53:07 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Date:   Wed, 3 Apr 2019 16:52:45 +0200
-Message-ID: <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+        Wed, 3 Apr 2019 10:53:41 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:40208 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfDCOxl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:53:41 -0400
+Received: by mail-it1-f193.google.com with SMTP id k64so11677493itb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 07:53:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8+/RVufi/Cyud6W//tHe0TC6IZaSHBeEPFHV25pw8LQ=;
+        b=b6lyq6M6RcSROOZ2JFcaJsfylG+1IJQCJ8HWB3jHL9xYAOhEpLT8ph83CG7c4CEh/O
+         0EnsM3ivCftLPEHkpmbKzACTvghkzO5E+y6MGtvdQyYPta7PHoLveX7dOK8WCgNf0G/Y
+         vel+L1u2+fpd63nO4xSubZCA4kWjgNfOR8si8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8+/RVufi/Cyud6W//tHe0TC6IZaSHBeEPFHV25pw8LQ=;
+        b=ANIlTyNaTNXqICDRUWoVqo2sud3OOHk8J/7zTN9QMH2ZPiiLF9Sw5/PhfmTfTEYeE/
+         bb9JuIDIvlquqFf04oviuA7wZKMHcvdOIWp55WfBnut2j0VpjsjYq5kr75DulM+aQRk9
+         mD4daVAStpvHHUwQEUkxy52Jjg8mtZ6FBj1SA+T9Lmpd8oFaW0VvYMt7UE+wPT1xxBGx
+         pXXIoWzXBAmJiMOTp9zuzpxGiGePxdopQCdzfgpGkvcc722YFrwUYfxM9b0c+kLdm+z7
+         8r4qfCAOKLYMkzXJsK5Dwo7reV2rHr2pjfoVTvEnZHuIgEcUu09PxixKzWkZQ6zXr1ch
+         NmNw==
+X-Gm-Message-State: APjAAAVP64hW+H6dEJSsi0hmuoQvKEjoVXPZlZQ2KMrPSJs+atch4I6l
+        6uLDHEQQFy/4XIV1TJ7qF/Tsnqv6distIRbJw2dYBA==
+X-Google-Smtp-Source: APXvYqzhlDhqd7u5p7rb3lZ3z8KuWPosXY7qkgLpDJMDw3g8jQkXwD+T167lpq0xur21McErGi51lWRp7vel+urzALY=
+X-Received: by 2002:a24:480e:: with SMTP id p14mr591445ita.61.1554303219967;
+ Wed, 03 Apr 2019 07:53:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B0210.5CA4C8D4.0055,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+References: <20190319215401.6562-1-sonal.santan@xilinx.com>
+ <20190325202810.GG2665@phenom.ffwll.local> <BYAPR02MB51608FDF39B39898FAAEBFEEBB5F0@BYAPR02MB5160.namprd02.prod.outlook.com>
+ <CAKMK7uHh5KNaTO+a4ZA+vPQcPKUBwODsx+pPCWNp3sxe9TFP0Q@mail.gmail.com>
+ <BYAPR02MB51603A1AD72F704112B55B90BB580@BYAPR02MB5160.namprd02.prod.outlook.com>
+ <20190327141137.GK2665@phenom.ffwll.local> <BYAPR02MB5160162639C2EAC6B19901B7BB590@BYAPR02MB5160.namprd02.prod.outlook.com>
+ <CAPM=9tyLNOXCaKGQkCCmo4tt=Dny0j984-=q8utjwv-aX-Y6BQ@mail.gmail.com>
+ <871s2pw4ld.fsf@fisel.enstb.org> <20190403131449.GB2665@phenom.ffwll.local> <20190403141701.GA5752@archbook>
+In-Reply-To: <20190403141701.GA5752@archbook>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 3 Apr 2019 16:53:28 +0200
+Message-ID: <CAKMK7uEVCFgoFFGbP19bLLoQimftAkAZpJHbsqjTwhRjcJCx6w@mail.gmail.com>
+Subject: Re: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     Ronan KERYELL <ronan@keryell.fr>, Dave Airlie <airlied@gmail.com>,
+        Sonal Santan <sonals@xilinx.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Cyril Chemparathy <cyrilc@xilinx.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lizhi Hou <lizhih@xilinx.com>,
+        Michal Simek <michals@xilinx.com>,
+        "airlied@redhat.com" <airlied@redhat.com>,
+        linux-fpga@vger.kernel.org, Ralph Wittig <wittig@xilinx.com>,
+        Ronan Keryell <rkeryell@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pcf2127 has an automatic battery-low detection function.
+On Wed, Apr 3, 2019 at 4:17 PM Moritz Fischer <mdf@kernel.org> wrote:
+>
+> Hi Daniel,
+>
+> On Wed, Apr 03, 2019 at 03:14:49PM +0200, Daniel Vetter wrote:
+> > On Fri, Mar 29, 2019 at 06:09:18PM -0700, Ronan KERYELL wrote:
+> > > I am adding linux-fpga@vger.kernel.org, since this is why I missed this
+> > > thread in the first place...
+> > >
+> > > >>>>> On Fri, 29 Mar 2019 14:56:17 +1000, Dave Airlie <airlied@gmail.com> said:
+> > >
+> > > Hi Dave!
+> > >
+> > >     Dave> On Thu, 28 Mar 2019 at 10:14, Sonal Santan <sonals@xilinx.com> wrote:
+> > >
+> > >     >>> From: Daniel Vetter [mailto:daniel.vetter@ffwll.ch]
+> > >
+> > > [...]
+> > >
+> > >     >>> Note: There's no expectation for the fully optimizing compiler,
+> > >     >>> and we're totally ok if there's an optimizing proprietary
+> > >     >>> compiler and a basic open one (amd, and bunch of other
+> > >     >>> companies all have such dual stacks running on top of drm
+> > >     >>> kernel drivers). But a basic compiler that can convert basic
+> > >     >>> kernels into machine code is expected.
+> > >
+> > >     >> Although the compiler is not open source the compilation flow
+> > >     >> lets users examine output from various stages. For example if you
+> > >     >> write your kernel in OpenCL/C/C++ you can view the RTL
+> > >     >> (Verilog/VHDL) output produced by first stage of compilation.
+> > >     >> Note that the compiler is really generating a custom circuit
+> > >     >> given a high level input which in the last phase gets synthesized
+> > >     >> into bitstream. Expert hardware designers can handcraft a circuit
+> > >     >> in RTL and feed it to the compiler. Our FPGA tools let you view
+> > >     >> the generated hardware design, the register map, etc. You can get
+> > >     >> more information about a compiled design by running XRT tool like
+> > >     >> xclbinutil on the generated file.
+> > >
+> > >     >> In essence compiling for FPGAs is quite different than compiling
+> > >     >> for GPU/CPU/DSP.  Interestingly FPGA compilers can run anywhere
+> > >     >> from 30 mins to a few hours to compile a testcase.
+> > >
+> > >     Dave> So is there any open source userspace generator for what this
+> > >     Dave> interface provides? Is the bitstream format that gets fed into
+> > >     Dave> the FPGA proprietary and is it signed?
+> > >
+> > > Short answer:
+> > >
+> > > - a bitstream is an opaque content similar to various firmware handled
+> > >   by Linux, EFI capsules, x86 microcode, WiFi modems, etc.
+> > >
+> > > - there is no open-source generator for what the interface consume;
+> > >
+> > > - I do not know if it is signed;
+> > >
+> > > - it is probably similar to what Intel FPGA (not GPU) drivers provide
+> > >   already inside the Linux kernel and I guess there is no pure
+> > >   open-source way to generate their bit-stream either.
+> >
+> > Yeah, drivers/gpu folks wouldn't ever have merged drivers/fpga, and I
+> > think there's pretty strong consensus over here that merging fpga stuff
+> > without having clear specs (in the form of an executable open source
+> > compiler/synthesizer/whatever) was a mistake.
+>
+> I don't totally understand this statement. You don't go out and ask
+> people to open source their EDA tools that are used to create the ASICs
+> on any piece of HW (NIC, GPU, USB controller,...) out there.
+>
+> FPGAs are no different.
+>
+> I think you need to distinguish between the general FPGA as a means to
+> implement a HW solution and *FPGA based devices* that implement flows such
+> as OpenCL etc. For the latter I'm more inclined to buy the equivalence
+> to GPUs argument.
 
-In case of battery-low event, an interrupt generation through
-the pin INTn (active low) can be enabled, setting the flag BLIE
-in the register Control_3.
+Yeah maybe there's a misunderstanding, my comments where in the
+context of the submitted xilinx driver, and similar drivers that mean
+to expose fpgas to userspace for doing stuff. If all you use your FGPA
+for is to load a bitstream as a firmware blob, to then instantiate a
+device which doesn't really change anymore, then then bistream is just
+like firmware indeed. But we're talking about kernel/userspace api,
+where (possible multiple) unpriviledged clients can do whatever they
+feel like, and where we have pretty hard requirements about not
+breaking userspace. To be able to fully review and more or less
+indefinitely support such driver stacks, we need to understand what
+they're doing and what's possible. It's the "unpriviledge userspace
+submits touring complete (ok sometimes not quite touring complete, but
+really powerful i/o is usually on the menu) blobs to be run on
+questionable hardware by the kernel" which is the part that
+distinguishes a firmware blob from the compute kernels we're talking
+about here. It's not gpu vs fpga vs something else. From a kernel
+driver pov those are all the same: You take a
+shader/bitstream/whatever blob + a bit of state/configuration from
+userspace, and need to make sure there's no DOS or other exploit in
+there.
 
-This function is activated by the "battery-low-hw-alarm" DT property.
+And we're not going to take "there's no problem here" on blind faith,
+because we know how well designed&validated hw is. This isn't new with
+smeltdown, because gpus have been very fragile/broken/insecure pieces
+since forever (it's slowly getting better though, and we rely ever
+less on sw to guarantee isolation).
 
-Example of use for an NXP i.MX7D board:
+Wrt drivers/fpga: My understanding is that's very much meant to allow
+unpriviledge userspace to use them, at least they wouldn't need an
+ioctl interface otherwise.
+-Daniel
 
-&i2c3 {
-	clock-frequency = <100000>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_i2c3>;
-	status = "okay";
+> > We just had a similar huge discussions around the recently merged
+> > habanalabs driver in drivers/misc, for neural network accel. There was a
+> > proposed drivers/accel for these. gpu folks objected, Greg and Olof were
+> > happy with merging.
+> >
+> > And the exact same arguments has come up tons of times for gpus too, with
+> > lots proposals to merge a kernel driver with just the kernel driver being
+> > open source, or just the state tracker/runtime, but most definitely not
+> > anything looking like the compiler. Because $reasons.
+> >
+> > Conclusion was that drivers/gpu people will continue to reject these,
+> > everyone else will continue to take whatever, but just don't complain to
+> > us if it all comes crashing down :-)
+> >
+> > > Long answer:
+> > >
+> > > - processors, GPU and other digital circuits are designed from a lot of
+> > >   elementary transistors, wires, capacitors, resistors... using some
+> > >   very complex (and expensive) tools from some EDA companies but at the
+> > >   end, after months of work, they come often with a "simple" public
+> > >   interface, the... instruction set! So it is rather "easy" at the end
+> > >   to generate some instructions with a compiler such as LLVM from a
+> > >   description of this ISA or some reverse engineering. Note that even if
+> > >   the ISA is public, it is very difficult to make another efficient
+> > >   processor from scratch just from this ISA, so there is often no
+> > >   concern about making this ISA public to develop the ecosystem ;
+> > >
+> > > - FPGA are field-programmable gate arrays, made also from a lot of
+> > >   elementary transistors, wires, capacitors, resistors... but organized
+> > >   in billions of very low-level elementary gates, memory elements, DSP
+> > >   blocks, I/O blocks, clock generators, specific
+> > >   accelerators... directly exposed to the user and that can be
+> > >   programmed according to a configuration memory (the bitstream) that
+> > >   details how to connect each part, routing element, configuring each
+> > >   elemental piece of hardware.  So instead of just writing instructions
+> > >   like on a CPU or a GPU, you need to configure each bit of the
+> > >   architecture in such a way it does something interesting for
+> > >   you. Concretely, you write some programs in RTL languages (Verilog,
+> > >   VHDL) or higher-level (C/C++, OpenCL, SYCL...)  and you use some very
+> > >   complex (and expensive) tools from some EDA companies to generate the
+> > >   bitstream implementing an equivalent circuit with the same
+> > >   semantics. Since the architecture is so low level, there is a direct
+> > >   mapping between the configuration memory (bitstream) and the hardware
+> > >   architecture itself, so if it is public then it is easy to duplicate
+> > >   the FPGA itself and to start a new FPGA company. That is unfortunately
+> > >   something the existing FPGA companies do not want... ;-)
+> >
+> > i.e. you have a use case where you absolutely need an offline compiler.
+> > Like with gpus (in some use cases), the only difference is that for gpus
+> > the latency requirement that's too high is measured in milliseconds, cause
+> > that would cause dropped frames, and worst case compiling takes seconds
+> > for some big shaders. With FPGAs it's just 1000x higher limits, same problem.
+>
+> As I said above, you'd do the same thing when you design any other piece
+> of hardware out there, except for with FPGAs you'd be able to change
+> stuff, whereas with an ASIC your netlist gets fixed at tape-out date.
+> >
+> > > To summarize:
+> > >
+> > > - on a CPU & GPU, the vendor used the expensive EDA tools once already
+> > >   for you and provide the simpler ISA interface;
+> > >
+> > > - on an FPGA, you have access to a pile of low-level hardware and it is
+> > >   up to you to use the lengthy process of building your own computing
+> > >   architecture using the heavy expensive very subtle EDA tools that will
+> > >   run for hours or days to generate some good-enough placement for your
+> > >   pleasure.
+> > >
+> > > There is some public documentation on-line:
+> > > https://www.xilinx.com/products/silicon-devices/fpga/virtex-ultrascale-plus.html#documentation
+> > >
+> > > To have an idea of the elementary architecture:
+> > > https://www.xilinx.com/support/documentation/user_guides/ug574-ultrascale-clb.pdf
+> > > https://www.xilinx.com/support/documentation/user_guides/ug579-ultrascale-dsp.pdf
+> > > https://www.xilinx.com/support/documentation/user_guides/ug573-ultrascale-memory-resources.pdf
+> > >
+> > > Even on the configuration and the file format, but without any detailed semantics:
+> > > https://www.xilinx.com/support/documentation/user_guides/ug570-ultrascale-configuration.pdf
+> > >
+> > >
+> > > The Xilinx compiler xocc taking for example some LLVM IR and generating
+> > > some bitstream is not open-source and will probably never be for the
+> > > reasons above... :-(
+> > >
+> > > Xilinx is open-sourcing all what can reasonably be open-sourced:
+> > >
+> > > - the user-level and system run-time, including the OpenCL runtime:
+> > >   https://github.com/Xilinx/XRT to handle the bitstreams generated by
+> > >   some close-source tools
+> > >
+> > > - the kernel device drivers which are already in
+> > >   https://github.com/Xilinx/XRT but we want to upstream into the Linux
+> > >   kernel to make life easier (this is the matter of this e-mail thread);
+> > >
+> > > - to generate some real code in the most (modern and) open-source way,
+> > >   there is an open-source framework to compile some SYCL C++ including
+> > >   some Xilinx FPGA-specific extensions down to SPIR LLVM IR using
+> > >   Clang/LLVM and to feed the close-source xocc tool with it
+> > >   https://github.com/triSYCL/triSYCL
+> > >
+> > >   You can see starting from
+> > >   https://github.com/triSYCL/triSYCL/blob/master/tests/Makefile#L322 how
+> > >   to start from C++ code, generate some SPIR LLVM IR and to feed xocc
+> > >   and build a fat binary that will use the XRT runtime.
+> > >
+> > >   Some documentation in
+> > >   https://github.com/triSYCL/triSYCL/blob/master/doc/architecture.rst
+> > >
+> > >   There are other more official ways to generate bitstream (they are
+> > >   called products instead of research projects like triSYCL :-) ).
+> > >
+> > >   We are also working on an other open-source SYCL compiler with Intel
+> > >   to have a better common implementation
+> > >   https://github.com/intel/llvm/wiki and to upstream this into Clang/LLVM.
+> >
+> > Yeah, there's been plenty of gpu stacks with "everything open sourced that
+> > can be open sourced", except the compiler, for gpus. We didn't take those
+> > drivers either.
+> >
+> > And I looked at the entire stack already to see what's there and what's
+> > missing.
+> >
+> > > So for Xilinx FPGA, you can see the LLVM IR as the equivalent of PTX for
+> > > nVidia. But xocc is close-source for some more fundamental reasons: it
+> > > would expose all the details of the FPGA. I guess this is exactly the
+> > > same for Xilinx FPGA.
+> >
+> > Yeah, neither did we merge a driver with just some IR as the "compiler",
+> > and most definitely not PTX (since that's just nv lock-in, spirv is the
+> > cross vendor solution that at least seems to have a fighting chance). We
+> > want the low level stuff (and if the high level compiler is the dumbest,
+> > least optimizing thing ever that can't run any real world workload yet,
+> > that's fine, it can be fixed). The low level stuff is what matters from an
+> > uapi perspective.
+> >
+> > > Note that probably most of the tool chains used to generate the
+> > > low-level firmware for the various CPU (microcode), GPU, etc. are
+> > > also close-source.
+> >
+> > Yup. None have been successfully used to merge stuff into drivers/gpu.
+> >
+> > Note that we're perfectly fine with closed source stacks running on top of
+> > drivers/gpu, with lots of additional secret sauce/value add/customer lock
+> > in/whatever compared to the basic open source stack. There's plenty of
+> > vendors doing that. But for the uapi review, and making sure we can at
+> > least keep the basic stack working, it needs to be the full open stack.
+> > End to end.
+> >
+> > I guess I need to actually type that article on my blog about why exactly
+> > we're so much insisting on this, seems to become a bit an FAQ.
+> >
+> > Cheers, Daniel
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+>
+> Cheers,
+> Moritz
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-	pcf2127@51 {
-		compatible = "nxp,pcf2127";
-		reg = <0x51>;
-		battery-low-hw-alarm;
-		status = "okay";
-	};
-};
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- drivers/rtc/rtc-pcf2127.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
 
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 7cb786d..e3805c8 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -228,6 +228,10 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
- 			const char *name, bool has_nvmem)
- {
- 	struct pcf2127 *pcf2127;
-+	struct device_node *np;
-+	struct i2c_client *client = to_i2c_client(dev);
-+	unsigned char buf[2];
-+	int err;
- 	int ret = 0;
- 
- 	dev_dbg(dev, "%s\n", __func__);
-@@ -245,6 +249,35 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
- 	if (IS_ERR(pcf2127->rtc))
- 		return PTR_ERR(pcf2127->rtc);
- 
-+	/*
-+	 * The pcf2127 has an automatic battery-low detection function.
-+	 *
-+	 * In case of battery-low event, an interrupt generation through
-+	 * the pin INTn (active low) can be enabled, setting the flag BLIE
-+	 * in the register Control_3.
-+	 */
-+	np = of_node_get(dev->of_node);
-+	if (!np) {
-+		dev_err(dev, "failed to find the RTC pcf2127 node\n");
-+		return -ENOENT;
-+	}
-+	if (of_get_property(np, "battery-low-hw-alarm", NULL)) {
-+		dev_info(dev, "enable battery-low hw alarm on INTn pin\n");
-+
-+		/*
-+		 * Set BLIE bit in register Control_3 (override is possible
-+		 * because this register is fully zero after reset)
-+		 */
-+		buf[0] = PCF2127_REG_CTRL3;
-+		buf[1] = 0x01;
-+		/* write register's data */
-+		err = i2c_master_send(client, buf, 2);
-+		if (err != 2) {
-+			dev_err(dev, "%s: err=%d", __func__, err);
-+			return -EIO;
-+		}
-+	}
-+
- 	if (has_nvmem) {
- 		struct nvmem_config nvmem_cfg = {
- 			.priv = pcf2127,
 -- 
-2.7.4
-
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
