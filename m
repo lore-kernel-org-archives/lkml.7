@@ -2,90 +2,112 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D23C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418E5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64B32075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="wngj67Q/"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC4A2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfDCN6S (ORCPT
+        id S1726548AbfDCN6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:58:18 -0400
-Received: from pb-smtp20.pobox.com ([173.228.157.52]:54028 "EHLO
-        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDCN6R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:58:17 -0400
-Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id BE3085A606;
-        Wed,  3 Apr 2019 09:58:15 -0400 (EDT)
-        (envelope-from nicolas.pitre@linaro.org)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=3jyHG9U6T9W2bkF6HS56FEP+arw=; b=wngj67
-        Q/7oYsYvktcTP53qK0Ej/xH6tbVV+xZEWCpVr4dB7tygPJ0LKSMFYFwRj3OkHw55
-        bc9W+AFVBHMBkvdnRR0OUIyuS7kZ7ee8c81bB5RbpLIN8AGelXBqM+iyTYd31j0Z
-        0fhDuyc1pdN82SAhH8nzbi2KDF26T+QvojH5g=
-Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id B6CFF5A605;
-        Wed,  3 Apr 2019 09:58:15 -0400 (EDT)
-        (envelope-from nicolas.pitre@linaro.org)
-Received: from yoda.home (unknown [70.82.104.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id AC8CE5A602;
-        Wed,  3 Apr 2019 09:58:11 -0400 (EDT)
-        (envelope-from nicolas.pitre@linaro.org)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 8407F2DA017B;
-        Wed,  3 Apr 2019 09:58:09 -0400 (EDT)
-Date:   Wed, 3 Apr 2019 09:58:03 -0400 (EDT)
-From:   Nicolas Pitre <nicolas.pitre@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] update my email address
-In-Reply-To: <CAHk-=wiQq8UsV0cOTASUmsZyfm8E1BdfZFduxD0TZgOxXqXqqQ@mail.gmail.com>
-Message-ID: <nycvar.YSQ.7.76.1904030954490.20244@knanqh.ubzr>
-References: <nycvar.YSQ.7.76.1904021315560.20244@knanqh.ubzr> <CAHk-=wiQq8UsV0cOTASUmsZyfm8E1BdfZFduxD0TZgOxXqXqqQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 3 Apr 2019 09:58:34 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40916 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfDCN6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:58:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76FF6A78;
+        Wed,  3 Apr 2019 06:58:33 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 196953F557;
+        Wed,  3 Apr 2019 06:58:29 -0700 (PDT)
+Subject: Re: [PATCH 6/6] arm64/mm: Enable ZONE_DEVICE
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com
+Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
+        mark.rutland@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        logang@deltatee.com, david@redhat.com, cai@lca.pw,
+        dan.j.williams@intel.com, jglisse@redhat.com
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-7-git-send-email-anshuman.khandual@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <ea5567c7-caad-8a4e-7c6f-cec4b772a526@arm.com>
+Date:   Wed, 3 Apr 2019 14:58:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 84B5A88C-5618-11E9-BE81-D01F9763A999-78420484!pb-smtp20.pobox.com
+In-Reply-To: <1554265806-11501-7-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+[ +Dan, Jerome ]
 
-On Tue, 2 Apr 2019, Linus Torvalds wrote:
+On 03/04/2019 05:30, Anshuman Khandual wrote:
+> Arch implementation for functions which create or destroy vmemmap mapping
+> (vmemmap_populate, vmemmap_free) can comprehend and allocate from inside
+> device memory range through driver provided vmem_altmap structure which
+> fulfils all requirements to enable ZONE_DEVICE on the platform. Hence just
 
-> On Tue, Apr 2, 2019 at 7:18 AM Nicolas Pitre <nico@fluxnic.net> wrote:
-> >
-> > The @linaro version won't be valid much longer.
+ZONE_DEVICE is about more than just altmap support, no?
+
+> enable ZONE_DEVICE by subscribing to ARCH_HAS_ZONE_DEVICE. But this is only
+> applicable for ARM64_4K_PAGES (ARM64_SWAPPER_USES_SECTION_MAPS) only which
+> creates vmemmap section mappings and utilize vmem_altmap structure.
+
+What prevents it from working with other page sizes? One of the foremost 
+use-cases for our 52-bit VA/PA support is to enable mapping large 
+quantities of persistent memory, so we really do need this for 64K pages 
+too. FWIW, it appears not to be an issue for PowerPC.
+
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>   arch/arm64/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> Generally I like seeing these come in from the old address just to verify.
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index db3e625..b5d8cf5 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -31,6 +31,7 @@ config ARM64
+>   	select ARCH_HAS_SYSCALL_WRAPPER
+>   	select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
+>   	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+> +	select ARCH_HAS_ZONE_DEVICE if ARM64_4K_PAGES
+
+IIRC certain configurations (HMM?) don't even build if you just turn 
+this on alone (although of course things may have changed elsewhere in 
+the meantime) - crucially, though, from previous discussions[1] it seems 
+fundamentally unsafe, since I don't think we can guarantee that nobody 
+will touch the corners of ZONE_DEVICE that also require pte_devmap in 
+order not to go subtly wrong. I did get as far as cooking up some 
+patches to sort that out [2][3] which I never got round to posting for 
+their own sake, so please consider picking those up as part of this series.
+
+Robin.
+
+>   	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>   	select ARCH_INLINE_READ_LOCK if !PREEMPT
+>   	select ARCH_INLINE_READ_LOCK_BH if !PREEMPT
 > 
-> But at least the old address is cc'd..
 
-Fair enough. Here's a confirmation.
 
-Nicolas
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBAgAGBQJcpLvrAAoJEH9KYoIL9GO3NlwH/iSnLw3VgKBJBTCbiOmgZTMu
-+X5Pebwe9TlVJxqnFBMnszJT4GJTrg5oA4m1hAh8vxoQnwQ/HIYJs1ioAlGLl9wi
-KQ2AsMiokO5LXLz2L0YjD5/5YY5G5c6o8qP9cVt6e3ep6jOJej0QSY1rc0FYu2sf
-QOTal+HswoaEb8Nu/nir3aNaKJhBK7rf+t7KpvbfHXjH72C5VHe9ECCgsPOSgm3Z
-d/jalyarPk237xDQ0la/hiXunnen/3yQrZ12ILQs5g426CAhykK5L9gIPoSnFT90
-uIP1Wpe0pCy3v3UoF9etZmQD3uavLm5lEC0RzSESSaUAprV2pK/3uMebyQnrN3M=
-=xJL1
------END PGP SIGNATURE-----
+[1] 
+https://lore.kernel.org/linux-mm/CAA9_cmfA9GS+1M1aSyv1ty5jKY3iho3CERhnRAruWJW3PfmpgA@mail.gmail.com/#t
+[2] 
+http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=61816b833afdb56b49c2e58f5289ae18809e5d67
+[3] 
+http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a5a16560eb1becf9a1d4cc0d03d6b5e76da4f4e1
+(apologies to anyone if the linux-arm.org server is being flaky as usual 
+and requires a few tries to respond properly)
