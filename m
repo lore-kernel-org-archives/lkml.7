@@ -2,114 +2,98 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6033BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64B2C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D44C206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ThHYq2VJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8B475206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfDCQJQ (ORCPT
+        id S1727242AbfDCQJY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:09:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:60006 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDCQJQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:09:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33G4NAs096077;
-        Wed, 3 Apr 2019 16:06:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Qa48Suyz500z7A2yWyZLvBEvJHp5kd9ufgcGoK7MTZY=;
- b=ThHYq2VJOnrKxy/DbuCf19v7JxOwgc2BrWEa4Dj9DsthPi1CT3F1hNCHp+TuIOHnEqvd
- F0NpGaY3M1YKKaYed8wMK3LJfPPm6mPwDXEWwoEnHmRwiqTKIG7YVsahmBAucIuK7nQX
- B4CSwPzR5T4okTUZoEX+DkkqfeMAskNvkWWpTZfd/Ya5yCG7P2stfViIB48iaJDKG1+B
- Fv7HQoI+z6PpvfdQEjLFXmjfASHiKOGPQ396PbPSdC/Zy0j6yEJ1k6I3SdkiuRL6Bhu6
- DoianK/kCG92MSG6jD8gfD1Tm3chIi6j/ds0LUwl9oMiW5HLf9rTz6ckICA6swYHAx/f Fw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2rhyvta28k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Apr 2019 16:06:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33G5akN018598;
-        Wed, 3 Apr 2019 16:06:39 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2rm8f668wq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Apr 2019 16:06:38 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x33G6bXr007088;
-        Wed, 3 Apr 2019 16:06:37 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Apr 2019 09:06:37 -0700
-Date:   Wed, 3 Apr 2019 12:07:02 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Alan Tull <atull@kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] mm: change locked_vm's type from unsigned long to
- atomic64_t
-Message-ID: <20190403160702.uevv74wajpqtggo7@ca-dmjordan1.us.oracle.com>
-References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
- <20190402204158.27582-2-daniel.m.jordan@oracle.com>
- <20190402150424.5cf64e19deeafa58fc6c1a9f@linux-foundation.org>
- <20190402234357.tn3tik4r7k6nbrau@linux-r8p5>
+        Wed, 3 Apr 2019 12:09:24 -0400
+Received: from smtp.asem.it ([151.1.184.197]:55907 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbfDCQJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:09:21 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003789787.MSG 
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 18:09:15 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 3
+ Apr 2019 18:09:15 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1261.035; Wed, 3 Apr 2019 18:09:15 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Thread-Topic: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Thread-Index: AQHU6izzDrhx33Rd2E28nY3Qp112E6YqaEkAgAAhzmD//+S2gIAAI/HA///jGACAACKDsA==
+Date:   Wed, 3 Apr 2019 16:09:14 +0000
+Message-ID: <8367f68a023d468f8235810b0cf583bc@asem.it>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+ <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
+ <20190403150824.GO22216@piout.net> <452a4cf1410a41c8b6f767ac6258482e@asem.it>
+ <20190403153143.GQ22216@piout.net> <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
+ <20190403155654.GR22216@piout.net>
+In-Reply-To: <20190403155654.GR22216@piout.net>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402234357.tn3tik4r7k6nbrau@linux-r8p5>
-User-Agent: NeoMutt/20180323-268-5a959c
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904030109
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904030109
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B0201.5CA4DAAB.003C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 04:43:57PM -0700, Davidlohr Bueso wrote:
-> On Tue, 02 Apr 2019, Andrew Morton wrote:
-> 
-> > Also, we didn't remove any down_write(mmap_sem)s from core code so I'm
-> > thinking that the benefit of removing a few mmap_sem-takings from a few
-> > obscure drivers (sorry ;)) is pretty small.
-> 
-> afaik porting the remaining incorrect users of locked_vm to pinned_vm was
-> the next step before this one, which made converting locked_vm to atomic
-> hardly worth it. Daniel?
- 
-Right, as you know I tried those incorrect users first, but there were concerns
-about user-visible changes regarding RLIMIT_MEMLOCK and pinned_vm/locked_vm
-without the accounting problem between all three being solved.
+Hi,
 
-To my knowledge no one has a solution for that, so in the meantime I'm taking
-the incremental step of getting rid of mmap_sem for locked_vm users.  The
-locked_vm -> pinned_vm conversion can happen later.
+> On 03/04/2019 15:49:03+0000, Flavio Suligoi wrote:
+> > > Then, you should probably not enable BLIE because this will cause
+> issues
+> > > with the alarm functionnality.. It is certainly enough to use
+> > > RTC_VL_READ periodically.
+> >
+> > We use the nINT signaling solution because of this pin, in addition
+> > to be used by the CPU, can be also connected to an external connector,
+> > available for the final user.
+> > Anyway, even if the BLIE is set, the sw low voltage alarm works,
+> > with the message (displayed about every 12 minutes):
+> >
+> 
+> I agree the DT property makes sense when the nINT pin is not connected
+> to the CPU. But if it is, then you have an issue that nINT will be
+> pulled low until the user changes the battery, meaning that you will
+> not get any alarm interrupt anymore, possibly leading to a system that
+> is not waking up anymore.
+
+Ah, ok, thanks for the info. 
+I know this, but in our specific case, this is not a problem,
+since we don't use the nINT for other purposes, but only for
+a battery low indicator. On the contrary, in our case, it's better
+that the alarm signal remains low until the battery is changed.
+
+Anyway, I can specify this collateral effect in a specific file for the
+Pcf2127 in the DT bindings Documentation. What do you think?
+
+
+Flavio Suligoi
