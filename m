@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C192C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704A3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B9B20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F38C20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CjzAan6D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmkxdSO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfDCDs3 (ORCPT
+        id S1727053AbfDCDtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:48:29 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42185 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbfDCDs2 (ORCPT
+        Tue, 2 Apr 2019 23:49:52 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34388 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfDCDtw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:48:28 -0400
-Received: by mail-lf1-f66.google.com with SMTP id b7so10564456lfg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:48:27 -0700 (PDT)
+        Tue, 2 Apr 2019 23:49:52 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y18so10590591lfe.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:49:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=B0LO8i/P4ocbb21SDQpdrOuCyeO4aCMaVaU0YL0U9YA=;
-        b=CjzAan6DwDxTWf1n2O+o3/ZRxxlw1gzD0X+HcCbyvKj+N0F91i87u/vZ10217mDjgP
-         4KR0EMWqcKqCRVFkV1sBvrD3abgQGF0FGvYv/d7cXBDDwOGJ7n8ZdHEkbBFPBux5DiE+
-         edhynx5vAnDTd62IXd7TJbJuliuA2uiBDTC/WVWiLIXJhN9bC3NsDSxDAOjE/iL2u9Zp
-         LD1cKltYOvuPi3LeoMe/2N4FjXUWiTsb7MxPG/xsnCqwYdVFJn9q6Kte7fx6flHsrXW9
-         ySGgn2YZiJNYG8Szon57bIB0LxNjpQvsvd+FTCKPsnyELx4DDVCBUWb+S5IshX60yBI0
-         NWwg==
+        bh=TpU/xVxBv9WEG+3g7U9648HQVl2f7NlFys1Xmj7hepg=;
+        b=tmkxdSO+rb89A084WPto+VexCa+WwxrARfqz4RtKxjj79sPgiXdxYK3UIt7ksiLs7L
+         OPDsJPj1QHEqAl0EpmPJpPUMqZYy53N3FOFrUImGgY1P0+xNBEn3Rdtg6l1sT0AQJ4wE
+         GKKJZgEn0UdzS7EqsSHy4vO1141TQOVLot8LxKNRheQGAVahC1LXDFY7Lf7v7UksnUqs
+         1x4EoDzg3YfJcx5ELdIiZuIWIeSjmYZXK71vDIAueNe62K2+i8bTsPN9+GdWROkwoPS6
+         Ta96AOma2MRi0V5tQJlClerj8QRvH+QlLZ4Agt8108RIAZeROoti45TaZB8rmEQtoiBm
+         wqfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B0LO8i/P4ocbb21SDQpdrOuCyeO4aCMaVaU0YL0U9YA=;
-        b=hLkrMbYhqretHB+QU34Ar3B7dJ/EGtKuCYsylG/a/RhPotFt3u8DaOwjDimuoDMGFh
-         K4GTZbP9qHK8CJzUtiUlX9qd56GZ+9TtLFEm+EhP71b2Dedt6URLnkfWzvXDn9rqynek
-         Wclv2ZJdusqff+z8YoqYDhKRK/xS/pQaqEGoiaKw9oxK6ZqcMdDIsDGz4t0Q6sZ54B85
-         ey9IeRKlXdMptMoy/QrRZUtrYyZTD4l3vjic27dk3q1UoDRngTqqX7m922GpM27YI+Ji
-         by4pr0qFJ6n09zCGoI1bG4V/FQUh3tlnNL/jawoWx4ZkwIKuXr6iBJoh9UMufAUyv3mU
-         4Ajg==
-X-Gm-Message-State: APjAAAUvhuwqd79Uouk8C9gM2emQ4GajEl9gdAx438lnctSjQzxM407A
-        Sk4in9+l+TE7MhDGkiHDXC21HSBwTloeFDNeiIj0LA==
-X-Google-Smtp-Source: APXvYqyaqpOMpBJa5Npe6J2zf5/kQPqvfsPwjNgLRPm1+GDkG/FPbz/tJoF6AUXcc7pUHSnArRQ8N3jh413H0Ky4y8o=
-X-Received: by 2002:ac2:54b0:: with SMTP id w16mr4459585lfk.138.1554263306442;
- Tue, 02 Apr 2019 20:48:26 -0700 (PDT)
+        bh=TpU/xVxBv9WEG+3g7U9648HQVl2f7NlFys1Xmj7hepg=;
+        b=GwvkWCmPK6QL87pGH3Cc50IM/qaJV3PE2iPPfMSnTBBKIyfOL1q942uBmbYtf4C2JJ
+         Vxh8Tl2cQqrpzTgvkpeLaZN50dWpO/JwKIF+f36F5H5XW2DzjRhNy+4AeP3af3di196l
+         EdT992sH/PYZ/UM5ckLvWaOPL/E/EWyQbJQTcCStMzkrjN9ePz2h1+KsEXXJRHLOYDfD
+         lbs4IVjBKgdiLwEzn2kfNnLE8fL+6BIP0oFk1H8NYStiGX4rOwNi76KWvYP/nLo4yPfE
+         RjxzusfXxZ9ZOhJfIZNoBDf/41UVD57Dsn5lgcYJVoILuhR/HUW/TBmLlXCGiETu2962
+         Kklg==
+X-Gm-Message-State: APjAAAXQ4O6PZzMfcr+33G4affUu8hsch+HZrM10orMNZVJfJzvw8xfP
+        GxteJQRXqQE7HTRbM5p5ZSBPGPQ9u3rGml/FyA9Z+A==
+X-Google-Smtp-Source: APXvYqzyM/9XxtV6zaPsy/6WzV0bMFhvjVBpG+Pd/TUBfIpczrZGXBhbPCaXlWvCXW8fZYYC9NmEoT71O+e0veseDxI=
+X-Received: by 2002:ac2:4285:: with SMTP id m5mr11297261lfh.103.1554263390092;
+ Tue, 02 Apr 2019 20:49:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-35-git-send-email-info@metux.net>
-In-Reply-To: <1552330521-4276-35-git-send-email-info@metux.net>
+References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-36-git-send-email-info@metux.net>
+In-Reply-To: <1552330521-4276-36-git-send-email-info@metux.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Apr 2019 10:48:14 +0700
-Message-ID: <CACRpkdYxL1SXt7yDHzfo12JFudVrS=4ag9nPBRUtbvs3NNTa1Q@mail.gmail.com>
-Subject: Re: [PATCH 35/42] drivers: gpio: ts4800: use devm_platform_ioremap_resource()
+Date:   Wed, 3 Apr 2019 10:49:38 +0700
+Message-ID: <CACRpkdZx+Y5s0n6=AuTmmKhQZWsZs-sLTrfgnkqt4DtWrYZ1wg@mail.gmail.com>
+Subject: Re: [PATCH 36/42] drivers: gpio: uniphier: use devm_platform_ioremap_resource()
 To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -97,7 +97,7 @@ On Tue, Mar 12, 2019 at 1:57 AM Enrico Weigelt, metux IT consult
 >
 > Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-Patch applied.
+Patch applied with Masahiro's ACK.
 
 Yours,
 Linus Walleij
