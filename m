@@ -2,102 +2,108 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F01C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AB3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E61C20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD41B2147A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z8xhJlPv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xc6/+a7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfDCD5T (ORCPT
+        id S1726105AbfDCEBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:57:19 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46503 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfDCD5S (ORCPT
+        Wed, 3 Apr 2019 00:01:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37684 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfDCEBv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:57:18 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r25so10566725lfn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:57:17 -0700 (PDT)
+        Wed, 3 Apr 2019 00:01:51 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 8so7459413pfr.4;
+        Tue, 02 Apr 2019 21:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AbU+kmZSC+Y/tOkChrqM0buIPdAzFYZS8GmNBgZASBE=;
-        b=Z8xhJlPv0TtCxjb97A0wr3PD6CLzvcGjyT+3RAC9TGeAJqa1TWFRoOVtsPnlVAlHze
-         dg7umcmlEe2PXpjwG5pupxb31N1nPWAG967bBJJyQhAm09MquXAdv96Hzw+GDaslJnqB
-         yX9ceBdf4aaTSbSdIaKXQSmcPso6uLDgFcY3gsEMa6rXS5XXfKEFJTC7uL8IY606liqt
-         TJ+/SdkjH6E66u4CpdlDJNy1PRXqZSQPCdJkTOQfRc1F9FYvBP4Tf0X6RSKZq12C61nO
-         F7yXE9LFkOXNle8MntmrD/+ympcHataYbRrwhyTMcW4KWYW3oS+eXF6eT95togsSj4Fc
-         9IwQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lxLrLCbVFtIy/2ubbj8Qeap60NlW6HHL3ONFbuGto3Y=;
+        b=Xc6/+a7ewMlXoahd2w2kgGP7noBDg1B9iHlHEESf0VmW+YukMNx7AaElYP5em/g99G
+         /g5KqlKZ3ndcEhOQjuy19sSea7bwnDFEZDV7P7VEy2vUEbEHdqRKJbosLwosPyPKn9io
+         FiYeWfAuKdCpsdwwreQ/dtnLvMSCl5AMnQb0/qw71kvUBITWmFlo8Pu3qc3k9K8h4lFo
+         5i9Eg3URjXmgjE6FWr0MIjaTJCv5ORLVR0KfKPLjhRqYrfSJB6NiO4rOO+eckKamSiOd
+         KD5wF8Q120D6Frb6tIMFh810s0BoTqQEDJKnpRdkqkurHwaMWks9T6w8w8r7BJiSbaCq
+         otpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AbU+kmZSC+Y/tOkChrqM0buIPdAzFYZS8GmNBgZASBE=;
-        b=Wu3D79UzVWJMTZMj7FuS033nROUCLsJs5urET1BywzHEsY/PbME/VY4ZnGvBPHN/Aj
-         w3V6kMY35ohaq0FTHB9PU3UppyoSkMedht3EX3oBQFxtQS0SymFMrgDVBoADj1WAF4+G
-         6t3UQPHZdxRxc9nyczXYt7AvcdtbkUk1yK9eGWJUcbim9Hi+/hqwWLwdSCyXP70fyI5X
-         yzUQCkdUhwvdReiipNdPzjLtDuBK/20cB/oWyHU6ddz0bfCtBaaMorc//MNhbfKypkKF
-         ZXK50ezFxsgBwtm4w4UV/OVQNSDmd1Mal6m5Mm2Ws2EIxYaoqBLk4J06LK3q+AqzjE2k
-         tjAA==
-X-Gm-Message-State: APjAAAXjNCtFW8tYom/JCe0RdCIQkt54B6+Ia+AUY5hm8EgXmoVXEArO
-        8xkDxiPhsP8aTbb9MJvI1y8zaVkiPzkaykVkBXFdRA==
-X-Google-Smtp-Source: APXvYqxCtW6t1J0D2KR9/Dvk/b7vu0LCbFlnG2X7HgOHuumYsqjFLX/FhDm026tSB6cKJc5ogxxh3f4Dlow1w3RPJcU=
-X-Received: by 2002:ac2:4192:: with SMTP id z18mr9312256lfh.96.1554263836817;
- Tue, 02 Apr 2019 20:57:16 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lxLrLCbVFtIy/2ubbj8Qeap60NlW6HHL3ONFbuGto3Y=;
+        b=qtQBmvhQLPsQxrnLM8lIZygi9jUnZjy97DRaO3Q26BlMKIbKyUClsLGExcZBpr57W0
+         QvTaX3c4loRHMzUPnqpd93EWXKedJIDBAUrQZCmkbXZBad/6jP6P2D5EtxegLSLCVh2H
+         ji+rcZZOazUkZNxhy7+cZuam09Cv/dOSn2mX0Zvx2bBHOxLE+a47S7ManxU6Ik4a7XXz
+         mtIZH5j7CyGqfshKyMg8CCZJ1y8QS2nr8IC6J3Mfof8qVLALVLQipjW+9qK3NRqlx1NV
+         SGnXKSPL9wv3+ZCUCI/FPzqwaLhiFku6EnccqdxVgL0Imk9yhco9CK/akFa98M3X51wb
+         luOg==
+X-Gm-Message-State: APjAAAXx4MXIQ+sYrCjJ2Eu/TWfv1oEgKKxODIEUku6bg65RPA+k+3eA
+        Gy9dNSPbiaOyxhEpeIE7J7xlj9Aq
+X-Google-Smtp-Source: APXvYqwswxkqLTa43qq9uT8QDHLUEggiP/JlvjaeuISf1CqJBWxGQhJf9aQM2QUIYtia7DCSrN1KpQ==
+X-Received: by 2002:a63:d302:: with SMTP id b2mr9881105pgg.13.1554264110191;
+        Tue, 02 Apr 2019 21:01:50 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id k14sm16278064pfb.125.2019.04.02.21.01.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 21:01:48 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/12] SPI GPIO improvements
+Date:   Tue,  2 Apr 2019 21:01:21 -0700
+Message-Id: <20190403040133.1459-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-42-git-send-email-info@metux.net>
-In-Reply-To: <1552330521-4276-42-git-send-email-info@metux.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Apr 2019 10:57:05 +0700
-Message-ID: <CACRpkdZ2de7Z+yhwb_dYfn5ThmuCHtxhgYoOVJtc9mQU4PsSAg@mail.gmail.com>
-Subject: Re: [PATCH 42/42] drivers: gpio: use devm_platform_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 1:56 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+Everyone:
 
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.
->
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+This series contains a fix ("spi: Don't call spi_get_gpio_descs()
+before device name is set) and improvements for SPI GPIO and driver I
+made while looking at that code recently. Hopefully each patch is
+self-explanatory.
 
-Changed subject to gpio: zynq: and applied.
+Feedback is welcome!
 
-Yours,
-Linus Walleij
+Thanks,
+Andrey Smirnov
+
+Andrey Smirnov (12):
+  spi: gpio: Drop unused spi_to_pdata()
+  spi: gpio: Add local struct device pointer in spi_gpio_probe()
+  spi: gpio: Add local struct spi_bitbang pointer in spi_gpio_probe()
+  spi: gpio: Simplify SPI_MASTER_NO_TX check in spi_gpio_probe()
+  spi: gpio: Drop unused pdata copy in struct spi_gpio
+  spi: gpio: Don't request CS GPIO in DT use-case
+  spi: Don't call spi_get_gpio_descs() before device name is set
+  spi: gpio: Drop mflags argument from spi_gpio_request()
+  spi: gpio: Drop unused pdev field in struct spi_gpio
+  spi: gpio: Make sure spi_master_put() is called in every error path
+  spi: bitbang: Introduce spi_bitbang_init()
+  spi: gpio: Use devm_spi_register_master()
+
+ drivers/spi/spi-bitbang.c       |  66 ++++++----
+ drivers/spi/spi-gpio.c          | 226 ++++++++++++++------------------
+ drivers/spi/spi.c               |  37 +++---
+ include/linux/spi/spi_bitbang.h |   1 +
+ 4 files changed, 154 insertions(+), 176 deletions(-)
+
+-- 
+2.20.1
+
