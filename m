@@ -2,161 +2,129 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F55C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878B0C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044E920830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:08:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfuQdVW9"
+	by mail.kernel.org (Postfix) with ESMTP id 4E82420830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfDCMIR (ORCPT
+        id S1726384AbfDCMJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:08:17 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:35508 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfDCMIR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:08:17 -0400
-Received: by mail-wr1-f48.google.com with SMTP id w1so21025595wrp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 05:08:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=GguOis0TNjEhCnveF9SJU+/OKkeHIxndz0Sf1FaMQ5o=;
-        b=cfuQdVW94oYWdXo6ayWx7w7K9MVFwINBTtTxHiu2pbVYcyZha5Aw+DdFaS4Cr8XQkv
-         71p/D5Ym/boo+1zNIxYnQYaIM2lDo5CeHd1PS7zRhTPF65Td3WL0Z3QF0UnIFOlSbO0t
-         ZOr+/p1eLZQ63fduf6K8snmQU92ICZpX+5AwvV0yWKxD8h+BNjOl/ZqmDCXdVYlUbs4x
-         7junRXMJiM70G2PIfjNRgEGqVJv7SEN8IjxGwTJ6p6Se07DSBc/KB9c44GcCDrahNzMy
-         5EsJshrgvSihHeuA1e3onQG7DbIpJeBTZ+EDQd4Ni2dXrg9T7tSl5gnrTrFUaeX2fYIj
-         0p8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=GguOis0TNjEhCnveF9SJU+/OKkeHIxndz0Sf1FaMQ5o=;
-        b=mpFllcposgHhmGMEZ+6kWau+vs4N6yxelzo/rWCQNr74bewUwjxf5criWejYNLgYQg
-         vOgZPt+4dyKNBXNKeB+oyBW9ItxQmdt8/PL9bWVYLfTLvkjtAUVUAWBujFk8WSumB/EW
-         ACwklkLeu0ipliIFbKuH1TPg8auu35eVX6oK79gkHl2pN6acqyDYyGcSstF8LMbfFsmy
-         BxfkWmJDX7JvrEteZmHYYlW5kZ6+pkK0YYheLZ2Odbe59HDhFsR7VbR1FB0vVe/RvrLv
-         TbJKopbCIY/JkBCT1vkyXB+UTV45Wiz5O85sfuedVEcWA5YwHstZr9abiuPUaeMh0nrk
-         PAwQ==
-X-Gm-Message-State: APjAAAXE5PWn4gCy7Em72x4K1AeWnywAqF+TUnlqV8KW15vxvu42tldw
-        TO4Wg9/jUxnZZo/oYnAAArGYDaWo
-X-Google-Smtp-Source: APXvYqxvh8SIWsnDtfmU/rMwn1LEtlqBolldMlo+yENKdyGizTVbn8uySaZNU7hgAPHmQVvZKVpxhQ==
-X-Received: by 2002:adf:f7cc:: with SMTP id a12mr3172521wrq.87.1554293294037;
-        Wed, 03 Apr 2019 05:08:14 -0700 (PDT)
-Received: from [192.168.107.155] (x4d0b13a0.dyn.telefonica.de. [77.11.19.160])
-        by smtp.gmail.com with ESMTPSA id g19sm16116369wmh.17.2019.04.03.05.08.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 05:08:13 -0700 (PDT)
-From:   Oliver Henning <oliver.henning@gmail.com>
-Subject: Unchecked kmalloc() calls
-To:     linux-kernel@vger.kernel.org
-Message-ID: <9f3ba19b-70cb-7631-9426-7aabacc1fdb6@gmail.com>
-Date:   Wed, 3 Apr 2019 14:08:12 +0200
+        Wed, 3 Apr 2019 08:09:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54826 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbfDCMJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:09:18 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 903CF3082E6E;
+        Wed,  3 Apr 2019 12:09:17 +0000 (UTC)
+Received: from [10.36.117.225] (ovpn-117-225.ams2.redhat.com [10.36.117.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8727764032;
+        Wed,  3 Apr 2019 12:09:15 +0000 (UTC)
+Subject: Re: [PATCH v3 1/2] s390/setup: diag318: remove bit check and refactor
+ struct
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>, pbonzini@redhat.com,
+        cohuck@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        frankja@linux.ibm.com
+References: <20190402174636.15175-1-walling@linux.ibm.com>
+ <20190402174636.15175-2-walling@linux.ibm.com>
+ <92d69cf5-0510-cf22-9f72-ab3efe4ede9b@de.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <13072d30-0ecb-e655-8f34-71c640a519df@redhat.com>
+Date:   Wed, 3 Apr 2019 14:09:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <92d69cf5-0510-cf22-9f72-ab3efe4ede9b@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: de-DE
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 03 Apr 2019 12:09:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On 03.04.19 13:28, Christian Borntraeger wrote:
+> 
+> 
+> On 02.04.19 19:46, Collin Walling wrote:
+>> Execution of DIAGNOSE 0x318 is fenced by checking an SCLP bit
+>> for the availability of hardware support for the instruction.
+>>
+>> In order to support this instruction for a KVM/QEMU guest, we
+>> would need to provide modifications to the SCLP Read SCP Info
+>> data, which will in turn reduce the maximum number of CPUs that
+>> may be provided to the guest. This issue introduces compatability
+>> and legacy concerns.
+>>
+>> Let's circumvent this issue by removing the bit check and blindly
+>> executing the instruction. An exception table rule is in place to
+>> catch the case where hardware does not support this instruction.
+> 
+> 
+> No, please keep the check. We have to extend the read scp field anyway
+> for future extensions.
 
-I have written a Python script to scan the kernel for unchecked kmalloc() calls. It found the following instances. I checked them manually, too. I would like to fix them myself but I do not how to do a proper failure handling. So maybe someone else can have a look.
+Wasn't there already an SCLP-way of telling the guest that the read-scp
+info response is bigger than 4k? Somehow rings a bell ...
 
-Oliver
+-- 
 
+Thanks,
 
-drivers/net/wireless/rsi/rsi_91x_mac80211.c:199
-             channels = kmalloc(sizeof(rsi_2ghz_channels), GFP_KERNEL);
-             memcpy(channels,
-                    rsi_2ghz_channels,
-                    sizeof(rsi_2ghz_channels));
----
-drivers/net/wireless/rsi/rsi_91x_mac80211.c:208
-             channels = kmalloc(sizeof(rsi_5ghz_channels), GFP_KERNEL);
-             memcpy(channels,
-                    rsi_5ghz_channels,
-                    sizeof(rsi_5ghz_channels));
----
-arch/mips/pmcs-msp71xx/msp_prom.c:378
-          argv = kmalloc(len, GFP_KERNEL);
-          ptr = (char *) &argv[prom_argc + 1];    /* strings follow array */
-    
-          for (argc = 0; argc < prom_argc; argc++) {
-               argv[argc] = ptr;
-               strcpy(ptr, prom_argv[argc]);
-               ptr += strlen(prom_argv[argc]) + 1;
-          }
----
-arch/mips/pmcs-msp71xx/msp_prom.c:399
-          envp = kmalloc(len, GFP_KERNEL);
-          ptr = (char *) &envp[i+1];
-    
-          for (argc = 0; argc < i; argc++) {
-               envp[argc] = ptr;
-               strcpy(ptr, prom_envp[argc]);
-               ptr += strlen(prom_envp[argc]) + 1;
-          }
----
-arch/powerpc/platforms/pseries/dlpar.c:389
-          hp_errlog_copy = kmalloc(sizeof(struct pseries_hp_errorlog),
-                          GFP_KERNEL);
-          memcpy(hp_errlog_copy, hp_errlog, sizeof(struct pseries_hp_errorlog));
----
-drivers/media/pci/cx23885/cx23885-dvb.c:1477
-                    fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
-                    memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
----
-/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/misc/lkdtm/perms.c:135
-          u32 *kmalloc_area = kmalloc(EXEC_SIZE, GFP_KERNEL);
-          execute_location(kmalloc_area, CODE_WRITE);
-          kfree(kmalloc_area);
-     }
----
-/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c:113
-          new_compat = kmalloc(new_len, GFP_KERNEL);
-    
-          omapdss_prefix_strcpy(new_compat, new_len, prop->value, prop->length);
-    
-          omapdss_update_prop(node, new_compat, new_len);
-     }
----
-/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/staging/media/davinci_vpfe/dm365_ipipe.c:1267
-               params = kmalloc(sizeof(struct ipipe_module_params),
-                          GFP_KERNEL);
-               to = (void *)params + module_if->param_offset;
-               size = module_if->param_size;
-    
-               if (to && from && size) {
-                    if (copy_from_user(to, (void __user *)from, size)) {
-                         rval = -EFAULT;
-                         break;
-                    }
----
-/mnt/hgfs/Projekte/linux-master (1)/linux-master/drivers/staging/media/davinci_vpfe/dm365_ipipe.c:1309
-               params = kmalloc(sizeof(struct ipipe_module_params),
-                          GFP_KERNEL);
-               from = (void *)params + module_if->param_offset;
-               size = module_if->param_size;
-    
-               if (to && from && size) {
-                    rval = module_if->get(ipipe, from);
-                    if (rval)
-                         goto error;
-                    if (copy_to_user((void __user *)to, from, size)) {
----
-
+David / dhildenb
