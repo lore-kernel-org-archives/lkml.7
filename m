@@ -2,287 +2,176 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE821C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F83DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78375206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B102E206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:01:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ys0DR8XZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfDCP7k (ORCPT
+        id S1726528AbfDCQBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:59:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:43810 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfDCP7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:59:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72DBE80D;
-        Wed,  3 Apr 2019 08:59:39 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 707B63F68F;
-        Wed,  3 Apr 2019 08:59:37 -0700 (PDT)
-Subject: Re: [PATCH V4 3/3] hwmon: pwm-fan: Add RPM support via external
- interrupt
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Wed, 3 Apr 2019 12:01:12 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:45938 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDCQBM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:01:12 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33Fs8Jg091591;
+        Wed, 3 Apr 2019 15:58:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=m9/fVJl/h3Kd1KuK3z0lqXqKJeT7piCvZPAM9eU/c/8=;
+ b=ys0DR8XZC0YAZvbuOkLQlwFLkYZiTCmf0p3sfDetash2oLWhcI/DR3BxXKfHBR8Nm//3
+ tVFHQYx5jsLJT5Yyk+6QFKFYjUp6ogGxcSsGTFJ5pY19qW8pvvoWEpWXpEpx8Mq/vkgP
+ wpiG5deCHbow6vkO4Ytxbzyp9tWUSxi+n0wkHkUGwv7CXLYfsyzFZR90Bc40Se8dbDff
+ JqPcJ9GgzILz+SDLyYA4kxm8v6nt4e70O+4uIeaoBwmGEIwgzuLi2i8dATpEhIujJdni
+ A59HJPonxahfIIwDj4rfR7muFqgtraJ11X0zNM8dWl4yD6MOnLR9rZDE0PU2bfoqDJFI tw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2rhwyda5fe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 15:58:21 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33Fw9pX179888;
+        Wed, 3 Apr 2019 15:58:21 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2rm8f56372-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Apr 2019 15:58:20 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x33FwDYU029010;
+        Wed, 3 Apr 2019 15:58:13 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Apr 2019 08:58:13 -0700
+Date:   Wed, 3 Apr 2019 11:58:39 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Alan Tull <atull@kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Lameter <cl@linux.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>, Wu Hao <hao.wu@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1554214910-29925-1-git-send-email-stefan.wahren@i2se.com>
- <1554214910-29925-4-git-send-email-stefan.wahren@i2se.com>
- <20190402205538.GA15543@roeck-us.net>
- <31ef4637-fa95-3800-20cf-96be2a5ecae4@i2se.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <40c0bee8-3a24-66f8-615f-ec36ae7721ef@arm.com>
-Date:   Wed, 3 Apr 2019 16:59:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Subject: Re: [PATCH 1/6] mm: change locked_vm's type from unsigned long to
+ atomic64_t
+Message-ID: <20190403155839.m447czluxd74n5ad@ca-dmjordan1.us.oracle.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+ <20190402204158.27582-2-daniel.m.jordan@oracle.com>
+ <20190402150424.5cf64e19deeafa58fc6c1a9f@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <31ef4637-fa95-3800-20cf-96be2a5ecae4@i2se.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402150424.5cf64e19deeafa58fc6c1a9f@linux-foundation.org>
+User-Agent: NeoMutt/20180323-268-5a959c
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904030108
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904030108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 10:55, Stefan Wahren wrote:
-> Hi Guenter,
+On Tue, Apr 02, 2019 at 03:04:24PM -0700, Andrew Morton wrote:
+> On Tue,  2 Apr 2019 16:41:53 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+> >  static long kvmppc_account_memlimit(unsigned long stt_pages, bool inc)
+> >  {
+> >  	long ret = 0;
+> > +	s64 locked_vm;
+> >  
+> >  	if (!current || !current->mm)
+> >  		return ret; /* process exited */
+> >  
+> >  	down_write(&current->mm->mmap_sem);
+> >  
+> > +	locked_vm = atomic64_read(&current->mm->locked_vm);
+> >  	if (inc) {
+> >  		unsigned long locked, lock_limit;
+> >  
+> > -		locked = current->mm->locked_vm + stt_pages;
+> > +		locked = locked_vm + stt_pages;
+> >  		lock_limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+> >  		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
+> >  			ret = -ENOMEM;
+> >  		else
+> > -			current->mm->locked_vm += stt_pages;
+> > +			atomic64_add(stt_pages, &current->mm->locked_vm);
+> >  	} else {
+> > -		if (WARN_ON_ONCE(stt_pages > current->mm->locked_vm))
+> > -			stt_pages = current->mm->locked_vm;
+> > +		if (WARN_ON_ONCE(stt_pages > locked_vm))
+> > +			stt_pages = locked_vm;
+> >  
+> > -		current->mm->locked_vm -= stt_pages;
+> > +		atomic64_sub(stt_pages, &current->mm->locked_vm);
+> >  	}
 > 
-> Am 02.04.19 um 22:55 schrieb Guenter Roeck:
->> On Tue, Apr 02, 2019 at 04:21:50PM +0200, Stefan Wahren wrote:
->>> This adds RPM support to the pwm-fan driver in order to use with
->>> fancontrol/pwmconfig. This feature is intended for fans with a tachometer
->>> output signal, which generate a defined number of pulses per revolution.
->>>
->>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>> ---
->>>   drivers/hwmon/pwm-fan.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++--
->>>   1 file changed, 107 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
->>> index 167221c..3245a49 100644
->>> --- a/drivers/hwmon/pwm-fan.c
->>> +++ b/drivers/hwmon/pwm-fan.c
->>> @@ -18,6 +18,7 @@
->>>   
->>>   #include <linux/hwmon.h>
->>>   #include <linux/hwmon-sysfs.h>
->>> +#include <linux/interrupt.h>
->>>   #include <linux/module.h>
->>>   #include <linux/mutex.h>
->>>   #include <linux/of.h>
->>> @@ -26,6 +27,7 @@
->>>   #include <linux/regulator/consumer.h>
->>>   #include <linux/sysfs.h>
->>>   #include <linux/thermal.h>
->>> +#include <linux/timer.h>
->>>   
->>>   #define MAX_PWM 255
->>>   
->>> @@ -33,6 +35,14 @@ struct pwm_fan_ctx {
->>>   	struct mutex lock;
->>>   	struct pwm_device *pwm;
->>>   	struct regulator *reg_en;
->>> +
->>> +	int irq;
->>> +	atomic_t pulses;
->>> +	unsigned int rpm;
->>> +	u8 pulses_per_revolution;
->>> +	ktime_t sample_start;
->>> +	struct timer_list rpm_timer;
->>> +
->>>   	unsigned int pwm_value;
->>>   	unsigned int pwm_fan_state;
->>>   	unsigned int pwm_fan_max_state;
->>> @@ -40,6 +50,32 @@ struct pwm_fan_ctx {
->>>   	struct thermal_cooling_device *cdev;
->>>   };
->>>   
->>> +/* This handler assumes self resetting edge triggered interrupt. */
->>> +static irqreturn_t pulse_handler(int irq, void *dev_id)
->>> +{
->>> +	struct pwm_fan_ctx *ctx = dev_id;
->>> +
->>> +	atomic_inc(&ctx->pulses);
->>> +
->>> +	return IRQ_HANDLED;
->>> +}
->>> +
->>> +static void sample_timer(struct timer_list *t)
->>> +{
->>> +	struct pwm_fan_ctx *ctx = from_timer(ctx, t, rpm_timer);
->>> +	int pulses;
->>> +	u64 tmp;
->>> +
->>> +	pulses = atomic_read(&ctx->pulses);
->>> +	atomic_sub(pulses, &ctx->pulses);
->>> +	tmp = (u64)pulses * ktime_ms_delta(ktime_get(), ctx->sample_start) * 60;
->>> +	do_div(tmp, ctx->pulses_per_revolution * 1000);
->>> +	ctx->rpm = tmp;
->>> +
->>> +	ctx->sample_start = ktime_get();
->>> +	mod_timer(&ctx->rpm_timer, jiffies + HZ);
->>> +}
->>> +
->>>   static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
->>>   {
->>>   	unsigned long period;
->>> @@ -100,15 +136,49 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr,
->>>   	return sprintf(buf, "%u\n", ctx->pwm_value);
->>>   }
->>>   
->>> +static ssize_t rpm_show(struct device *dev,
->>> +			struct device_attribute *attr, char *buf)
->>> +{
->>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
->>> +
->>> +	return sprintf(buf, "%u\n", ctx->rpm);
->>> +}
->>>   
->>>   static SENSOR_DEVICE_ATTR_RW(pwm1, pwm, 0);
->>> +static SENSOR_DEVICE_ATTR_RO(fan1_input, rpm, 0);
->>>   
->>>   static struct attribute *pwm_fan_attrs[] = {
->>>   	&sensor_dev_attr_pwm1.dev_attr.attr,
->>> +	&sensor_dev_attr_fan1_input.dev_attr.attr,
->>>   	NULL,
->>>   };
->>>   
->>> -ATTRIBUTE_GROUPS(pwm_fan);
->>> +static umode_t pwm_fan_attrs_visible(struct kobject *kobj, struct attribute *a,
->>> +				     int n)
->>> +{
->>> +	struct device *dev = container_of(kobj, struct device, kobj);
->>> +	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
->>> +	struct device_attribute *devattr;
->>> +
->>> +	/* Hide fan_input in case no interrupt is available  */
->>> +	devattr = container_of(a, struct device_attribute, attr);
->>> +	if (devattr == &sensor_dev_attr_fan1_input.dev_attr) {
->>> +		if (ctx->irq <= 0)
->>> +			return 0;
->>> +	}
->> Side note: This can be easier written as
->> 	if (n == 1 && ctx->irq <= 0)
->> 		return 0;
->>
->> Not that it matters much.
->>
->>> +
->>> +	return a->mode;
->>> +}
->>> +
->>> +static const struct attribute_group pwm_fan_group = {
->>> +	.attrs = pwm_fan_attrs,
->>> +	.is_visible = pwm_fan_attrs_visible,
->>> +};
->>> +
->>> +static const struct attribute_group *pwm_fan_groups[] = {
->>> +	&pwm_fan_group,
->>> +	NULL,
->>> +};
->>>   
->>>   /* thermal cooling device callbacks */
->>>   static int pwm_fan_get_max_state(struct thermal_cooling_device *cdev,
->>> @@ -261,17 +331,45 @@ static int pwm_fan_probe(struct platform_device *pdev)
->>>   		goto err_reg_disable;
->>>   	}
->>>   
->>> +	timer_setup(&ctx->rpm_timer, sample_timer, 0);
->>> +
->>> +	if (of_property_read_u8(pdev->dev.of_node, "pulses-per-revolution",
->> This does not work: The property is not defined as u8. You have to either
->> use of_property_read_u32() or declare the property as u8.
-> pulses_per_revolution is defined as u8 since this version
-
-The variable might be, but the "pulses-per-revolution" property itself 
-is not being defined with the appropriate DT type ("/bits/ 8") in the 
-binding, and thus will be stored as a regular 32-bit cell, for which 
-reading it as a u8 array may or may not work correctly depending on 
-endianness.
-
-TBH, unless there's a real need for a specific binary format in the FDT, 
-I don't think it's usually worth the bother of using irregular DT types, 
-especially when the practical impact amounts to possibly saving up to 3 
-bytes for a property which usually won't need to be specified anyway. 
-I'd just do something like:
-
-	u32 ppr = 2;
-
-	of_property_read_u32(np, "pulses-per-revolution", &ppr);
-	ctx->pulses_per_revolution = ppr;
-
->>
->> [ Sorry, I didn't know until recently that this is necessary ]
->>
->>> +				&ctx->pulses_per_revolution)) {
->>> +		ctx->pulses_per_revolution = 2;
->>> +	}
->>> +
->>> +	if (!ctx->pulses_per_revolution) {
->>> +		dev_err(&pdev->dev, "pulses-per-revolution can't be zero.\n");
->>> +		ret = -EINVAL;
->>> +		goto err_pwm_disable;
->>> +	}
->>> +
->>> +	ctx->irq = platform_get_irq(pdev, 0);
->>> +	if (ctx->irq == -EPROBE_DEFER) {
->>> +		ret = ctx->irq;
->>> +		goto err_pwm_disable;
->> It might be better to call platform_get_irq() and to do do this check
->> first, before enabling the regulator (in practice before calling
->> devm_regulator_get_optional). It doesn't make sense to enable the
->> regulator only to disable it because the irq is not yet available.
->>
->>> +	} else if (ctx->irq > 0) {
->> As written, this else is unnecessary, and static checkers will complain
->> about it.
->>
->>> +		ret = devm_request_irq(&pdev->dev, ctx->irq, pulse_handler, 0,
->>> +				       pdev->name, ctx);
->>> +		if (ret) {
->>> +			dev_err(&pdev->dev, "Can't get interrupt working.\n");
->>> +			goto err_pwm_disable;
-
-We could still continue without RPM support at this point, couldn't we? 
-Or is this a deliberate "if that failed, then who knows how messed up 
-the system is..." kind of thing?
-
-Robin.
-
->>> +		}
->>> +		ctx->sample_start = ktime_get();
->>> +		mod_timer(&ctx->rpm_timer, jiffies + HZ);
->>> +	}
->>> +
->>>   	hwmon = devm_hwmon_device_register_with_groups(&pdev->dev, "pwmfan",
->>>   						       ctx, pwm_fan_groups);
->>>   	if (IS_ERR(hwmon)) {
->>>   		dev_err(&pdev->dev, "Failed to register hwmon device\n");
->>>   		ret = PTR_ERR(hwmon);
->>> -		goto err_pwm_disable;
->>> +		goto err_del_timer;
->>>   	}
->>>   
->>>   	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
->>>   	if (ret)
->>> -		return ret;
->>> +		goto err_del_timer;
->> Outch. This is buggy and should have been "goto err_pwm_disable;".
->> It needs to be fixed with a separate patch, and first, so we can
->> backport it. Can you do that ?
+> With the current code, current->mm->locked_vm cannot go negative. 
+> After the patch, it can go negative.  If someone else decreased
+> current->mm->locked_vm between this function's atomic64_read() and
+> atomic64_sub().
 > 
-> Sure
+> I guess this is a can't-happen in this case because the racing code
+> which performed the modification would have taken it negative anyway.
 > 
-> Stefan
-> 
+> But this all makes me rather queazy.
+
+mmap_sem is still held in this patch, so updates to locked_vm are still
+serialized and I don't think what you describe can happen.  A later patch
+removes mmap_sem, of course, but it also rewrites the code to do something
+different.  This first patch is just a mechanical type change from unsigned
+long to atomic64_t.
+
+So...does this alleviate your symptoms?
+
+> Also, we didn't remove any down_write(mmap_sem)s from core code so I'm
+> thinking that the benefit of removing a few mmap_sem-takings from a few
+> obscure drivers (sorry ;)) is pretty small.
+
+Not sure about the other drivers, but vfio type1 isn't obscure.  We use it
+extensively in our cloud, and from Andrea's __GFP_THISNODE thread a few months
+back it seems Red Hat also uses it:
+
+  https://lore.kernel.org/linux-mm/20180820032204.9591-3-aarcange@redhat.com/
+
+> Also, the argument for switching 32-bit arches to a 64-bit counter was
+> suspiciously vague.  What overflow issues?  Or are we just being lazy?
+
+If user-controlled values are used to increase locked_vm, multiple threads
+doing it at once on a 32-bit system could theoretically cause overflow, so in
+the absence of atomic overflow checking, the 64-bit counter on 32b is defensive
+programming.
+
+I wouldn't have thought to do it, but Jason Gunthorpe raised the same issue in
+the pinned_vm series:
+
+  https://lore.kernel.org/linux-mm/20190115205311.GD22031@mellanox.com/
+
+I'm fine with changing it to atomic_long_t if the scenario is too theoretical
+for people.
+
+
+Anyway, thanks for looking at this.
