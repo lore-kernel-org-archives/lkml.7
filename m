@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F30C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD2FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FE720700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B12520700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbfDCKr4 (ORCPT
+        id S1727053AbfDCKr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:47:56 -0400
-Received: from bastet.se.axis.com ([195.60.68.11]:33531 "EHLO
+        Wed, 3 Apr 2019 06:47:59 -0400
+Received: from bastet.se.axis.com ([195.60.68.11]:33548 "EHLO
         bastet.se.axis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDCKry (ORCPT
+        with ESMTP id S1726849AbfDCKr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:47:54 -0400
+        Wed, 3 Apr 2019 06:47:56 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by bastet.se.axis.com (Postfix) with ESMTP id 9EE6618591;
-        Wed,  3 Apr 2019 12:47:51 +0200 (CEST)
+        by bastet.se.axis.com (Postfix) with ESMTP id 87FC5184E0;
+        Wed,  3 Apr 2019 12:47:54 +0200 (CEST)
 X-Axis-User: NO
 X-Axis-NonUser: YES
 X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
 Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
         by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id tk-27QV0B8q9; Wed,  3 Apr 2019 12:47:50 +0200 (CEST)
+        with LMTP id kkSO6RMcDj3g; Wed,  3 Apr 2019 12:47:50 +0200 (CEST)
 Received: from boulder03.se.axis.com (boulder03.se.axis.com [10.0.8.17])
-        by bastet.se.axis.com (Postfix) with ESMTPS id DD060185CC;
-        Wed,  3 Apr 2019 12:47:49 +0200 (CEST)
+        by bastet.se.axis.com (Postfix) with ESMTPS id E3259185D3;
+        Wed,  3 Apr 2019 12:47:50 +0200 (CEST)
 Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF2A21E087;
-        Wed,  3 Apr 2019 12:47:49 +0200 (CEST)
+        by IMSVA (Postfix) with ESMTP id CB2621E07B;
+        Wed,  3 Apr 2019 12:47:50 +0200 (CEST)
 Received: from boulder03.se.axis.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B29831E064;
-        Wed,  3 Apr 2019 12:47:49 +0200 (CEST)
-Received: from thoth.se.axis.com (unknown [10.0.2.173])
+        by IMSVA (Postfix) with ESMTP id BFA4F1E064;
+        Wed,  3 Apr 2019 12:47:50 +0200 (CEST)
+Received: from seth.se.axis.com (unknown [10.0.2.172])
         by boulder03.se.axis.com (Postfix) with ESMTP;
-        Wed,  3 Apr 2019 12:47:49 +0200 (CEST)
+        Wed,  3 Apr 2019 12:47:50 +0200 (CEST)
 Received: from lnxartpec.se.axis.com (lnxartpec.se.axis.com [10.88.4.9])
-        by thoth.se.axis.com (Postfix) with ESMTP id A640626FC;
+        by seth.se.axis.com (Postfix) with ESMTP id AF5363165;
         Wed,  3 Apr 2019 12:47:49 +0200 (CEST)
 Received: by lnxartpec.se.axis.com (Postfix, from userid 10564)
-        id 9DDA580D27; Wed,  3 Apr 2019 12:47:49 +0200 (CEST)
+        id ABF8780D29; Wed,  3 Apr 2019 12:47:49 +0200 (CEST)
 From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
 To:     sudeep.dutt@intel.com, ashutosh.dixit@intel.com,
         gregkh@linuxfoundation.org, arnd@arndb.de
 Cc:     linux-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Vincent Whitchurch <rabinv@axis.com>
-Subject: [PATCH v3 1/4] mic: vop: Fix init race with shared interrupts
-Date:   Wed,  3 Apr 2019 12:47:43 +0200
-Message-Id: <20190403104746.16063-2-vincent.whitchurch@axis.com>
+Subject: [PATCH v3 4/4] samples: mic: Add sample VOP userspace
+Date:   Wed,  3 Apr 2019 12:47:46 +0200
+Message-Id: <20190403104746.16063-5-vincent.whitchurch@axis.com>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190403104746.16063-1-vincent.whitchurch@axis.com>
 References: <20190403104746.16063-1-vincent.whitchurch@axis.com>
@@ -66,127 +66,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a vop virtio device's interrupt is shared with others, there is a
-window where the interrupt can hit and the ->vqs list can be attempted
-to be traversed before register_virtio_device() has initialized it,
-leading to a NULL pointer dereference in vop_virtio_intr_handler().
+Add a sample userspace program which can be used with the VOP framework
+with vop-loopback and non-MIC hardware.
 
-Fix this by keeping a local list of virtqueues in this driver and using
-that instead of the list inside the struct virtio_device, similar to how
-virtio-pci handles this.
+For example, the following commands can be used to test networking over
+vop-loopback.  (IPv6 is used with zone indices to force traffic through
+the interfaces instead of short-circuit delivery, since both interfaces
+are on the same system.)
+
+ # modprobe vop_loopback
+ # ./vopd &
+
+ Setup host interface:
+ # ip a a dev mic0 scope link fe80::0
+ # ip link set dev mic0 up
+
+ Setup guest interface:
+ # ip a a dev eth1 scope link fe80::1
+ # ip link set dev eth1 up
+
+ Ping from host to guest:
+ # ping6 fe80::1%mic0
+
+ Ping from guest to host:
+ # ping6 fe80::0%eth1
 
 Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 ---
- drivers/misc/mic/vop/vop_main.c | 42 ++++++++++++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 3 deletions(-)
+ samples/mic/mpssd/.gitignore |  1 +
+ samples/mic/mpssd/Makefile   |  5 ++++-
+ samples/mic/mpssd/vopd.c     | 25 +++++++++++++++++++++++++
+ 3 files changed, 30 insertions(+), 1 deletion(-)
+ create mode 100644 samples/mic/mpssd/vopd.c
 
-diff --git a/drivers/misc/mic/vop/vop_main.c b/drivers/misc/mic/vop/vop_main.c
-index e37b2c2152a2..6764feea6f55 100644
---- a/drivers/misc/mic/vop/vop_main.c
-+++ b/drivers/misc/mic/vop/vop_main.c
-@@ -40,6 +40,11 @@
+diff --git a/samples/mic/mpssd/.gitignore b/samples/mic/mpssd/.gitignore
+index 8b7c72f07c92..34c001135abb 100644
+--- a/samples/mic/mpssd/.gitignore
++++ b/samples/mic/mpssd/.gitignore
+@@ -1 +1,2 @@
+ mpssd
++vopd
+diff --git a/samples/mic/mpssd/Makefile b/samples/mic/mpssd/Makefile
+index bc94054dbe2b..b94b18de5a43 100644
+--- a/samples/mic/mpssd/Makefile
++++ b/samples/mic/mpssd/Makefile
+@@ -5,7 +5,7 @@ ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
  
- #define VOP_MAX_VRINGS 4
+ ifeq ($(ARCH),x86)
  
-+struct vop_vq {
-+	struct virtqueue *vq;
-+	struct list_head list;
-+};
+-PROGS := mpssd
++PROGS := mpssd vopd
+ CC = $(CROSS_COMPILE)gcc
+ CFLAGS := -I../../../usr/include -I../../../tools/include
+ 
+@@ -17,6 +17,9 @@ all: $(PROGS)
+ mpssd: mpssd.c sysfs.c vop.o
+ 	$(CC) $(CFLAGS) $^ -o $@ -lpthread
+ 
++vopd: vopd.c vop.o
++	$(CC) $(CFLAGS) $^ -o $@ -lpthread
 +
- /*
-  * _vop_vdev - Allocated per virtio device instance injected by the peer.
-  *
-@@ -68,6 +73,9 @@ struct _vop_vdev {
- 	int used_size[VOP_MAX_VRINGS];
- 	struct completion reset_done;
- 	struct mic_irq *virtio_cookie;
-+	struct vop_vq *vqs;
-+	struct list_head virtqueues;
-+	spinlock_t virtqueues_lock;
- 	int c2h_vdev_db;
- 	int h2c_vdev_db;
- 	int dnode;
-@@ -264,6 +272,12 @@ static void vop_del_vq(struct virtqueue *vq, int n)
- {
- 	struct _vop_vdev *vdev = to_vopvdev(vq->vdev);
- 	struct vop_device *vpdev = vdev->vpdev;
-+	struct vop_vq *vopvq = &vdev->vqs[n];
-+	unsigned long flags;
+ install:
+ 	install mpssd /usr/sbin/mpssd
+ 	install micctrl /usr/sbin/micctrl
+diff --git a/samples/mic/mpssd/vopd.c b/samples/mic/mpssd/vopd.c
+new file mode 100644
+index 000000000000..48c1877fed28
+--- /dev/null
++++ b/samples/mic/mpssd/vopd.c
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+	spin_lock_irqsave(&vdev->virtqueues_lock, flags);
-+	list_del(&vopvq->list);
-+	spin_unlock_irqrestore(&vdev->virtqueues_lock, flags);
- 
- 	dma_unmap_single(&vpdev->dev, vdev->used[n],
- 			 vdev->used_size[n], DMA_BIDIRECTIONAL);
-@@ -284,6 +298,9 @@ static void vop_del_vqs(struct virtio_device *dev)
- 
- 	list_for_each_entry_safe(vq, n, &dev->vqs, list)
- 		vop_del_vq(vq, idx++);
++#include <stdio.h>
 +
-+	kfree(vdev->vqs);
-+	vdev->vqs = NULL;
- }
- 
- static struct virtqueue *vop_new_virtqueue(unsigned int index,
-@@ -411,7 +428,13 @@ static int vop_find_vqs(struct virtio_device *dev, unsigned nvqs,
- 	if (nvqs > ioread8(&vdev->desc->num_vq))
- 		return -ENOENT;
- 
-+	vdev->vqs = kcalloc(nvqs, sizeof(*vdev->vqs), GFP_KERNEL);
-+	if (!vdev->vqs)
-+		return -ENOMEM;
++#include "mpssd.h"
 +
- 	for (i = 0; i < nvqs; ++i) {
-+		unsigned long flags;
++void mpsslog(char *format, ...)
++{
++	va_list args;
 +
- 		if (!names[i]) {
- 			vqs[i] = NULL;
- 			continue;
-@@ -425,6 +448,12 @@ static int vop_find_vqs(struct virtio_device *dev, unsigned nvqs,
- 			err = PTR_ERR(vqs[i]);
- 			goto error;
- 		}
++	va_start(args, format);
++	vprintf(format, args);
++	va_end(args);
++}
 +
-+		vdev->vqs[i].vq = vqs[i];
++int main(int argc, char *argv[])
++{
++	struct mic_info themic = {
++		.name = "mic",
++	};
 +
-+		spin_lock_irqsave(&vdev->virtqueues_lock, flags);
-+		list_add(&vdev->vqs[i].list, &vdev->virtqueues);
-+		spin_unlock_irqrestore(&vdev->virtqueues_lock, flags);
- 	}
- 
- 	iowrite8(1, &dc->used_address_updated);
-@@ -468,13 +497,17 @@ static struct virtio_config_ops vop_vq_config_ops = {
- 
- static irqreturn_t vop_virtio_intr_handler(int irq, void *data)
- {
-+	unsigned long flags;
- 	struct _vop_vdev *vdev = data;
- 	struct vop_device *vpdev = vdev->vpdev;
--	struct virtqueue *vq;
-+	struct vop_vq *vopvq;
- 
- 	vpdev->hw_ops->ack_interrupt(vpdev, vdev->h2c_vdev_db);
--	list_for_each_entry(vq, &vdev->vdev.vqs, list)
--		vring_interrupt(0, vq);
++	serve_virtio(&themic, &themic);
 +
-+	spin_lock_irqsave(&vdev->virtqueues_lock, flags);
-+	list_for_each_entry(vopvq, &vdev->virtqueues, list)
-+		vring_interrupt(0, vopvq->vq);
-+	spin_unlock_irqrestore(&vdev->virtqueues_lock, flags);
- 
- 	return IRQ_HANDLED;
- }
-@@ -516,6 +549,9 @@ static int _vop_add_device(struct mic_device_desc __iomem *d,
- 	vdev->vdev.priv = (void *)(unsigned long)dnode;
- 	init_completion(&vdev->reset_done);
- 
-+	INIT_LIST_HEAD(&vdev->virtqueues);
-+	spin_lock_init(&vdev->virtqueues_lock);
-+
- 	vdev->h2c_vdev_db = vpdev->hw_ops->next_db(vpdev);
- 	vdev->virtio_cookie = vpdev->hw_ops->request_irq(vpdev,
- 			vop_virtio_intr_handler, "virtio intr",
++	return 0;
++}
 -- 
 2.20.0
 
