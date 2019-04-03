@@ -2,87 +2,111 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7642C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBACC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F9A2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC8B204EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:14:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ik+nILnT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfDCENd (ORCPT
+        id S1728134AbfDCEOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:13:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6219 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725970AbfDCENc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:13:32 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [10.3.19.207])
-        by Forcepoint Email with ESMTP id 747E04DAD2D1D8C0BC33;
-        Wed,  3 Apr 2019 12:13:30 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Wed, 3 Apr 2019
- 12:13:28 +0800
-Subject: Re: [PATCH] ASoC: Mediatek: MT8183: Fix build error in
- mt8183_da7219_max98357_dev_probe
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <matthias.bgg@gmail.com>,
-        <shunli.wang@mediatek.com>
-References: <20190403041128.1900-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <alsa-devel@alsa-project.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <5a3cde15-1d33-a67e-2a82-72b0edb099e6@huawei.com>
-Date:   Wed, 3 Apr 2019 12:13:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 3 Apr 2019 00:14:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38491 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfDCEOI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 00:14:08 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p14so13540716ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rXMYr8XOulVCkNYfy+jpJ4ir/8UpzS0he/ToEImGw30=;
+        b=Ik+nILnTbBjtqveUr3TWxBGdZBuzoE2R1YqxmAfIqZyZG7S1o3s22jeaRFVPCOQyBA
+         LujCk8v+atgarmUlYfB0pDN/aQrVd1qH3yjvEZxBVbht9gf7rplmHD+u3tutdgqdPYQQ
+         G4jhlgo7qw68hL+awXCPSmpB3fwUYszlcHTRfhiTcGCuk7/Q1woB0pOqLONexG+HMzFb
+         TCOh4SpYmV8d7U5FpxsWKUFyRKrsjTN+AK3qiZuvJkx2RAV/D+kBhXU7zGJ5AofABMWY
+         /Xm1HoCzQ4rRKI1DhZ778RNSeY1uVP9yaoLgnEtGgHBR8AwOnnhPwOH2sfhAS8BDajZW
+         BQXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rXMYr8XOulVCkNYfy+jpJ4ir/8UpzS0he/ToEImGw30=;
+        b=ecF5ZJe3sSOq+zgiXlKTpVDE3O5P0nKmFALOXivaxRWG3bPldWx8hK1gNx3e50mXHe
+         uwZ0ImrGmAFrBGtlPkJbfzFByHKHwgJBPamv7qEkPk8RjHqF+J4uq1eMXKu10MMU+puk
+         +pdbm1biuj9i3ZWEM63mY0KIPkO9xqPzZZQP79YROcUrYzz5ARw+xl8/fuxVxFDHAyVv
+         +f09qkT+JKu82WFfex7ueLRUSGZxAP05UAF8oHQyumEqxB3X4V6FRTrQtc6ydTd754b1
+         swPjX355SbTya2bVlnMB2a/8v9mxMHp315hnPpB40ykGIJHniIuh2M73rFfCqmzLTZWA
+         Q6Xw==
+X-Gm-Message-State: APjAAAU5hX4kJnQb1dH5VxaTc8mQa5YFF/N4cszUwQ0mhj0f3c3Bmqtt
+        Xg4PO6NEQHLvcUL07YrudCmhXADX9artGN7dBa9WYw==
+X-Google-Smtp-Source: APXvYqxuvHPo+3QR/FzBTDZc3EVPj5llZlguyWiIvutgie3op2fVLuirRagEbYREyCkgsJjBMUnv0JVIAXe5lRqSQlQ=
+X-Received: by 2002:a2e:808e:: with SMTP id i14mr23145645ljg.103.1554264846907;
+ Tue, 02 Apr 2019 21:14:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190403041128.1900-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
+References: <1553135724-38331-1-git-send-email-zhuchangchun@cvte.com>
+ <20190321084420.GG3622@lahna.fi.intel.com> <20190321092330.GK9224@smile.fi.intel.com>
+ <140c6ec0-7c11-6aa9-8434-f14d77be9a8c@metux.net>
+In-Reply-To: <140c6ec0-7c11-6aa9-8434-f14d77be9a8c@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Apr 2019 11:13:55 +0700
+Message-ID: <CACRpkdZ1xPJ=NS=o=-PYqCO4d-VVZM1=f=xBZa5Dwx78LFPYtA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: Implements gpio free function
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        zhuchangchun <zhuchangchun@cvte.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        hendychu@aliyun.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pls ignore this.
+On Sat, Mar 23, 2019 at 1:32 AM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+> On 21.03.19 10:23, Andy Shevchenko wrote:
+>
+> > ...and on top of that GPIO sysfs interface is deprecated.
+>
+> I don't like the idea of deprecating this. It might not be enough for
+> all usecases, but for a lot of usecases, it's a very easy and simple
+> interfaces.
 
-On 2019/4/3 12:11, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> When building CONFIG_SND_SOC_MT8183_DA7219_MAX98357A=m
-> gcc warn this:
-> 
-> sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c: In function mt8183_mt6358_ts3a227_max98357_dev_probe:
-> sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c:325:13: error: struct snd_soc_dai_link has no member named platform; did you mean platforms?
->    dai_link->platform = NULL;
->              ^~~~~~~~
->              platforms
-> 
-> use 'dai_link->platforms' instead of 'dai_link->platform'.
-> 
-> Fixes: 11c0269017b2 ("ASoC: Mediatek: MT8183: Add machine driver with TS3A227")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-> index 9353665..1e7e8ae 100644
-> --- a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-> +++ b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-> @@ -410,7 +410,7 @@ static int mt8183_da7219_max98357_dev_probe(struct platform_device *pdev)
->  		 * the "platform" will not null when probe is trying
->  		 * again. It's not expected normally.
->  		 */
-> -		dai_link->platform = NULL;
-> +		dai_link->platforms = NULL;
->  
->  		if (dai_link->platform_name)
->  			continue;
-> 
+Yeah it is deprecated for years.
 
+It is not like I don't see the simpleness and utility.
+
+The reason why it is not good for anyone is simple:
+
+Export some GPIOs in sysfs. You script crashes. Who is going
+to unexport them now? (Answer: noone. Restart machine?)
+
+Two scripts at the same time try to use the same GPIO. Such as happen
+to start the same script twice. What happens
+now? (Answer: both, with interesting results.)
+
+Sure you can make more elaborate scripts that check for stuff already
+being exported etc.
+
+But the chardev on the other hand will protect you from all this.
+
+If the program crashes, the lines will be free:ed.
+
+If two scripts try to access the same GPIO, they will be denied.
+
+And to spice things up, I only add new stuff like open drain and
+driving several lines at the same time only to the chardev.
+
+Yours,
+Linus Walleij
