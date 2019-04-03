@@ -2,124 +2,103 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698DFC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6116C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F632206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="MqDEGB9S"
+	by mail.kernel.org (Postfix) with ESMTP id 6EC5C206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfDCPbk (ORCPT
+        id S1726412AbfDCPbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:31:40 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:43772 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDCPbk (ORCPT
+        Wed, 3 Apr 2019 11:31:48 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:34327 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDCPbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:31:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1554305496; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=28XImi+Bp9I9pF6FT2i90FcrcKEdvt/D5NO3ZjWScyA=;
-        b=MqDEGB9SnrGrgSJrtyYZeKnct1xJ519myFX5BqxUbKAZTroXbV2+07Q4Eye0TwcIXiszS3
-        NiYW0pvdiAouEh2xSNwwhhfcjag0jH5P9HG2vs4hwKT0ueb+/cjQJj3bMvB1oXLwcB+oy/
-        X+t6ksyeryauUWCLY1uGYd6H98rzeQ4=
-Date:   Wed, 03 Apr 2019 17:31:31 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] usb: musb: Force-disable pullup on shutdown
-To:     Bin Liu <b-liu@ti.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me
-Message-Id: <1554305491.1177.0@crapouillou.net>
-In-Reply-To: <20190403132600.GQ25852@uda0271908>
-References: <20190321144246.3547-1-paul@crapouillou.net>
-        <20190401171725.GK25852@uda0271908> <1554140782.10471.0@crapouillou.net>
-        <20190401182008.GL25852@uda0271908> <1554235122.13181.0@crapouillou.net>
-        <20190403132600.GQ25852@uda0271908>
+        Wed, 3 Apr 2019 11:31:47 -0400
+X-Originating-IP: 109.213.83.19
+Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 368601C0004;
+        Wed,  3 Apr 2019 15:31:44 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 17:31:43 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Message-ID: <20190403153143.GQ22216@piout.net>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+ <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
+ <20190403150824.GO22216@piout.net>
+ <452a4cf1410a41c8b6f767ac6258482e@asem.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <452a4cf1410a41c8b6f767ac6258482e@asem.it>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/04/2019 15:14:24+0000, Flavio Suligoi wrote:
+> Hi Alexandre,
+> 
+> > On 03/04/2019 16:52:45+0200, Flavio Suligoi wrote:
+> > > The pcf2127 has an automatic battery-low detection function.
+> > >
+> > > In case of battery-low event, an interrupt generation through
+> > > the pin INTn (active low) can be enabled, setting the flag BLIE
+> > > in the register Control_3.
+> > >
+> > > This function is activated by the "battery-low-hw-alarm" DT property.
+> > >
+> > > Example of use for an NXP i.MX7D board:
+> > >
+> > > &i2c3 {
+> > > 	clock-frequency = <100000>;
+> > > 	pinctrl-names = "default";
+> > > 	pinctrl-0 = <&pinctrl_i2c3>;
+> > > 	status = "okay";
+> > >
+> > > 	pcf2127@51 {
+> > > 		compatible = "nxp,pcf2127";
+> > > 		reg = <0x51>;
+> > > 		battery-low-hw-alarm;
+> > > 		status = "okay";
+> > > 	};
+> > > };
+> > >
+> > 
+> > So I'm curious, how do you then use that signal? I have a (not yet sent)
+> > series adding alarm support for the pcf2127. The issue having BLIE is
+> > that then this will prevent the alarm to work properly.
+> > 
+> > So my guess is that you have nINT connected to an LED or something that
+> > the user can see?
+> > 
+> 
+> I'm working on our custom embedded board with an NXP i.MX7D,
+> developed here, in Asem (www.asem.it).
+> The nINT pin is connected to a GPIO of the MX7 and then
+> used by an applicative sw, to generate an alarm for the user.
+> 
+
+Then, you should probably not enable BLIE because this will cause issues
+with the alarm functionnality.. It is certainly enough to use
+RTC_VL_READ periodically.
 
 
-Le mer. 3 avril 2019 =E0 15:26, Bin Liu <b-liu@ti.com> a =E9crit :
-> On Tue, Apr 02, 2019 at 09:58:42PM +0200, Paul Cercueil wrote:
->>  Hi,
->>=20
->>  Le lun. 1 avril 2019 =E0 20:20, Bin Liu <b-liu@ti.com> a =E9crit :
->>  >On Mon, Apr 01, 2019 at 07:46:22PM +0200, Paul Cercueil wrote:
->>  >>
->>  >>
->>  >> Le lun. 1 avril 2019 =E0 19:17, Bin Liu <b-liu@ti.com> a =E9crit :
->>  >> >On Thu, Mar 21, 2019 at 03:42:46PM +0100, Paul Cercueil wrote:
->>  >> >> When the musb is shutdown, for instance when the driver is
->>  >>unloaded,
->>  >> >> force-disable the pullup. Otherwise, the host will still see
->>  >> >>the gadget
->>  >> >> device even after the shutdown.
->>  >> >
->>  >> >how would this happen?
->>  >> >
->>  >> >when musb-hdrc driver is unloaded, udc core removes the bound
->>  >>gadget
->>  >> >driver which calls musb_gadget_pullup() to disable the pullup.
->>  >>
->>  >> I'm testing with the jz4740-musb driver. I don't unload the
->>  >>module (it's
->>  >> built-in) but unbind it from sysfs.
->>  >
->>  >I did unbind too.
->>  >
->>  >root@am335x-evm:/sys/bus/platform/drivers/musb-hdrc# echo
->>  >musb-hdrc.0 > unbind
->>  >
->>  >or unbind the glue driver:
->>  >
->>  >root@am335x-evm:/sys/bus/platform/drivers/musb-dsps# echo
->>  >47401400.usb > unbind
->>  >
->>  >musb_gadget_pullup() is called in both cases.
->>  >
->>  >[ 3880.597014] [<bf444ab0>] (musb_gadget_pullup [musb_hdrc]) from
->>  >[<bf402cbc>] (usb_gadget_disconnect+0x3c/0xf4 [udc_core])
->>  >[ 3880.607959] [<bf402cbc>] (usb_gadget_disconnect [udc_core])
->>  >from [<bf403b28>] (usb_gadget_remove_driver+0x4c/0x90 [udc_core])
->>  >[ 3880.619338] [<bf403b28>] (usb_gadget_remove_driver [udc_core])
->>  >from [<bf403d20>] (usb_del_gadget_udc+0x5c/0xc0 [udc_core])
->>=20
->>  In my case this stops here, usb_del_gadget_udc() does not call
->>  usb_gadget_remove_driver(), that's why the pullup is never disabled.
->>=20
->>  I guess that's because udc->driver is NULL; I'm testing with
->=20
-> then the pullup should be disable by now.
->=20
->>  CONFIG_USB_CONFIGFS,
->>  and I don't configure anything in sysfs before unbinding the driver.
->=20
-> I didn't check on this, but I could imagine that
-> - when a configfs gadget is bound to the udc, .pullup() is called;
-> - when the configfs gadget is unbound from the udc, .pullup should be
->   called again to disable the pullup.
-
-An important thing that I did not mention, is that the SoC boots from=20
-USB,
-so the pullup is active before the musb driver loads. Since in my case a
-configfs gadget is never bound, then .pullup() is never called, and when
-I unbind the driver the pullup is still enabled.
-
--Paul
-
-=
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
