@@ -2,228 +2,218 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A433BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CA8C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFB4206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F92206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfDCKlv (ORCPT
+        id S1726993AbfDCKmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:41:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58222 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbfDCKlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:41:50 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 57C1A59474;
-        Wed,  3 Apr 2019 10:41:49 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (dhcp-10-65-161-59.pnq.redhat.com [10.65.161.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CD4119724;
-        Wed,  3 Apr 2019 10:41:25 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com
-Subject: [PATCH v4 3/5] libnvdimm: add dax_dev sync flag
-Date:   Wed,  3 Apr 2019 16:10:16 +0530
-Message-Id: <20190403104018.23947-4-pagupta@redhat.com>
-In-Reply-To: <20190403104018.23947-1-pagupta@redhat.com>
-References: <20190403104018.23947-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 03 Apr 2019 10:41:49 +0000 (UTC)
+        Wed, 3 Apr 2019 06:42:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39109 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726849AbfDCKmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 06:42:01 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33AfTj91812320
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 3 Apr 2019 03:41:29 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33AfS1x1812314;
+        Wed, 3 Apr 2019 03:41:28 -0700
+Date:   Wed, 3 Apr 2019 03:41:28 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for Lendacky, Thomas" <tipbot@zytor.com>
+Message-ID: <tip-914123fa39042e651d79eaf86bbf63a1b938dddf@git.kernel.org>
+Cc:     thomas.lendacky@amd.com, eranian@google.com, hpa@zytor.com,
+        tglx@linutronix.de, acme@redhat.com, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        Thomas.Lendacky@amd.com, bp@alien8.de,
+        torvalds@linux-foundation.org, mingo@kernel.org,
+        vincent.weaver@maine.edu, acme@kernel.org
+Reply-To: namhyung@kernel.org, peterz@infradead.org,
+          alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+          hpa@zytor.com, eranian@google.com, thomas.lendacky@amd.com,
+          linux-kernel@vger.kernel.org, acme@redhat.com,
+          tglx@linutronix.de, acme@kernel.org, bp@alien8.de,
+          Thomas.Lendacky@amd.com, vincent.weaver@maine.edu,
+          torvalds@linux-foundation.org, mingo@kernel.org
+In-Reply-To: <Message-ID:>
+References: <Message-ID:>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] x86/perf/amd: Resolve race condition when
+ disabling PMC
+Git-Commit-ID: 914123fa39042e651d79eaf86bbf63a1b938dddf
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds 'DAXDEV_SYNC' flag which is set
-for nd_region doing synchronous flush. This later 
-is used to disable MAP_SYNC functionality for 
-ext4 & xfs filesystem for devices don't support
-synchronous flush.
+Commit-ID:  914123fa39042e651d79eaf86bbf63a1b938dddf
+Gitweb:     https://git.kernel.org/tip/914123fa39042e651d79eaf86bbf63a1b938dddf
+Author:     Lendacky, Thomas <Thomas.Lendacky@amd.com>
+AuthorDate: Tue, 2 Apr 2019 15:21:14 +0000
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 3 Apr 2019 11:40:32 +0200
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+x86/perf/amd: Resolve race condition when disabling PMC
+
+On AMD processors, the detection of an overflowed counter in the NMI
+handler relies on the current value of the counter. So, for example, to
+check for overflow on a 48 bit counter, bit 47 is checked to see if it
+is 1 (not overflowed) or 0 (overflowed).
+
+There is currently a race condition present when disabling and then
+updating the PMC. Increased NMI latency in newer AMD processors makes this
+race condition more pronounced. If the counter value has overflowed, it is
+possible to update the PMC value before the NMI handler can run. The
+updated PMC value is not an overflowed value, so when the perf NMI handler
+does run, it will not find an overflowed counter. This may appear as an
+unknown NMI resulting in either a panic or a series of messages, depending
+on how the kernel is configured.
+
+To eliminate this race condition, the PMC value must be checked after
+disabling the counter. Add an AMD function, amd_pmu_disable_all(), that
+will wait for the NMI handler to reset any active and overflowed counter
+after calling x86_pmu_disable_all().
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org> # 4.14.x-
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/Message-ID:
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/dax/bus.c            |  2 +-
- drivers/dax/super.c          | 13 ++++++++++++-
- drivers/md/dm.c              |  2 +-
- drivers/nvdimm/pmem.c        |  3 ++-
- drivers/nvdimm/region_devs.c |  7 +++++++
- include/linux/dax.h          |  9 +++++++--
- include/linux/libnvdimm.h    |  1 +
- 7 files changed, 31 insertions(+), 6 deletions(-)
+ arch/x86/events/amd/core.c | 65 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 62 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 2109cfe80219..431bf7d2a7f9 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -388,7 +388,7 @@ struct dev_dax *__devm_create_dev_dax(struct dax_region *dax_region, int id,
- 	 * No 'host' or dax_operations since there is no access to this
- 	 * device outside of mmap of the resulting character device.
- 	 */
--	dax_dev = alloc_dax(dev_dax, NULL, NULL);
-+	dax_dev = alloc_dax(dev_dax, NULL, NULL, true);
- 	if (!dax_dev)
- 		goto err;
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 7d2d7c801dba..c09ee88b0eed 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -3,6 +3,7 @@
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
++#include <linux/delay.h>
+ #include <asm/apicdef.h>
  
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index 0a339b85133e..bd6509308d05 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -186,6 +186,8 @@ enum dax_device_flags {
- 	DAXDEV_ALIVE,
- 	/* gate whether dax_flush() calls the low level flush routine */
- 	DAXDEV_WRITE_CACHE,
-+	/* flag to check if device supports synchronous flush */
-+	DAXDEV_SYNC,
- };
- 
- /**
-@@ -354,6 +356,12 @@ bool dax_write_cache_enabled(struct dax_device *dax_dev)
- }
- EXPORT_SYMBOL_GPL(dax_write_cache_enabled);
- 
-+bool dax_synchronous(struct dax_device *dax_dev)
-+{
-+	return test_bit(DAXDEV_SYNC, &dax_dev->flags);
-+}
-+EXPORT_SYMBOL_GPL(dax_synchronous);
-+
- bool dax_alive(struct dax_device *dax_dev)
- {
- 	lockdep_assert_held(&dax_srcu);
-@@ -511,7 +519,7 @@ static void dax_add_host(struct dax_device *dax_dev, const char *host)
- }
- 
- struct dax_device *alloc_dax(void *private, const char *__host,
--		const struct dax_operations *ops)
-+		const struct dax_operations *ops, bool sync)
- {
- 	struct dax_device *dax_dev;
- 	const char *host;
-@@ -534,6 +542,9 @@ struct dax_device *alloc_dax(void *private, const char *__host,
- 	dax_add_host(dax_dev, host);
- 	dax_dev->ops = ops;
- 	dax_dev->private = private;
-+	if (sync)
-+		set_bit(DAXDEV_SYNC, &dax_dev->flags);
-+
- 	return dax_dev;
- 
-  err_dev:
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 68d24056d0b1..534e12ca6329 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1965,7 +1965,7 @@ static struct mapped_device *alloc_dev(int minor)
- 	sprintf(md->disk->disk_name, "dm-%d", minor);
- 
- 	if (IS_ENABLED(CONFIG_DAX_DRIVER)) {
--		dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops);
-+		dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops, true);
- 		if (!dax_dev)
- 			goto bad;
+ #include "../perf_event.h"
+@@ -429,6 +430,64 @@ static void amd_pmu_cpu_dead(int cpu)
  	}
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 5a5b3ea4d073..78f71ba0e7cf 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -466,7 +466,8 @@ static int pmem_attach_disk(struct device *dev,
- 	nvdimm_badblocks_populate(nd_region, &pmem->bb, &bb_res);
- 	disk->bb = &pmem->bb;
- 
--	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops);
-+	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops,
-+					is_nvdimm_sync(nd_region));
- 
- 	if (!dax_dev) {
- 		put_disk(disk);
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index fb1041ab32a6..8c7aa047fe2b 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -1231,6 +1231,13 @@ int nvdimm_has_cache(struct nd_region *nd_region)
  }
- EXPORT_SYMBOL_GPL(nvdimm_has_cache);
  
-+bool is_nvdimm_sync(struct nd_region *nd_region)
-+{
-+	return is_nd_pmem(&nd_region->dev) &&
-+		!test_bit(ND_REGION_ASYNC, &nd_region->flags);
-+}
-+EXPORT_SYMBOL_GPL(is_nvdimm_sync);
++/*
++ * When a PMC counter overflows, an NMI is used to process the event and
++ * reset the counter. NMI latency can result in the counter being updated
++ * before the NMI can run, which can result in what appear to be spurious
++ * NMIs. This function is intended to wait for the NMI to run and reset
++ * the counter to avoid possible unhandled NMI messages.
++ */
++#define OVERFLOW_WAIT_COUNT	50
 +
- struct conflict_context {
- 	struct nd_region *nd_region;
- 	resource_size_t start, size;
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 0dd316a74a29..9bdd50d06ef6 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -32,18 +32,19 @@ extern struct attribute_group dax_attribute_group;
- #if IS_ENABLED(CONFIG_DAX)
- struct dax_device *dax_get_by_host(const char *host);
- struct dax_device *alloc_dax(void *private, const char *host,
--		const struct dax_operations *ops);
-+		const struct dax_operations *ops, bool sync);
- void put_dax(struct dax_device *dax_dev);
- void kill_dax(struct dax_device *dax_dev);
- void dax_write_cache(struct dax_device *dax_dev, bool wc);
- bool dax_write_cache_enabled(struct dax_device *dax_dev);
-+bool dax_synchronous(struct dax_device *dax_dev);
- #else
- static inline struct dax_device *dax_get_by_host(const char *host)
- {
- 	return NULL;
- }
- static inline struct dax_device *alloc_dax(void *private, const char *host,
--		const struct dax_operations *ops)
-+		const struct dax_operations *ops, bool sync)
- {
- 	/*
- 	 * Callers should check IS_ENABLED(CONFIG_DAX) to know if this
-@@ -64,6 +65,10 @@ static inline bool dax_write_cache_enabled(struct dax_device *dax_dev)
- {
- 	return false;
- }
-+static inline bool dax_synchronous(struct dax_device *dax_dev)
++static void amd_pmu_wait_on_overflow(int idx)
 +{
-+	return false;
++	unsigned int i;
++	u64 counter;
++
++	/*
++	 * Wait for the counter to be reset if it has overflowed. This loop
++	 * should exit very, very quickly, but just in case, don't wait
++	 * forever...
++	 */
++	for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
++		rdmsrl(x86_pmu_event_addr(idx), counter);
++		if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
++			break;
++
++		/* Might be in IRQ context, so can't sleep */
++		udelay(1);
++	}
 +}
- #endif
++
++static void amd_pmu_disable_all(void)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	int idx;
++
++	x86_pmu_disable_all();
++
++	/*
++	 * This shouldn't be called from NMI context, but add a safeguard here
++	 * to return, since if we're in NMI context we can't wait for an NMI
++	 * to reset an overflowed counter value.
++	 */
++	if (in_nmi())
++		return;
++
++	/*
++	 * Check each counter for overflow and wait for it to be reset by the
++	 * NMI if it has overflowed. This relies on the fact that all active
++	 * counters are always enabled when this function is caled and
++	 * ARCH_PERFMON_EVENTSEL_INT is always set.
++	 */
++	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
++		if (!test_bit(idx, cpuc->active_mask))
++			continue;
++
++		amd_pmu_wait_on_overflow(idx);
++	}
++}
++
+ static struct event_constraint *
+ amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+@@ -622,7 +681,7 @@ static ssize_t amd_event_sysfs_show(char *page, u64 config)
+ static __initconst const struct x86_pmu amd_pmu = {
+ 	.name			= "AMD",
+ 	.handle_irq		= x86_pmu_handle_irq,
+-	.disable_all		= x86_pmu_disable_all,
++	.disable_all		= amd_pmu_disable_all,
+ 	.enable_all		= x86_pmu_enable_all,
+ 	.enable			= x86_pmu_enable_event,
+ 	.disable		= x86_pmu_disable_event,
+@@ -732,7 +791,7 @@ void amd_pmu_enable_virt(void)
+ 	cpuc->perf_ctr_virt_mask = 0;
  
- struct writeback_control;
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index d9d2ab8a6e64..9a8aea370cbc 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -270,6 +270,7 @@ int generic_nvdimm_flush(struct nd_region *nd_region);
- int nvdimm_has_flush(struct nd_region *nd_region);
- int nvdimm_has_cache(struct nd_region *nd_region);
- int nvdimm_in_overwrite(struct nvdimm *nvdimm);
-+bool is_nvdimm_sync(struct nd_region *nd_region);
+ 	/* Reload all events */
+-	x86_pmu_disable_all();
++	amd_pmu_disable_all();
+ 	x86_pmu_enable_all(0);
+ }
+ EXPORT_SYMBOL_GPL(amd_pmu_enable_virt);
+@@ -750,7 +809,7 @@ void amd_pmu_disable_virt(void)
+ 	cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
  
- static inline int nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
- 		unsigned int buf_len, int *cmd_rc)
--- 
-2.20.1
-
+ 	/* Reload all events */
+-	x86_pmu_disable_all();
++	amd_pmu_disable_all();
+ 	x86_pmu_enable_all(0);
+ }
+ EXPORT_SYMBOL_GPL(amd_pmu_disable_virt);
