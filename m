@@ -2,157 +2,183 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B26C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF55C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1C620882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A0B20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tXazteTc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7rSS8PV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfDCWQq (ORCPT
+        id S1726562AbfDCWU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 18:16:46 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45561 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbfDCWQp (ORCPT
+        Wed, 3 Apr 2019 18:20:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34691 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfDCWU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 18:16:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bf11so80370plb.12;
-        Wed, 03 Apr 2019 15:16:45 -0700 (PDT)
+        Wed, 3 Apr 2019 18:20:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p10so929304wrq.1;
+        Wed, 03 Apr 2019 15:20:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qWogcakmliCnWA6g1zXhbplYsTnHQEuiNfytwIqmhw0=;
-        b=tXazteTczgZ4b6Zb8BhHzvbVtwlbbNu4aL13+3OucVP0LsI1dLY81yJ9MPY08NovYx
-         hRhV/vtVXvUbfEiEdPKjtrTOqN3iY45Ww13nfPB7otTMm/N1LVEBItYjGXK643sJ34rA
-         T/Py2OauFYUlyeiKIBMkcKU8e0Pnrap6OhWRUWxYu9SHxByUIz+LhDprzgBRsIb/LQ/h
-         xUH7IpiGIIryRIiZ0U092XMojrXJGYWHm7O1AHBkD69HBjE/rj6vuS0YUnVxpVTquI7U
-         Nc7MEjYQ1OQOZLImZTn0eI00OJn35js1e8Gj/W4AHZRa4o5lGqis3yCNxRW+apzC1+tT
-         io+w==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dbHWiyCqsMBJOaYr6iRKJfvtkjejzBYb8p0l+H+gTNI=;
+        b=M7rSS8PVbDD2ePGaC5yyz8jCgPHrBaW0LGDfG+QAbdRQXuh5KYmw6uSeVfp4FfamEq
+         mEcxx8aIyUc/VTEME9g+l3QAz0/YSUIMtF5vxN9Kwj/8D8/bZY+lVkrTtgbDlTJgIfGW
+         owru05mTdEMNogItt+ti7ET6SDx/IBOSfo3VN7C6yK37PwdggWqvjn7gSGSm3WvFdoC5
+         693PaEdNKWttzdUXAygQ42wsD2drmY9ZjfsJQPLsfKDdSvpwLMlVQjTEoc1oIjUyMlog
+         beSHdnbNREcIRUNenAaO6pM5dViaIBh437OCYNNasZOslqgnp3xMfdMrYy1tqhKT0qNh
+         7/AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qWogcakmliCnWA6g1zXhbplYsTnHQEuiNfytwIqmhw0=;
-        b=jbj9QIyYZXwQHFSAN/oHVTDnbl4c5PWZtXyVIqCwtyJrmqIbb4CkyJoSpqSdgi7iKV
-         VUwvOVNBkOCqMJSfEvWlimzk3NH9H9zcsjK4RX/2I0QO+ULWYMRX0Rwo4MAIbioEL/Dd
-         2G2VFcLEFbzJFeVxGQFGBVPT5d8mlYy8P8HLVi2yPkjjiw3WIAds8zs4oVmgCRnEKwKV
-         E47Lj0qaWYg3OS6lrPezeEv1E2BFSOltyHIrJ6qa73qJ95ogWuz/Rgf53V+mzcnDMbtl
-         HZEyuOJz83JWVmI4OVWVzheeBgPFn4pnUH0v0SajZBRw50LShkiC0TiS9fuaJLt2A5m+
-         /RJg==
-X-Gm-Message-State: APjAAAVqgLHhn51d50iQsr6ZGD2zO24zhYAAXonVkKamS/bNfh3yuyk0
-        Kr2PqQ6YsVVqmuCzBElRTPE=
-X-Google-Smtp-Source: APXvYqymrSyQX3XHMm0QmoQHSr6bHP9NMOTCCcZBhGgee+gvqXKIh/aFFAPIAOIPttHpBCZABEN2DQ==
-X-Received: by 2002:a17:902:ba88:: with SMTP id k8mr2593113pls.268.1554329804443;
-        Wed, 03 Apr 2019 15:16:44 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id o76sm48644836pfa.156.2019.04.03.15.16.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 15:16:43 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 15:16:42 -0700
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] input: keyboard: snvs: use dev_pm_set_wake_irq() to
- simplify code
-Message-ID: <20190403221642.GF53104@dtor-ws>
-References: <1553666576-21621-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=dbHWiyCqsMBJOaYr6iRKJfvtkjejzBYb8p0l+H+gTNI=;
+        b=R0hjoGZ4jl8MrpYvJIE9HvCURNt+/1fZNQdpcp/L3/IaPI+Hv09qVl744NHZlpMBCo
+         BnYpzl0EfDzum2camQ1tVHzFlzWu0YmyEfXJAwwSFvBNMq9f2/6roHvQncN8AZy+/Vb9
+         Vkz/Bu8avQzxsFAK0lPImJSSmfX5r+/dRvwDj4cAC7nzTl1Vgf803bei/ioxAJd0g10u
+         RpGIxwzQjV4llnRkpbnqxl1hhxHPubz7JIO2KJ/1/j1zs098t3GMgdYlhJOTJyPKK89W
+         OJfiWWym34W9GdLdz/ku5zBFcfi0X8vtvnajPbqVF2AKqinio8NQh8LXPflpQIAvdg5c
+         LpAg==
+X-Gm-Message-State: APjAAAUDoBzs2Yz5EUjpRDmWtfLdVqFzj9wiTrsU9HfSGbuAH1vv4ryX
+        Q+JvcTXHbLeckltVznIJbqE=
+X-Google-Smtp-Source: APXvYqx01HJOTcFEYxL+JyHDTFj0fe1jysPufq5CnMVM+sOGa9B7xc55WsDr31n1+IOt0EZA7B+DXA==
+X-Received: by 2002:a05:6000:124a:: with SMTP id j10mr1433859wrx.24.1554330023731;
+        Wed, 03 Apr 2019 15:20:23 -0700 (PDT)
+Received: from [10.67.49.126] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id b134sm39386348wmd.26.2019.04.03.15.20.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 15:20:22 -0700 (PDT)
+Subject: Re: [PATCH v6 0/9] iProc I2C slave mode and NIC mode
+To:     Wolfram Sang <wsa@the-dreams.de>, Ray Jui <ray.jui@broadcom.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190403011830.3254-1-ray.jui@broadcom.com>
+ <20190403204423.btgtke3tmt7pkr3j@ninjato>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <06dff712-151b-f188-d154-3130d56d01d8@gmail.com>
+Date:   Wed, 3 Apr 2019 15:20:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1553666576-21621-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190403204423.btgtke3tmt7pkr3j@ninjato>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 06:08:05AM +0000, Anson Huang wrote:
-> With calling dev_pm_set_wake_irq() to set SNVS ON/OFF button
-> as wakeup source for suspend, generic wake irq mechanism
-> will automatically enable it as wakeup source when suspend,
-> then the enable_irq_wake()/disable_irq_wake() can be removed
-> in suspend/resume callback, it simplifies the code.
+On 4/3/19 1:44 PM, Wolfram Sang wrote:
+> On Tue, Apr 02, 2019 at 06:18:21PM -0700, Ray Jui wrote:
+>> This patch series adds the following support to the iProc I2C driver:
+>> - Increase maximum read transfer size to 255 bytes
+>> - I2C slave mode
+>> - Polling mode
+>> - NIC I2C mode
+>>
+>> This patch series is based on kernel v5.1-rc3 and available at:
+>> https://github.com/Broadcom/arm64-linux.git
+>> branch: i2c-slave-v6
+>>
+>> Changes from v5:
+>>  - Address various comments from Wolfram
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> In the future, please write in detail what you changed. I review so many
+> patches that I can't recall all my comments on every patch.
+> 
+> That being said, all patches applied to for-next, thanks!
 
-Applied, thank you.
+OK, I will drop patch #9 from my queue then, thanks.
 
-> ---
->  drivers/input/keyboard/snvs_pwrkey.c | 30 ++++--------------------------
->  1 file changed, 4 insertions(+), 26 deletions(-)
 > 
-> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> index 4c67cf3..5342d8d 100644
-> --- a/drivers/input/keyboard/snvs_pwrkey.c
-> +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> @@ -15,6 +15,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_wakeirq.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
->  
-> @@ -167,28 +168,9 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	}
->  
->  	device_init_wakeup(&pdev->dev, pdata->wakeup);
-> -
-> -	return 0;
-> -}
-> -
-> -static int __maybe_unused imx_snvs_pwrkey_suspend(struct device *dev)
-> -{
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-> -
-> -	if (device_may_wakeup(&pdev->dev))
-> -		enable_irq_wake(pdata->irq);
-> -
-> -	return 0;
-> -}
-> -
-> -static int __maybe_unused imx_snvs_pwrkey_resume(struct device *dev)
-> -{
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-> -
-> -	if (device_may_wakeup(&pdev->dev))
-> -		disable_irq_wake(pdata->irq);
-> +	error = dev_pm_set_wake_irq(&pdev->dev, pdata->irq);
-> +	if (error)
-> +		dev_err(&pdev->dev, "irq wake enable failed.\n");
->  
->  	return 0;
->  }
-> @@ -199,13 +181,9 @@ static const struct of_device_id imx_snvs_pwrkey_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
->  
-> -static SIMPLE_DEV_PM_OPS(imx_snvs_pwrkey_pm_ops, imx_snvs_pwrkey_suspend,
-> -				imx_snvs_pwrkey_resume);
-> -
->  static struct platform_driver imx_snvs_pwrkey_driver = {
->  	.driver = {
->  		.name = "snvs_pwrkey",
-> -		.pm     = &imx_snvs_pwrkey_pm_ops,
->  		.of_match_table = imx_snvs_pwrkey_ids,
->  	},
->  	.probe = imx_snvs_pwrkey_probe,
-> -- 
-> 2.7.4
+> Can be fixed incrementally, my code checkers complain about:
 > 
+>     CPPCHECK
+> drivers/i2c/busses/i2c-bcm-iproc.c:720:14: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>     val |= 1 << M_TX_WR_STATUS_SHIFT;
+>              ^
+> drivers/i2c/busses/i2c-bcm-iproc.c:847:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
+>             ^
+> drivers/i2c/busses/i2c-bcm-iproc.c:998:13: warning: Shifting signed 32-bit value by 31 bits is undefined behaviour [shiftTooManyBitsSigned]
+>  val &= ~(1 << TIM_CFG_MODE_400_SHIFT);
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
 
 -- 
-Dmitry
+Florian
