@@ -6,80 +6,89 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C25C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25626C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB7B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12A020830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfDCMoP (ORCPT
+        id S1726633AbfDCMod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:44:15 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39456 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfDCMoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:44:15 -0400
+        Wed, 3 Apr 2019 08:44:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:39484 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbfDCMod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:44:33 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A537D1596;
-        Wed,  3 Apr 2019 05:44:14 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADBBF15AD;
+        Wed,  3 Apr 2019 05:44:32 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DEAA3F59C;
-        Wed,  3 Apr 2019 05:44:13 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 13:44:10 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E8ED3F59C;
+        Wed,  3 Apr 2019 05:44:31 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 13:44:29 +0100
 From:   Will Deacon <will.deacon@arm.com>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        shenghui <shhuiw@foxmail.com>
-Subject: Re: [PATCH] locking/lockdep: Zap lock classes even with lock
- debugging disabled
-Message-ID: <20190403124410.GE16362@fuggles.cambridge.arm.com>
-References: <20190326195912.43316-1-bvanassche@acm.org>
+To:     wen.yang99@zte.com.cn
+Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
+        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: =?utf-8?B?562U5aSNOiBSZTogW1BBVENIIHYy?=
+ =?utf-8?Q?_14=2F15=5D_arm64=3A_cpu=5Fops?= =?utf-8?Q?=3A?= fix a leaked
+ reference byadding missing of_node_put
+Message-ID: <20190403124429.GG16362@fuggles.cambridge.arm.com>
+References: <20190401153722.GA6884@fuggles.cambridge.arm.com>
+ <201904031356099956278@zte.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326195912.43316-1-bvanassche@acm.org>
+In-Reply-To: <201904031356099956278@zte.com.cn>
 User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 12:59:12PM -0700, Bart Van Assche wrote:
-> Commit a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer
-> in use") changed the behavior of lockdep_free_key_range() from
-> unconditionally zapping lock classes into only zapping lock classes if
-> debug_lock == true. Since the new behavior can cause cat /proc/lockdep to
-> crash due to a NULL pointer dereference, restore the pre-v5.1 behavior.
-
-Can you elaborate on this NULL dereference please, and why this patch fixes
-it?
-
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: shenghui <shhuiw@foxmail.com>
-> Reported-by: shenghui <shhuiw@foxmail.com>
-> Fixes: a0b0fd53e1e6 ("locking/lockdep: Free lock classes that are no longer in use") # v5.1-rc1.
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> ---
->  kernel/locking/lockdep.c | 23 ++++++-----------------
->  1 file changed, 6 insertions(+), 17 deletions(-)
+On Wed, Apr 03, 2019 at 01:56:09PM +0800, wen.yang99@zte.com.cn wrote:
+> > > The call to of_get_next_child returns a node pointer with refcount
+> > > incremented thus it must be explicitly decremented after the last
+> > > usage.
+> > >
+> > > Detected by coccinelle with the following warnings:
+> > > ./arch/arm64/kernel/cpu_ops.c:102:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 69, but without a corresponding object release within this function.
+> > >
+> > > Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > Cc: Will Deacon <will.deacon@arm.com>
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > ---
+> > > v2->v1: add a missing space between "adding" and "missing"
+> > >
+> > >  arch/arm64/kernel/cpu_ops.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
+> > > index ea00124..00f8b86 100644
+> > > --- a/arch/arm64/kernel/cpu_ops.c
+> > > +++ b/arch/arm64/kernel/cpu_ops.c
+> > > @@ -85,6 +85,7 @@ static const char *__init cpu_read_enable_method(int cpu)
+> > >                  pr_err("%pOF: missing enable-method property\n",
+> > >                      dn);
+> > >          }
+> > > +        of_node_put(dn);
+> > >      } else {
+> > >          enable_method = acpi_get_enable_method(cpu);
+> > >          if (!enable_method) {
+> > 
+> > Looks about right to me:
+> > 
+> > Acked-by: Will Deacon <will.deacon@arm.com>
+> > 
+> > How do you plan to get this upstream? Can we just pick this one up via
+> > arm64?
 > 
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 34cdcbedda49..70480e4f8f5d 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -4689,8 +4689,7 @@ static void free_zapped_rcu(struct rcu_head *ch)
->  		return;
->  
->  	raw_local_irq_save(flags);
-> -	if (!graph_lock())
-> -		goto out_irq;
-> +	arch_spin_lock(&lockdep_lock);
+> Ok, thank you.
+> We are very happy to know that it is useful.
 
-This also throws out the recursion counting. Is that ok?
+Ok, I picked it up.
 
 Will
