@@ -2,102 +2,87 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6406C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23B0C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75213205C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B5B205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5S6AgW/N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FrV3Vkbj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfDCROK (ORCPT
+        id S1726372AbfDCRQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:14:10 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:40106 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfDCROJ (ORCPT
+        Wed, 3 Apr 2019 13:16:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41786 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfDCRQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:14:09 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33H3hRG154371;
-        Wed, 3 Apr 2019 17:13:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=AMEI3so+eBmfxTU0R6ccc4DLo94luNS9vEBVO3oIV+M=;
- b=5S6AgW/NZ3zO150072DaZjxsLUd/+NHCNhKNsBC+lYsydsr8GkauCA5XITjNF3yDcjiB
- qzFcZYHNaAJ/dEaVrAzqkRjojL6Rj92pCk3TiH9xaUIvIVsGDtq5lAdo+oFCFDSSfBzP
- HIRVGGGTKDHYFv0d0vnK02+g9GJR+pjJVLL3UoXMuq7QJWzQCLmTmKrrxTOhzRkj62We
- etdYiI54DeV8+ZbxVYc/7ItCr2MwprRHgmnaAuxhdytJEuvTg43eE8GEzFQiFoBMFNbR
- B2FKY6Yy0pURjuRE8xawyYYVvMr99BRo+XvoYSenbzG2h3eKs8wWws6gWOIvo7rP6C2D IQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2rhwydajtx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Apr 2019 17:13:30 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x33HD5LL033428;
-        Wed, 3 Apr 2019 17:13:29 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2rm8f67mcn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Apr 2019 17:13:29 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x33HDQNP019113;
-        Wed, 3 Apr 2019 17:13:27 GMT
-Received: from [10.11.111.157] (/10.11.111.157)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Apr 2019 10:13:26 -0700
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: [PATCH v2 0/5] Add NUMA-awareness to qspinlock
-From:   Alex Kogan <alex.kogan@oracle.com>
-In-Reply-To: <20190401090943.GG11158@hirez.programming.kicks-ass.net>
-Date:   Wed, 3 Apr 2019 13:13:39 -0400
-Cc:     linux@armlinux.org.uk, mingo@redhat.com, will.deacon@arm.com,
-        arnd@arndb.de, longman@redhat.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        steven.sistare@oracle.com, daniel.m.jordan@oracle.com,
-        dave.dice@oracle.com, rahul.x.yadav@oracle.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6E1DD598-2493-4C81-9CB6-8024E9244574@oracle.com>
+        Wed, 3 Apr 2019 13:16:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YHQi/3e6+Nd2hmdPSPUhS2o9LcDAvjz7QnorLsrEaIA=; b=FrV3Vkbj94xDcrez4y+cFwZDvK
+        8Q8ZRS8AGtUWTig02ihcurV7zE/EgQoc/ERjGev3ApAPQ/t2ZuH9xyPjDqcUprs+2s3UEeTtCMfmJ
+        Qp2IyMl9+4LzYyta6Csf5oPcbfHKzT7obMyQEu5qPVTlOHYv0YFP9yJV3kfQ8NCtkUlSd/rTemEyU
+        MEqBmG5+TrRoDvy2uKcavz5Lzcs+BIhEXA/qMKJOt3+qjkT26ohY7+6L0iqMU0i07yv7PzRLbnYKR
+        rjzyci7tmIaRgeRjaZGiZrOaTYwLFw2/wpfnGug8FzeaFOIK2OJHreUoSTDrQJSxSqLSBEroZlKI9
+        D0AY5Arg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBjV8-000255-3T; Wed, 03 Apr 2019 17:16:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 56840203C12DB; Wed,  3 Apr 2019 19:16:35 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 19:16:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
+        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, steven.sistare@oracle.com,
+        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
+        rahul.x.yadav@oracle.com
+Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
+ path of qspinlock
+Message-ID: <20190403171635.GM4038@hirez.programming.kicks-ass.net>
 References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190401090943.GG11158@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3259)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=817
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904030117
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=859 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904030116
+ <20190329152006.110370-4-alex.kogan@oracle.com>
+ <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
+ <20190402094320.GM11158@hirez.programming.kicks-ass.net>
+ <9ec3d8dc-d1e0-1b8a-5e00-ba92b9756c58@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9ec3d8dc-d1e0-1b8a-5e00-ba92b9756c58@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 03, 2019 at 12:33:20PM -0400, Waiman Long wrote:
+> static inline void queued_spin_lock_slowpath(struct qspinlock *lock, u32
+> val)
+> {
+>         if (static_branch_unlikely(&use_numa_spinlock))
+>                 numa_queued_spin_lock_slowpath(lock, val);
+>         else   
+>                 native_queued_spin_lock_slowpath(lock, val);
+> }
 
-> On Apr 1, 2019, at 5:09 AM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
->=20
-> On Fri, Mar 29, 2019 at 11:20:01AM -0400, Alex Kogan wrote:
->> The following locktorture results are from an Oracle X5-4 server
->> (four Intel Xeon E7-8895 v3 @ 2.60GHz sockets with 18 hyperthreaded
->> cores each).=20
->=20
-> The other interesting number is on a !NUMA machine. What do these
-> patches do there? Remember, most people do not in fact have numa.
-I will make sure to include numbers from a !NUMA machine in the next =
-revision of the patch.
+That's horrible for the exact reason you state.
 
-Regards,
-=E2=80=94 Alex=
+> Alternatively, we can also call numa_queued_spin_lock_slowpath() in
+> native_queued_spin_lock_slowpath() if we don't want to increase the code
+> size of spinlock call sites.
+
+Yeah, still don't much like that though, we're littering the fast path
+of that slow path with all sorts of crap.
