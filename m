@@ -2,114 +2,211 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E983AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D88AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE36121473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE55A2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfDCIWQ (ORCPT
+        id S1728861AbfDCIXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:22:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:32983 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfDCIWQ (ORCPT
+        Wed, 3 Apr 2019 04:23:12 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:25154 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726004AbfDCIXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:22:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x338LoeX1758688
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 01:21:50 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x338Lno91758685;
-        Wed, 3 Apr 2019 01:21:49 -0700
-Date:   Wed, 3 Apr 2019 01:21:49 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-37686b1353cfc30e127cef811959cdbcd0495d98@git.kernel.org>
-Cc:     peterz@infradead.org, hpa@zytor.com, torvalds@linux-foundation.org,
-        jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, bp@alien8.de, tglx@linutronix.de
-Reply-To: linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de,
-          mingo@kernel.org, jpoimboe@redhat.com,
-          torvalds@linux-foundation.org, peterz@infradead.org,
-          hpa@zytor.com
-In-Reply-To: <20190307174802.46fmpysxyo35hh43@treble>
-References: <20190307174802.46fmpysxyo35hh43@treble>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/objtool] tracing: Improve "if" macro code generation
-Git-Commit-ID: 37686b1353cfc30e127cef811959cdbcd0495d98
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Apr 2019 04:23:12 -0400
+X-IronPort-AV: E=Sophos;i="5.60,303,1549900800"; 
+   d="scan'208";a="58373655"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 03 Apr 2019 16:23:09 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 35F954C8B03D;
+        Wed,  3 Apr 2019 16:23:11 +0800 (CST)
+Received: from localhost.localdomain (10.167.225.56) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Wed, 3 Apr 2019 16:23:15 +0800
+Date:   Wed, 3 Apr 2019 16:23:06 +0800
+From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
+To:     Dave Young <dyoung@redhat.com>
+CC:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190403082305.GG1555@localhost.localdomain>
+References: <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+ <20190403053459.GD1555@localhost.localdomain>
+ <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403072141.GE1555@localhost.localdomain>
+ <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
+In-Reply-To: <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.167.225.56]
+X-yoursite-MailScanner-ID: 35F954C8B03D.ACA1F
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  37686b1353cfc30e127cef811959cdbcd0495d98
-Gitweb:     https://git.kernel.org/tip/37686b1353cfc30e127cef811959cdbcd0495d98
-Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Thu, 7 Mar 2019 11:48:02 -0600
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 3 Apr 2019 09:36:27 +0200
+On Wed, Apr 03, 2019 at 04:09:16PM +0800, Dave Young wrote:
+>On 04/03/19 at 03:21pm, Chao Fan wrote:
+>> On Wed, Apr 03, 2019 at 01:53:40PM +0800, Dave Young wrote:
+>> >On 04/03/19 at 01:35pm, Chao Fan wrote:
+>> >> On Tue, Apr 02, 2019 at 08:03:19PM +0800, Dave Young wrote:
+>> >> >On 04/01/19 at 12:08am, Junichi Nomura wrote:
+>> >> >> Commit 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in
+>> >> >> boot_params") broke kexec boot on EFI systems.  efi_get_rsdp_addr()
+>> >> >> in the early parsing code tries to search RSDP from EFI table but
+>> >> >> that will crash because the table address is virtual when the kernel
+>> >> >> was booted by kexec.
+>> >> >> 
+>> >> >> In the case of kexec, physical address of EFI tables is provided
+>> >> >> via efi_setup_data in boot_params, which is set up by kexec(1).
+>> >> >> 
+>> >> >> Factor out the table parsing code and use different pointers depending
+>> >> >> on whether the kernel is booted by kexec or not.
+>> >> >> 
+>> >> >> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+>> >> >> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+>> >> >> Acked-by: Baoquan He <bhe@redhat.com>
+>> >> >> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+>> >> >> Cc: Borislav Petkov <bp@suse.de>
+>> >> >> Cc: Dave Young <dyoung@redhat.com>
+>> >> [...]
+>> >> >
+>> >> >I failed to kexec reboot on my laptop, kernel panics too quick,  I'm not sure this is
+>> >> >caused by your patch though.
+>> >> >
+>> >> >Actually there are something probably i915 changes break kexec,  the
+>> >> >above test is with "nomodeset" which should work.
+>> >> >
+>> >> >Let me do more testing and update here tomorrow.
+>> >> >
+>> >> 
+>> >> Hi Dave,
+>> >> 
+>> >> Last day I was testing the normal kexec, today I have tested the kdump
+>> >> issue. Since the kdump has set "nokaslr" to cmdline, so I drop from
+>> >> KDUMP_COMMANDLINE_APPEND
+>> >> And it booted OK, so the PATCH works in both normal kexec and kdump.
+>> >> 
+>> >
+>> >Actually I got some different kexec test results.
+>> >
+>> >Yesterday, with my installed kernel (based on git head several weeks
+>> >ago), kexec kernel panics.
+>> >
+>> >Then I tried latest mainline with git pull, everything works, (with or
+>> >without the patch, and can not reproduce the bug this patch is fixing)
+>> >
+>> >Today, test again, kexec reboot hangs (with or without your patch), but
+>> >kdump works always (with or without the patch)
+>> 
+>> That's so strange, I'm puzzled by your test.
+>> Withour ant changes, just test again, the result of yesterday and today
+>> are different?
+>> 
+>> >
+>> >It is weird to me. Probably I need find out why I can not reproduce the
+>> >bug this patch is addressing first.
+>> 
+>> Hmm, is your laptop booted from EFI or legacy BIOS?
+>
+>EFI booted.
+>
+>> >
+>> >earlyprintk seems not working for me anymore, it is not easy to debug on
+>> >laptop now.
+>> 
+>> Another computer can help print the console message.
+>> I remeber you are good at debug on two computers.
+>
+>I used to use earlyprintk, but seems earlyprintk can not work so early.
+>So I only can try to comment out code manually.
 
-tracing: Improve "if" macro code generation
+Ah, I got it. If you want to use earlyprintk to print message of
+get_rsdp_addr(), you should change some code.
+Because get_rsdp_addr() is called before earlyprintk initialed.
 
-With CONFIG_PROFILE_ALL_BRANCHES=y, the "if" macro converts the
-conditional to an array index.  This can cause GCC to create horrible
-code.  When there are nested ifs, the generated code uses register
-values to encode branching decisions.
+I am still testing, but in my debug stage, I change like this:
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index c0d6c560df69..dbbe8d9a5792 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -352,7 +352,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+        boot_params->hdr.loadflags &= ~KASLR_FLAG;
 
-Make it easier for GCC to optimize by keeping the conditional as a
-conditional rather than converting it to an integer.  This shrinks the
-generated code quite a bit, and also makes the code sane enough for
-objtool to understand.
+        /* Save RSDP address for later use. */
+-       boot_params->acpi_rsdp_addr = get_rsdp_addr();
 
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: brgerst@gmail.com
-Cc: catalin.marinas@arm.com
-Cc: dvlasenk@redhat.com
-Cc: dvyukov@google.com
-Cc: hpa@zytor.com
-Cc: james.morse@arm.com
-Cc: julien.thierry@arm.com
-Cc: luto@amacapital.net
-Cc: luto@kernel.org
-Cc: rostedt@goodmis.org
-Cc: valentin.schneider@arm.com
-Cc: will.deacon@arm.com
-Link: https://lkml.kernel.org/r/20190307174802.46fmpysxyo35hh43@treble
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/compiler.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+        sanitize_boot_params(boot_params);
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 445348facea9..d58aa0db05f9 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -67,7 +67,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 				.line = __LINE__,			\
- 			};						\
- 		______r = !!(cond);					\
--		______f.miss_hit[______r]++;					\
-+		______r ? ______f.miss_hit[1]++ : ______f.miss_hit[0]++;\
- 		______r;						\
- 	}))
- #endif /* CONFIG_PROFILE_ALL_BRANCHES */
+@@ -368,6 +367,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+        cols = boot_params->screen_info.orig_video_cols;
+
+        console_init();
++       boot_params->acpi_rsdp_addr = get_rsdp_addr();
+        debug_putstr("early console in extract_kernel\n");
+
+        free_mem_ptr     = heap;        /* Heap */
+
+Call this function after console_init().
+That will make earlyprintk works.
+
+>
+>It seems to be still some bug in early acpi code because if I 
+>return 0 in get rsdp function it just works.
+>
+>This guess make sense to me for now:
+>1. nokaslr does not work because it may only avoid randomization, but it
+>does not avoid running the early acpi parsing code.
+>
+>2. kexec does not work without the patch we talked about, because I just
+>reproduced Junichi reported bug, sometimes hang, or reset, it is
+>understandable.
+>
+>3. kexec does not work with the patch, so there is still bugs in the
+>code. 
+>
+>So several things to do is:
+>
+>Fix 1. (separate issue),  Baoquan or either of you may want to fix it :)
+
+For 1, I think it's not needed to fix. Since not only KASLR needs RSDP.
+So nokaslr should not stop the acpi parsing code.
+>
+>Fix 3.  need more debugging, have you or Junichi run tests on more real
+>hardware, maybe it is easier to reproduce on real hardware, I'm glad to
+>help to try test patch or provide any help. 
+
+I am still testing in real hardware.
+
+Thanks,
+Chao Fan
+
+>
+>Thanks
+>Dave
+>
+>
+
+
