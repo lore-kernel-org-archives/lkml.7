@@ -2,107 +2,144 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B50DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A6EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071252133D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FBD20657
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="D4A9+Cb2";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Quey626e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfDCR5I (ORCPT
+        id S1726425AbfDCR6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:57:08 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45988 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbfDCR5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:57:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF8DA80D;
-        Wed,  3 Apr 2019 10:57:07 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AC263F721;
-        Wed,  3 Apr 2019 10:57:04 -0700 (PDT)
-Subject: Re: [PATCH 2/6] arm64/mm: Enable memory hot remove
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com
-Cc:     mark.rutland@arm.com, mhocko@suse.com, david@redhat.com,
-        cai@lca.pw, pasha.tatashin@oracle.com,
-        Stephen Bates <sbates@raithlin.com>, james.morse@arm.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de
-References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
- <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
- <f2ea761c-49b2-88f6-14fa-5aaec57952cb@deltatee.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <85fbfe49-d49e-fd6e-21dd-ff4d9808610b@arm.com>
-Date:   Wed, 3 Apr 2019 18:57:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 3 Apr 2019 13:58:20 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57072 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726151AbfDCR6U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:58:20 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33Hqpow001589;
+        Wed, 3 Apr 2019 10:57:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=szVyQXzqNWFLz55J/ZpIrcml3NcRugE0hUK+gSoqhVQ=;
+ b=D4A9+Cb2q+yHlJw+MNGM50mCNehKtmxAFZ2rDBqYP6i/widC0ggiZ0+ENI1HSFxpAPm9
+ fa9LfN0/8sEe4z48uRRgSfEKLmjLs99UWnM6T/ldsNv5hpsuBRyAw9xLSibszMxotRm4
+ IVAnhrh8LP1b5oCELhQ9N0UjDf51zw3oLcc= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rn1hvg1dv-8
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 03 Apr 2019 10:57:57 -0700
+Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 3 Apr 2019 10:57:53 -0700
+Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
+ prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 3 Apr 2019 10:57:45 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 3 Apr 2019 10:57:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=szVyQXzqNWFLz55J/ZpIrcml3NcRugE0hUK+gSoqhVQ=;
+ b=Quey626ebiTBxmyhI0+PVUiCsNnGs/iLpDJVZr+fr3cqDhMianAKQiPpX19z5Xe0ULVy74LZwcdCMEdKEOs5ktNwx7EdcohGJFQybiiUmVTQNvxYX49xkDCf9eFMh1lcxMszypEv50Dnywo/8yMLP+GwvLkEJW/OWJjIj6Hxh4E=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2231.namprd15.prod.outlook.com (52.135.196.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.20; Wed, 3 Apr 2019 17:57:43 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded%3]) with mapi id 15.20.1750.017; Wed, 3 Apr 2019
+ 17:57:43 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/7] list: Add function list_rotate_to_front()
+Thread-Topic: [PATCH v5 1/7] list: Add function list_rotate_to_front()
+Thread-Index: AQHU6ai/hRRVJsHCh0Ws9dfflaiJBKYquiKA
+Date:   Wed, 3 Apr 2019 17:57:42 +0000
+Message-ID: <20190403175739.GB6778@tower.DHCP.thefacebook.com>
+References: <20190402230545.2929-1-tobin@kernel.org>
+ <20190402230545.2929-2-tobin@kernel.org>
+In-Reply-To: <20190402230545.2929-2-tobin@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO1PR15CA0085.namprd15.prod.outlook.com
+ (2603:10b6:101:20::29) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:9220]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a106cac7-85a9-43f6-e12a-08d6b85dde9d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR15MB2231;
+x-ms-traffictypediagnostic: BYAPR15MB2231:
+x-microsoft-antispam-prvs: <BYAPR15MB2231D9DC7E65A43F17277132BE570@BYAPR15MB2231.namprd15.prod.outlook.com>
+x-forefront-prvs: 0996D1900D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(39860400002)(346002)(136003)(376002)(199004)(189003)(6246003)(86362001)(25786009)(46003)(486006)(81166006)(186003)(81156014)(2906002)(305945005)(6512007)(7736002)(6436002)(1076003)(102836004)(6506007)(76176011)(9686003)(105586002)(6116002)(386003)(6916009)(8936002)(106356001)(14444005)(8676002)(4326008)(53936002)(99286004)(6486002)(14454004)(478600001)(52116002)(5660300002)(71190400001)(71200400001)(256004)(33656002)(68736007)(446003)(476003)(229853002)(11346002)(316002)(97736004)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2231;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sHSjdRnrnJck4csKcNDUt05UUmEkRZ6JRXUpgdY2ivdycWiocae+N18jlYYUVTPJNIdPt9z0w7fBdt8e2ZFLrE6zGgPi7EOATv0wRDhO2T0M8kAMDnMs2/pYU9hCh9//+cB3N+fd/pAhiX0s501CcJyHirdawEG7vRs+qfkviGzjIa/SB9gm9IwQZOcRm3CxhevQGRRwrz+EeP3kl8zxlWCetSMUg3/9QZnO9mWiLlueRccKIbTjspYHWaxLPaRpTivCDDMeiDu6Hx+L8/WorhIIvfNZ4ZvoMmDCpeEJGeNdg2RtSr2BFDGmbiyydC/tDS6eUCwaeNAFVijXvlPKe+PNYrigEo883wbv1/po9Jxe7OwoowJaElcTNAKZx4HqvsMiAu90rol/KqYXWDTOq+JZids4bGNbB4q4XcvKnqA=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <088A820733D4244DA401E5CE186B29A6@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <f2ea761c-49b2-88f6-14fa-5aaec57952cb@deltatee.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: a106cac7-85a9-43f6-e12a-08d6b85dde9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2019 17:57:42.9005
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2231
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_10:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 18:32, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-04-02 10:30 p.m., Anshuman Khandual wrote:
->> Memory removal from an arch perspective involves tearing down two different
->> kernel based mappings i.e vmemmap and linear while releasing related page
->> table pages allocated for the physical memory range to be removed.
->>
->> Define a common kernel page table tear down helper remove_pagetable() which
->> can be used to unmap given kernel virtual address range. In effect it can
->> tear down both vmemap or kernel linear mappings. This new helper is called
->> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
->> The argument 'direct' here identifies kernel linear mappings.
->>
->> Vmemmap mappings page table pages are allocated through sparse mem helper
->> functions like vmemmap_alloc_block() which does not cycle the pages through
->> pgtable_page_ctor() constructs. Hence while removing it skips corresponding
->> destructor construct pgtable_page_dtor().
->>
->> While here update arch_add_mempory() to handle __add_pages() failures by
->> just unmapping recently added kernel linear mapping. Now enable memory hot
->> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
->>
->> This implementation is overall inspired from kernel page table tear down
->> procedure on X86 architecture.
-> 
-> I've been working on very similar things for RISC-V. In fact, I'm
-> currently in progress on a very similar stripped down version of
-> remove_pagetable(). (Though I'm fairly certain I've done a bunch of
-> stuff wrong.)
-> 
-> Would it be possible to move this work into common code that can be used
-> by all arches? Seems like, to start, we should be able to support both
-> arm64 and RISC-V... and maybe even x86 too.
-> 
-> I'd be happy to help integrate and test such functions in RISC-V.
+On Wed, Apr 03, 2019 at 10:05:39AM +1100, Tobin C. Harding wrote:
+> Currently if we wish to rotate a list until a specific item is at the
+> front of the list we can call list_move_tail(head, list).  Note that the
+> arguments are the reverse way to the usual use of list_move_tail(list,
+> head).  This is a hack, it depends on the developer knowing how the
+> list_head operates internally which violates the layer of abstraction
+> offered by the list_head.  Also, it is not intuitive so the next
+> developer to come along must study list.h in order to fully understand
+> what is meant by the call, while this is 'good for' the developer it
+> makes reading the code harder.  We should have an function appropriately
+> named that does this if there are users for it intree.
+>=20
+> By grep'ing the tree for list_move_tail() and list_tail() and attempting
+> to guess the argument order from the names it seems there is only one
+> place currently in the tree that does this - the slob allocatator.
+>=20
+> Add function list_rotate_to_front() to rotate a list until the specified
+> item is at the front of the list.
+>=20
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 
-Indeed, I had hoped we might be able to piggyback off generic code for 
-this anyway, given that we have generic pagetable code which knows how 
-to free process pagetables, and kernel pagetables are also pagetables.
-
-I did actually hack up such a patch[1], and other than 
-p?d_none_or_clear_bad() being loud it does actually appear to function 
-OK in terms of withstanding repeated add/remove cycles and not crashing, 
-but all the pagetable accounting and other stuff I don't really know 
-about mean it's probably not viable without a lot more core work.
-
-Robin.
-
-[1] 
-http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=75934a2c4f737ad9f26903861108d5b0658e86bb
+Reviewed-by: Roman Gushchin <guro@fb.com>
