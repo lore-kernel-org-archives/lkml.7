@@ -2,278 +2,98 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE66DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80511C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C071F20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463D720830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554301225;
+	bh=YpJBBoYpoUjmlc3F7RcbH+BUTGifKEeDm1kgn4IpXPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2LX8gN9GIpqkdXK8SE26pCwS+VPjZUhz7mT2Sw7Sl7uzjjFoTVYQ5kVtJ2whLajGc
+	 Da8UR38VhVsSJNnVYGV2oepzOTaxoNoS1q7aKb61b+9MEomPOY4VivmcxOHUP95Y45
+	 RP5ICY6wDEbzwf9LfoIAOG5dfC7oR94lf6ke1sjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfDCOS7 (ORCPT
+        id S1726496AbfDCOUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:18:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46508 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726184AbfDCOS6 (ORCPT
+        Wed, 3 Apr 2019 10:20:24 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43894 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfDCOUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:18:58 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33EFoIE136053
-        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 10:18:57 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmvh86jae-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:18:56 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Wed, 3 Apr 2019 15:18:52 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 3 Apr 2019 15:18:49 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x33EIlbc36110536
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Apr 2019 14:18:48 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF187AE05D;
-        Wed,  3 Apr 2019 14:18:47 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68D88AE067;
-        Wed,  3 Apr 2019 14:18:47 +0000 (GMT)
-Received: from [9.145.9.70] (unknown [9.145.9.70])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  3 Apr 2019 14:18:47 +0000 (GMT)
-Subject: Re: [PATCH v4 1/4] ocxl: Rename struct link to ocxl_link
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Greg Kurz <groug@kaod.org>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190320053448.2098-1-alastair@au1.ibm.com>
- <20190325053456.14599-1-alastair@au1.ibm.com>
- <20190325053456.14599-2-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Wed, 3 Apr 2019 16:18:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Apr 2019 10:20:23 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t81so13681656oig.10;
+        Wed, 03 Apr 2019 07:20:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vB/OBQax5R4rjNTU0F5RxkuYfIFOtn/+V3lPfgLchV4=;
+        b=lkcKaD3tj2OVbLfhZfQKZ5dmum2/oB+NSO6Ra40bafzGJyEo4LahiVtTWzYXZCcw+i
+         SaoTSyAttQnVH/l0Ggh869OrPyfdMTDzgYo3XQScg7hhNGTw+SI3onCiU+dxVMnPeiJA
+         /Io0sQIZlPwelar9b97rTzF6ateokoJelaQBL4v/YK7dEMmnJ7iXCpPccQHvlIP/5PCe
+         i6iE+I6KCMPplHIseeDj+mlK+KJ8zWKU16BxAUYHSeWSZqbvE6p75HQDBaET7hy+bh+N
+         QRHsmkJXlZDD8DzQE9ivwsTqq1plHAJK+AqGNrWFAlaWS4dzpvcsIuNXMqo9e3t6AjMm
+         ZT7Q==
+X-Gm-Message-State: APjAAAX92huyyOWMEfHnQHLz7s99pZ4+91kdYGjtxmZSOa30LLdS8b4k
+        DEsth3RGZTmu+G31562q2Ok=
+X-Google-Smtp-Source: APXvYqzmJphmqgl+5isEouBPtPvvu6olFc0Gj2NyusYlgqRo0bbrVSBbslHTVF9x8/wz0XqffajJ5w==
+X-Received: by 2002:aca:4b03:: with SMTP id y3mr404842oia.21.1554301223123;
+        Wed, 03 Apr 2019 07:20:23 -0700 (PDT)
+Received: from localhost ([130.164.62.212])
+        by smtp.gmail.com with ESMTPSA id q23sm6951753oic.45.2019.04.03.07.20.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 07:20:22 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 07:20:22 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     richard.gong@linux.intel.com
+Cc:     atull@kernel.org, mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Richard Gong <richard.gong@intel.com>
+Subject: Re: [PATCHv1] fpga: mgr: add FPGA configuration log
+Message-ID: <20190403142022.GB5752@archbook>
+References: <1554243943-25507-1-git-send-email-richard.gong@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190325053456.14599-2-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19040314-0028-0000-0000-0000035CD981
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040314-0029-0000-0000-0000241BE330
-Message-Id: <a5e3486c-f78a-ba9c-0a4b-b16b4c57b16c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904030097
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554243943-25507-1-git-send-email-richard.gong@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Richard,
 
-
-Le 25/03/2019 à 06:34, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Tue, Apr 02, 2019 at 05:25:43PM -0500, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
 > 
-> The term 'link' is ambiguous (especially when the struct is used for a
-> list), so rename it for clarity.
+> Add a log for user to know FPGA configuration is successful
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Reviewed-by: Greg Kurz <groug@kaod.org>
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
 > ---
-
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-
-
->   drivers/misc/ocxl/file.c |  5 ++---
->   drivers/misc/ocxl/link.c | 36 ++++++++++++++++++------------------
->   2 files changed, 20 insertions(+), 21 deletions(-)
+>  drivers/fpga/fpga-mgr.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
-> index e6a607488f8a..009e09b7ded5 100644
-> --- a/drivers/misc/ocxl/file.c
-> +++ b/drivers/misc/ocxl/file.c
-> @@ -151,10 +151,9 @@ static long afu_ioctl_enable_p9_wait(struct ocxl_context *ctx,
->   		mutex_unlock(&ctx->status_mutex);
->   
->   		if (status == ATTACHED) {
-> -			int rc;
-> -			struct link *link = ctx->afu->fn->link;
-> +			int rc = ocxl_link_update_pe(ctx->afu->fn->link,
-> +				ctx->pasid, ctx->tidr);
->   
-> -			rc = ocxl_link_update_pe(link, ctx->pasid, ctx->tidr);
->   			if (rc)
->   				return rc;
->   		}
-> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> index d50b861d7e57..8d2690a1a9de 100644
-> --- a/drivers/misc/ocxl/link.c
-> +++ b/drivers/misc/ocxl/link.c
-> @@ -76,7 +76,7 @@ struct spa {
->    * limited number of opencapi slots on a system and lookup is only
->    * done when the device is probed
->    */
-> -struct link {
-> +struct ocxl_link {
->   	struct list_head list;
->   	struct kref ref;
->   	int domain;
-> @@ -179,7 +179,7 @@ static void xsl_fault_handler_bh(struct work_struct *fault_work)
->   
->   static irqreturn_t xsl_fault_handler(int irq, void *data)
->   {
-> -	struct link *link = (struct link *) data;
-> +	struct ocxl_link *link = (struct ocxl_link *) data;
->   	struct spa *spa = link->spa;
->   	u64 dsisr, dar, pe_handle;
->   	struct pe_data *pe_data;
-> @@ -256,7 +256,7 @@ static int map_irq_registers(struct pci_dev *dev, struct spa *spa)
->   				&spa->reg_tfc, &spa->reg_pe_handle);
->   }
->   
-> -static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
-> +static int setup_xsl_irq(struct pci_dev *dev, struct ocxl_link *link)
->   {
->   	struct spa *spa = link->spa;
->   	int rc;
-> @@ -311,7 +311,7 @@ static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
->   	return rc;
->   }
->   
-> -static void release_xsl_irq(struct link *link)
-> +static void release_xsl_irq(struct ocxl_link *link)
->   {
->   	struct spa *spa = link->spa;
->   
-> @@ -323,7 +323,7 @@ static void release_xsl_irq(struct link *link)
->   	unmap_irq_registers(spa);
->   }
->   
-> -static int alloc_spa(struct pci_dev *dev, struct link *link)
-> +static int alloc_spa(struct pci_dev *dev, struct ocxl_link *link)
->   {
->   	struct spa *spa;
->   
-> @@ -350,7 +350,7 @@ static int alloc_spa(struct pci_dev *dev, struct link *link)
->   	return 0;
->   }
->   
-> -static void free_spa(struct link *link)
-> +static void free_spa(struct ocxl_link *link)
->   {
->   	struct spa *spa = link->spa;
->   
-> @@ -364,12 +364,12 @@ static void free_spa(struct link *link)
->   	}
->   }
->   
-> -static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
-> +static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_link)
->   {
-> -	struct link *link;
-> +	struct ocxl_link *link;
->   	int rc;
->   
-> -	link = kzalloc(sizeof(struct link), GFP_KERNEL);
-> +	link = kzalloc(sizeof(struct ocxl_link), GFP_KERNEL);
->   	if (!link)
->   		return -ENOMEM;
->   
-> @@ -405,7 +405,7 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
->   	return rc;
->   }
->   
-> -static void free_link(struct link *link)
-> +static void free_link(struct ocxl_link *link)
->   {
->   	release_xsl_irq(link);
->   	free_spa(link);
-> @@ -415,7 +415,7 @@ static void free_link(struct link *link)
->   int ocxl_link_setup(struct pci_dev *dev, int PE_mask, void **link_handle)
->   {
->   	int rc = 0;
-> -	struct link *link;
-> +	struct ocxl_link *link;
->   
->   	mutex_lock(&links_list_lock);
->   	list_for_each_entry(link, &links_list, list) {
-> @@ -442,7 +442,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_setup);
->   
->   static void release_xsl(struct kref *ref)
->   {
-> -	struct link *link = container_of(ref, struct link, ref);
-> +	struct ocxl_link *link = container_of(ref, struct ocxl_link, ref);
->   
->   	list_del(&link->list);
->   	/* call platform code before releasing data */
-> @@ -452,7 +452,7 @@ static void release_xsl(struct kref *ref)
->   
->   void ocxl_link_release(struct pci_dev *dev, void *link_handle)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   
->   	mutex_lock(&links_list_lock);
->   	kref_put(&link->ref, release_xsl);
-> @@ -488,7 +488,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
->   		void *xsl_err_data)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
->   	struct ocxl_process_element *pe;
->   	int pe_handle, rc = 0;
-> @@ -558,7 +558,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_add_pe);
->   
->   int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
->   	struct ocxl_process_element *pe;
->   	int pe_handle, rc;
-> @@ -594,7 +594,7 @@ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
->   
->   int ocxl_link_remove_pe(void *link_handle, int pasid)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
->   	struct ocxl_process_element *pe;
->   	struct pe_data *pe_data;
-> @@ -666,7 +666,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_remove_pe);
->   
->   int ocxl_link_irq_alloc(void *link_handle, int *hw_irq, u64 *trigger_addr)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	int rc, irq;
->   	u64 addr;
->   
-> @@ -687,7 +687,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_irq_alloc);
->   
->   void ocxl_link_free_irq(void *link_handle, int hw_irq)
->   {
-> -	struct link *link = (struct link *) link_handle;
-> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   
->   	pnv_ocxl_free_xive_irq(hw_irq);
->   	atomic_inc(&link->irq_available);
-> 
+> diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+> index c386681..559e046 100644
+> --- a/drivers/fpga/fpga-mgr.c
+> +++ b/drivers/fpga/fpga-mgr.c
+> @@ -151,6 +151,7 @@ static int fpga_mgr_write_complete(struct fpga_manager *mgr,
+>  	}
+>  	mgr->state = FPGA_MGR_STATE_OPERATING;
+>  
+> +	dev_info(&mgr->dev, "Successfully programming FPGA\n");
 
+That info is available in FPGA manager's sysfs status entry, if at all
+I'd make this a dev_dbg().
+
+From my end I don't see how we need this really.
+
+Thanks,
+Moritz
