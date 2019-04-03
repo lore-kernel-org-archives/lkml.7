@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC24AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58385C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8498C2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D89620830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfDCQma (ORCPT
+        id S1728728AbfDCQnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:42:30 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41943 "EHLO
+        Wed, 3 Apr 2019 12:43:37 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41978 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbfDCQmY (ORCPT
+        with ESMTP id S1727259AbfDCQm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:42:24 -0400
+        Wed, 3 Apr 2019 12:42:29 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hBixv-0004GO-0K; Wed, 03 Apr 2019 18:42:19 +0200
+        id 1hBiy0-0004GO-1J; Wed, 03 Apr 2019 18:42:24 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,9 +33,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 14/27] x86/pkeys: Don't check if PKRU is zero before writting it
-Date:   Wed,  3 Apr 2019 18:41:43 +0200
-Message-Id: <20190403164156.19645-15-bigeasy@linutronix.de>
+Subject: [PATCH 19/27] x86/fpu: Update xstate's PKRU value on write_pkru()
+Date:   Wed,  3 Apr 2019 18:41:48 +0200
+Message-Id: <20190403164156.19645-20-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
 References: <20190403164156.19645-1-bigeasy@linutronix.de>
@@ -46,35 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-write_pkru() checks if the current value is the same as the expected
-value. So instead just checking if the current and new value is zero
-(and skip the write in such a case) we can benefit from that.
+During the context switch the xstate is loaded which also includes the
+PKRU value.
+If xstate is restored on return to userland it is required that the
+PKRU value in xstate is the same as the one in the CPU.
 
-Remove the zero check of PKRU, write_pkru() provides a similar check.
+Save the PKRU in xstate during modification.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/mm/pkeys.c | 7 -------
- 1 file changed, 7 deletions(-)
+ arch/x86/include/asm/pgtable.h | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
-index 05bb9a44eb1c3..50f65fc1b9a3f 100644
---- a/arch/x86/mm/pkeys.c
-+++ b/arch/x86/mm/pkeys.c
-@@ -142,13 +142,6 @@ u32 init_pkru_value = PKRU_AD_KEY( 1) | PKRU_AD_KEY( 2) | PKRU_AD_KEY( 3) |
- void copy_init_pkru_to_fpregs(void)
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 1df90feeea5c6..58a3a68e1f114 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -23,6 +23,8 @@
+ 
+ #ifndef __ASSEMBLY__
+ #include <asm/x86_init.h>
++#include <asm/fpu/xstate.h>
++#include <asm/fpu/api.h>
+ 
+ extern pgd_t early_top_pgt[PTRS_PER_PGD];
+ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
+@@ -133,8 +135,22 @@ static inline u32 read_pkru(void)
+ 
+ static inline void write_pkru(u32 pkru)
  {
- 	u32 init_pkru_value_snapshot = READ_ONCE(init_pkru_value);
--	/*
--	 * Any write to PKRU takes it out of the XSAVE 'init
--	 * state' which increases context switch cost.  Avoid
--	 * writing 0 when PKRU was already 0.
--	 */
--	if (!init_pkru_value_snapshot && !read_pkru())
--		return;
- 	/*
- 	 * Override the PKRU state that came from 'init_fpstate'
- 	 * with the baseline from the process.
+-	if (boot_cpu_has(X86_FEATURE_OSPKE))
+-		__write_pkru(pkru);
++	struct pkru_state *pk;
++
++	if (!boot_cpu_has(X86_FEATURE_OSPKE))
++		return;
++
++	pk = get_xsave_addr(&current->thread.fpu.state.xsave, XFEATURE_PKRU);
++	/*
++	 * The PKRU value in xstate needs to be in sync with the value that is
++	 * written to the CPU. The FPU restore on return to userland would
++	 * otherwise load the previous value again.
++	 */
++	fpregs_lock();
++	if (pk)
++		pk->pkru = pkru;
++	__write_pkru(pkru);
++	fpregs_unlock();
+ }
+ 
+ static inline int pte_young(pte_t pte)
 -- 
 2.20.1
 
