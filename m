@@ -2,123 +2,115 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA06C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F6BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A2F20643
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 857992133D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554324877;
+	bh=eIdJhARtDbQsSMGOl0+VyK9vQxyJt9OnI2DZG/S1G2Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KIVXj9S/7RP2xv1HqKk8T8iE+BLlfVfX/qGMMLrBEEwzWAnh+XBIVujlpa3+nScv0
+	 bOCKZr/tg6CI6xTTiEhXxvORyb/qfxmHYylcLx748yeIlI3JdyjVz19dd/LhZ1RGQz
+	 7acrIsvLiurdo2MFvjqu98r0xsc1zXkE4eRZlW/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfDCUyG (ORCPT
+        id S1726607AbfDCUyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:54:06 -0400
-Received: from sauhun.de ([88.99.104.3]:51634 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfDCUyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:54:05 -0400
-Received: from localhost (p54B3311F.dip0.t-ipconnect.de [84.179.49.31])
-        by pokefinder.org (Postfix) with ESMTPSA id 0D4362C282F;
-        Wed,  3 Apr 2019 22:54:03 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 22:54:02 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
-Subject: Re: [PATCH] axxia-i2c: use auto cmd for last message
-Message-ID: <20190403205402.dr2uolmpew45xoxd@ninjato>
-References: <20190328111858.GA17086@localhost.localdomain>
+        Wed, 3 Apr 2019 16:54:35 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41099 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfDCUyf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 16:54:35 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 64so280136otb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 13:54:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pMNiQJpCYrgsSJq4y5K2SgmqoiP0YH+pXeQN305Fal8=;
+        b=j9eYCbsrZS8M+dypggedBMIX5ZhxUmMqBdEjlqD50din7ID8YaXhzhms01ofgEecfa
+         0QaxAbX6iD/cQn2otbmVAHu4ZNrTq2ioq0R93RqcQcqCOnEdkR4EXrwq6NNVN9GvhBWl
+         cJwn2lnUoy3JbEGlF4no3G5WfydE+7makpnwqGTzQGIAPoHJYx3NX2skXiEWzz48sOcQ
+         FfcVOHOnJyFJ5/L+Ow9q0NYfBWNHObPfPSYotwNs6R7bhGqGqBByfWBH6nglj3zQY6Ay
+         Nwn9qm/OOXyO5sv62Y1GFX9xZC7caqTBzz5Ky7WSVBkIsg3Y9Ba7MfUEgqPw2X6S+qB/
+         z+bQ==
+X-Gm-Message-State: APjAAAX82qhwyFhWKiDR5BNrOozXBT3JUe0iiNFEy8jDJxxu0ow2XEEu
+        Qw6ApzFHoy4gKBm8UXIv0JlVpCGJfgoHHlMUTog=
+X-Google-Smtp-Source: APXvYqzsdpOLd5tyMa1zzmXpjZ8t/avhmb1tNr/Fw42nQqhPdVI0AtgrekWw567uRS1SSAXwlxHM0hAQQDzRD3m7Aus=
+X-Received: by 2002:a9d:6646:: with SMTP id q6mr1410546otm.20.1554324874414;
+ Wed, 03 Apr 2019 13:54:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6l3yfohu3gsj3jo7"
-Content-Disposition: inline
-In-Reply-To: <20190328111858.GA17086@localhost.localdomain>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190402155914.78166-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0hCrpyxJzMOQXthHkqLBaYBH44f_XsHy-YUfxxUU_o41w@mail.gmail.com> <20190403112923.GV9224@smile.fi.intel.com>
+In-Reply-To: <20190403112923.GV9224@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 3 Apr 2019 22:54:22 +0200
+Message-ID: <CAJZ5v0hR_0Do+jv79wxA4BRgrUKDfes2K5gYud9-2SoWOOEf0g@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: platform: Propagate error from insert_resource()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 3, 2019 at 1:29 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Apr 02, 2019 at 06:02:40PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Apr 2, 2019 at 5:59 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > Since insert_resource() might return an error we don't need
+> > > to shadow its error code and would safely propagate to the user.
+>
+> > > -               if (p && insert_resource(p, r)) {
+> > > +               if (p && (ret = insert_resource(p, r))) {
+> >
+> > I would put the assignment here.
+> >
+> > >                         dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
+> > > -                       ret = -EBUSY;
+> > >                         goto failed;
+> > >                 }
+>
+> Something like this?
 
---6l3yfohu3gsj3jo7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes.
 
-Hi,
-
-On Thu, Mar 28, 2019 at 11:19:45AM +0000, Adamski, Krzysztof (Nokia - PL/Wr=
-oclaw) wrote:
-> Some recent commits to this driver were trying to make sure the TSS
-> interrupt is not generated on busy system due to 25ms timer expiring
-> between commands. It can still happen, however if STOP command is not
-> issued on time at the end of the transmission. If wait_for_completion in
-> axxia_i2c_xfer_msg() would not return after 25ms of getting an
-> interrupt, TSS will be generated and idev->err_msg will be set to
-> -ETIMEDOUT which will be returned from the axxia_i2c_xfer_msg(), even
-> though the transfer did actually succeed (STOP is automatically issued
-> when TSS triggers).
->=20
-> Fortunately, apart from already used manual and sequence commands, the
-> controller also has so called auto command. It works just like manual
-> mode but it but an automatic STOP is issued when either transfer length
-> is met or NAK is received from slave device.
->=20
-> This patch changes the axxia_i2c_xfer_msg() function so that auto
-> command is used for last message in transaction letting hardware manage
-> issuing STOP. TSS is disabled just after command transferring last
-> message finishes. Auto command, just like sequence, ends with SS
-> interrupt instead of SNS so handling of both had to be unified.
->=20
-> The axxia_i2c_stop() is no longer needed as the transfer can only end
-> with following conditions:
-> - fully successful - then last message was send by AUTO command and STOP
->   was issued automatically
-> - NAK received - STOP is issued automatically by controller
-> - arbitration lost - STOP should not be issued as we don't control the
->   bus
-> - IP interrupt received - this is sent when transfer length is set to 0
->   for auto/sequence command. The check for that is done before START is
->   send so no STOP is required
-> - TSS received between commands - STOP is issued by the controller
-
-I am not sure. Is this a bugfix (=3D for-current) or more a new feature (=3D
-for-next)?
-
-> Signed-off-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-> Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-
-I trust you that Alexander gave the review, but it would be a tad more
-'open development' if he could give it as a reply to your patch on the
-mailing list.
-
-Thanks,
-
-   Wolfram
-
-
---6l3yfohu3gsj3jo7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlylHWoACgkQFA3kzBSg
-KbbsKQ/+P9zFtuRRIvAsHKTSBI0uhB4PfJGhVOi6dZdCkw/LKN5j77iixqkIMRZE
-dPXic+LoF7BycMHN+0WJF9qAhnBf9xAvoPCjBwTg15AnpsZlM/q79vqPVYuTmIe2
-SsMWyWbtz+Et9jwRVKaIAkP+CWtZMrA1p0dB3w//blQ32/uE8qj54sugQgdjmRcg
-IHNUlv2s1RjrJM5UcU1HAYP0lU5UR6oTlDKa/MdOKcuPM8Aem4vE+ZPLG8CUPJvf
-Sa+DoUL3yjcmwfz2ghovfi6IhrID5+LY/laFacc3t+vkF3KoLFn2PrBUDqphM3Wj
-8A/li8vEuGYL6uucveKzD1+96Y7tkVdWOSgBDlHX6LBkTWCj+r24QULm3WGmpltd
-XM/QUz7xHPdiQdY2dYbgF+yVpijUNLWS9KeBJFeA3wdXUbzIhBxk4AubVCbLrAKa
-b/j8DKZ4V4cHQEYQGyMvvnDSQ87+WGArvUWCnfcijaTd593emQ5dQ+/xUBHGZyy6
-ojIw9V8aZcjLRaysBJxodmWZ8sRJk5IdCuCTET4DEpykxzRVpgybAVMg8xOg8O1c
-Ho0DrwRJuV3d8Lwv1s0QYPN+fS6SMXmP0SLm7gATuSxnq23KQsdE7GaeqrNdMPUs
-nA+qbM850iKZPfxuKntrQsqW7E9CoVdOOM6DdnsxwmW2plgN24Y=
-=J56r
------END PGP SIGNATURE-----
-
---6l3yfohu3gsj3jo7--
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index dab0a5abc391..9cf9e2af9efd 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -438,10 +438,12 @@ int platform_device_add(struct platform_device *pdev)
+>                                 p = &ioport_resource;
+>                 }
+>
+> -               if (p && insert_resource(p, r)) {
+> -                       dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
+> -                       ret = -EBUSY;
+> -                       goto failed;
+> +               if (p) {
+> +                       ret = insert_resource(p, r);
+> +                       if (ret) {
+> +                               dev_err(&pdev->dev, "failed to claim resource %d: %pR\n", i, r);
+> +                               goto failed;
+> +                       }
+>                 }
+>         }
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
