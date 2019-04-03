@@ -2,148 +2,118 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42581C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E796C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128E0206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554281045;
-	bh=chlWf/RWTAZL3U16E4MCgfIgdHI3rZbqz85ybHAMAP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lU1AYKvl4rjLu6UJz6iwqbIdYPZve0PLwoxA8Z0yZAz6mGsmJE9BkK+KvDCGAKXKM
-	 tflH4LxXQsOswIqc08fm0fC2Jxrxqx01QBCslpIZKgp3POpBnOjTiNinqpetwsaC2M
-	 xATpstDR9T91GlGjI1wcxZRB/PWN680rOeTz9c3w=
+	by mail.kernel.org (Postfix) with ESMTP id 6BD24206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:44:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ugG+ZPxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbfDCIoE (ORCPT
+        id S1729187AbfDCIoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:44:04 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34337 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfDCIoD (ORCPT
+        Wed, 3 Apr 2019 04:44:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40362 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbfDCIoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:44:03 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y18so11082331lfe.1;
-        Wed, 03 Apr 2019 01:44:01 -0700 (PDT)
+        Wed, 3 Apr 2019 04:44:18 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z24so7150126wmi.5;
+        Wed, 03 Apr 2019 01:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TgNJkiIJco64eBTAO+WtdYBGVP372Xd3zBa8xXutFu8=;
+        b=ugG+ZPxL6C33RUOHfeEaTf+XoiqxkVQC+37gkRIOy31Jd8l0TM+nufJpJlGHBBuZdj
+         1eibYkOVxrpP/Ei/ejWvFMGKv40rLoR0GGMfSa8Tr6mzRH2dLuNWWJyHxZpTslOFYr3t
+         wnWL07Un460wZvxJtfYyMLJfUG2u1hR/27ZMjVxh0RFMovAnuauZpS/hAmV9PpDSjUrr
+         DrC2afAYrhjpNhID4xBfNTDoM8Z97blN+nyivnOpwy/LK+elE3WAlnDojBNZhSUdXWga
+         8CpdOXTipzrqxDwMR3Pz2UuyLSE1Gdsp+KaDm3qJ/OxiQ9thGl6mTzuYSnpGe5sdTNWa
+         CAaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EbCew/WSzhbEM/eiMyTtaND34Yc3ob4fWHrPq1t/bBI=;
-        b=PLtNoq6iJrPh8Evqrs/Ul321aqxOZ7cuTuY7DALUCiEZteoMoHzrfubmnw0rQREF7o
-         nb+yc7obM8UUnFk0+fs81lVTFluia0xPwOjeCEJYtdoue97OrbRCP2j+fpIruisqYQs1
-         OboeJiIHG5ZUSgFXBKIZEFtqNAg9dJ3GzMNo+eFpVit8sGhAX8G3QJ4GWcaKIlBb7BNz
-         Aq6G1JNJ7ET1ACPFeGxhlu8UF1rNWYo5ea78i1eYEjTye3a3/Qq8vsrwhNFCvSwzl2ue
-         v5EahAlJZirRIfLmr7BQhLxkkQfyYaLgqEvqud8XeAEun2m5HaVwzUUsr//Oevw0bkIb
-         ij+A==
-X-Gm-Message-State: APjAAAVtXTyRWO61zswa+JhhzGDjp5wKyTPYsJTV+2QOsqtKInCR2+9k
-        eIF4BsuyDQryWPlL+Zrw15CD3KNB
-X-Google-Smtp-Source: APXvYqyTVkR10QDxKKi6JMqF6/oj/wm66+NnrPAqSkvvIJwaJsZHYEt9ITWQBsdicpPHSe9a07ru3w==
-X-Received: by 2002:a19:f707:: with SMTP id z7mr5904080lfe.61.1554281040491;
-        Wed, 03 Apr 2019 01:44:00 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id a7sm2832903lfo.8.2019.04.03.01.43.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 01:43:59 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hBbVM-0004gK-QR; Wed, 03 Apr 2019 10:44:20 +0200
-Date:   Wed, 3 Apr 2019 10:44:20 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Fabien Dessenne <fabien.dessenne@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 2/2] tty: add rpmsg driver
-Message-ID: <20190403084420.GH6734@localhost>
-References: <1553183239-13253-1-git-send-email-fabien.dessenne@st.com>
- <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
+        bh=TgNJkiIJco64eBTAO+WtdYBGVP372Xd3zBa8xXutFu8=;
+        b=QzPiHoCZLnCz9+FPMhvWN23MjRvIpwD3/VuVxlPOlc8xF8sZ8ASR3KQIyJFCiyPfDl
+         PRRP2PVJZjBjjcSxdoaFy0pxEB3cy/xYNBKY0J243q7BK3FOPaTGUwA5wIQ2WMjbrHrL
+         vAUtUiu5H/AlGbaCSU3oK6RzEAwt9MFwKtsI7pGxQsL3G/7iMYRjbmxn/e1l/8juqa6S
+         vUnN6LuiJ/fiPvLU83V3uWasbtFzuINGOMXsNwUkFHHj70mG0PfMjgZu/YGrdASIQNS+
+         6c9dEM5dO+4JlauszTAo/QEWMtS6UwPVZC0nRRZP7KDxkloRdWjXaWoBtdrqCuMRY+3N
+         l0bA==
+X-Gm-Message-State: APjAAAWMPpKfTkm6UDNwcq59PggqcEdBya6Opbm2etnTgYuFKocr8oJP
+        kyIgZefslaL91dcsHa/KDVE=
+X-Google-Smtp-Source: APXvYqze7Zk81YamM/hxo1KAaLcwqgmzJlsAHK3xKvuZbJyM7So2BZRVXQdhVVTRMfdCk0D3o22EXw==
+X-Received: by 2002:a1c:9cd1:: with SMTP id f200mr1194121wme.91.1554281055988;
+        Wed, 03 Apr 2019 01:44:15 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id v16sm29430429wro.48.2019.04.03.01.44.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 01:44:15 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 10:44:14 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] iommu/tegra-smmu: Respect IOMMU API read-write
+ protections
+Message-ID: <20190403084414.GC5238@ulmo>
+References: <20190306225009.3391-1-digetx@gmail.com>
+ <20190306225009.3391-4-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f0KYrhQ4vYSV2aJu"
 Content-Disposition: inline
-In-Reply-To: <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <20190306225009.3391-4-digetx@gmail.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 04:47:19PM +0100, Fabien Dessenne wrote:
-> This driver exposes a standard tty interface on top of the rpmsg
-> framework through the "rpmsg-tty-channel" rpmsg service.
-> 
-> This driver supports multi-instances, offering a /dev/ttyRPMSGx entry
-> per rpmsg endpoint.
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+
+--f0KYrhQ4vYSV2aJu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 07, 2019 at 01:50:09AM +0300, Dmitry Osipenko wrote:
+> Set PTE read/write attributes accordingly to the the protections requested
+> by IOMMU API.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/tty/Kconfig     |   9 ++
->  drivers/tty/Makefile    |   1 +
->  drivers/tty/rpmsg_tty.c | 309 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 319 insertions(+)
->  create mode 100644 drivers/tty/rpmsg_tty.c
+>  drivers/iommu/tegra-smmu.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 
-> +static int rpmsg_tty_write(struct tty_struct *tty, const unsigned char *buf,
-> +			   int total)
-> +{
-> +	int count, ret = 0;
-> +	const unsigned char *tbuf;
-> +	struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
-> +	struct rpmsg_device *rpdev;
-> +	int msg_size;
-> +
-> +	if (!cport) {
-> +		dev_err(tty->dev, "cannot get cport\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	rpdev = cport->rpdev;
-> +
-> +	dev_dbg(&rpdev->dev, "%s: send message from tty->index = %d\n",
-> +		__func__, tty->index);
-> +
-> +	if (!buf) {
-> +		dev_err(&rpdev->dev, "buf shouldn't be null.\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	msg_size = rpmsg_get_buf_payload_size(rpdev->ept);
-> +	if (msg_size < 0)
-> +		return msg_size;
-> +
-> +	count = total;
-> +	tbuf = buf;
-> +	do {
-> +		/* send a message to our remote processor */
-> +		ret = rpmsg_send(rpdev->ept, (void *)tbuf,
-> +				 min(count, msg_size));
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Just a drive-by comment; it looks like rpmsg_send() may block, but
-the tty-driver write() callback must never sleep.
+--f0KYrhQ4vYSV2aJu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +		if (ret) {
-> +			dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		if (count > msg_size) {
-> +			count -= msg_size;
-> +			tbuf += msg_size;
-> +		} else {
-> +			count = 0;
-> +		}
-> +	} while (count > 0);
-> +
-> +	return total;
-> +}
+-----BEGIN PGP SIGNATURE-----
 
-Johan
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlykcl4ACgkQ3SOs138+
+s6H28xAAgNjdDZjkv5RLkJ4TWzCDzmFPgu2T9fGG6G1y/ZluTwUWVSufoTnXpQQA
+fgPeZypWXbodkcIk8YRrPUo/vF47hNO4bJJrnFS6/7AQdzgHEf698LnOBh9mzN5R
+QXmDBX/EmcwBL9Tmd6V8LIFN6FqrCl+q1jSi3odAFCbb/n+6AdLT4R2B7op1TvBy
+xIV47Tq7pY5uQ71KSjT8zN5mHP1WNcEjWg3uuLp3OpZ0Ifv69ihvgU2xd8bGuayH
+4IIu3SC4rAycDfPcYveq2EeVuuzuBXxPNiDUlEtCLQCYyNs0BC090xo3mQRBrKF5
+rtQHvip+24w1HZxO4Na9eWm52h2Zhi9maw27cgYmfGRwwXA4z2lyYml/7+MOR5JC
+tZKPbX5AnymdqAEgdsqAr+y3iGHYydeVS6Jbf//y0vPKylJDK9nUDZdFdFK2MA9c
+sPUjYO/6zRdtqmvtg9EWja+8GGQ4/V+UlyswqjXNRv+qZEAxCg3l3gy9hZQVWe01
+46zL5U2by3F4+m5HGXqUiQLgUSi5tzUHTl0vlcetJHi9vidKDqQTxlZo3bksjwNg
+TmSlm1I6eUqvqE/dZsv0TCfigGvUTxlExOqxIkRcPnfH4y8VRiUtkFIto4u1idQI
+g4KaEcvPvnmbd6X0nfPLFJDIhUWRNu1j28czRMFA1ODAzHltloA=
+=1HwV
+-----END PGP SIGNATURE-----
+
+--f0KYrhQ4vYSV2aJu--
