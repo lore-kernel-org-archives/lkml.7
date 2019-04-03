@@ -2,208 +2,92 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A26C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D0EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1816206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE38C206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:43:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukMmPCNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfDCKmm (ORCPT
+        id S1726602AbfDCKnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:42:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42221 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfDCKml (ORCPT
+        Wed, 3 Apr 2019 06:43:13 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40411 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfDCKnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:42:41 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33AgAO71812704
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 03:42:10 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33Ag9NH1812698;
-        Wed, 3 Apr 2019 03:42:09 -0700
-Date:   Wed, 3 Apr 2019 03:42:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   "tip-bot for Lendacky, Thomas" <tipbot@zytor.com>
-Message-ID: <tip-6d3edaae16c6c7d238360f2841212c2b26774d5e@git.kernel.org>
-Cc:     bp@alien8.de, hpa@zytor.com, acme@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        alexander.shishkin@linux.intel.com, eranian@google.com,
-        Thomas.Lendacky@amd.com, thomas.lendacky@amd.com, mingo@kernel.org,
-        vincent.weaver@maine.edu, namhyung@kernel.org,
-        torvalds@linux-foundation.org, peterz@infradead.org,
-        acme@kernel.org, jolsa@redhat.com
-Reply-To: acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
-          torvalds@linux-foundation.org, namhyung@kernel.org,
-          mingo@kernel.org, vincent.weaver@maine.edu,
-          thomas.lendacky@amd.com, Thomas.Lendacky@amd.com,
-          eranian@google.com, alexander.shishkin@linux.intel.com,
-          tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          acme@redhat.com, hpa@zytor.com, bp@alien8.de
-In-Reply-To: <Message-ID:>
-References: <Message-ID:>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] x86/perf/amd: Resolve NMI latency issues for
- active PMCs
-Git-Commit-ID: 6d3edaae16c6c7d238360f2841212c2b26774d5e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Apr 2019 06:43:13 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a28so11331787lfo.7;
+        Wed, 03 Apr 2019 03:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DcTmFfB3VDL/cCLY+rfICK2qcZkK67M426hRryMBpSE=;
+        b=ukMmPCNvmXncl2AwBxbr6aWQoEau1QD6UFObPWLRrh3tUfXFqkDjyMxVKw1NFltfnu
+         dOuZDVGLFTmKa0zkOSEg3HN+tCrX2pVewnSjljZw6z+MFGD18XZS8I4cu/A6byshOMfg
+         fBl2W+YZyE1WtOfCkBctyREOK6KajoMdJJZPdGRVL4NfdQ2FyESdLZumZYXmOndVNAqb
+         sm8KRk9sRrY1sGFKJJY4baE5urVRaq98+itd9rVtl+0YBCPpxd0saw7Pqhcqi6rwf0ox
+         dHaSPSv1cNj1prcYLOWqiu7kP6rkA+NnoS3EfPsenb81kjil8Vr7+eozkMswx51n+z1o
+         3jnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DcTmFfB3VDL/cCLY+rfICK2qcZkK67M426hRryMBpSE=;
+        b=Qmfi0JKepx5oCh8cs7RxxYiT3QpmwRIdsNxncsKxi8KfS4LBtzkv1GZ7RmnV7nWhgt
+         X+7OlNTuq0jeAfr3631xr87Woy3tYY4pOmXEY8x3iMhn22ZqQg4XsSFe3tGe2R2cVyZc
+         ausxNYkUkqNA++MrSoVGpeD6N/WFfvLnF3U+8GFfi7RZnoNNiE0TI26bJhmPh0vB+ULD
+         9M/r6Ho6/vKDkcZ2yteO6ceXG+qi/HMJQl5xxG84mj1105ytfGN/ZWEoqijMH2xpf788
+         YgQtlcJg43Z/wDnMGMxpQ9pEcij/1BrGi3yHgwftgBMVZ9ivfsYg+qlDyvFYaI12fuPi
+         pgNg==
+X-Gm-Message-State: APjAAAXngE4eM9F6AbZB+7lyAOc+nSm/nmBSR+OkwL6U183FLnbr3Mg5
+        OkAkqKbNp4I1pwWRkaaMHS/Suz29
+X-Google-Smtp-Source: APXvYqzE9iPiqacrSEKEuRgvX0mJV/6H0atkNMdHmjGAHdtIbrZUduicKYm46ioUKAzCBXauhgOCdA==
+X-Received: by 2002:a19:ec17:: with SMTP id b23mr37389716lfa.76.1554288191119;
+        Wed, 03 Apr 2019 03:43:11 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id x30sm3217341ljd.38.2019.04.03.03.43.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 03:43:10 -0700 (PDT)
+Subject: Re: [PATCH v10 0/7] Support Trusted Foundations firmware on Tegra30
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Robert Yang <decatf@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190317225211.23091-1-digetx@gmail.com>
+Message-ID: <2e3d45c9-c31b-e7e3-74f3-b0e8fb767c1f@gmail.com>
+Date:   Wed, 3 Apr 2019 13:43:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190317225211.23091-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6d3edaae16c6c7d238360f2841212c2b26774d5e
-Gitweb:     https://git.kernel.org/tip/6d3edaae16c6c7d238360f2841212c2b26774d5e
-Author:     Lendacky, Thomas <Thomas.Lendacky@amd.com>
-AuthorDate: Tue, 2 Apr 2019 15:21:16 +0000
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 3 Apr 2019 11:40:32 +0200
+18.03.2019 1:52, Dmitry Osipenko пишет:
+> Hello,
+> 
+> This patchset adds support for the Trusted Foundations firmware on
+> NVIDIA Tegra30. Pretty much all of Tegra30 consumer devices have that
+> firmware and upstream kernel can't boot on those devices without the
+> firmware support. This series was tested on Nexus 7, TF300T and Ouya
+> Tegra30 devices.
 
-x86/perf/amd: Resolve NMI latency issues for active PMCs
-
-On AMD processors, the detection of an overflowed PMC counter in the NMI
-handler relies on the current value of the PMC. So, for example, to check
-for overflow on a 48-bit counter, bit 47 is checked to see if it is 1 (not
-overflowed) or 0 (overflowed).
-
-When the perf NMI handler executes it does not know in advance which PMC
-counters have overflowed. As such, the NMI handler will process all active
-PMC counters that have overflowed. NMI latency in newer AMD processors can
-result in multiple overflowed PMC counters being processed in one NMI and
-then a subsequent NMI, that does not appear to be a back-to-back NMI, not
-finding any PMC counters that have overflowed. This may appear to be an
-unhandled NMI resulting in either a panic or a series of messages,
-depending on how the kernel was configured.
-
-To mitigate this issue, add an AMD handle_irq callback function,
-amd_pmu_handle_irq(), that will invoke the common x86_pmu_handle_irq()
-function and upon return perform some additional processing that will
-indicate if the NMI has been handled or would have been handled had an
-earlier NMI not handled the overflowed PMC. Using a per-CPU variable, a
-minimum value of the number of active PMCs or 2 will be set whenever a
-PMC is active. This is used to indicate the possible number of NMIs that
-can still occur. The value of 2 is used for when an NMI does not arrive
-at the LAPIC in time to be collapsed into an already pending NMI. Each
-time the function is called without having handled an overflowed counter,
-the per-CPU value is checked. If the value is non-zero, it is decremented
-and the NMI indicates that it handled the NMI. If the value is zero, then
-the NMI indicates that it did not handle the NMI.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org> # 4.14.x-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/Message-ID:
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/amd/core.c | 56 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index c09ee88b0eed..34c191453ce3 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -4,10 +4,13 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/nmi.h>
- #include <asm/apicdef.h>
- 
- #include "../perf_event.h"
- 
-+static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
-+
- static __initconst const u64 amd_hw_cache_event_ids
- 				[PERF_COUNT_HW_CACHE_MAX]
- 				[PERF_COUNT_HW_CACHE_OP_MAX]
-@@ -488,6 +491,57 @@ static void amd_pmu_disable_all(void)
- 	}
- }
- 
-+/*
-+ * Because of NMI latency, if multiple PMC counters are active or other sources
-+ * of NMIs are received, the perf NMI handler can handle one or more overflowed
-+ * PMC counters outside of the NMI associated with the PMC overflow. If the NMI
-+ * doesn't arrive at the LAPIC in time to become a pending NMI, then the kernel
-+ * back-to-back NMI support won't be active. This PMC handler needs to take into
-+ * account that this can occur, otherwise this could result in unknown NMI
-+ * messages being issued. Examples of this is PMC overflow while in the NMI
-+ * handler when multiple PMCs are active or PMC overflow while handling some
-+ * other source of an NMI.
-+ *
-+ * Attempt to mitigate this by using the number of active PMCs to determine
-+ * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
-+ * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
-+ * number of active PMCs or 2. The value of 2 is used in case an NMI does not
-+ * arrive at the LAPIC in time to be collapsed into an already pending NMI.
-+ */
-+static int amd_pmu_handle_irq(struct pt_regs *regs)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	int active, handled;
-+
-+	/*
-+	 * Obtain the active count before calling x86_pmu_handle_irq() since
-+	 * it is possible that x86_pmu_handle_irq() may make a counter
-+	 * inactive (through x86_pmu_stop).
-+	 */
-+	active = __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
-+
-+	/* Process any counter overflows */
-+	handled = x86_pmu_handle_irq(regs);
-+
-+	/*
-+	 * If a counter was handled, record the number of possible remaining
-+	 * NMIs that can occur.
-+	 */
-+	if (handled) {
-+		this_cpu_write(perf_nmi_counter,
-+			       min_t(unsigned int, 2, active));
-+
-+		return handled;
-+	}
-+
-+	if (!this_cpu_read(perf_nmi_counter))
-+		return NMI_DONE;
-+
-+	this_cpu_dec(perf_nmi_counter);
-+
-+	return NMI_HANDLED;
-+}
-+
- static struct event_constraint *
- amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event)
-@@ -680,7 +734,7 @@ static ssize_t amd_event_sysfs_show(char *page, u64 config)
- 
- static __initconst const struct x86_pmu amd_pmu = {
- 	.name			= "AMD",
--	.handle_irq		= x86_pmu_handle_irq,
-+	.handle_irq		= amd_pmu_handle_irq,
- 	.disable_all		= amd_pmu_disable_all,
- 	.enable_all		= x86_pmu_enable_all,
- 	.enable			= x86_pmu_enable_event,
+Russell, could you please give yours ACK to the firmware patches so that Thierry could pick up the patchset to the Tegra's tree? Alternatively we may take your silence as an implicit ACK and move on if you won't answer.
