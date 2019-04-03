@@ -2,191 +2,86 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570CCC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AA6C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2939B20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21FD20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfDCIAL (ORCPT
+        id S1728817AbfDCIBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:00:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40104 "EHLO mx1.suse.de"
+        Wed, 3 Apr 2019 04:01:18 -0400
+Received: from charybdis-ext.suse.de ([195.135.221.2]:24274 "EHLO suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726084AbfDCIAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:00:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DBDDAADA3;
-        Wed,  3 Apr 2019 08:00:08 +0000 (UTC)
-Message-ID: <1554278395.20869.5.camel@suse.com>
-Subject: Re: [PATCH V5 1/3] USB: serial: f81232: clear overrun flag
-From:   Oliver Neukum <oneukum@suse.com>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>,
-        peter_hong@fintek.com.tw, johan@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Date:   Wed, 03 Apr 2019 09:59:55 +0200
-In-Reply-To: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
-References: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726360AbfDCIBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 04:01:18 -0400
+Received: by suse.de (Postfix, from userid 1000)
+        id A8CEC47E0; Wed,  3 Apr 2019 10:01:16 +0200 (CEST)
+Date:   Wed, 3 Apr 2019 10:01:16 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+        anshuman.khandual@arm.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 0/4] mm,memory_hotplug: allocate memmap from hotadded
+ memory
+Message-ID: <20190403080113.adj2m3szhhnvzu56@d104.suse.de>
+References: <20190328134320.13232-1-osalvador@suse.de>
+ <cc68ec6d-3ad2-a998-73dc-cb90f3563899@redhat.com>
+ <efb08377-ca5d-4110-d7ae-04a0d61ac294@redhat.com>
+ <20190329084547.5k37xjwvkgffwajo@d104.suse.de>
+ <20190329134243.GA30026@dhcp22.suse.cz>
+ <20190401075936.bjt2qsrhw77rib77@d104.suse.de>
+ <20190401115306.GF28293@dhcp22.suse.cz>
+ <20190402082812.fefamf7qlzulb7t2@d104.suse.de>
+ <20190402124845.GD28293@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402124845.GD28293@dhcp22.suse.cz>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mi, 2019-04-03 at 14:26 +0800,  Ji-Ze Hong (Peter Hong)  wrote:
-> The F81232 will report data and LSR with bulk like following format:
-> bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
-> 
-> LSR will auto clear frame/parity/break error flag when reading by H/W,
-> but overrrun will only cleared when reading LSR. So this patch add a
-> worker to read LSR when overrun and flush the worker on close() &
-> suspend().
+On Tue, Apr 02, 2019 at 02:48:45PM +0200, Michal Hocko wrote:
+> So what is going to happen when you hotadd two memblocks. The first one
+> holds memmaps and then you want to hotremove (not just offline) it?
 
-Hi,
+If you hot-add two memblocks, this means that either:
 
-I am most sorry to complain again. Please forgive me for being less
-clear than necessary.
+a) you hot-add a 256MB-memory-device (128MB per memblock)
+b) you hot-add two 128MB-memory-device
 
-> 
-> Cc: Oliver Neukum <oneukum@suse.com>
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-> ---
-> v5:
-> 	1: Source code base revert to v3 and remove all v4 changes.
-> 	2: Add serial->suspending check in f81232_process_read_urb()
-> 	   before schedule_work(&priv->lsr_work) to avoid race condition.
-> 
-> v4:
-> 	1: Add serial->suspending check in f81232_lsr_worker() to avoid
-> 	   re-trigger
-> 	2: Add port_priv-lsr_work_resched to re-trigger LSR worker
-> 
-> v3:
-> 	1: Add flush_work(&port_priv->lsr_work) in f81232_suspend().
-> 
-> v2:
-> 	1: Add flush_work(&port_priv->lsr_work) in f81232_close().
-> 
->  drivers/usb/serial/f81232.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-> index 0dcdcb4b2cde..d8a0bb7a41f0 100644
-> --- a/drivers/usb/serial/f81232.c
-> +++ b/drivers/usb/serial/f81232.c
-> @@ -41,12 +41,14 @@ MODULE_DEVICE_TABLE(usb, id_table);
->  #define FIFO_CONTROL_REGISTER		(0x02 + SERIAL_BASE_ADDRESS)
->  #define LINE_CONTROL_REGISTER		(0x03 + SERIAL_BASE_ADDRESS)
->  #define MODEM_CONTROL_REGISTER		(0x04 + SERIAL_BASE_ADDRESS)
-> +#define LINE_STATUS_REGISTER		(0x05 + SERIAL_BASE_ADDRESS)
->  #define MODEM_STATUS_REGISTER		(0x06 + SERIAL_BASE_ADDRESS)
->  
->  struct f81232_private {
->  	struct mutex lock;
->  	u8 modem_control;
->  	u8 modem_status;
+Either way, hot-removing only works for memory-device as a whole, so
+there is no problem.
 
-Here you need a flag
+Vmemmaps are created per hot-added operations, this means that
+vmemmaps will be created for the hot-added range.
+And since hot-add/hot-remove operations works with the same granularity,
+there is no problem.
 
-bool deferred_lsr_work_needed;
-> +	struct work_struct lsr_work;
->  	struct work_struct interrupt_work;
->  	struct usb_serial_port *port;
->  };
-> @@ -282,6 +284,8 @@ static void f81232_read_int_callback(struct urb *urb)
->  static void f81232_process_read_urb(struct urb *urb)
->  {
->  	struct usb_serial_port *port = urb->context;
-> +	struct usb_serial *serial = port->serial;
-> +	struct f81232_private *priv = usb_get_serial_port_data(port);
->  	unsigned char *data = urb->transfer_buffer;
->  	char tty_flag;
->  	unsigned int i;
-> @@ -315,6 +319,9 @@ static void f81232_process_read_urb(struct urb *urb)
->  
->  			if (lsr & UART_LSR_OE) {
->  				port->icount.overrun++;
-> +
-> +				if (!serial->suspending)
-> +					schedule_work(&priv->lsr_work);
-Yes, but you cannot just drop it. You also need
+E.g:
 
-else
-	priv->deferred_lsr_work_needed = true;
->  				tty_insert_flip_char(&port->port, 0,
->  						TTY_OVERRUN);
->  			}
-> @@ -556,9 +563,12 @@ static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
->  
->  static void f81232_close(struct usb_serial_port *port)
->  {
-> +	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-> +
->  	f81232_port_disable(port);
->  	usb_serial_generic_close(port);
->  	usb_kill_urb(port->interrupt_in_urb);
-> +	flush_work(&port_priv->lsr_work);
->  }
->  
->  static void f81232_dtr_rts(struct usb_serial_port *port, int on)
-> @@ -603,6 +613,21 @@ static void  f81232_interrupt_work(struct work_struct *work)
->  	f81232_read_msr(priv->port);
->  }
->  
-> +static void f81232_lsr_worker(struct work_struct *work)
-> +{
-> +	struct f81232_private *priv;
-> +	struct usb_serial_port *port;
-> +	int status;
-> +	u8 tmp;
-> +
-> +	priv = container_of(work, struct f81232_private, lsr_work);
-> +	port = priv->port;
-> +
-> +	status = f81232_get_register(port, LINE_STATUS_REGISTER, &tmp);
-> +	if (status)
-> +		dev_warn(&port->dev, "read LSR failed: %d\n", status);
-> +}
-> +
->  static int f81232_port_probe(struct usb_serial_port *port)
->  {
->  	struct f81232_private *priv;
-> @@ -613,6 +638,7 @@ static int f81232_port_probe(struct usb_serial_port *port)
->  
->  	mutex_init(&priv->lock);
->  	INIT_WORK(&priv->interrupt_work,  f81232_interrupt_work);
-> +	INIT_WORK(&priv->lsr_work, f81232_lsr_worker);
->  
->  	usb_set_serial_port_data(port, priv);
->  
-> @@ -632,6 +658,16 @@ static int f81232_port_remove(struct usb_serial_port *port)
->  	return 0;
->  }
->  
-> +static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
-> +{
-> +	struct f81232_private *port_priv;
-> +
-> +	port_priv = usb_get_serial_port_data(serial->port[0]);
-> +	flush_work(&port_priv->lsr_work);
-> +
-> +	return 0;
-> +}
+# (qemu) object_add memory-backend-ram,id=ram0,size=128M
+# (qemu) device_add pc-dimm,id=dimm0,memdev=ram0,node=1
 
-And you do need a resume, which you had in version v4 to check
-the  deferred_lsr_work_needed flag and schedule the work if it is
-set.
+# (qemu) object_add memory-backend-ram,id=ram1,size=512M
+# (qemu) device_add pc-dimm,id=dimm1,memdev=ram1,node=1
 
-	Most sorry
-		Oliver
+# (qemu) object_add memory-backend-ram,id=ram2,size=1G
+# (qemu) device_add pc-dimm,id=dimm2,memdev=ram2,node=1
 
+These are three hot-add operations.
+Each hot-add operation will create use vmemmaps to hold the memmap for
+its hot-added sections.
+
+-- 
+Oscar Salvador
+SUSE L3
