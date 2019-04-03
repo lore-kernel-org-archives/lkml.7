@@ -2,129 +2,88 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E07C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E63C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42252146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:22:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h+veNXvh"
+	by mail.kernel.org (Postfix) with ESMTP id 9516820882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554265596;
+	bh=s1+mjeozG8dJNID92iKzglQZvABgRZXNNUbdrtGrmQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ATh9usPCUxM+IjE4mB4ZVSs16IKqxlxrsMza+hM6m/KKuK0icrk1AIp6fRTn/OhIb
+	 JBTc1IS0HEltgD7r1op9DboFabBob6Tmol+J9Jm1CeRdhQca7zIIy5NVaMFWWL31GC
+	 3biX/3CKgxRvbLNvb2HIF9BBl7gQq2RzOgVveiek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfDCEW4 (ORCPT
+        id S1726606AbfDCE0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:22:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:45465 "EHLO ozlabs.org"
+        Wed, 3 Apr 2019 00:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbfDCEW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:22:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725879AbfDCE0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 00:26:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44YtGh1DBSz9sRs;
-        Wed,  3 Apr 2019 15:22:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1554265373;
-        bh=srT79qgkT+73/cUjoOe2PJNbWSyGuLzHXwpY197h6zw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=h+veNXvhbtB4SFV7Utwxql+zyxskFebXnsiMiII+iZt0xkoMV1++JEad5m27vbTlI
-         6dBO0oF8ARmsuLriH41GmwNZMFyFKbc0Bm2oj7CDUSGl1ajnY4WpRSBk+0AddswAZC
-         NJ34oGePkCtyPnYZLelZZLo+2avq21tW6/kRd5tcYEFhskgToug97t96pn+rRpGeSD
-         sGYKiM9DwtoC88abTqL7TZ0q9oFZd76LeyvWOemHcok6fWP8fxEdGUMnsrR/Uh/UGD
-         RpUrbTG8tsX53cQQVnYpY/YkiVqTFfgATjuF3lDnIlRzt4oerpHVQn4f1eg618y7wT
-         3pPjlA5cLOqpg==
-Date:   Wed, 3 Apr 2019 15:22:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-Subject: linux-next: manual merge of the vhost tree with the net-next tree
-Message-ID: <20190403152237.631a0b3c@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EC12206B7;
+        Wed,  3 Apr 2019 04:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554265594;
+        bh=s1+mjeozG8dJNID92iKzglQZvABgRZXNNUbdrtGrmQ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N67aWbIPqiLBCHhkHLhznDiBJcoahkPSUhMvBEyktz1rua/5ERuPuB/cccMTKs/QZ
+         3s/QMUZcC+Z+soW2WGdvggf61+YLK50ZX/REtwfWF9Z5yju81M+7wPc3wLYNdE5dyK
+         yTKJ+zKKLUqwzPc+9ceNQIPf/8X2lgjKR9vc4OBg=
+Date:   Wed, 3 Apr 2019 06:26:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andre Dainez <andredainez@gmail.com>
+Cc:     lkcamp@lists.libreplanetbr.org, realwakka@gmail.com,
+        straube.linux@gmail.com, hle@owl.eu.com, rico.schrage@gmail.com,
+        sophie.matter@web.de, Valentin.Vidic@carnet.hr, simon@nikanor.nu,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: gdm724x: Add parenthesis to Macro arguments
+Message-ID: <20190403042632.GA31130@kroah.com>
+References: <1554253445-28635-1-git-send-email-andredainez@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/s62lV97IyNeb3ffEJ54elnK"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554253445-28635-1-git-send-email-andredainez@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/s62lV97IyNeb3ffEJ54elnK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 02, 2019 at 10:04:05PM -0300, Andre Dainez wrote:
+> Fix checkpatch errors:
+> 
+> CHECK: Macro argument 'len' may be better as '(len)' to avoid precedence issues
+> CHECK: Macro argument 'nlh' may be better as '(nlh)' to avoid precedence issues
+> 
+> Signed-off-by: Andre Dainez <andredainez@gmail.com>
+> ---
+>  drivers/staging/gdm724x/netlink_k.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/gdm724x/netlink_k.c b/drivers/staging/gdm724x/netlink_k.c
+> index 92440c3..36d88f4 100644
+> --- a/drivers/staging/gdm724x/netlink_k.c
+> +++ b/drivers/staging/gdm724x/netlink_k.c
+> @@ -19,8 +19,8 @@ static DEFINE_MUTEX(netlink_mutex);
+>  #define ND_NLMSG_SPACE(len)	(NLMSG_SPACE(len) + ND_IFINDEX_LEN)
+>  #define ND_NLMSG_DATA(nlh)	((void *)((char *)NLMSG_DATA(nlh) + \
+>  						  ND_IFINDEX_LEN))
+> -#define ND_NLMSG_S_LEN(len)	(len + ND_IFINDEX_LEN)
+> -#define ND_NLMSG_R_LEN(nlh)	(nlh->nlmsg_len - ND_IFINDEX_LEN)
+> +#define ND_NLMSG_S_LEN(len)	((len) + ND_IFINDEX_LEN)
 
-Hi all,
+This makes sense, but:
 
-Today's linux-next merge of the vhost tree got a conflict in:
+> +#define ND_NLMSG_R_LEN(nlh)	((nlh)->nlmsg_len - ND_IFINDEX_LEN)
 
-  drivers/net/virtio_net.c
-
-between commit:
-
-  6b16f9ee89b8 ("net: move skb->xmit_more hint to softnet data")
-
-from the net-next tree and commit:
-
-  916faccfe56d ("virtio-net: bql support")
-
-from the vhost tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/virtio_net.c
-index ba246fc475ae,955b3e76eb8d..000000000000
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@@ -1568,13 -1571,15 +1572,15 @@@ static netdev_tx_t start_xmit(struct sk
-  	struct send_queue *sq =3D &vi->sq[qnum];
-  	int err;
-  	struct netdev_queue *txq =3D netdev_get_tx_queue(dev, qnum);
-- 	bool kick =3D !netdev_xmit_more();
- -	bool more =3D skb->xmit_more;
-++	bool more =3D netdev_xmit_more();
-  	bool use_napi =3D sq->napi.weight;
-+ 	unsigned int bytes =3D skb->len;
-+ 	bool kick;
- =20
-  	/* Free up any pending old buffers before queueing new ones. */
-- 	free_old_xmit_skbs(sq, false);
-+ 	free_old_xmit_skbs(sq, txq, false);
- =20
-- 	if (use_napi && kick)
-+ 	if (use_napi && !more)
-  		virtqueue_enable_cb_delayed(sq->vq);
- =20
-  	/* timestamp packet in software */
-
---Sig_/s62lV97IyNeb3ffEJ54elnK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlykNQ0ACgkQAVBC80lX
-0GzsTQf+Pxa9z5oMKmnyw2PcfDshstSYPMe2ncWXjTfjBSFDsmUJr3w31CCmTLpm
-crAnvBdX5PFTqcfQlsGoBcDG6iG9yFGxsB9jA+bSPHOQsUTPkBlG0JSz8pJO5ABj
-JFv24q2sLeaQF8xcD0ercsOupZxExfov4PdlAHmoLwNRbaR1oB02S4rhCmg+oRH5
-QyEjVF5cbHGGyfQEzV81pWDXrXtXlooHoDzRRgkKIjSVf2NeStwnk1fSK62j1Vtq
-RSHZ/aaNujmDBH45igXJgF50PAADMkPT5wvtqGDTaqkehYqqcn6ZZbYupySiCII5
-l4dWQGY6M4NYMWXkP1WCJTu/pMPOFg==
-=/gvM
------END PGP SIGNATURE-----
-
---Sig_/s62lV97IyNeb3ffEJ54elnK--
+That does not, correct?
