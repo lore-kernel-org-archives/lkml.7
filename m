@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CB6C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AA7C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECD120882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717102084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mshvlYNL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMGdznHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfDCECK (ORCPT
+        id S1727254AbfDCECE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:02:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37702 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbfDCECH (ORCPT
+        Wed, 3 Apr 2019 00:02:04 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42065 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfDCECA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:02:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 8so7459715pfr.4;
-        Tue, 02 Apr 2019 21:02:06 -0700 (PDT)
+        Wed, 3 Apr 2019 00:02:00 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p6so7595747pgh.9;
+        Tue, 02 Apr 2019 21:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/HOj5AcsPPIUP9eNWZ5uQOH1gzbtnepnAaSzlGF2WO8=;
-        b=mshvlYNL7Y3Ctd1PpKGF/38N3zF4DnPDyUJmXs7lu14zGu+fgPkReT7E8vx3wEBIIi
-         LRMXuv5JsRITmYy+5R0uGqhF2D5wsvZp4HKiQwi7eIWPS/0el7yIw0lRN5OOFnrGPQs6
-         EY+eAXlZQMlegGl8GD8wApevIG9qwr3yl8YB14Daa08F49bvnv0+tSiyFo0aff2j4G9T
-         WESqkAK7u/9VuBjJf9kmRUPAEQxtCb1Vywv14hPfbbLqTYJQyciHWzwV5nBgpUxRaI9T
-         1TT/5StA8t9A+PPXtdulLhUMMYZe5NnvWstvrL1eUUdxY6EQOUTNKEP1xNXaKb13lhdL
-         0bXw==
+        bh=XIvhZvEfkbeo4H9XjoKPljUa+D7k5vhWMpbvGBotaLs=;
+        b=bMGdznHsx81EYZ4yET0F5yuaCpdXWqVJqtRm0dWFMLds6gvJCZGg6DDGkk+5h8optw
+         P9htPS1IQXxEkPQu9RTPLHI2n5xtDhtfXdYmF1Wouz5XCVBg9Uabx+LqbiUO7ORGVRf2
+         NbAhvvE/1RdhpfMlHiWpbPhAhKqYOgNTiV+p0rDMUytZpblSM3jEUozJZlydjL7x46bm
+         Aa6Ziz4MdvcDgheZWN0DfGSVpmrseQRgHlbKWEZl4pwMLUqVxYp5W745FTdMwakO6QTn
+         BjMOgKLvburc8LQKWXCS1mXS2FPrMIa3gECZGLyAY7ex9/BMfwUTEDgxCdY+DIRaT2Hb
+         QmDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/HOj5AcsPPIUP9eNWZ5uQOH1gzbtnepnAaSzlGF2WO8=;
-        b=mWns6ZRQsPjmoKIB8fiFyr3J36dnERek1JmQcv8nr14dV0cKmVrKv9850t7PCJlUzw
-         2jk4jdNjMCOHAzJUethEFlXSC5vhYHL8yhyu1DPapZQlqDJk7B54ZRcBRrWJOWC4rSur
-         feH6Ct/pMLSkQmRkpmQuOgIYROUPg81NyM86u43MSn3Eb3F8cKjYIjhqrEPywX6+9IXJ
-         xrzAPN0ZdYD/9FiGHcA5/deod+NXciePWCt/fz5tRVEAPZ5gVvxeKzjKCXaSc2ARHMxo
-         KqUyi9MIAQ4JM5C+3omLUodGi9O41iTysllrOZFlgzjp/k86zvqgXXtfY1pnZpbOgJI8
-         VPiw==
-X-Gm-Message-State: APjAAAUi6d7V1xUhI41SnSmS3FVCu1VUCpvt4RpruibvZ9oHF95Jy1E4
-        KR3AGsApz+X7uaWgGCv7V591bLet
-X-Google-Smtp-Source: APXvYqwVaJX8j3M/byMDW7Q8RRDk3NV2jI8WNad7Iz7Y92HtWj+VNLoxmtQdPklCl8I8wky/Zps6vQ==
-X-Received: by 2002:a63:c706:: with SMTP id n6mr37001637pgg.310.1554264125998;
-        Tue, 02 Apr 2019 21:02:05 -0700 (PDT)
+        bh=XIvhZvEfkbeo4H9XjoKPljUa+D7k5vhWMpbvGBotaLs=;
+        b=L6Wj/GKcCxk75/zS8+yWIUTv47ZjXtUoeWqWy2jpsuHWG93EbTOHTqBCOmUeN3Rv+Q
+         eFm/qdoQZoAD7i8L4t91cTz5W1UuhF4OygSoRoT2+alHcmgsHa+XhvfWHPl8rO2bfkF7
+         9kRBNuLE/9SgbkLLgHLE7UYkEc+fjMFvWOzgq56dYesS0DkRyNZRtuSF4Lpr0sVXfla4
+         lEps7cJRnsYm+9f67SAcP/+jE57ewjfVzgzxPbr6jhIiUe/ohHfllsrxEmGqlZepaY87
+         tLKUVnmkAbpz/HgeLG4j2MfbbXTORLNf4SodpBOWIquegY1v20Q90UJcpnEhWTWG5J2b
+         758Q==
+X-Gm-Message-State: APjAAAWXxultlxqtnJdY6sEybjy6CP5kkZnYp5uRvF7WzuOMEOln3heD
+        hxZRN831e3zTfJ7EJBHDzltDKcVD
+X-Google-Smtp-Source: APXvYqx+Xz6lSUAlH4ppEZuZZgS80Abtb6x6Jc6jy3asPFa4TqW4p8ewRFreevY1zBelFGxU/MDbPQ==
+X-Received: by 2002:a63:c706:: with SMTP id n6mr37001089pgg.310.1554264119436;
+        Tue, 02 Apr 2019 21:01:59 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id k14sm16278064pfb.125.2019.04.02.21.02.04
+        by smtp.gmail.com with ESMTPSA id k14sm16278064pfb.125.2019.04.02.21.01.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 21:02:05 -0700 (PDT)
+        Tue, 02 Apr 2019 21:01:58 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-spi@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/12] spi: gpio: Use devm_spi_register_master()
-Date:   Tue,  2 Apr 2019 21:01:33 -0700
-Message-Id: <20190403040133.1459-13-andrew.smirnov@gmail.com>
+Subject: [PATCH 07/12] spi: Don't call spi_get_gpio_descs() before device name is set
+Date:   Tue,  2 Apr 2019 21:01:28 -0700
+Message-Id: <20190403040133.1459-8-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403040133.1459-1-andrew.smirnov@gmail.com>
 References: <20190403040133.1459-1-andrew.smirnov@gmail.com>
@@ -74,9 +74,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace spi_bitbang_start() with a combination of spi_bitbang_init()
-and devm_spi_register_master() and drop all of the explicit
-cleanup-related code that's no longer necessary.
+Move code calling spi_get_gpio_descs() to happen after ctlr->dev's
+name is set in order to have proper GPIO consumer names.
+
+Before:
+
+cat /sys/kernel/debug/gpio
+gpiochip0: GPIOs 0-31, parent: platform/40049000.gpio, vf610-gpio:
+ gpio-6   (                    |regulator-usb0-vbus ) out lo
+
+gpiochip1: GPIOs 32-63, parent: platform/4004a000.gpio, vf610-gpio:
+ gpio-36  (                    |scl                 ) in  hi
+ gpio-37  (                    |sda                 ) in  hi
+ gpio-40  (                    |(null) CS1          ) out lo
+ gpio-41  (                    |(null) CS0          ) out lo ACTIVE LOW
+ gpio-42  (                    |miso                ) in  hi
+ gpio-43  (                    |mosi                ) in  lo
+ gpio-44  (                    |sck                 ) out lo
+
+After:
+
+cat /sys/kernel/debug/gpio
+gpiochip0: GPIOs 0-31, parent: platform/40049000.gpio, vf610-gpio:
+ gpio-6   (                    |regulator-usb0-vbus ) out lo
+
+gpiochip1: GPIOs 32-63, parent: platform/4004a000.gpio, vf610-gpio:
+ gpio-36  (                    |scl                 ) in  hi
+ gpio-37  (                    |sda                 ) in  hi
+ gpio-40  (                    |spi0 CS1            ) out lo
+ gpio-41  (                    |spi0 CS0            ) out lo ACTIVE LOW
+ gpio-42  (                    |miso                ) in  hi
+ gpio-43  (                    |mosi                ) in  lo
+ gpio-44  (                    |sck                 ) out lo
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>
@@ -84,54 +113,64 @@ Cc: Chris Healy <cphealy@gmail.com>
 Cc: linux-spi@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/spi/spi-gpio.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ drivers/spi/spi.c | 37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 668f2cd82d98..674432bbbbc2 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -397,8 +397,6 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 
- 	spi_gpio = spi_master_get_devdata(master);
- 
--	platform_set_drvdata(pdev, spi_gpio);
--
- 	status = spi_gpio_request(dev, spi_gpio);
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index bd2a424672df..19d663435b8c 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2279,24 +2279,6 @@ int spi_register_controller(struct spi_controller *ctlr)
  	if (status)
  		return status;
-@@ -438,19 +436,11 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	}
- 	bb->setup_transfer = spi_bitbang_setup_transfer;
  
--	return spi_bitbang_start(&spi_gpio->bitbang);
--}
+-	if (!spi_controller_is_slave(ctlr)) {
+-		if (ctlr->use_gpio_descriptors) {
+-			status = spi_get_gpio_descs(ctlr);
+-			if (status)
+-				return status;
+-			/*
+-			 * A controller using GPIO descriptors always
+-			 * supports SPI_CS_HIGH if need be.
+-			 */
+-			ctlr->mode_bits |= SPI_CS_HIGH;
+-		} else {
+-			/* Legacy code path for GPIOs from DT */
+-			status = of_spi_register_master(ctlr);
+-			if (status)
+-				return status;
+-		}
+-	}
 -
--static int spi_gpio_remove(struct platform_device *pdev)
--{
--	struct spi_gpio			*spi_gpio;
--
--	spi_gpio = platform_get_drvdata(pdev);
--
--	/* stop() unregisters child devices too */
--	spi_bitbang_stop(&spi_gpio->bitbang);
-+	status = spi_bitbang_init(&spi_gpio->bitbang);
-+	if (status)
-+		return status;
- 
--	return 0;
-+	return devm_spi_register_master(&pdev->dev, spi_master_get(master));
- }
- 
- MODULE_ALIAS("platform:" DRIVER_NAME);
-@@ -461,7 +451,6 @@ static struct platform_driver spi_gpio_driver = {
- 		.of_match_table = of_match_ptr(spi_gpio_dt_ids),
- 	},
- 	.probe		= spi_gpio_probe,
--	.remove		= spi_gpio_remove,
- };
- module_platform_driver(spi_gpio_driver);
- 
+ 	/* even if it's just one always-selected device, there must
+ 	 * be at least one chipselect
+ 	 */
+@@ -2353,6 +2335,25 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	 * registration fails if the bus ID is in use.
+ 	 */
+ 	dev_set_name(&ctlr->dev, "spi%u", ctlr->bus_num);
++
++	if (!spi_controller_is_slave(ctlr)) {
++		if (ctlr->use_gpio_descriptors) {
++			status = spi_get_gpio_descs(ctlr);
++			if (status)
++				return status;
++			/*
++			 * A controller using GPIO descriptors always
++			 * supports SPI_CS_HIGH if need be.
++			 */
++			ctlr->mode_bits |= SPI_CS_HIGH;
++		} else {
++			/* Legacy code path for GPIOs from DT */
++			status = of_spi_register_master(ctlr);
++			if (status)
++				return status;
++		}
++	}
++
+ 	status = device_add(&ctlr->dev);
+ 	if (status < 0) {
+ 		/* free bus id */
 -- 
 2.20.1
 
