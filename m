@@ -2,118 +2,127 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7463CC10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40400C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D4C2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="pZ8RyOJ3"
+	by mail.kernel.org (Postfix) with ESMTP id 013D42075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554298764;
+	bh=LM8rm/6DR75PeaE3f4EJR+ywSgqlgBvMry0dFyBJsH8=;
+	h=Date:From:To:cc:Subject:List-ID:From;
+	b=gFSTrx79K7WpJROLQ08ytZjysAJyB/Yba/rKsQiR7ox0qfzm1mIlgYqiDM9UswQbU
+	 gU13v3ZpzecKH3XfEHClkMf3seNc+fJv76Cd30fWpiRGp/Q2BzJzFalPeyBrYlYMaF
+	 /pUZoDZIcTzCX1qltaS20sluBZs7sfQsHbgTfOXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfDCNgW (ORCPT
+        id S1726315AbfDCNjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:36:22 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16398 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbfDCNgV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:36:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca4b6d90000>; Wed, 03 Apr 2019 06:36:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 03 Apr 2019 06:36:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 03 Apr 2019 06:36:21 -0700
-Received: from [10.24.47.153] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Apr
- 2019 13:36:18 +0000
-Subject: Re: [PATCH v4 0/5] PCI: dwc: Support remove
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-CC:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20190329194750.265f6df6@xhacker.debian>
- <20190401134946.GA4722@e107981-ln.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <aff1dc7f-1108-1df7-1ccb-11be08413e28@nvidia.com>
-Date:   Wed, 3 Apr 2019 19:06:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Apr 2019 09:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbfDCNjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:39:22 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739C02075E;
+        Wed,  3 Apr 2019 13:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554298761;
+        bh=LM8rm/6DR75PeaE3f4EJR+ywSgqlgBvMry0dFyBJsH8=;
+        h=Date:From:To:cc:Subject:From;
+        b=s9CYtrMSKwnpAaIF43zgcLCZ3DMubltsC9oT9hhXpVQ9jSw49I8havfrQbAw0Q4Zr
+         7HcSDfGexsoELPTnxvghjjeegMtFlXsQL6Ztp4GQ7wqnjbWLbNV7HMmUjZodofBX8J
+         +PS/cx7dOMsranYLVq3Fue9XAnB97D27o+ignhns=
+Date:   Wed, 3 Apr 2019 15:39:18 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] HID fixes
+Message-ID: <nycvar.YFH.7.76.1904031532431.9803@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190401134946.GA4722@e107981-ln.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554298585; bh=C0oQ7FYIrJb0RBLM8r34YqTNLG1rc+1+fDNURJ0zZdQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pZ8RyOJ31JvpJHEgduTQ+X1TvA10BMAhKQbSyCacJ80aQucnlJMI1QkfMgWZfJoRC
-         NbYFN96AehjJRtnSlawsE1/DWWLR6C/YTquP1VHdRxLf9qIBCpTYuQzffI0Aehmmfh
-         aJc5pbRdHsn+k5cJ8OXUvZxaNU5TBEXm51buwXmRzeaV4bf33D9slVmo6w5z5CFRhP
-         NFaELlAGPHCsk83oI+Fxq9WTy6k+2kFUrMy7ii0LEWpx5WdtT5gNJcdAOIRSE+cgVP
-         PB2eue4a6QKbgQ5pookLfqQNz7k48hHUfo0PeqsPMdiB9owBuODwP89PSHoBn1LwYO
-         QT5XuU2WlKjrA==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Verified it with Tegra194 PCIe host controller driver, but had to do
-EXPORT_SYMBOL_GPL() for a bunch of APIs.
-I'll push changes to export all those APIs as part of Tegra194 PCIe driver patch series.
+Linus,
 
-Thanks
-Vidya Sagar
+please pull from
 
-On 4/1/2019 7:20 PM, Lorenzo Pieralisi wrote:
-> On Fri, Mar 29, 2019 at 11:55:36AM +0000, Jisheng Zhang wrote:
->> Currently, the PCI dwc host users don't support the remove, but nothing
->> prevent us from supporting it. To achieve this goal, we need to ensure
->> we can do necessary clean up work.
->>
->> Changes since v3:
->>    - add Gustavo's ACK to patch2, patch5
->>    - remove IS_ENABLED(CONFIG_PCI_MSI) check
->>
->> Changes since v2:
->>    - address all Gustavo's comments
->>    - add Gustavo's ACK to patch1, patch3, patch4
->>
->> Changes since v1:
->>    - address Bjorn's comments, I.E Capitalize, s/irq/IRQ/, s/msi/MSI/
->>
->>
->> Jisheng Zhang (5):
->>    PCI: dwc: Fix dw_pcie_free_msi() if msi_irq is invalid
->>    PCI: dwc: Free the page for MSI IRQ in dw_pcie_free_msi()
->>    PCI: dwc: Free MSI in the error code path of dw_pcie_host_init()
->>    PCI: dwc: Use devm_pci_alloc_host_bridge() to simplify the code
->>    PCI: dwc: Save root bus for driver remove
->>
->>   .../pci/controller/dwc/pcie-designware-host.c | 60 ++++++++++---------
->>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +
->>   2 files changed, 34 insertions(+), 28 deletions(-)
->   
-> Applied to pci/dwc for v5.2, thanks.
-> 
-> Lorenzo
-> 
+  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+
+to receive HID fixes:
+
+=====
+- build dependency fix for hid-asus from Arnd Bergmann
+- addition of omitted mapping of _ASSISTANT key from Dmitry Torokhov
+- race condition fix in hid-debug inftastructure from He, Bo
+- fixed support for devices with big maximum report size from Kai-Heng 
+  Feng
+- deadlock fix in hid-steam from Rodrigo Rivas Costa
+- quite a few device-specific quirks
+=====
+
+Thanks.
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      HID: quirks: Drop misused kernel-doc annotation
+
+Arnd Bergmann (1):
+      HID: hid-asus: select CONFIG_POWER_SUPPLY
+
+Colin Ian King (1):
+      HID: uclogic: remove redudant duplicated null check on ver_ptr
+
+Dmitry Torokhov (1):
+      HID: input: add mapping for Assistant key
+
+He, Bo (1):
+      HID: debug: fix race condition with between rdesc_show() and device removal
+
+Hui Wang (1):
+      HID: i2c-hid: Disable runtime PM on Synaptics touchpad
+
+Jeffrey Hugo (1):
+      HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630
+
+Kai-Heng Feng (1):
+      HID: Increase maximum report size allowed by hid_field_extract()
+
+Kangjie Lu (1):
+      HID: logitech: check the return value of create_singlethread_workqueue
+
+Louis Taylor (1):
+      HID: quirks: use correct format chars in dbg_hid
+
+Peter Hutterer (1):
+      HID: logitech: Handle 0 scroll events for the m560
+
+Rodrigo Rivas Costa (1):
+      HID: steam: fix deadlock with input devices.
+
+ drivers/hid/Kconfig                |  1 +
+ drivers/hid/hid-core.c             |  6 +++---
+ drivers/hid/hid-debug.c            |  5 +++++
+ drivers/hid/hid-ids.h              |  1 +
+ drivers/hid/hid-input.c            |  1 +
+ drivers/hid/hid-logitech-hidpp.c   | 13 ++++++++++---
+ drivers/hid/hid-quirks.c           | 11 +++++++----
+ drivers/hid/hid-steam.c            | 26 +++++++++++++++++++-------
+ drivers/hid/hid-uclogic-params.c   |  4 ----
+ drivers/hid/i2c-hid/i2c-hid-core.c |  2 ++
+ 10 files changed, 49 insertions(+), 21 deletions(-)
+
+-- 
+Jiri Kosina
+SUSE Labs
 
