@@ -2,196 +2,144 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47027C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168FAC10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C07C2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCAF82147C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554296255;
+	bh=gt3d+lSFz3AJBz5Hwm71/3by3kFEWNG8lmd3dZ0Ozc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b/Y139ze6ABnpgXEN7ognmNvq0+sFt78dr1qT3wIp+bTesmU+yfIZ4f2JNIn+xsA7
+	 thd0qpONYcsgCzTvocJhQjgk0cAZivbK+//6TIAe4Ccs3pOwlmmA5qfJ+Av+RP4cao
+	 9m8AwbrT+TvkWr2QA63+ejYrnRXh4XhJNMrzAwFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDCM5N (ORCPT
+        id S1726499AbfDCM5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:57:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48493 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfDCM5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:57:13 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33CuWt81854300
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 05:56:32 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33CuVMD1854297;
-        Wed, 3 Apr 2019 05:56:31 -0700
-Date:   Wed, 3 Apr 2019 05:56:31 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Waiman Long <tipbot@zytor.com>
-Message-ID: <tip-ddb20d1d3aed8f130519c0a29cd5392efcc067b8@git.kernel.org>
-Cc:     arnd@arndb.de, akpm@linux-foundation.org, dave@stgolabs.net,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        peterz@infradead.org, paulmck@linux.vnet.ibm.com,
-        tim.c.chen@linux.intel.com, longman@redhat.com, hpa@zytor.com,
-        bp@alien8.de, mingo@kernel.org, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, bp@alien8.de, mingo@kernel.org,
-          will.deacon@arm.com, hpa@zytor.com, longman@redhat.com,
-          tim.c.chen@linux.intel.com, paulmck@linux.vnet.ibm.com,
-          tglx@linutronix.de, peterz@infradead.org,
-          akpm@linux-foundation.org, arnd@arndb.de,
-          torvalds@linux-foundation.org, dave@stgolabs.net
-In-Reply-To: <20190322143008.21313-4-longman@redhat.com>
-References: <20190322143008.21313-4-longman@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/rwsem: Optimize down_read_trylock()
-Git-Commit-ID: ddb20d1d3aed8f130519c0a29cd5392efcc067b8
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 3 Apr 2019 08:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfDCM5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:57:34 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2092084B;
+        Wed,  3 Apr 2019 12:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554296253;
+        bh=gt3d+lSFz3AJBz5Hwm71/3by3kFEWNG8lmd3dZ0Ozc8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HoGykfmZkqjFjc63N4+2ee7NrJN4Lx/mO5Wi7fYjg/20Ao0ztQOtB9gy/YqGSASPa
+         rT4ucWiSMr8U9+hm0nNzg4IXYilP9HDtafwT0HQdDKQJvuF+44WdXJvXyJnuCWeB3X
+         ejh1JG2Vp2K28SHV5jHgwtYH2klav16LVHrYCKDM=
+Date:   Wed, 3 Apr 2019 08:57:30 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Heitke, Kenneth" <kenneth.heitke@intel.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        linux-nvme@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 4.14 18/37] nvme-pci: fix conflicting p2p
+ resource adds
+Message-ID: <20190403125730.GA16241@sasha-vm>
+References: <20190330013020.379-1-sashal@kernel.org>
+ <20190330013020.379-18-sashal@kernel.org>
+ <225c0c91-dd78-9cd9-7b16-5ef3bf394895@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
+In-Reply-To: <225c0c91-dd78-9cd9-7b16-5ef3bf394895@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ddb20d1d3aed8f130519c0a29cd5392efcc067b8
-Gitweb:     https://git.kernel.org/tip/ddb20d1d3aed8f130519c0a29cd5392efcc067b8
-Author:     Waiman Long <longman@redhat.com>
-AuthorDate: Fri, 22 Mar 2019 10:30:08 -0400
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 3 Apr 2019 14:50:52 +0200
+On Mon, Apr 01, 2019 at 11:37:52AM -0600, Heitke, Kenneth wrote:
+>
+>On 3/29/2019 7:30 PM, Sasha Levin wrote:
+>>From: Keith Busch <keith.busch@intel.com>
+>>
+>>[ Upstream commit 9fe5c59ff6a1e5e26a39b75489a1420e7eaaf0b1 ]
+>>
+>>The nvme pci driver had been adding its CMB resource to the P2P DMA
+>>subsystem everytime on on a controller reset. This results in the
+>>following warning:
+>>
+>>     ------------[ cut here ]------------
+>>     nvme 0000:00:03.0: Conflicting mapping in same section
+>>     WARNING: CPU: 7 PID: 81 at kernel/memremap.c:155 devm_memremap_pages+0xa6/0x380
+>>     ...
+>>     Call Trace:
+>>      pci_p2pdma_add_resource+0x153/0x370
+>>      nvme_reset_work+0x28c/0x17b1 [nvme]
+>>      ? add_timer+0x107/0x1e0
+>>      ? dequeue_entity+0x81/0x660
+>>      ? dequeue_entity+0x3b0/0x660
+>>      ? pick_next_task_fair+0xaf/0x610
+>>      ? __switch_to+0xbc/0x410
+>>      process_one_work+0x1cf/0x350
+>>      worker_thread+0x215/0x3d0
+>>      ? process_one_work+0x350/0x350
+>>      kthread+0x107/0x120
+>>      ? kthread_park+0x80/0x80
+>>      ret_from_fork+0x1f/0x30
+>>     ---[ end trace f7ea76ac6ee72727 ]---
+>>     nvme nvme0: failed to register the CMB
+>>
+>>This patch fixes this by registering the CMB with P2P only once.
+>>
+>>Signed-off-by: Keith Busch <keith.busch@intel.com>
+>>Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+>>Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>---
+>>  drivers/nvme/host/pci.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>>diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+>>index 06355ca832db..ae03a5b70324 100644
+>>--- a/drivers/nvme/host/pci.c
+>>+++ b/drivers/nvme/host/pci.c
+>>@@ -1546,6 +1546,9 @@ static void __iomem *nvme_map_cmb(struct nvme_dev *dev)
+>>  	void __iomem *cmb;
+>>  	int bar;
+>>+	if (dev->cmb_size)
+>>+		return;
+>>+
+>>  	dev->cmbsz = readl(dev->bar + NVME_REG_CMBSZ);
+>>  	if (!(NVME_CMB_SZ(dev->cmbsz)))
+>>  		return NULL;
+>>@@ -2034,7 +2037,6 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+>>  {
+>>  	struct pci_dev *pdev = to_pci_dev(dev->dev);
+>>-	nvme_release_cmb(dev);
+>>  	pci_free_irq_vectors(pdev);
+>>  	if (pci_is_enabled(pdev)) {
+>>@@ -2434,6 +2436,7 @@ static void nvme_remove(struct pci_dev *pdev)
+>>  	nvme_stop_ctrl(&dev->ctrl);
+>>  	nvme_remove_namespaces(&dev->ctrl);
+>>  	nvme_dev_disable(dev, true);
+>>+	nvme_release_cmb(dev);
+>>  	nvme_free_host_mem(dev);
+>>  	nvme_dev_remove_admin(dev);
+>>  	nvme_free_queues(dev, 0);
+>>
+>
+>There is no P2P support in the 4.14 kernel so I'm not sure this change
+>is necessary. I would also worry that it might break things if the BARs
+>need to be remapped after a controller reset.
 
-locking/rwsem: Optimize down_read_trylock()
+I've removed it, thanks!
 
-Modify __down_read_trylock() to optimize for an unlocked rwsem and make
-it generate slightly better code.
-
-Before this patch, down_read_trylock:
-
-   0x0000000000000000 <+0>:     callq  0x5 <down_read_trylock+5>
-   0x0000000000000005 <+5>:     jmp    0x18 <down_read_trylock+24>
-   0x0000000000000007 <+7>:     lea    0x1(%rdx),%rcx
-   0x000000000000000b <+11>:    mov    %rdx,%rax
-   0x000000000000000e <+14>:    lock cmpxchg %rcx,(%rdi)
-   0x0000000000000013 <+19>:    cmp    %rax,%rdx
-   0x0000000000000016 <+22>:    je     0x23 <down_read_trylock+35>
-   0x0000000000000018 <+24>:    mov    (%rdi),%rdx
-   0x000000000000001b <+27>:    test   %rdx,%rdx
-   0x000000000000001e <+30>:    jns    0x7 <down_read_trylock+7>
-   0x0000000000000020 <+32>:    xor    %eax,%eax
-   0x0000000000000022 <+34>:    retq
-   0x0000000000000023 <+35>:    mov    %gs:0x0,%rax
-   0x000000000000002c <+44>:    or     $0x3,%rax
-   0x0000000000000030 <+48>:    mov    %rax,0x20(%rdi)
-   0x0000000000000034 <+52>:    mov    $0x1,%eax
-   0x0000000000000039 <+57>:    retq
-
-After patch, down_read_trylock:
-
-   0x0000000000000000 <+0>:	callq  0x5 <down_read_trylock+5>
-   0x0000000000000005 <+5>:	xor    %eax,%eax
-   0x0000000000000007 <+7>:	lea    0x1(%rax),%rdx
-   0x000000000000000b <+11>:	lock cmpxchg %rdx,(%rdi)
-   0x0000000000000010 <+16>:	jne    0x29 <down_read_trylock+41>
-   0x0000000000000012 <+18>:	mov    %gs:0x0,%rax
-   0x000000000000001b <+27>:	or     $0x3,%rax
-   0x000000000000001f <+31>:	mov    %rax,0x20(%rdi)
-   0x0000000000000023 <+35>:	mov    $0x1,%eax
-   0x0000000000000028 <+40>:	retq
-   0x0000000000000029 <+41>:	test   %rax,%rax
-   0x000000000000002c <+44>:	jns    0x7 <down_read_trylock+7>
-   0x000000000000002e <+46>:	xor    %eax,%eax
-   0x0000000000000030 <+48>:	retq
-
-By using a rwsem microbenchmark, the down_read_trylock() rate (with a
-load of 10 to lengthen the lock critical section) on a x86-64 system
-before and after the patch were:
-
-                 Before Patch    After Patch
-   # of Threads     rlock           rlock
-   ------------     -----           -----
-        1           14,496          14,716
-        2            8,644           8,453
-	4            6,799           6,983
-	8            5,664           7,190
-
-On a ARM64 system, the performance results were:
-
-                 Before Patch    After Patch
-   # of Threads     rlock           rlock
-   ------------     -----           -----
-        1           23,676          24,488
-        2            7,697           9,502
-        4            4,945           3,440
-        8            2,641           1,603
-
-For the uncontended case (1 thread), the new down_read_trylock() is a
-little bit faster. For the contended cases, the new down_read_trylock()
-perform pretty well in x86-64, but performance degrades at high
-contention level on ARM64.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-c6x-dev@linux-c6x.org
-Cc: linux-m68k@lists.linux-m68k.org
-Cc: linux-riscv@lists.infradead.org
-Cc: linux-um@lists.infradead.org
-Cc: linux-xtensa@linux-xtensa.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: nios2-dev@lists.rocketboards.org
-Cc: openrisc@lists.librecores.org
-Cc: uclinux-h8-devel@lists.sourceforge.jp
-Link: https://lkml.kernel.org/r/20190322143008.21313-4-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/rwsem.h | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
-index 45ee00236e03..1f5775aa6a1d 100644
---- a/kernel/locking/rwsem.h
-+++ b/kernel/locking/rwsem.h
-@@ -174,14 +174,17 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
- 
- static inline int __down_read_trylock(struct rw_semaphore *sem)
- {
--	long tmp;
-+	/*
-+	 * Optimize for the case when the rwsem is not locked at all.
-+	 */
-+	long tmp = RWSEM_UNLOCKED_VALUE;
- 
--	while ((tmp = atomic_long_read(&sem->count)) >= 0) {
--		if (tmp == atomic_long_cmpxchg_acquire(&sem->count, tmp,
--				   tmp + RWSEM_ACTIVE_READ_BIAS)) {
-+	do {
-+		if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+					tmp + RWSEM_ACTIVE_READ_BIAS)) {
- 			return 1;
- 		}
--	}
-+	} while (tmp >= 0);
- 	return 0;
- }
- 
+--
+Thanks,
+Sasha
