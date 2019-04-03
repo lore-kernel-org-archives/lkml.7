@@ -2,125 +2,94 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2532C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AC8C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 976EE206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eF7UAwlP"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF40206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbfDCQPV (ORCPT
+        id S1726547AbfDCQPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:15:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37971 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDCQPV (ORCPT
+        Wed, 3 Apr 2019 12:15:33 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36919 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDCQPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:15:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k11so22212567wro.5;
-        Wed, 03 Apr 2019 09:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mibXejhkTt3HczjfIawcvoFcD+Z22ProgZ/81SwqvDw=;
-        b=eF7UAwlPbC4rhMnc+PT2kD6K5ltbjbw0IVURvRDdXyNNRFfozaJEZF7rBjySd1CO3v
-         XUFCPPQ016wKJIqm6Cql/IDFKGkB9vTiRygDb/cjPJPbAGPMrB8yXUp8C9dkQ8dZbSRU
-         MMmGstZIQ4IJ3SGHmf+uFc7HhR+EcQGLSLWy4lyBvqkmQ9d+C0le3uGNoJ4FckEdzGXH
-         7+4fhQQdkBL/YaKH1IWHDrfv9xgUFAAHPlR6W1d7JJptpA2GPF/PwZB1tgmUC0juhyKK
-         rKeIeDTRWBdid6fXOTBdItyjsRDjIgRTS9pHLwisurgWmooI4oxzgyRWyerNiUre8kb/
-         +60Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mibXejhkTt3HczjfIawcvoFcD+Z22ProgZ/81SwqvDw=;
-        b=l42u3xYFwLmnMfCkMvciJw+iwgpc1V+DPSpuslo2+DhxVSEYeGiHMH/oQ0/61OZdLs
-         FTAL76EhKlPI5hhoSxvj+DT4Grre3Hj1i5QfzjulhY/AddZh3QcTCuU0RjA4oWiqsE33
-         YFpqqy6AIftKsTzvP/yCidqWgI9kh0C0fKppRMjJTP67zagEZfgGDqXNEC93SWDrK7hk
-         ha0mZnau6ZJARPeQylLCI3VMls5srGuCkpQoYQolk3J+aXPgxLdUjzfiUQpWCZQJoR4w
-         NLLejzFM3YVo8ZDCglo8CKDa3ULRTK/aRfPfoSDkqu6I6eEmWZZNRIcK+JwbS1P8/Rdf
-         tl6Q==
-X-Gm-Message-State: APjAAAWk7FkjdYMETYARIKIs0NE8SiUv+DlWTpQ6Y9yyYhrKfgbbttPz
-        902ffigOA+WRePuP0a2X/bo=
-X-Google-Smtp-Source: APXvYqzF3q9yfL8z7Kl9fMKeQ/ZjTBkQwwTHW0ld9TqnGlqaUsS6/1CsGLZHjUcRf7c0Eypjnz3rgA==
-X-Received: by 2002:adf:f14e:: with SMTP id y14mr299213wro.276.1554308119230;
-        Wed, 03 Apr 2019 09:15:19 -0700 (PDT)
-Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
-        by smtp.gmail.com with ESMTPSA id r16sm11575764wrx.37.2019.04.03.09.15.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 09:15:18 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 18:15:17 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 3 Apr 2019 12:15:33 -0400
+X-Originating-IP: 109.213.83.19
+Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 6F6F71BF21A;
+        Wed,  3 Apr 2019 16:15:30 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 18:15:29 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] dt-bindings: display/panel: Add missing unit names
-Message-ID: <20190403161517.GM5238@ulmo>
-References: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Message-ID: <20190403161529.GS22216@piout.net>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+ <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
+ <20190403150824.GO22216@piout.net>
+ <452a4cf1410a41c8b6f767ac6258482e@asem.it>
+ <20190403153143.GQ22216@piout.net>
+ <fd4bef0bb64e4b6fbdf74cbebaa12de3@asem.it>
+ <20190403155654.GR22216@piout.net>
+ <8367f68a023d468f8235810b0cf583bc@asem.it>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DXTueXWT3Da08pik"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <901e836ea06889a9d91a799102b2a6b836d93dcd.1553529797.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <8367f68a023d468f8235810b0cf583bc@asem.it>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/04/2019 16:09:14+0000, Flavio Suligoi wrote:
+> Hi,
+> 
+> > On 03/04/2019 15:49:03+0000, Flavio Suligoi wrote:
+> > > > Then, you should probably not enable BLIE because this will cause
+> > issues
+> > > > with the alarm functionnality.. It is certainly enough to use
+> > > > RTC_VL_READ periodically.
+> > >
+> > > We use the nINT signaling solution because of this pin, in addition
+> > > to be used by the CPU, can be also connected to an external connector,
+> > > available for the final user.
+> > > Anyway, even if the BLIE is set, the sw low voltage alarm works,
+> > > with the message (displayed about every 12 minutes):
+> > >
+> > 
+> > I agree the DT property makes sense when the nINT pin is not connected
+> > to the CPU. But if it is, then you have an issue that nINT will be
+> > pulled low until the user changes the battery, meaning that you will
+> > not get any alarm interrupt anymore, possibly leading to a system that
+> > is not waking up anymore.
+> 
+> Ah, ok, thanks for the info. 
+> I know this, but in our specific case, this is not a problem,
+> since we don't use the nINT for other purposes, but only for
+> a battery low indicator. On the contrary, in our case, it's better
+> that the alarm signal remains low until the battery is changed.
+> 
+> Anyway, I can specify this collateral effect in a specific file for the
+> Pcf2127 in the DT bindings Documentation. What do you think?
+> 
 
---DXTueXWT3Da08pik
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is fine as-is, I'll handle that in my series adding alarm support
+because there will be no issues until then.
 
-On Mon, Mar 25, 2019 at 05:08:10PM +0100, Guido G=C3=BCnther wrote:
-> Some examples were missing the unit names triggering
->=20
->  Warning (unit_address_vs_reg): .../panel: node has a reg or ranges prope=
-rty, but no unit name
->=20
-> warnings when used verbatim in DTs and running dtc with W=3D1.
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-> ---
->  .../devicetree/bindings/display/panel/innolux,p079zca.txt       | 2 +-
->  .../devicetree/bindings/display/panel/innolux,p097pfg.txt       | 2 +-
->  .../devicetree/bindings/display/panel/kingdisplay,kd097d04.txt  | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-
-Applied, thanks.
-
-Thierry
-
---DXTueXWT3Da08pik
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyk3BUACgkQ3SOs138+
-s6EUSBAAg+iye7nrVWW3qKP9BoY9lnhQAewxgvMoVktvxT+7+GOMKSOeGyjJGhxw
-GluTb2Nqv3wGBq6EPv7qm6Fw+3Dlt4x7fkXw6AgEYn/9Aee+VmaXEq6TtqBy36r1
-zNWa7LSyHjNT2mMfwE8qltlOPaESocjActvzziGRHlLLS6X0kZB9irDlOBbCSlP+
-NXqAipfD7wnHRt0Kl5qnhn27vtsVBEpSiAW8gmqkvJANDlLeW2p4r6aK31Z1B+jR
-Lc1+6V5Jb9nQgEhDbW+JD5cJdvesvXv3K5c0Hk2e+4XkR5+2HfLdNvQIF2Kijfcp
-mAv7x8JblSIn5c4scD3RBVZaSfI6nJl3BmtdFkCAIU8QT6Jdr3mKPkudh8Ip9WsO
-I3xPtLbnJ78bwnLvVx5ZFaM9LJkrocHBc1GioVk6VmfsvEz75HtdUPKc9Hsnq9tD
-3WxHrEZzBoKxrBq7JO1BqvJdz0RhTs9WYBHUazDO5wdGqCN6Utr2k8JJL8R+VvZz
-+DsBD44EJFkEfKBcL/SBbwlzJCo11qw2midN9jXJYxZoExY+7J2RWxLtPpEMZLH4
-rFmDUTlU9wNwPqtWsLdBsANyRTnWwvF4NMvMpwWAfO5MD6IUXvs98F/lnqeTVM7i
-Pp/wnFKMPxU36SUXI5KA0CBpks3dBoVGUjqy3MkG0Xy0DHZupYM=
-=SpyK
------END PGP SIGNATURE-----
-
---DXTueXWT3Da08pik--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
