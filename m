@@ -2,380 +2,447 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB81BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7E8C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9758720882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5335320830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:47:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSoW0cuF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfDCMqR (ORCPT
+        id S1726468AbfDCMrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:46:17 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43699 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbfDCMqQ (ORCPT
+        Wed, 3 Apr 2019 08:47:22 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43823 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfDCMrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:46:16 -0400
-Received: by mail-lf1-f68.google.com with SMTP id g7so11589961lfh.10;
-        Wed, 03 Apr 2019 05:46:13 -0700 (PDT)
+        Wed, 3 Apr 2019 08:47:21 -0400
+Received: by mail-qt1-f193.google.com with SMTP id v32so19013978qtc.10;
+        Wed, 03 Apr 2019 05:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WSsEyITWasyMP6xmNrWvmYvmO63+glZk0bBIfUpuQIo=;
+        b=mSoW0cuFnMI8FfuTF+bjTgS7s4EHrqBSpcnOQJewZUZrGl4WiN1l1RF3GmRh16wSId
+         AnK0oO0dTbp7/3njGDWLniC8nPZ8ODNzBFJ5MSmWIVTjH/bkeP35hscs8KHgLEeAyD3N
+         25bXc/iqoMFUlVFr1hhPmgq9ZC6eS3c9B2UoBGTPHKmc/99/BU70T5op1UF3f29tZ8tI
+         j2EHTZ7id7EAaVDu/10hwFDx6UELep+FACmAOTPbkA0G8s4nmcezoFs3KgbBcGMd+LSm
+         Hx53DD63lfoanSo4wwNDRAnnPf49pRSgqGOjI4MD+Y1Paylu8oIkOCLEto4aprQIt796
+         Gqug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AZttPSqeyrYSJUh8jRjV4pcp4V6xytFgoBwfnm+UpFE=;
-        b=FkRU/9joaXi/D4b57rbgA4LNIGgEdDNj/ggerHdnU6x4LPKnZvLZR4VQT9EnYeKm1+
-         +sUKIwdI1Tc1ASM0chGUAmO+1xxhKfqg/z7WarkSls1NzuCo0io2KYIasXJU4Emr0h90
-         EEa+9909BnuWJwLGqXbjpxgFToVEeuqoBXZS3FbBMsSfa8m7UFq6FvapTbTZ2ZAi5oKo
-         0WioxHL4fBRj2r8N5BdV9XhtQitBCiQgW3G2IR1ty+FrYNVn2D7AFT8wO+PMfv2CzvjD
-         cQLLJbFWg6PZo5godKN6rQLunR/OryHZE8sM1SOTOUuxy7efDutfqfApgG67CT1GO4Ul
-         GEGA==
-X-Gm-Message-State: APjAAAVc6kgVj6m5sDasxYZNNcc2UBH9axslD5/p82xKg12d4BKATc4z
-        DNv2MHI9r3U6eNdZFBqXK7c=
-X-Google-Smtp-Source: APXvYqz3ln7wGxLkmEWA1BALUOwgPgVocLmq68wnddLJOd2FAEYPHT+KfPLdJxZ7v6vZ7Ca9d1xO9w==
-X-Received: by 2002:a19:954b:: with SMTP id x72mr39209529lfd.67.1554295572691;
-        Wed, 03 Apr 2019 05:46:12 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id c7sm3517480lja.90.2019.04.03.05.46.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 05:46:12 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 15:46:04 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: [PATCH v12 5/8] gpio: Initial support for ROHM bd70528 GPIO block
-Message-ID: <3549877aac9dcddebe498b87bc9692bf857a86e5.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WSsEyITWasyMP6xmNrWvmYvmO63+glZk0bBIfUpuQIo=;
+        b=H8ejPgwoa1p8ftDJEXK3kCsX4xLB7/UHfyQrsgX5jTpeHA0ZWvd/OYIv8GvgIJMuL1
+         QClyItsDQEdkVDolYm0LENlR3MnEmMfzOf51dgZTqY/MMIz3bfKb00wp+wY1DItbj4Si
+         V/vLXM7uU23Rv9JuKAjs6e3kSxECCU6A7UTrqvbkPI38/BIGPzfgrzNUpNg4Wn3dje7C
+         W/wdj02Lp+yx8EzWvuKmBIyQYez4rqEoMds58jIcp1qfXfBhW5OkEFHOaNiVpQ8v8xnG
+         QOTIq5b/4MG8QTNXluJdSliCCK2EiHPfRjLBs3A1O+vUseZ1Pkk+8BuHqps73TCLUBwx
+         94IQ==
+X-Gm-Message-State: APjAAAVb9H7lWZ4DdQA1JlWz+59AXIxV1gK6E48584F9K4jye7shK3NF
+        E7EXow6ZwH/VYejNQvPcuRI6tSiao4jeW0j2fQ8=
+X-Google-Smtp-Source: APXvYqw0lfbhSEnX4A/uXSRNh8Tfu3HuWdITJVPZcARWXSitnCqec6x+/kA/vYGq6jfDgPKO20yp+qe89gyufmX1LMM=
+X-Received: by 2002:a0c:b107:: with SMTP id q7mr45288196qvc.77.1554295639852;
+ Wed, 03 Apr 2019 05:47:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1553183239-13253-1-git-send-email-fabien.dessenne@st.com> <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
+From:   xiang xiao <xiaoxiang781216@gmail.com>
+Date:   Wed, 3 Apr 2019 20:47:08 +0800
+Message-ID: <CAH2Cfb8K5hB=UeMOeTEXud1XZVp12Qbw9NYoxJ0XQK4FFuF3wQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tty: add rpmsg driver
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD70528 PMIC has 4 GPIO pins. Allow them to be
-controlled by GPIO framework.
+On Thu, Mar 21, 2019 at 11:48 PM Fabien Dessenne <fabien.dessenne@st.com> wrote:
+>
+> This driver exposes a standard tty interface on top of the rpmsg
+> framework through the "rpmsg-tty-channel" rpmsg service.
+>
+> This driver supports multi-instances, offering a /dev/ttyRPMSGx entry
+> per rpmsg endpoint.
+>
 
-IRQs are handled by regmap-irq and GPIO driver is not
-aware of the irq usage.
+How to support multi-instances from the same remoteproc instance? I
+saw that the channel name is fixed to "rpmsg-tty-channel" which mean
+only one channel can be created for each remote side.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-Changelog v12:
-- No functional changes
-- Styling fixes
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> ---
+>  drivers/tty/Kconfig     |   9 ++
+>  drivers/tty/Makefile    |   1 +
+>  drivers/tty/rpmsg_tty.c | 309 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 319 insertions(+)
+>  create mode 100644 drivers/tty/rpmsg_tty.c
+>
+> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+> index 0840d27..42696e6 100644
+> --- a/drivers/tty/Kconfig
+> +++ b/drivers/tty/Kconfig
+> @@ -441,4 +441,13 @@ config VCC
+>         depends on SUN_LDOMS
+>         help
+>           Support for Sun logical domain consoles.
+> +
+> +config RPMSG_TTY
+> +       tristate "RPMSG tty driver"
+> +       depends on RPMSG
+> +       help
+> +         Say y here to export rpmsg endpoints as tty devices, usually found
+> +         in /dev/ttyRPMSGx.
+> +         This makes it possible for user-space programs to send and receive
+> +         rpmsg messages as a standard tty protocol.
+>  endif # TTY
+> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+> index c72cafd..90a98a2 100644
+> --- a/drivers/tty/Makefile
+> +++ b/drivers/tty/Makefile
+> @@ -33,5 +33,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
+>  obj-$(CONFIG_GOLDFISH_TTY)     += goldfish.o
+>  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
+>  obj-$(CONFIG_VCC)              += vcc.o
+> +obj-$(CONFIG_RPMSG_TTY)                += rpmsg_tty.o
+>
+>  obj-y += ipwireless/
+> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
+> new file mode 100644
+> index 0000000..9c2a629
+> --- /dev/null
+> +++ b/drivers/tty/rpmsg_tty.c
+> @@ -0,0 +1,309 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
+> + * Authors: Arnaud Pouliquen <arnaud.pouliquen@st.com> for STMicroelectronics.
+> + *          Fabien Dessenne <fabien.dessenne@st.com> for STMicroelectronics.
+> + * Derived from the imx-rpmsg and omap-rpmsg implementations.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/rpmsg.h>
+> +#include <linux/slab.h>
+> +#include <linux/tty.h>
+> +#include <linux/tty_flip.h>
+> +
+> +#define MAX_TTY_RPMSG          32
+> +
+> +static DEFINE_IDR(tty_idr);            /* tty instance id */
+> +static DEFINE_MUTEX(idr_lock);         /* protects tty_idr */
+> +
+> +static struct tty_driver *rpmsg_tty_driver;
+> +
+> +struct rpmsg_tty_port {
+> +       struct tty_port         port;   /* TTY port data */
+> +       unsigned int            id;     /* TTY rpmsg index */
+> +       spinlock_t              rx_lock; /* message reception lock */
+> +       struct rpmsg_device     *rpdev; /* rpmsg device */
+> +};
+> +
+> +static int rpmsg_tty_cb(struct rpmsg_device *rpdev, void *data, int len,
+> +                       void *priv, u32 src)
+> +{
+> +       int space;
+> +       unsigned char *cbuf;
+> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
+> +
+> +       dev_dbg(&rpdev->dev, "msg(<- src 0x%x) len %d\n", src, len);
+> +
+> +       print_hex_dump_debug(__func__, DUMP_PREFIX_NONE, 16, 1, data, len,
+> +                            true);
+> +
+> +       /* Flush the recv-ed none-zero data to tty node */
+> +       if (!len)
+> +               return -EINVAL;
+> +
+> +       spin_lock(&cport->rx_lock);
+> +       space = tty_prepare_flip_string(&cport->port, &cbuf, len);
+> +       if (space <= 0) {
+> +               dev_err(&rpdev->dev, "No memory for tty_prepare_flip_string\n");
+> +               spin_unlock(&cport->rx_lock);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       if (space != len)
+> +               dev_warn(&rpdev->dev, "Trunc buffer from %d to %d\n",
+> +                        len, space);
+> +
+> +       memcpy(cbuf, data, space);
+> +       tty_flip_buffer_push(&cport->port);
+> +       spin_unlock(&cport->rx_lock);
+> +
+> +       return 0;
+> +}
+> +
+> +static int rpmsg_tty_install(struct tty_driver *driver, struct tty_struct *tty)
+> +{
+> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+> +
+> +       if (!cport) {
+> +               dev_err(tty->dev, "cannot get cport\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       return tty_port_install(&cport->port, driver, tty);
+> +}
+> +
+> +static int rpmsg_tty_open(struct tty_struct *tty, struct file *filp)
+> +{
+> +       return tty_port_open(tty->port, tty, filp);
+> +}
+> +
+> +static void rpmsg_tty_close(struct tty_struct *tty, struct file *filp)
+> +{
+> +       return tty_port_close(tty->port, tty, filp);
+> +}
+> +
+> +static int rpmsg_tty_write(struct tty_struct *tty, const unsigned char *buf,
+> +                          int total)
+> +{
+> +       int count, ret = 0;
+> +       const unsigned char *tbuf;
+> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+> +       struct rpmsg_device *rpdev;
+> +       int msg_size;
+> +
+> +       if (!cport) {
+> +               dev_err(tty->dev, "cannot get cport\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       rpdev = cport->rpdev;
+> +
+> +       dev_dbg(&rpdev->dev, "%s: send message from tty->index = %d\n",
+> +               __func__, tty->index);
+> +
+> +       if (!buf) {
+> +               dev_err(&rpdev->dev, "buf shouldn't be null.\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       msg_size = rpmsg_get_buf_payload_size(rpdev->ept);
+> +       if (msg_size < 0)
+> +               return msg_size;
+> +
+> +       count = total;
+> +       tbuf = buf;
+> +       do {
+> +               /* send a message to our remote processor */
+> +               ret = rpmsg_send(rpdev->ept, (void *)tbuf,
+> +                                min(count, msg_size));
+> +               if (ret) {
+> +                       dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
+> +                       return ret;
+> +               }
+> +
+> +               if (count > msg_size) {
+> +                       count -= msg_size;
+> +                       tbuf += msg_size;
+> +               } else {
+> +                       count = 0;
+> +               }
+> +       } while (count > 0);
+> +
 
- drivers/gpio/Kconfig        |  11 ++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-bd70528.c | 232 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 244 insertions(+)
- create mode 100644 drivers/gpio/gpio-bd70528.c
+We need the flow control(or handshake) here, otherwise it's very easy
+to lose the data if kernel keep send the data as fast as possible.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526a771f..2789530a93ae 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -979,6 +979,17 @@ config GPIO_ARIZONA
- 	help
- 	  Support for GPIOs on Wolfson Arizona class devices.
- 
-+config GPIO_BD70528
-+	tristate "ROHM BD70528 GPIO support"
-+	depends on MFD_ROHM_BD70528
-+	help
-+	  Support for GPIOs on ROHM BD70528 PMIC. There are four GPIOs
-+	  available on the ROHM PMIC in total. The GPIOs can also
-+	  generate interrupts.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called gpio-bd70528.
-+
- config GPIO_BD9571MWV
- 	tristate "ROHM BD9571 GPIO support"
- 	depends on MFD_BD9571MWV
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 54d55274b93a..e93e376bae0b 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_GPIO_ATH79)	+= gpio-ath79.o
- obj-$(CONFIG_GPIO_ASPEED)	+= gpio-aspeed.o
- obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
- obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
-+obj-$(CONFIG_GPIO_BD70528) 	+= gpio-bd70528.o
- obj-$(CONFIG_GPIO_BD9571MWV)	+= gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)	+= gpio-brcmstb.o
- obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
-diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
-new file mode 100644
-index 000000000000..fd85605d2dab
---- /dev/null
-+++ b/drivers/gpio/gpio-bd70528.c
-@@ -0,0 +1,232 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 ROHM Semiconductors
-+// gpio-bd70528.c ROHM BD70528MWV gpio driver
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/mfd/rohm-bd70528.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define GPIO_IN_REG(offset) (BD70528_REG_GPIO1_IN + (offset) * 2)
-+#define GPIO_OUT_REG(offset) (BD70528_REG_GPIO1_OUT + (offset) * 2)
-+
-+struct bd70528_gpio {
-+	struct rohm_regmap_dev chip;
-+	struct gpio_chip gpio;
-+};
-+
-+static int bd70528_set_debounce(struct bd70528_gpio *bdgpio,
-+				unsigned int offset, unsigned int debounce)
-+{
-+	u8 val;
-+
-+	switch (debounce) {
-+	case 0:
-+		val = BD70528_DEBOUNCE_DISABLE;
-+		break;
-+	case 1 ... 15:
-+		val = BD70528_DEBOUNCE_15MS;
-+		break;
-+	case 16 ... 30:
-+		val = BD70528_DEBOUNCE_30MS;
-+		break;
-+	case 31 ... 50:
-+		val = BD70528_DEBOUNCE_50MS;
-+		break;
-+	default:
-+		dev_err(bdgpio->chip.dev,
-+			"Invalid debouce value %u\n", debounce);
-+		return -EINVAL;
-+	}
-+	return regmap_update_bits(bdgpio->chip.regmap, GPIO_IN_REG(offset),
-+				 BD70528_DEBOUNCE_MASK, val);
-+}
-+
-+static int bd70528_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
-+	int val, ret;
-+
-+	/* Do we need to do something to IRQs here? */
-+	ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset), &val);
-+	if (ret) {
-+		dev_err(bdgpio->chip.dev, "Could not read gpio direction\n");
-+		return ret;
-+	}
-+
-+	return !(val & BD70528_GPIO_OUT_EN_MASK);
-+}
-+
-+static int bd70528_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
-+				   unsigned long config)
-+{
-+	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
-+
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+		return regmap_update_bits(bdgpio->chip.regmap,
-+					  GPIO_OUT_REG(offset),
-+					  BD70528_GPIO_DRIVE_MASK,
-+					  BD70528_GPIO_OPEN_DRAIN);
-+		break;
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+		return regmap_update_bits(bdgpio->chip.regmap,
-+					  GPIO_OUT_REG(offset),
-+					  BD70528_GPIO_DRIVE_MASK,
-+					  BD70528_GPIO_PUSH_PULL);
-+		break;
-+	case PIN_CONFIG_INPUT_DEBOUNCE:
-+		return bd70528_set_debounce(bdgpio, offset,
-+					    pinconf_to_config_argument(config));
-+		break;
-+	default:
-+		break;
-+	}
-+	return -ENOTSUPP;
-+}
-+
-+static int bd70528_direction_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
-+
-+	/* Do we need to do something to IRQs here? */
-+	return regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
-+				 BD70528_GPIO_OUT_EN_MASK,
-+				 BD70528_GPIO_OUT_DISABLE);
-+}
-+
-+static void bd70528_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			     int value)
-+{
-+	int ret;
-+	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
-+	u8 val = (value) ? BD70528_GPIO_OUT_HI : BD70528_GPIO_OUT_LO;
-+
-+	ret = regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
-+				 BD70528_GPIO_OUT_MASK, val);
-+	if (ret)
-+		dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", value);
-+}
-+
-+static int bd70528_direction_output(struct gpio_chip *chip, unsigned int offset,
-+				    int value)
-+{
-+	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
-+
-+	bd70528_gpio_set(chip, offset, value);
-+	return regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
-+				 BD70528_GPIO_OUT_EN_MASK,
-+				 BD70528_GPIO_OUT_ENABLE);
-+}
-+
-+#define GPIO_IN_STATE_MASK(offset) (BD70528_GPIO_IN_STATE_BASE << (offset))
-+
-+static int bd70528_gpio_get_o(struct bd70528_gpio *bdgpio, unsigned int offset)
-+{
-+	int ret;
-+	unsigned int val;
-+
-+	ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset), &val);
-+	if (!ret)
-+		ret = !!(val & BD70528_GPIO_OUT_MASK);
-+	else
-+		dev_err(bdgpio->chip.dev, "GPIO (out) state read failed\n");
-+
-+	return ret;
-+}
-+
-+static int bd70528_gpio_get_i(struct bd70528_gpio *bdgpio, unsigned int offset)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(bdgpio->chip.regmap, BD70528_REG_GPIO_STATE, &val);
-+
-+	if (!ret)
-+		ret = !(val & GPIO_IN_STATE_MASK(offset));
-+	else
-+		dev_err(bdgpio->chip.dev, "GPIO (in) state read failed\n");
-+
-+	return ret;
-+}
-+
-+static int bd70528_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	int ret = -EINVAL;
-+	struct bd70528_gpio *bdgpio = gpiochip_get_data(chip);
-+
-+	/*
-+	 * There is a race condition where someone might be changing the
-+	 * GPIO direction after we get it but before we read the value. But
-+	 * application design where GPIO direction may be changed just when
-+	 * we read GPIO value would be pointless as reader could not know
-+	 * whether the returned high/low state is caused by input or output.
-+	 * Or then there must be other ways to mitigate the issue. Thus
-+	 * locking would make no sense.
-+	 */
-+	ret = bd70528_get_direction(chip, offset);
-+	if (ret == 0)
-+		ret = bd70528_gpio_get_o(bdgpio, offset);
-+	else if (ret == 1)
-+		ret = bd70528_gpio_get_i(bdgpio, offset);
-+	else
-+		dev_err(bdgpio->chip.dev, "failed to read GPIO direction\n");
-+
-+	return ret;
-+}
-+
-+static int bd70528_probe(struct platform_device *pdev)
-+{
-+	struct bd70528_gpio *bdgpio;
-+	struct rohm_regmap_dev *bd70528;
-+	int ret;
-+
-+	bd70528 = dev_get_drvdata(pdev->dev.parent);
-+	if (!bd70528) {
-+		dev_err(&pdev->dev, "No MFD driver data\n");
-+		return -EINVAL;
-+	}
-+
-+	bdgpio = devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
-+			      GFP_KERNEL);
-+	if (!bdgpio)
-+		return -ENOMEM;
-+	bdgpio->chip.dev = &pdev->dev;
-+	bdgpio->gpio.parent = pdev->dev.parent;
-+	bdgpio->gpio.label = "bd70528-gpio";
-+	bdgpio->gpio.owner = THIS_MODULE;
-+	bdgpio->gpio.get_direction = bd70528_get_direction;
-+	bdgpio->gpio.direction_input = bd70528_direction_input;
-+	bdgpio->gpio.direction_output = bd70528_direction_output;
-+	bdgpio->gpio.set_config = bd70528_gpio_set_config;
-+	bdgpio->gpio.can_sleep = true;
-+	bdgpio->gpio.get = bd70528_gpio_get;
-+	bdgpio->gpio.set = bd70528_gpio_set;
-+	bdgpio->gpio.ngpio = 4;
-+	bdgpio->gpio.base = -1;
-+#ifdef CONFIG_OF_GPIO
-+	bdgpio->gpio.of_node = pdev->dev.parent->of_node;
-+#endif
-+	bdgpio->chip.regmap = bd70528->regmap;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
-+				     bdgpio);
-+	if (ret)
-+		dev_err(&pdev->dev, "gpio_init: Failed to add bd70528-gpio\n");
-+
-+	return ret;
-+}
-+
-+static struct platform_driver bd70528_gpio = {
-+	.driver = {
-+		.name = "bd70528-gpio"
-+	},
-+	.probe = bd70528_probe,
-+};
-+
-+module_platform_driver(bd70528_gpio);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("BD70528 voltage regulator driver");
-+MODULE_LICENSE("GPL");
--- 
-2.17.2
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> +       return total;
+> +}
+> +
+> +static int rpmsg_tty_write_room(struct tty_struct *tty)
+> +{
+> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+> +
+> +       if (!cport) {
+> +               dev_err(tty->dev, "cannot get cport\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       /* report the space in the rpmsg buffer */
+> +       return rpmsg_get_buf_payload_size(cport->rpdev->ept);
+> +}
+> +
+> +static const struct tty_operations rpmsg_tty_ops = {
+> +       .install        = rpmsg_tty_install,
+> +       .open           = rpmsg_tty_open,
+> +       .close          = rpmsg_tty_close,
+> +       .write          = rpmsg_tty_write,
+> +       .write_room     = rpmsg_tty_write_room,
+> +};
+> +
+> +struct rpmsg_tty_port *rpmsg_tty_alloc_cport(void)
+> +{
+> +       struct rpmsg_tty_port *cport;
+> +
+> +       cport = kzalloc(sizeof(*cport), GFP_KERNEL);
+> +       if (!cport)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       mutex_lock(&idr_lock);
+> +       cport->id = idr_alloc(&tty_idr, cport, 0, MAX_TTY_RPMSG, GFP_KERNEL);
+> +       mutex_unlock(&idr_lock);
+> +
+> +       if (cport->id < 0) {
+> +               kfree(cport);
+> +               return ERR_PTR(-ENOSPC);
+> +       }
+> +
+> +       return cport;
+> +}
+> +
+> +static void rpmsg_tty_release_cport(struct rpmsg_tty_port *cport)
+> +{
+> +       mutex_lock(&idr_lock);
+> +       idr_remove(&tty_idr, cport->id);
+> +       mutex_unlock(&idr_lock);
+> +
+> +       kfree(cport);
+> +}
+> +
+> +static int rpmsg_tty_probe(struct rpmsg_device *rpdev)
+> +{
+> +       struct rpmsg_tty_port *cport;
+> +       struct device *tty_dev;
+> +       int ret;
+> +
+> +       cport = rpmsg_tty_alloc_cport();
+> +       if (IS_ERR(cport)) {
+> +               dev_err(&rpdev->dev, "failed to alloc tty port\n");
+> +               return PTR_ERR(cport);
+> +       }
+> +
+> +       tty_port_init(&cport->port);
+> +       cport->port.low_latency = cport->port.flags | ASYNC_LOW_LATENCY;
+> +
+> +       tty_dev = tty_port_register_device(&cport->port, rpmsg_tty_driver,
+> +                                          cport->id, &rpdev->dev);
+> +       if (IS_ERR(tty_dev)) {
+> +               dev_err(&rpdev->dev, "failed to register tty port\n");
+> +               ret = PTR_ERR(tty_dev);
+> +               goto err_destroy;
+> +       }
+> +
+> +       spin_lock_init(&cport->rx_lock);
+> +       cport->rpdev = rpdev;
+> +
+> +       dev_set_drvdata(&rpdev->dev, cport);
+> +
+> +       dev_info(&rpdev->dev, "new channel: 0x%x -> 0x%x : ttyRPMSG%d\n",
+> +                rpdev->src, rpdev->dst, cport->id);
+> +
+> +       return 0;
+> +
+> +err_destroy:
+> +       tty_port_destroy(&cport->port);
+> +       rpmsg_tty_release_cport(cport);
+> +       return ret;
+> +}
+> +
+> +static void rpmsg_tty_remove(struct rpmsg_device *rpdev)
+> +{
+> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
+> +
+> +       dev_info(&rpdev->dev, "removing rpmsg tty device %d\n", cport->id);
+> +
+> +       /* User hang up to release the tty */
+> +       if (tty_port_initialized(&cport->port))
+> +               tty_port_tty_hangup(&cport->port, false);
+> +
+> +       tty_unregister_device(rpmsg_tty_driver, cport->id);
+> +       tty_port_destroy(&cport->port);
+> +
+> +       rpmsg_tty_release_cport(cport);
+> +}
+> +
+> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
+> +       { .name = "rpmsg-tty-channel" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(rpmsg, rpmsg_driver_tty_id_table);
+> +
+> +static struct rpmsg_driver rpmsg_tty_rpmsg_drv = {
+> +       .drv.name       = KBUILD_MODNAME,
+> +       .id_table       = rpmsg_driver_tty_id_table,
+> +       .probe          = rpmsg_tty_probe,
+> +       .callback       = rpmsg_tty_cb,
+> +       .remove         = rpmsg_tty_remove,
+> +};
+> +
+> +static int __init rpmsg_tty_init(void)
+> +{
+> +       int err;
+> +
+> +       rpmsg_tty_driver = tty_alloc_driver(MAX_TTY_RPMSG, TTY_DRIVER_REAL_RAW |
+> +                                           TTY_DRIVER_DYNAMIC_DEV);
+> +       if (IS_ERR(rpmsg_tty_driver))
+> +               return PTR_ERR(rpmsg_tty_driver);
+> +
+> +       rpmsg_tty_driver->driver_name = "rpmsg_tty";
+> +       rpmsg_tty_driver->name = "ttyRPMSG";
+> +       rpmsg_tty_driver->major = 0;
+> +       rpmsg_tty_driver->type = TTY_DRIVER_TYPE_CONSOLE;
+> +       rpmsg_tty_driver->init_termios = tty_std_termios;
+> +
+> +       tty_set_operations(rpmsg_tty_driver, &rpmsg_tty_ops);
+> +
+> +       err = tty_register_driver(rpmsg_tty_driver);
+> +       if (err < 0) {
+> +               pr_err("Couldn't install rpmsg tty driver: err %d\n", err);
+> +               goto error_put;
+> +       }
+> +
+> +       err = register_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
+> +       if (err < 0) {
+> +               pr_err("Couldn't register rpmsg tty driver: err %d\n", err);
+> +               goto error_unregister;
+> +       }
+> +
+> +       return 0;
+> +
+> +error_unregister:
+> +       tty_unregister_driver(rpmsg_tty_driver);
+> +
+> +error_put:
+> +       put_tty_driver(rpmsg_tty_driver);
+> +
+> +       return err;
+> +}
+> +
+> +static void __exit rpmsg_tty_exit(void)
+> +{
+> +       unregister_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
+> +       tty_unregister_driver(rpmsg_tty_driver);
+> +       put_tty_driver(rpmsg_tty_driver);
+> +       idr_destroy(&tty_idr);
+> +}
+> +
+> +module_init(rpmsg_tty_init);
+> +module_exit(rpmsg_tty_exit);
+> +
+> +MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
+> +MODULE_AUTHOR("Fabien Dessenne <fabien.dessenne@st.com>");
+> +MODULE_DESCRIPTION("virtio remote processor messaging tty driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+>
