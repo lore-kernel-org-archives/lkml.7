@@ -4,60 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3148C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0955C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B5B2146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EE320882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:34:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VBL8N9kg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNO02wrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfDCCcl (ORCPT
+        id S1726845AbfDCCeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 22:32:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42133 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbfDCCcl (ORCPT
+        Tue, 2 Apr 2019 22:34:15 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46769 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfDCCeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 22:32:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b7so10478228lfg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:32:40 -0700 (PDT)
+        Tue, 2 Apr 2019 22:34:14 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h21so13364203ljk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XkQq/Hrmv0eGgt6shvKyYOCwWEYAJMOW7yeHRm4cO0g=;
-        b=VBL8N9kgYf4OpxFjIlQsx7a9JiT+wlXxZjn8a7Ew1b88LHZV2Ydnv6McK49y8aZ+hZ
-         tQ33owMcvOBCoMswxDyHeO2AGuUYnm292cmfNulBgnCVA1ARVdEBTjx+XzbUUClgFG6r
-         F6zfgdLTTWNMnXK76LX5Rl3IDDaqcWKbQ58q6kICrQU5ChxBVIGoEBl6Ixx99zBj0Hl9
-         FZX++pvhEmUl5liPHqlpF8OGkwTOLISHE4qNl6Ez2m+9zBITzEk6hAXzcdlZTPKoR07u
-         1m8noRmyziVMaaQYqoP9DC5aAiDxOeayupXvD79HU1bfHnUxzpIVb39uM1R7IwibKH7Q
-         Q/fQ==
+        bh=73ZkZUgkUuZQK7LGV80tvF14Mb93y9TFKlB/wlbdK9U=;
+        b=GNO02wrd0qC9l8HJUlDZf+R/EWlcmeGpnGCL/k0YHyYWvQNtuHj5RflUR2hQ9KDmRe
+         WSVU+HAKcD2q5/CI1CpXshQaEo+52MuIjcMClMcyCUV/xNDBN2edJ3uG1L+nVHGMWZDA
+         dN4qHHTAn3wo7/LGtTxjpMmzOOTnzM6XHmTZLZAT6gX/8Z2gdDtksHr0Pva+hHkPz0ep
+         weIC0hC+IR/NbbZeaSUqO89NdPTWXfi8MMleeAdqae5/JBBaG4KxUDwf9lmd8rsUF8Mh
+         2FbiAdeZdBvNSgqIzv+G21LK9LxYP8R/BIu4vC+fHC3Z2N9MxYHpCIiPSrIYiC/vD+xC
+         IjpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XkQq/Hrmv0eGgt6shvKyYOCwWEYAJMOW7yeHRm4cO0g=;
-        b=esMkiBvrhh/njGPFyUdjwazwdqHsw9xZjtaPJcWDb4j7Dg8DK51g1OHA5fnXFqPOE3
-         /lyV+iRTnCJTAidGteCr4eY2I8/FkupZCsr091zrG9vCVPJGQGYDCs1IkDw4IJERBoXp
-         +jGAlVAFGUNPOfHRVaHRFjOC1oF4gR6D8G2N4DFfJ66Ost5VwR972BSQFBJtL55ITopD
-         kxpyT83fIDWORNvm3ne30yD3TSFEb8jupHNQhbDM83cmLgnzK1z2TDL/6nTgyKGNlu2h
-         l/by0UFwZeD6CtPNlC4pmIxv0kZMEqPpDwLZQ3et7/7GGhkEOYO5ZDV0WYDBW6z1S3Dv
-         DvFQ==
-X-Gm-Message-State: APjAAAXnRElHiblsQmXluSHFeTsyTuNhR2QUYhfvWmhzwpU5qAO3Lt8g
-        +6bEANnkJe/Ug4hUZEEOY4WBVlLR/5DrVTLhpfvF2g==
-X-Google-Smtp-Source: APXvYqw44m2qMH4I41m3lUaUrhkfEcGyaJZHic91oHnKZ19gtvM6EZuxTqd0vOCRvurIsNn7zq/sMfQvd8gw0IzgLAE=
-X-Received: by 2002:ac2:4192:: with SMTP id z18mr9155286lfh.96.1554258759875;
- Tue, 02 Apr 2019 19:32:39 -0700 (PDT)
+        bh=73ZkZUgkUuZQK7LGV80tvF14Mb93y9TFKlB/wlbdK9U=;
+        b=Ld9aM2B44+9dL6L8ovm5OHY72/In6kBYTCixOz+wyE/xT7ii+RFJlCkW9i9ZYprSCF
+         KdbEOE8UjeUwowuMBKAzzMoHguSMh+CpQpIfsVhNSR53VvuOSKXzR7xcaGZI0pmZRC8u
+         1Vf/ObgMCyp6EStFuiIZ8aXT5clBBVq2P3dTh3a3bCdTs9mU8XzSoJHaFgRmvMeISF3x
+         W3lZ0h6e/ekLVPfI8t3D1NFfZ2CA4eYwMKfKMUftfUdk+VIGT5+F2tutQxSvXthjDvDG
+         zZE9LzlrW3WcwwHdl8/sp8JrCk6bF/oFbYjkkTJIRYf8NfoGc0rkXnnOl5Tc4eg1+5uI
+         7SfQ==
+X-Gm-Message-State: APjAAAVbtwlXssNzuzLr48FD7CV2Nb0gTHJN/u4io9MLAPPRRcOGr2cQ
+        DGtLWzyf8Ty4Pc/sAN/szRoZbpZm7FOdsDhKeEg3iw==
+X-Google-Smtp-Source: APXvYqxUTntwDkNZQEqlHd6+GypniVK5KCFvKuk+8ovxaW8CZH1GqYjreaSGoeHxUSPtJhPu1cobJU0anDrQsvoM7TI=
+X-Received: by 2002:a2e:808e:: with SMTP id i14mr22937294ljg.103.1554258853023;
+ Tue, 02 Apr 2019 19:34:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-15-git-send-email-info@metux.net>
-In-Reply-To: <1552330521-4276-15-git-send-email-info@metux.net>
+References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-16-git-send-email-info@metux.net>
+In-Reply-To: <1552330521-4276-16-git-send-email-info@metux.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Apr 2019 09:32:28 +0700
-Message-ID: <CACRpkdb3wQnj6akRb9qBZAgsv7_HTguFgxhNCFaM31+pym7vzw@mail.gmail.com>
-Subject: Re: [PATCH 15/42] drivers: gpio: janz-ttl: use devm_platform_ioremap_resource()
+Date:   Wed, 3 Apr 2019 09:34:00 +0700
+Message-ID: <CACRpkdY6fSGJYWq78vTtwfHYauv4ej9nmiBQF7J6EgXid5F0mQ@mail.gmail.com>
+Subject: Re: [PATCH 16/42] drivers: gpio: janz-ttl: drop unneccessary temp
+ variable dev
 To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -92,12 +93,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Tue, Mar 12, 2019 at 1:55 AM Enrico Weigelt, metux IT consult
 <info@metux.net> wrote:
 
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.
+> don't need the temporary variable "dev", directly use &pdev->dev
 >
 > Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-Patch applied.
+Dropping this patch following the discussion. I like it better as it is :D
 
 Yours,
 Linus Walleij
