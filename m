@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C043CC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358AFC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F2D20700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C8520700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfDCKsN (ORCPT
+        id S1727523AbfDCKs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:48:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48605 "EHLO
+        Wed, 3 Apr 2019 06:48:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56825 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfDCKsL (ORCPT
+        with ESMTP id S1725956AbfDCKs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:48:11 -0400
+        Wed, 3 Apr 2019 06:48:27 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33AlYOf1815150
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x33AksGI1815104
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 03:47:34 -0700
+        Wed, 3 Apr 2019 03:46:54 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33AlXtX1815147;
-        Wed, 3 Apr 2019 03:47:33 -0700
-Date:   Wed, 3 Apr 2019 03:47:33 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x33AksC51815101;
+        Wed, 3 Apr 2019 03:46:54 -0700
+Date:   Wed, 3 Apr 2019 03:46:54 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   "tip-bot for Joel Fernandes (Google)" <tipbot@zytor.com>
-Message-ID: <tip-03f4b48edae7d936c5bf23488c1ce3fbe7fc2733@git.kernel.org>
-Cc:     rostedt@goodmis.org, morten.rasmussen@arm.com, hpa@zytor.com,
-        mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        paulmck@linux.ibm.com, josh@joshtriplett.org, efault@gmx.de,
-        joel@joelfernandes.org, jiangshanlai@gmail.com,
-        luc.vanoostenryck@gmail.com, peterz@infradead.org,
-        torvalds@linux-foundation.org, mathieu.desnoyers@efficios.com
-Reply-To: linux-kernel@vger.kernel.org, josh@joshtriplett.org,
-          efault@gmx.de, paulmck@linux.ibm.com, joel@joelfernandes.org,
-          luc.vanoostenryck@gmail.com, jiangshanlai@gmail.com,
-          peterz@infradead.org, torvalds@linux-foundation.org,
-          mathieu.desnoyers@efficios.com, rostedt@goodmis.org,
-          morten.rasmussen@arm.com, hpa@zytor.com, mingo@kernel.org,
-          tglx@linutronix.de
-In-Reply-To: <20190321003426.160260-4-joel@joelfernandes.org>
-References: <20190321003426.160260-4-joel@joelfernandes.org>
+Message-ID: <tip-994aeb7a93e43d28f6074195ccb03a384342e1bf@git.kernel.org>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, paulmck@linux.ibm.com, jiangshanlai@gmail.com,
+        tglx@linutronix.de, luc.vanoostenryck@gmail.com,
+        joel@joelfernandes.org, morten.rasmussen@arm.com, hpa@zytor.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        torvalds@linux-foundation.org, mingo@kernel.org, efault@gmx.de
+Reply-To: luc.vanoostenryck@gmail.com, tglx@linutronix.de,
+          paulmck@linux.ibm.com, jiangshanlai@gmail.com,
+          rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, morten.rasmussen@arm.com,
+          joel@joelfernandes.org, mingo@kernel.org,
+          torvalds@linux-foundation.org, mathieu.desnoyers@efficios.com,
+          hpa@zytor.com, josh@joshtriplett.org, efault@gmx.de
+In-Reply-To: <20190321003426.160260-3-joel@joelfernandes.org>
+References: <20190321003426.160260-3-joel@joelfernandes.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] rcuwait: Annotate task_struct with __rcu
-Git-Commit-ID: 03f4b48edae7d936c5bf23488c1ce3fbe7fc2733
+Subject: [tip:sched/core] sched_domain: Annotate RCU pointers properly
+Git-Commit-ID: 994aeb7a93e43d28f6074195ccb03a384342e1bf
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -63,20 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  03f4b48edae7d936c5bf23488c1ce3fbe7fc2733
-Gitweb:     https://git.kernel.org/tip/03f4b48edae7d936c5bf23488c1ce3fbe7fc2733
+Commit-ID:  994aeb7a93e43d28f6074195ccb03a384342e1bf
+Gitweb:     https://git.kernel.org/tip/994aeb7a93e43d28f6074195ccb03a384342e1bf
 Author:     Joel Fernandes (Google) <joel@joelfernandes.org>
-AuthorDate: Wed, 20 Mar 2019 20:34:25 -0400
+AuthorDate: Wed, 20 Mar 2019 20:34:24 -0400
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Wed, 3 Apr 2019 12:34:31 +0200
 
-rcuwait: Annotate task_struct with __rcu
+sched_domain: Annotate RCU pointers properly
 
-This suppresses sparse error generated due to the recently added
-rcu_assign_pointer sparse check.
+The scheduler uses RCU API in various places to access sched_domain
+pointers. These cause sparse errors as below.
 
-  percpu-rwsem.c:162:9: sparse: error: incompatible types in comparison expression
-  exit.c:316:16: sparse: error: incompatible types in comparison expression
+Many new errors show up because of an annotation check I added to
+rcu_assign_pointer(). Let us annotate the pointers correctly which also
+will help sparse catch any potential future bugs.
+
+This fixes the following sparse errors:
+
+  rt.c:1681:9: error: incompatible types in comparison expression
+  deadline.c:1904:9: error: incompatible types in comparison expression
+  core.c:519:9: error: incompatible types in comparison expression
+  core.c:1634:17: error: incompatible types in comparison expression
+  fair.c:6193:14: error: incompatible types in comparison expression
+  fair.c:9883:22: error: incompatible types in comparison expression
+  fair.c:9897:9: error: incompatible types in comparison expression
+  sched.h:1287:9: error: incompatible types in comparison expression
+  topology.c:612:9: error: incompatible types in comparison expression
+  topology.c:615:9: error: incompatible types in comparison expression
+  sched.h:1300:9: error: incompatible types in comparison expression
+  topology.c:618:9: error: incompatible types in comparison expression
+  sched.h:1287:9: error: incompatible types in comparison expression
+  topology.c:621:9: error: incompatible types in comparison expression
+  sched.h:1300:9: error: incompatible types in comparison expression
+  topology.c:624:9: error: incompatible types in comparison expression
+  topology.c:671:9: error: incompatible types in comparison expression
+  stats.c:45:17: error: incompatible types in comparison expression
+  fair.c:5998:15: error: incompatible types in comparison expression
+  fair.c:5989:15: error: incompatible types in comparison expression
+  fair.c:5998:15: error: incompatible types in comparison expression
+  fair.c:5989:15: error: incompatible types in comparison expression
+  fair.c:6120:19: error: incompatible types in comparison expression
+  fair.c:6506:14: error: incompatible types in comparison expression
+  fair.c:6515:14: error: incompatible types in comparison expression
+  fair.c:6623:9: error: incompatible types in comparison expression
+  fair.c:5970:17: error: incompatible types in comparison expression
+  fair.c:8642:21: error: incompatible types in comparison expression
+  fair.c:9253:9: error: incompatible types in comparison expression
+  fair.c:9331:9: error: incompatible types in comparison expression
+  fair.c:9519:15: error: incompatible types in comparison expression
+  fair.c:9533:14: error: incompatible types in comparison expression
+  fair.c:9542:14: error: incompatible types in comparison expression
+  fair.c:9567:14: error: incompatible types in comparison expression
+  fair.c:9597:14: error: incompatible types in comparison expression
+  fair.c:9421:16: error: incompatible types in comparison expression
+  fair.c:9421:16: error: incompatible types in comparison expression
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -95,22 +136,83 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: keescook@chromium.org
 Cc: kernel-hardening@lists.openwall.com
 Cc: kernel-team@android.com
-Link: https://lkml.kernel.org/r/20190321003426.160260-4-joel@joelfernandes.org
+Link: https://lkml.kernel.org/r/20190321003426.160260-3-joel@joelfernandes.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/rcuwait.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/sched/topology.h |  4 ++--
+ kernel/sched/sched.h           | 14 +++++++-------
+ kernel/sched/topology.c        | 10 +++++-----
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/rcuwait.h b/include/linux/rcuwait.h
-index 90bfa3279a01..563290fc194f 100644
---- a/include/linux/rcuwait.h
-+++ b/include/linux/rcuwait.h
-@@ -18,7 +18,7 @@
-  * awoken.
-  */
- struct rcuwait {
--	struct task_struct *task;
-+	struct task_struct __rcu *task;
- };
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index 57c7ed3fe465..cfc0a89a7159 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -76,8 +76,8 @@ struct sched_domain_shared {
  
- #define __RCUWAIT_INITIALIZER(name)		\
+ struct sched_domain {
+ 	/* These fields must be setup */
+-	struct sched_domain *parent;	/* top domain must be null terminated */
+-	struct sched_domain *child;	/* bottom domain must be null terminated */
++	struct sched_domain __rcu *parent;	/* top domain must be null terminated */
++	struct sched_domain __rcu *child;	/* bottom domain must be null terminated */
+ 	struct sched_group *groups;	/* the balancing groups of the domain */
+ 	unsigned long min_interval;	/* Minimum balance interval ms */
+ 	unsigned long max_interval;	/* Maximum balance interval ms */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 713715dd00cf..2b452d68ab2e 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -869,8 +869,8 @@ struct rq {
+ 	atomic_t		nr_iowait;
+ 
+ #ifdef CONFIG_SMP
+-	struct root_domain	*rd;
+-	struct sched_domain	*sd;
++	struct root_domain		*rd;
++	struct sched_domain __rcu	*sd;
+ 
+ 	unsigned long		cpu_capacity;
+ 	unsigned long		cpu_capacity_orig;
+@@ -1324,13 +1324,13 @@ static inline struct sched_domain *lowest_flag_domain(int cpu, int flag)
+ 	return sd;
+ }
+ 
+-DECLARE_PER_CPU(struct sched_domain *, sd_llc);
++DECLARE_PER_CPU(struct sched_domain __rcu *, sd_llc);
+ DECLARE_PER_CPU(int, sd_llc_size);
+ DECLARE_PER_CPU(int, sd_llc_id);
+-DECLARE_PER_CPU(struct sched_domain_shared *, sd_llc_shared);
+-DECLARE_PER_CPU(struct sched_domain *, sd_numa);
+-DECLARE_PER_CPU(struct sched_domain *, sd_asym_packing);
+-DECLARE_PER_CPU(struct sched_domain *, sd_asym_cpucapacity);
++DECLARE_PER_CPU(struct sched_domain_shared __rcu *, sd_llc_shared);
++DECLARE_PER_CPU(struct sched_domain __rcu *, sd_numa);
++DECLARE_PER_CPU(struct sched_domain __rcu *, sd_asym_packing);
++DECLARE_PER_CPU(struct sched_domain __rcu *, sd_asym_cpucapacity);
+ extern struct static_key_false sched_asym_cpucapacity;
+ 
+ struct sched_group_capacity {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index ab7f371a3a17..64bec54ded3e 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -615,13 +615,13 @@ static void destroy_sched_domains(struct sched_domain *sd)
+  * the cpumask of the domain), this allows us to quickly tell if
+  * two CPUs are in the same cache domain, see cpus_share_cache().
+  */
+-DEFINE_PER_CPU(struct sched_domain *, sd_llc);
++DEFINE_PER_CPU(struct sched_domain __rcu *, sd_llc);
+ DEFINE_PER_CPU(int, sd_llc_size);
+ DEFINE_PER_CPU(int, sd_llc_id);
+-DEFINE_PER_CPU(struct sched_domain_shared *, sd_llc_shared);
+-DEFINE_PER_CPU(struct sched_domain *, sd_numa);
+-DEFINE_PER_CPU(struct sched_domain *, sd_asym_packing);
+-DEFINE_PER_CPU(struct sched_domain *, sd_asym_cpucapacity);
++DEFINE_PER_CPU(struct sched_domain_shared __rcu *, sd_llc_shared);
++DEFINE_PER_CPU(struct sched_domain __rcu *, sd_numa);
++DEFINE_PER_CPU(struct sched_domain __rcu *, sd_asym_packing);
++DEFINE_PER_CPU(struct sched_domain __rcu *, sd_asym_cpucapacity);
+ DEFINE_STATIC_KEY_FALSE(sched_asym_cpucapacity);
+ 
+ static void update_top_cache_domain(int cpu)
