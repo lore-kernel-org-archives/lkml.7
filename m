@@ -2,136 +2,112 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DE8C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2478C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0DE2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B3E2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:15:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WLMqsNwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfDCOM7 (ORCPT
+        id S1726404AbfDCOPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:12:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52020 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726105AbfDCOM7 (ORCPT
+        Wed, 3 Apr 2019 10:15:04 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46529 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfDCOPE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:12:59 -0400
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hBgdN-0005XX-HX; Wed, 03 Apr 2019 15:12:57 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hBgdM-0000FY-VS; Wed, 03 Apr 2019 15:12:56 +0100
-Message-ID: <d94ae606a6770faa019a867579dda34a8c7c5606.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 00/99] 3.16.65-rc1 review
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Wed, 03 Apr 2019 15:12:48 +0100
-In-Reply-To: <af7bb5af-f0d1-d499-98b9-4c49d11aa39d@roeck-us.net>
-References: <lsq.1554212307.17110877@decadent.org.uk>
-         <af7bb5af-f0d1-d499-98b9-4c49d11aa39d@roeck-us.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-Ss5XdWD7k2Mv0gt8wSOC"
-User-Agent: Evolution 3.30.5-1 
+        Wed, 3 Apr 2019 10:15:04 -0400
+Received: by mail-yb1-f194.google.com with SMTP id u15so1806505ybj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 07:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pUNm8FbE9mgPJ18ACUFv10ogYAla06jt3nWb68IMWG0=;
+        b=WLMqsNwB/T7ldwcjJF2eOa+O4OkR52t6uCiSVfi4dE/Ki7G1kfPyeMhAIfB5GHk8e1
+         zKGYa04GxVTyW0LKbHmKprU77dFFgkAYLCrQEEiz8qQkvJpatdqPZstp4FcYgeCpEpAA
+         bTWIccSxFKnyJgP5znkPXrf7VYbvjHb6+6MC3jej0WMTtEip+v11zlJxX9Df37LlsLoL
+         iKtlt9ZoWpMfWnjHD160itYIorNuK09gfL2n3z+2EW2GVDQGANj6xW24sauSAyeSj8jr
+         kjg6LR43bKnTCWiInTF8SC6wVLruk9QQDPtUcQwftRql1akmdevqu3xiYLTQTzZ4JSpA
+         GOPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pUNm8FbE9mgPJ18ACUFv10ogYAla06jt3nWb68IMWG0=;
+        b=Cub+fNZx0yzZKOVNoESwaMJOtEQz2IWix7IVAtnHUxPKL5MkYWa5ANabdQ+l+dG61z
+         BS/uw2uOv+HbPGSOmZsEkNUWnty9JYpoj9RGoV88f+KgpfRXFZqvy73I9tZDCvJb4Ay9
+         vLZQHgq1Woe60VnHqTArVii5+oi5Q8UBQbm2V6SuOQsT7cSSDKTUAeVNv3llmr0td92a
+         U7iZQzYCE37OtRnsDYXvTtuapJGVYhbTCfAxXWdqHwcxDO6OCQ0SV4nFBQFLUiyUKsdi
+         erarBrKNd6/FblBt2V7t+WM50oZi+p2QJfmbyNKxEdvpsBqV9SK6WKAmg8o2BPpLCswP
+         AuGw==
+X-Gm-Message-State: APjAAAWBEoCcejkeTDzYa2tMNPErZqTkrC+VNMRFmd9h7h3FmJTtwDo8
+        r9kiOHT+5vpz5z1KtAmJ9hdT2uxhdXp1P7P0usraxQ==
+X-Google-Smtp-Source: APXvYqxUhlDGoJqNraYB3pdOi4X92Pp4oFDEyOxDdWE8at5/OEQzlkqhTtZywbMjhQbTyy/BR8rsILCX917sYXH1hjQ=
+X-Received: by 2002:a25:1254:: with SMTP id 81mr69050ybs.237.1554300902929;
+ Wed, 03 Apr 2019 07:15:02 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20190403134915.6616-1-olivier.tilmans@nokia-bell-labs.com>
+In-Reply-To: <20190403134915.6616-1-olivier.tilmans@nokia-bell-labs.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 3 Apr 2019 07:14:51 -0700
+Message-ID: <CANn89iJzTNjnABOxELHJG8Ub8-Oj0GzubvdN17scRfoegTNWbg@mail.gmail.com>
+Subject: Re: [PATCH net-next] tcp: Accept ECT on SYN in the presence of RFC8311
+To:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>
+Cc:     Bob Briscoe <research@bobbriscoe.net>,
+        "De Schepper, Koen (Nokia - BE/Antwerp)" 
+        <koen.de_schepper@nokia-bell-labs.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 3, 2019 at 6:49 AM Tilmans, Olivier (Nokia - BE/Antwerp)
+<olivier.tilmans@nokia-bell-labs.com> wrote:
+>
+> Linux currently disable ECN for incoming connections when the SYN
+> requests ECN and the IP header has ECT(0)/ECT(1) set, as some
+> networks were reportedly mangling the ToS byte, hence could later
+> trigger false congestion notifications.
+>
+> RFC8311 =C2=A74.3 relaxes RFC3168's requirements such that ECT can be set
+> one TCP control packets (including SYNs). The main benefit of this
+> is the decreased probability of losing a SYN in a congested
+> ECN-capable network (i.e., it avoids the initial 1s timeout).
+> Additionally, this allows the development of newer TCP extensions,
+> such as AccECN.
+>
+> This patch relaxes the previous check, by enabling ECN on incoming
+> connections using SYN+ECT if at least one bit of the reserved flags
+> of the TCP header is set. Such bit would indicate that the sender of
+> the SYN is using a newer TCP feature than what the host implements,
+> such as AccECN, and is thus implementing RFC8311. This enables
+> end-hosts not supporting such extensions to still negociate ECN, and
 
---=-Ss5XdWD7k2Mv0gt8wSOC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+nit : negotiate
 
-On Tue, 2019-04-02 at 19:22 -0700, Guenter Roeck wrote:
-> On 4/2/19 6:38 AM, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.65 release.
-> > There are 99 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >=20
-> > Responses should be made by Thu Apr 04 13:38:27 UTC 2019.
-> > Anything received after that time might be too late.
-> >=20
->=20
-> For v3.16.64-99-gfff72cd6bb56:
->=20
-> Build results:
-> 	total: 137 pass: 132 fail: 5
-> Failed builds:
-> 	arm:allmodconfig
-> 	i386:tools/perf
-> 	powerpc:ppc64e_defconfig
-> 	powerpc:cell_defconfig
-> 	powerpc:maple_defconfig
-> Qemu test results:
-> 	total: 222 pass: 210 fail: 12
-> Failed tests:
-> 	ppc64:mac99:ppc64_book3s_defconfig:nosmp:initrd
-> 	ppc64:mac99:ppc64_book3s_defconfig:smp:initrd
-> 	ppc64:mac99:ppc64_book3s_defconfig:smp:ide:rootfs
-> 	ppc64:mac99:ppc64_book3s_defconfig:smp:mmc:rootfs
-> 	ppc64:mac99:ppc64_book3s_defconfig:smp:nvme:rootfs
-> 	ppc64:mpc8544ds:ppc64_e5500_defconfig:nosmp:initrd
-> 	ppc64:mpc8544ds:ppc64_e5500_defconfig:smp:initrd
-> 	ppc64:ppce500:corenet64_smp_defconfig:e5500:initrd
-> 	ppc64:ppce500:corenet64_smp_defconfig:e5500:nvme:rootfs
-> 	ppc64:ppce500:corenet64_smp_defconfig:e5500:mmc:rootfs
-> 	ppc64:ppce500:corenet64_smp_defconfig:e5500:scsi[53C895A]:rootfs
-> 	ppc64:ppce500:corenet64_smp_defconfig:e5500:sata-sii3112:rootfs
->=20
->=20
-> sound/pci/hda/hda_tegra.c: In function 'hda_tegra_suspend':
-> sound/pci/hda/hda_tegra.c:256:25: error: implicit declaration of function=
- 'azx_bus'
->=20
-> arch/powerpc/kernel/signal_64.c: In function 'sys_rt_sigreturn':
-> arch/powerpc/kernel/signal_64.c:713:7: error: 'msr' undeclared
-
-Thanks, I've pushed build fixes (I think) for these two.
-
-Ben.
-
---=20
-Ben Hutchings
-Q.  Which is the greater problem in the world today,
-    ignorance or apathy?
-A.  I don't know and I couldn't care less.
+> to have some of the benefits of using ECN on control packets.
+>
+> Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
+> Suggested-by: Bob Briscoe <research@bobbriscoe.net>
+> Cc: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+> ---
 
 
+LGTM,  thank you.
 
---=-Ss5XdWD7k2Mv0gt8wSOC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAlykv2AACgkQ57/I7JWG
-EQncRQ/+KfU/rF7kGvh5AAKRYzp4iKM/Fga6p7s8MF/GwSZSFcvLH4+SPcHg36rf
-+4fVTcrOn9JxddjdTX96zlJrtfJeINnPVXPUCWtXhP22q9RD7XTOa3ovD686lC/X
-EBYPK0uPXOfI49EV5Bh6GbRZr37OzZ1psYCAOSImHDppaZRVQPR/zH5LlGqrPJVs
-TMZu/nEU0TbPZGjiAOgRSQjkfQJyYVFLxsWy+dOZqmNvA3DdHG6Ix1wEhsB7cgyp
-Nc6+UG+HFFIGyhQAvyFvdLB8AQzommCa/jyQ5E7pXuxrC9AaAGl6CJXx/Z6cPlSD
-KDjhcmLS50EBRFdl/n+Kcte/lxPRL0m0iPs2ADFf3THUR5vbvtkagnxSdB/Z+ELr
-sOHnwXjxgi/5onyFyertWIoIPQ8eKbSr+upBJ49XPVqlLUHMlTGt7YobF1acey9h
-ifebawx0uYcA3hT/sVu1huvWRArPhEPUXV7m4y0jPb711zH4VCMRVvPdi0tUG/cW
-GrjyNwBUeC0jemTLI6oUuJDWnUX9RkxEjPUwLdfEgbkuZUfRqG6QpITNNCg6HMBs
-AmEm+VMWX1Ms5i/1Q8JLr8uygNjlEjxnK3RXi2fNXNh9aleiXmXQVnOswzvwLTjV
-dE2IumiFK8Pe1EkTTA6bBSHOnpzSrDpkM3biUurGAFp1tdweVe4=
-=62G8
------END PGP SIGNATURE-----
-
---=-Ss5XdWD7k2Mv0gt8wSOC--
+Signed-off-by: Eric Dumazet <edumazet@google.com>
