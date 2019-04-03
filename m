@@ -6,239 +6,269 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF08C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B187C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3952084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BEF20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ECbzrYeK"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NZ8R+a2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfDCUGn (ORCPT
+        id S1728019AbfDCUGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:06:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8995 "EHLO pegase1.c-s.fr"
+        Wed, 3 Apr 2019 16:06:50 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:22434 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfDCUG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:06:28 -0400
+        id S1726874AbfDCUGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 16:06:24 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44ZHCP6VXmz9v3q0;
-        Wed,  3 Apr 2019 22:06:25 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44ZHCL5swjz9v3pw;
+        Wed,  3 Apr 2019 22:06:22 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ECbzrYeK; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=NZ8R+a2G; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id vaTjaJP2E-0K; Wed,  3 Apr 2019 22:06:25 +0200 (CEST)
+        with ESMTP id tqSRQYidq7mz; Wed,  3 Apr 2019 22:06:22 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44ZHCP5QhGz9v3pp;
-        Wed,  3 Apr 2019 22:06:25 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44ZHCL4nMKz9v3pp;
+        Wed,  3 Apr 2019 22:06:22 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1554321985; bh=8ho2v9nDYOZx8aR7I3T7obQsL0sM3UzsRT35jMaFzi8=;
+        t=1554321982; bh=DRnB2NIv8b4QEyMhI2kawKCRkEJXAXNv08uJGVDM2z4=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=ECbzrYeKj0AbTJNMzdU1cYI0OxmJJ2Y0l5Qi9sVyTnZ4PJFdtVcF49lCY2slBP9YY
-         k94kSPayuvYGnXIqOOq/PW0Ovn03GFTXsS0fXja0NxMDg6/wTcOWdownSQ9LVm8BSX
-         4z1UwW96cW8103Vxh3Qv0RHq3c3MzYQhUVh5c/4I=
+        b=NZ8R+a2GZe53lTgCbTNW60C70uG7czM8wsY67bczz2wT0ZISbtHsMocAQD095tw5z
+         HNnE54U39SlLOGNQn+gbBO3OsRcDXDW3s+A+rQF3ZON65d26CO5A0gcagnXsfMxHj5
+         gpRGJMyBAnPykq/AAlKAqGtfZkooNIM/ZL22/REY=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DCAB08B905;
-        Wed,  3 Apr 2019 22:06:25 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C5F728B905;
+        Wed,  3 Apr 2019 22:06:22 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id jHR9nqXGxIFT; Wed,  3 Apr 2019 22:06:25 +0200 (CEST)
+        with ESMTP id eUxpq5sOSvOx; Wed,  3 Apr 2019 22:06:22 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE5388B902;
-        Wed,  3 Apr 2019 22:06:25 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 95C638B902;
+        Wed,  3 Apr 2019 22:06:22 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 8D98E655EC; Wed,  3 Apr 2019 20:06:25 +0000 (UTC)
-Message-Id: <d7cfc093d5516600c1df5e1ae052db46af506353.1554321743.git.christophe.leroy@c-s.fr>
+        id 792D2655EC; Wed,  3 Apr 2019 20:06:22 +0000 (UTC)
+Message-Id: <f616dc4df269094d4e7c514ec64d416c4ab761b8.1554321743.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1554321743.git.christophe.leroy@c-s.fr>
 References: <cover.1554321743.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 13/15] powerpc/mm: refactor pgtable freeing functions on
- nohash
+Subject: [PATCH v1 10/15] powerpc/mm: refactor pte_alloc_one() and pte_free()
+ families definition.
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  3 Apr 2019 20:06:25 +0000 (UTC)
+Date:   Wed,  3 Apr 2019 20:06:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pgtable_free() and others are identical on nohash/32 and 64,
-so move them into asm/nohash/pgalloc.h
+Functions pte_alloc_one(), pte_alloc_one_kernel(), pte_free(),
+pte_free_kernel() are identical for the four subarches.
+
+This patch moves their definition in a common place.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/nohash/32/pgalloc.h | 43 ---------------------------
- arch/powerpc/include/asm/nohash/64/pgalloc.h | 43 ---------------------------
- arch/powerpc/include/asm/nohash/pgalloc.h    | 44 ++++++++++++++++++++++++++++
- 3 files changed, 44 insertions(+), 86 deletions(-)
+ arch/powerpc/include/asm/book3s/32/pgalloc.h | 25 -------------------------
+ arch/powerpc/include/asm/book3s/64/pgalloc.h | 22 ----------------------
+ arch/powerpc/include/asm/nohash/32/pgalloc.h | 25 -------------------------
+ arch/powerpc/include/asm/nohash/64/pgalloc.h | 25 -------------------------
+ arch/powerpc/include/asm/pgalloc.h           | 25 +++++++++++++++++++++++++
+ 5 files changed, 25 insertions(+), 97 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/pgalloc.h b/arch/powerpc/include/asm/nohash/32/pgalloc.h
-index 7ee8e27070f4..6c0f5151dc1d 100644
---- a/arch/powerpc/include/asm/nohash/32/pgalloc.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgalloc.h
-@@ -45,47 +45,4 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmdp,
+diff --git a/arch/powerpc/include/asm/book3s/32/pgalloc.h b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+index 0ed856068bb8..46422309d6e0 100644
+--- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
++++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+@@ -59,31 +59,6 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmdp,
  
  #define pmd_pgtable(pmd) ((pgtable_t)pmd_page_vaddr(pmd))
  
--static inline void pgtable_free(void *table, unsigned index_size)
+-pte_t *pte_fragment_alloc(struct mm_struct *mm, int kernel);
+-
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
 -{
--	if (!index_size) {
--		pte_fragment_free((unsigned long *)table, 0);
--	} else {
--		BUG_ON(index_size > MAX_PGTABLE_INDEX_SIZE);
--		kmem_cache_free(PGT_CACHE(index_size), table);
--	}
+-	return (pte_t *)pte_fragment_alloc(mm, 1);
 -}
 -
--#define get_hugepd_cache_index(x)	(x)
--
--#ifdef CONFIG_SMP
--static inline void pgtable_free_tlb(struct mmu_gather *tlb,
--				    void *table, int shift)
+-static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
 -{
--	unsigned long pgf = (unsigned long)table;
--	BUG_ON(shift > MAX_PGTABLE_INDEX_SIZE);
--	pgf |= shift;
--	tlb_remove_table(tlb, (void *)pgf);
+-	return (pgtable_t)pte_fragment_alloc(mm, 0);
 -}
 -
--static inline void __tlb_remove_table(void *_table)
--{
--	void *table = (void *)((unsigned long)_table & ~MAX_PGTABLE_INDEX_SIZE);
--	unsigned shift = (unsigned long)_table & MAX_PGTABLE_INDEX_SIZE;
+-void pte_frag_destroy(void *pte_frag);
+-void pte_fragment_free(unsigned long *table, int kernel);
 -
--	pgtable_free(table, shift);
--}
--#else
--static inline void pgtable_free_tlb(struct mmu_gather *tlb,
--				    void *table, int shift)
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
 -{
--	pgtable_free(table, shift);
+-	pte_fragment_free((unsigned long *)pte, 1);
 -}
--#endif
 -
--static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
--				  unsigned long address)
+-static inline void pte_free(struct mm_struct *mm, pgtable_t ptepage)
 -{
--	tlb_flush_pgtable(tlb, address);
--	pgtable_free_tlb(tlb, table, 0);
+-	pte_fragment_free((unsigned long *)ptepage, 0);
 -}
- #endif /* _ASM_POWERPC_PGALLOC_32_H */
+-
+ static inline void pgtable_free(void *table, unsigned index_size)
+ {
+ 	if (!index_size) {
+diff --git a/arch/powerpc/include/asm/book3s/64/pgalloc.h b/arch/powerpc/include/asm/book3s/64/pgalloc.h
+index 138bc2ecc0c4..cfd48d8cc055 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
++++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
+@@ -39,9 +39,7 @@ extern struct vmemmap_backing *vmemmap_list;
+ extern struct kmem_cache *pgtable_cache[];
+ #define PGT_CACHE(shift) pgtable_cache[shift]
+ 
+-extern pte_t *pte_fragment_alloc(struct mm_struct *, int);
+ extern pmd_t *pmd_fragment_alloc(struct mm_struct *, unsigned long);
+-extern void pte_fragment_free(unsigned long *, int);
+ extern void pmd_fragment_free(unsigned long *);
+ extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift);
+ #ifdef CONFIG_SMP
+@@ -190,26 +188,6 @@ static inline pgtable_t pmd_pgtable(pmd_t pmd)
+ 	return (pgtable_t)pmd_page_vaddr(pmd);
+ }
+ 
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+-{
+-	return (pte_t *)pte_fragment_alloc(mm, 1);
+-}
+-
+-static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+-{
+-	return (pgtable_t)pte_fragment_alloc(mm, 0);
+-}
+-
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+-{
+-	pte_fragment_free((unsigned long *)pte, 1);
+-}
+-
+-static inline void pte_free(struct mm_struct *mm, pgtable_t ptepage)
+-{
+-	pte_fragment_free((unsigned long *)ptepage, 0);
+-}
+-
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+ 				  unsigned long address)
+ {
+diff --git a/arch/powerpc/include/asm/nohash/32/pgalloc.h b/arch/powerpc/include/asm/nohash/32/pgalloc.h
+index 1d41508f0676..e96ef2fde2ca 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgalloc.h
++++ b/arch/powerpc/include/asm/nohash/32/pgalloc.h
+@@ -77,31 +77,6 @@ static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmdp,
+ #define pmd_pgtable(pmd) ((pgtable_t)pmd_page_vaddr(pmd))
+ #endif
+ 
+-pte_t *pte_fragment_alloc(struct mm_struct *mm, int kernel);
+-
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+-{
+-	return (pte_t *)pte_fragment_alloc(mm, 1);
+-}
+-
+-static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+-{
+-	return (pgtable_t)pte_fragment_alloc(mm, 0);
+-}
+-
+-void pte_frag_destroy(void *pte_frag);
+-void pte_fragment_free(unsigned long *table, int kernel);
+-
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+-{
+-	pte_fragment_free((unsigned long *)pte, 1);
+-}
+-
+-static inline void pte_free(struct mm_struct *mm, pgtable_t ptepage)
+-{
+-	pte_fragment_free((unsigned long *)ptepage, 0);
+-}
+-
+ static inline void pgtable_free(void *table, unsigned index_size)
+ {
+ 	if (!index_size) {
 diff --git a/arch/powerpc/include/asm/nohash/64/pgalloc.h b/arch/powerpc/include/asm/nohash/64/pgalloc.h
-index ffc86d42816d..c636feced1ff 100644
+index 7fb87235f845..98de4f3b0306 100644
 --- a/arch/powerpc/include/asm/nohash/64/pgalloc.h
 +++ b/arch/powerpc/include/asm/nohash/64/pgalloc.h
-@@ -72,49 +72,6 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+@@ -92,31 +92,6 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
  	kmem_cache_free(PGT_CACHE(PMD_CACHE_INDEX), pmd);
  }
  
--static inline void pgtable_free(void *table, int shift)
+-pte_t *pte_fragment_alloc(struct mm_struct *mm, int kernel);
+-
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
 -{
--	if (!shift) {
--		pte_fragment_free((unsigned long *)table, 0);
--	} else {
--		BUG_ON(shift > MAX_PGTABLE_INDEX_SIZE);
--		kmem_cache_free(PGT_CACHE(shift), table);
--	}
+-	return (pte_t *)pte_fragment_alloc(mm, 1);
 -}
 -
--#define get_hugepd_cache_index(x)	(x)
--#ifdef CONFIG_SMP
--static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+-static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
 -{
--	unsigned long pgf = (unsigned long)table;
--
--	BUG_ON(shift > MAX_PGTABLE_INDEX_SIZE);
--	pgf |= shift;
--	tlb_remove_table(tlb, (void *)pgf);
+-	return (pgtable_t)pte_fragment_alloc(mm, 0);
 -}
 -
--static inline void __tlb_remove_table(void *_table)
--{
--	void *table = (void *)((unsigned long)_table & ~MAX_PGTABLE_INDEX_SIZE);
--	unsigned shift = (unsigned long)_table & MAX_PGTABLE_INDEX_SIZE;
+-void pte_frag_destroy(void *pte_frag);
+-void pte_fragment_free(unsigned long *table, int kernel);
 -
--	pgtable_free(table, shift);
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+-{
+-	pte_fragment_free((unsigned long *)pte, 1);
 -}
 -
--#else
--static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+-static inline void pte_free(struct mm_struct *mm, pgtable_t ptepage)
 -{
--	pgtable_free(table, shift);
--}
--#endif
--
--static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
--				  unsigned long address)
--{
--	tlb_flush_pgtable(tlb, address);
--	pgtable_free_tlb(tlb, table, 0);
+-	pte_fragment_free((unsigned long *)ptepage, 0);
 -}
 -
- #define __pmd_free_tlb(tlb, pmd, addr)		      \
- 	pgtable_free_tlb(tlb, pmd, PMD_CACHE_INDEX)
- #define __pud_free_tlb(tlb, pud, addr)		      \
-diff --git a/arch/powerpc/include/asm/nohash/pgalloc.h b/arch/powerpc/include/asm/nohash/pgalloc.h
-index 0634f2949438..4fccac6af3ad 100644
---- a/arch/powerpc/include/asm/nohash/pgalloc.h
-+++ b/arch/powerpc/include/asm/nohash/pgalloc.h
-@@ -21,4 +21,48 @@ static inline void tlb_flush_pgtable(struct mmu_gather *tlb,
+ static inline void pgtable_free(void *table, int shift)
+ {
+ 	if (!shift) {
+diff --git a/arch/powerpc/include/asm/pgalloc.h b/arch/powerpc/include/asm/pgalloc.h
+index e11f03007b57..c2c6fd438840 100644
+--- a/arch/powerpc/include/asm/pgalloc.h
++++ b/arch/powerpc/include/asm/pgalloc.h
+@@ -20,6 +20,31 @@ static inline gfp_t pgtable_gfp_flags(struct mm_struct *mm, gfp_t gfp)
+ 
+ #define PGALLOC_GFP (GFP_KERNEL | __GFP_ZERO)
+ 
++pte_t *pte_fragment_alloc(struct mm_struct *mm, int kernel);
++
++static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
++{
++	return (pte_t *)pte_fragment_alloc(mm, 1);
++}
++
++static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
++{
++	return (pgtable_t)pte_fragment_alloc(mm, 0);
++}
++
++void pte_frag_destroy(void *pte_frag);
++void pte_fragment_free(unsigned long *table, int kernel);
++
++static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
++{
++	pte_fragment_free((unsigned long *)pte, 1);
++}
++
++static inline void pte_free(struct mm_struct *mm, pgtable_t ptepage)
++{
++	pte_fragment_free((unsigned long *)ptepage, 0);
++}
++
+ #ifdef CONFIG_PPC_BOOK3S
+ #include <asm/book3s/pgalloc.h>
  #else
- #include <asm/nohash/32/pgalloc.h>
- #endif
-+
-+static inline void pgtable_free(void *table, int shift)
-+{
-+	if (!shift) {
-+		pte_fragment_free((unsigned long *)table, 0);
-+	} else {
-+		BUG_ON(shift > MAX_PGTABLE_INDEX_SIZE);
-+		kmem_cache_free(PGT_CACHE(shift), table);
-+	}
-+}
-+
-+#define get_hugepd_cache_index(x)	(x)
-+
-+#ifdef CONFIG_SMP
-+static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
-+{
-+	unsigned long pgf = (unsigned long)table;
-+
-+	BUG_ON(shift > MAX_PGTABLE_INDEX_SIZE);
-+	pgf |= shift;
-+	tlb_remove_table(tlb, (void *)pgf);
-+}
-+
-+static inline void __tlb_remove_table(void *_table)
-+{
-+	void *table = (void *)((unsigned long)_table & ~MAX_PGTABLE_INDEX_SIZE);
-+	unsigned shift = (unsigned long)_table & MAX_PGTABLE_INDEX_SIZE;
-+
-+	pgtable_free(table, shift);
-+}
-+
-+#else
-+static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
-+{
-+	pgtable_free(table, shift);
-+}
-+#endif
-+
-+static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
-+				  unsigned long address)
-+{
-+	tlb_flush_pgtable(tlb, address);
-+	pgtable_free_tlb(tlb, table, 0);
-+}
- #endif /* _ASM_POWERPC_NOHASH_PGALLOC_H */
 -- 
 2.13.3
 
