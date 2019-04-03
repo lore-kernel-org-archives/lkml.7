@@ -2,107 +2,108 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCFDC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8E1C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E662084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554280001;
-	bh=VrdmJMUdb7I9TXBgKTo7IRCWyph2KbU/hsHFEr+MAgs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jpLnLfbBZrqbcyo1+fS+tIKI3+VLXdGd0BMso+nw5QSNaQf8v5ku1CAI3BzaZwijf
-	 Soild5hRQYhdrdrruXrD56zk/PD8KG+5iEHWYqzqvrf2RTpOBNsx+KWrElsMK4mp1t
-	 YRzAmMcc0M825utn/HnT7hXlRBseBnhsQxXA4xOc=
+	by mail.kernel.org (Postfix) with ESMTP id 161F72084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfDCI0k (ORCPT
+        id S1728881AbfDCI0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:26:40 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40422 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfDCI0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:26:39 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a28so11029844lfo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:26:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jKayWre1k/uhqb6AX0DLMxMElkzD/gI+OlZ55di6lpE=;
-        b=HyFhceDdPA6en1X5C0iCvFIGj7ZJOqKfN2ty2O97fT0LM1DxgTNbp/Y7Cwcp3egIWE
-         r3flvRuIPv2ayA1UPlOKr6vgoz5rO/ofDAeTla2qxZh2W3ejweI0tc5CsCYZ+yR9smOX
-         h1TbUB9RdhVOGWmt7uVovWydqaUPmfFhcHY7rXQgJLlaWvFOfMgsNeFqKHf4ah7gHGMu
-         ophUwnb6pYFY3h5EFClJGJ+ZOTPqwTFTbshH2mSelUmQV1tdJpHLtvBO+TDd2CEQqkBB
-         ho+bo/8eO6JPH/5fVxqMSLXJWzOPPnPIBhmOx7jG0kqIqAniFmbGyfpn9NNg6w91l4Pz
-         Iv7Q==
-X-Gm-Message-State: APjAAAVs6ctj7cWNO3Y5VaFv4Cbxq6d6oaY1i7IbS20XfmrtEAGbR6U9
-        NWU60GHNHBl1IkeAPUmPVZVHK8P5
-X-Google-Smtp-Source: APXvYqzUMTMZRTlwyjJfNmP3dI/ctfmC72firxePSMZs9XhqZgxECtI6sS65OMUvI7f4OT5FPChbWg==
-X-Received: by 2002:ac2:530a:: with SMTP id c10mr9632013lfh.45.1554279997633;
-        Wed, 03 Apr 2019 01:26:37 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id s10sm2819161lfc.20.2019.04.03.01.26.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 01:26:36 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hBbEY-0004Wv-Px; Wed, 03 Apr 2019 10:26:58 +0200
-Date:   Wed, 3 Apr 2019 10:26:58 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        linux-kernel@vger.kernel.org,
-        Fabien Dessenne <fabien.dessenne@st.com>
-Subject: Re: [PATCH] Revert "tty: fix NULL pointer issue when tty_port ops is
- not set"
-Message-ID: <20190403082658.GG6734@localhost>
-References: <20190403074053.5961-1-johan@kernel.org>
- <20190403080649.GA12019@kroah.com>
+        Wed, 3 Apr 2019 04:26:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51648 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726004AbfDCI0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 04:26:42 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA2B4308427C;
+        Wed,  3 Apr 2019 08:26:41 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-59.pek2.redhat.com [10.72.12.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 757925C234;
+        Wed,  3 Apr 2019 08:26:38 +0000 (UTC)
+Date:   Wed, 3 Apr 2019 16:26:34 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     "bhe@redhat.com" <bhe@redhat.com>
+Cc:     Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190403082634.GA14852@dhcp-128-65.nay.redhat.com>
+References: <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+ <20190403053459.GD1555@localhost.localdomain>
+ <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403063911.GA2579@dhcp-128-65.nay.redhat.com>
+ <20190403073023.GF1555@localhost.localdomain>
+ <20190403075015.GQ7627@MiWiFi-R3L-srv>
+ <20190403082313.GA14838@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403080649.GA12019@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190403082313.GA14838@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 03 Apr 2019 08:26:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:06:49AM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Apr 03, 2019 at 09:40:53AM +0200, Johan Hovold wrote:
-> > This reverts commit f4e68d58cf2b20a581759bbc7228052534652673.
+On 04/03/19 at 04:23pm, Dave Young wrote:
+> On 04/03/19 at 03:50pm, Baoquan He wrote:
+> > On 04/03/19 at 03:30pm, Chao Fan wrote:
+> > > On Wed, Apr 03, 2019 at 02:39:11PM +0800, Dave Young wrote:
+> > > >> Actually I got some different kexec test results.
+> > > >> 
+> > > >> Yesterday, with my installed kernel (based on git head several weeks
+> > > >> ago), kexec kernel panics.
+> > > >> 
+> > > >> Then I tried latest mainline with git pull, everything works, (with or
+> > > >> without the patch, and can not reproduce the bug this patch is fixing)
+> > > >> 
+> > > >> Today, test again, kexec reboot hangs (with or without your patch), but
+> > > >> kdump works always (with or without the patch)
+> > > >> 
+> > > >> It is weird to me. Probably I need find out why I can not reproduce the
+> > > >> bug this patch is addressing first.
+> > > >> 
+> > > >> earlyprintk seems not working for me anymore, it is not easy to debug on
+> > > >> laptop now.
+> > > >> 
+> > > >> But the patch itself is clear, I think it should be good.  There might be
+> > > >> other things broken.
+> > > >
+> > > >Disable your immovable mem code then everything works for me.  There
+> > > >might be something wrong in the code.  Also "nokaslr" does not help, it
+> > > >should be another problem 
+> > > 
+> > > If "nokaslr" doesn't help, so I think
+> > > >+      /*num_immovable_mem = count_immovable_mem_regions();*/
+> > > also doesn't help. I think the problem is from get_rsdp_addr().
 > > 
-> > TTY drivers using the tty-port abstraction all provide a pointer to a
-> > set of port operations, which specifically cannot be NULL (or we'd find
-> > out at first attempt to open a port).
-> > 
-> > Revert the recent commit which added unnecessary NULL-checks and whose
-> > commit message indicated that it was fixing a real problem, which it did
-> > not.
-> > 
-> > Note that even the two tty drivers for virtual devices currently
-> > providing an empty set of operations probably should be implementing at
-> > least some of the callbacks.
+> > Yes, seems get_rsdp_addr() has issue in this case. I am wondering if we
+> > can adjust the postion of get_rsdp_addr() calling. If nokaslr is
+> > specified, no need to get rsdp?
 > 
-> This was a "future fix" for a driver that is under review for 5.2, see
-> the email thread:
-> 	Subject: [PATCH 0/2] TTY: add rpmsg tty driver
->
-> It didn't want/need the port pointer, if that is incorrect, that's fine,
-> I'll gladly revert this, but as-is this patch isn't hurting anything,
-> right?
-
-No, it only adds the unnecessary NULL checks and some confusion by
-claiming to "fix an issue".
-
-The rpmsg tty driver not having to do anything at activate/shutdown
-(first open, final close) looks a bit suspicious, but in any case I
-think it's the outliers that should continue providing an empty set of
-callbacks instead of sprinkling conditionals in core.
-
-Johan
+> I assumed the early code is only be useful for kaslr, if this is true
+> then no need to get rsdp in case nokaslr.
+> 
+> But I vaguely remember Boris want the boot_params rsdp pointer be a
+> general thing, I did not followed up these patch discussions, need to see how Boris thinks about this.
+> 
+Personally I would like to have a cmdline to bypass the early acpi code
+because early code is hard to debug, if we have something weird happens
+we can try to gate out these code, and then get some idea..
