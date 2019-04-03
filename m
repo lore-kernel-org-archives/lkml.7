@@ -2,124 +2,123 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01C1C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F3EC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2B6206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:54:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=dell.com header.i=@dell.com header.b="RzE3uQcC"
+	by mail.kernel.org (Postfix) with ESMTP id 0422F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 21:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554328720;
+	bh=n9MizSFifBOp4+iFqTCqzgnorratvlaGO2SLnCeWxzY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qPDRK9/xq4Kab9OZVj296VV9Yvl8nCW8hNthqGae/SoJvTqFq1YFZF83IU2h1cEMs
+	 ONvNax4xUwYPVbw/y7vXRdcYTCDuhiuT5z7eFlmekmHiPA9tZpgyKqXX3WZou1CIrn
+	 KP+7TBmDG7R52bFvJFV6YMNbPW5TB/dMi5Za5M9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfDCVyc (ORCPT
+        id S1726387AbfDCV6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 17:54:32 -0400
-Received: from esa5.dell-outbound.iphmx.com ([68.232.153.95]:37749 "EHLO
-        esa5.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726151AbfDCVyc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 17:54:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=dell.com; i=@dell.com; q=dns/txt; s=smtpout;
-  t=1554328470; x=1585864470;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DbZ3Tb/koDmpGY5plQFT5CHMdwrED/2qUzFpbcuPr4A=;
-  b=RzE3uQcCMeVNbNzOY9YzcjOL4YPLwKkHXFMFgtGlQwSiHb2dWnDgtAoA
-   l8YjIu0MEoWrqA6RAgzTYuR1FNuMTLqu3CGmCcfHfcRJYS9UHwjRHW9m7
-   BwMA9vuATGjywDUNQxqPV/YQaxp+Vmzilnw+Hmx10+HHI2NIhFYa1+e15
-   Y=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EBAAC1KaVchyWd50NlGgEBAQEBAgE?=
- =?us-ascii?q?BAQEHAgEBAQGBUQUBAQEBCwGCZxFxEicKjCBfjEmJOI8HFIFnDgEBIwuEPgK?=
- =?us-ascii?q?FZzQJDQEBAwEBCQEDAgEBAhABAQEVCQgpIwyCOiIcTWsBAQEBAQEjAg1jAQE?=
- =?us-ascii?q?BAQMSZwwEAgEIEQQBAQEuIS4IAgQOBQgagwABgV0DFQ+gYD0Cb4EBiQcBAQG?=
- =?us-ascii?q?CHogCDYIaBYEvAY1IgRGDEj6CGkcEGIEUARIBbIUUA5IckxE2BwKHfog2gzw?=
- =?us-ascii?q?ilEaRZYFCjAwCBAIEBQIVgU03Z3FwgzyCJIhohT8/AQExAY1/gR+BHwEB?=
-X-IPAS-Result: =?us-ascii?q?A2EBAAC1KaVchyWd50NlGgEBAQEBAgEBAQEHAgEBAQGBU?=
- =?us-ascii?q?QUBAQEBCwGCZxFxEicKjCBfjEmJOI8HFIFnDgEBIwuEPgKFZzQJDQEBAwEBC?=
- =?us-ascii?q?QEDAgEBAhABAQEVCQgpIwyCOiIcTWsBAQEBAQEjAg1jAQEBAQMSZwwEAgEIE?=
- =?us-ascii?q?QQBAQEuIS4IAgQOBQgagwABgV0DFQ+gYD0Cb4EBiQcBAQGCHogCDYIaBYEvA?=
- =?us-ascii?q?Y1IgRGDEj6CGkcEGIEUARIBbIUUA5IckxE2BwKHfog2gzwilEaRZYFCjAwCB?=
- =?us-ascii?q?AIEBQIVgU03Z3FwgzyCJIhohT8/AQExAY1/gR+BHwEB?=
-Received: from mx0b-00154901.pphosted.com (HELO mx0a-00154901.pphosted.com) ([67.231.157.37])
-  by esa5.dell-outbound.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Apr 2019 16:54:29 -0500
-Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33Lrjkp090335;
-        Wed, 3 Apr 2019 17:54:29 -0400
-Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
-        by mx0b-00154901.pphosted.com with ESMTP id 2rn2e1gw9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Apr 2019 17:54:29 -0400
-X-LoopCount0: from 10.166.132.187
-X-IronPort-AV: E=Sophos;i="5.60,306,1549951200"; 
-   d="scan'208";a="1219483800"
-From:   <Mario.Limonciello@dell.com>
-To:     <dvhart@infradead.org>
-CC:     <andy.shevchenko@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: RE: [PATCH] platform/x86: dell-laptop: fix rfkill functionality
-Thread-Topic: [PATCH] platform/x86: dell-laptop: fix rfkill functionality
-Thread-Index: AQHU5Kj/gxMqgDyHnUGMU1hr9IeRM6YrQL0A///BDvA=
-Date:   Wed, 3 Apr 2019 21:54:27 +0000
-Message-ID: <643bcf131bc642cb821ba57f69707fc9@ausx13mpc120.AMER.DELL.COM>
-References: <1553696734-31282-1-git-send-email-mario.limonciello@dell.com>
- <20190403202338.GB39081@wrath>
-In-Reply-To: <20190403202338.GB39081@wrath>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 3 Apr 2019 17:58:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfDCV6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 17:58:38 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B0E2084B;
+        Wed,  3 Apr 2019 21:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554328717;
+        bh=n9MizSFifBOp4+iFqTCqzgnorratvlaGO2SLnCeWxzY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JJcND8pHcNsNKLnL4Y2EOP9KOi/cTEeMqqK6LJv/0FE0uzHlNzW3UxKpopBcQhDx+
+         C+DA7nrXN93nSORoPnRO8qKsXf/7j6RQboW7dh80dUZnkntPjzMu+GX5F+0UOoWAxn
+         MNpbBARe8C/zlr38fK32G55MMoFCCp44d+i0jN7Q=
+Received: by mail-ed1-f47.google.com with SMTP id h22so301367edw.7;
+        Wed, 03 Apr 2019 14:58:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAXIdA7GeUSHkXQvn/CciP1BGwdMfju6/y01IDfQZgQ/EgQgoSVZ
+        TGvfcAQaCe5dlp/bjiEE4VQwineb3BjTAaeurLA=
+X-Google-Smtp-Source: APXvYqwfxFHV2+lYaccmpc7qEjevN9OSbA5eMj7E2VdtAt04nkyjp+Qsa+qRPeEthUNzyaKtfRGnquYYAFoPlkj/6n4=
+X-Received: by 2002:a17:906:b84c:: with SMTP id ga12mr1123602ejb.253.1554328715752;
+ Wed, 03 Apr 2019 14:58:35 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=803 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904030144
+References: <1554243943-25507-1-git-send-email-richard.gong@linux.intel.com>
+ <20190403142022.GB5752@archbook> <ee94981a-6562-9d26-ddc2-967596589599@linux.intel.com>
+ <20190403164742.GC5752@archbook> <CANk1AXSoF3bhiO=t-XJRLhBH20emWYaZ+2LCPtqJsKyh4b+9KQ@mail.gmail.com>
+ <CANk1AXSJ31Q7X3J6NOsqVkQoJkjJz=xka0XiWvuYC36s1HiBuA@mail.gmail.com> <20190403200800.GE5752@archbook>
+In-Reply-To: <20190403200800.GE5752@archbook>
+From:   Alan Tull <atull@kernel.org>
+Date:   Wed, 3 Apr 2019 16:57:59 -0500
+X-Gmail-Original-Message-ID: <CANk1AXRtDJYAYS3WUvDhbhrN92pKFbsZYTbS8rXAJi78kAfbNA@mail.gmail.com>
+Message-ID: <CANk1AXRtDJYAYS3WUvDhbhrN92pKFbsZYTbS8rXAJi78kAfbNA@mail.gmail.com>
+Subject: Re: [PATCHv1] fpga: mgr: add FPGA configuration log
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     Richard Gong <richard.gong@linux.intel.com>,
+        linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Gong <richard.gong@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Darren Hart <dvhart@infradead.org>
-> Sent: Wednesday, April 3, 2019 3:24 PM
-> To: Limonciello, Mario
-> Cc: Andy Shevchenko; LKML; platform-driver-x86@vger.kernel.org
-> Subject: Re: [PATCH] platform/x86: dell-laptop: fix rfkill functionality
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> On Wed, Mar 27, 2019 at 09:25:34AM -0500, Mario Limonciello wrote:
-> > When converting the driver two arguments were transposed leading
-> > to rfkill not working.
+On Wed, Apr 3, 2019 at 3:08 PM Moritz Fischer <mdf@kernel.org> wrote:
+>
+> On Wed, Apr 03, 2019 at 01:37:51PM -0500, Alan Tull wrote:
+> > >
+> > > it's state, not status for most fpga manager drivers.  It should
+> > > return 'operating' if everything went well.
+>
+> Yeah, sorry :)
+>
+> > > It seems like there's a possible scenario where the FPGA starts up
+> > > with the FPGA in 'operating' mode and the user messes up early enough
+> > > that the state doesn't change.
+>
+> Huh, then we should fix that instead? :)
+> > >
+> > > >
+> > > > Personally not in favor of extra messages, but if we do it we should
+> > > > change the message to "Sucessfully programmed FPGA".
+> > > >
+> > > > I think making it a dbg message is a good trade-off ...
 > >
-> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D201427
-> > Reported-by: Pepijn de Vos <pepijndevos@gmail.com>
-> > Fixes: 549b49 ("platform/x86: dell-smbios: Introduce dispatcher for SMM=
- calls")
-> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > Acked-by: Pali Roh=E1r <pali.rohar@gmail.com>
->=20
-> Looks like this broken in 4.14? So Cc stable back to then? I'm surprised =
-it's
-> been broken that long :-(
->=20
+> > dbg vs info... On the one hand, it is a usually a message the
+> > developer wants to see so the developer would turn on debug messages.
+> > But then again FPGA programming doesn't happen that often and it is a
+> > kind of significant event since it is your hardware changing i.e. it
+> > won't add a lot messages, but it is sort of an important one if it
+> > happens.   If the system crashes after a FPGA reprogramming event, it
+> > would be good to have this in the log by default.  I don't want to
+> > argue too powerfully for adding extra messages though.  Is this a case
+> > where info is worth it since fpga programming is significant?
+>
+> In the current setup, it doesn't happen often. Going forward people
+> might have use-cases where this happens a lot more often.
 
-Not many "newer" platforms actually use this radio control anymore.  It's b=
-een
-superseded by other technologies.  So I think that would be the main reason=
-.
+Yes, then adding the message could become very spammy.
 
-Can you CC it to stable when it's committed or do I need to re-send or anyt=
-hing?
+>
+> I mean if y'all feel like this is required, sure, I still feel people
+> shouldn't rely on dmesg output for functional verification :)
+
+I agree with you that using sysfs to see what state the FPGA mgr ended
+up in should be adequate most of the time.  We probably don't need
+this.
+
+>
+> I don't wanna guarantee that this message is gonna be there always ...
+
+Indeed...
+
+Thanks,
+Alan
+
+>
+> Cheers,
+> Moritz
