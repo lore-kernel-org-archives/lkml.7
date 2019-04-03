@@ -2,122 +2,170 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F980C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144D6C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B0B2084A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C882A2084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:12:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="C2HGrofr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfDCDK4 (ORCPT
+        id S1727115AbfDCDL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:10:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33310 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbfDCDKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:10:55 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A7021330258;
-        Wed,  3 Apr 2019 03:10:54 +0000 (UTC)
-Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 336AD60240;
-        Wed,  3 Apr 2019 03:10:52 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 11:10:49 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
-Message-ID: <20190403031049.GP7627@MiWiFi-R3L-srv>
-References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com>
- <20190402080811.GO7627@MiWiFi-R3L-srv>
- <CAFgQCTtYLVS8Mfztg8=PWEn8cxDm9Lm1p=zXDR1YG8Oo0MLx0Q@mail.gmail.com>
+        Tue, 2 Apr 2019 23:11:59 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38448 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726775AbfDCDL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 23:11:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w15so6219676wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sOsg6KbhYLxtnJPk5ktRy/YMbya5ZDgO5Ntlax/ZgsU=;
+        b=C2HGrofr582q+vezNcaNw/4zOoTI5MWaXuCAluzImLKp0lErO51V+YalVuBu1zM03m
+         mN4TleLkwdPFMXstCbC3aO8JzajwM+0MqMkg3VYKpmJ1TxuVI5Z4ShTK6YnTA9Ge0o1r
+         FW2nhIssagGZwQb3+Upi2P5sughC43y2SAP5o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sOsg6KbhYLxtnJPk5ktRy/YMbya5ZDgO5Ntlax/ZgsU=;
+        b=Qrs2LkwqJMOUXq0u4DQMOI9TzFYyUXw57OtgS5YK2JrI4V5ddqTDUkiYnDApXJOXAD
+         /JDu/AKSAzZPnxcHLbFWtWxvWXgwqsaLFoJp6U9vaHcB/uC4MkLF3IPASF1f3DiBknVI
+         NJC7O7dTdx9csy0zUVR9yeNRhG4IUkUnyJNQPydXKtOQ8djWezKwIA2i7JSEEN0Tdiw8
+         5YuFDmdbCCgk/8nKlzRdyKw6VsZWxcF+T2XcxH/Ogl5KsC2xSvFiOmuKkveY5RufbQ81
+         Ual/3wXEiK/+oZyNOscmQhH5ouw1ok71GseWgnw6g1Q3lyTHkiUiSbrAt52XLB27nHU8
+         GuUg==
+X-Gm-Message-State: APjAAAW5giseBffIHZu+YDOB/OTkKLeddf8+HtVIpTiKfi3QjIz/sVUa
+        uKD6Pujrs55YJefxJ8tHaC1/MPMnEFWwQmAsvppIKQ==
+X-Google-Smtp-Source: APXvYqzIg/sbwKb0idpuZU0QB4hz/btIbr64An3MA7txpWoQtJj9Bb4+5XKcf8G/tdEOQZ0yw5k5VW/USYtnY+TFMyk=
+X-Received: by 2002:a1c:9e96:: with SMTP id h144mr219884wme.33.1554261116396;
+ Tue, 02 Apr 2019 20:11:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTtYLVS8Mfztg8=PWEn8cxDm9Lm1p=zXDR1YG8Oo0MLx0Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 03 Apr 2019 03:10:54 +0000 (UTC)
+References: <1551415936-30174-1-git-send-email-srinath.mannam@broadcom.com>
+ <1551415936-30174-3-git-send-email-srinath.mannam@broadcom.com>
+ <20190329173515.GA10367@e107981-ln.cambridge.arm.com> <CABe79T7LwFLST0dwwswv8sdqHcn0T4ked5WtcNpM78XUDUN3Jw@mail.gmail.com>
+ <20190401164416.GA8616@e107981-ln.cambridge.arm.com> <e7d3e5a1-db5c-8438-f10f-81b87aba0e03@broadcom.com>
+ <CABe79T7uLo+68P0Yr7jpgn1+4H01qhoPRjX05gszin3FXkBZ5w@mail.gmail.com>
+ <20190402102639.GB22708@e107981-ln.cambridge.arm.com> <CABe79T5O-1EWVrR1vZ27LWuxTBqN4_x37bkpfKxfm1ZB+oDUvA@mail.gmail.com>
+ <20190402133851.GA26122@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20190402133851.GA26122@e107981-ln.cambridge.arm.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Wed, 3 Apr 2019 08:41:44 +0530
+Message-ID: <CABe79T7JdOh0Lpr2vhWX5QPE5nuP9hZeviSB9E3tVteeAX89fw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] PCI: iproc: Add outbound configuration for 32-bit
+ I/O region
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Ray Jui <ray.jui@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abhishek Shah <abhishek.shah@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/19 at 10:58am, Pingfan Liu wrote:
-> On Tue, Apr 2, 2019 at 4:08 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > > +/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
-> > > +static void mem_avoid_specified_crashkernel_region(char *option)
-> > > +{
-> > > +     unsigned long long crash_size, crash_base = 0;
-> > > +     char    *first_colon, *first_space, *cur = option;
-> > > +
-> >
-> > Another thing which need be noticed is that you may only need to handle
-> > when '@' is found. Otherwise just let it go. Right?
-> >
-> According to kernel's behavior, only the last "crashkernel=" option
-> takes effect. Hence if no '@', then clearing mem_avoid
+Hi Lorenzo,
 
-Here I mean that you can search '@' at the beginning if crashkernel is
-found. Maybe no need to clear mem_avoid since it's global data, has been
-initialized to 0 during loading. It's in BSS, right?
+Please see my reply below,
 
-You don't have to search first colon or first space, then parse size of
-crashkernel, and finally find out that it's only crashkernel=512M-2G:64M,2G-:128M
-style, no '@' specified. What do you think?
+On Tue, Apr 2, 2019 at 7:08 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Tue, Apr 02, 2019 at 04:16:13PM +0530, Srinath Mannam wrote:
+>
+> [...]
+>
+> > > Ok - I start to understand. What does it mean in HW terms that your
+> > > 32bit AXI address region size is 32MB ? Please explain to me in details.
+> > >
+> > In our PCIe controller HW, AXI address from 0x42000000 to 0x44000000
+> > of 32MB size and .
+> > AXI address from 0x400000000 to 0x480000000 of 2GB size are provided
+> > to map ob address.
+> > First IO region is inside 32bit address and second IO region is
+> > outside 32bit address.
+> > This code change is to map first IO region(0x42000000 to 0x44000000).
+> >
+> > > IIUC you are using an OARR0 of 128MB in size to map a 32MB address
+> > > region, that's what I understand this patch does (and the lowest index
+> > > corresponds to the smallest possible size - it is far from clear by
+> > > looking at the patch).
+> > Yes, lowest index corresponds to smallest possible size (128MB).
+> > In our controller we have multiple windows like OARR0, OARR1, OARR2,
+> > OARR3 all supports multiple sizes from 128MB to 1024MB.
+> > These details are given at the top of this driver file, as shown
+> > below. all windows supports 128MB size still we must use OARR0 window
+> > to configure first IO region(0x42000000 to 0x44000000).
+> >
+> > static const struct iproc_pcie_ob_map paxb_v2_ob_map[] = {
+> >         {
+> >                 /* OARR0/OMAP0 */
+> >                 .window_sizes = { 128, 256 },
+> >                 .nr_sizes = 2,
+> >         },
+> >         {
+> >                 /* OARR1/OMAP1 */
+> >                 .window_sizes = { 128, 256 },
+> >                 .nr_sizes = 2,
+> >         },
+> >         {
+> >                 /* OARR2/OMAP2 */
+> >                 .window_sizes = { 128, 256, 512, 1024 },
+> >                 .nr_sizes = 4,
+> >         },
+> >         {
+> >                 /* OARR3/OMAP3 */
+> >                 .window_sizes = { 128, 256, 512, 1024 },
+> >                 .nr_sizes = 4,
+> >         },
+> > };
+>
+> Ok so this patch allows mapping an AXI I/O window that is smaller
+> than OARR possible sizes, why it was not done from the beginning
+> I really do not know.
+>
+Same Iproc driver we use for multiple SOCs, in previous SOCs does not
+have 32-bit AXI address region to map ob.
+In the present SOC, 32-bit AXI address region is available so that
+this change is added.
 
-> 
-> > > +     first_colon = strchr(option, ':');
-> > > +     first_space = strchr(option, ' ');
-> > > +     /* if contain ":" */
-> > > +     if (first_colon && (!first_space || first_colon < first_space)) {
-> > > +             int i;
-> > > +             u64 total_sz = 0;
-> > > +             struct boot_e820_entry *entry;
-> > > +
-> > > +             for (i = 0; i < boot_params->e820_entries; i++) {
-> > > +                     entry = &boot_params->e820_table[i];
-> > > +                     /* Skip non-RAM entries. */
-> > > +                     if (entry->type != E820_TYPE_RAM)
-> > > +                             continue;
-> > > +                     total_sz += entry->size;
-> > > +             }
-> > > +             handle_crashkernel_mem(option, total_sz, &crash_size,
-> > > +                     &crash_base);
-> > > +     } else {
-> > > +             crash_size = memparse(option, &cur);
-> > > +             if (option == cur)
-> > > +                     return;
-> > > +             while (*cur && *cur != ' ' && *cur != '@')
-> > > +                     cur++;
-> > > +             if (*cur == '@') {
-> > > +                     option = cur + 1;
-> > > +                     crash_base = memparse(option, &cur);
-> > > +             }
-> > > +     }
-> > > +     if (crash_base) {
-> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
-> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
-> > > +     } else {
-> > > +             /*
-> > > +              * Clearing mem_avoid if no offset is given. This is consistent
-> > > +              * with kernel, which uses the last crashkernel= option.
-> > > +              */
-> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
-> > > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
-> > > +     }
-> > > +}
+> Now explain this to me please:
+>
+> > This patch add outbound window configuration to map below 32-bit I/O range
+> > with corresponding PCI memory, which helps to access I/O region in ARM
+> > 32-bit and one to one mapping of I/O region to PCI memory.
+> >
+> > Ex:
+> > 1. ranges DT property given for current driver is,
+> >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
+> >     I/O region address is 0x400000000
+> > 2. ranges DT property can be given after this patch,
+> >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
+> >     I/O region address is 0x42000000
+>
+> Why 1:1 AXI<->PCI address mapping is not possible in (1), how does the
+> current code works on 32-bit systems and what's the benefit your change
+> is bringing.
+non-prefetchable memory range can only support 32-bit addresses, so
+that we have taken 32-bit PCI bus address in (1).
+current code does not work in 32-bit systems. In the present SOC with
+this new change we can access from 32-bit CPU.
+
+Regards,
+Srinath.
+>
+> Thanks,
+> Lorenzo
