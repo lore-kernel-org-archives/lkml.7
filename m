@@ -2,153 +2,135 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9698FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB37C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E83F2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF772147C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 07:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfDCHaB (ORCPT
+        id S1728712AbfDCHac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 03:30:01 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:47739 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfDCHaA (ORCPT
+        Wed, 3 Apr 2019 03:30:32 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:18868 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725936AbfDCHac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 03:30:00 -0400
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 92621100006;
-        Wed,  3 Apr 2019 07:29:48 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 09:29:48 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     hans.verkuil@cisco.com, acourbot@chromium.org,
-        sakari.ailus@linux.intel.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        tfiga@chromium.org, posciak@chromium.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
-        jernej.skrabec@gmail.com, jonas@kwiboo.se, ezequiel@collabora.com,
-        linux-sunxi@googlegroups.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH v6 1/2] media: uapi: Add H264 low-level decoder API
- compound controls.
-Message-ID: <20190403072948.ixugqb2t4z3dcyd4@flea>
-References: <cover.3917a1471bfc8cbdfdde8026566b3857caff5762.1553009355.git-series.maxime.ripard@bootlin.com>
- <9d9fe5c2dc58f9398cb6b1e9bb208640d25ae816.1553009355.git-series.maxime.ripard@bootlin.com>
- <dbe5702e-f76d-9c92-cab6-bd88d243ae55@xs4all.nl>
- <4c70e58d-ce7b-c15d-4b1c-063cf9b67007@xs4all.nl>
+        Wed, 3 Apr 2019 03:30:32 -0400
+X-IronPort-AV: E=Sophos;i="5.60,303,1549900800"; 
+   d="scan'208";a="58369011"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 03 Apr 2019 15:30:29 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 3E5CE4C8B03D;
+        Wed,  3 Apr 2019 15:30:28 +0800 (CST)
+Received: from localhost.localdomain (10.167.225.56) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Wed, 3 Apr 2019 15:30:31 +0800
+Date:   Wed, 3 Apr 2019 15:30:23 +0800
+From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
+To:     Dave Young <dyoung@redhat.com>
+CC:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190403073023.GF1555@localhost.localdomain>
+References: <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+ <20190403053459.GD1555@localhost.localdomain>
+ <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403063911.GA2579@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6mczpj43p5bcvl5e"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <4c70e58d-ce7b-c15d-4b1c-063cf9b67007@xs4all.nl>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190403063911.GA2579@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.167.225.56]
+X-yoursite-MailScanner-ID: 3E5CE4C8B03D.ADED7
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6mczpj43p5bcvl5e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Hans,
-
-On Tue, Apr 02, 2019 at 01:39:21PM +0200, Hans Verkuil wrote:
-> >> +struct v4l2_h264_dpb_entry {
-> >> +	__u64 timestamp;
-> >
-> > As mentioned above, I suggest to rename this to 'reference_ts'.
-> >
-> > But see also the discussion below.
-> >
-> >> +	__u16 frame_num;
-> >> +	__u16 pic_num;
-> >> +	/* Note that field is indicated by v4l2_buffer.field */
-> >> +	__s32 top_field_order_cnt;
-> >> +	__s32 bottom_field_order_cnt;
-> >> +	__u32 flags; /* V4L2_H264_DPB_ENTRY_FLAG_* */
-> >> +};
-> >> +
-> >> +#define V4L2_H264_DECODE_PARAM_FLAG_IDR_PIC	0x01
-> >> +
-> >> +struct v4l2_ctrl_h264_decode_param {
-> >> +	__u32 num_slices;
-> >> +	__u32 nal_ref_idc;
-> >> +	__u8 ref_pic_list_p0[32];
-> >> +	__u8 ref_pic_list_b0[32];
-> >> +	__u8 ref_pic_list_b1[32];
-> >> +	__s32 top_field_order_cnt;
-> >> +	__s32 bottom_field_order_cnt;
-> >> +	__u32 flags; /* V4L2_H264_DECODE_PARAM_FLAG_* */
-> >> +	struct v4l2_h264_dpb_entry dpb[16];
-> >
-> > Should the reference timestamp be included in this control? Or be
-> > separated into its own control?
-> >
-> > Reference frames do not apply to stateless encoders (the driver will
-> > have to maintain the reference frames internally). Everything else
-> > is equally valid for both stateless encoders and decoders, but only
-> > stateless decoders need to provide the reference frames.
-> >
-> > So in this case we would need to create a new control:
-> >
-> > #define V4L2_CID_MPEG_VIDEO_H264_DECODE_REF_TS	(V4L2_CID_MPEG_BASE+1005)
-> >
-> > Which is a u64 array control (16 elements for H.264).
-> >
-> > You would need to do something similar for MPEG2.
+On Wed, Apr 03, 2019 at 02:39:11PM +0800, Dave Young wrote:
+>> Actually I got some different kexec test results.
+>> 
+>> Yesterday, with my installed kernel (based on git head several weeks
+>> ago), kexec kernel panics.
+>> 
+>> Then I tried latest mainline with git pull, everything works, (with or
+>> without the patch, and can not reproduce the bug this patch is fixing)
+>> 
+>> Today, test again, kexec reboot hangs (with or without your patch), but
+>> kdump works always (with or without the patch)
+>> 
+>> It is weird to me. Probably I need find out why I can not reproduce the
+>> bug this patch is addressing first.
+>> 
+>> earlyprintk seems not working for me anymore, it is not easy to debug on
+>> laptop now.
+>> 
+>> But the patch itself is clear, I think it should be good.  There might be
+>> other things broken.
 >
-> The question is if this is worth the extra effort. An alternative is
-> to just specify that these reference timestamps are always to be zeroed
-> by stateless encoders and are unused.
+>Disable your immovable mem code then everything works for me.  There
+>might be something wrong in the code.  Also "nokaslr" does not help, it
+>should be another problem 
+
+If "nokaslr" doesn't help, so I think
+>+      /*num_immovable_mem = count_immovable_mem_regions();*/
+also doesn't help. I think the problem is from get_rsdp_addr().
+
+You test it in your laptop, I only tested in Qemu guest.
+I have no laptop avaliable, so I will look for a physical machine
+to test it.
+
+Thanks,
+Chao Fan
+
 >
-> I'm undecided on this.
+>diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+>index 2e53c056ba20..e760c9159662 100644
+>--- a/arch/x86/boot/compressed/kaslr.c
+>+++ b/arch/x86/boot/compressed/kaslr.c
+>@@ -416,7 +416,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+> 	handle_mem_options();
+> 
+> 	/* Enumerate the immovable memory regions */
+>-	num_immovable_mem = count_immovable_mem_regions();
+>+	/*num_immovable_mem = count_immovable_mem_regions();*/
+> 
+> #ifdef CONFIG_X86_VERBOSE_BOOTUP
+> 	/* Make sure video RAM can be used. */
+>diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+>index c0d6c560df69..1bc6f46d3aa7 100644
+>--- a/arch/x86/boot/compressed/misc.c
+>+++ b/arch/x86/boot/compressed/misc.c
+>@@ -352,7 +352,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+> 	boot_params->hdr.loadflags &= ~KASLR_FLAG;
+> 
+> 	/* Save RSDP address for later use. */
+>-	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+>+/*	boot_params->acpi_rsdp_addr = get_rsdp_addr(); */
+> 
+> 	sanitize_boot_params(boot_params);
+> 
+>
+>
 
-I'll address your other comments, thanks!
 
-For that part, I haven't really looked at the encoder parameters yet,
-but I guess we should have other controls to be passed there as well
-(like the target level of encoding). We can probably reuse the
-existing controls for that though.
-
-=46rom the way it looks, our encoder needs to put some parameters (the
-level and feature flags, mostly) and will output the entire
-bitstream. I'm not really sure if it qualifies as a stateless encoder,
-but that would require far less than what we have in those controls
-already.
-
-Either way, maybe the good way forward here would be to way for an
-H264 / MPEG2 stateless encoder to come up, either ours or some other,
-to see what should we do about this. How does that sound?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---6mczpj43p5bcvl5e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKRg7AAKCRDj7w1vZxhR
-xWkOAQDj950LGL8g5ChswLf8C7Ktgyu6QoYL2RuqohRF+mFhYwEA/a01+LbhBj+n
-C+ihsMxE3npCOR5y/vroVSe+hgDWkg8=
-=MqY4
------END PGP SIGNATURE-----
-
---6mczpj43p5bcvl5e--
