@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC6BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD197C10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0412075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8544120882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554266521;
-	bh=Fjh9D6jxhmn36g/LBm3vQB1GK/ujxkdAYjpIjEQ0COs=;
+	s=default; t=1554266522;
+	bh=HgbqjqGeFQ/gNPi/Zda3m6PlMNR5IaA+D73gNCZNaFA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=PuxO7btBJjxwGgZFV42spImNb7fdbu6Lajm/9a/oJ9qR23Dz2WYQz7lrF5XXHndzy
-	 7NKY4/jL/JO90fkdg75kVsZwOTUKH5mIJwmB2CebKTaBeGgjYqvbADUcE4QSdWYqVn
-	 qIpNL6BLesrVhFK8ZV82jFTUrj51uJGJjAYzU6Sc=
+	b=Tbf5mstcwph6k5cYN2HVspZeifyG91Q9VaCEGeewZoTa7C1WXwSEqmCCvKgWN1995
+	 qmIYAjXY4/W60VoU7NRq5SvaO3yKplSh3ODk94kwqSs/q9HxcfF4QDF6DTBV19pr+m
+	 myHusBoXl1rQGbElttb6GUkbKbBQ/nVeU8jHnPuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfDCEl7 (ORCPT
+        id S1728672AbfDCEmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:41:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39718 "EHLO
+        Wed, 3 Apr 2019 00:42:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39716 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726547AbfDCEl7 (ORCPT
+        with ESMTP id S1725941AbfDCEl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 00:41:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,31 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=h+qeIcaQptR7Amaj5228AEr9h3jsDQKvQrc8WUgWiYw=; b=jNP3h41M+O62
-        X15Bz3fuPwJIUJCBFenM6G5n647uOuGUpl+xAybg/IuXo1mNsLSwDIu/NTsQ/ne52Qee+Y7YCA6EC
-        CFEbq97wpFDFZoEVlnspr5FXlEvgxrm1HJ9Zhtymh1TLDE0h9Rsxj8uL4v3hcW5j26eSeXMRUWOzA
-        ZxMjU=;
+        List-Archive; bh=48lfx6JNrwWs2NWzduRfqdDtkiIqAvOHTd1MVl/LbAY=; b=mADK6azMrBqF
+        UeXrtbObx8lrQmU8DaWaKs1o7Qdt/ekeM3X0+VLOk1fCEhQ6p+Vl8xnVctA3+d42XST/I722eTzFw
+        p3fXWKD1vQIvLonZty8JcKeMcGACG38Zk9ZwAEWdRd8eoNDDOkMBHYo5FQ6HHZSwqm0ywgENI+Sr5
+        h/dqk=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hBXiS-0003zQ-DX; Wed, 03 Apr 2019 04:41:36 +0000
+        id 1hBXig-0003zg-1U; Wed, 03 Apr 2019 04:41:50 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 5EF89440083; Wed,  3 Apr 2019 05:41:33 +0100 (BST)
+        id BD773440082; Wed,  3 Apr 2019 05:41:46 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, "Andrew F. Davis" <afd@ti.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Mark Brown <broonie@kernel.org>, kbuild-all@01.org,
-        Colin Ian King <colin.king@canonical.com>,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: tlv320aic31xx: aic31xx_set_jack() can be static" to the asoc tree
-In-Reply-To:  <20190402114618.GA8728@lkp-wsm-ep1>
+To:     Han Nandor <nandor.han@vaisala.com>
+Cc:     Nandor Han <nandor.han@vaisala.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regmap: verify if register is writeable before writing operations" to the regmap tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190403044133.5EF89440083@finisterre.ee.mobilebroadband>
-Date:   Wed,  3 Apr 2019 05:41:33 +0100 (BST)
+Message-Id: <20190403044146.BD773440082@finisterre.ee.mobilebroadband>
+Date:   Wed,  3 Apr 2019 05:41:46 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +61,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: tlv320aic31xx: aic31xx_set_jack() can be static
+   regmap: verify if register is writeable before writing operations
 
-has been applied to the asoc tree at
+has been applied to the regmap tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,33 +86,54 @@ to this mail.
 Thanks,
 Mark
 
-From 7742a5b418c91b1f27a08ebf90cb662cf4c06604 Mon Sep 17 00:00:00 2001
-From: kbuild test robot <lkp@intel.com>
-Date: Tue, 2 Apr 2019 19:46:18 +0800
-Subject: [PATCH] ASoC: tlv320aic31xx: aic31xx_set_jack() can be static
+From 8b9f9d4dc511309918c4f6793bae7387c0c638af Mon Sep 17 00:00:00 2001
+From: Han Nandor <nandor.han@vaisala.com>
+Date: Tue, 2 Apr 2019 08:01:22 +0000
+Subject: [PATCH] regmap: verify if register is writeable before writing
+ operations
 
-Fixes: ebf3326cd969 ("ASoC: tlv320aic31xx: Add headphone/headset detection")
-Signed-off-by: kbuild test robot <lkp@intel.com>
+regmap provides a couple of ways to validate the register range used.
+a) maxim allowed register, b) writable/readable register tables,
+c) callback function that can be provided by the driver to validate
+a register. regmap framework should verify if registers
+are writeable before every write operation. However this doesn't
+seems to happen in every situation.
+
+The method `_regmap_raw_write_impl` is only using the `writeable_reg`
+callback to verify if register is writeable, ignoring the other two.
+This can lead to undefined behaviour since this allows to write to
+registers that could be declared un-writeable by using any other
+option.
+
+Change `_regmap_raw_write_impl` to use the `regmap_writeable` method
+to verify if registers are writable before the write operation.
+
+Signed-off-by: Nandor Han <nandor.han@vaisala.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/tlv320aic31xx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/base/regmap/regmap.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index fa47bfcb93e9..9b37e98da0db 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -1264,8 +1264,8 @@ static int aic31xx_set_bias_level(struct snd_soc_component *component,
- 	return 0;
- }
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 4f822e087def..42d8404bc8cc 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1493,11 +1493,10 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
+ 	WARN_ON(!map->bus);
  
--int aic31xx_set_jack(struct snd_soc_component *component,
--		     struct snd_soc_jack *jack, void *data)
-+static int aic31xx_set_jack(struct snd_soc_component *component,
-+			    struct snd_soc_jack *jack, void *data)
- {
- 	struct aic31xx_priv *aic31xx = snd_soc_component_get_drvdata(component);
+ 	/* Check for unwritable registers before we start */
+-	if (map->writeable_reg)
+-		for (i = 0; i < val_len / map->format.val_bytes; i++)
+-			if (!map->writeable_reg(map->dev,
+-					       reg + regmap_get_offset(map, i)))
+-				return -EINVAL;
++	for (i = 0; i < val_len / map->format.val_bytes; i++)
++		if (!regmap_writeable(map,
++				     reg + regmap_get_offset(map, i)))
++			return -EINVAL;
  
+ 	if (!map->cache_bypass && map->format.parse_val) {
+ 		unsigned int ival;
 -- 
 2.20.1
 
