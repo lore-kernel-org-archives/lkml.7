@@ -4,55 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4E3C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B1C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15622084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DA020882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554266533;
-	bh=6eTY2yO3tl+Y54QH0z3V0PVZtS8wZHxDfgUyK96xVzU=;
+	s=default; t=1554266550;
+	bh=/R5IO1TdFWA671UnKlDpoFYgFK9Bb6pLWqB9NcCRtiE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=LBHDFilwOw6HBPi6XE32UZTGv3Q2kPP9TMnx4/cqZvu/JAH3t/X3wb3D7873yg2Dw
-	 2dyro07nuzh53oD5WP4K7RivZSesNdG8xJVn789uHMg9VlIX5u1fkjqapWb8Srykgm
-	 85vBcxaX9R7Y/vcB/CRn8gRBYifAeSj6ACYh7kWk=
+	b=nSgw6YFfeVHjyxJEw52YHlm0BFsI4w0+QSO02s5JzxC3TFENUtg9UVFbRj9u5pVd9
+	 GB9EnoMbN1WyvS17AcYQ7ZTJvHR/VEDXQkPZA9vcvoj6DMX+I3uFnCanlV7FoByUgF
+	 TRxTm10EVb6H2DFqUCobXMwPbFui3P9zAj163ddc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbfDCEmM (ORCPT
+        id S1728798AbfDCEma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:42:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39988 "EHLO
+        Wed, 3 Apr 2019 00:42:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40584 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbfDCEmI (ORCPT
+        with ESMTP id S1728764AbfDCEm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:42:08 -0400
+        Wed, 3 Apr 2019 00:42:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=GLSjERMINTVj8yJRocPeebdC0jZaXUafitvIU9qQeDw=; b=o7IezE3xpPbT
-        Y8WVX5c8fzwgpYrygrHyvM5Vt0eqEtlbEkxUWRebsKl5fHl2SYpRpchtTwjpdPeJ/d+bSK0+H0znq
-        BAtpaOU01RTCdzDVKGGGG3y4swaRyT6ok3GwKp0E1RBoVuED66DrKPiR1ijc9sOjzyccQXnQ05aOv
-        7yOGM=;
+        List-Archive; bh=NPeduGz+9mec+3IumoCAqAM0ew2GTeDpO/fBBwD4BzI=; b=va9nuMp87KKl
+        H9Oyv7t5rWCetz87+yn7B6tUwChLvcGOmJPoTSrKx5RJ0UeE24xUXPcVwdYr0Srzwl+RwpH5zqlkz
+        nNtjEC22Oj4kdugBPdjSiVlc0E744J2/f9yhm6cTkbJFoOXmELTalWItoOE6XD2Sg0T81JG6x6r/v
+        2UJuE=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hBXiv-000406-Ng; Wed, 03 Apr 2019 04:42:05 +0000
+        id 1hBXjE-00040V-L9; Wed, 03 Apr 2019 04:42:24 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id D2924440082; Wed,  3 Apr 2019 05:42:02 +0100 (BST)
+        id E7247440083; Wed,  3 Apr 2019 05:42:21 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: lm363x: Use proper data type for regmap_read arguments" to the regulator tree
-In-Reply-To: 
+To:     Clark Wang <xiaoning.wang@nxp.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: lpspi: add missing complete in abort func at dma mode" to the spi tree
+In-Reply-To:  <20190402124609.22157-1-xiaoning.wang@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190403044202.D2924440082@finisterre.ee.mobilebroadband>
-Date:   Wed,  3 Apr 2019 05:42:02 +0100 (BST)
+Message-Id: <20190403044221.E7247440083@finisterre.ee.mobilebroadband>
+Date:   Wed,  3 Apr 2019 05:42:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: lm363x: Use proper data type for regmap_read arguments
+   spi: lpspi: add missing complete in abort func at dma mode
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -85,43 +89,40 @@ to this mail.
 Thanks,
 Mark
 
-From 8a76f107216f770c0f6e6ea13bb962fbe4568b5f Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 2 Apr 2019 20:13:47 +0800
-Subject: [PATCH] regulator: lm363x: Use proper data type for regmap_read
- arguments
+From 8863eca8c46affaa91ae35390b00358b925483eb Mon Sep 17 00:00:00 2001
+From: Clark Wang <xiaoning.wang@nxp.com>
+Date: Tue, 2 Apr 2019 12:45:53 +0000
+Subject: [PATCH] spi: lpspi: add missing complete in abort func at dma mode
 
-regmap_read() takes unsigned int reg and unsigned int *val arguments,
-use proper data type for these arguments.
+Add the missing complete operations for dma_completion to fix the
+problem of blocking at the wait_for_completion_interruptible()
+function when use spi_slave_abort().
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/lm363x-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-fsl-lpspi.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-index c876e161052a..ebec91b55ceb 100644
---- a/drivers/regulator/lm363x-regulator.c
-+++ b/drivers/regulator/lm363x-regulator.c
-@@ -48,7 +48,7 @@ static const int ldo_cont_enable_time[] = {
- static int lm363x_regulator_enable_time(struct regulator_dev *rdev)
- {
- 	enum lm363x_regulator_id id = rdev_get_id(rdev);
--	u8 val, addr, mask;
-+	unsigned int val, addr, mask;
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index 4de8eb378752..2ad9d6262c2b 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -482,7 +482,13 @@ static int fsl_lpspi_slave_abort(struct spi_controller *controller)
+ 				spi_controller_get_devdata(controller);
  
- 	switch (id) {
- 	case LM3631_LDO_CONT:
-@@ -71,7 +71,7 @@ static int lm363x_regulator_enable_time(struct regulator_dev *rdev)
- 		return 0;
- 	}
+ 	fsl_lpspi->slave_aborted = true;
+-	complete(&fsl_lpspi->xfer_done);
++	if (!fsl_lpspi->usedma)
++		complete(&fsl_lpspi->xfer_done);
++	else {
++		complete(&fsl_lpspi->dma_tx_completion);
++		complete(&fsl_lpspi->dma_rx_completion);
++	}
++
+ 	return 0;
+ }
  
--	if (regmap_read(rdev->regmap, addr, (unsigned int *)&val))
-+	if (regmap_read(rdev->regmap, addr, &val))
- 		return -EINVAL;
- 
- 	val = (val & mask) >> LM3631_ENTIME_SHIFT;
 -- 
 2.20.1
 
