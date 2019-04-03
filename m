@@ -2,135 +2,167 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26113C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB7BC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E624120882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:51:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZPpFmaw"
+	by mail.kernel.org (Postfix) with ESMTP id 274452084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfDCRv1 (ORCPT
+        id S1726628AbfDCRwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:51:27 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43569 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfDCRv1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:51:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z9so8681783pgu.10;
-        Wed, 03 Apr 2019 10:51:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x260aecoqnYvgaGz2sM+JUpMrXA7MWBDVaxzH7/23D8=;
-        b=OZPpFmawqry7/pwK8xNefAgc9v+4DLf6KqNcgBEjcIHuaGID1RfWfw48oD32KYicjs
-         +nvmeGtguvKgWQAwz0EYIBPtvHRnBMKkP+8QB21BNiBgJvuDXiARfjJLHLncbBXfBnzN
-         RLtZhni5t9fkG6nnRoMm48qdDPgp00jjENvssanA5sFQ4ThZudBqr8gM5XkVgHtgDmlq
-         fkmwY/vbin45dvhKvXQrFQwdh+2rjEELy2tDEGEO56VpKu0HnXeN6udhrT76JfoSeylD
-         RdmhGinqYZA40+bhQjQAI0hZMrTlkopk7NwOYNxQfwgdAuKqhqopIIMzEc2f8X0tIV6Z
-         ZMzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x260aecoqnYvgaGz2sM+JUpMrXA7MWBDVaxzH7/23D8=;
-        b=jOhywAmAU/g0scFxnUh3VWO9CqGX8RtFk2Ub/bf3NJOWmlqW83ukEUO5dQ6+FgeL4h
-         9xr27Gk19FD9ftS8wrhKlwT4d/1U+WFXnAiUjG4rZxqpy2N4kEu10Gj5cvRt5qXTzZAa
-         Pg40O/+yq8/OXXhl5iPWwrcq7pOidrpEVZbHbQBMx2NrxR1D7pjot/wz83LoVdAKdghU
-         LLkewhQkB3eGMbZulccqbAN/Jz3yEPeKy9ec6x2XP6YnWturVGzwiyBGUkU7ek9m3Q34
-         Zr9YC4iS2c1iPp8IRQGvGyFCLCskTOhPzrkEdcyYe3JPB7tgeinSoRi6+AYQDMTHOKYr
-         fEwg==
-X-Gm-Message-State: APjAAAUs8RxEECdT0OwXUu0lP1o8fX712lf6d98dC2ZiJLAgll2EGzER
-        p4uozCJNdrb5+9aM/l+wFGA=
-X-Google-Smtp-Source: APXvYqxaMEmFmgzM+z4/+WZUiYyTLeY04LlO3+vVomTeNyGvLVRQ+kQAhSc0Qmh+yUgKogAwxNVMlg==
-X-Received: by 2002:a62:ab13:: with SMTP id p19mr750493pff.131.1554313885453;
-        Wed, 03 Apr 2019 10:51:25 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id d38sm19877908pgd.40.2019.04.03.10.51.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 10:51:24 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 10:51:22 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: evdev - use struct_size() in kzalloc() and
- vzalloc()
-Message-ID: <20190403175122.GA53104@dtor-ws>
-References: <20190221153738.GA17825@embeddedor>
+        Wed, 3 Apr 2019 13:52:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57365 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbfDCRwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:52:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 10:52:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,305,1549958400"; 
+   d="scan'208";a="139717984"
+Received: from oakcakay-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.254.144])
+  by orsmga003.jf.intel.com with ESMTP; 03 Apr 2019 10:52:08 -0700
+Date:   Wed, 3 Apr 2019 20:52:07 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Phil Baker <baker1tex@gmail.com>,
+        Craig Robson <craig@zhatt.com>,
+        Laura Abbott <labbott@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>, Arnd Bergmann <arnd@arndb.de>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Subject: Re: [PATCH v3] tpm: Actually fail on TPM errors during "get random"
+Message-ID: <20190403175207.GC13396@linux.intel.com>
+References: <20190401190607.GA23795@beast>
+ <20190401234625.GA29016@linux.intel.com>
+ <20190402164057.GA4544@linux.intel.com>
+ <5B8DA87D05A7694D9FA63FD143655C1B9DAE2759@hasmsx108.ger.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190221153738.GA17825@embeddedor>
+In-Reply-To: <5B8DA87D05A7694D9FA63FD143655C1B9DAE2759@hasmsx108.ger.corp.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 09:37:38AM -0600, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
+On Tue, Apr 02, 2019 at 07:13:52PM +0000, Winkler, Tomas wrote:
 > 
-> struct foo {
->     int stuff;
->     struct boo entry[];
-> };
 > 
-> size = sizeof(struct foo) + count * sizeof(struct boo);
-> instance = kzalloc(size, GFP_KERNEL);
-> 
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
-> 
-> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
-> 
-> Notice that, in this case, variable size is not necessary, hence
-> it is removed.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > On Tue, Apr 02, 2019 at 02:46:25AM +0300, Jarkko Sakkinen wrote:
+> > > On Mon, Apr 01, 2019 at 12:06:07PM -0700, Kees Cook wrote:
+> > > > A "get random" may fail with a TPM error, but those codes were
+> > > > returned as-is to the caller, which assumed the result was the
+> > > > number of bytes that had been written to the target buffer, which
+> > > > could lead to a kernel heap memory exposure and over-read.
+> > > >
+> > > > This fixes tpm1_get_random() to mask positive TPM errors into -EIO,
+> > > > as before.
+> > > >
+> > > > [   18.092103] tpm tpm0: A TPM error (379) occurred attempting get
+> > random
+> > > > [   18.092106] usercopy: Kernel memory exposure attempt detected from
+> > SLUB object 'kmalloc-64' (offset 0, size 379)!
+> > > >
+> > > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1650989
+> > > > Reported-by: Phil Baker <baker1tex@gmail.com>
+> > > > Reported-by: Craig Robson <craig@zhatt.com>
+> > > > Fixes: 7aee9c52d7ac ("tpm: tpm1: rewrite tpm1_get_random() using
+> > > > tpm_buf structure")
+> > > > Cc: Laura Abbott <labbott@redhat.com>
+> > > > Cc: Tomas Winkler <tomas.winkler@intel.com>
+> > > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > > v3: fix never-succeed, limit checks to tpm cmd return (James, Jason)
+> > > > v2: also fix tpm2 implementation (Jason Gunthorpe)
+> > > > ---
+> > > >  drivers/char/tpm/tpm1-cmd.c | 7 +++++--
+> > > > drivers/char/tpm/tpm2-cmd.c | 7 +++++--
+> > > >  2 files changed, 10 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/drivers/char/tpm/tpm1-cmd.c
+> > > > b/drivers/char/tpm/tpm1-cmd.c index 85dcf2654d11..faacbe1ffa1a
+> > > > 100644
+> > > > --- a/drivers/char/tpm/tpm1-cmd.c
+> > > > +++ b/drivers/char/tpm/tpm1-cmd.c
+> > > > @@ -510,7 +510,7 @@ struct tpm1_get_random_out {
+> > > >   *
+> > > >   * Return:
+> > > >   * *  number of bytes read
+> > > > - * * -errno or a TPM return code otherwise
+> > > > + * * -errno (positive TPM return codes are masked to -EIO)
+> > > >   */
+> > > >  int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
+> > > > @@ -531,8 +531,11 @@ int tpm1_get_random(struct tpm_chip *chip, u8
+> > > > *dest, size_t max)
+> > > >
+> > > >  		rc = tpm_transmit_cmd(chip, &buf, sizeof(out->rng_data_len),
+> > > >  				      "attempting get random");
+> > > > -		if (rc)
+> > > > +		if (rc) {
+> > > > +			if (rc > 0)
+> > > > +				rc = -EIO;
+> > > >  			goto out;
+> > > > +		}
+> > > >
+> > > >  		out = (struct tpm1_get_random_out
+> > *)&buf.data[TPM_HEADER_SIZE];
+> > > >
+> > > > diff --git a/drivers/char/tpm/tpm2-cmd.c
+> > > > b/drivers/char/tpm/tpm2-cmd.c index e74c5b7b64bf..8ffa6af61580
+> > > > 100644
+> > > > --- a/drivers/char/tpm/tpm2-cmd.c
+> > > > +++ b/drivers/char/tpm/tpm2-cmd.c
+> > > > @@ -301,7 +301,7 @@ struct tpm2_get_random_out {
+> > > >   *
+> > > >   * Return:
+> > > >   *   size of the buffer on success,
+> > > > - *   -errno otherwise
+> > > > + *   -errno otherwise ((positive TPM return codes are masked to -EIO)
+> > > >   */
+> > > >  int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max)  {
+> > > > @@ -328,8 +328,11 @@ int tpm2_get_random(struct tpm_chip *chip, u8
+> > *dest, size_t max)
+> > > >  				       offsetof(struct tpm2_get_random_out,
+> > > >  						buffer),
+> > > >  				       "attempting get random");
+> > > > -		if (err)
+> > > > +		if (err) {
+> > > > +			if (err > 0)
+> > > > +				err = -EIO;
+> > > >  			goto out;
+> > > > +		}
+> > > >
+> > > >  		out = (struct tpm2_get_random_out *)
+> > > >  			&buf.data[TPM_HEADER_SIZE];
+> > > > --
+> > > > 2.17.1
+> > > >
+> > > >
+> > > > --
+> > > > Kees Cook
+> > >
+> > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > 
+> > Applied to my master branch. Jason, Tomas, do you want me to add reviewed-
+> > by's?
+> Sure, it fixes my patch.
 
-Applied, thank you.
+Great, I'll add it. Thank you. Just want to be explicit with these
+things as I consider them as if I was asking a signature from someone
+:-)
 
-> ---
->  drivers/input/evdev.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-> index f48369d6f3a0..ee8dd8b1b09e 100644
-> --- a/drivers/input/evdev.c
-> +++ b/drivers/input/evdev.c
-> @@ -503,14 +503,13 @@ static int evdev_open(struct inode *inode, struct file *file)
->  {
->  	struct evdev *evdev = container_of(inode->i_cdev, struct evdev, cdev);
->  	unsigned int bufsize = evdev_compute_buffer_size(evdev->handle.dev);
-> -	unsigned int size = sizeof(struct evdev_client) +
-> -					bufsize * sizeof(struct input_event);
->  	struct evdev_client *client;
->  	int error;
->  
-> -	client = kzalloc(size, GFP_KERNEL | __GFP_NOWARN);
-> +	client = kzalloc(struct_size(client, buffer, bufsize),
-> +			 GFP_KERNEL | __GFP_NOWARN);
->  	if (!client)
-> -		client = vzalloc(size);
-> +		client = vzalloc(struct_size(client, buffer, bufsize));
->  	if (!client)
->  		return -ENOMEM;
->  
-> -- 
-> 2.20.1
-> 
-
--- 
-Dmitry
+/Jarkko
