@@ -2,273 +2,77 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8186FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60652C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4539F2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE982084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554298295;
+	bh=APsVE2HNM1yvN30VdtPTZSwbP5F1EvMqlD6Jj3TMZvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B1f4Ih07SbMcVD51PHvRRvF+8xUc/P+RRkHaZMndEW3cuuczxl/mEMactLAnoOm9m
+	 hNd1QnJSeos4WW2H65ofUigujmV7GXk1l3JifXkXkRW+R/SFQA5tCT5aOFF+GT2D/D
+	 IFJXqRAF59/85cpWUKZz/P7/IuzazhpVunCFCr8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfDCNau (ORCPT
+        id S1726387AbfDCNbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:30:50 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:52125 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDCNat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:30:49 -0400
-Received: from aptenodytes (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id CC50C100011;
-        Wed,  3 Apr 2019 13:30:47 +0000 (UTC)
-Message-ID: <c153b5bf62825718216dc54a2f79c291f84eb24f.camel@bootlin.com>
-Subject: Re: [PATCH v2 2/2] drm/vc4: Disable V3D interactions if the v3d
- component didn't probe.
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Date:   Wed, 03 Apr 2019 15:30:47 +0200
-In-Reply-To: <20190401183559.3823-2-eric@anholt.net>
-References: <20190401183559.3823-1-eric@anholt.net>
-         <20190401183559.3823-2-eric@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Wed, 3 Apr 2019 09:31:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726097AbfDCNbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:31:33 -0400
+Received: from localhost (217-101-180-136.cable.dynamic.v4.ziggo.nl [217.101.180.136])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8BFA2075E;
+        Wed,  3 Apr 2019 13:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554298293;
+        bh=APsVE2HNM1yvN30VdtPTZSwbP5F1EvMqlD6Jj3TMZvc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Is7u/VGEar2BwA1zV8Ct359ueRijOFpXhP3O9hkazTLkkuvkVSRLuTYS7Hg5oY90U
+         tTUvZKgOJ+dw4+MhvGccfyZ7Xlj5omEDLjIwaPc7oJudBnTgTP5oHCs1MGkEULujtl
+         9FkE6JuhCLKEliSrwxFfLReYHGSS80twmvdXL6LY=
+Date:   Wed, 3 Apr 2019 15:00:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>, devel@driverdev.osuosl.org,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] staging:iio:accel:adis16203: add SPDX license
+ identifier tag
+Message-ID: <20190403130010.GA3660@kroah.com>
+References: <1554284489-5023-1-git-send-email-hofrat@osadl.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554284489-5023-1-git-send-email-hofrat@osadl.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Mon, 2019-04-01 at 11:35 -0700, Eric Anholt wrote:
-> One might want to use the VC4 display stack without using Mesa.
-> Similar to the debugfs fixes for not having all of the possible
-> display bits enabled, make sure you can't oops in vc4 if v3d isn't
-> enabled.
-
-Just thought about this: perhaps we should be returning -ENODEV instead
-of -EINVAL when !vc4->v3d, just so that the error is a bit more
-explicit to userspace?
-
-Cheers,
-
-Paul
-
-> v2: Fix matching against other v3d variants (review by Paul), don't
->     forget to set irq_enabled so that the vblank uapi works
+On Wed, Apr 03, 2019 at 11:41:28AM +0200, Nicholas Mc Guire wrote:
+> Pop in the SPDX tag as the license is clearly indicated
+> as GPL V2 or later this should also be indicated with a SPDX license
+> identifier tag.
 > 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  drivers/gpu/drm/vc4/vc4_drv.c     | 10 ++++++++++
->  drivers/gpu/drm/vc4/vc4_drv.h     |  1 +
->  drivers/gpu/drm/vc4/vc4_gem.c     | 10 ++++++++++
->  drivers/gpu/drm/vc4/vc4_irq.c     |  9 +++++++++
->  drivers/gpu/drm/vc4/vc4_kms.c     |  1 +
->  drivers/gpu/drm/vc4/vc4_perfmon.c | 18 ++++++++++++++++++
->  drivers/gpu/drm/vc4/vc4_v3d.c     |  2 +-
->  7 files changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-> index 3d6fccea5080..d840b52b9805 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.c
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.c
-> @@ -72,6 +72,9 @@ static int vc4_get_param_ioctl(struct drm_device *dev, void *data,
->  	if (args->pad != 0)
->  		return -EINVAL;
->  
-> +	if (!vc4->v3d)
-> +		return -EINVAL;
-> +
->  	switch (args->param) {
->  	case DRM_VC4_PARAM_V3D_IDENT0:
->  		ret = vc4_v3d_pm_get(vc4);
-> @@ -248,6 +251,7 @@ static int vc4_drm_bind(struct device *dev)
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct drm_device *drm;
->  	struct vc4_dev *vc4;
-> +	struct device_node *node;
->  	int ret = 0;
->  
->  	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> @@ -256,6 +260,12 @@ static int vc4_drm_bind(struct device *dev)
->  	if (!vc4)
->  		return -ENOMEM;
->  
-> +	/* If VC4 V3D is missing, don't advertise render nodes. */
-> +	node = of_find_matching_node_and_match(NULL, vc4_v3d_dt_match, NULL);
-> +	if (!node || !of_device_is_available(node))
-> +		vc4_drm_driver.driver_features &= ~DRIVER_RENDER;
-> +	of_node_put(node);
-> +
->  	drm = drm_dev_alloc(&vc4_drm_driver, dev);
->  	if (IS_ERR(drm))
->  		return PTR_ERR(drm);
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-> index be85656024fa..e61734af059b 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.h
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-> @@ -831,6 +831,7 @@ void vc4_plane_async_set_fb(struct drm_plane *plane,
->  
->  /* vc4_v3d.c */
->  extern struct platform_driver vc4_v3d_driver;
-> +extern const struct of_device_id vc4_v3d_dt_match[];
->  int vc4_v3d_get_bin_slot(struct vc4_dev *vc4);
->  int vc4_v3d_pm_get(struct vc4_dev *vc4);
->  void vc4_v3d_pm_put(struct vc4_dev *vc4);
-> diff --git a/drivers/gpu/drm/vc4/vc4_gem.c b/drivers/gpu/drm/vc4/vc4_gem.c
-> index 5e9496d477bf..4544a478f106 100644
-> --- a/drivers/gpu/drm/vc4/vc4_gem.c
-> +++ b/drivers/gpu/drm/vc4/vc4_gem.c
-> @@ -74,6 +74,11 @@ vc4_get_hang_state_ioctl(struct drm_device *dev, void *data,
->  	u32 i;
->  	int ret = 0;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("VC4_GET_HANG_STATE with no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	spin_lock_irqsave(&vc4->job_lock, irqflags);
->  	kernel_state = vc4->hang_state;
->  	if (!kernel_state) {
-> @@ -1119,6 +1124,11 @@ vc4_submit_cl_ioctl(struct drm_device *dev, void *data,
->  	struct dma_fence *in_fence;
->  	int ret = 0;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("VC4_SUBMIT_CL with no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	if ((args->flags & ~(VC4_SUBMIT_CL_USE_CLEAR_COLOR |
->  			     VC4_SUBMIT_CL_FIXED_RCL_ORDER |
->  			     VC4_SUBMIT_CL_RCL_ORDER_INCREASING_X |
-> diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
-> index 4cd2ccfe15f4..ffd0a4388752 100644
-> --- a/drivers/gpu/drm/vc4/vc4_irq.c
-> +++ b/drivers/gpu/drm/vc4/vc4_irq.c
-> @@ -229,6 +229,9 @@ vc4_irq_preinstall(struct drm_device *dev)
->  {
->  	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  
-> +	if (!vc4->v3d)
-> +		return;
-> +
->  	init_waitqueue_head(&vc4->job_wait_queue);
->  	INIT_WORK(&vc4->overflow_mem_work, vc4_overflow_mem_work);
->  
-> @@ -243,6 +246,9 @@ vc4_irq_postinstall(struct drm_device *dev)
->  {
->  	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  
-> +	if (!vc4->v3d)
-> +		return 0;
-> +
->  	/* Enable both the render done and out of memory interrupts. */
->  	V3D_WRITE(V3D_INTENA, V3D_DRIVER_IRQS);
->  
-> @@ -254,6 +260,9 @@ vc4_irq_uninstall(struct drm_device *dev)
->  {
->  	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  
-> +	if (!vc4->v3d)
-> +		return;
-> +
->  	/* Disable sending interrupts for our driver's IRQs. */
->  	V3D_WRITE(V3D_INTDIS, V3D_DRIVER_IRQS);
->  
-> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
-> index 5160cad25fce..295dacc8bcb9 100644
-> --- a/drivers/gpu/drm/vc4/vc4_kms.c
-> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
-> @@ -525,6 +525,7 @@ int vc4_kms_load(struct drm_device *dev)
->  	/* Set support for vblank irq fast disable, before drm_vblank_init() */
->  	dev->vblank_disable_immediate = true;
->  
-> +	dev->irq_enabled = true;
->  	ret = drm_vblank_init(dev, dev->mode_config.num_crtc);
->  	if (ret < 0) {
->  		dev_err(dev->dev, "failed to initialize vblank\n");
-> diff --git a/drivers/gpu/drm/vc4/vc4_perfmon.c b/drivers/gpu/drm/vc4/vc4_perfmon.c
-> index 495150415020..6562d3d30b20 100644
-> --- a/drivers/gpu/drm/vc4/vc4_perfmon.c
-> +++ b/drivers/gpu/drm/vc4/vc4_perfmon.c
-> @@ -100,12 +100,18 @@ void vc4_perfmon_close_file(struct vc4_file *vc4file)
->  int vc4_perfmon_create_ioctl(struct drm_device *dev, void *data,
->  			     struct drm_file *file_priv)
->  {
-> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  	struct vc4_file *vc4file = file_priv->driver_priv;
->  	struct drm_vc4_perfmon_create *req = data;
->  	struct vc4_perfmon *perfmon;
->  	unsigned int i;
->  	int ret;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("Creating perfmon no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	/* Number of monitored counters cannot exceed HW limits. */
->  	if (req->ncounters > DRM_VC4_MAX_PERF_COUNTERS ||
->  	    !req->ncounters)
-> @@ -146,10 +152,16 @@ int vc4_perfmon_create_ioctl(struct drm_device *dev, void *data,
->  int vc4_perfmon_destroy_ioctl(struct drm_device *dev, void *data,
->  			      struct drm_file *file_priv)
->  {
-> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  	struct vc4_file *vc4file = file_priv->driver_priv;
->  	struct drm_vc4_perfmon_destroy *req = data;
->  	struct vc4_perfmon *perfmon;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("Destroying perfmon no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	mutex_lock(&vc4file->perfmon.lock);
->  	perfmon = idr_remove(&vc4file->perfmon.idr, req->id);
->  	mutex_unlock(&vc4file->perfmon.lock);
-> @@ -164,11 +176,17 @@ int vc4_perfmon_destroy_ioctl(struct drm_device *dev, void *data,
->  int vc4_perfmon_get_values_ioctl(struct drm_device *dev, void *data,
->  				 struct drm_file *file_priv)
->  {
-> +	struct vc4_dev *vc4 = to_vc4_dev(dev);
->  	struct vc4_file *vc4file = file_priv->driver_priv;
->  	struct drm_vc4_perfmon_get_values *req = data;
->  	struct vc4_perfmon *perfmon;
->  	int ret;
->  
-> +	if (!vc4->v3d) {
-> +		DRM_DEBUG("Getting perfmon no VC4 V3D probed\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	mutex_lock(&vc4file->perfmon.lock);
->  	perfmon = idr_find(&vc4file->perfmon.idr, req->id);
->  	vc4_perfmon_get(perfmon);
-> diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
-> index 36e6c7086ecf..a4b6859e3af6 100644
-> --- a/drivers/gpu/drm/vc4/vc4_v3d.c
-> +++ b/drivers/gpu/drm/vc4/vc4_v3d.c
-> @@ -474,7 +474,7 @@ static int vc4_v3d_dev_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id vc4_v3d_dt_match[] = {
-> +const struct of_device_id vc4_v3d_dt_match[] = {
->  	{ .compatible = "brcm,bcm2835-v3d" },
->  	{ .compatible = "brcm,cygnus-v3d" },
->  	{ .compatible = "brcm,vc4-v3d" },
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
 
+I sent patches yesterday to fix up all of drivers/staging/ for all spdx
+issues so as to keep people from accidentally getting this wrong.  That
+patch is now in my tree and will show up in linux-next tomorrow.
+
+Sorry,
+
+greg k-h
