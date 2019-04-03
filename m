@@ -2,166 +2,128 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EC6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C75FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374B42082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D703920830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554310066;
+	bh=lRdeevj5cZlijkozufjDpEWXzomyGATg5+JX/JeHLmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MZK99bdtO7jwRSNYDjo4F3vNE16n0LiOgORT0Cb3brAF0J6xktySU9uZ4qS8eQIV+
+	 Cgm6hBDchjSJxjHjpPGq/TB2mOVldBh7LdkoiH1QmG9TefFJCGYVcp0wJ0W35MUSKI
+	 3iIqknYWpy3zTlEVVBWz56O/XrgPRcHC4D5XG5XU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfDCQr0 (ORCPT
+        id S1726561AbfDCQrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:47:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:42684 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfDCQrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:47:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 09:47:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,305,1549958400"; 
-   d="scan'208";a="132687041"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga006.jf.intel.com with ESMTP; 03 Apr 2019 09:47:22 -0700
-Date:   Thu, 4 Apr 2019 00:31:47 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     atull@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Luwei Kang <luwei.kang@intel.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH 14/17] fpga: dfl: fme: add thermal management support
-Message-ID: <20190403163147.GA28570@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-15-git-send-email-hao.wu@intel.com>
- <20190402145925.GA15773@archbook>
+        Wed, 3 Apr 2019 12:47:45 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:47065 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfDCQro (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:47:44 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s24so16003952otk.13;
+        Wed, 03 Apr 2019 09:47:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K8u+qJVWk3puiAbwA2MiT4s2T0KxTnWEgSl/MPXNyZQ=;
+        b=CvalVmyRjCG0dXYLDL5v8Bpo6N1MoqVLwOuKk0O8JLPzuHZtZghSqHcTy+X713fa86
+         dPep6HIcKrBMN004c2U8SFkoj31SYTKuN5WtvMfTuN/Jl8CwOv1uanNUPJ3eJ7O+VZsV
+         p/JJw9wYIDcb8JvxGGtbvcInJIvGUIBcFWbNuW2qROiQUs4agAEWBYyviGFjaS1aC2gf
+         I9V5jqjG2UDahm6wuoeaUpTszt6kOgngHJzAgrIb7LmrPHJAqOA6qsb7HMouWsgzXHYg
+         MYqXpfoFYAZQBS1NyhrPZzNCIOGsF95vfFP791fRZ/So/yQSgpUbMli7YTp0Fm7SuMlR
+         opow==
+X-Gm-Message-State: APjAAAVXJXCrtP3qLRyFUtI6w6N2ii+75neSyOgivS39ZaYpnvWXR2+E
+        l+IoOfNkvnJDzVHt3BKW9j4=
+X-Google-Smtp-Source: APXvYqyYlOwdEWSnwg4utpLgiUxjDTjABGAmPzsoc4M+19vqe5cstnb5RP9t9skItJMKB640NF9kLA==
+X-Received: by 2002:a05:6830:1654:: with SMTP id h20mr382165otr.149.1554310063637;
+        Wed, 03 Apr 2019 09:47:43 -0700 (PDT)
+Received: from localhost ([130.164.62.212])
+        by smtp.gmail.com with ESMTPSA id k25sm6905368otj.72.2019.04.03.09.47.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 09:47:43 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 09:47:42 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Richard Gong <richard.gong@linux.intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, atull@kernel.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Gong <richard.gong@intel.com>
+Subject: Re: [PATCHv1] fpga: mgr: add FPGA configuration log
+Message-ID: <20190403164742.GC5752@archbook>
+References: <1554243943-25507-1-git-send-email-richard.gong@linux.intel.com>
+ <20190403142022.GB5752@archbook>
+ <ee94981a-6562-9d26-ddc2-967596589599@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190402145925.GA15773@archbook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <ee94981a-6562-9d26-ddc2-967596589599@linux.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 07:59:25AM -0700, Moritz Fischer wrote:
-> Hi Wu,
+Hi Richard,
+
+On Wed, Apr 03, 2019 at 11:43:26AM -0500, Richard Gong wrote:
+> Hi Moritz,
 > 
-> On Mon, Mar 25, 2019 at 11:07:41AM +0800, Wu Hao wrote:
-> > This patch adds support to thermal management private feature for DFL
-> > FPGA Management Engine (FME). As thermal throttling is handled by
-> > hardware automatically per pre-defined thresholds, this private
-> > feature driver only provides read-only sysfs interfaces for user
-> > to read temperature, thresholds, threshold policy and other info.
+> 
+> On 4/3/19 9:20 AM, Moritz Fischer wrote:
+> > Hi Richard,
 > > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++++
-> >  drivers/fpga/dfl-fme-main.c                      | 202 +++++++++++++++++++++++
-> >  2 files changed, 258 insertions(+)
+> > On Tue, Apr 02, 2019 at 05:25:43PM -0500, richard.gong@linux.intel.com wrote:
+> > > From: Richard Gong <richard.gong@intel.com>
+> > > 
+> > > Add a log for user to know FPGA configuration is successful
+> > > 
+> > > Signed-off-by: Richard Gong <richard.gong@intel.com>
+> > > ---
+> > >   drivers/fpga/fpga-mgr.c | 1 +
+> > >   1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+> > > index c386681..559e046 100644
+> > > --- a/drivers/fpga/fpga-mgr.c
+> > > +++ b/drivers/fpga/fpga-mgr.c
+> > > @@ -151,6 +151,7 @@ static int fpga_mgr_write_complete(struct fpga_manager *mgr,
+> > >   	}
+> > >   	mgr->state = FPGA_MGR_STATE_OPERATING;
+> > > +	dev_info(&mgr->dev, "Successfully programming FPGA\n");
 > > 
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > index b8327e9..d3aeb88 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > @@ -44,3 +44,59 @@ Description:	Read-only. It returns socket_id to indicate which socket
-> >  		this FPGA belongs to, only valid for integrated solution.
-> >  		User only needs this information, in case standard numa node
-> >  		can't provide correct information.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/temperature
-> > +Date:		March 2019
-> > +KernelVersion:  5.2
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. It returns temperature (in Celsius) of this FPGA
-> > +		device.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1
-> > +Date:		March 2019
-> > +KernelVersion:  5.2
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. Read this file to get the temperature threshold1
-> > +		(in Celsius).
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2
-> > +Date:		March 2019
-> > +KernelVersion:  5.2
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. Read this file to get the temperature threshold2
-> > +		(in Celsius).
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/trip_threshold
-> > +Date:		March 2019
-> > +KernelVersion:  5.2
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. It returns trip threshold (in Celsius), once FPGA
-> > +		temperature reaches trip threshold, it triggers a fatal event
-> > +		to board management controller (BMC) to shutdown FPGA.
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_status
-> > +Date:		March 2019
-> > +KernelVersion:  5.2
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. It returns 1 if temperature reaches threshold1,
-> > +		otherwise 0. Once temperature reaches threshold1, hardware
-> > +		will automatically enter throttling state (AP1 - 50%
-> > +		or AP2 - 90% throttling, see 'threshold1_policy').
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2_status
-> > +Date:		March 2019
-> > +KernelVersion:  5.2
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. It returns 1 if temperature reaches threshold2,
-> > +		otherwise 0. Once temperature reaches threshold2, hardware
-> > +		will automatically enter the deepest throttling state (AP6
-> > +		- 100% throttling).
-> > +
-> > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_policy
-> > +Date:		March 2019
-> > +KernelVersion:  5.2
-> > +Contact:	Wu Hao <hao.wu@intel.com>
-> > +Description:	Read-only. Read this file to get the policy of temperature
-> > +		threshold1. It only supports two value (policy):
-> > +		    0 - AP2 state (90% throttling)
-> > +		    1 - AP1 state (50% throttling)
+> > That info is available in FPGA manager's sysfs status entry, if at all
+> > I'd make this a dev_dbg().
+> > 
+> >  From my end I don't see how we need this really.
 > 
-> These look like they could directly map to the linux thermal framework,
-> any reason you can't use the thermal framework?
+> We got requests from the field and they want to see a log to get know if
+> FPGA configuration is successfully completed. They don't want use any
+> additional command to get status.
 > 
-> The trip stuff literally maps 1:1 to what a thermal driver does, I think
-> that's something you'd wanna consider.
+> This log is useful for the user who performs FPGA configuration.
 > 
+> I think we need use dev_info, since dev_dbg is not enabled by fault for most
+> build.
 
-Hi Moritz,
+Well basically it boils down to:
 
-Thanks a lot for the suggestion, actually I feel that the trip points in thermal
-zone are used to indicate cooling actions required for thermal software either
-in kernel or userspace. But in this case, such FPGA hardware handles cooling
-automatically (yes, driver only expose Read-only sysfs for information), so
-software doesn't need to take care of this at all. For this purpose, it seems
-that we don't have to put these thresholds as trip points. And per my
-understanding, if people use such FPGA device, then they may need to know
-what's the current hardware throttling behavior, e.g. 50% vs 90%. These
-information can't be provided by standard thermal zone sysfs, so anyway user
-needs these sysfs interfaces to know it. But it seems that we still could
-create a thermal zone without trip points, it could help if user wants to
-connect some external cooling devices via userspace thermal daemon, they can
-define whatever trip points they like to activate the external cooling 
-device. I will consider this further more and come up with a new patch in
-v2 patchset.
+$ dmesg | grep "Sucessfully"
 
-Thanks
-Hao
+vs
 
-> Cheers,
-> Moritz
+$ cat /sys/class/fpga.../status 
+
+Personally not in favor of extra messages, but if we do it we should
+change the message to "Sucessfully programmed FPGA".
+
+I think making it a dbg message is a good trade-off ...
+
+Moritz
