@@ -2,165 +2,129 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE2EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EDBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43DB7206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE487206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1z7hqcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfDCPrl (ORCPT
+        id S1726791AbfDCPrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:47:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47110 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfDCPrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:47:41 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 47D1FBDD0;
-        Wed,  3 Apr 2019 15:47:40 +0000 (UTC)
-Received: from redhat.com (ovpn-125-190.rdu2.redhat.com [10.10.125.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 197785C229;
-        Wed,  3 Apr 2019 15:47:37 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 11:47:36 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Ronan KERYELL <ronan@keryell.fr>
-Cc:     Dave Airlie <airlied@gmail.com>, Sonal Santan <sonals@xilinx.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Cyril Chemparathy <cyrilc@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lizhi Hou <lizhih@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        "airlied@redhat.com" <airlied@redhat.com>,
-        linux-fpga@vger.kernel.org, Ralph Wittig <wittig@xilinx.com>,
-        Ronan Keryell <rkeryell@xilinx.com>
-Subject: Re: [RFC PATCH Xilinx Alveo 0/6] Xilinx PCIe accelerator driver
-Message-ID: <20190403154734.GA12818@redhat.com>
-References: <20190319215401.6562-1-sonal.santan@xilinx.com>
- <20190325202810.GG2665@phenom.ffwll.local>
- <BYAPR02MB51608FDF39B39898FAAEBFEEBB5F0@BYAPR02MB5160.namprd02.prod.outlook.com>
- <CAKMK7uHh5KNaTO+a4ZA+vPQcPKUBwODsx+pPCWNp3sxe9TFP0Q@mail.gmail.com>
- <BYAPR02MB51603A1AD72F704112B55B90BB580@BYAPR02MB5160.namprd02.prod.outlook.com>
- <20190327141137.GK2665@phenom.ffwll.local>
- <BYAPR02MB5160162639C2EAC6B19901B7BB590@BYAPR02MB5160.namprd02.prod.outlook.com>
- <CAPM=9tyLNOXCaKGQkCCmo4tt=Dny0j984-=q8utjwv-aX-Y6BQ@mail.gmail.com>
- <871s2pw4ld.fsf@fisel.enstb.org>
+        Wed, 3 Apr 2019 11:47:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41047 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDCPrm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 11:47:42 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so22036282wrq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 08:47:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Yz/4CyqHDMrLkZdlukictkm21VWz7WjVM0p13FQfods=;
+        b=T1z7hqcXiqPgjp9q4TB+FpRpfolX6d9Yr5mh20RiHgJ2GFVhNvjqGv5Y/Y+cdBGz7Z
+         YV1T6QvvNxCcHzYLkhMKkW4M5K0nxnpsfgeJXqqizaudExF2TEdhRqQK0Xfv4/5S6sBV
+         oqdljNLVF7sa+eZk+KG/SNURy6JauQw37mzgnLN2PawWnjiJxThfxkHUha7DcSWzKzlM
+         /OQfBx5dPYExs6BZvh9xFcrC7xxMbDzbbxguujjiLgnxTPU1M+Op1lem8lma0A/+Qalm
+         aA0oNhdm7HeolSuFPxYm0NLoqsmXJvnsIb43UQVJVtTYx1gKvyXuFbTfxFvAUeAoF6m1
+         9mLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yz/4CyqHDMrLkZdlukictkm21VWz7WjVM0p13FQfods=;
+        b=Kr0mziPYg3rxA7zFlv8IJYsLEeJL7de1jvCmYUqB0iila+RcDpNeyaG8vFzeIJlRUU
+         87vm2NEwvNy1R/Ok+Gd0UMMvo1v7IYaw6WLqqAzsX7+mESYt4Oihj2RC/fR8ydBwvaTi
+         80XHOQSo1i0oFId8vhmPwzdgHpHE5/s3ji9HkzwKM/lUusMneJ1TgaHcjKv1WLs5XqAZ
+         VAaSKU/QUcz1QNT4z+UTZgvoIB7janeGDpz1Bn2rohiF3z4Pu8A8knCP1tGgGKupM3Zk
+         DBiA7phP0alqOepA/I7J7vmHX7lmqtwZKavYVRkms/h5prmdhBc/uYe8wmeqReec5Myo
+         NmJA==
+X-Gm-Message-State: APjAAAVUqoZTSQfi/mW/vrmk6nNa7IiwhuUWBsDP+bePVmfjN/WuwIhq
+        uFfr86x/XLTkawn4xc93V6RmMWPE
+X-Google-Smtp-Source: APXvYqyCdYWdsdcRGkwrcv/6uxvQHxIlX3cfdD0SoDswCzlHUnn2PTOmNiM6ZTsXuLaJahbwMIVV2Q==
+X-Received: by 2002:adf:ed8a:: with SMTP id c10mr211219wro.40.1554306460696;
+        Wed, 03 Apr 2019 08:47:40 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id h12sm13149992wrq.95.2019.04.03.08.47.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 08:47:39 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 17:47:38 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v7 1/2] dt-bindings: panel: Add Feiyang FY07024DI26A30-D
+ MIPI-DSI LCD panel
+Message-ID: <20190403154738.GK5238@ulmo>
+References: <20190212204109.3528-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="opg8F0UgoHELSI+9"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <871s2pw4ld.fsf@fisel.enstb.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 03 Apr 2019 15:47:40 +0000 (UTC)
+In-Reply-To: <20190212204109.3528-1-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 06:09:18PM -0700, Ronan KERYELL wrote:
-> I am adding linux-fpga@vger.kernel.org, since this is why I missed this
-> thread in the first place...
-> >>>>> On Fri, 29 Mar 2019 14:56:17 +1000, Dave Airlie <airlied@gmail.com> said:
->     Dave> On Thu, 28 Mar 2019 at 10:14, Sonal Santan <sonals@xilinx.com> wrote:
->     >>> From: Daniel Vetter [mailto:daniel.vetter@ffwll.ch]
 
-[...]
+--opg8F0UgoHELSI+9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Long answer:
-> 
-> - processors, GPU and other digital circuits are designed from a lot of
->   elementary transistors, wires, capacitors, resistors... using some
->   very complex (and expensive) tools from some EDA companies but at the
->   end, after months of work, they come often with a "simple" public
->   interface, the... instruction set! So it is rather "easy" at the end
->   to generate some instructions with a compiler such as LLVM from a
->   description of this ISA or some reverse engineering. Note that even if
->   the ISA is public, it is very difficult to make another efficient
->   processor from scratch just from this ISA, so there is often no
->   concern about making this ISA public to develop the ecosystem ;
-> 
-> - FPGA are field-programmable gate arrays, made also from a lot of
->   elementary transistors, wires, capacitors, resistors... but organized
->   in billions of very low-level elementary gates, memory elements, DSP
->   blocks, I/O blocks, clock generators, specific
->   accelerators... directly exposed to the user and that can be
->   programmed according to a configuration memory (the bitstream) that
->   details how to connect each part, routing element, configuring each
->   elemental piece of hardware.  So instead of just writing instructions
->   like on a CPU or a GPU, you need to configure each bit of the
->   architecture in such a way it does something interesting for
->   you. Concretely, you write some programs in RTL languages (Verilog,
->   VHDL) or higher-level (C/C++, OpenCL, SYCL...)  and you use some very
->   complex (and expensive) tools from some EDA companies to generate the
->   bitstream implementing an equivalent circuit with the same
->   semantics. Since the architecture is so low level, there is a direct
->   mapping between the configuration memory (bitstream) and the hardware
->   architecture itself, so if it is public then it is easy to duplicate
->   the FPGA itself and to start a new FPGA company. That is unfortunately
->   something the existing FPGA companies do not want... ;-)
+On Wed, Feb 13, 2019 at 02:11:08AM +0530, Jagan Teki wrote:
+> Feiyang FY07024DI26A30-D is 1024x600, 4-lane MIPI-DSI LCD panel.
+>=20
+> Add dt-bingings for it.
+>=20
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes for v7, v6, v5, v4, v3:
+> - none
+> Changes for v2:
+> - new patch, derived from another dsi series=20
+>=20
+>  .../display/panel/feiyang,fy07024di26a30d.txt | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/feiya=
+ng,fy07024di26a30d.txt
 
-This is completely bogus argument, all FPGA documentation i have seen so far
-_extensively_ describe _each_ basic blocks within the FGPA, this does include
-the excelent documentation Xilinx provide on the inner working and layout of
-Xilinx FPGA. Same apply to Altera, Atmel, Latice, ...
+Applied, thanks.
 
-The extensive public documentation is enough for anyone with the money and
-with half decent engineers to produce an FPGA.
+Thierry
 
-The real know how of FPGA vendor is how to produce big chips on small process
-capable to sustain high clock with the best power consumption possible. This
-is the part where the years of experiences of each company pay off. The cost
-for anyone to come to the market is in the hundred of millions just in setup
-cost and to catch with established vendor on the hardware side. This without
-any garanty of revenue at the end.
+--opg8F0UgoHELSI+9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The bitstream is only giving away which bits correspond to which wire where
-the LUT boolean table is store  ... Bitstream that have been reverse engineer
-never revealed anything of value that was not already publicly documented.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyk1ZcACgkQ3SOs138+
+s6GcCQ/+LQI8IF4Q8eAZLnbV3bA9PSR7289XV0YvLHoopVOHI5BdSa0HRhukuDDO
+DtdMr8JrNaRw8nm2YgNNlc/fMndb8znB1K0Cm7TalT+/KN8i/KPXaVlvhdl68Bam
+39V1h/i5Vp8ozMvz1YY1jbMHOy2gI7NoqkrG4bhbqVCgqhskh5Gv1hczNwo20Jgu
+EOQjeDPuCfmBHmAsXDSHFwSo2bW+YaTPJ3tUCaAsmWLBek05yFyug5+Ds2iDfMb6
+SwbANCxiR6TmTQIllZZ3NZeK0CYFgK9I2MSEbVASaq6nJX8aB/ZYujSwHVDSBcoo
+AcwYCvf5OzpnUmxwclYPdW7w3mKlUcon6DtA2QCbeuNXK2pvUIX2MALkyAWXVV8I
+6VBO7ZpDLgsh4zgtYIM096VuQMcv36+DasLEmZ20eLybGaqB5o9zhUKUDJsCvpOY
+7LcLfg6tfsFT5NaPK1TZQF97HmYnMmgRfWuS2UeieLPvAIrODG7646WpJGZ8uJpv
+bb3o+Z/UabOqspue33ldrWtf+FJhhTlhjySxc5xFi+8GREPclPahIUUhLh7coD6W
+rGSkemBHW8Iwg7rIyerR+4nfY6zJCxXVx441xuOqGBDhZYQPfCbTrymwAOj/0WUZ
+oAuada6Ue8bmCLmQcmG8kbrE9yzQlzWn2ZGpskND6DsP5WAWSN4=
+=GgYe
+-----END PGP SIGNATURE-----
 
-So no the bitstream has _no_ value, please prove me wrong with Latice bitstream
-for instance. If anything the fact that Latice has a reverse engineer bitstream
-has made that FPGA popular with the maker community as it allows people to do
-experiment for which the closed source tools are an impediment. So i would argue
-that open bitstream is actualy beneficial.
-
-
-The only valid reason i have ever seen for hidding the bitstream is to protect
-the IP of the customer ie those customer that can pour quite a lot of money on
-designing something with an FPGA and then wants to keep the VHDL/Verilog
-protected and "safe" from reverse engineering.
-
-But this is security by obscurity and FPGA company would be better off providing
-strong bitstream encryption (and most already do but i have seen some paper on
-how to break them).
-
-
-I rather not see any bogus argument to try to justify something that is not
-justifiable.
-
-
-Daniel already stressed that we need to know what the bitstream can do and it
-is even more important with FPGA where on some FPGA AFAICT the bitstream can
-have total control over the PCIE BUS and thus can be use to attack either main
-memory or other PCIE devices.
-
-For instance with ATS/PASID you can have the device send pre-translated request
-to the IOMMU and access any memory despite the IOMMU.
-
-So without total confidence of what the bitstream can and can not do, and thus
-without knowledge of the bitstream format and how it maps to LUT, switch, cross-
-bar, clock, fix block (PCIE, DSP, DAC, ADC, ...) there is no way for someone
-independant to check anything.
-
-
-Cheers,
-Jérôme Glisse
+--opg8F0UgoHELSI+9--
