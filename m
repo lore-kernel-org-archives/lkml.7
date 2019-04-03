@@ -6,176 +6,138 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB1CC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA4CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859762084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FC92084B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 20:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="FiBDTIys"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="engR7EGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfDCUGW (ORCPT
+        id S1726950AbfDCUG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 16:06:22 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:48109 "EHLO pegase1.c-s.fr"
+        Wed, 3 Apr 2019 16:06:26 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8856 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfDCUGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 16:06:17 -0400
+        id S1726843AbfDCUGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 16:06:22 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44ZHCD3TDzz9v3pn;
-        Wed,  3 Apr 2019 22:06:16 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 44ZHCJ4zxLz9v3pt;
+        Wed,  3 Apr 2019 22:06:20 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=FiBDTIys; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=engR7EGy; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id CAT7K8uO1yy7; Wed,  3 Apr 2019 22:06:16 +0200 (CEST)
+        with ESMTP id 12emPzzJmuOk; Wed,  3 Apr 2019 22:06:20 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44ZHCD2MkXz9v6Km;
-        Wed,  3 Apr 2019 22:06:16 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44ZHCJ3wJQz9v3pp;
+        Wed,  3 Apr 2019 22:06:20 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1554321976; bh=QrOIJAoXklCeiX4EgvV03ibMMsu5JAy8M1zOTj0D3tg=;
+        t=1554321980; bh=XiMjxBUPhiN74HOYzIXa7EKgRGmh9waO0nn5quBwI8I=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=FiBDTIyss1zjK+tubbbQp0pmk9Z1eIrPS1TpXt5Mt2lqro8xEiRcqQXeGgnmk85vZ
-         CoVJ41KIlGWjD6aZOy3IjMaBE2lk+HmqiZeOZbzgn7kNN9pegUabAVYFpVmz55vvqV
-         Ak8pt6S8A6zSJjVu4Jta6qx77wkqQGWxJlKHaVVY=
+        b=engR7EGy/oio3I6+XaD5RTXCY6RHfLBawyX5a6yCXJc4dGqv5KcI/Z1IVoPagpPK7
+         Anhx9Azot74q5gYJ7VV5mpt9BsicdtWD9GlUhU6qBrL1V2780S5x0sQyre/rKM8MgU
+         HMaHxMqsx42aDGbyfOkgb6MLNeZ7hJkaujVUUUoU=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7245D8B905;
-        Wed,  3 Apr 2019 22:06:16 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AA9548B905;
+        Wed,  3 Apr 2019 22:06:20 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9Fgkls_Gh-nC; Wed,  3 Apr 2019 22:06:16 +0200 (CEST)
+        with ESMTP id 93u_JhDh0yb7; Wed,  3 Apr 2019 22:06:20 +0200 (CEST)
 Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 434D78B902;
-        Wed,  3 Apr 2019 22:06:16 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 83E768B902;
+        Wed,  3 Apr 2019 22:06:20 +0200 (CEST)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2EDB9655EC; Wed,  3 Apr 2019 20:06:16 +0000 (UTC)
-Message-Id: <8f824023d2c2a5cee55afdc172241d5ae6d601ed.1554321743.git.christophe.leroy@c-s.fr>
+        id 6CBFA655EC; Wed,  3 Apr 2019 20:06:20 +0000 (UTC)
+Message-Id: <570d98c68283d7d5039bf8e261fea9c5d891f219.1554321743.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1554321743.git.christophe.leroy@c-s.fr>
 References: <cover.1554321743.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v1 04/15] powerpc/mm: move pgtable_t in asm/mmu.h
+Subject: [PATCH v1 08/15] powerpc/mm: don't use pte_alloc_kernel() until slab
+ is available on PPC32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         aneesh.kumar@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed,  3 Apr 2019 20:06:16 +0000 (UTC)
+Date:   Wed,  3 Apr 2019 20:06:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pgtable_t is now identical for all subarches, move it to the
-top level asm/mmu.h
+In the same way as PPC64, implement early allocation functions and
+avoid calling pte_alloc_kernel() before slab is available.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/book3s/32/mmu-hash.h | 4 ----
- arch/powerpc/include/asm/book3s/64/mmu.h      | 8 --------
- arch/powerpc/include/asm/mmu.h                | 3 +++
- arch/powerpc/include/asm/nohash/32/mmu.h      | 6 ------
- arch/powerpc/include/asm/nohash/64/mmu.h      | 6 ------
- 5 files changed, 3 insertions(+), 24 deletions(-)
+ arch/powerpc/mm/pgtable_32.c | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/32/mmu-hash.h b/arch/powerpc/include/asm/book3s/32/mmu-hash.h
-index 5cb588395fdc..2612d7a1688c 100644
---- a/arch/powerpc/include/asm/book3s/32/mmu-hash.h
-+++ b/arch/powerpc/include/asm/book3s/32/mmu-hash.h
-@@ -10,8 +10,6 @@
-  * BATs
-  */
+diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+index 6e56a6240bfa..a1c3062f0665 100644
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -43,11 +43,8 @@ EXPORT_SYMBOL(ioremap_bot);	/* aka VMALLOC_END */
  
--#include <asm/page.h>
--
- /* Block size masks */
- #define BL_128K	0x000
- #define BL_256K 0x001
-@@ -49,8 +47,6 @@ struct ppc_bat {
- 	u32 batu;
- 	u32 batl;
- };
--
--typedef pte_t *pgtable_t;
- #endif /* !__ASSEMBLY__ */
+ extern char etext[], _stext[], _sinittext[], _einittext[];
  
- /*
-diff --git a/arch/powerpc/include/asm/book3s/64/mmu.h b/arch/powerpc/include/asm/book3s/64/mmu.h
-index 1ceee000c18d..b98b5b304307 100644
---- a/arch/powerpc/include/asm/book3s/64/mmu.h
-+++ b/arch/powerpc/include/asm/book3s/64/mmu.h
-@@ -25,14 +25,6 @@ struct mmu_psize_def {
- 	};
- };
- extern struct mmu_psize_def mmu_psize_defs[MMU_PAGE_COUNT];
+-__ref pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
++pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+ {
+-	if (!slab_is_available())
+-		return memblock_alloc(PTE_FRAG_SIZE, PTE_FRAG_SIZE);
 -
--/*
-- * For BOOK3s 64 with 4k and 64K linux page size
-- * we want to use pointers, because the page table
-- * actually store pfn
-- */
--typedef pte_t *pgtable_t;
--
- #endif /* __ASSEMBLY__ */
+ 	return (pte_t *)pte_fragment_alloc(mm, 1);
+ }
  
- /* 64-bit classic hash table MMU */
-diff --git a/arch/powerpc/include/asm/mmu.h b/arch/powerpc/include/asm/mmu.h
-index 598cdcdd1355..d10dc714f95f 100644
---- a/arch/powerpc/include/asm/mmu.h
-+++ b/arch/powerpc/include/asm/mmu.h
-@@ -124,6 +124,9 @@
- #ifndef __ASSEMBLY__
- #include <linux/bug.h>
- #include <asm/cputable.h>
-+#include <asm/page.h>
+@@ -205,7 +202,29 @@ void iounmap(volatile void __iomem *addr)
+ }
+ EXPORT_SYMBOL(iounmap);
+ 
+-int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot)
++static void __init *early_alloc_pgtable(unsigned long size)
++{
++	void *ptr = memblock_alloc(size, size);
 +
-+typedef pte_t *pgtable_t;
- 
- #ifdef CONFIG_PPC_FSL_BOOK3E
- #include <asm/percpu.h>
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu.h b/arch/powerpc/include/asm/nohash/32/mmu.h
-index 7d94a36d57d2..af0e8b54876a 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu.h
-@@ -2,8 +2,6 @@
- #ifndef _ASM_POWERPC_NOHASH_32_MMU_H_
- #define _ASM_POWERPC_NOHASH_32_MMU_H_
- 
--#include <asm/page.h>
--
- #if defined(CONFIG_40x)
- /* 40x-style software loaded TLB */
- #include <asm/nohash/32/mmu-40x.h>
-@@ -18,8 +16,4 @@
- #include <asm/nohash/32/mmu-8xx.h>
- #endif
- 
--#ifndef __ASSEMBLY__
--typedef pte_t *pgtable_t;
--#endif
--
- #endif /* _ASM_POWERPC_NOHASH_32_MMU_H_ */
-diff --git a/arch/powerpc/include/asm/nohash/64/mmu.h b/arch/powerpc/include/asm/nohash/64/mmu.h
-index 3376f5222d24..87871d027b75 100644
---- a/arch/powerpc/include/asm/nohash/64/mmu.h
-+++ b/arch/powerpc/include/asm/nohash/64/mmu.h
-@@ -2,13 +2,7 @@
- #ifndef _ASM_POWERPC_NOHASH_64_MMU_H_
- #define _ASM_POWERPC_NOHASH_64_MMU_H_
- 
--#include <asm/page.h>
--
- /* Freescale Book-E software loaded TLB or Book-3e (ISA 2.06+) MMU */
- #include <asm/nohash/mmu-book3e.h>
- 
--#ifndef __ASSEMBLY__
--typedef pte_t *pgtable_t;
--#endif
--
- #endif /* _ASM_POWERPC_NOHASH_64_MMU_H_ */
++	if (!ptr)
++		panic("%s: Failed to allocate %lu bytes align=0x%lx\n",
++		      __func__, size, size);
++
++	return ptr;
++}
++
++static pte_t __init *early_pte_alloc_kernel(pmd_t *pmdp, unsigned long va)
++{
++	if (pmd_none(*pmdp)) {
++		pte_t *ptep = early_alloc_pgtable(PTE_FRAG_SIZE);
++
++		pmd_populate_kernel(&init_mm, pmdp, ptep);
++	}
++	return pte_offset_kernel(pmdp, va);
++}
++
++
++int __ref map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot)
+ {
+ 	pmd_t *pd;
+ 	pte_t *pg;
+@@ -214,7 +233,10 @@ int map_kernel_page(unsigned long va, phys_addr_t pa, pgprot_t prot)
+ 	/* Use upper 10 bits of VA to index the first level map */
+ 	pd = pmd_offset(pud_offset(pgd_offset_k(va), va), va);
+ 	/* Use middle 10 bits of VA to index the second-level map */
+-	pg = pte_alloc_kernel(pd, va);
++	if (likely(slab_is_available()))
++		pg = pte_alloc_kernel(pd, va);
++	else
++		pg = early_pte_alloc_kernel(pd, va);
+ 	if (pg != 0) {
+ 		err = 0;
+ 		/* The PTE should never be already set nor present in the
 -- 
 2.13.3
 
