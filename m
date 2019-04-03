@@ -2,79 +2,87 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62468C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB7BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3973B2082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08AEF2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfDCJgO (ORCPT
+        id S1726218AbfDCJiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:36:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34246 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725935AbfDCJgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:36:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 266ACABF0;
-        Wed,  3 Apr 2019 09:36:12 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 351CA1E3FFD; Wed,  3 Apr 2019 11:36:10 +0200 (CEST)
-Date:   Wed, 3 Apr 2019 11:36:10 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Jan Kara <jack@suse.cz>, Kanchan Joshi <joshi.k@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, axboe@fb.com, prakash.v@samsung.com,
-        anshul@samsung.com, joshiiitr@gmail.com
-Subject: Re: [PATCH v3 3/7] block: add write-hint to stream-id conversion
-Message-ID: <20190403093610.GE8836@quack2.suse.cz>
-References: <1553846032-4451-1-git-send-email-joshi.k@samsung.com>
- <CGME20190329075749epcas2p22b85cbdbb7ccb4f7f3ecf69b84f75dc9@epcas2p2.samsung.com>
- <1553846032-4451-4-git-send-email-joshi.k@samsung.com>
- <20190401050821.GQ23020@dastard>
- <20190402092044.GE12133@quack2.suse.cz>
- <20190402203508.GT26298@dastard>
+        Wed, 3 Apr 2019 05:38:03 -0400
+Received: from mga06.intel.com ([134.134.136.31]:61192 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfDCJiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:38:03 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 02:38:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
+   d="scan'208";a="333344948"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Apr 2019 02:37:59 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id CBAB120892; Wed,  3 Apr 2019 12:37:58 +0300 (EEST)
+Date:   Wed, 3 Apr 2019 12:37:58 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v4 3/5] media: sunxi: Add A10 CSI driver
+Message-ID: <20190403093758.z2wlnx5ck6ck36ib@paasikivi.fi.intel.com>
+References: <cover.2aba8cbd95630d87f927465cc2beb881936c83d9.1553010938.git-series.maxime.ripard@bootlin.com>
+ <bf348ec10d4444dd80eab0caddc4e2d3ce3131d4.1553010938.git-series.maxime.ripard@bootlin.com>
+ <20190403091221.qd5ivgcoviazccv7@paasikivi.fi.intel.com>
+ <20190403092655.engthyfinpxvndh4@flea>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190402203508.GT26298@dastard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190403092655.engthyfinpxvndh4@flea>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 03-04-19 07:35:08, Dave Chinner wrote:
-> On Tue, Apr 02, 2019 at 11:20:44AM +0200, Jan Kara wrote:
-> > On Mon 01-04-19 16:08:21, Dave Chinner wrote:
-> > > On Fri, Mar 29, 2019 at 01:23:48PM +0530, Kanchan Joshi wrote:
-> > > > +		if(streamid > nr_streams)
-> > > > +			streamid = 0;
-> > > 
-> > > So, basically, we'll compress all the kernel hints down to "no hint"
-> > > if there are more user streams than the device supports?
-> > > 
-> > > Surely we should be reserving a stream for the kernel hints separate
-> > > from the user and "none" streams when we have limited device streams
-> > > available...
-> > 
-> > The question is what to do in a situation when the device has exactly as
-> > many hints as we currently offer to userspace.
+On Wed, Apr 03, 2019 at 11:26:55AM +0200, Maxime Ripard wrote:
+> Hi Sakari,
 > 
-> Then do what we do now for that case. For every other case, the
-> kernel should have reserved space and not get intermingled with
-> userspace hints.
+> On Wed, Apr 03, 2019 at 12:12:21PM +0300, Sakari Ailus wrote:
+> > Thanks for the update and my apologies for the late review.
+> >
+> > On Tue, Mar 19, 2019 at 04:55:46PM +0100, Maxime Ripard wrote:
+> > > The older CSI drivers have camera capture interface different from the one
+> > > in the newer ones.
+> > >
+> > > This IP is pretty simple. Some variants (one controller out of two
+> > > instances on some SoCs) have an ISP embedded, but there's no code that make
+> > > use of it, so we ignored that part for now.
+> > >
+> > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> >
+> > Could you add a sub-device for the CSI-2 receiver, please?
+> >
+> > See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c for an example.
+> 
+> It's confusing, I know, but this isn't a MIPI-CSI receiver. The IP is
+> called CSI, but it's only capable of handling parallel and BT656.
 
-Yup, we are on the same page then.
+Right, for the parallel (or Bt.656) receiver then.
 
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Sakari Ailus
+sakari.ailus@linux.intel.com
