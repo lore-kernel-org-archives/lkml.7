@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328E4C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD67BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB532082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6EF2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfDCQoV (ORCPT
+        id S1726948AbfDCQmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:44:21 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41931 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbfDCQmW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 12:42:22 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41908 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfDCQmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:42:19 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hBixs-0004GO-LR; Wed, 03 Apr 2019 18:42:16 +0200
+        id 1hBixq-0004GO-4q; Wed, 03 Apr 2019 18:42:14 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -32,11 +32,10 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: [PATCH 12/27] x86/pkru: Provide .*_pkru_ins() functions
-Date:   Wed,  3 Apr 2019 18:41:41 +0200
-Message-Id: <20190403164156.19645-13-bigeasy@linutronix.de>
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 09/27] x86/fpu: Add (__)make_fpregs_active helpers
+Date:   Wed,  3 Apr 2019 18:41:38 +0200
+Message-Id: <20190403164156.19645-10-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
 References: <20190403164156.19645-1-bigeasy@linutronix.de>
@@ -47,85 +46,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Hansen has asked for __read_pkru() and __write_pkru() to be symmetrical.
-As part of the series __write_pkru() will read back the value and only write it
-if it is different.
-In order to make both functions symmetrical move the function containing only
-the opcode into a function with _isn() suffix. __write_pkru() will just invoke
-__write_pkru_isn() but in a flowup patch will also read back the value.
+From: Rik van Riel <riel@surriel.com>
 
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Add helper function that ensures the floating point registers for
+the current task are active. Use with preemption disabled.
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/include/asm/pgtable.h       |  2 +-
- arch/x86/include/asm/special_insns.h | 12 +++++++++---
- arch/x86/kvm/vmx/vmx.c               |  2 +-
- 3 files changed, 11 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/fpu/api.h      | 11 +++++++++++
+ arch/x86/include/asm/fpu/internal.h | 19 +++++++++++--------
+ 2 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 2779ace16d23f..64333e5222cd9 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -127,7 +127,7 @@ static inline int pte_dirty(pte_t pte)
- static inline u32 read_pkru(void)
- {
- 	if (boot_cpu_has(X86_FEATURE_OSPKE))
--		return __read_pkru();
-+		return __read_pkru_ins();
- 	return 0;
- }
+diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
+index b56d504af6545..73e684160f354 100644
+--- a/arch/x86/include/asm/fpu/api.h
++++ b/arch/x86/include/asm/fpu/api.h
+@@ -10,6 +10,7 @@
  
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 43c029cdc3fe8..27328606ff687 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -92,7 +92,7 @@ static inline void native_write_cr8(unsigned long val)
- #endif
+ #ifndef _ASM_X86_FPU_API_H
+ #define _ASM_X86_FPU_API_H
++#include <linux/preempt.h>
  
- #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
--static inline u32 __read_pkru(void)
-+static inline u32 __read_pkru_ins(void)
- {
- 	u32 ecx = 0;
- 	u32 edx, pkru;
-@@ -107,7 +107,7 @@ static inline u32 __read_pkru(void)
- 	return pkru;
- }
+ /*
+  * Use kernel_fpu_begin/end() if you intend to use FPU in kernel context. It
+@@ -22,6 +23,16 @@ extern void kernel_fpu_begin(void);
+ extern void kernel_fpu_end(void);
+ extern bool irq_fpu_usable(void);
  
--static inline void __write_pkru(u32 pkru)
-+static inline void __write_pkru_ins(u32 pkru)
- {
- 	u32 ecx = 0, edx = 0;
- 
-@@ -118,8 +118,14 @@ static inline void __write_pkru(u32 pkru)
- 	asm volatile(".byte 0x0f,0x01,0xef\n\t"
- 		     : : "a" (pkru), "c"(ecx), "d"(edx));
- }
-+
-+static inline void __write_pkru(u32 pkru)
++static inline void fpregs_lock(void)
 +{
-+	__write_pkru_ins(pkru);
++	preempt_disable();
 +}
 +
- #else
--static inline u32 __read_pkru(void)
-+static inline u32 __read_pkru_ins(void)
- {
- 	return 0;
++static inline void fpregs_unlock(void)
++{
++	preempt_enable();
++}
++
+ /*
+  * Query the presence of one or more xfeatures. Works on any legacy CPU as well.
+  *
+diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
+index df98bc7f1c8d8..237ff8dc8559b 100644
+--- a/arch/x86/include/asm/fpu/internal.h
++++ b/arch/x86/include/asm/fpu/internal.h
+@@ -484,6 +484,15 @@ static inline void fpregs_activate(struct fpu *fpu)
+ 	trace_x86_fpu_regs_activated(fpu);
  }
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ab432a930ae86..96dec81430970 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6501,7 +6501,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	 */
- 	if (static_cpu_has(X86_FEATURE_PKU) &&
- 	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE)) {
--		vcpu->arch.pkru = __read_pkru();
-+		vcpu->arch.pkru = __read_pkru_ins();
- 		if (vcpu->arch.pkru != vmx->host_pkru)
- 			__write_pkru(vmx->host_pkru);
- 	}
+ 
++static inline void __fpregs_load_activate(struct fpu *fpu, int cpu)
++{
++	if (!fpregs_state_valid(fpu, cpu)) {
++		if (current->mm)
++			copy_kernel_to_fpregs(&fpu->state);
++		fpregs_activate(fpu);
++	}
++}
++
+ /*
+  * FPU state switching for scheduling.
+  *
+@@ -522,14 +531,8 @@ switch_fpu_prepare(struct fpu *old_fpu, int cpu)
+  */
+ static inline void switch_fpu_finish(struct fpu *new_fpu, int cpu)
+ {
+-	if (static_cpu_has(X86_FEATURE_FPU)) {
+-		if (!fpregs_state_valid(new_fpu, cpu)) {
+-			if (current->mm)
+-				copy_kernel_to_fpregs(&new_fpu->state);
+-		}
+-
+-		fpregs_activate(new_fpu);
+-	}
++	if (static_cpu_has(X86_FEATURE_FPU))
++		__fpregs_load_activate(new_fpu, cpu);
+ }
+ 
+ /*
 -- 
 2.20.1
 
