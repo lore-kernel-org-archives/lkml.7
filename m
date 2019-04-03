@@ -2,70 +2,69 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50526C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297D6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA4520882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J6iyJ5oQ"
+	by mail.kernel.org (Postfix) with ESMTP id 041C220830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDCOqF (ORCPT
+        id S1726528AbfDCOqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:46:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35074 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbfDCOqF (ORCPT
+        Wed, 3 Apr 2019 10:46:10 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:48734 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfDCOqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:46:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GYAGuk0O3D2BLdcy+4PiyrPExV3e9t7xumPWKaDT0ko=; b=J6iyJ5oQR/ztl7SwiyktghPL9
-        cSy9wHJPlKCidbWYW6VxktWTK10RXKcPi9w/objorltCTeHZ9K1kyNQGxh+ST8I1Y8Dhlui8xyKGA
-        maezubdQbP7FAfLOuzewgjMFaMthn42UnFJDnhqDRXhTQzvjs23lsUNhB8RNWJC+1XUrcDAH8L/uR
-        s1cbkcLi6UGZ2qpiYOEGb3eWHtgvkLB3VLPFOfLEbG0ruITHcv+QCNKX+YiMPmtD5Wz+ZhMADkAE8
-        Cdy/9Hzk8eH55U76vc5jX9DWM4rUX1wKwYtFPcpIiPQGf24K1n0bMDhnmApnK9gmqT9jPrDxP8ss1
-        F0eGOjHzg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hBh9P-0003c2-6w; Wed, 03 Apr 2019 14:46:03 +0000
-Date:   Wed, 3 Apr 2019 07:46:03 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] RISC-V: Fix Maximum Physical Memory 2GiB option for
- 64bit systems
-Message-ID: <20190403144603.GB8397@infradead.org>
-References: <20190402091741.11298-1-anup.patel@wdc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402091741.11298-1-anup.patel@wdc.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 3 Apr 2019 10:46:06 -0400
+Received: from ramsan ([84.194.111.163])
+        by andre.telenet-ops.be with bizsmtp
+        id vqm31z0153XaVaC01qm3B1; Wed, 03 Apr 2019 16:46:04 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hBh9P-0003aV-S2; Wed, 03 Apr 2019 16:46:03 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hBh9P-00027L-Pi; Wed, 03 Apr 2019 16:46:03 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] spi: spi-gpio: Remove spi->controller_data comment
+Date:   Wed,  3 Apr 2019 16:46:02 +0200
+Message-Id: <20190403144602.8098-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +			if ((reg->base + mem_size) < end)
+The conversion from GPIO numbers to GPIO descriptors removed the use of
+spi->controller_data, but forgot to update a comment referring to it.
 
-No need for the braces.
+Fixes: 9b00bc7b901ff672 ("spi: spi-gpio: Rewrite to use GPIO descriptors")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/spi/spi-gpio.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Otherwise looks fine:
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 53b35c56a557ae8a..f22db00b51e453b8 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -35,7 +35,6 @@
+  * platform_device->driver_data ... points to spi_gpio
+  *
+  * spi->controller_state ... reserved for bitbang framework code
+- * spi->controller_data ... holds chipselect GPIO
+  *
+  * spi->master->dev.driver_data ... points to spi_gpio->bitbang
+  */
+-- 
+2.17.1
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
