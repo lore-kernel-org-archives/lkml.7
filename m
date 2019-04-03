@@ -2,112 +2,227 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988ACC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3D6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C842084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:27:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVTXbwnK"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA8F2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfDCO16 (ORCPT
+        id S1726451AbfDCOab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:27:58 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34365 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDCO15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:27:57 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y18so11885957lfe.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 07:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oj98AJ5SxCJqLbMaBKWyaYJnW7QhiHu8Umax6AYXRzg=;
-        b=JVTXbwnKrP4XqH2OXIu7DZ+HYbx8jx01vo90plmsrDjdxd2SM4MQDC6P0tEAtkK4Xy
-         qBCKicwOpygK5MHl/Kx6CYbDqeGzd2Qda98ELOvaI4cQailsWRsDCg5Oc2JO02Bqf+u8
-         l8qaFqQEC1NoUK7klh5KSQftB4vv+Bx8XfGxOdIFGSJvgqrsqaz2KQxm1sS/eKAjqMnL
-         PuhhGeLSqtiZogoFxnoowO10NzGDLBZJvscjX+4ixCyT6zreEh/8g9HVsOFCGhR+6TH8
-         3w01JUsnVNBampzEliEzq+r+BJkaE7pPdYM0zVVGYGm3KSu70FuUGl+ibSjhAnmkKbqY
-         FF5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oj98AJ5SxCJqLbMaBKWyaYJnW7QhiHu8Umax6AYXRzg=;
-        b=eH++UnVXGUIzKqgRMDNk94L7mnJb4n/LEQPFZdLHNnrC2lk0lde9RB+TLNxOyhzX/b
-         V0iSFZBCdJqg6PwoWEIknezpR2UOL0AEqh1VoulE9tHO3C0pKWQyJuHFSkCII1kc3IXS
-         oF8WQYp7kDOj3EW/3G195UlDQZOGzTLH+rF4LhO+fBAnCKgK7upsDFMlQGYx15cZLYJn
-         ITq064/+jf8NSQhPuUlSGv4VpSapRLg6+EmO0WM/QHg33ue0XlCkkjIQId9befUndwIA
-         x047CzGtnrICPRU+xGsQ5fRUjV78Pi6igoPjDo0cUk9ATJ4YCK1jd5XLrpfcuPmYxuGa
-         N6/g==
-X-Gm-Message-State: APjAAAUq3NiYPo8h0pqzT0PSfEJzqkuj64csQwrxCowr6J+4iH9K3KN2
-        v79d43bTiFACj3zPmZ52Ebs=
-X-Google-Smtp-Source: APXvYqxsq4+pl7CInZh9GNpCOBDgTmFk1J1ptFbgCZD2jax48w2mkJr4V33fsnF4o4K/lVeuJXMg7Q==
-X-Received: by 2002:ac2:53a4:: with SMTP id j4mr34407lfh.106.1554301675661;
-        Wed, 03 Apr 2019 07:27:55 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id d77sm3005396lfg.55.2019.04.03.07.27.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 07:27:54 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 14E4646041B; Wed,  3 Apr 2019 17:27:54 +0300 (MSK)
-Date:   Wed, 3 Apr 2019 17:27:54 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Vince Weaver <vince@deater.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC PATCH v3 0/3] x86/perf/amd: AMD PMC counters and NMI latency
-Message-ID: <20190403142754.GE1421@uranus.lan>
-References: <155415519143.24457.2706922532995302758.stgit@tlendack-t1.amdoffice.net>
- <20190402130302.GL12232@hirez.programming.kicks-ass.net>
- <20190402132200.GA23501@uranus>
- <alpine.DEB.2.21.1904021050090.15645@pianoman.cluster.toy>
- <20190402150936.GB23501@uranus>
- <alpine.DEB.2.21.1904021709340.24692@pianoman.cluster.toy>
- <20190402213151.GC23501@uranus>
- <alpine.DEB.2.21.1904031009300.26186@pianoman.cluster.toy>
+        Wed, 3 Apr 2019 10:30:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47040 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726168AbfDCOaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:30:30 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E538F3082E67;
+        Wed,  3 Apr 2019 14:30:23 +0000 (UTC)
+Received: from [10.36.117.163] (ovpn-117-163.ams2.redhat.com [10.36.117.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DEDD560149;
+        Wed,  3 Apr 2019 14:30:16 +0000 (UTC)
+Subject: Re: [PATCH v6 09/22] vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        jacob.jun.pan@linux.intel.com, yi.l.liu@linux.intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        peter.maydell@linaro.org, vincent.stehle@arm.com
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+ <20190317172232.1068-10-eric.auger@redhat.com>
+ <20190321170159.38358f38@x1.home>
+ <16931d58-9c88-8cfb-a392-408ea7afdf16@redhat.com>
+ <20190322160947.3f8dacdb@x1.home>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <b47128de-88d0-1971-1fbc-86e43439c7ee@redhat.com>
+Date:   Wed, 3 Apr 2019 16:30:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904031009300.26186@pianoman.cluster.toy>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190322160947.3f8dacdb@x1.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 03 Apr 2019 14:30:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:15:33AM -0400, Vince Weaver wrote:
-> > Mind to point me where json events should lay, I could try to convert
-> > names.
+Hi Alex,
+
+On 3/22/19 11:09 PM, Alex Williamson wrote:
+> On Fri, 22 Mar 2019 10:30:02 +0100
+> Auger Eric <eric.auger@redhat.com> wrote:
 > 
-> I was mostly joking about that.  But the event lists are in the kernel 
-> tree in
-> 	tools/perf/pmu-events/arch/x86/
->
-> I don't think anything older than Nehalem is included.
+>> Hi Alex,
+>> On 3/22/19 12:01 AM, Alex Williamson wrote:
+>>> On Sun, 17 Mar 2019 18:22:19 +0100
+>>> Eric Auger <eric.auger@redhat.com> wrote:
+>>>   
+>>>> This patch adds the VFIO_IOMMU_BIND/UNBIND_MSI ioctl which aim
+>>>> to pass/withdraw the guest MSI binding to/from the host.
+>>>>
+>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>>
+>>>> ---
+>>>> v3 -> v4:
+>>>> - add UNBIND
+>>>> - unwind on BIND error
+>>>>
+>>>> v2 -> v3:
+>>>> - adapt to new proto of bind_guest_msi
+>>>> - directly use vfio_iommu_for_each_dev
+>>>>
+>>>> v1 -> v2:
+>>>> - s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
+>>>> ---
+>>>>  drivers/vfio/vfio_iommu_type1.c | 58 +++++++++++++++++++++++++++++++++
+>>>>  include/uapi/linux/vfio.h       | 29 +++++++++++++++++
+>>>>  2 files changed, 87 insertions(+)
+>>>>
+>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+>>>> index 12a40b9db6aa..66513679081b 100644
+>>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>>> @@ -1710,6 +1710,25 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
+>>>>  	return iommu_cache_invalidate(d, dev, &ustruct->info);
+>>>>  }
+>>>>  
+>>>> +static int vfio_bind_msi_fn(struct device *dev, void *data)
+>>>> +{
+>>>> +	struct vfio_iommu_type1_bind_msi *ustruct =
+>>>> +		(struct vfio_iommu_type1_bind_msi *)data;
+>>>> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
+>>>> +
+>>>> +	return iommu_bind_guest_msi(d, dev, ustruct->iova,
+>>>> +				    ustruct->gpa, ustruct->size);
+>>>> +}
+>>>> +
+>>>> +static int vfio_unbind_msi_fn(struct device *dev, void *data)
+>>>> +{
+>>>> +	dma_addr_t *iova = (dma_addr_t *)data;
+>>>> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);  
+>>>
+>>> Same as previous, we can encapsulate domain in our own struct to avoid
+>>> a lookup.
+>>>   
+>>>> +
+>>>> +	iommu_unbind_guest_msi(d, dev, *iova);  
+>>>
+>>> Is it strange that iommu-core is exposing these interfaces at a device
+>>> level if every one of them requires us to walk all the devices?  Thanks,  
+>>
+>> Hum this per device API was devised in response of Robin's comments on
+>>
+>> [RFC v2 12/20] dma-iommu: Implement NESTED_MSI cookie.
+>>
+>> "
+>> But that then seems to reveal a somewhat bigger problem - if the callers
+>> are simply registering IPAs, and relying on the ITS driver to grab an
+>> entry and fill in a PA later, then how does either one know *which* PA
+>> is supposed to belong to a given IPA in the case where you have multiple
+>> devices with different ITS targets assigned to the same guest? (and if
+>> it's possible to assume a guest will use per-device stage 1 mappings and
+>> present it with a single vITS backed by multiple pITSes, I think things
+>> start breaking even harder.)
+>> "
+>>
+>> However looking back into the problem I wonder if there was an issue
+>> with the iommu_domain based API.
+>>
+>> If my understanding is correct, when assigned devices are protected by a
+>> vIOMMU then they necessarily end up in separate host iommu domains even
+>> if they belong to the same iommu_domain on the guest. And there can only
+>> be a single device in this iommu_domain.
+> 
+> Don't forget that a container represents the IOMMU context in a vfio
+> environment, groups are associated with containers and a group may
+> contain one or more devices.  When a vIOMMU comes into play, we still
+> only have an IOMMU context per container.  If we have multiple devices
+> in a group, we run into problems with vIOMMU.  We can resolve this by
+> requiring that the user ignore all but one device in the group,
+> or making sure that the devices in the group have the same IOMMU
+> context.  The latter we could do in QEMU if PCIe-to-PCI bridges there
+> masked the per-device address space as it does on real hardware (ie.
+> there is no requester ID on conventional PCI, all transactions appear to
+> the IOMMU with the bridge requester ID).  So I raise this question
+> because vfio's minimum domain granularity is a group.
+> 
+>> If this is confirmed, there is a non ambiguous association between 1
+>> physical iommu_domain, 1 device, 1 S1 mapping and 1 physical MSI
+>> controller.
+>>
+>> I added the device handle handle to disambiguate those associations. The
+>> gIOVA ->gDB mapping is associated with a device handle. Then when the
+>> host needs a stage 1 mapping for this device, to build the nested
+>> mapping towards the physical DB it can easily grab the gIOVA->gDB stage
+>> 1 mapping registered for this device.
+>>
+>> The correctness looks more obvious to me, at least.
+> 
+> Except all devices within all groups within the same container
+> necessarily share the same IOMMU context, so from that perspective, it
+> appears to impose non-trivial redundancy on the caller.  Thanks,
 
-I see ;)
+Taking into consideration the case where we could have several devices
+attached to the same host iommu group, each of them possibly using
+different host MSI doorbells, I think I am in trouble.
 
-> After letting the fuzzer run a bit longer I did manage to get it 
-> to hard-lock with no messages in the log, though eventually while I was 
-> fiddling with alt-sysrq over serial port did get this to trigger.
-> Though if I'm going to start reporting p4 crashes I should start a 
-> separate thread.
+Let's assume that using the pcie-to-pci bridge trick on guest side they
+end up in the same container and in the same guest iommu group.
 
-Oh. Will try to take a look on, thanks a lot!
+At the moment there is a single MSI controller on guest, so the same
+gIOVA/gDB S1 mapping is going to be created by the guest iommu dommain
+and both devices are programmed with gIOVA. If dev0 and dev1 are
+attached to different host MSI controllers, I would need to build the 2
+nested bindings:
+dev0: MSI nested binding: gIOVA -> gDB -> hDB0
+dev1: MSI nested binding: gIOVA -> gDB -> hDB1
+(on guest there is a single MSI controller at the moment)
+
+which is not possible as the devices belong to the same host iommu group
+and share the same mapping.
+
+The solution would be to instantiate 2 MSI controllers on guest side, in
+which case we would end up with
+dev0: gIOVA0 -> gDB0 -> hDB0
+dev1: gIOVA1 -> gDB1 -> hDB1
+
+Isn't it somehow what we do with the IOMMU RID topology. We need to take
+into account the host topology (2 devices belonging to the same group)
+to force the same on guest by introducing a PCIe-to-PCI bridge. Here we
+would need to say, those assigned devices are attached to different MSI
+domains on host, so we need the same on guest.
+
+Anyway, the current container based IOCTL would fail to implement that
+because I would register gIOVA0 -> gDB0 and gIOVA1 -> gDB1 for each
+device within the container which would definitively fail to build the
+correct association. So I think I would need anyway a device based IOTCL
+that would aim to tell: this assigned device uses this S1 MSI binding.
+All the notification mechanism we have in qemu is based on container, so
+this would obliged to have device based notification mechanism.
+
+So I wonder whether it wouldn't be sensible to restrict this use case
+and say we support nested mode only if we have a single assigned device
+within the container?
+
+Thoughts?
+
+Eric
+
+
+
+> 
+> Alex
+> 
