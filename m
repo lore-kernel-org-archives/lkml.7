@@ -2,102 +2,189 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A59C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB4CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88EBD20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E76A2147A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 11:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="xQHHDT8y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="arC2Bdv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfDCLYb (ORCPT
+        id S1726442AbfDCL0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 07:24:31 -0400
-Received: from cock.li ([185.100.85.212]:41702 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfDCLYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 07:24:30 -0400
+        Wed, 3 Apr 2019 07:26:11 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41185 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfDCL0L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 07:26:11 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d1so6198197plj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 04:26:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=0B5846Qj48irt1Bqb+wtKlBUuvrN2uhhkGpMhKv1ajc=;
+        b=arC2Bdv3ecOwLXWncAWAMI+rAbMY/c9t2P2HMeyzFpWKWMglGp5i8PVCn7cgdNWubw
+         r2pjO6PJny0CXo3p/v/Xhx3wsQ6IotgWtdTLT08ey05MQZgTdYyFNBWaOezT2P5rBkx8
+         iAUCB4YgJuL+qGAT2KeuyNp/uZpMoXOjSYv/dEICAaAYqx+V94pIU9VwaIUz5HfUwRRR
+         nMwTcQAsLvHeLnBkDj84zcephzy0l0MAC3LjTZ0agbN89exavaC2vXMAF7EtPdPhGXa2
+         aNMSBrljC+adAJ9ABsCsG1hx/QEQZx36m3Ho0IBSDi823DJkbgFdZfpkJNY9sdm5GpUS
+         WhOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0B5846Qj48irt1Bqb+wtKlBUuvrN2uhhkGpMhKv1ajc=;
+        b=sgn3afNXxgKoqOWpPLThG3BQqb1APTSB588YosKS/Ji/OXuK1+3gYu/0vv3/Il/jHu
+         8Q85fbDiVwowe5b1o3Buaa8ftYZw8Kkj160dDauYUy3GuDiVNdbaILfZy5EZMLwOIrOS
+         SLeE7mxko9dpO4WsIE5aKI+e4m966x47vMI70qZVG/Rctyo+ohiCo2yjZCPOXyNYbdu4
+         nLXf1Eq5WmsSVnYlOt3jV9xxYGAtafl+5eID5T9MggOYs41nt8i/mj0QUlqp+b7nT3ua
+         CtjGRvko+ujyW9XIOpllyogQhvG7gDbr2iIx9tZ7+Q1nO0cojek0ElFm6NSXd45WNS0G
+         5g5A==
+X-Gm-Message-State: APjAAAXAw2byfC+K1wMxhnFQ9lkKob/NI/cEF4XPEeIc1nWrhYSOiIhr
+        DaygXB0ulcx5nOBevlaTWphNHQ==
+X-Google-Smtp-Source: APXvYqwbGKDsbAGKaKk33ooPdr+A6/ssJ3ZShnRgfwyosb8w1MssA6oLeadkL3bzTfQwyEUIIr9h5g==
+X-Received: by 2002:a17:902:4101:: with SMTP id e1mr77449907pld.25.1554290769884;
+        Wed, 03 Apr 2019 04:26:09 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id n26sm47326286pfi.165.2019.04.03.04.26.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 04:26:08 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 12:25:59 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
+Message-ID: <20190403112559.GP11301@dell>
+References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
+ <39efebe0396dd42de30d37c6f3c1ef2926c90210.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190403073152.GM4187@dell>
+ <20190403084732.GA3493@localhost.localdomain>
+ <20190403093015.GJ11301@dell>
+ <20190403101003.GC3493@localhost.localdomain>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1554290667; bh=45bvdyLfGpzypB/QzrUMFJvAvnMqRNIWkW1pumQtoMA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xQHHDT8yjYRgds47U6oKLPzcJCjN4x17avV1DjQQUh9bveleSgJuC2R69HpeRyuvn
-         EFImFoPqxpgHgrf/fdebv51tKEyrzMVHR0Lq0iCxjHtv6+5cFmSuoSgxTM7tZl2w/6
-         j5MvySnKeCicNoFDxwtH8n5WtIQZ5MH/8GpZqFyLKmCgXM4FLX8j7vltzGCebiiPhb
-         YWsZpQnZNwC+VCoA/+anzl1OCT9QoCk6aEpZeYI2fgXdlF6UAJaQ5M7Six2r7b39A+
-         v0k/qlRbeHCxji9AAlqyQH3aXwVQqMuqEs6ZvkY/+enDSzWNuQ9AiUA/U83c0yb1Eo
-         GgVWexdEx3ahw==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Apr 2019 11:24:26 +0000
-From:   mikeeusa@redchan.it
-To:     GitHub Staff <support@github.com>
-Cc:     linux-kernel@vger.kernel.org, esr@thyrsus.com, misc@openbsd.org
-Subject: License revocation from GitHub and GitHub Staff (regarding GPC-Slots
- 2) Re: DMCA takedown notice
-In-Reply-To: <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5870232@github.com>
-References: <5c51daed7c023_2fcf3fe7576d45c417207b@github-lowworker-89d05ac.cp1-iad.github.net.mail>
- <5c51ee838b18f_74e53fd6ff0d45c41780e2@github-lowworker-5909e27.cp1-iad.github.net.mail>
- <5c522f5b6cb8a_60733fc5256d45b412831@github-lowworker-39ccb07.cp1-iad.github.net.mail>
- <5c534f0336ca6_19ae3fcbf5cd45b4186161@github-lowworker-e55e3e3.cp1-iad.github.net.mail>
- <5c535110f0f30_3aa13fafe46d45c4222962@github-lowworker-dcc078e.cp1-iad.github.net.mail>
- <061a28afa26cf5ad7d11f8074353a9cf@redchan.it>
- <5c5489478eb20_56f33fd9e9ad45b43146ec@github-lowworker-4f62d42.cp1-iad.github.net.mail>
- <5c55ecdcb298_3a283fd6dfcd45c4309246@github-lowworker-63e61ec.cp1-iad.github.net.mail>
- <5c563190ae6cc_18c33fcb464d45bc1523b0@github-lowworker-39ccb07.cp1-iad.github.net.mail>
- <5c586b095281b_4c6d3ffba28d45b8120450@github-lowworker-e51511d.cp1-iad.github.net.mail>
- <5c58a56f8ded7_36e93f9cb4ad45b8932e7@github-lowworker-e55e3e3.cp1-iad.github.net.mail>
- <312c3d91f6c4a71c34b96728a2efb385@redchan.it>
- <5c5b1609a1561_1ac23fbe2d6d45b88762d0@github-lowworker-dcc078e.cp1-iad.github.net.mail>
- <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5812163@github.com>
- <d6326acd7a9a52a5cf4de2bd3841fc5c@redchan.it>
- <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5851873@github.com>
- <1ad00463db02ac58f89c4ac99b2299e4@redchan.it>
- <CAKSHBJW4qkrozz0HrWvXnbpHicSBRoRKycC7xBoK0uWZJx5NkQ@mail.gmail.com>
- <discussions/31b6c69e24b211e98081e6b282f84ff2/comments/5870232@github.com>
-Message-ID: <4d888cf10279eee33b6f4a3b2e7c40a6@redchan.it>
-X-Sender: mikeeusa@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190403101003.GC3493@localhost.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have, at this moment, chosen to terminate any permissions GitHub and
-the GitHub Staff have enjoyed regarding my protected work (GPC-Slots 2).
+On Wed, 03 Apr 2019, Matti Vaittinen wrote:
 
-Any allowances GitHub (GH) and the GitHub Staff (staff) had regarding 
-GPC-Slots 2
-(the work) is hereby revocated, rescinded, and made null.
+> On Wed, Apr 03, 2019 at 10:30:15AM +0100, Lee Jones wrote:
+> > On Wed, 03 Apr 2019, Matti Vaittinen wrote:
+> > 
+> > > Hello Lee,
+> > > 
+> > > Thanks for taking a look on this again =) I agree with most of the
+> > > comments and correct them at next version.
+> > > 
+> > > On Wed, Apr 03, 2019 at 08:31:52AM +0100, Lee Jones wrote:
+> > > > On Mon, 25 Mar 2019, Matti Vaittinen wrote:
+> > > > 
+> > > > > ROHM BD70528MWV is an ultra-low quiescent current general
+> > > > > purpose single-chip power management IC for battery-powered
+> > > > > portable devices.
+> > > > > 
+> > > > > Add MFD core which enables chip access for following subdevices:
+> > > > > 	- regulators/LED drivers
+> > > > > 	- battery-charger
+> > > > > 	- gpios
+> > > > > 	- 32.768kHz clk
+> > > > > 	- RTC
+> > > > > 	- watchdog
+> > > > > 
+> > > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > > > + * Mapping of main IRQ register bits to sub irq register offsets so
+> > > > 
+> > > > "sub-IRQ"
+> > > > 
+> > > > > + * that we can access corect sub IRQ registers based on bits that
+> > > > 
+> > > > "sub IRQ" is also fine, but please standardise.
+> > > > 
+> > > > I do prefer "sub-IRQ" though.
+> > > 
+> > > I'll go with "sub-IRQ" then
+> > > 
+> > > > > +
+> > > > > +#define WD_CTRL_MAGIC1 0x55
+> > > > > +#define WD_CTRL_MAGIC2 0xAA
+> > > > > +/**
+> > > > > + * bd70528_wdt_set - arm or disarm watchdog timer
+> > > > > + *
+> > > > > + * @data:	device data for the PMIC instance we want to operate on
+> > > > > + * @enable:	new state of WDT. zero to disable, non zero to enable
+> > > > > + * @old_state:	previous state of WDT will be filled here
+> > > > > + *
+> > > > > + * Arm or disarm WDT on BD70528 PMIC. Expected to be called only by
+> > > > > + * BD70528 RTC and BD70528 WDT drivers. The rtc_timer_lock must be taken
+> > > > > + * by calling bd70528_wdt_lock before calling bd70528_wdt_set.
+> > > > > + */
+> > > > > +int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_state)
+> > > > 
+> > > > Why doesn't this reside in the watchdog driver?
+> > > 
+> > > If my memory serves me right we shortly discussed this already during v8
+> > > review ;) Cant blame you though as I have seen some of the mail traffic
+> > > going through your inbox :D
+> > > 
+> > > The motivation to have the functions exported from MFD is to not create
+> > > sirect dependency between RTC and WDT. There may be cases where we want
+> > > to leave either RTC or WDT out of compilation. MFD is always needed so
+> > > the dependency from MFD to RTC/WDT does not harm.
+> > > 
+> > > (Here's some discussion necromancy if you are interested in re-reading
+> > > how we did end up with this implementation:
+> > > https://lore.kernel.org/lkml/20190212091723.GZ20638@dell/)
+> > > 
+> > > I hope you are still Ok with having the WDT control functions in MFD.
+> > 
+> > OOI, why does the RTC need to control the WDT?
+> 
+> I thought I had a comment about this somewhere in code... O_o Must have
+> been in some development branch I had :/
+> 
+> Anyways, setting the RTC counter may cause watchdog to trigger. It is not
+> further explained why but I would guess watchdog uses RTC counter to check
+> if it should've been pinged already. So RTC needs to disable watch dog for
+> the duration of hwclock setting and enable it again after the new time is
+> set. I can add a comment about this to MFD driver if it helps :)
 
-The allowances memorialized in the writing known as the "GPL" are
-rescinded from GitHub and the GitHub staff.
+How does the user select between using the RTC and the WDT?
 
-I am not in privity of contract regarding the licensing and
-distribution of GPC-Slots 2 with GitHub nor any of the GitHub staff,
-nor have I ever been.
+Or are the generally both enabled at the same time?
 
-I have not been paid any good, value, or consideration for the
-dispensation of the permissions.
-
-The permissions are freely revocable by me, the Copyright Holder, in
-furtherance of my pursuit of my various exclusive rights regarding the
-work, none of which I have transferred or contracted away for value.
-
-Should Git Hub or any member of the Git Hub Staff choose to defy my
-wishes, regarding the work, I will seek remedy at my pleasure: both
-against the corporate person and in their individual capacities.
-
-Signed;
---MikeeUSA--
-
-Note: I have posted this notice at the original place of download, of
-the work, lest there be any contrived confusion regarding veracity of
-person or pleasure.
-
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
