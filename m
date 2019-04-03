@@ -2,97 +2,101 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84EAC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C76C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDD520830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554262359;
-	bh=rEjQ9L/7fpfsO4wFoyXbSNmriisEXNYcLi4MSrs9s0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U+a+zMtXA+i449uvwXEKtIx5VuxoXjqV0bMUQpXWwm8V6MdOuQJSskaO/CTM/LaOp
-	 t8pah5Fvkli7RiPk00E45b0zYxl/4dNOk65zX7R1yD7zwdob/PJ4o0cOUCtcT0Ro8D
-	 JeThf1eC3xCwds18chG2MfkoPUe3IyNqXaWx1i94=
+	by mail.kernel.org (Postfix) with ESMTP id 2995C20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 03:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tKtYxtwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfDCDci (ORCPT
+        id S1727441AbfDCDcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 23:32:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36132 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfDCDch (ORCPT
+        Tue, 2 Apr 2019 23:32:50 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35126 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDCDcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 23:32:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lRsdsi75KJ1aJG3kl3MA0mdKJCqKBlk6tqPPgiI6BOw=; b=SZsovRx579TDgxAcr8D2Ltb4X
-        BFYJWhDYVf/DdUbQtookNeXrzIev7IoV8ziB8YjXcrkdNQQOro0DuGOKLGt3FUPYPJJfaxLYJalua
-        PvBsareLLZ35WjOwl5bD+G5IVu70ID5iU9YLSeYvJTj8uPQu/nVCW5qw4ynMcoNGQ3OJY=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBWde-0003Yu-UJ; Wed, 03 Apr 2019 03:32:35 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 0C29D440082; Wed,  3 Apr 2019 04:32:28 +0100 (BST)
-Date:   Wed, 3 Apr 2019 10:32:27 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 1/4] drivers: base: regmap: add proper SPDX identifiers
- on files that did not have them.
-Message-ID: <20190403033227.GG2059@sirena.org.uk>
-References: <20190402133203.5463-1-gregkh@linuxfoundation.org>
+        Tue, 2 Apr 2019 23:32:50 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u21so10563730lfu.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 20:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UCHuYZwShC0SSs91PVEBOAxkLphUC+4MrAsjagpLwQk=;
+        b=tKtYxtwHdsLitqDbT/bvLkz/4V+uSdm52IelVe+0R10Hlpn7uZ8f2m+yBHTLtTS/ql
+         oTF0U0W56WcZeLoXnzXhtsIYoZWY+CS8nbHV5mHPTpK4JXu9BJDkGsx7PI54SEbU6EMI
+         yzjfp8gqinwFEW1S0MCz6pusVYWhsSe3AfphjSW8+7qCYix3vFFMI0sOvR2oRnnSeZI1
+         eKp4N2yd9nvV9Wjx6pBwygg+DJ8IAXA7JWIu/1wLftNrbzSlDmqutCuPF1vtEbE2LCbU
+         Fvmygs5hqhh+tIjRIlpa/6rBhrPzf8dTikDKSQJYG85HNS4wRkNmv9roLZpI0fMwrRhU
+         iqMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UCHuYZwShC0SSs91PVEBOAxkLphUC+4MrAsjagpLwQk=;
+        b=RbGGIREFzii7S9db5HLtZBdpWGajoZx/n2pYYM5lpXPLi/E3qIRJ85eU0yCyt6Bbtl
+         HcLivv0QfTrTRPfz7ciyDmsmbE7XCUnJ1DjQPVpazahsBAVUopQOxoJ8KKZj+ZbN+6iw
+         8jmGC/JCVXaqZaqRpd1Dd9aSkdfcy0wnbOZFKqD9cPPFXMnTSSB7t3RQugXJUL6T8GJa
+         A/29vSMsFar9rD5COqbKelOYdcU0h8n+QFAZGgq+yE8+/h50AHYEkpxCeIawR3A/4dNJ
+         xJlInJc5cUlIeA87L9OnG+GwGgfHxLTKZ9fzfoxyXRsTvBTYw2MRrXVzdHpRmM4zFn2U
+         mmvw==
+X-Gm-Message-State: APjAAAVjTL4gwkvql50F/GMFwQ/KL/6WXiZFwfjrJv4SFp6KzmOmQcMR
+        dRITSa9DppFbAeXH77PVZ7pvpgEfwHv+kY2551HTEw==
+X-Google-Smtp-Source: APXvYqxa1xT6zd5hRIjquO+yC8wbkQmhFYE+rBC5zjqTeiysQx+MXMz4hfJFE0sZkfDH9CPtVTk9JV2OWY/SSk02REY=
+X-Received: by 2002:a19:ec14:: with SMTP id b20mr24261664lfa.55.1554262367930;
+ Tue, 02 Apr 2019 20:32:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gAUgrzRZ7tRi/Yr6"
-Content-Disposition: inline
-In-Reply-To: <20190402133203.5463-1-gregkh@linuxfoundation.org>
-X-Cookie: Use extra care when cleaning on stairs.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-26-git-send-email-info@metux.net>
+In-Reply-To: <1552330521-4276-26-git-send-email-info@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Apr 2019 10:32:36 +0700
+Message-ID: <CACRpkdbwFpX6CR=25fW4hxwZrdpq6vbyMw06J6Ff2un9OUarcw@mail.gmail.com>
+Subject: Re: [PATCH 26/42] drivers: gpio: rcar: pendantic formatting
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 12, 2019 at 1:56 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
---gAUgrzRZ7tRi/Yr6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> a tab sneaked in, where it shouldn't be.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-On Tue, Apr 02, 2019 at 03:32:00PM +0200, Greg Kroah-Hartman wrote:
+Waiting for a new version of this patch.
 
-> --- a/drivers/base/regmap/regcache-flat.c
-> +++ b/drivers/base/regmap/regcache-flat.c
-> @@ -1,13 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
-
-Please make the whole header a C++ header so that things look more
-consistent and intentional.
-
---gAUgrzRZ7tRi/Yr6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlykKUkACgkQJNaLcl1U
-h9DGnAf/Rkpqgpx8ZNrtZBTvBbLxGcIT1AGHNeQP+0gAHDDmdrzrxrCS0f2Ks6LU
-133iodlYB+muLn2Utd56EINaDK8j8f92T9/D22tZ/giMkusjzzfwF4cfNUzl3DEL
-dBM+zAtPuuqfev0fzAgPcyrj0vJziqvU1tmexvORCsrxBrGmUINUHwX8Lytfwag2
-l2ZYaj3Ao/Jli7pXSq+4NVi87FX5ncDvyl7U2fVptqccnImSo0Q2iytHSyQZs+1a
-1NJksQIKCKJF3TlQTiHokwmpRaQxC5hnUaSZLyLyvhbUd66HYkKFppukvXTRk6HH
-0CVxulhyHNg6s15Mh88m/XyqmRRH+w==
-=V+PI
------END PGP SIGNATURE-----
-
---gAUgrzRZ7tRi/Yr6--
+Yours,
+Linus Walleij
