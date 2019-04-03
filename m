@@ -2,178 +2,110 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52101C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075C9C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F412075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4EA2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="jUcez77v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfDCPOd convert rfc822-to-8bit (ORCPT
+        id S1726530AbfDCPPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:14:33 -0400
-Received: from smtp.asem.it ([151.1.184.197]:56847 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfDCPOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:14:32 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003789590.MSG 
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:14:24 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 3
- Apr 2019 17:14:24 +0200
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1261.035; Wed, 3 Apr 2019 17:14:24 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Thread-Topic: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
-Thread-Index: AQHU6izzDrhx33Rd2E28nY3Qp112E6YqaEkAgAAhzmA=
-Date:   Wed, 3 Apr 2019 15:14:24 +0000
-Message-ID: <452a4cf1410a41c8b6f767ac6258482e@asem.it>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
- <20190403150824.GO22216@piout.net>
-In-Reply-To: <20190403150824.GO22216@piout.net>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.208]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 3 Apr 2019 11:15:22 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36644 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfDCPPV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 11:15:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r24so15252341ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 08:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iHotHzEjU1qzj9BJulC5Ed51CFuyFnl3nK+gD0M9X6A=;
+        b=jUcez77vGOxll91oMTJgrsgL/43L+fXpHbXMt2nXXRcnNdZX6or4swAlYGmDujYbr6
+         63p9yhQ+oNHQSDcteYTxEhqEeaHn7Xo9Wl/wnQCz+VhdjxRhjpXRvS0QSG8sj0GfAorX
+         y+mqAchoAukp5rHxB23LfZaBqPKEm78T8bLukqKaptfUKSA49MVDNf5y1kX6ssj/nNYT
+         kHPD5sHJTKR9qQLL3yE31JwyZAGdivoe20u6YwCyvKTimoh/yiUDm11ikcC3466QRoJc
+         aY9c4Z/KHKfCm4Xa/z1jrGo16WIAxZxx3Ippi3iRGOuDtGe9+GF+FNtFnsOdiwRiFrF7
+         n9JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iHotHzEjU1qzj9BJulC5Ed51CFuyFnl3nK+gD0M9X6A=;
+        b=tLK2bfmnASL88QbJtNaYhkhYnzV7pIvhqoy98LnFQQviQAZidpXA9qMsAugpKJiJkU
+         ddbkV1pztQiDe6gG5zA79fwipCMQq+hBpeEoCCkx8JcRTR+Pj3qSFdA+oeG+xHWGi7yn
+         zxKFSLSCY+crG8fb3wcJb4LDc8OT5W1KczfL/nyD46fq/EhtPGoYBkRYKpcYSnkUpp8H
+         2+lZp44fEOSn+eJfKEz5M8xl4M5XZLal5Qhi07N05GKFitANeBdJbBNP4xCa3r2/giBD
+         LIxRmuvMeSS09s/RmT2oa3pO84Ao6oB4S2MVEQF4h0amzTHXKssDTWew9H037X6C+wQc
+         xapQ==
+X-Gm-Message-State: APjAAAVpdghQDtEtN2ZgHY77Zqotmbk/LpZeMLK2AAWF+IMtGjYFXgH+
+        m2WLZlJ7O8oG3KSeaSQMJdN3m1pLGrsYqaFaQQGdJA==
+X-Google-Smtp-Source: APXvYqz8gnBbW3N2iTbXKKbUef4OXpN9FLTfdsRvsJgLww+eEHbkwa4onFJvPVzOpUGkS7lL88WDSQudZtH65dzwQOE=
+X-Received: by 2002:a2e:9703:: with SMTP id r3mr191509lji.88.1554304519634;
+ Wed, 03 Apr 2019 08:15:19 -0700 (PDT)
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B020F.5CA4CDD1.001E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+References: <20190403072318.31507-1-kraxel@redhat.com> <85ba308177f4e9ddee336d5110cb6df7a447cebf.camel@redhat.com>
+In-Reply-To: <85ba308177f4e9ddee336d5110cb6df7a447cebf.camel@redhat.com>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Wed, 3 Apr 2019 16:15:08 +0100
+Message-ID: <CAPj87rOE2K9nxV2p+KrMTDnijdKpmNP8BGSUJyK9YtFueJpkqw@mail.gmail.com>
+Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
+To:     Adam Jackson <ajax@redhat.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Dave Airlie <airlied@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
+        <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+On Wed, 3 Apr 2019 at 16:12, Adam Jackson <ajax@redhat.com> wrote:
+> On Wed, 2019-04-03 at 09:23 +0200, Gerd Hoffmann wrote:
+> >  - Only DRM_FORMAT_RGB565 (depth 16) is supported.  The old driver does
+> >    that too by default.  There was a module parameter which enables 24/32
+> >    bpp support and disables higher resolutions (due to cirrus hardware
+> >    constrains).  That parameter wasn't reimplemented.
+>
+> One slightly annoying aspect of this (well, initially of the patch to
+> clamp the default to 16bpp, but this too) is that we only have a way to
+> ask the driver which format it prefers, not which ones it supports at
+> all. For X's modesetting driver (and yes some of this is because X is
+> awful) this creates the following failure mode:
+>
+> 1: user sets up xorg.conf for depth 24
+> 2: user upgrades kernel, reboots
+> 3: X driver detects that depth 16 is preferred, but
+> 4: X core respects user's xorg.conf and tries depth 24, which
+> 5: throws -EINVAL and X won't start.
+>
+> Possibly X should work around this by transparently setting up a shadow
+> framebuffer at the user's requested depth. The problem there is, if 565
+> is preferred but 8888 works, you're adding a format-conversion blit in
+> the middle for no reason. If I could ask the kernel for the entire list
+> of supported formats, I could only set up the shadow if it was
+> necessary.
 
-> On 03/04/2019 16:52:45+0200, Flavio Suligoi wrote:
-> > The pcf2127 has an automatic battery-low detection function.
-> >
-> > In case of battery-low event, an interrupt generation through
-> > the pin INTn (active low) can be enabled, setting the flag BLIE
-> > in the register Control_3.
-> >
-> > This function is activated by the "battery-low-hw-alarm" DT property.
-> >
-> > Example of use for an NXP i.MX7D board:
-> >
-> > &i2c3 {
-> > 	clock-frequency = <100000>;
-> > 	pinctrl-names = "default";
-> > 	pinctrl-0 = <&pinctrl_i2c3>;
-> > 	status = "okay";
-> >
-> > 	pcf2127@51 {
-> > 		compatible = "nxp,pcf2127";
-> > 		reg = <0x51>;
-> > 		battery-low-hw-alarm;
-> > 		status = "okay";
-> > 	};
-> > };
-> >
-> 
-> So I'm curious, how do you then use that signal? I have a (not yet sent)
-> series adding alarm support for the pcf2127. The issue having BLIE is
-> that then this will prevent the alarm to work properly.
-> 
-> So my guess is that you have nINT connected to an LED or something that
-> the user can see?
-> 
+There's already a list of supported formats for each DRM plane, which
+you can get via drmModeGetPlane (being careful to enable universal
+planes so you can discover the primary plane). The same information is
+present in the 'IN_FORMATS' property, which is more difficult to parse
+but also tells you about modifiers.
 
-I'm working on our custom embedded board with an NXP i.MX7D,
-developed here, in Asem (www.asem.it).
-The nINT pin is connected to a GPIO of the MX7 and then
-used by an applicative sw, to generate an alarm for the user.
+modesetting already pulls all this out (at least in the atomic path)
+so we can reason about acceptable modifiers.
 
-> > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> > ---
-> >  drivers/rtc/rtc-pcf2127.c | 33 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >
-> > diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-> > index 7cb786d..e3805c8 100644
-> > --- a/drivers/rtc/rtc-pcf2127.c
-> > +++ b/drivers/rtc/rtc-pcf2127.c
-> > @@ -228,6 +228,10 @@ static int pcf2127_probe(struct device *dev, struct
-> regmap *regmap,
-> >  			const char *name, bool has_nvmem)
-> >  {
-> >  	struct pcf2127 *pcf2127;
-> > +	struct device_node *np;
-> > +	struct i2c_client *client = to_i2c_client(dev);
-> > +	unsigned char buf[2];
-> > +	int err;
-> >  	int ret = 0;
-> >
-> >  	dev_dbg(dev, "%s\n", __func__);
-> > @@ -245,6 +249,35 @@ static int pcf2127_probe(struct device *dev, struct
-> regmap *regmap,
-> >  	if (IS_ERR(pcf2127->rtc))
-> >  		return PTR_ERR(pcf2127->rtc);
-> >
-> > +	/*
-> > +	 * The pcf2127 has an automatic battery-low detection function.
-> > +	 *
-> > +	 * In case of battery-low event, an interrupt generation through
-> > +	 * the pin INTn (active low) can be enabled, setting the flag BLIE
-> > +	 * in the register Control_3.
-> > +	 */
-> > +	np = of_node_get(dev->of_node);
-> > +	if (!np) {
-> > +		dev_err(dev, "failed to find the RTC pcf2127 node\n");
-> > +		return -ENOENT;
-> > +	}
-> > +	if (of_get_property(np, "battery-low-hw-alarm", NULL)) {
-> > +		dev_info(dev, "enable battery-low hw alarm on INTn pin\n");
-> > +
-> > +		/*
-> > +		 * Set BLIE bit in register Control_3 (override is possible
-> > +		 * because this register is fully zero after reset)
-> > +		 */
-> > +		buf[0] = PCF2127_REG_CTRL3;
-> > +		buf[1] = 0x01;
-> > +		/* write register's data */
-> > +		err = i2c_master_send(client, buf, 2);
-> 
-> This has to use regmap_update_bits because this also has to work on spi.
-> (I don't know where you get the client pointer from anyway).
-> 
-> > +		if (err != 2) {
-> > +			dev_err(dev, "%s: err=%d", __func__, err);
-> > +			return -EIO;
-> > +		}
-> > +	}
-> > +
-> >  	if (has_nvmem) {
-> >  		struct nvmem_config nvmem_cfg = {
-> >  			.priv = pcf2127,
-> > --
-> > 2.7.4
-> >
-> 
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-Flavio Suligoi
-
+Cheers,
+Daniel
