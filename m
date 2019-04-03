@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEC5C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A6AC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EF32075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D0720882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzANNnfH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaIJkXaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfDCEj5 (ORCPT
+        id S1728479AbfDCElh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:39:57 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33987 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfDCEj4 (ORCPT
+        Wed, 3 Apr 2019 00:41:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44190 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfDCElh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:39:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v12so7669280pgq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:39:56 -0700 (PDT)
+        Wed, 3 Apr 2019 00:41:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i2so7644587pgj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:41:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
         bh=GujRPZuMwtaEM7TH+99GzvcY8K4c6i03TTC4G7ZR+GM=;
-        b=IzANNnfHUSZYgVwaBi5R4l7RmEU6g12r9FbV34LwlynJItiErDZncxtbk1xgeVqw86
-         lILQfUrV2Bmmr+l8/7LAwRss1EW7joREXIWghV+/521SJdZ8jiDKjRaY0XLH4DCz0rpn
-         hxp/1haeojd9yN+Td4NGSqmbxYpr3TfSbiT+LSDfQQ7s3vAa18DBSuopfpb2P5Zi5nUH
-         xewvqV6QG3JxOdmt/dBXp6zrH5m3Mnu7G6Ht0antScOHK/0dROKf2cJnoBouhuE3g+d+
-         hMsH4TOX4xCMlWwBYspf8oUmXgp5OYeD+wfoPIzGLiM0M6xaQJrAU2cQKj44aWmxEkMq
-         7Zkw==
+        b=MaIJkXaRgU7Kpq+tAhc9kBZBS90TiQUv8Vy1/7y6oZfz87PraiP1oxZrsKAwpiVi1a
+         fz8UYNgpPMyCbsRdqiei40Sh+w/klzkjHy4BsQ9n/mujQRvV3j1d6nggu86An0iO6rkE
+         xwMGoJ8ZgYFnzUWx8aay/OI4ABxEO4fpBGaVZ5MjD94286IwtjC3Fm1L1avaJLxSusGS
+         Ep3/KmXqge9l2caZHnv/AZRGBesmqWkeGAMvD085bKlyWFu6iIENVZ+H5shMVEarMaGG
+         2frQpBbn45JPcBcggLsudfX/xBaO00mfgQk9BbPIcTr2BiSJgyR3HZ+jMGM8+kUhYy+J
+         r83w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
         bh=GujRPZuMwtaEM7TH+99GzvcY8K4c6i03TTC4G7ZR+GM=;
-        b=sQ724TG9h1q4Gn5SKZcRu0i9XpiKnM4X2qpl8/rlftlXfSBnuIGFgLy+hdY8X8Fdxi
-         +9Bh6hWYgDoTWA00WHymwmXuPHHeHDwn9pPwWxjGGqS3MT58KRg9z9cv4OfAM4PTMp+z
-         KmyZeS4klMD7GSHzwgyocC09U60OTrZfp5WzVrAnC4TxU0brSDLS0fn/f4FUO0EgfU8O
-         4H9JtIAo9f2I/YQthFMoL3rLs9h4+6RjMzuI38lnWG5I4GdyqSu9225RWKq6xb7Dw673
-         6bxBteNsGbjioykvuuDfhA949C+L9Mled20xXOYPqO+GYMKoq3p3eMopoXGbRjYNA9RV
-         4wDg==
-X-Gm-Message-State: APjAAAURI7ulZ2W4ny6M290ckfOwZ+UN51dQn2A0+zXGrh4o21fR30Cm
-        Gl6LAN5Ayo7Xg98pdU5uUTs=
-X-Google-Smtp-Source: APXvYqwnjhNjDDCzQ+bcmGpgLalobIsp4MtJKO1b0Yvixyw4cDJor7DunTwVUiN5I4WOAWYOImx9Zg==
-X-Received: by 2002:a63:5466:: with SMTP id e38mr43196834pgm.340.1554266395210;
-        Tue, 02 Apr 2019 21:39:55 -0700 (PDT)
+        b=pe6E99k2YJKeLYtJVTJIkPYcbgS4pXzhMbTfCOl9MNVhWYU5tKG25Q/AF7YmxHyMjF
+         DCzhQgAuWMdwCd/2DbEBJzdrBC+KTdYpex3taCyGmMHpKs884R1ew3iQrW44DtN4CLC4
+         SQCh6BTxn1ZwYHvFkCh7iPyL3EBxX/h56yfyxCrtA0/cbtGN74CiMQiI3yps5cbdwZJ8
+         2w48LwBTrywtUXAo37cQ+7g0TZV85v93F3W47jsAN940rYL6+wsxHBggt8/offSdWmKN
+         RA3PsuaAPfdAzGdHNNmI269XD6A3IuLuuWRZhqtu+8oGO1N3n8zXABZ7DcNO8nxEpznG
+         OBBA==
+X-Gm-Message-State: APjAAAWmSt1BnZ303+eP4Vzm17enTXaAj4mBZj4/KNn7aWI5V9Qk7KdS
+        sBJdMMcQ92Bo7+LlC6b8D7Q=
+X-Google-Smtp-Source: APXvYqyvf1bbeeFiCXRhFzyRqxySZa1o0GEZeeigWxAk58c4g56CJmGsYcN0xCJHAVTSPk0NB6s9zg==
+X-Received: by 2002:a63:4101:: with SMTP id o1mr17759469pga.17.1554266496094;
+        Tue, 02 Apr 2019 21:41:36 -0700 (PDT)
 Received: from localhost (c-71-202-79-220.hsd1.ca.comcast.net. [71.202.79.220])
-        by smtp.gmail.com with ESMTPSA id v15sm19531699pff.105.2019.04.02.21.39.54
+        by smtp.gmail.com with ESMTPSA id d129sm20945461pfa.142.2019.04.02.21.41.35
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 02 Apr 2019 21:39:54 -0700 (PDT)
+        Tue, 02 Apr 2019 21:41:35 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 X-Google-Original-From: Yury Norov <ynorov@marvell.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -67,8 +67,8 @@ To:     Andrew Morton <akpm@linux-foundation.org>,
 Cc:     Yury Norov <ynorov@marvell.com>, Yury Norov <yury.norov@gmail.com>,
         linux-kernel@vger.kernel.org
 Subject: [PATCH v3 0/5] lib: rework bitmap_parselist and tests
-Date:   Wed,  3 Apr 2019 07:39:00 +0300
-Message-Id: <20190403043905.15785-1-ynorov@marvell.com>
+Date:   Wed,  3 Apr 2019 07:40:27 +0300
+Message-Id: <20190403044032.15965-1-ynorov@marvell.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
