@@ -3,131 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0A2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91239C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A96206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F29E206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 10:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfDCKdl (ORCPT
+        id S1726582AbfDCKeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 06:33:41 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37038 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfDCKdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 06:33:38 -0400
+        Wed, 3 Apr 2019 06:34:16 -0400
+Received: from foss.arm.com ([217.140.101.70]:37054 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726199AbfDCKeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 06:34:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB9551596;
-        Wed,  3 Apr 2019 03:33:37 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 652B080D;
+        Wed,  3 Apr 2019 03:34:15 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 785CC3F59C;
-        Wed,  3 Apr 2019 03:33:36 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 31AE73F59C;
+        Wed,  3 Apr 2019 03:34:14 -0700 (PDT)
 From:   Will Deacon <will.deacon@arm.com>
 To:     gregkh@linuxfoundation.org
 Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
         sashal@kernel.org, Will Deacon <will.deacon@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.9 BACKPORT 2/2] arm64: debug: Ensure debug handlers check triggering exception level
-Date:   Wed,  3 Apr 2019 11:33:26 +0100
-Message-Id: <20190403103326.29161-2-will.deacon@arm.com>
+Subject: [PATCH 4.19 BACKPORT] arm64: debug: Don't propagate UNKNOWN FAR into si_code for debug signals
+Date:   Wed,  3 Apr 2019 11:34:08 +0100
+Message-Id: <20190403103408.29209-1-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190403103326.29161-1-will.deacon@arm.com>
-References: <20190403103326.29161-1-will.deacon@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 6bd288569b50bc89fa5513031086746968f585cb upstream.
+Commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
 
-Debug exception handlers may be called for exceptions generated both by
-user and kernel code. In many cases, this is checked explicitly, but
-in other cases things either happen to work by happy accident or they
-go slightly wrong. For example, executing 'brk #4' from userspace will
-enter the kprobes code and be ignored, but the instruction will be
-retried forever in userspace instead of delivering a SIGTRAP.
+FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
+taking a hardware watchpoint. Unfortunately, if a debug handler returns
+a non-zero value, then we will propagate the UNKNOWN FAR value to
+userspace via the si_addr field of the SIGTRAP siginfo_t.
 
-Fix this issue in the most stable-friendly fashion by simply adding
-explicit checks of the triggering exception level to all of our debug
-exception handlers.
+Instead, let's set si_addr to take on the PC of the faulting instruction,
+which we have available in the current pt_regs.
 
-Cc: <stable@vger.kernel.org> # 4.9.y
+Cc: <stable@vger.kernel.org> # 4.19.y
 Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/kernel/kgdb.c           | 15 ++++++++++++---
- arch/arm64/kernel/probes/kprobes.c |  6 ++++++
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ arch/arm64/mm/fault.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index e017a9493b92..72a660a74ff9 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -231,24 +231,33 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
- 
- static int kgdb_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
--	return 0;
-+	return DBG_HOOK_HANDLED;
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 50b30ff30de4..a4c134677285 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -827,11 +827,12 @@ void __init hook_debug_fault_code(int nr,
+ 	debug_fault_info[nr].name	= name;
  }
- NOKPROBE_SYMBOL(kgdb_brk_fn)
  
- static int kgdb_compiled_brk_fn(struct pt_regs *regs, unsigned int esr)
+-asmlinkage int __exception do_debug_exception(unsigned long addr,
++asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 					      unsigned int esr,
+ 					      struct pt_regs *regs)
  {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	compiled_break = 1;
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
+ 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
++	unsigned long pc = instruction_pointer(regs);
+ 	int rv;
  
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_compiled_brk_fn);
+ 	/*
+@@ -841,10 +842,10 @@ asmlinkage int __exception do_debug_exception(unsigned long addr,
+ 	if (interrupts_enabled(regs))
+ 		trace_hardirqs_off();
  
- static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_step_brk_fn);
+-	if (user_mode(regs) && instruction_pointer(regs) > TASK_SIZE)
++	if (user_mode(regs) && pc > TASK_SIZE)
+ 		arm64_apply_bp_hardening();
  
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index d2b1b624ddc3..17f647103ed7 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -450,6 +450,9 @@ kprobe_single_step_handler(struct pt_regs *regs, unsigned int esr)
- 	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
- 	int retval;
- 
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	/* return error if this is not our step */
- 	retval = kprobe_ss_hit(kcb, instruction_pointer(regs));
- 
-@@ -466,6 +469,9 @@ kprobe_single_step_handler(struct pt_regs *regs, unsigned int esr)
- int __kprobes
- kprobe_breakpoint_handler(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kprobe_handler(regs);
- 	return DBG_HOOK_HANDLED;
- }
+-	if (!inf->fn(addr, esr, regs)) {
++	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
+ 		rv = 1;
+ 	} else {
+ 		struct siginfo info;
+@@ -853,7 +854,7 @@ asmlinkage int __exception do_debug_exception(unsigned long addr,
+ 		info.si_signo = inf->sig;
+ 		info.si_errno = 0;
+ 		info.si_code  = inf->code;
+-		info.si_addr  = (void __user *)addr;
++		info.si_addr  = (void __user *)pc;
+ 		arm64_notify_die(inf->name, regs, &info, esr);
+ 		rv = 0;
+ 	}
 -- 
 2.11.0
 
