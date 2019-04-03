@@ -3,105 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB8EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF58C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 073252084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594B32084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfDCNUO (ORCPT
+        id S1726495AbfDCNVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:20:14 -0400
-Received: from ivanoab6.miniserver.com ([5.153.251.140]:54744 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbfDCNUO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:20:14 -0400
-Received: from [192.168.17.6] (helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1hBfoF-00074u-33; Wed, 03 Apr 2019 13:20:08 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.89)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1hBfo8-0003sm-9t; Wed, 03 Apr 2019 14:20:06 +0100
-Subject: Re: [RESEND PATCH 0/4] um: build and irq fixes
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-um@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190403083902.3975-1-brgl@bgdev.pl>
- <CAMRc=MdBVwYiHLPRAJFVaS2OKx-006+P8R8VEfe+x6W_3uq37w@mail.gmail.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <0d83eba7-f71c-53e0-57ef-29aacbef64f1@cambridgegreys.com>
-Date:   Wed, 3 Apr 2019 14:20:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Apr 2019 09:21:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:50537 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbfDCNVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:21:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44Z6Cs5jdRz9sRW;
+        Thu,  4 Apr 2019 00:21:13 +1100 (AEDT)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Claudio Carvalho <cclaudio@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: Re: [PATCH 0/4] Enabling secure boot on PowerNV systems
+In-Reply-To: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+References: <20190402181505.25037-1-cclaudio@linux.ibm.com>
+Date:   Thu, 04 Apr 2019 00:21:12 +1100
+Message-ID: <87r2aj1ayf.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=MdBVwYiHLPRAJFVaS2OKx-006+P8R8VEfe+x6W_3uq37w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Claudio,
 
+Thanks for posting this.
 
-On 03/04/2019 09:39, Bartosz Golaszewski wrote:
-> śr., 3 kwi 2019 o 10:39 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
->>
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> I've previously sent these patches separately. I still don't see them
->> in next and I don't know what the policy is for picking up uml patches
->> but I thought I'd resend them rebased together on top of v5.1-rc3.
->>
-> 
+Claudio Carvalho <cclaudio@linux.ibm.com> writes:
+> This patch set is part of a series that implements secure boot on
+> PowerNV systems.
+>
+> In order to verify the OS kernel on PowerNV, secure boot requires X.509
+> certificates trusted by the platform, the secure boot modes, and several
+> other pieces of information. These are stored in secure variables
+> controlled by OPAL, also known as OPAL secure variables.
+>
+> This patch set adds the following features:
+>
+> 1. Enable efivarfs by selecting CONFIG_EFI in the CONFIG_OPAL_SECVAR
+>    introduced in this patch set. With CONFIG_EFIVAR_FS, userspace tools can
+>    be used to manage the secure variables.
+> 2. Add support for OPAL secure variables by overwriting the EFI hooks
+>    (get_variable, get_next_variable, set_variable and query_variable_info)
+>    with OPAL call wrappers. There is probably a better way to add this
+>    support, for example, we are investigating if we could register the
+>    efivar_operations rather than overwriting the EFI hooks. In this patch
+>    set, CONFIG_OPAL_SECVAR selects CONFIG_EFI. If, instead, we registered
+>    efivar_operations, CONFIG_EFIVAR_FS would need to depend on
+>    CONFIG_EFI|| CONFIG_OPAL_SECVAR. Comments or suggestions on the
+>    preferred technique would be greatly appreciated.
 
+I am *very* reluctant to start selecting CONFIG_EFI on powerpc.
 
-I test and ack stuff to the extent I can (especially the areas which I 
-have worked on recently). Richard has the final say for what goes in on 
-the next merge and he does it based on his own and my testing and/or 
-markings in patchwork.
+Simply because we don't actually have EFI, and I worry we're going to
+both break assumptions in the EFI code as well as impose requirements on
+the powerpc code that aren't really necessary.
 
+So I'd definitely prefer we go the route of enabling efivarfs with an
+alternate backend.
 
-> And of course I forgot to pick up acks from Anton...
+Better still would be a generic secure variable interface as Matt
+suggests, if the userspace tools can be relatively easily adapted to use
+that interface.
 
-Indeed - I have acked some of these :)
-
-> 
->> Bartosz Golaszewski (4):
->>    um: remove unused variable
->>    um: remove uses of variable length arrays
->>    um: define set_pte_at() as a static inline function, not a macro
->>    um: irq: don't set the chip for all irqs
->>
->>   arch/um/include/asm/pgtable.h |  7 ++++++-
->>   arch/um/kernel/irq.c          |  2 +-
->>   arch/um/kernel/skas/uaccess.c |  1 -
->>   arch/um/os-Linux/umid.c       | 36 ++++++++++++++++++++++++++---------
->>   4 files changed, 34 insertions(+), 12 deletions(-)
->>
->> --
->> 2.21.0
->>
-> 
-> _______________________________________________
-> linux-um mailing list
-> linux-um@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-um
-> 
-
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+cheers
