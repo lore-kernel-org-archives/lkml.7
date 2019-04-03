@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4BDC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81432C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8EAF214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389FE2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:42:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfDCQmb (ORCPT
+        id S1728255AbfDCQmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:42:31 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41945 "EHLO
+        Wed, 3 Apr 2019 12:42:36 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41998 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbfDCQm0 (ORCPT
+        with ESMTP id S1728012AbfDCQme (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:42:26 -0400
+        Wed, 3 Apr 2019 12:42:34 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hBixw-0004GO-MG; Wed, 03 Apr 2019 18:42:20 +0200
+        id 1hBiy2-0004GO-4u; Wed, 03 Apr 2019 18:42:26 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -33,135 +33,211 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 15/27] x86/fpu: Eager switch PKRU state
-Date:   Wed,  3 Apr 2019 18:41:44 +0200
-Message-Id: <20190403164156.19645-16-bigeasy@linutronix.de>
+Subject: [PATCH 21/27] x86/fpu: Let __fpu__restore_sig() restore the !32bit+fxsr frame from kernel memory
+Date:   Wed,  3 Apr 2019 18:41:50 +0200
+Message-Id: <20190403164156.19645-22-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
 References: <20190403164156.19645-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rik van Riel <riel@surriel.com>
+The !32bit+fxsr case loads the new state from user memory. In case we
+restore the FPU state on return to userland we can't do this. It would
+be required to disable preemption in order to avoid a context switch
+which would set TIF_NEED_FPU_LOAD. If this happens before the "restore"
+operation then the loaded registers would become volatile.
 
-While most of a task's FPU state is only needed in user space, the
-protection keys need to be in place immediately after a context switch.
+Disabling preemption while accessing user memory requires to disable the
+pagefault handler. An error during XRSTOR would then mean that either a
+page fault occured (and we have to retry with enabled page fault
+handler) or a #GP occured because the xstate is bogus (after all the
+sig-handler can modify it).
 
-The reason is that any access to userspace memory while running in
-kernel mode also need to abide by the memory permissions specified in
-the protection keys.
+In order to avoid that mess, copy the FPU state from userland, validate
+it and then load it. The copy_users_…() helper are basically the old
+helper except that they operate on kernel memory and the fault handler
+just sets the error value and the caller handles it.
 
-The "eager switch" is a preparation for loading the FPU state on return
-to userland. Instead of decoupling PKRU state from xstate I update PKRU
-within xstate on write operations by the kernel.
+copy_user_to_fpregs_zeroing() and its helpers remain and will be used
+later for a fastpath optimisation.
 
-The read/write_pkru() is moved to another header file so it can easily
-accessed from pgtable.h and fpu/internal.h.
-
-For user tasks we should always get the PKRU from the xsave area and it
-should not change anything because the PKRU value was loaded as part of
-FPU restore.
-For kernel threads we now will have the default "init_pkru_value"
-written. Before this commit the kernel thread would end up with a
-random value which it inherited from the previous user task.
-
-Signed-off-by: Rik van Riel <riel@surriel.com>
-[bigeasy: save pkru to xstate, no cache, don't use __raw_xsave_addr()]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/x86/include/asm/fpu/internal.h | 24 ++++++++++++++++++++++--
- arch/x86/include/asm/fpu/xstate.h   |  1 +
- arch/x86/include/asm/pgtable.h      |  6 ++++++
- arch/x86/mm/pkeys.c                 |  1 -
- 4 files changed, 29 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/fpu/internal.h | 43 ++++++++++++++++++++
+ arch/x86/kernel/fpu/signal.c        | 62 +++++++++++++++++++++++------
+ 2 files changed, 92 insertions(+), 13 deletions(-)
 
 diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 237ff8dc8559b..82ff84a4c4ab7 100644
+index b12874b7cf0cf..037472d0be140 100644
 --- a/arch/x86/include/asm/fpu/internal.h
 +++ b/arch/x86/include/asm/fpu/internal.h
-@@ -14,6 +14,7 @@
- #include <linux/compat.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-+#include <linux/mm.h>
+@@ -121,6 +121,21 @@ extern void fpstate_sanitize_xstate(struct fpu *fpu);
+ 	err;								\
+ })
  
- #include <asm/user.h>
- #include <asm/fpu/api.h>
-@@ -531,8 +532,27 @@ switch_fpu_prepare(struct fpu *old_fpu, int cpu)
-  */
- static inline void switch_fpu_finish(struct fpu *new_fpu, int cpu)
- {
--	if (static_cpu_has(X86_FEATURE_FPU))
--		__fpregs_load_activate(new_fpu, cpu);
-+	struct pkru_state *pk;
-+	u32 pkru_val = init_pkru_value;
++#define kernel_insn_err(insn, output, input...)				\
++({									\
++	int err;							\
++	asm volatile("1:" #insn "\n\t"					\
++		     "2:\n"						\
++		     ".section .fixup,\"ax\"\n"				\
++		     "3:  movl $-1,%[err]\n"				\
++		     "    jmp  2b\n"					\
++		     ".previous\n"					\
++		     _ASM_EXTABLE(1b, 3b)				\
++		     : [err] "=r" (err), output				\
++		     : "0"(0), input);					\
++	err;								\
++})
 +
-+	if (!static_cpu_has(X86_FEATURE_FPU))
-+		return;
-+
-+	__fpregs_load_activate(new_fpu, cpu);
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
-+		return;
-+
-+	/*
-+	 * PKRU state is switched eagerly because it needs to be valid before we
-+	 * return to userland e.g. for a copy_to_user() operation.
-+	 */
-+	if (current->mm) {
-+		pk = get_xsave_addr(&new_fpu->state.xsave, XFEATURE_PKRU);
-+		if (pk)
-+			pkru_val = pk->pkru;
-+	}
-+	__write_pkru(pkru_val);
+ #define kernel_insn(insn, output, input...)				\
+ 	asm volatile("1:" #insn "\n\t"					\
+ 		     "2:\n"						\
+@@ -149,6 +164,14 @@ static inline void copy_kernel_to_fxregs(struct fxregs_state *fx)
+ 		kernel_insn(fxrstorq %[fx], "=m" (*fx), [fx] "m" (*fx));
  }
  
- /*
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index fbe41f808e5d8..4e18a837223ff 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -5,6 +5,7 @@
- #include <linux/types.h>
- #include <asm/processor.h>
- #include <linux/uaccess.h>
-+#include <asm/user.h>
- 
- /* Bit 63 of XCR0 is reserved for future expansion */
- #define XFEATURE_MASK_EXTEND	(~(XFEATURE_MASK_FPSSE | (1ULL << 63)))
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 64333e5222cd9..1df90feeea5c6 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1355,6 +1355,12 @@ static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
- #define PKRU_WD_BIT 0x2
- #define PKRU_BITS_PER_PKEY 2
- 
-+#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-+extern u32 init_pkru_value;
-+#else
-+#define init_pkru_value	0
-+#endif
++static inline int copy_kernel_to_fxregs_err(struct fxregs_state *fx)
++{
++	if (IS_ENABLED(CONFIG_X86_32))
++		return kernel_insn_err(fxrstor %[fx], "=m" (*fx), [fx] "m" (*fx));
++	else
++		return kernel_insn_err(fxrstorq %[fx], "=m" (*fx), [fx] "m" (*fx));
++}
 +
- static inline bool __pkru_allows_read(u32 pkru, u16 pkey)
+ static inline int copy_user_to_fxregs(struct fxregs_state __user *fx)
  {
- 	int pkru_pkey_bits = pkey * PKRU_BITS_PER_PKEY;
-diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
-index 50f65fc1b9a3f..2ecbf4155f98f 100644
---- a/arch/x86/mm/pkeys.c
-+++ b/arch/x86/mm/pkeys.c
-@@ -126,7 +126,6 @@ int __arch_override_mprotect_pkey(struct vm_area_struct *vma, int prot, int pkey
-  * in the process's lifetime will not accidentally get access
-  * to data which is pkey-protected later on.
-  */
--static
- u32 init_pkru_value = PKRU_AD_KEY( 1) | PKRU_AD_KEY( 2) | PKRU_AD_KEY( 3) |
- 		      PKRU_AD_KEY( 4) | PKRU_AD_KEY( 5) | PKRU_AD_KEY( 6) |
- 		      PKRU_AD_KEY( 7) | PKRU_AD_KEY( 8) | PKRU_AD_KEY( 9) |
+ 	if (IS_ENABLED(CONFIG_X86_32))
+@@ -162,6 +185,11 @@ static inline void copy_kernel_to_fregs(struct fregs_state *fx)
+ 	kernel_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+ }
+ 
++static inline int copy_kernel_to_fregs_err(struct fregs_state *fx)
++{
++	return kernel_insn_err(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
++}
++
+ static inline int copy_user_to_fregs(struct fregs_state __user *fx)
+ {
+ 	return user_insn(frstor %[fx], "=m" (*fx), [fx] "m" (*fx));
+@@ -361,6 +389,21 @@ static inline int copy_user_to_xregs(struct xregs_state __user *buf, u64 mask)
+ 	return err;
+ }
+ 
++/*
++ * Restore xstate from kernel space xsave area, return an error code instead an
++ * exception.
++ */
++static inline int copy_kernel_to_xregs_err(struct xregs_state *xstate, u64 mask)
++{
++	u32 lmask = mask;
++	u32 hmask = mask >> 32;
++	int err;
++
++	XSTATE_OP(XRSTOR, xstate, lmask, hmask, err);
++
++	return err;
++}
++
+ /*
+  * These must be called with preempt disabled. Returns
+  * 'true' if the FPU state is still intact and we can
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index f733425c66d8d..8ee54a1958308 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -234,7 +234,8 @@ sanitize_restored_xstate(union fpregs_state *state,
+ 		 */
+ 		xsave->i387.mxcsr &= mxcsr_feature_mask;
+ 
+-		convert_to_fxsr(&state->fxsave, ia32_env);
++		if (ia32_env)
++			convert_to_fxsr(&state->fxsave, ia32_env);
+ 	}
+ }
+ 
+@@ -337,28 +338,63 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		kfree(tmp);
+ 		return err;
+ 	} else {
++		union fpregs_state *state;
++		void *tmp;
+ 		int ret;
+ 
++		tmp = kzalloc(sizeof(*state) + fpu_kernel_xstate_size + 64, GFP_KERNEL);
++		if (!tmp)
++			return -ENOMEM;
++		state = PTR_ALIGN(tmp, 64);
++
+ 		/*
+ 		 * For 64-bit frames and 32-bit fsave frames, restore the user
+ 		 * state to the registers directly (with exceptions handled).
+ 		 */
+-		if (use_xsave()) {
+-			if ((unsigned long)buf_fx % 64 || fx_only) {
++		if ((unsigned long)buf_fx % 64)
++			fx_only = 1;
++
++		if (use_xsave() && !fx_only) {
++			u64 init_bv = xfeatures_mask & ~xfeatures;
++
++			if (using_compacted_format()) {
++				ret = copy_user_to_xstate(&state->xsave, buf_fx);
++			} else {
++				ret = __copy_from_user(&state->xsave, buf_fx, state_size);
++
++				if (!ret && state_size > offsetof(struct xregs_state, header))
++					ret = validate_xstate_header(&state->xsave.header);
++			}
++			if (ret)
++				goto err_out;
++			sanitize_restored_xstate(state, NULL, xfeatures,
++						 fx_only);
++
++			if (unlikely(init_bv))
++				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
++			ret = copy_kernel_to_xregs_err(&state->xsave, xfeatures);
++
++		} else if (use_fxsr()) {
++			ret = __copy_from_user(&state->fxsave, buf_fx, state_size);
++			if (ret)
++				goto err_out;
++
++			if (use_xsave()) {
+ 				u64 init_bv = xfeatures_mask & ~XFEATURE_MASK_FPSSE;
+ 				copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-				ret = copy_user_to_fxregs(buf_fx);
+-			} else {
+-				u64 init_bv = xfeatures_mask & ~xfeatures;
+-				if (unlikely(init_bv))
+-					copy_kernel_to_xregs(&init_fpstate.xsave, init_bv);
+-				ret = copy_user_to_xregs(buf_fx, xfeatures);
+ 			}
+-		} else if (use_fxsr()) {
+-			ret = copy_user_to_fxregs(buf_fx);
+-		} else
+-			ret = copy_user_to_fregs(buf_fx);
++			state->fxsave.mxcsr &= mxcsr_feature_mask;
+ 
++			ret = copy_kernel_to_fxregs_err(&state->fxsave);
++		} else {
++			ret = __copy_from_user(&state->fsave, buf_fx, state_size);
++			if (ret)
++				goto err_out;
++			ret = copy_kernel_to_fregs_err(&state->fsave);
++		}
++
++err_out:
++		kfree(tmp);
+ 		if (ret) {
+ 			fpu__clear(fpu);
+ 			return -1;
 -- 
 2.20.1
 
