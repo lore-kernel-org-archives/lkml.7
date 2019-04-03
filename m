@@ -6,82 +6,75 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4E8C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D11C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256172075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF66B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfDCOWs (ORCPT
+        id S1726545AbfDCOXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:22:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47712 "EHLO
+        Wed, 3 Apr 2019 10:23:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51622 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726144AbfDCOWs (ORCPT
+        by vger.kernel.org with ESMTP id S1726269AbfDCOXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:22:48 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33EFBtV133797
-        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 10:22:47 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmwf53u7j-1
+        Wed, 3 Apr 2019 10:23:19 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33EFp6W136098
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 10:23:18 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmvh86rfu-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:22:46 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:23:15 -0400
 Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <walling@linux.ibm.com>;
-        Wed, 3 Apr 2019 15:22:46 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Wed, 3 Apr 2019 15:23:05 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 3 Apr 2019 15:22:42 +0100
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x33EMdHk60031212
+        Wed, 3 Apr 2019 15:23:03 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x33EN2TV59572270
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Apr 2019 14:22:39 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B11FB136051;
-        Wed,  3 Apr 2019 14:22:39 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DFD38136053;
-        Wed,  3 Apr 2019 14:22:38 +0000 (GMT)
-Received: from [9.56.58.47] (unknown [9.56.58.47])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  3 Apr 2019 14:22:38 +0000 (GMT)
-Subject: Re: [PATCH v3 1/2] s390/setup: diag318: remove bit check and refactor
- struct
-To:     Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Cc:     pbonzini@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com
-References: <20190402174636.15175-1-walling@linux.ibm.com>
- <20190402174636.15175-2-walling@linux.ibm.com>
- <599addd3-a4f8-d4e7-5898-dc45f52cd7a6@redhat.com>
- <20190403143333.2a3db681.cohuck@redhat.com>
-From:   Collin Walling <walling@linux.ibm.com>
-Date:   Wed, 3 Apr 2019 10:22:38 -0400
+        Wed, 3 Apr 2019 14:23:02 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1967EAE053;
+        Wed,  3 Apr 2019 14:23:02 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD565AE056;
+        Wed,  3 Apr 2019 14:23:01 +0000 (GMT)
+Received: from [9.145.9.70] (unknown [9.145.9.70])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Apr 2019 14:23:01 +0000 (GMT)
+Subject: Re: [PATCH v4 4/4] ocxl: Remove some unused exported symbols
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190320053448.2098-1-alastair@au1.ibm.com>
+ <20190325053456.14599-1-alastair@au1.ibm.com>
+ <20190325053456.14599-5-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Wed, 3 Apr 2019 16:23:01 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190403143333.2a3db681.cohuck@redhat.com>
+In-Reply-To: <20190325053456.14599-5-alastair@au1.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19040314-8235-0000-0000-00000E78E889
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010867; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01183759; UDB=6.00619764; IPR=6.00964510;
- MB=3.00026276; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-03 14:22:44
+x-cbid: 19040314-0008-0000-0000-000002D5D9C2
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040314-8236-0000-0000-00004502BD8A
-Message-Id: <bce6e8cf-6f45-7549-8ada-ba4f77059487@linux.ibm.com>
+x-cbparentid: 19040314-0009-0000-0000-00002241E26E
+Message-Id: <a26a2820-bac5-463f-78a3-45576a82882a@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_09:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904030097
@@ -90,101 +83,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/19 8:33 AM, Cornelia Huck wrote:
-> On Wed, 3 Apr 2019 14:03:21 +0200
-> David Hildenbrand <david@redhat.com> wrote:
-> 
->> On 02.04.19 19:46, Collin Walling wrote:
->>> Execution of DIAGNOSE 0x318 is fenced by checking an SCLP bit
->>> for the availability of hardware support for the instruction.
->>>
->>> In order to support this instruction for a KVM/QEMU guest, we
->>> would need to provide modifications to the SCLP Read SCP Info
->>> data, which will in turn reduce the maximum number of CPUs that
->>> may be provided to the guest. This issue introduces compatability
->>> and legacy concerns.
->>>
->>> Let's circumvent this issue by removing the bit check and blindly
->>> executing the instruction. An exception table rule is in place to
->>> catch the case where hardware does not support this instruction.
->>>
->>> While we're at it, let's condense the version code fields in the
->>> diag318_info struct until we can determine how it will be used.
->>>
->>> This modifies commit 4ad78b8651aacf26b3ab6d1e784952eb70469c43
->>>
->>> Signed-off-by: Collin Walling <walling@linux.ibm.com>
->>> ---
->>>   arch/s390/include/asm/diag.h |  6 ++----
->>>   arch/s390/kernel/setup.c     | 12 ++++++------
->>>   2 files changed, 8 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/arch/s390/include/asm/diag.h b/arch/s390/include/asm/diag.h
->>> index 19562be22b7e..215516284175 100644
->>> --- a/arch/s390/include/asm/diag.h
->>> +++ b/arch/s390/include/asm/diag.h
->>> @@ -298,10 +298,8 @@ struct diag26c_mac_resp {
->>>   union diag318_info {
->>>   	unsigned long val;
->>>   	struct {
->>> -		unsigned int cpnc : 8;
->>> -		unsigned int cpvc_linux : 24;
->>> -		unsigned char cpvc_distro[3];
->>> -		unsigned char zero;
->>> +		unsigned long cpnc : 8;
->>> +		unsigned long cpvc : 56;
-> 
-> That part looks reasonable (we don't have a proper convention yet, have
-> we?)
-> 
->>>   	};
->>>   };
->>>   
->>> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
->>> index 2c642af526ce..fe70201f8b5d 100644
->>> --- a/arch/s390/kernel/setup.c
->>> +++ b/arch/s390/kernel/setup.c
->>> @@ -1011,15 +1011,15 @@ static void __init setup_control_program_code(void)
->>>   {
->>>   	union diag318_info diag318_info = {
->>>   		.cpnc = CPNC_LINUX,
->>> -		.cpvc_linux = 0,
->>> -		.cpvc_distro = {0},
->>> +		.cpvc = 0,
->>>   	};
->>>   
->>> -	if (!sclp.has_diag318)
->>> -		return;
->>> -
->>>   	diag_stat_inc(DIAG_STAT_X318);
->>> -	asm volatile("diag %0,0,0x318\n" : : "d" (diag318_info.val));
->>> +	asm volatile(
->>> +		"	diag	%0,0,0x318\n"
->>> +		"0:	nopr	%%r7\n"
->>> +		EX_TABLE(0b,0b)
->>> +		: : "d" (diag318_info.val));
->>>   }
->>>   
->>>   /*
->>>    
->>
->> That smells like a nasty hack to not expose new features in QEMU and
->> deal with the issue of handling CPU limits. No, I don't like this.
->>
->> Fix QEMU, not the kernel.
->>
-> 
-> I agree. The compat handling is a bit annoying, but I don't think we
-> can get around it.
-> 
 
-Thanks for the feedback, everyone.
 
-The consensus here is to keep the bit check, so I'll throw that back in.
-I'll squeeze in a "clean-up" patch for the diag318_info struct in v4.
+Le 25/03/2019 à 06:34, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> Remove some unused exported symbols.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
 
-I'll see that QEMU 4.1 has a max cpu limit of at most 247 (one less than
-the current max). If anyone has a suggestion on a better limit
-(Christian mentioned 240), please let me know. Otherwise we can discuss
-that value in the next version.
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+
+
+>   drivers/misc/ocxl/config.c        |  4 +---
+>   drivers/misc/ocxl/ocxl_internal.h | 23 +++++++++++++++++++++++
+>   include/misc/ocxl.h               | 23 -----------------------
+>   3 files changed, 24 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+> index 4dc11897237d..5e65acb8e134 100644
+> --- a/drivers/misc/ocxl/config.c
+> +++ b/drivers/misc/ocxl/config.c
+> @@ -2,8 +2,8 @@
+>   // Copyright 2017 IBM Corp.
+>   #include <linux/pci.h>
+>   #include <asm/pnv-ocxl.h>
+> -#include <misc/ocxl.h>
+>   #include <misc/ocxl-config.h>
+> +#include "ocxl_internal.h"
+>   
+>   #define EXTRACT_BIT(val, bit) (!!(val & BIT(bit)))
+>   #define EXTRACT_BITS(val, s, e) ((val & GENMASK(e, s)) >> s)
+> @@ -299,7 +299,6 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
+>   	}
+>   	return 1;
+>   }
+> -EXPORT_SYMBOL_GPL(ocxl_config_check_afu_index);
+>   
+>   static int read_afu_name(struct pci_dev *dev, struct ocxl_fn_config *fn,
+>   			struct ocxl_afu_config *afu)
+> @@ -535,7 +534,6 @@ int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count)
+>   {
+>   	return pnv_ocxl_get_pasid_count(dev, count);
+>   }
+> -EXPORT_SYMBOL_GPL(ocxl_config_get_pasid_info);
+>   
+>   void ocxl_config_set_afu_pasid(struct pci_dev *dev, int pos, int pasid_base,
+>   			u32 pasid_count_log)
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index 321b29e77f45..06fd98c989c8 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -107,6 +107,29 @@ void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+>   int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
+>   void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+>   
+> +/*
+> + * Get the max PASID value that can be used by the function
+> + */
+> +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+> +
+> +/*
+> + * Check if an AFU index is valid for the given function.
+> + *
+> + * AFU indexes can be sparse, so a driver should check all indexes up
+> + * to the maximum found in the function description
+> + */
+> +int ocxl_config_check_afu_index(struct pci_dev *dev,
+> +				struct ocxl_fn_config *fn, int afu_idx);
+> +
+> +/**
+> + * Update values within a Process Element
+> + *
+> + * link_handle: the link handle associated with the process element
+> + * pasid: the PASID for the AFU context
+> + * tid: the new thread id for the process element
+> + */
+> +int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+> +
+>   struct ocxl_context *ocxl_context_alloc(void);
+>   int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+>   			struct address_space *mapping);
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 4544573cc93c..9530d3be1b30 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -56,15 +56,6 @@ struct ocxl_fn_config {
+>   int ocxl_config_read_function(struct pci_dev *dev,
+>   				struct ocxl_fn_config *fn);
+>   
+> -/*
+> - * Check if an AFU index is valid for the given function.
+> - *
+> - * AFU indexes can be sparse, so a driver should check all indexes up
+> - * to the maximum found in the function description
+> - */
+> -int ocxl_config_check_afu_index(struct pci_dev *dev,
+> -				struct ocxl_fn_config *fn, int afu_idx);
+> -
+>   /*
+>    * Read the configuration space of a function for the AFU specified by
+>    * the index 'afu_idx'. Fills in a ocxl_afu_config structure
+> @@ -74,11 +65,6 @@ int ocxl_config_read_afu(struct pci_dev *dev,
+>   				struct ocxl_afu_config *afu,
+>   				u8 afu_idx);
+>   
+> -/*
+> - * Get the max PASID value that can be used by the function
+> - */
+> -int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+> -
+>   /*
+>    * Tell an AFU, by writing in the configuration space, the PASIDs that
+>    * it can use. Range starts at 'pasid_base' and its size is a multiple
+> @@ -188,15 +174,6 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>   		void *xsl_err_data);
+>   
+> -/**
+> - * Update values within a Process Element
+> - *
+> - * link_handle: the link handle associated with the process element
+> - * pasid: the PASID for the AFU context
+> - * tid: the new thread id for the process element
+> - */
+> -int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+> -
+>   /*
+>    * Remove a Process Element from the Shared Process Area for a link
+>    */
+> 
 
