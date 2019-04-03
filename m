@@ -2,147 +2,201 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958C4C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E928FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B922146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554265936;
-	bh=KmUiynWUvzX1AGA6hKWXMi0UzG+E6PNVUghW6sPUh0o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEq2KHcqMJQq1EyI4AhOE9Ag60nHUvhpELq20i65ntIaCf3DWOiOMM0W1UHcEbETI
-	 x9KlBSnfjvvYQFK6WOONucf6RRVa2zLtPhmkQQSvEgJJlYxZF+MCS/lOf0m6N3ZfDk
-	 J5MJuRCYZ0E/5iY+0ODbG+qY/G5xKbtK6OzZBY3s=
+	by mail.kernel.org (Postfix) with ESMTP id AF8B8206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 04:32:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BbZVYyg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbfDCEcF (ORCPT
+        id S1728905AbfDCEcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 00:32:05 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:60923 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728683AbfDCEbJ (ORCPT
+        Wed, 3 Apr 2019 00:32:20 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39645 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728682AbfDCEcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 00:31:09 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 57E9821B2A;
-        Wed,  3 Apr 2019 00:23:06 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 00:23:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=oAX6zCohmPiQ74kYACc2QgeImmemzleYDH4h+URdt/s=; b=FC9CRiNy
-        /A2QACAxPg4m3dmOCUdhhqa5feWxuaX7P0DN1cHtAGYWp1mGWP79PKIKnCk61N8b
-        HJ+e0qEBWAWBOZ8aIklqcS6HduIcqSzhR2lHIemxwotBmC58QMnVTGS32LM3UIt+
-        6qp1Xg1tEinuIHZtRcvmbN2JKESdUCciDey+5yqaPvwCkJ3TRgHkUAnA+MXn7aKv
-        JIremYOdC/D8Zo9iexYBt+p91801gl7QHym/o0JuDzUYmYJMhU+7p0rN4tFvmNGt
-        qdleqeBuW4FoFEBbAUdh3EXUMNNhPut1FvkVUfwRAj9AenIa0OO01aO3RbaLsYPo
-        fSbc5pRf/Vpe6w==
-X-ME-Sender: <xms:KjWkXAMAadFEKSji-jKpD65Pk5MCBTa69LGYjRUyDXr3NKHeHWW7bw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdektdculddtuddrgedutddrtddtmd
-    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhgggfestdekredtredttden
-    ucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrh
-    hnvghlrdhorhhgqeenucfkphepuddvgedrudeiledrvdejrddvtdeknecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
-    hiiigvpedv
-X-ME-Proxy: <xmx:KjWkXBNmOykh5jksjMZXXL3SRPbWLG97p95FiIAdlXfAyB8-TF_jZQ>
-    <xmx:KjWkXMsjrBxDY92haktuDCCZN3U4tBtwqA4VcLqmUzCJJ7Wv0kmGRg>
-    <xmx:KjWkXO--NjFTy9UKSOvKrEdX0FuExPWlG7a1ZFMTXvyJu6k5AMTKvw>
-    <xmx:KjWkXJakolUOLXLXS-GgxSlXzBcuiKvaEnY5ABAZpxIA1X85q__9JA>
-Received: from eros.localdomain (124-169-27-208.dyn.iinet.net.au [124.169.27.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 43DB310310;
-        Wed,  3 Apr 2019 00:22:59 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Christopher Lameter <cl@linux.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "Theodore Ts'o" <tytso@mit.edu>, Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 03/14] slub: Sort slab cache list
-Date:   Wed,  3 Apr 2019 15:21:16 +1100
-Message-Id: <20190403042127.18755-4-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190403042127.18755-1-tobin@kernel.org>
-References: <20190403042127.18755-1-tobin@kernel.org>
+        Wed, 3 Apr 2019 00:32:17 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t28so18010562qte.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 21:32:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S57beQPqnsWH7c2yhxwG0r7rfdOqzi6B+T57wk8rq/M=;
+        b=BbZVYyg8g6syDUQKFjBvTT9cLUZZE7a6OoGz+AIY0bEwIXN9dYTEbQaMsqnN4pxqOI
+         2r0+OQ+53kGWyP2J80MdrjT1505TRde0MzZ6us98yNcBZuc6C7WbyPZUduN1fogM437b
+         G1cTOHaQO47gppSFUJUHRq0GoKVkpZiZM1PaI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S57beQPqnsWH7c2yhxwG0r7rfdOqzi6B+T57wk8rq/M=;
+        b=YnpT2/DxQ4WVFML+Wh04QznX7h5ZAyqy9wT85P7TOLPbmO1LB5r/LuCLW1rW4cAnGY
+         i0Y0WuBJVMZGMLmXmI3fIcm0sG+Gy6rn3/Xe+x16okh9ppTfdLRA1S5gvmKatvgQQFQy
+         cixrCmcaACsGzDrPJkKJUXJdPR6XQ378FIVJ7JDKCbPFpe3lvfXFWJTAeyFbV5cDPaE3
+         9wO+sglzNOFA18eUiGzsmhhGYxgLOx9G2Sjs1eI2Vj6dzEoas/cdcDYK9v0pfvrfPVmU
+         Jaf8L3jSxWFX04mt1rDbbzlIODDpDvARODNibF/sr+/F767qRzZmhj35qbORL7fzhD3A
+         fADA==
+X-Gm-Message-State: APjAAAWJLX9z6Uh24JtcYRKLiwkooRiwHZEvanGartN+ZwYvinqdjuCW
+        SypVDpRiI2cHSegV5smbt7lcSl1TGSPSLnKXm0RQiA==
+X-Google-Smtp-Source: APXvYqwCMzL/Q6XymiDfrIN3Qb+qE6BeNX7uPJe7jrtKFSR5gRQ8ao3MXoV+ChtaAA8YTutR2Ju+mySkTo3kVL2gS+w=
+X-Received: by 2002:ac8:2ed7:: with SMTP id i23mr61752841qta.326.1554265936440;
+ Tue, 02 Apr 2019 21:32:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1553841972-19737-1-git-send-email-andrew-sh.cheng@mediatek.com> <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+In-Reply-To: <1553841972-19737-3-git-send-email-andrew-sh.cheng@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 3 Apr 2019 12:32:05 +0800
+Message-ID: <CANMq1KB6x77F9Vo_wXK-M1Qt0Mo9VP3MfgKBAON18cHMts_kwg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] opp: add API which get max freq by voltage
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        linux-pm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is advantageous to have all defragmentable slabs together at the
-beginning of the list of slabs so that there is no need to scan the
-complete list. Put defragmentable caches first when adding a slab cache
-and others last.
+On Fri, Mar 29, 2019 at 2:46 PM Andrew-sh.Cheng
+<andrew-sh.cheng@mediatek.com> wrote:
+>
+> This API will get voltage as input parameter.
+> Search all opp items for the item which with max frequency,
+> and the voltae is smaller than provided voltage.
+>
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  drivers/opp/core.c     | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_opp.h |  8 ++++++++
+>  2 files changed, 63 insertions(+)
+>
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 0420f7e..7323cd9 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -526,6 +526,61 @@ struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_find_freq_floor);
+>
+> +/**
+> + * dev_pm_opp_find_max_freq_by_volt() - Search for a opp with max freq
+> + * under provided voltage
+> + * @dev:       device for which we do this operation
+> + * @u_volt:    provided voltage
+> + *
+> + * Search for the matching available OPP which provide voltage can support.
+> + *
+> + * Return: matching *opp, else returns ERR_PTR in case of error
+> + * and should be handled using IS_ERR.
+> + * Error return values can be:
+> + * EINVAL:     for bad pointer
+> + * ERANGE:     no match found for search
+> + * ENODEV:     if device not found in list of registered devices
+> + *
+> + * The callers are required to call dev_pm_opp_put() for the returned OPP after
+> + * use.
+> + */
+> +struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
+> +                                             unsigned long u_volt)
+> +{
+> +       struct opp_table *opp_table;
+> +       struct dev_pm_opp *temp_opp, *opp = ERR_PTR(-ERANGE);
+> +
+> +       if (!dev || !u_volt) {
+> +               dev_err(dev, "%s: Invalid argument volt=%d\n", __func__,
+> +                       u_volt);
 
-Co-developed-by: Christoph Lameter <cl@linux.com>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- mm/slab_common.c | 2 +-
- mm/slub.c        | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+u_volt is an unsigned long, so you should use %lu.
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 58251ba63e4a..db5e9a0b1535 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -393,7 +393,7 @@ static struct kmem_cache *create_cache(const char *name,
- 		goto out_free_cache;
- 
- 	s->refcount = 1;
--	list_add(&s->list, &slab_caches);
-+	list_add_tail(&s->list, &slab_caches);
- 	memcg_link_cache(s);
- out:
- 	if (err)
-diff --git a/mm/slub.c b/mm/slub.c
-index ae44d640b8c1..f6b0e4a395ef 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4342,6 +4342,8 @@ void kmem_cache_setup_mobility(struct kmem_cache *s,
- 		return;
- 	}
- 
-+	mutex_lock(&slab_mutex);
-+
- 	s->isolate = isolate;
- 	s->migrate = migrate;
- 
-@@ -4350,6 +4352,10 @@ void kmem_cache_setup_mobility(struct kmem_cache *s,
- 	 * to disable fast cmpxchg based processing.
- 	 */
- 	s->flags &= ~__CMPXCHG_DOUBLE;
-+
-+	list_move(&s->list, &slab_caches);	/* Move to top */
-+
-+	mutex_unlock(&slab_mutex);
- }
- EXPORT_SYMBOL(kmem_cache_setup_mobility);
- 
--- 
-2.21.0
+drivers/opp/core.c:582:3: error: format '%d' expects argument of type
+'int', but argument 4 has type 'long unsigned int' [-Werror=format=]
+  chromeos-kernel-4_19-4.19.32-r271:    dev_err(dev, "%s: Invalid
+argument volt=%d\n", __func__,
+  chromeos-kernel-4_19-4.19.32-r271:    ^
 
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       opp_table = _find_opp_table(dev);
+> +       if (IS_ERR(opp_table))
+> +               return ERR_CAST(opp_table);
+> +
+> +       mutex_lock(&opp_table->lock);
+> +
+> +       list_for_each_entry(temp_opp, &opp_table->opp_list, node) {
+> +               if (temp_opp->available) {
+> +                       /* go to the next node, before choosing prev */
+> +                       if (temp_opp->supplies[0].u_volt > u_volt)
+> +                               break;
+> +                       opp = temp_opp;
+> +               }
+> +       }
+> +
+> +       /* Increment the reference count of OPP */
+> +       if (!IS_ERR(opp))
+> +               dev_pm_opp_get(opp);
+> +       mutex_unlock(&opp_table->lock);
+> +       dev_pm_opp_put_opp_table(opp_table);
+> +
+> +       return opp;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_find_max_freq_by_volt);
+> +
+>  static int _set_opp_voltage(struct device *dev, struct regulator *reg,
+>                             struct dev_pm_opp_supply *supply)
+>  {
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index 24c757a..57deef9 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -102,6 +102,8 @@ struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
+>
+>  struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
+>                                               unsigned long *freq);
+> +struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
+> +                                             unsigned long u_volt);
+>
+>  struct dev_pm_opp *dev_pm_opp_find_freq_ceil(struct device *dev,
+>                                              unsigned long *freq);
+> @@ -207,6 +209,12 @@ static inline struct dev_pm_opp *dev_pm_opp_find_freq_floor(struct device *dev,
+>         return ERR_PTR(-ENOTSUPP);
+>  }
+>
+> +static inline struct dev_pm_opp *dev_pm_opp_find_max_freq_by_volt(struct device *dev,
+> +                                             unsigned long u_volt)
+> +{
+> +       return ERR_PTR(-ENOTSUPP);
+> +}
+> +
+>  static inline struct dev_pm_opp *dev_pm_opp_find_freq_ceil(struct device *dev,
+>                                         unsigned long *freq)
+>  {
+> --
+> 1.8.1.1.dirty
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
