@@ -2,131 +2,102 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041FBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C96C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C191B2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E445204EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SowecZhS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p3ig8KV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfDCC6l (ORCPT
+        id S1727242AbfDCC7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 22:58:41 -0400
-Received: from mail-it1-f176.google.com ([209.85.166.176]:55300 "EHLO
-        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfDCC6l (ORCPT
+        Tue, 2 Apr 2019 22:59:24 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41190 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfDCC7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 22:58:41 -0400
-Received: by mail-it1-f176.google.com with SMTP id z126so8698670itd.5
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:58:40 -0700 (PDT)
+        Tue, 2 Apr 2019 22:59:24 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k8so5045038lja.8
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pDAlw57SiOhCqoHDQpobUVdPGLSt30DBZUBllkvzPEw=;
-        b=SowecZhSxDaI5B+UH8e7HZ0QxnBjbsD8p43QAGMTIgEeUbPDoEif8nGW3Wj1fLQFRp
-         u7Z1SiAnqpP1YFWJWmstSpse9Ssosy8bdU5grGrm9rHImZHpPNt1DD2FMngiljkG5scA
-         5aVDi+GKxaJheC5+XWGtFBo7XSQAdKfX7Givr2tNDWC+2r+WS/cbjUzSE0xEJaF1tGfl
-         vhOj7qHFQ29RNMwgYJmscgBPFKCN0XpPFwwSINysR0w4ZYiP48wS6mhAhsEcTpJtsp0u
-         QTyk1SKJIgOynEwJiA5LEchR0Wc+yhSF9VZTtQTO7uFXf7gLzVE6ukU8Hdx3Gw94bHSX
-         wIIw==
+        bh=m5exmGidpjCr4jWrxYPKmCQp8rsnrX7zpX4nxsNlFNY=;
+        b=p3ig8KV5DbSiTc+DqBvEXPIifWRQHI7B+1Ms7ib1/p0gAIGIqAOShL/ZW+YJ8uJZ5U
+         3XtOabaCcy7VMC3LDbe2nIELLM50f8qY9djrIyPoT/bGwi2ngpXYc5Q/jXK7iDSMjrXM
+         A902lpiP9X/7WKjMhHqNkgikybEbwSwuXxLS0VB/u4NZook+RpCbRUh4ersX4mp6lKko
+         D+AJegBWcYPfR7q7+jWK2R//DmPEX8r/p2FZ3n5iQ83wm9Zj6DPi/LmCPU+CXjPy6Uv4
+         9DLmAxbUWOYYB+3xJPU8h+5uGbrBeoGAJWWyw2TgOVBoamOVeCb8P9N3b5EV809mnjpo
+         Q0DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pDAlw57SiOhCqoHDQpobUVdPGLSt30DBZUBllkvzPEw=;
-        b=HgbXHE28bWhscF+KXXqU7XabxggCzFqYJ1936iqEB4kuxZ2ywrI0sWezwABlSchkT+
-         65S8ri/aCosShKRaWnC6ZWPt1U7aczpGDAW0SjTtHjjuyDSxC1TBcA+OtUYhNNre13ar
-         k75w4f+YCCx/I7Tmy/4e+jgphCTeZyek/wTYm1JMkeW0RN9WA1nGUb+rEWxG7cvDSBnh
-         ddUSYZxrjNCuon2Yjuvw24K/zPiLRYz9bG33HY9emo1LriW0PThMIL1TM8c5j41Vut27
-         YLHd3aB8V92YAVUhsHgAOi2L9K0u0dGj+GR8/2YPkpLpYRFLhbpxGd/jYHLco/gO9+IB
-         40Sg==
-X-Gm-Message-State: APjAAAXKGiRh0HtYnkbkXvD4ZoH+47hRfXcyfOhljVEAEnoUW5SGYy2B
-        Wn6y1K8nSGsYLByzVWHHDhrTunDJuZnda/ki1g==
-X-Google-Smtp-Source: APXvYqzoi+rBjVVEIoA3EuddeaHKg8I3We5VfmXj2d+aezVVkSVtRsGvdwq9/DcZI9+QcPyaygd4frU6xRSsgTpCeGs=
-X-Received: by 2002:a02:ac14:: with SMTP id a20mr55863492jao.130.1554260319988;
- Tue, 02 Apr 2019 19:58:39 -0700 (PDT)
+        bh=m5exmGidpjCr4jWrxYPKmCQp8rsnrX7zpX4nxsNlFNY=;
+        b=odJpmiFFVhcCKIHiqsBtaNB7YBqJ50H0fcPTkU1JSEPpjzn6OVm2HWFLFmhRwvFSZD
+         qq4+mteviwjAgRQGdlJBvYUkDnj3Pfp11McBsxY3VZRDndnvtaNugvnNmzu2/vTXCkvS
+         ggh5SCtqc1E0JmgzfcYVngJoLGYxCd7X93yCFuK7mrdpektLnFr+xn6gniLT/6yP/UsD
+         qrY1Svs8j2z4W09ZHkqyWURS9bMpKmeV2O1qn49RqePJvN8icXEdxAdwzrkc40vM+zYO
+         kmP5bUPRyFj2S9sMji4tZwCnSxnqnbD6kk+m09Hxdz7lMsVXEsLLJMTGKXQkM0lj+fMM
+         AuuA==
+X-Gm-Message-State: APjAAAUg8GsEM91z49tKodhrpdcjIikNxT/wj3bZawbdPqcZC4R5kl49
+        CNYR+FNYxFx9EF5mnYdg4h5AFGq62vPVD4RKjM3VmA==
+X-Google-Smtp-Source: APXvYqy29GH1Jn+4u+MOhDomj+6lezG9yxERqwHecHUTB1BCVyWQlMbSD+e5lim1Q7JFWVDTXQVrM/0b/Nzkmxs9nBE=
+X-Received: by 2002:a2e:3512:: with SMTP id z18mr27025494ljz.25.1554260361993;
+ Tue, 02 Apr 2019 19:59:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554178246-8162-1-git-send-email-kernelfans@gmail.com> <20190402080811.GO7627@MiWiFi-R3L-srv>
-In-Reply-To: <20190402080811.GO7627@MiWiFi-R3L-srv>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Wed, 3 Apr 2019 10:58:28 +0800
-Message-ID: <CAFgQCTtYLVS8Mfztg8=PWEn8cxDm9Lm1p=zXDR1YG8Oo0MLx0Q@mail.gmail.com>
-Subject: Re: [PATCHv3] x86/boot/KASLR: skip the specified crashkernel region
-To:     Baoquan He <bhe@redhat.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-20-git-send-email-info@metux.net>
+In-Reply-To: <1552330521-4276-20-git-send-email-info@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Apr 2019 09:59:10 +0700
+Message-ID: <CACRpkdYXKOdk42V4xZLY5BWbEp8hPePep5-XmcdB=WBewpUm6w@mail.gmail.com>
+Subject: Re: [PATCH 20/42] drivers: gpio: mt7621: use devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 4:08 PM Baoquan He <bhe@redhat.com> wrote:
->
-> > +/* handle crashkernel=x@y or =range1:size1[,range2:size2,...]@offset options */
-> > +static void mem_avoid_specified_crashkernel_region(char *option)
-> > +{
-> > +     unsigned long long crash_size, crash_base = 0;
-> > +     char    *first_colon, *first_space, *cur = option;
-> > +
->
-> Another thing which need be noticed is that you may only need to handle
-> when '@' is found. Otherwise just let it go. Right?
->
-According to kernel's behavior, only the last "crashkernel=" option
-takes effect. Hence if no '@', then clearing mem_avoid
+On Tue, Mar 12, 2019 at 1:59 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
-> > +     first_colon = strchr(option, ':');
-> > +     first_space = strchr(option, ' ');
-> > +     /* if contain ":" */
-> > +     if (first_colon && (!first_space || first_colon < first_space)) {
-> > +             int i;
-> > +             u64 total_sz = 0;
-> > +             struct boot_e820_entry *entry;
-> > +
-> > +             for (i = 0; i < boot_params->e820_entries; i++) {
-> > +                     entry = &boot_params->e820_table[i];
-> > +                     /* Skip non-RAM entries. */
-> > +                     if (entry->type != E820_TYPE_RAM)
-> > +                             continue;
-> > +                     total_sz += entry->size;
-> > +             }
-> > +             handle_crashkernel_mem(option, total_sz, &crash_size,
-> > +                     &crash_base);
-> > +     } else {
-> > +             crash_size = memparse(option, &cur);
-> > +             if (option == cur)
-> > +                     return;
-> > +             while (*cur && *cur != ' ' && *cur != '@')
-> > +                     cur++;
-> > +             if (*cur == '@') {
-> > +                     option = cur + 1;
-> > +                     crash_base = memparse(option, &cur);
-> > +             }
-> > +     }
-> > +     if (crash_base) {
-> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
-> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
-> > +     } else {
-> > +             /*
-> > +              * Clearing mem_avoid if no offset is given. This is consistent
-> > +              * with kernel, which uses the last crashkernel= option.
-> > +              */
-> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].start = 0;
-> > +             mem_avoid[MEM_AVOID_CRASHKERNEL].size = 0;
-> > +     }
-> > +}
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+
+Patch applied with Matthias' ACK.
+
+Yours,
+Linus Walleij
