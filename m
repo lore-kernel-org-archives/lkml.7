@@ -2,131 +2,153 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7113DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5FBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AEFF20700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0ED20700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 17:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ATCjHw1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfDCRkX (ORCPT
+        id S1726425AbfDCRlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 13:40:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57786 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbfDCRkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 13:40:22 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 60DF081E16;
-        Wed,  3 Apr 2019 17:40:21 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-19.bos.redhat.com [10.18.17.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 843A66B2C8;
-        Wed,  3 Apr 2019 17:40:19 +0000 (UTC)
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alex Kogan <alex.kogan@oracle.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, steven.sistare@oracle.com,
-        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
- <9ec3d8dc-d1e0-1b8a-5e00-ba92b9756c58@redhat.com>
- <20190403171635.GM4038@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <063622f7-6aab-9824-afce-ea5de103e1f6@redhat.com>
-Date:   Wed, 3 Apr 2019 13:40:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 3 Apr 2019 13:41:53 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:40203 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfDCRlx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 13:41:53 -0400
+Received: by mail-vs1-f67.google.com with SMTP id f22so10491195vso.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y8CF+OJt6vJCiWGA55M98hTDR4Pj8zfzvZjsAL1jpAc=;
+        b=ATCjHw1D5zHPEozfJWOwPuFkb9O/ZQmNa6bhJ2+wDZ5gz+RXJO6ja50fnf219kx/a8
+         rpBCYS6KQ54sc8ID7DfKkG6vgnkn4Hq6I35/d8Tz8iWcb4obCyvscbRuh6knWwmR78Mu
+         4fQlQczOZ18Jk/XHnWFumC3CG9KxIEbda3bWY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y8CF+OJt6vJCiWGA55M98hTDR4Pj8zfzvZjsAL1jpAc=;
+        b=bTecBF9joQYckuZN/QTsIEui9Ufrb0qnJ4LTlaN36L6dz81hdwAfpfJ8gGx4b0p+CE
+         dIMjtN9cnJOTHyFz3ijNX3vFP4jXtkpqz//ht11ChzufB0jcY3hLjJtruR/rFZkIytyt
+         LqcEd9am7a+Xa1qJbIWSrDf7qIgarQN1p6xFwl02wNigmOByc0qJduckG6L5+VxShtvy
+         8RKmLqT1oY7bjOfyPPfCStYkq66LeN2cw9S2uFY83IowgeX/ap5sZ7dJJiIxoYvJJiXD
+         TNaE6ZbRdr8MMsF9BODPGz5FpQt8L3WT/nDX3KHX6h52V8OzKsqhVFcDn4LjnIbMF31U
+         RLNg==
+X-Gm-Message-State: APjAAAW45goLxlRk+gqshYCz8g2kRyBHH33W1MP/WHe3CX2Q9uUwfVE9
+        DSQFKF+4Q5xVQu4zvwoXHBdPXlUHx60=
+X-Google-Smtp-Source: APXvYqx4ZyBxix0/UmVVSf9ZEfChBWhYuvmPpf9OPC9qkXiJdUmlYZj87lP+Flc/n9T5mpQoh3anUA==
+X-Received: by 2002:a67:8546:: with SMTP id h67mr1116199vsd.11.1554313311283;
+        Wed, 03 Apr 2019 10:41:51 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id l193sm12519957vka.19.2019.04.03.10.41.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 10:41:50 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id d8so9466347vsp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:41:50 -0700 (PDT)
+X-Received: by 2002:a67:7816:: with SMTP id t22mr1099376vsc.115.1554313309569;
+ Wed, 03 Apr 2019 10:41:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190403171635.GM4038@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 03 Apr 2019 17:40:22 +0000 (UTC)
+References: <20190328130306.25384-1-mcroce@redhat.com>
+In-Reply-To: <20190328130306.25384-1-mcroce@redhat.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 3 Apr 2019 10:41:38 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLnu3-Gxb-4Gv8vtA9B3o582tX0GiOfug_wRZ78RDaW=g@mail.gmail.com>
+Message-ID: <CAGXu5jLnu3-Gxb-4Gv8vtA9B3o582tX0GiOfug_wRZ78RDaW=g@mail.gmail.com>
+Subject: Re: [PATCH] kernel/sysctl.c: fix out of bounds access in fs.file-max
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2019 01:16 PM, Peter Zijlstra wrote:
-> On Wed, Apr 03, 2019 at 12:33:20PM -0400, Waiman Long wrote:
->> static inline void queued_spin_lock_slowpath(struct qspinlock *lock, u32
->> val)
->> {
->>         if (static_branch_unlikely(&use_numa_spinlock))
->>                 numa_queued_spin_lock_slowpath(lock, val);
->>         else   
->>                 native_queued_spin_lock_slowpath(lock, val);
->> }
-> That's horrible for the exact reason you state.
+On Thu, Mar 28, 2019 at 6:03 AM Matteo Croce <mcroce@redhat.com> wrote:
 >
->> Alternatively, we can also call numa_queued_spin_lock_slowpath() in
->> native_queued_spin_lock_slowpath() if we don't want to increase the code
->> size of spinlock call sites.
-> Yeah, still don't much like that though, we're littering the fast path
-> of that slow path with all sorts of crap.
+> fs.file-max sysctl uses proc_doulongvec_minmax() as proc handler, which
+> accesses *extra1 and *extra2 as unsigned long, but commit 32a5ad9c2285
+> ("sysctl: handle overflow for file-max") assigns &zero, which is an int,
+> to extra1, generating the following KASAN report.
+> Fix this by changing 'zero' to long, which does not need to be duplicated
+> like 'one' and 'one_ul' for two data types.
+>
+> ==================================================================
+> BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x2f9/0x600
+> Read of size 8 at addr ffffffff8233dc20 by task systemd/1
+>
+> CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc2-kvm+ #22
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+> Call Trace:
+>  print_address_description+0x67/0x23d
+>  kasan_report.cold.3+0x1c/0x36
+>  __do_proc_doulongvec_minmax+0x2f9/0x600
+>  proc_doulongvec_minmax+0x3a/0x50
+>  proc_sys_call_handler+0x11d/0x170
+>  vfs_write+0xd7/0x200
+>  ksys_write+0x93/0x110
+>  do_syscall_64+0x57/0x140
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7f67d33e8804
+> Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 48 8d 05 f9 5e 0d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89 f5 53
+> RSP: 002b:00007fffd9992ed8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f67d33e8804
+> RDX: 0000000000000015 RSI: 00005586ce2607b0 RDI: 0000000000000004
+> RBP: 00007fffd9992f30 R08: 000000000000c0c0 R09: ffffffffffff0000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
+> R13: 0000000000000015 R14: 00005586ce2607c4 R15: 00007fffd9992f70
+>
+> The buggy address belongs to the variable:
+>  0xffffffff8233dc20
+>
+> Memory state around the buggy address:
+>  ffffffff8233db00: 00 00 00 00 00 00 00 00 fa fa fa fa 04 fa fa fa
+>  ffffffff8233db80: fa fa fa fa 04 fa fa fa fa fa fa fa 04 fa fa fa
+> >ffffffff8233dc00: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 00 00
+>                                ^
+>  ffffffff8233dc80: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+>  ffffffff8233dd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ==================================================================
+>
+> Fixes: 32a5ad9c2285 ("sysctl: handle overflow for file-max")
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> ---
+>  kernel/sysctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index e5da394d1ca3..3e959d67d619 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -124,7 +124,7 @@ static int sixty = 60;
+>
+>  static int __maybe_unused neg_one = -1;
+>
+> -static int zero;
+> +static long zero;
+>  static int __maybe_unused one = 1;
+>  static int __maybe_unused two = 2;
+>  static int __maybe_unused four = 4;
 
-Yes, I know it is less than ideal, but that is probably the only option
-if we don't have static_call or paravirt. On the other hand, I am
-perfectly fine with making CNA depends on PARAVIRT_SPINLOCKS for now
-until static_call is available.
+This seems okay to me; thanks for the fix! (I think it's fine to keep
+this merged instead of a distinct long_zero, as long as we're not
+seeing type warnings during the build.)
 
-Cheers,
-Longman
+Acked-by: Kees Cook <keescook@chromium.org>
 
+-Kees
+
+-- 
+Kees Cook
