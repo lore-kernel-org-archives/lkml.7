@@ -2,102 +2,124 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DB9C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698DFC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFD2206DD
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F632206DD
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="MqDEGB9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfDCP3B (ORCPT
+        id S1726199AbfDCPbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:29:01 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56215 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDCP3B (ORCPT
+        Wed, 3 Apr 2019 11:31:40 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:43772 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDCPbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:29:01 -0400
-X-Originating-IP: 109.213.83.19
-Received: from localhost (alyon-652-1-60-19.w109-213.abo.wanadoo.fr [109.213.83.19])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 246621BF213;
-        Wed,  3 Apr 2019 15:28:57 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 17:28:56 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: add battery-low-hw-alarm property
-Message-ID: <20190403152856.GP22216@piout.net>
-References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
- <20190403145709.GN22216@piout.net>
- <b45fc9a86a0d4126ad6d8dda9c883043@asem.it>
+        Wed, 3 Apr 2019 11:31:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554305496; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=28XImi+Bp9I9pF6FT2i90FcrcKEdvt/D5NO3ZjWScyA=;
+        b=MqDEGB9SnrGrgSJrtyYZeKnct1xJ519myFX5BqxUbKAZTroXbV2+07Q4Eye0TwcIXiszS3
+        NiYW0pvdiAouEh2xSNwwhhfcjag0jH5P9HG2vs4hwKT0ueb+/cjQJj3bMvB1oXLwcB+oy/
+        X+t6ksyeryauUWCLY1uGYd6H98rzeQ4=
+Date:   Wed, 03 Apr 2019 17:31:31 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] usb: musb: Force-disable pullup on shutdown
+To:     Bin Liu <b-liu@ti.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me
+Message-Id: <1554305491.1177.0@crapouillou.net>
+In-Reply-To: <20190403132600.GQ25852@uda0271908>
+References: <20190321144246.3547-1-paul@crapouillou.net>
+        <20190401171725.GK25852@uda0271908> <1554140782.10471.0@crapouillou.net>
+        <20190401182008.GL25852@uda0271908> <1554235122.13181.0@crapouillou.net>
+        <20190403132600.GQ25852@uda0271908>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b45fc9a86a0d4126ad6d8dda9c883043@asem.it>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 15:06:17+0000, Flavio Suligoi wrote:
-> Hi Alexandre,
-> 
-> > Hi,
-> > 
-> > On 03/04/2019 16:52:44+0200, Flavio Suligoi wrote:
-> > > Some RTC devices have a battery-low automatic detection circuit.
-> > > The battery-low event is usually reported with:
-> > >
-> > > - a bit change in a RTC status register
-> > > - a hw signaling (generally using an interrupt generation), changing
-> > >   the hw level of a specific pin;
-> > >
-> > > The new property "battery-low-hw-alarm" enable the RTC to generate the
-> > > hw signaling in case of battery-low event.
-> > >
-> > > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> > > ---
-> > >  Documentation/devicetree/bindings/rtc/rtc.txt | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt
-> > b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > > index a97fc6a..f93a44d 100644
-> > > --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> > > +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> > > @@ -31,6 +31,9 @@ below.
-> > >                              expressed in femto Farad (fF).
-> > >                              The default value shall be listed (if
-> > optional),
-> > >                              and likewise all valid values.
-> > > +- battery-low-hw-alarm :    Enable the "battery-low" output pin. This
-> > function
-> > 
-> > I would name that voltage-low-alarm as not all the secondary voltages
-> > are batteries.
-> 
-> You have right. So we can also name the property a: "voltage-low-hw-alarm". 
-> I prefer to have the word "hw" in the property name, since the "sw" voltage
-> low alarm is already present is some RTC drivers. 
-> In this way, with the word "hw", is more clear that we are speaking about
-> an hw pin signaling.
-> 
-
-Well, the device tree always describes the hardware so there is no point
-in specifying hw.
 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Le mer. 3 avril 2019 =E0 15:26, Bin Liu <b-liu@ti.com> a =E9crit :
+> On Tue, Apr 02, 2019 at 09:58:42PM +0200, Paul Cercueil wrote:
+>>  Hi,
+>>=20
+>>  Le lun. 1 avril 2019 =E0 20:20, Bin Liu <b-liu@ti.com> a =E9crit :
+>>  >On Mon, Apr 01, 2019 at 07:46:22PM +0200, Paul Cercueil wrote:
+>>  >>
+>>  >>
+>>  >> Le lun. 1 avril 2019 =E0 19:17, Bin Liu <b-liu@ti.com> a =E9crit :
+>>  >> >On Thu, Mar 21, 2019 at 03:42:46PM +0100, Paul Cercueil wrote:
+>>  >> >> When the musb is shutdown, for instance when the driver is
+>>  >>unloaded,
+>>  >> >> force-disable the pullup. Otherwise, the host will still see
+>>  >> >>the gadget
+>>  >> >> device even after the shutdown.
+>>  >> >
+>>  >> >how would this happen?
+>>  >> >
+>>  >> >when musb-hdrc driver is unloaded, udc core removes the bound
+>>  >>gadget
+>>  >> >driver which calls musb_gadget_pullup() to disable the pullup.
+>>  >>
+>>  >> I'm testing with the jz4740-musb driver. I don't unload the
+>>  >>module (it's
+>>  >> built-in) but unbind it from sysfs.
+>>  >
+>>  >I did unbind too.
+>>  >
+>>  >root@am335x-evm:/sys/bus/platform/drivers/musb-hdrc# echo
+>>  >musb-hdrc.0 > unbind
+>>  >
+>>  >or unbind the glue driver:
+>>  >
+>>  >root@am335x-evm:/sys/bus/platform/drivers/musb-dsps# echo
+>>  >47401400.usb > unbind
+>>  >
+>>  >musb_gadget_pullup() is called in both cases.
+>>  >
+>>  >[ 3880.597014] [<bf444ab0>] (musb_gadget_pullup [musb_hdrc]) from
+>>  >[<bf402cbc>] (usb_gadget_disconnect+0x3c/0xf4 [udc_core])
+>>  >[ 3880.607959] [<bf402cbc>] (usb_gadget_disconnect [udc_core])
+>>  >from [<bf403b28>] (usb_gadget_remove_driver+0x4c/0x90 [udc_core])
+>>  >[ 3880.619338] [<bf403b28>] (usb_gadget_remove_driver [udc_core])
+>>  >from [<bf403d20>] (usb_del_gadget_udc+0x5c/0xc0 [udc_core])
+>>=20
+>>  In my case this stops here, usb_del_gadget_udc() does not call
+>>  usb_gadget_remove_driver(), that's why the pullup is never disabled.
+>>=20
+>>  I guess that's because udc->driver is NULL; I'm testing with
+>=20
+> then the pullup should be disable by now.
+>=20
+>>  CONFIG_USB_CONFIGFS,
+>>  and I don't configure anything in sysfs before unbinding the driver.
+>=20
+> I didn't check on this, but I could imagine that
+> - when a configfs gadget is bound to the udc, .pullup() is called;
+> - when the configfs gadget is unbound from the udc, .pullup should be
+>   called again to disable the pullup.
+
+An important thing that I did not mention, is that the SoC boots from=20
+USB,
+so the pullup is active before the musb driver loads. Since in my case a
+configfs gadget is never bound, then .pullup() is never called, and when
+I unbind the driver the pullup is still enabled.
+
+-Paul
+
+=
+
