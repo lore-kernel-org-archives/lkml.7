@@ -2,88 +2,140 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381DFC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2723CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1210220830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD35A20830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:01:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="IssgnUNy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fjtWI6uU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbfDCGAN (ORCPT
+        id S1728211AbfDCGBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 02:00:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50670 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728763AbfDCGAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 02:00:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3EA13ACE3;
-        Wed,  3 Apr 2019 06:00:11 +0000 (UTC)
-Subject: Re: [PATCH] xen: use struct_size() helper in kzalloc()
-To:     Andrea Righi <andrea.righi@canonical.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20190403052636.GC21532@xps-13>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <86ebff84-6fe5-1f1f-d827-abcfb674cbf7@suse.com>
-Date:   Wed, 3 Apr 2019 08:00:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190403052636.GC21532@xps-13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Apr 2019 02:01:12 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:34027 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725879AbfDCGBM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 02:01:12 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5DD0520D8D;
+        Wed,  3 Apr 2019 02:01:10 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 03 Apr 2019 02:01:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=3kuereDgX3uXPv3easIr1d1LfpE5kaJ
+        mP5rSzNOWpp8=; b=IssgnUNygebNsmz7eoD82zi0nhXDuRTfy346XGDOua9x7XR
+        ZCADWU8cQnhvImCzPJXvuaL9omZgG5KidUQ7wqiVyuyieJOXwbAAJMpUDon8os7i
+        Vq85Ex28pTqdTh4NFsYq0yP9i3ofBdSzON0ug39l4onVt29EBXUlGamEKhPVNjDO
+        RfHOicwDC1iQlkRVEurXNeYyPfudaUpQ8nznHm+NS+mMM2/3WqcMBKdgLPBxRzcu
+        upR02T4CpCEVyf673K5JSwW0j6QQnmX8gsIgW+yGCRdNBry5rQuj9RMR1zw9sONr
+        8Wja//3v35HwBEGFOOJJks1H+NHMIpOvwZShRrQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3kuere
+        DgX3uXPv3easIr1d1LfpE5kaJmP5rSzNOWpp8=; b=fjtWI6uUN+/5uCXP1TuX7b
+        FKdvjfJWFvF1ZKhGyNn9/GJBoPmWKilOiu06m6/h5ktObY3fMV0NEYPV1FO/HzgN
+        JHhcDQHUWbVUH4uD5sFmIsA/YeDn4XkfGRcVWMbbg3l+uvPnVuB9FqRSuZEFYxAF
+        host7tFI9+/k5NwoYtsjwE607sOMvC5Kt3S57pW1nTj/eHphL2eeKc7gYvc6tYuL
+        81QDKIzbXskfeeZ7Ke0bucJXs/7UKIlw2tgZNrIQFj+Lcjnbw3ufCjBZK1vsY1d5
+        QIIpaFgLOvMqKmSW/d6SbApssDSYZu7lig0vbJ8GL1Y85a+Cad+3JSoBValg45+g
+        ==
+X-ME-Sender: <xms:JEykXAIW4Q6ogfNU9QJ-1g2rEP6dAzzmaU8fVHwUTGLXEoyx3davNw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtddugdelleculddtuddrgedutddrtddtmd
+    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertderreej
+    necuhfhrohhmpedftehnughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrd
+    hiugdrrghuqeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgu
+    rdgruhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:JEykXHF6wLmMQ1MrfWNoBABhwjiJKSrXpEvtn9fttoTiHMFEqb7U9w>
+    <xmx:JEykXF3E6KRWv3BCTfLGKQ8FUhvU9P1KXR3BgxazJyOsmofzugvYOQ>
+    <xmx:JEykXBy4W7h8k8sL05IHHeI0-e2S1O2B85WVAO8Gk9euNz-pQdGx1A>
+    <xmx:JkykXE-vTu_TYtC08xQXEMHIIBnmGPAltvkBJD-XJZ4-zh0sOAhB3Q>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id B05C67C1B9; Wed,  3 Apr 2019 02:01:08 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-329-gf4aae99-fmstable-20190329v1
+Mime-Version: 1.0
+X-Me-Personality: 52947553
+Message-Id: <7effb2de-cc91-47af-88a2-a0075262e9c4@www.fastmail.com>
+In-Reply-To: <1554229504-5661-3-git-send-email-eajames@linux.ibm.com>
+References: <1554229504-5661-1-git-send-email-eajames@linux.ibm.com>
+ <1554229504-5661-3-git-send-email-eajames@linux.ibm.com>
+Date:   Wed, 03 Apr 2019 02:01:08 -0400
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        "Joel Stanley" <joel@jms.id.au>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-clk@vger.kernel.org, "Stephen Boyd" <sboyd@kernel.org>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, mark.rutland@arm.com,
+        "Rob Herring" <robh+dt@kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_2/5]_media:_platform:_Aspeed:_Make_reserved_memory_?=
+ =?UTF-8?Q?optional?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 07:26, Andrea Righi wrote:
-> struct privcmd_buf_vma_private has a zero-sized array at the end
-> (pages), use the new struct_size() helper to determine the proper
-> allocation size and avoid potential type mistakes.
+
+
+On Wed, 3 Apr 2019, at 04:55, Eddie James wrote:
+> Reserved memory doesn't need to be required; system memory would work
+> fine.
+
+I had to do a bit of legwork to understand what you were doing here. My
+understanding is that we allocate out of the default CMA region if the
+memory-region property isn't specified. Is that what you're expecting?
+Could be helpful to be a little less terse in the commit message.
+
 > 
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  drivers/media/platform/aspeed-video.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/platform/aspeed-video.c 
+> b/drivers/media/platform/aspeed-video.c
+> index 55c55a6..8144fe3 100644
+> --- a/drivers/media/platform/aspeed-video.c
+> +++ b/drivers/media/platform/aspeed-video.c
+> @@ -1608,11 +1608,7 @@ static int aspeed_video_init(struct aspeed_video 
+> *video)
+>  		return PTR_ERR(video->vclk);
+>  	}
+>  
+> -	rc = of_reserved_mem_device_init(dev);
+> -	if (rc) {
+> -		dev_err(dev, "Unable to reserve memory\n");
+> -		return rc;
+> -	}
+> +	of_reserved_mem_device_init(dev);
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+You're ignoring *all* errors here with the expectation that the cause is the
+missing memory-region property. However, other errors can propagate
+out of of_reserved_mem_device_init() - e.g. ENOMEM. Rather than remove
+error checking, I think you should explicitly test for ENODEV, which is what is
+returned if the memory-region property is absent.
 
+Cheers,
 
-Juergen
+Andrew
+
+>  
+>  	rc = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>  	if (rc) {
+> -- 
+> 1.8.3.1
+> 
+>
