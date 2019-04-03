@@ -2,221 +2,124 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99376C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5455C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D59A20830
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F56620830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XOXCngxm"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="VxB1WByo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfDCJQG (ORCPT
+        id S1726547AbfDCJQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:16:06 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18363 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfDCJQF (ORCPT
+        Wed, 3 Apr 2019 05:16:22 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38121 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfDCJQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:16:05 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca479d70000>; Wed, 03 Apr 2019 02:16:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 03 Apr 2019 02:16:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 03 Apr 2019 02:16:03 -0700
-Received: from [10.24.47.153] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Apr
- 2019 09:15:52 +0000
-Subject: Re: [PATCH 09/10] PCI: tegra: Add Tegra194 PCIe support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <tiwai@suse.de>, <spujar@nvidia.com>, <skomatineni@nvidia.com>,
-        <liviu.dudau@arm.com>, <krzk@kernel.org>, <heiko@sntech.de>,
-        <horms+renesas@verge.net.au>, <olof@lixom.net>,
-        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
-        <bjorn.andersson@linaro.org>, <jagan@amarulasolutions.com>,
-        <enric.balletbo@collabora.com>, <ezequiel@collabora.com>,
-        <stefan.wahren@i2se.com>, <marc.w.gonzalez@free.fr>,
-        <l.stach@pengutronix.de>, <tpiepho@impinj.com>,
-        <hayashi.kunihiko@socionext.com>, <yue.wang@amlogic.com>,
-        <shawn.lin@rock-chips.com>, <xiaowei.bao@nxp.com>,
-        <devicetree@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kthota@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1553613207-3988-1-git-send-email-vidyas@nvidia.com>
- <1553613207-3988-10-git-send-email-vidyas@nvidia.com>
- <20190329203159.GG24180@google.com>
- <5eb9599c-a6d6-d3a3-beef-5225ed7393f9@nvidia.com>
- <20190402141424.GB8017@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <d51370ab-16be-18c8-5912-73ff9863a8ca@nvidia.com>
-Date:   Wed, 3 Apr 2019 14:45:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Wed, 3 Apr 2019 05:16:22 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a6so11165676lfl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 02:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4NRHrwD8OfEj2OriyZsAce/RXryE17FV/2DoIYmW/uU=;
+        b=VxB1WByoBY2oHz4sb27RF2dBGHfIwQR71NqPLQnhUI2vRXPdyAu8IronZR4/ibGPRE
+         hdkwMJXlF9+U+aPDMHToYHu5mAbKZ4tW6/HPa7O2b0jMfn5jz4yd0+A/n3zWQwGd0IPx
+         1rHKPANKARbh1s+4z2mVEBGFnNKupDoyTNouCogDQm6aeqDCgv1i6l1NsV5yKxdzJkMB
+         bAyHcmecvvvDVPXV6zD3aqzIo2PkQ/FT6DuD25TtsaOs1cFVG/S+/QV1Qdsn1wb390aW
+         AEV4++bBReKrbPiTM9i7GOK+C0w0LqPH/ws5hVKosq7lIdn2Elf81A+1eapv8PIh3Hvm
+         EnvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4NRHrwD8OfEj2OriyZsAce/RXryE17FV/2DoIYmW/uU=;
+        b=sDDb1lJeKAvTrGKHal/W81tMqqQoges/owXEQkOlHJfqn25FFQPaMacXd/MWOaMZJp
+         YxjpQbVhoAH7gKeIkggHdmsJd7GWv74qdwXlqMBNSyjHVK1eaPcG/b7TgzvrhXrEnxez
+         4JE5lyUJDbaXMilUeGwZAxbR3DLe86lqWgkcd8VLNqnrGyHvGbzyZRB+kII6tXMmrb4J
+         VCbou3bKRvhmqz64Gzlx60uDA/+pbA5wIZekDI6ORaPU8hTp+tJSeoq/3WvwWIrc4Ge8
+         X7VlLgJeyJwdK6NNYqug2MkZdwxr965NbZcTy0LeH2tO4qn4FFiOYgFp1HVVk5j/91ha
+         +Yjg==
+X-Gm-Message-State: APjAAAWPS00eJs9TWsWhT0H+kEDPu8SXfXDvtOdoGtdsJ2S48iJMI+6m
+        +lt9RqDhAbKL4GY5cxN+LAxZxQ==
+X-Google-Smtp-Source: APXvYqxfT+QcKs9T7IOfT3eHWhUNUiBheTe7uwUg0RsgaLnHe4yLPGoerv8fl7EtAT4tnGfQDR27bA==
+X-Received: by 2002:ac2:4561:: with SMTP id k1mr33847684lfm.95.1554282980031;
+        Wed, 03 Apr 2019 02:16:20 -0700 (PDT)
+Received: from [192.168.0.199] ([31.173.84.175])
+        by smtp.gmail.com with ESMTPSA id e2sm2851712lfc.75.2019.04.03.02.16.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 02:16:19 -0700 (PDT)
+Subject: Re: [PATCH net-next 04/12] net: hns3: return 0 and print warning when
+ hit duplicate MAC
+To:     Huazhong Tan <tanhuazhong@huawei.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, Peng Li <lipeng321@huawei.com>
+References: <1554260881-44948-1-git-send-email-tanhuazhong@huawei.com>
+ <1554260881-44948-5-git-send-email-tanhuazhong@huawei.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <4b40bd6e-a732-bc8b-4085-56520677b6ea@cogentembedded.com>
+Date:   Wed, 3 Apr 2019 12:15:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190402141424.GB8017@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <1554260881-44948-5-git-send-email-tanhuazhong@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554282967; bh=c8MvKeNkm6jRMFC23RiJXHefhPBDTqQ9LaEl0LP157I=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XOXCngxm765cJ6zww+F0HIGSXw86e6cX3pkHYvyOMqf3JbibcKhTASUKnfcdY96Nm
-         t72n3jP6kGHzhiOtRoj16nv8Qv7w44xaHd+7dowbFd1p+WviUEjbZ67sfRL+nqIkSP
-         TaYbkusIdEOSR4Qwr2WdCeb+c6wImfsZ8L7HJM8ddfkZmPOAg9SX0vKwmLMRUStFZW
-         HUNdRyveeOsxSFNwSx/Kw4dQIm9+sfi9SeeZLinKywWp1+W+frRBAlbrJOszBXH6KN
-         GBilyA7cC7vBakLVrrKAcEJXn5lqT9md9a0cCDCYopJHGLMIZGsmD7R3nWB5+SB1FB
-         FKrXHIN6Hc9pg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/2019 7:44 PM, Thierry Reding wrote:
-> On Tue, Apr 02, 2019 at 12:47:48PM +0530, Vidya Sagar wrote:
->> On 3/30/2019 2:22 AM, Bjorn Helgaas wrote:
-> [...]
->>>> +static int tegra_pcie_dw_host_init(struct pcie_port *pp)
->>>> +{
-> [...]
->>>> +	val_w = dw_pcie_readw_dbi(pci, CFG_LINK_STATUS);
->>>> +	while (!(val_w & PCI_EXP_LNKSTA_DLLLA)) {
->>>> +		if (!count) {
->>>> +			val = readl(pcie->appl_base + APPL_DEBUG);
->>>> +			val &= APPL_DEBUG_LTSSM_STATE_MASK;
->>>> +			val >>= APPL_DEBUG_LTSSM_STATE_SHIFT;
->>>> +			tmp = readl(pcie->appl_base + APPL_LINK_STATUS);
->>>> +			tmp &= APPL_LINK_STATUS_RDLH_LINK_UP;
->>>> +			if (val == 0x11 && !tmp) {
->>>> +				dev_info(pci->dev, "link is down in DLL");
->>>> +				dev_info(pci->dev,
->>>> +					 "trying again with DLFE disabled\n");
->>>> +				/* disable LTSSM */
->>>> +				val = readl(pcie->appl_base + APPL_CTRL);
->>>> +				val &= ~APPL_CTRL_LTSSM_EN;
->>>> +				writel(val, pcie->appl_base + APPL_CTRL);
->>>> +
->>>> +				reset_control_assert(pcie->core_rst);
->>>> +				reset_control_deassert(pcie->core_rst);
->>>> +
->>>> +				offset =
->>>> +				dw_pcie_find_ext_capability(pci,
->>>> +							    PCI_EXT_CAP_ID_DLF)
->>>> +				+ PCI_DLF_CAP;
->>>
->>> This capability offset doesn't change, does it?  Could it be computed
->>> outside the loop?
->> This is the only place where DLF offset is needed and gets calculated and this
->> scenario is very rare as so far only a legacy ASMedia USB3.0 card requires DLF
->> to be disabled to get PCIe link up. So, I thought of calculating the offset
->> here itself instead of using a separate variable.
->>
->>>
->>>> +				val = dw_pcie_readl_dbi(pci, offset);
->>>> +				val &= ~DL_FEATURE_EXCHANGE_EN;
->>>> +				dw_pcie_writel_dbi(pci, offset, val);
->>>> +
->>>> +				tegra_pcie_dw_host_init(&pcie->pci.pp);
->>>
->>> This looks like some sort of "wait for link up" retry loop, but a
->>> recursive call seems a little unusual.  My 5 second analysis is that
->>> the loop could run this 200 times, and you sure don't want the
->>> possibility of a 200-deep call chain.  Is there way to split out the
->>> host init from the link-up polling?
->> Again, this recursive calling comes into picture only for a legacy ASMedia
->> USB3.0 card and it is going to be a 1-deep call chain as the recursion takes
->> place only once depending on the condition. Apart from the legacy ASMedia card,
->> there is no other card at this point in time out of a huge number of cards that we have
->> tested.
-> 
-> A more idiomatic way would be to add a "retry:" label somewhere and goto
-> that after disabling DLFE. That way you achieve the same effect, but you
-> can avoid the recursion, even if it is harmless in practice.
-Initially I thought of using goto to keep it simple, but I thought it would be
-discouraged and hence used recursion. But, yeah.. agree that goto would keep
-it simple and I'll switch to goto now.
+On 03.04.2019 6:07, Huazhong Tan wrote:
 
+> From: Peng Li <lipeng321@huawei.com>
 > 
->>>> +static int tegra_pcie_dw_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct tegra_pcie_dw *pcie;
->>>> +	struct pcie_port *pp;
->>>> +	struct dw_pcie *pci;
->>>> +	struct phy **phy;
->>>> +	struct resource	*dbi_res;
->>>> +	struct resource	*atu_dma_res;
->>>> +	const struct of_device_id *match;
->>>> +	const struct tegra_pcie_of_data *data;
->>>> +	char *name;
->>>> +	int ret, i;
->>>> +
->>>> +	pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
->>>> +	if (!pcie)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	pci = &pcie->pci;
->>>> +	pci->dev = &pdev->dev;
->>>> +	pci->ops = &tegra_dw_pcie_ops;
->>>> +	pp = &pci->pp;
->>>> +	pcie->dev = &pdev->dev;
->>>> +
->>>> +	match = of_match_device(of_match_ptr(tegra_pcie_dw_of_match),
->>>> +				&pdev->dev);
->>>> +	if (!match)
->>>> +		return -EINVAL;
->>>
->>> Logically could be the first thing in the function since it doesn't
->>> depend on anything.
->> Done
->>
->>>
->>>> +	data = (struct tegra_pcie_of_data *)match->data;
+> When set 2 same MAC to different function of one port, IMP
+> will return error as the later one may modify the origin one.
+> This will cause bond fail for 2 VFs of one port.
 > 
-> of_device_get_match_data() can help remove some of the above
-> boilerplate. Also, there's no reason to check for a failure with these
-> functions. The driver is OF-only and can only ever be probed if the
-> device exists, in which case match (or data for that matter) will never
-> be NULL.
-Done.
+> Driver just print warning and return 0 with this patch, so
+> if set same MAC address, it will return 0 but do not really
+> configure to HW.
 
-> 
->>> I see that an earlier patch added "bus" to struct pcie_port.  I think
->>> it would be better to somehow connect to the pci_host_bridge struct.
->>> Several other drivers already do this; see uses of
->>> pci_host_bridge_from_priv().
->> All non-DesignWare based implementations save their private data structure
->> in 'private' pointer of struct pci_host_bridge and use pci_host_bridge_from_priv()
->> to get it back. But, DesignWare based implementations save pcie_port in 'sysdata'
->> and nothing in 'private' pointer. So,  I'm not sure if pci_host_bridge_from_priv()
->> can be used in this case. Please do let me know if you think otherwise.
-> 
-> If nothing is currently stored in the private pointer, why not do like
-> the other drivers and store the struct pci_host_bridge pointer there?
-non-designware drivers get their private data allocated as part of pci_alloc_host_bridge()
-by passing the size of their private structure and use pci_host_bridge_from_priv() to get
-pointer to their own private structure (which is within struct pci_host_bridge).
-Whereas in Designware core, we can get the memory for struct pcie_port much before than
-calling pci_alloc_host_bridge() API, in fact, size '0' is passed as an argument to alloc API.
-This is the reason why struct pcie_port pointer is saved in 'sysdata'.
+    "To" not needed here.
 
+> Signed-off-by: Peng Li <lipeng321@huawei.com>
+> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+> ---
+>   drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> Thierry
-> 
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+> index e742a05..d45789e 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+> @@ -5962,8 +5962,11 @@ int hclge_add_uc_addr_common(struct hclge_vport *vport,
+>   	}
+>   
+>   	/* check if we just hit the duplicate */
+> -	if (!ret)
+> -		ret = -EINVAL;
+> +	if (!ret) {
+> +		dev_warn(&hdev->pdev->dev, "VF %d mac(%pM) has been existed\n",
 
+    Maybe just "exists"? The grammar is certainly wrong as is. :-)
+
+> +			 vport->vport_id, addr);
+> +		return 0;
+> +	}
+>   
+>   	dev_err(&hdev->pdev->dev,
+>   		"PF failed to add unicast entry(%pM) in the MAC table\n",
+
+MBR, Sergei
