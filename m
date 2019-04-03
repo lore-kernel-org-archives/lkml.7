@@ -2,149 +2,132 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F369C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027F2C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675D021473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BFC2147A
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i41MgARA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbfDCIrQ (ORCPT
+        id S1729151AbfDCIrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:47:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33264 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728696AbfDCIrN (ORCPT
+        Wed, 3 Apr 2019 04:47:19 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:34632 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbfDCIrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:47:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q1so20198420wrp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:47:12 -0700 (PDT)
+        Wed, 3 Apr 2019 04:47:17 -0400
+Received: by mail-wr1-f49.google.com with SMTP id p10so20211999wrq.1;
+        Wed, 03 Apr 2019 01:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tFRNnaPfxgsd7kdjbcp3Ak2bhf4Ex75awlMXNJiGe/c=;
+        b=i41MgARAGLQthq8ZW76BAjsuhYJPxmH1fkQRBPGDZEBxLdKJoP8gM97vmaO5MRS6jH
+         u4lwnSYvR03ONRRWtPjVpc4SULpd0j7Bfn93dEj+uwyZfLKvT/IL1bnYWB0Lb+K2gWiF
+         tY0gVV92BGIiYj8E6YXnUMRPBGfgCL5arxZ53Khezx0l/fzH034tVNSDaQ61347T7kq+
+         6jAKn3x8o5znaOipbxVZG1ui7j7ENFKDdu7iDUiF5nuF+pm+kNfvLMXzhkqM2V6H0jsD
+         I+5Ul+CnUdMahLUIc4SHjGPJRCDEiKP2NJk9TiETAkvaKez4HTxBz3d4xvVCUIxgzSYm
+         kVyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=L4zmx41iw1KumQPxCRIW2sBgEknaPog+5Lq3b2W35Co=;
-        b=bG9Uwj+1FfBsIqpsxmdGk51NbXKd2GTpsSYNsaAdKMnomW1y4zTYZuQW96CYo31uhb
-         wgxce7GeR1PZwXRGR2ymtv2kpb5RqKykyNB1BFlexqwhImyqL+AzJIQ03r09biQB7YvF
-         pjs2feytpg9K0BwQJq9kcQJ43GMyPKiXxs57JS06KCZ40HWEjeMy2YdQ9C4IrdcfB7I4
-         PDjKYbLbSdz1FLXMeARjdCW0rbbmK4gernkfi/uxx2RZA1LI8Gcwn69xf5VgYDMkJ/I8
-         98f1w5LjaV95seSoMEDwlvm0DZbAJB7SwIICPXydg3KCPare8gylb7QVGOrMqfpIwTny
-         iv1w==
-X-Gm-Message-State: APjAAAWpBYcqup/7qhcX018YwQ85Mb6KQ8ZY+DHTYJghGrqP1u9IWuU/
-        YgB46449CcdSlnn3ubChadEIpw==
-X-Google-Smtp-Source: APXvYqx2sqF1ALjK/4/RFVRSIYr52LB+RLoqBwSCqlpWsa481F6FNXJjbxQhUIq3KclPkg/rx2xVqg==
-X-Received: by 2002:adf:b6a4:: with SMTP id j36mr27046494wre.55.1554281231568;
-        Wed, 03 Apr 2019 01:47:11 -0700 (PDT)
-Received: from localhost.localdomain.com ([151.29.174.33])
-        by smtp.gmail.com with ESMTPSA id o2sm12258081wrs.89.2019.04.03.01.47.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tFRNnaPfxgsd7kdjbcp3Ak2bhf4Ex75awlMXNJiGe/c=;
+        b=qwUhkwnNgQ0KNaTv0eTcGyIriGCH3oZi0wuCqJAMoJhKjS7ldOIcQkwO+amU4kCBsj
+         4B/LaXhMB6Br5oV7rDriJJ1cmXwMPDrhgPLz0xZinRD5Wj+uDCRuZriKnw1TUcmyKoDr
+         zEwCobsflW34+tYiE7vpxK0fe/RNS13iIdAOlzXkiu0WpbfHX4U6leFWqv3+Xqvfaknj
+         z0+6mVYYVXgwJ7owwl4pi3I/tIP709Y4iT4qy26DGaVPh+gKHTZ/uy6bJ7t8nzEXXeW8
+         nPNR7H9rm6YW4Swa6N+GtZ72HVH4PEtZy0NAakRrIxN1M2W6KRnNq1DGyX+9t407lcTt
+         jnUA==
+X-Gm-Message-State: APjAAAUeiIITo1WXX3zmwWsI5MXBCwA82rlUEmr1281Tg5c/hmUh13et
+        61Ipi8qbHjVG2yqQSYx34XY=
+X-Google-Smtp-Source: APXvYqwS6h31kQVYl4p2j5ppv6uLHcB+v8UtPbZrYDj3R/YAbXgM5o0XUjvjqKppQVN8cYPJDJwHWQ==
+X-Received: by 2002:adf:dc88:: with SMTP id r8mr42348832wrj.28.1554281235105;
+        Wed, 03 Apr 2019 01:47:15 -0700 (PDT)
+Received: from localhost (pD9E51B25.dip0.t-ipconnect.de. [217.229.27.37])
+        by smtp.gmail.com with ESMTPSA id f1sm505707wml.28.2019.04.03.01.47.14
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 01:47:10 -0700 (PDT)
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tj@kernel.org
-Cc:     linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
-        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
-        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
-        cgroups@vger.kernel.org
-Subject: [PATCH v7 1/7] sched/topology: Adding function partition_sched_domains_locked()
-Date:   Wed,  3 Apr 2019 10:46:44 +0200
-Message-Id: <20190403084650.4414-2-juri.lelli@redhat.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190403084650.4414-1-juri.lelli@redhat.com>
-References: <20190403084650.4414-1-juri.lelli@redhat.com>
+        Wed, 03 Apr 2019 01:47:14 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 10:47:13 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Wan ZongShun <mcuos.com@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>, Barry Song <baohua@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] watchdog: Convert to use devm_platform_ioremap_resource
+Message-ID: <20190403084713.GD5238@ulmo>
+References: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="/3yNEOqWowh/8j+e"
+Content-Disposition: inline
+In-Reply-To: <1554231713-14137-1-git-send-email-linux@roeck-us.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Introducing function partition_sched_domains_locked() by taking
-the mutex locking code out of the original function.  That way
-the work done by partition_sched_domains_locked() can be reused
-without dropping the mutex lock.
+--/3yNEOqWowh/8j+e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No change of functionality is introduced by this patch.
+On Tue, Apr 02, 2019 at 12:01:53PM -0700, Guenter Roeck wrote:
+[...]
+>  drivers/watchdog/tegra_wdt.c      | 4 +---
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Tejun Heo <tj@kernel.org>
----
- include/linux/sched/topology.h | 10 ++++++++++
- kernel/sched/topology.c        | 17 +++++++++++++----
- 2 files changed, 23 insertions(+), 4 deletions(-)
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 57c7ed3fe465..e7db602e898c 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -161,6 +161,10 @@ static inline struct cpumask *sched_domain_span(struct sched_domain *sd)
- 	return to_cpumask(sd->span);
- }
- 
-+extern void partition_sched_domains_locked(int ndoms_new,
-+					   cpumask_var_t doms_new[],
-+					   struct sched_domain_attr *dattr_new);
-+
- extern void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 				    struct sched_domain_attr *dattr_new);
- 
-@@ -213,6 +217,12 @@ unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
- 
- struct sched_domain_attr;
- 
-+static inline void
-+partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
-+			       struct sched_domain_attr *dattr_new)
-+{
-+}
-+
- static inline void
- partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 			struct sched_domain_attr *dattr_new)
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index ab7f371a3a17..b63ac11d0831 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2154,16 +2154,16 @@ static int dattrs_equal(struct sched_domain_attr *cur, int idx_cur,
-  * ndoms_new == 0 is a special case for destroying existing domains,
-  * and it will not create the default domain.
-  *
-- * Call with hotplug lock held
-+ * Call with hotplug lock and sched_domains_mutex held
-  */
--void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
--			     struct sched_domain_attr *dattr_new)
-+void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
-+				    struct sched_domain_attr *dattr_new)
- {
- 	bool __maybe_unused has_eas = false;
- 	int i, j, n;
- 	int new_topology;
- 
--	mutex_lock(&sched_domains_mutex);
-+	lockdep_assert_held(&sched_domains_mutex);
- 
- 	/* Always unregister in case we don't destroy any domains: */
- 	unregister_sched_domain_sysctl();
-@@ -2246,6 +2246,15 @@ void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 	ndoms_cur = ndoms_new;
- 
- 	register_sched_domain_sysctl();
-+}
- 
-+/*
-+ * Call with hotplug lock held
-+ */
-+void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
-+			     struct sched_domain_attr *dattr_new)
-+{
-+	mutex_lock(&sched_domains_mutex);
-+	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
- 	mutex_unlock(&sched_domains_mutex);
- }
--- 
-2.17.2
+--/3yNEOqWowh/8j+e
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlykcxEACgkQ3SOs138+
+s6E2RRAAoT043id64ord0O28U5hcmx0fHiMg9zmloWTkycYSG1MQK4kQ0JAEdPet
+x1JnF2eTEQocqgHGHtk2k/saFXvtO63qBaNxorWhGBgfPNWyR5UAy1WijFE90eOs
+Bu3fldZY+ZZ64Xo2TxtPXc9yXzZ7A7l0dg0l+oV2Wo1MrvBBJtdF0pFPBClz1dXc
+c5fx5ow1vRq5zUd5FB7bUmlM1pmYzh6EhKugrreqQd3TRSMm/+j3BfLI+bDDan7y
+9FOxbZ3GSObFld3bcLNsSk4efJT4SVfIx7MOhHtKtdG4Vn/diFwU8YfOrdS8Wb6u
+IXllxOVVx006HibFXKwnbgS+RWaX22Eg6Av/hd8ZJ0Ud+UbT0Im7W8Zog/k0H3BQ
+ecjhGtfGtIMV2PLMEUY2nyh3xJnTj6UvzdVHQz6X+RXfUJDDrTs/oPZAXm2BzWKZ
+eETYQxga8pRU/eayMnRE8C84YYFx2+y0lOyTkFw8XKch51MfMIGSZJHfpGNSYAvx
+LOS3PwsR9TSozumi5zntfti7wuMvKSUcYk9hLUg4xmGEDPn0zYkCVrXDWroIq4xr
+mwrzg/gZ/jCcfH3MTYo+aps9VRVuzqkjfX6eUJU3caHEXla2zrhngQ29xP0anC+Y
+ldNlM/VhDj1JQfsbbwXMsGlM1kaHxJBArY/8ZvCLSOZdCJav118=
+=vq6o
+-----END PGP SIGNATURE-----
+
+--/3yNEOqWowh/8j+e--
