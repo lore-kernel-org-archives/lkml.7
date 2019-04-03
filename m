@@ -2,85 +2,137 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B28C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BD4C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53D72084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:20:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="argDfeYU"
+	by mail.kernel.org (Postfix) with ESMTP id EAC412075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfDCPUS (ORCPT
+        id S1726218AbfDCPXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:20:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52066 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfDCPUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:20:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=R5T7kDV7TpyWs6S5Q85Fo4256ZuEQ3gxr7tNwxCads0=; b=argDfeYUxxJTNDNEAik618ZR/
-        nDvEsQgUGtGwDfQm5SYJnaLznKQH1MSbdMsxl1TJk5Jm831iLQ5Vlx8VD4BrIKcFkQwy4JFaT7fDT
-        COQALpBS2NabrxRQ4ZHD648+lNswBixF4f1SG11dZjlzCqmSZAV1DLuQ8doBSlPNgQ7y1biPZAaUF
-        FtpYQRR+oI0kb8Lfl9kbPB2X+EZ1R5CeKyGbF3WG6qkpE6owAPcccveCxybFMTjp/N6+uxScYznJQ
-        lCBLo1sogbpXqgbipYoeCPXjcXXEoCXN96K9WxmcSIs2jogPhr2gNmWyakJ246eZz1jHodCsPPDKX
-        h9HwO3hTQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hBhgX-0000Jo-Av; Wed, 03 Apr 2019 15:20:17 +0000
-Subject: Re: linux-next: Tree for Apr 3 (acpi_dev_get_first_match*)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>
-References: <20190403192407.13a99513@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <532f66c8-4c25-10d3-d119-71f3c8f82edd@infradead.org>
-Date:   Wed, 3 Apr 2019 08:20:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 3 Apr 2019 11:23:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41630 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725959AbfDCPXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 11:23:19 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [10.3.19.206])
+        by Forcepoint Email with ESMTP id 12AAE4FDD608E969D7C1;
+        Wed,  3 Apr 2019 23:23:17 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 3 Apr 2019 23:23:09 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <julien.thierry@arm.com>, <marc.zyngier@arm.com>,
+        <rostedt@goodmis.org>
+CC:     <mark.rutland@arm.com>, <suzuki.poulose@arm.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <mingo@redhat.com>, <james.morse@arm.com>, <yuzenghui@huawei.com>,
+        <wanghaibin.wang@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>,
+        <huawei.libin@huawei.com>
+Subject: [RFC PATCH] arm64: irqflags: fix incomplete save & restore
+Date:   Wed, 3 Apr 2019 23:28:54 +0800
+Message-ID: <20190403152854.27741-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190403192407.13a99513@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/19 1:24 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20190402:
-> 
+To support the arm64 pseudo nmi, function arch_local_irq_save() and
+arch_local_irq_restore() now operate ICC_PMR_EL1 insead of daif.
+But i found the logic of the save and restore may be suspicious:
 
-on i386 or x86_64:
+arch_local_irq_save():
+daif.i_on	pmr_on	->	flag.i_on
+1			0		|	0
+1			1		|	1
+0			1		|	0		--[1]
+0			0		|	0
 
-The patch(es) that change acpi_dev_get_first_match_name() to
-acpi_dev_get_first_match_dev() have a problem when CONFIG_ACPI is not set/enabled.
+arch_local_irq_restore():
+daif.i_on	pmr_on	<-	flag.i_on
+x			0		|	0
+x			1		|	1
 
+As we see, the condintion [1] will never be restored honestly. When doing
+function_graph trace at gic_handle_irq(), calling local_irq_save() and
+local_irq_restore() in trace_graph_entry() will just go into this
+condintion. Therefore the irq can never be processed and leading to hang.
 
-../drivers/gpio/gpio-merrifield.c: In function ‘mrfld_gpio_get_pinctrl_dev_name’:
-../drivers/gpio/gpio-merrifield.c:388:19: error: dereferencing pointer to incomplete type
-   put_device(&adev->dev);
-                   ^
+In this patch, we do the save & restore exactly, and make sure the
+arch_irqs_disabled_flags() returns correctly.
 
-../drivers/extcon/extcon-axp288.c: In function ‘axp288_extcon_probe’:
-../drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
-    put_device(&adev->dev);
-                    ^
+Fix: commit 4a503217ce37 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
+Signed-off-by: Wei Li <liwei391@huawei.com>
+---
+ arch/arm64/include/asm/irqflags.h | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-
+diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+index 43d8366c1e87..7bc6a79f31c4 100644
+--- a/arch/arm64/include/asm/irqflags.h
++++ b/arch/arm64/include/asm/irqflags.h
+@@ -76,8 +76,7 @@ static inline unsigned long arch_local_save_flags(void)
+ 	 * The asm is logically equivalent to:
+ 	 *
+ 	 * if (system_uses_irq_prio_masking())
+-	 *	flags = (daif_bits & PSR_I_BIT) ?
+-	 *			GIC_PRIO_IRQOFF :
++	 *	flags = (daif_bits << 32) |
+ 	 *			read_sysreg_s(SYS_ICC_PMR_EL1);
+ 	 * else
+ 	 *	flags = daif_bits;
+@@ -87,11 +86,11 @@ static inline unsigned long arch_local_save_flags(void)
+ 			"nop\n"
+ 			"nop",
+ 			"mrs_s	%0, " __stringify(SYS_ICC_PMR_EL1) "\n"
+-			"ands	%1, %1, " __stringify(PSR_I_BIT) "\n"
+-			"csel	%0, %0, %2, eq",
++			"lsl	%1, %1, #32\n"
++			"orr	%0, %0, %1",
+ 			ARM64_HAS_IRQ_PRIO_MASKING)
+ 		: "=&r" (flags), "+r" (daif_bits)
+-		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
++		:
+ 		: "memory");
+ 
+ 	return flags;
+@@ -119,8 +118,8 @@ static inline void arch_local_irq_restore(unsigned long flags)
+ 			"msr_s	" __stringify(SYS_ICC_PMR_EL1) ", %0\n"
+ 			"dsb	sy",
+ 			ARM64_HAS_IRQ_PRIO_MASKING)
+-		: "+r" (flags)
+ 		:
++		: "r" ((int)flags)
+ 		: "memory");
+ }
+ 
+@@ -130,12 +129,14 @@ static inline int arch_irqs_disabled_flags(unsigned long flags)
+ 
+ 	asm volatile(ALTERNATIVE(
+ 			"and	%w0, %w1, #" __stringify(PSR_I_BIT) "\n"
++			"nop\n"
+ 			"nop",
++			"and	%w0, %w2, #" __stringify(PSR_I_BIT) "\n"
+ 			"cmp	%w1, #" __stringify(GIC_PRIO_IRQOFF) "\n"
+-			"cset	%w0, ls",
++			"cinc	%w0, %w0, ls",
+ 			ARM64_HAS_IRQ_PRIO_MASKING)
+ 		: "=&r" (res)
+-		: "r" ((int) flags)
++		: "r" ((int) flags), "r" (flags >> 32)
+ 		: "memory");
+ 
+ 	return res;
 -- 
-~Randy
+2.17.1
+
