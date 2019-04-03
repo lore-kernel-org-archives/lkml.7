@@ -2,218 +2,116 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC300C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44187C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D5B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0676A206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:38:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkgZrTL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfDCWhr (ORCPT
+        id S1726458AbfDCWi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 18:37:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47930 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726099AbfDCWhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 18:37:46 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 311C4C05B1CB;
-        Wed,  3 Apr 2019 22:37:46 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 969DB18BA1;
-        Wed,  3 Apr 2019 22:37:40 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/nouveau/i2c: Disable i2c bus access after ->fini()
-Date:   Wed,  3 Apr 2019 18:37:28 -0400
-Message-Id: <20190403223732.30876-1-lyude@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 03 Apr 2019 22:37:46 +0000 (UTC)
+        Wed, 3 Apr 2019 18:38:56 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42902 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbfDCWi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 18:38:56 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 103so510251otd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 15:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=0YxX/DUB5kIbMUGhk9cYcrzc+Fvg0YYmoL5PkOL4j2Q=;
+        b=dkgZrTL3wA4iHdfktXMmSml01jZGmg9FcVBo2hKFtmimju1vZGc59fjqot+URhG6m+
+         4bI9Bs/Q3ij/Gd/bhFu63Hk7H31bsGCCX9lZd96XpJLNxub+SppHU4Y8IQh4y5DrYt48
+         PgOFsszjaN7XhMwkMICPWnh9AD97mdLOoGA6XtUy2AN431ipR6jpvoflkGJrOpvCLr2G
+         YKp+oCe5rBwsUkUDY3cLgAQyateGsCi+3OtHsp1cW6Cri9BmUxVIF++y/ZWccaXDN696
+         6NuE7pi8E+F4vz/epjxDKn0zE/eZoRFLhkj+JB4fWy7xTqhx7/SfLOrN9QBqq173ULvp
+         762g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0YxX/DUB5kIbMUGhk9cYcrzc+Fvg0YYmoL5PkOL4j2Q=;
+        b=nEWWDgSgTv2GXkvNWUIO1uR4z9ondXj61E7S+hnmH6lrjZWRJ+SJHIK6GKxVgnJTrq
+         75E9XMoO0lyVRIxS8rBhSLw8mIS/DyhfY8j+ZTHwB8cZkibSZRd+/5oh2+vQnHe1hd04
+         DPI+bmlpj443EhY/3VwS7OTACDkMmC1OLIIXBonh+BxngjYhenKLjXJN8DCFp0X4z+cy
+         UpQdXrl2ZqIFD90MPdBfbJs36/1YMrIobY1uOBOAe71drf3iOGU1TzpojxICtZ9Dqbsm
+         bZ4+vnrWomV/B344frR5kB180NsipdC6hHbko9cGphXeSEfHf1bl4NkwQq1Lk0a9C3jz
+         75Tw==
+X-Gm-Message-State: APjAAAWsQZ8v7otojg0oh7EM0sTOxrP/s+uFX4CUqOdGzt6Kc4bKr/Km
+        dN12aJDOHlmdP4accDfypZs=
+X-Google-Smtp-Source: APXvYqw1M7NnH4LF/4m25aaIfuWws9rSZ+TRtmJ1mE8ATU2U/gRWsMYlpKZFbOQyyKPgti31/7OBwg==
+X-Received: by 2002:a9d:68c7:: with SMTP id i7mr1544393oto.275.1554331135583;
+        Wed, 03 Apr 2019 15:38:55 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:1876:bc0b:8981:17be])
+        by smtp.gmail.com with ESMTPSA id c145sm7289396oig.0.2019.04.03.15.38.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 15:38:54 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH v2] Staging: rtlwifi: Remove unwanted parentheses
+Date:   Wed,  3 Apr 2019 17:38:51 -0500
+Message-Id: <20190403223851.22524-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For a while, we've had the problem of i2c bus access not grabbing
-a runtime PM ref when it's being used in userspace by i2c-dev, resulting
-in nouveau spamming the kernel log with errors if anything attempts to
-access the i2c bus while the GPU is in runtime suspend. An example:
+Remove unwanted parentheses and use !! idiom in place of ternary
+operator to make code simple and more understandable.
 
-[  130.078386] nouveau 0000:01:00.0: i2c: aux 000d: begin idle timeout ffffffff
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
 
-Since the GPU is in runtime suspend, the MMIO region that the i2c bus is
-on isn't accessible. On x86, the standard behavior for accessing an
-unavailable MMIO region is to just return ~0.
-
-Except, that turned out to be a lie. While computers with a clean
-concious will return ~0 in this scenario, some machines will actually
-completely hang a CPU on certian bad MMIO accesses. This was witnessed
-with someone's Lenovo ThinkPad P50, where sensors-detect attempting to
-access the i2c bus while the GPU was suspended would result in a CPU
-hang:
-
-  CPU: 5 PID: 12438 Comm: sensors-detect Not tainted 5.0.0-0.rc4.git3.1.fc30.x86_64 #1
-  Hardware name: LENOVO 20EQS64N17/20EQS64N17, BIOS N1EET74W (1.47 ) 11/21/2017
-  RIP: 0010:ioread32+0x2b/0x30
-  Code: 81 ff ff ff 03 00 77 20 48 81 ff 00 00 01 00 76 05 0f b7 d7 ed c3
-  48 c7 c6 e1 0c 36 96 e8 2d ff ff ff b8 ff ff ff ff c3 8b 07 <c3> 0f 1f
-  40 00 49 89 f0 48 81 fe ff ff 03 00 76 04 40 88 3e c3 48
-  RSP: 0018:ffffaac3c5007b48 EFLAGS: 00000292 ORIG_RAX: ffffffffffffff13
-  RAX: 0000000001111000 RBX: 0000000001111000 RCX: 0000043017a97186
-  RDX: 0000000000000aaa RSI: 0000000000000005 RDI: ffffaac3c400e4e4
-  RBP: ffff9e6443902c00 R08: ffffaac3c400e4e4 R09: ffffaac3c5007be7
-  R10: 0000000000000004 R11: 0000000000000001 R12: ffff9e6445dd0000
-  R13: 000000000000e4e4 R14: 00000000000003c4 R15: 0000000000000000
-  FS:  00007f253155a740(0000) GS:ffff9e644f600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00005630d1500358 CR3: 0000000417c44006 CR4: 00000000003606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   g94_i2c_aux_xfer+0x326/0x850 [nouveau]
-   nvkm_i2c_aux_i2c_xfer+0x9e/0x140 [nouveau]
-   __i2c_transfer+0x14b/0x620
-   i2c_smbus_xfer_emulated+0x159/0x680
-   ? _raw_spin_unlock_irqrestore+0x1/0x60
-   ? rt_mutex_slowlock.constprop.0+0x13d/0x1e0
-   ? __lock_is_held+0x59/0xa0
-   __i2c_smbus_xfer+0x138/0x5a0
-   i2c_smbus_xfer+0x4f/0x80
-   i2cdev_ioctl_smbus+0x162/0x2d0 [i2c_dev]
-   i2cdev_ioctl+0x1db/0x2c0 [i2c_dev]
-   do_vfs_ioctl+0x408/0x750
-   ksys_ioctl+0x5e/0x90
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x60/0x1e0
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  RIP: 0033:0x7f25317f546b
-  Code: 0f 1e fa 48 8b 05 1d da 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
-  ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
-  f0 ff ff 73 01 c3 48 8b 0d ed d9 0c 00 f7 d8 64 89 01 48
-  RSP: 002b:00007ffc88caab68 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-  RAX: ffffffffffffffda RBX: 00005630d0fe7260 RCX: 00007f25317f546b
-  RDX: 00005630d1598e80 RSI: 0000000000000720 RDI: 0000000000000003
-  RBP: 00005630d155b968 R08: 0000000000000001 R09: 00005630d15a1da0
-  R10: 0000000000000070 R11: 0000000000000246 R12: 00005630d1598e80
-  R13: 00005630d12f3d28 R14: 0000000000000720 R15: 00005630d12f3ce0
-  watchdog: BUG: soft lockup - CPU#5 stuck for 23s! [sensors-detect:12438]
-
-Yikes! While I wanted to try to make it so that accessing an i2c bus on
-nouveau would wake up the GPU as needed, airlied pointed out that pretty
-much any usecase for userspace accessing an i2c bus on a GPU (mainly for
-the DDC brightness control that some displays have) is going to only be
-useful while there's at least one display enabled on the GPU anyway, and
-the GPU never sleeps while there's displays running.
-
-Since teaching the i2c bus to wake up the GPU on userspace accesses is a
-good deal more difficult than it might seem, mostly due to the fact that
-we have to use the i2c bus during runtime resume of the GPU, we instead
-opt for the easiest solution: don't let userspace access i2c busses on
-the GPU at all while it's in runtime suspend.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: stable@vger.kernel.org
 ---
- .../gpu/drm/nouveau/include/nvkm/subdev/i2c.h |  1 +
- .../gpu/drm/nouveau/nvkm/subdev/i2c/base.c    |  5 +++++
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c | 21 ++++++++++++++++++-
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h |  1 +
- 4 files changed, 27 insertions(+), 1 deletion(-)
+Changes in v2:
+- Changed commit log
+- Replaced ternary operator with !! idiom
+- Modified a BIT operator
+---
+ drivers/staging/rtlwifi/core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-index eef54e9b5d77..7c45056c47dd 100644
---- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-+++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/i2c.h
-@@ -36,6 +36,7 @@ struct nvkm_i2c_bus {
- 	int id;
+diff --git a/drivers/staging/rtlwifi/core.c b/drivers/staging/rtlwifi/core.c
+index a9902818ae7e..c70f062cf4b9 100644
+--- a/drivers/staging/rtlwifi/core.c
++++ b/drivers/staging/rtlwifi/core.c
+@@ -341,8 +341,8 @@ static u16 crc16_ccitt(u8 data, u16 crc)
+ 	u16 result;
  
- 	struct mutex mutex;
-+	u8 enabled;
- 	struct list_head head;
- 	struct i2c_adapter i2c;
- };
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-index 4f197b15acf6..54d9882f9931 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-@@ -160,8 +160,13 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev, bool suspend)
- {
- 	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
- 	struct nvkm_i2c_pad *pad;
-+	struct nvkm_i2c_bus *bus;
- 	u32 mask;
+ 	for (i = 0; i < 8; i++) {
+-		crc_bit15 = ((crc & BIT(15)) ? 1 : 0);
+-		data_bit  = (data & (BIT(0) << i) ? 1 : 0);
++		crc_bit15 = !!(crc & BIT(15));
++		data_bit  = !!(data & BIT(i));
+ 		shift_in = crc_bit15 ^ data_bit;
  
-+	list_for_each_entry(bus, &i2c->bus, head) {
-+		nvkm_i2c_bus_fini(bus);
-+	}
-+
- 	if ((mask = (1 << i2c->func->aux) - 1), i2c->func->aux_stat) {
- 		i2c->func->aux_mask(i2c, NVKM_I2C_ANY, mask, 0);
- 		i2c->func->aux_stat(i2c, &mask, &mask, &mask, &mask);
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-index 807a2b67bd64..ed50cc3736b9 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.c
-@@ -110,6 +110,19 @@ nvkm_i2c_bus_init(struct nvkm_i2c_bus *bus)
- 	BUS_TRACE(bus, "init");
- 	if (bus->func->init)
- 		bus->func->init(bus);
-+
-+	mutex_lock(&bus->mutex);
-+	bus->enabled = true;
-+	mutex_unlock(&bus->mutex);
-+}
-+
-+void
-+nvkm_i2c_bus_fini(struct nvkm_i2c_bus *bus)
-+{
-+	BUS_TRACE(bus, "fini");
-+	mutex_lock(&bus->mutex);
-+	bus->enabled = false;
-+	mutex_unlock(&bus->mutex);
- }
+ 		result = crc << 1;
+@@ -351,13 +351,13 @@ static u16 crc16_ccitt(u8 data, u16 crc)
+ 		else
+ 			result |= BIT(0);
  
- void
-@@ -126,9 +139,15 @@ nvkm_i2c_bus_acquire(struct nvkm_i2c_bus *bus)
- {
- 	struct nvkm_i2c_pad *pad = bus->pad;
- 	int ret;
-+
- 	BUS_TRACE(bus, "acquire");
- 	mutex_lock(&bus->mutex);
--	ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-+
-+	if (bus->enabled)
-+		ret = nvkm_i2c_pad_acquire(pad, NVKM_I2C_PAD_I2C);
-+	else
-+		ret = -EIO;
-+
- 	if (ret)
- 		mutex_unlock(&bus->mutex);
- 	return ret;
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-index bea0dd33961e..465464bba58b 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/bus.h
-@@ -18,6 +18,7 @@ int nvkm_i2c_bus_new_(const struct nvkm_i2c_bus_func *, struct nvkm_i2c_pad *,
- 		      int id, struct nvkm_i2c_bus **);
- void nvkm_i2c_bus_del(struct nvkm_i2c_bus **);
- void nvkm_i2c_bus_init(struct nvkm_i2c_bus *);
-+void nvkm_i2c_bus_fini(struct nvkm_i2c_bus *);
+-		crc_bit11 = ((crc & BIT(11)) ? 1 : 0) ^ shift_in;
++		crc_bit11 = !!(crc & BIT(11)) ^ shift_in;
+ 		if (crc_bit11 == 0)
+ 			result &= (~BIT(12));
+ 		else
+ 			result |= BIT(12);
  
- int nvkm_i2c_bit_xfer(struct nvkm_i2c_bus *, struct i2c_msg *, int);
- 
+-		crc_bit4 = ((crc & BIT(4)) ? 1 : 0) ^ shift_in;
++		crc_bit4 = !!(crc & BIT(4)) ^ shift_in;
+ 		if (crc_bit4 == 0)
+ 			result &= (~BIT(5));
+ 		else
 -- 
-2.20.1
+2.17.1
 
