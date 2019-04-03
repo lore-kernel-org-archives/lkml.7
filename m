@@ -2,198 +2,102 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE35C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A7DC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5D92146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225C72146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 02:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OBUgMHS0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l8QAW9kK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfDCC3Y (ORCPT
+        id S1726966AbfDCC3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 22:29:24 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46134 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfDCC3X (ORCPT
+        Tue, 2 Apr 2019 22:29:50 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36960 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfDCC3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 22:29:23 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z17so17512125qts.13
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:29:22 -0700 (PDT)
+        Tue, 2 Apr 2019 22:29:49 -0400
+Received: by mail-lf1-f66.google.com with SMTP id o19so133926lfl.4
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 19:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=AZgVPE4HREq+sv6cmpMtDG6gnzQkBOK43yh8D3ILToQ=;
-        b=OBUgMHS0ifgqCut+LRrVnK4OKWSIn2FHLfyQla7SPo0+MRm3yUlamfA/7jh82iGxJi
-         ShhhPJZJBJQv7ByakBgw8jN7R7Gsz1vAHmRQViZRZDMemyOB4tGEBJpgtwWDpp3kR2YH
-         HU1wY3KXvPpfS7KXCmzE2L3U40Bp9JdCcs9e9/ycuj8qyPCDwPtTN+Uq0A911EVHgldF
-         kWNtahF5k6T5QrAR0D+4k6tul5MmuzWYFt2i97TwuWxk0EUrRJziIcC6huUeeqbUJyXi
-         UuYhk2jXiaA+M1owgJ+BcxZ+tvLIFksXEpbEUTJZOtGNQISAR0g/4KtijVLR86oRChnX
-         Gd8g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n40Gmtanin2LRj3c84+mc3xFGY0g/YNWV6TPA8Bz1eY=;
+        b=l8QAW9kK6K8C+7fIgC6llonrFej8Bcc4h0e1KUwrxA4OVmJFNkVcgn2UyE12ckmDxC
+         XrJVMDGvhXFHOI4rH6G8U9uPze+iGSuzdOm7NdGzL1tFeKH1aX4Nfjf1QsId/0Zos+2Q
+         22M9Otu8g+pbrOmn3i51IKkrGoIgcX3qRjLCb63pyo88Y40jRGaPEkFsWoMTVqPnM2/G
+         tLv7foK/dpybzaPQEZaHqur+dXTCNscH7MBV+rk9j7Rk+IF1hqDAqf9xZJM83UrxKYKs
+         0K0kqgWhPrRDdk/7QLyw6ps4j0Ri1MOn+q9BzdNFoHzp6jkHovDAAx0rVFQkCaJEGaUq
+         bKtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AZgVPE4HREq+sv6cmpMtDG6gnzQkBOK43yh8D3ILToQ=;
-        b=mELU/U7VFqM/AXVlzuirmW979F3jjmtEE9L9LrfewfdPw6W9GGBsq4RoUVkakkMYdD
-         TtTi691YYviBTdhRaZ/LDQ7a80CobnRB1p6qWbjUM9Ap9DcFpCXNWBr1NYqJGJrL0rnL
-         x/n+bepro0zyOKzvwIjYq0BiN5FHNLLICIFWP23t2WN2KO7TXv7MjqKBVG+COcE2CdlU
-         nrnZp8oJ1+itqm5IWDOBVpcdajzTKtC6kHmu9g7Q2TYtMsIO51IC7XY/P4NX2R6PkF1y
-         aJnFTzqNDEheVAoEEmC6JN3SPK3cN8P1DDtqynh6ZhmqnGSyYxx0Mj13tu6C2dWrLWtS
-         4izg==
-X-Gm-Message-State: APjAAAVp0AxoADrS87ztpK9di5P+TEqSjxposF4OJQCvkiVTt0XQaf6y
-        LSqmdavLQVepYkBNpHz7lPsV4w==
-X-Google-Smtp-Source: APXvYqwedQnZcvsPDLInLy4Y+H1ifeejd/OGRe/ypSaz2cIuGClG7ekDLMNcXTbW2p0cY//cy9bCdw==
-X-Received: by 2002:ac8:3019:: with SMTP id f25mr61330389qte.204.1554258562365;
-        Tue, 02 Apr 2019 19:29:22 -0700 (PDT)
-Received: from ovpn-120-94.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id n41sm9520737qtf.63.2019.04.02.19.29.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 19:29:21 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     andreyknvl@google.com, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        aryabinin@virtuozzo.com, glider@google.com, dvyukov@google.com,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] slab: store tagged freelist for off-slab slabmgmt
-Date:   Tue,  2 Apr 2019 22:28:58 -0400
-Message-Id: <20190403022858.97584-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n40Gmtanin2LRj3c84+mc3xFGY0g/YNWV6TPA8Bz1eY=;
+        b=itSbvRa8+u1GnapzzENNhcW3xkDKmC/gBIiKYcs7mkGvvvvX6++rQQPDIOPheJBLl2
+         Y5iW8WqDnJD+i+fqTDHALKeTLe4jkUDCWSkYLV4KId7Z5H5kU9qO4tsPtv5OZOVbrZMQ
+         +AWcdGz92/q/udXjWaSKBFMMNJ7YjBgR7u4RhIRVc9K5mWNdK2iIjDFxN0Nl9JM7rHi1
+         Wzkr+brAHlHekzowPV3NrRCP0ZEnYVWuLLjqeP4djQ4Q8hM7od4WnCHazxanIuj9zwtE
+         RdTngsHLt4M0CNcznymR0NTEjMGIiVXVHy7rYPeGoR0wWuck8FEDzZQrxlupr/bDamLl
+         HYaA==
+X-Gm-Message-State: APjAAAVkTyeAvXz65+Qb5ZwF0oQ8LiCJ1r32a4zOvTdi9HsRWjfUKj31
+        /9ntqsLnpyg9akMWwx7jO7miRVvdtfzYzNhLXi++hQ==
+X-Google-Smtp-Source: APXvYqzejlF8ovyHuaAy6JGMq2uGvdmf/TxlUGTBW1AoyHaRM7Vqw5CHmJj8r60PHA7GrMI9mc+XBoJ+fUyLTMwvzm0=
+X-Received: by 2002:ac2:4192:: with SMTP id z18mr9149812lfh.96.1554258587676;
+ Tue, 02 Apr 2019 19:29:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-12-git-send-email-info@metux.net>
+In-Reply-To: <1552330521-4276-12-git-send-email-info@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Apr 2019 09:29:36 +0700
+Message-ID: <CACRpkdYX-xPGE61L5OCpB8JLGcO5GPcPy0Td2FiMziMrRDt+Hg@mail.gmail.com>
+Subject: Re: [PATCH 12/42] drivers: gpio: grgpio: use devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 51dedad06b5f ("kasan, slab: make freelist stored without
-tags") calls kasan_reset_tag() for off-slab slab management object
-leading to freelist being stored non-tagged. However, cache_grow_begin()
--> alloc_slabmgmt() -> kmem_cache_alloc_node() which assigns a tag for
-the address and stores in the shadow address. As the result, it causes
-endless errors below during boot due to drain_freelist() ->
-slab_destroy() -> kasan_slab_free() which compares already untagged
-freelist against the stored tag in the shadow address. Since off-slab
-slab management object freelist is such a special case, so just store it
-tagged. Non-off-slab management object freelist is still stored untagged
-which has not been assigned a tag and should not cause any other
-troubles with this inconsistency.
+On Tue, Mar 12, 2019 at 1:55 AM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 
-BUG: KASAN: double-free or invalid-free in slab_destroy+0x84/0x88
-Pointer tag: [ff], memory tag: [99]
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-CPU: 0 PID: 1376 Comm: kworker/0:4 Tainted: G        W
-5.1.0-rc3+ #8
-Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS
-L50_5.13_1.0.6 07/10/2018
-Workqueue: cgroup_destroy css_killed_work_fn
-Call trace:
- dump_backtrace+0x0/0x450
- show_stack+0x20/0x2c
- dump_stack+0xe0/0x16c
- print_address_description+0x74/0x2a4
- kasan_report_invalid_free+0x80/0xc0
- __kasan_slab_free+0x204/0x208
- kasan_slab_free+0xc/0x18
- kmem_cache_free+0xe4/0x254
- slab_destroy+0x84/0x88
- drain_freelist+0xd0/0x104
- __kmem_cache_shrink+0x1ac/0x224
- __kmemcg_cache_deactivate+0x1c/0x28
- memcg_deactivate_kmem_caches+0xa0/0xe8
- memcg_offline_kmem+0x8c/0x3d4
- mem_cgroup_css_offline+0x24c/0x290
- css_killed_work_fn+0x154/0x618
- process_one_work+0x9cc/0x183c
- worker_thread+0x9b0/0xe38
- kthread+0x374/0x390
- ret_from_fork+0x10/0x18
+Holding this one back so you can fix the bug pointed out by Thierry.
 
-Allocated by task 1625:
- __kasan_kmalloc+0x168/0x240
- kasan_slab_alloc+0x18/0x20
- kmem_cache_alloc_node+0x1f8/0x3a0
- cache_grow_begin+0x4fc/0xa24
- cache_alloc_refill+0x2f8/0x3e8
- kmem_cache_alloc+0x1bc/0x3bc
- sock_alloc_inode+0x58/0x334
- alloc_inode+0xb8/0x164
- new_inode_pseudo+0x20/0xec
- sock_alloc+0x74/0x284
- __sock_create+0xb0/0x58c
- sock_create+0x98/0xb8
- __sys_socket+0x60/0x138
- __arm64_sys_socket+0xa4/0x110
- el0_svc_handler+0x2c0/0x47c
- el0_svc+0x8/0xc
-
-Freed by task 1625:
- __kasan_slab_free+0x114/0x208
- kasan_slab_free+0xc/0x18
- kfree+0x1a8/0x1e0
- single_release+0x7c/0x9c
- close_pdeo+0x13c/0x43c
- proc_reg_release+0xec/0x108
- __fput+0x2f8/0x784
- ____fput+0x1c/0x28
- task_work_run+0xc0/0x1b0
- do_notify_resume+0xb44/0x1278
- work_pending+0x8/0x10
-
-The buggy address belongs to the object at ffff809681b89e00
- which belongs to the cache kmalloc-128 of size 128
-The buggy address is located 0 bytes inside of
- 128-byte region [ffff809681b89e00, ffff809681b89e80)
-The buggy address belongs to the page:
-page:ffff7fe025a06e00 count:1 mapcount:0 mapping:01ff80082000fb00
-index:0xffff809681b8fe04
-flags: 0x17ffffffc000200(slab)
-raw: 017ffffffc000200 ffff7fe025a06d08 ffff7fe022ef7b88 01ff80082000fb00
-raw: ffff809681b8fe04 ffff809681b80000 00000001000000e0 0000000000000000
-page dumped because: kasan: bad access detected
-page allocated via order 0, migratetype Unmovable, gfp_mask
-0x2420c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_COMP|__GFP_THISNODE)
- prep_new_page+0x4e0/0x5e0
- get_page_from_freelist+0x4ce8/0x50d4
- __alloc_pages_nodemask+0x738/0x38b8
- cache_grow_begin+0xd8/0xa24
- ____cache_alloc_node+0x14c/0x268
- __kmalloc+0x1c8/0x3fc
- ftrace_free_mem+0x408/0x1284
- ftrace_free_init_mem+0x20/0x28
- kernel_init+0x24/0x548
- ret_from_fork+0x10/0x18
-
-Memory state around the buggy address:
- ffff809681b89c00: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
- ffff809681b89d00: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
->ffff809681b89e00: 99 99 99 99 99 99 99 99 fe fe fe fe fe fe fe fe
-                   ^
- ffff809681b89f00: 43 43 43 43 43 fe fe fe fe fe fe fe fe fe fe fe
- ffff809681b8a000: 6d fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
-
-Fixes: 51dedad06b5f ("kasan, slab: make freelist stored without tags")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/slab.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/mm/slab.c b/mm/slab.c
-index 329bfe67f2ca..46a6e084222b 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -2374,7 +2374,6 @@ static void *alloc_slabmgmt(struct kmem_cache *cachep,
- 		/* Slab management obj is off-slab. */
- 		freelist = kmem_cache_alloc_node(cachep->freelist_cache,
- 					      local_flags, nodeid);
--		freelist = kasan_reset_tag(freelist);
- 		if (!freelist)
- 			return NULL;
- 	} else {
--- 
-2.17.2 (Apple Git-113)
-
+Yours,
+Linus Walleij
