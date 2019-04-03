@@ -2,137 +2,232 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE924C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5D1C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B2A206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96F4206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:40:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTf2QaeP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfDCIkR (ORCPT
+        id S1728973AbfDCIkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:40:17 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53601 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfDCIkQ (ORCPT
+        Wed, 3 Apr 2019 04:40:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37535 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfDCIkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:40:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x338dJS21775068
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 3 Apr 2019 01:39:19 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x338dJbd1775065;
-        Wed, 3 Apr 2019 01:39:19 -0700
-Date:   Wed, 3 Apr 2019 01:39:19 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   "tip-bot for Joel Fernandes (Google)" <tipbot@zytor.com>
-Message-ID: <tip-8f9affdf4094bde418a0dbd8b52bb503ee486469@git.kernel.org>
-Cc:     morten.rasmussen@arm.com, josh@joshtriplett.org,
-        jiangshanlai@gmail.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, joel@joelfernandes.org,
-        rostedt@goodmis.org, linux-kernel@vger.kernel.org, efault@gmx.de,
-        mathieu.desnoyers@efficios.com, hpa@zytor.com, tglx@linutronix.de,
-        peterz@infradead.org, luc.vanoostenryck@gmail.com,
-        paulmck@linux.ibm.com
-Reply-To: morten.rasmussen@arm.com, mingo@kernel.org,
-          jiangshanlai@gmail.com, josh@joshtriplett.org,
-          torvalds@linux-foundation.org, tglx@linutronix.de, efault@gmx.de,
-          hpa@zytor.com, mathieu.desnoyers@efficios.com,
-          linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-          joel@joelfernandes.org, peterz@infradead.org,
-          luc.vanoostenryck@gmail.com, paulmck@linux.ibm.com
-In-Reply-To: <20190321003426.160260-2-joel@joelfernandes.org>
-References: <20190321003426.160260-2-joel@joelfernandes.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/cpufreq: Annotate cpufreq_update_util_data
- pointer with __rcu
-Git-Commit-ID: 8f9affdf4094bde418a0dbd8b52bb503ee486469
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Wed, 3 Apr 2019 04:40:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so3597738pgc.4;
+        Wed, 03 Apr 2019 01:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aM2h7Uy7SZKtM8C0EfW2GUNH1XIUxG3SsKixMsxZK4Q=;
+        b=jTf2QaePVkgzP5yVJgfn+3XMWUuVyIm3nnfI6zaTGX+gnpRNbS2EToVH+WbJyeSPw6
+         IVExptzbgAqCP/W/h3CWEJip+zN2qJzZLCFcAPVJhOAen1qfanuE7et0Qp00aKZ/Gx/G
+         7K8+SRF3+MJakxmvLjNr5qIcj0dSLy+RfdGrtHvPPuiY6GQofkBq1R0q3Xc3jcWJCqO3
+         MqUrhiCD6Y6iHU2sea14k93WILx0vIownZPWnqSMnA0pW4y4JTMfdiZmAiGACpiJ7CTR
+         a/4pJQ7zDK9Cio9Rn/dDaw7UsP2QGjO7Wb0UA6uT/PCDrkyjR9Uukr48PWGqCMtV8bu4
+         gUtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aM2h7Uy7SZKtM8C0EfW2GUNH1XIUxG3SsKixMsxZK4Q=;
+        b=m10lRdGuIejrAOSyhSLdO6n8RSPFexwpclN3KVvkyPSyMFhdjylManeyj1ierYX1jZ
+         6CaeA/0bw7EfiQx2Eb996FQBcusrfbwHFl4tHueX0waRBw+LInzPfA5KGiW7rtY0aYpv
+         3jZAODPJtmmlKdJ0LUl/Ssdap5Z4VQMYKedkmwzP+sapwsbzRNmEb6nhkaq7fRTOitAp
+         3m0pNhRMOveH/d8F79bvWT5gERNeVHWrnzu6Rg4f3KTsrtVECPSDtk1VH+oWJ9RXUdM2
+         CqOc8rqDCpaz7sXA4tKMA9hlb9jgCXSXQCVmcrjoFifB6mP+UbNbxdWspu6XSsC3fEho
+         iATQ==
+X-Gm-Message-State: APjAAAUTui8xZOTvZrMHVnJ6yuHUKEE6F6BkpcWoNU5P4TNJM5FIIOHd
+        F7JC4648E+7RqvLSPRmJdgo=
+X-Google-Smtp-Source: APXvYqyDKux11Uf0SXqGFn79aEwz6/XhzcCO/Fz5loG25ods8KZLNlaHtvGzNdDp5vu/54KU7x69Xw==
+X-Received: by 2002:a63:3190:: with SMTP id x138mr64048908pgx.273.1554280838057;
+        Wed, 03 Apr 2019 01:40:38 -0700 (PDT)
+Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id d15sm22997514pfo.34.2019.04.03.01.40.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 01:40:37 -0700 (PDT)
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+To:     peter_hong@fintek.com.tw, johan@kernel.org,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH V6 1/3] USB: serial: f81232: clear overrun flag
+Date:   Wed,  3 Apr 2019 16:40:30 +0800
+Message-Id: <1554280832-29286-1-git-send-email-hpeter+linux_kernel@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8f9affdf4094bde418a0dbd8b52bb503ee486469
-Gitweb:     https://git.kernel.org/tip/8f9affdf4094bde418a0dbd8b52bb503ee486469
-Author:     Joel Fernandes (Google) <joel@joelfernandes.org>
-AuthorDate: Wed, 20 Mar 2019 20:34:23 -0400
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 3 Apr 2019 09:51:01 +0200
+The F81232 will report data and LSR with bulk like following format:
+bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
 
-sched/cpufreq: Annotate cpufreq_update_util_data pointer with __rcu
+LSR will auto clear frame/parity/break error flag when reading by H/W,
+but overrrun will only cleared when reading LSR. So this patch add a
+worker to read LSR when overrun and flush the worker on close() &
+suspend().
 
-Recently I added an RCU annotation check to rcu_assign_pointer(). All
-pointers assigned to RCU protected data are to be annotated with __rcu
-inorder to be able to use rcu_assign_pointer() similar to checks in
-other RCU APIs.
-
-This resulted in a sparse error:
-
-  kernel//sched/cpufreq.c:41:9: sparse: error: incompatible types in comparison expression (different address spaces)
-
-Fix this by annotating cpufreq_update_util_data pointer with __rcu. This
-will also help sparse catch any future RCU misuage bugs.
-
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-[ From an RCU perspective. ]
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: keescook@chromium.org
-Cc: kernel-hardening@lists.openwall.com
-Cc: kernel-team@android.com
-Link: https://lkml.kernel.org/r/20190321003426.160260-2-joel@joelfernandes.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
 ---
- kernel/sched/cpufreq.c | 2 +-
- kernel/sched/sched.h   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+V6:
+	1: Add deferred_lsr_work_needed to re-trigger when f81232_resume()
 
-diff --git a/kernel/sched/cpufreq.c b/kernel/sched/cpufreq.c
-index 835671f0f917..b5dcd1d83c7f 100644
---- a/kernel/sched/cpufreq.c
-+++ b/kernel/sched/cpufreq.c
-@@ -7,7 +7,7 @@
-  */
- #include "sched.h"
+v5:
+	1: Source code base revert to v3 and remove all v4 changes.
+	2: Add serial->suspending check in f81232_process_read_urb()
+	   before schedule_work(&priv->lsr_work) to avoid race condition.
+
+v4:
+	1: Add serial->suspending check in f81232_lsr_worker() to avoid
+	   re-trigger
+	2: Add port_priv-lsr_work_resched to re-trigger LSR worker
+
+v3:
+	1: Add flush_work(&port_priv->lsr_work) in f81232_suspend().
+
+v2:
+	1: Add flush_work(&port_priv->lsr_work) in f81232_close().
+
+ drivers/usb/serial/f81232.c | 55 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+
+diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
+index 0dcdcb4b2cde..600e1f4d94e0 100644
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -41,12 +41,15 @@ MODULE_DEVICE_TABLE(usb, id_table);
+ #define FIFO_CONTROL_REGISTER		(0x02 + SERIAL_BASE_ADDRESS)
+ #define LINE_CONTROL_REGISTER		(0x03 + SERIAL_BASE_ADDRESS)
+ #define MODEM_CONTROL_REGISTER		(0x04 + SERIAL_BASE_ADDRESS)
++#define LINE_STATUS_REGISTER		(0x05 + SERIAL_BASE_ADDRESS)
+ #define MODEM_STATUS_REGISTER		(0x06 + SERIAL_BASE_ADDRESS)
  
--DEFINE_PER_CPU(struct update_util_data *, cpufreq_update_util_data);
-+DEFINE_PER_CPU(struct update_util_data __rcu *, cpufreq_update_util_data);
+ struct f81232_private {
+ 	struct mutex lock;
+ 	u8 modem_control;
+ 	u8 modem_status;
++	bool deferred_lsr_work_needed;
++	struct work_struct lsr_work;
+ 	struct work_struct interrupt_work;
+ 	struct usb_serial_port *port;
+ };
+@@ -282,6 +285,8 @@ static void f81232_read_int_callback(struct urb *urb)
+ static void f81232_process_read_urb(struct urb *urb)
+ {
+ 	struct usb_serial_port *port = urb->context;
++	struct usb_serial *serial = port->serial;
++	struct f81232_private *priv = usb_get_serial_port_data(port);
+ 	unsigned char *data = urb->transfer_buffer;
+ 	char tty_flag;
+ 	unsigned int i;
+@@ -315,6 +320,12 @@ static void f81232_process_read_urb(struct urb *urb)
  
- /**
-  * cpufreq_add_update_util_hook - Populate the CPU's update_util_data pointer.
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index efa686eeff26..713715dd00cf 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2185,7 +2185,7 @@ static inline u64 irq_time_read(int cpu)
- #endif /* CONFIG_IRQ_TIME_ACCOUNTING */
+ 			if (lsr & UART_LSR_OE) {
+ 				port->icount.overrun++;
++
++				if (!serial->suspending)
++					schedule_work(&priv->lsr_work);
++				else
++					priv->deferred_lsr_work_needed = true;
++
+ 				tty_insert_flip_char(&port->port, 0,
+ 						TTY_OVERRUN);
+ 			}
+@@ -556,9 +567,12 @@ static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
  
- #ifdef CONFIG_CPU_FREQ
--DECLARE_PER_CPU(struct update_util_data *, cpufreq_update_util_data);
-+DECLARE_PER_CPU(struct update_util_data __rcu *, cpufreq_update_util_data);
+ static void f81232_close(struct usb_serial_port *port)
+ {
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++
+ 	f81232_port_disable(port);
+ 	usb_serial_generic_close(port);
+ 	usb_kill_urb(port->interrupt_in_urb);
++	flush_work(&port_priv->lsr_work);
+ }
  
- /**
-  * cpufreq_update_util - Take a note about CPU utilization changes.
+ static void f81232_dtr_rts(struct usb_serial_port *port, int on)
+@@ -603,6 +617,21 @@ static void  f81232_interrupt_work(struct work_struct *work)
+ 	f81232_read_msr(priv->port);
+ }
+ 
++static void f81232_lsr_worker(struct work_struct *work)
++{
++	struct f81232_private *priv;
++	struct usb_serial_port *port;
++	int status;
++	u8 tmp;
++
++	priv = container_of(work, struct f81232_private, lsr_work);
++	port = priv->port;
++
++	status = f81232_get_register(port, LINE_STATUS_REGISTER, &tmp);
++	if (status)
++		dev_warn(&port->dev, "read LSR failed: %d\n", status);
++}
++
+ static int f81232_port_probe(struct usb_serial_port *port)
+ {
+ 	struct f81232_private *priv;
+@@ -613,6 +642,7 @@ static int f81232_port_probe(struct usb_serial_port *port)
+ 
+ 	mutex_init(&priv->lock);
+ 	INIT_WORK(&priv->interrupt_work,  f81232_interrupt_work);
++	INIT_WORK(&priv->lsr_work, f81232_lsr_worker);
+ 
+ 	usb_set_serial_port_data(port, priv);
+ 
+@@ -632,6 +662,29 @@ static int f81232_port_remove(struct usb_serial_port *port)
+ 	return 0;
+ }
+ 
++static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
++{
++	struct f81232_private *port_priv;
++
++	port_priv = usb_get_serial_port_data(serial->port[0]);
++	flush_work(&port_priv->lsr_work);
++
++	return 0;
++}
++
++static int f81232_resume(struct usb_serial *serial)
++{
++	struct f81232_private *port_priv;
++
++	port_priv = usb_get_serial_port_data(serial->port[0]);
++	if (port_priv->deferred_lsr_work_needed) {
++		port_priv->deferred_lsr_work_needed = false;
++		schedule_work(&port_priv->lsr_work);
++	}
++
++	return usb_serial_generic_resume(serial);
++}
++
+ static struct usb_serial_driver f81232_device = {
+ 	.driver = {
+ 		.owner =	THIS_MODULE,
+@@ -655,6 +708,8 @@ static struct usb_serial_driver f81232_device = {
+ 	.read_int_callback =	f81232_read_int_callback,
+ 	.port_probe =		f81232_port_probe,
+ 	.port_remove =		f81232_port_remove,
++	.suspend =		f81232_suspend,
++	.resume =		f81232_resume,
+ };
+ 
+ static struct usb_serial_driver * const serial_drivers[] = {
+-- 
+2.7.4
+
