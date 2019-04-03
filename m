@@ -2,161 +2,162 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CF4C10F0B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79178C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B4B21473
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wepfVLKE"
+	by mail.kernel.org (Postfix) with ESMTP id 5012F2082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfDCJbP (ORCPT
+        id S1726409AbfDCJcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:31:15 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59436 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfDCJbP (ORCPT
+        Wed, 3 Apr 2019 05:32:33 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:45109 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725935AbfDCJcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:31:15 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x339V4ib011292;
-        Wed, 3 Apr 2019 04:31:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554283864;
-        bh=mmudK46J15CJFT4qMmYeR4xgQWqPuI4jG+nU4vhcOjs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wepfVLKEqZwkoO40p7KHsugofYqTPMaZCem4wi77kshSc2M2EK+K7k6bFlR0ZP9rT
-         tOr3AG9remTdeAZSG/3x3Shtt7h1jMl9Si6zPjFP3BCan/EWWqdvWpD3n5qlfr+n5j
-         KrDOUGDI41KBioczfdwu0MkcUaMwlWMgrhxdMblw=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x339V4nB103943
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 3 Apr 2019 04:31:04 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 3 Apr
- 2019 04:31:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 3 Apr 2019 04:31:03 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x339Uvam012755;
-        Wed, 3 Apr 2019 04:30:58 -0500
-Subject: Re: [PATCH 1/2] dt-bindings: clock: Add binding documentation for TI
- syscon gate clock
-To:     Rob Herring <robh@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
-References: <20190312090518.28666-1-vigneshr@ti.com>
- <20190312090518.28666-2-vigneshr@ti.com> <20190328123142.GA6229@bogus>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <a998b977-99ef-876e-a226-4f1738392f9f@ti.com>
-Date:   Wed, 3 Apr 2019 12:30:05 +0300
+        Wed, 3 Apr 2019 05:32:32 -0400
+Received: from [IPv6:2001:420:44c1:2579:c83e:d0a5:cb24:b9a9] ([IPv6:2001:420:44c1:2579:c83e:d0a5:cb24:b9a9])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id BcFshxPEGUjKfBcFwhDvGg; Wed, 03 Apr 2019 11:32:29 +0200
+Subject: Re: [PATCH v6 1/2] media: uapi: Add H264 low-level decoder API
+ compound controls.
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     hans.verkuil@cisco.com, acourbot@chromium.org,
+        sakari.ailus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        tfiga@chromium.org, posciak@chromium.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
+        jernej.skrabec@gmail.com, jonas@kwiboo.se, ezequiel@collabora.com,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>
+References: <cover.3917a1471bfc8cbdfdde8026566b3857caff5762.1553009355.git-series.maxime.ripard@bootlin.com>
+ <9d9fe5c2dc58f9398cb6b1e9bb208640d25ae816.1553009355.git-series.maxime.ripard@bootlin.com>
+ <dbe5702e-f76d-9c92-cab6-bd88d243ae55@xs4all.nl>
+ <4c70e58d-ce7b-c15d-4b1c-063cf9b67007@xs4all.nl>
+ <20190403072948.ixugqb2t4z3dcyd4@flea>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <9e2c1764-a7c3-71d7-5058-cb40cce4d4d6@xs4all.nl>
+Date:   Wed, 3 Apr 2019 11:32:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190328123142.GA6229@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190403072948.ixugqb2t4z3dcyd4@flea>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-CMAE-Envelope: MS4wfGhmIka3vRcnzhkOjszXlXoq65engabdrAMmDlyXuLaBX3wlGrkUGi6e0A7epMclXei6iuO+07XLnfINE5s+Mqwp1B9767FC1dv0zDrvXYVUYb5KrA8G
+ zXOJTREy6gvifRA7IU6xVFEszq7/4Jog3pOlj7M4F+DDPsCcZ6jmEWIqojmfaeD5SUilPvaIihC04J2TjBaAxGEh/H0Qhn8cLOg964XTUQwg5okwLZ4COWU0
+ Xxi2XHoHLoQfeL9ABzr6vMyl11e6ZaxV7Bo8ccS7HWhlDzlOZhoHueY0G2YuAg4gLUo0fNePmnwHjJk4Pb+w7aibCtQ0VpT9Ia4gmKeOV5OdLwRgiUkx7dqn
+ 8zIjHGi+vGsheZ/lKdFgU3p7tuufocuREmnL3tFD1iMfxaVBw0Ai71YOdkG9KzVNHCqzHwtyG4Hu9wkeOwsJGKH0Zfd9+FBpQ+Nf/pOBGbhysRKP9slgoEXd
+ omva50RBFtw6Cz0C2zST2Ps17de60UskyX267MAicziMTf3AEWn1WmmzfkI/7+1YOpyKS7iNZF+cJmn5QsytM1KhNau76xZXMrqMjmYjHGGjreqVsnM0qC5i
+ tSsF1xa0j6zh5IaB32JIycMg6L3OUOtk2MUmnVYYfvC6+NboJzaouy43+RF9T/BHi36m5Tk/u4/vfOWNmvmJRvY3jY5l3Gm/gqV7CYsRJPZ/N0yt60T40Up9
+ mg7RYGk2pDBqkMjUAYV+V4JbZEXITCIxaqRYp1mOThXKUhHJ/d/SHu/oYH6S+Zbe2YJsVXSxIw4Cv/51Zw30MtXXa11bn768gBN8CDgEUIirYOEdbgyJLsxj
+ 6tQLfE3bjyI2aIUJ3Ol8pop6B82Goarhb5TuNO/CX/3zgpjb2I/oCAo/cAhJfof7kuHaQoaqmJrroHeSj1QSryhF9AmyaG3DFy26SYwtgPtOGraEpj0DKY10
+ q+sESinId+Wqn47eD5WKAafaaumo/y1Ut11HebBxgrLLwbk2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/03/2019 14:31, Rob Herring wrote:
-> On Tue, Mar 12, 2019 at 02:35:17PM +0530, Vignesh Raghavendra wrote:
->> Add dt bindings for TI syscon gate clock.
+On 4/3/19 9:29 AM, Maxime Ripard wrote:
+> Hi Hans,
+> 
+> On Tue, Apr 02, 2019 at 01:39:21PM +0200, Hans Verkuil wrote:
+>>>> +struct v4l2_h264_dpb_entry {
+>>>> +	__u64 timestamp;
+>>>
+>>> As mentioned above, I suggest to rename this to 'reference_ts'.
+>>>
+>>> But see also the discussion below.
+>>>
+>>>> +	__u16 frame_num;
+>>>> +	__u16 pic_num;
+>>>> +	/* Note that field is indicated by v4l2_buffer.field */
+>>>> +	__s32 top_field_order_cnt;
+>>>> +	__s32 bottom_field_order_cnt;
+>>>> +	__u32 flags; /* V4L2_H264_DPB_ENTRY_FLAG_* */
+>>>> +};
+>>>> +
+>>>> +#define V4L2_H264_DECODE_PARAM_FLAG_IDR_PIC	0x01
+>>>> +
+>>>> +struct v4l2_ctrl_h264_decode_param {
+>>>> +	__u32 num_slices;
+>>>> +	__u32 nal_ref_idc;
+>>>> +	__u8 ref_pic_list_p0[32];
+>>>> +	__u8 ref_pic_list_b0[32];
+>>>> +	__u8 ref_pic_list_b1[32];
+>>>> +	__s32 top_field_order_cnt;
+>>>> +	__s32 bottom_field_order_cnt;
+>>>> +	__u32 flags; /* V4L2_H264_DECODE_PARAM_FLAG_* */
+>>>> +	struct v4l2_h264_dpb_entry dpb[16];
+>>>
+>>> Should the reference timestamp be included in this control? Or be
+>>> separated into its own control?
+>>>
+>>> Reference frames do not apply to stateless encoders (the driver will
+>>> have to maintain the reference frames internally). Everything else
+>>> is equally valid for both stateless encoders and decoders, but only
+>>> stateless decoders need to provide the reference frames.
+>>>
+>>> So in this case we would need to create a new control:
+>>>
+>>> #define V4L2_CID_MPEG_VIDEO_H264_DECODE_REF_TS	(V4L2_CID_MPEG_BASE+1005)
+>>>
+>>> Which is a u64 array control (16 elements for H.264).
+>>>
+>>> You would need to do something similar for MPEG2.
 >>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>   .../bindings/clock/ti,syscon-gate-clock.txt   | 35 +++++++++++++++++++
->>   1 file changed, 35 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
+>> The question is if this is worth the extra effort. An alternative is
+>> to just specify that these reference timestamps are always to be zeroed
+>> by stateless encoders and are unused.
 >>
->> diff --git a/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt b/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
->> new file mode 100644
->> index 000000000000..f2bc4281ddba
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/ti,syscon-gate-clock.txt
->> @@ -0,0 +1,35 @@
->> +TI syscon gate clock
->> +
->> +The gate clock node must be provided inside a system controller node.
->> +
->> +Required:
->> +- comaptible: Must be "ti,syscon-gate-clock"
->> +- reg: Offset of register that controls the clock within syscon regmap
->> +- ti,clock-bit-idx: bit index that control gate/ungating of clock
->> +- clocks: phandle to the clock parent
->> +- #clock-cells: must be <0>
->> +
->> +Example:
->> +	ctrlmmr_epwm_ctrl: syscon@104140{
->> +		compatible = "syscon", "simple-bus";
+>> I'm undecided on this.
 > 
-> Can't be both of these...
+> I'll address your other comments, thanks!
+> 
+> For that part, I haven't really looked at the encoder parameters yet,
+> but I guess we should have other controls to be passed there as well
+> (like the target level of encoding). We can probably reuse the
+> existing controls for that though.
+> 
+> From the way it looks, our encoder needs to put some parameters (the
+> level and feature flags, mostly) and will output the entire
+> bitstream. I'm not really sure if it qualifies as a stateless encoder,
+> but that would require far less than what we have in those controls
+> already.
 
-Is this a hard requirement? We seem to have few instances in the various 
-DTS files for various vendors where this is done, syscon is paired with 
-simple-mfd or simple-bus, or something else.
-
-Basically, syscon by itself does not probe its children, and you can't 
-have the simple syscon support from kernel side if you don't have the 
-syscon compatible. Alternative is that we don't add any of the syscon 
-children under the syscon but add them as separate nodes outside it.
-
-The above is not an issue for this patch itself if we ditch the separate 
-clock nodes, but it is more of a question about the syscon functionality 
-itself.
-
--Tero
+This sounds like a stateful encoder. A stateless encoder would rely on
+userspace to mux the metadata and the compressed video into a valid
+bitstream, and it doesn't seem that that's the case here.
 
 > 
->> +		reg = <0x0 0x104140 0x0 0x18>;
->> +		ranges = <0x0 0x0 0x104140>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		ehrpwm0_tbclk: clk@0 {
->> +			compatible = "ti,syscon-gate-clock";
->> +			reg = <0x0>;
->> +			#clock-cells = <0>;
->> +			clocks = <&k3_clks 40 0>;
->> +			ti,clock-bit-idx = <0>;
-> 
-> This would imply you have multiple nodes at one address which is
-> discouraged.
-> 
->> +		};
-> 
-> We generally don't describe clocks as 1 clock per node. Give the parent
-> a specific compatible and make it a clock provider.
-> 
->> +
->> +		ehrpwm1_tbclk: clk@4 {
->> +			compatible = "ti,syscon-gate-clock";
->> +			reg = <0x4>;
->> +			#clock-cells = <0>;
->> +			clocks = <&k3_clks 41 0>;
->> +			ti,clock-bit-idx = <0>;
->> +		};
->> +	};
->> -- 
->> 2.21.0
->>
+> Either way, maybe the good way forward here would be to way for an
+> H264 / MPEG2 stateless encoder to come up, either ours or some other,
+> to see what should we do about this. How does that sound?
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I think so too.
+
+I think splitting off the reference timestamps into a separate control
+is probably overkill.
+
+Regards,
+
+	Hans
+
+> 
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
+
