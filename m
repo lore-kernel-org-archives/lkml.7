@@ -2,120 +2,104 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B85C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CEBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE09B20700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA30720700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbfDCTFl (ORCPT
+        id S1726676AbfDCTHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 15:05:41 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:35422 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfDCTFl (ORCPT
+        Wed, 3 Apr 2019 15:07:07 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.212]:39788 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726199AbfDCTHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 15:05:41 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hBlCK-0006a6-NT; Wed, 03 Apr 2019 19:05:20 +0000
-Date:   Wed, 3 Apr 2019 20:05:20 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexander Viro <viro@ftp.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Waiman Long <longman@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Chinner <david@fromorbit.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Rik van Riel <riel@redhat.com>,
-        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH v2 14/14] dcache: Implement object migration
-Message-ID: <20190403190520.GW2217@ZenIV.linux.org.uk>
-References: <20190403042127.18755-1-tobin@kernel.org>
- <20190403042127.18755-15-tobin@kernel.org>
- <20190403170811.GR2217@ZenIV.linux.org.uk>
- <01000169e458534a-3c6a5d6f-3054-4c64-b5f9-7f46c811eeac-000000@email.amazonses.com>
- <20190403182454.GU2217@ZenIV.linux.org.uk>
+        Wed, 3 Apr 2019 15:07:07 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 1FFB94018DDD3
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2019 14:06:38 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BlDah6pEd90onBlDahKV44; Wed, 03 Apr 2019 14:06:38 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.114.183] (port=48104 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hBlDZ-0033Pm-BZ; Wed, 03 Apr 2019 14:06:37 -0500
+Date:   Wed, 3 Apr 2019 14:06:36 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] ath10k: coredump: use struct_size() helper
+Message-ID: <20190403190636.GA9827@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403182454.GU2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.114.183
+X-Source-L: No
+X-Exim-ID: 1hBlDZ-0033Pm-BZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.114.183]:48104
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 07:24:54PM +0100, Al Viro wrote:
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes, in particular in the
+context in which this code is being used.
 
-> If by "how to do it right" you mean "expedit kicking out something with
-> non-zero refcount" - there's no way to do that.  Nothing even remotely
-> sane.
-> 
-> If you mean "kick out everything in this page with zero refcount" - that
-> can be done (see further in the thread).
-> 
-> Look, dentries and inodes are really, really not relocatable.  If they
-> can be evicted by memory pressure - sure, we can do that for a given
-> set (e.g. "everything in that page").  But that's it - if memory
-> pressure would _not_ get rid of that one, there's nothing to be done.
-> Again, all VM can do is to simulate shrinker hitting hard on given
-> bunch (rather than buggering the entire cache).  If filesystem (or
-> something in VFS) says "it's busy", it bloody well _is_ busy and
-> won't be going away until it ceases to be such.
+So, replace code of the following form:
 
-FWIW, some theory: the only kind of long-term reference that can
-be killed off by memory pressure is that from child to parent.
-Anything else (e.g. an opened file, current directory, mountpoint,
-etc.) is out of limits - it either won't be going away until
-the thing is not pinned anymore (close, chdir, etc.) *or*
-it really shouldn't be ("VM wants this mountpoint dentry freed,
-so just dissolve the mount" is a bloody bad idea for obvious
-reasons).
+sizeof(*ce_hdr) + CE_COUNT * sizeof(ce_hdr->entries[0])
 
-Stuff in somebody's shrink list is none of our business - somebody
-else is going to try and evict it anyway; if it can be evicted,
-it will be.
+with:
 
-Anything with zero refcount that isn't in somebody else's
-shrink list is fair game.
+struct_size(ce_hdr, entries, CE_COUNT)
 
-Directories with children could, in principle, be helped along -
-we could try shrink_dcache_parent() on them, which might end
-up leaving them with zero refcount.  However, it's not cheap
-and if you pick the root dentry of a filesystem, it'll try to
-evict everything on it that can be evicted, be it in this page
-or not.  And there's no promise that it will end up evictable
-after that.
+This code was detected with the help of Coccinelle.
 
-So from the correctness POV
-	* you can kick out everything with zero refcount not
-on shrink lists.
-	* you _might_ try shrink_dcache_parent() on directory
-dentries, in hope to drive their refcount to zero.  However,
-that's almost certainly going to hit too hard and be too costly.
-	* d_invalidate() is no-go; if anything, you want something
-weaker than shrink_dcache_parent(), not stronger.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/wireless/ath/ath10k/coredump.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-For anything beyond "just kick out everything in that page that
-happens to have zero refcount" I would really like to see the
-stats - how much does it help, how costly it is _and_ how much
-of the cache does it throw away (see above re running into a root
-dentry of some filesystem and essentially trimming dcache for
-that fs down to the unevictable stuff).
+diff --git a/drivers/net/wireless/ath/ath10k/coredump.c b/drivers/net/wireless/ath/ath10k/coredump.c
+index 33838d9c1cb6..7825b6a1b104 100644
+--- a/drivers/net/wireless/ath/ath10k/coredump.c
++++ b/drivers/net/wireless/ath/ath10k/coredump.c
+@@ -1192,8 +1192,8 @@ static struct ath10k_dump_file_data *ath10k_coredump_build(struct ath10k *ar)
+ 	if (test_bit(ATH10K_FW_CRASH_DUMP_CE_DATA, &ath10k_coredump_mask)) {
+ 		dump_tlv = (struct ath10k_tlv_dump_data *)(buf + sofar);
+ 		dump_tlv->type = cpu_to_le32(ATH10K_FW_CRASH_DUMP_CE_DATA);
+-		dump_tlv->tlv_len = cpu_to_le32(sizeof(*ce_hdr) +
+-						CE_COUNT * sizeof(ce_hdr->entries[0]));
++		dump_tlv->tlv_len = cpu_to_le32(struct_size(ce_hdr, entries,
++							    CE_COUNT));
+ 		ce_hdr = (struct ath10k_ce_crash_hdr *)(dump_tlv->tlv_data);
+ 		ce_hdr->ce_count = cpu_to_le32(CE_COUNT);
+ 		memset(ce_hdr->reserved, 0, sizeof(ce_hdr->reserved));
+-- 
+2.21.0
+
