@@ -2,102 +2,95 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE68C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5FFC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8197F2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:18:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="W8XxZkUS"
+	by mail.kernel.org (Postfix) with ESMTP id 4641D2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 05:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfDCFSa (ORCPT
+        id S1728672AbfDCF0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 01:18:30 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:38337 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfDCFSa (ORCPT
+        Wed, 3 Apr 2019 01:26:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49052 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfDCF0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 01:18:30 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x335IJ2r025071;
-        Wed, 3 Apr 2019 14:18:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x335IJ2r025071
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554268700;
-        bh=Pan6kbLEqd0Bp/ZwtxT4KpWfhApzkS4/9SXjDUrP1RQ=;
-        h=From:Date:Subject:To:Cc:From;
-        b=W8XxZkUSxF+icfpP41zqWSgPnAmMPzrN7BLqxDT/4sBDKvt3iHwQliaysxPmLFj5M
-         86fZ1rBnt5YF1n9HQ63iv1Nm6HpWEBITRIUwfnJXHd8JpLQdyUgr8poFTQu4XlxwtR
-         Kt5t5Tp8bJuhVAk19wA1L1T29MNU+iOpSlMIj3cHB/hSIwjr2BMfTEGM/fmDSZZajP
-         VEzYG6lMDm5ju3VT327l05OsG0BIcr6ecCPUlytJK/G9/tYS0Ob9NtZK3T9aqmANpX
-         X9sMNsZ4iTgZ0TEvXugd5pqOn7KaL94HqR5OZnRsgBw/a//WjZsuyadMrQktBNeOE/
-         k0EwcaZqM2DeA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id j184so9207136vsd.11;
-        Tue, 02 Apr 2019 22:18:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAUXCmbHKvDfaVIjaCawMvN03BVUNTCoPPOfQNu8OHNwlOAT96pv
-        gZ9inag+tKEVFm/TkF0mjIQxeBFwdAl45NINifw=
-X-Google-Smtp-Source: APXvYqwKiUG6C79u6dnHCag93mX94eYj7Xazpa8k4f2tg9PQ5t6RT66oh7aPS1zGPLvVvadZdimbqT8J3Pwo/kA2Wuc=
-X-Received: by 2002:a67:c29e:: with SMTP id k30mr45312946vsj.203.1554268699243;
- Tue, 02 Apr 2019 22:18:19 -0700 (PDT)
+        Wed, 3 Apr 2019 01:26:40 -0400
+Received: from mail-wm1-f70.google.com ([209.85.128.70])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1hBYQ2-0003xV-H4
+        for linux-kernel@vger.kernel.org; Wed, 03 Apr 2019 05:26:38 +0000
+Received: by mail-wm1-f70.google.com with SMTP id 7so3587134wmj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 22:26:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ECodeZO9T5iZTHTW0pQrH8foCwy+FC2Ouv0VI/SA1Ss=;
+        b=N0Fn0ewRqr0MeEOEudqI/SrCV1LN4b8qVCK2OfRrNoY9ecMB0N7VJo04TlF3pdjSRR
+         bsW3f30cXfXgoMDhX1Sht5/lKTwTwWXW6rXRB7VQIygz/aETlydRfEMUW0Jwk34oXh2t
+         0rRlWStFGV4XvdLw/rqKd/UoehznjgxRgejWlcjrycJbxNOSzEm4GvNDha4TF6S0NMPk
+         pucVI/PQWjDL1khbOMY1cs+X9+LDjBgfLgG4TTLJRUYMjQVNtd3Qe61TKOKIqK0OTPxu
+         TuE82jHMn82mRj2byf6gWy3awDIaZ5Sjhov4o+iVxKUCHMSEh+aOfeMgpH9DQbroSRyI
+         NU1Q==
+X-Gm-Message-State: APjAAAVNOFj7lYkpobr0ql9zQWR0IsxPbRLIaecaQzqsnroDiK0MZnML
+        fwFHBrMpQEEjOVyTr6DK9n6KEtVSQzaAaZQp60UZ9WXhqXEbG7cIzjgfmraozBv8Vz+l351G5yX
+        SNiMAogiPhD0Y3CSbPXWyYSuQTjzvOwDZ/CvZfKNscA==
+X-Received: by 2002:adf:ffc2:: with SMTP id x2mr35849748wrs.86.1554269198285;
+        Tue, 02 Apr 2019 22:26:38 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz6wn4GAs3/mxi7+HnSA463u1EJIYzbDZCtS52uQteIk76aOQLqlNSa8Cx4aYgCamrCNj4FSA==
+X-Received: by 2002:adf:ffc2:: with SMTP id x2mr35849738wrs.86.1554269198113;
+        Tue, 02 Apr 2019 22:26:38 -0700 (PDT)
+Received: from localhost (host141-127-dynamic.17-87-r.retail.telecomitalia.it. [87.17.127.141])
+        by smtp.gmail.com with ESMTPSA id z18sm24988643wrr.90.2019.04.02.22.26.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2019 22:26:37 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 07:26:36 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] xen: use struct_size() helper in kzalloc()
+Message-ID: <20190403052636.GC21532@xps-13>
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 3 Apr 2019 14:17:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQwHRJL=3yD_7P2mMSVnwZbayww+dHC22+v4oTpMZv58w@mail.gmail.com>
-Message-ID: <CAK7LNAQwHRJL=3yD_7P2mMSVnwZbayww+dHC22+v4oTpMZv58w@mail.gmail.com>
-Subject: Does vdso_install attempt to re-compile objects under root privilege?
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+struct privcmd_buf_vma_private has a zero-sized array at the end
+(pages), use the new struct_size() helper to determine the proper
+allocation size and avoid potential type mistakes.
 
-I have a question about 'vdso_install'.
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+---
+ drivers/xen/privcmd-buf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-
-In my understanding, vdso is embedded in the kernel.
-In addition, you can run 'make vdso_install'
-to install an unstripped version of vdso.
-(Mainly, debugging purpose?)
-
-By default, 'make vdso_install' will install it to
-/lib/modules/$(uname -r)/vdso/.
-
-
-Since that directly is owned by root,
-'make vdso_install' could potentially be
-executed by root, isn't it?
-
-
-Currently, 'vdso_install' depends on vdso,
-so it may cause recompilation of objects
-in the source tree.
-
-
-This violates the basic rule:
-"Installation targets must not modify the source tree".
-
-We often miss this point. For example, see
-commit 19514fc665ffbce624785f76ee7ad0ea6378a527
-
-
-If this is a problem, I will fix Makefiles to
-make 'vdso_install' not depend on vdso
-
-Thanks.
-
-
+diff --git a/drivers/xen/privcmd-buf.c b/drivers/xen/privcmd-buf.c
+index de01a6d0059d..a1c61e351d3f 100644
+--- a/drivers/xen/privcmd-buf.c
++++ b/drivers/xen/privcmd-buf.c
+@@ -140,8 +140,7 @@ static int privcmd_buf_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (!(vma->vm_flags & VM_SHARED))
+ 		return -EINVAL;
+ 
+-	vma_priv = kzalloc(sizeof(*vma_priv) + count * sizeof(void *),
+-			   GFP_KERNEL);
++	vma_priv = kzalloc(struct_size(vma_priv, pages, count), GFP_KERNEL);
+ 	if (!vma_priv)
+ 		return -ENOMEM;
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.19.1
+
