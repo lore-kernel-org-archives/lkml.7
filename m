@@ -2,192 +2,86 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3102C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFE0C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A0920700
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8A4206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfDCQaW (ORCPT
+        id S1726548AbfDCQbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:30:22 -0400
-Received: from foss.arm.com ([217.140.101.70]:44392 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfDCQaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:30:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D815880D;
-        Wed,  3 Apr 2019 09:30:18 -0700 (PDT)
-Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E4653F68F;
-        Wed,  3 Apr 2019 09:30:16 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64: irqflags: fix incomplete save & restore
-To:     Wei Li <liwei391@huawei.com>, marc.zyngier@arm.com,
-        rostedt@goodmis.org
-Cc:     mark.rutland@arm.com, suzuki.poulose@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, mingo@redhat.com,
-        james.morse@arm.com, yuzenghui@huawei.com,
-        wanghaibin.wang@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, guohanjun@huawei.com,
-        huawei.libin@huawei.com
-References: <20190403152854.27741-1-liwei391@huawei.com>
-From:   Julien Thierry <julien.thierry@arm.com>
-Message-ID: <dac1f926-e621-c29c-ac95-463aa92db527@arm.com>
-Date:   Wed, 3 Apr 2019 17:30:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 3 Apr 2019 12:31:00 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41599 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfDCQbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 12:31:00 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hBimv-0003mf-M8; Wed, 03 Apr 2019 18:30:58 +0200
+Date:   Wed, 3 Apr 2019 18:30:57 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [patch 00/14] x86/exceptions: Add guard patches to IST stacks
+In-Reply-To: <CALCETrX1ZtZE2JUgXD55vZgwxpO2pTiUJb_GKDXAJJd4VTyGSw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904031826560.1967@nanos.tec.linutronix.de>
+References: <20190331214020.836098943@linutronix.de> <CALCETrX1ZtZE2JUgXD55vZgwxpO2pTiUJb_GKDXAJJd4VTyGSw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190403152854.27741-1-liwei391@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
-
-Thanks for looking into this.
-
-On 03/04/2019 16:28, Wei Li wrote:
-> To support the arm64 pseudo nmi, function arch_local_irq_save() and
-> arch_local_irq_restore() now operate ICC_PMR_EL1 insead of daif.
-> But i found the logic of the save and restore may be suspicious:
+On Sun, 31 Mar 2019, Andy Lutomirski wrote:
+> On Sun, Mar 31, 2019 at 3:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > While looking for something different I stumbled over the comment in struct
+> > cpu_entry_area:
+> >
+> >          * Exception stacks used for IST entries.
+> >          *
+> >          * In the future, this should have a separate slot for each stack
+> >          * with guard pages between them.
+> >
+> > As usual with such comments they are added in good faith and then
+> > forgotten. Looking what it takes to fix that let me stumble over some other
+> > leftovers like orig_ist[], now unused macros, useless defines and a bunch
+> > of assumptions about the exception stacks being a big lump. Aside of that I
+> > found a too broad check of the exception stack in the x86/64 stack overflow
+> > detector.
+> >
+> > The following series cleans that up and gradually prepares for guard pages
+> > between the IST stacks.
 > 
-> arch_local_irq_save():
-> daif.i_on	pmr_on	->	flag.i_on
-> 1			0		|	0
-> 1			1		|	1
-> 0			1		|	0		--[1]
-> 0			0		|	0
+> Thanks!  I'll review this over the next couple days.
 > 
-> arch_local_irq_restore():
-> daif.i_on	pmr_on	<-	flag.i_on
-> x			0		|	0
-> x			1		|	1
+> Meanwhile, if you're inspired, I have a WIP series to do the same
+> thing to the IRQ stacks here:
 > 
-> As we see, the condintion [1] will never be restored honestly. When doing
-> function_graph trace at gic_handle_irq(), calling local_irq_save() and
-> local_irq_restore() in trace_graph_entry() will just go into this
-> condintion. Therefore the irq can never be processed and leading to hang.
+> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=x86/guard_pages
 > 
-> In this patch, we do the save & restore exactly, and make sure the
-> arch_irqs_disabled_flags() returns correctly.
+> Want to take a look or pick it up if you want to keep working on this?
 
-Thinking out loud:
+I grabbed the lot and addressed the todo's there. Not completely done
+though, but it builds and boots :)
 
-So, with this patch we make sure that PMR is not sneakily altered when
-restoring a state with PSR.I == 1 and PMR == GIC_PRIO_IRQON.
-
-One thing that could be odd from such a state is:
-
-	flags = local_irq_save(); // local_irqs_disabled_flags(flags) == true
-
-	[...]
-
-	write_sysreg(ICC_PMR_EL1, GIC_PRIO_IRQOFF);
-	write_sysreg(daif, read_sysreg(daif) & ~PSR_I_BIT);
-
-	[...]
-
-	local_irq_restore(flags);
-
-Where restoring flags that indicated us that interrupts were disabled
-suddenly enable interrupts.
-
-But doing a save/restore around an operation that fiddles with PSR.I
-doesn't make sense, especially when we are using PMR for normal
-enable/disable.
-
-I think your suggestion is better that what we have right now, but I'd
-like to think about it a bit more.
-
-In a previous version of the priority masking, PSR.I was both saved and
-restored in the flags (almost like you did except you don't restore it
-in your case). So I'm wondering whether we should just go back to that
-option... (Maybe taking inspiration from your patch and just keep all
-daif bits and stuff them as they are in the upper 32 bits since both
-daif and pmr are 32 bit registers and the flags are 64 bits).
-
-Other people's opinion are welcome as well.
-
-> 
-> Fix: commit 4a503217ce37 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
-> Signed-off-by: Wei Li <liwei391@huawei.com>
-> ---
->  arch/arm64/include/asm/irqflags.h | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
-> index 43d8366c1e87..7bc6a79f31c4 100644
-> --- a/arch/arm64/include/asm/irqflags.h
-> +++ b/arch/arm64/include/asm/irqflags.h
-> @@ -76,8 +76,7 @@ static inline unsigned long arch_local_save_flags(void)
->  	 * The asm is logically equivalent to:
->  	 *
->  	 * if (system_uses_irq_prio_masking())
-> -	 *	flags = (daif_bits & PSR_I_BIT) ?
-> -	 *			GIC_PRIO_IRQOFF :
-> +	 *	flags = (daif_bits << 32) |
->  	 *			read_sysreg_s(SYS_ICC_PMR_EL1);
->  	 * else
->  	 *	flags = daif_bits;
-> @@ -87,11 +86,11 @@ static inline unsigned long arch_local_save_flags(void)
->  			"nop\n"
->  			"nop",
->  			"mrs_s	%0, " __stringify(SYS_ICC_PMR_EL1) "\n"
-> -			"ands	%1, %1, " __stringify(PSR_I_BIT) "\n"
-> -			"csel	%0, %0, %2, eq",
-> +			"lsl	%1, %1, #32\n"
-> +			"orr	%0, %0, %1",
->  			ARM64_HAS_IRQ_PRIO_MASKING)
->  		: "=&r" (flags), "+r" (daif_bits)
-> -		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
-> +		:
->  		: "memory");
->  
->  	return flags;
-> @@ -119,8 +118,8 @@ static inline void arch_local_irq_restore(unsigned long flags)
->  			"msr_s	" __stringify(SYS_ICC_PMR_EL1) ", %0\n"
->  			"dsb	sy",
->  			ARM64_HAS_IRQ_PRIO_MASKING)
-> -		: "+r" (flags)
->  		:
-> +		: "r" ((int)flags)
-
-Nit: If we go with that, can we cast this to "u32" or "uint32_t"?
-
->  		: "memory");
->  }
->  
-> @@ -130,12 +129,14 @@ static inline int arch_irqs_disabled_flags(unsigned long flags)
->  
->  	asm volatile(ALTERNATIVE(
->  			"and	%w0, %w1, #" __stringify(PSR_I_BIT) "\n"
-> +			"nop\n"
->  			"nop",
-> +			"and	%w0, %w2, #" __stringify(PSR_I_BIT) "\n"
->  			"cmp	%w1, #" __stringify(GIC_PRIO_IRQOFF) "\n"
-> -			"cset	%w0, ls",
-> +			"cinc	%w0, %w0, ls",
->  			ARM64_HAS_IRQ_PRIO_MASKING)
->  		: "=&r" (res)
-> -		: "r" ((int) flags)
-> +		: "r" ((int) flags), "r" (flags >> 32)
-
-Same.
-
->  		: "memory");
->  
->  	return res;
-> 
+With all stacks having guard pages now, the stack_overflow_check() in
+irq_64.c is kind of pointless. When the kernel overflows any of the stacks
+independent of what we do with DB (we at least split it into 2 different
+valid stacks) then it hits a guard page and dies. Mission accomplished....
 
 Thanks,
 
--- 
-Julien Thierry
+	tglx
+
+
+
