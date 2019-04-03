@@ -2,286 +2,114 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE4AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55BDC10F06
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEE820657
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F39C20449
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 18:04:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6pnE2Tj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfDCSBA (ORCPT
+        id S1726263AbfDCSEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 14:01:00 -0400
-Received: from muru.com ([72.249.23.125]:44150 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfDCSBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 14:01:00 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8B27C803A;
-        Wed,  3 Apr 2019 18:01:12 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 11:00:54 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 05/14] bus: ti-sysc: Add separate functions for handling
- clocks
-Message-ID: <20190403180054.GS49658@atomide.com>
-References: <20190325215849.13182-1-tony@atomide.com>
- <20190325215849.13182-6-tony@atomide.com>
+        Wed, 3 Apr 2019 14:04:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36320 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfDCSD7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 14:03:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z5so7512026pfn.3;
+        Wed, 03 Apr 2019 11:03:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Q9PLwwVzOIDPi/cGX2bBRNrfqlokXfh2QaqRvF0H8kE=;
+        b=B6pnE2Tj7LrGboD9n06GciD4cZS1tGg9A8U1zan/ODqIUxs7TslF38ydqkPLz/U2rU
+         1JyL2MLf+utgtkeIJSzR2bPIiZyoOiJ9WvjFodBwR8Q4cgZntUQw8qRqDaovWBwJyNhN
+         Qq/s18XhSsedcRtsk3wQqOhrs+IuACA2hn2gszptMOkaseLBWQx33/ffmEo6RM+kaH0m
+         NzCCFi2x6O2v4pFDjqq7ty1uPMNY+fQPTuKr7ZjiGXJucY6SZMuaN1JYkGKguBL3h1Gf
+         jimyNlhId/rN1uft9DIuTedsaNqcOwI1wREIlR/ShHkkqwJfQ4xJNWOsCTGCRuoUNTiT
+         ppGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Q9PLwwVzOIDPi/cGX2bBRNrfqlokXfh2QaqRvF0H8kE=;
+        b=apeX4TTuc2zG8iI83MioXHyZf+J4c9u94bvgg+9axMdB3B9eCc0vicYVpVJQa/RqgV
+         kPeqbfCYnec0V2G9q7WQJpVh0vYCILtzBEBztiFba6g5TukvAKmcTMVD2Z9spfXWT9qz
+         nUTcnL4jxKiJSpPfr8VLaMTcIhdYQd9VMNhNZco9kU04y8SLSgHlNj+DGn2gIw9GA/bN
+         NDabj6UujKkTKWfDNKA9s6mkzwSpsgBW5hukA7mL9PmgzDjNdCQnQ4ivEzpGYbhiC59H
+         4vvg5D3kgabLOI53TO4ifLwxgDjqxisLfRyIikoeu8MNd88KDqDx17tI5+ok8q9XAva1
+         5g9g==
+X-Gm-Message-State: APjAAAXH33sKpwpgzf5olwEJ21CdyuCc62RhU+NVHGM+NgrQidoKiN9v
+        u4IFO/ww7md4e9o4A4lf2lSs/mmbK4a4o27lUyYHnaTe
+X-Google-Smtp-Source: APXvYqy/LCaeakEBbGxhp7Vg3XqCtWPy/WXHA5CBk2mF5PqSrqDJnVnKoUQNY77oOJzWHbYc6o5gWvg0XehSwRUeI3M=
+X-Received: by 2002:a62:4115:: with SMTP id o21mr782674pfa.153.1554314638671;
+ Wed, 03 Apr 2019 11:03:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190325215849.13182-6-tony@atomide.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 3 Apr 2019 13:03:47 -0500
+Message-ID: <CAH2r5mv70K=Mj7ehKB2iAZc95emcWGYC5eBKOV-1tkD=euyatQ@mail.gmail.com>
+Subject: [GIT PULL] SMB3 Fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [190325 22:00]:
-> Let's also add error handling to shut down already enabled clocks
-> while at it.
-...
+Please pull the following changes since commit
+5e7a8ca319268a70a6c7c3c1fde5bea38e1e5539:
 
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> +err_disable:
-> +	for (; i >= 0; i--) {
-> +		clock = ddata->clocks[i];
-> +
-> +		/* Main clocks may not have ick */
-> +		if (IS_ERR_OR_NULL(clock))
-> +			continue;
-> +
-> +		clk_disable(clock);
-> +	}
-> +
-> +	return error;
-> +}
+  Merge branch 'work.aio' of
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2019-04-01
+08:28:36 -0700)
 
-We need to ignore the current clock on error above
-and use for (i--; i >= 0; i--) instead. The same for
-sysc_enable_opt_clocks().
+are available in the Git repository at:
 
-Updated patch below.
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.1-rc3-smb3-fixes
 
-Regards,
+for you to fetch changes up to 4811e3096daaa56e145a1d2bec45e2e9fe790729:
 
-Tony
+  cifs: a smb2_validate_and_copy_iov failure does not mean the handle
+is invalid. (2019-04-01 14:33:38 -0500)
 
-8< --------------------
-From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony@atomide.com>
-Date: Thu, 21 Mar 2019 11:00:21 -0700
-Subject: [PATCH] bus: ti-sysc: Add separate functions for handling clocks
+----------------------------------------------------------------
+four smb3 fixes for stable
+- fix an open path where we had an unitialized structure
+- fix for snapshot (previous version) enumeration
+- allow reconnect timeout on handles to be configurable to better
+handle network or server crash
 
-At least McPDM module depends on an external optional clock to be
-usable. To make handling of the McPDM clock easier in the following
-patches, let's add separate functions for handling the main clocks
-and the optional clocks.
+----------------------------------------------------------------
+Ronnie Sahlberg (2):
+      cifs: fix kref underflow in close_shroot()
+      cifs: a smb2_validate_and_copy_iov failure does not mean the
+handle is invalid.
 
-Let's also add error handling to shut down already enabled clocks
-while at it.
+Steve French (2):
+      smb3: Fix enumerating snapshots to Azure
+      SMB3: Allow persistent handle timeout to be configurable on mount
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 141 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 123 insertions(+), 18 deletions(-)
+ fs/cifs/cifsfs.c    |  2 ++
+ fs/cifs/cifsglob.h  |  8 ++++++++
+ fs/cifs/connect.c   | 30 +++++++++++++++++++++++++++++-
+ fs/cifs/smb2file.c  |  6 ++++--
+ fs/cifs/smb2ops.c   | 68
+++++++++++++++++++++++++++++++++++++++++++--------------------------
+ fs/cifs/smb2pdu.c   | 49 +++++++++++++++++++++++++++++++++----------------
+ fs/cifs/smb2proto.h |  5 +++--
+ 7 files changed, 121 insertions(+), 47 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -231,6 +231,112 @@ static int sysc_get_clocks(struct sysc *ddata)
- 	return 0;
- }
- 
-+static int sysc_enable_main_clocks(struct sysc *ddata)
-+{
-+	struct clk *clock;
-+	int i, error;
-+
-+	if (!ddata->clocks)
-+		return 0;
-+
-+	for (i = 0; i < SYSC_OPTFCK0; i++) {
-+		clock = ddata->clocks[i];
-+
-+		/* Main clocks may not have ick */
-+		if (IS_ERR_OR_NULL(clock))
-+			continue;
-+
-+		error = clk_enable(clock);
-+		if (error)
-+			goto err_disable;
-+	}
-+
-+	return 0;
-+
-+err_disable:
-+	for (i--; i >= 0; i--) {
-+		clock = ddata->clocks[i];
-+
-+		/* Main clocks may not have ick */
-+		if (IS_ERR_OR_NULL(clock))
-+			continue;
-+
-+		clk_disable(clock);
-+	}
-+
-+	return error;
-+}
-+
-+static void sysc_disable_main_clocks(struct sysc *ddata)
-+{
-+	struct clk *clock;
-+	int i;
-+
-+	if (!ddata->clocks)
-+		return;
-+
-+	for (i = 0; i < SYSC_OPTFCK0; i++) {
-+		clock = ddata->clocks[i];
-+		if (IS_ERR_OR_NULL(clock))
-+			continue;
-+
-+		clk_disable(clock);
-+	}
-+}
-+
-+static int sysc_enable_opt_clocks(struct sysc *ddata)
-+{
-+	struct clk *clock;
-+	int i, error;
-+
-+	if (!ddata->clocks)
-+		return 0;
-+
-+	for (i = SYSC_OPTFCK0; i < SYSC_MAX_CLOCKS; i++) {
-+		clock = ddata->clocks[i];
-+
-+		/* Assume no holes for opt clocks */
-+		if (IS_ERR_OR_NULL(clock))
-+			return 0;
-+
-+		error = clk_enable(clock);
-+		if (error)
-+			goto err_disable;
-+	}
-+
-+	return 0;
-+
-+err_disable:
-+	for (i--; i >= 0; i--) {
-+		clock = ddata->clocks[i];
-+		if (IS_ERR_OR_NULL(clock))
-+			continue;
-+
-+		clk_disable(clock);
-+	}
-+
-+	return error;
-+}
-+
-+static void sysc_disable_opt_clocks(struct sysc *ddata)
-+{
-+	struct clk *clock;
-+	int i;
-+
-+	if (!ddata->clocks)
-+		return;
-+
-+	for (i = SYSC_OPTFCK0; i < SYSC_MAX_CLOCKS; i++) {
-+		clock = ddata->clocks[i];
-+
-+		/* Assume no holes for opt clocks */
-+		if (IS_ERR_OR_NULL(clock))
-+			return;
-+
-+		clk_disable(clock);
-+	}
-+}
-+
- /**
-  * sysc_init_resets - reset module on init
-  * @ddata: device driver data
-@@ -667,7 +773,7 @@ static int __maybe_unused sysc_runtime_resume_legacy(struct device *dev,
- static int __maybe_unused sysc_runtime_suspend(struct device *dev)
- {
- 	struct sysc *ddata;
--	int error = 0, i;
-+	int error = 0;
- 
- 	ddata = dev_get_drvdata(dev);
- 
-@@ -682,15 +788,10 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
- 		return error;
- 	}
- 
--	for (i = 0; i < ddata->nr_clocks; i++) {
--		if (IS_ERR_OR_NULL(ddata->clocks[i]))
--			continue;
-+	sysc_disable_main_clocks(ddata);
- 
--		if (i >= SYSC_OPTFCK0 && !sysc_opt_clks_needed(ddata))
--			break;
--
--		clk_disable(ddata->clocks[i]);
--	}
-+	if (sysc_opt_clks_needed(ddata))
-+		sysc_disable_opt_clocks(ddata);
- 
- 	ddata->enabled = false;
- 
-@@ -700,7 +801,7 @@ static int __maybe_unused sysc_runtime_suspend(struct device *dev)
- static int __maybe_unused sysc_runtime_resume(struct device *dev)
- {
- 	struct sysc *ddata;
--	int error = 0, i;
-+	int error = 0;
- 
- 	ddata = dev_get_drvdata(dev);
- 
-@@ -715,20 +816,24 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
- 		return error;
- 	}
- 
--	for (i = 0; i < ddata->nr_clocks; i++) {
--		if (IS_ERR_OR_NULL(ddata->clocks[i]))
--			continue;
--
--		if (i >= SYSC_OPTFCK0 && !sysc_opt_clks_needed(ddata))
--			break;
--
--		error = clk_enable(ddata->clocks[i]);
-+	if (sysc_opt_clks_needed(ddata)) {
-+		error = sysc_enable_opt_clocks(ddata);
- 		if (error)
- 			return error;
- 	}
- 
-+	error = sysc_enable_main_clocks(ddata);
-+	if (error)
-+		goto err_main_clocks;
-+
- 	ddata->enabled = true;
- 
-+	return 0;
-+
-+err_main_clocks:
-+	if (sysc_opt_clks_needed(ddata))
-+		sysc_disable_opt_clocks(ddata);
-+
- 	return error;
- }
- 
+
 -- 
-2.21.0
+Thanks,
+
+Steve
