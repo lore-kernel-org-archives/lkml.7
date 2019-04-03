@@ -2,204 +2,158 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8B3C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2757BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570E22082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98582082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:40:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MSgjxUPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfDCJj5 (ORCPT
+        id S1726431AbfDCJkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:39:57 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:28488 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725956AbfDCJj4 (ORCPT
+        Wed, 3 Apr 2019 05:40:40 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58086 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfDCJkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:39:56 -0400
-X-IronPort-AV: E=Sophos;i="5.60,304,1549900800"; 
-   d="scan'208";a="58379933"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 03 Apr 2019 17:39:55 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 8E2F54C8B03D;
-        Wed,  3 Apr 2019 17:39:52 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.56) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Wed, 3 Apr 2019 17:39:56 +0800
-Date:   Wed, 3 Apr 2019 17:39:47 +0800
-From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
-To:     Dave Young <dyoung@redhat.com>
-CC:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "kasong@redhat.com" <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190403093947.GJ1555@localhost.localdomain>
-References: <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
- <20190328155256.GP22720@zn.tnic>
- <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
- <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
- <20190403053459.GD1555@localhost.localdomain>
- <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
- <20190403072141.GE1555@localhost.localdomain>
- <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
- <20190403082305.GG1555@localhost.localdomain>
- <20190403090210.GH1555@localhost.localdomain>
+        Wed, 3 Apr 2019 05:40:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=C3jCv1BCI/s8EdZ3pwEsAhvgQDQo0ioBHGBJcEAl7po=; b=MSgjxUPB2wUu/Wm3HVCj/Kp36
+        8APc/3UV+VFV+OrVyfap3q6HDFm4IcBlDup6/Dm8yRobpLeUCjI2NG1n6A2AtKYARgQMAGaNWb37B
+        k3nufowz44M4yOT+tL4OwDdGC12oclmql4HZOosw7vUNphaw+w3k9PE9BYzmPHtG2c9GsBDC+sfkB
+        HRzbO1ZE3T8H6p0bDd0nRLEOh/ndnDx+3Uj8XrK7KZzpYMTORyM+iHS+q/J/LS3II6+yflQzehfGT
+        +a6gDXzGsmxwixc7P7qQStnUdoNFpxX/CaazbxasYOUQ7JINfrZ6aFlIM5jQ1mZbqNj95kiyEFc9s
+        ZizpG9oUA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51938)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hBcNl-0002FQ-K0; Wed, 03 Apr 2019 10:40:33 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hBcNg-0004lb-DD; Wed, 03 Apr 2019 10:40:28 +0100
+Date:   Wed, 3 Apr 2019 10:40:28 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>, davem@davemloft.net,
+        andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        maxime.chevallier@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        mw@semihalf.com
+Subject: Re: [PATCH net-next v4 1/2] net: phy: marvell10g: implement
+ suspend/resume callbacks
+Message-ID: <20190403094028.vvyuqe6ojza2ezhv@shell.armlinux.org.uk>
+References: <20190402131029.26880-1-antoine.tenart@bootlin.com>
+ <20190402131029.26880-2-antoine.tenart@bootlin.com>
+ <762a34e2-e89b-9a96-938f-5c85709c8760@gmail.com>
+ <20190402221048.fpdqfeuzscthn6qd@shell.armlinux.org.uk>
+ <af550dd9-1374-621d-a37a-8e32314be01c@gmail.com>
+ <20190403084614.GC3354@kwain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190403090210.GH1555@localhost.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Originating-IP: [10.167.225.56]
-X-yoursite-MailScanner-ID: 8E2F54C8B03D.AC983
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
+In-Reply-To: <20190403084614.GC3354@kwain>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 05:02:11PM +0800, Chao Fan wrote:
->On Wed, Apr 03, 2019 at 04:23:06PM +0800, Chao Fan wrote:
->>On Wed, Apr 03, 2019 at 04:09:16PM +0800, Dave Young wrote:
->>>On 04/03/19 at 03:21pm, Chao Fan wrote:
->>>> On Wed, Apr 03, 2019 at 01:53:40PM +0800, Dave Young wrote:
->>>> >On 04/03/19 at 01:35pm, Chao Fan wrote:
->>>> >> On Tue, Apr 02, 2019 at 08:03:19PM +0800, Dave Young wrote:
->>>> >> >On 04/01/19 at 12:08am, Junichi Nomura wrote:
->[...]
->>>> >
->>>> >It is weird to me. Probably I need find out why I can not reproduce the
->>>> >bug this patch is addressing first.
->>>> 
->>>> Hmm, is your laptop booted from EFI or legacy BIOS?
->>>
->>>EFI booted.
->>>
->>>> >
->>>> >earlyprintk seems not working for me anymore, it is not easy to debug on
->>>> >laptop now.
->>>> 
->>>> Another computer can help print the console message.
->>>> I remeber you are good at debug on two computers.
->>>
->>>I used to use earlyprintk, but seems earlyprintk can not work so early.
->>>So I only can try to comment out code manually.
->>
->>Ah, I got it. If you want to use earlyprintk to print message of
->>get_rsdp_addr(), you should change some code.
->>Because get_rsdp_addr() is called before earlyprintk initialed.
->>
->>I am still testing, but in my debug stage, I change like this:
->>diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
->>index c0d6c560df69..dbbe8d9a5792 100644
->>--- a/arch/x86/boot/compressed/misc.c
->>+++ b/arch/x86/boot/compressed/misc.c
->>@@ -352,7 +352,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
->>        boot_params->hdr.loadflags &= ~KASLR_FLAG;
->>
->>        /* Save RSDP address for later use. */
->>-       boot_params->acpi_rsdp_addr = get_rsdp_addr();
->>
->>        sanitize_boot_params(boot_params);
->>
->>@@ -368,6 +367,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
->>        cols = boot_params->screen_info.orig_video_cols;
->>
->>        console_init();
->>+       boot_params->acpi_rsdp_addr = get_rsdp_addr();
->>        debug_putstr("early console in extract_kernel\n");
->>
->>        free_mem_ptr     = heap;        /* Heap */
->>
->>Call this function after console_init().
->>That will make earlyprintk works.
->>
->>>
->>>It seems to be still some bug in early acpi code because if I 
->>>return 0 in get rsdp function it just works.
->>>
->>>This guess make sense to me for now:
->>>1. nokaslr does not work because it may only avoid randomization, but it
->>>does not avoid running the early acpi parsing code.
->>>
->>>2. kexec does not work without the patch we talked about, because I just
->>>reproduced Junichi reported bug, sometimes hang, or reset, it is
->>>understandable.
->>>
->>>3. kexec does not work with the patch, so there is still bugs in the
->>>code. 
->>>
->>>So several things to do is:
->>>
->>>Fix 1. (separate issue),  Baoquan or either of you may want to fix it :)
->>
->>For 1, I think it's not needed to fix. Since not only KASLR needs RSDP.
->>So nokaslr should not stop the acpi parsing code.
->>>
->>>Fix 3.  need more debugging, have you or Junichi run tests on more real
->>>hardware, maybe it is easier to reproduce on real hardware, I'm glad to
->>>help to try test patch or provide any help. 
->>
->>I am still testing in real hardware.
->
->Hi Dave,
->
->I find a Fujitsu Desktop PC to test it.
->Without this PATCH, it failed to kexec and kdump.
->With this PATCH, it succeed to kexec.
->But failed to kdump. From the log, I think it didn't jump to the second
->kernel, just reboot after panic. I have not figured out what's the
->problem, but it seems not caused by this PATCH.
+On Wed, Apr 03, 2019 at 10:46:14AM +0200, Antoine Tenart wrote:
+> Hi,
+> 
+> On Wed, Apr 03, 2019 at 07:09:55AM +0200, Heiner Kallweit wrote:
+> > On 03.04.2019 00:10, Russell King - ARM Linux admin wrote:
+> > > On Tue, Apr 02, 2019 at 08:17:16PM +0200, Heiner Kallweit wrote:
+> > >> On 02.04.2019 15:10, Antoine Tenart wrote:
+> > >>> This patch adds the suspend/resume callbacks for Marvell 10G PHYs. The
+> > >>> three PCS (base-t, base-r and 1000base-x) are set in low power (the PCS
+> > >>> are powered down) when the PHY isn't used.
+> > >>>
+> > >>> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> > >>> ---
+> > >>>  drivers/net/phy/marvell10g.c | 12 +++++++++++-
+> > >>>  1 file changed, 11 insertions(+), 1 deletion(-)
+> > >>>
+> > >>> diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
+> > >>> index 80678919641d..9ee033c8a12b 100644
+> > >>> --- a/drivers/net/phy/marvell10g.c
+> > >>> +++ b/drivers/net/phy/marvell10g.c
+> > >>> @@ -51,6 +51,8 @@ enum {
+> > >>>  	MV_AN_STAT1000		= 0x8001, /* 1000base-T status register */
+> > >>>  
+> > >>>  	/* Vendor2 MMD registers */
+> > >>> +	MV_V2_PORT_CTRL		= 0xf001,
+> > >>> +	MV_V2_PORT_CTRL_PWRDOWN = 0x0800,
+> > >>
+> > >> If this driver is touched again I think it would be good to change all
+> > >> such constants to BIT() and GENMASK(), ideally combined with the macros
+> > >> from bitfields.h. This makes it much easier to check the code against the
+> > >> datasheet. Apart from that:
+> > > 
+> > > Specifically, which constants are you talking about?
+> > > 
+> > > I think there's only MV_PCS_PAIRSWAP_MASK and MV_V2_TEMP_CTRL_MASK,
+> > > which would be confusing to change given that the following definitions
+> > > are values for the masked field.
+> > > 
+> > Exactly, MV_V2_TEMP_CTRL_MASK is a good example. My personal preference is
+> > to define the mask as GENMASK(15, 14) and the field values as 0 and 3.
+> > Then it's aligned with the datasheet that says:
+> > 15:14 Temperature Sense Enable, 11 = Disable
 
-I comment out this line:
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index c0d6c560df69..4d826abe659c 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -352,7 +352,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
-        boot_params->hdr.loadflags &= ~KASLR_FLAG;
+Sorry, I don't see that.  You still have to convert between what the
+data sheet says (binary) and the values used in C code (hex or decimal).
+To me, it would be natural to state the above as 0xc000 rather than
+stating it as '3' in the code with a GENMASK defining a mask for the
+appropriate fields, and then have to check all over the place that
+the right FIELD_* macros are used.  This seems _way_ more complex than
+it needs to be.
 
-        /* Save RSDP address for later use. */
--       boot_params->acpi_rsdp_addr = get_rsdp_addr();
-+       //boot_params->acpi_rsdp_addr = get_rsdp_addr();
+> > Macros FIELD_GET and FIELD_PREP are perfect to deal with such fields.
+> 
+> I agree, I didn't used that to be consistent with what was already done
+> in the driver.
+> 
+> > > However, MV_V2_PORT_CTRL_PWRDOWN should be defined using BIT() in any
+> > > case.
+> 
+> Shouldn't MV_PCS_PAIRSWAP_AB also be defined using BIT()?
 
-        sanitize_boot_params(boot_params);
+It is this that makes me utterly detest BIT().  It seems folk just
+look at the value and think "it defines a single bit, it must use
+BIT()" without thinking that it might be a field.  So we end up
+with people inappropriately proposing to change stuff to BIT().
 
-Kdump also failed to jump to the second kernel and just hang.
-So I think it's another issue. As for this PATCH, I think it works.
-So for now, we only find your laptop will meet the problem, so maybe
-you can debug for more information.
+So no.
 
-Thanks,
-Chao Fan
+> More generally, we could have all the register definitions using the 0x
+> values, the masks using GENMASK() and the values using a combination of
+> BIT() and (0x... << y). That would match what's usually done in other
+> drivers and improve the readability. (But I also recall being told not
+> to use GENMASK in net/, so it's up to you to decide).
 
->So I still think this PATCH works for the Fujitsu Desktop PC.
->
->As for your issue, I think there may be some problems related to specified
->hardware. Are you using a Lenovo laptop?
->
->And I am not sure how Nomura tested it.
->
->Thanks,
->Chao Fan
->
->>
->>Thanks,
->>Chao Fan
->>
->>>
->>>Thanks
->>>Dave
->>>
->>>
+That difference is why I don't like GENMASK().  We end up with masks
+defined using GENMASK() and their bitfields defined a completely
+different way - there is no consistency, and it is not obvious that
+the masks and the field values are related.
 
+In my opinion, BIT() is only marginally useful, the rest just makes
+things _less_ obviously correct.
 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
