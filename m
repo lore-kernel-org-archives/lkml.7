@@ -2,74 +2,94 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC2AC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED112C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C12214AF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554284467;
-	bh=NXyN6Su33fVYiNatkAtDtUCyzSWg58qHU+DgJyZ8oD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tOzy2emK34mpsqWegqbfUOK9MkJ7+C23D97Je+mcb5KSTBAgBtkcIslVL7xweBN0b
-	 qQi3wdEqFIEn99m+Ftsdgoxro5eAmMK02q5KR4LhdRCEXDokZFyiLiIya/AEel7Toy
-	 +gOEWUGuZpo4jwLfH/IuuhcvQAxd7/ecfJtllv8g=
+	by mail.kernel.org (Postfix) with ESMTP id C48D4206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfDCJlG (ORCPT
+        id S1726461AbfDCJmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbfDCJlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:41:06 -0400
-Received: from X250 (unknown [147.50.13.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECA972082C;
-        Wed,  3 Apr 2019 09:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554284465;
-        bh=NXyN6Su33fVYiNatkAtDtUCyzSWg58qHU+DgJyZ8oD0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ab/UIeXqu4GmP/gjv9yfCRo2xIckGDdfgM3IhT5E0sYp6tmZhJSkjFsxKpM4KlOX8
-         0bVA3DGdZthF5DL7opaLgjL2W3jOF3j7Z9JVh0iQrFiUR9t/9tYHjHW8GTJRQ8gqdv
-         UwyhZA/RIlttF1KUbjOFujPUXb15RdHxpdEoHyj8=
-Date:   Wed, 3 Apr 2019 16:40:58 +0700
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] ARM: dts: imx7d: Specify viewport count for PCIE
- block
-Message-ID: <20190403094057.GE7932@X250>
-References: <20190327063841.28350-1-andrew.smirnov@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190327063841.28350-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 3 Apr 2019 05:42:39 -0400
+Received: from regular1.263xmail.com ([211.150.70.200]:58060 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725940AbfDCJmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 05:42:38 -0400
+Received: from zhangqing?rock-chips.com (unknown [192.168.167.130])
+        by regular1.263xmail.com (Postfix) with ESMTP id 65242340;
+        Wed,  3 Apr 2019 17:42:35 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P18217T139987412580096S1554284546411238_;
+        Wed, 03 Apr 2019 17:42:28 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <74f47f99bc0cbdefabe3b9299eab2085>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Elaine Zhang <zhangqing@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
+        Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v1 0/6] clk: rockchip: Support for some new features
+Date:   Wed,  3 Apr 2019 17:42:23 +0800
+Message-Id: <1554284549-24916-1-git-send-email-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 11:38:40PM -0700, Andrey Smirnov wrote:
-> i.MX7D comes with 4 viewports, so configure PCIE node accordingly so
-> that the driver won't assume we only have 2.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+1. Support for some new features
+2. fix up some error
 
-Applied both, thanks.
+Elaine Zhang (4):
+  clk: rockchip: fix up the frac clk get rate error
+  clk: rockchip: add a clock-type for muxes based in the pmugrf
+  clk: rockchip: add pll up and down when change pll freq
+  clk: rockchip: support pll setting by auto
+
+Finley Xiao (2):
+  clk: rockchip: Add supprot to limit input rate for fractional divider
+  clk: rockchip: add a COMPOSITE_DIV_OFFSET clock-type
+
+ drivers/clk/rockchip/clk-pll.c    | 234 +++++++++++++++++++++++++++++++++++---
+ drivers/clk/rockchip/clk-px30.c   |  29 ++---
+ drivers/clk/rockchip/clk-rk3036.c |  13 ++-
+ drivers/clk/rockchip/clk-rk3128.c |  15 ++-
+ drivers/clk/rockchip/clk-rk3188.c |  24 ++--
+ drivers/clk/rockchip/clk-rk3228.c |  18 +--
+ drivers/clk/rockchip/clk-rk3288.c |  19 ++--
+ drivers/clk/rockchip/clk-rk3328.c |  17 +--
+ drivers/clk/rockchip/clk-rk3368.c |  17 +--
+ drivers/clk/rockchip/clk-rk3399.c |  32 +++---
+ drivers/clk/rockchip/clk-rv1108.c |  14 ++-
+ drivers/clk/rockchip/clk.c        |  48 ++++++--
+ drivers/clk/rockchip/clk.h        |  50 +++++++-
+ include/linux/clk-provider.h      |   2 +
+ 14 files changed, 423 insertions(+), 109 deletions(-)
+
+-- 
+1.9.1
+
+
+
