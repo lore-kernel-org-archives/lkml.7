@@ -2,79 +2,70 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EE6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD5BC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0725120882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E28820882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfDCTYg (ORCPT
+        id S1726607AbfDCTZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 15:24:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47522 "EHLO mx1.redhat.com"
+        Wed, 3 Apr 2019 15:25:46 -0400
+Received: from lnfm1.sai.msu.ru ([93.180.26.255]:49521 "EHLO lnfm1.sai.msu.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726064AbfDCTYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 15:24:36 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 43EA42D7E4;
-        Wed,  3 Apr 2019 19:24:36 +0000 (UTC)
-Received: from redhat.com (ovpn-125-190.rdu2.redhat.com [10.10.125.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9179A5C88F;
-        Wed,  3 Apr 2019 19:24:28 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 15:24:26 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        eric.auger@redhat.com, cohuck@redhat.com, peterx@redhat.com
-Subject: Re: [PATCH v2] vfio/type1: Limit DMA mappings per container
-Message-ID: <20190403192426.GA16117@redhat.com>
-References: <155422160029.16896.1992475589398080933.stgit@gimli.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <155422160029.16896.1992475589398080933.stgit@gimli.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 03 Apr 2019 19:24:36 +0000 (UTC)
+        id S1726064AbfDCTZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 15:25:46 -0400
+X-Greylist: delayed 1904 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Apr 2019 15:25:44 EDT
+Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
+        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id x33IrVbO024069;
+        Wed, 3 Apr 2019 21:53:36 +0300
+Received: from oak.local (unknown [92.243.181.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 3B8D1C085;
+        Wed,  3 Apr 2019 21:53:33 +0300 (MSK)
+From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
+To:     b-liu@ti.com, gregkh@linuxfoundation.org
+Cc:     matwey.kornilov@gmail.com,
+        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [PATCH 1/6] usb: musb: Use USB_DIR_IN when calling musb_advance_schedule()
+Date:   Wed,  3 Apr 2019 21:53:05 +0300
+Message-Id: <20190403185310.8437-2-matwey@sai.msu.ru>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190403185310.8437-1-matwey@sai.msu.ru>
+References: <20190403185310.8437-1-matwey@sai.msu.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 10:15:38AM -0600, Alex Williamson wrote:
-> Memory backed DMA mappings are accounted against a user's locked
-> memory limit, including multiple mappings of the same memory.  This
-> accounting bounds the number of such mappings that a user can create.
-> However, DMA mappings that are not backed by memory, such as DMA
-> mappings of device MMIO via mmaps, do not make use of page pinning
-> and therefore do not count against the user's locked memory limit.
-> These mappings still consume memory, but the memory is not well
-> associated to the process for the purpose of oom killing a task.
-> 
-> To add bounding on this use case, we introduce a limit to the total
-> number of concurrent DMA mappings that a user is allowed to create.
-> This limit is exposed as a tunable module option where the default
-> value of 64K is expected to be well in excess of any reasonable use
-> case (a large virtual machine configuration would typically only make
-> use of tens of concurrent mappings).
-> 
-> This fixes CVE-2019-3882.
-> 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Use USB_DIR_IN instead of 1 when calling musb_advance_schedule().
+This is consistent with the rest of musb_host.c code and impoves
+the readability.
 
-Have you tested with GPU passthrough ? GPU have huge BAR from
-hundred of mega bytes to giga bytes (some driver resize them
-to cover the whole GPU memory). Driver need to map those to
-properly work. I am not sure what path is taken by mmap of
-mmio BAR by a guest on the host but i just thought i would
-point that out.
+Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
+---
+ drivers/usb/musb/musb_host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Jérôme
+diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
+index eb308ec35c66..3ffea6a5e022 100644
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -1195,7 +1195,7 @@ irqreturn_t musb_h_ep0_irq(struct musb *musb)
+ 
+ 	/* call completion handler if done */
+ 	if (complete)
+-		musb_advance_schedule(musb, urb, hw_ep, 1);
++		musb_advance_schedule(musb, urb, hw_ep, USB_DIR_IN);
+ done:
+ 	return retval;
+ }
+-- 
+2.16.4
+
