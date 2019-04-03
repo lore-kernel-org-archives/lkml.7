@@ -2,83 +2,178 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DC8C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52101C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9C82084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F412075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 15:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfDCPOY (ORCPT
+        id S1726833AbfDCPOd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 11:14:24 -0400
-Received: from mailoutvs38.siol.net ([185.57.226.229]:52284 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726099AbfDCPOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 11:14:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 29BA55229E9;
-        Wed,  3 Apr 2019 17:14:17 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id z3kRh_h6lRjd; Wed,  3 Apr 2019 17:14:16 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id E058B5229DF;
-        Wed,  3 Apr 2019 17:14:16 +0200 (CEST)
-Received: from localhost.localdomain (cpe-86-58-52-202.static.triera.net [86.58.52.202])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 8C9595229E9;
-        Wed,  3 Apr 2019 17:14:14 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     maxime.ripard@bootlin.com, wens@csie.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jernej.skrabec@siol.net
-Subject: [PATCH v2 2/2] clk: sunxi-ng: nkmp: Explain why zero width check is needed
-Date:   Wed,  3 Apr 2019 17:14:04 +0200
-Message-Id: <20190403151404.26542-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190403151404.26542-1-jernej.skrabec@siol.net>
-References: <20190403151404.26542-1-jernej.skrabec@siol.net>
+        Wed, 3 Apr 2019 11:14:33 -0400
+Received: from smtp.asem.it ([151.1.184.197]:56847 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbfDCPOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 11:14:32 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003789590.MSG 
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:14:24 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Wed, 3
+ Apr 2019 17:14:24 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1261.035; Wed, 3 Apr 2019 17:14:24 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Thread-Topic: [PATCH 2/2] rtc: pcf2127: add battery-low INTn generation
+Thread-Index: AQHU6izzDrhx33Rd2E28nY3Qp112E6YqaEkAgAAhzmA=
+Date:   Wed, 3 Apr 2019 15:14:24 +0000
+Message-ID: <452a4cf1410a41c8b6f767ac6258482e@asem.it>
+References: <1554303165-24813-1-git-send-email-f.suligoi@asem.it>
+ <1554303165-24813-2-git-send-email-f.suligoi@asem.it>
+ <20190403150824.GO22216@piout.net>
+In-Reply-To: <20190403150824.GO22216@piout.net>
+Accept-Language: it-IT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B020F.5CA4CDD1.001E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an explanation why zero width check is needed when generating factor
-mask using GENMASK() macro.
+Hi Alexandre,
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/clk/sunxi-ng/ccu_nkmp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> On 03/04/2019 16:52:45+0200, Flavio Suligoi wrote:
+> > The pcf2127 has an automatic battery-low detection function.
+> >
+> > In case of battery-low event, an interrupt generation through
+> > the pin INTn (active low) can be enabled, setting the flag BLIE
+> > in the register Control_3.
+> >
+> > This function is activated by the "battery-low-hw-alarm" DT property.
+> >
+> > Example of use for an NXP i.MX7D board:
+> >
+> > &i2c3 {
+> > 	clock-frequency = <100000>;
+> > 	pinctrl-names = "default";
+> > 	pinctrl-0 = <&pinctrl_i2c3>;
+> > 	status = "okay";
+> >
+> > 	pcf2127@51 {
+> > 		compatible = "nxp,pcf2127";
+> > 		reg = <0x51>;
+> > 		battery-low-hw-alarm;
+> > 		status = "okay";
+> > 	};
+> > };
+> >
+> 
+> So I'm curious, how do you then use that signal? I have a (not yet sent)
+> series adding alarm support for the pcf2127. The issue having BLIE is
+> that then this will prevent the alarm to work properly.
+> 
+> So my guess is that you have nINT connected to an LED or something that
+> the user can see?
+> 
 
-diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_n=
-kmp.c
-index 69dfc6de1c4e..cbcdf664f336 100644
---- a/drivers/clk/sunxi-ng/ccu_nkmp.c
-+++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
-@@ -186,6 +186,12 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsi=
-gned long rate,
-=20
- 	ccu_nkmp_find_best(parent_rate, rate, &_nkmp);
-=20
-+	/*
-+	 * If width is 0, GENMASK() macro may not generate expected mask (0)
-+	 * as it falls under undefined behaviour by C standard due to shifts
-+	 * which are equal or greater than width of left operand. This can
-+	 * be easily avoided by explicitly checking if width is 0.
-+	 */
- 	if (nkmp->n.width)
- 		n_mask =3D GENMASK(nkmp->n.width + nkmp->n.shift - 1,
- 				 nkmp->n.shift);
---=20
-2.21.0
+I'm working on our custom embedded board with an NXP i.MX7D,
+developed here, in Asem (www.asem.it).
+The nINT pin is connected to a GPIO of the MX7 and then
+used by an applicative sw, to generate an alarm for the user.
+
+> > Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> > ---
+> >  drivers/rtc/rtc-pcf2127.c | 33 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >
+> > diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
+> > index 7cb786d..e3805c8 100644
+> > --- a/drivers/rtc/rtc-pcf2127.c
+> > +++ b/drivers/rtc/rtc-pcf2127.c
+> > @@ -228,6 +228,10 @@ static int pcf2127_probe(struct device *dev, struct
+> regmap *regmap,
+> >  			const char *name, bool has_nvmem)
+> >  {
+> >  	struct pcf2127 *pcf2127;
+> > +	struct device_node *np;
+> > +	struct i2c_client *client = to_i2c_client(dev);
+> > +	unsigned char buf[2];
+> > +	int err;
+> >  	int ret = 0;
+> >
+> >  	dev_dbg(dev, "%s\n", __func__);
+> > @@ -245,6 +249,35 @@ static int pcf2127_probe(struct device *dev, struct
+> regmap *regmap,
+> >  	if (IS_ERR(pcf2127->rtc))
+> >  		return PTR_ERR(pcf2127->rtc);
+> >
+> > +	/*
+> > +	 * The pcf2127 has an automatic battery-low detection function.
+> > +	 *
+> > +	 * In case of battery-low event, an interrupt generation through
+> > +	 * the pin INTn (active low) can be enabled, setting the flag BLIE
+> > +	 * in the register Control_3.
+> > +	 */
+> > +	np = of_node_get(dev->of_node);
+> > +	if (!np) {
+> > +		dev_err(dev, "failed to find the RTC pcf2127 node\n");
+> > +		return -ENOENT;
+> > +	}
+> > +	if (of_get_property(np, "battery-low-hw-alarm", NULL)) {
+> > +		dev_info(dev, "enable battery-low hw alarm on INTn pin\n");
+> > +
+> > +		/*
+> > +		 * Set BLIE bit in register Control_3 (override is possible
+> > +		 * because this register is fully zero after reset)
+> > +		 */
+> > +		buf[0] = PCF2127_REG_CTRL3;
+> > +		buf[1] = 0x01;
+> > +		/* write register's data */
+> > +		err = i2c_master_send(client, buf, 2);
+> 
+> This has to use regmap_update_bits because this also has to work on spi.
+> (I don't know where you get the client pointer from anyway).
+> 
+> > +		if (err != 2) {
+> > +			dev_err(dev, "%s: err=%d", __func__, err);
+> > +			return -EIO;
+> > +		}
+> > +	}
+> > +
+> >  	if (has_nvmem) {
+> >  		struct nvmem_config nvmem_cfg = {
+> >  			.priv = pcf2127,
+> > --
+> > 2.7.4
+> >
+> 
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+Flavio Suligoi
 
