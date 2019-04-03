@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF08C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F457C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86502082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F492082C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 16:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfDCQmS (ORCPT
+        id S1728810AbfDCQow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 12:42:18 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41869 "EHLO
+        Wed, 3 Apr 2019 12:44:52 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41901 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfDCQmP (ORCPT
+        with ESMTP id S1726436AbfDCQmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 12:42:15 -0400
+        Wed, 3 Apr 2019 12:42:18 -0400
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1hBixm-0004GO-0E; Wed, 03 Apr 2019 18:42:10 +0200
+        id 1hBixp-0004GO-63; Wed, 03 Apr 2019 18:42:13 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
@@ -34,9 +34,9 @@ Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Borislav Petkov <bp@suse.de>
-Subject: [PATCH 04/27] x86/fpu: Always init the `state' in fpu__clear()
-Date:   Wed,  3 Apr 2019 18:41:33 +0200
-Message-Id: <20190403164156.19645-5-bigeasy@linutronix.de>
+Subject: [PATCH 08/27] x86/fpu: Remove user_fpu_begin()
+Date:   Wed,  3 Apr 2019 18:41:37 +0200
+Message-Id: <20190403164156.19645-9-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
 References: <20190403164156.19645-1-bigeasy@linutronix.de>
@@ -47,82 +47,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fpu__clear() only initializes the `state' if the FPU is present. This
-initialisation is also required for the FPU-less system and takes place
-in math_emulate(). Since fpu__initialize() only performs the
-initialization if ->initialized is zero it does not matter that it is
-invoked each time an opcode is emulated. It makes the removal of
-->initialized easier if the struct is also initialized in the FPU-less
-case at the same time.
+user_fpu_begin() sets fpu_fpregs_owner_ctx to task's fpu struct. This is
+always the case since there is no lazy FPU anymore.
 
-Move fpu__initialize() before the FPU check so it is also performed in
-the FPU-less case.
+fpu_fpregs_owner_ctx is used during context switch to decide if it needs
+to load the saved registers or if the currently loaded registers are
+valid. It could be skipped during
+	taskA -> kernel thread -> taskA
+
+because the switch to kernel thread would not alter the CPU's FPU state.
+
+Since this field is always updated during context switch and never
+invalidated, setting it manually (in user context) makes no difference.
+A kernel thread with kernel_fpu_begin() block could set
+fpu_fpregs_owner_ctx to NULL but a kernel thread does not use
+user_fpu_begin().
+This is a leftover from the lazy-FPU time.
+
+Remove user_fpu_begin(), it does not change fpu_fpregs_owner_ctx's
+content.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Reviewed-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/include/asm/fpu/internal.h | 1 -
- arch/x86/kernel/fpu/core.c          | 5 ++---
- arch/x86/math-emu/fpu_entry.c       | 3 ---
- 3 files changed, 2 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/fpu/internal.h | 17 -----------------
+ arch/x86/kernel/fpu/core.c          |  4 +---
+ arch/x86/kernel/fpu/signal.c        |  1 -
+ 3 files changed, 1 insertion(+), 21 deletions(-)
 
 diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 75a1d5f712ee7..70ecb7c032cb4 100644
+index fd95f1411eb5c..df98bc7f1c8d8 100644
 --- a/arch/x86/include/asm/fpu/internal.h
 +++ b/arch/x86/include/asm/fpu/internal.h
-@@ -24,7 +24,6 @@
- /*
-  * High level FPU state handling functions:
-  */
--extern void fpu__initialize(struct fpu *fpu);
- extern void fpu__prepare_read(struct fpu *fpu);
- extern void fpu__prepare_write(struct fpu *fpu);
- extern void fpu__save(struct fpu *fpu);
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 1940319268aef..e43296854e379 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -223,7 +223,7 @@ int fpu__copy(struct fpu *dst_fpu, struct fpu *src_fpu)
-  * Activate the current task's in-memory FPU context,
-  * if it has not been used before:
-  */
--void fpu__initialize(struct fpu *fpu)
-+static void fpu__initialize(struct fpu *fpu)
- {
- 	WARN_ON_FPU(fpu != &current->thread.fpu);
- 
-@@ -236,7 +236,6 @@ void fpu__initialize(struct fpu *fpu)
- 		fpu->initialized = 1;
+@@ -532,23 +532,6 @@ static inline void switch_fpu_finish(struct fpu *new_fpu, int cpu)
  	}
  }
--EXPORT_SYMBOL_GPL(fpu__initialize);
  
- /*
-  * This function must be called before we read a task's fpstate.
-@@ -365,8 +364,8 @@ void fpu__clear(struct fpu *fpu)
- 	/*
- 	 * Make sure fpstate is cleared and initialized.
- 	 */
-+	fpu__initialize(fpu);
- 	if (static_cpu_has(X86_FEATURE_FPU)) {
--		fpu__initialize(fpu);
- 		user_fpu_begin();
- 		copy_init_fpstate_to_fpregs();
- 	}
-diff --git a/arch/x86/math-emu/fpu_entry.c b/arch/x86/math-emu/fpu_entry.c
-index 9e2ba7e667f61..a873da6b46d6b 100644
---- a/arch/x86/math-emu/fpu_entry.c
-+++ b/arch/x86/math-emu/fpu_entry.c
-@@ -113,9 +113,6 @@ void math_emulate(struct math_emu_info *info)
- 	unsigned long code_base = 0;
- 	unsigned long code_limit = 0;	/* Initialized to stop compiler warnings */
- 	struct desc_struct code_descriptor;
+-/*
+- * Needs to be preemption-safe.
+- *
+- * NOTE! user_fpu_begin() must be used only immediately before restoring
+- * the save state. It does not do any saving/restoring on its own. In
+- * lazy FPU mode, it is just an optimization to avoid a #NM exception,
+- * the task can lose the FPU right after preempt_enable().
+- */
+-static inline void user_fpu_begin(void)
+-{
 -	struct fpu *fpu = &current->thread.fpu;
 -
--	fpu__initialize(fpu);
+-	preempt_disable();
+-	fpregs_activate(fpu);
+-	preempt_enable();
+-}
+-
+ /*
+  * MXCSR and XCR definitions:
+  */
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 97e27de2b7c05..739ca3ae2bdcd 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -335,10 +335,8 @@ void fpu__clear(struct fpu *fpu)
+ 	 * Make sure fpstate is cleared and initialized.
+ 	 */
+ 	fpu__initialize(fpu);
+-	if (static_cpu_has(X86_FEATURE_FPU)) {
+-		user_fpu_begin();
++	if (static_cpu_has(X86_FEATURE_FPU))
+ 		copy_init_fpstate_to_fpregs();
+-	}
+ }
  
- #ifdef RE_ENTRANT_CHECKING
- 	if (emulating) {
+ /*
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index 2f044021fde2b..6475320939ce3 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -322,7 +322,6 @@ static int __fpu__restore_sig(void __user *buf, void __user *buf_fx, int size)
+ 		 * For 64-bit frames and 32-bit fsave frames, restore the user
+ 		 * state to the registers directly (with exceptions handled).
+ 		 */
+-		user_fpu_begin();
+ 		if (copy_user_to_fpregs_zeroing(buf_fx, xfeatures, fx_only)) {
+ 			fpu__clear(fpu);
+ 			return -1;
 -- 
 2.20.1
 
