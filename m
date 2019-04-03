@@ -2,154 +2,126 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E6C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE73C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFE52084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CFC2084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:17:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZWEI5SjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfDCNPP (ORCPT
+        id S1726372AbfDCNRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:15:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:44506 "EHLO mga05.intel.com"
+        Wed, 3 Apr 2019 09:17:38 -0400
+Received: from mout.web.de ([217.72.192.78]:52173 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfDCNPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:15:15 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 06:15:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
-   d="scan'208";a="334627151"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Apr 2019 06:15:11 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hBfjS-0002qL-IF; Wed, 03 Apr 2019 16:15:10 +0300
-Date:   Wed, 3 Apr 2019 16:15:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peter Rosin <peda@axentia.se>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/12] i2c: core: introduce atomic transfers
-Message-ID: <20190403131510.GE9224@smile.fi.intel.com>
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+        id S1726064AbfDCNRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:17:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1554297444;
+        bh=UBr5FqpbD9IgzQJam370uLoKFEHO4jvA5uni94YywT8=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=ZWEI5SjIFraD9ysCo1tKzxSFKYA7awb10/mFy53TDTAPR4y1AI/+3WZLvXHcVJwYj
+         WZ/CHGohMgLkJLvJVuEfCpr3XUS0oRYGROdr3v5KWPvOSVUy7noSMAjGMA5VoQGt77
+         FSfwoFIId0Unmkdw5487eQrE1qaGQba//7003Za8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.115.60]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MT8bi-1hJxTR3ST8-00S3FD; Wed, 03
+ Apr 2019 15:17:23 +0200
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Yi Wang <wang.yi59@zte.com.cn>
+References: <1554082674-2049-4-git-send-email-wen.yang99@zte.com.cn>
+Subject: Re: [3/7] cpufreq: kirkwood: fix possible object reference leak
+To:     Wen Yang <wen.yang99@zte.com.cn>, kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <89d2a2bd-ea72-6280-2fd2-c1475b400c67@web.de>
+Date:   Wed, 3 Apr 2019 15:17:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1554082674-2049-4-git-send-email-wen.yang99@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:MkGIAGyRM4uP47U+A3wrLaBm8VqTEWbm1ZS5Lpj0FXEfOU3IHmY
+ 6xEldanRcEV9r8+ILWhJFQ4Zo5nDohLcer/RzYf8grLlDBJifmCkaYcGxJ+xvp1vOMJiJ4/
+ J+pirbNIGKxpXRNaYypB2sW8dSqVmKmAYhmvRI3V59+1+nGkrPu7xTDRCAIQRd6kio/tJSt
+ 8eAyxoc2IoeKbAEyPNqaw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iq2IV+UZ90Q=:V7uKRZiq+0K/pbkSuIrUti
+ VYHc3ZXCiE5khsBdKRFvZoSw5EEyGvJ9SlGCkqvh7vPanfGh3sqXbHo1S2AXstI0suWNe7IHy
+ RFqVHV3nROrUmcEq1lQK//MU05Y03ZaqQFDnwg8hUQ+F6e0WaIPyK/fgNzWgT3vLaFuwUwu9e
+ DwdRaEymrlUSlwOC3Q9i6OVCu/Hkg1gDPAD8/xGuvWALaZjKUQMZc+NS5t1D5wOwsGQ2qeBEY
+ 2dmiByogL2gO3T5Nf2hrDIJxMMb+HUBfcmYKAt/mj/rcbSfIoMWYvPoELwIeS/900n5p/kNNk
+ EfbjVmEeDXYZaaV8ZiLeccovClmScySQicBCL7n9YswfqoZsGxtasoDBdd8j1l+q5GUNywmUZ
+ 795ByKWl4nqPAXwnS5Rwh6OsqTOW2JKoXH3E7AL1JITcduvGOv3Pcb0/Ke9sdeB7zGZWbVh+q
+ R6yiSvhfc0u/r+LWh/Pt5B8zc2t8vbj5Qn+bBCKFxz0h6A7jI4hMS270YdA9tu0uBHIOx2r7O
+ Jxb71fStzlYOjWHpZf6aBripgtzKgtqm/qEPGpNz0tfdwmBhHWKzG/skjdaLXfwLNfdTiDvLE
+ CmjxCsSzyY+CvaMs/9tav8EYmA3E7tE46DgYH3BUD5rG6xiCWdNrz/FoJ8TuyYAEeUOkAYm7g
+ ye6t9CYP1Bb35sQJ0HIJ3NDT7W5k9jDYXi3r4I8WxH2tgjm8byelPSLpU5t0HUe27sSC6Im8q
+ nQX6vW8U9qF9FFyV/NQ2AXSEnbQb7YQ3M/10P8pDI+l5DhlT9vX+mvWRoWN1QeOOExjBpytvB
+ aw40yUTy0Pcrcj5wjqIW3eFMyWD5vC/A13S4gFctr3oJxMb/IawPi39moMkpwjL44S6wOHkvn
+ gV9nnOq+Ji2WrJ/Qo4UVhWil9zPnSTAA1lWMY0c2AuNuWlTQaBDPW1dSSam/gEd7qOMbLDUl7
+ 5wTQBhBxCmQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 02:40:07PM +0200, Wolfram Sang wrote:
-> This series adds support for very late atomic transfers to the I2C subsystem.
-> It finally reached a state which I think is ready-to-apply. This is mainly
-> because of two things:
-> 
-> a) we decided to respect the current locking scheme and to not give atomic
-> transfers a priority. The code needed for that would have been either
-> incomplete or very invasive. And we cannot guarantee successful transfers
-> anyhow. See [1] for the discussion and other write-ups for design choices.
-> 
-> b) thanks to a discussion with Peter Zijlstra[2], the conditions when to allow
-> atomic transfers became much clearer. The new helper i2c_in_atomic_xfer_mode()
-> adds readability, too.
-> 
-> In detail, changes since RFC v2:
-> 
-> * dropped coding style patch because already applied
-> * added new patch 1 to drop in_atomic() and have better conditions when
->   to enter the atomic path
-> * added support to the mux-core
-> * simplified omap conversion a little
-> * added new conversions for ocores, stu300, and algo-bit/gpio
-> * typo corrections found by Simon and Stefan
-> * added tags to drivers
-> * dropped tags from core patches because that part changed too much
-> 
-> All tested on a Renesas Lager board (R-Car H2). Sadly, the i2c-sh_mobile driver
-> cannot be converted now because of other work needed first. I tested with the
-> i2c-gpio driver, though. The other driver patches are build tested. A branch
-> can be found here:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/atomic_xfer
-> 
-> I am happy for reviews and comments. Please note if you review (especially the
-> core parts), I'd like to have a short summary of your review even if there is
-> no proposed change. Like what you did, what you think about it, etc. Some stuff
-> in here is subtle, so if you went through the effort to double check my
-> assumptions you should name it :)
-> 
+> and also do some cleanup:
 
-Thank you!
+Would it be safer to integrate this source code adjustment
+by another update step?
 
-FWIW,
-
-Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-for patches 1-5,12.
-
-Indeed, atomic condition sounds clear now.
-
-> 
-> Finally, a big thank you and credit to Renesas for funding this work, of course!
-> 
-> Happy hacking,
-> 
->    Wolfram
-> 
-> [1] https://lkml.org/lkml/2019/3/2/76
-> [2] http://patchwork.ozlabs.org/patch/1067437/
-> 
-> Wolfram Sang (12):
->   i2c: remove use of in_atomic()
->   i2c: core: use I2C locking behaviour also for SMBUS
->   i2c: core: introduce callbacks for atomic transfers
->   i2c: mux: populate the new *_atomic callbacks
->   i2c: demux: handle the new atomic callbacks
->   i2c: omap: Add the master_xfer_irqless hook
->   i2c: tegra-bpmp: convert to use new atomic callbacks
->   i2c: ocores: refactor setup for polling
->   i2c: ocores: enable atomic xfers
->   i2c: stu300: use xfer_atomic callback to bail out early
->   i2c: algo: bit: add flag to whitelist atomic transfers
->   i2c: gpio: flag atomic capability if possible
-> 
->  drivers/i2c/algos/i2c-algo-bit.c      | 22 +++++++++-
->  drivers/i2c/busses/i2c-gpio.c         |  2 +
->  drivers/i2c/busses/i2c-ocores.c       | 16 +++-----
->  drivers/i2c/busses/i2c-omap.c         | 76 +++++++++++++++++++++++++++++------
->  drivers/i2c/busses/i2c-stu300.c       | 25 +++++-------
->  drivers/i2c/busses/i2c-tegra-bpmp.c   | 25 +++++++++---
->  drivers/i2c/i2c-core-base.c           | 17 ++++----
->  drivers/i2c/i2c-core-smbus.c          | 25 +++++++++---
->  drivers/i2c/i2c-core.h                | 25 ++++++++++++
->  drivers/i2c/i2c-mux.c                 |  6 +++
->  drivers/i2c/muxes/i2c-demux-pinctrl.c |  2 +
->  include/linux/i2c-algo-bit.h          |  1 +
->  include/linux/i2c.h                   | 15 +++++--
->  13 files changed, 194 insertions(+), 63 deletions(-)
-> 
-> -- 
-> 2.11.0
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Markus
