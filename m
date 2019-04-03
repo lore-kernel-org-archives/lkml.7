@@ -2,100 +2,152 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463CFC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B665C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E645206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681E0206B7
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 09:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfDCJ1D (ORCPT
+        id S1726535AbfDCJ23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 05:27:03 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38081 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725940AbfDCJ1D (ORCPT
+        Wed, 3 Apr 2019 05:28:29 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:2581 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726084AbfDCJ22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 05:27:03 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9E59824001B;
-        Wed,  3 Apr 2019 09:26:55 +0000 (UTC)
-Date:   Wed, 3 Apr 2019 11:26:55 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v4 3/5] media: sunxi: Add A10 CSI driver
-Message-ID: <20190403092655.engthyfinpxvndh4@flea>
-References: <cover.2aba8cbd95630d87f927465cc2beb881936c83d9.1553010938.git-series.maxime.ripard@bootlin.com>
- <bf348ec10d4444dd80eab0caddc4e2d3ce3131d4.1553010938.git-series.maxime.ripard@bootlin.com>
- <20190403091221.qd5ivgcoviazccv7@paasikivi.fi.intel.com>
+        Wed, 3 Apr 2019 05:28:28 -0400
+X-IronPort-AV: E=Sophos;i="5.60,304,1549900800"; 
+   d="scan'208";a="58379024"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 03 Apr 2019 17:28:27 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 7AB984CD7EE6;
+        Wed,  3 Apr 2019 17:28:26 +0800 (CST)
+Received: from localhost.localdomain (10.167.225.56) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Wed, 3 Apr 2019 17:28:30 +0800
+Date:   Wed, 3 Apr 2019 17:28:21 +0800
+From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
+To:     "bhe@redhat.com" <bhe@redhat.com>
+CC:     Dave Young <dyoung@redhat.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190403092821.GI1555@localhost.localdomain>
+References: <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+ <20190403053459.GD1555@localhost.localdomain>
+ <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403063911.GA2579@dhcp-128-65.nay.redhat.com>
+ <20190403073023.GF1555@localhost.localdomain>
+ <20190403075015.GQ7627@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zchbulmqh2lleyeb"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190403091221.qd5ivgcoviazccv7@paasikivi.fi.intel.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190403075015.GQ7627@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.167.225.56]
+X-yoursite-MailScanner-ID: 7AB984CD7EE6.AD589
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---zchbulmqh2lleyeb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Sakari,
-
-On Wed, Apr 03, 2019 at 12:12:21PM +0300, Sakari Ailus wrote:
-> Thanks for the update and my apologies for the late review.
+On Wed, Apr 03, 2019 at 03:50:15PM +0800, bhe@redhat.com wrote:
+>On 04/03/19 at 03:30pm, Chao Fan wrote:
+>> On Wed, Apr 03, 2019 at 02:39:11PM +0800, Dave Young wrote:
+>> >> Actually I got some different kexec test results.
+>> >> 
+>> >> Yesterday, with my installed kernel (based on git head several weeks
+>> >> ago), kexec kernel panics.
+>> >> 
+>> >> Then I tried latest mainline with git pull, everything works, (with or
+>> >> without the patch, and can not reproduce the bug this patch is fixing)
+>> >> 
+>> >> Today, test again, kexec reboot hangs (with or without your patch), but
+>> >> kdump works always (with or without the patch)
+>> >> 
+>> >> It is weird to me. Probably I need find out why I can not reproduce the
+>> >> bug this patch is addressing first.
+>> >> 
+>> >> earlyprintk seems not working for me anymore, it is not easy to debug on
+>> >> laptop now.
+>> >> 
+>> >> But the patch itself is clear, I think it should be good.  There might be
+>> >> other things broken.
+>> >
+>> >Disable your immovable mem code then everything works for me.  There
+>> >might be something wrong in the code.  Also "nokaslr" does not help, it
+>> >should be another problem 
+>> 
+>> If "nokaslr" doesn't help, so I think
+>> >+      /*num_immovable_mem = count_immovable_mem_regions();*/
+>> also doesn't help. I think the problem is from get_rsdp_addr().
 >
-> On Tue, Mar 19, 2019 at 04:55:46PM +0100, Maxime Ripard wrote:
-> > The older CSI drivers have camera capture interface different from the one
-> > in the newer ones.
-> >
-> > This IP is pretty simple. Some variants (one controller out of two
-> > instances on some SoCs) have an ISP embedded, but there's no code that make
-> > use of it, so we ignored that part for now.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>Yes, seems get_rsdp_addr() has issue in this case. I am wondering if we
+>can adjust the postion of get_rsdp_addr() calling. If nokaslr is
+>specified, no need to get rsdp?
+
+I think no, RSDP parsing dosn't only work for KASLR.
+
+Thanks,
+Chao Fan
+
 >
-> Could you add a sub-device for the CSI-2 receiver, please?
+>> 
+>> You test it in your laptop, I only tested in Qemu guest.
+>> I have no laptop avaliable, so I will look for a physical machine
+>> to test it.
+>> 
+>> Thanks,
+>> Chao Fan
+>> 
+>> >
+>> >diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+>> >index 2e53c056ba20..e760c9159662 100644
+>> >--- a/arch/x86/boot/compressed/kaslr.c
+>> >+++ b/arch/x86/boot/compressed/kaslr.c
+>> >@@ -416,7 +416,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+>> > 	handle_mem_options();
+>> > 
+>> > 	/* Enumerate the immovable memory regions */
+>> >-	num_immovable_mem = count_immovable_mem_regions();
+>> >+	/*num_immovable_mem = count_immovable_mem_regions();*/
+>> > 
+>> > #ifdef CONFIG_X86_VERBOSE_BOOTUP
+>> > 	/* Make sure video RAM can be used. */
+>> >diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+>> >index c0d6c560df69..1bc6f46d3aa7 100644
+>> >--- a/arch/x86/boot/compressed/misc.c
+>> >+++ b/arch/x86/boot/compressed/misc.c
+>> >@@ -352,7 +352,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+>> > 	boot_params->hdr.loadflags &= ~KASLR_FLAG;
+>> > 
+>> > 	/* Save RSDP address for later use. */
+>> >-	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+>> >+/*	boot_params->acpi_rsdp_addr = get_rsdp_addr(); */
+>> > 
+>> > 	sanitize_boot_params(boot_params);
+>> > 
+>> >
+>> >
+>> 
+>> 
 >
-> See e.g. drivers/media/pci/intel/ipu3/ipu3-cio2.c for an example.
+>
 
-It's confusing, I know, but this isn't a MIPI-CSI receiver. The IP is
-called CSI, but it's only capable of handling parallel and BT656.
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---zchbulmqh2lleyeb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKR8XwAKCRDj7w1vZxhR
-xWzTAQCO6onvJvAyxQ/6zEc/t+3ODQNIh2Kd0llgRcS0+j8TzgEA+9nsA6jNG3Rt
-7u3CgLYRL2TexYqGU4lz12/2fB7ndAA=
-=riar
------END PGP SIGNATURE-----
-
---zchbulmqh2lleyeb--
