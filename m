@@ -2,166 +2,79 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D654EC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7A0C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50CC206B7
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BA320830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554281765;
+	bh=3yrlKdp1GXB5y5TWOVAnwszgqtS8Gt9SsSrRmuUdXNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NLaXgEg94uvgySqnnjcDLzdoVSQf0PcokZlWdnI2wHNcG+GsNvRqCDjnabwivc6E+
+	 nvvrGK3P3jF8McbGT8/IiUVoW1K3z58ym3z0XJj/45Fyr56PBoxdUkwObxiGdAREuK
+	 bg8wuNU8mUZYIDMsaOrYEZZlZB2F/QJ+0V/3Tyk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfDCIyf (ORCPT
+        id S1726199AbfDCI4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:54:35 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37310 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfDCIyf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:54:35 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v21so367280edq.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:54:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rc6JX/J0H0lELUIlyHnWgPMa2qMrRc1HE3FjVIepV/s=;
-        b=n1SGuyOaseVVclrbxjLf3KtCeVTkgsQ5hRqsHz+maRs0HZng6nBpuyBepV9mSKSSCN
-         ZmyYxeo2P9jO08btJMfQzbRdnb2P2vUjbyyT4R3LYVZ/sXu3yaYgVQcd+59wjYUb4Vik
-         VwEIAoqvuWtRMwX4wLTHNy4R/bTc+69pNUqc/Z9agkuTqxh7180d8H7EypQPjkWE0lRS
-         d5SDBefRcxVLGYjmHfabCc9I/GmGU7X+ZU6W5MxQpo11eI4wamrCmuvquIUDK9EqSAB/
-         G8R5E7PfItxotxYlPQ+0pFZWbEHqeMzibstslxQm6HD2kchntEDlvU5ayJAu8yFBTjlE
-         A+wQ==
-X-Gm-Message-State: APjAAAWS/W0b4hkQ+gSiGitNnQXjUJIhsQI/HmxtY9RHliY4/kOn0HcY
-        rMTPu93n/A4uUxGfclaM6R0+iWH9fvY=
-X-Google-Smtp-Source: APXvYqxIZ/LO69Fcgv4N7etO6HKelbFbwUrOqq+v5EFl19oItyMfs388h+blHWXBDTBfQZjrh+p55w==
-X-Received: by 2002:a50:b4af:: with SMTP id w44mr20263537edd.179.1554281672649;
-        Wed, 03 Apr 2019 01:54:32 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id m3sm2856486ejn.76.2019.04.03.01.54.31
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 01:54:32 -0700 (PDT)
-Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
- on BYT/CHT
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, rjw@rjwysocki.net
-Cc:     lenb@kernel.org, rhowell@uwyo.edu, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <eb1462c9-ebef-7bd6-c263-3f4f2e8ba63d@redhat.com>
-Date:   Wed, 3 Apr 2019 10:54:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 3 Apr 2019 04:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfDCI4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 04:56:04 -0400
+Received: from localhost (unknown [195.134.171.12])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E39AC206B7;
+        Wed,  3 Apr 2019 08:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554281763;
+        bh=3yrlKdp1GXB5y5TWOVAnwszgqtS8Gt9SsSrRmuUdXNE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oQWfxWwGrVbRI0Cd67J6BYCGtnVodi1yZX9+n80LIL1Ya8Kpyn6VYTSbaGne66vXS
+         v6YkzPg6w/zc+Vrcy/ezgHMS0kes6R/kZCTuvL81yv55/sIVq8TKF1n794YSHC+yCK
+         1IskuFJbcNXYkPqB/ORWMEvvBdDygjCcDuzm8SVI=
+Date:   Wed, 3 Apr 2019 10:56:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.0 000/146] 5.0.6-stable review
+Message-ID: <20190403085600.GA4601@kroah.com>
+References: <20190401170048.449559024@linuxfoundation.org>
+ <20190402190606.GF14232@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20190403054352.30120-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402190606.GF14232@roeck-us.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 03-04-19 07:43, Kai-Heng Feng wrote:
-> i2c-designware-platdrv fails to work after the system restored from
-> hibernation:
-> [ 272.775692] i2c_designware 80860F41:00: Unknown Synopsys component type: 0xffffffff
+On Tue, Apr 02, 2019 at 12:06:06PM -0700, Guenter Roeck wrote:
+> On Mon, Apr 01, 2019 at 07:00:12PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.0.6 release.
+> > There are 146 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Wed Apr  3 16:59:21 UTC 2019.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Commit 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from
-> resume_noirq") makes acpi_lpss_{suspend_late,resume_early}() bail early
-> on BYT/CHT as resume_from_noirq is set. This means dw_i2c_plat_resume()
-> doesn't gets called by acpi_lpss_resume_early(), and this causes the
-> issue.
-> 
-> Introduce acpi_lpss_{poweroff_late,restore_early}() to make sure
-> driver's own poweroff_late and restore_early get called.
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202139
-> Fixes: 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from resume_noirq")
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Build results:
+> 	total: 159 pass: 159 fail: 0
+> Qemu test results:
+> 	total: 345 pass: 345 fail: 0
 
-The ordering problem fixed by commit 48402cee6889 can hit hibernate too,
-so I think it would be better to do this instead to fix this problem:
+Thanks for testing all of these and letting me know.
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 1e2a10a06b9d..cf768608437e 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -1142,8 +1142,8 @@ static struct dev_pm_domain acpi_lpss_pm_domain = {
-  		.thaw_noirq = acpi_subsys_thaw_noirq,
-  		.poweroff = acpi_subsys_suspend,
-  		.poweroff_late = acpi_lpss_suspend_late,
--		.poweroff_noirq = acpi_subsys_suspend_noirq,
--		.restore_noirq = acpi_subsys_resume_noirq,
-+		.poweroff_noirq = acpi_lpss_suspend_noirq,
-+		.restore_noirq = acpi_lpss_resume_noirq,
-  		.restore_early = acpi_lpss_resume_early,
-  #endif
-  		.runtime_suspend = acpi_lpss_runtime_suspend,
-
-Then the i2c controllers on platforms with the resume_from_noirq
-flag set for them will be ready for use while the PCI subsystem
-runs the _PS0 / _PS3 methods of PCI devices which may use the
-i2c controllers (which is what commit 48402cee6889 set out to fix
-in the first place).
-
-If people affected by the problem can give my version of the fix a test,
-then that would be great.
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->   drivers/acpi/acpi_lpss.c | 14 ++++++++++++--
->   1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-> index 1e2a10a06b9d..49aef186d73d 100644
-> --- a/drivers/acpi/acpi_lpss.c
-> +++ b/drivers/acpi/acpi_lpss.c
-> @@ -1058,6 +1058,11 @@ static int acpi_lpss_suspend_late(struct device *dev)
->   	return acpi_lpss_do_suspend_late(dev);
->   }
->   
-> +static int acpi_lpss_poweroff_late(struct device *dev)
-> +{
-> +	return acpi_lpss_do_suspend_late(dev);
-> +}
-> +
->   static int acpi_lpss_suspend_noirq(struct device *dev)
->   {
->   	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-> @@ -1089,6 +1094,11 @@ static int acpi_lpss_resume_early(struct device *dev)
->   	return acpi_lpss_do_resume_early(dev);
->   }
->   
-> +static int acpi_lpss_restore_early(struct device *dev)
-> +{
-> +	return acpi_lpss_do_resume_early(dev);
-> +}
-> +
->   static int acpi_lpss_resume_noirq(struct device *dev)
->   {
->   	struct lpss_private_data *pdata = acpi_driver_data(ACPI_COMPANION(dev));
-> @@ -1141,10 +1151,10 @@ static struct dev_pm_domain acpi_lpss_pm_domain = {
->   		.freeze_noirq = acpi_subsys_freeze_noirq,
->   		.thaw_noirq = acpi_subsys_thaw_noirq,
->   		.poweroff = acpi_subsys_suspend,
-> -		.poweroff_late = acpi_lpss_suspend_late,
-> +		.poweroff_late = acpi_lpss_poweroff_late,
->   		.poweroff_noirq = acpi_subsys_suspend_noirq,
->   		.restore_noirq = acpi_subsys_resume_noirq,
-> -		.restore_early = acpi_lpss_resume_early,
-> +		.restore_early = acpi_lpss_restore_early,
->   #endif
->   		.runtime_suspend = acpi_lpss_runtime_suspend,
->   		.runtime_resume = acpi_lpss_runtime_resume,
-> 
+greg k-h
