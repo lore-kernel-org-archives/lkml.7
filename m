@@ -2,155 +2,361 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACA3C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845B5C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80642147A
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3F121473
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 08:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfDCIru (ORCPT
+        id S1729316AbfDCIr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 04:47:50 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41491 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfDCIro (ORCPT
+        Wed, 3 Apr 2019 04:47:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40157 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfDCIrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 04:47:44 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k8so5701662lja.8;
-        Wed, 03 Apr 2019 01:47:42 -0700 (PDT)
+        Wed, 3 Apr 2019 04:47:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so20151762wre.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 01:47:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vV91FJckZyEnX1fNk46Z/ZVvwXEZdniEhNT6utM+pl0=;
-        b=kRMqzFHUUnLQjLoRZRdDZhwky9eZIzgPjEkF8oyxJRmivKz8g0VTI9sQNmGzJdlJqu
-         mclNwAKYO7QwSPI2f7aLn1WlnhsqjXo6BjVe8JyZcJfAIOvJ5UcTYQJfFWeU1TdcQs3w
-         6GhE4K57O/3ic4CCFdFxCYY+a8oSxOnaMhRTrujsDhTgkn9Yc57r+nfl/PhMvasnL5f1
-         YQA39a03iw0x00cJpbQ2Mo7eVjQExM+jhgYMHRUJNnKjKdYYriOv5VT7X4RZjFeF37l9
-         QzRrtkSostK/E2/Y/7/BUFjLqjkf0swVORevPKP8fmYW8IWdfiF3cJFV15iYXNrzXf9w
-         Ig5g==
-X-Gm-Message-State: APjAAAU0rf61GsOBz7OIUc5MFSbq8LyZMcJi0dmX+ZRDb2jT4eP5ADBw
-        CZpJfS89EmYjgwKLTcpCb+0P5Gne
-X-Google-Smtp-Source: APXvYqzNn4N2OOgSmDPgWNdJ7vxsAzE+uFA6SFl4HHatfJnRGC0mozlanur+QnPloC1sFw17e9ioMA==
-X-Received: by 2002:a2e:8347:: with SMTP id l7mr28852729ljh.17.1554281261464;
-        Wed, 03 Apr 2019 01:47:41 -0700 (PDT)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id f25sm2344070lfk.69.2019.04.03.01.47.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=0pncQ3L2dC6BgznbJC4tNl5K2b6mJzsZhh3saZCpfWQ=;
+        b=XCxEhf38FR9cKCTDi1ukzQHxuFLXFU61YwpjIHZIVtH07cNG5aRHp06kerdX0+x2ai
+         Uh6Om3n8ZkOe/g2V6DSgUeQCNQWwER0WJBb11qvA61vHqxfGfS4+L9l244rBTNBeD1Q2
+         M3Vev0WPR+IHChDxNIFtCW8fudjlCDMe2H1u77HZcUtvfTxaQyJHkSnkuWptbqbIbOHp
+         3vqyRf9B34wj5VYIpEnsEsszUKAmBvy9fOB9xAeJ1WWHwjX+BEG/0cMEwXpyvLrkn8Wg
+         qvEjZEyf3uf1a5j7FcyU+VnEfblII4vLKNvCpu5MVALwHvxFXw1BW+67dT4VWZp0Zlxk
+         b7Xg==
+X-Gm-Message-State: APjAAAXnryYqzF8Iov28DVDPVDNAyhM6S5jlUyaNW8iFxdge40ubWBUA
+        WVLgWOyS9k89rlpm6A4VqaHxBA==
+X-Google-Smtp-Source: APXvYqwuAhrDc0mB+CvXRZ+HfmYzV99CdK3X2rmgmOpuyqnqjccpqCSlqev8RfMusTIO4HZFJgFIrA==
+X-Received: by 2002:a5d:52c6:: with SMTP id r6mr24195441wrv.131.1554281234469;
+        Wed, 03 Apr 2019 01:47:14 -0700 (PDT)
+Received: from localhost.localdomain.com ([151.29.174.33])
+        by smtp.gmail.com with ESMTPSA id o2sm12258081wrs.89.2019.04.03.01.47.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 01:47:40 -0700 (PDT)
-Date:   Wed, 3 Apr 2019 11:47:32 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
-Message-ID: <20190403084732.GA3493@localhost.localdomain>
-References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <39efebe0396dd42de30d37c6f3c1ef2926c90210.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <20190403073152.GM4187@dell>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403073152.GM4187@dell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 03 Apr 2019 01:47:13 -0700 (PDT)
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
+        tj@kernel.org
+Cc:     linux-kernel@vger.kernel.org, luca.abeni@santannapisa.it,
+        claudio@evidence.eu.com, tommaso.cucinotta@santannapisa.it,
+        bristot@redhat.com, mathieu.poirier@linaro.org, lizefan@huawei.com,
+        cgroups@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v7 3/7] cgroup/cpuset: make callback_lock raw
+Date:   Wed,  3 Apr 2019 10:46:46 +0200
+Message-Id: <20190403084650.4414-4-juri.lelli@redhat.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190403084650.4414-1-juri.lelli@redhat.com>
+References: <20190403084650.4414-1-juri.lelli@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Lee,
+callback_lock grants the holder read-only access to cpusets.  For fixing
+a synchronization issue between cpusets and scheduler core, it is now
+required to make callback_lock available to core scheduler code.
 
-Thanks for taking a look on this again =) I agree with most of the
-comments and correct them at next version.
+Convert callback_lock to raw_spin_lock, so that it will be always safe
+to acquire it from atomic context.
 
-On Wed, Apr 03, 2019 at 08:31:52AM +0100, Lee Jones wrote:
-> On Mon, 25 Mar 2019, Matti Vaittinen wrote:
-> 
-> > ROHM BD70528MWV is an ultra-low quiescent current general
-> > purpose single-chip power management IC for battery-powered
-> > portable devices.
-> > 
-> > Add MFD core which enables chip access for following subdevices:
-> > 	- regulators/LED drivers
-> > 	- battery-charger
-> > 	- gpios
-> > 	- 32.768kHz clk
-> > 	- RTC
-> > 	- watchdog
-> > 
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > + * Mapping of main IRQ register bits to sub irq register offsets so
-> 
-> "sub-IRQ"
-> 
-> > + * that we can access corect sub IRQ registers based on bits that
-> 
-> "sub IRQ" is also fine, but please standardise.
-> 
-> I do prefer "sub-IRQ" though.
+Unfortunately, callback_lock guards some user-controlled operations
+(e.g., cpuset_cpus_allowed, cpuset_mems_allowed, etc.), which is usually
+bad for a raw_spin_lock. Ideally we'd like to somehow avoid this, but we
+have this behavior spread all over the place. A price we decide to pay
+for the time being.
 
-I'll go with "sub-IRQ" then
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
 
-> > +
-> > +#define WD_CTRL_MAGIC1 0x55
-> > +#define WD_CTRL_MAGIC2 0xAA
-> > +/**
-> > + * bd70528_wdt_set - arm or disarm watchdog timer
-> > + *
-> > + * @data:	device data for the PMIC instance we want to operate on
-> > + * @enable:	new state of WDT. zero to disable, non zero to enable
-> > + * @old_state:	previous state of WDT will be filled here
-> > + *
-> > + * Arm or disarm WDT on BD70528 PMIC. Expected to be called only by
-> > + * BD70528 RTC and BD70528 WDT drivers. The rtc_timer_lock must be taken
-> > + * by calling bd70528_wdt_lock before calling bd70528_wdt_set.
-> > + */
-> > +int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_state)
-> 
-> Why doesn't this reside in the watchdog driver?
+---
 
-If my memory serves me right we shortly discussed this already during v8
-review ;) Cant blame you though as I have seen some of the mail traffic
-going through your inbox :D
+v6->v7: Added comment in changelog about callback_lock potential
+problems w.r.t. userspace ops. [peterz]
+---
+ kernel/cgroup/cpuset.c | 70 +++++++++++++++++++++---------------------
+ 1 file changed, 35 insertions(+), 35 deletions(-)
 
-The motivation to have the functions exported from MFD is to not create
-sirect dependency between RTC and WDT. There may be cases where we want
-to leave either RTC or WDT out of compilation. MFD is always needed so
-the dependency from MFD to RTC/WDT does not harm.
-
-(Here's some discussion necromancy if you are interested in re-reading
-how we did end up with this implementation:
-https://lore.kernel.org/lkml/20190212091723.GZ20638@dell/)
-
-I hope you are still Ok with having the WDT control functions in MFD.
-
-Best Regards
-    Matti Vaittinen
-
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 4834c4214e9c..ff9bd5abe613 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -333,7 +333,7 @@ static struct cpuset top_cpuset = {
+  */
+ 
+ static DEFINE_MUTEX(cpuset_mutex);
+-static DEFINE_SPINLOCK(callback_lock);
++static DEFINE_RAW_SPINLOCK(callback_lock);
+ 
+ static struct workqueue_struct *cpuset_migrate_mm_wq;
+ 
+@@ -1235,7 +1235,7 @@ static int update_parent_subparts_cpumask(struct cpuset *cpuset, int cmd,
+ 	 * Newly added CPUs will be removed from effective_cpus and
+ 	 * newly deleted ones will be added back to effective_cpus.
+ 	 */
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	if (adding) {
+ 		cpumask_or(parent->subparts_cpus,
+ 			   parent->subparts_cpus, tmp->addmask);
+@@ -1254,7 +1254,7 @@ static int update_parent_subparts_cpumask(struct cpuset *cpuset, int cmd,
+ 	}
+ 
+ 	parent->nr_subparts_cpus = cpumask_weight(parent->subparts_cpus);
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 
+ 	return cmd == partcmd_update;
+ }
+@@ -1359,7 +1359,7 @@ static void update_cpumasks_hier(struct cpuset *cs, struct tmpmasks *tmp)
+ 			continue;
+ 		rcu_read_unlock();
+ 
+-		spin_lock_irq(&callback_lock);
++		raw_spin_lock_irq(&callback_lock);
+ 
+ 		cpumask_copy(cp->effective_cpus, tmp->new_cpus);
+ 		if (cp->nr_subparts_cpus &&
+@@ -1390,7 +1390,7 @@ static void update_cpumasks_hier(struct cpuset *cs, struct tmpmasks *tmp)
+ 					= cpumask_weight(cp->subparts_cpus);
+ 			}
+ 		}
+-		spin_unlock_irq(&callback_lock);
++		raw_spin_unlock_irq(&callback_lock);
+ 
+ 		WARN_ON(!is_in_v2_mode() &&
+ 			!cpumask_equal(cp->cpus_allowed, cp->effective_cpus));
+@@ -1508,7 +1508,7 @@ static int update_cpumask(struct cpuset *cs, struct cpuset *trialcs,
+ 			return -EINVAL;
+ 	}
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	cpumask_copy(cs->cpus_allowed, trialcs->cpus_allowed);
+ 
+ 	/*
+@@ -1519,7 +1519,7 @@ static int update_cpumask(struct cpuset *cs, struct cpuset *trialcs,
+ 			       cs->cpus_allowed);
+ 		cs->nr_subparts_cpus = cpumask_weight(cs->subparts_cpus);
+ 	}
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 
+ 	update_cpumasks_hier(cs, &tmp);
+ 
+@@ -1713,9 +1713,9 @@ static void update_nodemasks_hier(struct cpuset *cs, nodemask_t *new_mems)
+ 			continue;
+ 		rcu_read_unlock();
+ 
+-		spin_lock_irq(&callback_lock);
++		raw_spin_lock_irq(&callback_lock);
+ 		cp->effective_mems = *new_mems;
+-		spin_unlock_irq(&callback_lock);
++		raw_spin_unlock_irq(&callback_lock);
+ 
+ 		WARN_ON(!is_in_v2_mode() &&
+ 			!nodes_equal(cp->mems_allowed, cp->effective_mems));
+@@ -1783,9 +1783,9 @@ static int update_nodemask(struct cpuset *cs, struct cpuset *trialcs,
+ 	if (retval < 0)
+ 		goto done;
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	cs->mems_allowed = trialcs->mems_allowed;
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 
+ 	/* use trialcs->mems_allowed as a temp variable */
+ 	update_nodemasks_hier(cs, &trialcs->mems_allowed);
+@@ -1876,9 +1876,9 @@ static int update_flag(cpuset_flagbits_t bit, struct cpuset *cs,
+ 	spread_flag_changed = ((is_spread_slab(cs) != is_spread_slab(trialcs))
+ 			|| (is_spread_page(cs) != is_spread_page(trialcs)));
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	cs->flags = trialcs->flags;
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 
+ 	if (!cpumask_empty(trialcs->cpus_allowed) && balance_flag_changed)
+ 		rebuild_sched_domains_locked();
+@@ -2381,7 +2381,7 @@ static int cpuset_common_seq_show(struct seq_file *sf, void *v)
+ 	cpuset_filetype_t type = seq_cft(sf)->private;
+ 	int ret = 0;
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 
+ 	switch (type) {
+ 	case FILE_CPULIST:
+@@ -2403,7 +2403,7 @@ static int cpuset_common_seq_show(struct seq_file *sf, void *v)
+ 		ret = -EINVAL;
+ 	}
+ 
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 	return ret;
+ }
+ 
+@@ -2713,14 +2713,14 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
+ 
+ 	cpuset_inc();
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	if (is_in_v2_mode()) {
+ 		cpumask_copy(cs->effective_cpus, parent->effective_cpus);
+ 		cs->effective_mems = parent->effective_mems;
+ 		cs->use_parent_ecpus = true;
+ 		parent->child_ecpus_count++;
+ 	}
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 
+ 	if (!test_bit(CGRP_CPUSET_CLONE_CHILDREN, &css->cgroup->flags))
+ 		goto out_unlock;
+@@ -2747,12 +2747,12 @@ static int cpuset_css_online(struct cgroup_subsys_state *css)
+ 	}
+ 	rcu_read_unlock();
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	cs->mems_allowed = parent->mems_allowed;
+ 	cs->effective_mems = parent->mems_allowed;
+ 	cpumask_copy(cs->cpus_allowed, parent->cpus_allowed);
+ 	cpumask_copy(cs->effective_cpus, parent->cpus_allowed);
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ out_unlock:
+ 	mutex_unlock(&cpuset_mutex);
+ 	return 0;
+@@ -2805,7 +2805,7 @@ static void cpuset_css_free(struct cgroup_subsys_state *css)
+ static void cpuset_bind(struct cgroup_subsys_state *root_css)
+ {
+ 	mutex_lock(&cpuset_mutex);
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 
+ 	if (is_in_v2_mode()) {
+ 		cpumask_copy(top_cpuset.cpus_allowed, cpu_possible_mask);
+@@ -2816,7 +2816,7 @@ static void cpuset_bind(struct cgroup_subsys_state *root_css)
+ 		top_cpuset.mems_allowed = top_cpuset.effective_mems;
+ 	}
+ 
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 	mutex_unlock(&cpuset_mutex);
+ }
+ 
+@@ -2917,12 +2917,12 @@ hotplug_update_tasks_legacy(struct cpuset *cs,
+ {
+ 	bool is_empty;
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	cpumask_copy(cs->cpus_allowed, new_cpus);
+ 	cpumask_copy(cs->effective_cpus, new_cpus);
+ 	cs->mems_allowed = *new_mems;
+ 	cs->effective_mems = *new_mems;
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 
+ 	/*
+ 	 * Don't call update_tasks_cpumask() if the cpuset becomes empty,
+@@ -2959,10 +2959,10 @@ hotplug_update_tasks(struct cpuset *cs,
+ 	if (nodes_empty(*new_mems))
+ 		*new_mems = parent_cs(cs)->effective_mems;
+ 
+-	spin_lock_irq(&callback_lock);
++	raw_spin_lock_irq(&callback_lock);
+ 	cpumask_copy(cs->effective_cpus, new_cpus);
+ 	cs->effective_mems = *new_mems;
+-	spin_unlock_irq(&callback_lock);
++	raw_spin_unlock_irq(&callback_lock);
+ 
+ 	if (cpus_updated)
+ 		update_tasks_cpumask(cs);
+@@ -3117,7 +3117,7 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
+ 
+ 	/* synchronize cpus_allowed to cpu_active_mask */
+ 	if (cpus_updated) {
+-		spin_lock_irq(&callback_lock);
++		raw_spin_lock_irq(&callback_lock);
+ 		if (!on_dfl)
+ 			cpumask_copy(top_cpuset.cpus_allowed, &new_cpus);
+ 		/*
+@@ -3137,17 +3137,17 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
+ 			}
+ 		}
+ 		cpumask_copy(top_cpuset.effective_cpus, &new_cpus);
+-		spin_unlock_irq(&callback_lock);
++		raw_spin_unlock_irq(&callback_lock);
+ 		/* we don't mess with cpumasks of tasks in top_cpuset */
+ 	}
+ 
+ 	/* synchronize mems_allowed to N_MEMORY */
+ 	if (mems_updated) {
+-		spin_lock_irq(&callback_lock);
++		raw_spin_lock_irq(&callback_lock);
+ 		if (!on_dfl)
+ 			top_cpuset.mems_allowed = new_mems;
+ 		top_cpuset.effective_mems = new_mems;
+-		spin_unlock_irq(&callback_lock);
++		raw_spin_unlock_irq(&callback_lock);
+ 		update_tasks_nodemask(&top_cpuset);
+ 	}
+ 
+@@ -3248,11 +3248,11 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+ {
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&callback_lock, flags);
++	raw_spin_lock_irqsave(&callback_lock, flags);
+ 	rcu_read_lock();
+ 	guarantee_online_cpus(task_cs(tsk), pmask);
+ 	rcu_read_unlock();
+-	spin_unlock_irqrestore(&callback_lock, flags);
++	raw_spin_unlock_irqrestore(&callback_lock, flags);
+ }
+ 
+ void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+@@ -3300,11 +3300,11 @@ nodemask_t cpuset_mems_allowed(struct task_struct *tsk)
+ 	nodemask_t mask;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&callback_lock, flags);
++	raw_spin_lock_irqsave(&callback_lock, flags);
+ 	rcu_read_lock();
+ 	guarantee_online_mems(task_cs(tsk), &mask);
+ 	rcu_read_unlock();
+-	spin_unlock_irqrestore(&callback_lock, flags);
++	raw_spin_unlock_irqrestore(&callback_lock, flags);
+ 
+ 	return mask;
+ }
+@@ -3396,14 +3396,14 @@ bool __cpuset_node_allowed(int node, gfp_t gfp_mask)
+ 		return true;
+ 
+ 	/* Not hardwall and node outside mems_allowed: scan up cpusets */
+-	spin_lock_irqsave(&callback_lock, flags);
++	raw_spin_lock_irqsave(&callback_lock, flags);
+ 
+ 	rcu_read_lock();
+ 	cs = nearest_hardwall_ancestor(task_cs(current));
+ 	allowed = node_isset(node, cs->mems_allowed);
+ 	rcu_read_unlock();
+ 
+-	spin_unlock_irqrestore(&callback_lock, flags);
++	raw_spin_unlock_irqrestore(&callback_lock, flags);
+ 	return allowed;
+ }
+ 
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+2.17.2
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
