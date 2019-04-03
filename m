@@ -2,95 +2,135 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33790C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED2CC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AA520693
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Coq9e0YI"
+	by mail.kernel.org (Postfix) with ESMTP id 1A93D2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 01:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfDCBZc (ORCPT
+        id S1726582AbfDCB3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Apr 2019 21:25:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36646 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfDCBZc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Apr 2019 21:25:32 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r24so13340152ljg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 18:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iTXTjbu6DJIQc8NFJSYiqPfZyS3U6rOibd7vzKP+eY0=;
-        b=Coq9e0YI7xs3iHLHOwDqJb8bdvAGzKPCqosZjlVQ7PHIQpxiRklQEKeehNiryoLV+E
-         UuPWIpXIWKUMhAwNo1V6zBB5BKo8C8wKPN4KB1mva7mNc9jEUdjIJAWOt6h3lUbuEiXS
-         lAi5K94PHc1u2z8r+r1dvr0TVgnwJUtSY/kxa4W99D3SOVUryzwHJ95wsGwpqm5ECfOP
-         9ciTgroafGyvp1fAu7D98tAiPRzP9HzqLaUYxeuNS0E5q44hc+fquxwXG/W0AKKsa/W+
-         1TYWmG9UKvO1wZSmYJ3BYW7NRPb8zKnc9Tbh8RSarXiL6ShxS43u0qul+0V4gOeRJWpi
-         twWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iTXTjbu6DJIQc8NFJSYiqPfZyS3U6rOibd7vzKP+eY0=;
-        b=CiDQU1nPFi+uLlR8yvVqPhiYpmJmh7JeU5tDnMQ6X+guFYZZxYbtIhHNwOGdsA/Wk4
-         9FTP5MF/pf6a/h5hQ+1U8W+NPWugOJaPWBxEFsEH/ppC4nUF8KfmmH1jz0dzgV6abiNm
-         8iQQgbELLDn4brpwwp8BOCrN56YqmaGslE4Im/SuQZ1zK1dggsRAqXDpA/J57RF5NPV2
-         MYcZrTpoPkZDT5NHuNZnD8iwNfTcp9C056IiHnt9jTce2Zpgcbz+ADYoKqun5B2YgZB7
-         fenKI8ogZ3h03UTx5A1G90r0CO6/9kAxdmQ6yk+CqgeNIjxyNK5szKyytWtV2h40PyZ1
-         gFtA==
-X-Gm-Message-State: APjAAAValjZWu1K7OImi5ZQY2LL03Q7rbaZPSzkocJfADFHpQITIGDxW
-        nFtuKhWsUL0ltAp08X9RizfEa7Og83BuZO7WeNu2
-X-Google-Smtp-Source: APXvYqw+k6lmWsK2vH/Pmcjla9OQJ7D5ESbL9Kx/zrdYrzL6CoC7Wnl2yPlZia5+12zk6zzJcSXZcYkhfy9Pt8J/gyI=
-X-Received: by 2002:a2e:7114:: with SMTP id m20mr9191024ljc.120.1554254729960;
- Tue, 02 Apr 2019 18:25:29 -0700 (PDT)
+        Tue, 2 Apr 2019 21:29:31 -0400
+Received: from mx.socionext.com ([202.248.49.38]:49084 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbfDCB3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Apr 2019 21:29:31 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 03 Apr 2019 10:29:29 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 43057180B60;
+        Wed,  3 Apr 2019 10:29:29 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 3 Apr 2019 10:29:29 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id AF0171A15B7;
+        Wed,  3 Apr 2019 10:29:28 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.119.83])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id A19D0120499;
+        Wed,  3 Apr 2019 10:29:28 +0900 (JST)
+Subject: Re: [PATCH] dt-bindings: cpu: Fix JSON schema
+From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     ARM-SoC Maintainers <arm@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190318100521.29109-1-maxime.ripard@bootlin.com>
+ <CAL_JsqJ_LYycXazkdP2Q=e-jynKiX+z5En0bz0AWpDjsevwQTg@mail.gmail.com>
+ <20190401091050.cwph7xlpv3pmkwnq@flea>
+ <78bb248e-56b8-b825-e763-583f75148eb3@socionext.com>
+ <20190401113546.d6p2mg2y47abhumz@flea>
+ <b6cb709b-7b1a-6bab-6f93-bcb565be18fb@socionext.com>
+ <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+Message-ID: <c08031d4-d719-b91b-8789-b526ee80efe4@socionext.com>
+Date:   Wed, 3 Apr 2019 10:29:27 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190403122212.68a9964d@canb.auug.org.au>
-In-Reply-To: <20190403122212.68a9964d@canb.auug.org.au>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 2 Apr 2019 21:25:18 -0400
-Message-ID: <CAHC9VhRbYZzd=526r4k6d12Rs=PKx0ro4+04BKfAN-ozarc2cg@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the selinux tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b3ecf5c5-9b1a-eb8b-95c2-c30a94c8bdd8@socionext.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 9:22 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> Hi Paul,
->
-> After merging the selinux tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> x86_64-linux-gnu-ld: security/selinux/hooks.o: in function `selinux_kernfs_init_security':
-> hooks.c:(.text+0x8f7d): undefined reference to `kernfs_xattr_get'
-> x86_64-linux-gnu-ld: hooks.c:(.text+0x8ff5): undefined reference to `kernfs_xattr_get'
-> x86_64-linux-gnu-ld: hooks.c:(.text+0x91b5): undefined reference to `kernfs_xattr_set'
->
-> Caused by commit
->
->   1991af34fa26 ("kernfs: fix xattr name handling in LSM helpers")
->
-> I have used the selinux tree from next-20190402 for today.
 
-Hi Stephen,
 
-My apologies, I just noticed the same failure and removed the commit
-from selinux/next.  I let Ondrej know and I would expect he'll have an
-updated patch shortly.
+On 2019/04/02 20:42, Sugaya, Taichi wrote:
+> Hi,
+> 
+> On 2019/04/01 22:02, Sugaya, Taichi wrote:
+>> Hi,
+>>
+>> On 2019/04/01 20:35, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Mon, Apr 01, 2019 at 07:52:06PM +0900, Sugaya, Taichi wrote:
+>>>> On 2019/04/01 18:10, Maxime Ripard wrote:
+>>>>> Hi Sugaya, Arnd, Olof,
+>>>>>
+>>>>> On Thu, Mar 28, 2019 at 02:35:54PM -0500, Rob Herring wrote:
+>>>>>> +arm-soc
+>>>>>>
+>>>>>> On Mon, Mar 18, 2019 at 5:05 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>>>>>>>
+>>>>>>> Commit fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for
+>>>>>>> Milbeaut") added support for a new cpu enable-method, but did so using
+>>>>>>> tabulations to ident. This is however invalid in the syntax, and resulted
+>>>>>>> in a failure when trying to use that schemas for validation.
+>>>>>>>
+>>>>>>> Use spaces instead of tabs to indent to fix this.
+>>>>>>>
+>>>>>>> Fixes: fd73403a4862 ("dt-bindings: arm: Add SMP enable-method for Milbeaut")
+>>>>>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>>>>>>> ---
+>>>>>>>    Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+>>>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>>>>
+>>>>>> This should be applied to arm-soc tree having the commit.
+>>>>>
+>>>>> Could you pick up that patch?
+>>>>
+>>>> I got it.
+>>>> My mission is to resubmit your fix-patch added my singned-off tag and
+>>>> Rob's reviewed tag...right?
+>>>
+>>> If you are part of arm-soc and send your pull requests to Arnd and
+>>> Olof, simply pick it up in the same branch than the initial patch was
+>>> in. And when you apply that patch, you indeed need to add your
+>>> Signed-off-by (note that most commands to commit have an option to do
+>>> that automatically: -s and that includes git am) and the Rob's
+>>> reviewed-by.
+>>>
+>>> Then, send a new pull request to arm-soc.
+>>>
+>>
+>> Okay, thanks for your suggestion.
+>> I try to make pull request!
+>>
+> 
+> Sorry I realized that I couldn't make a private repository, so I'll send my Ack instead.
 
--- 
-paul moore
-www.paul-moore.com
+One correction: "a public repository"
+
+> 
+> Acked-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+> 
+>> Thanks,
+>> Sugaya Taichi
+>>
+>>> Maxime
+>>>
+>>> -- 
+>>> Maxime Ripard, Bootlin
+>>> Embedded Linux and Kernel engineering
+>>> https://bootlin.com
+>>>
+
