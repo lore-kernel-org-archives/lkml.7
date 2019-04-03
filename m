@@ -2,163 +2,119 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF5BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED672C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3748B2084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B186820643
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="k0IFccUE"
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="UuYxKhpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbfDCMUy (ORCPT
+        id S1726193AbfDCMYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:20:54 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:59505 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfDCMUx (ORCPT
+        Wed, 3 Apr 2019 08:24:00 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40943 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfDCMX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:20:53 -0400
-X-Greylist: delayed 13648 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Apr 2019 08:20:51 EDT
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x33CKeWx022626;
-        Wed, 3 Apr 2019 21:20:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x33CKeWx022626
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1554294041;
-        bh=TQlzNrWGG9CeBRdpHJD0Jy415b18W+tDfogFpAUzxj4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=k0IFccUE3Y1A2HKH20rwuTzfAcWDdzMO5664eXt/L+tfA4H16944omheiMKlLlmmi
-         x0g2H7a2/ErZmS+tr2aBEf5QFWUjVxkpt+tJ1AO6JDMHpPwmecGPBKQDogY8Qf/Z3r
-         kiPCc0nEKwG7q+L3O1i6DeW7rbu3GNDj6qgPs9sji8D/MIB8cibxAQnmJ01u5kLBDA
-         CNJCHfT8vifzybSlgya/QfN9RleH1kl9MZXC53Mo2+nqXTBpD7b3BiL6uptyAhDPZf
-         AWbbTWedBGQqUColg/dT+MnSPRbcDI+Tv9s09DQBSqaXjgpTsRx7XZD6RDANZtOnRM
-         mzJ2OelJ87t/Q==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id e2so9106926vsc.13;
-        Wed, 03 Apr 2019 05:20:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAUz/UDl6tkyg9q/3XykzcZM0baYqRpz5LPR6g6ni7bnHgay0Kq/
-        ziY1Eucx0ScnuRmWtZkSq1qoK9xAE0X4AnBOuAw=
-X-Google-Smtp-Source: APXvYqx1JTGfLIcJwtEzBGuPv4eYn13RShHCH7HC40qEGlfWaidm3iv2N0h6gkkr8ozUJMap9lBacR4BD+xKy5WGOaY=
-X-Received: by 2002:a67:c29e:: with SMTP id k30mr46197501vsj.203.1554294040230;
- Wed, 03 Apr 2019 05:20:40 -0700 (PDT)
+        Wed, 3 Apr 2019 08:23:59 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x12so19185142qts.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 05:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=msxtIHAtJz4OY5Sv8/Ja7X44EEFN0Z54zKL8t5s+a1A=;
+        b=UuYxKhpyzwNXizySpmvdMrgOGMuu+8jYEU3E4FzENoIsoEYOZoVz100zTI2besjFKa
+         W2D+rzw2OcLaWStcOgorwbS6sztHvPezDZrrq7gJ2nFqSewNYCY1V9LsQW4vbjlK5nnp
+         fVZLAH4O6uf7LZ2+zbqtNYShEdiGS3oInzW/4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=msxtIHAtJz4OY5Sv8/Ja7X44EEFN0Z54zKL8t5s+a1A=;
+        b=PpLCZVWNC9LTMgPJ/CPggAxDLuA9xYM7YaNgAkLQdDYSGmAYxGokzb4Okh+C+3nmD0
+         O5MdLeYnokNvZ87O0iFQ6BFT9auQpttabYAsaDQ7Bp2KM8F7Vup/FFQ5L5S9jhr2jFi5
+         URwIA/FeIRrOTIZZ9VvJBy1AmGc631Sh0YW/v5T3n3t2mHEaDAIApmJR71SVSkfHSB2j
+         Rw8iGR3pwQBEABIjC1JRRmc44LJ/buEe6TWX/xPAwgEN9KxsXR3JPZJLHllGvmOwUzQC
+         4c6N192lwyBGVp5a6e32tXFSNhFJ6QGbX5ULRsaIOTqo+DU4omuAQfwyqqqW99pxFRBV
+         pDjg==
+X-Gm-Message-State: APjAAAWKOs+nPGiVVJtN1Ulc2QGvay0CWqvSsDA4Y5TsCYRMSVJhFbL2
+        Aiigz931FHZZ03pLwhFQZA7nug==
+X-Google-Smtp-Source: APXvYqyqNvmtb6PJRvTNthZo3Avx9Soy5BGJOj63KReQJj9m6VSyefDcK/b3rPrYZGf8mv+GyDPl9g==
+X-Received: by 2002:a0c:b8aa:: with SMTP id y42mr61217214qvf.66.1554294238476;
+        Wed, 03 Apr 2019 05:23:58 -0700 (PDT)
+Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id b37sm13576985qtb.92.2019.04.03.05.23.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 05:23:57 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Wed, 3 Apr 2019 08:23:52 -0400 (EDT)
+X-X-Sender: vince@macbook-air
+To:     Thomas Gleixner <tglx@linutronix.de>
+cc:     nelson.dsouza@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
+        peterz@infradead.org, vincent.weaver@maine.edu, eranian@google.com,
+        hpa@zytor.com, mingo@kernel.org, torvalds@linux-foundation.org,
+        acme@redhat.com, linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:perf/urgent] perf/x86/intel: Initialize TFA MSR
+In-Reply-To: <alpine.DEB.2.21.1904031330060.1967@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1904030823020.29082@macbook-air>
+References: <20190321123849.GN6521@hirez.programming.kicks-ass.net> <tip-d7262457e35dbe239659e62654e56f8ddb814bed@git.kernel.org> <alpine.DEB.2.21.1904031330060.1967@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <1554280344-10741-1-git-send-email-yamada.masahiro@socionext.com> <CAKwvOdkrMB-pvjhuFXPCb-v-6nRkRcm+y5iApNcJHiTd=bdeaw@mail.gmail.com>
-In-Reply-To: <CAKwvOdkrMB-pvjhuFXPCb-v-6nRkRcm+y5iApNcJHiTd=bdeaw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 3 Apr 2019 21:20:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARbmuCKjkMP-_ZNLUm1XBjxG7RoMJf5-xcNjnv5rVwVOw@mail.gmail.com>
-Message-ID: <CAK7LNARbmuCKjkMP-_ZNLUm1XBjxG7RoMJf5-xcNjnv5rVwVOw@mail.gmail.com>
-Subject: Re: [PATCH] sparc: vdso: add FORCE to the build rule of %.so
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 7:36 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> $ grep -r 'call if_changed,' -B
->
-> shows a few more FWIW:
->
-> drivers/scsi/Makefile
-> drivers/gpu/drm/radeon/Makefile
-> arch/c6x/boot/Makefile
-> arch/arm64/kernel/vdso/Makefile
-> arch/x86/entry/vdso/Makefile
-> arch/x86/entry/syscalls/Makefile
-> arch/powerpc/platforms/cell/spufs/Makefile
-> arch/powerpc/kernel/syscalls/Makefile
-> arch/alpha/kernel/syscalls/Makefile
-> arch/sparc/boot/Makefile
-> arch/sparc/kernel/syscalls/Makefile
-> arch/mips/kernel/syscalls/Makefile
-> arch/h8300/boot/Makefile
-> arch/nios2/boot/Makefile
-> arch/ia64/kernel/syscalls/Makefile
-> arch/microblaze/boot/dts/Makefile
-> arch/microblaze/kernel/syscalls/Makefile
-> arch/csky/boot/Makefile
-> arch/xtensa/kernel/syscalls/Makefile
-> arch/sh/boot/Makefile
-> arch/sh/kernel/syscalls/Makefile
-> arch/parisc/boot/compressed/Makefile
-> arch/parisc/kernel/syscalls/Makefile
-> arch/m68k/kernel/syscalls/Makefile
->
+On Wed, 3 Apr 2019, Thomas Gleixner wrote:
 
-I sent patches for vdso Makefiles, but
-lots of Makefiles are still wrong.
+> On Wed, 3 Apr 2019, tip-bot for Peter Zijlstra wrote:
+> 
+> > Commit-ID:  d7262457e35dbe239659e62654e56f8ddb814bed
+> > Gitweb:     https://git.kernel.org/tip/d7262457e35dbe239659e62654e56f8ddb814bed
+> > Author:     Peter Zijlstra <peterz@infradead.org>
+> > AuthorDate: Thu, 21 Mar 2019 13:38:49 +0100
+> > Committer:  Ingo Molnar <mingo@kernel.org>
+> > CommitDate: Wed, 3 Apr 2019 11:40:32 +0200
+> > 
+> > perf/x86/intel: Initialize TFA MSR
+> > 
+> > Stephane reported that the TFA MSR is not initialized by the kernel,
+> > but the TFA bit could set by firmware or as a leftover from a kexec,
+> > which makes the state inconsistent.
+> > 
+> > Reported-by: Stephane Eranian <eranian@google.com>
+> > Tested-by: Nelson DSouza <nelson.dsouza@intel.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Vince Weaver <vincent.weaver@maine.edu>
+> > Cc: tonyj@suse.com
+> > Link: https://lkml.kernel.org/r/20190321123849.GN6521@hirez.programming.kicks-ass.net
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> 
+> This lacks:
+> 
+>  1) Fixes tag
+> 
+>  2) Cc: stable ....
+> 
+> Sigh.
 
-Your contribution is appreciated.  :)
+It would also be nice to know what a "TFA" bit is without having to go 
+find a copy of the Intel documentation.
 
-
-> On Wed, Apr 3, 2019 at 3:32 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > $(call if_changed,...) must have FORCE as a prerequisite.
->
-> According to Documentation/kbuild/makefiles.txt#L1064:
-> ```
-> Note: It is a typical mistake to forget the FORCE prerequisite.
-> ```
-
-Yeah, people often miss to add this.
-
-There is one more thing people often miss:
-
- "Any target that utilises if_changed must be listed in $(targets),
-  otherwise the command line check will fail, and the target will
-  always be built."
-
-
-
-
-
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
->
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  arch/sparc/vdso/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> > index 74e97f7..83c4b46 100644
-> > --- a/arch/sparc/vdso/Makefile
-> > +++ b/arch/sparc/vdso/Makefile
-> > @@ -68,7 +68,7 @@ CFLAGS_REMOVE_vdso-note.o = -pg
-> >  CFLAGS_REMOVE_vclock_gettime.o = -pg
-> >
-> >  $(obj)/%.so: OBJCOPYFLAGS := -S
-> > -$(obj)/%.so: $(obj)/%.so.dbg
-> > +$(obj)/%.so: $(obj)/%.so.dbg FORCE
-> >         $(call if_changed,objcopy)
-> >
-> >  CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
-> > --
-> > 2.7.4
-> >
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
-
-
-
---
-Best Regards
-
-Masahiro Yamada
+Vince
