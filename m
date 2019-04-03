@@ -2,142 +2,123 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B09C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B473C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0DE2147C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:27:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NeBDJvy/"
+	by mail.kernel.org (Postfix) with ESMTP id 2E12C20651
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfDCW1a (ORCPT
+        id S1726653AbfDCW1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 18:27:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50639 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfDCW13 (ORCPT
+        Wed, 3 Apr 2019 18:27:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39994 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfDCW1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 18:27:29 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z11so614958wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 15:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3BOtlaSUOh6SUerCJfSPHdxDpudukFzT6tHRpAGQTww=;
-        b=NeBDJvy/OKPRGYVBu0dQUieAcspHD1ylMEKo/YziYKBVhgPpe3Fgxttr7z9rqDf/SA
-         xqeMvdVf+suYg6XAwf3/m96LGoTqi0rmahJ6rAOymBKD9wd+8DJYuehUyPmy8qkL3BJa
-         CbL7ewdIOn3P0f8HOc7kfCjs3uESP4Ke8YJQICooPPYBPqTq5X2gckP5ENGafdTbwjms
-         8BC2gC90pN16Mztip7R1G7vCQmuWpG8DLxLqxK0fO8aHMdTXwG96xrd82f++xfXOsGF7
-         MY3UkivGHVL30JJPBofPH43M4LGyNNLH/jvk69/xYECh6TJ8Jts1eZfU3+XNN5KIxiJo
-         Cyqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3BOtlaSUOh6SUerCJfSPHdxDpudukFzT6tHRpAGQTww=;
-        b=V7l+D1gqZmZd5bSqAK6CHCI37r2VVRvw4bhtDJLwRFjL1yuptNDjIBgLGAiRqCU7TY
-         Dzko2yuAmolk+bjj6cvudV10Oi2UZgylkpRTMWfGpEN4t31+vFjyGtvTM1dLOE3iuH/j
-         fCDSnB7BQXg49JzMFd5TFZ0qVRGL8r4Fga1I71Oq/V9x1hCqUHAuHZfM2qq7VN9FufBw
-         SlmE6V377E5kt40hIVSWcscCBp6ck1XA7oBLlsO70WOY5IoWEtgMmynXD47HRu4WDPQM
-         p2VIN60LgoyrC4JnQitgm9YpnCM7TfuQUZHWiRml/XDKqEyyIEKqljnxajxVmpF/BFt0
-         wyDQ==
-X-Gm-Message-State: APjAAAV2H8s6zYfQK66KiqC46rzWyY2LB6pBpjRHtJM4PV0Qg9ATLX5o
-        X1WjNlbp1sFnJhvbiFoDkS8gO6nb2uAv6Dj0F5tl
-X-Google-Smtp-Source: APXvYqyud5gU1u28lCZ+hJAVD0GfdoXNYhC2+EANISfGgdPDLjAaXtK7Pw2XzeqLT76P3ilJMfOwDtoO/h9h9uTTcI0=
-X-Received: by 2002:a1c:6c04:: with SMTP id h4mr1596406wmc.135.1554330446739;
- Wed, 03 Apr 2019 15:27:26 -0700 (PDT)
+        Wed, 3 Apr 2019 18:27:55 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hBoMK-000173-In; Wed, 03 Apr 2019 22:27:52 +0000
+Subject: Re: [PATCH] platform/x86: alienware-wmi: fix kfree on potentially
+ uninitialized pointer
+To:     Darren Hart <dvhart@infradead.org>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190330001712.8923-1-colin.king@canonical.com>
+ <20190403220200.GC39081@wrath>
+ <424c2bba-1e17-3131-c15b-44462c57e22d@canonical.com>
+ <20190403222626.GA11745@wrath>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f649f63e-9dc5-8c8d-39ab-cf624f75c550@canonical.com>
+Date:   Wed, 3 Apr 2019 23:27:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190325183652.252175-1-helgaas@kernel.org> <CAErSpo6_VMJ8nP9sA2xZffsMXdG3bKKv8WL0skyTTbuLe4WtJQ@mail.gmail.com>
- <20190401140806.GB4570@kunai> <CAErSpo6MJFJO3s4NZ61CPZngbSaOhG-s5wLJyCQbwvdcnuBP1Q@mail.gmail.com>
- <20190403205724.ozrdjdujvnzzbrpe@ninjato>
-In-Reply-To: <20190403205724.ozrdjdujvnzzbrpe@ninjato>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed, 3 Apr 2019 17:27:14 -0500
-Message-ID: <CAErSpo4aRuM3rLFvMiKVwnpDxsfbVc9jR2bWse8tMZ-xWzYp8w@mail.gmail.com>
-Subject: Re: [PATCH] i2c: isch: Remove unnecessary acpi.h include
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mukesh Ojha <mojha@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190403222626.GA11745@wrath>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 3:57 PM Wolfram Sang <wsa@the-dreams.de> wrote:
->
-> On Mon, Apr 01, 2019 at 02:37:19PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Apr 1, 2019 at 9:08 AM Wolfram Sang <wsa@the-dreams.de> wrote:
-> > >
-> > >
-> > > > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > > > >
-> > > > > 54fb4a05af0a ("i2c: Check for ACPI resource conflicts") included
-> > > > > <linux/acpi.h> so we could use acpi_check_region().  fd46a0064af1 ("i2c:
-> > > > > convert i2c-isch to platform_device") removed the use of
-> > > > > acpi_check_region() but not the include.
-> > > > >
-> > > > > Remove the now-unnecessary include of <linux/acpi.h>.  No functional change
-> > > > > intended.
-> > > > >
-> > > > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > >
-> > > > Added
-> > > >
-> > > >     Fixes: fd46a0064af1 ("i2c: convert i2c-isch to platform_device")
-> > > >     Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> > > >     Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> > > >
-> > > > on my local branch.
-> > > >
-> > > > Jean, would you like me to repost this with the updates?  I assume you
-> > > > will merge this (just based on get_maintainer.pl)?
-> > >
-> > > I will apply it, now that it has Jean's Rev-by. I assume this is
-> > > for-next material despite the Fixes tag?
-> >
-> > Definitely for-next material, not for the current release.  Jean
-> > suggested the Fixes tag, I think since it's related to a specific
-> > commit and could be backported together with that commit.
-> >
-> > Should there be a MAINTAINERS update to clarify who applies patches to
-> > drivers/i2c/busses/i2c-isch.c?  Right now, get_maintainers.pl doesn't
-> > mention you (Wolfram).
-> >
-> > Patch with tags attached in case it's useful to you (sorry, I'm
-> > saddled with gmail right now and can't include it inline).
->
-> > From 36fbdab89f5b8aa2d3616bd289e2c695fd3c0f9b Mon Sep 17 00:00:00 2001
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > Date: Tue, 30 Oct 2018 14:12:36 -0500
-> > Subject: [PATCH] i2c: isch: Remove unnecessary acpi.h include
-> >
-> > 54fb4a05af0a ("i2c: Check for ACPI resource conflicts") included
-> > <linux/acpi.h> so we could use acpi_check_region().  fd46a0064af1 ("i2c:
-> > convert i2c-isch to platform_device") removed the use of
-> > acpi_check_region() but not the include.
-> >
-> > Remove the now-unnecessary include of <linux/acpi.h>.  No functional change
-> > intended.
-> >
-> > Fixes: fd46a0064af1 ("i2c: convert i2c-isch to platform_device")
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Reviewed-by: Jean Delvare <jdelvare@suse.de>
-> > Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
->
-> Fixed this checkpatch error:
->
-> ERROR: Please use git commit description style 'commit <12+ chars of sha1> ("<title line>")' - ie: 'commit fd46a0064af1 ("i2c: convert i2c-isch to platform_device")'
-
-Thanks, I didn't even know about that requirement for the word
-"commit"!  I assume this only applies in the text, not in the "Fixes:"
-tag.
+On 03/04/2019 23:26, Darren Hart wrote:
+> On Wed, Apr 03, 2019 at 11:05:12PM +0100, Colin Ian King wrote:
+>> On 03/04/2019 23:02, Darren Hart wrote:
+>>> On Sat, Mar 30, 2019 at 12:17:12AM +0000, Colin King wrote:
+>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> Currently the kfree of output.pointer can be potentially freeing
+>>>> an uninitalized pointer in the case where out_data is NULL. Fix this
+>>>> by reworking the case where out_data is not-null to perform the
+>>>> ACPI status check and also the kfree of outpoint.pointer in one block
+>>>> and hence ensuring the pointer is only freed when it has been used.
+>>>>
+>>>> Also replace the if (ptr != NULL) idiom with just if (ptr).
+>>>>
+>>>> Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
+>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> Thanks for the catch Colin, queued for testing.
+>>>
+>>> Did you trigger this error or detect it via review or static analysis?
+>>>
+>> Static analysis, I'm now running a licensed version of Coverity on one
+>> of our servers.
+> 
+> We typically include the tool used to identify such bugs, and I see several such
+> tags for Coverity in the logs. Was there a reason not to include that tag? If
+> just an oversight, can you provide that tag and I'll amend the commit.
+> 
+I didn't have an external coverity CID# number so I omitted it this time.
