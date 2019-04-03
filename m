@@ -2,133 +2,89 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357ADC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B98FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B4F20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 22:57:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vplj40Sr"
+	by mail.kernel.org (Postfix) with ESMTP id D31BC20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfDCW5F (ORCPT
+        id S1726396AbfDCXDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 18:57:05 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41125 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726206AbfDCW5F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 18:57:05 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k8so317902lja.8;
-        Wed, 03 Apr 2019 15:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kzdcy6zDAVBi4lPlN6UsVKWH/Jkbli+MQJiHkKwRPvM=;
-        b=Vplj40SrTOR9QSf1dsHAv3KjBehJVyY5dIJnb2V/ahqan/nJNWmCHpL7gP6Jd0zmlx
-         rh+lO0bfM6OmCVP1nMUpjhGtXEvIl9xN8Az6Eiw1Xl87j0GuaF6tFYMuZXeeCM6ik4lq
-         jGu5+9tlQfUv6tIlLX90+R7fzZXNRcFUXGEWWrfvvUIfcnEuuT8HfojyVgIUatH2H28q
-         mY3eUaQxln4054UXVGIj2Ki5xEFvjclQSalsf2w5JNW331LdmWQbK8p2PfEzKr/pnTNg
-         PmkZ0NbN0BRAcHamVnbyvClLcsI13IHh2CujvAxGSOVAc10iMi1rQog3cf6Pv98gpobU
-         3v5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kzdcy6zDAVBi4lPlN6UsVKWH/Jkbli+MQJiHkKwRPvM=;
-        b=Z9VjGUS6g9uLJN7bkyQYd4nq6fCn5vVN78KjyGPypSMVUHF/+QkZlLtSXYTm96EGOM
-         4U6igHi82mCoQN2/ZMn3Z7xPGIWxvtZuF+mMte3Ei2/RSVOXCe2GFtyvahMUINQ/j7wB
-         SqolhAn4Krn5zlDWkpuPHDQ6Bd0b+K7oMj1JbhXjbkohg6w5AcoX0PnN/M75oMjesC7r
-         syNFcGbg5PKui0RqpGco2hXzOtVg9CruwoUuLpec5TFEmarnxG4YqUlNpMYrTEMqEcHr
-         uj1yOw/Dj6OpB66nCEErNWlxU0SsJpyAqQyVguQhjxERk+EUHCbh4Q2cD24kv7QAWmDC
-         YOuQ==
-X-Gm-Message-State: APjAAAWe0+fsy40W0hEEePoBif3xNPPQBfSpPRyQuWZdIW8Yo8dfkz3Y
-        agjp0WSU6Qff9M5wNqRbFi43yUJJ9yIMaowECc4=
-X-Google-Smtp-Source: APXvYqx6MieX7VAgdPO4kGkCz/Jy3PG8BDiXKqowb+OfCkQz+jDhj6oC9GlR+FURApAVaquTD3Bz/8lkgZIvrFOLP8I=
-X-Received: by 2002:a2e:309:: with SMTP id 9mr1281709ljd.114.1554332222843;
- Wed, 03 Apr 2019 15:57:02 -0700 (PDT)
+        Wed, 3 Apr 2019 19:03:19 -0400
+Received: from mga18.intel.com ([134.134.136.126]:50167 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726099AbfDCXDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 19:03:19 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 16:03:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
+   d="scan'208";a="137394331"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2019 16:03:17 -0700
+Date:   Wed, 3 Apr 2019 16:03:17 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Dr . Greg Wettstein" <greg@enjellic.com>
+Subject: Re: [PATCH v19,RESEND 24/27] x86/vdso: Add
+ __vdso_sgx_enter_enclave() to wrap SGX enclave transitions
+Message-ID: <20190403230317.GD4682@linux.intel.com>
+References: <20190322215903.GE12666@linux.intel.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85E481@ORSMSX116.amr.corp.intel.com>
+ <CALCETrV589POrG3RaPHBWOFuytkWjeJgJgLHk4OKbizOgJVKZQ@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85E989@ORSMSX116.amr.corp.intel.com>
+ <20190325180349.GF31069@linux.intel.com>
+ <CALCETrXqb3CHefN-RLudC61jwdbLFS8cXuS4V5OJ6HTuf_arYw@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E85FABF@ORSMSX116.amr.corp.intel.com>
+ <CALCETrVcR_etAHSVZxvCz7CcPnF4ajpcWiRCtFrOckVWVJByHA@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E860C69@ORSMSX116.amr.corp.intel.com>
+ <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190327064150.31549-1-andrew.smirnov@gmail.com> <20190327064150.31549-2-andrew.smirnov@gmail.com>
-In-Reply-To: <20190327064150.31549-2-andrew.smirnov@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 3 Apr 2019 19:56:53 -0300
-Message-ID: <CAOMZO5BZCGzJddFdbXKFYu8YPf-sWrpidf-B8JKi-KXPFR4Kmg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: Add support for ZII i.MX7 RPU2 board
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrUUv3WSX7uL22DnWg8FOJqVyB=tknxbGDWb9wpx7zY2CQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+On Thu, Mar 28, 2019 at 12:18:40PM -0700, Andy Lutomirski wrote:
+> Finally, why does the vDSO code bother checking whether the leaf is valid?
 
-This looks good. Only some minor comments:
+To sanity check the input to ensure the caller is attempting to enter an
+enclave, i.e. the function is named __vdso_sgx_enter_enclave(), not
+__vsgx_enclu().  And if the caller does pass the wrong leaf, EINVAL will
+be easier to debug than EFAULT, especially on SGX1 hardware where the #GP
+could be misconstrued as a loss of EPC.
 
-On Wed, Mar 27, 2019 at 3:41 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
-
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx7d-zii-rpu2.dts
-> @@ -0,0 +1,936 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +
-Shawn mentioned on a prior submission of mine that this empty line is
-not needed.
-
-> +       cs2000_ref: cs2000-ref {
-
-generic node name, please.
-
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <24576000>;
-> +       };
-> +
-> +       cs2000_in_dummy: cs2000-in-dummy {
-
-generic node name, please.
-
-> +&ecspi1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_ecspi1>;
-> +       status = "okay";
-> +
-> +       cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
-
-status property usually is the last one. So please move cs-gpios prior
-to status.
-
-> +
-> +       flash@0 {
-> +               compatible = "jedec,spi-nor";
-> +               spi-max-frequency = <20000000>;
-> +               reg = <0>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +       };
-> +};
-> +
-
-> +&i2c1 {
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c1>;
-> +       status = "okay";
-> +
-> +       pmic: pfuze3000@8 {
-
-pmic@8
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+I'm not dead set on the checks by any means, but it does seem appropriate.
+And the cost is all of 3 uops and a few bytes of a code.
