@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0908BC10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92611C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55252084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1C5214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfDCTdt (ORCPT
+        id S1727354AbfDCTdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 15:33:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49684 "EHLO mx1.redhat.com"
+        Wed, 3 Apr 2019 15:33:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50456 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbfDCTdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 15:33:43 -0400
+        id S1727011AbfDCTdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 15:33:44 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 621B13092669;
-        Wed,  3 Apr 2019 19:33:43 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id A5D6CC049598;
+        Wed,  3 Apr 2019 19:33:44 +0000 (UTC)
 Received: from localhost.localdomain.com (ovpn-125-190.rdu2.redhat.com [10.10.125.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4AC056012C;
-        Wed,  3 Apr 2019 19:33:42 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FD0A6012C;
+        Wed,  3 Apr 2019 19:33:43 +0000 (UTC)
 From:   jglisse@redhat.com
 To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -34,17 +34,17 @@ Cc:     linux-kernel@vger.kernel.org,
         Ralph Campbell <rcampbell@nvidia.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH v3 11/12] mm/hmm: add an helper function that fault pages and map them to a device v3
-Date:   Wed,  3 Apr 2019 15:33:17 -0400
-Message-Id: <20190403193318.16478-12-jglisse@redhat.com>
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v3 12/12] mm/hmm: convert various hmm_pfn_* to device_entry which is a better name
+Date:   Wed,  3 Apr 2019 15:33:18 -0400
+Message-Id: <20190403193318.16478-13-jglisse@redhat.com>
 In-Reply-To: <20190403193318.16478-1-jglisse@redhat.com>
 References: <20190403193318.16478-1-jglisse@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 03 Apr 2019 19:33:43 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 03 Apr 2019 19:33:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -52,218 +52,240 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jérôme Glisse <jglisse@redhat.com>
 
-This is a all in one helper that fault pages in a range and map them to
-a device so that every single device driver do not have to re-implement
-this common pattern.
+Convert hmm_pfn_* to device_entry_* as here we are dealing with device
+driver specific entry format and hmm provide helpers to allow differents
+components (including HMM) to create/parse device entry.
 
-This is taken from ODP RDMA in preparation of ODP RDMA convertion. It
-will be use by nouveau and other drivers.
-
-Changes since v2:
-    - Improved function comment for kernel documentation.
-Changes since v1:
-    - improved commit message
+We keep wrapper with the old name so that we can convert driver to use the
+new API in stages in each device driver tree. This will get remove once all
+driver are converted.
 
 Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Ralph Campbell <rcampbell@nvidia.com>
 Cc: John Hubbard <jhubbard@nvidia.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
 ---
- include/linux/hmm.h |   9 +++
- mm/hmm.c            | 152 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 161 insertions(+)
+ include/linux/hmm.h | 93 +++++++++++++++++++++++++++++++--------------
+ mm/hmm.c            | 19 +++++----
+ 2 files changed, 75 insertions(+), 37 deletions(-)
 
 diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index a79fcc6681f5..f81fe2c0f343 100644
+index f81fe2c0f343..51ec27a84668 100644
 --- a/include/linux/hmm.h
 +++ b/include/linux/hmm.h
-@@ -474,6 +474,15 @@ int hmm_range_register(struct hmm_range *range,
- void hmm_range_unregister(struct hmm_range *range);
- long hmm_range_snapshot(struct hmm_range *range);
- long hmm_range_fault(struct hmm_range *range, bool block);
-+long hmm_range_dma_map(struct hmm_range *range,
-+		       struct device *device,
-+		       dma_addr_t *daddrs,
-+		       bool block);
-+long hmm_range_dma_unmap(struct hmm_range *range,
-+			 struct vm_area_struct *vma,
-+			 struct device *device,
-+			 dma_addr_t *daddrs,
-+			 bool dirty);
+@@ -239,36 +239,36 @@ static inline bool hmm_range_valid(struct hmm_range *range)
+ }
  
  /*
-  * HMM_RANGE_DEFAULT_TIMEOUT - default timeout (ms) when waiting for a range
+- * hmm_pfn_to_page() - return struct page pointed to by a valid HMM pfn
+- * @range: range use to decode HMM pfn value
+- * @pfn: HMM pfn value to get corresponding struct page from
+- * Returns: struct page pointer if pfn is a valid HMM pfn, NULL otherwise
++ * hmm_device_entry_to_page() - return struct page pointed to by a device entry
++ * @range: range use to decode device entry value
++ * @entry: device entry value to get corresponding struct page from
++ * Returns: struct page pointer if entry is a valid, NULL otherwise
+  *
+- * If the HMM pfn is valid (ie valid flag set) then return the struct page
+- * matching the pfn value stored in the HMM pfn. Otherwise return NULL.
++ * If the device entry is valid (ie valid flag set) then return the struct page
++ * matching the entry value. Otherwise return NULL.
+  */
+-static inline struct page *hmm_pfn_to_page(const struct hmm_range *range,
+-					   uint64_t pfn)
++static inline struct page *hmm_device_entry_to_page(const struct hmm_range *range,
++						    uint64_t entry)
+ {
+-	if (pfn == range->values[HMM_PFN_NONE])
++	if (entry == range->values[HMM_PFN_NONE])
+ 		return NULL;
+-	if (pfn == range->values[HMM_PFN_ERROR])
++	if (entry == range->values[HMM_PFN_ERROR])
+ 		return NULL;
+-	if (pfn == range->values[HMM_PFN_SPECIAL])
++	if (entry == range->values[HMM_PFN_SPECIAL])
+ 		return NULL;
+-	if (!(pfn & range->flags[HMM_PFN_VALID]))
++	if (!(entry & range->flags[HMM_PFN_VALID]))
+ 		return NULL;
+-	return pfn_to_page(pfn >> range->pfn_shift);
++	return pfn_to_page(entry >> range->pfn_shift);
+ }
+ 
+ /*
+- * hmm_pfn_to_pfn() - return pfn value store in a HMM pfn
+- * @range: range use to decode HMM pfn value
+- * @pfn: HMM pfn value to extract pfn from
+- * Returns: pfn value if HMM pfn is valid, -1UL otherwise
++ * hmm_device_entry_to_pfn() - return pfn value store in a device entry
++ * @range: range use to decode device entry value
++ * @entry: device entry to extract pfn from
++ * Returns: pfn value if device entry is valid, -1UL otherwise
+  */
+-static inline unsigned long hmm_pfn_to_pfn(const struct hmm_range *range,
+-					   uint64_t pfn)
++static inline unsigned long
++hmm_device_entry_to_pfn(const struct hmm_range *range, uint64_t pfn)
+ {
+ 	if (pfn == range->values[HMM_PFN_NONE])
+ 		return -1UL;
+@@ -282,31 +282,66 @@ static inline unsigned long hmm_pfn_to_pfn(const struct hmm_range *range,
+ }
+ 
+ /*
+- * hmm_pfn_from_page() - create a valid HMM pfn value from struct page
++ * hmm_device_entry_from_page() - create a valid device entry for a page
+  * @range: range use to encode HMM pfn value
+- * @page: struct page pointer for which to create the HMM pfn
+- * Returns: valid HMM pfn for the page
++ * @page: page for which to create the device entry
++ * Returns: valid device entry for the page
+  */
+-static inline uint64_t hmm_pfn_from_page(const struct hmm_range *range,
+-					 struct page *page)
++static inline uint64_t hmm_device_entry_from_page(const struct hmm_range *range,
++						  struct page *page)
+ {
+ 	return (page_to_pfn(page) << range->pfn_shift) |
+ 		range->flags[HMM_PFN_VALID];
+ }
+ 
+ /*
+- * hmm_pfn_from_pfn() - create a valid HMM pfn value from pfn
++ * hmm_device_entry_from_pfn() - create a valid device entry value from pfn
+  * @range: range use to encode HMM pfn value
+- * @pfn: pfn value for which to create the HMM pfn
+- * Returns: valid HMM pfn for the pfn
++ * @pfn: pfn value for which to create the device entry
++ * Returns: valid device entry for the pfn
+  */
+-static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
+-					unsigned long pfn)
++static inline uint64_t hmm_device_entry_from_pfn(const struct hmm_range *range,
++						 unsigned long pfn)
+ {
+ 	return (pfn << range->pfn_shift) |
+ 		range->flags[HMM_PFN_VALID];
+ }
+ 
++/*
++ * Old API:
++ * hmm_pfn_to_page()
++ * hmm_pfn_to_pfn()
++ * hmm_pfn_from_page()
++ * hmm_pfn_from_pfn()
++ *
++ * This are the OLD API please use new API, it is here to avoid cross-tree
++ * merge painfullness ie we convert things to new API in stages.
++ */
++static inline struct page *hmm_pfn_to_page(const struct hmm_range *range,
++					   uint64_t pfn)
++{
++	return hmm_device_entry_to_page(range, pfn);
++}
++
++static inline unsigned long hmm_pfn_to_pfn(const struct hmm_range *range,
++					   uint64_t pfn)
++{
++	return hmm_device_entry_to_pfn(range, pfn);
++}
++
++static inline uint64_t hmm_pfn_from_page(const struct hmm_range *range,
++					 struct page *page)
++{
++	return hmm_device_entry_from_page(range, page);
++}
++
++static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
++					unsigned long pfn)
++{
++	return hmm_device_entry_from_pfn(range, pfn);
++}
++
++
+ 
+ #if IS_ENABLED(CONFIG_HMM_MIRROR)
+ /*
 diff --git a/mm/hmm.c b/mm/hmm.c
-index 39bc77d7e6e3..82fded7273d8 100644
+index 82fded7273d8..75d2ea906efb 100644
 --- a/mm/hmm.c
 +++ b/mm/hmm.c
-@@ -30,6 +30,7 @@
- #include <linux/hugetlb.h>
- #include <linux/memremap.h>
- #include <linux/jump_label.h>
-+#include <linux/dma-mapping.h>
- #include <linux/mmu_notifier.h>
- #include <linux/memory_hotplug.h>
+@@ -542,7 +542,7 @@ static int hmm_vma_handle_pmd(struct mm_walk *walk,
+ 			if (unlikely(!hmm_vma_walk->pgmap))
+ 				return -EBUSY;
+ 		}
+-		pfns[i] = hmm_pfn_from_pfn(range, pfn) | cpu_flags;
++		pfns[i] = hmm_device_entry_from_pfn(range, pfn) | cpu_flags;
+ 	}
+ 	if (hmm_vma_walk->pgmap) {
+ 		put_dev_pagemap(hmm_vma_walk->pgmap);
+@@ -606,7 +606,8 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+ 					   &fault, &write_fault);
+ 			if (fault || write_fault)
+ 				goto fault;
+-			*pfn = hmm_pfn_from_pfn(range, swp_offset(entry));
++			*pfn = hmm_device_entry_from_pfn(range,
++					    swp_offset(entry));
+ 			*pfn |= cpu_flags;
+ 			return 0;
+ 		}
+@@ -644,7 +645,7 @@ static int hmm_vma_handle_pte(struct mm_walk *walk, unsigned long addr,
+ 		return -EFAULT;
+ 	}
  
-@@ -1173,6 +1174,157 @@ long hmm_range_fault(struct hmm_range *range, bool block)
- 	return (hmm_vma_walk.last - range->start) >> PAGE_SHIFT;
- }
- EXPORT_SYMBOL(hmm_range_fault);
-+
-+/**
-+ * hmm_range_dma_map() - hmm_range_fault() and dma map page all in one.
-+ * @range: range being faulted
-+ * @device: device against to dma map page to
-+ * @daddrs: dma address of mapped pages
-+ * @block: allow blocking on fault (if true it sleeps and do not drop mmap_sem)
-+ * Returns: number of pages mapped on success, -EAGAIN if mmap_sem have been
-+ *          drop and you need to try again, some other error value otherwise
-+ *
-+ * Note same usage pattern as hmm_range_fault().
-+ */
-+long hmm_range_dma_map(struct hmm_range *range,
-+		       struct device *device,
-+		       dma_addr_t *daddrs,
-+		       bool block)
-+{
-+	unsigned long i, npages, mapped;
-+	long ret;
-+
-+	ret = hmm_range_fault(range, block);
-+	if (ret <= 0)
-+		return ret ? ret : -EBUSY;
-+
-+	npages = (range->end - range->start) >> PAGE_SHIFT;
-+	for (i = 0, mapped = 0; i < npages; ++i) {
-+		enum dma_data_direction dir = DMA_FROM_DEVICE;
-+		struct page *page;
-+
-+		/*
-+		 * FIXME need to update DMA API to provide invalid DMA address
-+		 * value instead of a function to test dma address value. This
-+		 * would remove lot of dumb code duplicated accross many arch.
-+		 *
-+		 * For now setting it to 0 here is good enough as the pfns[]
-+		 * value is what is use to check what is valid and what isn't.
-+		 */
-+		daddrs[i] = 0;
-+
-+		page = hmm_pfn_to_page(range, range->pfns[i]);
-+		if (page == NULL)
-+			continue;
-+
-+		/* Check if range is being invalidated */
-+		if (!range->valid) {
-+			ret = -EBUSY;
-+			goto unmap;
-+		}
-+
-+		/* If it is read and write than map bi-directional. */
-+		if (range->pfns[i] & range->values[HMM_PFN_WRITE])
-+			dir = DMA_BIDIRECTIONAL;
-+
-+		daddrs[i] = dma_map_page(device, page, 0, PAGE_SIZE, dir);
-+		if (dma_mapping_error(device, daddrs[i])) {
-+			ret = -EFAULT;
-+			goto unmap;
-+		}
-+
-+		mapped++;
-+	}
-+
-+	return mapped;
-+
-+unmap:
-+	for (npages = i, i = 0; (i < npages) && mapped; ++i) {
-+		enum dma_data_direction dir = DMA_FROM_DEVICE;
-+		struct page *page;
-+
-+		page = hmm_pfn_to_page(range, range->pfns[i]);
-+		if (page == NULL)
-+			continue;
-+
-+		if (dma_mapping_error(device, daddrs[i]))
-+			continue;
-+
-+		/* If it is read and write than map bi-directional. */
-+		if (range->pfns[i] & range->values[HMM_PFN_WRITE])
-+			dir = DMA_BIDIRECTIONAL;
-+
-+		dma_unmap_page(device, daddrs[i], PAGE_SIZE, dir);
-+		mapped--;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(hmm_range_dma_map);
-+
-+/**
-+ * hmm_range_dma_unmap() - unmap range of that was map with hmm_range_dma_map()
-+ * @range: range being unmapped
-+ * @vma: the vma against which the range (optional)
-+ * @device: device against which dma map was done
-+ * @daddrs: dma address of mapped pages
-+ * @dirty: dirty page if it had the write flag set
-+ * Returns: number of page unmapped on success, -EINVAL otherwise
-+ *
-+ * Note that caller MUST abide by mmu notifier or use HMM mirror and abide
-+ * to the sync_cpu_device_pagetables() callback so that it is safe here to
-+ * call set_page_dirty(). Caller must also take appropriate locks to avoid
-+ * concurrent mmu notifier or sync_cpu_device_pagetables() to make progress.
-+ */
-+long hmm_range_dma_unmap(struct hmm_range *range,
-+			 struct vm_area_struct *vma,
-+			 struct device *device,
-+			 dma_addr_t *daddrs,
-+			 bool dirty)
-+{
-+	unsigned long i, npages;
-+	long cpages = 0;
-+
-+	/* Sanity check. */
-+	if (range->end <= range->start)
-+		return -EINVAL;
-+	if (!daddrs)
-+		return -EINVAL;
-+	if (!range->pfns)
-+		return -EINVAL;
-+
-+	npages = (range->end - range->start) >> PAGE_SHIFT;
-+	for (i = 0; i < npages; ++i) {
-+		enum dma_data_direction dir = DMA_FROM_DEVICE;
-+		struct page *page;
-+
-+		page = hmm_pfn_to_page(range, range->pfns[i]);
-+		if (page == NULL)
-+			continue;
-+
-+		/* If it is read and write than map bi-directional. */
-+		if (range->pfns[i] & range->values[HMM_PFN_WRITE]) {
-+			dir = DMA_BIDIRECTIONAL;
-+
-+			/*
-+			 * See comments in function description on why it is
-+			 * safe here to call set_page_dirty()
-+			 */
-+			if (dirty)
-+				set_page_dirty(page);
-+		}
-+
-+		/* Unmap and clear pfns/dma address */
-+		dma_unmap_page(device, daddrs[i], PAGE_SIZE, dir);
-+		range->pfns[i] = range->values[HMM_PFN_NONE];
-+		/* FIXME see comments in hmm_vma_dma_map() */
-+		daddrs[i] = 0;
-+		cpages++;
-+	}
-+
-+	return cpages;
-+}
-+EXPORT_SYMBOL(hmm_range_dma_unmap);
- #endif /* IS_ENABLED(CONFIG_HMM_MIRROR) */
+-	*pfn = hmm_pfn_from_pfn(range, pte_pfn(pte)) | cpu_flags;
++	*pfn = hmm_device_entry_from_pfn(range, pte_pfn(pte)) | cpu_flags;
+ 	return 0;
  
+ fault:
+@@ -797,7 +798,8 @@ static int hmm_vma_walk_pud(pud_t *pudp,
+ 					      hmm_vma_walk->pgmap);
+ 			if (unlikely(!hmm_vma_walk->pgmap))
+ 				return -EBUSY;
+-			pfns[i] = hmm_pfn_from_pfn(range, pfn) | cpu_flags;
++			pfns[i] = hmm_device_entry_from_pfn(range, pfn) |
++				  cpu_flags;
+ 		}
+ 		if (hmm_vma_walk->pgmap) {
+ 			put_dev_pagemap(hmm_vma_walk->pgmap);
+@@ -870,7 +872,8 @@ static int hmm_vma_walk_hugetlb_entry(pte_t *pte, unsigned long hmask,
+ 
+ 	pfn = pte_pfn(entry) + (start & mask);
+ 	for (; addr < end; addr += size, i++, pfn += pfn_inc)
+-		range->pfns[i] = hmm_pfn_from_pfn(range, pfn) | cpu_flags;
++		range->pfns[i] = hmm_device_entry_from_pfn(range, pfn) |
++				 cpu_flags;
+ 	hmm_vma_walk->last = end;
+ 
+ unlock:
+@@ -1213,7 +1216,7 @@ long hmm_range_dma_map(struct hmm_range *range,
+ 		 */
+ 		daddrs[i] = 0;
+ 
+-		page = hmm_pfn_to_page(range, range->pfns[i]);
++		page = hmm_device_entry_to_page(range, range->pfns[i]);
+ 		if (page == NULL)
+ 			continue;
+ 
+@@ -1243,7 +1246,7 @@ long hmm_range_dma_map(struct hmm_range *range,
+ 		enum dma_data_direction dir = DMA_FROM_DEVICE;
+ 		struct page *page;
+ 
+-		page = hmm_pfn_to_page(range, range->pfns[i]);
++		page = hmm_device_entry_to_page(range, range->pfns[i]);
+ 		if (page == NULL)
+ 			continue;
+ 
+@@ -1298,7 +1301,7 @@ long hmm_range_dma_unmap(struct hmm_range *range,
+ 		enum dma_data_direction dir = DMA_FROM_DEVICE;
+ 		struct page *page;
+ 
+-		page = hmm_pfn_to_page(range, range->pfns[i]);
++		page = hmm_device_entry_to_page(range, range->pfns[i]);
+ 		if (page == NULL)
+ 			continue;
  
 -- 
 2.17.2
