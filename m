@@ -2,160 +2,257 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3829C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57CCC10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6188E20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6658F20700
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 06:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ez27oy5t"
+	dkim=pass (2048-bit key) header.d=skydio.com header.i=@skydio.com header.b="nHCqK7wo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfDCG0t (ORCPT
+        id S1727027AbfDCG3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 02:26:49 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43637 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbfDCG0p (ORCPT
+        Wed, 3 Apr 2019 02:29:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38933 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfDCG3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 02:26:45 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m10so7505034plt.10;
-        Tue, 02 Apr 2019 23:26:44 -0700 (PDT)
+        Wed, 3 Apr 2019 02:29:41 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b65so7511623plb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2019 23:29:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hSgiNEiAmccUSvUVAZdmUraEr6LWG63D8IydZdtnQ9Q=;
-        b=Ez27oy5tv57Qm3PYk/3NYGZ+vVQk/P000G6ZRq3L96hDsLa4yXdKh2enWyqoQwxlNf
-         rgQjMWaqS3jP3GgJ1EuRLuY1ZhBW0JIiCl52322l7DY3mRkAPZG1tSE4T7Yo4zlu+9+O
-         gtFRfaJ4CdiPWpVFEAKWeiIGczzTfI/a7UpGNEljCfhY6Br0J1+1+CHBc8XRNY1I5pk9
-         dNIEev4a96SL/tUApiaLkqd0MqXe6rkzZVr1qirpynEoAKYXGpSYH69x09YJKQabncde
-         wfkgZN7aQbc4TRt1mOD8xc7whBqyzP6uEeC59BZ9c4oU29jM04q2AmKc72NgNtbYsSgG
-         hgCQ==
+        d=skydio.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XP7U60ZYVT0uUBZTkEg4Hm9QJC3LmZWFKNaW0HDMkxI=;
+        b=nHCqK7woN2yfUmCyd6wS8NPfEbCp0d2lsi/2/BucuceS+p6e1ugRTLNEjiwLKWm8t/
+         l0fD43+XtEgMcUjtlChDeBs7Ctq3zY25++HnI6njHWzgnzoIpjKW9j+V3C5LWWGT7l75
+         Cr5iQMaPgZ7HBc/33PX/jVUa45StQvy74p38cwTIZIl7BIAGheQgdC4YNX/GvnxBLqCv
+         xPG4JTZQk2tqOrOcpuhBSSa5WovfaRURUJmEBUezUeGSG5e3bN4IpCW6qOqnl/Gzh5qD
+         0iuMYox6Uy7/cwbreFMA9JQmx2KsGp0z2kEGZHosrHyyU/Zt0NNdAqrdya7PL2GSiVGS
+         DnEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=hSgiNEiAmccUSvUVAZdmUraEr6LWG63D8IydZdtnQ9Q=;
-        b=DV1Y1Ay05RmiQVzWErNw++Srq9C4NEaMvSVMshyF8QE8LywbRmaTHylf6HkO6WAAqq
-         oB9inBsBU2qNWoTty4xryneBH3+9O9NxByU6k/00RKDktthbTMH/5ppmJkUL+hVYLsko
-         uMbga9RSDo/KdjENXIJUcFzywXVKoifonnQH/LY6a8X8uYUT8RiHdG6BeQxFw+2wS1QR
-         TkYSI+SEEDYrNafWrSGTprY2AyhZJFQzEAICNaVidrq5XWw9Zk++peufUIvFpXJlq6Sy
-         +6F1SzvchNXeIru8PiWBzMiwa2AfXJKm1Rnel0pLRiMAumMlCnKEAR95r+5M/crzUXoA
-         1Ecw==
-X-Gm-Message-State: APjAAAUv9hgiyP/ehX7lVwsmML8t3LAWpzAvT5SqBm/Q3oIGzlMFGMOe
-        RXN61aZld48w64yidSRqaA4=
-X-Google-Smtp-Source: APXvYqwOOe5rN1bjMfC2W/dRpRJny18tIBl133uAsMJKKhaQFDSdgFkJf69Cxnb6QMs6cImsbXywwA==
-X-Received: by 2002:a17:902:9a89:: with SMTP id w9mr689920plp.126.1554272804184;
-        Tue, 02 Apr 2019 23:26:44 -0700 (PDT)
-Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id k4sm18621542pgk.1.2019.04.02.23.26.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Apr 2019 23:26:43 -0700 (PDT)
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-To:     peter_hong@fintek.com.tw, johan@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: [PATCH V5 3/3] USB: serial: f81232: implement break control
-Date:   Wed,  3 Apr 2019 14:26:30 +0800
-Message-Id: <1554272790-26747-3-git-send-email-hpeter+linux_kernel@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
-References: <1554272790-26747-1-git-send-email-hpeter+linux_kernel@gmail.com>
+         :references:mime-version:content-transfer-encoding;
+        bh=XP7U60ZYVT0uUBZTkEg4Hm9QJC3LmZWFKNaW0HDMkxI=;
+        b=pkyrcD+FWvZgdoZIl1Gf6p/JWt/2S2+lIk7mHKtZvRuWUo2Gu9dXKmQb1XhNBUhYmu
+         PycR7WVzWa0SbpncChmaPEQw4iAT6amdderjQNj9sQXkSgDMMWvqUuY4RlJtHn7i+CD8
+         Bvt3gPaOil6WpFVb6ZokfUXrJIWKt/eHcvLb7paPsv4Ned/FFV1SAo8mlW5TB8cdJaRk
+         4TmOhydp74O+fliCFJhOUbKDysA+T8o4zaptpOdCiwe1fcOtxX2VwHWu/HFBU2VZZ1Fv
+         Nx2hLrqSR72EV9VlLlkkcUHXV1A4OGdvIfXSpJRsM1tik1sseYB1gYF43YTDpI5vFbSh
+         eDtg==
+X-Gm-Message-State: APjAAAUrnZzyIwjioeqMPG5tYaFbqXic7cXfpYElTNw1jUS+lCIL0eg/
+        JLfkiQJZgviS2Pp6MaT5lxBh/Q==
+X-Google-Smtp-Source: APXvYqzFAgGoNw4D6bfqQcO/OmbtgB1O8tRSzVWlPBtrTXJ+9GD1YKXDNnqHmRW7eaMFCZHLSSZW3Q==
+X-Received: by 2002:a17:902:b713:: with SMTP id d19mr59926975pls.54.1554272980197;
+        Tue, 02 Apr 2019 23:29:40 -0700 (PDT)
+Received: from stevemo-laptop.localdomain ([50.236.240.214])
+        by smtp.gmail.com with ESMTPSA id d11sm17226216pgq.6.2019.04.02.23.29.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 02 Apr 2019 23:29:39 -0700 (PDT)
+From:   stevemo@skydio.com
+To:     jmaneyrol@invensense.com
+Cc:     Steve Moskovchenko <stevemo@skydio.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Martin Kelly <mkelly@xevo.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Brian Masney <masneyb@onstation.org>,
+        =?UTF-8?q?Randolph=20Maa=C3=9Fen?= <gaireg@gaireg.de>,
+        Douglas Fischer <fischerdouglasc@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iio: imu: mpu6050: Fix FIFO layout for ICM20602
+Date:   Tue,  2 Apr 2019 23:28:56 -0700
+Message-Id: <20190403062910.5047-1-stevemo@skydio.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190326090238.23651-1-stevemo@skydio.com>
+References: <20190326090238.23651-1-stevemo@skydio.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement Fintek F81232 break on/off with LCR register.
-It's the same with 16550A LCR register layout.
+From: Steve Moskovchenko <stevemo@skydio.com>
 
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+The MPU6050 driver has recently gained support for the
+ICM20602 IMU, which is very similar to MPU6xxx. However,
+the ICM20602's FIFO data specifically includes temperature
+readings, which were not present on MPU6xxx parts. As a
+result, the driver will under-read the ICM20602's FIFO
+register, causing the same (partial) sample to be returned
+for all reads, until the FIFO overflows.
+
+Fix this by adding a table of scan elements specifically
+for the ICM20602, which takes the extra temperature data
+into consideration.
+
+While we're at it, fix the temperature offset and scaling
+on ICM20602, since it uses different scale/offset constants
+than the rest of the MPU6xxx devices.
+
+Signed-off-by: Steve Moskovchenko <stevemo@skydio.com>
 ---
-v5:
-	1: no change
+v2: Read temperature when running in accel-only mode, too.
 
-v4:
-	1: no change
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 46 ++++++++++++++++++++--
+ drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  | 20 +++++++++-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c |  3 ++
+ 3 files changed, 64 insertions(+), 5 deletions(-)
 
-v3:
-	1: using shadow_lcr to save LCR in f81232_break_ctl()
-
- drivers/usb/serial/f81232.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-index 32eff8fad56a..fe28657b4064 100644
---- a/drivers/usb/serial/f81232.c
-+++ b/drivers/usb/serial/f81232.c
-@@ -65,6 +65,7 @@ struct f81232_private {
- 	struct mutex lock;
- 	u8 modem_control;
- 	u8 modem_status;
-+	u8 shadow_lcr;
- 	speed_t baud_base;
- 	struct work_struct lsr_work;
- 	struct work_struct interrupt_work;
-@@ -380,13 +381,23 @@ static void f81232_process_read_urb(struct urb *urb)
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index 650de0fefb7b..fedd3f2b0135 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -471,7 +471,10 @@ inv_mpu6050_read_raw(struct iio_dev *indio_dev,
+ 			return IIO_VAL_INT_PLUS_MICRO;
+ 		case IIO_TEMP:
+ 			*val = 0;
+-			*val2 = INV_MPU6050_TEMP_SCALE;
++			if (st->chip_type == INV_ICM20602)
++				*val2 = INV_ICM20602_TEMP_SCALE;
++			else
++				*val2 = INV_MPU6050_TEMP_SCALE;
  
- static void f81232_break_ctl(struct tty_struct *tty, int break_state)
- {
--	/* FIXME - Stubbed out for now */
-+	struct usb_serial_port *port = tty->driver_data;
-+	struct f81232_private *priv = usb_get_serial_port_data(port);
-+	int status;
+ 			return IIO_VAL_INT_PLUS_MICRO;
+ 		default:
+@@ -480,7 +483,10 @@ inv_mpu6050_read_raw(struct iio_dev *indio_dev,
+ 	case IIO_CHAN_INFO_OFFSET:
+ 		switch (chan->type) {
+ 		case IIO_TEMP:
+-			*val = INV_MPU6050_TEMP_OFFSET;
++			if (st->chip_type == INV_ICM20602)
++				*val = INV_ICM20602_TEMP_OFFSET;
++			else
++				*val = INV_MPU6050_TEMP_OFFSET;
  
--	/*
--	 * break_state = -1 to turn on break, and 0 to turn off break
--	 * see drivers/char/tty_io.c to see it used.
--	 * last_set_data_urb_value NEVER has the break bit set in it.
--	 */
-+	mutex_lock(&priv->lock);
-+
-+	if (break_state)
-+		priv->shadow_lcr |= UART_LCR_SBC;
-+	else
-+		priv->shadow_lcr &= ~UART_LCR_SBC;
-+
-+	status = f81232_set_register(port, LINE_CONTROL_REGISTER,
-+					priv->shadow_lcr);
-+	if (status)
-+		dev_err(&port->dev, "set break failed: %d\n", status);
-+
-+	mutex_unlock(&priv->lock);
- }
+ 			return IIO_VAL_INT;
+ 		default:
+@@ -845,6 +851,32 @@ static const struct iio_chan_spec inv_mpu_channels[] = {
+ 	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_MPU6050_SCAN_ACCL_Z),
+ };
  
- static int f81232_find_clk(speed_t baudrate)
-@@ -522,6 +533,7 @@ static int f81232_port_disable(struct usb_serial_port *port)
- static void f81232_set_termios(struct tty_struct *tty,
- 		struct usb_serial_port *port, struct ktermios *old_termios)
- {
-+	struct f81232_private *priv = usb_get_serial_port_data(port);
- 	u8 new_lcr = 0;
- 	int status = 0;
- 	speed_t baudrate;
-@@ -575,11 +587,16 @@ static void f81232_set_termios(struct tty_struct *tty,
- 		break;
- 	}
- 
-+	mutex_lock(&priv->lock);
++static const struct iio_chan_spec inv_icm20602_channels[] = {
++	IIO_CHAN_SOFT_TIMESTAMP(INV_ICM20602_SCAN_TIMESTAMP),
++	{
++		.type = IIO_TEMP,
++		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
++				| BIT(IIO_CHAN_INFO_OFFSET)
++				| BIT(IIO_CHAN_INFO_SCALE),
++		.scan_index = INV_ICM20602_SCAN_GYRO_TEMP,
++		.scan_type = {
++				.sign = 's',
++				.realbits = 16,
++				.storagebits = 16,
++				.shift = 0,
++				.endianness = IIO_BE,
++			     },
++	},
 +
-+	new_lcr |= (priv->shadow_lcr & UART_LCR_SBC);
- 	status = f81232_set_register(port, LINE_CONTROL_REGISTER, new_lcr);
- 	if (status) {
- 		dev_err(&port->dev, "%s failed to set LCR: %d\n",
- 			__func__, status);
- 	}
++	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_X, INV_ICM20602_SCAN_GYRO_X),
++	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_Y, INV_ICM20602_SCAN_GYRO_Y),
++	INV_MPU6050_CHAN(IIO_ANGL_VEL, IIO_MOD_Z, INV_ICM20602_SCAN_GYRO_Z),
 +
-+	mutex_unlock(&priv->lock);
- }
++	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Y, INV_ICM20602_SCAN_ACCL_Y),
++	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_X, INV_ICM20602_SCAN_ACCL_X),
++	INV_MPU6050_CHAN(IIO_ACCEL, IIO_MOD_Z, INV_ICM20602_SCAN_ACCL_Z),
++};
++
+ /*
+  * The user can choose any frequency between INV_MPU6050_MIN_FIFO_RATE and
+  * INV_MPU6050_MAX_FIFO_RATE, but only these frequencies are matched by the
+@@ -1100,8 +1132,14 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+ 		indio_dev->name = name;
+ 	else
+ 		indio_dev->name = dev_name(dev);
+-	indio_dev->channels = inv_mpu_channels;
+-	indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
++
++	if (chip_type == INV_ICM20602) {
++		indio_dev->channels = inv_icm20602_channels;
++		indio_dev->num_channels = ARRAY_SIZE(inv_icm20602_channels);
++	} else {
++		indio_dev->channels = inv_mpu_channels;
++		indio_dev->num_channels = ARRAY_SIZE(inv_mpu_channels);
++	}
  
- static int f81232_tiocmget(struct tty_struct *tty)
+ 	indio_dev->info = &mpu_info;
+ 	indio_dev->modes = INDIO_BUFFER_TRIGGERED;
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+index 325afd9f5f61..2ed4b98e0cd7 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
+@@ -208,6 +208,9 @@ struct inv_mpu6050_state {
+ #define INV_MPU6050_BYTES_PER_3AXIS_SENSOR   6
+ #define INV_MPU6050_FIFO_COUNT_BYTE          2
+ 
++/* ICM20602 FIFO samples include temperature readings */
++#define INV_ICM20602_BYTES_PER_TEMP_SENSOR   2
++
+ /* mpu6500 registers */
+ #define INV_MPU6500_REG_ACCEL_CONFIG_2      0x1D
+ #define INV_MPU6500_REG_ACCEL_OFFSET        0x77
+@@ -229,6 +232,9 @@ struct inv_mpu6050_state {
+ #define INV_MPU6050_GYRO_CONFIG_FSR_SHIFT    3
+ #define INV_MPU6050_ACCL_CONFIG_FSR_SHIFT    3
+ 
++#define INV_ICM20602_TEMP_OFFSET	     8170
++#define INV_ICM20602_TEMP_SCALE		     3060
++
+ /* 6 + 6 round up and plus 8 */
+ #define INV_MPU6050_OUTPUT_DATA_SIZE         24
+ 
+@@ -270,7 +276,7 @@ struct inv_mpu6050_state {
+ #define INV_ICM20608_WHOAMI_VALUE		0xAF
+ #define INV_ICM20602_WHOAMI_VALUE		0x12
+ 
+-/* scan element definition */
++/* scan element definition for generic MPU6xxx devices */
+ enum inv_mpu6050_scan {
+ 	INV_MPU6050_SCAN_ACCL_X,
+ 	INV_MPU6050_SCAN_ACCL_Y,
+@@ -281,6 +287,18 @@ enum inv_mpu6050_scan {
+ 	INV_MPU6050_SCAN_TIMESTAMP,
+ };
+ 
++/* scan element definition for ICM20602, which includes temperature */
++enum inv_icm20602_scan {
++	INV_ICM20602_SCAN_ACCL_X,
++	INV_ICM20602_SCAN_ACCL_Y,
++	INV_ICM20602_SCAN_ACCL_Z,
++	INV_ICM20602_SCAN_GYRO_TEMP,
++	INV_ICM20602_SCAN_GYRO_X,
++	INV_ICM20602_SCAN_GYRO_Y,
++	INV_ICM20602_SCAN_GYRO_Z,
++	INV_ICM20602_SCAN_TIMESTAMP,
++};
++
+ enum inv_mpu6050_filter_e {
+ 	INV_MPU6050_FILTER_256HZ_NOLPF2 = 0,
+ 	INV_MPU6050_FILTER_188HZ,
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+index 548e042f7b5b..57bd11bde56b 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+@@ -207,6 +207,9 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+ 	if (st->chip_config.gyro_fifo_enable)
+ 		bytes_per_datum += INV_MPU6050_BYTES_PER_3AXIS_SENSOR;
+ 
++	if (st->chip_type == INV_ICM20602)
++		bytes_per_datum += INV_ICM20602_BYTES_PER_TEMP_SENSOR;
++
+ 	/*
+ 	 * read fifo_count register to know how many bytes are inside the FIFO
+ 	 * right now
 -- 
-2.7.4
+2.20.1
 
