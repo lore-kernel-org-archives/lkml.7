@@ -2,415 +2,278 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0822C10F06
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE66DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860352084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C071F20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 14:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfDCOSc (ORCPT
+        id S1726494AbfDCOS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 10:18:32 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42078 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbfDCOS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 10:18:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3968D169E;
-        Wed,  3 Apr 2019 07:18:28 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF37D3F68F;
-        Wed,  3 Apr 2019 07:18:24 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v8 20/20] x86: mm: Convert dump_pagetables to use walk_page_range
-Date:   Wed,  3 Apr 2019 15:16:27 +0100
-Message-Id: <20190403141627.11664-21-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190403141627.11664-1-steven.price@arm.com>
-References: <20190403141627.11664-1-steven.price@arm.com>
+        Wed, 3 Apr 2019 10:18:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46508 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726184AbfDCOS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 10:18:58 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x33EFoIE136053
+        for <linux-kernel@vger.kernel.org>; Wed, 3 Apr 2019 10:18:57 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rmvh86jae-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 10:18:56 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Wed, 3 Apr 2019 15:18:52 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Apr 2019 15:18:49 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x33EIlbc36110536
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Apr 2019 14:18:48 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF187AE05D;
+        Wed,  3 Apr 2019 14:18:47 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68D88AE067;
+        Wed,  3 Apr 2019 14:18:47 +0000 (GMT)
+Received: from [9.145.9.70] (unknown [9.145.9.70])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Apr 2019 14:18:47 +0000 (GMT)
+Subject: Re: [PATCH v4 1/4] ocxl: Rename struct link to ocxl_link
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Greg Kurz <groug@kaod.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190320053448.2098-1-alastair@au1.ibm.com>
+ <20190325053456.14599-1-alastair@au1.ibm.com>
+ <20190325053456.14599-2-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Wed, 3 Apr 2019 16:18:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190325053456.14599-2-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19040314-0028-0000-0000-0000035CD981
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040314-0029-0000-0000-0000241BE330
+Message-Id: <a5e3486c-f78a-ba9c-0a4b-b16b4c57b16c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-03_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904030097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the new functionality in walk_page_range to remove the
-arch page walking code and use the generic code to walk the page tables.
 
-The effective permissions are passed down the chain using new fields
-in struct pg_state.
 
-The KASAN optimisation is implemented by including test_p?d callbacks
-which can decide to skip an entire tree of entries
+Le 25/03/2019 à 06:34, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> The term 'link' is ambiguous (especially when the struct is used for a
+> list), so rename it for clarity.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Reviewed-by: Greg Kurz <groug@kaod.org>
+> ---
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/x86/mm/dump_pagetables.c | 280 ++++++++++++++++++----------------
- 1 file changed, 146 insertions(+), 134 deletions(-)
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index c0fbb9e5a790..f6b814aaddf7 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -33,6 +33,10 @@ struct pg_state {
- 	int level;
- 	pgprot_t current_prot;
- 	pgprotval_t effective_prot;
-+	pgprotval_t effective_prot_pgd;
-+	pgprotval_t effective_prot_p4d;
-+	pgprotval_t effective_prot_pud;
-+	pgprotval_t effective_prot_pmd;
- 	unsigned long start_address;
- 	unsigned long current_address;
- 	const struct addr_marker *marker;
-@@ -356,22 +360,21 @@ static inline pgprotval_t effective_prot(pgprotval_t prot1, pgprotval_t prot2)
- 	       ((prot1 | prot2) & _PAGE_NX);
- }
- 
--static void walk_pte_level(struct pg_state *st, pmd_t addr, pgprotval_t eff_in,
--			   unsigned long P)
-+static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
- {
--	int i;
--	pte_t *pte;
--	pgprotval_t prot, eff;
--
--	for (i = 0; i < PTRS_PER_PTE; i++) {
--		st->current_address = normalize_addr(P + i * PTE_LEVEL_MULT);
--		pte = pte_offset_map(&addr, st->current_address);
--		prot = pte_flags(*pte);
--		eff = effective_prot(eff_in, prot);
--		note_page(st, __pgprot(prot), eff, 5);
--		pte_unmap(pte);
--	}
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	prot = pte_flags(*pte);
-+	eff = effective_prot(st->effective_prot_pmd, prot);
-+	note_page(st, __pgprot(prot), eff, 5);
-+
-+	return 0;
- }
-+
- #ifdef CONFIG_KASAN
- 
- /*
-@@ -400,131 +403,152 @@ static inline bool kasan_page_table(struct pg_state *st, void *pt)
- }
- #endif
- 
--#if PTRS_PER_PMD > 1
--
--static void walk_pmd_level(struct pg_state *st, pud_t addr,
--			   pgprotval_t eff_in, unsigned long P)
-+static int ptdump_test_pmd(unsigned long addr, unsigned long next,
-+			   pmd_t *pmd, struct mm_walk *walk)
- {
--	int i;
--	pmd_t *start, *pmd_start;
--	pgprotval_t prot, eff;
--
--	pmd_start = start = (pmd_t *)pud_page_vaddr(addr);
--	for (i = 0; i < PTRS_PER_PMD; i++) {
--		st->current_address = normalize_addr(P + i * PMD_LEVEL_MULT);
--		if (!pmd_none(*start)) {
--			prot = pmd_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (pmd_large(*start) || !pmd_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 4);
--			} else if (!kasan_page_table(st, pmd_start)) {
--				walk_pte_level(st, *start, eff,
--					       P + i * PMD_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 4);
--		start++;
--	}
-+	struct pg_state *st = walk->private;
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (kasan_page_table(st, pmd))
-+		return 1;
-+	return 0;
- }
- 
--#else
--#define walk_pmd_level(s,a,e,p) walk_pte_level(s,__pmd(pud_val(a)),e,p)
--#undef pud_large
--#define pud_large(a) pmd_large(__pmd(pud_val(a)))
--#define pud_none(a)  pmd_none(__pmd(pud_val(a)))
--#endif
-+static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = pmd_flags(*pmd);
-+	eff = effective_prot(st->effective_prot_pud, prot);
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (pmd_large(*pmd))
-+		note_page(st, __pgprot(prot), eff, 4);
- 
--#if PTRS_PER_PUD > 1
-+	st->effective_prot_pmd = eff;
- 
--static void walk_pud_level(struct pg_state *st, p4d_t addr, pgprotval_t eff_in,
--			   unsigned long P)
-+	return 0;
-+}
-+
-+static int ptdump_test_pud(unsigned long addr, unsigned long next,
-+			   pud_t *pud, struct mm_walk *walk)
- {
--	int i;
--	pud_t *start, *pud_start;
--	pgprotval_t prot, eff;
--
--	pud_start = start = (pud_t *)p4d_page_vaddr(addr);
--
--	for (i = 0; i < PTRS_PER_PUD; i++) {
--		st->current_address = normalize_addr(P + i * PUD_LEVEL_MULT);
--		if (!pud_none(*start)) {
--			prot = pud_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (pud_large(*start) || !pud_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 3);
--			} else if (!kasan_page_table(st, pud_start)) {
--				walk_pmd_level(st, *start, eff,
--					       P + i * PUD_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 3);
-+	struct pg_state *st = walk->private;
- 
--		start++;
--	}
-+	st->current_address = normalize_addr(addr);
-+
-+	if (kasan_page_table(st, pud))
-+		return 1;
-+	return 0;
- }
- 
--#else
--#define walk_pud_level(s,a,e,p) walk_pmd_level(s,__pud(p4d_val(a)),e,p)
--#undef p4d_large
--#define p4d_large(a) pud_large(__pud(p4d_val(a)))
--#define p4d_none(a)  pud_none(__pud(p4d_val(a)))
--#endif
-+static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = pud_flags(*pud);
-+	eff = effective_prot(st->effective_prot_p4d, prot);
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (pud_large(*pud))
-+		note_page(st, __pgprot(prot), eff, 3);
-+
-+	st->effective_prot_pud = eff;
- 
--static void walk_p4d_level(struct pg_state *st, pgd_t addr, pgprotval_t eff_in,
--			   unsigned long P)
-+	return 0;
-+}
-+
-+static int ptdump_test_p4d(unsigned long addr, unsigned long next,
-+			   p4d_t *p4d, struct mm_walk *walk)
- {
--	int i;
--	p4d_t *start, *p4d_start;
--	pgprotval_t prot, eff;
--
--	if (PTRS_PER_P4D == 1)
--		return walk_pud_level(st, __p4d(pgd_val(addr)), eff_in, P);
--
--	p4d_start = start = (p4d_t *)pgd_page_vaddr(addr);
--
--	for (i = 0; i < PTRS_PER_P4D; i++) {
--		st->current_address = normalize_addr(P + i * P4D_LEVEL_MULT);
--		if (!p4d_none(*start)) {
--			prot = p4d_flags(*start);
--			eff = effective_prot(eff_in, prot);
--			if (p4d_large(*start) || !p4d_present(*start)) {
--				note_page(st, __pgprot(prot), eff, 2);
--			} else if (!kasan_page_table(st, p4d_start)) {
--				walk_pud_level(st, *start, eff,
--					       P + i * P4D_LEVEL_MULT);
--			}
--		} else
--			note_page(st, __pgprot(0), 0, 2);
-+	struct pg_state *st = walk->private;
- 
--		start++;
--	}
-+	st->current_address = normalize_addr(addr);
-+
-+	if (kasan_page_table(st, p4d))
-+		return 1;
-+	return 0;
- }
- 
--#undef pgd_large
--#define pgd_large(a) (pgtable_l5_enabled() ? pgd_large(a) : p4d_large(__p4d(pgd_val(a))))
--#define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
-+static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = p4d_flags(*p4d);
-+	eff = effective_prot(st->effective_prot_pgd, prot);
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (p4d_large(*p4d))
-+		note_page(st, __pgprot(prot), eff, 2);
-+
-+	st->effective_prot_p4d = eff;
-+
-+	return 0;
-+}
- 
--static inline bool is_hypervisor_range(int idx)
-+static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
-+			    unsigned long next, struct mm_walk *walk)
- {
--#ifdef CONFIG_X86_64
--	/*
--	 * A hole in the beginning of kernel address space reserved
--	 * for a hypervisor.
--	 */
--	return	(idx >= pgd_index(GUARD_HOLE_BASE_ADDR)) &&
--		(idx <  pgd_index(GUARD_HOLE_END_ADDR));
-+	struct pg_state *st = walk->private;
-+	pgprotval_t eff, prot;
-+
-+	prot = pgd_flags(*pgd);
-+
-+#ifdef CONFIG_X86_PAE
-+	eff = _PAGE_USER | _PAGE_RW;
- #else
--	return false;
-+	eff = prot;
- #endif
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	if (pgd_large(*pgd))
-+		note_page(st, __pgprot(prot), eff, 1);
-+
-+	st->effective_prot_pgd = eff;
-+
-+	return 0;
-+}
-+
-+static int ptdump_hole(unsigned long addr, unsigned long next,
-+		       struct mm_walk *walk)
-+{
-+	struct pg_state *st = walk->private;
-+
-+	st->current_address = normalize_addr(addr);
-+
-+	note_page(st, __pgprot(0), 0, -1);
-+
-+	return 0;
- }
- 
- static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
- 				       bool checkwx, bool dmesg)
- {
--	pgd_t *start = mm->pgd;
--	pgprotval_t prot, eff;
--	int i;
- 	struct pg_state st = {};
-+	struct mm_walk walk = {
-+		.mm		= mm,
-+		.pgd_entry	= ptdump_pgd_entry,
-+		.p4d_entry	= ptdump_p4d_entry,
-+		.pud_entry	= ptdump_pud_entry,
-+		.pmd_entry	= ptdump_pmd_entry,
-+		.pte_entry	= ptdump_pte_entry,
-+		.test_p4d	= ptdump_test_p4d,
-+		.test_pud	= ptdump_test_pud,
-+		.test_pmd	= ptdump_test_pmd,
-+		.pte_hole	= ptdump_hole,
-+		.private	= &st
-+	};
- 
- 	st.to_dmesg = dmesg;
- 	st.check_wx = checkwx;
-@@ -532,27 +556,15 @@ static void ptdump_walk_pgd_level_core(struct seq_file *m, struct mm_struct *mm,
- 	if (checkwx)
- 		st.wx_pages = 0;
- 
--	for (i = 0; i < PTRS_PER_PGD; i++) {
--		st.current_address = normalize_addr(i * PGD_LEVEL_MULT);
--		if (!pgd_none(*start) && !is_hypervisor_range(i)) {
--			prot = pgd_flags(*start);
--#ifdef CONFIG_X86_PAE
--			eff = _PAGE_USER | _PAGE_RW;
-+	down_read(&mm->mmap_sem);
-+#ifdef CONFIG_X86_64
-+	walk_page_range(0, PTRS_PER_PGD*PGD_LEVEL_MULT/2, &walk);
-+	walk_page_range(normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT/2), ~0,
-+			&walk);
- #else
--			eff = prot;
-+	walk_page_range(0, ~0, &walk);
- #endif
--			if (pgd_large(*start) || !pgd_present(*start)) {
--				note_page(&st, __pgprot(prot), eff, 1);
--			} else {
--				walk_p4d_level(&st, *start, eff,
--					       i * PGD_LEVEL_MULT);
--			}
--		} else
--			note_page(&st, __pgprot(0), 0, 1);
--
--		cond_resched();
--		start++;
--	}
-+	up_read(&mm->mmap_sem);
- 
- 	/* Flush out the last page */
- 	st.current_address = normalize_addr(PTRS_PER_PGD*PGD_LEVEL_MULT);
--- 
-2.20.1
+
+>   drivers/misc/ocxl/file.c |  5 ++---
+>   drivers/misc/ocxl/link.c | 36 ++++++++++++++++++------------------
+>   2 files changed, 20 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
+> index e6a607488f8a..009e09b7ded5 100644
+> --- a/drivers/misc/ocxl/file.c
+> +++ b/drivers/misc/ocxl/file.c
+> @@ -151,10 +151,9 @@ static long afu_ioctl_enable_p9_wait(struct ocxl_context *ctx,
+>   		mutex_unlock(&ctx->status_mutex);
+>   
+>   		if (status == ATTACHED) {
+> -			int rc;
+> -			struct link *link = ctx->afu->fn->link;
+> +			int rc = ocxl_link_update_pe(ctx->afu->fn->link,
+> +				ctx->pasid, ctx->tidr);
+>   
+> -			rc = ocxl_link_update_pe(link, ctx->pasid, ctx->tidr);
+>   			if (rc)
+>   				return rc;
+>   		}
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index d50b861d7e57..8d2690a1a9de 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -76,7 +76,7 @@ struct spa {
+>    * limited number of opencapi slots on a system and lookup is only
+>    * done when the device is probed
+>    */
+> -struct link {
+> +struct ocxl_link {
+>   	struct list_head list;
+>   	struct kref ref;
+>   	int domain;
+> @@ -179,7 +179,7 @@ static void xsl_fault_handler_bh(struct work_struct *fault_work)
+>   
+>   static irqreturn_t xsl_fault_handler(int irq, void *data)
+>   {
+> -	struct link *link = (struct link *) data;
+> +	struct ocxl_link *link = (struct ocxl_link *) data;
+>   	struct spa *spa = link->spa;
+>   	u64 dsisr, dar, pe_handle;
+>   	struct pe_data *pe_data;
+> @@ -256,7 +256,7 @@ static int map_irq_registers(struct pci_dev *dev, struct spa *spa)
+>   				&spa->reg_tfc, &spa->reg_pe_handle);
+>   }
+>   
+> -static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
+> +static int setup_xsl_irq(struct pci_dev *dev, struct ocxl_link *link)
+>   {
+>   	struct spa *spa = link->spa;
+>   	int rc;
+> @@ -311,7 +311,7 @@ static int setup_xsl_irq(struct pci_dev *dev, struct link *link)
+>   	return rc;
+>   }
+>   
+> -static void release_xsl_irq(struct link *link)
+> +static void release_xsl_irq(struct ocxl_link *link)
+>   {
+>   	struct spa *spa = link->spa;
+>   
+> @@ -323,7 +323,7 @@ static void release_xsl_irq(struct link *link)
+>   	unmap_irq_registers(spa);
+>   }
+>   
+> -static int alloc_spa(struct pci_dev *dev, struct link *link)
+> +static int alloc_spa(struct pci_dev *dev, struct ocxl_link *link)
+>   {
+>   	struct spa *spa;
+>   
+> @@ -350,7 +350,7 @@ static int alloc_spa(struct pci_dev *dev, struct link *link)
+>   	return 0;
+>   }
+>   
+> -static void free_spa(struct link *link)
+> +static void free_spa(struct ocxl_link *link)
+>   {
+>   	struct spa *spa = link->spa;
+>   
+> @@ -364,12 +364,12 @@ static void free_spa(struct link *link)
+>   	}
+>   }
+>   
+> -static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
+> +static int alloc_link(struct pci_dev *dev, int PE_mask, struct ocxl_link **out_link)
+>   {
+> -	struct link *link;
+> +	struct ocxl_link *link;
+>   	int rc;
+>   
+> -	link = kzalloc(sizeof(struct link), GFP_KERNEL);
+> +	link = kzalloc(sizeof(struct ocxl_link), GFP_KERNEL);
+>   	if (!link)
+>   		return -ENOMEM;
+>   
+> @@ -405,7 +405,7 @@ static int alloc_link(struct pci_dev *dev, int PE_mask, struct link **out_link)
+>   	return rc;
+>   }
+>   
+> -static void free_link(struct link *link)
+> +static void free_link(struct ocxl_link *link)
+>   {
+>   	release_xsl_irq(link);
+>   	free_spa(link);
+> @@ -415,7 +415,7 @@ static void free_link(struct link *link)
+>   int ocxl_link_setup(struct pci_dev *dev, int PE_mask, void **link_handle)
+>   {
+>   	int rc = 0;
+> -	struct link *link;
+> +	struct ocxl_link *link;
+>   
+>   	mutex_lock(&links_list_lock);
+>   	list_for_each_entry(link, &links_list, list) {
+> @@ -442,7 +442,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_setup);
+>   
+>   static void release_xsl(struct kref *ref)
+>   {
+> -	struct link *link = container_of(ref, struct link, ref);
+> +	struct ocxl_link *link = container_of(ref, struct ocxl_link, ref);
+>   
+>   	list_del(&link->list);
+>   	/* call platform code before releasing data */
+> @@ -452,7 +452,7 @@ static void release_xsl(struct kref *ref)
+>   
+>   void ocxl_link_release(struct pci_dev *dev, void *link_handle)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   
+>   	mutex_lock(&links_list_lock);
+>   	kref_put(&link->ref, release_xsl);
+> @@ -488,7 +488,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>   		void *xsl_err_data)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+>   	struct ocxl_process_element *pe;
+>   	int pe_handle, rc = 0;
+> @@ -558,7 +558,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_add_pe);
+>   
+>   int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+>   	struct ocxl_process_element *pe;
+>   	int pe_handle, rc;
+> @@ -594,7 +594,7 @@ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
+>   
+>   int ocxl_link_remove_pe(void *link_handle, int pasid)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+>   	struct ocxl_process_element *pe;
+>   	struct pe_data *pe_data;
+> @@ -666,7 +666,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_remove_pe);
+>   
+>   int ocxl_link_irq_alloc(void *link_handle, int *hw_irq, u64 *trigger_addr)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	int rc, irq;
+>   	u64 addr;
+>   
+> @@ -687,7 +687,7 @@ EXPORT_SYMBOL_GPL(ocxl_link_irq_alloc);
+>   
+>   void ocxl_link_free_irq(void *link_handle, int hw_irq)
+>   {
+> -	struct link *link = (struct link *) link_handle;
+> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   
+>   	pnv_ocxl_free_xive_irq(hw_irq);
+>   	atomic_inc(&link->irq_available);
+> 
 
