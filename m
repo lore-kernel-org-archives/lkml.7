@@ -2,151 +2,111 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741E0C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFA6C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E582084B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A094214AF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 13:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gj3d2dIg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfDCNGp (ORCPT
+        id S1726310AbfDCNHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 09:06:45 -0400
-Received: from mga09.intel.com ([134.134.136.24]:16284 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfDCNGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 09:06:44 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 06:06:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,304,1549958400"; 
-   d="scan'208";a="137243453"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Apr 2019 06:06:41 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1hBfbE-0002kQ-LO; Wed, 03 Apr 2019 16:06:40 +0300
-Date:   Wed, 3 Apr 2019 16:06:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH] pinctrl: intel: save HOSTSW_OWN register over
- suspend/resume
-Message-ID: <20190403130640.GD9224@smile.fi.intel.com>
-References: <CAD8Lp44xuzHj4uu3a-Y9wscSyEmuG6=nbww6T9-9FaYZT_qYsw@mail.gmail.com>
- <CAB4CAwfH237-EUgfyR8-KWKo0HJOf=QkxiNjkBRg+gBpbKiM7g@mail.gmail.com>
- <20190328123444.GX3622@lahna.fi.intel.com>
- <CAB4CAwcQTH5BiDDbzfFXTDDuYQ_fuDd_1tKkecf6vwygGQmn5w@mail.gmail.com>
- <20190401074953.GQ3622@lahna.fi.intel.com>
- <CAB4CAweW_3p4i_8ntscJyU9n55HwdLt3pxyT3Gf6SUSbZAJ8qA@mail.gmail.com>
- <20190401122256.GF9224@smile.fi.intel.com>
- <CAB4CAwd6+6+Qwb2wDFkVOc_auTNdrEw07tX2ha=XLvxfwFHRXw@mail.gmail.com>
- <20190402115836.GL9224@smile.fi.intel.com>
- <CAB4CAwe7n5XsRNS-ZoJL1K7dHLpRrwNReBCCMXjDWCtxYaqfdQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB4CAwe7n5XsRNS-ZoJL1K7dHLpRrwNReBCCMXjDWCtxYaqfdQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 3 Apr 2019 09:07:53 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36882 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbfDCNHx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 09:07:53 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z16so19410799qtn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 06:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6TbXx470gB2/L327MHubCCa9FGqzdEttkYRsItRZ/js=;
+        b=gj3d2dIgyS1juous1+rrj5kPXgzLNcDgCTr0MjFUCmXxbywzvPEbuXfBhNfDjC1N61
+         CMGh6M7pxGvStFupFAXAL40cY305TZmNYiylRnPoXmCIzQGxiPbCnqdVKmF24zamew3f
+         wUNbwizEnVexKfzbEK/xTornjseE5OAqSvInI36+WiWJB1fsyhjYID9AR9MV9LOsoKGH
+         mIgaeq/jub+ukXx0pZt8vkjbglYCRAVr8KrhLWylg0RElkC5hZ6AkIu1V18C4/vWsdtO
+         A0FjzOj2TDtxxN4Yz0HfwFkvJVZOvGGedSsWJ5PR0iuS44JwO4BYQQrIY6V2DiSCXipQ
+         JIoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6TbXx470gB2/L327MHubCCa9FGqzdEttkYRsItRZ/js=;
+        b=KdhzH/SKug4q7rOhK1TUXepYeRUWUp7HQyapRIJ60jQ+1p8t7IKlP1noc6fjJmUu05
+         NmtXeWoaATlUXBqqsnEqlDOA/gygJSZbMXjZUmTkJOeygiiV+0LdYPImEWuGgUHdS178
+         IGySlPPE/7D0EQGCSI/8yWym7wwDcBCA8+DGOW9Izo1NlJr7CU8POii47InhKcCX1drF
+         VPxUgiWLZaBch1FM1rmz2t0Zn2CXOSsgqERm2/3gAmZ9n/oZLMTBY+AEQ3QNAqJSosz5
+         pWS/jd+Hnrcn5wvBaFeGGqOHi0tTKOmmz63+lH7zt4s3NbK6CBnMSIA4lQYF3aaxmBmx
+         he4w==
+X-Gm-Message-State: APjAAAWUEsBqo9Turz18Gi3VQualV2P4RMRdfwgCh26QviaXE20Me7Aw
+        oBxvd+09Jm2RaUt9bIydZ3XRQQ==
+X-Google-Smtp-Source: APXvYqzEEHgsgkai8JhpGANOP06QXmX0CP1vzaNNrNU61AclZARASaHB8UoGll4tCJ6GJGEk51f24A==
+X-Received: by 2002:ac8:66d0:: with SMTP id m16mr53517935qtp.215.1554296872208;
+        Wed, 03 Apr 2019 06:07:52 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id h2sm7013076qkl.3.2019.04.03.06.07.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Apr 2019 06:07:51 -0700 (PDT)
+Message-ID: <1554296870.26196.32.camel@lca.pw>
+Subject: Re: [PATCH] slab: store tagged freelist for off-slab slabmgmt
+From:   Qian Cai <cai@lca.pw>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 03 Apr 2019 09:07:50 -0400
+In-Reply-To: <CAAeHK+y25S6GYMrGUEQJJ5AU1LZ7T-jWrwoDsLXdxuk_E+q5BQ@mail.gmail.com>
+References: <20190403022858.97584-1-cai@lca.pw>
+         <CAAeHK+y25S6GYMrGUEQJJ5AU1LZ7T-jWrwoDsLXdxuk_E+q5BQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 03:06:43PM +0800, Chris Chiu wrote:
-> On Tue, Apr 2, 2019 at 7:58 PM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
+On Wed, 2019-04-03 at 13:23 +0200, Andrey Konovalov wrote:
+> On Wed, Apr 3, 2019 at 4:29 AM Qian Cai <cai@lca.pw> wrote:
+> > 
+> > The commit 51dedad06b5f ("kasan, slab: make freelist stored without
+> > tags") calls kasan_reset_tag() for off-slab slab management object
+> > leading to freelist being stored non-tagged. However, cache_grow_begin()
+> > -> alloc_slabmgmt() -> kmem_cache_alloc_node() which assigns a tag for
+> > the address and stores in the shadow address. As the result, it causes
+> > endless errors below during boot due to drain_freelist() ->
+> > slab_destroy() -> kasan_slab_free() which compares already untagged
+> > freelist against the stored tag in the shadow address. Since off-slab
+> > slab management object freelist is such a special case, so just store it
+> > tagged. Non-off-slab management object freelist is still stored untagged
+> > which has not been assigned a tag and should not cause any other
+> > troubles with this inconsistency.
+> 
+> Hi Qian,
+> 
+> Could you share the config (or other steps) you used to reproduce this?
 
-> > Instead you may need to loop over each pin in the part of the group related to
-> > one 32-bit HOSTSW_OWN register (i.e. 8, see PADOWN_*() macros in the driver),
-> > check if it's requested and break a loop. If loop index is off-by-one a limit,
-> > nothing to do, otherwise restore hostown register.
-> >
-> > More pedantic approach is to collect the mask inside the loop and apply it.
-> >
-> > The check function name is gpiochip_is_requested().
-> >
-> > (One of Intel's drivers which is using that at ->resume() is
-> >  drivers/gpio/gpio-lynxpoint.c)
-> >
-> > P.S. I prefer pedantic approach. The simplification one is showed in order to
-> > give you an idea.
+https://git.sr.ht/~cai/linux-debug/blob/master/config
 
-> Thanks for your great comment. I remove the useless hostown save function
-> and make the following change in ->resume() to detect and restore the abnormal
-> HOSTSW_OWN. Please help comment if there're still problems. Thanks.
+Additional command-line option to boot:
 
-> +               base = community->regs + community->hostown_offset;
-> +               for (gpp = 0; gpp < community->ngpps; gpp++) {
-> +                       const struct intel_padgroup *padgrp =
-> &community->gpps[i];
-> +                       unsigned int requested = 0;
-> +                       int j;
-> +
-> +                       if (padgrp->gpio_base < 0)
-> +                               continue;
-
-> +
-> +                       for (j = 0; j < padgrp->size; j++)
-> +                               if
-> (gpiochip_is_requested(&pctrl->chip, padgrp->gpio_base + j))
-> +                                       requested |= BIT(j);
-> +
-
-This better to make as a separate helper function
-
-static u32 intel_gpio_is_requested(chip, base, size)
-{
-	u32 requested = 0;
-	unsigned int i;
-
-	for () {
-		if ()
-			requested |= BIT();
-	}
-	return requested;
-}
-
-(Note u32 as a type)
-
-> +                       if (requested) {
-> +                               if (communities[i].hostown[gpp] !=
-> readl(base + gpp * 4)) {
-> +
-> writel(communities[i].hostown[gpp], base + gpp * 4);
-
-The idea here not to check this at all, but rather apply a mask.
-
-u32 value;
-
-...
-value = readl();
-value = (value & ~requested) | (hostown[gpp] & requested);
-writel(value);
-
-> +                                       dev_warn(dev, "hostown been
-> changed during resume\n");
-> +                                       dev_dbg(dev, "restored hostown
-> %d/%u %#08x\n", i, gpp,
-> +                                               readl(base + gpp * 4));
-> +                               }
-> +                       }
-> +               }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+page_poison=on crashkernel=768M earlycon page_owner=on numa_balancing=enable
+systemd.unified_cgroup_hierarchy=1 debug_guardpage_minorder=1
 
