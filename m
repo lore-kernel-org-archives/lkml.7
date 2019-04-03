@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D588C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94F3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D0720882
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBF020882
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 19:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfDCT0E (ORCPT
+        id S1726870AbfDCTZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 15:26:04 -0400
+        Wed, 3 Apr 2019 15:25:57 -0400
 Received: from lnfm1.sai.msu.ru ([93.180.26.255]:49521 "EHLO lnfm1.sai.msu.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfDCT0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 15:26:00 -0400
+        id S1726064AbfDCTZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 15:25:53 -0400
 X-Greylist: delayed 1904 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Apr 2019 15:25:44 EDT
 Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id x33IrXuD024073;
-        Wed, 3 Apr 2019 21:53:38 +0300
+        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id x33IrWkL024071;
+        Wed, 3 Apr 2019 21:53:37 +0300
 Received: from oak.local (unknown [92.243.181.209])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id B4554F5B7;
-        Wed,  3 Apr 2019 21:53:34 +0300 (MSK)
+        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 01EFAE74A;
+        Wed,  3 Apr 2019 21:53:33 +0300 (MSK)
 From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
 To:     b-liu@ti.com, gregkh@linuxfoundation.org
 Cc:     matwey.kornilov@gmail.com,
         "Matwey V. Kornilov" <matwey@sai.msu.ru>,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH 3/6] usb: musb: Introduce musb_qh_free() helper function
-Date:   Wed,  3 Apr 2019 21:53:07 +0300
-Message-Id: <20190403185310.8437-4-matwey@sai.msu.ru>
+Subject: [PATCH 2/6] usb: musb: Introduce musb_qh_empty() helper function
+Date:   Wed,  3 Apr 2019 21:53:06 +0300
+Message-Id: <20190403185310.8437-3-matwey@sai.msu.ru>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20190403185310.8437-1-matwey@sai.msu.ru>
 References: <20190403185310.8437-1-matwey@sai.msu.ru>
@@ -44,125 +44,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reduce the following similar snippets by using musb_qh_free().
-
-    qh->hep->hcpriv = NULL;
-    list_del(&qh->ring);
-    kfree(qh);
+Use musb_qh_empty() instead of &qh->hep->urb_list to avoid code
+duplicating.
 
 Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
 ---
- drivers/usb/musb/musb_host.c | 66 +++++++++++++++++++++-----------------------
- 1 file changed, 32 insertions(+), 34 deletions(-)
+ drivers/usb/musb/musb_host.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-index 37aa9f6155d9..5d23c950a21b 100644
+index 3ffea6a5e022..37aa9f6155d9 100644
 --- a/drivers/usb/musb/musb_host.c
 +++ b/drivers/usb/musb/musb_host.c
-@@ -85,6 +85,21 @@ static bool musb_qh_empty(struct musb_qh *qh)
- 	return list_empty(&qh->hep->urb_list);
- }
+@@ -80,6 +80,11 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
+ 			struct urb *urb, int is_out,
+ 			u8 *buf, u32 offset, u32 len);
  
-+static void musb_qh_unlink_hep(struct musb_qh *qh)
++static bool musb_qh_empty(struct musb_qh *qh)
 +{
-+	if (!qh->hep)
-+		return;
-+
-+	qh->hep->hcpriv = NULL;
-+}
-+
-+static void musb_qh_free(struct musb_qh *qh)
-+{
-+	musb_qh_unlink_hep(qh);
-+	list_del(&qh->ring);
-+	kfree(qh);
++	return list_empty(&qh->hep->urb_list);
 +}
 +
  /*
   * Clear TX fifo. Needed to avoid BABBLE errors.
   */
-@@ -348,7 +363,7 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
+@@ -342,7 +347,7 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
+ 	/* reclaim resources (and bandwidth) ASAP; deschedule it, and
  	 * invalidate qh as soon as list_empty(&hep->urb_list)
  	 */
- 	if (musb_qh_empty(qh)) {
--		struct list_head	*head;
-+		struct list_head	*head = NULL;
+-	if (list_empty(&qh->hep->urb_list)) {
++	if (musb_qh_empty(qh)) {
+ 		struct list_head	*head;
  		struct dma_controller	*dma = musb->dma_controller;
  
- 		if (is_in) {
-@@ -367,34 +382,22 @@ static void musb_advance_schedule(struct musb *musb, struct urb *urb,
- 
- 		/* Clobber old pointers to this qh */
- 		musb_ep_set_qh(ep, is_in, NULL);
--		qh->hep->hcpriv = NULL;
- 
--		switch (qh->type) {
-+		/* USB_ENDPOINT_XFER_CONTROL and USB_ENDPOINT_XFER_BULK: fifo
-+		 * policy for these lists, except that NAKing should rotate
-+		 * a qh to the end (for fairness).
-+		 * USB_ENDPOINT_XFER_ISOC and USB_ENDPOINT_XFER_INT: this is
-+		 * where periodic bandwidth should be de-allocated if it's
-+		 * tracked and allocated; and where we'd update the schedule
-+		 * tree...
-+		 */
-+		if (qh->mux == 1
-+		    && (qh->type == USB_ENDPOINT_XFER_CONTROL || qh->type == USB_ENDPOINT_XFER_BULK))
-+			head = qh->ring.prev;
- 
--		case USB_ENDPOINT_XFER_CONTROL:
--		case USB_ENDPOINT_XFER_BULK:
--			/* fifo policy for these lists, except that NAKing
--			 * should rotate a qh to the end (for fairness).
--			 */
--			if (qh->mux == 1) {
--				head = qh->ring.prev;
--				list_del(&qh->ring);
--				kfree(qh);
--				qh = first_qh(head);
--				break;
--			}
--			/* fall through */
-+		musb_qh_free(qh);
- 
--		case USB_ENDPOINT_XFER_ISOC:
--		case USB_ENDPOINT_XFER_INT:
--			/* this is where periodic bandwidth should be
--			 * de-allocated if it's tracked and allocated;
--			 * and where we'd update the schedule tree...
--			 */
--			kfree(qh);
--			qh = NULL;
--			break;
--		}
-+		qh = head ? first_qh(head) : NULL;
- 	}
- 
- 	if (qh != NULL && qh->is_ready) {
-@@ -2435,11 +2438,8 @@ static int musb_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
+@@ -2430,7 +2435,7 @@ static int musb_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
  		/* If nothing else (usually musb_giveback) is using it
  		 * and its URB list has emptied, recycle this qh.
  		 */
--		if (ready && musb_qh_empty(qh)) {
--			qh->hep->hcpriv = NULL;
--			list_del(&qh->ring);
--			kfree(qh);
--		}
-+		if (ready && musb_qh_empty(qh))
-+			musb_qh_free(qh);
- 	} else
- 		ret = musb_cleanup_urb(urb, qh);
- done:
-@@ -2493,9 +2493,7 @@ musb_h_disable(struct usb_hcd *hcd, struct usb_host_endpoint *hep)
- 		while (!musb_qh_empty(qh))
+-		if (ready && list_empty(&qh->hep->urb_list)) {
++		if (ready && musb_qh_empty(qh)) {
+ 			qh->hep->hcpriv = NULL;
+ 			list_del(&qh->ring);
+ 			kfree(qh);
+@@ -2475,7 +2480,7 @@ musb_h_disable(struct usb_hcd *hcd, struct usb_host_endpoint *hep)
+ 		/* Then nuke all the others ... and advance the
+ 		 * queue on hw_ep (e.g. bulk ring) when we're done.
+ 		 */
+-		while (!list_empty(&hep->urb_list)) {
++		while (!musb_qh_empty(qh)) {
+ 			urb = next_urb(qh);
+ 			urb->status = -ESHUTDOWN;
+ 			musb_advance_schedule(musb, urb, qh->hw_ep, is_in);
+@@ -2485,7 +2490,7 @@ musb_h_disable(struct usb_hcd *hcd, struct usb_host_endpoint *hep)
+ 		 * other transfers, and since !qh->is_ready nothing
+ 		 * will activate any of these as it advances.
+ 		 */
+-		while (!list_empty(&hep->urb_list))
++		while (!musb_qh_empty(qh))
  			musb_giveback(musb, next_urb(qh), -ESHUTDOWN);
  
--		hep->hcpriv = NULL;
--		list_del(&qh->ring);
--		kfree(qh);
-+		musb_qh_free(qh);
- 	}
- exit:
- 	spin_unlock_irqrestore(&musb->lock, flags);
+ 		hep->hcpriv = NULL;
 -- 
 2.16.4
 
