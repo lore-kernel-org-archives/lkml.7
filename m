@@ -2,129 +2,165 @@ Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C509C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93504C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2426E2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BE320830
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 12:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfDCMly (ORCPT
+        id S1726602AbfDCMm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 08:41:54 -0400
-Received: from sauhun.de ([88.99.104.3]:48300 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfDCMkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 08:40:37 -0400
-Received: from localhost (p54B3311F.dip0.t-ipconnect.de [84.179.49.31])
-        by pokefinder.org (Postfix) with ESMTPSA id 870A23E4246;
-        Wed,  3 Apr 2019 14:40:35 +0200 (CEST)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Peter Rosin <peda@axentia.se>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Wed, 3 Apr 2019 08:42:56 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46789 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbfDCMmz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 08:42:55 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r25so11581562lfn.13;
+        Wed, 03 Apr 2019 05:42:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xPUCMe1wedD3mJ/hN2Qprojga5iPAW9GSHN+HKSNLC0=;
+        b=dvxzFKOoCfKzXFmB26vb/hQp487kgkQGN5DOqxgChPlAnPb0rewavLz8o00AHn2tFD
+         /w2zYiCVqZysGxho+i/ahxeN8sSC+lFcOQlrd3smT4YDYWRoiNMg3LP0woHlAEkOaE7d
+         BYP/r0gey5cRtxCcheV73k4eDJP4gzeOJu8WOALi+7TEq/v3hz2i3L91rXiqJoFgAteT
+         1L//Usw/b+6VePeIfuJvwe3+BA8pchhN1j/UGRO6rhcWVK8CZdiJtrQQDzjyQcNVqBYi
+         ZydGuGkOkEP7QNUq0C55a0n0CyvSOTPYHykl0FKhGzgad0RDOEaEGzAaaoBq84Z/ZM77
+         4esw==
+X-Gm-Message-State: APjAAAUL9fmHueKncAb/pOO0DNQ1qc1V6IttgNMBC/qBH8+8OksKFqlI
+        WabxJCgectUSL4K6AGnmATU=
+X-Google-Smtp-Source: APXvYqzzLhiDpSUXGoQcMwGEKVPY8a9JMsTB7xPeOcqqRhj9WWClkBHqQldKemvihjOLku/6pmas5w==
+X-Received: by 2002:a19:4b14:: with SMTP id y20mr38154452lfa.36.1554295372570;
+        Wed, 03 Apr 2019 05:42:52 -0700 (PDT)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id a29sm2989030lfi.19.2019.04.03.05.42.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 05:42:52 -0700 (PDT)
+Date:   Wed, 3 Apr 2019 15:42:45 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 02/12] i2c: core: use I2C locking behaviour also for SMBUS
-Date:   Wed,  3 Apr 2019 14:40:09 +0200
-Message-Id: <20190403124019.8947-3-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Subject: [PATCH v12 3/8] clk: bd718x7: Support ROHM BD70528 clk block
+Message-ID: <b9ebc239654ca9546954ff662fb93d53e789f16e.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1554294791.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If I2C transfers are executed in atomic contexts, trylock is used
-instead of lock. This behaviour was missing for SMBUS, although a lot of
-transfers are of SMBUS type, either emulated or direct. So, factor out
-the locking routine into a helper and use it for I2C and SMBUS.
+ROHM BD70528 is an ultra low power PMIC with similar 32K clk as
+bd718x7. Only difference (from clk perspective) is register address.
+Add support for controlling BD70528 clk using bd718x7 driver.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/i2c/i2c-core-base.c  | 11 +++--------
- drivers/i2c/i2c-core-smbus.c |  7 ++++++-
- drivers/i2c/i2c-core.h       | 12 ++++++++++++
- 3 files changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index f8502064cd6b..ad14f38a67e4 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -1946,14 +1946,9 @@ int i2c_transfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
- 	 *    one (discarding status on the second message) or errno
- 	 *    (discarding status on the first one).
- 	 */
--	if (i2c_in_atomic_xfer_mode()) {
--		ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT);
--		if (!ret)
--			/* I2C activity is ongoing. */
--			return -EAGAIN;
--	} else {
--		i2c_lock_bus(adap, I2C_LOCK_SEGMENT);
--	}
-+	ret = __i2c_lock_bus_helper(adap);
-+	if (ret)
-+		return ret;
+Changelog v12:
+- No changes
+
+ drivers/clk/Kconfig       |  6 +++---
+ drivers/clk/clk-bd718x7.c | 20 ++++++++++++++++----
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index e705aab9e38b..86828939d095 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -285,10 +285,10 @@ config COMMON_CLK_STM32H7
  
- 	ret = __i2c_transfer(adap, msgs, num);
- 	i2c_unlock_bus(adap, I2C_LOCK_SEGMENT);
-diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-index 132119112596..357e083e8f45 100644
---- a/drivers/i2c/i2c-core-smbus.c
-+++ b/drivers/i2c/i2c-core-smbus.c
-@@ -20,6 +20,8 @@
- #include <linux/i2c-smbus.h>
+ config COMMON_CLK_BD718XX
+ 	tristate "Clock driver for ROHM BD718x7 PMIC"
+-	depends on MFD_ROHM_BD718XX
++	depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
+ 	help
+-	  This driver supports ROHM BD71837 and ROHM BD71847
+-	  PMICs clock gates.
++	  This driver supports ROHM BD71837, ROHM BD71847 and
++	  ROHM BD70528 PMICs clock gates.
+ 
+ config COMMON_CLK_FIXED_MMIO
+ 	bool "Clock driver for Memory Mapped Fixed values"
+diff --git a/drivers/clk/clk-bd718x7.c b/drivers/clk/clk-bd718x7.c
+index 461228ebf703..ae6e5baee330 100644
+--- a/drivers/clk/clk-bd718x7.c
++++ b/drivers/clk/clk-bd718x7.c
+@@ -8,6 +8,7 @@
+ #include <linux/platform_device.h>
  #include <linux/slab.h>
+ #include <linux/mfd/rohm-bd718x7.h>
++#include <linux/mfd/rohm-bd70528.h>
+ #include <linux/clk-provider.h>
+ #include <linux/clkdev.h>
+ #include <linux/regmap.h>
+@@ -86,9 +87,20 @@ static int bd71837_clk_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "No parent clk found\n");
+ 		return -EINVAL;
+ 	}
+-
+-	c->reg = BD718XX_REG_OUT32K;
+-	c->mask = BD718XX_OUT32K_EN;
++	switch (mfd->chip_type) {
++	case ROHM_CHIP_TYPE_BD71837:
++	case ROHM_CHIP_TYPE_BD71847:
++		c->reg = BD718XX_REG_OUT32K;
++		c->mask = BD718XX_OUT32K_EN;
++		break;
++	case ROHM_CHIP_TYPE_BD70528:
++		c->reg = BD70528_REG_CLK_OUT;
++		c->mask = BD70528_CLK_OUT_EN_MASK;
++		break;
++	default:
++		dev_err(&pdev->dev, "Unknown clk chip\n");
++		return -EINVAL;
++	}
+ 	c->mfd = mfd;
+ 	c->pdev = pdev;
+ 	c->hw.init = &init;
+@@ -119,5 +131,5 @@ static struct platform_driver bd71837_clk = {
+ module_platform_driver(bd71837_clk);
  
-+#include "i2c-core.h"
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/smbus.h>
- 
-@@ -530,7 +532,10 @@ s32 i2c_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
- {
- 	s32 res;
- 
--	i2c_lock_bus(adapter, I2C_LOCK_SEGMENT);
-+	res = __i2c_lock_bus_helper(adapter);
-+	if (res)
-+		return res;
-+
- 	res = __i2c_smbus_xfer(adapter, addr, flags, read_write,
- 			       command, protocol, data);
- 	i2c_unlock_bus(adapter, I2C_LOCK_SEGMENT);
-diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-index 9d8526415b26..deea47c576e5 100644
---- a/drivers/i2c/i2c-core.h
-+++ b/drivers/i2c/i2c-core.h
-@@ -39,6 +39,18 @@ static inline bool i2c_in_atomic_xfer_mode(void)
- 	return system_state > SYSTEM_RUNNING && irqs_disabled();
- }
- 
-+static inline int __i2c_lock_bus_helper(struct i2c_adapter *adap)
-+{
-+	int ret = 0;
-+
-+	if (i2c_in_atomic_xfer_mode())
-+		ret = i2c_trylock_bus(adap, I2C_LOCK_SEGMENT) ? 0 : -EAGAIN;
-+	else
-+		i2c_lock_bus(adap, I2C_LOCK_SEGMENT);
-+
-+	return ret;
-+}
-+
- #ifdef CONFIG_ACPI
- const struct acpi_device_id *
- i2c_acpi_match_device(const struct acpi_device_id *matches,
+ MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
+-MODULE_DESCRIPTION("BD71837/BD71847 chip clk driver");
++MODULE_DESCRIPTION("BD71837/BD71847/BD70528 chip clk driver");
+ MODULE_LICENSE("GPL");
 -- 
-2.11.0
+2.17.2
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
