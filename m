@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF303C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D2120820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E8220820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371084;
-	bh=B2RSedtcUBI+m5qdY0UreAzRYY+7w6QJmj8qpNTCdpY=;
+	s=default; t=1554371094;
+	bh=aRQlGvE+vUmaVktcUcH0m4+YZsFDCT0ezh2m8A00NUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QqfSeV9g8ikdzz9BWjUdPUJ/cDi+wTrWXt06r0+j/X/KBvxHDjoMZMkbZLCzgqm6d
-	 QGscmk2+McpAHG5bsPQG3t5iHd74J1a162gYV9KysUeBV32Cd6rPHVNx10KPEa4cmK
-	 W2yWCqbUnP5gtYr2cwutNekTfFJ91zenSSg+mPWw=
+	b=PIHYG3FJDWvbsPiSr90twOHZshVHS7KoesclVqxXFmcZ3i1B6C4Cs+tN0OWbdZr67
+	 pVW1Z3cEkxaIOmC5H8cNelRSJhjDteJLt2lSTsjkvC9E9SmicVPuulORFwesOJT3ys
+	 j4ToVmSKChLvGexCzuTO7HHpPBrUbjw5NaH4HqOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfDDJon (ORCPT
+        id S1731287AbfDDJox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36008 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:44:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730767AbfDDI7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:38 -0400
+        id S1730724AbfDDI70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6012075E;
-        Thu,  4 Apr 2019 08:59:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55D0920652;
+        Thu,  4 Apr 2019 08:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368377;
-        bh=B2RSedtcUBI+m5qdY0UreAzRYY+7w6QJmj8qpNTCdpY=;
+        s=default; t=1554368365;
+        bh=aRQlGvE+vUmaVktcUcH0m4+YZsFDCT0ezh2m8A00NUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=buYBdUpFhr029eCzFoL3HC4kvR+6gHScw7QXt2OQNKQadJI+WI9H/VcTBgGC0suaf
-         nGQPOF/Kg1tCFGQdEgqPK092S6AmRBDtxBrY8h8ojXlcfIUFVmqN53dd7PVmAFXjLN
-         Pn1LnWnV9l6CJBb+S03Lt9Tt2XgAmopsKy2UNgKk=
+        b=ochXxN3TvGov0loCQLVomFP7JVwJzs8HBbfLoC/FSqVsVMMJ+jkNbp5zyaTfrNHlG
+         GJBkBIwha6+qdv/3jN2CEpyrwP+rDlRTGYwVkyNEF1uJKmvhg30umF9yE3ZIX0cVxq
+         7LdJIhkkF5rH4qWEHyvOrk+zWn5HTh6t26GSwSCo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Jens Axboe <axboe@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/187] libbpf: force fixdep compilation at the start of the build
-Date:   Thu,  4 Apr 2019 10:45:54 +0200
-Message-Id: <20190404084603.903820643@linuxfoundation.org>
+Subject: [PATCH 4.19 013/187] include/linux/relay.h: fix percpu annotation in struct rchan
+Date:   Thu,  4 Apr 2019 10:45:50 +0200
+Message-Id: <20190404084603.719646890@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,118 +70,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8e2688876c7f7073d925e1f150e86b8ed3338f52 ]
+[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
 
-libbpf targets don't explicitly depend on fixdep target, so when
-we do 'make -j$(nproc)', there is a high probability, that some
-objects will be built before fixdep binary is available.
+The percpu member of this structure is declared as:
+	struct ... ** __percpu member;
+So its type is:
+	__percpu pointer to pointer to struct ...
 
-Fix this by running sub-make; this makes sure that fixdep dependency
-is properly accounted for.
+But looking at how it's used, its type should be:
+	pointer to __percpu pointer to struct ...
+and it should thus be declared as:
+	struct ... * __percpu *member;
 
-For the same issue in perf, see commit abb26210a395 ("perf tools: Force
-fixdep compilation at the start of the build").
+So fix the placement of '__percpu' in the definition of this
+structures.
 
-Before:
+This silents a few Sparse's warnings like:
+	warning: incorrect type in initializer (different address spaces)
+	  expected void const [noderef] <asn:3> *__vpp_verify
+	  got struct sched_domain **
 
-$ rm -rf /tmp/bld; mkdir /tmp/bld; make -j$(nproc) O=/tmp/bld -C tools/lib/bpf/
-
-Auto-detecting system features:
-...                        libelf: [ on  ]
-...                           bpf: [ on  ]
-
-  HOSTCC   /tmp/bld/fixdep.o
-  CC       /tmp/bld/libbpf.o
-  CC       /tmp/bld/bpf.o
-  CC       /tmp/bld/btf.o
-  CC       /tmp/bld/nlattr.o
-  CC       /tmp/bld/libbpf_errno.o
-  CC       /tmp/bld/str_error.o
-  CC       /tmp/bld/netlink.o
-  CC       /tmp/bld/bpf_prog_linfo.o
-  CC       /tmp/bld/libbpf_probes.o
-  CC       /tmp/bld/xsk.o
-  HOSTLD   /tmp/bld/fixdep-in.o
-  LINK     /tmp/bld/fixdep
-  LD       /tmp/bld/libbpf-in.o
-  LINK     /tmp/bld/libbpf.a
-  LINK     /tmp/bld/libbpf.so
-  LINK     /tmp/bld/test_libbpf
-
-$ head /tmp/bld/.libbpf.o.cmd
- # cannot find fixdep (/usr/local/google/home/sdf/src/linux/xxx//fixdep)
- # using basic dep data
-
-/tmp/bld/libbpf.o: libbpf.c /usr/include/stdc-predef.h \
- /usr/include/stdlib.h /usr/include/features.h \
- /usr/include/x86_64-linux-gnu/sys/cdefs.h \
- /usr/include/x86_64-linux-gnu/bits/wordsize.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs.h \
- /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
-
-After:
-
-$ rm -rf /tmp/bld; mkdir /tmp/bld; make -j$(nproc) O=/tmp/bld -C tools/lib/bpf/
-
-Auto-detecting system features:
-...                        libelf: [ on  ]
-...                           bpf: [ on  ]
-
-  HOSTCC   /tmp/bld/fixdep.o
-  HOSTLD   /tmp/bld/fixdep-in.o
-  LINK     /tmp/bld/fixdep
-  CC       /tmp/bld/libbpf.o
-  CC       /tmp/bld/bpf.o
-  CC       /tmp/bld/nlattr.o
-  CC       /tmp/bld/btf.o
-  CC       /tmp/bld/libbpf_errno.o
-  CC       /tmp/bld/str_error.o
-  CC       /tmp/bld/netlink.o
-  CC       /tmp/bld/bpf_prog_linfo.o
-  CC       /tmp/bld/libbpf_probes.o
-  CC       /tmp/bld/xsk.o
-  LD       /tmp/bld/libbpf-in.o
-  LINK     /tmp/bld/libbpf.a
-  LINK     /tmp/bld/libbpf.so
-  LINK     /tmp/bld/test_libbpf
-
-$ head /tmp/bld/.libbpf.o.cmd
-cmd_/tmp/bld/libbpf.o := gcc -Wp,-MD,/tmp/bld/.libbpf.o.d -Wp,-MT,/tmp/bld/libbpf.o -g -Wall -DHAVE_LIBELF_MMAP_SUPPORT -DCOMPAT_NEED_REALLOCARRAY -Wbad-function-cast -Wdeclaration-after-statement -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls -Wshadow -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat -Wstrict-aliasing=3 -Werror -Wall -fPIC -I. -I/usr/local/google/home/sdf/src/linux/tools/include -I/usr/local/google/home/sdf/src/linux/tools/arch/x86/include/uapi -I/usr/local/google/home/sdf/src/linux/tools/include/uapi -fvisibility=hidden -D"BUILD_STR(s)=$(pound)s" -c -o /tmp/bld/libbpf.o libbpf.c
-
-source_/tmp/bld/libbpf.o := libbpf.c
-
-deps_/tmp/bld/libbpf.o := \
-  /usr/include/stdc-predef.h \
-  /usr/include/stdlib.h \
-  /usr/include/features.h \
-  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
-  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
-
-Fixes: 7c422f557266 ("tools build: Build fixdep helper from perf and basic libs")
-Reported-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
+Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Jens Axboe <axboe@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/relay.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index d49902e818b5..3624557550a1 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -149,7 +149,8 @@ CMD_TARGETS = $(LIB_FILE)
- 
- TARGETS = $(CMD_TARGETS)
- 
--all: fixdep all_cmd
-+all: fixdep
-+	$(Q)$(MAKE) all_cmd
- 
- all_cmd: $(CMD_TARGETS)
- 
+diff --git a/include/linux/relay.h b/include/linux/relay.h
+index e1bdf01a86e2..c759f96e39c1 100644
+--- a/include/linux/relay.h
++++ b/include/linux/relay.h
+@@ -66,7 +66,7 @@ struct rchan
+ 	struct kref kref;		/* channel refcount */
+ 	void *private_data;		/* for user-defined data */
+ 	size_t last_toobig;		/* tried to log event > subbuf size */
+-	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
++	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
+ 	int is_global;			/* One global buffer ? */
+ 	struct list_head list;		/* for channel list */
+ 	struct dentry *parent;		/* parent dentry passed to open */
 -- 
 2.19.1
 
