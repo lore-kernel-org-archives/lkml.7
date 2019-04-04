@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D597C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E92C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E936420449
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F59920693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369942;
-	bh=EB8Cz3OcHOLApapkwolqXFdNyko4hfCv3gTGCRCM1A0=;
+	s=default; t=1554369951;
+	bh=kIZRaT3LuOGOAg5eihIJ1kG9X6O7jRuJDTSpER5JRtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xOJXhadvmSRUpJ6f4Jm8wH8/wbJzIrKqLPwTC/2ii0vc0lp7VhKUaqmr+bkzPVHH1
-	 v1pmCdKYK8zjYB0hLzlbxW5lUGjPpP/krGLBAAbwxlAcOCotTwyDJuT6D7kXBFR+/7
-	 hpz98QMim5G3EGFUZT0aW/JSchvTOFJ058wFSlQ4=
+	b=pF6KzXcSi1ztET6NjgR6Ow2qiiQs0PkBpl04Ek9Rz7aAvpKhn2xd7WKAL/KuHSeTi
+	 /v2weXoPXNmk1GUEknk6sNpmG7NDxECoLf4GVeWhnueNZGjXe3FRwioN53RLC1rcQ1
+	 N68S09ocTtnsa2gXwXJQc/8/s7aC4Ski5x07aVIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbfDDJNn (ORCPT
+        id S2387787AbfDDJZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:25:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387598AbfDDJNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:13:40 -0400
+        id S1733294AbfDDJNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:13:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D23F20693;
-        Thu,  4 Apr 2019 09:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588362054F;
+        Thu,  4 Apr 2019 09:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369218;
-        bh=EB8Cz3OcHOLApapkwolqXFdNyko4hfCv3gTGCRCM1A0=;
+        s=default; t=1554369215;
+        bh=kIZRaT3LuOGOAg5eihIJ1kG9X6O7jRuJDTSpER5JRtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hd3gfFI52NJSuFTxALv1yPHKcP2uFdyq6Z6z20oOpUbYLiZpJVov0uxAfxCMW3+9p
-         ZDKRKbS09ysEk5A7oHwmlDZj5LVYVYxe/EDbXuz37fici2bQELvJQD2gZfK/3KmhVg
-         rEEO1tEbVdr22EbUkA7dE18ZoWRIMd7V8apQ4GUk=
+        b=hODMDMlg9SluvM8/ptDaySEdP9mRfq1Dt4cpeXWt+GB6iKR6StFFplJ18CwJQzZON
+         J2Dhg66KK2sXt09h2IcQBkLvbfu0U8hxzbNogQ8DzNQDxFObaeDN5PA7tVYxiu4/Ww
+         wfN+NHh8+FSj9jsdckuBvEcoDxWAzhZF8LSXIOAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 128/246] regulator: core: Take lock before applying system load
-Date:   Thu,  4 Apr 2019 10:47:08 +0200
-Message-Id: <20190404084623.640257367@linuxfoundation.org>
+Subject: [PATCH 5.0 127/246] drm/sched: Fix entities with 0 rqs.
+Date:   Thu,  4 Apr 2019 10:47:07 +0200
+Message-Id: <20190404084623.605560398@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,100 +68,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e5e21f70bfd3a201e627b48aed82793d1bcd6f78 ]
+[ Upstream commit 1decbf6bb0b4dc56c9da6c5e57b994ebfc2be3aa ]
 
-Take the regulator lock before applying system load.
+Some blocks in amdgpu can have 0 rqs.
 
-Fixes the following lockdep splat:
+Job creation already fails with -ENOENT when entity->rq is NULL,
+so jobs cannot be pushed. Without a rq there is no scheduler to
+pop jobs, and rq selection already does the right thing with a
+list of length 0.
 
-[    5.583581] WARNING: CPU: 1 PID: 16 at drivers/regulator/core.c:925 drms_uA_update+0x114/0x360
-[    5.588467] Modules linked in:
-[    5.596833] CPU: 1 PID: 16 Comm: kworker/1:0 Not tainted 5.0.0-rc6-next-20190213-00002-g0fce66ab480f #18
-[    5.599933] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    5.609544] Workqueue: events qcom_channel_state_worker
-[    5.616209] pstate: 60000005 (nZCv daif -PAN -UAO)
-[    5.621152] pc : drms_uA_update+0x114/0x360
-[    5.626006] lr : drms_uA_update+0x110/0x360
-[    5.630084] sp : ffff0000124b3490
-[    5.634242] x29: ffff0000124b3490 x28: ffff800005326e00
-[    5.637735] x27: ffff0000124b35f8 x26: 000000000032bc48
-[    5.643117] x25: ffff800004c7e800 x24: ffff800004c6d500
-[    5.648411] x23: ffff800004c38a80 x22: 00000000000000d1
-[    5.653706] x21: 00000000001ab3f0 x20: ffff800004c7e800
-[    5.659001] x19: ffff0000114c3000 x18: ffffffffffffffff
-[    5.664297] x17: 0000000000000000 x16: 0000000000000000
-[    5.669592] x15: ffff0000114c3808 x14: 0720072007200720
-[    5.674888] x13: 00000000199c9b28 x12: ffff80002bcccc40
-[    5.680183] x11: ffff000012286000 x10: ffff0000114c3808
-[    5.685477] x9 : 0720072007200720 x8 : ffff000010e9e808
-[    5.690772] x7 : ffff0000106da568 x6 : 0000000000000000
-[    5.696067] x5 : 0000000000000000 x4 : 0000000000000000
-[    5.701362] x3 : 0000000000000004 x2 : 0000000000000000
-[    5.706658] x1 : 0000000000000000 x0 : 0000000000000000
-[    5.711952] Call trace:
-[    5.717223]  drms_uA_update+0x114/0x360
-[    5.719405]  regulator_register+0xb30/0x1140
-[    5.723230]  devm_regulator_register+0x4c/0xa8
-[    5.727745]  rpm_reg_probe+0xfc/0x1b0
-[    5.731992]  platform_drv_probe+0x50/0xa0
-[    5.735727]  really_probe+0x20c/0x2b8
-[    5.739718]  driver_probe_device+0x58/0x100
-[    5.743368]  __device_attach_driver+0x90/0xd0
-[    5.747363]  bus_for_each_drv+0x64/0xc8
-[    5.751870]  __device_attach+0xd8/0x138
-[    5.755516]  device_initial_probe+0x10/0x18
-[    5.759341]  bus_probe_device+0x98/0xa0
-[    5.763502]  device_add+0x3d0/0x640
-[    5.767319]  of_device_add+0x48/0x58
-[    5.770793]  of_platform_device_create_pdata+0xb0/0x128
-[    5.774629]  of_platform_bus_create+0x174/0x370
-[    5.779569]  of_platform_populate+0x78/0xe0
-[    5.784082]  qcom_smd_rpm_probe+0x80/0xa0
-[    5.788245]  rpmsg_dev_probe+0x114/0x1a0
-[    5.792411]  really_probe+0x20c/0x2b8
-[    5.796401]  driver_probe_device+0x58/0x100
-[    5.799964]  __device_attach_driver+0x90/0xd0
-[    5.803960]  bus_for_each_drv+0x64/0xc8
-[    5.808468]  __device_attach+0xd8/0x138
-[    5.812115]  device_initial_probe+0x10/0x18
-[    5.815936]  bus_probe_device+0x98/0xa0
-[    5.820099]  device_add+0x3d0/0x640
-[    5.823916]  device_register+0x1c/0x28
-[    5.827391]  rpmsg_register_device+0x4c/0x90
-[    5.831216]  qcom_channel_state_worker+0x170/0x298
-[    5.835651]  process_one_work+0x294/0x6e8
-[    5.840241]  worker_thread+0x40/0x450
-[    5.844318]  kthread+0x11c/0x120
-[    5.847961]  ret_from_fork+0x10/0x18
-[    5.851260] irq event stamp: 9090
-[    5.854820] hardirqs last  enabled at (9089): [<ffff000010160798>] console_unlock+0x3e0/0x5b0
-[    5.858086] hardirqs last disabled at (9090): [<ffff0000100817cc>] do_debug_exception+0x104/0x140
-[    5.866596] softirqs last  enabled at (9086): [<ffff000010082024>] __do_softirq+0x474/0x574
-[    5.875446] softirqs last disabled at (9079): [<ffff0000100f2254>] irq_exit+0x13c/0x148
-[    5.883598] ---[ end trace 6984ef7f081afa21 ]---
+So the operations we need to fix are:
+  - Creation, do not set rq to rq_list[0] if the list can have length 0.
+  - Do not flush any jobs when there is no rq.
+  - On entity destruction handle the rq = NULL case.
+  - on set_priority, do not try to change the rq if it is NULL.
 
-Fixes: fa94e48e13a1 ("regulator: core: Apply system load even if no consumer loads")
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/scheduler/sched_entity.c | 39 ++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index b9d7b45c7295..e2caf11598c7 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1349,7 +1349,9 @@ static int set_machine_constraints(struct regulator_dev *rdev,
- 		 * We'll only apply the initial system load if an
- 		 * initial mode wasn't specified.
- 		 */
-+		regulator_lock(rdev);
- 		drms_uA_update(rdev);
-+		regulator_unlock(rdev);
- 	}
+diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
+index e2942c9a11a7..35ddbec1375a 100644
+--- a/drivers/gpu/drm/scheduler/sched_entity.c
++++ b/drivers/gpu/drm/scheduler/sched_entity.c
+@@ -52,12 +52,12 @@ int drm_sched_entity_init(struct drm_sched_entity *entity,
+ {
+ 	int i;
  
- 	if ((rdev->constraints->ramp_delay || rdev->constraints->ramp_disable)
+-	if (!(entity && rq_list && num_rq_list > 0 && rq_list[0]))
++	if (!(entity && rq_list && (num_rq_list == 0 || rq_list[0])))
+ 		return -EINVAL;
+ 
+ 	memset(entity, 0, sizeof(struct drm_sched_entity));
+ 	INIT_LIST_HEAD(&entity->list);
+-	entity->rq = rq_list[0];
++	entity->rq = NULL;
+ 	entity->guilty = guilty;
+ 	entity->num_rq_list = num_rq_list;
+ 	entity->rq_list = kcalloc(num_rq_list, sizeof(struct drm_sched_rq *),
+@@ -67,6 +67,10 @@ int drm_sched_entity_init(struct drm_sched_entity *entity,
+ 
+ 	for (i = 0; i < num_rq_list; ++i)
+ 		entity->rq_list[i] = rq_list[i];
++
++	if (num_rq_list)
++		entity->rq = rq_list[0];
++
+ 	entity->last_scheduled = NULL;
+ 
+ 	spin_lock_init(&entity->rq_lock);
+@@ -165,6 +169,9 @@ long drm_sched_entity_flush(struct drm_sched_entity *entity, long timeout)
+ 	struct task_struct *last_user;
+ 	long ret = timeout;
+ 
++	if (!entity->rq)
++		return 0;
++
+ 	sched = entity->rq->sched;
+ 	/**
+ 	 * The client will not queue more IBs during this fini, consume existing
+@@ -264,20 +271,24 @@ static void drm_sched_entity_kill_jobs(struct drm_sched_entity *entity)
+  */
+ void drm_sched_entity_fini(struct drm_sched_entity *entity)
+ {
+-	struct drm_gpu_scheduler *sched;
++	struct drm_gpu_scheduler *sched = NULL;
+ 
+-	sched = entity->rq->sched;
+-	drm_sched_rq_remove_entity(entity->rq, entity);
++	if (entity->rq) {
++		sched = entity->rq->sched;
++		drm_sched_rq_remove_entity(entity->rq, entity);
++	}
+ 
+ 	/* Consumption of existing IBs wasn't completed. Forcefully
+ 	 * remove them here.
+ 	 */
+ 	if (spsc_queue_peek(&entity->job_queue)) {
+-		/* Park the kernel for a moment to make sure it isn't processing
+-		 * our enity.
+-		 */
+-		kthread_park(sched->thread);
+-		kthread_unpark(sched->thread);
++		if (sched) {
++			/* Park the kernel for a moment to make sure it isn't processing
++			 * our enity.
++			 */
++			kthread_park(sched->thread);
++			kthread_unpark(sched->thread);
++		}
+ 		if (entity->dependency) {
+ 			dma_fence_remove_callback(entity->dependency,
+ 						  &entity->cb);
+@@ -362,9 +373,11 @@ void drm_sched_entity_set_priority(struct drm_sched_entity *entity,
+ 	for (i = 0; i < entity->num_rq_list; ++i)
+ 		drm_sched_entity_set_rq_priority(&entity->rq_list[i], priority);
+ 
+-	drm_sched_rq_remove_entity(entity->rq, entity);
+-	drm_sched_entity_set_rq_priority(&entity->rq, priority);
+-	drm_sched_rq_add_entity(entity->rq, entity);
++	if (entity->rq) {
++		drm_sched_rq_remove_entity(entity->rq, entity);
++		drm_sched_entity_set_rq_priority(&entity->rq, priority);
++		drm_sched_rq_add_entity(entity->rq, entity);
++	}
+ 
+ 	spin_unlock(&entity->rq_lock);
+ }
 -- 
 2.19.1
 
