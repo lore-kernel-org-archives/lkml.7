@@ -2,112 +2,111 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60983C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B257C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270E42075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1EE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E5xS03X6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbfDDTXb (ORCPT
+        id S1730368AbfDDTXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:23:31 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60580 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730275AbfDDTXb (ORCPT
+        Thu, 4 Apr 2019 15:23:45 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42642 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730275AbfDDTXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:23:31 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 06C8D802CA; Thu,  4 Apr 2019 21:23:20 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 21:23:31 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dmitry Torokhov <dtor@google.com>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs
- support
-Message-ID: <20190404192331.GB29984@amd>
-References: <20190308203801.57920-1-ncrews@chromium.org>
- <20190308210843.GA16125@amd>
- <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com>
- <20190404112415.GB18653@amd>
- <CAE_wzQ96MkKb7uSoVBNkOZexevUKPf4jHyQZneg7YNCEs7SHfQ@mail.gmail.com>
- <20190404190326.GC27340@amd>
- <CAE_wzQ8mr1OMKB+ASfsCdGcs70YrzEMN4Htfg1+O51=ByhXchw@mail.gmail.com>
+        Thu, 4 Apr 2019 15:23:45 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x34JNbnI078945;
+        Thu, 4 Apr 2019 14:23:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554405817;
+        bh=DGkc/VfGsLgtv4bR0og0NgUmtBX9VcmZUbsKQUVlX4I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=E5xS03X6aKqNoGAFujvdbvH9vbtTf854ZGavPmlrX4gLBFJhTr6vTS3StPAgxWZrj
+         nkZf58jNXMMYcEEx6UlnKw2oVFnQa1EJHQ+DKhOZt8wb+a+xJ59537RClYbKgK9Xm6
+         XtOg/adpdAygSY/aMDGo5vomBRoT4Xh2SnmtQ87g=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x34JNbgZ103384
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Apr 2019 14:23:37 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
+ 2019 14:23:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 4 Apr 2019 14:23:37 -0500
+Received: from [172.22.84.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x34JNaNu015463;
+        Thu, 4 Apr 2019 14:23:37 -0500
+Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     <robh+dt@kernel.org>, <pavel@ucw.cz>, <lee.jones@linaro.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-4-dmurphy@ti.com> <20190404000909.GY49658@atomide.com>
+ <f4c0a946-fd0f-0071-0039-cfaea2f27ccc@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f278edc7-1614-0410-9aa7-2e3a6fc7818b@ti.com>
+Date:   Thu, 4 Apr 2019 14:23:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="H1spWtNR+x+ondvy"
-Content-Disposition: inline
-In-Reply-To: <CAE_wzQ8mr1OMKB+ASfsCdGcs70YrzEMN4Htfg1+O51=ByhXchw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <f4c0a946-fd0f-0071-0039-cfaea2f27ccc@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tony
 
---H1spWtNR+x+ondvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 4/4/19 1:48 PM, Jacek Anaszewski wrote:
+> Hi Tony,
+> 
+> Thanks for the feedback.
+> 
+> On 4/4/19 2:09 AM, Tony Lindgren wrote:
+>> * Dan Murphy <dmurphy@ti.com> [190321 14:29]:
+>>> Introduce the Texas Instruments LM3532 White LED driver.
+>>> The driver supports ALS configurability or manual brightness
+>>> control.
+>>>
+>>> The driver also supports associating LED strings with specific
+>>> control banks in a group or as individually controlled strings.
+>>
+>> I'm seeing slightly different naming under /sys/class/leds:
+>>
+>> lm3532:backlight
+>> lm3532:platform::kbd_backlight
+> 
+> The problem is in the "platform:" being a part of DT
+> label property. It should not be included there if devicename
+> section is added in the driver.
+> 
 
-Hi!
+Feel free to make it whatever you want I am not married to the naming convention for Droid 4.
+It was a suggestion in the code review
 
-> > > > Yeah, well, we not let the cros_kbd_led_backlight.c use chromeos:: =
-in
-> > > > the first place. But it happened. We want all backlights for the
-> > > > system keyboard to use common name, and "chromeos" is not really
-> > > > suitable for that. "platform" is.
-> > >
-> > > Pavel, who exactly wants this and why? Looking at today's -next I see:
-> > >
-> > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-> > > "::kbd_backlight" | wc -l
-> > > 18
-> > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-> > > "platform::kbd_backlight" | wc -l
-> > > 0
-> > >
-> > > so there isn't a single instance of "platform::kbd_backlight" and we
-> > > definitely not changing existing names.
-> >
-> > Yeah, we made mistakes in the past. We _don't_ want userspace to have
-> > ever growing list of names for userspace to follow.
-> >
-> > Backlight of internal keyboard is pretty common concept and there
-> > should be one name for it.
->=20
-> It is the *function* that is interesting to userspace, not full name,
-> and we have proper standardization there.
+https://lore.kernel.org/patchwork/patch/1048806/
 
-Well, if full name is not interesting, as you argue, why do we have
-this discussion?
-									Pavel
+<snip>
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---H1spWtNR+x+ondvy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlymWbMACgkQMOfwapXb+vIRUgCgho7OJjwsAgoIWqnCfbMgmfEf
-CUkAnA+NfFWvB1SSaxxOG9QtPTkwaFkC
-=9MDq
------END PGP SIGNATURE-----
-
---H1spWtNR+x+ondvy--
+-- 
+------------------
+Dan Murphy
