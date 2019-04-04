@@ -7,49 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B04C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8CAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D9221738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8137A218C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368287;
-	bh=NRzeKH9mI7WlQYFIgg7mMzNYW4YSK4SHg5AbRf4TcC8=;
+	s=default; t=1554368289;
+	bh=YIqn0khCvKFA2UV9MyopVX8ckf/h6e9+xCsgeSGJt4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eyb5EqxrtBUbOZHw6Q7AWvH/WPdmMnj2KCKkiOxmbtDY4Tkm6sxgmliJRdDLXCKva
-	 SO60eCWHuF8Qv6RnO2lvngNwX4kWCbdaNGBQIhO8li5tfOGbkE7NLZWh7D8oe9x+Bk
-	 N2jKBZD25TFGOf3owRZt/MC1vCPFvC3xNwT2Fm+M=
+	b=1YQvzrObRGR+y/4vQOkA7bxOjAtmFoVL8dUZghzV+Ids/F2M54uU4i1WmWYqKVITE
+	 5rif7IQeSuug9q3cSoK3aXhyBtustLK+xau7gon2cCSqkXHJuAruHsfNX+zZPogLUC
+	 sexA2EPk5DHqpvlvr3eut5Cjlty6ajpD0YSSNeXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfDDI6F (ORCPT
+        id S1730805AbfDDI6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730132AbfDDI6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:58:00 -0400
+        id S1730777AbfDDI6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:58:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBB1E21738;
-        Thu,  4 Apr 2019 08:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56EA6217D9;
+        Thu,  4 Apr 2019 08:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368279;
-        bh=NRzeKH9mI7WlQYFIgg7mMzNYW4YSK4SHg5AbRf4TcC8=;
+        s=default; t=1554368281;
+        bh=YIqn0khCvKFA2UV9MyopVX8ckf/h6e9+xCsgeSGJt4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBM1yl1HcnpK/Qt5C3oeTt6sELYxHLxW6coaDNLVmrM8v/+HYtdpfgMBq5++KrrL6
-         /fwLv/FNwckb0n/DY/4GMwFLMIXB52OuS1ycH6YOa7tL1J3/giuBA1T3oNqF8RvONo
-         SSm27xK6AACsw6gwtMBtTcVXC9jJmIGy7dyqs3Y8=
+        b=CJtDwpqVfxvJYyInmxKNfW3Z6Tf0gd/ZVU4PeWeiR0K+yvRIhjKCKHRxQnxGDErs9
+         zxhAI6qVbldnvTq74HtPgw0vvchlyZOJ+sPvxQQLc93V1U8xosv3KZKLncwO0Wop+X
+         9gVhRp7K2KWOvD242dsOnK/uFwwldjyo19AkjaFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/121] backlight: pwm_bl: Use gpiod_get_value_cansleep() to get initial state
-Date:   Thu,  4 Apr 2019 10:48:04 +0200
-Message-Id: <20190404084550.532093898@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>, cai@gmx.us,
+        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        linux-arm-kernel@lists.infradead.org, longman@redhat.com,
+        marc.zyngier@arm.com, mark.rutland@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 105/121] cpu/hotplug: Mute hotplug lockdep during init
+Date:   Thu,  4 Apr 2019 10:48:13 +0200
+Message-Id: <20190404084550.981621646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -68,64 +74,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cec2b18832e26bc866bef2be22eff4e25bbc4034 ]
+[ Upstream commit ce48c457b95316b9a01b5aa9d4456ce820df94b4 ]
 
-gpiod_get_value() gives out a warning if access to the underlying gpiochip
-requires sleeping, which is common for I2C based chips:
+Since we've had:
 
-    WARNING: CPU: 0 PID: 77 at drivers/gpio/gpiolib.c:2500 gpiod_get_value+0xd0/0x100
-    Modules linked in:
-    CPU: 0 PID: 77 Comm: kworker/0:2 Not tainted 4.14.0-rc3-00589-gf32897915d48-dirty #90
-    Hardware name: Allwinner sun4i/sun5i Families
-    Workqueue: events deferred_probe_work_func
-    [<c010ec50>] (unwind_backtrace) from [<c010b784>] (show_stack+0x10/0x14)
-    [<c010b784>] (show_stack) from [<c0797224>] (dump_stack+0x88/0x9c)
-    [<c0797224>] (dump_stack) from [<c0125b08>] (__warn+0xe8/0x100)
-    [<c0125b08>] (__warn) from [<c0125bd0>] (warn_slowpath_null+0x20/0x28)
-    [<c0125bd0>] (warn_slowpath_null) from [<c037069c>] (gpiod_get_value+0xd0/0x100)
-    [<c037069c>] (gpiod_get_value) from [<c03778d0>] (pwm_backlight_probe+0x238/0x508)
-    [<c03778d0>] (pwm_backlight_probe) from [<c0411a2c>] (platform_drv_probe+0x50/0xac)
-    [<c0411a2c>] (platform_drv_probe) from [<c0410224>] (driver_probe_device+0x238/0x2e8)
-    [<c0410224>] (driver_probe_device) from [<c040e820>] (bus_for_each_drv+0x44/0x94)
-    [<c040e820>] (bus_for_each_drv) from [<c040ff0c>] (__device_attach+0xb0/0x114)
-    [<c040ff0c>] (__device_attach) from [<c040f4f8>] (bus_probe_device+0x84/0x8c)
-    [<c040f4f8>] (bus_probe_device) from [<c040f944>] (deferred_probe_work_func+0x50/0x14c)
-    [<c040f944>] (deferred_probe_work_func) from [<c013be84>] (process_one_work+0x1ec/0x414)
-    [<c013be84>] (process_one_work) from [<c013ce5c>] (worker_thread+0x2b0/0x5a0)
-    [<c013ce5c>] (worker_thread) from [<c0141908>] (kthread+0x14c/0x154)
-    [<c0141908>] (kthread) from [<c0107ab0>] (ret_from_fork+0x14/0x24)
+  commit cb538267ea1e ("jump_label/lockdep: Assert we hold the hotplug lock for _cpuslocked() operations")
 
-This was missed in commit 0c9501f823a4 ("backlight: pwm_bl: Handle gpio
-that can sleep"). The code was then moved to a separate function in
-commit 7613c922315e ("backlight: pwm_bl: Move the checks for initial power
-state to a separate function").
+we've been getting some lockdep warnings during init, such as on HiKey960:
 
-The only usage of gpiod_get_value() is during the probe stage, which is
-safe to sleep in. Switch to gpiod_get_value_cansleep().
+[    0.820495] WARNING: CPU: 4 PID: 0 at kernel/cpu.c:316 lockdep_assert_cpus_held+0x3c/0x48
+[    0.820498] Modules linked in:
+[    0.820509] CPU: 4 PID: 0 Comm: swapper/4 Tainted: G S                4.20.0-rc5-00051-g4cae42a #34
+[    0.820511] Hardware name: HiKey960 (DT)
+[    0.820516] pstate: 600001c5 (nZCv dAIF -PAN -UAO)
+[    0.820520] pc : lockdep_assert_cpus_held+0x3c/0x48
+[    0.820523] lr : lockdep_assert_cpus_held+0x38/0x48
+[    0.820526] sp : ffff00000a9cbe50
+[    0.820528] x29: ffff00000a9cbe50 x28: 0000000000000000
+[    0.820533] x27: 00008000b69e5000 x26: ffff8000bff4cfe0
+[    0.820537] x25: ffff000008ba69e0 x24: 0000000000000001
+[    0.820541] x23: ffff000008fce000 x22: ffff000008ba70c8
+[    0.820545] x21: 0000000000000001 x20: 0000000000000003
+[    0.820548] x19: ffff00000a35d628 x18: ffffffffffffffff
+[    0.820552] x17: 0000000000000000 x16: 0000000000000000
+[    0.820556] x15: ffff00000958f848 x14: 455f3052464d4d34
+[    0.820559] x13: 00000000769dde98 x12: ffff8000bf3f65a8
+[    0.820564] x11: 0000000000000000 x10: ffff00000958f848
+[    0.820567] x9 : ffff000009592000 x8 : ffff00000958f848
+[    0.820571] x7 : ffff00000818ffa0 x6 : 0000000000000000
+[    0.820574] x5 : 0000000000000000 x4 : 0000000000000001
+[    0.820578] x3 : 0000000000000000 x2 : 0000000000000001
+[    0.820582] x1 : 00000000ffffffff x0 : 0000000000000000
+[    0.820587] Call trace:
+[    0.820591]  lockdep_assert_cpus_held+0x3c/0x48
+[    0.820598]  static_key_enable_cpuslocked+0x28/0xd0
+[    0.820606]  arch_timer_check_ool_workaround+0xe8/0x228
+[    0.820610]  arch_timer_starting_cpu+0xe4/0x2d8
+[    0.820615]  cpuhp_invoke_callback+0xe8/0xd08
+[    0.820619]  notify_cpu_starting+0x80/0xb8
+[    0.820625]  secondary_start_kernel+0x118/0x1d0
 
-Fixes: 0c9501f823a4 ("backlight: pwm_bl: Handle gpio that can sleep")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+We've also had a similar warning in sched_init_smp() for every
+asymmetric system that would enable the sched_asym_cpucapacity static
+key, although that was singled out in:
+
+  commit 40fa3780bac2 ("sched/core: Take the hotplug lock in sched_init_smp()")
+
+Those warnings are actually harmless, since we cannot have hotplug
+operations at the time they appear. Instead of starting to sprinkle
+useless hotplug lock operations in the init codepaths, mute the
+warnings until they start warning about real problems.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: cai@gmx.us
+Cc: daniel.lezcano@linaro.org
+Cc: dietmar.eggemann@arm.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: longman@redhat.com
+Cc: marc.zyngier@arm.com
+Cc: mark.rutland@arm.com
+Link: https://lkml.kernel.org/r/1545243796-23224-2-git-send-email-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/pwm_bl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cpu.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 155153ecb894..2a0ce0c68302 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -212,7 +212,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
- 	 */
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 32f0432f0c26..8c350dd81581 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -314,6 +314,15 @@ void cpus_write_unlock(void)
  
- 	/* if the enable GPIO is disabled, do not enable the backlight */
--	if (pb->enable_gpio && gpiod_get_value(pb->enable_gpio) == 0)
-+	if (pb->enable_gpio && gpiod_get_value_cansleep(pb->enable_gpio) == 0)
- 		return FB_BLANK_POWERDOWN;
+ void lockdep_assert_cpus_held(void)
+ {
++	/*
++	 * We can't have hotplug operations before userspace starts running,
++	 * and some init codepaths will knowingly not take the hotplug lock.
++	 * This is all valid, so mute lockdep until it makes sense to report
++	 * unheld locks.
++	 */
++	if (system_state < SYSTEM_RUNNING)
++		return;
++
+ 	percpu_rwsem_assert_held(&cpu_hotplug_lock);
+ }
  
- 	/* The regulator is disabled, do not enable the backlight */
 -- 
 2.19.1
 
