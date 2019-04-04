@@ -2,115 +2,143 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E95C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C03C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2B020693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vT41n3az"
+	by mail.kernel.org (Postfix) with ESMTP id AE9B620693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfDDQrF (ORCPT
+        id S1729573AbfDDQrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:47:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36824 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfDDQrE (ORCPT
+        Thu, 4 Apr 2019 12:47:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42414 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfDDQrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:47:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r24so2720305ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EuUJCkkF8EMeJhXuUWpVcEjJ3aQNWsOOW9Ft9o4wkUw=;
-        b=vT41n3azLBzPxsjuLtHLjhEXyWSoRrYcY8AOY4/ad1KCN3DBKMX3gZK+X+yigUPKUo
-         rx6foXla0O3fYtS+m9Dfa03GpjfFELLvkGaTC8d2TbzYfmisEP/k7saD8BfKPDLe8UZV
-         jGC+sjzPxo6lCGNdoOrvdBWMyVebByL2ZlDU/rKQNvBCRwFYiEZFtI8TyBsYf4xeqH6p
-         4O/XHAIRuwNNKBvyc9jcBHf6KQgiIZAKelygbp3jnr6ECDqM/oD90VA9HKJCZwZUe7i1
-         pyXP5Te5qbzyoxx8NHtzWjL/1fqYfHDcIPwvacC344nkbCmdraQYfXhczaBsbUox1Qbd
-         EvxQ==
+        Thu, 4 Apr 2019 12:47:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id g3so4638037wrx.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:47:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EuUJCkkF8EMeJhXuUWpVcEjJ3aQNWsOOW9Ft9o4wkUw=;
-        b=NjYZbBsscexaoatQoqjHaGSDaO500jT9a3hosIm65SMpH7oB78UlMpN4kBnweKxfg8
-         gVZ9YM87Qh9bBK89B4u9tsYVwqrbsSjJ8lb31xkebJ3beZdW7jcR6MzlL+/axCjMpJDF
-         uvHeLlEvKceoHmNwEknkJB/n3wHpL6mFOlWBLQ0VLSOMLyZ62oaRoZbHYpz2hzk9rphg
-         nmuTxE0OJxd369GsjcbLu46iqAahaad5HLtzibyoxdSi0esS4HxlMTjWuoYhb5TgO4j9
-         oPvN3KGO0+JN/yOF7UlA3OicE9y/cKZ1M7WT785pFi6LU97Wg+dNSaSxkFwSgJBR6SHN
-         JjJA==
-X-Gm-Message-State: APjAAAXuzA2LeTaSWD+vkU5B59LL6FllNlDGYehVutuiTVahFrGOQ7qT
-        jBXYoRrc8BUGOU5hrC3qsrp6qcEh
-X-Google-Smtp-Source: APXvYqwIH35wa0aknRh53RHPK4HJD8UsM+ImzyK4tKGrlpokK5Qc0Lec99iRXt6HjV2MmKcjk1bgNw==
-X-Received: by 2002:a2e:8648:: with SMTP id i8mr4086539ljj.166.1554396422353;
-        Thu, 04 Apr 2019 09:47:02 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id i66sm4079357lji.43.2019.04.04.09.47.01
+        bh=CgNWawq9rjViyTKeZpo/Mpeg3+hyzXwUPSiaLOVr/WM=;
+        b=OJp7ZARUFWLq9aBiftzJNVZC3sasY2RTKeRd/0ByhPO316DtvqDwNZGubnBT89b1AV
+         bBvxqQ6Fp3F6+L7esQGfy88tdCG5VKYswNkp/mIYcItQz/G/baubnL8za43Cz0zKA8LL
+         nEuFjAqeSpzzfGdzcIgPWRV36/PxI97h8B5bIRJ34Dm6EQ/sk2HK0UklB0TS0na19IYb
+         sE+TnN7o9GxyAlcwiyfuDcbSZNyPKQS+6N8ecXKDCSMKPmgXETi4sW15nuXUgn9pJJ9n
+         XKfFh1xzdBvUnig1yQWhUHWL090b5KaUsyVmeq8Ro85P76MzpMC253rcMGWZXYkp1Xho
+         t3Aw==
+X-Gm-Message-State: APjAAAX/ibZu6S52FBTmvioWyi/PRaVovZVhYpZOiwuuuzdASQKNjU5n
+        Jhm7heb9VupBeBeeVS8cIbXUkQ==
+X-Google-Smtp-Source: APXvYqxOgjvZzMt3gWOchMtrayK6nUb0GdNpKZ2rmUDbKTRSqa4SOQqtEtN2WP8a3Xd7jj6t1MNDrw==
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr1095163wrj.101.1554396438780;
+        Thu, 04 Apr 2019 09:47:18 -0700 (PDT)
+Received: from steredhat (host35-203-static.12-87-b.business.telecomitalia.it. [87.12.203.35])
+        by smtp.gmail.com with ESMTPSA id y5sm13933396wrw.23.2019.04.04.09.47.17
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 09:47:01 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id 73C21460438; Thu,  4 Apr 2019 19:47:00 +0300 (MSK)
-Date:   Thu, 4 Apr 2019 19:47:00 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Vince Weaver <vincent.weaver@maine.edu>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 04 Apr 2019 09:47:18 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 18:47:15 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: perf: perf_fuzzer crashes on Pentium 4 systems
-Message-ID: <20190404164700.GR1421@uranus.lan>
-References: <alpine.DEB.2.21.1904031043170.29188@macbook-air>
- <20190403191944.GH1421@uranus.lan>
- <20190403203144.GI1421@uranus.lan>
- <alpine.DEB.2.21.1904040922350.3758@macbook-air>
- <20190404133327.GP1421@uranus.lan>
- <alpine.DEB.2.21.1904041234340.5098@macbook-air>
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH RFC 0/4] vsock/virtio: optimizations to increase the
+ throughput
+Message-ID: <20190404164715.sycigtccwq2rziuz@steredhat>
+References: <20190404105838.101559-1-sgarzare@redhat.com>
+ <20190404114643-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904041234340.5098@macbook-air>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190404114643-mutt-send-email-mst@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 12:37:18PM -0400, Vince Weaver wrote:
-> On Thu, 4 Apr 2019, Cyrill Gorcunov wrote:
+On Thu, Apr 04, 2019 at 11:52:46AM -0400, Michael S. Tsirkin wrote:
+> I simply love it that you have analysed the individual impact of
+> each patch! Great job!
+
+Thanks! I followed Stefan's suggestions!
+
 > 
-> > On Thu, Apr 04, 2019 at 09:25:47AM -0400, Vince Weaver wrote:
-> > > 
-> > > It looks like there are at least two bugs here, one that's a full 
-> > > hardlockup with nothing on serial console.  The other is the NULL 
-> > > dereference.
+> For comparison's sake, it could be IMHO benefitial to add a column
+> with virtio-net+vhost-net performance.
 > 
-> OK, it turns out the hard-lock and the null pointer dereference might be 
-> the same, I have a random seed for the fuzzer from a hard-lock crash that 
-> reproduces and it generated the null pointer crash.  (This is with your 
-> patch applied).
+> This will both give us an idea about whether the vsock layer introduces
+> inefficiencies, and whether the virtio-net idea has merit.
+> 
 
-I see. My patch simply eliminates wrong event for unimplemented general
-events, but it definitely won't help with nil deref, so it mostly to
-eliminate some potential side effects.
+Sure, I already did TCP tests on virtio-net + vhost, starting qemu in
+this way:
+  $ qemu-system-x86_64 ... \
+      -netdev tap,id=net0,vhost=on,ifname=tap0,script=no,downscript=no \
+      -device virtio-net-pci,netdev=net0
 
-> I can try to see if I can bisect down to a specific event sequence that 
-> triggers this, but that can be tricky sometimes if things lock up so fast 
-> that the event log doesn't get written out before the crash.
+I did also a test using TCP_NODELAY, just to be fair, because VSOCK
+doesn't implement something like this.
+In both cases I set the MTU to the maximum allowed (65520).
 
-Oh, Vince, I suspect such kind of bisection might consume a lot of your
-time :( Maybe we could update perf fuzzer so that it would send events
-to some net-storage first then write them to the counters, iow to automatize
-this all stuff somehow?
+                        VSOCK                        TCP + virtio-net + vhost
+                  host -> guest [Gbps]                 host -> guest [Gbps]
+pkt_size  before opt. patch 1 patches 2+3 patch 4     TCP_NODELAY
+  64          0.060     0.102     0.102     0.096         0.16        0.15
+  256         0.22      0.40      0.40      0.36          0.32        0.57
+  512         0.42      0.82      0.85      0.74          1.2         1.2
+  1K          0.7       1.6       1.6       1.5           2.1         2.1
+  2K          1.5       3.0       3.1       2.9           3.5         3.4
+  4K          2.5       5.2       5.3       5.3           5.5         5.3
+  8K          3.9       8.4       8.6       8.8           8.0         7.9
+  16K         6.6      11.1      11.3      12.8           9.8        10.2
+  32K         9.9      15.8      15.8      18.1          11.8        10.7
+  64K        13.5      17.4      17.7      21.4          11.4        11.3
+  128K       17.9      19.0      19.0      23.6          11.2        11.0
+  256K       18.0      19.4      19.8      24.4          11.1        11.0
+  512K       18.4      19.6      20.1      25.3          10.1        10.7
+
+For small packet size (< 4K) I think we should implement some kind of
+batching/merging, that could be for free if we use virtio-net as a transport.
+
+Note: Maybe I have something miss configured because TCP on virtio-net
+for host -> guest case doesn't exceed 11 Gbps.
+
+                        VSOCK                        TCP + virtio-net + vhost
+                  guest -> host [Gbps]                 guest -> host [Gbps]
+pkt_size  before opt. patch 1 patches 2+3             TCP_NODELAY
+  64          0.088     0.100     0.101                   0.24        0.24
+  256         0.35      0.36      0.41                    0.36        1.03
+  512         0.70      0.74      0.73                    0.69        1.6
+  1K          1.1       1.3       1.3                     1.1         3.0
+  2K          2.4       2.4       2.6                     2.1         5.5
+  4K          4.3       4.3       4.5                     3.8         8.8
+  8K          7.3       7.4       7.6                     6.6        20.0
+  16K         9.2       9.6      11.1                    12.3        29.4
+  32K         8.3       8.9      18.1                    19.3        28.2
+  64K         8.3       8.9      25.4                    20.6        28.7
+  128K        7.2       8.7      26.7                    23.1        27.9
+  256K        7.7       8.4      24.9                    28.5        29.4
+  512K        7.7       8.5      25.0                    28.3        29.3
+
+For guest -> host I think is important the TCP_NODELAY test, because TCP
+buffering increases a lot the throughput.
+
+> One other comment: it makes sense to test with disabling smap
+> mitigations (boot host and guest with nosmap).  No problem with also
+> testing the default smap path, but I think you will discover that the
+> performance impact of smap hardening being enabled is often severe for
+> such benchmarks.
+
+Thanks for this valuable suggestion, I'll redo all the tests with nosmap!
+
+Cheers,
+Stefano
