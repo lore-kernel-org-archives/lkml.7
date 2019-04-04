@@ -2,223 +2,187 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36329C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EAFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4D0205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615C3205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jOmVn4fV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OX1I4ZS8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pnGGaQ5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfDDKAD (ORCPT
+        id S1728918AbfDDKBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:00:03 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54046 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDDKAD (ORCPT
+        Thu, 4 Apr 2019 06:01:34 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54288 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDDKBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:00:03 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 72A6861926; Thu,  4 Apr 2019 10:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554372001;
-        bh=uS3tQVq+7k16FrxHJQ1eUQoMO40M6FO3w4lLZ5kIqKg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jOmVn4fVTJ4sNLQS3zd5zKGP4H5fjv0jIF2p9ZgPwo4kYx2fC0oK17o52FW+h1jj8
-         tkD/ug+8TSIeLWyI5VVS6umanmQhuWgzwyWexI0EG6CmTgFj/DuyP9PBjKhDboWSDi
-         DPPPl67PjlUxSDmeM/z2FbWKqzi3X9wpTgzqCf9k=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id D65A66134E;
-        Thu,  4 Apr 2019 09:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554371999;
-        bh=uS3tQVq+7k16FrxHJQ1eUQoMO40M6FO3w4lLZ5kIqKg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OX1I4ZS8ZFFuJbV2Y2BFJpqrjt1yoOfTge6rSSNxYq5JqJSYnWq0wP1Yny9+maBlE
-         1tXdAZ2RCwhCH08I/RY6lfSUPE00Peuj+1Nr2NOQbK/0VazcLepP7aMQbamQ7W1Jad
-         7u9HDPUrLbydPGjXQCarlQRku7p8R5Gz8KFdtdY0=
+        Thu, 4 Apr 2019 06:01:33 -0400
+Received: by mail-it1-f196.google.com with SMTP id a190so2785371ite.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 03:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yQqy5633naz9ZVmb/XbHF2bm08Eks0wHR7zngF2kpNM=;
+        b=pnGGaQ5yTsSx4DZD0C7N7Qwhg9JRBNb3VSF2CsRBzL7cVvh9KRZA/u7eiyv7j2ITMw
+         ThIk9xXFr8HImlr/89wz8uVV2y49b+6lfQ1hqL/aaZ0DE8KzgFC8+BoP/IJDUN4zG+S2
+         WxlpuHbMJ/FNKrPt88JGdJoBujgY4Cwu5nj315NxW9s2qGSf38b8dORWtBenvVj/F4dn
+         rmmnYSnxTn+HcIt21F2vCG4BW4LUh3qRqkz9U3gFoXMpbKZRNDMvc0RQVhzSqS8mtq4K
+         yBj3hMnyv8Fmwq1ytd7am28T8o9SzWRydR+omLlOg1A6cIamkmW7omF4Sc1um+SfU89Y
+         rpuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yQqy5633naz9ZVmb/XbHF2bm08Eks0wHR7zngF2kpNM=;
+        b=k7YkBJDASd9GjQHMjXdEWxOZjiQBRzbop8/05I1un7E7gIRa7fJRFNVBs/t/BKqge/
+         9rkaQSEm3jWZV/zSFLvN4wQPDzUkO5aAjmHT4kLHBciCfc0viWUMjorTCrwg9mPmajDI
+         5gA+tV/+xfQKbUS0mwg8g2fLL+UHZQFH0jBYgYonnViCi+h0o7GUP9pyOsr0Il7ARNOc
+         RhkMevZc/IooWzjDtZjogbImuTfUlxp6GUpZKeNm9tePRCvwlnx0tr+WKU2K7pWbDFRA
+         CXyHtzZrJtlrZ9BKbdPREf2B+4IUc0GWOT+mlc83xLwlNGcuJO2pmyGSs7AFZNJJ3qrG
+         4Gpw==
+X-Gm-Message-State: APjAAAUTcfnqWNXck7aTE/EhlZmoPkJPCmBuO/++uQ5lOU4a9aUeF+TX
+        XtEFPayINmrcXXef2ebI+Mo7Vw3tUrh6mujsfbsJdw==
+X-Google-Smtp-Source: APXvYqwWkt5Xzdv/Itge6JN/eCPWxU4C2oM6z51lh5rczR2K41iPLdrhkVmdO8Bnvkr8eEfXSaW3Bj+Kc63DCmvmDjA=
+X-Received: by 2002:a02:5bc2:: with SMTP id g185mr4010098jab.31.1554372092646;
+ Thu, 04 Apr 2019 03:01:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 04 Apr 2019 15:29:58 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, hemantg@codeaurora.org
-Subject: Re: [PATCH v2 1/2] Bluetooth: hci_qca: Load customized NVM based on
- the device property
-In-Reply-To: <1554368908-22017-1-git-send-email-rjliao@codeaurora.org>
-References: <1554359858-21049-1-git-send-email-rjliao@codeaurora.org>
- <1554368908-22017-1-git-send-email-rjliao@codeaurora.org>
-Message-ID: <874b0a9f23d3857ed2dbcfb7ff84e558@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <20190322133105.5945-1-brgl@bgdev.pl> <20190322133105.5945-2-brgl@bgdev.pl>
+ <CAHCN7xJj_aA8XFR6=ZxO-WrfkJRY5fS6NgjHbeqpdfhUnn1apA@mail.gmail.com>
+ <CAMpxmJVBTny7kzADSZHQXk_ZUjnRaNWu0Ly3WC8v+zPmR8Dizg@mail.gmail.com>
+ <bb734e20-d2c7-73f4-e2c5-3b810ccf4c81@ti.com> <CAMRc=MdYhaED30Xu8oJiJD7F9z=SPu6u+1p32mQnX0tEL=iOiA@mail.gmail.com>
+ <CAHCN7x+-GRBygMt9APi9sf19PQksfmXk9sOZUo-1YY40RhUmng@mail.gmail.com>
+In-Reply-To: <CAHCN7x+-GRBygMt9APi9sf19PQksfmXk9sOZUo-1YY40RhUmng@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 4 Apr 2019 12:01:21 +0200
+Message-ID: <CAMRc=Md-XtFYP_c4afNDHdYDUV77tGpvau8AsG1KGwQ6Hm+FhQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] ARM: davinci: fix cpufreq registration on da850-evm
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Lechner <david@lechnology.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
+=C5=9Br., 3 kwi 2019 o 17:49 Adam Ford <aford173@gmail.com> napisa=C5=82(a)=
+:
+>
+> On Wed, Apr 3, 2019 at 7:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > =C5=9Br., 27 mar 2019 o 12:14 Sekhar Nori <nsekhar@ti.com> napisa=C5=82=
+(a):
+> > >
+> > > Hi Bart,
+> > >
+> > > On 26/03/19 11:21 PM, Bartosz Golaszewski wrote:
+> > > > wt., 26 mar 2019 o 15:00 Adam Ford <aford173@gmail.com> napisa=C5=
+=82(a):
+> > > >>
+> > > >> On Fri, Mar 22, 2019 at 8:31 AM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> > > >>>
+> > > >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >>>
+> > > >>> The system_rev variable is never set on davinci and is always 0, =
+so
+> > > >>> we're using the default max operating point of 300MHz. The cvdd s=
+upply
+> > > >>> comes from the tps6507 pmic and the voltage can go all the way to=
+ 1.3V
+> > > >>> so the maximum supported rate should be 456MHz.
+> > > >>
+> > > >> My understanding is that only certain revisions of the silicon can=
+ go
+> > > >> to 456MHz.   The L138's Datasheet lists both a 456 and 375 version=
+.  I
+> > > >> cannot find a way to read a register to determine which version of=
+ the
+> > > >> silicon is available. Maybe Sekhar can confirm.
+> > > >>
+> > > >
+> > > > Commit 28bd2c341120 ("davinci: am18x/da850/omap-l138 evm: add suppo=
+rt
+> > > > for higher speed grades") mentions the following:
+> > > >
+> > > > ---
+> > > > U-Boot on the EVM sets up ATAG_REVISION to inform the OS
+> > > > regarding the speed grade supported by the silicon. We use
+> > > > this information to pass on the speed grade information to
+> > > > the SoC code.
+> > > > ---
+> > > >
+> > > > Should the system_rev somehow reflect that revision? Any way I can =
+check it?
+> > >
+> > > Can you check if the procedure in doc/README.davinci in U-Boot source=
+s
+> > > still works?
+> > >
+> > > Environment Variables
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > >
+> > > The DA850 EVM allows the user to specify the maximum cpu clock allowe=
+d by the
+> > > silicon, in Hz, via an environment variable "maxcpuclk".
+> > >
+> > > The maximum clock rate allowed depends on the silicon populated on th=
+e EVM.
+> > > Please make sure you understand the restrictions placed on this clock=
+ in the
+> > > device specific datasheet before setting up this variable. This infor=
+mation is
+> > > passed to the Linux kernel using the ATAG_REVISION atag.
+> > >
+> > > If "maxcpuclk" is not defined, the configuration CONFIG_DA850_EVM_MAX=
+_CPU_CLK
+> > > is used to obtain this information.
+> > >
+> > > Thanks,
+> > > Sekhar
+> >
+> > Hi Sekhar,
+> >
+> > I built the current upstream u-boot and the get_board_rev() function
+> > for da850-evm doesn't seem to be called at all. For instance the
+> > lego-ev3 platform does this:
+> >
+> > ./lego/ev3/legoev3.c:108: board_rev =3D get_board_rev();
+> >
+> > but in davinci this function seems to be unused and I don't see it
+> > called from any other core u-boot component. I don't see any commit
+> > that would mention this function but there are a lot of commits
+> > removing get_board_rev() for other boards in git log. Is it possible
+> > it stopped being used at some point?
+>
+> Look for setup_revision_tag in arch/arm/lib/bootm.c
+>
+> The function appears to be called from there.
+>
+> There is a __weak reference in the header file which I think allows
+> people to remove them without breaking bootm.
+>
+> adam
+> >
+> > Bart
 
-On 2019-04-04 14:38, Rocky Liao wrote:
-> QCA BTSOC nvm is a customized file and different vendor/platoform may 
-> want
-> to have different BTSOC configuration via this file (e.g. Configure SCO
-> over PCM or I2S, Setting Tx power, etc.) This patch will allow vendors 
-> to
-> download different nvm file by reading a device property "nvm-postfix" 
-> as
-> the nvm file name postfix.
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> Changes in v2:
->   * added the property to the document file
->     Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->   * fixed coding style warnings
->   * moved the nvm-postfix to the last entry of the qca_serdev
-> ---
->  drivers/bluetooth/btqca.c   | 14 ++++++++++----
->  drivers/bluetooth/btqca.h   |  6 ++++--
->  drivers/bluetooth/hci_qca.c | 19 ++++++++++++++++++-
->  3 files changed, 32 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index 6122685..4e89286 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev,
-> const bdaddr_t *bdaddr)
->  EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
-> 
->  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> -		   enum qca_btsoc_type soc_type, u32 soc_ver)
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
-> +		   const char *nvm_postfix)
->  {
->  	struct rome_config config;
->  	int err;
-> @@ -368,9 +369,14 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t 
-> baudrate,
->  	if (soc_type == QCA_WCN3990)
->  		snprintf(config.fwname, sizeof(config.fwname),
->  			 "qca/crnv%02x.bin", rom_ver);
-> -	else
-> -		snprintf(config.fwname, sizeof(config.fwname),
-> -			 "qca/nvm_%08x.bin", soc_ver);
-> +	else {
-> +		if (nvm_postfix)
-> +			snprintf(config.fwname, sizeof(config.fwname),
-> +				 "qca/nvm_%08x_%s.bin", soc_ver, nvm_postfix);
-> +		else
-> +			snprintf(config.fwname, sizeof(config.fwname),
-> +				 "qca/nvm_%08x.bin", soc_ver);
-> +	}
-> 
->  	err = qca_download_firmware(hdev, &config);
->  	if (err < 0) {
-> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-> index 6fdc25d..0dd6cd0 100644
-> --- a/drivers/bluetooth/btqca.h
-> +++ b/drivers/bluetooth/btqca.h
-> @@ -139,7 +139,8 @@ enum qca_btsoc_type {
-> 
->  int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->  int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
-> -		   enum qca_btsoc_type soc_type, u32 soc_ver);
-> +		   enum qca_btsoc_type soc_type, u32 soc_ver,
-> +		   const char *nvm_postfix);
->  int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
->  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
->  #else
-> @@ -150,7 +151,8 @@ static inline int qca_set_bdaddr_rome(struct
-> hci_dev *hdev, const bdaddr_t *bdad
->  }
-> 
->  static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t 
-> baudrate,
-> -				 enum qca_btsoc_type soc_type, u32 soc_ver)
-> +				 enum qca_btsoc_type soc_type, u32 soc_ver,
-> +				 const char *nvm_postfix)
->  {
->  	return -EOPNOTSUPP;
->  }
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index 4ea995d..560e880 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -168,6 +168,7 @@ struct qca_serdev {
->  	struct qca_power *bt_power;
->  	u32 init_speed;
->  	u32 oper_speed;
-> +	const char *nvm_postfix;
+Thanks, now verified that this still works in board file mode for
+da850-evm. Now the questions is - what about DT mode? Should we only
+enable the lowest possible mode (300MHz) and leave it to the user to
+enable any higher frequencies?
 
-[Bala]: I guess your trying to the read the type of communication for 
-SCO.
-         so i would recommend to change this to variable name to 
-sco_com_type or might be to the use understandable name.
-         just an suggestion. Don't respin right away wait for other 
-comments too :)
-
->  };
-> 
->  static int qca_power_setup(struct hci_uart *hu, bool on);
-> @@ -189,6 +190,17 @@ static enum qca_btsoc_type qca_soc_type(struct
-> hci_uart *hu)
->  	return soc_type;
->  }
-> 
-> +static const char *qca_get_nvm_postfix(struct hci_uart *hu)
-> +{
-> +	if (hu->serdev) {
-> +		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
-> +
-> +		return qsd->nvm_postfix;
-> +	} else {
-> +		return NULL;
-> +	}
-> +}
-> +
->  static void __serial_clock_on(struct tty_struct *tty)
->  {
->  	/* TODO: Some chipset requires to enable UART clock on client
-> @@ -1191,6 +1203,7 @@ static int qca_setup(struct hci_uart *hu)
->  	struct qca_data *qca = hu->priv;
->  	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
->  	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-> +	const char *nvm_postfix = qca_get_nvm_postfix(hu);
->  	int ret;
->  	int soc_ver = 0;
-> 
-> @@ -1241,7 +1254,8 @@ static int qca_setup(struct hci_uart *hu)
-> 
->  	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
->  	/* Setup patch / NVM configurations */
-> -	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
-> +	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
-> +			nvm_postfix);
->  	if (!ret) {
->  		set_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
->  		qca_debugfs_init(hdev);
-> @@ -1462,6 +1476,9 @@ static int qca_serdev_probe(struct serdev_device 
-> *serdev)
->  			return PTR_ERR(qcadev->bt_en);
->  		}
-> 
-> +		device_property_read_string(&serdev->dev, "nvm-postfix",
-> +					 &qcadev->nvm_postfix);
-> +
->  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
->  		if (IS_ERR(qcadev->susclk)) {
->  			dev_err(&serdev->dev, "failed to acquire clk\n");
-
--- 
-Regards
-Balakrishna.
+Bart
