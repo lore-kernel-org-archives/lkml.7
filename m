@@ -4,54 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CB8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E7EC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7AC2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4017F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369312;
-	bh=1XBMWzmyoaSDiyIN1So87avbBwSH5uN/ymx2n/0Gkbw=;
+	s=default; t=1554369316;
+	bh=T2RJgN2sKJmaeLcJLVgct0wZCzifj+SPlyN3qpZ35co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPyGRJhecg2xizLjvoSTEy9W69G3cZMDVUaMjo1l9YBpG36CqAHD/hjpOlYnj3XgY
-	 uTJLlrtX4F70qAzC3fAxcJUAVQxyR9/PY1+VBVdct6O7TV/3b8r/IjvKJ9fS6oIkat
-	 KWCm0x2VuWDrbm8grSPwax9GsHL406MAKuefxi04=
+	b=pKiVKWYM+bljYQCQR+XG0J3tSWTHBH88am39NNgO97oXluxyoOkMdef9fVkIKGNbD
+	 jHotdEp06bkgUWtwswT/4zjZXsfO7T28uXWft7nXscHrnqBGeTsjFPPCtfaR2KdY5T
+	 fvPfoOTLZvVQOAL/FOaTs2uT2Ax7eE59m0NAAVHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfDDJPK (ORCPT
+        id S2387853AbfDDJPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387403AbfDDJPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:07 -0400
+        id S1732558AbfDDJPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF1E2054F;
-        Thu,  4 Apr 2019 09:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12CB220820;
+        Thu,  4 Apr 2019 09:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369307;
-        bh=1XBMWzmyoaSDiyIN1So87avbBwSH5uN/ymx2n/0Gkbw=;
+        s=default; t=1554369312;
+        bh=T2RJgN2sKJmaeLcJLVgct0wZCzifj+SPlyN3qpZ35co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tNcFoQ0BSfBb+F4b9lo6HwBBj9laoOQ1hQw0aRJMnk2ADMZsGjCZl2qFsy+fJPqw8
-         YFcRkDB7vJqNUNd2kRlf3K+s+uGO4jEhjTqDxRi9Y2OqQ/oCpVJ3N0NwpiOq0/OWm+
-         iaTfC7Ks6vgWxwLJ2gOk3kJcBYLblUJTImnaxMeg=
+        b=mEWuOKYvFCVd+wR1Rfja0+TOHyHwUeIw74McuYBYZiFVKklWY1YfpA9iy5P8QDbt7
+         6z8OqyoXYgU++6qvT8UIuBmYmuxIZWDsuboKhT0ZJXO9Y4cVzghaObcKJKdTXhjpJg
+         WsIcpr1hhTRJjeXY8nJevmR3HDH37iFhHrywbiig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Sun peng Li <Sunpeng.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Kairui Song <kasong@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Dave Young <dyoung@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        kexec@lists.infradead.org, Philipp Rudo <prudo@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Yannik Sembritzki <yannik@sembritzki.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 161/246] drm/amd/display: Dont re-program planes for DPMS changes
-Date:   Thu,  4 Apr 2019 10:47:41 +0200
-Message-Id: <20190404084624.807062146@linuxfoundation.org>
+Subject: [PATCH 5.0 163/246] x86/kexec: Fill in acpi_rsdp_addr from the first kernel
+Date:   Thu,  4 Apr 2019 10:47:43 +0200
+Message-Id: <20190404084624.878734238@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -70,62 +76,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5062b797db4103218fa00ee254417b8ecaab7401 ]
+[ Upstream commit ccec81e4251f5a5421e02874e394338a897056ca ]
 
-[Why]
-There are opt1c lock warnings and CRTC read timeouts when running the
-"igt@kms_plane@plane-position-hole-dpms-pipe-*" tests. These are
-caused by trying to reprogram planes that are not in the current
-context.
+When efi=noruntime or efi=oldmap is used on the kernel command line, EFI
+services won't be available in the second kernel, therefore the second
+kernel will not be able to get the ACPI RSDP address from firmware by
+calling EFI services and so it won't boot.
 
-DPMS off removes the stream from the context. In this case:
+Commit
 
-new_crtc_state->active_changed = true
-new_crtc_state->mode_changed = false
+  e6e094e053af ("x86/acpi, x86/boot: Take RSDP address from boot params if available")
 
-The planes are reprogrammed before the stream is removed from the
-context because stream_state->mode_changed = false.
+added an acpi_rsdp_addr field to boot_params which stores the RSDP
+address for other kernel users.
 
-For DPMS adds the stream and planes back to the context:
+Recently, after
 
-new_crtc_state->active_changed = true
-new_crtc_state->mode_changed = false
+  3a63f70bf4c3 ("x86/boot: Early parse RSDP and save it in boot_params")
 
-The planes are also reprogrammed here before the stream is added to the
-context because stream_state->mode_changed = true. They were not
-previously in the current context so warnings occur here.
+the acpi_rsdp_addr will always be filled with a valid RSDP address.
 
-[How]
-Set stream_state->mode_changed = true when
-new_crtc_state->active_changed = true too.
+So fill in that value into the second kernel's boot_params thus ensuring
+that the second kernel receives the RSDP value from the first kernel.
 
-This prevents reprogramming before the context is applied in DC. The
-programming will be done after the context is applied.
+ [ bp: massage commit message. ]
 
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Yannik Sembritzki <yannik@sembritzki.me>
+Link: https://lkml.kernel.org/r/20190204173852.4863-1-kasong@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/kexec-bzimage64.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 6d77fd966dbd..0040605cace8 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4975,7 +4975,8 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
- static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
- 						struct dc_stream_state *stream_state)
- {
--	stream_state->mode_changed = crtc_state->mode_changed;
-+	stream_state->mode_changed =
-+		crtc_state->mode_changed || crtc_state->active_changed;
- }
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 53917a3ebf94..1f3b77367948 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -218,6 +218,9 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 	params->screen_info.ext_mem_k = 0;
+ 	params->alt_mem_k = 0;
  
- static int amdgpu_dm_atomic_commit(struct drm_device *dev,
++	/* Always fill in RSDP: it is either 0 or a valid value */
++	params->acpi_rsdp_addr = boot_params.acpi_rsdp_addr;
++
+ 	/* Default APM info */
+ 	memset(&params->apm_bios_info, 0, sizeof(params->apm_bios_info));
+ 
+@@ -256,7 +259,6 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+ 			efi_setup_data_offset);
+ #endif
+-
+ 	/* Setup EDD info */
+ 	memcpy(params->eddbuf, boot_params.eddbuf,
+ 				EDDMAXNR * sizeof(struct edd_info));
 -- 
 2.19.1
 
