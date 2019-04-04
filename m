@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F47C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866C0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC7220693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5825F20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369364;
-	bh=CESGC82cYMb+qvxBWHsfu5/oumGj+VOtsBEAQHLTP+U=;
+	s=default; t=1554369368;
+	bh=oE70Pctxw4FtaVIQz5zH0c9BpOmvUaup7sy04pBiwWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QQYfLMS5cEtrJp9Yv3H5rhPQV/jrCHRpddm/VfA33+OXnhy6HwTwq1lz1kxVisBX9
-	 9hgFdOVFiWWRW6fC6kGD+czlSYP/xJTsI+WpLuujejKifcB9oqY8g2RM81TEquVOyS
-	 DDgKPXc/JJcnn0/F3kWdchuW69ctIb7dQOSa01dw=
+	b=2kkvgWQNbcS0h82vYPUnf36nUI/NVeDTzbgZd5ySX2m0LlMNz9K+DCq5+BjsM8Ean
+	 R+4g5aTcYUhobxPKschOTSry4bFznduGxVU0FscvLtVeHMMSy/H+Xuh7yKLcqGdq1z
+	 lpzy+Gry3k4fT8odxKH8nsFo99n+qLWZWtjxCGkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387983AbfDDJQC (ORCPT
+        id S2387994AbfDDJQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387971AbfDDJP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:59 -0400
+        id S2387975AbfDDJQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FBD220820;
-        Thu,  4 Apr 2019 09:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AF782075E;
+        Thu,  4 Apr 2019 09:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369358;
-        bh=CESGC82cYMb+qvxBWHsfu5/oumGj+VOtsBEAQHLTP+U=;
+        s=default; t=1554369360;
+        bh=oE70Pctxw4FtaVIQz5zH0c9BpOmvUaup7sy04pBiwWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvUEkvrzJZk8T1+Fh6oYsOBRanJ6owB1iLzKw9gdWqz4+cpM4ipioKaWxmO52g2O2
-         apwiJjPmu5qqPWNNlOsYxKNkI5OiTFh57i54wNuMZaMnK9ZkZ9KVpJHch9/1G/U5vQ
-         ADRBlpKsd3dtJHYCGC5Z3zQmyfHyPCZGSx1oHV8w=
+        b=Tnp3c3ntwiBFXgyVpNaO1GSn436nVeLyFeivZFHSOpnuzWlBssDx0l9rZNfvqGsi6
+         Mp0Wkw5HlGrtBkxEmdS2vOd5sEZPjHo0qNlQAMcD/AzkZwFmMsVnlquGvCQkzrlpKM
+         R4v1h/xm4ECNRKPtXO1SIInzK4cFFNto7Q7nECcE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        "Michael W. Bringmann" <mwb@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 185/246] ARM: avoid Cortex-A9 livelock on tight dmb loops
-Date:   Thu,  4 Apr 2019 10:48:05 +0200
-Message-Id: <20190404084625.660263238@linuxfoundation.org>
+Subject: [PATCH 5.0 194/246] powerpc/pseries: Perform full re-add of CPU for topology update post-migration
+Date:   Thu,  4 Apr 2019 10:48:14 +0200
+Message-Id: <20190404084625.979616695@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,207 +67,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5388a5b82199facacd3d7ac0d05aca6e8f902fed ]
+[ Upstream commit 81b61324922c67f73813d8a9c175f3c153f6a1c6 ]
 
-machine_crash_nonpanic_core() does this:
+On pseries systems, performing a partition migration can result in
+altering the nodes a CPU is assigned to on the destination system. For
+exampl, pre-migration on the source system CPUs are in node 1 and 3,
+post-migration on the destination system CPUs are in nodes 2 and 3.
 
-	while (1)
-		cpu_relax();
+Handling the node change for a CPU can cause corruption in the slab
+cache if we hit a timing where a CPUs node is changed while cache_reap()
+is invoked. The corruption occurs because the slab cache code appears
+to rely on the CPU and slab cache pages being on the same node.
 
-because the kernel has crashed, and we have no known safe way to deal
-with the CPU.  So, we place the CPU into an infinite loop which we
-expect it to never exit - at least not until the system as a whole is
-reset by some method.
+The current dynamic updating of a CPUs node done in arch/powerpc/mm/numa.c
+does not prevent us from hitting this scenario.
 
-In the absence of erratum 754327, this code assembles to:
+Changing the device tree property update notification handler that
+recognizes an affinity change for a CPU to do a full DLPAR remove and
+add of the CPU instead of dynamically changing its node resolves this
+issue.
 
-	b	.
-
-In other words, an infinite loop.  When erratum 754327 is enabled,
-this becomes:
-
-1:	dmb
-	b	1b
-
-It has been observed that on some systems (eg, OMAP4) where, if a
-crash is triggered, the system tries to kexec into the panic kernel,
-but fails after taking the secondary CPU down - placing it into one
-of these loops.  This causes the system to livelock, and the most
-noticable effect is the system stops after issuing:
-
-	Loading crashdump kernel...
-
-to the system console.
-
-The tested as working solution I came up with was to add wfe() to
-these infinite loops thusly:
-
-	while (1) {
-		cpu_relax();
-		wfe();
-	}
-
-which, without 754327 builds to:
-
-1:	wfe
-	b	1b
-
-or with 754327 is enabled:
-
-1:	dmb
-	wfe
-	b	1b
-
-Adding "wfe" does two things depending on the environment we're running
-under:
-- where we're running on bare metal, and the processor implements
-  "wfe", it stops us spinning endlessly in a loop where we're never
-  going to do any useful work.
-- if we're running in a VM, it allows the CPU to be given back to the
-  hypervisor and rescheduled for other purposes (maybe a different VM)
-  rather than wasting CPU cycles inside a crashed VM.
-
-However, in light of erratum 794072, Will Deacon wanted to see 10 nops
-as well - which is reasonable to cover the case where we have erratum
-754327 enabled _and_ we have a processor that doesn't implement the
-wfe hint.
-
-So, we now end up with:
-
-1:      wfe
-        b       1b
-
-when erratum 754327 is disabled, or:
-
-1:      dmb
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        wfe
-        b       1b
-
-when erratum 754327 is enabled.  We also get the dmb + 10 nop
-sequence elsewhere in the kernel, in terminating loops.
-
-This is reasonable - it means we get the workaround for erratum
-794072 when erratum 754327 is enabled, but still relinquish the dead
-processor - either by placing it in a lower power mode when wfe is
-implemented as such or by returning it to the hypervisior, or in the
-case where wfe is a no-op, we use the workaround specified in erratum
-794072 to avoid the problem.
-
-These as two entirely orthogonal problems - the 10 nops addresses
-erratum 794072, and the wfe is an optimisation that makes the system
-more efficient when crashed either in terms of power consumption or
-by allowing the host/other VMs to make use of the CPU.
-
-I don't see any reason not to use kexec() inside a VM - it has the
-potential to provide automated recovery from a failure of the VMs
-kernel with the opportunity for saving a crashdump of the failure.
-A panic() with a reboot timeout won't do that, and reading the
-libvirt documentation, setting on_reboot to "preserve" won't either
-(the documentation states "The preserve action for an on_reboot event
-is treated as a destroy".)  Surely it has to be a good thing to
-avoiding having CPUs spinning inside a VM that is doing no useful
-work.
-
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Signed-off-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
+Tested-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/barrier.h   | 2 ++
- arch/arm/include/asm/processor.h | 6 +++++-
- arch/arm/kernel/machine_kexec.c  | 5 ++++-
- arch/arm/kernel/smp.c            | 4 +++-
- arch/arm/mach-omap2/prm_common.c | 4 +++-
- 5 files changed, 17 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/topology.h          |  2 ++
+ arch/powerpc/mm/numa.c                       |  9 +--------
+ arch/powerpc/platforms/pseries/hotplug-cpu.c | 19 +++++++++++++++++++
+ 3 files changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/include/asm/barrier.h b/arch/arm/include/asm/barrier.h
-index 69772e742a0a..83ae97c049d9 100644
---- a/arch/arm/include/asm/barrier.h
-+++ b/arch/arm/include/asm/barrier.h
-@@ -11,6 +11,8 @@
- #define sev()	__asm__ __volatile__ ("sev" : : : "memory")
- #define wfe()	__asm__ __volatile__ ("wfe" : : : "memory")
- #define wfi()	__asm__ __volatile__ ("wfi" : : : "memory")
-+#else
-+#define wfe()	do { } while (0)
- #endif
- 
- #if __LINUX_ARM_ARCH__ >= 7
-diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
-index 120f4c9bbfde..57fe73ea0f72 100644
---- a/arch/arm/include/asm/processor.h
-+++ b/arch/arm/include/asm/processor.h
-@@ -89,7 +89,11 @@ extern void release_thread(struct task_struct *);
- unsigned long get_wchan(struct task_struct *p);
- 
- #if __LINUX_ARM_ARCH__ == 6 || defined(CONFIG_ARM_ERRATA_754327)
--#define cpu_relax()			smp_mb()
-+#define cpu_relax()						\
-+	do {							\
-+		smp_mb();					\
-+		__asm__ __volatile__("nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;");	\
-+	} while (0)
- #else
- #define cpu_relax()			barrier()
- #endif
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index dd2eb5f76b9f..76300f3813e8 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -91,8 +91,11 @@ void machine_crash_nonpanic_core(void *unused)
- 
- 	set_cpu_online(smp_processor_id(), false);
- 	atomic_dec(&waiting_for_crash_ipi);
--	while (1)
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index a4a718dbfec6..f85e2b01c3df 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -132,6 +132,8 @@ static inline void shared_proc_topology_init(void) {}
+ #define topology_sibling_cpumask(cpu)	(per_cpu(cpu_sibling_map, cpu))
+ #define topology_core_cpumask(cpu)	(per_cpu(cpu_core_map, cpu))
+ #define topology_core_id(cpu)		(cpu_to_core_id(cpu))
 +
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
++int dlpar_cpu_readd(int cpu);
+ #endif
+ #endif
+ 
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 87f0dd004295..b5d1c45c1475 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -1460,13 +1460,6 @@ static void reset_topology_timer(void)
+ 
+ #ifdef CONFIG_SMP
+ 
+-static void stage_topology_update(int core_id)
+-{
+-	cpumask_or(&cpu_associativity_changes_mask,
+-		&cpu_associativity_changes_mask, cpu_sibling_mask(core_id));
+-	reset_topology_timer();
+-}
+-
+ static int dt_update_callback(struct notifier_block *nb,
+ 				unsigned long action, void *data)
+ {
+@@ -1479,7 +1472,7 @@ static int dt_update_callback(struct notifier_block *nb,
+ 		    !of_prop_cmp(update->prop->name, "ibm,associativity")) {
+ 			u32 core_id;
+ 			of_property_read_u32(update->dn, "reg", &core_id);
+-			stage_topology_update(core_id);
++			rc = dlpar_cpu_readd(core_id);
+ 			rc = NOTIFY_OK;
+ 		}
+ 		break;
+diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+index 2f8e62163602..97feb6e79f1a 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
++++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+@@ -802,6 +802,25 @@ static int dlpar_cpu_add_by_count(u32 cpus_to_add)
+ 	return rc;
  }
  
- void crash_smp_send_stop(void)
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 1d6f5ea522f4..a3ce7c5365fa 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -604,8 +604,10 @@ static void ipi_cpu_stop(unsigned int cpu)
- 	local_fiq_disable();
- 	local_irq_disable();
- 
--	while (1)
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
- 
- static DEFINE_PER_CPU(struct completion *, cpu_completion);
-diff --git a/arch/arm/mach-omap2/prm_common.c b/arch/arm/mach-omap2/prm_common.c
-index 058a37e6d11c..fd6e0671f957 100644
---- a/arch/arm/mach-omap2/prm_common.c
-+++ b/arch/arm/mach-omap2/prm_common.c
-@@ -523,8 +523,10 @@ void omap_prm_reset_system(void)
- 
- 	prm_ll_data->reset_system();
- 
--	while (1)
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
- 
- /**
++int dlpar_cpu_readd(int cpu)
++{
++	struct device_node *dn;
++	struct device *dev;
++	u32 drc_index;
++	int rc;
++
++	dev = get_cpu_device(cpu);
++	dn = dev->of_node;
++
++	rc = of_property_read_u32(dn, "ibm,my-drc-index", &drc_index);
++
++	rc = dlpar_cpu_remove_by_index(drc_index);
++	if (!rc)
++		rc = dlpar_cpu_add(drc_index);
++
++	return rc;
++}
++
+ int dlpar_cpu(struct pseries_hp_errorlog *hp_elog)
+ {
+ 	u32 count, drc_index;
 -- 
 2.19.1
 
