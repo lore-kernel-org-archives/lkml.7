@@ -2,193 +2,100 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD6DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42851C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378C02147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140D42133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bs+UaaYK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Fol2SPEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfDDDao (ORCPT
+        id S1726849AbfDDDat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:30:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33465 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfDDDao (ORCPT
+        Wed, 3 Apr 2019 23:30:49 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36772 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfDDDar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:30:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i19so630897pfd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=lv8NVbJO6cxJt5xlEdH0XCLVCT+ImQmsAWGyClGMj7s=;
-        b=Bs+UaaYK7meC5Cxn0BfLUhKq2cxLzN/IxzdWFfI5ouoUAsAeWY/0ic8yvAyF4Z3FP5
-         i43xuSQd3ClJH05R4RJxnYS0ER2iOFW6gWgjtzGILMCcuO3Jl0mEYYBMMZbd9crz0Fkk
-         j38WPKQwMtWfl1wqCKRJjmrvUdCRueIi6qFRze4qBGMFlO/Bom4h49eUFkFp0fr0qPqb
-         jkiZEFj9FfdqmzlC/1Mqaie5zpbQSC9zoKpOZVuffBuR3bElTFJTcbViqaiGqH/ph6Vw
-         Zm5F6E0AFOF/fSie8TBulqSyiCP1ObxhGBEjD1cZ1DtdNAvnsrKPFQpL5gW4FV3Ir+wW
-         v4dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=lv8NVbJO6cxJt5xlEdH0XCLVCT+ImQmsAWGyClGMj7s=;
-        b=X1Gmt5D2XM34K2TghGzoOe99qT7GQbpomp71ob9y1w+ARCvCAjFRxoLJkvapFl9T0d
-         seC4U6w4VVY8W40uNtXPJWMhS6vrAPbfoxlFQtl+dkvmLJ6URY4RSQwe4xW7zqwyGaEu
-         jPQoHbF6CBa3Wfa8q/EaYm2UgT3OqZH3bY/D1v3ayOHMJcwKYTHDBOIDrtQZrdHaMrzW
-         4tmzq1cNzDquon/16j4r4Oplo9SK9nBxbviVCtYNtC6PdMonhXpN5z6m9dKDRIwasjng
-         PkxLxct1hM+PK29mL9kL7U0Zbzg7gDAAdpdW6tov5LjloVFSn6i3P/IlCf2Bfp7D+hHE
-         j3qA==
-X-Gm-Message-State: APjAAAXZeW6ju4N2b1b1LsgGsPBV9sn95hH2s3nAfTGMywzPU7+C5kEA
-        YJfFWaTgiQIfhOp8mIMPXgY=
-X-Google-Smtp-Source: APXvYqwUv0dDc5yX7JjWTWOotQnOt3ARoTj1FoGAfJdEyBh+T0nU/S8/a+Kf7sdDsKqbttMjLkaaEQ==
-X-Received: by 2002:a63:6a42:: with SMTP id f63mr3345989pgc.207.1554348643029;
-        Wed, 03 Apr 2019 20:30:43 -0700 (PDT)
-Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j4sm27324017pfn.132.2019.04.03.20.30.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 03 Apr 2019 20:30:42 -0700 (PDT)
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm:workingset use real time to judge activity of the file page
-Date:   Thu,  4 Apr 2019 11:30:17 +0800
-Message-Id: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
+        Wed, 3 Apr 2019 23:30:47 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343OUaM044798;
+        Thu, 4 Apr 2019 03:30:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=2zpkVrYlG8RlUEo6FKZ3He5jYZgyeIglZvoGsdlS27M=;
+ b=Fol2SPEeasgiJZA4XmexEqQvXhXTj2mkdK+v6BSutu9aTkW6g3An5wQqvI+tpxaC6kkq
+ PCj7w8ezvQGnVtbTWX4CCJZrhHX7o9rmOJjyHFGNXYJOSKMKcFaD85KZY9t71JC1/X6+
+ WDjedXXd2MUyKUor3DrJsS245b9UWylIBqK87kCdWla5M0cTeRSW98e3SzBBgUbbpsyu
+ hBtlE4PblZu7nMTLKfiKZtRxj2BX/NLIgGuzOpz2ZIXgy87nipXmNn57/JA6IuVR1tZu
+ TLJqoZDb2Ac/4qKeOq4G7B6erxxO84qaH7ORnGtUKc0gi9Gi8N5xZtMVBwfVPsjb1YXu 2A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2rj13qcfbj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 03:30:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343Todk086853;
+        Thu, 4 Apr 2019 03:30:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2rm8f6ehm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 03:30:39 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x343Ucix010650;
+        Thu, 4 Apr 2019 03:30:38 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Apr 2019 20:30:38 -0700
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        "martin.petersen\@oracle.com" <martin.petersen@oracle.com>,
+        Long Li <longli@microsoft.com>,
+        "James.Bottomley\@hansenpartnership.com" 
+        <James.Bottomley@hansenpartnership.com>,
+        "emilne\@redhat.com" <emilne@redhat.com>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] scsi: storvsc: Fix calculation of sub-channel count
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1554134985-8671-1-git-send-email-mikelley@microsoft.com>
+Date:   Wed, 03 Apr 2019 23:30:35 -0400
+In-Reply-To: <1554134985-8671-1-git-send-email-mikelley@microsoft.com>
+        (Michael Kelley's message of "Mon, 1 Apr 2019 16:10:52 +0000")
+Message-ID: <yq18swqtpk4.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=923
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040022
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=971 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-In previous implementation, the number of refault pages is used
-for judging the refault period of each page, which is not precised as
-eviction of other files will be affect a lot on current cache.
-We introduce the timestamp into the workingset's entry and refault ratio
-to measure the file page's activity. It helps to decrease the affection
-of other files(average refault ratio can reflect the view of whole system
-'s memory).
-The patch is tested on an Android system, which can be described as
-comparing the launch time of an application between a huge memory
-consumption. The result is launch time decrease 50% and the page fault
-during the test decrease 80%.
+Michael,
 
-Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
----
- include/linux/mmzone.h |  2 ++
- mm/workingset.c        | 24 +++++++++++++++++-------
- 2 files changed, 19 insertions(+), 7 deletions(-)
+> When the number of sub-channels offered by Hyper-V is >= the number of
+> CPUs in the VM, calculate the correct number of sub-channels.  The
+> current code produces one too many.
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 32699b2..c38ba0a 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -240,6 +240,8 @@ struct lruvec {
- 	atomic_long_t			inactive_age;
- 	/* Refaults at the time of last reclaim cycle */
- 	unsigned long			refaults;
-+	atomic_long_t			refaults_ratio;
-+	atomic_long_t			prev_fault;
- #ifdef CONFIG_MEMCG
- 	struct pglist_data *pgdat;
- #endif
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 40ee02c..6361853 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -159,7 +159,7 @@
- 			 NODES_SHIFT +	\
- 			 MEM_CGROUP_ID_SHIFT)
- #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
--
-+#define EVICTION_JIFFIES (BITS_PER_LONG >> 3)
- /*
-  * Eviction timestamps need to be able to cover the full range of
-  * actionable refaults. However, bits are tight in the radix tree
-@@ -175,18 +175,22 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
- 	eviction >>= bucket_order;
- 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
- 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
-+	eviction = (eviction << EVICTION_JIFFIES) | (jiffies >> EVICTION_JIFFIES);
- 	eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
- 
- 	return (void *)(eviction | RADIX_TREE_EXCEPTIONAL_ENTRY);
- }
- 
- static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
--			  unsigned long *evictionp)
-+			  unsigned long *evictionp, unsigned long *prev_jiffp)
- {
- 	unsigned long entry = (unsigned long)shadow;
- 	int memcgid, nid;
-+	unsigned long prev_jiff;
- 
- 	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
-+	entry >>= EVICTION_JIFFIES;
-+	prev_jiff = (entry & ((1UL << EVICTION_JIFFIES) - 1)) << EVICTION_JIFFIES;
- 	nid = entry & ((1UL << NODES_SHIFT) - 1);
- 	entry >>= NODES_SHIFT;
- 	memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
-@@ -195,6 +199,7 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
- 	*memcgidp = memcgid;
- 	*pgdat = NODE_DATA(nid);
- 	*evictionp = entry << bucket_order;
-+	*prev_jiffp = prev_jiff;
- }
- 
- /**
-@@ -242,8 +247,12 @@ bool workingset_refault(void *shadow)
- 	unsigned long refault;
- 	struct pglist_data *pgdat;
- 	int memcgid;
-+	unsigned long refault_ratio;
-+	unsigned long prev_jiff;
-+	unsigned long avg_refault_time;
-+	unsigned long refault_time;
- 
--	unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
-+	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_jiff);
- 
- 	rcu_read_lock();
- 	/*
-@@ -288,10 +297,11 @@ bool workingset_refault(void *shadow)
- 	 * list is not a problem.
- 	 */
- 	refault_distance = (refault - eviction) & EVICTION_MASK;
--
- 	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
--
--	if (refault_distance <= active_file) {
-+	lruvec->refaults_ratio = atomic_long_read(&lruvec->inactive_age) / jiffies;
-+	refault_time = jiffies - prev_jiff;
-+	avg_refault_time = refault_distance / lruvec->refaults_ratio;
-+	if (refault_time <= avg_refault_time) {
- 		inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
- 		rcu_read_unlock();
- 		return true;
-@@ -521,7 +531,7 @@ static int __init workingset_init(void)
- 	 * some more pages at runtime, so keep working with up to
- 	 * double the initial memory by using totalram_pages as-is.
- 	 */
--	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
-+	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT - EVICTION_JIFFIES;
- 	max_order = fls_long(totalram_pages - 1);
- 	if (max_order > timestamp_bits)
- 		bucket_order = max_order - timestamp_bits;
+Applied to 5.1/scsi-fixes, thanks.
+
 -- 
-1.9.1
-
+Martin K. Petersen	Oracle Linux Engineering
