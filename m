@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C32DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDDEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4E620820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796C720820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371513;
-	bh=E2fEmGmM5k0TAKdhhSjqEQ2jvI8BWT3j5x7oWrf8JTU=;
+	s=default; t=1554371523;
+	bh=TGBQnqmn+5XPHYFSUZddVuHnYi+5v35G53U4l8E1ohg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o72V/5Ai/VNeb/mKOEdMYeoKu59tdHHSUHPHG8gzZHBjGK/LRaP+uARtR0n+RxwEQ
-	 k5CDhzzRDfRGTekoK69njSyiFDO0JIHEg98UjOPh0vf7QuK7sE2ascyy0fpMhaoR9r
-	 PsgB4kyB4SVNE8e8H3/UxF8Wj7UdoomEtpUW6/9g=
+	b=0OxntGT+izSl/Ud3Oc4sOdC0KaYRmv+m1Ce8R2QPkBbiG5DLqQkzHZF+inSchFEWl
+	 2nvPi15BJlvTEXW/EbOALmrgu3ZNGSHyDqlPOd2CNhP0SHKDSVFobJ4Rf/XSL4gQDN
+	 5GBLkORAQVh2QIIG1cvrcNpUllkw00T1GMsX5TrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbfDDJvv (ORCPT
+        id S1730058AbfDDIyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730086AbfDDIyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:37 -0400
+        id S1728860AbfDDIy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B95E217D9;
-        Thu,  4 Apr 2019 08:54:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE08820652;
+        Thu,  4 Apr 2019 08:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368076;
-        bh=E2fEmGmM5k0TAKdhhSjqEQ2jvI8BWT3j5x7oWrf8JTU=;
+        s=default; t=1554368068;
+        bh=TGBQnqmn+5XPHYFSUZddVuHnYi+5v35G53U4l8E1ohg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=miLvd/kcrBdHmU4g1LG9Pq2mhnj1kpmfUYMCbUmVpxWAXaR10XmwtfOzJcw1Vv1F6
-         2pdKXcBfgD0Zb9+gUMEjx5/raok265fxxF5yZ9QPqPn42yuqddEpVEGRRvtY7wQWOz
-         kOEVHwL5IRtwfB86G3e/4ZnK8jplkqTYAHyZPTf4=
+        b=T8JgMM81VBqGl/qesOj83VCMPEbhu30CuGY42WSCU7ypGaEgBOydL6giCvpVTs9FN
+         XD+pIC6aBMPeXtJbw5R7QbdsGjBpUgRkCCA2DFiXUROwp89gCUaoK5KxYy2RWxY9xE
+         GILXDIL5zwK3FKfx3GCcXK/uwKsvThw3BXKhE7fU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eli Cohen <eli@mellanox.com>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Jiqun Li <jiqun.li@unisoc.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/121] net/mlx5: Avoid panic when setting vport mac, getting vport config
-Date:   Thu,  4 Apr 2019 10:46:40 +0200
-Message-Id: <20190404084545.979919353@linuxfoundation.org>
+Subject: [PATCH 4.14 009/121] f2fs: fix to avoid deadlock in f2fs_read_inline_dir()
+Date:   Thu,  4 Apr 2019 10:46:37 +0200
+Message-Id: <20190404084545.776589928@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -68,78 +66,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6e77c413e8e73d0f36b5358b601389d75ec4451c ]
+[ Upstream commit aadcef64b22f668c1a107b86d3521d9cac915c24 ]
 
-If we try to set VFs mac address on a VF (not PF) net device,
-the kernel will be crash. The commands are show as below:
+As Jiqun Li reported in bugzilla:
 
-$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
-$ ip link set $MLX_VF0 vf 0 mac 00:11:22:33:44:00
+https://bugzilla.kernel.org/show_bug.cgi?id=202883
 
-[exception RIP: mlx5_eswitch_set_vport_mac+41]
-[ffffb8b7079e3688] do_setlink at ffffffff8f67f85b
-[ffffb8b7079e37a8] __rtnl_newlink at ffffffff8f683778
-[ffffb8b7079e3b68] rtnl_newlink at ffffffff8f683a63
-[ffffb8b7079e3b90] rtnetlink_rcv_msg at ffffffff8f67d812
-[ffffb8b7079e3c10] netlink_rcv_skb at ffffffff8f6b88ab
-[ffffb8b7079e3c60] netlink_unicast at ffffffff8f6b808f
-[ffffb8b7079e3ca0] netlink_sendmsg at ffffffff8f6b8412
-[ffffb8b7079e3d18] sock_sendmsg at ffffffff8f6452f6
-[ffffb8b7079e3d30] ___sys_sendmsg at ffffffff8f645860
-[ffffb8b7079e3eb0] __sys_sendmsg at ffffffff8f647a38
-[ffffb8b7079e3f38] do_syscall_64 at ffffffff8f00401b
-[ffffb8b7079e3f50] entry_SYSCALL_64_after_hwframe at ffffffff8f80008c
+sometimes, dead lock when make system call SYS_getdents64 with fsync() is
+called by another process.
 
-and
+monkey running on android9.0
 
-[exception RIP: mlx5_eswitch_get_vport_config+12]
-[ffffa70607e57678] mlx5e_get_vf_config at ffffffffc03c7f8f [mlx5_core]
-[ffffa70607e57688] do_setlink at ffffffffbc67fa59
-[ffffa70607e577a8] __rtnl_newlink at ffffffffbc683778
-[ffffa70607e57b68] rtnl_newlink at ffffffffbc683a63
-[ffffa70607e57b90] rtnetlink_rcv_msg at ffffffffbc67d812
-[ffffa70607e57c10] netlink_rcv_skb at ffffffffbc6b88ab
-[ffffa70607e57c60] netlink_unicast at ffffffffbc6b808f
-[ffffa70607e57ca0] netlink_sendmsg at ffffffffbc6b8412
-[ffffa70607e57d18] sock_sendmsg at ffffffffbc6452f6
-[ffffa70607e57d30] ___sys_sendmsg at ffffffffbc645860
-[ffffa70607e57eb0] __sys_sendmsg at ffffffffbc647a38
-[ffffa70607e57f38] do_syscall_64 at ffffffffbc00401b
-[ffffa70607e57f50] entry_SYSCALL_64_after_hwframe at ffffffffbc80008c
+1.  task 9785 held sbi->cp_rwsem and waiting lock_page()
+2.  task 10349 held mm_sem and waiting sbi->cp_rwsem
+3. task 9709 held lock_page() and waiting mm_sem
 
-Fixes: a8d70a054a718 ("net/mlx5: E-Switch, Disallow vlan/spoofcheck setup if not being esw manager")
-Cc: Eli Cohen <eli@mellanox.com>
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Acked-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+so this is a dead lock scenario.
+
+task stack is show by crash tools as following
+
+crash_arm64> bt ffffffc03c354080
+PID: 9785   TASK: ffffffc03c354080  CPU: 1   COMMAND: "RxIoScheduler-3"
+>> #7 [ffffffc01b50fac0] __lock_page at ffffff80081b11e8
+
+crash-arm64> bt 10349
+PID: 10349  TASK: ffffffc018b83080  CPU: 1   COMMAND: "BUGLY_ASYNC_UPL"
+>> #3 [ffffffc01f8cfa40] rwsem_down_read_failed at ffffff8008a93afc
+     PC: 00000033  LR: 00000000  SP: 00000000  PSTATE: ffffffffffffffff
+
+crash-arm64> bt 9709
+PID: 9709   TASK: ffffffc03e7f3080  CPU: 1   COMMAND: "IntentService[A"
+>> #3 [ffffffc001e67850] rwsem_down_read_failed at ffffff8008a93afc
+>> #8 [ffffffc001e67b80] el1_ia at ffffff8008084fc4
+     PC: ffffff8008274114  [compat_filldir64+120]
+     LR: ffffff80083584d4  [f2fs_fill_dentries+448]
+     SP: ffffffc001e67b80  PSTATE: 80400145
+    X29: ffffffc001e67b80  X28: 0000000000000000  X27: 000000000000001a
+    X26: 00000000000093d7  X25: ffffffc070d52480  X24: 0000000000000008
+    X23: 0000000000000028  X22: 00000000d43dfd60  X21: ffffffc001e67e90
+    X20: 0000000000000011  X19: ffffff80093a4000  X18: 0000000000000000
+    X17: 0000000000000000  X16: 0000000000000000  X15: 0000000000000000
+    X14: ffffffffffffffff  X13: 0000000000000008  X12: 0101010101010101
+    X11: 7f7f7f7f7f7f7f7f  X10: 6a6a6a6a6a6a6a6a   X9: 7f7f7f7f7f7f7f7f
+     X8: 0000000080808000   X7: ffffff800827409c   X6: 0000000080808000
+     X5: 0000000000000008   X4: 00000000000093d7   X3: 000000000000001a
+     X2: 0000000000000011   X1: ffffffc070d52480   X0: 0000000000800238
+>> #9 [ffffffc001e67be0] f2fs_fill_dentries at ffffff80083584d0
+     PC: 0000003c  LR: 00000000  SP: 00000000  PSTATE: 000000d9
+    X12: f48a02ff X11: d4678960 X10: d43dfc00  X9: d4678ae4
+     X8: 00000058  X7: d4678994  X6: d43de800  X5: 000000d9
+     X4: d43dfc0c  X3: d43dfc10  X2: d46799c8  X1: 00000000
+     X0: 00001068
+
+Below potential deadlock will happen between three threads:
+Thread A		Thread B		Thread C
+- f2fs_do_sync_file
+ - f2fs_write_checkpoint
+  - down_write(&sbi->node_change) -- 1)
+			- do_page_fault
+			 - down_write(&mm->mmap_sem) -- 2)
+			  - do_wp_page
+			   - f2fs_vm_page_mkwrite
+						- getdents64
+						 - f2fs_read_inline_dir
+						  - lock_page -- 3)
+  - f2fs_sync_node_pages
+   - lock_page -- 3)
+			    - __do_map_lock
+			     - down_read(&sbi->node_change) -- 1)
+						  - f2fs_fill_dentries
+						   - dir_emit
+						    - compat_filldir64
+						     - do_page_fault
+						      - down_read(&mm->mmap_sem) -- 2)
+
+Since f2fs_readdir is protected by inode.i_rwsem, there should not be
+any updates in inode page, we're safe to lookup dents in inode page
+without its lock held, so taking off the lock to improve concurrency
+of readdir and avoid potential deadlock.
+
+Reported-by: Jiqun Li <jiqun.li@unisoc.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/inline.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index 2aec0c021b6c..d2914116af8e 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -1719,7 +1719,7 @@ int mlx5_eswitch_set_vport_mac(struct mlx5_eswitch *esw,
- 	u64 node_guid;
- 	int err = 0;
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index 888a9dc13677..506e365cf903 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -656,6 +656,12 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
+ 	if (IS_ERR(ipage))
+ 		return PTR_ERR(ipage);
  
--	if (!MLX5_CAP_GEN(esw->dev, vport_group_manager))
-+	if (!esw || !MLX5_CAP_GEN(esw->dev, vport_group_manager))
- 		return -EPERM;
- 	if (!LEGAL_VPORT(esw, vport) || is_multicast_ether_addr(mac))
- 		return -EINVAL;
-@@ -1793,7 +1793,7 @@ int mlx5_eswitch_get_vport_config(struct mlx5_eswitch *esw,
- {
- 	struct mlx5_vport *evport;
++	/*
++	 * f2fs_readdir was protected by inode.i_rwsem, it is safe to access
++	 * ipage without page's lock held.
++	 */
++	unlock_page(ipage);
++
+ 	inline_dentry = inline_data_addr(inode, ipage);
  
--	if (!MLX5_CAP_GEN(esw->dev, vport_group_manager))
-+	if (!esw || !MLX5_CAP_GEN(esw->dev, vport_group_manager))
- 		return -EPERM;
- 	if (!LEGAL_VPORT(esw, vport))
- 		return -EINVAL;
+ 	make_dentry_ptr_inline(inode, &d, inline_dentry);
+@@ -664,7 +670,7 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
+ 	if (!err)
+ 		ctx->pos = d.max;
+ 
+-	f2fs_put_page(ipage, 1);
++	f2fs_put_page(ipage, 0);
+ 	return err < 0 ? err : 0;
+ }
+ 
 -- 
 2.19.1
 
