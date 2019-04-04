@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859E8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD210C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A41206B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0BA2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfDDBjr (ORCPT
+        id S1726858AbfDDBj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 21:39:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6228 "EHLO huawei.com"
+        Wed, 3 Apr 2019 21:39:56 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34518 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726167AbfDDBjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 21:39:47 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [10.3.19.205])
-        by Forcepoint Email with ESMTP id 0D37595C5B14EE9B1E94;
-        Thu,  4 Apr 2019 09:39:45 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Thu, 4 Apr 2019
- 09:39:40 +0800
+        id S1726167AbfDDBjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 21:39:55 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [10.3.19.204])
+        by Forcepoint Email with ESMTP id A1B4750F67E7B62F6DB5;
+        Thu,  4 Apr 2019 09:39:53 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Thu, 4 Apr 2019
+ 09:39:52 +0800
 Subject: Re: [PATCH -next] ASoC: Mediatek: MT8183: Fix
  platform_no_drv_owner.cocci warnings
 To:     Liam Girdwood <lgirdwood@gmail.com>,
@@ -33,18 +33,18 @@ To:     Liam Girdwood <lgirdwood@gmail.com>,
         Takashi Iwai <tiwai@suse.com>,
         "Matthias Brugger" <matthias.bgg@gmail.com>,
         Shunli Wang <shunli.wang@mediatek.com>
-References: <20190403071159.9725-1-yuehaibing@huawei.com>
+References: <20190403071139.9625-1-yuehaibing@huawei.com>
 CC:     <alsa-devel@alsa-project.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
 From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <9d10b78e-c98d-932f-285b-2485e4f12acc@huawei.com>
-Date:   Thu, 4 Apr 2019 09:39:39 +0800
+Message-ID: <b9e3c8d6-9c69-5450-bcf8-3457dc9243f0@huawei.com>
+Date:   Thu, 4 Apr 2019 09:39:51 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
  Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190403071159.9725-1-yuehaibing@huawei.com>
+In-Reply-To: <20190403071139.9625-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.177.31.96]
@@ -61,20 +61,20 @@ On 2019/4/3 15:11, YueHaibing wrote:
 > 
 > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c | 1 -
+>  sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c | 1 -
 >  1 file changed, 1 deletion(-)
 > 
-> diff --git a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-> index 93536659a859..117d81b43542 100644
-> --- a/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-> +++ b/sound/soc/mediatek/mt8183/mt8183-da7219-max98357.c
-> @@ -454,7 +454,6 @@ static const struct of_device_id mt8183_da7219_max98357_dt_match[] = {
->  static struct platform_driver mt8183_da7219_max98357_driver = {
+> diff --git a/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c b/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
+> index 2da56232a9e1..7ed3c947276d 100644
+> --- a/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
+> +++ b/sound/soc/mediatek/mt8183/mt8183-mt6358-ts3a227-max98357.c
+> @@ -364,7 +364,6 @@ static const struct of_device_id mt8183_mt6358_ts3a227_max98357_dt_match[] = {
+>  static struct platform_driver mt8183_mt6358_ts3a227_max98357_driver = {
 >  	.driver = {
->  		.name = "mt8183_da7219_max98357",
+>  		.name = "mt8183_mt6358_ts3a227_max98357",
 > -		.owner = THIS_MODULE,
 >  #ifdef CONFIG_OF
->  		.of_match_table = mt8183_da7219_max98357_dt_match,
+>  		.of_match_table = mt8183_mt6358_ts3a227_max98357_dt_match,
 >  #endif
 > 
 > 
