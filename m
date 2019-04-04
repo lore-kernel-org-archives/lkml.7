@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03022C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34D1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92F32075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90DC92075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369453;
-	bh=mL3P1WKEHm37xYIlUU1J1wFg2S4HHG5Zad6V7tcQZ1I=;
+	s=default; t=1554369456;
+	bh=9jLA0YSxUlc/+mgRq34SmclPETWQAPpErWHL4ApI4y8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fQ+kN9jsoVbbNz6+rv+SAqmQT5Fm92nAmvD7aGlvBRH3DS28JOgf7EMDhKgl4d3Wq
-	 UOJrniAWMh821OK+YucuIg//AHdH9XfsHAKuXeLKDMx1KsEaier7ECJpZbMpIVfdtV
-	 ke/wmAzkR5h/JdJL/YafEAG8ejE+SOssvFJrTl7s=
+	b=FH+9ziUbXFPnek0YaoIRf5TdRQJ5TujfUa2gNeELueOCBQsV01fON2jiFMDe01feJ
+	 hRIjmq4VByFMv8et8K688OXR9e+uxnKhmXaXYvBfsta65fxsOrXQDYIne+o3Sjf80i
+	 e8BHDnFX1L5B8sfafAppT/OEl5DWzZctrhODT5Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388235AbfDDJRc (ORCPT
+        id S2387605AbfDDJRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:17:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59100 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:17:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387796AbfDDJR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:28 -0400
+        id S2388199AbfDDJRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354D02075E;
-        Thu,  4 Apr 2019 09:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F9262075E;
+        Thu,  4 Apr 2019 09:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369446;
-        bh=mL3P1WKEHm37xYIlUU1J1wFg2S4HHG5Zad6V7tcQZ1I=;
+        s=default; t=1554369451;
+        bh=9jLA0YSxUlc/+mgRq34SmclPETWQAPpErWHL4ApI4y8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K1hLkuwaeO9/beBmBC55NegI96qPn7nogIXfZMOPgwW1pomIhW7iCUfKrs/ZCacvX
-         v+o7m6EI1UtxxwmuKjfEvABkTQZ4IB8HH60PG/z420HhwUO4dsGQub8M5R34Ez5iTC
-         Xz8VIvTsEAbnhl9cpFjOkSI8hnbrNywt3BCJuoTM=
+        b=cLB/ypuOkzYCnSfmd6ttIIequYvsO4Wh8n7Qux4NWX1+yoV1QqEbaG/IBRFsi4HEh
+         KXhWKLSN+n1xvGlVd3dFLc78YXasvZMwbpgOaRf/avte7G7yS1iHvnBP3WCiS88tQZ
+         0VW43vbC+RfeyT387t7jktABPcRaJyG7PPlMIh0A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 201/246] perf script python: Use PyBytes for attr in trace-event-python
-Date:   Thu,  4 Apr 2019 10:48:21 +0200
-Message-Id: <20190404084626.225923086@linuxfoundation.org>
+Subject: [PATCH 5.0 229/246] brcmfmac: Use firmware_request_nowarn for the clm_blob
+Date:   Thu,  4 Apr 2019 10:48:49 +0200
+Message-Id: <20190404084627.269619402@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -71,57 +66,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 72e0b15cb24a497d7d0d4707cf51ff40c185ae8c ]
+[ Upstream commit 4ad0be160544ffbdafb7cec39bb8e6dd0a97317a ]
 
-With Python3.  PyUnicode_FromStringAndSize is unsafe to call on attr and will
-return NULL.  Use _PyBytes_FromStringAndSize (as with raw_buf).
+The linux-firmware brcmfmac firmware files contain an embedded table with
+per country allowed channels and strength info.
 
-Below is the observed behavior without the fix.  Note it is first necessary
-to apply the prior fix (Add trace_context extension module to sys,modules):
+For recent hardware these versions of the firmware are specially build for
+linux-firmware, the firmware files directly available from Cypress rely on
+a separate clm_blob file for this info.
 
-  # ldd /usr/bin/perf | grep -i python
-          libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
+For some unknown reason Cypress refuses to provide the standard firmware
+files + clm_blob files it uses elsewhere for inclusion into linux-firmware,
+instead relying on these special builds with the clm_blob info embedded.
+This means that the linux-firmware firmware versions often lag behind,
+but I digress.
 
-  # perf record -e raw_syscalls:sys_enter /bin/false
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.018 MB perf.data (21 samples) ]
+The brcmfmac driver does support the separate clm_blob file and always
+tries to load this. Currently we use request_firmware for this. This means
+that on any standard install, using the standard combo of linux-kernel +
+linux-firmware, we will get a warning:
+"Direct firmware load for ... failed with error -2"
 
-  # perf script -g python | cat
-  generated Python script: perf-script.py
+On top of this, brcmfmac itself prints: "no clm_blob available (err=-2),
+device may have limited channels available".
 
-  # perf script -s ./perf-script.py
-  in trace_begin
-  Segmentation fault (core dumped)
+This commit switches to firmware_request_nowarn, fixing almost any brcmfmac
+device logging the warning (it leaves the brcmfmac info message in place).
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jaroslav Škarvada <jskarvad@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
-Link: http://lkml.kernel.org/r/20190124005229.16146-3-tonyj@suse.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/scripting-engines/trace-event-python.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 87ef16a1b17e..2fe3cc43526f 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -733,8 +733,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 		Py_FatalError("couldn't create Python dictionary");
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index 1f1e95a15a17..0ce1d8174e6d 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -149,7 +149,7 @@ static int brcmf_c_process_clm_blob(struct brcmf_if *ifp)
+ 		return err;
+ 	}
  
- 	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(perf_evsel__name(evsel)));
--	pydict_set_item_string_decref(dict, "attr", _PyUnicode_FromStringAndSize(
--			(const char *)&evsel->attr, sizeof(evsel->attr)));
-+	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->attr, sizeof(evsel->attr)));
- 
- 	pydict_set_item_string_decref(dict_sample, "pid",
- 			_PyLong_FromLong(sample->pid));
+-	err = request_firmware(&clm, clm_name, bus->dev);
++	err = firmware_request_nowarn(&clm, clm_name, bus->dev);
+ 	if (err) {
+ 		brcmf_info("no clm_blob available (err=%d), device may have limited channels available\n",
+ 			   err);
 -- 
 2.19.1
 
