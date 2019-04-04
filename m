@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41955C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CB8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131C020820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7AC2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369307;
-	bh=07OUOamTalkmWoYkRL9TEN6G0bf+k2gjAZYa0H/MvRI=;
+	s=default; t=1554369312;
+	bh=1XBMWzmyoaSDiyIN1So87avbBwSH5uN/ymx2n/0Gkbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGyX/LtNRmThsqvTWIp6hcnNqrgFWKqLG8RoQmREbNMrwgiWRjRbEsEJgoFpczKY9
-	 vXw9a/wrS8NYjwAEgPuA1eCzuLJitqf2yJExxcWnh/8BeecTbCDuHC2N4AdhOuvnYi
-	 xTjwrpH+RxK5eXT1XOwdbXlOTs5HK2Wjh92Z/1Sg=
+	b=DPyGRJhecg2xizLjvoSTEy9W69G3cZMDVUaMjo1l9YBpG36CqAHD/hjpOlYnj3XgY
+	 uTJLlrtX4F70qAzC3fAxcJUAVQxyR9/PY1+VBVdct6O7TV/3b8r/IjvKJ9fS6oIkat
+	 KWCm0x2VuWDrbm8grSPwax9GsHL406MAKuefxi04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387818AbfDDJPF (ORCPT
+        id S2387835AbfDDJPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55874 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387403AbfDDJPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:02 -0400
+        id S2387403AbfDDJPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845AF2075E;
-        Thu,  4 Apr 2019 09:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF1E2054F;
+        Thu,  4 Apr 2019 09:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369301;
-        bh=07OUOamTalkmWoYkRL9TEN6G0bf+k2gjAZYa0H/MvRI=;
+        s=default; t=1554369307;
+        bh=1XBMWzmyoaSDiyIN1So87avbBwSH5uN/ymx2n/0Gkbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gW3DESzDObwM2eiNPl5WhyZwmX/e1/NSkGjNY5UAvRSTCiIjX6JuBpNtOi03FEh5O
-         anufMX6wU9U0ACE07GEe9gUyTbQ8E8to3fOb/R6v20AEOY3pxNzk5da8BuPMn9bLYP
-         zAPQL4JcHzCrsmR9VN/J7W49rf+LgS5e13bb59tk=
+        b=tNcFoQ0BSfBb+F4b9lo6HwBBj9laoOQ1hQw0aRJMnk2ADMZsGjCZl2qFsy+fJPqw8
+         YFcRkDB7vJqNUNd2kRlf3K+s+uGO4jEhjTqDxRi9Y2OqQ/oCpVJ3N0NwpiOq0/OWm+
+         iaTfC7Ks6vgWxwLJ2gOk3kJcBYLblUJTImnaxMeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 159/246] cdrom: Fix race condition in cdrom_sysctl_register
-Date:   Thu,  4 Apr 2019 10:47:39 +0200
-Message-Id: <20190404084624.737237834@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 161/246] drm/amd/display: Dont re-program planes for DPMS changes
+Date:   Thu,  4 Apr 2019 10:47:41 +0200
+Message-Id: <20190404084624.807062146@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -65,97 +70,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
+[ Upstream commit 5062b797db4103218fa00ee254417b8ecaab7401 ]
 
-The following traceback is sometimes seen when booting an image in qemu:
+[Why]
+There are opt1c lock warnings and CRTC read timeouts when running the
+"igt@kms_plane@plane-position-hole-dpms-pipe-*" tests. These are
+caused by trying to reprogram planes that are not in the current
+context.
 
-[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
-[   54.611085] Fusion MPT base driver 3.04.20
-[   54.611877] Copyright (c) 1999-2008 LSI Corporation
-[   54.616234] Fusion MPT SAS Host driver 3.04.20
-[   54.635139] sysctl duplicate entry: /dev/cdrom//info
-[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
-[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[   54.641273] Workqueue: events_unbound async_run_entry_fn
-[   54.641273] Call Trace:
-[   54.641273]  dump_stack+0x67/0x90
-[   54.641273]  __register_sysctl_table+0x50b/0x570
-[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
-[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
-[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
-[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
-[   54.646814]  register_cdrom.cold.24+0x2a/0x33
-[   54.646814]  sr_probe+0x4bd/0x580
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  really_probe+0xd6/0x260
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  driver_probe_device+0x4a/0xb0
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  bus_for_each_drv+0x73/0xc0
-[   54.646814]  __device_attach+0xd6/0x130
-[   54.646814]  bus_probe_device+0x9a/0xb0
-[   54.646814]  device_add+0x40c/0x670
-[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
-[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
-[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
-[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
-[   54.646814]  __scsi_add_device+0x116/0x130
-[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
-[   54.646814]  async_run_entry_fn+0x34/0x100
-[   54.646814]  process_one_work+0x237/0x5e0
-[   54.646814]  worker_thread+0x37/0x380
-[   54.646814]  ? rescuer_thread+0x360/0x360
-[   54.646814]  kthread+0x118/0x130
-[   54.646814]  ? kthread_create_on_node+0x60/0x60
-[   54.646814]  ret_from_fork+0x3a/0x50
+DPMS off removes the stream from the context. In this case:
 
-The only sensible explanation is that cdrom_sysctl_register() is called
-twice, once from the module init function and once from register_cdrom().
-cdrom_sysctl_register() is not mutex protected and may happily execute
-twice if the second call is made before the first call is complete.
+new_crtc_state->active_changed = true
+new_crtc_state->mode_changed = false
 
-Use a static atomic to ensure that the function is executed exactly once.
+The planes are reprogrammed before the stream is removed from the
+context because stream_state->mode_changed = false.
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+For DPMS adds the stream and planes back to the context:
+
+new_crtc_state->active_changed = true
+new_crtc_state->mode_changed = false
+
+The planes are also reprogrammed here before the stream is added to the
+context because stream_state->mode_changed = true. They were not
+previously in the current context so warnings occur here.
+
+[How]
+Set stream_state->mode_changed = true when
+new_crtc_state->active_changed = true too.
+
+This prevents reprogramming before the context is applied in DC. The
+programming will be done after the context is applied.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Acked-by: Tony Cheng <Tony.Cheng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 614ecdbb4ab7..933268b8d6a5 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -265,6 +265,7 @@
- /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
- /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
- 
-+#include <linux/atomic.h>
- #include <linux/module.h>
- #include <linux/fs.h>
- #include <linux/major.h>
-@@ -3692,9 +3693,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
- 
- static void cdrom_sysctl_register(void)
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 6d77fd966dbd..0040605cace8 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4975,7 +4975,8 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
+ 						struct dc_stream_state *stream_state)
  {
--	static int initialized;
-+	static atomic_t initialized = ATOMIC_INIT(0);
- 
--	if (initialized == 1)
-+	if (!atomic_add_unless(&initialized, 1, 1))
- 		return;
- 
- 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
-@@ -3705,8 +3706,6 @@ static void cdrom_sysctl_register(void)
- 	cdrom_sysctl_settings.debug = debug;
- 	cdrom_sysctl_settings.lock = lockdoor;
- 	cdrom_sysctl_settings.check = check_media_type;
--
--	initialized = 1;
+-	stream_state->mode_changed = crtc_state->mode_changed;
++	stream_state->mode_changed =
++		crtc_state->mode_changed || crtc_state->active_changed;
  }
  
- static void cdrom_sysctl_unregister(void)
+ static int amdgpu_dm_atomic_commit(struct drm_device *dev,
 -- 
 2.19.1
 
