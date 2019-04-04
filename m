@@ -2,71 +2,67 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A335C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55151C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FCC20651
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CBE52082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730421AbfDDThI (ORCPT
+        id S1730368AbfDDTj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:37:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:32675 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729789AbfDDThH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:37:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 12:37:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,309,1549958400"; 
-   d="scan'208";a="288770635"
-Received: from jespires-mobl2.amr.corp.intel.com (HELO [10.255.76.233]) ([10.255.76.233])
-  by orsmga004.jf.intel.com with ESMTP; 04 Apr 2019 12:37:06 -0700
-Subject: Re: [alsa-devel] [PATCH 1/3] soundwire: fix style issues
-To:     Joe Perches <joe@perches.com>, alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        vkoul@kernel.org, broonie@kernel.org, jank@cadence.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190404182204.31262-1-pierre-louis.bossart@linux.intel.com>
- <20190404182204.31262-2-pierre-louis.bossart@linux.intel.com>
- <98050a8abfdd9ec015d4de846b276cf046115e3f.camel@perches.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <52a3a4a0-c81c-3daf-78b3-7668b621ecf1@linux.intel.com>
-Date:   Thu, 4 Apr 2019 14:37:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 15:39:56 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:49765 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729789AbfDDTjz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 15:39:55 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 93ED0100D940E;
+        Thu,  4 Apr 2019 21:39:53 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 380DD1C0353; Thu,  4 Apr 2019 21:39:53 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 21:39:53 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Kellner <ckellner@redhat.com>,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH v3 18/36] thunderbolt: Add helper function to iterate
+ from one port to another
+Message-ID: <20190404193953.566aceawn2qi5jq3@wunner.de>
+References: <20190328123633.42882-1-mika.westerberg@linux.intel.com>
+ <20190328123633.42882-19-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <98050a8abfdd9ec015d4de846b276cf046115e3f.camel@perches.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190328123633.42882-19-mika.westerberg@linux.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review Joe,
+On Thu, Mar 28, 2019 at 03:36:15PM +0300, Mika Westerberg wrote:
+> We need to be able to walk from one port to another when we are creating
+> paths where there are multiple switches between two ports. For this
+> reason introduce a new function tb_next_port_on_path().
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-@@ -458,13 +458,13 @@ static int sdw_assign_device_num(struct sdw_slave 
-*slave)
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
->>   		mutex_unlock(&slave->bus->bus_lock);
->>   		if (dev_num < 0) {
->>   			dev_err(slave->bus->dev, "Get dev_num failed: %d",
->> -								dev_num);
->> +				dev_num);
-> You could also add the missing terminating '\n' to these formats like:
->
->   			dev_err(slave->bus->dev, "Get dev_num failed: %d\n",
->
-Yes indeed, I just fixed that tools reported, but that is a miss. Will 
-fix with a v2 (hopefully with other comments).
+The algorithm in this patch looks clear and concise now.
 
--Pierre
+Thanks,
 
+Lukas
