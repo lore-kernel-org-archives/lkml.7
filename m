@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D400CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6279BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5463218FF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D512183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368845;
-	bh=/n3CilU3J04TV2dZ6/tGDdZ2xh1ITRtX9ypyEVjD3PY=;
+	s=default; t=1554368850;
+	bh=N76NJacwlt3I5/RosT1SY5cweye0dMDIM21iYnpw7ZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n3uwTbn/HCkF/urAWye55EERUhnIF2SfFTq4/mC6Ty74fQxfBe1oPI40W24S2F7Cb
-	 qOnPtvEu+k/mSwlMD+ww7ZeMLv2hmJatWsDfIvBysMW4HybpjjfBBOMf813gXvWx9O
-	 Tfkd1ciSxjWE56Xj/iNzkMwy7ppOo6YU4cx05QDo=
+	b=NHKHPxj+v6WHplH/T8gOQp0lTUZ/sKDgey1iMjVavQHd6i8KMEsbuLU55Q/+7WCVd
+	 rRpuIurkh7bwAmJoLo+iw9junUlvwuYGcXFalnHXj4Srf0FahikFDxnG5+i0XAMc3M
+	 qYs9WKatf/0BKNsdEdJ8Uyojb8DCoq8h+cYaeEcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732503AbfDDJHY (ORCPT
+        id S1732509AbfDDJH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46120 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:07:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732485AbfDDJHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:07:20 -0400
+        id S1731959AbfDDJHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:07:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E252183E;
-        Thu,  4 Apr 2019 09:07:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82F7E218FF;
+        Thu,  4 Apr 2019 09:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368839;
-        bh=/n3CilU3J04TV2dZ6/tGDdZ2xh1ITRtX9ypyEVjD3PY=;
+        s=default; t=1554368842;
+        bh=N76NJacwlt3I5/RosT1SY5cweye0dMDIM21iYnpw7ZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GRpjIg12+cNBipXW5BTlgV86YwWCKaG1gLoWHzoHcaO4ga5Qr8Lc6koRAbhNUOvNB
-         eRhgK4XkI//0emUlkskbBrFR9IPZGg/O5UTyaiyNtZ4MMHIJq73SFeVt8Pa5u6opnI
-         2z7ZjY1XK3Mm/dI6N17UgIFGajxrOWdPQOdlBHQM=
+        b=E5Cj69OHlFeD4C9LnpKCfQNr9HEuONlCimK1pyu3ArsF+ZRS9CCW3IV8B4fCfVvsJ
+         peA0SFB+u/fjXdfKUuTrgGh8zXY9ax9kLFEDoUFU/VpVO4wCP0TwWIsYE6LUO1DRzl
+         wO2suqNgfedbJjNS2+q5r5Cw6uo56Iz+Yq0TCM4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 181/187] dmaengine: tegra: avoid overflow of byte tracking
-Date:   Thu,  4 Apr 2019 10:48:38 +0200
-Message-Id: <20190404084611.652835657@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 182/187] Input: soc_button_array - fix mapping of the 5th GPIO in a PNP0C40 device
+Date:   Thu,  4 Apr 2019 10:48:39 +0200
+Message-Id: <20190404084611.694946820@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,53 +66,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e486df39305864604b7e25f2a95d51039517ac57 ]
+[ Upstream commit e9eb788f9442d1b5d93efdb30c3be071ce8a22b1 ]
 
-The dma_desc->bytes_transferred counter tracks the number of bytes
-moved by the DMA channel. This is then used to calculate the information
-passed back in the in the tegra_dma_tx_status callback, which is usually
-fine.
+The Microsoft documenation for the PNP0C40 device aka the
+"Windows-compatible button array" describes the 5th GpioInt listed in
+the resources as: '5. Interrupt corresponding to the "Rotation Lock"
+button, if supported'.
 
-When the DMA channel is configured as continous, then the bytes_transferred
-counter will increase over time and eventually overflow to become negative
-so the residue count will become invalid and the ALSA sound-dma code will
-report invalid hardware pointer values to the application. This results in
-some users becoming confused about the playout position and putting audio
-data in the wrong place.
+Notice this describes the 5th entry as a button while we sofar have been
+mapping it to EV_SW, SW_ROTATE_LOCK. On my Point of View TAB P1006W-232
+which actually comes with a rotation-lock button, the button indeed is a
+button and not a slider/switch. An image search for other Windows tablets
+has found 2 more models with a rotation-lock button and on both of those
+it too is a push-button and not a slider/switch.
 
-To fix this issue, always ensure the bytes_transferred field is modulo the
-size of the request. We only do this for the case of the cyclic transfer
-done ISR as anyone attempting to move 2GiB of DMA data in one transfer
-is unlikely.
+Further evidence can be found in the HUT extension HUTRR52 from Microsoft
+which adds rotation lock support to the HUT, which describes 2 different
+usages: "0xC9 System Display Rotation Lock Button" and
+"0xCA System Display Rotation Lock Slider Switch" note that switch is seen
+as a separate thing here and the non switch wording is an exact match for
+the "Windows-compatible button array" spec wording.
 
-Note, we don't fix the issue that we should /never/ transfer a negative
-number of bytes so we could make those fields unsigned.
+TL;DR: our current mapping of the 5th GPIO to SW_ROTATE_LOCK is wrong
+because the 5th GPIO is for a push-button not a switch.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This commit fixes this by maping the 5th GPIO to KEY_ROTATE_LOCK_TOGGLE.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra20-apb-dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/input/misc/soc_button_array.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 9a558e30c461..8219ab88a507 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -636,7 +636,10 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+index 23520df7650f..55cd6e0b409c 100644
+--- a/drivers/input/misc/soc_button_array.c
++++ b/drivers/input/misc/soc_button_array.c
+@@ -373,7 +373,7 @@ static struct soc_button_info soc_button_PNP0C40[] = {
+ 	{ "home", 1, EV_KEY, KEY_LEFTMETA, false, true },
+ 	{ "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false },
+ 	{ "volume_down", 3, EV_KEY, KEY_VOLUMEDOWN, true, false },
+-	{ "rotation_lock", 4, EV_SW, SW_ROTATE_LOCK, false, false },
++	{ "rotation_lock", 4, EV_KEY, KEY_ROTATE_LOCK_TOGGLE, false, false },
+ 	{ }
+ };
  
- 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
- 	dma_desc = sgreq->dma_desc;
--	dma_desc->bytes_transferred += sgreq->req_len;
-+	/* if we dma for long enough the transfer count will wrap */
-+	dma_desc->bytes_transferred =
-+		(dma_desc->bytes_transferred + sgreq->req_len) %
-+		dma_desc->bytes_requested;
- 
- 	/* Callback need to be call */
- 	if (!dma_desc->cb_count)
 -- 
 2.19.1
 
