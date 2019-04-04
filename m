@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4905C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50982C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B315B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1289A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369057;
-	bh=H3zYd6LHv8vPWev23ZRMQ85KTBmETVrvz+AKsxpdCEE=;
+	s=default; t=1554369060;
+	bh=BOUCe4qItu6MoKe6kgJI66qQLOyN/TTOqvTwEyFQjQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pmaTWO/xgYL+iBnwROfCwkAlVs4MTztRBqzu4VM7DBL+BOkQ9jM/gHRCL8C+Hwvs
-	 bvbi60Zj7WP8dzIQA80I8RMNHU04536OtVlT9Es5/y2BVZlPbKwGFeN83Jwlg4yj2l
-	 BsovVoMt60t/hEsK7c6/qycPJYe1aqa3TO+Eph0Q=
+	b=DuxJ/G1yfuQCOiFrPEgyXh4bckQKE2316qFqL222lxhds5uC2zMfk3oT19NoBAnwP
+	 W0aFIDoUHBAV5rFgdv322f+Qw11QRqkWNiCR5zoD5WTp/lJgwp+d4Mk+Dl997e28nc
+	 eDi2ewpR9vPZkvXc4JSHh4XuTG8VUb6m750YSb/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbfDDJKz (ORCPT
+        id S1733098AbfDDJK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50676 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732400AbfDDJKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:53 -0400
+        id S1733086AbfDDJK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6307820693;
-        Thu,  4 Apr 2019 09:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0332520693;
+        Thu,  4 Apr 2019 09:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369052;
-        bh=H3zYd6LHv8vPWev23ZRMQ85KTBmETVrvz+AKsxpdCEE=;
+        s=default; t=1554369055;
+        bh=BOUCe4qItu6MoKe6kgJI66qQLOyN/TTOqvTwEyFQjQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XTsCyCQVySGneS87In+BT8+vITsu4Ugl0CuPpQlyp1jEicW1cOMewggPFbgG98orC
-         H5yx8b5pEMkRlp8taOwgNLQ3xq8f6rdUii3H/WzMQOANXxW5wo8iEk8yFbEWKccSWZ
-         26Yla6icubltucnY1RsTJLyB6YdyrqTaZQDfbImE=
+        b=Lw2SVr3SGAcWtW4KakmaS3dUiokT/0OqflumjRmJH2tqy4qQGkDBjc4R/va1/OssX
+         Q0/hJUEDFhpElHS250vAfFZU9raVK9tXxulNgRG6wGdBOYOgUoqQDiPvtsYlzhJA6U
+         AgEdN1JNPmumd5n0W4Wvt/xIGG2s9GjvzzDObJX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Peter Chen <peter.chen@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 065/246] tools/bpf: selftests: add map lookup to test_map_in_map bpf prog
-Date:   Thu,  4 Apr 2019 10:46:05 +0200
-Message-Id: <20190404084621.431369805@linuxfoundation.org>
+Subject: [PATCH 5.0 066/246] usb: chipidea: Grab the (legacy) USB PHY by phandle first
+Date:   Thu,  4 Apr 2019 10:46:06 +0200
+Message-Id: <20190404084621.462950971@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,59 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9eca5083757b679b37f210092c871916c2c222d0 ]
+[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
 
-The bpf_map_lookup_elem is added in the bpf program.
-Without previous patch, the test change will trigger the
-following error:
-  $ ./test_maps
-  ...
-  ; value_p = bpf_map_lookup_elem(map, &key);
-  20: (bf) r1 = r7
-  21: (bf) r2 = r8
-  22: (85) call bpf_map_lookup_elem#1
-  ; if (!value_p || *value_p != 123)
-  23: (15) if r0 == 0x0 goto pc+16
-   R0=map_value(id=2,off=0,ks=4,vs=4,imm=0) R6=inv1 R7=map_ptr(id=0,off=0,ks=4,vs=4,imm=0)
-   R8=fp-8,call_-1 R10=fp0,call_-1 fp-8=mmmmmmmm
-  ; if (!value_p || *value_p != 123)
-  24: (61) r1 = *(u32 *)(r0 +0)
-   R0=map_value(id=2,off=0,ks=4,vs=4,imm=0) R6=inv1 R7=map_ptr(id=0,off=0,ks=4,vs=4,imm=0)
-   R8=fp-8,call_-1 R10=fp0,call_-1 fp-8=mmmmmmmm
-  bpf_spin_lock cannot be accessed directly by load/store
+According to the chipidea driver bindings, the USB PHY is specified via
+the "phys" phandle node. However, this only takes effect for USB PHYs
+that use the common PHY framework. For legacy USB PHYs, a simple lookup
+based on the USB PHY type is done instead.
 
-With the kernel fix in the previous commit, the error goes away.
+This does not play out well when more than one USB PHY is registered,
+since the first registered PHY matching the type will always be
+returned regardless of what the driver was bound to.
 
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fix this by looking up the PHY based on the "phys" phandle node.
+Although generic PHYs are rather matched by their "phys-name" and not
+the "phys" phandle directly, there is no helper for similar lookup on
+legacy PHYs and it's probably not worth the effort to add it.
+
+When no legacy USB PHY is found by phandle, fallback to grabbing any
+registered USB2 PHY. This ensures backward compatibility if some users
+were actually relying on this mechanism.
+
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_map_in_map.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/chipidea/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/test_map_in_map.c b/tools/testing/selftests/bpf/test_map_in_map.c
-index ce923e67e08e..2985f262846e 100644
---- a/tools/testing/selftests/bpf/test_map_in_map.c
-+++ b/tools/testing/selftests/bpf/test_map_in_map.c
-@@ -27,6 +27,7 @@ SEC("xdp_mimtest")
- int xdp_mimtest0(struct xdp_md *ctx)
- {
- 	int value = 123;
-+	int *value_p;
- 	int key = 0;
- 	void *map;
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 7bfcbb23c2a4..016e4004fe9d 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -954,8 +954,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	} else if (ci->platdata->usb_phy) {
+ 		ci->usb_phy = ci->platdata->usb_phy;
+ 	} else {
++		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
++							  0);
+ 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
+-		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
++
++		/* Fallback to grabbing any registered USB2 PHY */
++		if (IS_ERR(ci->usb_phy) &&
++		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
++			ci->usb_phy = devm_usb_get_phy(dev->parent,
++						       USB_PHY_TYPE_USB2);
  
-@@ -35,6 +36,9 @@ int xdp_mimtest0(struct xdp_md *ctx)
- 		return XDP_DROP;
- 
- 	bpf_map_update_elem(map, &key, &value, 0);
-+	value_p = bpf_map_lookup_elem(map, &key);
-+	if (!value_p || *value_p != 123)
-+		return XDP_DROP;
- 
- 	map = bpf_map_lookup_elem(&mim_hash, &key);
- 	if (!map)
+ 		/* if both generic PHY and USB PHY layers aren't enabled */
+ 		if (PTR_ERR(ci->phy) == -ENOSYS &&
 -- 
 2.19.1
 
