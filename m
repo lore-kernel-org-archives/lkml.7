@@ -4,64 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D2AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA54C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F8720657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819C620657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369768;
-	bh=x0yeo4z62a3cqIW1f8yCpm39MZ2Pda12HTGwZF7CAfM=;
+	s=default; t=1554369771;
+	bh=TVpYoRwqP//PnvcsWAv6NGtEpoLgzlXMyHD28shlvn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FOw1lrSGWS4ywCE390Sd0mRNE3lzzqH8ZIbzwOleFVeW53f3vTE/e0bY0NE/2zrXc
-	 OexFH+vNgJu2wPEWEgpbS207AHICX+mgQHjiqrDTBDl2jy7MM7HJ0hH7fbR4ftCH4W
-	 3Y4s9Ttyo3c2iKnfXdJgf1IcbjsSOafCoo0h3WqI=
+	b=SzGFN7GXRUjwpyzecAQkPaZjNMV3IdhNpaYjNhHzjIKAnmX/zYl2h3WkZQYlCjFjs
+	 +JOSWIAMgHgvpcv0ZCxmtfBhmGUON3rEnK4pR97J09tnpkrQ5alBzApl4jgQw2yuT1
+	 4VvaVVtSyKjgzBF7WI0J8p3lDC1bmQMUTMYEnL00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387943AbfDDJPq (ORCPT
+        id S2388129AbfDDJWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56774 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387930AbfDDJPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:43 -0400
+        id S2387538AbfDDJPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E246D20693;
-        Thu,  4 Apr 2019 09:15:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07F7021734;
+        Thu,  4 Apr 2019 09:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369342;
-        bh=x0yeo4z62a3cqIW1f8yCpm39MZ2Pda12HTGwZF7CAfM=;
+        s=default; t=1554369347;
+        bh=TVpYoRwqP//PnvcsWAv6NGtEpoLgzlXMyHD28shlvn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvNpnyeeQ8AfQstQvEjlFCbAAFV36hXQgyW5gKeobgogyF+kkfSNV58NbBNh9nmcb
-         hdeDu/EBk9gE9YOnc7FuGH8I/mxeOIgTdJ3ITq3duz16XwAPlhY51AlmbZCzwdPUHe
-         Y55FvqZWTP6myjU/p49oxxif2/0t1vNKQTLcnDn8=
+        b=K8Crgzql0TlZJr6DPwKkymu8nHKBB4svSUABRuU8NzJO0bYnoTf0tL7iAXWhEml6R
+         jA01SWLXq+9utp33kUNZSJE3KH8DXlE+nlG6je5z0SnwzlJDJAyAYaP3dsvebbc6c4
+         lqVzRovY5MYOk5T2gcqlcJTje8VGHeCn26jlbT9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Alexander Graf <agraf@suse.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org,
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 175/246] efi/memattr: Dont bail on zero VA if it equals the regions PA
-Date:   Thu,  4 Apr 2019 10:47:55 +0200
-Message-Id: <20190404084625.305593989@linuxfoundation.org>
+Subject: [PATCH 5.0 177/246] drm/vkms: Bugfix racing hrtimer vblank handle
+Date:   Thu,  4 Apr 2019 10:47:57 +0200
+Message-Id: <20190404084625.376610155@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -80,66 +68,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5de0fef0230f3c8d75cff450a71740a7bf2db866 ]
+[ Upstream commit ba420afab565bdc7b028ddd4f222260f2de7a1db ]
 
-The EFI memory attributes code cross-references the EFI memory map with
-the more granular EFI memory attributes table to ensure that they are in
-sync before applying the strict permissions to the regions it describes.
+When the vblank irq happens, kernel time subsystem executes
+`vkms_vblank_simulate`. In parallel or not, it prepares all stuff
+necessary to the next vblank with arm, and it must flush these stuff
+before the next vblank irq. However, vblank counter is ahead when arm is
+executed in parallel with handle vblank.
 
-Since we always install virtual mappings for the EFI runtime regions to
-which these strict permissions apply, we currently perform a sanity check
-on the EFI memory descriptor, and ensure that the EFI_MEMORY_RUNTIME bit
-is set, and that the virtual address has been assigned.
+CPU 0:					CPU 1:
+ |					 |
+atomic_commit_tail is ongoing		 |
+ |					 |
+ |					hrtimer: vkms_vblank_simulate()
+ |					 |
+ |					drm_crtc_handle_vblank()
+ |					 |
+drm_crtc_arm_vblank()			 |
+ |					 |
+->get_vblank_timestamp()		 |
+ |					 |
+ |					hrtimer_forward_now()
 
-However, in cases where a runtime region exists at physical address 0x0,
-and the virtual mapping equals the physical mapping, e.g., when running
-in mixed mode on x86, we encounter a memory descriptor with the runtime
-attribute and virtual address 0x0, and incorrectly draw the conclusion
-that a runtime region exists for which no virtual mapping was installed,
-and give up altogether. The consequence of this is that firmware mappings
-retain their read-write-execute permissions, making the system more
-vulnerable to attacks.
+Then, we should guarantee that the vblank interval time is correct (not
+changed) before finish the vblank handle.
 
-So let's only bail if the virtual address of 0x0 has been assigned to a
-physical region that does not reside at address 0x0.
+Fix the bug including the call to `hrtimer_forward_now()` in the same
+lock of `drm_crtc_handle_vblank()` to ensure that the timestamp update
+is correct when finish the vblank handle.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: 10f0d2f577053 ("efi: Implement generic support for the Memory ...")
-Link: http://lkml.kernel.org/r/20190202094119.13230-4-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/e2e4b8f3a5cab7b2dba75bf1930f86b0a4ee08c9.1548856186.git.shayenneluzmoura@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/memattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_crtc.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/firmware/efi/memattr.c b/drivers/firmware/efi/memattr.c
-index 8986757eafaf..aac972b056d9 100644
---- a/drivers/firmware/efi/memattr.c
-+++ b/drivers/firmware/efi/memattr.c
-@@ -94,7 +94,7 @@ static bool entry_is_valid(const efi_memory_desc_t *in, efi_memory_desc_t *out)
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index e747a7d16739..00d961862d77 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -4,13 +4,17 @@
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_crtc_helper.h>
  
- 		if (!(md->attribute & EFI_MEMORY_RUNTIME))
- 			continue;
--		if (md->virt_addr == 0) {
-+		if (md->virt_addr == 0 && md->phys_addr != 0) {
- 			/* no virtual mapping has been installed by the stub */
- 			break;
- 		}
+-static void _vblank_handle(struct vkms_output *output)
++static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+ {
++	struct vkms_output *output = container_of(timer, struct vkms_output,
++						  vblank_hrtimer);
+ 	struct drm_crtc *crtc = &output->crtc;
+ 	struct vkms_crtc_state *state = to_vkms_crtc_state(crtc->state);
++	int ret_overrun;
+ 	bool ret;
+ 
+ 	spin_lock(&output->lock);
++
+ 	ret = drm_crtc_handle_vblank(crtc);
+ 	if (!ret)
+ 		DRM_ERROR("vkms failure on handling vblank");
+@@ -31,19 +35,9 @@ static void _vblank_handle(struct vkms_output *output)
+ 			DRM_WARN("failed to queue vkms_crc_work_handle");
+ 	}
+ 
+-	spin_unlock(&output->lock);
+-}
+-
+-static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+-{
+-	struct vkms_output *output = container_of(timer, struct vkms_output,
+-						  vblank_hrtimer);
+-	int ret_overrun;
+-
+-	_vblank_handle(output);
+-
+ 	ret_overrun = hrtimer_forward_now(&output->vblank_hrtimer,
+ 					  output->period_ns);
++	spin_unlock(&output->lock);
+ 
+ 	return HRTIMER_RESTART;
+ }
 -- 
 2.19.1
 
