@@ -2,112 +2,59 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EABC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470E2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9196A2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368026;
-	bh=vRItTxxnES0Ed65GgvV5v4VdZ1RWJQH2lOD3ni/k17s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XcI12O9CGP7NEaQPElLaKPNyH9BC+tzP3hirA07CcYdOG5ju2CYX5HxNXKvl3F82o
-	 +F8tODoAMM1m697ef3jSFEdPHXWGmw3Es6wPzqwOYYsPiZ4xn7wPFgBmiVhtXPaNfi
-	 C/UzKyDpVqdiEUt4lRoMh8fL6hrsaTgfdIXMOago=
+	by mail.kernel.org (Postfix) with ESMTP id 1F604217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbfDDIxp (ORCPT
+        id S1729899AbfDDIxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729413AbfDDIxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2AD721850;
-        Thu,  4 Apr 2019 08:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368021;
-        bh=vRItTxxnES0Ed65GgvV5v4VdZ1RWJQH2lOD3ni/k17s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jkTmxCpDAgranIwsecf9o/zZaDLbRqx0PzfGhjsKx1gW4O8dyIUFu8omYj9howyIj
-         HcG+I6k0b9yg58qHFHcPzlW1vAcsV4VcvpnCXSdpk6al1YlNv8/o8SKoilqubq0Kcq
-         uOatMOJktHeLT56TeCpt0pdVTKDIMGjjWP2UOWVc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.9 84/91] drm/nouveau: Stop using drm_crtc_force_disable
-Date:   Thu,  4 Apr 2019 10:48:08 +0200
-Message-Id: <20190404084540.327438243@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
-References: <20190404084535.450029272@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 4 Apr 2019 04:53:48 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54834 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728686AbfDDIxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F10D01684;
+        Thu,  4 Apr 2019 01:53:42 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 91F033F557;
+        Thu,  4 Apr 2019 01:53:41 -0700 (PDT)
+Subject: Re: [PATCH v3 02/20] coresight: etm4x: Add kernel configuration for
+ CONTEXTID
+To:     mathieu.poirier@linaro.org, linux-arm-kernel@lists.infradead.org
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        Mike.leach@arm.com, leo.yan@linaro.org, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20190404033541.14072-1-mathieu.poirier@linaro.org>
+ <20190404033541.14072-3-mathieu.poirier@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <91b16b6b-6db8-a10c-4923-e203aeaf5b07@arm.com>
+Date:   Thu, 4 Apr 2019 09:53:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190404033541.14072-3-mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-[ Upstream commit 934c5b32a5e43d8de2ab4f1566f91d7c3bf8cb64 ]
-
-The correct way for legacy drivers to update properties that need to
-do a full modeset, is to do a full modeset.
-
-Note that we don't need to call the drm_mode_config_internal helper
-because we're not changing any of the refcounted paramters.
-
-v2: Fixup error handling (Ville). Since the old code didn't bother
-I decided to just delete it instead of adding even more code for just
-error handling.
-
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com> (v1)
-Cc: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181217194303.14397-2-daniel.vetter@ffwll.ch
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/nouveau/dispnv04/tvnv17.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-index 434d1e29f279..cd37d00e9723 100644
---- a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-+++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-@@ -750,7 +750,9 @@ static int nv17_tv_set_property(struct drm_encoder *encoder,
- 		/* Disable the crtc to ensure a full modeset is
- 		 * performed whenever it's turned on again. */
- 		if (crtc)
--			drm_crtc_force_disable(crtc);
-+			drm_crtc_helper_set_mode(crtc, &crtc->mode,
-+						 crtc->x, crtc->y,
-+						 crtc->primary->fb);
- 	}
- 
- 	return 0;
--- 
-2.19.1
 
 
+On 04/04/2019 04:35, Mathieu Poirier wrote:
+> Set the proper bit in the configuration register when contextID tracing
+> has been requested by user space.  That way PE_CONTEXT elements are
+> generated by the tracers when a process is installed on a CPU.
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
