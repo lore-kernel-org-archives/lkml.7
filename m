@@ -3,33 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52321C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA39CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D6321872
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DFFB21872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfDDBhs (ORCPT
+        id S1726709AbfDDBhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 21:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
+        Wed, 3 Apr 2019 21:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbfDDBhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 21:37:46 -0400
+        id S1726193AbfDDBhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 21:37:45 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 786A821741;
+        by mail.kernel.org (Postfix) with ESMTPSA id E8984214AF;
         Thu,  4 Apr 2019 01:37:44 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hBrK3-0004xr-KB; Wed, 03 Apr 2019 21:37:43 -0400
-Message-Id: <20190404013743.513102920@goodmis.org>
+        id 1hBrK4-0004zJ-2v; Wed, 03 Apr 2019 21:37:44 -0400
+Message-Id: <20190404013743.975193729@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 03 Apr 2019 21:37:24 -0400
+Date:   Wed, 03 Apr 2019 21:37:27 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -37,7 +37,7 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>
-Subject: [for-next][PATCH 03/19] tracing: Add tracing error log
+Subject: [for-next][PATCH 06/19] tracing: Use tracing error_log with trace event filters
 References: <20190404013721.023858792@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -48,297 +48,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Introduce a new ftrace file, tracing/error_log, for ftrace commands to
-log errors.  This is useful for allowing more complex commands such as
-hist trigger and kprobe_event commands to point out specifically where
-something may have gone wrong without forcing them to resort to more
-ad hoc methods such as tacking error messages onto existing output
-files.
+Use tracing_log_err() from the new tracing error_log mechanism to send
+filter parse errors to tracing/error_log.
 
-To log a tracing error, call the event_log_err() function, passing it
-a location string describing where it came from e.g. kprobe_events or
-system:event, the command that caused the error, an array of static
-error strings describing errors and an index within that array which
-describes the specific error, along with the position to place the
-error caret.
+With this change, users will be able to see filter errors by looking
+at tracing/error_log.
 
-Reading the log displays the last (currently) 8 errors logged in the
-following format:
+The same errors will also be available in the filter file, as
+expected.
 
-  [timestamp] <loc>: error: <static error text>
-    Command: <command that caused the error>
-                      ^
-
-Memory for the error log isn't allocated unless there has been a trace
-event error, and the error log can be cleared and have its memory
-freed by writing the empty string in truncation mode to it:
-
-  # echo > tracing/error_log.
-
-Link: http://lkml.kernel.org/r/0c2c82571fd38c5f3a88ca823627edff250e9416.1554072478.git.tom.zanussi@linux.intel.com
+Link: http://lkml.kernel.org/r/1d942c419941539a11d78a6810fc5740a99b2974.1554072478.git.tom.zanussi@linux.intel.com
 
 Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-Improvements-suggested-by: Steve Rostedt <rostedt@goodmis.org>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 218 +++++++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace.h |   4 +
- 2 files changed, 222 insertions(+)
+ kernel/trace/trace_events_filter.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4384fcc386c8..7978168f5041 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6878,6 +6878,221 @@ static const struct file_operations snapshot_raw_fops = {
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 05a66493a164..290d42c59101 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -66,7 +66,8 @@ static const char * ops[] = { OPS };
+ 	C(INVALID_FILTER,	"Meaningless filter expression"),	\
+ 	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
+ 	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
+-	C(NO_FILTER,		"No filter found"),
++	C(ERRNO,		"Error"),				\
++	C(NO_FILTER,		"No filter found")
  
- #endif /* CONFIG_TRACER_SNAPSHOT */
+ #undef C
+ #define C(a, b)		FILT_ERR_##a
+@@ -76,7 +77,7 @@ enum { ERRORS };
+ #undef C
+ #define C(a, b)		b
  
-+#define TRACING_LOG_ERRS_MAX	8
-+#define TRACING_LOG_LOC_MAX	128
-+
-+#define CMD_PREFIX "  Command: "
-+
-+struct err_info {
-+	const char	**errs;	/* ptr to loc-specific array of err strings */
-+	u8		type;	/* index into errs -> specific err string */
-+	u8		pos;	/* MAX_FILTER_STR_VAL = 256 */
-+	u64		ts;
-+};
-+
-+struct tracing_log_err {
-+	struct list_head	list;
-+	struct err_info		info;
-+	char			loc[TRACING_LOG_LOC_MAX]; /* err location */
-+	char			cmd[MAX_FILTER_STR_VAL]; /* what caused err */
-+};
-+
-+static LIST_HEAD(tracing_err_log);
-+static DEFINE_MUTEX(tracing_err_log_lock);
-+
-+static unsigned int n_tracing_err_log_entries;
-+
-+struct tracing_log_err *get_tracing_log_err(void)
-+{
-+	struct tracing_log_err *err;
-+
-+	if (n_tracing_err_log_entries < TRACING_LOG_ERRS_MAX) {
-+		err = kzalloc(sizeof(*err), GFP_KERNEL);
-+		if (!err)
-+			err = ERR_PTR(-ENOMEM);
-+		n_tracing_err_log_entries++;
-+
-+		return err;
-+	}
-+
-+	err = list_first_entry(&tracing_err_log, struct tracing_log_err, list);
-+	list_del(&err->list);
-+
-+	return err;
-+}
-+
-+/**
-+ * err_pos - find the position of a string within a command for error careting
-+ * @cmd: The tracing command that caused the error
-+ * @str: The string to position the caret at within @cmd
-+ *
-+ * Finds the position of the first occurence of @str within @cmd.  The
-+ * return value can be passed to tracing_log_err() for caret placement
-+ * within @cmd.
-+ *
-+ * Returns the index within @cmd of the first occurence of @str or 0
-+ * if @str was not found.
-+ */
-+unsigned int err_pos(char *cmd, const char *str)
-+{
-+	char *found;
-+
-+	if (WARN_ON(!strlen(cmd)))
-+		return 0;
-+
-+	found = strstr(cmd, str);
-+	if (found)
-+		return found - cmd;
-+
-+	return 0;
-+}
-+
-+/**
-+ * tracing_log_err - write an error to the tracing error log
-+ * @loc: A string describing where the error occurred
-+ * @cmd: The tracing command that caused the error
-+ * @errs: The array of loc-specific static error strings
-+ * @type: The index into errs[], which produces the specific static err string
-+ * @pos: The position the caret should be placed in the cmd
-+ *
-+ * Writes an error into tracing/error_log of the form:
-+ *
-+ * <loc>: error: <text>
-+ *   Command: <cmd>
-+ *              ^
-+ *
-+ * tracing/error_log is a small log file containing the last
-+ * TRACING_LOG_ERRS_MAX errors (8).  Memory for errors isn't allocated
-+ * unless there has been a tracing error, and the error log can be
-+ * cleared and have its memory freed by writing the empty string in
-+ * truncation mode to it i.e. echo > tracing/error_log.
-+ *
-+ * NOTE: the @errs array along with the @type param are used to
-+ * produce a static error string - this string is not copied and saved
-+ * when the error is logged - only a pointer to it is saved.  See
-+ * existing callers for examples of how static strings are typically
-+ * defined for use with tracing_log_err().
-+ */
-+void tracing_log_err(const char *loc, const char *cmd,
-+		     const char **errs, u8 type, u8 pos)
-+{
-+	struct tracing_log_err *err;
-+
-+	mutex_lock(&tracing_err_log_lock);
-+	err = get_tracing_log_err();
-+	if (PTR_ERR(err) == -ENOMEM) {
-+		mutex_unlock(&tracing_err_log_lock);
-+		return;
-+	}
-+
-+	snprintf(err->loc, TRACING_LOG_LOC_MAX, "%s: error: ", loc);
-+	snprintf(err->cmd, MAX_FILTER_STR_VAL,"\n" CMD_PREFIX "%s\n", cmd);
-+
-+	err->info.errs = errs;
-+	err->info.type = type;
-+	err->info.pos = pos;
-+	err->info.ts = local_clock();
-+
-+	list_add_tail(&err->list, &tracing_err_log);
-+	mutex_unlock(&tracing_err_log_lock);
-+}
-+
-+static void clear_tracing_err_log(void)
-+{
-+	struct tracing_log_err *err, *next;
-+
-+	mutex_lock(&tracing_err_log_lock);
-+	list_for_each_entry_safe(err, next, &tracing_err_log, list) {
-+		list_del(&err->list);
-+		kfree(err);
-+	}
-+
-+	n_tracing_err_log_entries = 0;
-+	mutex_unlock(&tracing_err_log_lock);
-+}
-+
-+static void *tracing_err_log_seq_start(struct seq_file *m, loff_t *pos)
-+{
-+	mutex_lock(&tracing_err_log_lock);
-+
-+	return seq_list_start(&tracing_err_log, *pos);
-+}
-+
-+static void *tracing_err_log_seq_next(struct seq_file *m, void *v, loff_t *pos)
-+{
-+	return seq_list_next(v, &tracing_err_log, pos);
-+}
-+
-+static void tracing_err_log_seq_stop(struct seq_file *m, void *v)
-+{
-+	mutex_unlock(&tracing_err_log_lock);
-+}
-+
-+static void tracing_err_log_show_pos(struct seq_file *m, u8 pos)
-+{
-+	u8 i;
-+
-+	for (i = 0; i < sizeof(CMD_PREFIX) - 1; i++)
-+		seq_putc(m, ' ');
-+	for (i = 0; i < pos; i++)
-+		seq_putc(m, ' ');
-+	seq_puts(m, "^\n");
-+}
-+
-+static int tracing_err_log_seq_show(struct seq_file *m, void *v)
-+{
-+	struct tracing_log_err *err = v;
-+
-+	if (err) {
-+		const char *err_text = err->info.errs[err->info.type];
-+		u64 sec = err->info.ts;
-+		u32 nsec;
-+
-+		nsec = do_div(sec, NSEC_PER_SEC);
-+		seq_printf(m, "[%5llu.%06u] %s%s", sec, nsec / 1000,
-+			   err->loc, err_text);
-+		seq_printf(m, "%s", err->cmd);
-+		tracing_err_log_show_pos(m, err->info.pos);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct seq_operations tracing_err_log_seq_ops = {
-+	.start  = tracing_err_log_seq_start,
-+	.next   = tracing_err_log_seq_next,
-+	.stop   = tracing_err_log_seq_stop,
-+	.show   = tracing_err_log_seq_show
-+};
-+
-+static int tracing_err_log_open(struct inode *inode, struct file *file)
-+{
-+	int ret = 0;
-+
-+	/* If this file was opened for write, then erase contents */
-+	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC))
-+		clear_tracing_err_log();
-+
-+	if (file->f_mode & FMODE_READ)
-+		ret = seq_open(file, &tracing_err_log_seq_ops);
-+
-+	return ret;
-+}
-+
-+static ssize_t tracing_err_log_write(struct file *file,
-+				     const char __user *buffer,
-+				     size_t count, loff_t *ppos)
-+{
-+	return count;
-+}
-+
-+static const struct file_operations tracing_err_log_fops = {
-+	.open           = tracing_err_log_open,
-+	.write		= tracing_err_log_write,
-+	.read           = seq_read,
-+	.llseek         = seq_lseek,
-+};
-+
- static int tracing_buffers_open(struct inode *inode, struct file *filp)
- {
- 	struct trace_array *tr = inode->i_private;
-@@ -8284,6 +8499,9 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 			  tr, &snapshot_fops);
- #endif
+-static char *err_text[] = { ERRORS };
++static const char *err_text[] = { ERRORS };
  
-+	trace_create_file("error_log", 0644, d_tracer,
-+			  tr, &tracing_err_log_fops);
-+
- 	for_each_tracing_cpu(cpu)
- 		tracing_init_tracefs_percpu(tr, cpu);
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index d80cee49e0eb..b711edbef7e7 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1884,6 +1884,10 @@ extern ssize_t trace_parse_run_command(struct file *file,
- 		const char __user *buffer, size_t count, loff_t *ppos,
- 		int (*createfn)(int, char**));
- 
-+extern unsigned int err_pos(char *cmd, const char *str);
-+extern void tracing_log_err(const char *loc, const char *cmd,
-+			    const char **errs, u8 type, u8 pos);
-+
- /*
-  * Normal trace_printk() and friends allocates special buffers
-  * to do the manipulation, as well as saves the print formats
+ /* Called after a '!' character but "!=" and "!~" are not "not"s */
+ static bool is_not(const char *str)
+@@ -947,8 +948,14 @@ static void append_filter_err(struct filter_parse_error *pe,
+ 	if (pe->lasterr > 0) {
+ 		trace_seq_printf(s, "\n%*s", pos, "^");
+ 		trace_seq_printf(s, "\nparse_error: %s\n", err_text[pe->lasterr]);
++		tracing_log_err("event filter parse error",
++				filter->filter_string, err_text,
++				pe->lasterr, pe->lasterr_pos);
+ 	} else {
+ 		trace_seq_printf(s, "\nError: (%d)\n", pe->lasterr);
++		tracing_log_err("event filter parse error",
++				filter->filter_string, err_text,
++				FILT_ERR_ERRNO, 0);
+ 	}
+ 	trace_seq_putc(s, 0);
+ 	buf = kmemdup_nul(s->buffer, s->seq.len, GFP_KERNEL);
 -- 
 2.20.1
 
