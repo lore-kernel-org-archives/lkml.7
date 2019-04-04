@@ -2,314 +2,135 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6C7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE2CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2BE20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F37206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfDDUuP (ORCPT
+        id S1731267AbfDDUuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:50:15 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44909 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfDDUuO (ORCPT
+        Thu, 4 Apr 2019 16:50:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731250AbfDDUue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:50:14 -0400
-Received: by mail-qk1-f194.google.com with SMTP id y5so2534999qkc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:50:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q/0t2/mOf/vEgSIHmwRPc/7abCdI76JiFBmL2e4UGzA=;
-        b=aYdkLTFPveHgmucm70x6+6uHz7Ev5+SlOrItcwOcfF/dgBu86Gy0qXLOx0tBCIeZ2F
-         3iL1HIsqq4eZ2+737ZcFysqRM9RbuB0vtuHMrYo/c/J2FP/XnsB35VagzEKsCZf8nsXa
-         K1VD8b2Wac1MiGbEDCLdNafBjvO2dNcgYpJ+fN3dRSciLrwQdgAmeIjBn3RmmjnrU2Y9
-         CO3wNVOyyd2zJoTggl9zC/YbgkuZy8NB79X0AeZWlkVS3gQF+liNZBLOGI66iEa5xlO5
-         /B9AX/akTu38hfVoOVGcTj+E4KZqMN3oSoSgSTma9z+Iua8Tf5YcnS0Ef5hWj2/w3mXD
-         fmRQ==
-X-Gm-Message-State: APjAAAVUR3Whq21YvZ7Zvdtv21h5cpfXvLZB61bimCli5GO0dnr2cWdN
-        2HEjArdjpoE9wjchLXA/iATamA==
-X-Google-Smtp-Source: APXvYqzXdMTNDfC+oSPVW8wwCt2rhxkom9Sr5L2rM+Qre5QVNACuFqryyfw3IhYht67H1L4X7yIGmA==
-X-Received: by 2002:ae9:c314:: with SMTP id n20mr7090940qkg.191.1554411013446;
-        Thu, 04 Apr 2019 13:50:13 -0700 (PDT)
-Received: from [10.150.73.190] (214.sub-174-240-132.myvzw.com. [174.240.132.214])
-        by smtp.gmail.com with ESMTPSA id m31sm13916855qtm.46.2019.04.04.13.50.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 13:50:12 -0700 (PDT)
-Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup and
- thread creation (v7)
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
- <20190212194253.1951-2-mathieu.desnoyers@efficios.com>
- <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
- <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
-From:   Carlos O'Donell <codonell@redhat.com>
-Message-ID: <602718e0-7375-deb7-b6e6-2d17022173c5@redhat.com>
-Date:   Thu, 4 Apr 2019 16:50:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 4 Apr 2019 16:50:34 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34Km3cu041111
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 16:50:33 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rnpx2pf49-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:50:33 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 4 Apr 2019 21:50:31 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Apr 2019 21:50:26 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34KoPxi18087942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Apr 2019 20:50:25 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5F10B2065;
+        Thu,  4 Apr 2019 20:50:25 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A71C0B2066;
+        Thu,  4 Apr 2019 20:50:25 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Apr 2019 20:50:25 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 939D316C32DA; Thu,  4 Apr 2019 13:50:27 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 13:50:27 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, stern@rowland.harvard.edu, will.deacon@arm.com,
+        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        akiyks@gmail.com
+Subject: Re: [PATCH tip/core/rcu 08/21] tools/memory-model: Add support for
+ synchronize_srcu_expedited()
+Reply-To: paulmck@linux.ibm.com
+References: <20190326234114.GA23843@linux.ibm.com>
+ <20190326234133.24962-8-paulmck@linux.ibm.com>
+ <20190402144911.GA10044@andrea>
 MIME-Version: 1.0
-In-Reply-To: <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402144911.GA10044@andrea>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040420-0072-0000-0000-00000415A73A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010873; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01184363; UDB=6.00620129; IPR=6.00965117;
+ MB=3.00026298; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-04 20:50:30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040420-0073-0000-0000-00004BB6725B
+Message-Id: <20190404205027.GM14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904040131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/19 11:54 AM, Mathieu Desnoyers wrote:
-> Hi Carlos,
+On Tue, Apr 02, 2019 at 04:49:11PM +0200, Andrea Parri wrote:
+> On Tue, Mar 26, 2019 at 04:41:20PM -0700, Paul E. McKenney wrote:
+> > Given that synchronize_rcu_expedited() is supported, this commit adds
+> > support for synchronize_srcu_expedited().
+> > 
+> > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> > ---
+> >  tools/memory-model/linux-kernel.def | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/tools/memory-model/linux-kernel.def b/tools/memory-model/linux-kernel.def
+> > index 0c3f0ef486f4..551eeaa389d4 100644
+> > --- a/tools/memory-model/linux-kernel.def
+> > +++ b/tools/memory-model/linux-kernel.def
+> > @@ -51,6 +51,7 @@ synchronize_rcu_expedited() { __fence{sync-rcu}; }
+> >  srcu_read_lock(X)  __srcu{srcu-lock}(X)
+> >  srcu_read_unlock(X,Y) { __srcu{srcu-unlock}(X,Y); }
+> >  synchronize_srcu(X)  { __srcu{sync-srcu}(X); }
+> > +synchronize_srcu_expedited(X)  { __srcu{sync-srcu}(X); }
 > 
-> ----- On Mar 22, 2019, at 4:09 PM, Carlos O'Donell codonell@redhat.com wrote:
+> This and the other patches from the series do not apply to "tip/core/rcu"
+
+Ah, that is instead their hoped-for destination within the -tip tree.
+They are included in -rcu branch "dev".
+
+> (from the Subject), but this seems straightforward enough:
 > 
-> [...]
+> Acked-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+
+Applied, thank you!
+
+							Thanx, Paul
+
+>   Andrea
 > 
-> I took care of all your comments for an upcoming round of patches, except the
-> following that remain open (see answer inline). I'm adding Linux maintainers
-> for ARM, aarch64, MIPS, powerpc, s390, x86 in CC to discuss the choice of
-> code signature prior to the abort handler for each of those architectures.
-
-Thank you for kicking off this conversation.
-
-Every architecture should have a reasonable RSEQ_SIG that applies to their
-ISA with a comment about why that instruction was chosen. It should be a
-conscious choice, without a default.
-
-> * Support for automatically registering threads with the Linux rseq(2)
->    system call has been added.  This system call is implemented starting
->    from Linux 4.18.  The Restartable Sequences ABI accelerates user-space
->    operations on per-cpu data.  It allows user-space to perform updates
->    on per-cpu data without requiring heavy-weight atomic operations. See
->    https://www.efficios.com/blog/2019/02/08/linux-restartable-sequences/
->    for further explanation.
 > 
->    In order to be activated, it requires that glibc is built against
->    kernel headers that include this system call, and that glibc detects
->    availability of that system call at runtime.
-
-Suggest:
-
-* Support for automatically registering threads with the Linux rseq(2)
-   system call has been added.  This system call is implemented starting
-   from Linux 4.18.  The Restartable Sequences ABI accelerates user-space
-   operations on per-cpu data.  It allows user-space to perform updates
-   on per-cpu data without requiring heavy-weight atomic operations.
-   Automatically registering threads allows all libraries, including libc,
-   to make immediate use of the rseq(2) support by using the documented ABI.
-   See 'man 2 rseq' for the details of the ABI shared between libc and the
-   kernel.
-
+> >  
+> >  // Atomic
+> >  atomic_read(X) READ_ONCE(*X)
+> > -- 
+> > 2.17.1
+> > 
 > 
-> For reference the assembly code I'm pointing at below can be found
-> in the Linux selftests under:
-> 
-> tools/testing/selftests/rseq/rseq-*.h
 
-OK.
-
-
->>> +++ b/sysdeps/unix/sysv/linux/arm/bits/rseq.h
-> [...]
->>> +
->>> +/* Signature required before each abort handler code.  */
->>> +#define RSEQ_SIG 0x53053053
->>
->> Why isn't this an arm specific op code? Does the user have to mark this
->> up as part of a constant pool when placing it in front of the abort handler
->> to avoid disassembling the constant as code? This was at one point required
->> to get gdb to work properly.
->>
-> 
-> For arm, the abort is defined as:
-> 
-> #define __RSEQ_ASM_DEFINE_ABORT(table_label, label, teardown,           \
->                                  abort_label, version, flags,            \
->                                  start_ip, post_commit_offset, abort_ip) \
->                  ".balign 32\n\t"                                        \
->                  __rseq_str(table_label) ":\n\t"                         \
->                  ".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
->                  ".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
->                  ".word " __rseq_str(RSEQ_SIG) "\n\t"                    \
->                  __rseq_str(label) ":\n\t"                               \
->                  teardown                                                \
->                  "b %l[" __rseq_str(abort_label) "]\n\t"
-> 
-> Which contains a copy of the struct rseq_cs for that critical section
-> close to the actual critical section, within the code, followed by the
-> signature. The reason why we have a copy of the struct rseq_cs there is
-> to speed up entry into the critical section by using the "adr" instruction
-> to compute the address to store into __rseq_cs->rseq_cs.
-> 
-> AFAIU, a literal pool on ARM is defined as something which is always
-> jumped over (never executed), which is the case here. We always have
-> an unconditional branch instruction ("b") skipping over each
-> RSEQ_ASM_DEFINE_ABORT().
-> 
-> Therefore, given that the signature is part of a literal pool on ARM,
-> it can be any value we choose and should not need to be an actual valid
-> instruction.
-> 
-> aarch64 defines the abort as:
-> 
-> #define RSEQ_ASM_DEFINE_ABORT(label, abort_label)                               \
->          "       b       222f\n"                                                 \
->          "       .inst   "       __rseq_str(RSEQ_SIG) "\n"                       \
->          __rseq_str(label) ":\n"                                                 \
->          "       b       %l[" __rseq_str(abort_label) "]\n"                      \
->          "222:\n"
-> 
-> Where the signature actually maps to a valid instruction. Considering that
-> aarch64 also have literal pools, and we branch over the signature, I wonder
-> why it's so important to ensure the signature is a valid trap instruction.
-> Perhaps Will Deacon can enlighten us ?
-
-In the event that you accidentally jump to it then you trap?
-
-However, you want an *uncommon* trap insn.
-
-I think the order of preference is:
-
-1.  An uncommon insn (with random immediate values), in a literal pool, that is
-     not a useful ROP/JOP sequence (very uncommon)
-2a. A uncommon TRAP hopefully with some immediate data encoded (maybe uncommon)
-2b. A NOP to avoid affecting speculative execution (maybe uncommon)
-
-With 2a/2b being roughly equivalent depending on speculative execution policy.
-
->>> +/* Signature required before each abort handler code.  */
->>> +#define RSEQ_SIG 0x53053053
->>
->> Why isn't this a mips-specific op code?
-> 
-> MIPS also has a literal pool just before the abort handler, and it
-> jumps over it. My understanding is that we can use any signature value
-> we want, and it does not need to be a valid instruction, similarly to ARM:
-> 
-> #define __RSEQ_ASM_DEFINE_ABORT(table_label, label, teardown, \
->                                  abort_label, version, flags, \
->                                  start_ip, post_commit_offset, abort_ip) \
->                  ".balign 32\n\t" \
->                  __rseq_str(table_label) ":\n\t" \
->                  ".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
->                  LONG " " U32_U64_PAD(__rseq_str(start_ip)) "\n\t" \
->                  LONG " " U32_U64_PAD(__rseq_str(post_commit_offset)) "\n\t" \
->                  LONG " " U32_U64_PAD(__rseq_str(abort_ip)) "\n\t" \
->                  ".word " __rseq_str(RSEQ_SIG) "\n\t" \
->                  __rseq_str(label) ":\n\t" \
->                  teardown \
->                  "b %l[" __rseq_str(abort_label) "]\n\t"
-> 
-> Perhaps Paul Burton can confirm this ?
-
-Yes please.
-
-You also want to avoid the value being a valid MIPS insn that's common.
-
-Did you check that?
-
-> [...]
->>> +++ b/sysdeps/unix/sysv/linux/powerpc/bits/rseq.h
-> [...]
->>> +/* Signature required before each abort handler code.  */
->>> +#define RSEQ_SIG 0x53053053
->>
->> Why isn't this an opcode specific to power?
-> 
-> On powerpc 32/64, the abort is placed in a __rseq_failure executable section:
-> 
-> #define RSEQ_ASM_DEFINE_ABORT(label, abort_label)                               \
->                  ".pushsection __rseq_failure, \"ax\"\n\t"                       \
->                  ".long " __rseq_str(RSEQ_SIG) "\n\t"                            \
->                  __rseq_str(label) ":\n\t"                                       \
->                  "b %l[" __rseq_str(abort_label) "]\n\t"                         \
->                  ".popsection\n\t"
-> 
-> That section only contains snippets of those trampolines. Arguably, it would be
-> good if disassemblers could find valid instructions there. Boqun Feng could perhaps
-> shed some light on this signature choice ? Now would be a good time to decide
-> once and for all whether a valid instruction would be a better choice.
-
-This seems questionable too.
-
-> [...]
->>> +++ b/sysdeps/unix/sysv/linux/s390/bits/rseq.h
-> [...]
->>> +
->>> +/* Signature required before each abort handler code.  */
->>> +#define RSEQ_SIG 0x53053053
->>
->> Why not a s390 specific value here?
-> 
-> s390 also has the abort handler in a __rseq_failure section:
-> 
-> #define RSEQ_ASM_DEFINE_ABORT(label, teardown, abort_label)             \
->                  ".pushsection __rseq_failure, \"ax\"\n\t"               \
->                  ".long " __rseq_str(RSEQ_SIG) "\n\t"                    \
->                  __rseq_str(label) ":\n\t"                               \
->                  teardown                                                \
->                  "j %l[" __rseq_str(abort_label) "]\n\t"                 \
->                  ".popsection\n\t"
-> 
-> Same question applies as powerpc: since disassemblers will try to decode
-> that instruction, would it be better to define it as a valid one ?
-
-Yes, I think it needs to be a valid uncommon insn or nop.
-
-> [...]
->>> +++ b/sysdeps/unix/sysv/linux/x86/bits/rseq.h
-> [...]
->>> +/* Signature required before each abort handler code.  */
->>> +#define RSEQ_SIG 0x53053053
->>
->> Why not an x86-specific op code?
-> 
-> On x86, we use this 4-byte signature as operand to a "no-op" instruction
-> taking 4-byte immediate operand:
-
-That makes perfect sense. Thanks.
-
-So what is left to audit?
-
-In summary:
-
-- Why does AArch64 choose a trap?
-
-- Is the current choice of 0x53053053 OK for MIPS? Does it map to a valid insn?
-
-- What better choice is there for power? Pick a real uncommon insn or nop?
-
-- What better choice is there for s390? Pick a real uncommon insn or nop?
-   - Todays choice could become something special in the future since it's unassigned.
-
--- 
-Cheers,
-Carlos.
