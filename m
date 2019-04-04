@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A5AC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B62CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB2B2183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE97217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367939;
-	bh=acG2swO987h0hEnlWLELDhy7gaNlHmgK+TKDY+AFgog=;
+	s=default; t=1554367942;
+	bh=hiBG1pkORZZU+hNiR6kMoxMtEWgeH78To8J3buKfp5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MXaQuXjmK/Slj2iGUo6SRKlgZ7mzt+2JBdblQ8++oPUKbUq7CsT5Qg115EcK3MKhk
-	 Hsn1BsG8DFb5mmAVj8Ra66xRS0w1vZVj1mqoa9/LjCZ0ZIC2gUvr3SweDNQofc4pxE
-	 oAi9pAMnKAlu/bHRxhhsNcBlii2DMeP4bnnslRWQ=
+	b=oNwJf7pfoOVFyR9GBzR4rMinkUdf3l6PfbVwGjvlGechNNSASGcO4EmRn4YMk5swG
+	 Cd+miFD+07W1FaivE3/0vOYN4PzSblzjxQzmM9rFzLxaKOMlCa6XVQ/EC33eTs+wGa
+	 qi7R/p6uGqVzTecOK4JnklnFsHDzYmUyv+j0o4bQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbfDDIwS (ORCPT
+        id S1729588AbfDDIwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:52:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54192 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:52:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729544AbfDDIwK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:10 -0400
+        id S1729563AbfDDIwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3975720855;
-        Thu,  4 Apr 2019 08:52:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733ED20855;
+        Thu,  4 Apr 2019 08:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367929;
-        bh=acG2swO987h0hEnlWLELDhy7gaNlHmgK+TKDY+AFgog=;
+        s=default; t=1554367934;
+        bh=hiBG1pkORZZU+hNiR6kMoxMtEWgeH78To8J3buKfp5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ydi6QKWCsVrPCafrNlaFIrZsABeiKJBTIP/ohOuIPVUHdr3tU2HsEaPbgDg2ZI/+8
-         B5VtArYPa+2BUytifbBdCVRot+VWrXYYoSBOOkkS73lTI1Cd2BTYJ38Zx41z8zo33b
-         Fxf42yFi+/M80zeAEYIBtElV4VbyRmFQvnAtYfbg=
+        b=oAydh6Tj4J7qcC/NGuJnZHZNUekmB2sGWmQy61v4l9OoXXvddpKWtWA/g7wXvpXJA
+         ZNOz9/n+e6jJXKna00lWwno4OF5wLenNUsF8jRXHhCVlwmik0pAafmGz65rLJxjGxu
+         lPozqhEv6fIrkdNNWhOzf6aGtsIe4LjqnsiBQCGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmil.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 66/91] ASoC: fsl-asoc-card: fix object reference leaks in fsl_asoc_card_probe
-Date:   Thu,  4 Apr 2019 10:47:50 +0200
-Message-Id: <20190404084539.276503412@linuxfoundation.org>
+        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 52/91] iwlwifi: pcie: fix emergency path
+Date:   Thu,  4 Apr 2019 10:47:36 +0200
+Message-Id: <20190404084538.484571534@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -73,41 +67,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 11907e9d3533648615db08140e3045b829d2c141 ]
+[ Upstream commit c6ac9f9fb98851f47b978a9476594fc3c477a34d ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+Allocator swaps the pending requests with 0 when it starts
+working. This means that relying on it n RX path to decide if
+to move to emergency is not always a good idea, since it may
+be zero, but there are still a lot of unallocated RBs in the
+system. Change allocator to decrement the pending requests on
+real time. It is more expensive since it accesses the atomic
+variable more times, but it gives the RX path a better idea
+of the system's status.
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmil.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: 868a1e863f95 ("iwlwifi: pcie: avoid empty free RB queue")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index dffd549a0e2a..705d2524ec31 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -689,6 +689,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- asrc_fail:
- 	of_node_put(asrc_np);
- 	of_node_put(codec_np);
-+	put_device(&cpu_pdev->dev);
- fail:
- 	of_node_put(cpu_np);
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index e58a50d31d96..c21f8bd32d08 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -475,7 +475,7 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct iwl_rb_allocator *rba = &trans_pcie->rba;
+ 	struct list_head local_empty;
+-	int pending = atomic_xchg(&rba->req_pending, 0);
++	int pending = atomic_read(&rba->req_pending);
  
+ 	IWL_DEBUG_RX(trans, "Pending allocation requests = %d\n", pending);
+ 
+@@ -530,11 +530,13 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 			i++;
+ 		}
+ 
++		atomic_dec(&rba->req_pending);
+ 		pending--;
++
+ 		if (!pending) {
+-			pending = atomic_xchg(&rba->req_pending, 0);
++			pending = atomic_read(&rba->req_pending);
+ 			IWL_DEBUG_RX(trans,
+-				     "Pending allocation requests = %d\n",
++				     "Got more pending allocation requests = %d\n",
+ 				     pending);
+ 		}
+ 
+@@ -546,12 +548,15 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 		spin_unlock(&rba->lock);
+ 
+ 		atomic_inc(&rba->req_ready);
++
+ 	}
+ 
+ 	spin_lock(&rba->lock);
+ 	/* return unused rbds to the allocator empty list */
+ 	list_splice_tail(&local_empty, &rba->rbd_empty);
+ 	spin_unlock(&rba->lock);
++
++	IWL_DEBUG_RX(trans, "%s, exit.\n", __func__);
+ }
+ 
+ /*
 -- 
 2.19.1
 
