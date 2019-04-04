@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38149C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E8220820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084A6206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371094;
-	bh=aRQlGvE+vUmaVktcUcH0m4+YZsFDCT0ezh2m8A00NUw=;
+	s=default; t=1554371102;
+	bh=erMtdow+xmMQDA4r64UWuase+NqFQdsGiKNW1u/x7d0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIHYG3FJDWvbsPiSr90twOHZshVHS7KoesclVqxXFmcZ3i1B6C4Cs+tN0OWbdZr67
-	 pVW1Z3cEkxaIOmC5H8cNelRSJhjDteJLt2lSTsjkvC9E9SmicVPuulORFwesOJT3ys
-	 j4ToVmSKChLvGexCzuTO7HHpPBrUbjw5NaH4HqOg=
+	b=OITfr3C1sXsHPqYjCMdKFg6Oq6QrlrOu6/sjd4uaubN4urhTN7WRlTzFQv31Yfszs
+	 aGOYqpeCLq3KQ3INqJMw/KygkighMtTxGEjyUaevJ+2qYScW6W78Bn8OUGWMcx2gwD
+	 3BHzgyS/770KOiZ791xah0hwT6VT9+9XsKjx1aA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbfDDJox (ORCPT
+        id S1731145AbfDDJpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730724AbfDDI70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:26 -0400
+        id S1731074AbfDDI7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55D0920652;
-        Thu,  4 Apr 2019 08:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05D6920652;
+        Thu,  4 Apr 2019 08:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368365;
-        bh=aRQlGvE+vUmaVktcUcH0m4+YZsFDCT0ezh2m8A00NUw=;
+        s=default; t=1554368360;
+        bh=erMtdow+xmMQDA4r64UWuase+NqFQdsGiKNW1u/x7d0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ochXxN3TvGov0loCQLVomFP7JVwJzs8HBbfLoC/FSqVsVMMJ+jkNbp5zyaTfrNHlG
-         GJBkBIwha6+qdv/3jN2CEpyrwP+rDlRTGYwVkyNEF1uJKmvhg30umF9yE3ZIX0cVxq
-         7LdJIhkkF5rH4qWEHyvOrk+zWn5HTh6t26GSwSCo=
+        b=pnUu6qFPzYSlMRLQjetxPLnJHjoAqxULknkX+o5eeCFS35a2WPFB6YQ7azMQS15YF
+         XkysR5nWnqJz99G1Wz8PPn9HBw34fYXuWW7cJXSLBh2R+AnQyEM09CulbJ8mlXWdte
+         /SbrF79bkPd3Nj1mB0p0LYKgqpAVfGQtrrkolQ/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Jens Axboe <axboe@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Eli Cohen <eli@mellanox.com>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 013/187] include/linux/relay.h: fix percpu annotation in struct rchan
-Date:   Thu,  4 Apr 2019 10:45:50 +0200
-Message-Id: <20190404084603.719646890@linuxfoundation.org>
+Subject: [PATCH 4.19 011/187] net/mlx5: Avoid panic when setting vport mac, getting vport config
+Date:   Thu,  4 Apr 2019 10:45:48 +0200
+Message-Id: <20190404084603.640560892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -70,51 +68,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
+[ Upstream commit 6e77c413e8e73d0f36b5358b601389d75ec4451c ]
 
-The percpu member of this structure is declared as:
-	struct ... ** __percpu member;
-So its type is:
-	__percpu pointer to pointer to struct ...
+If we try to set VFs mac address on a VF (not PF) net device,
+the kernel will be crash. The commands are show as below:
 
-But looking at how it's used, its type should be:
-	pointer to __percpu pointer to struct ...
-and it should thus be declared as:
-	struct ... * __percpu *member;
+$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
+$ ip link set $MLX_VF0 vf 0 mac 00:11:22:33:44:00
 
-So fix the placement of '__percpu' in the definition of this
-structures.
+[exception RIP: mlx5_eswitch_set_vport_mac+41]
+[ffffb8b7079e3688] do_setlink at ffffffff8f67f85b
+[ffffb8b7079e37a8] __rtnl_newlink at ffffffff8f683778
+[ffffb8b7079e3b68] rtnl_newlink at ffffffff8f683a63
+[ffffb8b7079e3b90] rtnetlink_rcv_msg at ffffffff8f67d812
+[ffffb8b7079e3c10] netlink_rcv_skb at ffffffff8f6b88ab
+[ffffb8b7079e3c60] netlink_unicast at ffffffff8f6b808f
+[ffffb8b7079e3ca0] netlink_sendmsg at ffffffff8f6b8412
+[ffffb8b7079e3d18] sock_sendmsg at ffffffff8f6452f6
+[ffffb8b7079e3d30] ___sys_sendmsg at ffffffff8f645860
+[ffffb8b7079e3eb0] __sys_sendmsg at ffffffff8f647a38
+[ffffb8b7079e3f38] do_syscall_64 at ffffffff8f00401b
+[ffffb8b7079e3f50] entry_SYSCALL_64_after_hwframe at ffffffff8f80008c
 
-This silents a few Sparse's warnings like:
-	warning: incorrect type in initializer (different address spaces)
-	  expected void const [noderef] <asn:3> *__vpp_verify
-	  got struct sched_domain **
+and
 
-Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
-Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc: Jens Axboe <axboe@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[exception RIP: mlx5_eswitch_get_vport_config+12]
+[ffffa70607e57678] mlx5e_get_vf_config at ffffffffc03c7f8f [mlx5_core]
+[ffffa70607e57688] do_setlink at ffffffffbc67fa59
+[ffffa70607e577a8] __rtnl_newlink at ffffffffbc683778
+[ffffa70607e57b68] rtnl_newlink at ffffffffbc683a63
+[ffffa70607e57b90] rtnetlink_rcv_msg at ffffffffbc67d812
+[ffffa70607e57c10] netlink_rcv_skb at ffffffffbc6b88ab
+[ffffa70607e57c60] netlink_unicast at ffffffffbc6b808f
+[ffffa70607e57ca0] netlink_sendmsg at ffffffffbc6b8412
+[ffffa70607e57d18] sock_sendmsg at ffffffffbc6452f6
+[ffffa70607e57d30] ___sys_sendmsg at ffffffffbc645860
+[ffffa70607e57eb0] __sys_sendmsg at ffffffffbc647a38
+[ffffa70607e57f38] do_syscall_64 at ffffffffbc00401b
+[ffffa70607e57f50] entry_SYSCALL_64_after_hwframe at ffffffffbc80008c
+
+Fixes: a8d70a054a718 ("net/mlx5: E-Switch, Disallow vlan/spoofcheck setup if not being esw manager")
+Cc: Eli Cohen <eli@mellanox.com>
+Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/relay.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/relay.h b/include/linux/relay.h
-index e1bdf01a86e2..c759f96e39c1 100644
---- a/include/linux/relay.h
-+++ b/include/linux/relay.h
-@@ -66,7 +66,7 @@ struct rchan
- 	struct kref kref;		/* channel refcount */
- 	void *private_data;		/* for user-defined data */
- 	size_t last_toobig;		/* tried to log event > subbuf size */
--	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
-+	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
- 	int is_global;			/* One global buffer ? */
- 	struct list_head list;		/* for channel list */
- 	struct dentry *parent;		/* parent dentry passed to open */
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 886a4a77c47f..26c9f9421901 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -1797,7 +1797,7 @@ int mlx5_eswitch_set_vport_mac(struct mlx5_eswitch *esw,
+ 	u64 node_guid;
+ 	int err = 0;
+ 
+-	if (!MLX5_CAP_GEN(esw->dev, vport_group_manager))
++	if (!esw || !MLX5_CAP_GEN(esw->dev, vport_group_manager))
+ 		return -EPERM;
+ 	if (!LEGAL_VPORT(esw, vport) || is_multicast_ether_addr(mac))
+ 		return -EINVAL;
+@@ -1871,7 +1871,7 @@ int mlx5_eswitch_get_vport_config(struct mlx5_eswitch *esw,
+ {
+ 	struct mlx5_vport *evport;
+ 
+-	if (!MLX5_CAP_GEN(esw->dev, vport_group_manager))
++	if (!esw || !MLX5_CAP_GEN(esw->dev, vport_group_manager))
+ 		return -EPERM;
+ 	if (!LEGAL_VPORT(esw, vport))
+ 		return -EINVAL;
 -- 
 2.19.1
 
