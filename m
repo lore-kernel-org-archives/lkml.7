@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A824C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280F12183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E06521872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368534;
-	bh=5E/jEthbeDTM0q5ZANa4ihrd6+mB2VaduR8DXkhfl2U=;
+	s=default; t=1554368538;
+	bh=5sSIGHvHQgz+OipSgiacZ8OZWKXKEBa2ePdYsumJwfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwKvtadFdDPRrbYoidkBHaxZd9ScdO+BHQfJvxk3ssB3OxFpUedNkSy9YL0LHQZSV
-	 dWSCf4pj6hiipt3QjFmZ73HV/u54CqWFV63P0jZhDHr0AaX+fAwhQNQ1GE+VJkBsxx
-	 rEI6jy1+HzO3jPxpTwi8KS6kVPBlG2JEX8ZF2zfU=
+	b=lhwmox9P9RyMxl/hbRziJKIgw5Bkn0kwgwmiN599SnJRXnTkwmZZYtuKoFcAX6XQg
+	 M30nVHxh1wI9Jkj8WEd7B8roafeIZ+9/UhMPU5gq3FD7xO7QcvCXl6l+ZMXhBps4Wy
+	 fC90VUPTMhWVyeTRnrtpqORj0/tNY0vAm2T/GTSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbfDDJCN (ORCPT
+        id S1731588AbfDDJCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:02:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39486 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731322AbfDDJCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:02:09 -0400
+        id S1731577AbfDDJCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:02:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849482177E;
-        Thu,  4 Apr 2019 09:02:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 394DC21741;
+        Thu,  4 Apr 2019 09:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368529;
-        bh=5E/jEthbeDTM0q5ZANa4ihrd6+mB2VaduR8DXkhfl2U=;
+        s=default; t=1554368532;
+        bh=5sSIGHvHQgz+OipSgiacZ8OZWKXKEBa2ePdYsumJwfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gNcuxn/8yX3DZhM40rkL96YODRJnlFmNERAvsoEe74csmOMkQywo7OCiizBC/HUcy
-         z66EKOQLKIW+S+vRRBGq3Ns5STgy5RX55gxyawKPUIXGn6wSdWjPPMLQB2cJMSpVBE
-         o25t82At4haE+OyzT4MgmdNFAOMknY64PDSmf6As=
+        b=LKXe4WYOBHqql7//UVVCDm7eF5zqIRNIZ7DjwPmYOPp0EJdIvEjNXXnYaTKjKMT9H
+         sh87gAIdaO9UyvaVMUYslT+s2sQ9p3ZZAohjR8YkrON60e0rjJ8HoiMm5RkfVvMKra
+         sbDiEeM9Okeq5NZo9s+fpcsHDKlyhVHk4KjTuvSw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/187] coresight: etm4x: Add support to enable ETMv4.2
-Date:   Thu,  4 Apr 2019 10:46:34 +0200
-Message-Id: <20190404084605.767826102@linuxfoundation.org>
+Subject: [PATCH 4.19 058/187] serial: 8250_pxa: honor the port number from devicetree
+Date:   Thu,  4 Apr 2019 10:46:35 +0200
+Message-Id: <20190404084605.815075523@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,62 +65,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5666dfd1d8a45a167f0d8b4ef47ea7f780b1f24a ]
+[ Upstream commit fe9ed6d2483fda55465f32924fb15bce0fac3fac ]
 
-SDM845 has ETMv4.2 and can use the existing etm4x driver.
-But the current etm driver checks only for ETMv4.0 and
-errors out for other etm4x versions. This patch adds this
-missing support to enable SoC's with ETMv4x to use same
-driver by checking only the ETM architecture major version
-number.
+Like the other OF-enabled drivers, use the port number from the firmware if
+the devicetree specifies an alias:
 
-Without this change, we get below error during etm probe:
+  aliases {
+      ...
+      serial2 = &uart2; /* Should be ttyS2 */
+  }
 
-/ # dmesg | grep etm
-[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
-[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
-[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
-[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
-[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
-[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
-[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
-[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
+This is how the deprecated pxa.c driver behaved, switching to 8250_pxa
+messes up the numbering.
 
-With this change, etm probe is successful:
-
-/ # dmesg | grep etm
-[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
-[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
-[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
-[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
-[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
-[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
-[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
-[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
-
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_pxa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 1d94ebec027b..2bce7cf0b0af 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -54,7 +54,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
+diff --git a/drivers/tty/serial/8250/8250_pxa.c b/drivers/tty/serial/8250/8250_pxa.c
+index b9bcbe20a2be..c47188860e32 100644
+--- a/drivers/tty/serial/8250/8250_pxa.c
++++ b/drivers/tty/serial/8250/8250_pxa.c
+@@ -113,6 +113,10 @@ static int serial_pxa_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
- static bool etm4_arch_supported(u8 arch)
- {
--	switch (arch) {
-+	/* Mask out the minor version number */
-+	switch (arch & 0xf0) {
- 	case ETM_ARCH_V4:
- 		break;
- 	default:
++	ret = of_alias_get_id(pdev->dev.of_node, "serial");
++	if (ret >= 0)
++		uart.port.line = ret;
++
+ 	uart.port.type = PORT_XSCALE;
+ 	uart.port.iotype = UPIO_MEM32;
+ 	uart.port.mapbase = mmres->start;
 -- 
 2.19.1
 
