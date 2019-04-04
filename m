@@ -2,230 +2,91 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C1BC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82570C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2023206B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370124;
-	bh=NoVsBUpNU7dqoDYis7EYIDYW1iglML18BcNcCNHsOas=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ch6fWrWY0F1ilAJ1YRGi6r+xtu85Y+Kb276cbci1Mfrp9Sr0NYp0kyg7dwsPQ+bK6
-	 I4U2wdPWL+V3ftu9sBJR0kEBEMZd6C/Y7/ux2Lq3Sf2TOeTm8OL/x8W/Vuo/IB35Zl
-	 Zt6x3q4JIuqvQGGBjT0gqWZJBctUjPaKiaf3ZcUg=
+	by mail.kernel.org (Postfix) with ESMTP id 46026206B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:28:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EjVaaQx0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aN4n385L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387541AbfDDJ2m (ORCPT
+        id S2387565AbfDDJ25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:28:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732736AbfDDJLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 4 Apr 2019 05:28:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48664 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729275AbfDDJ2z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:28:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 58765614B5; Thu,  4 Apr 2019 09:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554370134;
+        bh=0Kvu+k7olBLdhhfbWZY3bUkOtIN9a4rTe3VpQTjAPjQ=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=EjVaaQx078VvzlNQl2b5s2/9X8zkexxkwgEtpngYr3E6k9geQTaQCeeQ93HNyaX17
+         4/euP7z5cb5Wwww+RB/B+W8+cdELCKWUBIkmGZWH6QkWLHpNI87cxqANt81mW2yEKr
+         oh7/lbnOWD1MvsyMD/+33FPmVkG5jy1ZZwKoBRhw=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2372054F;
-        Thu,  4 Apr 2019 09:11:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369092;
-        bh=NoVsBUpNU7dqoDYis7EYIDYW1iglML18BcNcCNHsOas=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8kYPW+vYXBRiQa4L/VgRsLZRY4CJ+To/uwmVtKrCiwYH7z4bXFmQa/KDTtINUgAy
-         g9882TnjS8K8oTEhxNZwgdGsGwFDHtkp2bLKyHPr6n/xTe9NLKSNOPZ25IfD0oUFll
-         +w+U2T4gGnFHtgevmwSsDJGIj66RPxhVspgz4lDM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 094/246] platform/mellanox: mlxreg-hotplug: Fix KASAN warning
-Date:   Thu,  4 Apr 2019 10:46:34 +0200
-Message-Id: <20190404084622.435039814@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F01FD619D2;
+        Thu,  4 Apr 2019 09:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554370133;
+        bh=0Kvu+k7olBLdhhfbWZY3bUkOtIN9a4rTe3VpQTjAPjQ=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=aN4n385Lh+W/3/LzSNhVU5wJ6Z2+OGOKrRAO883iCXKB7oIj7FWx1cVOezreYQaH3
+         TGDC83wB04rQeIh11droL4epwSpBF26xr9k0wXJlgJFCsh+aPPNSCwxtRJQLGJSdfe
+         NJb2k+WNXzLFM6F+sq1Z/msxOHeJKfmg6ES4MyZU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F01FD619D2
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] net: mwifiex: fix a NULL pointer dereference
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190323035711.23882-1-kjlu@umn.edu>
+References: <20190323035711.23882-1-kjlu@umn.edu>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     kjlu@umn.edu, pakki001@umn.edu,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190404092854.58765614B5@smtp.codeaurora.org>
+Date:   Thu,  4 Apr 2019 09:28:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+Kangjie Lu <kjlu@umn.edu> wrote:
 
-------------------
+> In case dev_alloc_skb fails, the fix returns -ENOMEM to avoid
+> NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit e4c275f77624961b56cce397814d9d770a45ac59 ]
+There is a similar patch submitted:
 
-Fix the following KASAN warning produced when booting a 64-bit kernel:
-[   13.334750] BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
-[   13.342166] Read of size 8 at addr ffff880235067178 by task kworker/2:1/42
-[   13.342176] CPU: 2 PID: 42 Comm: kworker/2:1 Not tainted 4.20.0-rc1+ #106
-[   13.342179] Hardware name: Mellanox Technologies Ltd. MSN2740/Mellanox x86 SFF board, BIOS 5.6.5 06/07/2016
-[   13.342190] Workqueue: events deferred_probe_work_func
-[   13.342194] Call Trace:
-[   13.342206]  dump_stack+0xc7/0x15b
-[   13.342214]  ? show_regs_print_info+0x5/0x5
-[   13.342220]  ? kmsg_dump_rewind_nolock+0x59/0x59
-[   13.342234]  ? _raw_write_lock_irqsave+0x100/0x100
-[   13.351593]  print_address_description+0x73/0x260
-[   13.351603]  kasan_report+0x260/0x380
-[   13.351611]  ? find_first_bit+0x19/0x70
-[   13.351619]  find_first_bit+0x19/0x70
-[   13.351630]  mlxreg_hotplug_work_handler+0x73c/0x920 [mlxreg_hotplug]
-[   13.351639]  ? __lock_text_start+0x8/0x8
-[   13.351646]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351656]  ? mlxreg_hotplug_remove+0x1e0/0x1e0 [mlxreg_hotplug]
-[   13.351663]  ? regmap_volatile+0x40/0xb0
-[   13.351668]  ? regcache_write+0x4c/0x90
-[   13.351676]  ? mlxplat_mlxcpld_reg_write+0x24/0x30 [mlx_platform]
-[   13.351681]  ? _regmap_write+0xea/0x220
-[   13.351688]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351696]  ? devm_add_action+0x70/0x70
-[   13.351701]  ? mutex_unlock+0x1d/0x40
-[   13.351710]  mlxreg_hotplug_probe+0x82e/0x989 [mlxreg_hotplug]
-[   13.351723]  ? mlxreg_hotplug_work_handler+0x920/0x920 [mlxreg_hotplug]
-[   13.351731]  ? sysfs_do_create_link_sd.isra.2+0xf4/0x190
-[   13.351737]  ? sysfs_rename_link_ns+0xf0/0xf0
-[   13.351743]  ? devres_close_group+0x2b0/0x2b0
-[   13.351749]  ? pinctrl_put+0x20/0x20
-[   13.351755]  ? acpi_dev_pm_attach+0x2c/0xd0
-[   13.351763]  platform_drv_probe+0x70/0xd0
-[   13.351771]  really_probe+0x480/0x6e0
-[   13.351778]  ? device_attach+0x10/0x10
-[   13.351784]  ? __lock_text_start+0x8/0x8
-[   13.351790]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351797]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.351806]  ? __driver_attach+0x190/0x190
-[   13.351812]  driver_probe_device+0x17d/0x1a0
-[   13.351819]  ? __driver_attach+0x190/0x190
-[   13.351825]  bus_for_each_drv+0xd6/0x130
-[   13.351831]  ? bus_rescan_devices+0x20/0x20
-[   13.351837]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351845]  __device_attach+0x18c/0x230
-[   13.351852]  ? device_bind_driver+0x70/0x70
-[   13.351859]  ? __mutex_lock_slowpath+0x10/0x10
-[   13.351866]  bus_probe_device+0xea/0x110
-[   13.351874]  deferred_probe_work_func+0x1c9/0x290
-[   13.351882]  ? driver_deferred_probe_add+0x1d0/0x1d0
-[   13.351889]  ? preempt_notifier_dec+0x20/0x20
-[   13.351897]  ? read_word_at_a_time+0xe/0x20
-[   13.351904]  ? strscpy+0x151/0x290
-[   13.351912]  ? set_work_pool_and_clear_pending+0x9c/0xf0
-[   13.351918]  ? __switch_to_asm+0x34/0x70
-[   13.351924]  ? __switch_to_asm+0x40/0x70
-[   13.351929]  ? __switch_to_asm+0x34/0x70
-[   13.351935]  ? __switch_to_asm+0x40/0x70
-[   13.351942]  process_one_work+0x5cc/0xa00
-[   13.351952]  ? pwq_dec_nr_in_flight+0x1e0/0x1e0
-[   13.351960]  ? pci_mmcfg_check_reserved+0x80/0xb8
-[   13.351967]  ? run_rebalance_domains+0x250/0x250
-[   13.351980]  ? stack_access_ok+0x35/0x80
-[   13.351986]  ? deref_stack_reg+0xa1/0xe0
-[   13.351994]  ? schedule+0xcd/0x250
-[   13.352000]  ? worker_enter_idle+0x2d6/0x330
-[   13.352006]  ? __schedule+0xeb0/0xeb0
-[   13.352014]  ? fork_usermode_blob+0x130/0x130
-[   13.352019]  ? mutex_lock+0xa7/0x100
-[   13.352026]  ? _raw_spin_lock_irq+0x98/0xf0
-[   13.352032]  ? _raw_read_unlock_irqrestore+0x30/0x30
-[   13.352037] i2c i2c-2: Added multiplexed i2c bus 11
-[   13.352043]  worker_thread+0x181/0xa80
-[   13.352052]  ? __switch_to_asm+0x34/0x70
-[   13.352058]  ? __switch_to_asm+0x40/0x70
-[   13.352064]  ? process_one_work+0xa00/0xa00
-[   13.352070]  ? __switch_to_asm+0x34/0x70
-[   13.352076]  ? __switch_to_asm+0x40/0x70
-[   13.352081]  ? __switch_to_asm+0x34/0x70
-[   13.352086]  ? __switch_to_asm+0x40/0x70
-[   13.352092]  ? __switch_to_asm+0x34/0x70
-[   13.352097]  ? __switch_to_asm+0x40/0x70
-[   13.352105]  ? __schedule+0x3d6/0xeb0
-[   13.352112]  ? migrate_swap_stop+0x470/0x470
-[   13.352119]  ? save_stack+0x89/0xb0
-[   13.352127]  ? kmem_cache_alloc_trace+0xe5/0x570
-[   13.352132]  ? kthread+0x59/0x1d0
-[   13.352138]  ? ret_from_fork+0x35/0x40
-[   13.352154]  ? __schedule+0xeb0/0xeb0
-[   13.352161]  ? remove_wait_queue+0x150/0x150
-[   13.352169]  ? _raw_write_lock_irqsave+0x80/0x100
-[   13.352175]  ? __lock_text_start+0x8/0x8
-[   13.352183]  ? process_one_work+0xa00/0xa00
-[   13.352188]  kthread+0x1a4/0x1d0
-[   13.352195]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[   13.352202]  ret_from_fork+0x35/0x40
+https://patchwork.kernel.org/patch/10851669/
 
-[   13.353879] The buggy address belongs to the page:
-[   13.353885] page:ffffea0008d419c0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
-[   13.353890] flags: 0x2ffff8000000000()
-[   13.353897] raw: 02ffff8000000000 ffffea0008d419c8 ffffea0008d419c8 0000000000000000
-[   13.353903] raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-[   13.353905] page dumped because: kasan: bad access detected
+Patch set to Superseded.
 
-[   13.353908] Memory state around the buggy address:
-[   13.353912]  ffff880235067000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   13.353917]  ffff880235067080: 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04
-[   13.353921] >ffff880235067100: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 f2 f2 f2 f2 04
-[   13.353923]                                                                 ^
-[   13.353927]  ffff880235067180: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 00 00 00 00 00
-[   13.353931]  ffff880235067200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[   13.353933] ==================================================================
-
-The warning is caused by the below loop:
-	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
-while "asserted" is declared as 'unsigned'.
-
-The casting of 32-bit unsigned integer pointer to a 64-bit unsigned long
-pointer. There are two problems here.
-It causes the access of four extra byte, which can corrupt memory
-The 32-bit pointer address may not be 64-bit aligned.
-
-The fix changes variable "asserted" to "unsigned long".
-
-Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/mellanox/mlxreg-hotplug.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index b6d44550d98c..eca16d00e310 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -248,7 +248,8 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 			   struct mlxreg_core_item *item)
- {
- 	struct mlxreg_core_data *data;
--	u32 asserted, regval, bit;
-+	unsigned long asserted;
-+	u32 regval, bit;
- 	int ret;
- 
- 	/*
-@@ -281,7 +282,7 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 	asserted = item->cache ^ regval;
- 	item->cache = regval;
- 
--	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
-+	for_each_set_bit(bit, &asserted, 8) {
- 		data = item->data + bit;
- 		if (regval & BIT(bit)) {
- 			if (item->inversed)
 -- 
-2.19.1
+https://patchwork.kernel.org/patch/10866749/
 
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
