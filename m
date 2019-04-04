@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 565EDC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1A8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F352184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E5521850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368438;
-	bh=A8ygAuuwuz+TN4EtylqAIuRwsff8dVeHrwVUHU2oM/U=;
+	s=default; t=1554368442;
+	bh=d79nm7yo6gb7XyAYspQJXBCB5KtCIjbFxVxxh9tL7Nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ELGsp7nFNWVT1tHMPd8wp3uu/AdCyAk0NuiMNpJIhtkm5DLvhB/l1Yfh1jb1ZVUUl
-	 CwzQIefvHKvYwehBQoYVYiVQJK7dGHU1sCNEK445kK39GLdeBlZFy4fqk4zI1D/Fds
-	 ndxlUyWpos1ZXt9Uto06MXoFom8N0rU41bad0XTc=
+	b=Yj1A9F7GA0ZiNuSaWFNkDXw+gxTYFqBBv0lw3ew1hsrgd3axbi8sfUfh1eTOonmVd
+	 0z8KJjOxfZhPXaJx2osasS1TRHYUWAlQC6L9xVP/cjnFVN8vRR7oGtJA7c4Mj5c1tY
+	 /GmFCzYcF5dRuQe7j3HUero4cCGSZLgqCxnXhQzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbfDDJAh (ORCPT
+        id S1731279AbfDDJAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:00:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37280 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731043AbfDDJAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:00:32 -0400
+        id S1731268AbfDDJAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A162184B;
-        Thu,  4 Apr 2019 09:00:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA2C2186A;
+        Thu,  4 Apr 2019 09:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368432;
-        bh=A8ygAuuwuz+TN4EtylqAIuRwsff8dVeHrwVUHU2oM/U=;
+        s=default; t=1554368434;
+        bh=d79nm7yo6gb7XyAYspQJXBCB5KtCIjbFxVxxh9tL7Nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDj2RuQtZqC2EFE6ao0lFP4RdD4Z5bMhH40cWlzEoBleAfEsvQ9SOMrzwEAvVWFpI
-         8roOPDtS7nD7H0iDhHC9fc/kXLg028+nXVfekQ8QZ4mbsgicxRwMFYGFEHCf8dc2+X
-         BsuY0s4h634AZLjVw9Onf1XM0twh6HOf/39Fm8Gs=
+        b=xSjSXiT6P5f9opxdqIX2XlpeoCFDWQCV0hYRYAo1eE30I4CJkjCn0gCTvhYLiVwYz
+         CJbfJjxkM+uO7NoeeR12DDuxiSdMpR408YLfz6W3lxWZpGG3esvFnaKlf05AaRlFRH
+         8ifuXtxHyC5ea25HYa5ZHqcS+O+LloEP3ViF3tHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nageswara R Sastry <nasastry@in.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 022/187] perf c2c: Fix c2c report for empty numa node
-Date:   Thu,  4 Apr 2019 10:45:59 +0200
-Message-Id: <20190404084604.128426074@linuxfoundation.org>
+Subject: [PATCH 4.19 023/187] mm/sparse: fix a bad comparison
+Date:   Thu,  4 Apr 2019 10:46:00 +0200
+Message-Id: <20190404084604.168765554@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -73,61 +68,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e34c940245437f36d2c492edd1f8237eff391064 ]
+[ Upstream commit d778015ac95bc036af73342c878ab19250e01fe1 ]
 
-Ravi Bangoria reported that we fail with an empty NUMA node with the
-following message:
+next_present_section_nr() could only return an unsigned number -1, so
+just check it specifically where compilers will convert -1 to unsigned
+if needed.
 
-  $ lscpu
-  NUMA node0 CPU(s):
-  NUMA node1 CPU(s):   0-4
+  mm/sparse.c: In function 'sparse_init_nid':
+  mm/sparse.c:200:20: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+         ((section_nr >= 0) &&    \
+                      ^~
+  mm/sparse.c:478:2: note: in expansion of macro
+  'for_each_present_section_nr'
+    for_each_present_section_nr(pnum_begin, pnum) {
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  mm/sparse.c:200:20: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+         ((section_nr >= 0) &&    \
+                      ^~
+  mm/sparse.c:497:2: note: in expansion of macro
+  'for_each_present_section_nr'
+    for_each_present_section_nr(pnum_begin, pnum) {
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  mm/sparse.c: In function 'sparse_init':
+  mm/sparse.c:200:20: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+         ((section_nr >= 0) &&    \
+                      ^~
+  mm/sparse.c:520:2: note: in expansion of macro
+  'for_each_present_section_nr'
+    for_each_present_section_nr(pnum_begin + 1, pnum_end) {
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  $ sudo ./perf c2c report
-  node/cpu topology bugFailed setup nodes
-
-Fix this by detecting the empty node and keeping its CPU set empty.
-
-Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190305152536.21035-2-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/20190228181839.86504-1-cai@lca.pw
+Fixes: c4e1be9ec113 ("mm, sparsemem: break out of loops early")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-c2c.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ mm/sparse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index f3aa9d02a5ab..763c2edf52e7 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2055,6 +2055,12 @@ static int setup_nodes(struct perf_session *session)
- 		if (!set)
- 			return -ENOMEM;
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 10b07eea9a6e..45950a074bdb 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -196,7 +196,7 @@ static inline int next_present_section_nr(int section_nr)
+ }
+ #define for_each_present_section_nr(start, section_nr)		\
+ 	for (section_nr = next_present_section_nr(start-1);	\
+-	     ((section_nr >= 0) &&				\
++	     ((section_nr != -1) &&				\
+ 	      (section_nr <= __highest_present_section_nr));	\
+ 	     section_nr = next_present_section_nr(section_nr))
  
-+		nodes[node] = set;
-+
-+		/* empty node, skip */
-+		if (cpu_map__empty(map))
-+			continue;
-+
- 		for (cpu = 0; cpu < map->nr; cpu++) {
- 			set_bit(map->map[cpu], set);
- 
-@@ -2063,8 +2069,6 @@ static int setup_nodes(struct perf_session *session)
- 
- 			cpu2node[map->map[cpu]] = node;
- 		}
--
--		nodes[node] = set;
- 	}
- 
- 	setup_nodes_header();
 -- 
 2.19.1
 
