@@ -2,103 +2,114 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FADC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5928C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C3820882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820032064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="orUATwCh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lRwJh+DE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfDDPFz (ORCPT
+        id S1729546AbfDDPF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 11:05:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37986 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729476AbfDDPFy (ORCPT
+        Thu, 4 Apr 2019 11:05:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:32770 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729476AbfDDPF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 11:05:54 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w15so3817031wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 08:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Af+jmp4TxV/QvWrI8cMBNBX8b92F7d39H2RU/VUPuWE=;
-        b=orUATwChTASPdHYfwTB7I0LB+HwbbvmzOPE5mGVbekd7ZK180nKS4YYUFiGPYz9aJw
-         14gf3J+dsx/J7iZagdSXdiSovF2dbuQme+GdTMM2BEI1DtSlUBrx4C0lSCCgVMEBCQ6m
-         LHxMhcGkd2YDYLoxi129toCuz7GHtMpx/OWsVIhO1ZaRtlmgYH9P4J7E1N5pu7hnP/8R
-         pa1Ogo6zQF+fwDIzFTulg1H5J/PKlW/LJIwb/Ojm+c4fwJ0KSh3uW6tMkAAAttCwNFLE
-         5Z1Lku13gC6r6RO/Xi9gbetV9vIH54P5AQzvBbuNFmbXf89CCNF57sIb6Zxyk+hu/9F4
-         IVVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Af+jmp4TxV/QvWrI8cMBNBX8b92F7d39H2RU/VUPuWE=;
-        b=bFkvzEhrXXsE5KryYqAZ5KLRTLUsg3HXBva5ve3IzoLE9XEm0CVh4yvrw9Rw9Q0/kP
-         EfIxfGVPzHdC9ST3glO4/p/cvzoYSG3ULPJd5omZ9I6mOO+RBD/X/y99Lujdm397VAwV
-         WU5l53skseBsAzRAT8l/NWaH9n1fttkWskmGky4qPa0yMC1/q9fmQSuuAoiHMiU7x3jL
-         b76C0I5mb0snWoQ6r9B70caY2Id8n8j+Wt8dDe2+Mv55f2NyPC1qOgFV09bp6T4ImhzU
-         ECczA9K/tG85w6Ccl48+QrOS68nptl5z5Ul6KTm1WcCnghSYURGxalZwdugo8mtrmDaZ
-         aPlQ==
-X-Gm-Message-State: APjAAAW0UmkW8iqaZb1ZnqmXPm2Fc0A9VyYQ8OeIXJUKeiZR6oszQ+Fv
-        d/SbJ9eI5+3zB8N8vvrYQvdE3Q==
-X-Google-Smtp-Source: APXvYqwxXqanvZ8gCr13G4rHzWLM8JaM55lN2GWp22sMBFDs785fPY1/LNLPsCXZiNAJGmLqRtwysQ==
-X-Received: by 2002:a1c:41d6:: with SMTP id o205mr4764633wma.2.1554390352542;
-        Thu, 04 Apr 2019 08:05:52 -0700 (PDT)
-Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id z23sm9880981wma.0.2019.04.04.08.05.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 04 Apr 2019 08:05:50 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com, devicetree@vger.kernel.org,
-        jbrunet@baylibre.com
-Cc:     baylibre-upstreaming@groups.io,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5/6] dt-bindings: arm: amlogic: add Odroid-N2 binding
-Date:   Thu,  4 Apr 2019 17:05:17 +0200
-Message-Id: <20190404150518.30337-6-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404150518.30337-1-narmstrong@baylibre.com>
-References: <20190404150518.30337-1-narmstrong@baylibre.com>
+        Thu, 4 Apr 2019 11:05:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34ExDis019529;
+        Thu, 4 Apr 2019 15:05:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=pEOqO5IwUn6lfdhHxHhS+5hcuhsf4w8bOu9lP5bbvB0=;
+ b=lRwJh+DEyLSO+PyJNQra61R+xs6GBJ1U8FGS6zm6YJvbeASWubGD26Z1PnbxcQqNtrkb
+ NuQi2V2mfAwHCbUvtODNr+DOg7EpSY+39mtwO9qd4bkRfrLEntiVs092z6B2JJ6hjhSK
+ RqDHae+jhG2SiiXHO5gDZurbP6feB2+g6IuahZtYTC3IaF2b5jTzOJ9k6aQFT6dIZ/I0
+ 2/FFlrRG1MWM3TYvEU+lbVLsWtvAbF9TClZCicbnVhZ+894W0kuT/7CmEjrQGGhya2C4
+ 1A8uIrXga73mnZ/qEmcmqLssKvf0l4Wv4DQw16zIDaNB96wzEEkWxIBlwxgh4cBEWcG2 eg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2rhyvtfred-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 15:05:22 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34F5Lk8116540;
+        Thu, 4 Apr 2019 15:05:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2rm8f5yu7w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 15:05:21 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x34F5Ir1028255;
+        Thu, 4 Apr 2019 15:05:19 GMT
+Received: from kadam (/41.202.241.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 08:05:18 -0700
+Date:   Thu, 4 Apr 2019 18:05:09 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tcp: remove redundant check on tskb
+Message-ID: <20190404150508.GL32590@kadam>
+References: <20190404144603.27682-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404144603.27682-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040097
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible for the Amlogic G12B (S922X) SoC based Odroid-N2 SBC
-from HardKernel.
+On Thu, Apr 04, 2019 at 03:46:03PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The non-null check on tskb is always false because it is in an else
+> path of a check on tskb and hence tskb is null in this code block.
+> This is check is therefore redundant and can be removed as well
+> as the label coalesc.
+> 
+> if (tsbk) {
+>         ...
+> } else {
+>         ...
+>         if (unlikely(!skb)) {
+>                 if (tskb)       /* can never be true, redundant code */
+>                         goto coalesc;
+>                 return;
+>         }
+> }
+> 
+> Addresses-Coverity: ("Logically dead code")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/amlogic.txt | 2 ++
- 1 file changed, 2 insertions(+)
+This was fallout from commit 75c119afe14f ("tcp: implement rb-tree based
+retransmit queue").
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index 94bbcc646e10..eff41128268e 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -116,6 +116,8 @@ Board compatible values (alphabetically, grouped by SoC):
-   - "amediatech,x96-max" (Meson g12a s905x2)
-   - "seirobotics,sei510" (Meson g12a s905x2)
- 
-+  - "hardkernel,odroid-n2" (Meson g12b s922x)
-+
- Amlogic Meson Firmware registers Interface
- ------------------------------------------
- 
--- 
-2.21.0
+regards,
+dan carpenter
 
