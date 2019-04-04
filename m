@@ -2,215 +2,148 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF86C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2184C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E38B72082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814A720674
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jx4EHWjI"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="AkEPeeMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfDDQnp (ORCPT
+        id S1729292AbfDDQoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:43:45 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33159 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfDDQnp (ORCPT
+        Thu, 4 Apr 2019 12:44:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54280 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfDDQoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:43:45 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q1so4679017wrp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:43:43 -0700 (PDT)
+        Thu, 4 Apr 2019 12:44:24 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c1so3813134wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:44:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Puk8ygpZTkh3N5Vz1gIqs6zEfLw0KYa6DIW9HT9+MA=;
-        b=Jx4EHWjIYBlIOL3wtLtHPu+uajjKfS1ahh0DV5VvdXiOBwflTxWI2P/KzN4KSGxMCC
-         JC4+1oEJv8p6FbZ2CUjOffkWVUH+f6yk8PVCpiY8GWfNvppyONvxe4fMqFCXLbNSSOa8
-         CGR7TFux9Lv4zG5TULVYLlFBi5Bt0EzgN0YEn91qw7PdhCNk7mnwG1LiN/IyGi7cGIFu
-         Ov2Kx42T0OSdHBhuNyXDcD7tXs2M6Sg//vPByQ3r5nwEhucCtWNxioc0CaZF5sWGUHfQ
-         U+oQivxBd8TQJEobmeGhzYCVy8ZUTqh6dDnIss6s6y9gyngLKE6ECPE1Ov2x/ulBKzHg
-         RAEw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=YpLOPOua607JN6G8G6zJ43r6p8dyzZncJOJL0tXdjpw=;
+        b=AkEPeeMeUddK122Rg870xtwkmjE/BFnUc70FFti913rlgbM8ioILuHsredFVuVSQJA
+         iFwAx3lqGvdNrWoYDBo4jMWlwY3ap+aigBFMlvSIqPV45P9IhyTH35E6+yrkYfBk8QkT
+         Xq02qvU4cnWIiibmuUsiRYIIyin129lKaFpIK/s+G+Is4O2gSeNwoc37VC28YUAaBeoq
+         0EJQ+oTpkTT42l3m+1Nj4XOck9enk9nlbztNRdOEhZ/3JT/6Kx8QOM6jxdzRolESMFFV
+         JzEp8+CkO6b67MAcgIX78mKYuUqmNdZJCzHh4eW5N6YMGmt3FCI7bgHL7RQKxR/Og1FC
+         LNMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Puk8ygpZTkh3N5Vz1gIqs6zEfLw0KYa6DIW9HT9+MA=;
-        b=cQ1nNwnS4xlT5rhqv6WZfEU2Ah+7aELuI6/o8iHFhCQCXzl/ws1pSB+emKFd5/FNNL
-         s27cNY6zAqngZyYwi2YRiVoaKNNKbeLw3DGpLSSE60tCVk29xeB8dpHrfVAk8nmx2IQX
-         MvS7aPt1e9gKpucSzeo4CQYzp0IAgaxclIJJCn98jy3DVOFF4755HRPiEvFEAJeg76Cc
-         Uq+jtbOBntTGh8sp7fS4guyBcj5dxWUIOcS8dudm34H3zb9tl5ZoaJCGYq4f3u8SzXWa
-         x0WXj/axDQxNhR+x90zxMSH4Jhs3frvUpNl3HEfsgqMAmtRMIfIxzJbCDLsRLG6rybU7
-         jWRg==
-X-Gm-Message-State: APjAAAXcxwSxlwoYsaiPXdDpdk9v6J1KF6e93PUkoq3vqtZVErFLX+rW
-        k0eBGVCeymo3yeuElK6utMckHOGr6F7H5tU7w7k=
-X-Google-Smtp-Source: APXvYqxOfmVXsO63LR9l3vlR4bZ7riDqpR9bOAdsbnqPy/021jlE8u08dQy7i3FaFl4cwDUE3NBZqNEt+RUT5C2/Jfw=
-X-Received: by 2002:a5d:6a8a:: with SMTP id s10mr5114136wru.66.1554396222832;
- Thu, 04 Apr 2019 09:43:42 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=YpLOPOua607JN6G8G6zJ43r6p8dyzZncJOJL0tXdjpw=;
+        b=S20kTD8n/vDNbXsoO7XSoI8BpuRrGyE1Q5MyfQL01hB4bzTbiLCPtQprs235wH05jw
+         xbrj9GjHf2J0SgLhn1RuEjxQxBEbDKyHB/3+co1NB4wGvd7OIMqwVAfTCdV0q/LLEG4/
+         eXzYo3waz6Z655f8uJWYKoyenHdWV/CObpm5nKZroTaChkk1SU8yRJVpf3nrgiDHEiRn
+         Gq/qGUwTY9UtFeVpaSbEG0fuE7tu92BXoMLdWZ+gjvpF6hkge/9cUK1XP2fADLiLRFVD
+         xUg9K+Spx32pTAPaP9Ud36jzKmM+ovgJoD1UgEcafHElW4lPtgrJ/RFOUcZBQwzk9EA5
+         8EKQ==
+X-Gm-Message-State: APjAAAWpE7R3inpQDrKZuMCke+/uDoWQOSJx1l+deBTlsL8NvAqSPsoT
+        UtDxiXXQaeALd3k+SQHAcvbNKg==
+X-Google-Smtp-Source: APXvYqwvCFnhOiDC0Q+hmy3qB8lD+3bf/jJokUM0PfmQfaGNWAVyl/uaxwRwDFLBVezK7DIu0u63Kg==
+X-Received: by 2002:a1c:6c17:: with SMTP id h23mr5106123wmc.122.1554396263098;
+        Thu, 04 Apr 2019 09:44:23 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id d4sm17155238wrv.42.2019.04.04.09.44.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 09:44:22 -0700 (PDT)
+Message-ID: <5ca63466.1c69fb81.9b5de.2bde@mx.google.com>
+Date:   Thu, 04 Apr 2019 09:44:22 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1554381015-13056-1-git-send-email-yuzenghui@huawei.com> <20190404141642.385daf5b@donnerap.cambridge.arm.com>
-In-Reply-To: <20190404141642.385daf5b@donnerap.cambridge.arm.com>
-From:   Zenghui Yu <zenghuiyu96@gmail.com>
-Date:   Fri, 5 Apr 2019 00:43:29 +0800
-Message-ID: <CAKcZhuVz4jXiAAJGg3DJqYCshEcoA_54Ai9=XBtu-k9cZSj2eQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: arm/arm64: vgic: Restrict setting irq->targets only
- in GICv2
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, julien.thierry@arm.com,
-        christoffer.dall@arm.com, LKML <linux-kernel@vger.kernel.org>,
-        eric.auger@redhat.com, james.morse@arm.com,
-        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.9.167-92-gea283005c82d
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.9.y
+In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
+References: <20190404084535.450029272@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/91] 4.9.168-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andre,
+stable-rc/linux-4.9.y boot: 101 boots: 0 failed, 82 passed with 18 offline,=
+ 1 untried/unknown (v4.9.167-92-gea283005c82d)
 
-Thanks for looking into this.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.167-92-gea283005c82d/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.167-92-gea283005c82d/
 
-On Thu, Apr 4, 2019 at 9:17 PM Andre Przywara <andre.przywara@arm.com> wrote:
->
-> On Thu, 4 Apr 2019 12:30:15 +0000
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
->
-> Hi,
->
-> > Commit ad275b8bb1e6 ("KVM: arm/arm64: vgic-new: vgic_init: implement
-> > vgic_init") had set irq->targets in kvm_vgic_vcpu_init(), regardless of
-> > the GIC architecture (v2 or v3). When the number of vcpu reaches 32
-> > (in v3), UBSAN will complain about it.
->
-> The first part looks similar to this one:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-March/637209.html
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.167-92-gea283005c82d
+Git Commit: ea283005c82dc0416d18a004588a21ee706cfabd
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 50 unique boards, 22 SoC families, 15 builds out of 197
 
-Yes. I have not noticed this, sorry.
+Offline Platforms:
 
->
-> >  ================================================================================
-> >  UBSAN: Undefined behaviour in arch/arm64/kvm/../../../virt/kvm/arm/vgic/vgic-init.c:223:21
-> >  shift exponent 32 is too large for 32-bit type 'unsigned int'
-> >  CPU: 13 PID: 833 Comm: CPU 32/KVM Kdump: loaded Not tainted 5.1.0-rc1+ #16
-> >  Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.58 10/24/2018
-> >  Call trace:
-> >   dump_backtrace+0x0/0x190
-> >   show_stack+0x24/0x30
-> >   dump_stack+0xc8/0x114
-> >   ubsan_epilogue+0x14/0x50
-> >   __ubsan_handle_shift_out_of_bounds+0x118/0x188
-> >   kvm_vgic_vcpu_init+0x1d4/0x200
-> >   kvm_arch_vcpu_init+0x3c/0x48
-> >   kvm_vcpu_init+0xa8/0x100
-> >   kvm_arch_vcpu_create+0x94/0x120
-> >   kvm_vm_ioctl+0x57c/0xe58
-> >   do_vfs_ioctl+0xc4/0x7f0
-> >   ksys_ioctl+0x8c/0xa0
-> >   __arm64_sys_ioctl+0x28/0x38
-> >   el0_svc_common+0xa0/0x190
-> >   el0_svc_handler+0x38/0x78
-> >   el0_svc+0x8/0xc
-> >  ================================================================================
-> >
-> > This patch Restricts setting irq->targets in GICv2, which only supports
-> > a maximum of eight PEs, to keep UBSAN quiet. And since irq->mpidr will
-> > only be used by SPI in GICv3, we decided to set mpidr to 0 for SGI and
-> > PPI.
-> >
-> > Like commit ab2d5eb03dbb ("KVM: arm/arm64: vgic: Always initialize the
-> > group of private IRQs"), we should also take the creating order of the
-> > VGIC and VCPUs into consideration.
-> >
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > Cc: Andre Przywara <andre.przywara@arm.com>
-> > Cc: Christoffer Dall <christoffer.dall@arm.com>
-> > Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> > ---
-> >  virt/kvm/arm/vgic/vgic-init.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
-> > index 3bdb31e..0cba92e 100644
-> > --- a/virt/kvm/arm/vgic/vgic-init.c
-> > +++ b/virt/kvm/arm/vgic/vgic-init.c
-> > @@ -220,7 +220,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
-> >               irq->intid = i;
-> >               irq->vcpu = NULL;
-> >               irq->target_vcpu = vcpu;
-> > -             irq->targets = 1U << vcpu->vcpu_id;
-> >               kref_init(&irq->refcount);
-> >               if (vgic_irq_is_sgi(i)) {
-> >                       /* SGIs */
-> > @@ -231,10 +230,14 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
-> >                       irq->config = VGIC_CONFIG_LEVEL;
-> >               }
-> >
-> > -             if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
-> > +             if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3) {
-> >                       irq->group = 1;
-> > -             else
-> > +                     irq->mpidr = 0;
-> > +             } else {
-> >                       irq->group = 0;
-> > +                     if (vcpu->vcpu_id < VGIC_V2_MAX_CPUS)
-> > +                             irq->targets = 1U << vcpu->vcpu_id;
-> > +             }
-> >       }
-> >
-> >       if (!irqchip_in_kernel(vcpu->kvm))
-> > @@ -297,10 +300,13 @@ int vgic_init(struct kvm *kvm)
-> >
-> >               for (i = 0; i < VGIC_NR_PRIVATE_IRQS; i++) {
-> >                       struct vgic_irq *irq = &vgic_cpu->private_irqs[i];
-> > -                     if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
-> > +                     if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3) {
-> >                               irq->group = 1;
-> > -                     else
-> > +                             irq->mpidr = 0;
-> > +                     } else {
-> >                               irq->group = 0;
-> > +                             irq->targets = 1U << vcpu->vcpu_id;
-> > +                     }
->
-> So why would you need this part? That does the same as above, doesn't it?
+arm:
 
-This idea comes from commit ab2d5eb03dbb. As Christoffer said, "we have no
-enforced ordering of creating the VGIC and creating VCPUs". Without this
-part, the VCPUs created before VGIC might still end up with the wrong
-"mpidr (target)" set, since they don't know the actual vGIC model.
+    bcm2835_defconfig:
+        gcc-7
+            bcm2835-rpi-b: 1 offline lab
 
-If we're using QEMU to boot a vGIC-v3 guest, we'll still find the incorrect
-TARGET value from debugfs. That's QEMU will create and intialize all of the
-VCPUs before VGIC.
+    multi_v7_defconfig:
+        gcc-7
+            alpine-db: 1 offline lab
+            at91-sama5d4_xplained: 1 offline lab
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
+            socfpga_cyclone5_de0_sockit: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            tegra124-jetson-tk1: 1 offline lab
+            tegra20-iris-512: 1 offline lab
 
-A detailed explanation can be found at:
+    sunxi_defconfig:
+        gcc-7
+            sun5i-r8-chip: 1 offline lab
 
-https://marc.info/?l=android-virt&m=154713085226516&w=2
+    socfpga_defconfig:
+        gcc-7
+            socfpga_cyclone5_de0_sockit: 1 offline lab
 
+    tegra_defconfig:
+        gcc-7
+            tegra124-jetson-tk1: 1 offline lab
+            tegra20-iris-512: 1 offline lab
 
-thanks,
+    sama5_defconfig:
+        gcc-7
+            at91-sama5d4_xplained: 1 offline lab
 
-zenghui
+    qcom_defconfig:
+        gcc-7
+            qcom-apq8064-cm-qs600: 1 offline lab
+            qcom-apq8064-ifc6410: 1 offline lab
 
->
-> Cheers,
-> Andre.
->
->
-> >               }
-> >       }
-> >
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+arm64:
+
+    defconfig:
+        gcc-7
+            apq8016-sbc: 1 offline lab
+            juno-r2: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
