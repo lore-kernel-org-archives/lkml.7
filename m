@@ -7,56 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579B6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD2DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2797F20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E9F20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371016;
-	bh=aogPuVBhN4S8+y8O86/5VhUHbLI+iCJ9SKUA5l4QSvc=;
+	s=default; t=1554371028;
+	bh=r8YHYRaqnoCraHtp30j9kJ1Qw0JOfqSxaEYILDaWKn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N0F7Jlrl2BEb9z1RUgIexO9P9qaw+0kbk0Zqi8Gg8xAVRLxolM4UB6fpc6z6ecvqn
-	 RA6IJ34MHLj7A//lQ5cBGO+L0sEEKVHfrRCibRcnsgIpS7qDxw8xVzhzGUSCR6LII+
-	 TRGEQj7L2dkT4AUelyMUyR3UmY14hzvJI5n3BgjA=
+	b=ChTMHEKvX8StL9FQlR7qw/V/+6MwWNrfTGWhIsa+RcOtMR9bcaoQZUk5L5XovTEa6
+	 3xr0ATy+y7E6WLR/fM9N+ICE9OvcePRkNhsEk+AupTzxGjHbxAlT+XZCJl6sldfVa0
+	 hIP8eUqGvi52Sy8gdrMPCGXWTZSfHrRZ9BH1/7IM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfDDJne (ORCPT
+        id S1731412AbfDDJnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:43:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37426 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731272AbfDDJAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:00:38 -0400
+        id S1730145AbfDDJA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C182177E;
-        Thu,  4 Apr 2019 09:00:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA33621741;
+        Thu,  4 Apr 2019 09:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368437;
-        bh=aogPuVBhN4S8+y8O86/5VhUHbLI+iCJ9SKUA5l4QSvc=;
+        s=default; t=1554368426;
+        bh=r8YHYRaqnoCraHtp30j9kJ1Qw0JOfqSxaEYILDaWKn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeLAMtpvq/K+Rkg/v0Ve53CsQhlzf8JXiz2TC2dD1gOvvOdCT0Cne47c+DKhMSY1I
-         bIm4YCAhvGWK99ydjO0aAc0EBfgOIIkhUiLbj4FUAkizF4/IZ7iDyh5eLxsLjd+plY
-         yzWFMllCOtXREBZCYAk93x3m+GlsrpPMeJ+W3D08=
+        b=L7cJv/XwGkbrsoLJ9sOzXJPWcqaZNdewjfO8ip3XDZvM9S+w9Xe+MEKFLYqDkrStC
+         ItfKf40aJJ/ilv91k1e5ey2qnYKivfZm3sB18SjsHCylWJMjAeDJ1T05/LQ9S/GpCV
+         19rej0j1HRT+vw1+1DMn6mss0sBTejmMjS3tFHQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/187] mm/cma.c: cma_declare_contiguous: correct err handling
-Date:   Thu,  4 Apr 2019 10:46:01 +0200
-Message-Id: <20190404084604.238946549@linuxfoundation.org>
+Subject: [PATCH 4.19 020/187] iio: adc: fix warning in Qualcomm PM8xxx HK/XOADC driver
+Date:   Thu,  4 Apr 2019 10:45:57 +0200
+Message-Id: <20190404084604.035618667@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -75,57 +72,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
+[ Upstream commit e0f0ae838a25464179d37f355d763f9ec139fc15 ]
 
-In case cma_init_reserved_mem failed, need to free the memblock
-allocated by memblock_reserve or memblock_alloc_range.
+The pm8xxx_get_channel() implementation is unclear, and causes gcc to
+suddenly generate odd warnings.  The trigger for the warning (at least
+for me) was the entirely unrelated commit 79a4e91d1bb2 ("device.h: Add
+__cold to dev_<level> logging functions"), which apparently changes gcc
+code generation in the caller function enough to cause this:
 
-Quote Catalin's comments:
-  https://lkml.org/lkml/2019/2/26/482
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c: In function ‘pm8xxx_xoadc_probe’:
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:633:8: warning: ‘ch’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+    ret = pm8xxx_read_channel_rsv(adc, ch, AMUX_RSV4,
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+             &read_nomux_rsv4, true);
+             ~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/iio/adc/qcom-pm8xxx-xoadc.c:426:27: note: ‘ch’ was declared here
+    struct pm8xxx_chan_info *ch;
+                             ^~
 
-Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
-ignores the memblock_reserve() as a memblock_alloc() implementation
-detail. It is, however, tolerant to memblock_free() being called on
-a sub-range or just a different range from a previous memblock_alloc().
-So the original patch looks fine to me. FWIW:
+because gcc for some reason then isn't able to see that the termination
+condition for the "for( )" loop in that function is also the condition
+for returning NULL.
 
-Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+So it's not _actually_ uninitialized, but the function is admittedly
+just unnecessarily oddly written.
+
+Simplify and clarify the function, making gcc also see that it always
+returns a valid initialized value.
+
+Cc: Joe Perches <joe@perches.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/adc/qcom-pm8xxx-xoadc.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 4cb76121a3ab..bfe9f5397165 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -353,12 +353,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
+diff --git a/drivers/iio/adc/qcom-pm8xxx-xoadc.c b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+index b093ecddf1a8..54db848f0bcd 100644
+--- a/drivers/iio/adc/qcom-pm8xxx-xoadc.c
++++ b/drivers/iio/adc/qcom-pm8xxx-xoadc.c
+@@ -423,18 +423,14 @@ static irqreturn_t pm8xxx_eoc_irq(int irq, void *d)
+ static struct pm8xxx_chan_info *
+ pm8xxx_get_channel(struct pm8xxx_xoadc *adc, u8 chan)
+ {
+-	struct pm8xxx_chan_info *ch;
+ 	int i;
  
- 	ret = cma_init_reserved_mem(base, size, order_per_bit, name, res_cma);
- 	if (ret)
--		goto err;
-+		goto free_mem;
+ 	for (i = 0; i < adc->nchans; i++) {
+-		ch = &adc->chans[i];
++		struct pm8xxx_chan_info *ch = &adc->chans[i];
+ 		if (ch->hwchan->amux_channel == chan)
+-			break;
++			return ch;
+ 	}
+-	if (i == adc->nchans)
+-		return NULL;
+-
+-	return ch;
++	return NULL;
+ }
  
- 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
- 		&base);
- 	return 0;
- 
-+free_mem:
-+	memblock_free(base, size);
- err:
- 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
- 	return ret;
+ static int pm8xxx_read_channel_rsv(struct pm8xxx_xoadc *adc,
 -- 
 2.19.1
 
