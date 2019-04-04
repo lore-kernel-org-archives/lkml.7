@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB250C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FCFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6A6206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570EA206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371304;
-	bh=9mTpAob/axftrg2GkgQe3U/VCWXNgyj0FK0iMkLooGg=;
+	s=default; t=1554371318;
+	bh=of87jsM+rHuEVl0svtfaTXlFdX9tnwNNu0werUnqz/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4LrNlt2y1oH1XaMgOighP28VCmdSfgbeFzHAk+/8RDxdlSTpzPIBiNp4pge9pc6o
-	 GNma8Kwp/FCne1yskmXh/20qDpHLrIepaR5f/66DM+m1m5ut+d6ivtfyYTvSr1dLPy
-	 03xOF2KoC2a5noLpHoZDFtSZRqyTdcNCRc+YdLSs=
+	b=XAkvVz2fdepX6sdZ8e2e3qrYtfTsjcGG6HnALYcHhsUl6eo9sXpVkaYl3LpEEzavo
+	 z8/8IZqni28uDXijuA2TyrAZszQKun8l9BhkzqUYWn8INVdEEJEfJMJNrHur0hq3rw
+	 f2sWMcWRiQzIGFVRGNCT+qXWZaYOynmXEdu6N5e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbfDDJsX (ORCPT
+        id S1730636AbfDDI5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:48:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32988 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbfDDI52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:28 -0400
+        id S1730614AbfDDI5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:57:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6183B21850;
-        Thu,  4 Apr 2019 08:57:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7DC72177E;
+        Thu,  4 Apr 2019 08:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368247;
-        bh=9mTpAob/axftrg2GkgQe3U/VCWXNgyj0FK0iMkLooGg=;
+        s=default; t=1554368225;
+        bh=of87jsM+rHuEVl0svtfaTXlFdX9tnwNNu0werUnqz/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bisf04AvOWhSv1spzRP+lSysKfL7hymq0nzq29OJ2PDz+cu9npdT/RZckTYzdXRwR
-         5iP1WWIUP4qE9cWMXsuyt1BBhQv3EWManoHI45qPpTf+m7mDoz2xnBuSqP9xRQZnwz
-         I5KFPpJBQqv13tY3Is7GaUlI4gLg8Uzxiwk99wI0=
+        b=l1J+fh6McxFBFpRFQoyvQLwQH7IbpaMHurIROt0xpj+P17ZMqnGef5kW9kGBfeoWN
+         hmmXGC+uaNsy4vq0MsOqACVf1HRZGhzC3evKXMFK/JtAnuTjLiEkv0JJfSf7LaqRrK
+         5GBAaZtD9QbtI7rGGmKg3YVvwvWB/gBCD+oegx5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 092/121] ARM: 8830/1: NOMMU: Toggle only bits in EXC_RETURN we are really care of
-Date:   Thu,  4 Apr 2019 10:48:00 +0200
-Message-Id: <20190404084550.350585168@linuxfoundation.org>
+Subject: [PATCH 4.14 068/121] iwlwifi: pcie: fix emergency path
+Date:   Thu,  4 Apr 2019 10:47:36 +0200
+Message-Id: <20190404084548.959197639@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,95 +67,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 72cd4064fccaae15ab84d40d4be23667402df4ed ]
+[ Upstream commit c6ac9f9fb98851f47b978a9476594fc3c477a34d ]
 
-ARMv8M introduces support for Security extension to M class, among
-other things it affects exception handling, especially, encoding of
-EXC_RETURN.
+Allocator swaps the pending requests with 0 when it starts
+working. This means that relying on it n RX path to decide if
+to move to emergency is not always a good idea, since it may
+be zero, but there are still a lot of unallocated RBs in the
+system. Change allocator to decrement the pending requests on
+real time. It is more expensive since it accesses the atomic
+variable more times, but it gives the RX path a better idea
+of the system's status.
 
-The new bits have been added:
-
-Bit [6]	Secure or Non-secure stack
-Bit [5]	Default callee register stacking
-Bit [0]	Exception Secure
-
-which conflicts with hard-coded value of EXC_RETURN:
-
-In fact, we only care of few bits:
-
-Bit [3]	 Mode (0 - Handler, 1 - Thread)
-Bit [2]	 Stack pointer selection (0 - Main, 1 - Process)
-
-We can toggle only those bits and left other bits as they were on
-exception entry.
-
-It is basically, what patch does - saves EXC_RETURN when we do
-transition form Thread to Handler mode (it is first svc), so later
-saved value is used instead of EXC_RET_THREADMODE_PROCESSSTACK.
-
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reported-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
+Fixes: 868a1e863f95 ("iwlwifi: pcie: avoid empty free RB queue")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/v7m.h     | 2 +-
- arch/arm/kernel/entry-header.S | 3 ++-
- arch/arm/kernel/entry-v7m.S    | 4 ++++
- arch/arm/mm/proc-v7m.S         | 3 +++
- 4 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/include/asm/v7m.h b/arch/arm/include/asm/v7m.h
-index e6d9e29fcae4..6416fd3a3894 100644
---- a/arch/arm/include/asm/v7m.h
-+++ b/arch/arm/include/asm/v7m.h
-@@ -49,7 +49,7 @@
-  * (0 -> msp; 1 -> psp). Bits [1:0] are fixed to 0b01.
-  */
- #define EXC_RET_STACK_MASK			0x00000004
--#define EXC_RET_THREADMODE_PROCESSSTACK		0xfffffffd
-+#define EXC_RET_THREADMODE_PROCESSSTACK		(3 << 2)
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index 5a15362ef671..a40ad4675e19 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -475,7 +475,7 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	struct iwl_rb_allocator *rba = &trans_pcie->rba;
+ 	struct list_head local_empty;
+-	int pending = atomic_xchg(&rba->req_pending, 0);
++	int pending = atomic_read(&rba->req_pending);
  
- /* Cache related definitions */
+ 	IWL_DEBUG_RX(trans, "Pending allocation requests = %d\n", pending);
  
-diff --git a/arch/arm/kernel/entry-header.S b/arch/arm/kernel/entry-header.S
-index 773424843d6e..62db1c9746cb 100644
---- a/arch/arm/kernel/entry-header.S
-+++ b/arch/arm/kernel/entry-header.S
-@@ -127,7 +127,8 @@
-          */
- 	.macro	v7m_exception_slow_exit ret_r0
- 	cpsid	i
--	ldr	lr, =EXC_RET_THREADMODE_PROCESSSTACK
-+	ldr	lr, =exc_ret
-+	ldr	lr, [lr]
+@@ -530,11 +530,13 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 			i++;
+ 		}
  
- 	@ read original r12, sp, lr, pc and xPSR
- 	add	r12, sp, #S_IP
-diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
-index abcf47848525..19d2dcd6530d 100644
---- a/arch/arm/kernel/entry-v7m.S
-+++ b/arch/arm/kernel/entry-v7m.S
-@@ -146,3 +146,7 @@ ENTRY(vector_table)
- 	.rept	CONFIG_CPU_V7M_NUM_IRQ
- 	.long	__irq_entry		@ External Interrupts
- 	.endr
-+	.align	2
-+	.globl	exc_ret
-+exc_ret:
-+	.space	4
-diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
-index 47a5acc64433..92e84181933a 100644
---- a/arch/arm/mm/proc-v7m.S
-+++ b/arch/arm/mm/proc-v7m.S
-@@ -139,6 +139,9 @@ __v7m_setup_cont:
- 	cpsie	i
- 	svc	#0
- 1:	cpsid	i
-+	ldr	r0, =exc_ret
-+	orr	lr, lr, #EXC_RET_THREADMODE_PROCESSSTACK
-+	str	lr, [r0]
- 	ldmia	sp, {r0-r3, r12}
- 	str	r5, [r12, #11 * 4]	@ restore the original SVC vector entry
- 	mov	lr, r6			@ restore LR
++		atomic_dec(&rba->req_pending);
+ 		pending--;
++
+ 		if (!pending) {
+-			pending = atomic_xchg(&rba->req_pending, 0);
++			pending = atomic_read(&rba->req_pending);
+ 			IWL_DEBUG_RX(trans,
+-				     "Pending allocation requests = %d\n",
++				     "Got more pending allocation requests = %d\n",
+ 				     pending);
+ 		}
+ 
+@@ -546,12 +548,15 @@ static void iwl_pcie_rx_allocator(struct iwl_trans *trans)
+ 		spin_unlock(&rba->lock);
+ 
+ 		atomic_inc(&rba->req_ready);
++
+ 	}
+ 
+ 	spin_lock(&rba->lock);
+ 	/* return unused rbds to the allocator empty list */
+ 	list_splice_tail(&local_empty, &rba->rbd_empty);
+ 	spin_unlock(&rba->lock);
++
++	IWL_DEBUG_RX(trans, "%s, exit.\n", __func__);
+ }
+ 
+ /*
 -- 
 2.19.1
 
