@@ -2,137 +2,126 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E268C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302B6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1839F2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F401221738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="K2TjjzNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfDDUJn (ORCPT
+        id S1730644AbfDDUJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:09:43 -0400
-Received: from anholt.net ([50.246.234.109]:42624 "EHLO anholt.net"
+        Thu, 4 Apr 2019 16:09:50 -0400
+Received: from mail.rptsys.com ([23.155.224.45]:4802 "EHLO mail.rptsys.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbfDDUJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:09:43 -0400
+        id S1729497AbfDDUJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 16:09:49 -0400
+X-Greylist: delayed 522 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Apr 2019 16:09:49 EDT
 Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 94B2110A06DA;
-        Thu,  4 Apr 2019 13:09:42 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id Ouh9KHZ2BCRs; Thu,  4 Apr 2019 13:09:41 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id E7DA910A068A;
-        Thu,  4 Apr 2019 13:09:40 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 732CE2FE3601; Thu,  4 Apr 2019 13:09:40 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>,
-        Daniel Stone <daniel@fooishbar.org>
-Subject: Re: [PATCH v4 3/4] drm/vc4: Check for the binner bo before handling OOM interrupt
-In-Reply-To: <041896dd4a8fb7e234356ee6d37a8a04909dd8b2.camel@bootlin.com>
-References: <20190403154856.9470-1-paul.kocialkowski@bootlin.com> <20190403154856.9470-4-paul.kocialkowski@bootlin.com> <87ef6ior0m.fsf@anholt.net> <041896dd4a8fb7e234356ee6d37a8a04909dd8b2.camel@bootlin.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
-Date:   Thu, 04 Apr 2019 13:09:40 -0700
-Message-ID: <87y34pv8fv.fsf@anholt.net>
+        by mail.rptsys.com (Postfix) with ESMTP id BC34FE64BF8;
+        Thu,  4 Apr 2019 15:01:06 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+        by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id aZDxJ46WG23u; Thu,  4 Apr 2019 15:01:05 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.rptsys.com (Postfix) with ESMTP id 28A2DE634F7;
+        Thu,  4 Apr 2019 15:01:05 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 28A2DE634F7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+        t=1554408065; bh=UOXZistDtfIVLs1k2qCBucJryKN2lZmP/gp8TjK5bx0=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=K2TjjzNm46u1tmFyW8wBZvXL/9qrV060qp0bmdAUszA/AfzFhFHMozT/+CQLJ6tEX
+         ub93M5n+xF5CvGrHtMQMHqbWWHxUnisL589Y8qRBBKqV76ZmcQYXzPqWciCP/Bi1pe
+         qPtvm5GnL3UD24XrVS6pKAWky+XoQ8sXaxTusuu0=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+        by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 96swXYcdsRvL; Thu,  4 Apr 2019 15:01:04 -0500 (CDT)
+Received: from vali.starlink.edu (unknown [192.168.3.2])
+        by mail.rptsys.com (Postfix) with ESMTP id B798DE6505A;
+        Thu,  4 Apr 2019 15:01:04 -0500 (CDT)
+Date:   Thu, 4 Apr 2019 15:01:04 -0500 (CDT)
+From:   Timothy Pearson <tpearson@raptorengineering.com>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Waiman Long <longman@redhat.com>, linux-arch@vger.kernel.org,
+        Jon Masters <jcm@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Tyler Hicks <tyhicks@canonical.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Message-ID: <401506569.4710878.1554408064001.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <nycvar.YFH.7.76.1904042145590.9803@cbobk.fhfr.pm>
+References: <cover.1554396090.git.jpoimboe@redhat.com> <91b92d8182d2f114d92c95689fcd4bb1a8dda1b0.1554396090.git.jpoimboe@redhat.com> <nycvar.YFH.7.76.1904042145590.9803@cbobk.fhfr.pm>
+Subject: Re: [PATCH RFC 3/5] powerpc/speculation: Add support for
+ 'cpu_spec_mitigations=' cmdline options
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC73 (Linux)/8.5.0_GA_3042)
+Thread-Topic: powerpc/speculation: Add support for 'cpu_spec_mitigations=' cmdline options
+Thread-Index: dinaMtutIL4nwvFGZxvsYJw0doq+RA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Will be joining in ~ 5 mins.  Getting Chromium set up here.
 
-Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+----- Original Message -----
+> From: "Jiri Kosina" <jikos@kernel.org>
+> To: "Josh Poimboeuf" <jpoimboe@redhat.com>
+> Cc: "Peter Zijlstra" <peterz@infradead.org>, "Heiko Carstens" <heiko.carstens@de.ibm.com>, "Paul Mackerras"
+> <paulus@samba.org>, "H . Peter Anvin" <hpa@zytor.com>, "Ingo Molnar" <mingo@kernel.org>, "Andrea Arcangeli"
+> <aarcange@redhat.com>, linux-s390@vger.kernel.org, x86@kernel.org, "Will Deacon" <will.deacon@arm.com>, "Linus
+> Torvalds" <torvalds@linux-foundation.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Waiman Long"
+> <longman@redhat.com>, linux-arch@vger.kernel.org, "Jon Masters" <jcm@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+> "Andy Lutomirski" <luto@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org,
+> "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "Tyler Hicks" <tyhicks@canonical.com>,
+> "Martin Schwidefsky" <schwidefsky@de.ibm.com>, linuxppc-dev@lists.ozlabs.org
+> Sent: Thursday, April 4, 2019 2:49:05 PM
+> Subject: Re: [PATCH RFC 3/5] powerpc/speculation: Add support for 'cpu_spec_mitigations=' cmdline options
 
-> Hey,
->
-> Le mercredi 03 avril 2019 =C3=A0 11:58 -0700, Eric Anholt a =C3=A9crit :
->> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
->>=20
->> > Since the OOM interrupt directly deals with the binner bo, it doesn't
->> > make sense to try and handle it without a binner buffer registered.
->> > The interrupt will kick again in due time, so we can safely ignore it
->> > without a binner bo allocated.
->> >=20
->> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->> > ---
->> >  drivers/gpu/drm/vc4/vc4_irq.c | 3 +++
->> >  1 file changed, 3 insertions(+)
->> >=20
->> > diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_i=
-rq.c
->> > index ffd0a4388752..723dc86b4511 100644
->> > --- a/drivers/gpu/drm/vc4/vc4_irq.c
->> > +++ b/drivers/gpu/drm/vc4/vc4_irq.c
->> > @@ -64,6 +64,9 @@ vc4_overflow_mem_work(struct work_struct *work)
->> >  	struct vc4_exec_info *exec;
->> >  	unsigned long irqflags;
->>=20
->> Since OOM handling is tricky, could we add a comment to help the next
->> person try to understand it:
->>=20
->> /* The OOM IRQ is level-triggered, so we'll see one at power-on before
->>  * any jobs are submitted.  The OOM IRQ is masked when this work is
->>  * scheduled, so we can safely return if there's no binner memory
->>  * (because no client is currently using 3D).  When a bin job is
->>  * later submitted, its tile memory allocation will end up bringing us
->>  * back to a non-OOM state so the OOM can be triggered again.
->>  */
->>=20
->> But, actually, I don't see how the OOM IRQ will ever get re-enabled.
->
-> Okay so I investigated that to try and understand what's going on.
-> We are definitely writing the OUTOMEM bit to V3D_INTDIS just before
-> scheduling the workqueue, and never re-enable the IRQ when leaving
-> early in the workqueue because !vc4->bin_bo.
->
-> It turns out that what saves us here is vc4_irq_postinstall being
-> called from runtime resume at "the right time". Obviously this is more
-> than fragile, so we should really be re-enabling the IRQ as soon as we
-> have the binner bo allocated.
->
-> Since we're now allocating at the first non-dumb bo alloc, I think we
-> need to make sure that we did in fact get the irq and registered the
-> allocated BO with the workqueue before submitting the rcl. Or does the
-> hardware provide any mechanism to take that off our hands somehow?
-
-Maybe just enable the OOM interrupt using INTENA in the bin BO
-allocation's success case?  That feels race-free, since it's a level
-interrupt and even if we were racing the !bin_bo check in the work, we'd
-end up re-scheduling the work?
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlymZIQACgkQtdYpNtH8
-nui0fhAAhVvMVUVK+u4cC7CN6ctNAd0SsqTDHb0yqtzFvpKWgVg1gBRNK2SvpI4v
-rB+UKyU0KLRLwzhWSQhfT9emlTDiMfefz/cMcn1hoTBHh+OEkEfoMHuVn9YfDstA
-CxaMgD/+8aseJLJfidJdxBi9BhLdntza9EfzBG5Ljg/p+Vkg3ZDRGptFKSjyWHOC
-XtvAPCc8Ww+gHGPP82zXisgVVR7YcYGoWtzfCfeLdKvBg6srKL8M/gMyYA6WE41g
-MU4fhIQ2J4BTQJkMpbGCnQO3boDukMmFdec30xcEGWcgdDO7tMaHqvyI6cQ1TYta
-c+N6o2HKUVO4DmAHpHqjZtF1zprYesjyMnblQj2jjin+yZkQNOHP5Ez0QwXPCVc+
-/CpCDaPpstBToXnqWvx+zcTNhpfsPl0eJ+WIhAp7C5HPEvy9ldImivgbpuLBaXdf
-gDWsqUJ6+36C0uXjGxKquubmuIAaxUDLky4e7HMVuiZTJ58OZtBwiM4FkhmVb5Yh
-/bCA68KHpxg+cV88F7eIAZfBKLFlBo7VM3e5/ZVTUzR0+NxUTk+JmWskZdj+IJO9
-7L25SXvrJ001abdb8iNwpElB5qKGC/ya357KzcZxk3yfHqBV5xHXPQh1lkpHAQUR
-IThD701wJGuzqpxMSUQjCzQN90uRrQZ9ejXq/CMJd/xjC6tokVA=
-=ptXX
------END PGP SIGNATURE-----
---=-=-=--
+> On Thu, 4 Apr 2019, Josh Poimboeuf wrote:
+> 
+>> Configure powerpc CPU runtime speculation bug mitigations in accordance
+>> with the 'cpu_spec_mitigations=' cmdline options.  This affects
+>> Meltdown, Spectre v1, Spectre v2, and Speculative Store Bypass.
+> [ ... snip ... ]
+>> -	if (!no_nospec)
+>> +	if (!no_nospec && cpu_spec_mitigations != CPU_SPEC_MITIGATIONS_OFF)
+> 
+> '!no_nospec' is something that I am sure will come back to hunt me in my
+> bad dreams.
+> 
+> But that's been there already, and fixing it is out of scope of this
+> patch. Other than that, as discussed previously -- I really like this new
+> global option. Feel free to add
+> 
+>	Reviewed-by: Jiri Kosina <jkosina@suse.cz>
+> 
+> for the whole set.
+> 
+> Thanks,
+> 
+> --
+> Jiri Kosina
+> SUSE Labs
