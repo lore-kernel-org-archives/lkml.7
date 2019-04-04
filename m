@@ -2,57 +2,57 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDC2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E273C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DAF3206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F059A206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:22:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BNGuIuJq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IzIsINoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729520AbfDDRWp (ORCPT
+        id S1729566AbfDDRWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 13:22:45 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:20686 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbfDDRWn (ORCPT
+        Thu, 4 Apr 2019 13:22:49 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:49045 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDDRWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 13:22:43 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190404172240epoutp020666eabc22d568d4c07c08c862c5b4f1~SVUFLvsXc2373723737epoutp02W;
-        Thu,  4 Apr 2019 17:22:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190404172240epoutp020666eabc22d568d4c07c08c862c5b4f1~SVUFLvsXc2373723737epoutp02W
+        Thu, 4 Apr 2019 13:22:48 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190404172245epoutp01b4728d9289925043af9a1b3a10a0d84c~SVUJuT_U91973719737epoutp01p;
+        Thu,  4 Apr 2019 17:22:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190404172245epoutp01b4728d9289925043af9a1b3a10a0d84c~SVUJuT_U91973719737epoutp01p
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1554398560;
-        bh=B11ea1innhdxdcFiV47lB6MPWRj7ZczCd4EndLFLAII=;
+        s=mail20170921; t=1554398565;
+        bh=dDJj7cygsR/Ujzoc6i/7zV99lnRysyucTL0YNXQfzSQ=;
         h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=BNGuIuJqT8bzc29k0n16JiK/ZDrqoY9TVGeyGB7kkl1pIacxPkPdkWYr++G7+JUoQ
-         Sgpg2BO84YGk5IXRof7wNYu/DZ2JgMe9rhzUT0Vx2ssX5RLjWJL2EEnGLUHA75Q1r8
-         NWc49JGbhjszwHcrGQv2cUYp3hJD9lp+sADaYuho=
-Received: from epsmges2p3.samsung.com (unknown [182.195.42.71]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20190404172239epcas2p2d4c744967581215b528be8c1f1f6295e~SVUE2uHRf3185231852epcas2p2S;
-        Thu,  4 Apr 2019 17:22:39 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A1.34.04206.F5D36AC5; Fri,  5 Apr 2019 02:22:39 +0900 (KST)
-Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8~SVUD62Qol3184831848epcas2p2D;
-        Thu,  4 Apr 2019 17:22:38 +0000 (GMT)
-X-AuditID: b6c32a47-14bff7000000106e-3b-5ca63d5fccf8
+        b=IzIsINoN+pDXK1XF99y6i0HgtfsKRxI+XVqVP6c7jDsdCvAxaXi5i4kAZjVytD6/G
+         klbAl3AM5zT1Pp9FuqUHF5pTF7OmDYVBLxg8sPeHzeXVqeDfBIcOMCbwFdelYyNiaz
+         IH8zolWugaiRFP2wPVF42+U1UDkozjQjLfCJ9DXs=
+Received: from epsmges1p3.samsung.com (unknown [182.195.42.55]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190404172244epcas1p15a340b6153cd1cad1eda0c5952dc727e~SVUJL2ESn1312213122epcas1p1P;
+        Thu,  4 Apr 2019 17:22:44 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        ED.5A.04143.46D36AC5; Fri,  5 Apr 2019 02:22:44 +0900 (KST)
+Received: from epsmgms2p1new.samsung.com (unknown [182.195.42.142]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20190404172243epcas1p39af2498a51772ee4ab2a31f26e469c5b~SVUH-YZ2E0537505375epcas1p3H;
+        Thu,  4 Apr 2019 17:22:43 +0000 (GMT)
+X-AuditID: b6c32a37-f19ff7000000102f-78-5ca63d64f940
 Received: from epmmp1.local.host ( [203.254.227.16]) by
-        epsmgms2p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        81.68.03620.E5D36AC5; Fri,  5 Apr 2019 02:22:38 +0900 (KST)
+        epsmgms2p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B5.B9.03598.36D36AC5; Fri,  5 Apr 2019 02:22:43 +0900 (KST)
 Received: from AMDC3061.DIGITAL.local ([106.120.51.75]) by mmp1.samsung.com
         (Oracle Communications Messaging Server 7.0.5.31.0 64bit (built May  5
         2014)) with ESMTPA id <0PPG00B165KSW780@mmp1.samsung.com>; Fri, 05 Apr 2019
-        02:22:38 +0900 (KST)
+        02:22:43 +0900 (KST)
 From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
 To:     krzk@kernel.org
 Cc:     kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
@@ -60,762 +60,70 @@ Cc:     kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         pankaj.dubey@samsung.com, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RFC 4/8] soc: samsung: Add Exynos Adaptive Supply Voltage
- driver
-Date:   Thu, 04 Apr 2019 19:17:31 +0200
-Message-id: <20190404171735.12815-5-s.nawrocki@samsung.com>
+        m.szyprowski@samsung.com
+Subject: [PATCH RFC 5/8] ARM: EXYNOS: enable exynos_chipid for ARCH_EXYNOS
+Date:   Thu, 04 Apr 2019 19:17:32 +0200
+Message-id: <20190404171735.12815-6-s.nawrocki@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-reply-to: <20190404171735.12815-1-s.nawrocki@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsWy7bCmmW687bIYgxtXzS02zljPanH9y3NW
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWy7bCmvm6K7bIYg7kblCw2zljPanH9y3NW
         i/lHzrFa9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWa4/cZbdYev0ik8XtxhVsFou2fmG3
-        aN17hN3i8Jt2Vgc+jzXz1jB6bFrVyeaxeUm9R9+WVYwenzfJBbBGcdmkpOZklqUW6dslcGX8
-        PpJbsG4GY0XPz9NMDYy91V2MnBwSAiYSX6/+ZO1i5OIQEtjBKHH/8kdGCOc7o8T6TVNYYaq6
-        du5lgUjsZpTYdmouVMtPRom5124wgVSxCRhK9B7tYwSxRQSEJe4tXc4OUsQs8J1J4tTrp2Cj
-        hAWCJFb3rgNrYBFQlXjT/JwdxOYVsJaY8eQiC8Q6eYnVGw4wg9icAjYSj5e8YQMZJCFwgE1i
-        35v5jBBFLhJ9K78xQdjSEs9WbWSEKGpmlOjZfZsdwpkA9NLxBVAd1hKHj18EO4NZgE+i4/Bf
-        oCIOoDivREebEESJh8SBM7+ZIX7rZ5Q4uGgGK9CIBYwMqxjFUguKc9NTi40KjPWKE3OLS/PS
-        9ZLzczcxgiNWy30H47ZzPocYBTgYlXh4NZiWxQixJpYVV+YeYpTgYFYS4Q3+vjRGiDclsbIq
-        tSg/vqg0J7X4EKM0B4uSOO9D6bnRQgLpiSWp2ampBalFMFkmDk6pBsYNcaYsjzeXBYhtCmxy
-        YGOdfcksf1fZtgch7e7z3s6MWDn7d+SbCVfLbXe7+LRpKF2aY/+LJyj0Qt+XX7fXdKtV/Ona
-        pdRjwHoqqZSzXztu8dGkvt9/Ttp8WFO6fsJrkS82jzdmbaza+PT3PD/RFe/PmiXu3RXySXCa
-        9yEx/19bzk9cavhljkahEktxRqKhFnNRcSIALtqwndQCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLLMWRmVeSWpSXmKPExsVy+t9jAd0422UxBrdmmVtsnLGe1eL6l+es
+        aN17hN2B12PNvDWMHptWdbJ5bF5S79G3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZPz+9YCtY
+        x1bxqm8iewPjJtYuRk4OCQETiemLXrN0MXJxCAnsYJQ4tGgDG4TznVGi88huuKqGvn3sEInd
+        jBJzzuxihHB+MkqsnLGGEaSKTcBQovdoH5gtIiAscW/pcrAOZoETTBKzjh0DGyUs4CXxcPYS
+        sCIWAVWJefN2Ai3n4OAVsJbY9sQNYpu8xOoNB5hBbE4BG4nHS96AnSQhsINN4nnfUhaIIheJ
+        tWsmMIP0SghIS1w6agtR08wo0bP7NjuEM4FR4v7xBYwQDdYSh49fBDuCWYBP4t3XHlaIZl6J
+        jjYhiBIPiQt7NrJCfNbPKLF9djMr0IgFjAyrGMVSC4pz01OLDQuM9YoTc4tL89L1kvNzNzGC
+        Y1TLfAfjhnM+hxgFOBiVeHg1mJbFCLEmlhVX5h5ilOBgVhLhDf6+NEaINyWxsiq1KD++qDQn
+        tfgQozQHi5I473oH5xghgfTEktTs1NSC1CKYLBMHp1QDo9uE4qP1H8xr+2scu2M2S2y+GfVY
+        /4kkY0j3xIu37nzpvSSqvG1X4j+lqN6O9MNZJ59krJu2OTE7fWvO+Y51n38d379ZdWuqvOOW
+        ddd/KpVfuP9mttQnQZlZab2lG5irOeNCNx+9Pe9K1vZdad8OqHDoKcxrne3vfnkL+92X0x9L
+        pj+aejeZO0KJpTgj0VCLuag4EQD0YKmxzQIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBLMWRmVeSWpSXmKPExsVy+t9jAd1k22UxBvcvCVhsnLGe1eL6l+es
         FvOPnGO16H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gs1h65y26x9PpFJovbjSvYLBZt/cJu
-        0br3CLvF4TftrA58HmvmrWH02LSqk81j85J6j74tqxg9Pm+SC2CN4rJJSc3JLEst0rdL4Mr4
-        fSS3YN0Mxoqen6eZGhh7q7sYOTkkBEwkunbuZeli5OIQEtjJKHHj2Bk2COcno8TVvvVsIFVs
-        AoYSvUf7GEFsEQFhiXtLl7OD2MwC35kkZs/LA7GFBQIkPq2dyQJiswioSrxpfg5WwytgLTHj
-        yUUWiG3yEqs3HGAGsTkFbCQeL3kDNJ8DaJm1xPctCRMYeRYwMqxilEwtKM5Nzy02KjDKSy3X
-        K07MLS7NS9dLzs/dxAgMxG2Htfp3MD5eEn+IUYCDUYmHV4NpWYwQa2JZcWXuIUYJDmYlEd7g
-        70tjhHhTEiurUovy44tKc1KLDzFKc7AoifPy5x+LFBJITyxJzU5NLUgtgskycXBKNTCeMlm5
-        b84Htkc8EYcW864QYL3Y3Lfjmfojp31Hf+1fcCDhkfHt14nK77fWcK1ruv62ccqd1f8Cc7w0
-        vpy4anPVLINj+jm1E72/DxVwLjx999dBzwd1lxq+8166fq7v/OEnok1r9nGK5WdtsmpLl+6a
-        kJV1t7Gzv+9zTsXB6nOBZhPLX9m0X2mbpMRSnJFoqMVcVJwIADj6gklAAgAA
-X-CMS-MailID: 20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8
-CMS-TYPE: 102P
-X-CMS-RootMailID: 20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8
+        0br3CLsDr8eaeWsYPTat6mTz2Lyk3qNvyypGj8+b5AJYo7hsUlJzMstSi/TtErgyfn56wVaw
+        jq3iVd9E9gbGTaxdjJwcEgImEg19+9i7GLk4hAR2Mkpc/PyJFcL5yShx7cQEJpAqNgFDid6j
+        fYwgtoiAsMS9pcvBOpgFTjBJ/F+4hgUkISzgJfFw9hKwIhYBVYl583YCxTk4eAWsJbY9cYPY
+        Ji+xesMBZhCbU8BG4vGSN2wgJUJAJd+3JExg5FnAyLCKUTK1oDg3PbfYqMAwL7Vcrzgxt7g0
+        L10vOT93EyMw/LYd1urbwXh/SfwhRgEORiUeXg2mZTFCrIllxZW5hxglOJiVRHiDvy+NEeJN
+        SaysSi3Kjy8qzUktPsQozcGiJM57O+9YpJBAemJJanZqakFqEUyWiYNTqoFxscTGpr6e5pDt
+        Tt82Cqx8/fP4t6mmIaeqEmUfvl1t4G+9+vXP0JoZhW/DG1xLa6ZK1KQsDxTqCdGN6XsR5vf7
+        zqca3w8dB88t2Xi8f990l6J1y2XDu9Iy7iXe+VFl6cO+YvkhD6ny5FeXZJyNf1pOvtpyw2fS
+        eg/DoAU/Xadd+2H8oF2m1v6zEktxRqKhFnNRcSIANLPjCzsCAAA=
+X-CMS-MailID: 20190404172243epcas1p39af2498a51772ee4ab2a31f26e469c5b
+CMS-TYPE: 101P
+X-CMS-RootMailID: 20190404172243epcas1p39af2498a51772ee4ab2a31f26e469c5b
 References: <20190404171735.12815-1-s.nawrocki@samsung.com>
-        <CGME20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8@epcas2p2.samsung.com>
+        <CGME20190404172243epcas1p39af2498a51772ee4ab2a31f26e469c5b@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Adaptive Supply Voltage (ASV) on Exynos SoCs is a technique of adjusting
-operating points of devices in order to better match actual capabilities
-of the hardware and optimize power consumption.
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
 
-This patch adds common code for parsing the ASV tables from devicetree
-and updating CPU OPPs.
+As now we have chipid driver to initialize SoC related information
+let's include it in build by default.
 
-Also support for Exynos5422/5800 SoC is added, the Exynos5422 specific part
-of the patch is partially based on code from
-https://github.com/hardkernel/linux repository, branch odroidxu4-4.14.y,
-files: arch/arm/mach-exynos/exynos5422-asv.[ch].
-
-Tested on Odroid XU3, XU4, XU3 Lite.
-
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/soc/samsung/Kconfig          |  11 ++
- drivers/soc/samsung/Makefile         |   3 +
- drivers/soc/samsung/exynos-asv.c     | 279 +++++++++++++++++++++++++++
- drivers/soc/samsung/exynos-asv.h     | 114 +++++++++++
- drivers/soc/samsung/exynos5422-asv.c | 209 ++++++++++++++++++++
- drivers/soc/samsung/exynos5422-asv.h |  25 +++
- 6 files changed, 641 insertions(+)
- create mode 100644 drivers/soc/samsung/exynos-asv.c
- create mode 100644 drivers/soc/samsung/exynos-asv.h
- create mode 100644 drivers/soc/samsung/exynos5422-asv.c
- create mode 100644 drivers/soc/samsung/exynos5422-asv.h
+ arch/arm/mach-exynos/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
-index 2905f5262197..4d121984f71a 100644
---- a/drivers/soc/samsung/Kconfig
-+++ b/drivers/soc/samsung/Kconfig
-@@ -7,6 +7,17 @@ menuconfig SOC_SAMSUNG
- 
- if SOC_SAMSUNG
- 
-+config EXYNOS_ASV
-+	bool "Exynos Adaptive Supply Voltage support" if COMPILE_TEST
-+	depends on ARCH_EXYNOS || ((ARM || ARM64) && COMPILE_TEST)
-+	depends on EXYNOS_CHIPID
-+	select EXYNOS_ASV_ARM if ARM && ARCH_EXYNOS
-+
-+# There is no need to enable these drivers for ARMv8
-+config EXYNOS_ASV_ARM
-+	bool "Exynos ASV ARMv7-specific driver extensions" if COMPILE_TEST
-+	depends on EXYNOS_ASV
-+
- config EXYNOS_CHIPID
- 	bool "Exynos Chipid controller driver" if COMPILE_TEST
- 	depends on ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/soc/samsung/Makefile b/drivers/soc/samsung/Makefile
-index 3b6a8797416c..edd1d6ea064d 100644
---- a/drivers/soc/samsung/Makefile
-+++ b/drivers/soc/samsung/Makefile
-@@ -1,5 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- 
-+obj-$(CONFIG_EXYNOS_ASV)	+= exynos-asv.o
-+obj-$(CONFIG_EXYNOS_ASV_ARM)	+= exynos5422-asv.o
-+
- obj-$(CONFIG_EXYNOS_CHIPID)	+= exynos-chipid.o
- obj-$(CONFIG_EXYNOS_PMU)	+= exynos-pmu.o
- 
-diff --git a/drivers/soc/samsung/exynos-asv.c b/drivers/soc/samsung/exynos-asv.c
-new file mode 100644
-index 000000000000..60532c7eb3aa
---- /dev/null
-+++ b/drivers/soc/samsung/exynos-asv.c
-@@ -0,0 +1,279 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 - 2019 Samsung Electronics Co., Ltd.
-+ *	      http://www.samsung.com/
-+ * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-+ *
-+ * Samsung Exynos SoC Adaptive Supply Voltage support
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/pm_opp.h>
-+#include <linux/slab.h>
-+
-+#include "exynos-asv.h"
-+#include "exynos5422-asv.h"
-+#include "exynos5433-asv.h"
-+
-+#ifndef MHZ
-+#define MHZ 1000000U
-+#endif
-+
-+static struct exynos_asv *exynos_asv;
-+
-+int exynos_asv_parse_of_table(struct device_node *node,
-+			      struct exynos_asv_table *table,
-+			      int index)
-+{
-+	u32 table_size, table_id = 0;
-+	unsigned int len1, len2 = 0;
-+	unsigned int num_cols, num_rows;
-+	u32 tmp[20];
-+	u32 *buf;
-+	int ret;
-+
-+	ret = of_property_read_u32(node, "samsung,asv-table-id",
-+				   &table_id);
-+	if (ret < 0) {
-+		pr_err("ASV: Missing table id in %pOF\n", node);
-+		return ret;
-+	}
-+	table->id = table_id;
-+
-+	if (index >= 0 && asv_table_to_index(table_id) != index)
-+		return -EBADR;
-+
-+	ret = of_property_read_u32_array(node, "samsung,asv-table-size",
-+					 tmp, 2);
-+	if (ret < 0)
-+		return ret;
-+
-+	num_rows = tmp[0];
-+	num_cols = tmp[1];
-+	if (num_rows > EXYNOS_ASV_MAX_LEVELS ||
-+	    num_cols > (EXYNOS_ASV_MAX_GROUPS + 1)) {
-+		pr_err("ASV: Unsupported ASV table size (%d x %d)\n",
-+		       num_rows, num_cols);
-+		return -EINVAL;
-+	}
-+
-+	table_size = num_rows * num_cols;
-+	buf = kcalloc(table_size, sizeof(u32), GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_variable_u32_array(node, "samsung,asv-data",
-+						  buf, 0, table_size);
-+	if (ret < 0)
-+		goto err_free_buf;
-+
-+	len1 = ret;
-+
-+	if (ret < table_size) {
-+		u32 *dst, *src;
-+		ret = of_property_read_variable_u32_array(node,
-+						"samsung,asv-common-data",
-+						(u32 *)tmp, 0,
-+						ARRAY_SIZE(tmp));
-+		if (ret < 0) {
-+			pr_err("ASV: Not enough data for table #%x (%d x %d)\n",
-+			       table_id, num_rows, num_cols);
-+			goto err_free_buf;
-+		}
-+		len2 = ret;
-+
-+		if (len1 + ((len2 / 2) * num_cols) > table_size) {
-+			pr_err("ASV: Incorrect table %#x definition\n",
-+			       table_id);
-+				ret = -EINVAL;
-+				goto err_free_buf;
-+			}
-+		/*
-+		 * Copy data common to all ASV levels to first and second column
-+		 * in the main buffer.  We don't replicate data to further
-+		 * columns, instead they are left initialized to 0 (invalid,
-+		 * unused frequency value).  We assume that users of the table
-+		 * will refer to voltage data in column 1 if 0 is encountered
-+		 * in any further column (2, 3,...).
-+		 */
-+		dst = buf + len1;
-+		src = tmp;
-+
-+		while (len2 >= 2) {
-+			memcpy(dst, src, 2 * sizeof(u32));
-+			dst += num_cols;
-+			src += 2;
-+			len2 -= 2;
-+		}
-+	}
-+
-+	table->num_cols = num_cols;
-+	table->num_rows = num_rows;
-+	table->buf = buf;
-+	return 0;
-+
-+err_free_buf:
-+	kfree(buf);
-+	return ret;
-+}
-+
-+int exynos_asv_parse_cpu_tables(struct exynos_asv *asv,	struct device_node *np,
-+				int table_index)
-+{
-+	struct exynos_asv_subsys *subsys;
-+	struct exynos_asv_table table;
-+	struct device_node *child;
-+	int ret;
-+
-+	for_each_child_of_node(np, child) {
-+		ret = exynos_asv_parse_of_table(child, &table, table_index);
-+		if (ret < 0) {
-+			if (ret == -EBADR)
-+				continue;
-+			of_node_put(child);
-+			return ret;
-+		}
-+
-+		pr_debug("%s: Matching table: id: %#x at %pOF\n",
-+			 __func__, table.id, child);
-+
-+		switch(asv_table_to_subsys_id(table.id)) {
-+		case EXYNOS_ASV_SUBSYS_ID_ARM:
-+			subsys = &asv->arm;
-+			break;
-+		case EXYNOS_ASV_SUBSYS_ID_KFC:
-+			subsys = &asv->kfc;
-+			break;
-+		default:
-+			of_node_put(child);
-+			return -EINVAL;
-+		}
-+
-+		subsys->num_asv_levels = table.num_rows;
-+		subsys->num_asv_groups = table.num_cols - 1;
-+		subsys->table = table;
-+		subsys->id = asv_table_to_subsys_id(table.id);
-+	}
-+
-+	return 0;
-+}
-+
-+static int exynos_asv_update_cpu_opps(struct device *cpu)
-+{
-+	struct exynos_asv_subsys *subsys = NULL;
-+	struct dev_pm_opp *opp;
-+	unsigned int opp_freq;
-+	int i;
-+
-+	if (of_device_is_compatible(cpu->of_node,
-+				    exynos_asv->arm.cpu_dt_compat))
-+		subsys = &exynos_asv->arm;
-+	else if (of_device_is_compatible(cpu->of_node,
-+					 exynos_asv->kfc.cpu_dt_compat))
-+		subsys = &exynos_asv->kfc;
-+
-+	if (!subsys)
-+		return -EINVAL;
-+
-+	for (i = 0; i < subsys->num_asv_levels; i++) {
-+		unsigned int new_voltage;
-+		unsigned int voltage;
-+		int timeout = 1000;
-+		int err;
-+
-+		opp_freq = exynos_asv_opp_get_frequency(subsys, i);
-+
-+		opp = dev_pm_opp_find_freq_exact(cpu, opp_freq * MHZ, true);
-+		if (IS_ERR(opp)) {
-+			pr_info("%s cpu%d opp%d, freq: %u missing\n",
-+				__func__, cpu->id, i, opp_freq);
-+
-+			continue;
-+		}
-+
-+		voltage = dev_pm_opp_get_voltage(opp);
-+		new_voltage = exynos_asv->opp_get_voltage(subsys, i, voltage);
-+		dev_pm_opp_put(opp);
-+
-+		opp_freq *= MHZ;
-+		dev_pm_opp_remove(cpu, opp_freq);
-+
-+		while (--timeout) {
-+			opp = dev_pm_opp_find_freq_exact(cpu, opp_freq, true);
-+			if (IS_ERR(opp))
-+				break;
-+			dev_pm_opp_put(opp);
-+			msleep(1);
-+		}
-+
-+		err = dev_pm_opp_add(cpu, opp_freq, new_voltage);
-+		if (err < 0)
-+			pr_err("%s: Failed to add OPP %u Hz/%u uV for cpu%d\n",
-+			       __func__, opp_freq, new_voltage, cpu->id);
-+	}
-+
-+	return 0;
-+}
-+
-+static int exynos_asv_update_opps(void)
-+{
-+	struct opp_table *last_opp_table = NULL;
-+	struct device *cpu;
-+	int ret, cpuid;
-+
-+	for_each_possible_cpu(cpuid) {
-+		struct opp_table *opp_table;
-+
-+		cpu = get_cpu_device(cpuid);
-+		if (!cpu)
-+			continue;
-+
-+		opp_table = dev_pm_opp_get_opp_table(cpu);
-+		if (IS_ERR(opp_table))
-+			continue;
-+
-+		if (!last_opp_table || opp_table != last_opp_table) {
-+			last_opp_table = opp_table;
-+
-+			ret = exynos_asv_update_cpu_opps(cpu);
-+			if (ret < 0)
-+				pr_err("%s: Couldn't udate OPPs for cpu%d\n",
-+				       __func__, cpuid);
-+		}
-+
-+		dev_pm_opp_put_opp_table(opp_table);
-+	}
-+
-+	return	0;
-+}
-+
-+static int __init exynos_asv_init(void)
-+{
-+	int ret;
-+
-+	exynos_asv = kcalloc(1, sizeof(struct exynos_asv), GFP_KERNEL);
-+	if (!exynos_asv)
-+		return -ENOMEM;
-+
-+	if (of_machine_is_compatible("samsung,exynos5800") ||
-+	    of_machine_is_compatible("samsung,exynos5420"))
-+		ret = exynos5422_asv_init(exynos_asv);
-+	else
-+		return 0;
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = exynos_asv_update_opps();
-+
-+	if (exynos_asv->release)
-+		exynos_asv->release(exynos_asv);
-+
-+	return ret;
-+}
-+late_initcall(exynos_asv_init)
-diff --git a/drivers/soc/samsung/exynos-asv.h b/drivers/soc/samsung/exynos-asv.h
-new file mode 100644
-index 000000000000..3444b361e5e3
---- /dev/null
-+++ b/drivers/soc/samsung/exynos-asv.h
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 - 2019 Samsung Electronics Co., Ltd.
-+ *	      http://www.samsung.com/
-+ * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-+ *
-+ * Samsung Exynos SoC Adaptive Supply Voltage support
-+ */
-+#ifndef __EXYNOS_ASV_H
-+#define __EXYNOS_ASV_H
-+
-+#define EXYNOS_ASV_MAX_GROUPS		16
-+#define EXYNOS_ASV_MAX_LEVELS		24
-+
-+#define EXYNOS_ASV_TABLE_INDEX_MASK	(0xff)
-+#define EXYNOS_ASV_SUBSYS_ID_MASK	(0xff << 8)
-+
-+#define asv_table_to_subsys_id(_id)	((_id >> 8) & 0xff)
-+#define asv_table_to_index(_id)		((_id) & 0xff)
-+
-+#define EXYNOS_ASV_SUBSYS_ID_ARM	0x0
-+#define EXYNOS_ASV_SUBSYS_ID_EGL	EXYNOS_ASV_SUBSYS_ID_ARM
-+#define EXYNOS_ASV_SUBSYS_ID_KFC	0x1
-+#define EXYNOS_ASV_SUBSYS_ID_INT	0x2
-+#define EXYNOS_ASV_SUBSYS_ID_MIF	0x3
-+#define EXYNOS_ASV_SUBSYS_ID_G3D	0x4
-+#define EXYNOS_ASV_SUBSYS_ID_CAM	0x5
-+#define EXYNOS_ASV_SUBSYS_ID_MAX	0x6
-+
-+struct device_node;
-+
-+/* HPM, IDS values to select target group */
-+struct asv_limit_entry {
-+	unsigned int hpm;
-+	unsigned int ids;
-+};
-+
-+struct exynos_asv_table {
-+	unsigned int num_rows;
-+	unsigned int num_cols;
-+	unsigned int id;
-+	u32 *buf;
-+};
-+
-+struct exynos_asv_subsys {
-+	int id;
-+	char *cpu_dt_compat;
-+
-+	unsigned int base_volt;
-+	unsigned int num_asv_levels;
-+	unsigned int num_asv_groups;
-+	unsigned int offset_volt_h;
-+	unsigned int offset_volt_l;
-+	struct exynos_asv_table table;
-+};
-+
-+struct exynos_asv {
-+	struct device_node *chipid_node;
-+	struct exynos_asv_subsys arm;
-+	struct exynos_asv_subsys kfc;
-+
-+	int (*opp_get_voltage)(struct exynos_asv_subsys *subs, int level,
-+			       unsigned int voltage);
-+	void (*release)(struct exynos_asv *asv);
-+
-+	unsigned int group;
-+	unsigned int table;
-+
-+	/* TODO: Move member fields below to SoC type specific data structure */
-+	unsigned int is_bin2;
-+	unsigned int is_special_lot;
-+};
-+
-+static inline u32 __exynos_asv_get_item(struct exynos_asv_table *table,
-+				      unsigned int row, unsigned int col)
-+{
-+	return table->buf[row * (table->num_cols) + col];
-+}
-+
-+static inline u32 exynos_asv_opp_get_frequency(struct exynos_asv_subsys *subsys,
-+					       unsigned int index)
-+{
-+	return __exynos_asv_get_item(&subsys->table, index, 0);
-+}
-+/**
-+ * exynos_asv_parse_of_table - Parse ASV table from devicetree
-+ *
-+ * @node: DT node containing the table
-+ * @table: The parsed table data
-+ * @index: Used to select table with specific index to parse, if >= 0.
-+ *         This argument is ignored if the value is less than 0.
-+ *
-+ * Returns: 0 on success, or negative value on failure. EBADR is returned
-+ * when @index is >= 0 but the index value of the parsed table ID is different
-+ * than @index.
-+ */
-+int exynos_asv_parse_of_table(struct device_node *node,
-+			      struct exynos_asv_table *table,
-+			      int index);
-+
-+/**
-+ * exynos_asv_parse_cpu_tables - Parse ARM and KFC ASV tables from DT
-+ *
-+ * @asv: data structure to store the parsed data to
-+ * @node: DT node containing the tables
-+ * @index: Used to select table with specific index to parse, if >= 0.
-+ *         This argument is ignored if the value is less than 0.
-+ *
-+ * Returns: 0 on success, or negative value on failure.
-+ */
-+int exynos_asv_parse_cpu_tables(struct exynos_asv *asv,	struct device_node *np,
-+				int table_index);
-+
-+#endif /* __EXYNOS_ASV_H */
-diff --git a/drivers/soc/samsung/exynos5422-asv.c b/drivers/soc/samsung/exynos5422-asv.c
-new file mode 100644
-index 000000000000..f0b7bdd873a9
---- /dev/null
-+++ b/drivers/soc/samsung/exynos5422-asv.c
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 - 2019 Samsung Electronics Co., Ltd.
-+ *	      http://www.samsung.com/
-+ *
-+ * Samsung Exynos 5422 SoC Adaptive Supply Voltage support
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+
-+#include "exynos-asv.h"
-+#include "exynos-chipid.h"
-+
-+#define EXYNOS5422_NUM_ASV_GROUPS	14
-+
-+static struct exynos_asv *exynos_asv;
-+
-+static int exynos5422_asv_get_table(void)
-+{
-+	unsigned int reg = exynos_chipid_read(EXYNOS_CHIPID_REG_PKG_ID);
-+
-+	return (reg >> EXYNOS5422_TABLE_OFFSET) & EXYNOS5422_TABLE_MASK;
-+}
-+
-+static int exynos5422_asv_check_bin2(void)
-+{
-+	unsigned int reg = exynos_chipid_read(EXYNOS_CHIPID_REG_PKG_ID);
-+
-+	return (reg >> EXYNOS5422_BIN2_OFFSET) & EXYNOS5422_BIN2_MASK;
-+}
-+
-+static bool exynos5422_asv_check_lot_id(void)
-+{
-+	unsigned int reg = exynos_chipid_read(EXYNOS_CHIPID_REG_PKG_ID);
-+
-+	return ((reg >> EXYNOS5422_USESG_OFFSET) & EXYNOS5422_USESG_MASK);
-+}
-+
-+static const struct asv_limit_entry __asv_limits[EXYNOS5422_NUM_ASV_GROUPS] = {
-+	{ 13, 55 },
-+	{ 21, 65 },
-+	{ 25, 69 },
-+	{ 30, 72 },
-+	{ 36, 74 },
-+	{ 43, 76 },
-+	{ 51, 78 },
-+	{ 65, 80 },
-+	{ 81, 82 },
-+	{ 98, 84 },
-+	{ 119, 87 },
-+	{ 135, 89 },
-+	{ 150, 92 },
-+	{ 999, 999 },
-+};
-+
-+static int exynos5422_asv_get_group(struct exynos_asv *asv)
-+{
-+	unsigned int pkgid_reg = exynos_chipid_read(EXYNOS_CHIPID_REG_PKG_ID);
-+	unsigned int auxi_reg = exynos_chipid_read(EXYNOS_CHIPID_AUX_INFO);
-+	int hpm, ids, i;
-+
-+	if (asv->is_special_lot) {
-+		u32 sga = (pkgid_reg >> EXYNOS5422_SG_A_OFFSET) &
-+			   EXYNOS5422_SG_A_MASK;
-+
-+		u32 sgb = (pkgid_reg >> EXYNOS5422_SG_B_OFFSET) &
-+			   EXYNOS5422_SG_B_MASK;
-+
-+		if ((pkgid_reg >> EXYNOS5422_SG_BSIGN_OFFSET) &
-+		     EXYNOS5422_SG_BSIGN_MASK)
-+			return sga + sgb;
-+		else
-+			return sga - sgb;
-+	}
-+
-+	hpm = (auxi_reg >> EXYNOS5422_TMCB_OFFSET) & EXYNOS5422_TMCB_MASK;
-+	ids = (pkgid_reg >> EXYNOS5422_IDS_OFFSET) & EXYNOS5422_IDS_MASK;
-+
-+	for (i = 0; i < EXYNOS5422_NUM_ASV_GROUPS; i++) {
-+		if (ids <= __asv_limits[i].ids)
-+			break;
-+		if (hpm <= __asv_limits[i].hpm)
-+			break;
-+	}
-+	if (i < EXYNOS5422_NUM_ASV_GROUPS)
-+		return i;
-+
-+	return 0;
-+}
-+
-+static int __asv_offset_voltage(unsigned int index)
-+{
-+	static const unsigned int offset_table[] = { 12500, 50000, 25000 };
-+
-+	if (index == 0 || index > 3)
-+		return 0;
-+
-+	return offset_table[index - 1];
-+}
-+
-+static void exynos5422_asv_offset_voltage_setup(struct exynos_asv *asv)
-+{
-+	struct exynos_asv_subsys *subsys;
-+	unsigned int reg, value;
-+
-+	reg = exynos_chipid_read(EXYNOS_CHIPID_AUX_INFO);
-+
-+	/* ARM offset voltage setup */
-+	subsys = &asv->arm;
-+
-+	subsys->base_volt = 1000000;
-+
-+	value = (reg >> EXYNOS5422_ARM_UP_OFFSET) & EXYNOS5422_ARM_UP_MASK;
-+	subsys->offset_volt_h = __asv_offset_voltage(value);
-+
-+	value = (reg >> EXYNOS5422_ARM_DN_OFFSET) & EXYNOS5422_ARM_DN_MASK;
-+	subsys->offset_volt_l = __asv_offset_voltage(value);
-+
-+	/* KFC offset voltage setup */
-+	subsys = &asv->kfc;
-+
-+	subsys->base_volt = 1000000;
-+
-+	value = (reg >> EXYNOS5422_KFC_UP_OFFSET) & EXYNOS5422_KFC_UP_MASK;
-+	subsys->offset_volt_h = __asv_offset_voltage(value);
-+
-+	value = (reg >> EXYNOS5422_KFC_DN_OFFSET) & EXYNOS5422_KFC_DN_MASK;
-+	subsys->offset_volt_l = __asv_offset_voltage(value);
-+}
-+
-+static int exynos5422_asv_opp_get_voltage(struct exynos_asv_subsys *subsys,
-+				int level, unsigned int volt)
-+{
-+	unsigned int asv_volt;
-+
-+	if (level >= subsys->num_asv_levels)
-+		return volt;
-+
-+	asv_volt = __exynos_asv_get_item(&subsys->table, level,
-+					 exynos_asv->group + 1);
-+	if (asv_volt == 0 && exynos_asv->group > 1)
-+		asv_volt = __exynos_asv_get_item(&subsys->table, level, 1);
-+
-+	if (volt > subsys->base_volt)
-+		asv_volt += subsys->offset_volt_h;
-+	else
-+		asv_volt += subsys->offset_volt_l;
-+
-+	return asv_volt;
-+}
-+
-+static void __init exynos5422_asv_release(struct exynos_asv *asv)
-+{
-+	kfree(asv->arm.table.buf);
-+	asv->arm.table.buf = NULL;
-+	kfree(asv->kfc.table.buf);
-+	asv->kfc.table.buf = NULL;
-+}
-+
-+int __init exynos5422_asv_init(struct exynos_asv *asv)
-+{
-+	struct device_node *node;
-+	unsigned int table_index;
-+	int ret;
-+
-+	exynos_asv = asv;
-+
-+	asv->is_bin2 = exynos5422_asv_check_bin2();
-+	asv->is_special_lot = exynos5422_asv_check_lot_id();
-+
-+	if (of_machine_is_compatible("hardkernel,odroid-xu3-lite")) {
-+		asv->is_bin2 = true;
-+		asv->is_special_lot = false;
-+	}
-+
-+	asv->group = exynos5422_asv_get_group(asv);
-+	asv->table = exynos5422_asv_get_table();
-+
-+	exynos5422_asv_offset_voltage_setup(asv);
-+
-+	node = of_find_compatible_node(NULL, NULL, "samsung,exynos-asv-v1");
-+	if (!node)
-+		return -ENODEV;
-+
-+	if (!asv->is_bin2) {
-+		if (asv->table == 2 || asv->table == 3)
-+			table_index = asv->table;
-+		else
-+			table_index = 0;
-+	} else {
-+		table_index = 4;
-+	}
-+
-+	ret = exynos_asv_parse_cpu_tables(asv, node, table_index);
-+	of_node_put(node);
-+	if (ret < 0)
-+		return ret;
-+
-+	asv->arm.cpu_dt_compat = "arm,cortex-a15";
-+	asv->kfc.cpu_dt_compat = "arm,cortex-a7";
-+
-+	asv->opp_get_voltage = exynos5422_asv_opp_get_voltage;
-+	asv->release = exynos5422_asv_release;
-+
-+	return ret;
-+}
-diff --git a/drivers/soc/samsung/exynos5422-asv.h b/drivers/soc/samsung/exynos5422-asv.h
-new file mode 100644
-index 000000000000..f0d9107d6d0a
---- /dev/null
-+++ b/drivers/soc/samsung/exynos5422-asv.h
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 - 2019 Samsung Electronics Co., Ltd.
-+ *	      http://www.samsung.com/
-+ *
-+ * Samsung Exynos 5422 SoC Adaptive Supply Voltage support
-+ */
-+
-+#ifndef __EXYNOS5422_ASV_H
-+#define __EXYNOS5422_ASV_H
-+
-+#include <linux/errno.h>
-+
-+struct exynos_asv;
-+
-+#ifdef CONFIG_EXYNOS_ASV_ARM
-+int exynos5422_asv_init(struct exynos_asv *asv);
-+#else
-+static inline int exynos5422_asv_init(struct exynos_asv *asv)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif
-+
-+#endif /* __EXYNOS5422_ASV_H */
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index b40963cf91c7..e3e63aa5d60a 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -13,6 +13,7 @@ menuconfig ARCH_EXYNOS
+ 	select ARM_AMBA
+ 	select ARM_GIC
+ 	select COMMON_CLK_SAMSUNG
++	select EXYNOS_CHIPID
+ 	select EXYNOS_THERMAL
+ 	select EXYNOS_PMU
+ 	select EXYNOS_SROM
 -- 
 2.17.1
 
