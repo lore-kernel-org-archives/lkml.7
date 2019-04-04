@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADB8C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D263C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6179F2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2244621734
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367798;
-	bh=jItkgQt/kKflLl0PAR5WinIoJot+r5yLBxoil5ETJbY=;
+	s=default; t=1554367803;
+	bh=BUhGl3KWnf8PiX+KzQP+NM0FQK9U41FNxo0fyq2YGgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mHrJNlaIBDWZSRsJCE4D1o8bmaYy7We+fGuq8PcdSw1REedomH5rhod7eXggWE9j0
-	 XbIxwmhJtXdKNxn5/v3C6ULSXXHpJ58sMm97f8QOuAG0HBkSEtn+a1uyIdGKHzP0Zl
-	 SGcgEanHg+S09TAoHU/+hhjEKqhtMt5KnvhueZII=
+	b=tYtgatugLhEG+V9u/f+d/0rzdsrFZ64uRcZZL3gLDBYN2KVeWHJ9a5bP7ZNEOYiZi
+	 OAr7JcBODtgJfvFeSVEgOiArCmjOuTwAyxobTvS+MMqtAzYy7da+11XNVwK+AqiENz
+	 zF5z55xSoK6nuBvZS3LFBhI9CUjJ+JIu+iQTZCvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfDDIt5 (ORCPT
+        id S1728962AbfDDIuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50674 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:50:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728843AbfDDItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:49:52 -0400
+        id S1728928AbfDDIuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:50:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC8722171F;
-        Thu,  4 Apr 2019 08:49:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B65042171F;
+        Thu,  4 Apr 2019 08:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367791;
-        bh=jItkgQt/kKflLl0PAR5WinIoJot+r5yLBxoil5ETJbY=;
+        s=default; t=1554367799;
+        bh=BUhGl3KWnf8PiX+KzQP+NM0FQK9U41FNxo0fyq2YGgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgC4yC7Yxx27GdHbUcoabUaAsW/ITWGwAnKv2PO7QlYmiAanAPWApiPddgQaeQmFV
-         O86yRKoB18zBJgrqpO/I2VYFWQgivvCRHbMIV/691nUlKiGQzykI3l20CSb3rB9eYh
-         Gna2g8oa1lHOZFYhN/4GD9cUCNCCzYdoMr0YLaPE=
+        b=P+VEMhbzLs3egYzUsro2EHV3eyRGR3w0MNIt+roApc2NnTBM62wKkMSwYF5GOJLnx
+         5u3da47JbVqz2fmllhWnsUDw8u4jelvo084gJQAGkqWyai5tQeDEwEHJWpQtDLZjHq
+         L01NnsIXufdPLCV+PuI47f3A3tLyy9x1SoUvapGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jari Ruusu <jari.ruusu@gmail.com>
-Subject: [PATCH 4.9 03/91] ext4: cleanup bh release code in ext4_ind_remove_space()
-Date:   Thu,  4 Apr 2019 10:46:47 +0200
-Message-Id: <20190404084535.624035856@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
+        Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH 4.9 06/91] tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped
+Date:   Thu,  4 Apr 2019 10:46:50 +0200
+Message-Id: <20190404084535.784149222@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,163 +66,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-commit 5e86bdda41534e17621d5a071b294943cae4376e upstream.
+commit 69646d7a3689fbe1a65ae90397d22ac3f1b8d40f upstream.
 
-Currently, we are releasing the indirect buffer where we are done with
-it in ext4_ind_remove_space(), so we can see the brelse() and
-BUFFER_TRACE() everywhere.  It seems fragile and hard to read, and we
-may probably forget to release the buffer some day.  This patch cleans
-up the code by putting of the code which releases the buffers to the
-end of the function.
+In half-duplex operation, RX should be started after TX completes.
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Jari Ruusu <jari.ruusu@gmail.com>
+If DMA is used, there is a case when the DMA transfer completes but the
+TX FIFO is not emptied, so the RX cannot be restarted just yet.
+
+Use a boolean variable to store this state and rearm TX interrupt mask
+to be signaled again that the transfer finished. In interrupt transmit
+handler this variable is used to start RX. A warning message is generated
+if RX is activated before TX fifo is cleared.
+
+Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable
+RX after TX is done")
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/indirect.c |   47 ++++++++++++++++++++++-------------------------
- 1 file changed, 22 insertions(+), 25 deletions(-)
+ drivers/tty/serial/atmel_serial.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1217,6 +1217,7 @@ int ext4_ind_remove_space(handle_t *hand
- 	ext4_lblk_t offsets[4], offsets2[4];
- 	Indirect chain[4], chain2[4];
- 	Indirect *partial, *partial2;
-+	Indirect *p = NULL, *p2 = NULL;
- 	ext4_lblk_t max_block;
- 	__le32 nr = 0, nr2 = 0;
- 	int n = 0, n2 = 0;
-@@ -1258,7 +1259,7 @@ int ext4_ind_remove_space(handle_t *hand
- 		}
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -175,6 +175,8 @@ struct atmel_uart_port {
+ 	unsigned int		pending_status;
+ 	spinlock_t		lock_suspended;
  
- 
--		partial = ext4_find_shared(inode, n, offsets, chain, &nr);
-+		partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
- 		if (nr) {
- 			if (partial == chain) {
- 				/* Shared branch grows from the inode */
-@@ -1283,13 +1284,11 @@ int ext4_ind_remove_space(handle_t *hand
- 				partial->p + 1,
- 				(__le32 *)partial->bh->b_data+addr_per_block,
- 				(chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 
- end_range:
--		partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+		partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 		if (nr2) {
- 			if (partial2 == chain2) {
- 				/*
-@@ -1319,16 +1318,14 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 		goto do_indirects;
- 	}
- 
- 	/* Punch happened within the same level (n == n2) */
--	partial = ext4_find_shared(inode, n, offsets, chain, &nr);
--	partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+	partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
-+	partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 
- 	/* Free top, but only if partial2 isn't its subtree. */
- 	if (nr) {
-@@ -1385,15 +1382,7 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			while (partial > chain) {
--				BUFFER_TRACE(partial->bh, "call brelse");
--				brelse(partial->bh);
--			}
--			while (partial2 > chain2) {
--				BUFFER_TRACE(partial2->bh, "call brelse");
--				brelse(partial2->bh);
--			}
--			return 0;
-+			goto cleanup;
- 		}
- 
- 		/*
-@@ -1408,8 +1397,6 @@ end_range:
- 					   partial->p + 1,
- 					   (__le32 *)partial->bh->b_data+addr_per_block,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 		if (partial2 > chain2 && depth2 <= depth) {
-@@ -1417,11 +1404,21 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 	}
++	bool			hd_start_rx;	/* can start RX during half-duplex operation */
 +
-+cleanup:
-+	while (p && p > chain) {
-+		BUFFER_TRACE(p->bh, "call brelse");
-+		brelse(p->bh);
-+		p--;
-+	}
-+	while (p2 && p2 > chain2) {
-+		BUFFER_TRACE(p2->bh, "call brelse");
-+		brelse(p2->bh);
-+		p2--;
-+	}
- 	return 0;
- 
- do_indirects:
-@@ -1429,7 +1426,7 @@ do_indirects:
- 	switch (offsets[0]) {
- 	default:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_IND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
-@@ -1437,7 +1434,7 @@ do_indirects:
- 		}
- 	case EXT4_IND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_DIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
-@@ -1445,7 +1442,7 @@ do_indirects:
- 		}
- 	case EXT4_DIND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_TIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
-@@ -1454,5 +1451,5 @@ do_indirects:
- 	case EXT4_TIND_BLOCK:
- 		;
+ 	int (*prepare_rx)(struct uart_port *port);
+ 	int (*prepare_tx)(struct uart_port *port);
+ 	void (*schedule_rx)(struct uart_port *port);
+@@ -815,8 +817,13 @@ static void atmel_complete_tx_dma(void *
+ 	if (!uart_circ_empty(xmit))
+ 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
+ 	else if (atmel_uart_is_half_duplex(port)) {
+-		/* DMA done, stop TX, start RX for RS485 */
+-		atmel_start_rx(port);
++		/*
++		 * DMA done, re-enable TXEMPTY and signal that we can stop
++		 * TX and start RX for RS485
++		 */
++		atmel_port->hd_start_rx = true;
++		atmel_uart_writel(port, ATMEL_US_IER,
++				  atmel_port->tx_done_mask);
  	}
--	return 0;
-+	goto cleanup;
+ 
+ 	spin_unlock_irqrestore(&port->lock, flags);
+@@ -1261,9 +1268,20 @@ atmel_handle_transmit(struct uart_port *
+ 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+ 
+ 	if (pending & atmel_port->tx_done_mask) {
+-		/* Either PDC or interrupt transmission */
+ 		atmel_uart_writel(port, ATMEL_US_IDR,
+ 				  atmel_port->tx_done_mask);
++
++		/* Start RX if flag was set and FIFO is empty */
++		if (atmel_port->hd_start_rx) {
++			if (!(atmel_uart_readl(port, ATMEL_US_CSR)
++					& ATMEL_US_TXEMPTY))
++				dev_warn(port->dev, "Should start RX, but TX fifo is not empty\n");
++
++			atmel_port->hd_start_rx = false;
++			atmel_start_rx(port);
++			return;
++		}
++
+ 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
+ 	}
  }
 
 
