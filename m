@@ -2,123 +2,119 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC233C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A630C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A01FB205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6B0205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554370508;
+	bh=1b6XqWC6eXD8aicezeUNaB2us//gmAIg4pzhMlVJ2N8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HvMX8HScYx3mdejH+Hd+iss9XTQpEMrwDz/rrEfBcY/4XGJsVfJ9vyqZ2YBjVDtHc
+	 NPqK28evZTMFRAfRF/iGpBAprhyXJFZ5Xq3DJPuEhxlpNYWQp0mdVJesEXGYAf3tGz
+	 9RFHXz+bnW1Y4mP7fimvqHMKla65qj1w+kzaLkq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbfDDJe7 (ORCPT
+        id S1732645AbfDDJfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:34:59 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44308 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731940AbfDDJGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:06:48 -0400
-Received: by mail-vs1-f68.google.com with SMTP id j184so890198vsd.11;
-        Thu, 04 Apr 2019 02:06:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4+XzHk+jpTGxDGVqwa4dg4gvQjQHJPUEUNt3UVVTA0M=;
-        b=TIxcxsAHP0ztxYQnoDKdJhgktWvXsEVcp7F4z5b40lX0LVZTavA1jqtUNAjkTchRk+
-         oEK5pwm0IYdoWuFqXSSOjBsquK87AW8I9aMRiL7tT1zTU9HsBeSE8ktlPvFIma5JKuue
-         0WynQMnh4mfkYDJ37Q3qvKW/zLlavfBNSr+iPfLE4P+INXt2itXDiPdkWq2i8ZYZaHbo
-         D8WRaAGsMe7DjrE8e8qVrZUIuc0MyJeQKadWhhELgWSxmZSo+Imf/z4jhl80ZzRtGGG+
-         yhJo1kwUqhBuQk5pz8LtnYmxmFQE6YsGc8cVkfy+mnII7ZbNQtlqIFLJyULQDkrELT3Z
-         W+Yw==
-X-Gm-Message-State: APjAAAXfmUcAAo5whrs4v2VLCxpzpN/qxlYupOlfcd1PzxX2RrfawxeN
-        EBTu8M35TyNlfjupYjYe3a0McSyLqusNsisZ8m0=
-X-Google-Smtp-Source: APXvYqyQVT+lQa4Dnf7R6t91gYRQ+JEWFwqrjQtb6c1FMR+gD5nZYaA9ZPLXA91ckUsikJjFPiyeIHEPUp5cB0tIzfY=
-X-Received: by 2002:a67:fbcc:: with SMTP id o12mr3473975vsr.60.1554368807334;
- Thu, 04 Apr 2019 02:06:47 -0700 (PDT)
+        Thu, 4 Apr 2019 05:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732358AbfDDJGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:06:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 047CA218FF;
+        Thu,  4 Apr 2019 09:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554368800;
+        bh=1b6XqWC6eXD8aicezeUNaB2us//gmAIg4pzhMlVJ2N8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2OxpsvSS+C9SAEbBOul/IgtEnnRjJWtRPW6mk1ENbrxEh4cdDh3BgdWVCGtByvITk
+         VRaaNHBtmxCPvMLK1hEYA9h+cm+J8B/nVCzUNohUafmRrhCQ++fdGlkKNK6vXJd6Tz
+         Cp5yUPhiRE0ecszbqYjSlQJZ1wDJBbkhs7QJWY68=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 175/187] brcmfmac: Use firmware_request_nowarn for the clm_blob
+Date:   Thu,  4 Apr 2019 10:48:32 +0200
+Message-Id: <20190404084611.350544499@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
+References: <20190404084603.119654039@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20190320103927.21227-1-geert+renesas@glider.be> <CAPDyKFpecPdcqagc567kZJeWbe6y_0j9JAVKcE6c9Ltv+OG-Yw@mail.gmail.com>
-In-Reply-To: <CAPDyKFpecPdcqagc567kZJeWbe6y_0j9JAVKcE6c9Ltv+OG-Yw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 4 Apr 2019 11:06:35 +0200
-Message-ID: <CAMuHMdVMOo2R2ehuU9XiVy0NS9J=mJkx0Mo-rsT=OBs-1kvH=Q@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpio: pca953x: Configure wake-up path when wake-up is enabled
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-On Thu, Apr 4, 2019 at 10:55 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On Wed, 20 Mar 2019 at 11:39, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > If a device is part of the wake-up path, it should indicate this by
-> > setting its power.wakeup_path field.  This allows the genpd core code to
-> > keep the device enabled during system suspend when needed.
-> >
-> > As regulators powering devices are not handled by genpd, the driver
-> > handles these itself, and thus must skip regulator control when the
-> > device is part of the wake-up path.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Note that I don't really need this on the Renesas Ebisu-4D board, as
-> > there is no regulator or PM Domain controlling power to the GPIO
-> > expander on that board.  I did want to have all wake-up path processing
-> > implemented in the driver for completeness, and did test its behavior
-> > with gpio-keys configured as a wake-up source.
->
-> All above makes perfect sense to me.
+------------------
 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+[ Upstream commit 4ad0be160544ffbdafb7cec39bb8e6dd0a97317a ]
 
-Thanks!
+The linux-firmware brcmfmac firmware files contain an embedded table with
+per country allowed channels and strength info.
 
-> > However, while this approach is known to work fine on other boards, with
-> > other GPIO and interrupt controllers (gpio-rcar, irq-renesas-irqc,
-> > irq-renesas-intc-irqpin), it wouldn't work on Ebisu-4D, due to different
-> > device suspend ordering.
-> >
-> > The proper ordering is:
-> >   1. When gpio-keys is suspended, its suspend handler calls
-> >      enable_irq_wake(), invoking pca953x_irq_set_wake(), and causing
-> >      pca953x_chip.wakeup_path to be incremented,
-> >   2. When gpio-pca953x is suspended, it checks pca953x_chip.wakeup_path,
-> >      and marks the device to be part of the wake-up path.
->
-> Right.
->
-> >
-> > However, gpio-keys is suspended _after_ gpio-pca953x, breaking the
-> > scheme :-(
->
-> Would it make sense to fixup the ordering issue via creating a
-> parent/child relationship or setting up a device link?
+For recent hardware these versions of the firmware are specially build for
+linux-firmware, the firmware files directly available from Cypress rely on
+a separate clm_blob file for this info.
 
-Could that be due to gpio_keys not having rudimentary Runtime PM support?
+For some unknown reason Cypress refuses to provide the standard firmware
+files + clm_blob files it uses elsewhere for inclusion into linux-firmware,
+instead relying on these special builds with the clm_blob info embedded.
+This means that the linux-firmware firmware versions often lag behind,
+but I digress.
 
-Gr{oetje,eeting}s,
+The brcmfmac driver does support the separate clm_blob file and always
+tries to load this. Currently we use request_firmware for this. This means
+that on any standard install, using the standard combo of linux-kernel +
+linux-firmware, we will get a warning:
+"Direct firmware load for ... failed with error -2"
 
-                        Geert
+On top of this, brcmfmac itself prints: "no clm_blob available (err=-2),
+device may have limited channels available".
 
+This commit switches to firmware_request_nowarn, fixing almost any brcmfmac
+device logging the warning (it leaves the brcmfmac info message in place).
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+index cd3651069d0c..27893af63ebc 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
+@@ -149,7 +149,7 @@ static int brcmf_c_process_clm_blob(struct brcmf_if *ifp)
+ 		return err;
+ 	}
+ 
+-	err = request_firmware(&clm, clm_name, bus->dev);
++	err = firmware_request_nowarn(&clm, clm_name, bus->dev);
+ 	if (err) {
+ 		brcmf_info("no clm_blob available (err=%d), device may have limited channels available\n",
+ 			   err);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.19.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
