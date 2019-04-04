@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6773C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69946C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4529214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3984520652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369522;
-	bh=T1nDkZaSpBroe4htsLqSy+PEbAe1j+Xx6PgOAZZnKaM=;
+	s=default; t=1554369526;
+	bh=PNiYqTZrhZu605lG950RmJceNbiRLA2RtOXRI7WxMnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q10H4ow/XNr1zU7XdrAw0s98YlAdfetujfvKlAMe0HAmp5NESGb+BppJADeo+3U1i
-	 1yqP3gV9dQa32JOgQiIFto3B7jeI0SiVY0iqC2Wg8JX002+fiiTKQy246LX/9+Rz4l
-	 vU9AA6tR6Ae5S8+/XD+6EfoxoI/iOSzGHzAL5RRw=
+	b=nf1KZEBq0JWzIUbgTvno1nsymIto5i1ADwkP5Lmk5oAtLw7X25wUFHAN5PR0x2LLE
+	 eSRFhLkFAtDhSNt5X0foxjf0TYCcihcP35JVTl8o3XrxGxDcWlDUiXUQs4dgXz0OZY
+	 EQRDn4oG6OghWbu+ELPaoOraV4Es8b4i7o4wEltE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbfDDJSl (ORCPT
+        id S2388421AbfDDJSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60784 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388405AbfDDJSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:18:36 -0400
+        id S2388413AbfDDJSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:18:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72B7120652;
-        Thu,  4 Apr 2019 09:18:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF90320652;
+        Thu,  4 Apr 2019 09:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369515;
-        bh=T1nDkZaSpBroe4htsLqSy+PEbAe1j+Xx6PgOAZZnKaM=;
+        s=default; t=1554369521;
+        bh=PNiYqTZrhZu605lG950RmJceNbiRLA2RtOXRI7WxMnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNyNf+auDb6ahOH/id8Kvx509TEdReX7NrIHZYdtPLzTVxyH+1raqAWlSR/OBeGxo
-         T5Vd41Hg+hC2XydAb/Y3AQFcqs4uDvL9zhNeCGq8zxTOACCLW6rSsOcyQOHkOYb9sx
-         F8/SqmCMoHA3Ha978UBWpraLhuwXMWaRgoC5HFiU=
+        b=N1oBJyDtxDOtbgZFMp/B0ZuxJH3OHcclouzYGnGa4dSH8HN3FtxSV/sQc2FwTEd4w
+         ADLw9aHArpJ8DKvDlahKTfOEO56v59ABF2ZHaE+l6HWIMwoXX8MoiT5R+a2jpaOJnZ
+         Y4guFtK26KreVrloNest3gcmgUwX9b8p5wXlYWo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 245/246] ACPI / video: Extend chassis-type detection with a "Lunch Box" check
-Date:   Thu,  4 Apr 2019 10:49:05 +0200
-Message-Id: <20190404084627.883273334@linuxfoundation.org>
+Subject: [PATCH 5.0 237/246] staging: iio: adt7316: fix dac_bits assignment
+Date:   Thu,  4 Apr 2019 10:48:57 +0200
+Message-Id: <20190404084627.589988870@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,45 +66,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d693c008e3ca04db5916ff72e68ce661888a913b ]
+[ Upstream commit e9de475723de5bf207a5b7b88bdca863393e42c8 ]
 
-Commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
-Win8-ready _desktops_") introduced chassis type detection, limiting the
-lcd_only check for the backlight to devices where the chassis-type
-indicates their is no builtin LCD panel.
+The value of dac_bits is used in adt7316_show_DAC() and adt7316_store_DAC(),
+and it should be either 8, 10, or 12 bits depending on the device in use. The
+driver currently only assigns a value to dac_bits in
+adt7316_store_da_high_resolution(). The purpose of the dac high resolution
+option is not to change dac resolution for normal operation. Instead, it
+is specific to an optional feature where one or two of the four dacs can
+be set to output voltage proportional to temperature. If the user chooses
+to set dac a and/or dac b to output voltage proportional to temperature,
+the da_high_resolution attribute can optionally be enabled to use 10 bit
+resolution rather than the default 8 bits. This is only available on the
+10 and 12 bit dac devices. If the user attempts to read or write dacs a
+or b under these settings, the driver's current behaviour is to return an
+error. Dacs c and d continue to operate normally under these conditions.
+With the above in mind, remove the dac_bits assignments from this function
+since the value of dac_bits as used in the driver is not dependent on this
+dac high resolution option.
 
-The purpose of the lcd_only check is to avoid advertising a backlight
-interface on desktops, since skylake and newer machines seem to always
-have a backlight interface even if there is no LCD panel. The limiting
-of this check to desktops only was done to avoid breaking backlight
-support on some laptops which do not have the lcd flag set.
+Since the dac_bits assignments discussed above are currently the only ones
+in this driver, the default value of dac_bits is 0. This results in incorrect
+calculations when the dacs are read or written in adt7316_show_DAC() and
+adt7316_store_DAC(). To correct this, assign a value to dac_bits in
+adt7316_probe() to ensure correct operation as soon as the device is
+registered and available to userspace.
 
-The Fujitsu ESPRIMO Q910 which is a compact (NUC like) desktop machine
-has a chassis type of 0x10 aka "Lunch Box". Without the lcd_only check
-we end up falsely advertising backlight/brightness control on this
-device. This commit extend the dmi_is_desktop check to return true
-for type 0x10 to fix this.
-
-Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
+Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/iio/addac/adt7316.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 1ab1460c4a4e..d73afb562ad9 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -2143,6 +2143,7 @@ static bool dmi_is_desktop(void)
- 	case 0x05: /* Pizza Box */
- 	case 0x06: /* Mini Tower */
- 	case 0x07: /* Tower */
-+	case 0x10: /* Lunch Box */
- 	case 0x11: /* Main Server Chassis */
- 		return true;
- 	}
+diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
+index dc93e85808e0..7839d869d25d 100644
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -651,17 +651,10 @@ static ssize_t adt7316_store_da_high_resolution(struct device *dev,
+ 	u8 config3;
+ 	int ret;
+ 
+-	chip->dac_bits = 8;
+-
+-	if (buf[0] == '1') {
++	if (buf[0] == '1')
+ 		config3 = chip->config3 | ADT7316_DA_HIGH_RESOLUTION;
+-		if (chip->id == ID_ADT7316 || chip->id == ID_ADT7516)
+-			chip->dac_bits = 12;
+-		else if (chip->id == ID_ADT7317 || chip->id == ID_ADT7517)
+-			chip->dac_bits = 10;
+-	} else {
++	else
+ 		config3 = chip->config3 & (~ADT7316_DA_HIGH_RESOLUTION);
+-	}
+ 
+ 	ret = chip->bus.write(chip->bus.client, ADT7316_CONFIG3, config3);
+ 	if (ret)
+@@ -2123,6 +2116,13 @@ int adt7316_probe(struct device *dev, struct adt7316_bus *bus,
+ 	else
+ 		return -ENODEV;
+ 
++	if (chip->id == ID_ADT7316 || chip->id == ID_ADT7516)
++		chip->dac_bits = 12;
++	else if (chip->id == ID_ADT7317 || chip->id == ID_ADT7517)
++		chip->dac_bits = 10;
++	else
++		chip->dac_bits = 8;
++
+ 	chip->ldac_pin = devm_gpiod_get_optional(dev, "adi,ldac", GPIOD_OUT_LOW);
+ 	if (IS_ERR(chip->ldac_pin)) {
+ 		ret = PTR_ERR(chip->ldac_pin);
 -- 
 2.19.1
 
