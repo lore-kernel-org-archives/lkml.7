@@ -2,25 +2,25 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43793C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38585C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA1A20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092012082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfDDQA2 (ORCPT
+        id S1729110AbfDDQA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 4 Apr 2019 12:00:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42708 "EHLO huawei.com"
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42716 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726888AbfDDQA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728159AbfDDQA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 12:00:27 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CB6438943CF24F2DBB85;
+        by Forcepoint Email with ESMTP id D3E89F261A06665AAF7B;
         Fri,  5 Apr 2019 00:00:23 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
@@ -34,12 +34,10 @@ CC:     <linux@roeck-us.net>, <linux-kernel@vger.kernel.org>,
         <andy.shevchenko@gmail.com>,
         <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
         <will.deacon@arm.com>, John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH v3 1/4] resource: Request IO port regions from children of ioport_resource
-Date:   Thu, 4 Apr 2019 23:59:59 +0800
-Message-ID: <1554393602-152448-2-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v3 0/4]  Fix system crash for accessing unmapped IO port regions
+Date:   Thu, 4 Apr 2019 23:59:58 +0800
+Message-ID: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
-References: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.75]
@@ -49,162 +47,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently request_region() requests an IO port region directly from the
-top resource, ioport_resource.
+It was reported some time ago that arm64 systems will crash if a driver
+attempts to access IO port addresses when the PCI IO port region has not
+been mapped [1].
 
-There is an issue here, in that drivers may successfully request an IO
-port region even if the IO port region has not even been mapped in
-(in pci_remap_iospace()).
+More recently, a similar crash is where the system PCI host probe fails,
+and the IPMI driver crashes the system while attempting to do some IO port
+accesses [2].
 
-This may lead to crashes when the system has no PCI host, or, has a host
-but it has failed enumeration, while drivers still attempt to access PCI
-IO ports, as below:
+This patchset attempts to keep the kernel alive in such situations by 2
+complementary methods:
+1. Rejecting IO port resource requests until PCI IO port regions have been
+mapped (in a pci_remap_iospace() call).
+2. Rejecting logic PIO access to PCI IO regions until, again, PCI IO port
+regions have been mapped
 
-root@(none)$root@(none)$ insmod f71882fg.ko
- Unable to handle kernel paging request at virtual address ffff7dfffee0002e
- Mem abort info:
-   ESR = 0x96000046
-   Exception class = DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000046
-   CM = 0, WnR = 1
- swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
- [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
- Internal error: Oops: 96000046 [#1] PREEMPT SMP
- Modules linked in: f71882fg(+)
- CPU: 8 PID: 2732 Comm: insmod Not tainted 5.1.0-rc1-00002-gab1a0e9200b8-dirty #102
- Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
- pstate: 80000005 (Nzcv daif -PAN -UAO)
- pc : logic_outb+0x54/0xb8
- lr : f71882fg_find+0x64/0x390 [f71882fg]
- sp : ffff000013393aa0
- x29: ffff000013393aa0 x28: ffff000008b98b10
- x27: ffff000013393df0 x26: 0000000000000100
- x25: ffff801f8c872d30 x24: ffff000011420000
- x23: ffff801fb49d2940 x22: ffff000011291000
- x21: 000000000000002e x20: 0000000000000087
- x19: ffff000013393b44 x18: ffffffffffffffff
- x17: 0000000000000000 x16: 0000000000000000
- x15: ffff00001127d6c8 x14: ffff801f8cfd691c
- x13: 0000000000000000 x12: 0000000000000000
- x11: 0000000000000003 x10: 0000801feace2000
- x9 : 0000000000000000 x8 : ffff841fa654f280
- x7 : 0000000000000000 x6 : 0000000000ffc0e3
- x5 : ffff000011291360 x4 : ffff801fb4949f00
- x3 : 0000000000ffbffe x2 : 76e767a63713d500
- x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
- Process insmod (pid: 2732, stack limit = 0x(____ptrval____))
- Call trace:
-  logic_outb+0x54/0xb8
-  f71882fg_find+0x64/0x390 [f71882fg]
-  f71882fg_init+0x38/0xc70 [f71882fg]
-  do_one_initcall+0x5c/0x198
-  do_init_module+0x54/0x1b0
-  load_module+0x1dc4/0x2158
-  __se_sys_init_module+0x14c/0x1e8
-  __arm64_sys_init_module+0x18/0x20
-  el0_svc_common+0x5c/0x100
-  el0_svc_handler+0x2c/0x80
-  el0_svc+0x8/0xc
- Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
- ---[ end trace fd4f35b610829a48 ]---
-Segmentation fault
-root@(none)$
+About 1:
+Currently the PCI IO port region is initialized to the full range,
+{0, IO_SPACE_LIMIT}. As such, any IO port region requests would not fail
+because of PCI IO port regions not being mapped.
 
-Note that the f71882fg driver correctly calls request_muxed_region().
+Patch 1/4 looks to remedy this issue by ensuring IO port requests are
+made to direct children of ioport_resource (PCI host IO port regions),
+similar to Arnd's solution, mentioned in [1]:
 
-This issue was originally reported in [1].
+"I see that ioport_resource gets initialized to the {0, IO_SPACE_LIMIT}
+range. If we could change it so that pci_remap_iospace() hooks up
+to ioport_resource and extends it whenever something gets mapped
+there up to IO_SPACE_LIMIT, we can change the default range to
+{0,0}, which would fail for any request_region call before the
+first pci_remap_iospace."
 
-This patch changes the functionality of request{muxed_}_region() to
-request a region from a direct child descendent of the top
-ioport_resource.
+I didn't use this solution, as logical PIO space is sparse in
+{0, IO_SPACE_LIMIT}, so we cannot simply grow the region.
 
-In this, if the IO port region has not been mapped for a particular IO
-region, the PCI IO resource would also not have been inserted, and so a
-suitable child region will not exist. As such,
-request_{muxed_}region() calls will fail.
+*As discussed with Bjorn in v2 series, we doubt that this approach is
+sound, as legacy ISA devices do not necessarily reply on PCI.*
 
-A side note: there are many drivers in the kernel which fail to even call
-request_{muxed_}region() prior to IO port accesses, and they also need to
-be fixed (to call request_{muxed_}region(), as appropriate) separately.
+However I will keep the patch in the series as a reference and as a topic
+of debate.
 
-[1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
+It's also an RFC as the implementation solution is not idea.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- include/linux/ioport.h | 11 ++++++++---
- kernel/resource.c      | 28 ++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+), 3 deletions(-)
+About 2:
+Some drivers - like f71805f hwmon driver - do not call
+request_{muxed_}region() prior to accessing IO port regions, as they
+should do.
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index da0ebaec25f0..76288b8783ff 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -217,15 +217,20 @@ static inline bool resource_contains(struct resource *r1, struct resource *r2)
- 
- 
- /* Convenience shorthand with allocation */
--#define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
--#define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
-+#define request_region(start, n, name)		__request_region_from_children(&ioport_resource, (start), (n), (name), 0)
-+#define request_muxed_region(start, n, name)	__request_region_from_children(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
- #define __request_mem_region(start,n,name, excl) __request_region(&iomem_resource, (start), (n), (name), excl)
- #define request_mem_region(start,n,name) __request_region(&iomem_resource, (start), (n), (name), 0)
- #define request_mem_region_exclusive(start,n,name) \
- 	__request_region(&iomem_resource, (start), (n), (name), IORESOURCE_EXCLUSIVE)
- #define rename_region(region, newname) do { (region)->name = (newname); } while (0)
- 
--extern struct resource * __request_region(struct resource *,
-+extern struct resource *__request_region(struct resource *,
-+					resource_size_t start,
-+					resource_size_t n,
-+					const char *name, int flags);
-+
-+extern struct resource *__request_region_from_children(struct resource *,
- 					resource_size_t start,
- 					resource_size_t n,
- 					const char *name, int flags);
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 92190f62ebc5..87ed200eda8b 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1097,6 +1097,34 @@ resource_size_t resource_alignment(struct resource *res)
- 
- static DECLARE_WAIT_QUEUE_HEAD(muxed_resource_wait);
- 
-+/**
-+ * __request_region_from_children - create a new busy region from a child
-+ * @parent: parent resource descriptor
-+ * @start: resource start address
-+ * @n: resource region size
-+ * @name: reserving caller's ID string
-+ * @flags: IO resource flags
-+ */
-+struct resource *__request_region_from_children(struct resource *parent,
-+						resource_size_t start,
-+						resource_size_t n,
-+						const char *name, int flags)
-+{
-+	struct resource *res = __request_region(parent, start, n, name, flags);
-+
-+	if (res && res->parent == parent) {
-+		/*
-+		 * This is a direct descendent of the parent, which is
-+		 * what we didn't want.
-+		 */
-+		__release_region(parent, start, n);
-+		res = NULL;
-+	}
-+
-+	return res;
-+}
-+EXPORT_SYMBOL(__request_region_from_children);
-+
- /**
-  * __request_region - create a new busy resource region
-  * @parent: parent resource descriptor
+So patches 2-3/4 adds a safeguard against this, in that unwarranted PIO IO
+accesses will be discarded in the low-level accessors.
+
+About the issue of f71805f driver not requesting the IO port region -
+many drivers do this, and need to be fixed up separately.
+
+1. https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
+2. https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/
+
+Differences to v2 patchset:
+https://lkml.org/lkml/2019/3/20/788
+- Add a patch to use logical PIO accessors for !CONFIG_INDIRECT_PIO
+- Some tidy-up according to Andy's review
+
+Differences to v1 patchset:
+https://lkml.org/lkml/2019/3/14/630
+- Drop f71805f fix - it can be done in a separate patchset
+- Change implementation in resource.c patch to check if parent of region
+  is ioport_resource
+- Add patch to fix some logic_pio.c prints
+
+John Garry (4):
+  resource: Request IO port regions from children of ioport_resource
+  lib: logic_pio: Use logical PIO low-level accessors for
+    !CONFIG_INDIRECT_PIO
+  lib: logic_pio: Reject accesses to unregistered CPU MMIO regions
+  lib: logic_pio: Fix up some prints
+
+ include/linux/ioport.h    |  11 ++-
+ include/linux/logic_pio.h |   7 +-
+ kernel/resource.c         |  28 +++++++
+ lib/logic_pio.c           | 157 +++++++++++++++++++++++++++++---------
+ 4 files changed, 159 insertions(+), 44 deletions(-)
+
 -- 
 2.17.1
 
