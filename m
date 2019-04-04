@@ -2,274 +2,508 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D12C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558C0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27CC206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 142CE206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:20:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pVyfIILp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbfDDSTz (ORCPT
+        id S1729728AbfDDSUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:19:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52170 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727310AbfDDSTz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:19:55 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34IGdJB007070
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 14:19:54 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rnncx4tuv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 14:19:53 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 4 Apr 2019 19:19:50 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Apr 2019 19:19:46 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34IJjTU20775084
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Apr 2019 18:19:45 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EBFCEB206A;
-        Thu,  4 Apr 2019 18:19:44 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE162B205F;
-        Thu,  4 Apr 2019 18:19:44 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Apr 2019 18:19:44 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7DDEC16C1D70; Thu,  4 Apr 2019 11:19:46 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 11:19:46 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>
-Subject: Re: [PATCH] Convert struct pid count to refcount_t
-Reply-To: paulmck@linux.ibm.com
-References: <20190404152314.GG14111@linux.ibm.com>
- <Pine.LNX.4.44L0.1904041138070.1288-100000@iolanthe.rowland.org>
- <20190404180842.GB183378@google.com>
+        Thu, 4 Apr 2019 14:20:05 -0400
+Received: from mail-eopbgr00043.outbound.protection.outlook.com ([40.107.0.43]:64390
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727310AbfDDSUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 14:20:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NoRPpeptFIV7BYaW8DXln3IENOwWVbGE8Q4/NQ3CqgE=;
+ b=pVyfIILpOkgOR2w7B1QZSEJMyaqUH4e1/+kMYObk+fyO2Sg1Rq2byCrrcV1Z9hCn3iwkstvY0ABG2Fd4/RAkLbOklIN1YAVAbpM2ADRg3ApT+WTIZC53XLfCLs04oDgOBUaeRUbvnbYyQsVf/qC7aKE+demmAi4M36HWKy2jo8U=
+Received: from AM6PR04MB5863.eurprd04.prod.outlook.com (20.179.1.11) by
+ AM6PR04MB4936.eurprd04.prod.outlook.com (20.177.33.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.20; Thu, 4 Apr 2019 18:20:00 +0000
+Received: from AM6PR04MB5863.eurprd04.prod.outlook.com
+ ([fe80::fc93:97ef:f27e:a9]) by AM6PR04MB5863.eurprd04.prod.outlook.com
+ ([fe80::fc93:97ef:f27e:a9%4]) with mapi id 15.20.1771.011; Thu, 4 Apr 2019
+ 18:20:00 +0000
+From:   Leo Li <leoyang.li@nxp.com>
+To:     Ioana Ciornei <ioana.ciornei@nxp.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Roy Pledge <roy.pledge@nxp.com>
+Subject: RE: [PATCH] soc: fsl: add DPAA2 console support
+Thread-Topic: [PATCH] soc: fsl: add DPAA2 console support
+Thread-Index: AQHU5AhknrBzPfGcyEqu6n1s2eiIeqYsXICg
+Date:   Thu, 4 Apr 2019 18:20:00 +0000
+Message-ID: <AM6PR04MB58632DC6480A51CEA6C3C2CC8F500@AM6PR04MB5863.eurprd04.prod.outlook.com>
+References: <1553627718-23714-1-git-send-email-ioana.ciornei@nxp.com>
+ <CADRPPNSPsRJEPW9uMNoDAEqYvKYPF2ybJX7a48rJJqap3nwOtw@mail.gmail.com>
+ <VI1PR0402MB28001287DEFB65FD29BE98E0E0500@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB28001287DEFB65FD29BE98E0E0500@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leoyang.li@nxp.com; 
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e7fdf8db-2fa5-425d-662c-08d6b92a265f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR04MB4936;
+x-ms-traffictypediagnostic: AM6PR04MB4936:
+x-microsoft-antispam-prvs: <AM6PR04MB4936A94642028DD74FC5B07F8F500@AM6PR04MB4936.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(396003)(366004)(136003)(346002)(13464003)(199004)(51914003)(189003)(3846002)(316002)(25786009)(5660300002)(6116002)(99286004)(256004)(229853002)(54906003)(14454004)(30864003)(66066001)(86362001)(6436002)(52536014)(14444005)(486006)(478600001)(81156014)(2906002)(6636002)(76176011)(26005)(7696005)(55016002)(74316002)(8936002)(53936002)(8676002)(71190400001)(476003)(97736004)(9686003)(7736002)(33656002)(6246003)(53546011)(81166006)(105586002)(4326008)(6862004)(106356001)(446003)(305945005)(186003)(102836004)(6506007)(11346002)(71200400001)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4936;H:AM6PR04MB5863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Gg7V3qJ5Nkdua2tthl0AWaRs2FMwmcirr4fmYd5NWx3h5qLclkbpwvrx4+O+v9FVBTQpjMXtK19rcQwx7IwmMBi0IzBu44/R/FXNiOSFY+GRfguA2uAgRR8oV9/3DdUF0f0A5OTFRB8pWPT8H31w6JJWIW6OwQ85Pyel5neQdkluXeSC4mfX42XHAMfRipbVDimft4dbXSJq2PEXAIydOEiIWBiZrIcofxcVlqCQcPaySmGy5X2s5HynjQCpY+wq2eYncNF3ryJ5FyvRtZlyz9DIwGHOjoHAftHzn36QxkaFfMZouqcwL/DD9dKtnvxP+FEICpV68rMqdKUy57x9jJhRRSgvxykE6ziS9+IstumvWsEeWndQNhNuUKPhFiuEDF6wQaeXXa+H1hvLiWdiIYQPVIQ/sqO+Y/WYAnGF/3w=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404180842.GB183378@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040418-2213-0000-0000-0000037178EA
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010873; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01184313; UDB=6.00620099; IPR=6.00965066;
- MB=3.00026298; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-04 18:19:49
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040418-2214-0000-0000-00005DE76509
-Message-Id: <20190404181946.GJ14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904040115
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7fdf8db-2fa5-425d-662c-08d6b92a265f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 18:20:00.2594
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4936
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 02:08:42PM -0400, Joel Fernandes wrote:
-> Thanks a lot Paul and Allen, I replied below.
-> 
-> On Thu, Apr 04, 2019 at 12:01:32PM -0400, Alan Stern wrote:
-> > On Thu, 4 Apr 2019, Paul E. McKenney wrote:
-> > 
-> > > On Mon, Apr 01, 2019 at 05:11:39PM -0400, Joel Fernandes wrote:
-> > 
-> > > > > > So I would have expected the following litmus to result in Never, but it
-> > > > > > doesn't with Alan's patch:
-> > > > > > 
-> > > > > > P0(int *x, int *y)
-> > > > > > {
-> > > > > > 	*x = 1;
-> > > > > > 	smp_mb();
-> > > > > > 	*y = 1;
-> > > > > > }
-> > > > > > 
-> > > > > > P1(int *x, int *y)
-> > > > > > {
-> > > > > > 	int r1;
-> > > > > > 
-> > > > > > 	r1 = READ_ONCE(*y);
-> > > > > > 	if (r1)
-> > > > > > 		WRITE_ONCE(*x, 2);
-> > > > > > }
-> > > > > > 
-> > > > > > exists (1:r1=1 /\ ~x=2)
-> > > > > 
-> > > > > The problem is that the compiler can turn both of P0()'s writes into reads:
-> > > > > 
-> > > > > P0(int *x, int *y)
-> > > > > {
-> > > > > 	if (*x != 1)
-> > > > > 		*x = 1;
-> > > > > 	smp_mb();
-> > > > > 	if (*y != 1)
-> > > > > 		*y = 1;
-> > > > > }
-> > > > > 
-> > > > > These reads will not be ordered by smp_wmb(), so you have to do WRITE_ONCE()
-> > > > > to get an iron-clad ordering guarantee.
-> > > > 
-> > > > But the snippet above has smp_mb() which does order writes, even for the
-> > > > plain accesses.
-> > > 
-> > > True, but that code has a data race, namely P0()'s plain write to y
-> > > races with P1()'s READ_ONCE().  Data races give the compiler absolutely
-> > > astonishing levels of freedom to rearrange your code.  So, if you
-> > > as a developer or maintainer choose to have data races, it is your
-> > > responsibility to ensure that the compiler cannot mess you up.  So what
-> > > you should do in that case is to list the transformed code the compiler's
-> > > optimizations can produce and feed the corresponding litmus tests to LKMM,
-> > > using READ_ONCE() and WRITE_ONCE() for the post-optimization accesses.
-> > 
-> > In this case, I strongly suspect the compiler would not mess up the
-> > code badly enough to allow the unwanted end result.  But the LKMM tries
-> > to avoid making strong assumptions about what compilers will or will
-> > not do.
-> 
-> Here I was just trying to understand better how any kind of code
-> transformation can cause an issue. Certainly I can see an issue if the
-> compiler uses the memory location as a temporary variable as Paul pointed, to
-> which I agree that a WRITE_ONCE is better. I am in favor of being careful,
-> but here I was just trying to understand this better.
-> 
-> > > > I understand. Are we talking about load/store tearing being the issue here?
-> > > > Even under load/store tearing, I feel the program will produce correct
-> > > > results because r1 is either 0 or 1 (a single bit cannot be torn).
-> > > 
-> > > The compiler can (at least in theory) also transform *y = 1 as follows:
-> > > 
-> > > 	*y = r1; /* Use *y as temporary storage. */
-> > > 	do_something();
-> > > 	r1 = *y;
-> > > 	*y = 1;
-> > > 
-> > > Here r1 is some register and do_something() is an inline function visible
-> > > to the compiler (hence not implying barrier() upon call and return).
-> > > 
-> > > I don't know of any compilers that actually do this, but for me use
-> > > of WRITE_ONCE() is a small price to pay to prevent all past, present,
-> > > and future compiler from ever destroying^W optimizing my code in this way.
-> > > 
-> > > In your own code, if you dislike WRITE_ONCE() so much that you are willing
-> > > to commit to (now and forever!!!) checking all applicable versions of
-> > > compilers to make sure that they don't do this, well and good, knock
-> > > yourself out.  But it is your responsibility to do that checking, and you
-> > > can attest to LKMM that you have done so by giving LKMM litmus tests that
-> > > substitute WRITE_ONCE() for that plain C-language assignment statement.
-> > 
-> > Remember that the LKMM does not produce strict bounds.  That is, the
-> > LKMM will say that some outcomes are allowed even though no existing
-> > compiler/CPU combination would ever actually produce them.  This litmus
-> > test is an example.
-> 
-> Ok.
-> 
-> > > > Further, from the herd simulator output (below), according to the "States",
-> > > > r1==1 means P1() AFAICS would have already finished the the read and set the
-> > > > r1 register to 1.  Then I am wondering why it couldn't take the branch to set
-> > > > *x to 2.  According to herd, r1 == 1 AND x == 1 is a perfectly valid state
-> > > > for the below program. I still couldn't see in my mind how for the below
-> > > > program, this is possible - in terms of compiler optimizations or other kinds
-> > > > of ordering. Because there is a smp_mb() between the 2 plain writes in P0()
-> > > > and P1() did establish that r1 is 1 in the positive case. :-/.  I am surely
-> > > > missing something :-)
-> > > > 
-> > > > ---8<-----------------------
-> > > > C Joel-put_pid
-> > > > 
-> > > > {}
-> > > > 
-> > > > P0(int *x, int *y)
-> > > > {
-> > > > 	*x = 1;
-> > > > 	smp_mb();
-> > > > 	*y = 1;
-> > > > }
-> > > > 
-> > > > P1(int *x, int *y)
-> > > > {
-> > > > 	int r1;
-> > > > 
-> > > > 	r1 = READ_ONCE(*y);
-> > > > 	if (r1)
-> > > > 		WRITE_ONCE(*x, 2);
-> > > > }
-> > > > 
-> > > > exists (1:r1=1 /\ ~x=2)
-> > > > 
-> > > > ---8<-----------------------
-> > > > Output:
-> > > > 
-> > > > Test Joel-put_pid Allowed
-> > > > States 3
-> > > > 1:r1=0; x=1;
-> > > > 1:r1=1; x=1;	<-- Can't figure out why r1=1 and x != 2 here.
-> > > 
-> > > I must defer to Alan on this, but my guess is that this is due to
-> > > the fact that there is a data race.
-> > 
-> > Yes, and because the plain-access/data-race patch for the LKMM was
-> > intended only to detect data races, not to be aware of all the kinds of
-> > ordering that plain accesses can induce.  I said as much at the start
-> > of the patch's cover letter and it bears repeating.
-> > 
-> > In this case it is certainly true that the "*x = 1" write must be
-> > complete before the value of *y is changed from 0.  Hence P1's
-> > WRITE_ONCE will certainly overwrite the 1 with 2, and the final value
-> > of *x will be 2 if r1=1.
-> > 
-> > But the notion of "visibility" of a write that I put into the LKMM
-> > patch only allows for chains of marked accesses.  Since "*y = 1" is a
-> > plain access, the model does not recognize that it can enforce the
-> > ordering between the two writes to *x.
-> > 
-> > Also, you must remember, the LKMM's prediction about whether an outcome
-> > will or will not occur are meaningless if a data race is present.  
-> > Therefore the most fundamental the answer to why the "1:r1=1; x=1;"  
-> > line is there is basically what Paul said: It's there because the
-> > herd model gets completely messed up by data races.
-> 
-> Makes sense to me. Thanks for the good work on this.
-> 
-> FWIW, thought to mention (feel free ignore the suggestion if its
-> meaningless): If there is any chance that the outcome can be better
-> outputted, like r1=X; x=1; Where X stands for the result of a data race, that
-> would be lovely.  I don't know much about herd internals (yet) to say if the
-> suggestion makes sense but as a user, it would certainly help reduce
-> confusion.
 
-The "Flag data-race" that appeared in the herd output is your friend in
-this case.  If you see that in the output, that means that herd detected
-a data race, and the states output might or might not be reliable.
 
-							Thanx, Paul
+> -----Original Message-----
+> From: Ioana Ciornei
+> Sent: Thursday, April 4, 2019 5:48 AM
+> To: Leo Li <leoyang.li@nxp.com>
+> Cc: linux-kernel@vger.kernel.org; Roy Pledge <roy.pledge@nxp.com>
+> Subject: Re: [PATCH] soc: fsl: add DPAA2 console support
+>=20
+> On 4/3/19 10:55 PM, Li Yang wrote:
+> > On Tue, Mar 26, 2019 at 2:17 PM Ioana Ciornei <ioana.ciornei@nxp.com>
+> wrote:
+> >>
+> >> This patch adds DPAA2 MC and AIOP console log support.
+> >>
+> >> The platform driver probes on the "fsl,dpaa2-console" device tree
+> >> node which describes the base firmware address needed in order to
+> >> infer the start address of both firmware logs: MC and AIOP.
+> >> It then exports two misc char devices which can be used to dump the
+> >> needed logs.
+> >>
+> >> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> >> Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+> >> ---
+> >>   drivers/soc/fsl/Kconfig         |  10 ++
+> >>   drivers/soc/fsl/Makefile        |   1 +
+> >>   drivers/soc/fsl/dpaa2-console.c | 306
+> ++++++++++++++++++++++++++++++++++++++++
+> >>   3 files changed, 317 insertions(+)
+> >>   create mode 100644 drivers/soc/fsl/dpaa2-console.c
+> >>
+> >> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig index
+> >> 61f8e1433d0a..9fe8222c3968 100644
+> >> --- a/drivers/soc/fsl/Kconfig
+> >> +++ b/drivers/soc/fsl/Kconfig
+> >> @@ -29,4 +29,14 @@ config FSL_MC_DPIO
+> >>            other DPAA2 objects. This driver does not expose the DPIO
+> >>            objects individually, but groups them under a service layer
+> >>            API.
+> >> +
+> >> +config DPAA2_CONSOLE
+> >> +       tristate "QorIQ DPAA2 console driver"
+> >> +       depends on OF && (ARCH_LAYERSCAPE || (COMPILE_TEST && (ARM
+> ||
+> >> +ARM64 || X86_LOCAL_APIC || PPC)))
+> >
+> > I don't know why FSL_MC driver added there architectures dependency
+> > for COMPILE_TEST, but is this driver also only buildable on these
+> > architectures?  Can we really just remove these dependencies?
+> >
+>=20
+> The initial reasoning behind the dependency on the COMPILE_TEST config
+> was to catch early build problems on any build configuration.
+> And yes, the dpaa2-console can be compiled without a problem on these
+> architectures.
+>=20
+> In this case, I would suggest to leave the dependencies as they are but i=
+f you
+> want I can also remove them.
+
+Can we keep the COMPILE_TEST and remove the (ARM || ARM64 || X86_LOCAL_APIC=
+ || PPC) if we are not using any architecture specific stuff?
+
+>=20
+> >> +       default y
+> >> +       help
+> >> +         Console driver for DPAA2 platforms. Exports 2 char devices,
+> >> +         /dev/dpaa2_mc_console and /dev/dpaa2_aiop_console,
+> >> +         which can be used to dump the Management Complex and AIOP
+> >> +         firmware logs.
+> >>   endmenu
+> >> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+> >> index 803ef1bfb5ff..57762c9fc7da 100644
+> >> --- a/drivers/soc/fsl/Makefile
+> >> +++ b/drivers/soc/fsl/Makefile
+> >> @@ -7,3 +7,4 @@ obj-$(CONFIG_QUICC_ENGINE)              +=3D qe/
+> >>   obj-$(CONFIG_CPM)                      +=3D qe/
+> >>   obj-$(CONFIG_FSL_GUTS)                 +=3D guts.o
+> >>   obj-$(CONFIG_FSL_MC_DPIO)              +=3D dpio/
+> >> +obj-$(CONFIG_DPAA2_CONSOLE)            +=3D dpaa2-console.o
+> >> diff --git a/drivers/soc/fsl/dpaa2-console.c
+> >> b/drivers/soc/fsl/dpaa2-console.c new file mode 100644 index
+> >> 000000000000..21a5e121f87b
+> >> --- /dev/null
+> >> +++ b/drivers/soc/fsl/dpaa2-console.c
+> >> @@ -0,0 +1,306 @@
+> >> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> >
+> > Probably good to have a one-line description of the driver?
+>=20
+> Will add one in the next version.
+>=20
+> >
+> >> +/* Copyright 2015-2016 Freescale Semiconductor Inc.
+> >> + * Copyright 2018 NXP
+> >> + */
+> >> +
+> >> +#define pr_fmt(fmt) "dpaa2-console: " fmt
+> >> +
+> >> +#include <linux/module.h>
+> >> +#include <linux/of_device.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/miscdevice.h>
+> >> +#include <linux/uaccess.h>
+> >> +#include <linux/slab.h>
+> >> +#include <linux/fs.h>
+> >> +#include <linux/io.h>
+> >> +
+> >> +MODULE_LICENSE("Dual BSD/GPL");
+> >> +MODULE_AUTHOR("Roy Pledge <roy.pledge@nxp.com>");
+> >> +MODULE_DESCRIPTION("DPAA2 console driver");
+> >
+> > These normally go to the bottom of a driver.
+>=20
+> Will move them.
+>=20
+> >
+> >> +
+> >> +/* MC firmware base low/high registers indexes */ #define
+> >> +MCFBALR_OFFSET 0 #define MCFBAHR_OFFSET 1
+> >> +
+> >> +/* Bit masks used to get the most/least significant part of the MC
+> >> +base addr */ #define MC_FW_ADDR_MASK_HIGH 0x1FFFF #define
+> >> +MC_FW_ADDR_MASK_LOW  0xE0000000
+> >> +
+> >> +#define MC_BUFFER_OFFSET 0x01000000
+> >> +#define MC_BUFFER_SIZE   (1024 * 1024 * 16)
+> >> +#define MC_OFFSET_DELTA  MC_BUFFER_OFFSET
+> >> +
+> >> +#define AIOP_BUFFER_OFFSET 0x06000000
+> >> +#define AIOP_BUFFER_SIZE   (1024 * 1024 * 16)
+> >> +#define AIOP_OFFSET_DELTA  0
+> >> +
+> >> +#define LOG_HEADER_FLAG_BUFFER_WRAPAROUND 0x80000000
+> #define
+> >> +LAST_BYTE(a) ((a) & ~(LOG_HEADER_FLAG_BUFFER_WRAPAROUND))
+> >> +
+> >> +/* MC and AIOP Magic words */
+> >> +#define MAGIC_MC   0x4d430100
+> >> +#define MAGIC_AIOP 0x41494F50
+> >> +
+> >> +struct log_header {
+> >> +       __le32 magic_word;
+> >> +       char reserved[4];
+> >> +       __le32 buf_start;
+> >> +       __le32 buf_length;
+> >> +       __le32 last_byte;
+> >> +};
+> >> +
+> >> +struct console_data {
+> >> +       char *map_addr;
+> >> +       struct log_header *hdr;
+> >> +       char *start_addr;
+> >> +       char *end_addr;
+> >> +       char *end_of_data;
+> >> +       char *cur_ptr;
+> >> +};
+> >> +
+> >> +struct resource mc_base_addr;
+> >> +
+> >> +static inline void adjust_end(struct console_data *cd) {
+> >> +       u32 last_byte =3D readl(&cd->hdr->last_byte);
+> >> +
+> >> +       cd->end_of_data =3D cd->start_addr + LAST_BYTE(last_byte); }
+> >> +
+> >> +static u64 get_mc_fw_base_address(void) {
+> >> +       u64 mcfwbase =3D 0ULL;
+> >> +       u32 *mcfbaregs;
+> >> +
+> >> +       mcfbaregs =3D (u32 *)ioremap(mc_base_addr.start,
+> >> +                                  resource_size(&mc_base_addr));
+> >> +       if (!mcfbaregs) {
+> >> +               pr_err("could not map MC Firmaware Base registers\n");
+> >> +               return -EIO;
+> >> +       }
+> >> +
+> >> +       mcfwbase  =3D readl(mcfbaregs + MCFBAHR_OFFSET) &
+> MC_FW_ADDR_MASK_HIGH;
+> >> +       mcfwbase <<=3D 32;
+> >> +       mcfwbase |=3D readl(mcfbaregs + MCFBALR_OFFSET) &
+> MC_FW_ADDR_MASK_LOW;
+> >> +       iounmap(mcfbaregs);
+> >> +
+> >> +       pr_debug("MC base address at 0x%016llx\n", mcfwbase);
+> >> +       return mcfwbase;
+> >> +}
+> >> +
+> >> +static ssize_t dpaa2_console_size(struct console_data *cd) {
+> >> +       ssize_t size;
+> >> +
+> >> +       if (cd->cur_ptr <=3D cd->end_of_data)
+> >> +               size =3D cd->end_of_data - cd->cur_ptr;
+> >> +       else
+> >> +               size =3D (cd->end_addr - cd->cur_ptr) +
+> >> +                       (cd->end_of_data - cd->start_addr);
+> >> +
+> >> +       return size;
+> >> +}
+> >> +
+> >> +static int dpaa2_generic_console_open(struct inode *node, struct file=
+ *fp,
+> >> +                                     u64 offset, u64 size,
+> >> +                                     u32 expected_magic,
+> >> +                                     u32 offset_delta) {
+> >> +       u32 read_magic, wrapped, last_byte, buf_start, buf_length;
+> >> +       struct console_data *cd;
+> >> +       u64 base_addr;
+> >> +       int err;
+> >> +
+> >> +       cd =3D kmalloc(sizeof(*cd), GFP_KERNEL);
+> >> +       if (!cd)
+> >> +               return -ENOMEM;
+> >> +
+> >> +       base_addr =3D get_mc_fw_base_address();
+> >> +       if (base_addr < 0)
+> >
+> > We are leaking cd structure here.
+>=20
+> Ugh, that's right. Will fix.
+>=20
+> >
+> >> +               return -EIO;
+> >> +
+> >> +       cd->map_addr =3D ioremap(base_addr + offset, size);
+> >> +       if (!cd->map_addr) {
+> >> +               pr_err("cannot map console log memory\n");
+> >> +               err =3D -EIO;
+> >> +               goto err_ioremap;
+> >> +       }
+> >> +
+> >> +       cd->hdr =3D (struct log_header *)cd->map_addr;
+> >> +       read_magic =3D readl(&cd->hdr->magic_word);
+> >> +       last_byte =3D readl(&cd->hdr->last_byte);
+> >> +       buf_start =3D readl(&cd->hdr->buf_start);
+> >> +       buf_length =3D readl(&cd->hdr->buf_length);
+> >> +
+> >> +       if (read_magic !=3D expected_magic) {
+> >> +               pr_warn("expected =3D %08x, read =3D %08x\n",
+> >> +                       expected_magic, read_magic);
+> >> +               err =3D -EIO;
+> >> +               goto err_magic;
+> >> +       }
+> >> +
+> >> +       cd->start_addr =3D cd->map_addr + buf_start - offset_delta;
+> >> +       cd->end_addr =3D cd->start_addr + buf_length;
+> >> +
+> >> +       wrapped =3D last_byte & LOG_HEADER_FLAG_BUFFER_WRAPAROUND;
+> >> +
+> >> +       adjust_end(cd);
+> >> +       if (wrapped && cd->end_of_data !=3D cd->end_addr)
+> >> +               cd->cur_ptr =3D cd->end_of_data + 1;
+> >> +       else
+> >> +               cd->cur_ptr =3D cd->start_addr;
+> >> +
+> >> +       fp->private_data =3D cd;
+> >> +
+> >> +       return 0;
+> >> +
+> >> +err_magic:
+> >> +       iounmap(cd->map_addr);
+> >> +
+> >> +err_ioremap:
+> >> +       kfree(cd);
+> >> +
+> >> +       return err;
+> >> +}
+> >> +
+> >> +static int dpaa2_mc_console_open(struct inode *node, struct file
+> >> +*fp) {
+> >> +       return dpaa2_generic_console_open(node, fp,
+> >> +                                         MC_BUFFER_OFFSET, MC_BUFFER_=
+SIZE,
+> >> +                                         MAGIC_MC, MC_OFFSET_DELTA);
+> >> +}
+> >> +
+> >> +static int dpaa2_aiop_console_open(struct inode *node, struct file
+> >> +*fp) {
+> >> +       return dpaa2_generic_console_open(node, fp,
+> >> +                                         AIOP_BUFFER_OFFSET, AIOP_BUF=
+FER_SIZE,
+> >> +                                         MAGIC_AIOP,
+> >> +AIOP_OFFSET_DELTA); }
+> >> +
+> >> +static int dpaa2_console_close(struct inode *node, struct file *fp)
+> >> +{
+> >> +       struct console_data *cd =3D fp->private_data;
+> >> +
+> >> +       iounmap(cd->map_addr);
+> >> +       kfree(cd);
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static ssize_t dpaa2_console_read(struct file *fp, char __user *buf,
+> >> +                                 size_t count, loff_t *f_pos) {
+> >> +       struct console_data *cd =3D fp->private_data;
+> >> +       size_t bytes =3D dpaa2_console_size(cd);
+> >> +       size_t bytes_end =3D cd->end_addr - cd->cur_ptr;
+> >> +       size_t written =3D 0;
+> >> +
+> >> +       /* Check if we need to adjust the end of data addr */
+> >> +       adjust_end(cd);
+> >> +
+> >> +       if (cd->end_of_data =3D=3D cd->cur_ptr)
+> >> +               return 0;
+> >> +
+> >> +       if (count < bytes)
+> >> +               bytes =3D count;
+> >> +
+> >> +       if (bytes > bytes_end) {
+> >> +               if (copy_to_user(buf, cd->cur_ptr, bytes_end))
+> >> +                       return -EFAULT;
+> >> +               buf +=3D bytes_end;
+> >> +               cd->cur_ptr =3D cd->start_addr;
+> >> +               bytes -=3D bytes_end;
+> >> +               written +=3D bytes_end;
+> >> +       }
+> >> +
+> >> +       if (copy_to_user(buf, cd->cur_ptr, bytes))
+> >> +               return -EFAULT;
+> >> +       cd->cur_ptr +=3D bytes;
+> >> +       written +=3D bytes;
+> >> +
+> >> +       return written;
+> >> +}
+> >> +
+> >> +static const struct file_operations dpaa2_mc_console_fops =3D {
+> >> +       .owner          =3D THIS_MODULE,
+> >> +       .open           =3D dpaa2_mc_console_open,
+> >> +       .release        =3D dpaa2_console_close,
+> >> +       .read           =3D dpaa2_console_read,
+> >> +};
+> >> +
+> >> +static struct miscdevice dpaa2_mc_console_dev =3D {
+> >> +       .minor =3D MISC_DYNAMIC_MINOR,
+> >> +       .name =3D "dpaa2_mc_console",
+> >> +       .fops =3D &dpaa2_mc_console_fops };
+> >> +
+> >> +static const struct file_operations dpaa2_aiop_console_fops =3D {
+> >> +       .owner          =3D THIS_MODULE,
+> >> +       .open           =3D dpaa2_aiop_console_open,
+> >> +       .release        =3D dpaa2_console_close,
+> >> +       .read           =3D dpaa2_console_read,
+> >> +};
+> >> +
+> >> +static struct miscdevice dpaa2_aiop_console_dev =3D {
+> >> +       .minor =3D MISC_DYNAMIC_MINOR,
+> >> +       .name =3D "dpaa2_aiop_console",
+> >> +       .fops =3D &dpaa2_aiop_console_fops };
+> >> +
+> >> +static int dpaa2_console_probe(struct platform_device *pdev) {
+> >> +       int error;
+> >> +
+> >> +       error =3D of_address_to_resource(pdev->dev.of_node, 0,
+> &mc_base_addr);
+> >> +       if (error < 0) {
+> >> +               pr_err("of_address_to_resource() failed for %pOF with =
+%d\n",
+> >> +                      pdev->dev.of_node, error);
+> >> +               return error;
+> >> +       }
+> >> +
+> >> +       error =3D misc_register(&dpaa2_mc_console_dev);
+> >> +       if (error) {
+> >> +               pr_err("dpaa2-console: cannot register device %s\n",
+> >> +                      dpaa2_mc_console_dev.name);
+> >
+> > The pr_fmt already have the dpaa2-console prefix.
+> >
+> >> +               goto err_register_mc;
+> >> +       }
+> >> +
+> >> +       error =3D misc_register(&dpaa2_aiop_console_dev);
+> >> +       if (error) {
+> >> +               pr_err("dpaa2-console: cannot register device %s\n",
+> >> +                      dpaa2_aiop_console_dev.name);
+> >
+> > The pr_fmt already have the dpaa2-console prefix.
+> >
+>=20
+>=20
+> Yep, will remove the duplicate "dpaa2-console" prefix.
+>=20
+> Thanks for the review,
+> Ioana C
+>=20
+>=20
+> >> +               goto err_register_aiop;
+> >> +       }
+> >> +
+> >> +       return 0;
+> >> +
+> >> +err_register_aiop:
+> >> +       misc_deregister(&dpaa2_mc_console_dev);
+> >> +err_register_mc:
+> >> +       return error;
+> >> +}
+> >> +
+> >> +static int dpaa2_console_remove(struct platform_device *pdev) {
+> >> +       misc_deregister(&dpaa2_mc_console_dev);
+> >> +       misc_deregister(&dpaa2_aiop_console_dev);
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static const struct of_device_id dpaa2_console_match_table[] =3D {
+> >> +       { .compatible =3D "fsl,dpaa2-console",},
+> >> +       {},
+> >> +};
+> >> +
+> >> +MODULE_DEVICE_TABLE(of, dpaa2_console_match_table);
+> >> +
+> >> +static struct platform_driver dpaa2_console_driver =3D {
+> >> +       .driver =3D {
+> >> +                  .name =3D "dpaa2-console",
+> >> +                  .pm =3D NULL,
+> >> +                  .of_match_table =3D dpaa2_console_match_table,
+> >> +                  },
+> >> +       .probe =3D dpaa2_console_probe,
+> >> +       .remove =3D dpaa2_console_remove, };
+> >> +module_platform_driver(dpaa2_console_driver);
+> >> --
+> >> 1.9.1
+> >>
+> >
 
