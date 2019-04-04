@@ -2,59 +2,51 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E177C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8B3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D15206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8055206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371552;
-	bh=khffCaXlBhpBIYtc3FYCv/JQC6N0wooRn0c43PdfCzU=;
+	s=default; t=1554371561;
+	bh=5hcjtEEmpH1EQNS0SQzfJcNAnlI52V0TXLUjfXddeJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNkSggGPcLEGTPXCBrjB6btUsGsVJGlP7/LlDFdPSk3Y3AasymU4Q2NNA0p+0cBda
-	 Dd/kDky5QWeeoSHoHXDmEqzX/D9VR81bbAK4r2s1/oUbTqhkiIU/4gz0ZIdvM9dPwg
-	 JWpfji+PE4Hf8be3sCJwIN2vChaYzJ2Pjk34PT0g=
+	b=ncZzsmU5HLVeyDQXrJkSQH/Fl85EMw+SEKNPLIN7hXL1AM/jT8ZQ11n4rnj0DR/qS
+	 vmFdHVB0DyiD5lwZOF8GHCzz3dStXoco2ohqQchpESqNxHJQrvgC4PBWzKZtGGwQth
+	 clZKULK86z4QikD9WUwnE03Uq7f9d7zwa1DCeOjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfDDJwa (ORCPT
+        id S1730447AbfDDJwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:52:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729964AbfDDIyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:10 -0400
+        id S1729928AbfDDIxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6228020882;
-        Thu,  4 Apr 2019 08:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E25B1217D7;
+        Thu,  4 Apr 2019 08:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368049;
-        bh=khffCaXlBhpBIYtc3FYCv/JQC6N0wooRn0c43PdfCzU=;
+        s=default; t=1554368034;
+        bh=5hcjtEEmpH1EQNS0SQzfJcNAnlI52V0TXLUjfXddeJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/NfVjCfYuxfSjkArXCR1gXnPUMzQ9ZOr7UlH8A7TkabvE+ZmYgL53Jsy3jpbgbDg
-         6UpbRv43MkcUDeNQf9up494ZC5p6vamuZ6VXri2vLK+tg2f26GLIKf6YvyYR13PIM8
-         YlXgtx6o55MtlOcqoJyjbykrbCvTQ6iTpfqePdlU=
+        b=OnM+4tLGf04Wvt9SU0WJ62PhKZBdO3sdnQVtbLc0HsH1gNpu4VEcYMec9CExRlNjU
+         o+BEv/clZ5iAZiI39K+P9wZm8MSkKQCKF/n6uo0cswmFAZ5Z1N0oXXWh+NpvXYjALc
+         YXT6fr2wOCwgPniu5CHwsB65P/XImbfD0l6uzfIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nageswara R Sastry <nasastry@in.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 019/121] perf c2c: Fix c2c report for empty numa node
-Date:   Thu,  4 Apr 2019 10:46:47 +0200
-Message-Id: <20190404084546.404735244@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
+        Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH 4.14 005/121] tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped
+Date:   Thu,  4 Apr 2019 10:46:33 +0200
+Message-Id: <20190404084545.545529341@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -73,63 +65,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e34c940245437f36d2c492edd1f8237eff391064 ]
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-Ravi Bangoria reported that we fail with an empty NUMA node with the
-following message:
+commit 69646d7a3689fbe1a65ae90397d22ac3f1b8d40f upstream.
 
-  $ lscpu
-  NUMA node0 CPU(s):
-  NUMA node1 CPU(s):   0-4
+In half-duplex operation, RX should be started after TX completes.
 
-  $ sudo ./perf c2c report
-  node/cpu topology bugFailed setup nodes
+If DMA is used, there is a case when the DMA transfer completes but the
+TX FIFO is not emptied, so the RX cannot be restarted just yet.
 
-Fix this by detecting the empty node and keeping its CPU set empty.
+Use a boolean variable to store this state and rearm TX interrupt mask
+to be signaled again that the transfer finished. In interrupt transmit
+handler this variable is used to start RX. A warning message is generated
+if RX is activated before TX fifo is cleared.
 
-Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190305152536.21035-2-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable
+RX after TX is done")
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/builtin-c2c.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/tty/serial/atmel_serial.c |   24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index fb76423022e8..32e64a8a6443 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -1935,6 +1935,12 @@ static int setup_nodes(struct perf_session *session)
- 		if (!set)
- 			return -ENOMEM;
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -176,6 +176,8 @@ struct atmel_uart_port {
+ 	unsigned int		pending_status;
+ 	spinlock_t		lock_suspended;
  
-+		nodes[node] = set;
++	bool			hd_start_rx;	/* can start RX during half-duplex operation */
 +
-+		/* empty node, skip */
-+		if (cpu_map__empty(map))
-+			continue;
-+
- 		for (cpu = 0; cpu < map->nr; cpu++) {
- 			set_bit(map->map[cpu], set);
- 
-@@ -1943,8 +1949,6 @@ static int setup_nodes(struct perf_session *session)
- 
- 			cpu2node[map->map[cpu]] = node;
- 		}
--
--		nodes[node] = set;
+ #ifdef CONFIG_PM
+ 	struct {
+ 		u32		cr;
+@@ -812,8 +814,13 @@ static void atmel_complete_tx_dma(void *
+ 	if (!uart_circ_empty(xmit))
+ 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
+ 	else if (atmel_uart_is_half_duplex(port)) {
+-		/* DMA done, stop TX, start RX for RS485 */
+-		atmel_start_rx(port);
++		/*
++		 * DMA done, re-enable TXEMPTY and signal that we can stop
++		 * TX and start RX for RS485
++		 */
++		atmel_port->hd_start_rx = true;
++		atmel_uart_writel(port, ATMEL_US_IER,
++				  atmel_port->tx_done_mask);
  	}
  
- 	setup_nodes_header();
--- 
-2.19.1
-
+ 	spin_unlock_irqrestore(&port->lock, flags);
+@@ -1258,9 +1265,20 @@ atmel_handle_transmit(struct uart_port *
+ 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+ 
+ 	if (pending & atmel_port->tx_done_mask) {
+-		/* Either PDC or interrupt transmission */
+ 		atmel_uart_writel(port, ATMEL_US_IDR,
+ 				  atmel_port->tx_done_mask);
++
++		/* Start RX if flag was set and FIFO is empty */
++		if (atmel_port->hd_start_rx) {
++			if (!(atmel_uart_readl(port, ATMEL_US_CSR)
++					& ATMEL_US_TXEMPTY))
++				dev_warn(port->dev, "Should start RX, but TX fifo is not empty\n");
++
++			atmel_port->hd_start_rx = false;
++			atmel_start_rx(port);
++			return;
++		}
++
+ 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
+ 	}
+ }
 
 
