@@ -3,29 +3,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964B7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B639CC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3FF20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8870020882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfDDHxu (ORCPT
+        id S1727370AbfDDHx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:53:50 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43855 "EHLO
+        Thu, 4 Apr 2019 03:53:57 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43866 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDDHxt (ORCPT
+        with ESMTP id S1726031AbfDDHx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:53:49 -0400
+        Thu, 4 Apr 2019 03:53:57 -0400
 Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hBxBB-0000UO-Aj; Thu, 04 Apr 2019 09:52:57 +0200
-Date:   Thu, 4 Apr 2019 09:52:56 +0200 (CEST)
+        id 1hBxBV-0000WH-Bj; Thu, 04 Apr 2019 09:53:17 +0200
+Date:   Thu, 4 Apr 2019 09:53:16 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Steven Rostedt <rostedt@goodmis.org>
 cc:     linux-kernel@vger.kernel.org,
@@ -56,11 +56,11 @@ cc:     linux-kernel@vger.kernel.org,
         linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
         linux-xtensa@linux-xtensa.org
-Subject: Re: [PATCH 5/6 v3] syscalls: Remove start and number from
- syscall_get_arguments() args
-In-Reply-To: <20190401134421.278590567@goodmis.org>
-Message-ID: <alpine.DEB.2.21.1904040952280.1833@nanos.tec.linutronix.de>
-References: <20190401134104.676620247@goodmis.org> <20190401134421.278590567@goodmis.org>
+Subject: Re: [PATCH 6/6 v3] syscalls: Remove start and number from
+ syscall_set_arguments() args
+In-Reply-To: <20190401134421.442323029@goodmis.org>
+Message-ID: <alpine.DEB.2.21.1904040953040.1833@nanos.tec.linutronix.de>
+References: <20190401134104.676620247@goodmis.org> <20190401134421.442323029@goodmis.org>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -74,21 +74,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 1 Apr 2019, Steven Rostedt wrote:
 
-> From: "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > 
-> At Linux Plumbers, Andy Lutomirski approached me and pointed out that the
-> function call syscall_get_arguments() implemented in x86 was horribly
-> written and not optimized for the standard case of passing in 0 and 6 for
-> the starting index and the number of system calls to get. When looking at
-> all the users of this function, I discovered that all instances pass in only
-> 0 and 6 for these arguments. Instead of having this function handle
-> different cases that are never used, simply rewrite it to return the first 6
-> arguments of a system call.
+> After removing the start and count arguments of syscall_get_arguments() it
+> seems reasonable to remove them from syscall_set_arguments(). Note, as of
+> today, there are no users of syscall_set_arguments(). But we are told that
+> there will be soon. But for now, at least make it consistent with
+> syscall_get_arguments().
 > 
-> This should help out the performance of tracing system calls by ptrace,
-> ftrace and perf.
-> 
-> Link: http://lkml.kernel.org/r/20161107213233.754809394@goodmis.org
+> Link: http://lkml.kernel.org/r/20190327222014.GA32540@altlinux.org
 
 For x86:
 
