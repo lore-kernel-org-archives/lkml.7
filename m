@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33887C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3202CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0007F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7D3205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370654;
-	bh=+99nPX0BD/OKqi6HTdELshrGt916SX9sHcTiExDomOE=;
+	s=default; t=1554370665;
+	bh=3Rjs0Z1gCt6XyUPp8nVsGXGtVYG/LJUSO9+X8OQdK1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQik7tIDgFXYvd3jN1X3YkxVLaW8b9TVSs6Q8rC4SBvMRBT7T9DQ2qFo7kSCnyOJe
-	 N2I42kKwKWy11u6IZwJkP1Hg6Ndf+B/N4rJuRRPtWvYVnVS4i/7srO7LIYfeMy+nMu
-	 UE2EuSVhJd9IymhESbu3emEfr7rMXnGhiy47mdt8=
+	b=pD0epCp//V+3Z56a4yo08p/yKHaX+DDjf999wNTenFAHz9RpHyr1zJVIF63A2L6Qr
+	 ijyyl6qtJTed8XQgbcSazP4BNnFrE/gQRAsLMd5z2aopSQBsjaQgPMuV7PXeo6bvP5
+	 7P3s29Dw9Lyf7gTcyPFKSfCZM21nd2PsKPr9R3aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbfDDJhc (ORCPT
+        id S1732338AbfDDJhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:37:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731812AbfDDJEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:54 -0400
+        id S1731781AbfDDJEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7E2F2183E;
-        Thu,  4 Apr 2019 09:04:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3875B2177E;
+        Thu,  4 Apr 2019 09:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368693;
-        bh=+99nPX0BD/OKqi6HTdELshrGt916SX9sHcTiExDomOE=;
+        s=default; t=1554368685;
+        bh=3Rjs0Z1gCt6XyUPp8nVsGXGtVYG/LJUSO9+X8OQdK1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zd9QcPWItKV6hANcw1YpsCiWkQwuAZARiY6leiUsggyQRyyIUGtSLBVNDNJs+qNkG
-         SN1EOT3e7/UdxGkZycr2PH//Dy/EFNaVo1pdR0x8cTr+rEUbo3hQbXjRKpm9D2i+fO
-         f4SnG56aRINyWXJyHS8oAD0MUpFgB/M9g57zCbb4=
+        b=YFmoljkx/nmXUzt5ghqMC+Hr/6tAcDaAIpJ/WDMzJ4XmPUi3a4W1dMMsnt+oHooFD
+         1LtOFTahDYtYXrIme0d41CB8OZNv53E9OVKklQ5tqjHiQMCtsz3AP7ZmDa+jcic9x6
+         8WsOLxqD8jZtQ0T0ceL+6SH4rS3zatkLdvlLKsAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 134/187] sched/core: Use READ_ONCE()/WRITE_ONCE() in move_queued_task()/task_rq_lock()
-Date:   Thu,  4 Apr 2019 10:47:51 +0200
-Message-Id: <20190404084609.508910932@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 116/187] net: marvell: mvpp2: fix stuck in-band SGMII negotiation
+Date:   Thu,  4 Apr 2019 10:47:33 +0200
+Message-Id: <20190404084608.727565391@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -73,112 +67,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c546951d9c9300065bad253ecdf1ac59ce9d06c8 ]
+[ Upstream commit 316734fdcf70900a83065360cff11a5826919067 ]
 
-move_queued_task() synchronizes with task_rq_lock() as follows:
+It appears that the mvpp22 can get stuck with SGMII negotiation.  The
+symptoms are that in-band negotiation never completes and the partner
+(eg, PHY) never reports SGMII link up, or if it supports negotiation
+bypass, goes into negotiation bypass mode (which will happen when the
+PHY sees that the MAC is alive but gets no response.)
 
-	move_queued_task()		task_rq_lock()
+Triggering the PHY end of the link to re-negotiate results in the
+bypass bit clearing on the PHY, and then re-setting - indicating that
+the problem is at the mvpp22 GMAC end.
 
-	[S] ->on_rq = MIGRATING		[L] rq = task_rq()
-	WMB (__set_task_cpu())		ACQUIRE (rq->lock);
-	[S] ->cpu = new_cpu		[L] ->on_rq
+Asserting the GMAC reset and de-asserting it resolves the issue.
+Arrange to assert the GMAC reset at probe time, and deassert it only
+after we have configured the GMAC for the appropriate mode.  This
+resolves the issue.
 
-where "[L] rq = task_rq()" is ordered before "ACQUIRE (rq->lock)" by an
-address dependency and, in turn, "ACQUIRE (rq->lock)" is ordered before
-"[L] ->on_rq" by the ACQUIRE itself.
-
-Use READ_ONCE() to load ->cpu in task_rq() (c.f., task_cpu()) to honor
-this address dependency.  Also, mark the accesses to ->cpu and ->on_rq
-with READ_ONCE()/WRITE_ONCE() to comply with the LKMM.
-
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/20190121155240.27173-1-andrea.parri@amarulasolutions.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched.h | 4 ++--
- kernel/sched/core.c   | 9 +++++----
- kernel/sched/sched.h  | 6 +++---
- 3 files changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4abb5bd74b04..5dc024e28397 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1737,9 +1737,9 @@ static __always_inline bool need_resched(void)
- static inline unsigned int task_cpu(const struct task_struct *p)
- {
- #ifdef CONFIG_THREAD_INFO_IN_TASK
--	return p->cpu;
-+	return READ_ONCE(p->cpu);
- #else
--	return task_thread_info(p)->cpu;
-+	return READ_ONCE(task_thread_info(p)->cpu);
- #endif
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index f8e4808a8317..9988c89ed9fd 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1372,13 +1372,9 @@ static void mvpp2_port_reset(struct mvpp2_port *port)
+ 	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
+ 		mvpp2_read_count(port, &mvpp2_ethtool_regs[i]);
+ 
+-	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
+-		    ~MVPP2_GMAC_PORT_RESET_MASK;
++	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) |
++	      MVPP2_GMAC_PORT_RESET_MASK;
+ 	writel(val, port->base + MVPP2_GMAC_CTRL_2_REG);
+-
+-	while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
+-	       MVPP2_GMAC_PORT_RESET_MASK)
+-		continue;
  }
  
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 152a0b0c91bb..9a4f57d7e931 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -107,11 +107,12 @@ struct rq *task_rq_lock(struct task_struct *p, struct rq_flags *rf)
- 		 *					[L] ->on_rq
- 		 *	RELEASE (rq->lock)
- 		 *
--		 * If we observe the old CPU in task_rq_lock, the acquire of
-+		 * If we observe the old CPU in task_rq_lock(), the acquire of
- 		 * the old rq->lock will fully serialize against the stores.
- 		 *
--		 * If we observe the new CPU in task_rq_lock, the acquire will
--		 * pair with the WMB to ensure we must then also see migrating.
-+		 * If we observe the new CPU in task_rq_lock(), the address
-+		 * dependency headed by '[L] rq = task_rq()' and the acquire
-+		 * will pair with the WMB to ensure we then also see migrating.
- 		 */
- 		if (likely(rq == task_rq(p) && !task_on_rq_migrating(p))) {
- 			rq_pin_lock(rq, rf);
-@@ -910,7 +911,7 @@ static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
+ /* Change maximum receive size of the port */
+@@ -4445,12 +4441,15 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
+ 			      const struct phylink_link_state *state)
  {
- 	lockdep_assert_held(&rq->lock);
+ 	u32 an, ctrl0, ctrl2, ctrl4;
++	u32 old_ctrl2;
  
--	p->on_rq = TASK_ON_RQ_MIGRATING;
-+	WRITE_ONCE(p->on_rq, TASK_ON_RQ_MIGRATING);
- 	dequeue_task(rq, p, DEQUEUE_NOCLOCK);
- 	set_task_cpu(p, new_cpu);
- 	rq_unlock(rq, rf);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index b63172288f7b..4c7a837d7c14 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1331,9 +1331,9 @@ static inline void __set_task_cpu(struct task_struct *p, unsigned int cpu)
- 	 */
- 	smp_wmb();
- #ifdef CONFIG_THREAD_INFO_IN_TASK
--	p->cpu = cpu;
-+	WRITE_ONCE(p->cpu, cpu);
- #else
--	task_thread_info(p)->cpu = cpu;
-+	WRITE_ONCE(task_thread_info(p)->cpu, cpu);
- #endif
- 	p->wake_cpu = cpu;
- #endif
-@@ -1434,7 +1434,7 @@ static inline int task_on_rq_queued(struct task_struct *p)
+ 	an = readl(port->base + MVPP2_GMAC_AUTONEG_CONFIG);
+ 	ctrl0 = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
+ 	ctrl2 = readl(port->base + MVPP2_GMAC_CTRL_2_REG);
+ 	ctrl4 = readl(port->base + MVPP22_GMAC_CTRL_4_REG);
  
- static inline int task_on_rq_migrating(struct task_struct *p)
- {
--	return p->on_rq == TASK_ON_RQ_MIGRATING;
-+	return READ_ONCE(p->on_rq) == TASK_ON_RQ_MIGRATING;
++	old_ctrl2 = ctrl2;
++
+ 	/* Force link down */
+ 	an &= ~MVPP2_GMAC_FORCE_LINK_PASS;
+ 	an |= MVPP2_GMAC_FORCE_LINK_DOWN;
+@@ -4523,6 +4522,12 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
+ 	writel(ctrl2, port->base + MVPP2_GMAC_CTRL_2_REG);
+ 	writel(ctrl4, port->base + MVPP22_GMAC_CTRL_4_REG);
+ 	writel(an, port->base + MVPP2_GMAC_AUTONEG_CONFIG);
++
++	if (old_ctrl2 & MVPP2_GMAC_PORT_RESET_MASK) {
++		while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
++		       MVPP2_GMAC_PORT_RESET_MASK)
++			continue;
++	}
  }
  
- /*
+ static void mvpp2_mac_config(struct net_device *dev, unsigned int mode,
 -- 
 2.19.1
 
