@@ -7,49 +7,60 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD83C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AD1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14522147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ADA92186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368446;
-	bh=YPryP4Dwp8Mgc3D4dYCmfc0TaTsFG4mWpgibxeg+Suc=;
+	s=default; t=1554368450;
+	bh=/GAgLW5ZlDvOCUP9XUY91tMQDAFIvyvhAZNkx6yAlkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQ4og8VjZx5sqCoXgMKbXacNBZdR+E33fivvd1QaonxhrHxCIlCxe8wFR69zo64Ym
-	 bcjNI8JGLU0mc5OU2vkvsaoxmQayCWEhvHTVQASMvino0d3DLUCrDB27Yx4si7IhUE
-	 Q7HClewv7bhQlHkbpHeZt/u4BCRjVl0QLhSlrfww=
+	b=M1Z1AMV7P6pdqgMRp7120qqmUM/RoqVjxnJq6hpYf52PlBGSXy81O6ohDI+Qttax0
+	 kB2jMc/N03wfPanKHZs6uyRLJpGKa//x5pV0bCUwZvJThWWf3HGwHrx6nCLAH+Qr+F
+	 9mA4h2hvudmQRpADEBjD+2Jiv0oxYzK7HIJzBUkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbfDDJAp (ORCPT
+        id S1731302AbfDDJAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:00:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37490 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731278AbfDDJAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:00:41 -0400
+        id S1731063AbfDDJAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6888E2184B;
-        Thu,  4 Apr 2019 09:00:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E70A82147C;
+        Thu,  4 Apr 2019 09:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368439;
-        bh=YPryP4Dwp8Mgc3D4dYCmfc0TaTsFG4mWpgibxeg+Suc=;
+        s=default; t=1554368442;
+        bh=/GAgLW5ZlDvOCUP9XUY91tMQDAFIvyvhAZNkx6yAlkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iYOPJEKoE3DosSYBrCaNCCkhY7w4LddSiaNwF7DbcRcrI3Ht7q4i7Ca83QO9sWTNP
-         cg2YLULkZhzNV5G+N8neyCpoPsWLOwR+ff6jthKE1lucMDSjUDIlEFC8Q34pkpZ8Hj
-         IWouXb2K7dG92i3R0Mpg8dgS5F1s8uscoQ92ZoUE=
+        b=g+5Rii09wHT49hBv5+7qa4qwGcGT1X9JbXEOuD1ulq3N3q82y1N5y9/RWAuoiGTuB
+         nwjpO33V7LC/dn+BBIvNhPVHUIzevGCsQBLxGe2sHMA3VsQu90QJyV+xmjWmHua5aI
+         72LprNczb4LN1uFBbPi7gdf+KDn/oFziXYRLLJc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Omar Sandoval <osandov@fb.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Shaohua Li <shli@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 025/187] mm/page_ext.c: fix an imbalance with kmemleak
-Date:   Thu,  4 Apr 2019 10:46:02 +0200
-Message-Id: <20190404084604.282137564@linuxfoundation.org>
+Subject: [PATCH 4.19 026/187] mm, swap: bounds check swap_info array accesses to avoid NULL derefs
+Date:   Thu,  4 Apr 2019 10:46:03 +0200
+Message-Id: <20190404084604.319839010@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,80 +79,211 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0c81585499601acd1d0e1cbf424cabfaee60628c ]
+[ Upstream commit c10d38cc8d3e43f946b6c2bf4602c86791587f30 ]
 
-After offlining a memory block, kmemleak scan will trigger a crash, as
-it encounters a page ext address that has already been freed during
-memory offlining.  At the beginning in alloc_page_ext(), it calls
-kmemleak_alloc(), but it does not call kmemleak_free() in
-free_page_ext().
+Dan Carpenter reports a potential NULL dereference in
+get_swap_page_of_type:
 
-    BUG: unable to handle kernel paging request at ffff888453d00000
-    PGD 128a01067 P4D 128a01067 PUD 128a04067 PMD 47e09e067 PTE 800ffffbac2ff060
-    Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-    CPU: 1 PID: 1594 Comm: bash Not tainted 5.0.0-rc8+ #15
-    Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20 10/25/2017
-    RIP: 0010:scan_block+0xb5/0x290
-    Code: 85 6e 01 00 00 48 b8 00 00 30 f5 81 88 ff ff 48 39 c3 0f 84 5b 01 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 0f 85 87 01 00 00 <4c> 8b 3b e8 f3 0c fa ff 4c 39 3d 0c 6b 4c 01 0f 87 08 01 00 00 4c
-    RSP: 0018:ffff8881ec57f8e0 EFLAGS: 00010082
-    RAX: 0000000000000000 RBX: ffff888453d00000 RCX: ffffffffa61e5a54
-    RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888453d00000
-    RBP: ffff8881ec57f920 R08: fffffbfff4ed588d R09: fffffbfff4ed588c
-    R10: fffffbfff4ed588c R11: ffffffffa76ac463 R12: dffffc0000000000
-    R13: ffff888453d00ff9 R14: ffff8881f80cef48 R15: ffff8881f80cef48
-    FS:  00007f6c0e3f8740(0000) GS:ffff8881f7680000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffff888453d00000 CR3: 00000001c4244003 CR4: 00000000001606a0
-    Call Trace:
-     scan_gray_list+0x269/0x430
-     kmemleak_scan+0x5a8/0x10f0
-     kmemleak_write+0x541/0x6ca
-     full_proxy_write+0xf8/0x190
-     __vfs_write+0xeb/0x980
-     vfs_write+0x15a/0x4f0
-     ksys_write+0xd2/0x1b0
-     __x64_sys_write+0x73/0xb0
-     do_syscall_64+0xeb/0xaaa
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    RIP: 0033:0x7f6c0dad73b8
-    Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 8d 05 65 63 2d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49 89 d4 55
-    RSP: 002b:00007ffd5b863cb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-    RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007f6c0dad73b8
-    RDX: 0000000000000005 RSI: 000055a9216e1710 RDI: 0000000000000001
-    RBP: 000055a9216e1710 R08: 000000000000000a R09: 00007ffd5b863840
-    R10: 000000000000000a R11: 0000000000000246 R12: 00007f6c0dda9780
-    R13: 0000000000000005 R14: 00007f6c0dda4740 R15: 0000000000000005
-    Modules linked in: nls_iso8859_1 nls_cp437 vfat fat kvm_intel kvm irqbypass efivars ip_tables x_tables xfs sd_mod ahci libahci igb i2c_algo_bit libata i2c_core dm_mirror dm_region_hash dm_log dm_mod efivarfs
-    CR2: ffff888453d00000
-    ---[ end trace ccf646c7456717c5 ]---
-    Kernel panic - not syncing: Fatal exception
-    Shutting down cpus with NMI
-    Kernel Offset: 0x24c00000 from 0xffffffff81000000 (relocation range:
-    0xffffffff80000000-0xffffffffbfffffff)
-    ---[ end Kernel panic - not syncing: Fatal exception ]---
+  Smatch complains that the NULL checks on "si" aren't consistent.  This
+  seems like a real bug because we have not ensured that the type is
+  valid and so "si" can be NULL.
 
-Link: http://lkml.kernel.org/r/20190227173147.75650-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Add the missing check for NULL, taking care to use a read barrier to
+ensure CPU1 observes CPU0's updates in the correct order:
+
+     CPU0                           CPU1
+     alloc_swap_info()              if (type >= nr_swapfiles)
+       swap_info[type] = p              /* handle invalid entry */
+       smp_wmb()                    smp_rmb()
+       ++nr_swapfiles               p = swap_info[type]
+
+Without smp_rmb, CPU1 might observe CPU0's write to nr_swapfiles before
+CPU0's write to swap_info[type] and read NULL from swap_info[type].
+
+Ying Huang noticed other places in swapfile.c don't order these reads
+properly.  Introduce swap_type_to_swap_info to encourage correct usage.
+
+Use READ_ONCE and WRITE_ONCE to follow the Linux Kernel Memory Model
+(see tools/memory-model/Documentation/explanation.txt).
+
+This ordering need not be enforced in places where swap_lock is held
+(e.g.  si_swapinfo) because swap_lock serializes updates to nr_swapfiles
+and the swap_info array.
+
+Link: http://lkml.kernel.org/r/20190131024410.29859-1-daniel.m.jordan@oracle.com
+Fixes: ec8acf20afb8 ("swap: add per-partition lock for swapfile")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+Reviewed-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Omar Sandoval <osandov@fb.com>
+Cc: Paul McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Shaohua Li <shli@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_ext.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/swapfile.c | 51 +++++++++++++++++++++++++++++----------------------
+ 1 file changed, 29 insertions(+), 22 deletions(-)
 
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index 4961f13b6ec1..aad120123688 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -273,6 +273,7 @@ static void free_page_ext(void *addr)
- 		table_size = get_entry_size() * PAGES_PER_SECTION;
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 340ef3177686..0047dcaf9369 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -98,6 +98,15 @@ static atomic_t proc_poll_event = ATOMIC_INIT(0);
  
- 		BUG_ON(PageReserved(page));
-+		kmemleak_free(addr);
- 		free_pages_exact(addr, table_size);
+ atomic_t nr_rotate_swap = ATOMIC_INIT(0);
+ 
++static struct swap_info_struct *swap_type_to_swap_info(int type)
++{
++	if (type >= READ_ONCE(nr_swapfiles))
++		return NULL;
++
++	smp_rmb();	/* Pairs with smp_wmb in alloc_swap_info. */
++	return READ_ONCE(swap_info[type]);
++}
++
+ static inline unsigned char swap_count(unsigned char ent)
+ {
+ 	return ent & ~SWAP_HAS_CACHE;	/* may include COUNT_CONTINUED flag */
+@@ -1030,12 +1039,14 @@ noswap:
+ /* The only caller of this function is now suspend routine */
+ swp_entry_t get_swap_page_of_type(int type)
+ {
+-	struct swap_info_struct *si;
++	struct swap_info_struct *si = swap_type_to_swap_info(type);
+ 	pgoff_t offset;
+ 
+-	si = swap_info[type];
++	if (!si)
++		goto fail;
++
+ 	spin_lock(&si->lock);
+-	if (si && (si->flags & SWP_WRITEOK)) {
++	if (si->flags & SWP_WRITEOK) {
+ 		atomic_long_dec(&nr_swap_pages);
+ 		/* This is called for allocating swap entry, not cache */
+ 		offset = scan_swap_map(si, 1);
+@@ -1046,6 +1057,7 @@ swp_entry_t get_swap_page_of_type(int type)
+ 		atomic_long_inc(&nr_swap_pages);
  	}
+ 	spin_unlock(&si->lock);
++fail:
+ 	return (swp_entry_t) {0};
  }
+ 
+@@ -1057,9 +1069,9 @@ static struct swap_info_struct *__swap_info_get(swp_entry_t entry)
+ 	if (!entry.val)
+ 		goto out;
+ 	type = swp_type(entry);
+-	if (type >= nr_swapfiles)
++	p = swap_type_to_swap_info(type);
++	if (!p)
+ 		goto bad_nofile;
+-	p = swap_info[type];
+ 	if (!(p->flags & SWP_USED))
+ 		goto bad_device;
+ 	offset = swp_offset(entry);
+@@ -1708,10 +1720,9 @@ int swap_type_of(dev_t device, sector_t offset, struct block_device **bdev_p)
+ sector_t swapdev_block(int type, pgoff_t offset)
+ {
+ 	struct block_device *bdev;
++	struct swap_info_struct *si = swap_type_to_swap_info(type);
+ 
+-	if ((unsigned int)type >= nr_swapfiles)
+-		return 0;
+-	if (!(swap_info[type]->flags & SWP_WRITEOK))
++	if (!si || !(si->flags & SWP_WRITEOK))
+ 		return 0;
+ 	return map_swap_entry(swp_entry(type, offset), &bdev);
+ }
+@@ -2269,7 +2280,7 @@ static sector_t map_swap_entry(swp_entry_t entry, struct block_device **bdev)
+ 	struct swap_extent *se;
+ 	pgoff_t offset;
+ 
+-	sis = swap_info[swp_type(entry)];
++	sis = swp_swap_info(entry);
+ 	*bdev = sis->bdev;
+ 
+ 	offset = swp_offset(entry);
+@@ -2707,9 +2718,7 @@ static void *swap_start(struct seq_file *swap, loff_t *pos)
+ 	if (!l)
+ 		return SEQ_START_TOKEN;
+ 
+-	for (type = 0; type < nr_swapfiles; type++) {
+-		smp_rmb();	/* read nr_swapfiles before swap_info[type] */
+-		si = swap_info[type];
++	for (type = 0; (si = swap_type_to_swap_info(type)); type++) {
+ 		if (!(si->flags & SWP_USED) || !si->swap_map)
+ 			continue;
+ 		if (!--l)
+@@ -2729,9 +2738,7 @@ static void *swap_next(struct seq_file *swap, void *v, loff_t *pos)
+ 	else
+ 		type = si->type + 1;
+ 
+-	for (; type < nr_swapfiles; type++) {
+-		smp_rmb();	/* read nr_swapfiles before swap_info[type] */
+-		si = swap_info[type];
++	for (; (si = swap_type_to_swap_info(type)); type++) {
+ 		if (!(si->flags & SWP_USED) || !si->swap_map)
+ 			continue;
+ 		++*pos;
+@@ -2838,14 +2845,14 @@ static struct swap_info_struct *alloc_swap_info(void)
+ 	}
+ 	if (type >= nr_swapfiles) {
+ 		p->type = type;
+-		swap_info[type] = p;
++		WRITE_ONCE(swap_info[type], p);
+ 		/*
+ 		 * Write swap_info[type] before nr_swapfiles, in case a
+ 		 * racing procfs swap_start() or swap_next() is reading them.
+ 		 * (We never shrink nr_swapfiles, we never free this entry.)
+ 		 */
+ 		smp_wmb();
+-		nr_swapfiles++;
++		WRITE_ONCE(nr_swapfiles, nr_swapfiles + 1);
+ 	} else {
+ 		kvfree(p);
+ 		p = swap_info[type];
+@@ -3365,7 +3372,7 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
+ {
+ 	struct swap_info_struct *p;
+ 	struct swap_cluster_info *ci;
+-	unsigned long offset, type;
++	unsigned long offset;
+ 	unsigned char count;
+ 	unsigned char has_cache;
+ 	int err = -EINVAL;
+@@ -3373,10 +3380,10 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
+ 	if (non_swap_entry(entry))
+ 		goto out;
+ 
+-	type = swp_type(entry);
+-	if (type >= nr_swapfiles)
++	p = swp_swap_info(entry);
++	if (!p)
+ 		goto bad_file;
+-	p = swap_info[type];
++
+ 	offset = swp_offset(entry);
+ 	if (unlikely(offset >= p->max))
+ 		goto out;
+@@ -3473,7 +3480,7 @@ int swapcache_prepare(swp_entry_t entry)
+ 
+ struct swap_info_struct *swp_swap_info(swp_entry_t entry)
+ {
+-	return swap_info[swp_type(entry)];
++	return swap_type_to_swap_info(swp_type(entry));
+ }
+ 
+ struct swap_info_struct *page_swap_info(struct page *page)
 -- 
 2.19.1
 
