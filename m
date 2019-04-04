@@ -2,125 +2,93 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC71C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21A4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCE52133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB802133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgN0RBlC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GG8gDsRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbfDDDle (ORCPT
+        id S1727020AbfDDDl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:41:34 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44192 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfDDDle (ORCPT
+        Wed, 3 Apr 2019 23:41:56 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45244 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfDDDl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:41:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id i2so497400pgj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:41:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:references:in-reply-to
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=sVTQZTJIJDgHWDkqttRX9W3FlnuYeGRiRP2zotopxQk=;
-        b=SgN0RBlCIHpAaLWix2PetN7kBpytCF81WU6flymBEoVKyBTMtBa7R5SZsfRnr0eGD4
-         y3/00BesjKkKED68dadrgfHJVuz5q5t3pXMLNd0sVDDbbXpDBLk+kt8URzraVEi72z8/
-         ECO3F7uqFqrUBdgV0au/gwMWSgiRzGHuU4klnIVdQ6xwOYv1m70TDqG0LyL5UD8Rvldb
-         GkIjpnzt8QagrBUgNU0scSCQmyZCSgM+vADtmVeAci27djGwxljNyQjy7Vs9bpDFMFau
-         7Vt5fHU3GYF4F2rq4fk60R2B7n3wORufZm4MykYRfgvT+0zPf0u5oDPap3I54C43fzOf
-         nlog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:references
-         :in-reply-to:user-agent:mime-version:content-transfer-encoding;
-        bh=sVTQZTJIJDgHWDkqttRX9W3FlnuYeGRiRP2zotopxQk=;
-        b=BEqWxTeyeI9LTAwjUZyWxURebSUtNCSIpAI37XNMb3S1X+pZCcO7zwVtQmqMH39DWq
-         KVq8vVVxSjQSCHQ0M5rTlPtZ7XkGsiJZzXwkeJtuNFHXoLwWzmW4eevB3xeLK9/2tslX
-         tLSO3EADwecwjnhLah+5cxYfoH1/YpPwIfxAezrhJhORTbkyylWz2IkmyvKEgHxNkTvD
-         QRrivDhhNtzuv1zESCxZTzh0eAlq2L3qsccp+0uF7M69UgC95O16B5pktOzmzl3wDkDm
-         rQafBZJyAXNQ7g4r7uG1i/PuFW9em4J9/gcTVs9vtE5/52l/w7dAKmlHbj//rTVIqgW5
-         IGSQ==
-X-Gm-Message-State: APjAAAXTH1tJK4cXNaKIFn2ZTjKqd/w9FTSA41bLZO+sLKIQrhOwuozy
-        nhI0mkTRvgNBt0/E8MFl3YMdrGrF
-X-Google-Smtp-Source: APXvYqy6RLoNhi+0cL4uuIpPszUSnpAbKitbZ6R0OuvdRrzOJzSUDQFb70C0FbiOvOxygvGV6Mezuw==
-X-Received: by 2002:aa7:8443:: with SMTP id r3mr3327133pfn.143.1554349293145;
-        Wed, 03 Apr 2019 20:41:33 -0700 (PDT)
-Received: from zen.local (216-160-106-16.tukw.qwest.net. [216.160.106.16])
-        by smtp.gmail.com with ESMTPSA id b26sm41006902pgn.4.2019.04.03.20.41.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 20:41:32 -0700 (PDT)
-Message-ID: <2f07167152e807917acb8199939886ed8a3a00f9.camel@gmail.com>
-Subject: Re: [PATCH] lib: Fix possible incorrect result from rational
- fractions helper
-From:   tpiepho@gmail.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Oskar Schirmer <oskar@scara.com>
-Date:   Wed, 03 Apr 2019 20:41:30 -0700
-References: <20190330205855.19396-1-tpiepho@gmail.com>
-         <20190401222228.5692d7e8d5b979a8c574e76c@linux-foundation.org>
-In-Reply-To: <20190401222228.5692d7e8d5b979a8c574e76c@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 3 Apr 2019 23:41:56 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343eI3k044012;
+        Thu, 4 Apr 2019 03:41:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=mmYojRU0lMBF+LAPxrni+tg/zLQL1UFVNNa5v2nBnQo=;
+ b=GG8gDsRdyMhwXqYsnWPf4eRk/Wn6K1gGoaBDNE7vJ+49g9ljSboAplqD0VYCK1Xk23Hd
+ 5KuBu06EY7PsYHw2xpxoQJj69g/PQx3mXhsdev+zkFzBUg7A5yt/DuE/dIXc0gzw0UtE
+ IVtFCPZ6BiJtOdsusdMBYQrHnie2Chm5a0/Gp83uYrRgxwojKoH+tvgvsn/3dqGa4XWX
+ NpLNqOiDFYe9Ml4dKGF12H9A5BrLqwtzSz5YfrSh9aZ2UJbp0ErujeG4AiQlPtB28CFC
+ ttg4i98xK2owI0A0OYA+NqVX+CTzwJ8GdTrudNeajSHhsQHiWbF0w2DL7f88ovSdZjSo jQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2rhyvtckdd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 03:41:46 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343eE5D115582;
+        Thu, 4 Apr 2019 03:41:46 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2rm8f5emt0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 03:41:45 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x343fi02020054;
+        Thu, 4 Apr 2019 03:41:44 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Apr 2019 20:41:44 -0700
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     <qla2xxx-upstream@qlogic.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH -next] scsi: qla2xxx: Remove useless set memory to zero use memset()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190323132753.22508-1-yuehaibing@huawei.com>
+Date:   Wed, 03 Apr 2019 23:41:41 -0400
+In-Reply-To: <20190323132753.22508-1-yuehaibing@huawei.com> (Yue Haibing's
+        message of "Sat, 23 Mar 2019 21:27:53 +0800")
+Message-ID: <yq1r2aisah6.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=666
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040024
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=725 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 10:22 PM Andrew Morton <
-akpm@linux-foundation.org> wrote:
 
-> On Sat, 30 Mar 2019 13:58:55 -0700 Trent Piepho <tpiepho@gmail.com>
-> wrote:
-> > In some cases the previous algorithm would not return the closest
-> > approximation.  This would happen when a semi-convergent was the
-> > closest, as the previous algorithm would only consider convergents.
-> > 
-> > As an example, consider an initial value of 5/4, and trying to find
-> > the
-> > closest approximation with a maximum of 4 for numerator and
-> > denominator.
-> > The previous algorithm would return 1/1 as the closest
-> > approximation,
-> > while this version will return the correct answer of 4/3.
-> 
-> What are the userspace-visible runtime effects of this change?
+Yue,
 
-Ok, I looked into this in some detail.
+> The memory return by kzalloc() has already be set to zero, so remove
+> useless memset(0).
 
-This routine is used in two places in the video4linux code, but in
-those cases it is only used to reduce a fraction to lowest terms, which
-the existing code will do correctly.  This could be done more
-efficiently with a different library routine but it would still be the
-Euclidean alogrithm at its heart.  So no change.
+Applied to 5.2/scsi-queue, thanks.
 
-The remain users are places where a fractional PLL divider is
-programmed.  What would happen is something asked for a clock of X MHz
-but instead gets Y MHz, where Y is close to X but not exactly due to
-the hardware limitations.  After this change they might, in some cases,
-get Y' MHz, where Y' is a little closer to X then Y was.
-
-Users like this are: Three UARTs, in 8250_mid, 8250_lpss, and
-imx.  One GPU in vp4_hdmi.  And three clock drivers, clk-cdce706, clk-si5351, and clk-fractional-divider.  The last is a generic clock driver and so would have more users referenced via device tree entries.
-
-I think there's a bug in that one, it's limiting an N bit field that is
-offset-by-1 to the range 0 .. (1<<N)-2, when it should be (1<<N)-1 as
-the upper limit.
-
-I have an IMX system, one of the UARTs using this, so I can provide a
-real example.  If I request a custom baud rate of 1499978, the driver
-will program the PLL to produce a baud rate of 1500000.  After this
-change, the fractional divider in the UART is programmed to a ratio of
-65535/65536, which produces a baud rate of 1499977.0625.  Closer to the
-requested value.
-
-
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
