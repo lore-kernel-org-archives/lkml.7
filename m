@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DD4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7BEC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B918321738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB4D20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368148;
-	bh=nBCghCJs2oxezPUJSJLbW9HkdKldw+llrwr2IrmC/Dg=;
+	s=default; t=1554368152;
+	bh=v8WzARKgtdZFbrz58kOY1r7mlH5VsEA2lgLBGyA6iZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gyp64IPKKcWNiRBYKmTW9k/s2GVoyN6vsQZeHxLELDMZQRflOpQBAs/q5cpmhm+Re
-	 C5kMaPDOvsmB3G0mWyyX10wYjeccgmKnHJ/3vYTZB9d6TnUu/jOCE1J4LpoB5ZAUPX
-	 l84bCqhxaWV3C3MMiuTNcNMRZrmQu7Ab7BPHCBmE=
+	b=jmCbKE9ZBfoRWh28zoMFZRhLQRAAAjKGGb29grw6lNiTT+GKIu1dlOsDU+5gMWraY
+	 sZc9RTlv8jQb2Uv7w6hanHE2/X/JwxrS/GIqLP42JKAaiTjegblMNV4Mak8LmFzWMs
+	 Vik/UVRR9qdZuyHLVLJkZA6qGda3Sr2ei0pyMJJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfDDIzq (ORCPT
+        id S1730360AbfDDIzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:55:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729581AbfDDIzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:42 -0400
+        id S1729636AbfDDIzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E78921738;
-        Thu,  4 Apr 2019 08:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 948C620652;
+        Thu,  4 Apr 2019 08:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368141;
-        bh=nBCghCJs2oxezPUJSJLbW9HkdKldw+llrwr2IrmC/Dg=;
+        s=default; t=1554368147;
+        bh=v8WzARKgtdZFbrz58kOY1r7mlH5VsEA2lgLBGyA6iZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMOg7IXj033IU6q6xoAncE8zHM8bKPsnCVYR9dqWW52+NqMvVXnwX5+gGw4aDQEM+
-         2qQquNZFzf8IS9A1pnY6H1E/YbIRBUjiMHJcqnXsVgytWQid8eSB8Te7cmK2Dy+siU
-         7+vrdXZvst98NzHoZB+3r903kKU+XNuagzxO039E=
+        b=Khtw+K+hEUDrBG8LNkDPHu0uegWwyM+o1RxUjaT9R8oQfYuu5tGybGFgAfiouwT67
+         rSuCg2nzrIKb9DAySw/D9YmBmghFL9dNkwbCg0f+9ZkeKsUtULWAL8mGQIQfb19YlP
+         1SpTYu7BHUg+UUO/ZweO0WBl/dVzVyq3vXNFKFiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Borislav Petkov <bp@suse.de>,
+        Tyler Baicar <baicar.tyler@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/121] clk: fractional-divider: check parent rate only if flag is set
-Date:   Thu,  4 Apr 2019 10:47:20 +0200
-Message-Id: <20190404084548.076099791@linuxfoundation.org>
+Subject: [PATCH 4.14 054/121] efi: cper: Fix possible out-of-bounds access
+Date:   Thu,  4 Apr 2019 10:47:22 +0200
+Message-Id: <20190404084548.198735557@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,102 +68,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d13501a2bedfbea0983cc868d3f1dc692627f60d ]
+[ Upstream commit 45b14a4ffcc1e0b5caa246638f942cbe7eaea7ad ]
 
-Custom approximation of fractional-divider may not need parent clock
-rate checking. For example Rockchip SoCs work fine using grand parent
-clock rate even if target rate is greater than parent.
+When checking a generic status block, we iterate over all the generic
+data blocks. The loop condition only checks that the start of the
+generic data block is valid (within estatus->data_length) but not the
+whole block. Because the size of data blocks (excluding error data) may
+vary depending on the revision and the revision is contained within the
+data block, ensure that enough of the current data block is valid before
+dereferencing any members otherwise an out-of-bounds access may occur if
+estatus->data_length is invalid.
 
-This patch checks parent clock rate only if CLK_SET_RATE_PARENT flag
-is set.
+This relies on the fact that struct acpi_hest_generic_data_v300 is a
+superset of the earlier version.  Also rework the other checks to avoid
+potential underflow.
 
-For detailed example, clock tree of Rockchip I2S audio hardware.
-  - Clock rate of CPLL is 1.2GHz, GPLL is 491.52MHz.
-  - i2s1_div is integer divider can divide N (N is 1~128).
-    Input clock is CPLL or GPLL. Initial divider value is N = 1.
-    Ex) PLL = CPLL, N = 10, i2s1_div output rate is
-      CPLL / 10 = 1.2GHz / 10 = 120MHz
-  - i2s1_frac is fractional divider can divide input to x/y, x and
-    y are 16bit integer.
-
-CPLL --> | selector | ---> i2s1_div -+--> | selector | --> I2S1 MCLK
-GPLL --> |          | ,--------------'    |          |
-                      `--> i2s1_frac ---> |          |
-
-Clock mux system try to choose suitable one from i2s1_div and
-i2s1_frac for master clock (MCLK) of I2S1.
-
-Bad scenario as follows:
-  - Try to set MCLK to 8.192MHz (32kHz audio replay)
-    Candidate setting is
-    - i2s1_div: GPLL / 60 = 8.192MHz
-    i2s1_div candidate is exactly same as target clock rate, so mux
-    choose this clock source. i2s1_div output rate is changed
-    491.52MHz -> 8.192MHz
-
-  - After that try to set to 11.2896MHz (44.1kHz audio replay)
-    Candidate settings are
-    - i2s1_div : CPLL / 107 = 11.214945MHz
-    - i2s1_frac: i2s1_div   = 8.192MHz
-      This is because clk_fd_round_rate() thinks target rate
-      (11.2896MHz) is higher than parent rate (i2s1_div = 8.192MHz)
-      and returns parent clock rate.
-
-Above is current upstreamed behavior. Clock mux system choose
-i2s1_div, but this clock rate is not acceptable for I2S driver, so
-users cannot replay audio.
-
-Expected behavior is:
-  - Try to set master clock to 11.2896MHz (44.1kHz audio replay)
-    Candidate settings are
-    - i2s1_div : CPLL / 107          = 11.214945MHz
-    - i2s1_frac: i2s1_div * 147/6400 = 11.2896MHz
-                 Change i2s1_div to GPLL / 1 = 491.52MHz at same
-                 time.
-
-If apply this commit, clk_fd_round_rate() calls custom approximate
-function of Rockchip even if target rate is higher than parent.
-Custom function changes both grand parent (i2s1_div) and parent
-(i2s_frac) settings at same time. Clock mux system can choose
-i2s1_frac and audio works fine.
-
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-[sboyd@kernel.org: Make function into a macro instead]
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Tested-by: Tyler Baicar <baicar.tyler@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-fractional-divider.c | 2 +-
- include/linux/clk-provider.h         | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/cper.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/clk-fractional-divider.c b/drivers/clk/clk-fractional-divider.c
-index fdf625fb10fa..083daa293280 100644
---- a/drivers/clk/clk-fractional-divider.c
-+++ b/drivers/clk/clk-fractional-divider.c
-@@ -77,7 +77,7 @@ static long clk_fd_round_rate(struct clk_hw *hw, unsigned long rate,
- 	unsigned long m, n;
- 	u64 ret;
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index d2fcafcea07e..ce23d5402bd6 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -641,19 +641,24 @@ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
+ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
+ {
+ 	struct acpi_hest_generic_data *gdata;
+-	unsigned int data_len, gedata_len;
++	unsigned int data_len, record_size;
+ 	int rc;
  
--	if (!rate || rate >= *parent_rate)
-+	if (!rate || (!clk_hw_can_set_rate_parent(hw) && rate >= *parent_rate))
- 		return *parent_rate;
- 
- 	if (fd->approximation)
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 2f4e79fe7b86..3eb3376f1cc8 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -743,6 +743,9 @@ unsigned int __clk_get_enable_count(struct clk *clk);
- unsigned long clk_hw_get_rate(const struct clk_hw *hw);
- unsigned long __clk_get_flags(struct clk *clk);
- unsigned long clk_hw_get_flags(const struct clk_hw *hw);
-+#define clk_hw_can_set_rate_parent(hw) \
-+	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
+ 	rc = cper_estatus_check_header(estatus);
+ 	if (rc)
+ 		return rc;
 +
- bool clk_hw_is_prepared(const struct clk_hw *hw);
- bool clk_hw_is_enabled(const struct clk_hw *hw);
- bool __clk_is_enabled(struct clk *clk);
+ 	data_len = estatus->data_length;
+ 
+ 	apei_estatus_for_each_section(estatus, gdata) {
+-		gedata_len = acpi_hest_get_error_length(gdata);
+-		if (gedata_len > data_len - acpi_hest_get_size(gdata))
++		if (sizeof(struct acpi_hest_generic_data) > data_len)
++			return -EINVAL;
++
++		record_size = acpi_hest_get_record_size(gdata);
++		if (record_size > data_len)
+ 			return -EINVAL;
+-		data_len -= acpi_hest_get_record_size(gdata);
++
++		data_len -= record_size;
+ 	}
+ 	if (data_len)
+ 		return -EINVAL;
 -- 
 2.19.1
 
