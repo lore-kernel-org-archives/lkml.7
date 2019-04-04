@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D80C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26CAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EC120693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD7A20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369660;
-	bh=XAk1OCT/5Hw+r6Xdyd4YqzWL8OIm9LX+eFvSmYxlF8U=;
+	s=default; t=1554369665;
+	bh=lZ31QYSzEQ0eA/uVHOo6kxtwqj+L/yiwk2qbjpa9QRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FUf5qTQXJimgfvcNiX1zmnuVi/oPvFRne5EyeqTGx3Lv4uMpUpFbZEh75/WVnqFQC
-	 chIgrRz0ziLkysPDk/Q/loM1jBSLPBjEYtYK1Do8h3vXc60pnL2tOLKlDdIxa6i4iV
-	 c4MCUyTDk8OlUVH+xp/15IZNlxR9sEKguVYgTGMw=
+	b=Ivvc5AYLz5wWP4WjVWLNOIAoz8QeBIAYoLOWDNxHFkB8gHoBY6wIOqTp9eDlPnWql
+	 iMwbqRaX6fLOShhILaGvY2zU4lpDutHwAI2Bw4zuX02JXdV5HzPQLhIkH4EVQYr4WL
+	 8JBzjs/DDPqnX6Jr41YoQQXlg0IaTqmNqCAASl5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388259AbfDDJU7 (ORCPT
+        id S2388292AbfDDJVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58698 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:21:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733276AbfDDJRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:08 -0400
+        id S2388153AbfDDJRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB50720693;
-        Thu,  4 Apr 2019 09:17:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7834C2177E;
+        Thu,  4 Apr 2019 09:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369428;
-        bh=XAk1OCT/5Hw+r6Xdyd4YqzWL8OIm9LX+eFvSmYxlF8U=;
+        s=default; t=1554369422;
+        bh=lZ31QYSzEQ0eA/uVHOo6kxtwqj+L/yiwk2qbjpa9QRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0tWfc0cT8Tvea932FZm5GBbs5d7MFKJokJGNEgfOpVIcuMmqrzdC8e4uh+td+qFDK
-         3iQzmfbzZj38pVKleciR2YxrEYg3L5DiU7p81aaQ5ElnfeICRGI7KNv+QMYrnVEoyI
-         80r7wn2fzSXJictfnrJStN+G85zCjgRss0K2BKlc=
+        b=xAbwJE772+UDTTzPzzfZ04ZM0X5uULE7N1N2JhrAr6bMPHmI6spjq0/1S1g1YkLf2
+         GiSnCls68ZfXbMDxudacWHyagZRBZb4tSpjSI3YbW2A4rJgiRyGl/sjrK9J7ZptW52
+         nOLKsqS6CnGsD8BYEOhPJksBkTStiKKOQP3JyWSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Tolnay <dtolnay@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 204/246] hwrng: virtio - Avoid repeated init of completion
-Date:   Thu,  4 Apr 2019 10:48:24 +0200
-Message-Id: <20190404084626.333448026@linuxfoundation.org>
+Subject: [PATCH 5.0 218/246] netfilter: physdev: relax br_netfilter dependency
+Date:   Thu,  4 Apr 2019 10:48:38 +0200
+Message-Id: <20190404084626.831232056@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,54 +66,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
+[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
 
-The virtio-rng driver uses a completion called have_data to wait for a
-virtio read to be fulfilled by the hypervisor. The completion is reset
-before placing a buffer on the virtio queue and completed by the virtio
-callback once data has been written into the buffer.
+Following command:
+  iptables -D FORWARD -m physdev ...
+causes connectivity loss in some setups.
 
-Prior to this commit, the driver called init_completion on this
-completion both during probe as well as when registering virtio buffers
-as part of a hwrng read operation. The second of these init_completion
-calls should instead be reinit_completion because the have_data
-completion has already been inited by probe. As described in
-Documentation/scheduler/completion.txt, "Calling init_completion() twice
-on the same completion object is most likely a bug".
+Reason is that iptables userspace will probe kernel for the module revision
+of the physdev patch, and physdev has an artificial dependency on
+br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
+is loaded).
 
-This bug was present in the initial implementation of virtio-rng in
-f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
-then the have_data completion was a single static completion rather than
-a member of one of potentially multiple virtrng_info structs as
-implemented later by 08e53fbdb85c ("virtio-rng: support multiple
-virtio-rng devices"). The original driver incorrectly used
-init_completion rather than INIT_COMPLETION to reset have_data during
-read.
+This causes the "phydev" module to be loaded, which in turn enables the
+"call-iptables" infrastructure.
 
-Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
-Chrome OS virtual machine monitor, and confirming that the virtio-rng
-driver successfully produces random bytes from the host.
+bridged packets might then get dropped by the iptables ruleset.
 
-Signed-off-by: David Tolnay <dtolnay@gmail.com>
-Tested-by: David Tolnay <dtolnay@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The better fix would be to change the "call-iptables" defaults to 0 and
+enforce explicit setting to 1, but that breaks backwards compatibility.
+
+This does the next best thing: add a request_module call to checkentry.
+This was a stray '-D ... -m physdev' won't activate br_netfilter
+anymore.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hw_random/virtio-rng.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/netfilter/br_netfilter.h | 1 -
+ net/bridge/br_netfilter_hooks.c      | 5 -----
+ net/netfilter/xt_physdev.c           | 9 +++++++--
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index b89df66ea1ae..7abd604e938c 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
+diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
+index 4cd56808ac4e..89808ce293c4 100644
+--- a/include/net/netfilter/br_netfilter.h
++++ b/include/net/netfilter/br_netfilter.h
+@@ -43,7 +43,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
+ }
  
- 	if (!vi->busy) {
- 		vi->busy = true;
--		init_completion(&vi->have_data);
-+		reinit_completion(&vi->have_data);
- 		register_buffer(vi, buf, size);
+ struct net_device *setup_pre_routing(struct sk_buff *skb);
+-void br_netfilter_enable(void);
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ int br_validate_ipv6(struct net *net, struct sk_buff *skb);
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index c93c35bb73dd..40d058378b52 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -881,11 +881,6 @@ static const struct nf_br_ops br_ops = {
+ 	.br_dev_xmit_hook =	br_nf_dev_xmit,
+ };
+ 
+-void br_netfilter_enable(void)
+-{
+-}
+-EXPORT_SYMBOL_GPL(br_netfilter_enable);
+-
+ /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
+  * br_dev_queue_push_xmit is called afterwards */
+ static const struct nf_hook_ops br_nf_ops[] = {
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index 4034d70bff39..b2e39cb6a590 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -96,8 +96,7 @@ match_outdev:
+ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ {
+ 	const struct xt_physdev_info *info = par->matchinfo;
+-
+-	br_netfilter_enable();
++	static bool brnf_probed __read_mostly;
+ 
+ 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
+ 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
+@@ -111,6 +110,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+ 			return -EINVAL;
  	}
++
++	if (!brnf_probed) {
++		brnf_probed = true;
++		request_module("br_netfilter");
++	}
++
+ 	return 0;
+ }
  
 -- 
 2.19.1
