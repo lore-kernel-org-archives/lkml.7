@@ -2,180 +2,134 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC581C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FEAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A75821738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5949214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JuKtGs2x";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MDVbf3Kl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XvEDaAMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfDDHG6 (ORCPT
+        id S1727152AbfDDHHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:06:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52186 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbfDDHG6 (ORCPT
+        Thu, 4 Apr 2019 03:07:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46092 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfDDHG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:06:58 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C782660850; Thu,  4 Apr 2019 07:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554361616;
-        bh=RyP/Xei6KM+/uvWb2yUEqkVLcT0HyR44aZdBkCuBsag=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JuKtGs2xeipJHsFt/nxAIgJcspQM8zyj3bE0TfcxqV8o/OAKRIymJfAnI9FxyVloA
-         LHr8rGjK3bUf8mI8vZ7SzewMe994gaAsyvFDqP0mqrEUwDM/+byvI52ftOsyDa24fw
-         aIyvwBo1V+DjhZTyaRZipp8L2VOJ7fOQ/ZqKFeyw=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 65FC360850;
-        Thu,  4 Apr 2019 07:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554361615;
-        bh=RyP/Xei6KM+/uvWb2yUEqkVLcT0HyR44aZdBkCuBsag=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MDVbf3KlIZx+DwtCwWJIcMQUC3oxM3TUA4a7wQ61xDXPKclEP4adhlfBOax7yHb9/
-         HHRNz47RJy84egXtsm/MRX75Vs390g4mHvL6CVcmLTmwfDpiVzy+gXY/oQQHvHqsTe
-         paceHQCXdCs2OZm+3idMAduDayMyW18csoGulSxc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 65FC360850
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH 1/2] tty: add SPDX identifiers to Kconfig and Makefiles
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        David Sterba <dsterba@suse.com>, Rob Herring <robh@kernel.org>
-References: <20190402140708.519-1-gregkh@linuxfoundation.org>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <adbb235f-97bb-e088-0067-34aa806a1bd3@codeaurora.org>
-Date:   Thu, 4 Apr 2019 12:36:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 03:06:59 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y6so675401pll.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 00:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=gIu1x+mW1ir5iF7JpPsqOImZuIQnF/0zUJnFMQ0zgOI=;
+        b=XvEDaAMb+Nu/iRu6vQJ4RSQqxMHTmPSawG6QOLFPl/skcZekhRuvQJ0c4y8uLKaUlQ
+         KAp2hR6Xm8dvSN30W1Rp0TBywBTWiM8FIiTRqLoSgjrPT3cSAOhHMYKR59nkDnj9ld3j
+         8ATdxGVDrkElsvvgKx/kRPxX6DUCLLpyhYLMLxN4JDCb8LnnOndX+DqdkmgNZ1F6VgUj
+         yfcMnH2jlVbpz73gdTz9BOBVks+gM0sSleCiWIrN4qnHY1LR+CjUM2BlhjpCJW9V5ZdG
+         9NZ+yppdR72MJo+yS3lGwAXLF5ZX3LOjoz9xgISgjenTfK8BvBynqOb0FuuZxuyxD0HL
+         eZpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=gIu1x+mW1ir5iF7JpPsqOImZuIQnF/0zUJnFMQ0zgOI=;
+        b=Fh8LFAY/6YNVwtpt2h68QoaCOsd6QAcAmZnPfU/IEJ19cwoi30ZxdepYeHhVMd8kbF
+         5V4Z9lOLWTnqDDaARmM9UQvGs0l3CHGu8iZcuob3xDsaOC0jxe89AVMMlbcfjJ3pyVq2
+         XaqIJBYAb9M1CZTN+KTnsH8BsuHu9K3wiqMype1AZAzlM8bCiBWgKtkJIDHDQGLhrbbZ
+         vxqmMocMVE7SV+LZd3fxPw2lciPpglgrFmpGT9B1KlH35zI9WL0TOvphJF4tcrEopMV1
+         KmUICzVw+tNyVkGLghr5bwCd28b1HeJEegqdtRveUxJwmRBuM0EJjNjZFHnXmLsCWcab
+         K2+Q==
+X-Gm-Message-State: APjAAAWtLcA5RnUz6WHMe2JJNKZqsH/k0XQPl9Cfl6bolvhNBr49aRQJ
+        ED89iCTftfyKqUPCZZQLMCakfQ==
+X-Google-Smtp-Source: APXvYqxSsDMrY3z1uaiFmPgDGLE7zhg0r9s5Uq+dcE/70kcAv+KvBfKLCe9bRCE8doW6O0v5hZTRsg==
+X-Received: by 2002:a17:902:768c:: with SMTP id m12mr4670072pll.160.1554361618828;
+        Thu, 04 Apr 2019 00:06:58 -0700 (PDT)
+Received: from arch-late ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id 17sm36102624pfw.65.2019.04.04.00.06.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 00:06:58 -0700 (PDT)
+References: <20190404065330.12382-1-johan@kernel.org>
+User-agent: mu4e 1.0; emacs 27.0.50
+From:   Rui Miguel Silva <rui.silva@linaro.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] staging: greybus: power_supply: fix prop-descriptor request size
+In-reply-to: <20190404065330.12382-1-johan@kernel.org>
+Date:   Thu, 04 Apr 2019 08:06:53 +0100
+Message-ID: <m38swqp7ua.fsf@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190402140708.519-1-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Johan,
+Thanks for the patch.
 
-On 4/2/2019 7:37 PM, Greg Kroah-Hartman wrote:
-> There were a few Kconfig and Makefiles under drivers/tty/ that were
-> missing a SPDX identifier.  Fix that up so that automated tools can
-> properly classify all kernel source files.
+On Thu 04 Apr 2019 at 07:53, Johan Hovold wrote:
+> Since moving the message buffers off the stack, the dynamically
+> allocated get-prop-descriptor request buffer is incorrectly 
+> sized due to
+> using the pointer rather than request-struct size when creating 
+> the
+> operation.
 >
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: David Sterba <dsterba@suse.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Fortunately, the pointer size is always larger than this 
+> one-byte
+> request, but this could still cause trouble on the remote end 
+> due to the
+> unexpected message size.
+>
+> Fixes: 9d15134d067e ("greybus: power_supply: rework get 
+> descriptors")
+> Cc: stable <stable@vger.kernel.org>     # 4.9
+> Cc: Rui Miguel Silva <rui.silva@linaro.org>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
+Nice catch. LGTM.
+
+Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+
+---
 Cheers,
--Mukesh
+	Rui
+
+
 > ---
->   drivers/tty/Kconfig                  | 1 +
->   drivers/tty/hvc/Kconfig              | 1 +
->   drivers/tty/ipwireless/Makefile      | 1 +
->   drivers/tty/serdev/Kconfig           | 1 +
->   drivers/tty/serdev/Makefile          | 1 +
->   drivers/tty/serial/8250/Kconfig      | 1 +
->   drivers/tty/serial/Kconfig           | 1 +
->   drivers/tty/serial/cpm_uart/Makefile | 1 +
->   drivers/tty/serial/jsm/Makefile      | 1 +
->   9 files changed, 9 insertions(+)
+>  drivers/staging/greybus/power_supply.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-> index e0a04bfc873e..8034473c54ca 100644
-> --- a/drivers/tty/Kconfig
-> +++ b/drivers/tty/Kconfig
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   config TTY
->   	bool "Enable TTY" if EXPERT
->   	default y
-> diff --git a/drivers/tty/hvc/Kconfig b/drivers/tty/hvc/Kconfig
-> index 4293c172e120..1a910ec9f643 100644
-> --- a/drivers/tty/hvc/Kconfig
-> +++ b/drivers/tty/hvc/Kconfig
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   if TTY
->   
->   config HVC_DRIVER
-> diff --git a/drivers/tty/ipwireless/Makefile b/drivers/tty/ipwireless/Makefile
-> index fe2e1730986b..a665d021e24d 100644
-> --- a/drivers/tty/ipwireless/Makefile
-> +++ b/drivers/tty/ipwireless/Makefile
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   #
->   # Makefile for the IPWireless driver
->   #
-> diff --git a/drivers/tty/serdev/Kconfig b/drivers/tty/serdev/Kconfig
-> index 1dbc8352e027..46ae732bfc68 100644
-> --- a/drivers/tty/serdev/Kconfig
-> +++ b/drivers/tty/serdev/Kconfig
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   #
->   # Serial bus device driver configuration
->   #
-> diff --git a/drivers/tty/serdev/Makefile b/drivers/tty/serdev/Makefile
-> index 0cbdb9444d9d..078417e5b068 100644
-> --- a/drivers/tty/serdev/Makefile
-> +++ b/drivers/tty/serdev/Makefile
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   serdev-objs := core.o
->   
->   obj-$(CONFIG_SERIAL_DEV_BUS) += serdev.o
-> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-> index 15c2c5463835..296115f6a4d8 100644
-> --- a/drivers/tty/serial/8250/Kconfig
-> +++ b/drivers/tty/serial/8250/Kconfig
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   #
->   # The 8250/16550 serial drivers.  You shouldn't be in this list unless
->   # you somehow have an implicit or explicit dependency on SERIAL_8250.
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 72966bc0ac76..a5032e58c737 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   #
->   # Serial device configuration
->   #
-> diff --git a/drivers/tty/serial/cpm_uart/Makefile b/drivers/tty/serial/cpm_uart/Makefile
-> index 896a5d57881c..3f3a6ed02ed4 100644
-> --- a/drivers/tty/serial/cpm_uart/Makefile
-> +++ b/drivers/tty/serial/cpm_uart/Makefile
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   #
->   # Makefile for the Motorola 8xx FEC ethernet controller
->   #
-> diff --git a/drivers/tty/serial/jsm/Makefile b/drivers/tty/serial/jsm/Makefile
-> index 705d1ff6fdeb..4f2dbada7741 100644
-> --- a/drivers/tty/serial/jsm/Makefile
-> +++ b/drivers/tty/serial/jsm/Makefile
-> @@ -1,3 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
->   #
->   # Makefile for Jasmine adapter
->   #
+> diff --git a/drivers/staging/greybus/power_supply.c 
+> b/drivers/staging/greybus/power_supply.c
+> index 0529e5628c24..ae5c0285a942 100644
+> --- a/drivers/staging/greybus/power_supply.c
+> +++ b/drivers/staging/greybus/power_supply.c
+> @@ -520,7 +520,7 @@ static int 
+> gb_power_supply_prop_descriptors_get(struct gb_power_supply 
+> *gbpsy)
+>  
+>  	op = gb_operation_create(connection,
+>  				 GB_POWER_SUPPLY_TYPE_GET_PROP_DESCRIPTORS,
+> -				 sizeof(req), sizeof(*resp) + 
+> props_count *
+> +				 sizeof(*req), sizeof(*resp) + 
+> props_count *
+>  				 sizeof(struct 
+>  gb_power_supply_props_desc),
+>  				 GFP_KERNEL);
+>  	if (!op)
+
