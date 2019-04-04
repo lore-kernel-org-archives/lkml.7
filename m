@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F42C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDB9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5B72075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B8220855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370720;
-	bh=35ge5w841acp8+JRmN+X9YBoaDbgbR1EPQSpzo3v18g=;
+	s=default; t=1554370729;
+	bh=9JryHmtGTA/Ig+O7TjYWCSMn7omrbVpBAFJ0w2Nc1K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EN6ROpbhj8SEyaxh3qmruWTtHrDWc9bAOL9Pgy1e1oLe8N+hEtLK5xGtv0tmwqd16
-	 UNg2mvusbfJaNueIbvrb/y0cyW2z6s+Vwz8TyTt+pRnwUhUgWXEZOWxmabZzPkRtTQ
-	 aiTKoQuXAC+Y4C+uIwjpC4SIRbuYsJ87s6SM4cvU=
+	b=MZpbsM19Hc/QSJptTsRVEXQe44shPC90aowJ7TBnGsYa7rqJLQU+B4ajvPowBFB2F
+	 xLwMthXvv/EaWiGnNydim4n/iHApnXyz7NAdL3gYSrQg1BZ0txtuYr+9CKIfkYGzBg
+	 Epsu/PF+4XVsW7I9tC+wXiuQQJI+Lr+2AqzTtwgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbfDDJEL (ORCPT
+        id S1731638AbfDDJir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727489AbfDDJEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:06 -0400
+        id S1731888AbfDDJED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF2F2214AF;
-        Thu,  4 Apr 2019 09:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F8332147C;
+        Thu,  4 Apr 2019 09:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368645;
-        bh=35ge5w841acp8+JRmN+X9YBoaDbgbR1EPQSpzo3v18g=;
+        s=default; t=1554368642;
+        bh=9JryHmtGTA/Ig+O7TjYWCSMn7omrbVpBAFJ0w2Nc1K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GoTMokSUObsO0t3IW1cQ7/AtqOvsftjYGBjpDFVUAT6RQUAxAv3WHOvg8aQkGt1Lq
-         tEhB6l59sP67S70v8YGj8QYj0b9xZ5xq80eiLVYMJbd9Qv9nMS7LrBaZme4++lyxg+
-         xuGW5Qt3u2IJ9DI4makJ713Qv1u98v+efx4zFZG0=
+        b=TISwC0JXyD/+mk1m7keOauPxUw/984N8HR6ejef2IEsdyZ7sP6XhX/xNNO0EQVLfp
+         4JcixDlbTnmNoTfH16PQfwnsQ8Oi8xUODC2GJCzBOphulkkooZiXXEh7RpdM41Lvyb
+         AIdphK87xkoFqM2PC0gsJitExjyEUJeNs4hyBf7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 108/187] ath10k: fix shadow register implementation for WCN3990
-Date:   Thu,  4 Apr 2019 10:47:25 +0200
-Message-Id: <20190404084608.345843636@linuxfoundation.org>
+Subject: [PATCH 4.19 089/187] media: mx2_emmaprp: Correct return type for mem2mem buffer helpers
+Date:   Thu,  4 Apr 2019 10:47:06 +0200
+Message-Id: <20190404084607.274137097@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,106 +67,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1863008369ae0407508033b4b00f98b985adeb15 ]
+[ Upstream commit 8d20dcefe471763f23ad538369ec65b51993ffff ]
 
-WCN3990 supports shadow registers write operation support
-for copy engine for regular operation in powersave mode.
+Fix the assigned type of mem2mem buffer handling API.
+Namely, these functions:
 
-Since WCN3990 is a 64-bit target, the shadow register
-implementation needs to be done in the copy engine handlers
-for 64-bit target. Currently the shadow register implementation
-is present in the 32-bit target handlers of copy engine.
+ v4l2_m2m_next_buf
+ v4l2_m2m_last_buf
+ v4l2_m2m_buf_remove
+ v4l2_m2m_next_src_buf
+ v4l2_m2m_next_dst_buf
+ v4l2_m2m_last_src_buf
+ v4l2_m2m_last_dst_buf
+ v4l2_m2m_src_buf_remove
+ v4l2_m2m_dst_buf_remove
 
-Fix the shadow register copy engine write operation
-implementation for 64-bit target(WCN3990).
+return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
+Fixing this is necessary to fix the mem2mem buffer handling API,
+changing the return to the correct struct vb2_v4l2_buffer instead
+of a void pointer.
 
-Fixes: b7ba83f7c414 ("ath10k: add support for shadow register for WNC3990")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/ce.c | 26 +++++++++++++-------------
- drivers/net/wireless/ath/ath10k/ce.h |  2 +-
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/media/platform/mx2_emmaprp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
-index 18c709c484e7..f761d651c16e 100644
---- a/drivers/net/wireless/ath/ath10k/ce.c
-+++ b/drivers/net/wireless/ath/ath10k/ce.c
-@@ -500,14 +500,8 @@ static int _ath10k_ce_send_nolock(struct ath10k_ce_pipe *ce_state,
- 	write_index = CE_RING_IDX_INCR(nentries_mask, write_index);
- 
- 	/* WORKAROUND */
--	if (!(flags & CE_SEND_FLAG_GATHER)) {
--		if (ar->hw_params.shadow_reg_support)
--			ath10k_ce_shadow_src_ring_write_index_set(ar, ce_state,
--								  write_index);
--		else
--			ath10k_ce_src_ring_write_index_set(ar, ctrl_addr,
--							   write_index);
--	}
-+	if (!(flags & CE_SEND_FLAG_GATHER))
-+		ath10k_ce_src_ring_write_index_set(ar, ctrl_addr, write_index);
- 
- 	src_ring->write_index = write_index;
- exit:
-@@ -581,8 +575,14 @@ static int _ath10k_ce_send_nolock_64(struct ath10k_ce_pipe *ce_state,
- 	/* Update Source Ring Write Index */
- 	write_index = CE_RING_IDX_INCR(nentries_mask, write_index);
- 
--	if (!(flags & CE_SEND_FLAG_GATHER))
--		ath10k_ce_src_ring_write_index_set(ar, ctrl_addr, write_index);
-+	if (!(flags & CE_SEND_FLAG_GATHER)) {
-+		if (ar->hw_params.shadow_reg_support)
-+			ath10k_ce_shadow_src_ring_write_index_set(ar, ce_state,
-+								  write_index);
-+		else
-+			ath10k_ce_src_ring_write_index_set(ar, ctrl_addr,
-+							   write_index);
-+	}
- 
- 	src_ring->write_index = write_index;
- exit:
-@@ -1394,12 +1394,12 @@ static int ath10k_ce_alloc_shadow_base(struct ath10k *ar,
- 				       u32 nentries)
+diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
+index 64195c4ddeaf..419e1cb10dc6 100644
+--- a/drivers/media/platform/mx2_emmaprp.c
++++ b/drivers/media/platform/mx2_emmaprp.c
+@@ -274,7 +274,7 @@ static void emmaprp_device_run(void *priv)
  {
- 	src_ring->shadow_base_unaligned = kcalloc(nentries,
--						  sizeof(struct ce_desc),
-+						  sizeof(struct ce_desc_64),
- 						  GFP_KERNEL);
- 	if (!src_ring->shadow_base_unaligned)
- 		return -ENOMEM;
+ 	struct emmaprp_ctx *ctx = priv;
+ 	struct emmaprp_q_data *s_q_data, *d_q_data;
+-	struct vb2_buffer *src_buf, *dst_buf;
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	struct emmaprp_dev *pcdev = ctx->dev;
+ 	unsigned int s_width, s_height;
+ 	unsigned int d_width, d_height;
+@@ -294,8 +294,8 @@ static void emmaprp_device_run(void *priv)
+ 	d_height = d_q_data->height;
+ 	d_size = d_width * d_height;
  
--	src_ring->shadow_base = (struct ce_desc *)
-+	src_ring->shadow_base = (struct ce_desc_64 *)
- 			PTR_ALIGN(src_ring->shadow_base_unaligned,
- 				  CE_DESC_RING_ALIGN);
- 	return 0;
-@@ -1453,7 +1453,7 @@ ath10k_ce_alloc_src_ring(struct ath10k *ar, unsigned int ce_id,
- 		ret = ath10k_ce_alloc_shadow_base(ar, src_ring, nentries);
- 		if (ret) {
- 			dma_free_coherent(ar->dev,
--					  (nentries * sizeof(struct ce_desc) +
-+					  (nentries * sizeof(struct ce_desc_64) +
- 					   CE_DESC_RING_ALIGN),
- 					  src_ring->base_addr_owner_space_unaligned,
- 					  base_addr);
-diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
-index b8fb5382dede..8088f7a66426 100644
---- a/drivers/net/wireless/ath/ath10k/ce.h
-+++ b/drivers/net/wireless/ath/ath10k/ce.h
-@@ -118,7 +118,7 @@ struct ath10k_ce_ring {
- 	u32 base_addr_ce_space;
- 
- 	char *shadow_base_unaligned;
--	struct ce_desc *shadow_base;
-+	struct ce_desc_64 *shadow_base;
- 
- 	/* keep last */
- 	void *per_transfer_context[0];
+-	p_in = vb2_dma_contig_plane_dma_addr(src_buf, 0);
+-	p_out = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
++	p_in = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
++	p_out = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+ 	if (!p_in || !p_out) {
+ 		v4l2_err(&pcdev->v4l2_dev,
+ 			 "Acquiring kernel pointers to buffers failed\n");
 -- 
 2.19.1
 
