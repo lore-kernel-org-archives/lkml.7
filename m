@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707AFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056A3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408E92183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB4D21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369278;
-	bh=82GjCbJ+B/xhlpNLx9s0ns6TgDFH8082n/lmSTM1SEk=;
+	s=default; t=1554369282;
+	bh=8mD6DfCv33e5oU0Hp6FUAiUU4b8FrtIVzz9qZ2WXA/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYNn2av7b4yyU3l4nxsopSGhCnBo0PFJf0RAFSdGZch9LREA3HUwo6BtqGsCfb5z2
-	 LrDT5w9+iGsQ6OCLYlfL/bEFheeBFFLdiQO6MVGzZA0TLtGPCkJ4QU7WkZoNi4oJj4
-	 +3VpbTfdbCA4yQ0IXOiYUoUPtLt65AsXwC8iUgfY=
+	b=rZXd/YmNps8r3syBE2pFjmUf0ijXTdSntHupt1CZmrcKez6NrhPOWy3XI6o7O5n/M
+	 2gvN9GCvU6YTXdWFoKQEztJ7AOfET77GTno3kmCig+wEpyhc49xWmRX80YP7LeDH6S
+	 BnuMCkuaJZmh7xUwlwQX0IGmy5FmDKgPP9VyPveM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387737AbfDDJOg (ORCPT
+        id S2387744AbfDDJOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387725AbfDDJOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:30 -0400
+        id S1733094AbfDDJOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:14:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46AD92054F;
-        Thu,  4 Apr 2019 09:14:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01584214AF;
+        Thu,  4 Apr 2019 09:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369269;
-        bh=82GjCbJ+B/xhlpNLx9s0ns6TgDFH8082n/lmSTM1SEk=;
+        s=default; t=1554369277;
+        bh=8mD6DfCv33e5oU0Hp6FUAiUU4b8FrtIVzz9qZ2WXA/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qeNQCpngCW+RorjJLbcz8Tq5unZCJOunJAn+qwo5toQ0+aDKYJ+Mpgmk1DPslSYG9
-         AY6nXZtYKaroy3YkS0idnu3E9zQmPpVnv0TnitIoA+Cr4APR6Ieajtxd7OHgCmrlsm
-         48THE1/dmMVks/ba/WzvJqhfCpr3C+2I75ZjUEUk=
+        b=HX6ko6JFBXkbdflv+1UoeHVSsY3h9zROExChqp191AMTowBrWmVsP9wZB4nz/nn1V
+         OiAeeZWCahofcLdZ5jfjQNleffZG0ODu5qB0Anark6DNZb+gqnuI4/GVwf03B+gXDf
+         //fzXukjrALak58D5seh2RLZ/DCjTi8rD2O1YiPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 147/246] ath10k: fix shadow register implementation for WCN3990
-Date:   Thu,  4 Apr 2019 10:47:27 +0200
-Message-Id: <20190404084624.315933280@linuxfoundation.org>
+        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 140/246] selftests: skip seccomp get_metadata test if not real root
+Date:   Thu,  4 Apr 2019 10:47:20 +0200
+Message-Id: <20190404084624.068041539@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,106 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1863008369ae0407508033b4b00f98b985adeb15 ]
+[ Upstream commit 3aa415dd2128e478ea3225b59308766de0e94d6b ]
 
-WCN3990 supports shadow registers write operation support
-for copy engine for regular operation in powersave mode.
+The get_metadata() test requires real root, so let's skip it if we're not
+real root.
 
-Since WCN3990 is a 64-bit target, the shadow register
-implementation needs to be done in the copy engine handlers
-for 64-bit target. Currently the shadow register implementation
-is present in the 32-bit target handlers of copy engine.
+Note that I used XFAIL here because that's what the test does later if
+CONFIG_CHEKCKPOINT_RESTORE happens to not be enabled. After looking at the
+code, there doesn't seem to be a nice way to skip tests defined as TEST(),
+since there's no return code (I tried exit(KSFT_SKIP), but that didn't work
+either...). So let's do it this way to be consistent, and easier to fix
+when someone comes along and fixes it.
 
-Fix the shadow register copy engine write operation
-implementation for 64-bit target(WCN3990).
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
-
-Fixes: b7ba83f7c414 ("ath10k: add support for shadow register for WNC3990")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/ce.c | 26 +++++++++++++-------------
- drivers/net/wireless/ath/ath10k/ce.h |  2 +-
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
-index 2a5668b4f6bc..1a1ea4bbf8a0 100644
---- a/drivers/net/wireless/ath/ath10k/ce.c
-+++ b/drivers/net/wireless/ath/ath10k/ce.c
-@@ -500,14 +500,8 @@ static int _ath10k_ce_send_nolock(struct ath10k_ce_pipe *ce_state,
- 	write_index = CE_RING_IDX_INCR(nentries_mask, write_index);
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 7e632b465ab4..6d7a81306f8a 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -2971,6 +2971,12 @@ TEST(get_metadata)
+ 	struct seccomp_metadata md;
+ 	long ret;
  
- 	/* WORKAROUND */
--	if (!(flags & CE_SEND_FLAG_GATHER)) {
--		if (ar->hw_params.shadow_reg_support)
--			ath10k_ce_shadow_src_ring_write_index_set(ar, ce_state,
--								  write_index);
--		else
--			ath10k_ce_src_ring_write_index_set(ar, ctrl_addr,
--							   write_index);
--	}
-+	if (!(flags & CE_SEND_FLAG_GATHER))
-+		ath10k_ce_src_ring_write_index_set(ar, ctrl_addr, write_index);
- 
- 	src_ring->write_index = write_index;
- exit:
-@@ -581,8 +575,14 @@ static int _ath10k_ce_send_nolock_64(struct ath10k_ce_pipe *ce_state,
- 	/* Update Source Ring Write Index */
- 	write_index = CE_RING_IDX_INCR(nentries_mask, write_index);
- 
--	if (!(flags & CE_SEND_FLAG_GATHER))
--		ath10k_ce_src_ring_write_index_set(ar, ctrl_addr, write_index);
-+	if (!(flags & CE_SEND_FLAG_GATHER)) {
-+		if (ar->hw_params.shadow_reg_support)
-+			ath10k_ce_shadow_src_ring_write_index_set(ar, ce_state,
-+								  write_index);
-+		else
-+			ath10k_ce_src_ring_write_index_set(ar, ctrl_addr,
-+							   write_index);
++	/* Only real root can get metadata. */
++	if (geteuid()) {
++		XFAIL(return, "get_metadata requires real root");
++		return;
 +	}
++
+ 	ASSERT_EQ(0, pipe(pipefd));
  
- 	src_ring->write_index = write_index;
- exit:
-@@ -1404,12 +1404,12 @@ static int ath10k_ce_alloc_shadow_base(struct ath10k *ar,
- 				       u32 nentries)
- {
- 	src_ring->shadow_base_unaligned = kcalloc(nentries,
--						  sizeof(struct ce_desc),
-+						  sizeof(struct ce_desc_64),
- 						  GFP_KERNEL);
- 	if (!src_ring->shadow_base_unaligned)
- 		return -ENOMEM;
- 
--	src_ring->shadow_base = (struct ce_desc *)
-+	src_ring->shadow_base = (struct ce_desc_64 *)
- 			PTR_ALIGN(src_ring->shadow_base_unaligned,
- 				  CE_DESC_RING_ALIGN);
- 	return 0;
-@@ -1461,7 +1461,7 @@ ath10k_ce_alloc_src_ring(struct ath10k *ar, unsigned int ce_id,
- 		ret = ath10k_ce_alloc_shadow_base(ar, src_ring, nentries);
- 		if (ret) {
- 			dma_free_coherent(ar->dev,
--					  (nentries * sizeof(struct ce_desc) +
-+					  (nentries * sizeof(struct ce_desc_64) +
- 					   CE_DESC_RING_ALIGN),
- 					  src_ring->base_addr_owner_space_unaligned,
- 					  base_addr);
-diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
-index ead9987c3259..463e2fc8b501 100644
---- a/drivers/net/wireless/ath/ath10k/ce.h
-+++ b/drivers/net/wireless/ath/ath10k/ce.h
-@@ -118,7 +118,7 @@ struct ath10k_ce_ring {
- 	u32 base_addr_ce_space;
- 
- 	char *shadow_base_unaligned;
--	struct ce_desc *shadow_base;
-+	struct ce_desc_64 *shadow_base;
- 
- 	/* keep last */
- 	void *per_transfer_context[0];
+ 	pid = fork();
 -- 
 2.19.1
 
