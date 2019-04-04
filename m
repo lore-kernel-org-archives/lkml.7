@@ -2,52 +2,53 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E07C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F013C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8B92075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCB120820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371074;
-	bh=A+q1ljrLu88squrDz/VCmdUTab98J4rAOPHq46cfohA=;
+	s=default; t=1554371079;
+	bh=FDLj2gQDtfh77BzlMtLajaBM0hcPDgSPGsjfv2S5TZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U+sJUpdQ33BiKni8KCPntfd4ffk7LWmCGLgAWRpP90DJlOuwFDs1ZgIwsBgiDRgar
-	 ALMBpmr7Y2emBz+acStN9HiYBevqQy8BqcggfOljZZBeVTNmZLOtMC4WG2iPSxZWML
-	 uXJ64mNiIrY0ypVPy1lfsU7kwa4lR732apa3v/tw=
+	b=RSKfDd1rO7QKVswG0Bvh9utR/RTOHwz87LfFwmPS8T+czBg2tY6HrKa8rGI7MO+vl
+	 sqnY+syDMrGeOtJdGT/6DxMZn1/yCS53Lt9L0y06oJaoW3AEvMKTiN16Gw86//M7Il
+	 6DNn1P/F8UDxigds+5QiFwaNK7tYdlKZj7eZUXSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbfDDI7r (ORCPT
+        id S1731112AbfDDI7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730818AbfDDI7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:43 -0400
+        id S1731098AbfDDI7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1477B20652;
-        Thu,  4 Apr 2019 08:59:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E91E720652;
+        Thu,  4 Apr 2019 08:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368382;
-        bh=A+q1ljrLu88squrDz/VCmdUTab98J4rAOPHq46cfohA=;
+        s=default; t=1554368374;
+        bh=FDLj2gQDtfh77BzlMtLajaBM0hcPDgSPGsjfv2S5TZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XguwDsmAnO9byTKVMKm8TIvq1UeKuKc8TtQmqsRm+V8C1KG/KhLmWWW5EHwz96o8+
-         rILID60mB6bHvCVWhoAf10HvEOCbQIEry7STjc4GuaeF3xegCCSC0oHelgcsav2FkX
-         JoNbZXnMIV4JPHOJtGBZIwIzlD21Lo/w122MvbZ4=
+        b=cjsTP5XnKK9cR+BWx0JVc98EfMbvIHANCRiLZwB/6zQ7ZtGvTuzi2vwzicpqHL8CH
+         DfuBDW2HijHjbfjUUAaBA2R4rB1JsPRQ3cWtg17FVL1POSxmuGk0/s2KQjqD7WCX6N
+         3IIwL6+X+TrDgb7xX/CrElI+QU6dITpssUuMH6AM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH 4.19 004/187] tty/serial: atmel: RS485 HD w/DMA: enable RX after TX is stopped
-Date:   Thu,  4 Apr 2019 10:45:41 +0200
-Message-Id: <20190404084603.306298950@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 016/187] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
+Date:   Thu,  4 Apr 2019 10:45:53 +0200
+Message-Id: <20190404084603.861490774@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,79 +67,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+[ Upstream commit 43d281662fdb46750d49417559b71069f435298d ]
 
-commit 69646d7a3689fbe1a65ae90397d22ac3f1b8d40f upstream.
+The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
+dynamically allocate a struct member, but this is normally intended for
+local variables.
 
-In half-duplex operation, RX should be started after TX completes.
+Building with clang, I get a warning for a few locations that check the
+address of the cpumask_var_t:
 
-If DMA is used, there is a case when the DMA transfer completes but the
-TX FIFO is not emptied, so the RX cannot be restarted just yet.
+drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
 
-Use a boolean variable to store this state and rearm TX interrupt mask
-to be signaled again that the transfer finished. In interrupt transmit
-handler this variable is used to start RX. A warning message is generated
-if RX is activated before TX fifo is cleared.
+As far as I can tell, the code is still correct, as the truth value of
+the pointer is what we need in this configuration. To get rid of
+the warning, use cpumask_available() instead of checking the
+pointer directly.
 
-Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable
-RX after TX is done")
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Acked-by: Richard Genoud <richard.genoud@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/atmel_serial.c |   24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -163,6 +163,8 @@ struct atmel_uart_port {
- 	unsigned int		pending_status;
- 	spinlock_t		lock_suspended;
+diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+index 9a7f70db20c7..733d9172425b 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -119,7 +119,7 @@ static void enic_init_affinity_hint(struct enic *enic)
  
-+	bool			hd_start_rx;	/* can start RX during half-duplex operation */
-+
- #ifdef CONFIG_PM
- 	struct {
- 		u32		cr;
-@@ -805,8 +807,13 @@ static void atmel_complete_tx_dma(void *
- 	if (!uart_circ_empty(xmit))
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
- 	else if (atmel_uart_is_half_duplex(port)) {
--		/* DMA done, stop TX, start RX for RS485 */
--		atmel_start_rx(port);
-+		/*
-+		 * DMA done, re-enable TXEMPTY and signal that we can stop
-+		 * TX and start RX for RS485
-+		 */
-+		atmel_port->hd_start_rx = true;
-+		atmel_uart_writel(port, ATMEL_US_IER,
-+				  atmel_port->tx_done_mask);
- 	}
+ 	for (i = 0; i < enic->intr_count; i++) {
+ 		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
+-		    (enic->msix[i].affinity_mask &&
++		    (cpumask_available(enic->msix[i].affinity_mask) &&
+ 		     !cpumask_empty(enic->msix[i].affinity_mask)))
+ 			continue;
+ 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
+@@ -148,7 +148,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+ 	for (i = 0; i < enic->intr_count; i++) {
+ 		if (enic_is_err_intr(enic, i)		||
+ 		    enic_is_notify_intr(enic, i)	||
+-		    !enic->msix[i].affinity_mask	||
++		    !cpumask_available(enic->msix[i].affinity_mask) ||
+ 		    cpumask_empty(enic->msix[i].affinity_mask))
+ 			continue;
+ 		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
+@@ -161,7 +161,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+ 	for (i = 0; i < enic->wq_count; i++) {
+ 		int wq_intr = enic_msix_wq_intr(enic, i);
  
- 	spin_unlock_irqrestore(&port->lock, flags);
-@@ -1252,9 +1259,20 @@ atmel_handle_transmit(struct uart_port *
- 	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
- 
- 	if (pending & atmel_port->tx_done_mask) {
--		/* Either PDC or interrupt transmission */
- 		atmel_uart_writel(port, ATMEL_US_IDR,
- 				  atmel_port->tx_done_mask);
-+
-+		/* Start RX if flag was set and FIFO is empty */
-+		if (atmel_port->hd_start_rx) {
-+			if (!(atmel_uart_readl(port, ATMEL_US_CSR)
-+					& ATMEL_US_TXEMPTY))
-+				dev_warn(port->dev, "Should start RX, but TX fifo is not empty\n");
-+
-+			atmel_port->hd_start_rx = false;
-+			atmel_start_rx(port);
-+			return;
-+		}
-+
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
- 	}
- }
+-		if (enic->msix[wq_intr].affinity_mask &&
++		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
+ 		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
+ 			netif_set_xps_queue(enic->netdev,
+ 					    enic->msix[wq_intr].affinity_mask,
+-- 
+2.19.1
+
 
 
