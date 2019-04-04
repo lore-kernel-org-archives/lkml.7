@@ -2,67 +2,106 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5195FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AAFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2440120882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554394795;
-	bh=G78JqYgq7n3sCHNgjQhR8RqmephFQJg6/G2R/ZkCSjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LtmD0nBHDqRHM5IuJ2t793pgYKSEDQAmriUvG3E/PI8ntjXwnVCskgXB9CTfAHrYF
-	 aNk4yp8DXtP20Bv8/eWvJF6VmyANGE0VHeViQ9Np9R3irG7jtuSkuA1zXhcM1wtV2C
-	 nkbu6MhPi5JkyHr8UJjY6PGyvNGcy9eQoD+L1qOI=
+	by mail.kernel.org (Postfix) with ESMTP id 78563206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfDDQTx (ORCPT
+        id S1729086AbfDDQXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:19:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727191AbfDDQTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:19:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B5D5206DD;
-        Thu,  4 Apr 2019 16:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554394792;
-        bh=G78JqYgq7n3sCHNgjQhR8RqmephFQJg6/G2R/ZkCSjU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gfyXZ/XmNiy/nizy/vkPJ/XW9NqvKQjlMQNShPP7dYCCeM0cOYbZK6HQ9edn0b1BN
-         XG/cjVkyL073x2qsETHzjYIoCapj5DwZOWeailb5mn+3hTw9Mm8W2m52A7IpgihQVx
-         N2oM5usf0yeYmxJJSercNVohO1zhh+cw/gd5blOE=
-Date:   Thu, 4 Apr 2019 18:19:49 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nilesh Hase <nilhase25@gmail.com>
-Cc:     matthias.bgg@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        sankalpnegi2310@gmail.com, neil@brown.name, sr@denx.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] MT7621-SPI: spi-mt7621: Fix alignment and style problems
- Fixed Coding function and style issues
-Message-ID: <20190404161948.GA9440@kroah.com>
-References: <20190403193107.23873-1-nilhase25@gmail.com>
+        Thu, 4 Apr 2019 12:23:12 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:41457 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727353AbfDDQXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:23:11 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-152-tcrawFhSMySPDwlHVrKWFw-1; Thu, 04 Apr 2019 17:23:09 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
+ 4 Apr 2019 17:24:15 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 4 Apr 2019 17:24:15 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Fenghua Yu' <fenghua.yu@intel.com>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Borislav Petkov' <bp@alien8.de>,
+        'H Peter Anvin' <hpa@zytor.com>,
+        'Dave Hansen' <dave.hansen@intel.com>,
+        'Paolo Bonzini' <pbonzini@redhat.com>,
+        'Ashok Raj' <ashok.raj@intel.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Kalle Valo' <kvalo@codeaurora.org>,
+        'Xiaoyao Li ' <xiaoyao.li@intel.com>,
+        'Michael Chan' <michael.chan@broadcom.com>,
+        "'Ravi V Shankar'" <ravi.v.shankar@intel.com>
+CC:     'linux-kernel' <linux-kernel@vger.kernel.org>,
+        'x86' <x86@kernel.org>,
+        "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>
+Subject: RE: [PATCH v6 04/20] x86/split_lock: Align x86_capability to unsigned
+ long to avoid split locked access
+Thread-Topic: [PATCH v6 04/20] x86/split_lock: Align x86_capability to
+ unsigned long to avoid split locked access
+Thread-Index: AQHU6mTrt6127B4KeUCFmArv0ksdfKYsEdZAgAAdv4A=
+Date:   Thu, 4 Apr 2019 16:24:15 +0000
+Message-ID: <c0d43317cce34389ac4a1e91e97d909b@AcuMS.aculab.com>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+ <1554326526-172295-5-git-send-email-fenghua.yu@intel.com>
+ <73ecc9de54c3424da3cddd1a34cb8701@AcuMS.aculab.com>
+In-Reply-To: <73ecc9de54c3424da3cddd1a34cb8701@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403193107.23873-1-nilhase25@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MC-Unique: tcrawFhSMySPDwlHVrKWFw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 01:01:07AM +0530, Nilesh Hase wrote:
-> Signed-off-by: Nilesh Hase <nilhase25@gmail.com>
-> ---
->  drivers/staging/mt7621-spi/spi-mt7621.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+RnJvbTogRGF2aWQgTGFpZ2h0DQo+IFNlbnQ6IDA0IEFwcmlsIDIwMTkgMTU6NDUNCj4gDQo+IEZy
+b206IEZlbmdodWEgWXUNCj4gPiBTZW50OiAwMyBBcHJpbCAyMDE5IDIyOjIyDQo+ID4gc2V0X2Nw
+dV9jYXAoKSBjYWxscyBsb2NrZWQgQlRTIGFuZCBjbGVhcl9jcHVfY2FwKCkgY2FsbHMgbG9ja2Vk
+IEJUUiB0bw0KPiA+IG9wZXJhdGUgb24gYml0bWFwIGRlZmluZWQgaW4geDg2X2NhcGFiaWxpdHku
+DQo+ID4NCj4gPiBMb2NrZWQgQlRTL0JUUiBhY2Nlc3NlcyBhIHNpbmdsZSB1bnNpZ25lZCBsb25n
+IGxvY2F0aW9uLiBJbiA2NC1iaXQgbW9kZSwNCj4gPiB0aGUgbG9jYXRpb24gaXMgYXQ6DQo+ID4g
+YmFzZSBhZGRyZXNzIG9mIHg4Nl9jYXBhYmlsaXR5ICsgKGJpdCBvZmZzZXQgaW4geDg2X2NhcGFi
+aWxpdHkgLyA2NCkgKiA4DQo+ID4NCj4gPiBTaW5jZSBiYXNlIGFkZHJlc3Mgb2YgeDg2X2NhcGFi
+aWxpdHkgbWF5IG5vdCBiZSBhbGlnbmVkIHRvIHVuc2lnbmVkIGxvbmcsDQo+ID4gdGhlIHNpbmds
+ZSB1bnNpZ25lZCBsb25nIGxvY2F0aW9uIG1heSBjcm9zcyB0d28gY2FjaGUgbGluZXMgYW5kDQo+
+ID4gYWNjZXNzaW5nIHRoZSBsb2NhdGlvbiBieSBsb2NrZWQgQlRTL0JUUiBpbnRyb2R1Y3Rpb25z
+IHdpbGwgdHJpZ2dlciAjQUMuDQo+IA0KPiBUaGF0IGlzIG5vdCB0cnVlLg0KPiBUaGUgQlRTL0JU
+UiBpbnN0cnVjdGlvbnMgYWNjZXNzIHRoZSBtZW1vcnkgd29yZCB0aGF0IGNvbnRhaW5zIHRoZQ0K
+PiBleHBlY3RlZCBiaXQuDQo+IFRoZSAnb3BlcmFuZCBzaXplJyBvbmx5IGFmZmVjdHMgdGhlIHNp
+emUgb2YgdGhlIHJlZ2lzdGVyIHVzZSBmb3IgdGhlDQo+IGJpdCBvZmZzZXQuDQo+IElmIHRoZSAn
+b3BlcmFuZCBzaXplJyBpcyAxNiBiaXRzIHdpZGUgKCsvLSAzMmsgYml0IG9mZnNldCkgdGhlIGNw
+dSBtaWdodA0KPiBkbyBhbiBhbGlnbmVkIDE2Yml0IG1lbW9yeSBhY2Nlc3MsIG90aGVyd2lzZSAo
+MzIgb3IgNjRiaXQgYml0IG9mZnNldCkgaXQNCj4gbWlnaHQgZG8gYW4gYWxpZ25lZCAzMiBiaXQg
+YWNjZXNzLg0KPiBJdCBzaG91bGQgbmV2ZXIgZG8gYW4gNjRiaXQgYWNjZXNzIGFuZCBuZXZlciBh
+IG1pc2FsaWduZWQgb25lIChldmVuIGlmDQo+IHRoZSBiYXNlIGFkZHJlc3MgaXMgbWlzYWxpZ25l
+ZCkuDQoNCkhtbW0uLi4gSSBtYXkgaGF2ZSBtaXNyZWFkIHRoaW5ncyBzbGlnaHRseS4NClRoZSBh
+Y2Nlc3NlZCBhZGRyZXNzIGlzICdFZmZlY3RpdmUgQWRkcmVzcyArICg0IOKIlyAoQml0T2Zmc2V0
+IERJViAzMikpJy4NCkhvd2V2ZXIgbm90aGluZyBzdWdnZXN0cyB0aGF0IGl0IGV2ZXIgZG9lcyA2
+NGJpdCBhY2Nlc3Nlcy4NCg0KSWYgaXQgZG9lcyBkbyA2NGJpdCBhY2Nlc3NlcyB3aGVuIHRoZSBv
+cGVyYW5kIHNpemUgaXMgNjQgYml0cyB0aGVuIHRoZQ0KYXNtIHN0dWJzIG91Z2h0IHRvIGJlIGNo
+YW5nZWQgdG8gb25seSBzcGVjaWZ5IDMyYml0IG9wZXJhbmQgc2l6ZS4NCg0KCURhdmlkDQoNCi0N
+ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
+aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
+cykNCg==
 
-I can't take patches without any changelog content, sorry.
