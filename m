@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5D9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63232C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB4F21738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B0D20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368193;
-	bh=ZuopJVfDodS7DATjzHhXKr49aU7R/DNGM2XSgkxnBZ8=;
+	s=default; t=1554368198;
+	bh=sYc8bypQZxCEC3sYBB3t5MvSWJRKEwLOapSm82liDbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BWuoOi9sj6hTihxpv6lZuTYq/TdlY0FgjwZ7X4KafhtW6yLMvrrNeouK3ICsVBHM9
-	 Qq6ceVmsdeEqbdEcuqswmfA0moByg0hKnRffd+sOnsgvI7zYrceUJ2m/pSO9H4ZZd5
-	 fg/bRiAjDYHSHsYdxfYUULg9Rr97YqACFO8C4h0M=
+	b=Uiu0aLM0I4SxVSe7QohVABMJvf74wxqaNCRkcMvZlswKl27t+QZr60JvQUyj/icDb
+	 mWd18iGuLkgWLWOxhpZi2mUt4V5IQ0P9wAwiY2bjKG7sEGXQiE5gw7Tj59u6t2YYhX
+	 6ABfGezxIXcwjGrcPFq9lBnonLccRiF0detXWNEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfDDI4c (ORCPT
+        id S1730508AbfDDI4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:56:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59740 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfDDI41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:27 -0400
+        id S1725904AbfDDI4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523552177E;
-        Thu,  4 Apr 2019 08:56:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 174EC20693;
+        Thu,  4 Apr 2019 08:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368185;
-        bh=ZuopJVfDodS7DATjzHhXKr49aU7R/DNGM2XSgkxnBZ8=;
+        s=default; t=1554368193;
+        bh=sYc8bypQZxCEC3sYBB3t5MvSWJRKEwLOapSm82liDbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7e7R7+5Efoy2mQgRdzQA8WyJC/X2pKn6P0KB8fauEJaXMKUvDlnDd34WzeQ1SsqO
-         lBg6dZsEOPKoyh/i1OmogG4M9uljlJJw1IE+feznVtr9w+aLTv0F/FwKZCZiNlhhll
-         11b0MgymVmcy8qye9lyRVV5VoI6GG/viAfhJcBuo=
+        b=ae81v6bsJVggpvqPV895uSUvWjCrLxqGQUTt9QzvJtzP/ePcCBwKxidERx63ZiTrh
+         3Lwc2WjHf4z4Z+itVDQz5neCnlU9m7SliqzU+oB32giA/zM7MKJTFffAXbE1QXk6cU
+         WuXTTW8LIII4FNH7Blm/7f3DEI+dtpwtVEqY0fXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Chieh-Min Wang <chiehminw@synology.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 060/121] media: s5p-jpeg: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:47:28 +0200
-Message-Id: <20190404084548.502861657@linuxfoundation.org>
+Subject: [PATCH 4.14 071/121] netfilter: conntrack: fix cloned unconfirmed skb->_nfct race in __nf_conntrack_confirm
+Date:   Thu,  4 Apr 2019 10:47:39 +0200
+Message-Id: <20190404084549.142349950@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,197 +66,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4a88f89885c7cf65c62793f385261a6e3315178a ]
+[ Upstream commit 13f5251fd17088170c18844534682d9cab5ff5aa ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+For bridge(br_flood) or broadcast/multicast packets, they could clone
+skb with unconfirmed conntrack which break the rule that unconfirmed
+skb->_nfct is never shared.  With nfqueue running on my system, the race
+can be easily reproduced with following warning calltrace:
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+[13257.707525] CPU: 0 PID: 12132 Comm: main Tainted: P        W       4.4.60 #7744
+[13257.707568] Hardware name: Qualcomm (Flattened Device Tree)
+[13257.714700] [<c021f6dc>] (unwind_backtrace) from [<c021bce8>] (show_stack+0x10/0x14)
+[13257.720253] [<c021bce8>] (show_stack) from [<c0449e10>] (dump_stack+0x94/0xa8)
+[13257.728240] [<c0449e10>] (dump_stack) from [<c022a7e0>] (warn_slowpath_common+0x94/0xb0)
+[13257.735268] [<c022a7e0>] (warn_slowpath_common) from [<c022a898>] (warn_slowpath_null+0x1c/0x24)
+[13257.743519] [<c022a898>] (warn_slowpath_null) from [<c06ee450>] (__nf_conntrack_confirm+0xa8/0x618)
+[13257.752284] [<c06ee450>] (__nf_conntrack_confirm) from [<c0772670>] (ipv4_confirm+0xb8/0xfc)
+[13257.761049] [<c0772670>] (ipv4_confirm) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
+[13257.769725] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
+[13257.777108] [<c06e7af0>] (nf_hook_slow) from [<c07f20b4>] (br_nf_post_routing+0x274/0x31c)
+[13257.784486] [<c07f20b4>] (br_nf_post_routing) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
+[13257.792556] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
+[13257.800458] [<c06e7af0>] (nf_hook_slow) from [<c07e5580>] (br_forward_finish+0x94/0xa4)
+[13257.808010] [<c07e5580>] (br_forward_finish) from [<c07f22ac>] (br_nf_forward_finish+0x150/0x1ac)
+[13257.815736] [<c07f22ac>] (br_nf_forward_finish) from [<c06e8df0>] (nf_reinject+0x108/0x170)
+[13257.824762] [<c06e8df0>] (nf_reinject) from [<c06ea854>] (nfqnl_recv_verdict+0x3d8/0x420)
+[13257.832924] [<c06ea854>] (nfqnl_recv_verdict) from [<c06e940c>] (nfnetlink_rcv_msg+0x158/0x248)
+[13257.841256] [<c06e940c>] (nfnetlink_rcv_msg) from [<c06e5564>] (netlink_rcv_skb+0x54/0xb0)
+[13257.849762] [<c06e5564>] (netlink_rcv_skb) from [<c06e4ec8>] (netlink_unicast+0x148/0x23c)
+[13257.858093] [<c06e4ec8>] (netlink_unicast) from [<c06e5364>] (netlink_sendmsg+0x2ec/0x368)
+[13257.866348] [<c06e5364>] (netlink_sendmsg) from [<c069fb8c>] (sock_sendmsg+0x34/0x44)
+[13257.874590] [<c069fb8c>] (sock_sendmsg) from [<c06a03dc>] (___sys_sendmsg+0x1ec/0x200)
+[13257.882489] [<c06a03dc>] (___sys_sendmsg) from [<c06a11c8>] (__sys_sendmsg+0x3c/0x64)
+[13257.890300] [<c06a11c8>] (__sys_sendmsg) from [<c0209b40>] (ret_fast_syscall+0x0/0x34)
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+The original code just triggered the warning but do nothing. It will
+caused the shared conntrack moves to the dying list and the packet be
+droppped (nf_ct_resolve_clash returns NF_DROP for dying conntrack).
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
+- Reproduce steps:
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
++----------------------------+
+|          br0(bridge)       |
+|                            |
++-+---------+---------+------+
+  | eth0|   | eth1|   | eth2|
+  |     |   |     |   |     |
+  +--+--+   +--+--+   +---+-+
+     |         |          |
+     |         |          |
+  +--+-+     +-+--+    +--+-+
+  | PC1|     | PC2|    | PC3|
+  +----+     +----+    +----+
+
+iptables -A FORWARD -m mark --mark 0x1000000/0x1000000 -j NFQUEUE --queue-num 100 --queue-bypass
+
+ps: Our nfq userspace program will set mark on packets whose connection
+has already been processed.
+
+PC1 sends broadcast packets simulated by hping3:
+
+hping3 --rand-source --udp 192.168.1.255 -i u100
+
+- Broadcast racing flow chart is as follow:
+
+br_handle_frame
+  BR_HOOK(NFPROTO_BRIDGE, NF_BR_PRE_ROUTING, br_handle_frame_finish)
+  // skb->_nfct (unconfirmed conntrack) is constructed at PRE_ROUTING stage
+  br_handle_frame_finish
+    // check if this packet is broadcast
+    br_flood_forward
+      br_flood
+        list_for_each_entry_rcu(p, &br->port_list, list) // iterate through each port
+          maybe_deliver
+            deliver_clone
+              skb = skb_clone(skb)
+              __br_forward
+                BR_HOOK(NFPROTO_BRIDGE, NF_BR_FORWARD,...)
+                // queue in our nfq and received by our userspace program
+                // goto __nf_conntrack_confirm with process context on CPU 1
+    br_pass_frame_up
+      BR_HOOK(NFPROTO_BRIDGE, NF_BR_LOCAL_IN,...)
+      // goto __nf_conntrack_confirm with softirq context on CPU 0
+
+Because conntrack confirm can happen at both INPUT and POSTROUTING
+stage.  So with NFQUEUE running, skb->_nfct with the same unconfirmed
+conntrack could race on different core.
+
+This patch fixes a repeating kernel splat, now it is only displayed
+once.
+
+Signed-off-by: Chieh-Min Wang <chiehminw@synology.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 38 ++++++++++-----------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ net/netfilter/nf_conntrack_core.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-index faac8161b683..d7679e4585fd 100644
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -793,14 +793,14 @@ static void skip(struct s5p_jpeg_buffer *buf, long len);
- static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	unsigned int word;
- 	int c, x, components;
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index f07357ba9629..06520bf30f29 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -763,10 +763,18 @@ __nf_conntrack_confirm(struct sk_buff *skb)
+ 	 * REJECT will give spurious warnings here.
+ 	 */
  
- 	jpeg_buffer.size = 2; /* Ls */
- 	jpeg_buffer.data =
--		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sos + 2;
-+		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sos + 2;
- 	jpeg_buffer.curr = 0;
- 
- 	word = 0;
-@@ -830,14 +830,14 @@ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	unsigned int word;
- 	int c, i, n, j;
- 
- 	for (j = 0; j < ctx->out_q.dht.n; ++j) {
- 		jpeg_buffer.size = ctx->out_q.dht.len[j];
--		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
-+		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
- 				   ctx->out_q.dht.marker[j];
- 		jpeg_buffer.curr = 0;
- 
-@@ -889,13 +889,13 @@ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	int c, x, components;
- 
- 	jpeg_buffer.size = ctx->out_q.sof_len;
- 	jpeg_buffer.data =
--		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sof;
-+		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sof;
- 	jpeg_buffer.curr = 0;
- 
- 	skip(&jpeg_buffer, 5); /* P, Y, X */
-@@ -920,14 +920,14 @@ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_parse_q_tbl(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	unsigned int word;
- 	int c, i, j;
- 
- 	for (j = 0; j < ctx->out_q.dqt.n; ++j) {
- 		jpeg_buffer.size = ctx->out_q.dqt.len[j];
--		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
-+		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
- 				   ctx->out_q.dqt.marker[j];
- 		jpeg_buffer.curr = 0;
- 
-@@ -2072,15 +2072,15 @@ static void s5p_jpeg_device_run(void *priv)
- {
- 	struct s5p_jpeg_ctx *ctx = priv;
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	unsigned long src_addr, dst_addr, flags;
- 
- 	spin_lock_irqsave(&ctx->jpeg->slock, flags);
- 
- 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
--	src_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	dst_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-+	src_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
-+	dst_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
- 
- 	s5p_jpeg_reset(jpeg->regs);
- 	s5p_jpeg_poweron(jpeg->regs);
-@@ -2153,7 +2153,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
- 	struct s5p_jpeg_fmt *fmt;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	struct s5p_jpeg_addr jpeg_addr = {};
- 	u32 pix_size, padding_bytes = 0;
- 
-@@ -2172,7 +2172,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- 		vb = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
- 	}
- 
--	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 
- 	if (fmt->colplanes == 2) {
- 		jpeg_addr.cb = jpeg_addr.y + pix_size - padding_bytes;
-@@ -2190,7 +2190,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	unsigned int jpeg_addr = 0;
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
-@@ -2198,7 +2198,7 @@ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- 	else
- 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 
--	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 	if (jpeg->variant->version == SJPEG_EXYNOS5433 &&
- 	    ctx->mode == S5P_JPEG_DECODE)
- 		jpeg_addr += ctx->out_q.sos;
-@@ -2314,7 +2314,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
- 	struct s5p_jpeg_fmt *fmt;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	struct s5p_jpeg_addr jpeg_addr = {};
- 	u32 pix_size;
- 
-@@ -2328,7 +2328,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- 		fmt = ctx->cap_q.fmt;
- 	}
- 
--	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 
- 	if (fmt->colplanes == 2) {
- 		jpeg_addr.cb = jpeg_addr.y + pix_size;
-@@ -2346,7 +2346,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	unsigned int jpeg_addr = 0;
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
-@@ -2354,7 +2354,7 @@ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- 	else
- 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 
--	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 	exynos3250_jpeg_jpgadr(jpeg->regs, jpeg_addr);
- }
- 
+-	/* No external references means no one else could have
+-	 * confirmed us.
++	/* Another skb with the same unconfirmed conntrack may
++	 * win the race. This may happen for bridge(br_flood)
++	 * or broadcast/multicast packets do skb_clone with
++	 * unconfirmed conntrack.
+ 	 */
+-	WARN_ON(nf_ct_is_confirmed(ct));
++	if (unlikely(nf_ct_is_confirmed(ct))) {
++		WARN_ON_ONCE(1);
++		nf_conntrack_double_unlock(hash, reply_hash);
++		local_bh_enable();
++		return NF_DROP;
++	}
++
+ 	pr_debug("Confirming conntrack %p\n", ct);
+ 	/* We have to check the DYING flag after unlink to prevent
+ 	 * a race against nf_ct_get_next_corpse() possibly called from
 -- 
 2.19.1
 
