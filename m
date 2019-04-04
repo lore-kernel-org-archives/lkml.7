@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A75C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E0C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE16B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6302220882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbfDDIT1 (ORCPT
+        id S1728982AbfDDITd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:19:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6240 "EHLO huawei.com"
+        Thu, 4 Apr 2019 04:19:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6241 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728919AbfDDITT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728909AbfDDITT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 04:19:19 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 07FCEA736DC0DD7F161B;
+        by Forcepoint Email with ESMTP id 11342FE9F908159C1A9E;
         Thu,  4 Apr 2019 16:19:15 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
@@ -30,11 +30,12 @@ To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <sergei.shtylyov@cogentembedded.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH V2 net-next 10/12] net: hns3: prevent change MTU when resetting
-Date:   Thu, 4 Apr 2019 16:17:57 +0800
-Message-ID: <1554365879-7932-11-git-send-email-tanhuazhong@huawei.com>
+        Jian Shen <shenjian15@huawei.com>,
+        "Peng Li" <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 08/12] net: hns3: add protect when handling mac addr list
+Date:   Thu, 4 Apr 2019 16:17:55 +0800
+Message-ID: <1554365879-7932-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554365879-7932-1-git-send-email-tanhuazhong@huawei.com>
 References: <1554365879-7932-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,29 +48,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When resetting, the changing of MTU is not allowed, so this patch
-adds checking reset status in hns3_nic_change_mtu() to do that.
+From: Jian Shen <shenjian15@huawei.com>
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+It used netdev->uc and netdev->mc list in function
+hns3_recover_hw_addr() and hns3_remove_hw_addr().
+We should add protect for them.
+
+Fixes: f05e21097121 ("net: hns3: Clear mac vlan table entries when unload driver or function reset")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 476c23d..0e31f74 100644
+index 5b34d2e..476c23d 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1591,6 +1591,9 @@ static int hns3_nic_change_mtu(struct net_device *netdev, int new_mtu)
- 	struct hnae3_handle *h = hns3_get_handle(netdev);
- 	int ret;
+@@ -3791,12 +3791,13 @@ static int hns3_recover_hw_addr(struct net_device *ndev)
+ 	struct netdev_hw_addr *ha, *tmp;
+ 	int ret = 0;
  
-+	if (hns3_nic_resetting(netdev))
-+		return -EBUSY;
++	netif_addr_lock_bh(ndev);
+ 	/* go through and sync uc_addr entries to the device */
+ 	list = &ndev->uc;
+ 	list_for_each_entry_safe(ha, tmp, &list->list, list) {
+ 		ret = hns3_nic_uc_sync(ndev, ha->addr);
+ 		if (ret)
+-			return ret;
++			goto out;
+ 	}
+ 
+ 	/* go through and sync mc_addr entries to the device */
+@@ -3804,9 +3805,11 @@ static int hns3_recover_hw_addr(struct net_device *ndev)
+ 	list_for_each_entry_safe(ha, tmp, &list->list, list) {
+ 		ret = hns3_nic_mc_sync(ndev, ha->addr);
+ 		if (ret)
+-			return ret;
++			goto out;
+ 	}
+ 
++out:
++	netif_addr_unlock_bh(ndev);
+ 	return ret;
+ }
+ 
+@@ -3817,6 +3820,7 @@ static void hns3_remove_hw_addr(struct net_device *netdev)
+ 
+ 	hns3_nic_uc_unsync(netdev, netdev->dev_addr);
+ 
++	netif_addr_lock_bh(netdev);
+ 	/* go through and unsync uc_addr entries to the device */
+ 	list = &netdev->uc;
+ 	list_for_each_entry_safe(ha, tmp, &list->list, list)
+@@ -3827,6 +3831,8 @@ static void hns3_remove_hw_addr(struct net_device *netdev)
+ 	list_for_each_entry_safe(ha, tmp, &list->list, list)
+ 		if (ha->refcount > 1)
+ 			hns3_nic_mc_unsync(netdev, ha->addr);
 +
- 	if (!h->ae_algo->ops->set_mtu)
- 		return -EOPNOTSUPP;
++	netif_addr_unlock_bh(netdev);
+ }
  
+ static void hns3_clear_tx_ring(struct hns3_enet_ring *ring)
 -- 
 2.7.4
 
