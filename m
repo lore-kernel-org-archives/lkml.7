@@ -1,182 +1,156 @@
-Return-Path: <SRS0=7x1k=SF=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E3DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42ACC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184B62082C
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Apr 2019 23:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CEC2133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554336079;
+	bh=ZPX475rPsm+JcsUyCA+9ooqeKYzOEmOziLymNX1DeUY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lwBjuZRTulW76xpmjTwL6SgN2KuiJ5/KqacU5EEuVtCz69kB3o5yZm1yTf1AGQ7/g
+	 PzggexsH9+SC9LJMOQEvjiGbEaJtO5HUjhZe476xRtpIOQv6cd82HSA8g52FRbvtlJ
+	 cl5h3yG9R7ukPCX5tHpcbOYdVqEVr/Cb7JMGi/ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfDCX7f (ORCPT
+        id S1726451AbfDDABS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 19:59:35 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55854 "EHLO mga18.intel.com"
+        Wed, 3 Apr 2019 20:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbfDCX7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 19:59:34 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Apr 2019 16:59:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
-   d="scan'208";a="312959833"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga005.jf.intel.com with ESMTP; 03 Apr 2019 16:59:31 -0700
-Date:   Thu, 4 Apr 2019 07:43:56 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     atull@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Luwei Kang <luwei.kang@intel.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH 14/17] fpga: dfl: fme: add thermal management support
-Message-ID: <20190403234356.GA11098@hao-dev>
-References: <1553483264-5379-1-git-send-email-hao.wu@intel.com>
- <1553483264-5379-15-git-send-email-hao.wu@intel.com>
- <20190402145925.GA15773@archbook>
- <20190403163147.GA28570@hao-dev>
- <20190403180909.GD5752@archbook>
+        id S1726167AbfDDABR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 20:01:17 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 261B4217D7
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2019 00:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554336076;
+        bh=ZPX475rPsm+JcsUyCA+9ooqeKYzOEmOziLymNX1DeUY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xHIxqd2gVYkBgGYcWilTWX4CLXHkENLc0Kx3g5CMt0pjeINfBB4/DHHCH/naeBGvX
+         e++4o8xEsYUO5Q7UfsWRBIQE/YtGtTNgD7W2WBqixbRwK8m9fDN0ydTLBYg0fYDWKN
+         0AtTH/ONyO/mOyc7QJrU3pUnDBCxPSTs+Ad947+g=
+Received: by mail-wr1-f54.google.com with SMTP id q1so1157408wrp.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:01:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAVGne98nleiqWwcSAe0VXhBFekuF2iGVYIMsUqONvfrK2zPrd9A
+        JjUCMgdPsjR5V0+5QIiBVg7qVsBvQEExAmrqpXjlHQ==
+X-Google-Smtp-Source: APXvYqxdLiqNtNmd5aMosiU+evC+jauccAjaFlB71Eq0MsLYq9beXZPg/BYtNbmmma+SUTaDWQ6W+RNt1Att2LJ0Wxc=
+X-Received: by 2002:adf:fd46:: with SMTP id h6mr1598988wrs.139.1554336074602;
+ Wed, 03 Apr 2019 17:01:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403180909.GD5752@archbook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <cover.1554234787.git.bristot@redhat.com>
+In-Reply-To: <cover.1554234787.git.bristot@redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 3 Apr 2019 17:01:02 -0700
+X-Gmail-Original-Message-ID: <CALCETrXUx7ExeqERxwu7nfps9vhZhQbfNEFG5fD_Kp7RexCEcA@mail.gmail.com>
+Message-ID: <CALCETrXUx7ExeqERxwu7nfps9vhZhQbfNEFG5fD_Kp7RexCEcA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] Early task context tracking
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+        Romulo Silva de Oliveira <romulo.deoliveira@ufsc.br>,
+        Clark Williams <williams@redhat.com>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 11:09:09AM -0700, Moritz Fischer wrote:
-> Hi Hao,
-> 
-> On Thu, Apr 04, 2019 at 12:31:47AM +0800, Wu Hao wrote:
-> > On Tue, Apr 02, 2019 at 07:59:25AM -0700, Moritz Fischer wrote:
-> > > Hi Wu,
-> > > 
-> > > On Mon, Mar 25, 2019 at 11:07:41AM +0800, Wu Hao wrote:
-> > > > This patch adds support to thermal management private feature for DFL
-> > > > FPGA Management Engine (FME). As thermal throttling is handled by
-> > > > hardware automatically per pre-defined thresholds, this private
-> > > > feature driver only provides read-only sysfs interfaces for user
-> > > > to read temperature, thresholds, threshold policy and other info.
-> > > > 
-> > > > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > > > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > > > ---
-> > > >  Documentation/ABI/testing/sysfs-platform-dfl-fme |  56 +++++++
-> > > >  drivers/fpga/dfl-fme-main.c                      | 202 +++++++++++++++++++++++
-> > > >  2 files changed, 258 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > > index b8327e9..d3aeb88 100644
-> > > > --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > > +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
-> > > > @@ -44,3 +44,59 @@ Description:	Read-only. It returns socket_id to indicate which socket
-> > > >  		this FPGA belongs to, only valid for integrated solution.
-> > > >  		User only needs this information, in case standard numa node
-> > > >  		can't provide correct information.
-> > > > +
-> > > > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/temperature
-> > > > +Date:		March 2019
-> > > > +KernelVersion:  5.2
-> > > > +Contact:	Wu Hao <hao.wu@intel.com>
-> > > > +Description:	Read-only. It returns temperature (in Celsius) of this FPGA
-> > > > +		device.
-> > > > +
-> > > > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1
-> > > > +Date:		March 2019
-> > > > +KernelVersion:  5.2
-> > > > +Contact:	Wu Hao <hao.wu@intel.com>
-> > > > +Description:	Read-only. Read this file to get the temperature threshold1
-> > > > +		(in Celsius).
-> > > > +
-> > > > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2
-> > > > +Date:		March 2019
-> > > > +KernelVersion:  5.2
-> > > > +Contact:	Wu Hao <hao.wu@intel.com>
-> > > > +Description:	Read-only. Read this file to get the temperature threshold2
-> > > > +		(in Celsius).
-> > > > +
-> > > > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/trip_threshold
-> > > > +Date:		March 2019
-> > > > +KernelVersion:  5.2
-> > > > +Contact:	Wu Hao <hao.wu@intel.com>
-> > > > +Description:	Read-only. It returns trip threshold (in Celsius), once FPGA
-> > > > +		temperature reaches trip threshold, it triggers a fatal event
-> > > > +		to board management controller (BMC) to shutdown FPGA.
-> > > > +
-> > > > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_status
-> > > > +Date:		March 2019
-> > > > +KernelVersion:  5.2
-> > > > +Contact:	Wu Hao <hao.wu@intel.com>
-> > > > +Description:	Read-only. It returns 1 if temperature reaches threshold1,
-> > > > +		otherwise 0. Once temperature reaches threshold1, hardware
-> > > > +		will automatically enter throttling state (AP1 - 50%
-> > > > +		or AP2 - 90% throttling, see 'threshold1_policy').
-> > > > +
-> > > > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold2_status
-> > > > +Date:		March 2019
-> > > > +KernelVersion:  5.2
-> > > > +Contact:	Wu Hao <hao.wu@intel.com>
-> > > > +Description:	Read-only. It returns 1 if temperature reaches threshold2,
-> > > > +		otherwise 0. Once temperature reaches threshold2, hardware
-> > > > +		will automatically enter the deepest throttling state (AP6
-> > > > +		- 100% throttling).
-> > > > +
-> > > > +What:		/sys/bus/platform/devices/dfl-fme.0/thermal_mgmt/threshold1_policy
-> > > > +Date:		March 2019
-> > > > +KernelVersion:  5.2
-> > > > +Contact:	Wu Hao <hao.wu@intel.com>
-> > > > +Description:	Read-only. Read this file to get the policy of temperature
-> > > > +		threshold1. It only supports two value (policy):
-> > > > +		    0 - AP2 state (90% throttling)
-> > > > +		    1 - AP1 state (50% throttling)
-> > > 
-> > > These look like they could directly map to the linux thermal framework,
-> > > any reason you can't use the thermal framework?
-> > > 
-> > > The trip stuff literally maps 1:1 to what a thermal driver does, I think
-> > > that's something you'd wanna consider.
-> > > 
-> > 
-> > Hi Moritz,
-> > 
-> > Thanks a lot for the suggestion, actually I feel that the trip points in thermal
-> > zone are used to indicate cooling actions required for thermal software either
-> > in kernel or userspace. But in this case, such FPGA hardware handles cooling
-> > automatically (yes, driver only expose Read-only sysfs for information), so
-> > software doesn't need to take care of this at all. For this purpose, it seems
-> > that we don't have to put these thresholds as trip points. And per my
-> > understanding, if people use such FPGA device, then they may need to know
-> > what's the current hardware throttling behavior, e.g. 50% vs 90%. These
-> > information can't be provided by standard thermal zone sysfs, so anyway user
-> > needs these sysfs interfaces to know it. But it seems that we still could
-> > create a thermal zone without trip points, it could help if user wants to
-> > connect some external cooling devices via userspace thermal daemon, they can
-> > define whatever trip points they like to activate the external cooling 
-> > device. I will consider this further more and come up with a new patch in
-> > v2 patchset.
-> 
-> Generally speaking extending an existing framework with the
-> functionality you want is preferable over rolling 100% your own.
-> 
-> So please look into this.
+> On Apr 2, 2019, at 2:03 PM, Daniel Bristot de Oliveira <bristot@redhat.com> wrote:
+>
+> Note: do not take it too seriously, it is just a proof of concept.
+>
+> Some time ago, while using perf to check the automaton model, I noticed
+> that perf was losing events. The same was reproducible with ftrace.
+>
+> See: https://www.spinics.net/lists/linux-rt-users/msg19781.html
+>
+> Steve pointed to a problem in the identification of the context
+> execution used by the recursion control.
+>
+> Currently, recursion control uses the preempt_counter to
+> identify the current context. The NMI/HARD/SOFT IRQ counters
+> are set in the preempt_counter in the irq_enter/exit functions.
+>
+> In a trace, they are set like this:
+> -------------- %< --------------------
+> 0)   ==========> |
+> 0)               |  do_IRQ() {        /* First C function */
+> 0)               |    irq_enter() {
+> 0)               |              /* set the IRQ context. */
+> 0)   1.081 us    |    }
+> 0)               |    handle_irq() {
+> 0)               |             /* IRQ handling code */
+> 0) + 10.290 us   |    }
+> 0)               |    irq_exit() {
+> 0)               |              /* unset the IRQ context. */
+> 0)   6.657 us    |    }
+> 0) + 18.995 us   |  }
+> 0)   <========== |
+> -------------- >% --------------------
+>
+> As one can see, functions (and events) that take place before the set
+> and after unset the preempt_counter are identified in the wrong context,
+> causing the miss interpretation that a recursion is taking place.
+> When this happens, events are dropped.
+>
+> To resolve this problem, the set/unset of the IRQ/NMI context needs to
+> be done before the execution of the first C execution, and after its
+> return. By doing so, and using this method to identify the context in the
+> trace recursion protection, no more events are lost.
 
-Yes, agree, will look into this and try to fix this in next version.
+I would much rather do the opposite: completely remove context
+tracking from the asm and, instead, stick it into the C code.  We'd
+need to make sure that the C code is totally immune from tracing,
+kprobes, etc, but it would be a nice cleanup.  And then you could fix
+this bug in C!
 
-Thanks for the comments.
 
-Hao
-
-> 
-> Thanks,
-> Moritz
+>
+> A possible solution is to use a per-cpu variable set and unset in the
+> entry point of NMI/IRQs, before calling the C handler. This possible
+> solution is presented in the next patches as a proof of concept, for
+> x86_64. However, other ideas might be better than mine... so...
+>
+> Daniel Bristot de Oliveira (7):
+>  x86/entry: Add support for early task context tracking
+>  trace: Move the trace recursion context enum to trace.h and reuse it
+>  trace: Optimize trace_get_context_bit()
+>  trace/ring_buffer: Use trace_get_context_bit()
+>  trace: Use early task context tracking if available
+>  events: Create an trace_get_context_bit()
+>  events: Use early task context tracking if available
+>
+> arch/x86/entry/entry_64.S       |  9 ++++++
+> arch/x86/include/asm/irqflags.h | 30 ++++++++++++++++++++
+> arch/x86/kernel/cpu/common.c    |  4 +++
+> include/linux/irqflags.h        |  4 +++
+> kernel/events/internal.h        | 50 +++++++++++++++++++++++++++------
+> kernel/softirq.c                |  5 +++-
+> kernel/trace/ring_buffer.c      | 28 ++----------------
+> kernel/trace/trace.h            | 46 ++++++++++++++++++++++--------
+> 8 files changed, 129 insertions(+), 47 deletions(-)
+>
+> --
+> 2.20.1
+>
