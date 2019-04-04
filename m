@@ -2,135 +2,85 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EC5C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95684C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D857420882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:09:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsKYpVAj"
+	by mail.kernel.org (Postfix) with ESMTP id 55430214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554361998;
+	bh=H0SYkQqKepUPt8a0R+ZbQdTTrj8kqa8aE18A99AhfWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z1K9Y4d/yYbEktATw2wsQk94ZMgr2GBsmeNx21UHHCbyy6rLGAd/8SVz3KlciLuYn
+	 JEXkSll+GHM9aEft9lM9nnzawPymVPyq1JIcMd6fBvRTzwjobqfJzrtUCNzAn+C3+j
+	 6zxgV9EVsKLBt39o58u1gk7E5KrUBqaFebR9UA7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfDDHJ6 (ORCPT
+        id S1727025AbfDDHNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:09:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34692 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDDHJ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:09:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b3so901992pfd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 00:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=Ep7yAE9Tz9TS8d850uoLwOoDVwwt26dOm09Cl0KgWaU=;
-        b=AsKYpVAjoweulSDpTqqaipCTpLIy0bz+T5Ud18MQveFv1tE93SUHCe4Uw5oP0zmAwP
-         zQsT+8BPbBEukHeXxc0RSGRDFnHCpKmtg6RcOp9d/khYVpmEJHtlol+AEk+webemoNw6
-         HOJIbeKz+/JPYM89uMi4hh1G5moBjjZprl/rp55j8eSi7T7XhrjqQ6nz1Nykj9UACXBU
-         IG0hWXbhehdv/XDZGzGbRSqQoWEVJw1k1YW7oQfBAO6530XAgjy0VxCux2Q7R5Wr44U0
-         I58koRaV3ifuHnBGwg7yS4Cz5Da4IolJi8eWGl/bFnHUeWM8Jx72YPKHS+AHm2H/Uucs
-         qfNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=Ep7yAE9Tz9TS8d850uoLwOoDVwwt26dOm09Cl0KgWaU=;
-        b=fYz4qZrK8o1poZt0rfAdNZjx2wz7DMQPHu02pI2ck0ol8TkhZhGQfertdyLeZTNYqN
-         6LaODMtnyH/uH2KFrN6vGsHkNPjod9NnWNy1nkNrGq/rzI6Duk3CVid3PW74pNLQhVQ7
-         e52dSoIXrCvzbZ1ov1oik+TRcf+NMWJoshancGziNvGA5Ckt4GFVuEpfj0KTmLL7Fkzt
-         z/wAtWkWGx3UqQVXyplWGRC/Mw9A0S3530lM/GTvYKRsTQY3TrhvTbwbYTOatAqb+kTl
-         NoUyin1pgKWzI1nHGPRKcB2qxdVjoN2x6z4G8VyLXPVdyPNpv0YEDO8DNd1VzAEgUTK7
-         /bSQ==
-X-Gm-Message-State: APjAAAUImYPMAF+BfxB3AF07d/Yb3/wrQdMIJJwO/egtWfK5urj5SA2B
-        4+dguEWgjqfMRQ2k7BhjMk7H7OgE
-X-Google-Smtp-Source: APXvYqz+sPiODb5NzjUOdfC2RQRqAyUixsG8w4JhGUMC1qay2WlNcILrl59RbCiGO3HTAxuqmmDabQ==
-X-Received: by 2002:a63:7943:: with SMTP id u64mr4199908pgc.91.1554361796950;
-        Thu, 04 Apr 2019 00:09:56 -0700 (PDT)
-Received: from arch-late ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id p26sm37472908pfa.49.2019.04.04.00.09.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 00:09:56 -0700 (PDT)
-References: <20190403205801.GA19762@embeddedor>
-User-agent: mu4e 1.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: greybus: power_supply: Use struct_size() helper
-In-reply-to: <20190403205801.GA19762@embeddedor>
-Date:   Thu, 04 Apr 2019 08:09:51 +0100
-Message-ID: <m37ecap7pc.fsf@gmail.com>
+        Thu, 4 Apr 2019 03:13:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43524 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726563AbfDDHNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 03:13:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 046F0B11F;
+        Thu,  4 Apr 2019 07:13:14 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 09:13:12 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     ziy@nvidia.com
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Mark Hairgrove <mhairgrove@nvidia.com>,
+        Nitin Gupta <nigupta@nvidia.com>,
+        Javier Cabezas <jcabezas@nvidia.com>,
+        David Nellans <dnellans@nvidia.com>
+Subject: Re: [RFC PATCH 00/25] Accelerate page migration and use memcg for
+ PMEM management
+Message-ID: <20190404071312.GD12864@dhcp22.suse.cz>
+References: <20190404020046.32741-1-zi.yan@sent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
-Thanks a lot for the patch.
+On Wed 03-04-19 19:00:21, Zi Yan wrote:
+> From: Zi Yan <ziy@nvidia.com>
+> 
+> Thanks to Dave Hansen's patches, which make PMEM as part of memory as NUMA nodes.
+> How to use PMEM along with normal DRAM remains an open problem. There are
+> several patchsets posted on the mailing list, proposing to use page migration to
+> move pages between PMEM and DRAM using Linux page replacement policy [1,2,3].
+> There are some important problems not addressed in these patches:
+> 1. The page migration in Linux does not provide high enough throughput for us to
+> fully exploit PMEM or other use cases.
+> 2. Linux page replacement is running too infrequent to distinguish hot and cold
+> pages.
+[...]
+>  33 files changed, 4261 insertions(+), 162 deletions(-)
 
-On Wed 03 Apr 2019 at 21:58, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded 
-> version
-> in order to avoid any potential type mistakes, in particular in 
-> the
-> context in which this code is being used.
->
-> So, replace code of the following form:
->
-> sizeof(*resp) + props_count * sizeof(struct 
-> gb_power_supply_props_desc)
->
-> with:
->
-> struct_size(resp, props, props_count)
->
-> This code was detected with the help of Coccinelle.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-What are the odds of 2 people changing same code in greybus in
-the same day :).
-
-But it happened, so as Johan asked please rebase on top of his
-patch. that would be great.
-
----
-Cheers,
-	Rui
-
-> ---
->  drivers/staging/greybus/power_supply.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/staging/greybus/power_supply.c 
-> b/drivers/staging/greybus/power_supply.c
-> index 0529e5628c24..40cc2d462ba0 100644
-> --- a/drivers/staging/greybus/power_supply.c
-> +++ b/drivers/staging/greybus/power_supply.c
-> @@ -520,8 +520,8 @@ static int 
-> gb_power_supply_prop_descriptors_get(struct gb_power_supply 
-> *gbpsy)
->  
->  	op = gb_operation_create(connection,
->  				 GB_POWER_SUPPLY_TYPE_GET_PROP_DESCRIPTORS,
-> -				 sizeof(req), sizeof(*resp) + 
-> props_count *
-> -				 sizeof(struct 
-> gb_power_supply_props_desc),
-> +				 sizeof(req),
-> +				 struct_size(resp, props, 
-> props_count),
->  				 GFP_KERNEL);
->  	if (!op)
->  		return -ENOMEM;
-
+For a patch _this_ large you should really start with a real world
+usecasing hitting bottlenecks with the current implementation. Should
+microbenchmarks can trigger bottlenecks much easier but do real
+application do the same? Please give us some numbers.
+-- 
+Michal Hocko
+SUSE Labs
