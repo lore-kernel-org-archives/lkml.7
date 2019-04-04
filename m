@@ -2,63 +2,57 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DF7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C913C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003D5206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3D120449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371866;
-	bh=nruYE71tMKdBSwTmSMpR5FkoGU0hAg+y1YyI6b2VNlQ=;
+	s=default; t=1554371871;
+	bh=G4TPYyJ5LM2oRtHiYOd5Nysyj0mAjBKOwdu3AWYvDvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sE7bnsEnrJwI25lzmWX3qzOSdfTPSC4DVEUSiHF14JSJGUhdgR/1BP1f66EPXMnrC
-	 vePeP09g6kjxvREuiYWtJows1qTwiwZZs1IeHD9xH61ZdwW9L4mkb1cdOpC9zSLsNX
-	 XcuGL1AhhirJozh3Bn28VkSairqzIrFILzcDnJcw=
+	b=I9pdCGHLQNSPGUjHHerX7A68mSSmElO2TmDr34/0quaDzXsTHDjhoKZG0e+/6WJov
+	 ka0AMZ0bjq9mqbubbWqgnfqbyQi1sfZlCSdk/66UHaoGpoPbFMWMSVjQqaz6PR5eLW
+	 NYnrSDhYiKh5M0w9RKPyByNFMoqlVMgNPY1OpfDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfDDJ5p (ORCPT
+        id S1728838AbfDDItv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:49:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbfDDIty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:49:54 -0400
+        id S1728756AbfDDItq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:49:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 649E221734;
-        Thu,  4 Apr 2019 08:49:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A17120882;
+        Thu,  4 Apr 2019 08:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367793;
-        bh=nruYE71tMKdBSwTmSMpR5FkoGU0hAg+y1YyI6b2VNlQ=;
+        s=default; t=1554367785;
+        bh=G4TPYyJ5LM2oRtHiYOd5Nysyj0mAjBKOwdu3AWYvDvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HtF8GTrQ0nblvwsCyQNCYOUCyp4pO2knAj563SnbbzQNGHeSwrol/HObJ26gHhW0J
-         0pwaWXU/Ee2pVGeNmtKZQg5Wigwa3ICU6Y6MfFX7imbHcXzcnkBzOMc4KM88rNz6Ta
-         Ql0NnMBXYcFZeF4B9XHM8WQfyqJdwDtpYjPAF5fI=
+        b=L/WdcTnhNpGb5TxetKj8aEjumUuS6Hs8RlVJPHoL2TXUC7o/S3vl8X0Qjh2YErNjl
+         YdENVM3jaIRGRITZurNNiG6WAMTkLGTbIqf4uNJi2slpGq7d5al9CldLU7jlPhBCaM
+         Qu6mzbEVDpHyw00E8T+a6jJcCiRBavtpLJBj5OaQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Anshul Garg <aksgarg1989@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Miller <davem@davemloft.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        Michael Davidson <md@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4.9 04/91] lib/int_sqrt: optimize initial value compute
-Date:   Thu,  4 Apr 2019 10:46:48 +0200
-Message-Id: <20190404084535.672303864@linuxfoundation.org>
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 12/91] gpio: gpio-omap: fix level interrupt idling
+Date:   Thu,  4 Apr 2019 10:46:56 +0200
+Message-Id: <20190404084536.137317451@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -77,91 +71,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
 
-commit f8ae107eef209bff29a5816bc1aad40d5cd69a80 upstream.
+Tony notes that the GPIO module does not idle when level interrupts are
+in use, as the wakeup appears to get stuck.
 
-The initial value (@m) compute is:
+After extensive investigation, it appears that the wakeup will only be
+cleared if the interrupt status register is cleared while the interrupt
+is enabled. However, we are currently clearing it with the interrupt
+disabled for level-based interrupts.
 
-	m = 1UL << (BITS_PER_LONG - 2);
-	while (m > x)
-		m >>= 2;
+It is acknowledged that this observed behaviour conflicts with a
+statement in the TRM:
 
-Which is a linear search for the highest even bit smaller or equal to @x
-We can implement this using a binary search using __fls() (or better when
-its hardware implemented).
+CAUTION
+  After servicing the interrupt, the status bit in the interrupt status
+  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
+  reset and the interrupt line released (by setting the corresponding
+  bit of the interrupt status register to 1) before enabling an
+  interrupt for the GPIO channel in the interrupt-enable register
+  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
+  the occurrence of unexpected interrupts when enabling an interrupt
+  for the GPIO channel.
 
-	m = 1UL << (__fls(x) & ~1UL);
+However, this does not appear to be a practical problem.
 
-Especially for small values of @x; which are the more common arguments
-when doing a CDF on idle times; the linear search is near to worst case,
-while the binary search of __fls() is a constant 6 (or 5 on 32bit)
-branches.
+Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
+the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
+Fix the sequence to clear the IRQ status" saying:
 
-      cycles:                 branches:              branch-misses:
+ if the status is cleared after disabling the IRQ then sWAKEUP will not
+ be cleared and gates the module transition
 
-PRE:
+When we unmask the level interrupt after the interrupt has been handled,
+enable the interrupt and only then clear the interrupt. If the interrupt
+is still pending, the hardware will re-assert the interrupt status.
 
-hot:   43.633557 +- 0.034373  45.333132 +- 0.002277  0.023529 +- 0.000681
-cold: 207.438411 +- 0.125840  45.333132 +- 0.002277  6.976486 +- 0.004219
+Should the caution note in the TRM prove to be a problem, we could
+use a clear-enable-clear sequence instead.
 
-SOFTWARE FLS:
-
-hot:   29.576176 +- 0.028850  26.666730 +- 0.004511  0.019463 +- 0.000663
-cold: 165.947136 +- 0.188406  26.666746 +- 0.004511  6.133897 +- 0.004386
-
-HARDWARE FLS:
-
-hot:   24.720922 +- 0.025161  20.666784 +- 0.004509  0.020836 +- 0.000677
-cold: 132.777197 +- 0.127471  20.666776 +- 0.004509  5.080285 +- 0.003874
-
-Averages computed over all values <128k using a LFSR to generate order.
-Cold numbers have a LFSR based branch trace buffer 'confuser' ran between
-each int_sqrt() invocation.
-
-Link: http://lkml.kernel.org/r/20171020164644.936577234@infradead.org
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Suggested-by: Joe Perches <joe@perches.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Anshul Garg <aksgarg1989@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: David Miller <davem@davemloft.net>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <mawilcox@microsoft.com>
-Cc: Michael Davidson <md@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Joe Perches <joe@perches.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[tony@atomide.com: updated comments based on an earlier TI patch]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/int_sqrt.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-omap.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/lib/int_sqrt.c
-+++ b/lib/int_sqrt.c
-@@ -7,6 +7,7 @@
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 6f9c9ac6ee70..75f30a0c418a 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -837,14 +837,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	if (trigger)
+ 		omap_set_gpio_triggering(bank, offset, trigger);
  
- #include <linux/kernel.h>
- #include <linux/export.h>
-+#include <linux/bitops.h>
+-	/* For level-triggered GPIOs, the clearing must be done after
+-	 * the HW source is cleared, thus after the handler has run */
+-	if (bank->level_mask & BIT(offset)) {
+-		omap_set_gpio_irqenable(bank, offset, 0);
++	omap_set_gpio_irqenable(bank, offset, 1);
++
++	/*
++	 * For level-triggered GPIOs, clearing must be done after the source
++	 * is cleared, thus after the handler has run. OMAP4 needs this done
++	 * after enabing the interrupt to clear the wakeup status.
++	 */
++	if (bank->level_mask & BIT(offset))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+-	}
  
- /**
-  * int_sqrt - rough approximation to sqrt
-@@ -21,10 +22,7 @@ unsigned long int_sqrt(unsigned long x)
- 	if (x <= 1)
- 		return x;
+-	omap_set_gpio_irqenable(bank, offset, 1);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
  
--	m = 1UL << (BITS_PER_LONG - 2);
--	while (m > x)
--		m >>= 2;
--
-+	m = 1UL << (__fls(x) & ~1UL);
- 	while (m != 0) {
- 		b = y + m;
- 		y >>= 1;
+-- 
+2.19.1
+
 
 
