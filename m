@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09785C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919F1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD71F205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6532A205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370467;
-	bh=TiIAm3q74voao95GL6gFmcsVFOXdP83S7xJ2nCwcdbM=;
+	s=default; t=1554370478;
+	bh=sM4XcSIWtBW4EWqe57Yv3bZQ5N62XO28uU0hSh0qt90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GXUx7OryyFZ5UIrpTfuNtZhnV0bvSc8fxLPWvhF944Wi5qziXPkdACFhVnPb9FDpt
-	 iv6opGRZgbjjizNwr+UvcBmWEsd/pRe9M5t2s3t3yEvXK0i1aFzkEdOUo0R4Njttc0
-	 XS37FMgKcgcQRg12WVK5sPUlH8uhAGe2VYuuat5k=
+	b=FbqwXi3dThEhT+kh+hyQ7Vyf7ws64kovxj15KpJy6RLhX1LpfdxQaapf21aaB9YJD
+	 xnPopzC/9MZx58/jUmDf7hH3GHXu6FGZlsO0/h4eUQCrcuGuo/1ehRZoclzbp/dGlL
+	 U3iLYDKkyNjUpDWPF/vKUmsu28lql6rOvo9itd2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732001AbfDDJHV (ORCPT
+        id S1732708AbfDDJeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46070 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732479AbfDDJHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:07:17 -0400
+        id S1732448AbfDDJHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:07:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43EDC21741;
-        Thu,  4 Apr 2019 09:07:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E292177E;
+        Thu,  4 Apr 2019 09:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368836;
-        bh=TiIAm3q74voao95GL6gFmcsVFOXdP83S7xJ2nCwcdbM=;
+        s=default; t=1554368826;
+        bh=sM4XcSIWtBW4EWqe57Yv3bZQ5N62XO28uU0hSh0qt90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t+6IIW670CTWkg8DfnqrJHtLBsF55osRsciGzC/iqSytv48cAKaWUMEKlgBEi51CS
-         9iVAqpSLNbY9Bn2sKfOQ2KCvDRYSXNXEvYaWxpt9rGJRELJWZX28KayPqEpx+4UEdG
-         BqnJlkheUFNYn5SWYxNrlv5ZvtHP2MahrGfmNQGU=
+        b=CDTn3EqL9QqLBLnLA9luaoW4JKsd0KqfjLx5B1px6ceK86rIoghvJ1bBk5IpqdBDk
+         yFSqBTCZhvtVzO5jG6Sd0fqRXquEqfqfWwaAVGRNvACRrVe/btM5DVWSqT2dZH4m9i
+         C/3N7d6P6pceyv0SM8CSGfgaTUWdC9RrR1IjwNqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 180/187] clk: rockchip: fix frac settings of GPLL clock for rk3328
-Date:   Thu,  4 Apr 2019 10:48:37 +0200
-Message-Id: <20190404084611.605818325@linuxfoundation.org>
+Subject: [PATCH 4.19 168/187] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
+Date:   Thu,  4 Apr 2019 10:48:25 +0200
+Message-Id: <20190404084611.001891681@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,63 +68,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a0e447b0c50240a90ab84b7126b3c06b0bab4adc ]
+[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
 
-This patch fixes settings of GPLL frequency in fractional mode for
-rk3328. In this mode, FOUTVCO is calcurated by following formula:
-  FOUTVCO = FREF * FBDIV / REFDIV + ((FREF * FRAC / REFDIV) >> 24)
+Previously when doing format enumeration, it was returning all
+ formats supported by driver, even if they're not supported by hw.
+Add missing check for fmt_ver_flag, so it'll be fixed and only those
+ supported by hw will be returned. Similar thing is already done
+ in s5p_jpeg_find_format.
 
-The problem is in FREF * FRAC >> 24 term. This result always lacks
-one from target value is specified by rate member. For example first
-itme of rk3328_pll_frac_rate originally has
-  - rate  : 1016064000
-  - refdiv: 3
-  - fbdiv : 127
-  - frac  : 134217
-  - FREF * FBDIV / REFDIV        = 1016000000
-  - (FREF * FRAC / REFDIV) >> 24 = 63999
-Thus calculated rate is 1016063999. It seems wrong.
+It was found by using v4l2-compliance tool and checking result
+ of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
+and using v4l2-ctl to get list of all supported formats.
 
-If frac has 134218 (it is increased 1 from original value), second
-term is 64000. All other items have same situation. So this patch
-adds 1 to frac member in all items of rk3328_pll_frac_rate.
+Tested on s5pv210-galaxys (Samsung i9000 phone).
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Acked-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
+
+Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3328.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index 2c5426607790..e431661fe874 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -78,17 +78,17 @@ static struct rockchip_pll_rate_table rk3328_pll_rates[] = {
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 29daecf8de7d..350afaa29a62 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -1293,13 +1293,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
+ 	return 0;
+ }
  
- static struct rockchip_pll_rate_table rk3328_pll_frac_rates[] = {
- 	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
--	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134217),
-+	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134218),
- 	/* vco = 1016064000 */
--	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671088),
-+	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671088),
-+	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671088),
-+	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671089),
- 	/* vco = 860156000 */
--	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797894),
-+	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797895),
- 	/* vco = 903168000 */
--	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066329),
-+	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066330),
- 	/* vco = 819200000 */
- 	{ /* sentinel */ },
- };
+-static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
++static int enum_fmt(struct s5p_jpeg_ctx *ctx,
++		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
+ 		    struct v4l2_fmtdesc *f, u32 type)
+ {
+ 	int i, num = 0;
++	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
+ 
+ 	for (i = 0; i < n; ++i) {
+-		if (sjpeg_formats[i].flags & type) {
++		if (sjpeg_formats[i].flags & type &&
++		    sjpeg_formats[i].flags & fmt_ver_flag) {
+ 			/* index-th format of type type found ? */
+ 			if (num == f->index)
+ 				break;
+@@ -1326,11 +1329,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_CAPTURE);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_CAPTURE);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_CAPTURE);
+ }
+ 
+ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+@@ -1339,11 +1342,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_OUTPUT);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_OUTPUT);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_OUTPUT);
+ }
+ 
+ static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
 2.19.1
 
