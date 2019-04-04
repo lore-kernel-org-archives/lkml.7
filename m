@@ -2,129 +2,166 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A94C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C31C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA932075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M76lnXAH"
+	by mail.kernel.org (Postfix) with ESMTP id 556C42075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfDDS4h (ORCPT
+        id S1730095AbfDDS45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:56:37 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:35136 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729789AbfDDS4f (ORCPT
+        Thu, 4 Apr 2019 14:56:57 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59759 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDDS44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:56:35 -0400
-Received: by mail-yb1-f195.google.com with SMTP id e12so1446529ybq.2;
-        Thu, 04 Apr 2019 11:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=czb2ENwQGWnSQaCPQIrYNCynYy2KSbTtKbmrxk8aiuA=;
-        b=M76lnXAHZW3E/8sfPEo6AMsEvKo1Fj2EhqlUI6eC714OKjs2ScEs0g5Kdp16SCqkPF
-         N0+X6xTwMiV/VBKBoM8U7lCaiLZf0D5h8H0NYyJsPMWgNRUMOJFoGIeE3Kw2Z03GU9vT
-         zVyDQ6CnNyqqWAbFqnkhKqeqcKWpSWW3q20J6IQ+uvd8srIqBj9yOsnXEon9ojIURp4v
-         bTLlHhqhnN0+9uDyqXd9PWoJbT4ZfrXOkz5CQF3mN7LEVXFyBxCwjgwaWqj7DMqenuLs
-         uXedhWbK9lmCM0WnwBXxlX+/J6awXNP/t6T5RlKFdEob9MOiRhxs9ue2K7i3gYHUzYfA
-         pf5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=czb2ENwQGWnSQaCPQIrYNCynYy2KSbTtKbmrxk8aiuA=;
-        b=rqXKHcl0Zbn3levc9Ru8bWjIHmlw/kxTP71nbcwpoJIpi0EfVg91xK5ie08/YaRexx
-         IPbGujwn8oD2VLRlR+GUy07P7RTkDAH9MGe/KI4IBBLg3sDD6RYxFrRgxV3Ck+i/ykBZ
-         Tnr2aStW9kpZCR50QgctV2jcbQa1fbCbq+Ug/LQah9dgju3JoxRnWOicJi+SZ/A/3gph
-         piRSERJJu5pSkCSb0tuYN/Uavqu8KRa/xEvWE20NEMerTTrXkCsb+umGgyZb71dlIUW7
-         uSujfiSuxMFWXTG4XqDhldRjnLRcTonA5zfO18InGqva4DDxl7JQ3eOjEKLT5O355LB+
-         ZyZw==
-X-Gm-Message-State: APjAAAVVgVrvAR8XrVv0bk/1de1jVp/tl5Rp8r9rllI34cfFSWJvo0k+
-        VMLuT0B1jHV9BTA58kBDK4Qq/llkwrQRrmc74fI=
-X-Google-Smtp-Source: APXvYqw2AeCdLcNxw3yXyG2q9A1yJJjPzbkEFkUNasjS0SEO0/rC6tigTrt97xSpbl9QpVkQd9PzuPxHxf4nnJWaXhg=
-X-Received: by 2002:a25:6c88:: with SMTP id h130mr6951040ybc.112.1554404194312;
- Thu, 04 Apr 2019 11:56:34 -0700 (PDT)
+        Thu, 4 Apr 2019 14:56:56 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 5F26B802CB; Thu,  4 Apr 2019 20:56:45 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 20:56:56 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Dmitry Torokhov <dtor@google.com>,
+        Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+Message-ID: <20190404185656.GA27340@amd>
+References: <20190404171007.160878-1-ncrews@chromium.org>
+ <20190404171007.160878-3-ncrews@chromium.org>
+ <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
+ <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
+ <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190401134104.676620247@goodmis.org> <20190401134421.278590567@goodmis.org>
-In-Reply-To: <20190401134421.278590567@goodmis.org>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Thu, 4 Apr 2019 11:56:23 -0700
-Message-ID: <CAMo8BfK8gdgni3z3PKv1rd0KPFMXgDCpicQQ_obuoDAEz3PkZQ@mail.gmail.com>
-Subject: Re: [PATCH 5/6 v3] syscalls: Remove start and number from
- syscall_get_arguments() args
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Roland McGrath <roland@hack.frob.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Dave Martin <dave.martin@arm.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        "moderated list:H8/300 ARCHITECTURE" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        "open list:IA64 (Itanium) PL..." <linux-ia64@vger.kernel.org>,
-        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org,
-        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Content-Disposition: inline
+In-Reply-To: <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 6:45 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> From: "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>
->
-> At Linux Plumbers, Andy Lutomirski approached me and pointed out that the
-> function call syscall_get_arguments() implemented in x86 was horribly
-> written and not optimized for the standard case of passing in 0 and 6 for
-> the starting index and the number of system calls to get. When looking at
-> all the users of this function, I discovered that all instances pass in only
-> 0 and 6 for these arguments. Instead of having this function handle
-> different cases that are never used, simply rewrite it to return the first 6
-> arguments of a system call.
->
-> This should help out the performance of tracing system calls by ptrace,
-> ftrace and perf.
 
-[...]
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  arch/xtensa/include/asm/syscall.h     | 16 ++----
+Hi!
 
-For xtensa changes:
-Acked-by: Max Filippov <jcmvbkbc@gmail.com>
+> You're right, I should have been more precise.
+> I was referring to Pavel, Enric, and myself. Pavel had this opinion here:
+> https://lkml.org/lkml/2019/4/4/1040. I don't know what Pavel meant by "we"
+> in that comment, but I would guess that could mean the other LED maintain=
+ers
+> as well? I talked with Enric 1:1 and he didn't see the problem with chang=
+ing it,
+> though perhaps he was only considering our use of the LED via powerd,
+> and not users in general. I'm guessing Pavel's and Enric's meanings thoug=
+h,
+> excuse me if I am misinterpreting.
+>=20
+> >
+> > This also has a potential of breaking existing setups if somebody did
+> > happen to match on entire name instead of suffix. Such changes have to
+> > be considered very carefully; at this point I am against of doing
+> > this.
+>=20
+> Would it make sense to keep the old name as is, and only make the new
+> Wilco name begin with "platform:"? What would you think is best?
 
--- 
-Thanks.
--- Max
+That works for me.
+
+I think we might be able to get away with changing the name (we have
+some really bad names in the LED subsystem, and it would be nice to
+fix them), but my priority at the moment is not to extend the problem.
+
+								Pavel
+
+-*- org -*-
+
+It is somehow important to provide consistent interface to the
+userland. LED devices have one problem there, and that is naming of
+directories in /sys/class/leds. It would be nice if userland would
+just know right "name" for given LED function, but situation got more
+complex.
+
+Anyway, if backwards compatibility is not an issue, new code should
+use one of the "good" names from this list, and you should extend the
+list where applicable.
+
+Bad names are listed, too; in case you are writing application that
+wants to use particular feature, you should probe for good name, first,
+but then try the bad ones, too.
+
+* Keyboards
+
+Good: "input*:*:capslock"
+Good: "input*:*:scrolllock"
+Good: "input*:*:numlock"
+Bad: "shift-key-light" (Motorola Droid 4, capslock)
+
+Set of common keyboard LEDs, going back to PC AT or so.
+
+Good: "platform::kbd_backlight"
+Bad: "tpacpi::thinklight" (IBM/Lenovo Thinkpads)
+Bad: "lp5523:kb{1,2,3,4,5,6}" (Nokia N900)
+
+Frontlight/backlight of main keyboard.
+
+Bad: "button-backlight" (Motorola Droid 4)
+
+Some phones have touch buttons below screen; it is different from main
+keyboard. And this is their backlight.
+
+* Sound subsystem
+
+Good: "platform:*:mute"
+Good: "platform:*:micmute"
+
+LEDs on notebook body, indicating that sound input / output is muted.
+
+* System notification
+
+Good: "status-led:{red,green,blue}" (Motorola Droid 4)
+Bad: "lp5523:{r,g,b}" (Nokia N900)
+
+Phones usually have multi-color status LED.
+
+* Power management
+
+Good: "platform:*:charging" (allwinner sun50i)
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlymU3gACgkQMOfwapXb+vIkLQCgh9qnaGmnwyyWKBT53sDXfYRw
+0acAoKNM9v7PQbJWEeEG37rjAy9mG3Vn
+=lwBd
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
