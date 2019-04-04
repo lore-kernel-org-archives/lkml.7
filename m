@@ -2,56 +2,55 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D02C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924FAC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFFF217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5999D2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368357;
-	bh=uHfEdp+sQctZzGHNpvJhFMzN4aZjylMxH3g3CAc5tAA=;
+	s=default; t=1554368365;
+	bh=0OxmJPZnkVCDwtKNj9a///FyKDal9zhRT2X9d+2AIGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ysnCE9+ygIdXViN0iCBLZ0tyJHlStezm0BKR5+XX6oqqsNbkqVFSn4O03L3E09RLu
-	 R7+XVVfIGmaGBucjSso24uoLKbiKcpkkInstfMyhdtoGeqXW7+pttM2yyx4CteIS4t
-	 AcDbkIP+aD7ZpmnT95SX4GREAioutxEUFLnSUJaQ=
+	b=YhcdfnPEXfEq/CmAyoi6iTH6LB7Ka6vq4X9HKrMfyxHkIinyR1+HSRyNRn1NmhiTI
+	 icDF/ArOwesmx3/q2SY4X7NL00wgYhdmKaywyjXWxm87xLse8PCCzm9xpP0WpG+M4y
+	 5A0c5t0vMbBu/sPR7nkrPjRNX2yJWBpZepiothcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbfDDI7P (ORCPT
+        id S1730739AbfDDI7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731038AbfDDI7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:11 -0400
+        id S1730084AbfDDI7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C070E21741;
-        Thu,  4 Apr 2019 08:59:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62D1C2177E;
+        Thu,  4 Apr 2019 08:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368351;
-        bh=uHfEdp+sQctZzGHNpvJhFMzN4aZjylMxH3g3CAc5tAA=;
+        s=default; t=1554368357;
+        bh=0OxmJPZnkVCDwtKNj9a///FyKDal9zhRT2X9d+2AIGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGuh5BWm132/cH5khn6rUaScgGGthqoclRfjI0PBaw0lLmZLjR1s/vciGLDJk4cu2
-         voRWEqVLdjdf/c3oRuE7UQw1gf/71MAbQJV/EHaOBHSrYRIfDGSvuAUE4PeNdayeMo
-         mbc3nwjXfLmB9QbG3ZW6i4RjSZc9A4pTuW5V51aU=
+        b=bViPVbAjYbqchf6l7qyQa6Dcr/HRYvaXxMS5Iv8+1OiD9+ei2ulrUKOSG3V0Yi3K/
+         kA/tA4MW3p4wXxp/cF2eigC/32dZxi6XKK99L95IqEec/mw499/BNCh2X6XyXlo3bd
+         BwpXt+ejpHvE3j66kIMrF48eqwAdCd1rmpy2UMt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 112/121] drm: Auto-set allow_fb_modifiers when given modifiers at plane init
-Date:   Thu,  4 Apr 2019 10:48:20 +0200
-Message-Id: <20190404084551.332045960@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jari Ruusu <jari.ruusu@gmail.com>
+Subject: [PATCH 4.19 002/187] ext4: cleanup bh release code in ext4_ind_remove_space()
+Date:   Thu,  4 Apr 2019 10:45:39 +0200
+Message-Id: <20190404084603.221472937@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
-References: <20190404084545.245659903@linuxfoundation.org>
+In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
+References: <20190404084603.119654039@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,50 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 890880ddfdbe256083170866e49c87618b706ac7 ]
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-When drivers pass non-empty lists of modifiers for initializing their
-planes, we can infer that they allow framebuffer modifiers and set the
-driver's allow_fb_modifiers mode config element.
+commit 5e86bdda41534e17621d5a071b294943cae4376e upstream.
 
-In case the allow_fb_modifiers element was not set (some drivers tend
-to set them after registering planes), the modifiers will still be
-registered but won't be available to userspace unless the flag is set
-later. However in that case, the IN_FORMATS blob won't be created.
+Currently, we are releasing the indirect buffer where we are done with
+it in ext4_ind_remove_space(), so we can see the brelse() and
+BUFFER_TRACE() everywhere.  It seems fragile and hard to read, and we
+may probably forget to release the buffer some day.  This patch cleans
+up the code by putting of the code which releases the buffers to the
+end of the function.
 
-In order to avoid this case and generally reduce the trouble associated
-with the flag, always set allow_fb_modifiers when a non-empty list of
-format modifiers is passed at plane init.
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Jari Ruusu <jari.ruusu@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190104085610.5829-1-paul.kocialkowski@bootlin.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_plane.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ext4/indirect.c |   47 ++++++++++++++++++++++-------------------------
+ 1 file changed, 22 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
-index 7a00351d5b5d..71186bf90760 100644
---- a/drivers/gpu/drm/drm_plane.c
-+++ b/drivers/gpu/drm/drm_plane.c
-@@ -203,6 +203,9 @@ int drm_universal_plane_init(struct drm_device *dev, struct drm_plane *plane,
- 			format_modifier_count++;
+--- a/fs/ext4/indirect.c
++++ b/fs/ext4/indirect.c
+@@ -1219,6 +1219,7 @@ int ext4_ind_remove_space(handle_t *hand
+ 	ext4_lblk_t offsets[4], offsets2[4];
+ 	Indirect chain[4], chain2[4];
+ 	Indirect *partial, *partial2;
++	Indirect *p = NULL, *p2 = NULL;
+ 	ext4_lblk_t max_block;
+ 	__le32 nr = 0, nr2 = 0;
+ 	int n = 0, n2 = 0;
+@@ -1260,7 +1261,7 @@ int ext4_ind_remove_space(handle_t *hand
+ 		}
+ 
+ 
+-		partial = ext4_find_shared(inode, n, offsets, chain, &nr);
++		partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
+ 		if (nr) {
+ 			if (partial == chain) {
+ 				/* Shared branch grows from the inode */
+@@ -1285,13 +1286,11 @@ int ext4_ind_remove_space(handle_t *hand
+ 				partial->p + 1,
+ 				(__le32 *)partial->bh->b_data+addr_per_block,
+ 				(chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+ 			partial--;
+ 		}
+ 
+ end_range:
+-		partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
++		partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+ 		if (nr2) {
+ 			if (partial2 == chain2) {
+ 				/*
+@@ -1321,16 +1320,14 @@ end_range:
+ 					   (__le32 *)partial2->bh->b_data,
+ 					   partial2->p,
+ 					   (chain2+n2-1) - partial2);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
+ 			partial2--;
+ 		}
+ 		goto do_indirects;
  	}
  
-+	if (format_modifier_count)
-+		config->allow_fb_modifiers = true;
+ 	/* Punch happened within the same level (n == n2) */
+-	partial = ext4_find_shared(inode, n, offsets, chain, &nr);
+-	partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
++	partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
++	partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+ 
+ 	/* Free top, but only if partial2 isn't its subtree. */
+ 	if (nr) {
+@@ -1387,15 +1384,7 @@ end_range:
+ 					   partial->p + 1,
+ 					   partial2->p,
+ 					   (chain+n-1) - partial);
+-			while (partial > chain) {
+-				BUFFER_TRACE(partial->bh, "call brelse");
+-				brelse(partial->bh);
+-			}
+-			while (partial2 > chain2) {
+-				BUFFER_TRACE(partial2->bh, "call brelse");
+-				brelse(partial2->bh);
+-			}
+-			return 0;
++			goto cleanup;
+ 		}
+ 
+ 		/*
+@@ -1410,8 +1399,6 @@ end_range:
+ 					   partial->p + 1,
+ 					   (__le32 *)partial->bh->b_data+addr_per_block,
+ 					   (chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+ 			partial--;
+ 		}
+ 		if (partial2 > chain2 && depth2 <= depth) {
+@@ -1419,11 +1406,21 @@ end_range:
+ 					   (__le32 *)partial2->bh->b_data,
+ 					   partial2->p,
+ 					   (chain2+n2-1) - partial2);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
+ 			partial2--;
+ 		}
+ 	}
 +
- 	plane->modifier_count = format_modifier_count;
- 	plane->modifiers = kmalloc_array(format_modifier_count,
- 					 sizeof(format_modifiers[0]),
--- 
-2.19.1
-
++cleanup:
++	while (p && p > chain) {
++		BUFFER_TRACE(p->bh, "call brelse");
++		brelse(p->bh);
++		p--;
++	}
++	while (p2 && p2 > chain2) {
++		BUFFER_TRACE(p2->bh, "call brelse");
++		brelse(p2->bh);
++		p2--;
++	}
+ 	return 0;
+ 
+ do_indirects:
+@@ -1431,7 +1428,7 @@ do_indirects:
+ 	switch (offsets[0]) {
+ 	default:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_IND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
+@@ -1439,7 +1436,7 @@ do_indirects:
+ 		}
+ 	case EXT4_IND_BLOCK:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_DIND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
+@@ -1447,7 +1444,7 @@ do_indirects:
+ 		}
+ 	case EXT4_DIND_BLOCK:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_TIND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
+@@ -1456,5 +1453,5 @@ do_indirects:
+ 	case EXT4_TIND_BLOCK:
+ 		;
+ 	}
+-	return 0;
++	goto cleanup;
+ }
 
 
