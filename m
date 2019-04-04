@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BE6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5D1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70BD62183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B2882186A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368522;
-	bh=ReCXjDPib65EYZYt2ERVLdD8NZTQhP04oQGom1ItsJ0=;
+	s=default; t=1554368526;
+	bh=l3cnE1BitOI+Qzay/2F7C5xp+lOJzIPtJmWcdRsSTT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t7WO3UnZ+N24jQfYCCL4p0HfTjeBA8KRIk1ruyi4M7B1w9ytlsxOUDJLRCeEL+x3a
-	 L4vZWFcQrEeBJHpfrLbOC/gfLJ+NpN9pwIQd4K1nB9X0ljvguyqvrcMR2lcLEdyJIq
-	 K7Ar/O6odPONLT/SoQDgTWSNBFef849c58o/4Ebc=
+	b=Z4qGRfhU1gH2m2DrsBqmalX9vInJiIuEecRlePJ6rVQ5cSPA38fRudGAyMkCArcrX
+	 rOWzF02YEZKuZw8FchMK+08oCZM8T/100g5upOsW9YZMMXSbEx9Bnk1zrt9KpgezFj
+	 vujQv4+vIJb8Ty2ukFcn67HuaPMLNNAENmVF55Qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbfDDJCB (ORCPT
+        id S1731551AbfDDJCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:02:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731521AbfDDJB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:59 -0400
+        id S1731521AbfDDJCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:02:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0533221741;
-        Thu,  4 Apr 2019 09:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 896AC2177E;
+        Thu,  4 Apr 2019 09:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368518;
-        bh=ReCXjDPib65EYZYt2ERVLdD8NZTQhP04oQGom1ItsJ0=;
+        s=default; t=1554368521;
+        bh=l3cnE1BitOI+Qzay/2F7C5xp+lOJzIPtJmWcdRsSTT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMa5Sljespp+2fwyOiiouCjmgR2ZPu/yKHRw3/LWbld4pYo77uoRVAUYtV2PKbGWZ
-         83MYo9ga6UwyoHs66AXe1AazdMqKrQzdVnvtnSuJ1awrkWaLht+dF9vvs5Dcnv7f2H
-         //atpheFj47e5OEkD7zquNFN2MoQLL3I0Ns4+8VI=
+        b=b8ru/93B64LitSE3XiWvTkuUOvDsbuBqx/XP0Img+BpyLFk1/7NHYI2HwVjmrkVVr
+         kkGjvDm5+RxvNKvXk4aY6avQAKhUqGHveaIg2Kv7hl39GXIauuhYr5cU6qaYxLF/Iz
+         62cXHj9szutW3BW1LTWTzV3AjrOaV4rf/Zuoj/jM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/187] loop: set GENHD_FL_NO_PART_SCAN after blkdev_reread_part()
-Date:   Thu,  4 Apr 2019 10:46:46 +0200
-Message-Id: <20190404084606.297660347@linuxfoundation.org>
+Subject: [PATCH 4.19 070/187] IB/mlx4: Increase the timeout for CM cache
+Date:   Thu,  4 Apr 2019 10:46:47 +0200
+Message-Id: <20190404084606.343951486@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,84 +68,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 758a58d0bc67457f1215321a536226654a830eeb ]
+[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
 
-Commit 0da03cab87e6
-("loop: Fix deadlock when calling blkdev_reread_part()") moves
-blkdev_reread_part() out of the loop_ctl_mutex. However,
-GENHD_FL_NO_PART_SCAN is set before __blkdev_reread_part(). As a result,
-__blkdev_reread_part() will fail the check of GENHD_FL_NO_PART_SCAN and
-will not rescan the loop device to delete all partitions.
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
 
-Below are steps to reproduce the issue:
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
+in a cache.
 
-step1 # dd if=/dev/zero of=tmp.raw bs=1M count=100
-step2 # losetup -P /dev/loop0 tmp.raw
-step3 # parted /dev/loop0 mklabel gpt
-step4 # parted -a none -s /dev/loop0 mkpart primary 64s 1
-step5 # losetup -d /dev/loop0
+Following the RDMA Connection Manager (CM) protocol, it is clear when
+an entry has to evicted form the cache. But life is not perfect,
+remote peers may die or be rebooted. Hence, it's a timeout to wipe out
+a cache entry, when the PF driver assumes the remote peer has gone.
 
-Step5 will not be able to delete /dev/loop0p1 (introduced by step4) and
-there is below kernel warning message:
+During workloads where a high number of QPs are destroyed concurrently,
+excessive amount of CM DREQ retries has been observed
 
-[  464.414043] __loop_clr_fd: partition scan of loop0 failed (rc=-22)
+The problem can be demonstrated in a bare-metal environment, where two
+nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
+have 16 vPorts per physical server.
 
-This patch sets GENHD_FL_NO_PART_SCAN after blkdev_reread_part().
+64 processes are associated with each vPort and creates and destroys
+one QP for each of the remote 64 processes. That is, 1024 QPs per
+vPort, all in all 16K QPs. The QPs are created/destroyed using the
+CM.
 
-Fixes: 0da03cab87e6 ("loop: Fix deadlock when calling blkdev_reread_part()")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+When tearing down these 16K QPs, excessive CM DREQ retries (and
+duplicates) are observed. With some cat/paste/awk wizardry on the
+infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
+nodes:
+
+cm_rx_duplicates:
+      dreq  2102
+cm_rx_msgs:
+      drep  1989
+      dreq  6195
+       rep  3968
+       req  4224
+       rtu  4224
+cm_tx_msgs:
+      drep  4093
+      dreq 27568
+       rep  4224
+       req  3968
+       rtu  3968
+cm_tx_retries:
+      dreq 23469
+
+Note that the active/passive side is equally distributed between the
+two nodes.
+
+Enabling pr_debug in cm.c gives tons of:
+
+[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
+1,sl_cm_id: 0xd393089f} is NULL!
+
+By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
+tear-down phase of the application is reduced from approximately 90 to
+50 seconds. Retries/duplicates are also significantly reduced:
+
+cm_rx_duplicates:
+      dreq  2460
+[]
+cm_tx_retries:
+      dreq  3010
+       req    47
+
+Increasing the timeout further didn't help, as these duplicates and
+retries stems from a too short CMA timeout, which was 20 (~4 seconds)
+on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
+numbers fell down to about 10 for both of them.
+
+Adjustment of the CMA timeout is not part of this commit.
+
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/mlx4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 0c5aeab4d23a..a63da9e07341 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1090,16 +1090,12 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 		kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
- 	}
- 	mapping_set_gfp_mask(filp->f_mapping, gfp);
--	lo->lo_state = Lo_unbound;
- 	/* This is safe: open() is still holding a reference. */
- 	module_put(THIS_MODULE);
- 	blk_mq_unfreeze_queue(lo->lo_queue);
+diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
+index fedaf8260105..8c79a480f2b7 100644
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -39,7 +39,7 @@
  
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
- 	lo_number = lo->lo_number;
--	lo->lo_flags = 0;
--	if (!part_shift)
--		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	loop_unprepare_queue(lo);
- out_unlock:
- 	mutex_unlock(&loop_ctl_mutex);
-@@ -1121,6 +1117,23 @@ out_unlock:
- 		/* Device is gone, no point in returning error */
- 		err = 0;
- 	}
-+
-+	/*
-+	 * lo->lo_state is set to Lo_unbound here after above partscan has
-+	 * finished.
-+	 *
-+	 * There cannot be anybody else entering __loop_clr_fd() as
-+	 * lo->lo_backing_file is already cleared and Lo_rundown state
-+	 * protects us from all the other places trying to change the 'lo'
-+	 * device.
-+	 */
-+	mutex_lock(&loop_ctl_mutex);
-+	lo->lo_flags = 0;
-+	if (!part_shift)
-+		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
-+	lo->lo_state = Lo_unbound;
-+	mutex_unlock(&loop_ctl_mutex);
-+
- 	/*
- 	 * Need not hold loop_ctl_mutex to fput backing file.
- 	 * Calling fput holding loop_ctl_mutex triggers a circular
+ #include "mlx4_ib.h"
+ 
+-#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
++#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
+ 
+ struct id_map_entry {
+ 	struct rb_node node;
 -- 
 2.19.1
 
