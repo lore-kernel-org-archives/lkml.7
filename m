@@ -7,59 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ECCC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627A6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51A5206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C675206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371764;
-	bh=eN/gQAv0J7NE2cnOczyQDSlN52+KXtRRbTRUYc6QtZY=;
+	s=default; t=1554371787;
+	bh=mC3D5EJmCA9gP2f9vmsUU+baiHoRPZqUWok9g5Z5kz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jy1fzgnlA83uLLMz2MReaA9B4seDbAHv05Yq6AGA5/S0ki8STsM0w87XDMgvkxSko
-	 kT7wemJzyS0Ad/O/V7XWJ3OAES2QEUKim5LDKb3NcnCTH/xTgTRgKaVuemvVeu3Lvr
-	 5OPyMLLQAP+Do+lpSbyHHET7xNIDFoUGyjByuziY=
+	b=rqAEKw2mHzc+IC/8nvpsGP7K6Ze0ICNqwrDjH/rN2XYqINh34zi7dLshmK4zp7prH
+	 Yh42B5U5YMN7ggsgLeDYrW2zrAJtN08vfIHUq8pS8qX6QuoqZq3P7QgG1mhN4Us+SB
+	 mp07os0aHquU1NvScmlD4uLHOLRXOpQx5RbB3AZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfDDJ4E (ORCPT
+        id S1729356AbfDDJ40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52834 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbfDDIvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:51:12 -0400
+        id S1725914AbfDDIuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:50:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27E5F217D7;
-        Thu,  4 Apr 2019 08:51:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B615E21734;
+        Thu,  4 Apr 2019 08:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367871;
-        bh=eN/gQAv0J7NE2cnOczyQDSlN52+KXtRRbTRUYc6QtZY=;
+        s=default; t=1554367853;
+        bh=mC3D5EJmCA9gP2f9vmsUU+baiHoRPZqUWok9g5Z5kz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HmWW4BngEylvBviQnKZj5/AwxxUtZ/orjroK/KSo156RrRVMTSIxBa872M5E+Ke//
-         vDPdAEGh+UdH20MQuRDPT8PxAKajlSViShS9anbzE6n8+OcpwK1QG+PKqR0aFiGfMt
-         +2O/IbkvG6dwUSEIkxJOYBZCruJTwivEYOkCQZd4=
+        b=yFKkfiXH5RBUuumF3GLGGBUi8fHUCaZ/Tg26RX/l6L2qqW68slh11/xsL4rPxSkh/
+         odXEVqofd9KMSjAyGOW1O7tpc63SvGIuW6+xFBRHni9EHfs3FoE9aC2WMDenWdFSEA
+         bBvSfHlr63tuGvEp4H2Qo7+6p/L/MYec+iNDST0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
+        stable@vger.kernel.org, Jia Guo <guojia12@huawei.com>,
+        Joseph Qi <jiangqi903@gmail.com>,
+        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <ge.changwei@h3c.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 44/91] SoC: imx-sgtl5000: add missing put_device()
-Date:   Thu,  4 Apr 2019 10:47:28 +0200
-Message-Id: <20190404084538.023440514@linuxfoundation.org>
+Subject: [PATCH 4.9 21/91] ocfs2: fix a panic problem caused by o2cb_ctl
+Date:   Thu,  4 Apr 2019 10:47:05 +0200
+Message-Id: <20190404084536.645991493@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -78,54 +72,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
+[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+In the process of creating a node, it will cause NULL pointer
+dereference in kernel if o2cb_ctl failed in the interval (mkdir,
+o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
 
-Detected by coccinelle with the following warnings:
-./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
-./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
-call of_find_device_by_node on line 105, but without a corresponding
-object release within this function.
+The node num is initialized to 0 in function o2nm_node_group_make_item,
+o2nm_node_group_drop_item will mistake the node number 0 for a valid
+node number when we delete the node before the node number is set
+correctly.  If the local node number of the current host happens to be
+0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
+o2hb_thread still running.  The panic stack is generated as follows:
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  o2hb_thread
+      \-o2hb_do_disk_heartbeat
+          \-o2hb_check_own_slot
+              |-slot = &reg->hr_slots[o2nm_this_node()];
+              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
+
+We need to check whether the node number is set when we delete the node.
+
+Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
+Signed-off-by: Jia Guo <guojia12@huawei.com>
+Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
+Acked-by: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <ge.changwei@h3c.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-sgtl5000.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index b99e0b5e00e9..8e525f7ac08d 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -115,6 +115,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		ret = -EPROBE_DEFER;
- 		goto fail;
+diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
+index c204ac9b49e5..81a0d5d82757 100644
+--- a/fs/ocfs2/cluster/nodemanager.c
++++ b/fs/ocfs2/cluster/nodemanager.c
+@@ -621,13 +621,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
+ 	struct o2nm_node *node = to_o2nm_node(item);
+ 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
+ 
+-	o2net_disconnect_node(node);
++	if (cluster->cl_nodes[node->nd_num] == node) {
++		o2net_disconnect_node(node);
+ 
+-	if (cluster->cl_has_local &&
+-	    (cluster->cl_local_node == node->nd_num)) {
+-		cluster->cl_has_local = 0;
+-		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
+-		o2net_stop_listening(node);
++		if (cluster->cl_has_local &&
++		    (cluster->cl_local_node == node->nd_num)) {
++			cluster->cl_has_local = 0;
++			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
++			o2net_stop_listening(node);
++		}
  	}
-+	put_device(&ssi_pdev->dev);
- 	codec_dev = of_find_i2c_device_by_node(codec_np);
- 	if (!codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+ 
+ 	/* XXX call into net to stop this node from trading messages */
 -- 
 2.19.1
 
