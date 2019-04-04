@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCB6C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D7EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB19F206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488F120693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbfDDQpT (ORCPT
+        id S1729676AbfDDQpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:45:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45822 "EHLO mx1.redhat.com"
+        Thu, 4 Apr 2019 12:45:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35096 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727353AbfDDQpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:45:17 -0400
+        id S1728762AbfDDQpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:45:23 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4DD193007432;
-        Thu,  4 Apr 2019 16:45:17 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 939ED30832C9;
+        Thu,  4 Apr 2019 16:45:22 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-125-158.rdu2.redhat.com [10.10.125.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A26E5608E2;
-        Thu,  4 Apr 2019 16:45:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7568C608EB;
+        Thu,  4 Apr 2019 16:45:17 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
@@ -51,85 +51,95 @@ Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tyler Hicks <tyhicks@canonical.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH RFC 4/5] s390/speculation: Add support for 'cpu_spec_mitigations=' cmdline options
-Date:   Thu,  4 Apr 2019 11:44:14 -0500
-Message-Id: <a887ee8cd195939c377ba60aac9e5c792809e447.1554396090.git.jpoimboe@redhat.com>
+Subject: [PATCH RFC 5/5] arm64/speculation: Add support for 'cpu_spec_mitigations=' cmdline options
+Date:   Thu,  4 Apr 2019 11:44:15 -0500
+Message-Id: <5f70df57b19bbccc4a0d5d76134b4681c9a50b0b.1554396090.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1554396090.git.jpoimboe@redhat.com>
 References: <cover.1554396090.git.jpoimboe@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 04 Apr 2019 16:45:17 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 04 Apr 2019 16:45:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Configure s390 runtime CPU speculation bug mitigations in accordance
-with the 'cpu_spec_mitigations=' cmdline options.  This affects Spectre
-v1 and Spectre v2.
+Configure arm64 runtime CPU speculation bug mitigations in accordance
+with the 'cpu_spec_mitigations=' cmdline options.  This affects
+Meltdown and Speculative Store Bypass.
 
 The default behavior is unchanged.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 7 ++++---
- arch/s390/kernel/nospec-branch.c                | 4 +++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 2 ++
+ arch/arm64/kernel/cpu_errata.c                  | 4 ++++
+ arch/arm64/kernel/cpufeature.c                  | 6 ++++++
+ 3 files changed, 12 insertions(+)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 0e8eae1e8a25..e838af96daa4 100644
+index e838af96daa4..0b54385ee7a8 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2554,8 +2554,9 @@
+@@ -2553,11 +2553,13 @@
+ 			off
  				Disable all speculative CPU mitigations.
  				Equivalent to: nopti [x86, powerpc]
++					       kpti=0 [arm64]
  					       nospectre_v1 [powerpc]
--					       nospectre_v2 [x86]
-+					       nospectre_v2 [x86, powerpc, s390]
+ 					       nospectre_v2 [x86, powerpc, s390]
  					       spectre_v2_user=off [x86]
-+					       nobp=0 [s390]
+ 					       nobp=0 [s390]
  					       spec_store_bypass_disable=off [x86, powerpc]
++					       ssbd=force-off [arm64]
  					       l1tf=off [x86]
  
-@@ -2567,7 +2568,7 @@
- 				upgrades, or who have other ways of avoiding
- 				SMT-based attacks.
- 				Equivalent to: pti=auto [x86]
--					       spectre_v2=auto [x86]
-+					       spectre_v2=auto [x86, s390]
- 					       spectre_v2_user=auto [x86]
- 					       spec_store_bypass_disable=auto [x86, powerpc]
- 					       l1tf=flush [x86]
-@@ -2578,7 +2579,7 @@
- 				always want to be fully mitigated, even if it
- 				means losing SMT.
- 				Equivalent to: pti=auto [x86]
--					       spectre_v2=auto [x86]
-+					       spectre_v2=auto [x86, s390]
- 					       spectre_v2_user=auto [x86]
- 					       spec_store_bypass_disable=auto [x86, powerpc]
- 					       l1tf=flush,nosmt [x86]
-diff --git a/arch/s390/kernel/nospec-branch.c b/arch/s390/kernel/nospec-branch.c
-index bdddaae96559..c40eb672b43a 100644
---- a/arch/s390/kernel/nospec-branch.c
-+++ b/arch/s390/kernel/nospec-branch.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/module.h>
- #include <linux/device.h>
+ 			auto (default)
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 9950bb0cbd52..db8d27e3fb1c 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -19,6 +19,7 @@
+ #include <linux/arm-smccc.h>
+ #include <linux/psci.h>
+ #include <linux/types.h>
 +#include <linux/cpu.h>
- #include <asm/nospec-branch.h>
+ #include <asm/cpu.h>
+ #include <asm/cputype.h>
+ #include <asm/cpufeature.h>
+@@ -385,6 +386,9 @@ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
+ 		return false;
+ 	}
  
- static int __init nobp_setup_early(char *str)
-@@ -58,7 +59,8 @@ early_param("nospectre_v2", nospectre_v2_setup_early);
++	if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF)
++		ssbd_state = ARM64_SSBD_FORCE_DISABLE;
++
+ 	switch (psci_ops.conduit) {
+ 	case PSCI_CONDUIT_HVC:
+ 		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 4061de10cea6..4512b582d50f 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -25,6 +25,7 @@
+ #include <linux/stop_machine.h>
+ #include <linux/types.h>
+ #include <linux/mm.h>
++#include <linux/cpu.h>
+ #include <asm/cpu.h>
+ #include <asm/cpufeature.h>
+ #include <asm/cpu_ops.h>
+@@ -978,6 +979,11 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 		__kpti_forced = -1;
+ 	}
  
- void __init nospec_auto_detect(void)
- {
--	if (test_facility(156)) {
-+	if (test_facility(156) ||
-+	    cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF) {
- 		/*
- 		 * The machine supports etokens.
- 		 * Disable expolines and disable nobp.
++	if (cpu_spec_mitigations == CPU_SPEC_MITIGATIONS_OFF) {
++		str = "cpu_spec_mitigations=off";
++		__kpti_forced = -1;
++	}
++
+ 	/* Forced? */
+ 	if (__kpti_forced) {
+ 		pr_info_once("kernel page table isolation forced %s by %s\n",
 -- 
 2.17.2
 
