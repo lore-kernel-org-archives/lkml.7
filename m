@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E90CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70E7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC39E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3DD52075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371648;
-	bh=DnpcXmv49/G9xVOgXkpSdA6U+sR3kKnKFwCgyMyDDdo=;
+	s=default; t=1554371656;
+	bh=BR/M9Oh4GUfXc9s5yeoFb2uEBm58dYBPTRR/KFltGFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qUHTf68TdAK8UX+oMdnzsxtqdLVH4aYjLP8dDRMuKkecUcO7G8Dv9804UkmnPi0bv
-	 y6L4rTJaDpbUaRRLEiTdwtBxHJsO1ExuXuCDldmKZchNBPuvMLaYku9Dhz4b5rl9VR
-	 hwjJ2nnQiDQ3Z7xvG0CyYrAK3YXw69GdHWm5n9QI=
+	b=L4fXkUk7DrXamWPHINCZGQTKOyBD/iwcMnUIL/jkYiBiZpxy0l3kFvMufu1/IxMf7
+	 ntLmLGhg1yGvx9KDwrmc7zjJ3+gZsVUc6pkmKYPAh3JrYX0mpFgO62e+DovEDek72h
+	 +SDetJWDI65pn/5KXfGsEh0ehpQIly0tr9xsmdOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfDDJyH (ORCPT
+        id S1729667AbfDDIwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:54:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbfDDIwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:50 -0400
+        id S1729185AbfDDIwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113F72147C;
-        Thu,  4 Apr 2019 08:52:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5765A20855;
+        Thu,  4 Apr 2019 08:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367969;
-        bh=DnpcXmv49/G9xVOgXkpSdA6U+sR3kKnKFwCgyMyDDdo=;
+        s=default; t=1554367957;
+        bh=BR/M9Oh4GUfXc9s5yeoFb2uEBm58dYBPTRR/KFltGFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ExeKqP/4fHImZTnZ/aULF5yLhbNaLC/evqe2fuRlVaqylSNbrp5mZbjylxwXcRBa
-         HHbY7bqR8+kprfN28aBfmrDhH9brrUVA3sQn5w0MPZN0Xp5gOLm9Xen9lkAle+bLgc
-         IZLJ6qMco727vz3c1dR6GTMfxLuU2EAFNwvZOVEs=
+        b=yDZuejzGKXBzgt1LO3WjyCzYksj/iS1X8kO1qlzBfMDFjhokps2/On4feHfxi78mX
+         DSRNlnoevUXV0zwH1tH2XqpBUovP7cDEofSIYWTUJkNCOPq4K8XwX6pHeFfgtJJX/0
+         OuYTa3eO2MvkCKEnoGEKt8gx3RbkBTAkZtejiG4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joey Zheng <yu.zheng@hxt-semitech.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Shunyong Yang <shunyong.yang@hxt-semitech.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 80/91] dmaengine: qcom_hidma: assign channel cookie correctly
-Date:   Thu,  4 Apr 2019 10:48:04 +0200
-Message-Id: <20190404084540.077201673@linuxfoundation.org>
+        stable@vger.kernel.org, David Daney <ddaney@caviumnetworks.com>,
+        Rob Herring <robh@kernel.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 68/91] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
+Date:   Thu,  4 Apr 2019 10:47:52 +0200
+Message-Id: <20190404084539.393491052@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -67,84 +68,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 546c0547555efca8ba8c120716c325435e29df1b ]
+[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
 
-When dma_cookie_complete() is called in hidma_process_completed(),
-dma_cookie_status() will return DMA_COMPLETE in hidma_tx_status(). Then,
-hidma_txn_is_success() will be called to use channel cookie
-mchan->last_success to do additional DMA status check. Current code
-assigns mchan->last_success after dma_cookie_complete(). This causes
-a race condition of dma_cookie_status() returns DMA_COMPLETE before
-mchan->last_success is assigned correctly. The race will cause
-hidma_tx_status() return DMA_ERROR but the transaction is actually a
-success. Moreover, in async_tx case, it will cause a timeout panic
-in async_tx_quiesce().
+Improve the DTS files by removing all the leading "0x" and zeros to fix
+the following dtc warnings:
 
- Kernel panic - not syncing: async_tx_quiesce: DMA error waiting for
- transaction
- ...
- Call trace:
- [<ffff000008089994>] dump_backtrace+0x0/0x1f4
- [<ffff000008089bac>] show_stack+0x24/0x2c
- [<ffff00000891e198>] dump_stack+0x84/0xa8
- [<ffff0000080da544>] panic+0x12c/0x29c
- [<ffff0000045d0334>] async_tx_quiesce+0xa4/0xc8 [async_tx]
- [<ffff0000045d03c8>] async_trigger_callback+0x70/0x1c0 [async_tx]
- [<ffff0000048b7d74>] raid_run_ops+0x86c/0x1540 [raid456]
- [<ffff0000048bd084>] handle_stripe+0x5e8/0x1c7c [raid456]
- [<ffff0000048be9ec>] handle_active_stripes.isra.45+0x2d4/0x550 [raid456]
- [<ffff0000048beff4>] raid5d+0x38c/0x5d0 [raid456]
- [<ffff000008736538>] md_thread+0x108/0x168
- [<ffff0000080fb1cc>] kthread+0x10c/0x138
- [<ffff000008084d34>] ret_from_fork+0x10/0x18
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 
-Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+and
+
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+
+Converted using the following command:
+
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
+
+For simplicity, two sed expressions were used to solve each warnings
+separately.
+
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before
+the opening curly brace:
+
+https://elinux.org/Device_Tree_Linux#Linux_conventions
+
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+[vzapolskiy: fixed commit message to pass checkpatch.pl test]
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/qcom/hidma.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index e244e10a94b5..5444f39bf939 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -131,24 +131,25 @@ static void hidma_process_completed(struct hidma_chan *mchan)
- 		desc = &mdesc->desc;
- 		last_cookie = desc->cookie;
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index b5841fab51c1..0d20aadc78bb 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -230,7 +230,7 @@
+ 				status = "disabled";
+ 			};
  
-+		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
-+
- 		spin_lock_irqsave(&mchan->lock, irqflags);
-+		if (llstat == DMA_COMPLETE) {
-+			mchan->last_success = last_cookie;
-+			result.result = DMA_TRANS_NOERROR;
-+		} else {
-+			result.result = DMA_TRANS_ABORTED;
-+		}
-+
- 		dma_cookie_complete(desc);
- 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+-			i2s1: i2s@2009C000 {
++			i2s1: i2s@2009c000 {
+ 				compatible = "nxp,lpc3220-i2s";
+ 				reg = <0x2009C000 0x1000>;
+ 			};
+@@ -273,7 +273,7 @@
+ 				status = "disabled";
+ 			};
  
--		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
- 		dmaengine_desc_get_callback(desc, &cb);
+-			i2c1: i2c@400A0000 {
++			i2c1: i2c@400a0000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A0000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -284,7 +284,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C1>;
+ 			};
  
- 		dma_run_dependencies(desc);
+-			i2c2: i2c@400A8000 {
++			i2c2: i2c@400a8000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A8000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -295,7 +295,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C2>;
+ 			};
  
- 		spin_lock_irqsave(&mchan->lock, irqflags);
- 		list_move(&mdesc->node, &mchan->free);
--
--		if (llstat == DMA_COMPLETE) {
--			mchan->last_success = last_cookie;
--			result.result = DMA_TRANS_NOERROR;
--		} else
--			result.result = DMA_TRANS_ABORTED;
--
- 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+-			mpwm: mpwm@400E8000 {
++			mpwm: mpwm@400e8000 {
+ 				compatible = "nxp,lpc3220-motor-pwm";
+ 				reg = <0x400E8000 0x78>;
+ 				status = "disabled";
+@@ -394,7 +394,7 @@
+ 				#gpio-cells = <3>; /* bank, pin, flags */
+ 			};
  
- 		dmaengine_desc_callback_invoke(&cb, &result);
+-			timer4: timer@4002C000 {
++			timer4: timer@4002c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4002C000 0x1000>;
+ 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+@@ -412,7 +412,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			watchdog: watchdog@4003C000 {
++			watchdog: watchdog@4003c000 {
+ 				compatible = "nxp,pnx4008-wdt";
+ 				reg = <0x4003C000 0x1000>;
+ 				clocks = <&clk LPC32XX_CLK_WDOG>;
+@@ -451,7 +451,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			timer1: timer@4004C000 {
++			timer1: timer@4004c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4004C000 0x1000>;
+ 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+@@ -475,14 +475,14 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm1: pwm@4005C000 {
++			pwm1: pwm@4005c000 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
+ 				status = "disabled";
+ 			};
+ 
+-			pwm2: pwm@4005C004 {
++			pwm2: pwm@4005c004 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
 -- 
 2.19.1
 
