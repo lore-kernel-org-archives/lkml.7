@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CB8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554ACC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789752147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214AE2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369175;
-	bh=IJEtCEmhWjhOzOEgNoeNQzUyQM3kvnLJ6DZPHIl0K8g=;
+	s=default; t=1554369182;
+	bh=2GTewGTFxolK0JLmclBkYFNxyhVWbnsycRlIkH3VQaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yaBZIamPAcU5jPe98KKWehZJMRjMXhASkXOtKxyimQhbCes3heCKMXhDaS36r5374
-	 lKuAVL5J7dM736iyHjTPB2U2O4HiXAeo5eX99T+fazxTHwLcnPt9OP8+3S9/Coobv1
-	 4VNlv9EN/LsluzlgUvObIkpTUUgfHWSS3gx1PKi0=
+	b=q8IzIuo1V5+A87V+Kwcadv+/tQV29PQvJAZUftlpYviYPaIwpEAsEtQIxQ20MbFTG
+	 n36aVs+23a2QFXCp23Q9M/YkIQWFLiXGvMzFFCPiiTF4GQMDPmHPbnzk7Jsg3Kn52n
+	 kjJv26z8KN10yebmQBs9xYa2SWqwvgiOTyYt9RWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387471AbfDDJMx (ORCPT
+        id S2387502AbfDDJNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:12:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53072 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732968AbfDDJMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:52 -0400
+        id S2387473AbfDDJM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A308520693;
-        Thu,  4 Apr 2019 09:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 013232147C;
+        Thu,  4 Apr 2019 09:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369171;
-        bh=IJEtCEmhWjhOzOEgNoeNQzUyQM3kvnLJ6DZPHIl0K8g=;
+        s=default; t=1554369176;
+        bh=2GTewGTFxolK0JLmclBkYFNxyhVWbnsycRlIkH3VQaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YHktE9aGX2kYN/n6Tp2O9+53oyU+N/iuTDOf1y0/U6orh+c5HW88xYABEvePXMSE3
-         bUkrPHhBS+nUnJ5hfD5tCguV2Rxt5ARlWI7Wbvh61D8N7PqsG0rtHFLjv85Lu5eRQI
-         nZp2CiNP3aLVwwcaxPaXrea0oeM++2nTqRSs3ORU=
+        b=k2o3WDNXkr+k0U24JA0aaGymPcNQRuedFf72E7JUF+PVPOeYZxCx56XIE/VNyWi4/
+         UxFVi9+t31pmlXUCHMfFT1F/LmPN+Iftt8zITykPMN81IdjoNPIdoHBLCppOt1WI4W
+         mjPNCzQ0iMvK4OgTmI/qUVmM+LnaPACN7tKpihDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Aurelien Jarno <aurelien@aurel32.net>,
+        stable@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 123/246] vfs: fix preadv64v2 and pwritev64v2 compat syscalls with offset == -1
-Date:   Thu,  4 Apr 2019 10:47:03 +0200
-Message-Id: <20190404084623.463351787@linuxfoundation.org>
+Subject: [PATCH 5.0 112/246] media: ov7740: fix runtime pm initialization
+Date:   Thu,  4 Apr 2019 10:46:52 +0200
+Message-Id: <20190404084623.072596345@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,53 +69,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cc4b1242d7e3b42eed73881fc749944146493e4f ]
+[ Upstream commit 12aceee1f412c3ddc7750155fec06c906f14ab51 ]
 
-The preadv2 and pwritev2 syscalls are supposed to emulate the readv and
-writev syscalls when offset == -1. Therefore the compat code should
-check for offset before calling do_compat_preadv64 and
-do_compat_pwritev64. This is the case for the preadv2 and pwritev2
-syscalls, but handling of offset == -1 is missing in their 64-bit
-equivalent.
+The runtime PM of this device is enabled after v4l2_ctrl_handler_setup(),
+and this makes this device's runtime PM usage count a negative value.
 
-This patch fixes that, calling do_compat_readv and do_compat_writev when
-offset == -1. This fixes the following glibc tests on x32:
- - misc/tst-preadvwritev2
- - misc/tst-preadvwritev64v2
+The ov7740_set_ctrl() tries to do something only if the device's runtime
+PM usage counter is nonzero.
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+ov7740_set_ctrl()
+{
+	if (!pm_runtime_get_if_in_use(&client->dev))
+		return 0;
+
+	<do something>;
+
+	pm_runtime_put(&client->dev);
+
+	return ret;
+}
+
+However, the ov7740_set_ctrl() is called by v4l2_ctrl_handler_setup()
+while the runtime PM of this device is not yet enabled.  In this case,
+the pm_runtime_get_if_in_use() returns -EINVAL (!= 0).
+
+Therefore we can't bail out of this function and the usage count is
+decreased by pm_runtime_put() without increment.
+
+This fixes this problem by enabling the runtime PM of this device before
+v4l2_ctrl_handler_setup() so that the ov7740_set_ctrl() is always called
+when the runtime PM is enabled.
+
+Cc: Wenyou Yang <wenyou.yang@microchip.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Tested-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/media/i2c/ov7740.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index ff3c5e6f87cf..27b69b85d49f 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1238,6 +1238,9 @@ COMPAT_SYSCALL_DEFINE5(preadv64v2, unsigned long, fd,
- 		const struct compat_iovec __user *,vec,
- 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
- {
-+	if (pos == -1)
-+		return do_compat_readv(fd, vec, vlen, flags);
+diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
+index 177688afd9a6..8835b831cdc0 100644
+--- a/drivers/media/i2c/ov7740.c
++++ b/drivers/media/i2c/ov7740.c
+@@ -1101,6 +1101,9 @@ static int ov7740_probe(struct i2c_client *client,
+ 	if (ret)
+ 		return ret;
+ 
++	pm_runtime_set_active(&client->dev);
++	pm_runtime_enable(&client->dev);
 +
- 	return do_compat_preadv64(fd, vec, vlen, pos, flags);
- }
- #endif
-@@ -1344,6 +1347,9 @@ COMPAT_SYSCALL_DEFINE5(pwritev64v2, unsigned long, fd,
- 		const struct compat_iovec __user *,vec,
- 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
- {
-+	if (pos == -1)
-+		return do_compat_writev(fd, vec, vlen, flags);
-+
- 	return do_compat_pwritev64(fd, vec, vlen, pos, flags);
- }
- #endif
+ 	ret = ov7740_detect(ov7740);
+ 	if (ret)
+ 		goto error_detect;
+@@ -1123,8 +1126,6 @@ static int ov7740_probe(struct i2c_client *client,
+ 	if (ret)
+ 		goto error_async_register;
+ 
+-	pm_runtime_set_active(&client->dev);
+-	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
+ 
+ 	return 0;
+@@ -1134,6 +1135,8 @@ error_async_register:
+ error_init_controls:
+ 	ov7740_free_controls(ov7740);
+ error_detect:
++	pm_runtime_disable(&client->dev);
++	pm_runtime_set_suspended(&client->dev);
+ 	ov7740_set_power(ov7740, 0);
+ 	media_entity_cleanup(&ov7740->subdev.entity);
+ 
 -- 
 2.19.1
 
