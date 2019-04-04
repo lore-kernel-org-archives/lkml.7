@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889FDC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECABCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A47B20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D6E20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369113;
-	bh=8yWRIlVtQ8vdjfvBFhjCFtMLTdNl/bLAurYctvRklfw=;
+	s=default; t=1554369116;
+	bh=8lO5gEy46eNd8G05r3dccYthC+fYHJPP3jfMgxv/3WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qDQ5iiu4S/R3NBAgfw+LWiQAC5XixEqwUv3fy7jzDTgrJCMAZnBqgCA7xD0siWcSz
-	 czH116F1M0JjqU25+iaqhZ5PpoXVuoydf2Bni0mfxuaUiZC7NqLxoSq3keBmGcnEuu
-	 g7KOhs3BoTjXsyAwdqjHClNlNQO71YDQRU5zYB/4=
+	b=SzqTXEfjdwUxBWgRmrIC8Kg1UBjhgmpVrpaEXoAo1mS7noSCdBhsf2Aj9QrK2BEjz
+	 eeJHSG5es139vTcrohi1HcX9AbMp/R/vE1od2YyJSd7CRMMz53xrRc4OOETeIy3vO4
+	 R4LZtR/l/R7RA6bMXukA2O3Cq0g8Sf2ALQ3ystL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733226AbfDDJLw (ORCPT
+        id S1733237AbfDDJLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51748 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733194AbfDDJLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:50 -0400
+        id S1733221AbfDDJLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:11:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87F2320652;
-        Thu,  4 Apr 2019 09:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F41FF2075E;
+        Thu,  4 Apr 2019 09:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369108;
-        bh=8yWRIlVtQ8vdjfvBFhjCFtMLTdNl/bLAurYctvRklfw=;
+        s=default; t=1554369111;
+        bh=8lO5gEy46eNd8G05r3dccYthC+fYHJPP3jfMgxv/3WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ns2A8rXDHrysDg1A0HWbB0c8Lj4kwYe5m4XXsph07tBN0+1SG2lW9y3stClei1rZg
-         9K4XFNkHyGD1fo0jto7j0uLKf3T9X4ijJYnP4IEiHutJeaWTiplDoxtGsQRy1XxaYj
-         Un6nsUOZCkq3ltdhj2SI3TVC5RORHw/umjwQgyPk=
+        b=J+2/glC12DLVlUMn/vz/IdOSzC2CLAfM66weFxP3g7Dh/FfziXj5heacI4rcv0IAQ
+         BistmHuu8S0bIglc+FNYJB+iMjfMevJ/u8Ec4QXAEvjgXZRZ26VyDyI65eL7N4qzo/
+         MpVpuRqX3MekucOr9j50DCqaVDCMJ9rfh7vltriI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 087/246] net: dsa: mv88e6xxx: Add lockdep classes to fix false positive splat
-Date:   Thu,  4 Apr 2019 10:46:27 +0200
-Message-Id: <20190404084622.188073082@linuxfoundation.org>
+Subject: [PATCH 5.0 088/246] net: hns3: fix setting of the hns reset_type for rdma hw errors
+Date:   Thu,  4 Apr 2019 10:46:28 +0200
+Message-Id: <20190404084622.223619925@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,117 +69,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f6d9758b12660484b6639364cc406da92a918c96 ]
+[ Upstream commit eb4c2ccbad6c688be791e0c08640a40124558c03 ]
 
-The following false positive lockdep splat has been observed.
+Presently the hns reset_type for the roce errors is set
+in the hclge_log_and_clear_rocee_ras_error function.
+This function is also called to detect and clear roce errors
+while enabling the rdma error interrupts. However there is no hns
+reset requested for this case. This can cause issue of wrong
+reset_type used with subsequent hns reset as the
+reset_type set in the above case was not cleared.
 
-======================================================
-WARNING: possible circular locking dependency detected
-4.20.0+ #302 Not tainted
-------------------------------------------------------
-systemd-udevd/160 is trying to acquire lock:
-edea6080 (&chip->reg_lock){+.+.}, at: __setup_irq+0x640/0x704
+This patch moves setting of hns reset_type for the roce errors from
+hclge_log_and_clear_rocee_ras_error function
+to hclge_handle_rocee_ras_error.
 
-but task is already holding lock:
-edff0340 (&desc->request_mutex){+.+.}, at: __setup_irq+0xa0/0x704
-
-which lock already depends on the new lock.
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&desc->request_mutex){+.+.}:
-       mutex_lock_nested+0x1c/0x24
-       __setup_irq+0xa0/0x704
-       request_threaded_irq+0xd0/0x150
-       mv88e6xxx_probe+0x41c/0x694 [mv88e6xxx]
-       mdio_probe+0x2c/0x54
-       really_probe+0x200/0x2c4
-       driver_probe_device+0x5c/0x174
-       __driver_attach+0xd8/0xdc
-       bus_for_each_dev+0x58/0x7c
-       bus_add_driver+0xe4/0x1f0
-       driver_register+0x7c/0x110
-       mdio_driver_register+0x24/0x58
-       do_one_initcall+0x74/0x2e8
-       do_init_module+0x60/0x1d0
-       load_module+0x1968/0x1ff4
-       sys_finit_module+0x8c/0x98
-       ret_fast_syscall+0x0/0x28
-       0xbedf2ae8
-
--> #0 (&chip->reg_lock){+.+.}:
-       __mutex_lock+0x50/0x8b8
-       mutex_lock_nested+0x1c/0x24
-       __setup_irq+0x640/0x704
-       request_threaded_irq+0xd0/0x150
-       mv88e6xxx_g2_irq_setup+0xcc/0x1b4 [mv88e6xxx]
-       mv88e6xxx_probe+0x44c/0x694 [mv88e6xxx]
-       mdio_probe+0x2c/0x54
-       really_probe+0x200/0x2c4
-       driver_probe_device+0x5c/0x174
-       __driver_attach+0xd8/0xdc
-       bus_for_each_dev+0x58/0x7c
-       bus_add_driver+0xe4/0x1f0
-       driver_register+0x7c/0x110
-       mdio_driver_register+0x24/0x58
-       do_one_initcall+0x74/0x2e8
-       do_init_module+0x60/0x1d0
-       load_module+0x1968/0x1ff4
-       sys_finit_module+0x8c/0x98
-       ret_fast_syscall+0x0/0x28
-       0xbedf2ae8
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&desc->request_mutex);
-                               lock(&chip->reg_lock);
-                               lock(&desc->request_mutex);
-  lock(&chip->reg_lock);
-
-&desc->request_mutex refer to two different mutex. #1 is the GPIO for
-the chip interrupt. #2 is the chained interrupt between global 1 and
-global 2.
-
-Add lockdep classes to the GPIO interrupt to avoid this.
-
-Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 630ba007f475 ("net: hns3: add handling of RDMA RAS errors")
+Reported-by: Huazhong Tan <tanhuazhong@huawei.com>
+Reported-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../hisilicon/hns3/hns3pf/hclge_err.c         | 36 ++++++++++---------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 4a0ec8e87c7a..6cba05a80892 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -442,12 +442,20 @@ out_mapping:
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index efb6c1a25171..3ea72e4d9dc4 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -1094,10 +1094,10 @@ static int hclge_log_rocee_ovf_error(struct hclge_dev *hdev)
+ 	return 0;
+ }
  
- static int mv88e6xxx_g1_irq_setup(struct mv88e6xxx_chip *chip)
+-static int hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
++static enum hnae3_reset_type
++hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
  {
-+	static struct lock_class_key lock_key;
-+	static struct lock_class_key request_key;
- 	int err;
+-	enum hnae3_reset_type reset_type = HNAE3_FUNC_RESET;
+-	struct hnae3_ae_dev *ae_dev = hdev->ae_dev;
++	enum hnae3_reset_type reset_type = HNAE3_NONE_RESET;
+ 	struct device *dev = &hdev->pdev->dev;
+ 	struct hclge_desc desc[2];
+ 	unsigned int status;
+@@ -1110,17 +1110,20 @@ static int hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
+ 	if (ret) {
+ 		dev_err(dev, "failed(%d) to query ROCEE RAS INT SRC\n", ret);
+ 		/* reset everything for now */
+-		HCLGE_SET_DEFAULT_RESET_REQUEST(HNAE3_GLOBAL_RESET);
+-		return ret;
++		return HNAE3_GLOBAL_RESET;
+ 	}
  
- 	err = mv88e6xxx_g1_irq_setup_common(chip);
- 	if (err)
- 		return err;
+ 	status = le32_to_cpu(desc[0].data[0]);
  
-+	/* These lock classes tells lockdep that global 1 irqs are in
-+	 * a different category than their parent GPIO, so it won't
-+	 * report false recursion.
-+	 */
-+	irq_set_lockdep_class(chip->irq, &lock_key, &request_key);
-+
- 	err = request_threaded_irq(chip->irq, NULL,
- 				   mv88e6xxx_g1_irq_thread_fn,
- 				   IRQF_ONESHOT | IRQF_SHARED,
+-	if (status & HCLGE_ROCEE_RERR_INT_MASK)
++	if (status & HCLGE_ROCEE_RERR_INT_MASK) {
+ 		dev_warn(dev, "ROCEE RAS AXI rresp error\n");
++		reset_type = HNAE3_FUNC_RESET;
++	}
+ 
+-	if (status & HCLGE_ROCEE_BERR_INT_MASK)
++	if (status & HCLGE_ROCEE_BERR_INT_MASK) {
+ 		dev_warn(dev, "ROCEE RAS AXI bresp error\n");
++		reset_type = HNAE3_FUNC_RESET;
++	}
+ 
+ 	if (status & HCLGE_ROCEE_ECC_INT_MASK) {
+ 		dev_warn(dev, "ROCEE RAS 2bit ECC error\n");
+@@ -1132,9 +1135,9 @@ static int hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
+ 		if (ret) {
+ 			dev_err(dev, "failed(%d) to process ovf error\n", ret);
+ 			/* reset everything for now */
+-			HCLGE_SET_DEFAULT_RESET_REQUEST(HNAE3_GLOBAL_RESET);
+-			return ret;
++			return HNAE3_GLOBAL_RESET;
+ 		}
++		reset_type = HNAE3_FUNC_RESET;
+ 	}
+ 
+ 	/* clear error status */
+@@ -1143,12 +1146,10 @@ static int hclge_log_and_clear_rocee_ras_error(struct hclge_dev *hdev)
+ 	if (ret) {
+ 		dev_err(dev, "failed(%d) to clear ROCEE RAS error\n", ret);
+ 		/* reset everything for now */
+-		reset_type = HNAE3_GLOBAL_RESET;
++		return HNAE3_GLOBAL_RESET;
+ 	}
+ 
+-	HCLGE_SET_DEFAULT_RESET_REQUEST(reset_type);
+-
+-	return ret;
++	return reset_type;
+ }
+ 
+ static int hclge_config_rocee_ras_interrupt(struct hclge_dev *hdev, bool en)
+@@ -1178,15 +1179,18 @@ static int hclge_config_rocee_ras_interrupt(struct hclge_dev *hdev, bool en)
+ 	return ret;
+ }
+ 
+-static int hclge_handle_rocee_ras_error(struct hnae3_ae_dev *ae_dev)
++static void hclge_handle_rocee_ras_error(struct hnae3_ae_dev *ae_dev)
+ {
++	enum hnae3_reset_type reset_type = HNAE3_NONE_RESET;
+ 	struct hclge_dev *hdev = ae_dev->priv;
+ 
+ 	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
+ 	    hdev->pdev->revision < 0x21)
+-		return HNAE3_NONE_RESET;
++		return;
+ 
+-	return hclge_log_and_clear_rocee_ras_error(hdev);
++	reset_type = hclge_log_and_clear_rocee_ras_error(hdev);
++	if (reset_type != HNAE3_NONE_RESET)
++		HCLGE_SET_DEFAULT_RESET_REQUEST(reset_type);
+ }
+ 
+ static const struct hclge_hw_blk hw_blk[] = {
 -- 
 2.19.1
 
