@@ -2,940 +2,105 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E633CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B83206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C590D206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kEqPrQcB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A6nL1ZQQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfDDQte (ORCPT
+        id S1729474AbfDDQup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:49:34 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39316 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729242AbfDDQtd (ORCPT
+        Thu, 4 Apr 2019 12:50:45 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41437 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfDDQup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:49:33 -0400
-Received: by mail-oi1-f194.google.com with SMTP id n187so2475987oih.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:49:33 -0700 (PDT)
+        Thu, 4 Apr 2019 12:50:45 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k8so2697381lja.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TC1DHPl+FUdEVWr2TNTdySDvTEbSmUF3bWSop9NIkNw=;
-        b=kEqPrQcBuqXfd/QdZGjTCMlTHmebOXJpGrsqwSiVF3zK+HMbLCMQ4lVBA3LNRkqM9U
-         39rmedzn+SuBai46hF3SJFbQq6tXaSdnBnqXZeyXPFBA2U5F/2PfTp0VzypYYlJ4YPbm
-         8k29MWv67dK4iuUOy8EdJ5On9HkdNcZvcsIqk=
+        bh=o10Sk2tktHmS4tpuqlk6YJF06nxzTJAdjjrZAuXQlUM=;
+        b=A6nL1ZQQJmlWyp/Yash6sBV6U2FvPggcyy5fTmt7Iukhk1Z3AezJtWCpvtCz0767ei
+         7ASlw1LlOf9gwOkKF5ILuKw33n9n6o2z/hb29dLCVRU5GByz1VFZjX7UI4NtNr+XKPtu
+         jCgR2CfloGOvJIvID3wVS742WPV7ortRQFjCN2Dxrc3354W3GBDiRSs8NairoLuVSUl7
+         P+9c6ok6gA/gFuTjYri+EGutf7TAZf5TEniGqhMntc33Mya1XQMPbQ3BqumE4Wfph1vj
+         M38kn+mIX+P2+dETcb4nB+hTOzQTmYhPqHuofMJrCz2OcqOOTirjJJqTQHLQeORO1Htl
+         zt6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TC1DHPl+FUdEVWr2TNTdySDvTEbSmUF3bWSop9NIkNw=;
-        b=HFhyRpk3LpNcno51Y6e+gjytf6k3YQSo/ca4T3cBM0HXZy/gJev989eMLbOS7ixUK3
-         9LoD8oVrz3clEuMiysPcxJyp2DcRs8B5HTs85Kz09H0QQRtQ1HQ7WDCOW7wSQDisp3fR
-         6IsgPwXImwrXry9KPqTFyeTMw6k418/OBfBNo7XM5PofOmJvsWckJmftsjpPDWJ4yedl
-         EDaZnJFxlg+rvB4+U2g3HtGeJR6W87100KMaK2cpA0whlK0LjYmnGf7PQC4RHpE8yAPI
-         qVOxQQiMMiYsEYIJPrIfOjKcBRR4k4CiEzYLOZaZcdQgkiD2NUwVSCEHLX9G5d9vl8N3
-         Nzmw==
-X-Gm-Message-State: APjAAAXwwO8yczv69XT/FA7pzHlpmOl+rJDkKppjhCPAt/i6vHUK0lxD
-        GZ28K+R9divvUd8AykWL91G1OjE3A+td+w==
-X-Google-Smtp-Source: APXvYqzRzUXKwM8Ar1T8+WY6hBJMrfNfRjL5oo5JNRY31f2Wbdhm0sJINS7mxher9ZIhQOcxY6FXZA==
-X-Received: by 2002:aca:d614:: with SMTP id n20mr3981195oig.135.1554396572055;
-        Thu, 04 Apr 2019 09:49:32 -0700 (PDT)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
-        by smtp.gmail.com with ESMTPSA id w11sm7637406otq.9.2019.04.04.09.49.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 09:49:31 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id 3so2471125oir.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:49:31 -0700 (PDT)
-X-Received: by 2002:aca:3c8a:: with SMTP id j132mr3832864oia.38.1554396570682;
- Thu, 04 Apr 2019 09:49:30 -0700 (PDT)
+        bh=o10Sk2tktHmS4tpuqlk6YJF06nxzTJAdjjrZAuXQlUM=;
+        b=kDZQlxA2EJvNdBDvxtlOujn8QLnrYmdF0et7NQMys+cVUOX51WtOXRzv/YQQoFPSvo
+         AaQpbrXnjrs8ROLRjX/KsG9OpmNLvtVD8oBGR1qAR5TuiU4SlLhdm5I82AdHAC8yD2mw
+         tvghCKbI+AE5fOj80Mno9Db3mKLTJYI7jY5yVHvBiP/vlRToudol+Nx+R3peNijqZ0/T
+         DotoUgykY9M42jwB0R7oLCRszgTr23QmKcCIAnoajKKGmIwmF1cuTzWgVJQ2ie9caCjC
+         rIST516uLTeI6k1Y9x57szPlsq8J5XBnfGjdx6Kys+tkGeDiYtnjGIFX6XCVnLN/vyXG
+         pGVw==
+X-Gm-Message-State: APjAAAXyszmav44Ovo0rEL58+zP3N/ui9fYNae7I7jRZOOg1WnlUJSKF
+        1u5i9Ux19xd79wZg0Oaw52WNREGr2bt3DPL5PutgPQ==
+X-Google-Smtp-Source: APXvYqz88BsGrP6DXSDEu+uMpxFBmSInxOw7o5NhMoo9R15tir6y3ZIzazcfy0ZC8AxqopQoGXHI6Ozeeu5948dHEGA=
+X-Received: by 2002:a2e:9a46:: with SMTP id k6mr4019248ljj.119.1554396643180;
+ Thu, 04 Apr 2019 09:50:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554060310-18078-1-git-send-email-rushikesh.s.kadam@intel.com>
-In-Reply-To: <1554060310-18078-1-git-send-email-rushikesh.s.kadam@intel.com>
-From:   Jett Rink <jettrink@chromium.org>
-Date:   Thu, 4 Apr 2019 10:49:18 -0600
-X-Gmail-Original-Message-ID: <CAK+PMK4632735YHQMrNG6s1msOuCiowy36mt5Td5R-NoDtPRAw@mail.gmail.com>
-Message-ID: <CAK+PMK4632735YHQMrNG6s1msOuCiowy36mt5Td5R-NoDtPRAw@mail.gmail.com>
-Subject: Re: [PATCH] platform: chrome: Add ChromeOS EC ISHTP driver
-To:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Nick Crews <ncrews@chromium.org>,
-        Gwendal Grignou <gwendal@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190401090942.12408-1-jank@cadence.com>
+In-Reply-To: <20190401090942.12408-1-jank@cadence.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Apr 2019 23:50:31 +0700
+Message-ID: <CACRpkdbB16Rq2zok70QDUsNst-iZYFFrRy=cv+38fhz2+Vjbpw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gpio: mmio: Fix bgpio_get_set & bgpio_get_set_multiple
+To:     Jan Kotas <jank@cadence.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 31, 2019 at 1:25 PM Rushikesh S Kadam
-<rushikesh.s.kadam@intel.com> wrote:
->
-> Add ChromeOS EC ISHTP driver.
->
-> Sends host commands over ISHTP to ISH firmware.
->
-> Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-> ---
->  drivers/platform/chrome/Kconfig         |  13 +
->  drivers/platform/chrome/Makefile        |   1 +
->  drivers/platform/chrome/cros_ec_ishtp.c | 795 ++++++++++++++++++++++++++++++++
->  3 files changed, 809 insertions(+)
->  create mode 100644 drivers/platform/chrome/cros_ec_ishtp.c
->
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> index 16b1615..92a339a 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -84,6 +84,19 @@ config CROS_EC_LPC
->            To compile this driver as a module, choose M here: the
->            module will be called cros_ec_lpc.
->
-> +config CROS_EC_ISHTP
-> +       tristate "ChromeOS Embedded Controller (ISHTP)"
-> +       depends on MFD_CROS_EC
-> +       depends on INTEL_ISH_HID
-> +       help
-> +         If you say Y here, you get support for talking to the ChromeOS EC
-> +         firmware running on Intel Integrated Sensor Hub (ISH), using the
-> +         ISH Transport protocol (ISH-TP). This uses a simple byte-level
-> +         protocol with a checksum.
-> +
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called cros_ec_ishtp.
-> +
->  config CROS_EC_LPC_MEC
->         bool "ChromeOS Embedded Controller LPC Microchip EC (MEC) variant"
->         depends on CROS_EC_LPC
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> index cd591bf..fb2639e 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -12,4 +12,5 @@ cros_ec_lpcs-objs                     := cros_ec_lpc.o cros_ec_lpc_reg.o
->  cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC) += cros_ec_lpc_mec.o
->  obj-$(CONFIG_CROS_EC_LPC)              += cros_ec_lpcs.o
->  obj-$(CONFIG_CROS_EC_PROTO)            += cros_ec_proto.o
-> +obj-$(CONFIG_CROS_EC_ISHTP)            += cros_ec_ishtp.o
->  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)   += cros_kbd_led_backlight.o
-> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-> new file mode 100644
-> index 0000000..f321a40
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
-> @@ -0,0 +1,795 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ISHTP client driver for talking to the Chrome OS EC firmware running
-> + * on Intel Integrated Sensor Hub (ISH) using the ISH Transport protocol
-> + * (ISH-TP).
-> + *
-> + * Copyright (c) 2019, Intel Corporation.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/intel-ish-client-if.h>
-> +
-> +/*
-> + * ISH TX/RX ring buffer pool size
-> + *
-> + * The AP->ISH messages and corresponding ISH->AP responses are
-> + * serialized. We need 1 TX and 1 RX buffer for these.
-> + *
-> + * The MKBP ISH->AP events are serialized. We need one additional RX
-> + * buffer for them.
-> + */
-> +#define CROS_ISH_CL_TX_RING_SIZE               1
-> +#define CROS_ISH_CL_RX_RING_SIZE               2
-> +
-> +/* ISH CrOS EC Host Commands */
-> +enum cros_ec_ish_channel {
-> +       CROS_EC_COMMAND = 1,                    /* AP->ISH message */
-> +       CROS_MKBP_EVENT = 2,                    /* ISH->AP events */
-> +};
-> +
-> +/*
-> + * ISH firmware timeout for 1 message send failure is 1Hz, and the
-> + * firmware will retry 2 times, so 3Hz is used for timeout.
-> + */
-> +#define ISHTP_SEND_TIMEOUT                     (3 * HZ)
-> +
-> +/* ISH Transport CrOS EC ISH client unique GUID */
-> +static const guid_t cros_ish_guid =
-> +       GUID_INIT(0x7b7154d0, 0x56f4, 0x4bdc,
-> +                 0xb0, 0xd8, 0x9e, 0x7c, 0xda, 0xe0, 0xd6, 0xa0);
-> +
-> +struct header {
-> +       u8 channel;
-> +       u8 status;
-> +       u8 reserved[2];
-> +} __packed;
-> +
-> +struct cros_ish_out_msg {
-> +       struct header hdr;
-> +       struct ec_host_request ec_request;
-> +} __packed;
-> +
-> +struct cros_ish_in_msg {
-> +       struct header hdr;
-> +       struct ec_host_response ec_response;
-> +} __packed;
-> +
-> +#define IN_MSG_EC_RESPONSE_PREAMBLE                                    \
-> +       offsetof(struct cros_ish_in_msg, ec_response)
-> +
-> +#define OUT_MSG_EC_REQUEST_PREAMBLE                                    \
-> +       offsetof(struct cros_ish_out_msg, ec_request)
-> +
-> +#define cl_data_to_dev(client_data) ishtp_device((client_data)->cl_device)
-> +
-> +/*
-> + * The Read-Write Semaphore is used to prevent message TX or RX while
-> + * the ishtp client is being initialized or undergoing reset.
-> + *
-> + * The readers are the kernel function calls responsibile for IA->ISH
-> + * and ISH->AP messaging.
-> + *
-> + * The writers are .reset() and .probe() function.
-> + */
-> +DECLARE_RWSEM(init_lock);
-> +
-> +/**
-> + * struct response_info - Encapsulate firmware response related
-> + *                     information for passing between function
-> + *                     ish_send() and process_recv() callback.
-> + * @data:              Copy the data received from firmware here.
-> + * @max_size:          Max size allocated for the @data buffer. If the
-> + *                     received data exceeds this value, we log an
-> + *                     error.
-> + * @size:              Actual size of data received from firmware.
-> + * @error:             Returns 0 for success, negative error code for a
-> + *                     failure in function process_recv().
-> + * @received:          Set to true on receiving a valid firmware
-> + *                     response to host command
-> + * @wait_queue:                Wait queue for Host firmware loading where the
-> + *                     client sends message to ISH firmware and waits
-> + *                     for response
-> + */
-> +struct response_info {
-> +       void *data;
-> +       size_t max_size;
-> +       size_t size;
-> +       int error;
-> +       bool received;
-> +       wait_queue_head_t wait_queue;
-> +};
-> +
-> +/**
-> + * struct ishtp_cl_data - Encapsulate per ISH TP Client.
-> + * @cros_ish_cl:       ISHTP firmware client instance.
-> + * @cl_device:         ISHTP client device instance.
-> + * @response:          Firmware response information for passing
-> + *                     between function ish_send() and process_recv()
-> + *                     callback.
-> + * @work_ishtp_reset:  Work queue reset handling.
-> + * @work_ec_evt:       Work queue for EC events.
-> + * @ec_dev:            CrOS EC MFD device.
-> + *
-> + * This structure is used to store per client data.
-> + */
-> +struct ishtp_cl_data {
-> +       struct ishtp_cl *cros_ish_cl;
-> +       struct ishtp_cl_device *cl_device;
-> +
-> +       /*
-> +        * Used for passing firmware response information between
-> +        * ish_send() and process_recv() callback.
-> +        */
-> +       struct response_info response;
-> +
-> +       struct work_struct work_ishtp_reset;
-> +       struct work_struct work_ec_evt;
-> +       struct cros_ec_device *ec_dev;
-> +};
-> +
-> +/**
-> + * ish_evt_handler - ISH to AP event handler
-> + * @work:              Work struct
-> + */
-> +static void ish_evt_handler(struct work_struct *work)
-> +{
-> +       struct ishtp_cl_data *client_data =
-> +               container_of(work, struct ishtp_cl_data, work_ec_evt);
-> +       struct cros_ec_device *ec_dev = client_data->ec_dev;
-> +
-> +       if (cros_ec_get_next_event(ec_dev, NULL) > 0) {
-> +               blocking_notifier_call_chain(&ec_dev->event_notifier,
-> +                                            0, ec_dev);
-> +       }
-> +}
-> +
-> +/**
-> + * ish_send() - Send message from host to firmware
-> + * @client_data:       Client data instance
-> + * @out_msg:           Message buffer to be sent to firmware
-> + * @out_size:          Size of out going message
-> + * @in_msg:            Message buffer where the incoming data copied.
-> + *                     This buffer is allocated by calling
-> + * @in_size:           Max size of incoming message
-> + *
-> + * Return: Number of bytes copied in the in_msg on success, negative
-> + * error code on failure.
-> + */
-> +static int ish_send(struct ishtp_cl_data *client_data,
-> +                   u8 *out_msg, size_t out_size,
-> +                   u8 *in_msg, size_t in_size)
-> +{
-> +       int rv;
-> +       struct header *out_hdr = (struct header *)out_msg;
-> +       struct ishtp_cl *cros_ish_cl = client_data->cros_ish_cl;
-> +
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "%s: channel=%02u status=%02u\n",
-> +               __func__, out_hdr->channel, out_hdr->status);
-> +
-> +       /* Setup for in-coming response */
-> +       client_data->response.data = in_msg;
-> +       client_data->response.max_size = in_size;
-> +       client_data->response.error = 0;
-> +       client_data->response.received = false;
-> +
-> +       rv = ishtp_cl_send(cros_ish_cl, out_msg, out_size);
-> +       if (rv) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "ishtp_cl_send error %d\n", rv);
-> +               return rv;
-> +       }
-> +
-> +       wait_event_interruptible_timeout(client_data->response.wait_queue,
-> +                                        client_data->response.received,
-> +                                        ISHTP_SEND_TIMEOUT);
-> +       if (!client_data->response.received) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Timed out for response to host message\n");
-> +               return -ETIMEDOUT;
-> +       }
-> +
-> +       if (client_data->response.error < 0)
-> +               return client_data->response.error;
-> +
-> +       return client_data->response.size;
-> +}
-> +
-> +/**
-> + * process_recv() -    Received and parse incoming packet
-> + * @cros_ish_cl:       Client instance to get stats
-> + * @rb_in_proc:                Host interface message buffer
-> + *
-> + * Parse the incoming packet. If it is a response packet then it will
-> + * update per instance flags and wake up the caller waiting to for the
-> + * response. If it is an event packet then it will schedule event work.
-> + */
-> +static void process_recv(struct ishtp_cl *cros_ish_cl,
-> +                        struct ishtp_cl_rb *rb_in_proc)
-> +{
-> +       size_t data_len = rb_in_proc->buf_idx;
-> +       struct ishtp_cl_data *client_data =
-> +               ishtp_get_client_data(cros_ish_cl);
-> +       struct cros_ish_in_msg *in_msg =
-> +               (struct cros_ish_in_msg *)rb_in_proc->buffer.data;
-> +
-> +       /* Proceed only if reset or init is not in progress */
-> +       if (!down_read_trylock(&init_lock)) {
-> +               dev_warn(cl_data_to_dev(client_data),
-> +                        "Host is not ready to receive incoming messages\n");
+On Mon, Apr 1, 2019 at 4:10 PM Jan Kotas <jank@cadence.com> wrote:
 
-Also, we need to recycle the buffer here: ishtp_cl_io_rb_recycle
-
-> +               return;
-> +       }
-> +
-> +       /*
-> +        * All firmware messages contain a header. Check the buffer size
-> +        * before accessing elements inside.
-> +        */
-> +       if (!rb_in_proc->buffer.data) {
-> +               dev_warn(cl_data_to_dev(client_data),
-> +                        "rb_in_proc->buffer.data returned null");
-> +               client_data->response.error = -EBADMSG;
-> +               goto end_error;
-> +       }
-> +
-> +       if (data_len < sizeof(struct header)) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "data size %zu is less than header %zu\n",
-> +                       data_len, sizeof(struct header));
-> +               client_data->response.error = -EMSGSIZE;
-> +               goto end_error;
-> +       }
-> +
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "channel=%02u status=%02u\n",
-> +               in_msg->hdr.channel, in_msg->hdr.status);
-> +
-> +       switch (in_msg->hdr.channel) {
-> +       case CROS_EC_COMMAND:
-> +               /* Sanity check */
-> +               if (!client_data->response.data) {
-> +                       dev_err(cl_data_to_dev(client_data),
-> +                               "Receiving buffer is null. Should be allocated by calling function\n");
-> +                       client_data->response.error = -EINVAL;
-> +                       goto error_wake_up;
-> +               }
-> +
-> +               if (client_data->response.received) {
-> +                       dev_err(cl_data_to_dev(client_data),
-> +                               "Previous firmware message not yet processed\n");
-> +                       client_data->response.error = -EINVAL;
-> +                       goto error_wake_up;
-> +               }
-> +
-> +               if (data_len > client_data->response.max_size) {
-> +                       dev_err(cl_data_to_dev(client_data),
-> +                               "Received buffer size %zu is larger than allocated buffer %zu\n",
-> +                               data_len, client_data->response.max_size);
-> +                       client_data->response.error = -EMSGSIZE;
-> +                       goto error_wake_up;
-> +               }
-> +
-> +               if (in_msg->hdr.status) {
-> +                       dev_err(cl_data_to_dev(client_data),
-> +                               "firmware returned status %d\n",
-> +                               in_msg->hdr.status);
-> +                       client_data->response.error = -EIO;
-> +                       goto error_wake_up;
-> +               }
-> +
-> +               /* Update the actual received buffer size */
-> +               client_data->response.size = data_len;
-> +
-> +               /*
-> +                * Copy the buffer received in firmware response for the
-> +                * calling thread.
-> +                */
-> +               memcpy(client_data->response.data,
-> +                      rb_in_proc->buffer.data, data_len);
-> +
-> +               /* Set flag before waking up the caller */
-> +               client_data->response.received = true;
-> +error_wake_up:
-> +               /* Wake the calling thread */
-> +               wake_up_interruptible(&client_data->response.wait_queue);
-> +
-> +               break;
-> +
-> +       case CROS_MKBP_EVENT:
-> +               /* The event system doesn't send any data in buffer */
-> +               schedule_work(&client_data->work_ec_evt);
-> +
-> +               break;
-> +
-> +       default:
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Invalid channel=%02d\n", in_msg->hdr.channel);
-> +       }
-> +
-> +end_error:
-> +       /* Free the buffer */
-> +       ishtp_cl_io_rb_recycle(rb_in_proc);
-> +       rb_in_proc = NULL;
-We don't need to set this to NULL anymore (left over from previous version)
-
-
-> +
-> +       up_read(&init_lock);
-> +}
-> +
-> +/**
-> + * ish_event_cb() - bus driver callback for incoming
-> + *                     message
-> + * @cl_device:         ISHTP client device for which this message is
-> + *                     targeted.
-> + *
-> + * Remove the packet from the list and process the message by calling
-> + * process_recv.
-> + */
-> +static void ish_event_cb(struct ishtp_cl_device *cl_device)
-> +{
-> +       struct ishtp_cl_rb *rb_in_proc;
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(cros_ish_cl);
-> +
-> +       while ((rb_in_proc = ishtp_cl_rx_get_rb(cros_ish_cl)) != NULL) {
-> +               /* Decide what to do with received data */
-> +               process_recv(cros_ish_cl, rb_in_proc);
-> +       }
-> +}
-> +
-> +/**
-> + * cros_ish_init() - Init function for ISHTP client
-> + * @cros_ish_cl:       ISHTP client instance
-> + * @reset:             true if called for init after reset
-> + *
-> + * This function complete the initializtion of the client.
-> + *
-> + * Return: 0 on success, non zero on error
-> + */
-> +static int cros_ish_init(struct ishtp_cl *cros_ish_cl, int reset)
-> +{
-> +       int rv;
-> +       struct ishtp_device *dev;
-> +       struct ishtp_fw_client *fw_client;
-> +       struct ishtp_cl_data *client_data =
-> +               ishtp_get_client_data(cros_ish_cl);
-> +
-> +       dev_dbg(cl_data_to_dev(client_data), "reset flag: %d\n", reset);
-> +
-> +       rv = ishtp_cl_link(cros_ish_cl);
-> +       if (rv) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "ishtp_cl_link failed\n");
-> +               return rv;
-> +       }
-> +
-> +       dev = ishtp_get_ishtp_device(cros_ish_cl);
-> +
-> +       /* Connect to firmware client */
-> +       ishtp_set_tx_ring_size(cros_ish_cl, CROS_ISH_CL_TX_RING_SIZE);
-> +       ishtp_set_rx_ring_size(cros_ish_cl, CROS_ISH_CL_RX_RING_SIZE);
-> +
-> +       fw_client = ishtp_fw_cl_get_client(dev, &cros_ish_guid);
-> +       if (!fw_client) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "ish client uuid not found\n");
-> +               rv = -ENOENT;
-> +               goto err_cl_unlink;
-> +       }
-> +
-> +       ishtp_cl_set_fw_client_id(cros_ish_cl,
-> +                                 ishtp_get_fw_client_id(fw_client));
-> +       ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_CONNECTING);
-> +
-> +       rv = ishtp_cl_connect(cros_ish_cl);
-> +       if (rv) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "client connect fail\n");
-> +               goto err_cl_unlink;
-> +       }
-> +
-> +       dev_dbg(cl_data_to_dev(client_data), "client connected\n");
-> +
-> +       ishtp_register_event_cb(client_data->cl_device, ish_event_cb);
-> +       return 0;
-> +
-> +err_cl_unlink:
-> +       ishtp_cl_unlink(cros_ish_cl);
-> +       return rv;
-> +}
-> +
-> +/**
-> + * cros_ish_deinit() - Deinit function for ISHTP client
-> + * @cros_ish_cl:       ISHTP client instance
-> + *
-> + * Unlink and free cros_ec client
-> + */
-> +static void cros_ish_deinit(struct ishtp_cl *cros_ish_cl)
-> +{
-> +       ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_DISCONNECTING);
-> +       ishtp_cl_disconnect(cros_ish_cl);
-> +       ishtp_cl_unlink(cros_ish_cl);
-> +       ishtp_cl_flush_queues(cros_ish_cl);
-> +
-> +       /* Disband and free all Tx and Rx client-level rings */
-> +       ishtp_cl_free(cros_ish_cl);
-> +}
-> +
-> +static int prepare_cros_ec_rx(struct cros_ec_device *ec_dev,
-> +                             const struct cros_ish_in_msg *in_msg,
-> +                             struct cros_ec_command *msg)
-> +{
-> +       u8 sum = 0;
-> +       int i, rv, offset;
-> +
-> +       /* Check response error code */
-> +       msg->result = in_msg->ec_response.result;
-> +       rv = cros_ec_check_result(ec_dev, msg);
-> +       if (rv < 0)
-> +               return rv;
-> +
-> +       if (in_msg->ec_response.data_len > msg->insize) {
-> +               dev_err(ec_dev->dev, "Packet too long (%d bytes, expected %d)",
-> +                       in_msg->ec_response.data_len, msg->insize);
-> +               return -ENOSPC;
-> +       }
-> +
-> +       /* Copy response packet payload and compute checksum */
-> +       for (i = 0; i < sizeof(struct ec_host_response); i++)
-> +               sum += ((u8 *)in_msg)[IN_MSG_EC_RESPONSE_PREAMBLE + i];
-> +
-> +       offset = sizeof(struct cros_ish_in_msg);
-> +       for (i = 0; i < in_msg->ec_response.data_len; i++)
-> +               sum += msg->data[i] = ((u8 *)in_msg)[offset + i];
-> +
-> +       if (sum) {
-> +               dev_err(ec_dev->dev, "Bad received packet checksum %d\n", sum);
-> +               return -EBADMSG;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int cros_ec_pkt_xfer_ish(struct cros_ec_device *ec_dev,
-> +                               struct cros_ec_command *msg)
-> +{
-> +       int rv;
-> +       struct ishtp_cl *cros_ish_cl = ec_dev->priv;
-> +       struct ishtp_cl_data *client_data =
-> +               ishtp_get_client_data(cros_ish_cl);
-> +       struct cros_ish_in_msg *in_msg =
-> +               (struct cros_ish_in_msg *)ec_dev->din;
-> +       struct cros_ish_out_msg *out_msg =
-> +               (struct cros_ish_out_msg *)ec_dev->dout;
-> +       size_t in_size = sizeof(struct cros_ish_in_msg) + msg->insize;
-> +       size_t out_size = sizeof(struct cros_ish_out_msg) + msg->outsize;
-> +
-> +       /* Proceed only if reset-init is not in progress */
-> +       if (!down_read_trylock(&init_lock)) {
-> +               dev_warn(cl_data_to_dev(client_data),
-> +                        "Host is not ready to send messages to ISH. Try again\n");
-> +               return -EAGAIN;
-> +       }
-> +
-> +       /* Sanity checks */
-> +       if (in_size > ec_dev->din_size) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Incoming payload size %zu is too large for ec_dev->din_size %d\n",
-> +                       in_size, ec_dev->din_size);
-> +               return -EMSGSIZE;
-> +       }
-> +
-> +       if (out_size > ec_dev->dout_size) {
-> +               dev_err(cl_data_to_dev(client_data),
-> +                       "Outgoing payload size %zu is too large for ec_dev->dout_size %d\n",
-> +                       out_size, ec_dev->dout_size);
-> +               return -EMSGSIZE;
-> +       }
-> +
-> +       /* Prepare the package to be sent over ISH TP */
-> +       out_msg->hdr.channel = CROS_EC_COMMAND;
-> +       out_msg->hdr.status = 0;
-> +
-> +       ec_dev->dout += OUT_MSG_EC_REQUEST_PREAMBLE;
-> +       cros_ec_prepare_tx(ec_dev, msg);
-> +       ec_dev->dout -= OUT_MSG_EC_REQUEST_PREAMBLE;
-> +
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "out_msg: struct_ver=0x%x checksum=0x%x command=0x%x command_ver=0x%x data_len=0x%x\n",
-> +               out_msg->ec_request.struct_version,
-> +               out_msg->ec_request.checksum,
-> +               out_msg->ec_request.command,
-> +               out_msg->ec_request.command_version,
-> +               out_msg->ec_request.data_len);
-> +
-> +       /* Send command to ISH EC firmware and read response */
-> +       rv = ish_send(client_data,
-> +                     (u8 *)out_msg, out_size,
-> +                     (u8 *)in_msg, in_size);
-> +       if (rv < 0)
-> +               goto end_error;
-> +
-> +       rv = prepare_cros_ec_rx(ec_dev, in_msg, msg);
-> +       if (rv)
-> +               goto end_error;
-> +
-> +       rv = in_msg->ec_response.data_len;
-> +
-> +       dev_dbg(cl_data_to_dev(client_data),
-> +               "in_msg: struct_ver=0x%x checksum=0x%x result=0x%x data_len=0x%x\n",
-> +               in_msg->ec_response.struct_version,
-> +               in_msg->ec_response.checksum,
-> +               in_msg->ec_response.result,
-> +               in_msg->ec_response.data_len);
-> +
-> +end_error:
-> +       if (msg->command == EC_CMD_REBOOT_EC)
-> +               msleep(EC_REBOOT_DELAY_MS);
-> +
-> +       up_read(&init_lock);
-> +
-> +       return rv;
-> +}
-> +
-> +static int cros_ec_dev_init(struct ishtp_cl_data *client_data)
-> +{
-> +       int rv;
-> +       struct cros_ec_device *ec_dev;
-> +       struct device *dev = cl_data_to_dev(client_data);
-> +
-> +       ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
-> +       if (!ec_dev)
-> +               return -ENOMEM;
-> +
-> +       client_data->ec_dev = ec_dev;
-> +       dev->driver_data = ec_dev;
-> +
-> +       ec_dev->dev = dev;
-> +       ec_dev->priv = client_data->cros_ish_cl;
-> +       ec_dev->irq = 0;
-> +       ec_dev->cmd_xfer = NULL;
-> +       ec_dev->pkt_xfer = cros_ec_pkt_xfer_ish;
-> +       ec_dev->phys_name = dev_name(dev);
-> +       ec_dev->din_size = sizeof(struct cros_ish_in_msg) +
-> +                          sizeof(struct ec_response_get_protocol_info);
-> +       ec_dev->dout_size = sizeof(struct cros_ish_out_msg);
-> +
-> +       rv = cros_ec_register(ec_dev);
-> +       if (rv) {
-> +               dev_err(dev, "cannot register EC\n");
-> +               return rv;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void reset_handler(struct work_struct *work)
-> +{
-> +       int rv;
-> +       struct device *dev;
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *cros_ish_cl;
-> +       struct ishtp_cl_device *cl_device;
-> +
-> +       client_data = container_of(work, struct ishtp_cl_data,
-> +                                  work_ishtp_reset);
-> +
-> +       /* Lock for reset to complete */
-> +       down_write(&init_lock);
-> +
-> +       cros_ish_cl = client_data->cros_ish_cl;
-> +       cl_device = client_data->cl_device;
-> +
-> +       dev_dbg(cl_data_to_dev(client_data), "%s\n", __func__);
-> +
-> +       /* Unlink, flush queues & start again */
-> +       ishtp_cl_unlink(cros_ish_cl);
-> +       ishtp_cl_flush_queues(cros_ish_cl);
-> +       ishtp_cl_free(cros_ish_cl);
-> +
-> +       cros_ish_cl = ishtp_cl_allocate(cl_device);
-> +       if (!cros_ish_cl) {
-> +               up_write(&init_lock);
-> +               return;
-> +       }
-> +
-> +       ishtp_set_drvdata(cl_device, cros_ish_cl);
-> +       ishtp_set_client_data(cros_ish_cl, client_data);
-> +       client_data->cros_ish_cl = cros_ish_cl;
-> +
-> +       rv = cros_ish_init(cros_ish_cl, 1);
-> +       if (rv) {
-> +               ishtp_cl_free(cros_ish_cl);
-> +               dev_err(cl_data_to_dev(client_data), "Reset Failed\n");
-> +               up_write(&init_lock);
-> +               return;
-> +       }
-> +
-> +       /* Refresh ec_dev device pointers */
-> +       client_data->ec_dev->priv = client_data->cros_ish_cl;
-> +       dev = cl_data_to_dev(client_data);
-> +       dev->driver_data = client_data->ec_dev;
-> +
-> +       dev_info(cl_data_to_dev(client_data), "Chrome EC ISH reset done\n");
-> +
-> +       up_write(&init_lock);
-> +}
-> +
-> +/**
-> + * cros_ec_ishtp_probe() - ISHTP client driver probe callback
-> + * @cl_device:         ISHTP client device instance
-> + *
-> + * Return: 0 on success, non zero on error
-> + */
-> +static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
-> +{
-> +       int rv;
-> +       struct ishtp_cl *cros_ish_cl;
-> +       struct ishtp_cl_data *client_data;
-> +
-> +       client_data = devm_kzalloc(ishtp_device(cl_device),
-> +                                  sizeof(*client_data), GFP_KERNEL);
-> +       if (!client_data)
-> +               return -ENOMEM;
-> +
-> +       /* Lock for initialization to complete */
-> +       down_write(&init_lock);
-> +
-> +       cros_ish_cl = ishtp_cl_allocate(cl_device);
-> +       if (!cros_ish_cl) {
-> +               rv = -ENOMEM;
-> +               goto end_ishtp_cl_alloc_error;
-> +       }
-> +
-> +       ishtp_set_drvdata(cl_device, cros_ish_cl);
-> +       ishtp_set_client_data(cros_ish_cl, client_data);
-> +       client_data->cros_ish_cl = cros_ish_cl;
-> +       client_data->cl_device = cl_device;
-> +
-> +       init_waitqueue_head(&client_data->response.wait_queue);
-> +
-> +       INIT_WORK(&client_data->work_ishtp_reset,
-> +                 reset_handler);
-> +       INIT_WORK(&client_data->work_ec_evt,
-> +                 ish_evt_handler);
-> +
-> +       rv = cros_ish_init(cros_ish_cl, 0);
-> +       if (rv)
-> +               goto end_ishtp_cl_init_error;
-> +
-> +       ishtp_get_device(cl_device);
-> +
-> +       up_write(&init_lock);
-> +
-> +       /* Register croc_ec_dev mfd */
-> +       rv = cros_ec_dev_init(client_data);
-> +       if (rv)
-> +               goto end_cros_ec_dev_init_error;
-> +
-> +       return 0;
-> +
-> +end_cros_ec_dev_init_error:
-> +       ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_DISCONNECTING);
-> +       ishtp_cl_disconnect(cros_ish_cl);
-> +       ishtp_put_device(cl_device);
-> +       cros_ish_deinit(cros_ish_cl);
-> +       return rv;
-> +
-> +end_ishtp_cl_init_error:
-> +       ishtp_cl_free(cros_ish_cl);
-> +end_ishtp_cl_alloc_error:
-> +       up_write(&init_lock);
-> +       return rv;
-> +}
-> +
-> +/**
-> + * cros_ec_ishtp_remove() - ISHTP client driver remove callback
-> + * @cl_device:         ISHTP client device instance
-> + *
-> + * Return: 0
-> + */
-> +static int cros_ec_ishtp_remove(struct ishtp_cl_device *cl_device)
-> +{
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(cros_ish_cl);
-> +
-> +       cancel_work_sync(&client_data->work_ishtp_reset);
-> +       cancel_work_sync(&client_data->work_ec_evt);
-> +       ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_DISCONNECTING);
-> +       ishtp_cl_disconnect(cros_ish_cl);
-> +       ishtp_put_device(cl_device);
-> +       cros_ish_deinit(cros_ish_cl);
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * cros_ec_ishtp_reset() - ISHTP client driver reset callback
-> + * @cl_device:         ISHTP client device instance
-> + *
-> + * Return: 0
-> + */
-> +static int cros_ec_ishtp_reset(struct ishtp_cl_device *cl_device)
-> +{
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(cros_ish_cl);
-> +
-> +       schedule_work(&client_data->work_ishtp_reset);
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * cros_ec_ishtp_suspend() - ISHTP client driver suspend callback
-> + * @device:    device instance
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int __maybe_unused cros_ec_ishtp_suspend(struct device *device)
-> +{
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-> +       struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(cros_ish_cl);
-> +
-> +       return cros_ec_suspend(client_data->ec_dev);
-> +}
-> +
-> +/**
-> + * cros_ec_ishtp_resume() - ISHTP client driver resume callback
-> + * @device:    device instance
-> + *
-> + * Return: 0 for success, negative error code for failure.
-> + */
-> +static int __maybe_unused cros_ec_ishtp_resume(struct device *device)
-> +{
-> +       struct ishtp_cl_data *client_data;
-> +       struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
-> +       struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
-> +
-> +       client_data = ishtp_get_client_data(cros_ish_cl);
-> +
-> +       return cros_ec_resume(client_data->ec_dev);
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(cros_ec_ishtp_pm_ops, cros_ec_ishtp_suspend,
-> +                        cros_ec_ishtp_resume);
-> +
-> +static struct ishtp_cl_driver  cros_ec_ishtp_driver = {
-> +       .name = "cros-ec-ishtp",
-> +       .guid = &cros_ish_guid,
-> +       .probe = cros_ec_ishtp_probe,
-> +       .remove = cros_ec_ishtp_remove,
-> +       .reset = cros_ec_ishtp_reset,
-> +       .driver = {
-> +               .pm = &cros_ec_ishtp_pm_ops,
-> +       },
-> +};
-> +
-> +static int __init cros_ec_ishtp_mod_init(void)
-> +{
-> +       return ishtp_cl_driver_register(&cros_ec_ishtp_driver, THIS_MODULE);
-> +}
-> +
-> +static void __exit cros_ec_ishtp_mod_exit(void)
-> +{
-> +       ishtp_cl_driver_unregister(&cros_ec_ishtp_driver);
-> +}
-> +
-> +late_initcall(cros_ec_ishtp_mod_init);
-> +module_exit(cros_ec_ishtp_mod_exit);
-> +
-> +MODULE_DESCRIPTION("ChromeOS EC ISHTP Client Driver");
-> +MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("ishtp:*");
-> --
-> 1.9.1
+> During my regression testing I noticed the cadence GPIO driver
+> fails on the latest gpio for-next tree.
 >
+> I think the reason is this patch:
+> commit 96cd559817f2 ("Merge branch 'devel' into for-next")
+>
+> Here is a part of the test log:
+>
+> Loopback 8 -> 24
+> TESTING: gpio: 488: output direction PASSED
+> TESTING: gpio: 504: input direction PASSED
+> TESTING: gpio: 488: 0 PASSED
+> TESTING: gpio: 488 -> 504: 0 PASSED
+> TESTING: gpio: 488: 1 FAILED
+> TESTING: gpio: 488 -> 504: 1 FAILED
+> TESTING: gpio: 488: 0 PASSED
+> TESTING: gpio: 488 -> 504: 0 PASSED
+>
+> It looks like the issue is that gc->bgpio_dir has changed its meaning.
+> It used to be set to the register value (so it was being inverted).
+>
+> Now it's always set to 1 for output and 0 for input.
+> However the bgpio_get_set functions were not updated.
+> So they invert the bit again, which means a wrong register
+> is being accessed.
+>
+> This patch fixes that by removing the unnecessary inversion.
+>
+> Signed-off-by: Jan Kotas <jank@cadence.com>
+
+Patch applied!
+
+Yours,
+Linus Walleij
