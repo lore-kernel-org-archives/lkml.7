@@ -2,81 +2,123 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB37C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FA6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD122082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE332171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbfDDOAl (ORCPT
+        id S1728841AbfDDOCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:00:41 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:20337 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727441AbfDDOAk (ORCPT
+        Thu, 4 Apr 2019 10:02:03 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:41830 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfDDOCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:00:40 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-113-8eB9-lQSN_KfDzsHNHWmvw-1; Thu, 04 Apr 2019 15:00:36 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 4 Apr 2019 15:01:43 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 4 Apr 2019 15:01:43 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Sebastian Andrzej Siewior' <bigeasy@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "x86@kernel.org" <x86@kernel.org>,
+        Thu, 4 Apr 2019 10:02:03 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 4C89972CC8C;
+        Thu,  4 Apr 2019 17:02:01 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 40F497CCE4F; Thu,  4 Apr 2019 17:02:01 +0300 (MSK)
+Date:   Thu, 4 Apr 2019 17:02:01 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Roland McGrath <roland@hack.frob.com>,
+        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
         Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: RE: [PATCH v9 00/27] x86: load FPU registers on return to userland
-Thread-Topic: [PATCH v9 00/27] x86: load FPU registers on return to userland
-Thread-Index: AQHU6jzQfWf8irPe1UiHuip9snecjKYsB0gw
-Date:   Thu, 4 Apr 2019 14:01:43 +0000
-Message-ID: <c4af28470a4347f5aa222a99471c939a@AcuMS.aculab.com>
-References: <20190403164156.19645-1-bigeasy@linutronix.de>
-In-Reply-To: <20190403164156.19645-1-bigeasy@linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Will Drewry <wad@chromium.org>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH 4/6 v3] csky: Fix syscall_get_arguments() and
+ syscall_set_arguments()
+Message-ID: <20190404140200.GB4962@altlinux.org>
+References: <20190401134104.676620247@goodmis.org>
+ <20190401134421.121919570@goodmis.org>
 MIME-Version: 1.0
-X-MC-Unique: 8eB9-lQSN_KfDzsHNHWmvw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Content-Disposition: inline
+In-Reply-To: <20190401134421.121919570@goodmis.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU2ViYXN0aWFuIEFuZHJ6ZWogU2lld2lvcg0KPiBTZW50OiAwMyBBcHJpbCAyMDE5IDE3
-OjQxDQouLi4NCj4gVG8gYWNjZXNzIHRoZSBGUFUgcmVnaXN0ZXJzIGluIGtlcm5lbCB3ZSBuZWVk
-Og0KPiAtIGRpc2FibGUgcHJlZW1wdGlvbiB0byBhdm9pZCB0aGF0IHRoZSBzY2hlZHVsZXIgc3dp
-dGNoZXMgdGFza3MuIEJ5DQo+ICAgZG9pbmcgc28gaXQgd291bGQgc2V0IFRJRl9ORUVEX0ZQVV9M
-T0FEIGFuZCB0aGUgRlBVIHJlZ2lzdGVycyB3b3VsZCBiZQ0KPiAgIG5vdCB2YWxpZC4NCj4gLSBk
-aXNhYmxlIEJIIGJlY2F1c2UgdGhlIHNvZnRpcnEgbWlnaHQgdXNlIGtlcm5lbF9mcHVfYmVnaW4o
-KSBhbmQgdGhlbg0KPiAgIHNldCBUSUZfTkVFRF9GUFVfTE9BRCBpbnN0ZWFkIGxvYWRpbmcgdGhl
-IEZQVSByZWdpc3RlcnMgb24gY29tcGxldGlvbi4NCg0KSXMgdGhlcmUgYSBwb3NzaWJsZSBvcHRp
-bWlzYXRpb24gaGVyZSBmb3Iga2VybmVsIHRocmVhZHM/DQpTaW5jZSB0aGVyZSBpcyBubyAndXNl
-ciBGUCBzdGF0ZScgdGhlICdrZXJuZWwgRlAgc3RhdGUnIGNhbg0KYmUgc2F2ZWQgYnkgYSB0YXNr
-IHN3aXRjaCBvciBzb2Z0aXJxLg0KDQpZb3UnZCBzdGlsbCB3YW50IHRoZSBrZXJuZWwgdGhyZWFk
-IHRvIGJyYWNrZXQgZnB1IHVzYWdlIChvciBhdCBsZWFzdCBzYXkNCnRoYXQgaXQgaXMgYSBrZXJu
-ZWwgdGhyZWFkIHRoYXQgYWx3YXlzIG5lZWRzIHRoZSBmcHUpIHRvIGF2b2lkIGhhdmluZw0KdG8g
-c2F2ZSBhbmQgcmVzdG9yZSB0aGUgZnB1IHJlZ2lzdGVycyBvbiBldmVyeSBjb250ZXh0IHN3aXRj
-aCB0by9mcm9tDQphIGtlcm5lbCB0aHJlYWQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
-ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
-TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
+--dTy3Mrz/UPE2dbVg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 01, 2019 at 09:41:08AM -0400, Steven Rostedt wrote:
+> From: "Dmitry V. Levin" <ldv@altlinux.org>
+>=20
+> C-SKY syscall arguments are located in orig_a0,a1,a2,a3,regs[0],regs[1]
+> fields of struct pt_regs.
+>=20
+> Due to an off-by-one bug and a bug in pointer arithmetic
+> syscall_get_arguments() was reading orig_a0,regs[1..5] fields instead.
+> Likewise, syscall_set_arguments() was writing orig_a0,regs[1..5] fields
+> instead.
+>=20
+> Link: http://lkml.kernel.org/r/20190329171230.GB32456@altlinux.org
+>=20
+> Fixes: 4859bfca11c7d ("csky: System Call")
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> Cc: Will Drewry <wad@chromium.org>
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: stable@vger.kernel.org # v4.20+
+> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+According to
+https://lore.kernel.org/lkml/20190330004949.GA15705@guoren-Inspiron-7460/
+the following tags could be added to this patch:
+
+Tested-by: Guo Ren <ren_guo@c-sky.com>
+Acked-by: Guo Ren <ren_guo@c-sky.com>
+
+
+--=20
+ldv
+
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJcpg5YAAoJEAVFT+BVnCUIdTgP/Rm77MXR6eHh3/59ZVPESJzg
+BcQDjaBmQo9TloF3Ykj5Bl7a7aHzWyBVjecJp57u0itrGGRrxuFGKekr2GDFjS0d
+BbNIuHQEjx01MTPVolFxeVTpkB+tVLjVpkVou1GQ+YuPVyflKxashigXr7XpkaDI
+3vKh4Ufj1TVJu+76gTHIONX57iwz5NyU2miNJ+6N53/agWMipEFdO/ZjEN4dm6lk
+W5bSWVXKwvONHzUHf/4zByVc9qWXsTG/uXQjhieHCk22Jxin6TZbP41a0OJF2A89
+FjHFdVzNmrX84IEeoXOSzBwA0oKboa+2bY4mMLkmB09EPRURtmJ97tKiOR3PFt+Z
+v4bUhvI3Ri1+4rvl6hdLubGTmiEF9ixWUDZoYkHaDvS3w8IYTUZeu5ageO1lAts0
+lz4kCCNuxN5sC46A0/wmNSdxDuWdd2B4eDZs2T+JcGJdjG3xTRAxYb3eYFISuksb
+v+1CA50fQfZJ77fTcNqgUYja64iNpA+L0jic98Npl9XqODL2kpz2roeVFJd7A/3j
+AMAmcvblmx22nIBTPuHi8wRhLsPDlTn/3LyAcastQQhNctGxBhjxHQBY75WNGshG
+1pitcDV8Q52/rjtm9ZsoxJuueU4Yvs4skaWXVrIbmL46XULuN10oheH0b9YXFvDi
+6T6VXgiXy9CmYHrM8fLa
+=556p
+-----END PGP SIGNATURE-----
+
+--dTy3Mrz/UPE2dbVg--
