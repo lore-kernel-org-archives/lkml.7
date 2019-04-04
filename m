@@ -2,413 +2,107 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251D0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380CFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF467206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0879F206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:47:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OHxRQe4t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731182AbfDDUob (ORCPT
+        id S1731248AbfDDUre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:44:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727398AbfDDUoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:44:30 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C6AC3D94D;
-        Thu,  4 Apr 2019 20:44:29 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CFAD11001E84;
-        Thu,  4 Apr 2019 20:44:28 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 14:44:28 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>
-Subject: Re: [PATCHv1 7/7] vfio/mdev: Fix race conditions with mdev device
- life cycle APIs
-Message-ID: <20190404144428.1fa6afb2@x1.home>
-In-Reply-To: <VI1PR0501MB22714BE24CEA00E14A811918D1500@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <1553658345-43995-1-git-send-email-parav@mellanox.com>
-        <1553658345-43995-8-git-send-email-parav@mellanox.com>
-        <20190403152722.24efc561@x1.home>
-        <VI1PR0501MB22714BE24CEA00E14A811918D1500@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        Thu, 4 Apr 2019 16:47:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46141 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730317AbfDDUrc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 16:47:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h21so3283067ljk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lj7E0dX/n40xL9DviNuZFYN3qlP/0blpKhCIQVM1Noo=;
+        b=OHxRQe4tknqzI3KJ77CK0N68mnchHgfZ+2xhr2CG02T/h6b3IGBmAbJ2/e7r+vCrF9
+         Q8TUXAKzlrMDfjIYoooHsr2ZIWLjLY13afv05+6ufRoMFwil7lSTS5TXzIOo9ab3m3Mf
+         dr/mEnEWMScIWjoB9EGceddpryw6Pby5PXQa8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lj7E0dX/n40xL9DviNuZFYN3qlP/0blpKhCIQVM1Noo=;
+        b=nJb2b33/TKVC0GSqtKsibymBuRH1AnW3C5Cj87sxicLvkgKNfwARUxBIDPNQltuHhx
+         SXzuzv4u2ULmvGjwrdbMDldzo58p8A0UKbbiRl74bynLDoUVNCpss8EomvPOxxORjOLa
+         OWWhARm2c/CnIomeVcoqEbrK/R3CzaJS+yufskPnqvC3z0iMqLnsY8ffsXGBMsbQ2O2P
+         CZJ2fUASndxa2wgm/6JJJeR59ZJNJX4sIm50K8GkrGxatAqM596cPV+2l0D7VZTQkZR4
+         N6AIZORZpoY+dQeAax4iZXWzvsXd9Ew+dAXhXr5Cw3N0qHFZzqfVHSerAcde6hns/Fby
+         DMKw==
+X-Gm-Message-State: APjAAAW42KbGNWAj3DhLZRVDybEwWbkWHZ/Df921p+J5g82fpCwE2sQz
+        CEHcdidDqIrSPfch39+rqJKph/mqUzg=
+X-Google-Smtp-Source: APXvYqyEjyu2oAhbq/jFKrHtk6LShCUWSUvmmnC+37ODs5lLqzVCl9GYbvwttzFeociY4Wq5zaCjJA==
+X-Received: by 2002:a2e:6c0f:: with SMTP id h15mr4425654ljc.155.1554410850475;
+        Thu, 04 Apr 2019 13:47:30 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id z65sm4146705lfa.90.2019.04.04.13.47.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 13:47:29 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id y18so2838626lfe.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:47:29 -0700 (PDT)
+X-Received: by 2002:a19:7d84:: with SMTP id y126mr4559966lfc.124.1554410848649;
+ Thu, 04 Apr 2019 13:47:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 04 Apr 2019 20:44:29 +0000 (UTC)
+References: <20190404040106.40519-1-dianders@chromium.org> <874l7egxdj.fsf@codeaurora.org>
+In-Reply-To: <874l7egxdj.fsf@codeaurora.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Thu, 4 Apr 2019 13:47:17 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXNfOUmMEWYwts8PuiDaEjuoPK+tZ0BhDSSte5u5toydkA@mail.gmail.com>
+Message-ID: <CA+ASDXNfOUmMEWYwts8PuiDaEjuoPK+tZ0BhDSSte5u5toydkA@mail.gmail.com>
+Subject: Re: [PATCH] mwifiex: Make resume actually do something useful again
+ on SDIO cards
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        Xinming Hu <huxinming820@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 00:02:22 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On Wed, Apr 3, 2019 at 10:20 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+> Douglas Anderson <dianders@chromium.org> writes:
+> > Fixes: fc3a2fcaa1ba ("mwifiex: use atomic bitops to represent adapter status variables")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>
+> I'm planning to queue this for 5.1.
 
-> > -----Original Message-----
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Wednesday, April 3, 2019 4:27 PM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > kwankhede@nvidia.com; cjia@nvidia.com
-> > Subject: Re: [PATCHv1 7/7] vfio/mdev: Fix race conditions with mdev device
-> > life cycle APIs
-> > 
-> > On Tue, 26 Mar 2019 22:45:45 -0500
-> > Parav Pandit <parav@mellanox.com> wrote:
-> >   
-> > > Below race condition and call trace exist with current device life
-> > > cycle sequence.
-> > >
-> > > 1. In following sequence, child devices created while removing mdev
-> > > parent device can be left out, or it may lead to race of removing half
-> > > initialized child mdev devices.
-> > >
-> > > issue-1:
-> > > --------
-> > >        cpu-0                         cpu-1
-> > >        -----                         -----
-> > >                                   mdev_unregister_device()
-> > >                                      device_for_each_child()
-> > >                                         mdev_device_remove_cb()
-> > >                                             mdev_device_remove()
-> > > create_store()
-> > >   mdev_device_create()                   [...]
-> > >        device_register()
-> > >                                   parent_remove_sysfs_files()
-> > >                                   /* BUG: device added by cpu-0
-> > >                                    * whose parent is getting removed.
-> > >                                    */
-> > >
-> > > issue-2:
-> > > --------
-> > >        cpu-0                         cpu-1
-> > >        -----                         -----
-> > > create_store()
-> > >   mdev_device_create()                   [...]
-> > >        device_register()
-> > >
-> > >        [...]                      mdev_unregister_device()
-> > >                                      device_for_each_child()
-> > >                                         mdev_device_remove_cb()
-> > >                                             mdev_device_remove()
-> > >
-> > >        mdev_create_sysfs_files()
-> > >        /* BUG: create is adding
-> > >         * sysfs files for a device
-> > >         * which is undergoing removal.
-> > >         */
-> > >                                  parent_remove_sysfs_files()
-> > >
-> > > 2. Below crash is observed when user initiated remove is in progress
-> > > and mdev_unregister_driver() completes parent unregistration.
-> > >
-> > >        cpu-0                         cpu-1
-> > >        -----                         -----
-> > > remove_store()
-> > >    mdev_device_remove()
-> > >    active = false;
-> > >                                   mdev_unregister_device()
-> > >                                     remove type
-> > >    [...]
-> > >    mdev_remove_ops() crashes.
-> > >
-> > > This is similar race like create() racing with mdev_unregister_device().
-> > >
-> > > mtty mtty: MDEV: Registered
-> > > iommu: Adding device 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001 to group 57
-> > > vfio_mdev 83b8f4f2-509f-382f-3c1e-e6bfe0fa1001: MDEV: group_id = 57
-> > > mtty mtty: MDEV: Unregistering
-> > > mtty_dev: Unloaded!
-> > > BUG: unable to handle kernel paging request at ffffffffc027d668 PGD
-> > > af9818067 P4D af9818067 PUD af981a067 PMD 8583c3067 PTE 0
-> > > Oops: 0000 [#1] SMP PTI
-> > > CPU: 15 PID: 3517 Comm: bash Kdump: loaded Not tainted
-> > > 5.0.0-rc7-vdevbus+ #2 Hardware name: Supermicro
-> > > SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
-> > > RIP: 0010:mdev_device_remove_ops+0x1a/0x50 [mdev] Call Trace:
-> > >  mdev_device_remove+0xef/0x130 [mdev]
-> > >  remove_store+0x77/0xa0 [mdev]
-> > >  kernfs_fop_write+0x113/0x1a0
-> > >  __vfs_write+0x33/0x1b0
-> > >  ? rcu_read_lock_sched_held+0x64/0x70
-> > >  ? rcu_sync_lockdep_assert+0x2a/0x50
-> > >  ? __sb_start_write+0x121/0x1b0
-> > >  ? vfs_write+0x17c/0x1b0
-> > >  vfs_write+0xad/0x1b0
-> > >  ? trace_hardirqs_on_thunk+0x1a/0x1c
-> > >  ksys_write+0x55/0xc0
-> > >  do_syscall_64+0x5a/0x210
-> > >
-> > > Therefore, mdev core is improved to overcome above issues.
-> > >
-> > > Wait for any ongoing mdev create() and remove() to finish before
-> > > unregistering parent device using srcu. This continues to allow
-> > > multiple create and remove to progress in parallel. At the same time
-> > > guard parent removal while parent is being access by create() and remove  
-> > callbacks.  
-> > >
-> > > mdev_device_remove() is refactored to not block on srcu when device is
-> > > removed as part of parent removal.
-> > >
-> > > Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-> > > Signed-off-by: Parav Pandit <parav@mellanox.com>
-> > > ---
-> > >  drivers/vfio/mdev/mdev_core.c    | 83  
-> > ++++++++++++++++++++++++++++++++++------  
-> > >  drivers/vfio/mdev/mdev_private.h |  6 +++
-> > >  2 files changed, 77 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/drivers/vfio/mdev/mdev_core.c
-> > > b/drivers/vfio/mdev/mdev_core.c index aefcf34..fa233c8 100644
-> > > --- a/drivers/vfio/mdev/mdev_core.c
-> > > +++ b/drivers/vfio/mdev/mdev_core.c
-> > > @@ -84,6 +84,7 @@ static void mdev_release_parent(struct kref *kref)
-> > >  						  ref);
-> > >  	struct device *dev = parent->dev;
-> > >
-> > > +	cleanup_srcu_struct(&parent->unreg_srcu);
-> > >  	kfree(parent);
-> > >  	put_device(dev);
-> > >  }
-> > > @@ -147,10 +148,30 @@ static int mdev_device_remove_ops(struct  
-> > mdev_device *mdev, bool force_remove)  
-> > >  	return 0;
-> > >  }
-> > >
-> > > +static int mdev_device_remove_common(struct mdev_device *mdev,
-> > > +				     bool force_remove)
-> > > +{
-> > > +	struct mdev_type *type;
-> > > +	int ret;
-> > > +
-> > > +	type = to_mdev_type(mdev->type_kobj);  
-> > 
-> > I know you're just moving this into the common function, but I think we're
-> > just caching this for aesthetics, the mdev object is still valid after the remove
-> > ops and I don't see anything touching this field.  If so, maybe we should
-> > remove 'type' or at least set it right before it's used so it doesn't appear that
-> > we're preserving it before the remove op.
-> >   
-> Sure, yes.
-> Type assignment should be done just before calling mdev_remove_sysfs_files().
-> Will send v2.
-> 
-> > > +
-> > > +	ret = mdev_device_remove_ops(mdev, force_remove);
-> > > +	if (ret && !force_remove) {
-> > > +		mutex_lock(&mdev_list_lock);
-> > > +		mdev->active = true;
-> > > +		mutex_unlock(&mdev_list_lock);  
-> > 
-> > The mutex around this is a change from the previous code and I'm not sure
-> > it adds anything.  If there's a thread testing for active racing with this thread
-> > setting active to true, there's no meaningful difference in the result by
-> > acquiring the mutex.  'active' may change from false->true during the critical
-> > section of the other thread, but I don't think there are any strange out of
-> > order things that give the wrong result, the other thread either sees true or
-> > false and continues or exits, regardless of this mutex.
-> >   
-> Yes, I can drop the mutex.
-> In future remove sequence fix, this will anyway vanish.
-> 
-> Shall we finish this series with these 7 patches?
-> Once you ack it will send v2 for these 7 patches and follow on to that we cleanup the sequencing?
+With an explicit
 
-Do you intend to move the removal of the mdev sanitization loop from
-6/7 to this patch?  I don't think we can really claim that what it's
-trying to do is unnecessary until after we have the new code here that
-prevents the sysfs remove path from running concurrent to the parent
-remove path.  It's not really related to the changes in 6/7 anyway.  In
-fact, rather than moving that chunk here, it could be added as a
-follow-on patch with explanation of why it is now unnecessary.  Thanks,
+Cc: <stable@vger.kernel.org>
 
-Alex
+please? Somebody would likely pick it up anyway, but it's nice to be explicit.
 
-> > > +		return ret;
-> > > +	}
-> > > +	mdev_remove_sysfs_files(&mdev->dev, type);
-> > > +	device_unregister(&mdev->dev);
-> > > +	return ret;
-> > > +}
-> > > +
-> > >  static int mdev_device_remove_cb(struct device *dev, void *data)  {
-> > >  	if (dev_is_mdev(dev))
-> > > -		mdev_device_remove(dev, true);
-> > > +		mdev_device_remove_common(to_mdev_device(dev), true);
-> > >
-> > >  	return 0;
-> > >  }
-> > > @@ -193,6 +214,7 @@ int mdev_register_device(struct device *dev, const  
-> > struct mdev_parent_ops *ops)  
-> > >  	}
-> > >
-> > >  	kref_init(&parent->ref);
-> > > +	init_srcu_struct(&parent->unreg_srcu);
-> > >
-> > >  	parent->dev = dev;
-> > >  	parent->ops = ops;
-> > > @@ -213,6 +235,7 @@ int mdev_register_device(struct device *dev, const  
-> > struct mdev_parent_ops *ops)  
-> > >  	if (ret)
-> > >  		dev_warn(dev, "Failed to create compatibility class link\n");
-> > >
-> > > +	rcu_assign_pointer(parent->self, parent);
-> > >  	list_add(&parent->next, &parent_list);
-> > >  	mutex_unlock(&parent_list_lock);
-> > >
-> > > @@ -251,13 +274,31 @@ void mdev_unregister_device(struct device *dev)
-> > >  	dev_info(dev, "MDEV: Unregistering\n");
-> > >
-> > >  	list_del(&parent->next);
-> > > +	mutex_unlock(&parent_list_lock);
-> > > +
-> > > +	/*
-> > > +	 * Publish that this mdev parent is unregistering. So any new
-> > > +	 * create/remove cannot start on this parent anymore by user.
-> > > +	 */
-> > > +	rcu_assign_pointer(parent->self, NULL);
-> > > +
-> > > +	/*
-> > > +	 * Wait for any active create() or remove() mdev ops on the parent
-> > > +	 * to complete.
-> > > +	 */
-> > > +	synchronize_srcu(&parent->unreg_srcu);
-> > > +
-> > > +	/*
-> > > +	 * At this point it is confirmed that any pending user initiated
-> > > +	 * create or remove callbacks accessing the parent are completed.
-> > > +	 * It is safe to remove the parent now.
-> > > +	 */  
-> > 
-> > Thanks for the good documentation here.
-> > 
-> > Alex
-> >   
-> > >  	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
-> > >
-> > >  	device_for_each_child(dev, NULL, mdev_device_remove_cb);
-> > >
-> > >  	parent_remove_sysfs_files(parent);
-> > >
-> > > -	mutex_unlock(&parent_list_lock);
-> > >  	mdev_put_parent(parent);
-> > >  }
-> > >  EXPORT_SYMBOL(mdev_unregister_device);
-> > > @@ -278,14 +319,24 @@ int mdev_device_create(struct kobject *kobj,
-> > >  		       struct device *dev, const guid_t *uuid)  {
-> > >  	int ret;
-> > > +	struct mdev_parent *valid_parent;
-> > >  	struct mdev_device *mdev, *tmp;
-> > >  	struct mdev_parent *parent;
-> > >  	struct mdev_type *type = to_mdev_type(kobj);
-> > > +	int srcu_idx;
-> > >
-> > >  	parent = mdev_get_parent(type->parent);
-> > >  	if (!parent)
-> > >  		return -EINVAL;
-> > >
-> > > +	srcu_idx = srcu_read_lock(&parent->unreg_srcu);
-> > > +	valid_parent = srcu_dereference(parent->self, &parent->unreg_srcu);
-> > > +	if (!valid_parent) {
-> > > +		/* parent is undergoing unregistration */
-> > > +		ret = -ENODEV;
-> > > +		goto mdev_fail;
-> > > +	}
-> > > +
-> > >  	mutex_lock(&mdev_list_lock);
-> > >
-> > >  	/* Check for duplicate */
-> > > @@ -334,44 +385,52 @@ int mdev_device_create(struct kobject *kobj,
-> > >  	mdev->type_kobj = kobj;
-> > >  	mdev->active = true;
-> > >  	dev_dbg(&mdev->dev, "MDEV: created\n");
-> > > +	srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
-> > >
-> > >  	return 0;
-> > >
-> > >  create_fail:
-> > >  	device_unregister(&mdev->dev);
-> > >  mdev_fail:
-> > > +	srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
-> > >  	mdev_put_parent(parent);
-> > >  	return ret;
-> > >  }
-> > >
-> > >  int mdev_device_remove(struct device *dev, bool force_remove)  {
-> > > +	struct mdev_parent *valid_parent;
-> > >  	struct mdev_device *mdev;
-> > >  	struct mdev_parent *parent;
-> > > -	struct mdev_type *type;
-> > > +	int srcu_idx;
-> > >  	int ret;
-> > >
-> > >  	mdev = to_mdev_device(dev);
-> > > +	parent = mdev->parent;
-> > > +
-> > > +	srcu_idx = srcu_read_lock(&parent->unreg_srcu);
-> > > +	valid_parent = srcu_dereference(parent->self, &parent->unreg_srcu);
-> > > +	if (!valid_parent) {
-> > > +		srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
-> > > +		/* parent is undergoing unregistration */
-> > > +		return -ENODEV;
-> > > +	}
-> > > +
-> > >  	mutex_lock(&mdev_list_lock);
-> > >  	if (!mdev->active) {
-> > >  		mutex_unlock(&mdev_list_lock);
-> > > +		srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
-> > >  		return -EAGAIN;
-> > >  	}
-> > >
-> > >  	mdev->active = false;
-> > >  	mutex_unlock(&mdev_list_lock);
-> > >
-> > > -	type = to_mdev_type(mdev->type_kobj);
-> > > -	parent = mdev->parent;
-> > > -
-> > > -	ret = mdev_device_remove_ops(mdev, force_remove);
-> > > -	if (ret) {
-> > > -		mdev->active = true;
-> > > +	ret = mdev_device_remove_common(mdev, force_remove);
-> > > +	srcu_read_unlock(&parent->unreg_srcu, srcu_idx);
-> > > +	if (ret)
-> > >  		return ret;
-> > > -	}
-> > >
-> > > -	mdev_remove_sysfs_files(dev, type);
-> > > -	device_unregister(dev);
-> > >  	mdev_put_parent(parent);
-> > >
-> > >  	return 0;
-> > > diff --git a/drivers/vfio/mdev/mdev_private.h
-> > > b/drivers/vfio/mdev/mdev_private.h
-> > > index ddcf9c7..b799978 100644
-> > > --- a/drivers/vfio/mdev/mdev_private.h
-> > > +++ b/drivers/vfio/mdev/mdev_private.h
-> > > @@ -23,6 +23,12 @@ struct mdev_parent {
-> > >  	struct list_head next;
-> > >  	struct kset *mdev_types_kset;
-> > >  	struct list_head type_list;
-> > > +	/*
-> > > +	 * Protects unregistration to wait until create/remove
-> > > +	 * are completed.
-> > > +	 */
-> > > +	struct srcu_struct unreg_srcu;
-> > > +	struct mdev_parent __rcu *self;
-> > >  };
-> > >
-> > >  struct mdev_device {  
-> 
+Not that it really matters, but also:
 
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+
+Thanks,
+Brian
