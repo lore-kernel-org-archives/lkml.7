@@ -2,113 +2,106 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14B7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C13EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99302206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57023206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:39:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YBQsv4R3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JVQGS4tr"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="N9O/P989"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfDDQi7 (ORCPT
+        id S1729446AbfDDQjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:38:59 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42946 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfDDQi7 (ORCPT
+        Thu, 4 Apr 2019 12:39:17 -0400
+Received: from mail-yw1-f43.google.com ([209.85.161.43]:46902 "EHLO
+        mail-yw1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfDDQjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:38:59 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 946856079C; Thu,  4 Apr 2019 16:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554395938;
-        bh=SKPAo48buD7X8AxyJfUMlxADDAoJ1X9bfMPOhEFlKtc=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=YBQsv4R3fqCKm3RYkj/6nEU8UBkZhhGSZ9jysQRxhf22IdO+ONKyUnG8n4pcPRNwu
-         A8TM7ZWIJzG5Ffwj5xLgb8ApZJde/Q81u08Tu2uJy4tue3joHh+Ox1PhNpXgw77NK9
-         3mXGE5pGOYw7kvrbn6IKk+uebJt6Cr8N5Eut33cM=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5303960790;
-        Thu,  4 Apr 2019 16:38:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554395936;
-        bh=SKPAo48buD7X8AxyJfUMlxADDAoJ1X9bfMPOhEFlKtc=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=JVQGS4trrTNaXS8flNloqNGoNaUbaq67SdXvpmOrQCUjHo+REVgZ3FOCxU6awzGY8
-         4ZY70m0qP1tE+hGSJMkNNUC0fOMUBUekzwzMA4m6ydFL5yrSP5kOI2d/h4BSj9BOQs
-         SjimriR31LUtTTjfcM0CtFW0rf8GLjJq6IX0qnr4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5303960790
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 4 Apr 2019 12:39:17 -0400
+Received: by mail-yw1-f43.google.com with SMTP id v127so1194968ywe.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sVZzefylPUert59vxaZI/oiiATEF9PQOgxdOg2fXoEs=;
+        b=N9O/P989CYq5nDJ+5cfuaXQTyO9yPFp/1/eKojWhp/i7Y2K8efOxl8h5pcHtpCFXpV
+         2/Fgk3oF02TPKWP0j2FhXquqaxWo7pcBk+LSDFbvbP6L7+AKKu3P8X1Bc/ih1Un5oAHW
+         lidSBfVBXnjoYtvNI8yPV/jeLc7aSm1KqADr4p45hgk+VpTgdmNZgYK7a9ZtS8/nOvWv
+         Ze6qWGbBNiCJZnPke88ZMLvYVM1HMR/817cLJax12DTXw/4xn7MrjL1SOwjZX3E93CRT
+         n9tNcxv2bv+8v9aEkys2lEACvHlf/xG0dxvVaY7Mo0mI/Orl1g12urtpIGjl1Q1vKsWG
+         eLEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sVZzefylPUert59vxaZI/oiiATEF9PQOgxdOg2fXoEs=;
+        b=IT45/cG4k3LUEVdE5SAVDZr5UZlDVPAG/GgTJV0rIxq1hNhZZGpn6VrR1KYqeHRseF
+         V6Pc/wcAe1Y99B6k9p+9MpAZX0Otdb90XHyAOoWvRF8RUIkVCvrcCylJK1GOg2tn/SI/
+         H3zjQxWbNSoygtcoLtN311tDlczsGohyu3p05uhhQfQBI9HMUWGTvp12Ou3ACtvAPJLB
+         dLh/8IT8WIXgdxxb3gYS8PxRrIn1+PkxdR50Am/BqciL4J9a6TTb4YMNrrIVvHGLJvZw
+         TYJzrbuE7b8XcZ0Tk6tkOql1/8DK+YxIMEMoQoSz2YPVEQIforCSk54VEUgQvUt5vClD
+         H/WA==
+X-Gm-Message-State: APjAAAWO08OmmLNEzDvg+1VBFQ+udUfSmrzUndf3D7dTO/0asEnjF4ND
+        FvfGqR1pqkGBd11n4QTQpL346Q==
+X-Google-Smtp-Source: APXvYqzilLKYDRMZlOnegsGNrRHGCTLtWjZZcd0Pk6bBZMtt4KU1a29LEu2clZfsFtRi2mMQ7fOucw==
+X-Received: by 2002:a81:4d8b:: with SMTP id a133mr5725050ywb.122.1554395956113;
+        Thu, 04 Apr 2019 09:39:16 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::1:af4])
+        by smtp.gmail.com with ESMTPSA id j187sm6563806ywj.32.2019.04.04.09.39.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 09:39:15 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 12:39:14 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm:workingset use real time to judge activity of the
+ file page
+Message-ID: <20190404163914.GA4229@cmpxchg.org>
+References: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] qtnfmac: replace qtnf_cmd_acl_data_size() with
- struct_size()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190403170236.GA31637@embeddedor>
-References: <20190403170236.GA31637@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190404163857.946856079C@smtp.codeaurora.org>
-Date:   Thu,  4 Apr 2019 16:38:57 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+On Thu, Apr 04, 2019 at 11:30:17AM +0800, Zhaoyang Huang wrote:
+> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> 
+> In previous implementation, the number of refault pages is used
+> for judging the refault period of each page, which is not precised as
+> eviction of other files will be affect a lot on current cache.
+> We introduce the timestamp into the workingset's entry and refault ratio
+> to measure the file page's activity. It helps to decrease the affection
+> of other files(average refault ratio can reflect the view of whole system
+> 's memory).
 
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct foo {
->     int stuff;
->     struct boo entry[];
-> };
-> 
-> size = sizeof(struct foo) + count * sizeof(struct boo);
-> instance = kzalloc(size, GFP_KERNEL)
-> 
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
-> 
-> size = struct_size(instance, entry, count);
-> 
-> or
-> 
-> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
-> 
-> Based on the above, replace qtnf_cmd_acl_data_size() with the
-> new struct_size() helper.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+I don't understand what exactly you're saying here, can you please
+elaborate?
 
-Patch applied to wireless-drivers-next.git, thanks.
+The reason it's using distances instead of absolute time is because
+the ordering of the LRU is relative and not based on absolute time.
 
-95336d4cb588 qtnfmac: replace qtnf_cmd_acl_data_size() with struct_size()
+E.g. if a page is accessed every 500ms, it depends on all other pages
+to determine whether this page is at the head or the tail of the LRU.
 
--- 
-https://patchwork.kernel.org/patch/10884311/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+So when you refault, in order to determine the relative position of
+the refaulted page in the LRU, you have to compare it to how fast that
+LRU is moving. The absolute refault time, or the average time between
+refaults, is not comparable to what's already in memory.
