@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B35C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37486C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B5C2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A1420882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368170;
-	bh=lmBROMTpVejuMNleZEVjH9FCakjaNPwo0GbhIFp4nx0=;
+	s=default; t=1554368175;
+	bh=bVwOoHt4SqR+uBklbkmzRuz0athJ9ajaiBhrwS+1sRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0ZFDauCcGUOG4zleNmU7Fj2g5bizqZdanwi3icajFbHBNHt7RVf53qVNlWSkvk4y
-	 Ac5kbUdOP1pCFAr/bp3NzM0+K/F37oN4rRS/vVnsWR/v/Glxn1xxfY4AC6K6un8TlV
-	 WrYGRrqwSczuMVnyfB8u9FAValcAqRUwVLD50ra4=
+	b=OSPn8sOfgpZJ/RzbE598I/h0Nx1se186QK13Cabw+kromUIMyIV8YvcNdm/J4RXPT
+	 7nXZQWC31oXS57t2XhNC8qdu1gmPZKYt6tK0kVEF+vxnNb+Xq1ygGivOBQuAhaAiqf
+	 ivxKGIpDdi9HcreuysT7Ll46lAzsVyoP5I15mXow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfDDI4J (ORCPT
+        id S1730445AbfDDI4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:56:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59362 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbfDDI4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:07 -0400
+        id S1729268AbfDDI4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E679C20882;
-        Thu,  4 Apr 2019 08:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E37320652;
+        Thu,  4 Apr 2019 08:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368166;
-        bh=lmBROMTpVejuMNleZEVjH9FCakjaNPwo0GbhIFp4nx0=;
+        s=default; t=1554368169;
+        bh=bVwOoHt4SqR+uBklbkmzRuz0athJ9ajaiBhrwS+1sRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1lRFgS5Rvz/+RVkVfULgXsogRkv8W+nfWhLpR9YQI5GSJRCmRbzbfXLVPDBV+Lqv
-         D9+zeEKhXSb3LIAkbCXCHt8Aq3Q2BoVLsuj3WtkadLkVh2UXV9aATe9ADbIF39Zt3A
-         xJMbMfuCF7f+0j17GEGI+hmjtJDsQYul7N4eNsec=
+        b=WZ4bGq1sXCHY+enQY5qQ0nRUPYI+eCsvOZW7G22Dg8FIMG6PdBpkQT1B0UuDCbM+/
+         zSVt7MXB4ciUKsJa6kwj545oFs19mIiYGpVl/V2k7R5bM4FC78PtD8VzHjgAmQQQ6M
+         d3688pM8tjXZKaGwjwdFrdVJ0nyWfw8vMb4COIWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 045/121] ARM: 8840/1: use a raw_spinlock_t in unwind
-Date:   Thu,  4 Apr 2019 10:47:13 +0200
-Message-Id: <20190404084547.721969523@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 046/121] iommu/io-pgtable-arm-v7s: Only kmemleak_ignore L2 tables
+Date:   Thu,  4 Apr 2019 10:47:14 +0200
+Message-Id: <20190404084547.766289498@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,90 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 74ffe79ae538283bbf7c155e62339f1e5c87b55a ]
+[ Upstream commit 032ebd8548c9d05e8d2bdc7a7ec2fe29454b0ad0 ]
 
-Mostly unwind is done with irqs enabled however SLUB may call it with
-irqs disabled while creating a new SLUB cache.
+L1 tables are allocated with __get_dma_pages, and therefore already
+ignored by kmemleak.
 
-I had system freeze while loading a module which called
-kmem_cache_create() on init. That means SLUB's __slab_alloc() disabled
-interrupts and then
+Without this, the kernel would print this error message on boot,
+when the first L1 table is allocated:
 
-->new_slab_objects()
- ->new_slab()
-  ->setup_object()
-   ->setup_object_debug()
-    ->init_tracking()
-     ->set_track()
-      ->save_stack_trace()
-       ->save_stack_trace_tsk()
-        ->walk_stackframe()
-         ->unwind_frame()
-          ->unwind_find_idx()
-           =>spin_lock_irqsave(&unwind_lock);
+[    2.810533] kmemleak: Trying to color unknown object at 0xffffffd652388000 as Black
+[    2.818190] CPU: 5 PID: 39 Comm: kworker/5:0 Tainted: G S                4.19.16 #8
+[    2.831227] Workqueue: events deferred_probe_work_func
+[    2.836353] Call trace:
+...
+[    2.852532]  paint_ptr+0xa0/0xa8
+[    2.855750]  kmemleak_ignore+0x38/0x6c
+[    2.859490]  __arm_v7s_alloc_table+0x168/0x1f4
+[    2.863922]  arm_v7s_alloc_pgtable+0x114/0x17c
+[    2.868354]  alloc_io_pgtable_ops+0x3c/0x78
+...
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: e5fc9753b1a8314 ("iommu/io-pgtable: Add ARMv7 short descriptor support")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/unwind.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/iommu/io-pgtable-arm-v7s.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-index 0bee233fef9a..314cfb232a63 100644
---- a/arch/arm/kernel/unwind.c
-+++ b/arch/arm/kernel/unwind.c
-@@ -93,7 +93,7 @@ extern const struct unwind_idx __start_unwind_idx[];
- static const struct unwind_idx *__origin_unwind_idx;
- extern const struct unwind_idx __stop_unwind_idx[];
- 
--static DEFINE_SPINLOCK(unwind_lock);
-+static DEFINE_RAW_SPINLOCK(unwind_lock);
- static LIST_HEAD(unwind_tables);
- 
- /* Convert a prel31 symbol to an absolute address */
-@@ -201,7 +201,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
- 		/* module unwind tables */
- 		struct unwind_table *table;
- 
--		spin_lock_irqsave(&unwind_lock, flags);
-+		raw_spin_lock_irqsave(&unwind_lock, flags);
- 		list_for_each_entry(table, &unwind_tables, list) {
- 			if (addr >= table->begin_addr &&
- 			    addr < table->end_addr) {
-@@ -213,7 +213,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
- 				break;
- 			}
- 		}
--		spin_unlock_irqrestore(&unwind_lock, flags);
-+		raw_spin_unlock_irqrestore(&unwind_lock, flags);
+diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
+index 29b7a6755fcd..56368c8bd791 100644
+--- a/drivers/iommu/io-pgtable-arm-v7s.c
++++ b/drivers/iommu/io-pgtable-arm-v7s.c
+@@ -217,7 +217,8 @@ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
+ 		if (dma != phys)
+ 			goto out_unmap;
  	}
+-	kmemleak_ignore(table);
++	if (lvl == 2)
++		kmemleak_ignore(table);
+ 	return table;
  
- 	pr_debug("%s: idx = %p\n", __func__, idx);
-@@ -529,9 +529,9 @@ struct unwind_table *unwind_table_add(unsigned long start, unsigned long size,
- 	tab->begin_addr = text_addr;
- 	tab->end_addr = text_addr + text_size;
- 
--	spin_lock_irqsave(&unwind_lock, flags);
-+	raw_spin_lock_irqsave(&unwind_lock, flags);
- 	list_add_tail(&tab->list, &unwind_tables);
--	spin_unlock_irqrestore(&unwind_lock, flags);
-+	raw_spin_unlock_irqrestore(&unwind_lock, flags);
- 
- 	return tab;
- }
-@@ -543,9 +543,9 @@ void unwind_table_del(struct unwind_table *tab)
- 	if (!tab)
- 		return;
- 
--	spin_lock_irqsave(&unwind_lock, flags);
-+	raw_spin_lock_irqsave(&unwind_lock, flags);
- 	list_del(&tab->list);
--	spin_unlock_irqrestore(&unwind_lock, flags);
-+	raw_spin_unlock_irqrestore(&unwind_lock, flags);
- 
- 	kfree(tab);
- }
+ out_unmap:
 -- 
 2.19.1
 
