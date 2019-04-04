@@ -2,115 +2,85 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F71C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76A2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B88720882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50AA20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:25:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UZLqYGkp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CqIeYaFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbfDDKYy (ORCPT
+        id S1729389AbfDDKZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:24:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:14871 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbfDDKYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:24:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 03:24:53 -0700
-X-IronPort-AV: E=Sophos;i="5.60,308,1549958400"; 
-   d="scan'208";a="131386438"
-Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.18])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 03:24:50 -0700
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        michal.wajdeczko@intel.com, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-Subject: [PATCH] drm/i915: Fix context IDs not released on driver hot unbind
-Date:   Thu,  4 Apr 2019 12:24:45 +0200
-Message-Id: <20190404102445.12303-1-janusz.krzysztofik@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 4 Apr 2019 06:25:13 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44994 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfDDKZM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:25:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id ADBB861344; Thu,  4 Apr 2019 10:25:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554373511;
+        bh=+kjDBZ69muzvXn1wtYlYw7mbI3XqyjhSb6umEv7mhKE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=UZLqYGkpgq/1TbyUUiFxaSmpenh4gzJwgfzngVS6RxDgqdigEHEkHWi3GdUSRyUPS
+         OP36G+p+xPqDVjyRYaYBL40pm0SvFeIazHsLh6ZHI5I0jtqBCoF0QnPH5t8ZmP5Ple
+         /kUTmAk+tbJ9XgB4xw+AKQz7g9ihNTM7XoqodHaY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 826916141C;
+        Thu,  4 Apr 2019 10:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554373510;
+        bh=+kjDBZ69muzvXn1wtYlYw7mbI3XqyjhSb6umEv7mhKE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=CqIeYaFyTfP3npvBHq7HQJF2Auk1irCyjkS6sBRFbq42B2VmxgIIELTRLnBpzxrhF
+         5wfP4CEHEqFi4GkfUeYTUfO7pDyKIzfVSmgAyGgIyyRaO7oQmP1TrlVaeni/vAzC5g
+         nE0nG1GUwnnb63AFVR8vLiCJ0xifKh5Tar4GLX8c=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 826916141C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtlwifi: fix a potential NULL pointer dereference
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190312075633.573-1-kjlu@umn.edu>
+References: <20190312075633.573-1-kjlu@umn.edu>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     kjlu@umn.edu, pakki001@umn.edu, Ping-Ke Shih <pkshih@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190404102511.ADBB861344@smtp.codeaurora.org>
+Date:   Thu,  4 Apr 2019 10:25:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
+Kangjie Lu <kjlu@umn.edu> wrote:
 
-In case the driver gets unbound while a device is open, kernel panic
-may be forced if a list of allocated context IDs is not empty.
+> In case alloc_workqueue fails, the fix reports the error and
+> returns to avoid NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-When a device is open, the list may happen to be not empty because a
-context ID, once allocated by a context ID allocator to a context
-assosiated with that open file descriptor, is released as late as
-on device close.
+Patch applied to wireless-drivers-next.git, thanks.
 
-On the other hand, there is a need to release all allocated context IDs
-and destroy the context ID allocator on driver unbind, even if a device
-is open, in order to free memory resources consumed and prevent from
-memory leaks.  The purpose of the forced kernel panic was to protect
-the context ID allocator from being silently destroyed if not all
-allocated IDs had been released.
+765976285a8c rtlwifi: fix a potential NULL pointer dereference
 
-Before forcing the kernel panic on non-empty list of allocated context
-IDs, do that unlikely on non-empty list of contexts that should be
-freed by preceding drain of work queue (there must be another bug if
-that list happens to be not empty).  If empty, we may assume that
-remaining contexts are idle (not pinned) and their IDs can be safely
-released.
-
-Once done, release context IDs of each of those remaining contexts
-unless it happens a context is unlikely pinned.  Force kernel panic in
-that case, there must be still another bug in the driver code.
-
-Now the kernel panic protecting the allocator should not pop up as the
-list it checks should be empty.  If it unlikely happens to be not
-empty, there must be still another bug.
-
-Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
----
- drivers/gpu/drm/i915/i915_gem_context.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/gpu/drm/i915/i915_gem_context.c b/drivers/gpu/drm/i915/i915_gem_context.c
-index 280813a4bf82..18d004d94e43 100644
---- a/drivers/gpu/drm/i915/i915_gem_context.c
-+++ b/drivers/gpu/drm/i915/i915_gem_context.c
-@@ -611,6 +611,8 @@ void i915_gem_contexts_lost(struct drm_i915_private *dev_priv)
- 
- void i915_gem_contexts_fini(struct drm_i915_private *i915)
- {
-+	struct i915_gem_context *ctx, *cn;
-+
- 	lockdep_assert_held(&i915->drm.struct_mutex);
- 
- 	if (i915->preempt_context)
-@@ -618,6 +620,14 @@ void i915_gem_contexts_fini(struct drm_i915_private *i915)
- 	destroy_kernel_context(&i915->kernel_context);
- 
- 	/* Must free all deferred contexts (via flush_workqueue) first */
-+	GEM_BUG_ON(!llist_empty(&i915->contexts.free_list));
-+
-+	/* Release all remaining HW IDs before ID allocator is destroyed */
-+	list_for_each_entry_safe(ctx, cn, &i915->contexts.hw_id_list,
-+				 hw_id_link) {
-+		GEM_BUG_ON(atomic_read(&ctx->hw_id_pin_count));
-+		release_hw_id(ctx);
-+	}
- 	GEM_BUG_ON(!list_empty(&i915->contexts.hw_id_list));
- 	ida_destroy(&i915->contexts.hw_ida);
- }
 -- 
-2.20.1
+https://patchwork.kernel.org/patch/10848697/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
