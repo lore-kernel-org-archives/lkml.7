@@ -7,58 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05120C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621C6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6488217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F79217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368138;
-	bh=kqLKYtvM22l4cbA3Uq0iKUzBH2Mm0w5EkAZWtCkpEaA=;
+	s=default; t=1554368143;
+	bh=b0eRE5tpknAVu3qdxUs/ygHuZEs4Y+7wFw3QR8x+xtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhUSwx0dVxA6n0VhZZcntQ9ZmzzO79j+NJxGhJoTLFwrsnBaCnsvedEGuqGoCI3t1
-	 8+sPLHTCTM6XPhrVZqgRN9DTPNVNL6BGPwVeJKDjk4tU2P1d6iaCblMKzhRT9g4DiZ
-	 i0qwWhnf1YfIL50WxY6KuBdcRmESaanp8h3j6hu4=
+	b=sfJWVkLVVobFmtC6YaFvUgphoWk9ulhf4fTxSuurlrfHhCTnYfP5LS4jPQAqFEZPb
+	 4J1v9tGamWDbsHW9eGSfSgn/brZ9VZZ9WxQa6gbxeTbS/7D0inkVjdjR/QnoPQ3Y0o
+	 gBMvyx6i6NMiDNt38w8So31TByaliBdbd2cmc/Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbfDDIzh (ORCPT
+        id S1730342AbfDDIzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729827AbfDDIzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:33 -0400
+        id S1729581AbfDDIzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AE8320882;
-        Thu,  4 Apr 2019 08:55:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5924217D4;
+        Thu,  4 Apr 2019 08:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368132;
-        bh=kqLKYtvM22l4cbA3Uq0iKUzBH2Mm0w5EkAZWtCkpEaA=;
+        s=default; t=1554368136;
+        bh=b0eRE5tpknAVu3qdxUs/ygHuZEs4Y+7wFw3QR8x+xtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m6Qxy1KDG9AQVSOTmmUSATQ+RhPuwz5Wld8yKoBaN53zGCdULtOVbfRKvXZbgkJBw
-         Q2GFqJ2nWFCYe+NY3wl5LicGOPZoCH6/hWYLBJFaXaVkgK3eFaO3sZHq3KKu3lWn5Q
-         QWUw3QifFl1cEH5h/RxallzIjeG7q1+b36TQuMIw=
+        b=BimYBiOtqWSGKNdLGcVvFcoS0QqAQsAlkR6DqhZ+1VJ/jeqFN+THrt1vi3KzF+B1v
+         e+9NSTi9Wa4sUw/eXQA6Fovpk4O/vseWILGz1g6SeGcTSr4GkOTFQ1RM1f4a0H6ZN8
+         aFYVO1VkT/WgqydsDnxAdvcch7NFMTB/+um1nnQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@elte.hu>,
-        Joel Fernandes <joelaf@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 023/121] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
-Date:   Thu,  4 Apr 2019 10:46:51 +0200
-Message-Id: <20190404084546.623023949@linuxfoundation.org>
+Subject: [PATCH 4.14 042/121] powerpc/xmon: Fix opcode being uninitialized in print_insn_powerpc
+Date:   Thu,  4 Apr 2019 10:47:10 +0200
+Message-Id: <20190404084547.565458376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -77,60 +68,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
+[ Upstream commit e7140639b1de65bba435a6bd772d134901141f86 ]
 
-One of the vmalloc stress test case triggers the kernel BUG():
+When building with -Wsometimes-uninitialized, Clang warns:
 
-  <snip>
-  [60.562151] ------------[ cut here ]------------
-  [60.562154] kernel BUG at mm/vmalloc.c:512!
-  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
-  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
-  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
-  <snip>
+  arch/powerpc/xmon/ppc-dis.c:157:7: warning: variable 'opcode' is used
+  uninitialized whenever 'if' condition is false
+  [-Wsometimes-uninitialized]
+    if (cpu_has_feature(CPU_FTRS_POWER9))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  arch/powerpc/xmon/ppc-dis.c:167:7: note: uninitialized use occurs here
+    if (opcode == NULL)
+        ^~~~~~
+  arch/powerpc/xmon/ppc-dis.c:157:3: note: remove the 'if' if its
+  condition is always true
+    if (cpu_has_feature(CPU_FTRS_POWER9))
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  arch/powerpc/xmon/ppc-dis.c:132:38: note: initialize the variable
+  'opcode' to silence this warning
+    const struct powerpc_opcode *opcode;
+                                       ^
+                                        = NULL
+  1 warning generated.
 
-it can happen due to big align request resulting in overflowing of
-calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
+This warning seems to make no sense on the surface because opcode is set
+to NULL right below this statement. However, there is a comma instead of
+semicolon to end the dialect assignment, meaning that the opcode
+assignment only happens in the if statement. Properly terminate that
+line so that Clang no longer warns.
 
-Fix it by checking if calculated address is within vstart/vend range.
-
-Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Thomas Garnier <thgarnie@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 5b102782c7f4 ("powerpc/xmon: Enable disassembly files (compilation changes)")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/vmalloc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/xmon/ppc-dis.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 8d9f636d0c98..6c906f6f16cc 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -498,7 +498,11 @@ nocache:
- 	}
+diff --git a/arch/powerpc/xmon/ppc-dis.c b/arch/powerpc/xmon/ppc-dis.c
+index 31db8c072acd..006c7f864f65 100644
+--- a/arch/powerpc/xmon/ppc-dis.c
++++ b/arch/powerpc/xmon/ppc-dis.c
+@@ -162,7 +162,7 @@ int print_insn_powerpc (unsigned long insn, unsigned long memaddr)
+     dialect |= (PPC_OPCODE_POWER5 | PPC_OPCODE_POWER6 | PPC_OPCODE_POWER7
+ 		| PPC_OPCODE_POWER8 | PPC_OPCODE_POWER9 | PPC_OPCODE_HTM
+ 		| PPC_OPCODE_ALTIVEC | PPC_OPCODE_ALTIVEC2
+-		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3),
++		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3);
  
- found:
--	if (addr + size > vend)
-+	/*
-+	 * Check also calculated address against the vstart,
-+	 * because it can be 0 because of big align request.
-+	 */
-+	if (addr + size > vend || addr < vstart)
- 		goto overflow;
- 
- 	va->va_start = addr;
+   /* Get the major opcode of the insn.  */
+   opcode = NULL;
 -- 
 2.19.1
 
