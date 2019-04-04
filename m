@@ -2,143 +2,163 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699C9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9891C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35ABD20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E00B20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:07:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CAT/eN5G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQ0v5O9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfDDIGj (ORCPT
+        id S1727323AbfDDIHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:06:39 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:53372 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDDIGi (ORCPT
+        Thu, 4 Apr 2019 04:07:06 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37088 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbfDDIHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:06:38 -0400
-Received: by mail-it1-f196.google.com with SMTP id y204so2347642itf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:06:38 -0700 (PDT)
+        Thu, 4 Apr 2019 04:07:05 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w23so770369ply.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=shJdvdGb88860d31wYHMujcMhegndt2m1bOdjIXO+xc=;
-        b=CAT/eN5GQvaUHT/B2oGu2uy902nw2xGiQS04eueuNNfsLLiZ2sZrq1djYQUxHf2ud/
-         n4+1n183QmzwuTPCPClOc+3NaDZIGu3NXptqhAeWzIfBCO4KxPmkBN7QdpGxr02T7WrS
-         5q5MxVvuAl8Hm1ON1Npt1S9VcGhvzKXMtlWpIe24EHTKYIYYcuGISN43xxMMhRiM9tmk
-         TIk2vubJ5B2kxfOOK+yASqUse32MZmoGeqyeS25U8XCv1D+SQIZI85Q6aWOrDxm0MjB4
-         xDf4yd/TjtKrulVw5KQ9WvR7RsC3GO5GQH/tEXLTJb3SlTvGxCp9FKYPkw6wHaP1wIcj
-         DsrQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=X5EjowjeZ3lBCaiOxRkIEY3EgwtWt+4pPPGinUjsGf0=;
+        b=ZQ0v5O9TBvpHSZWD1HXxvJy3G27safHY07lxtBzZc0TsvglUPkaCctkATHKclz9/0I
+         DPaGgB7voUEjbPbAYR38btNBdH3SII2DxiWhNhn91DnE+ZwQkRncAwWuUpVLDI0EnQbA
+         l5+vNtyfHgk946oXNrRbmuvjo0azGoBs9Hy/AMt/bv2MbfyenYW4urdN2jD+MrxqVmv8
+         pi4j8qGQ4HaN7AEFq/ubJ5+M0gyA0CX+vaDq0YpyexgM0I+a+agFFZuzzggG4Z7wqaAO
+         xLDEFA/gOQcS2kVqsb1GnmmqvMf+OKqOwj51rxF9T6f3aBaX2jCppeqllJgwy1t31K8N
+         wXYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=shJdvdGb88860d31wYHMujcMhegndt2m1bOdjIXO+xc=;
-        b=jUSpx6MpY4YKBrNds4UiJVbeM9WtROnVyF6Iw4KapXUR2AM+vKQc2n6EWKVxCtL4ML
-         7K89xF3BgF1iRZt7RyFL/vJGuXsWK7vGS6LIf4gMTI1cKgOvdQ2FvmvWLxIn8odlDdMD
-         oNx537ulDFSa3Kfg9lMMxnhi/IeVgrE3Fi5ejBWx4YxiYs98dEBLdhHo3ITlS9/Djod6
-         2KTg7glgPmITWmaxB6oK5YQSJKOrw4mIxtKKqozLKX+qgL37cOFjqRgAajqsbGf0i3TK
-         PdvLq6YhfrtNg+NCzvag8Q/DZ5sJvzwksBZiJX+jtZnrPohG7AIuOqX2hU9lC0QB0VFt
-         iEyw==
-X-Gm-Message-State: APjAAAW/+kBe6r0aG7ieNswEQH4I5ZraI7OuJNP115Vx9piMTaxEipR3
-        ltEqekSNK1qeW9Bg1cjmLiy2hw==
-X-Google-Smtp-Source: APXvYqxnNjN8K03nxu262Y9rYxDVOZyo44d73RJ8HFDjE227lUwvptExYSziV+j6FXd2h9oXxm68Mw==
-X-Received: by 2002:a02:1cc1:: with SMTP id c184mr3629232jac.97.1554365197844;
-        Thu, 04 Apr 2019 01:06:37 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id u19sm8172086iol.16.2019.04.04.01.06.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 01:06:36 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 09:06:23 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
-Message-ID: <20190404080623.GJ6830@dell>
-References: <20190403073152.GM4187@dell>
- <20190403084732.GA3493@localhost.localdomain>
- <20190403093015.GJ11301@dell>
- <20190403101003.GC3493@localhost.localdomain>
- <20190403112559.GP11301@dell>
- <85b20828bb4fb51e6df1d5d9d1c1f667db3a7c48.camel@fi.rohmeurope.com>
- <20190404025234.GB6830@dell>
- <6775a75d1ee3ab96123d84b077881beedc358d12.camel@fi.rohmeurope.com>
- <20190404065452.GD6830@dell>
- <20190404072449.GE3493@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190404072449.GE3493@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=X5EjowjeZ3lBCaiOxRkIEY3EgwtWt+4pPPGinUjsGf0=;
+        b=o/tqt2nndCBQkvFlzZOH6xtwDuv3TdpgXFxGbM/BWeiJGiK9vVZQ1uIZamdm9JP2D6
+         8wTHhUD63V5mOJwqFkHmucx10kB+zEufGLZT6xmVb2RyhoDgFi3Iuo8nBBlNCmA+/NhY
+         LZ3rR6OM4psp2OFu9lrD+df+906k6YEtiwEuO8FvZvrp/ucHArjddPedUFXnkzQZZcR1
+         qUWOJ+ea5iV9DmDyjuxY7r7NnU4GLFGlwckbi/edmc2iPcYWAonSNhGGYa0E5pb8gjSR
+         h5maKlI43JZu+WNaP9YD9vx+pUgwl4QLR8haeCQq8asezHd9/f0mF+xWqDyFiMCY55IA
+         Iwjw==
+X-Gm-Message-State: APjAAAWs7YKnokhVA1QGky12AbeW7SjI8YIdXPseAYuVuyNFRpUdsM6n
+        ciZg2piU4PVqJvwWJlbUvZ4TYA==
+X-Google-Smtp-Source: APXvYqzTKJX8dl5Tw5XFicD9if4J/2Ic5jaAAv+ky4WB10lY0m8hLnMfKi7rYQb3A8FWQIFn8jlcqg==
+X-Received: by 2002:a17:902:bd41:: with SMTP id b1mr4951965plx.221.1554365224645;
+        Thu, 04 Apr 2019 01:07:04 -0700 (PDT)
+Received: from mai.imgcgcw.net ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id x9sm32380940pfn.60.2019.04.04.01.07.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 01:07:03 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     andrew.smirnov@gmail.com
+Cc:     linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH RFC 1/2] thermal/drivers/of: Add a get_temp_id callback function
+Date:   Thu,  4 Apr 2019 10:06:46 +0200
+Message-Id: <20190404080647.8173-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <00a5711b-5120-9e77-91a0-e0cbab456d92@linaro.org>
+References: <00a5711b-5120-9e77-91a0-e0cbab456d92@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > ROHM. Also, I am not terribly excited about the option of changing this
-> > > back to function-pointer as I already removed the pointer from parent
-> > > data and this changed parent data is already adapted to all sub drivers
-> > > - so this is all just babbling. Maybe it is just my huge ego shouting
-> > > there - 'I was right, I must have the final say'.
-> > 
-> > No, a call-back function would be a back-step.
-> 
-> You are probably right.
-> 
-> > Ego or no ego, you're wrong. =:-D
-> 
-> I'd rephrase that as "It's not that I am wrong, but you are right." =)
+Currently when we register a sensor, we specify the sensor id and a data
+pointer to be passed when the get_temp function is called. However the
+sensor_id is not passed to the get_temp callback forcing the driver to
+do extra allocation and adding back pointer to find out from the sensor
+information the driver data and then back to the sensor id.
 
-Works for me.
+Add a new callback get_temp_id() which will be called if set. It will
+call the get_temp_id() with the sensor id.
 
-> > > As a side note, I already did submit v12 with other styling fixes but
-> > > which left the WDT function in MFD. If you still see the WDT functions
-> > > should be exported from WDT - then please ignore the v12. I'll do v13
-> > > at the afternoon (my time, which is only a bit after noon your time I
-> > > guess) which will export these functions from WDT. (Well, I had to try
-> > > once more :D)
-> > 
-> > Please keep the WDT code in the WDT driver.  Create a little stub for
-> > the cases where the WDT driver is not enabled - job done.
-> 
-> Yes Sir.
+That will be more consistent with the registering function.
 
-=;-)
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/of-thermal.c | 19 +++++++++++++------
+ include/linux/thermal.h      |  1 +
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index 2df059cc07e2..787d1cbe13f3 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -78,6 +78,8 @@ struct __thermal_zone {
+ 
+ 	/* sensor interface */
+ 	void *sensor_data;
++	int sensor_id;
++
+ 	const struct thermal_zone_of_device_ops *ops;
+ };
+ 
+@@ -88,10 +90,14 @@ static int of_thermal_get_temp(struct thermal_zone_device *tz,
+ {
+ 	struct __thermal_zone *data = tz->devdata;
+ 
+-	if (!data->ops->get_temp)
+-		return -EINVAL;
++	if (data->ops->get_temp)
++		return data->ops->get_temp(data->sensor_data, temp);
+ 
+-	return data->ops->get_temp(data->sensor_data, temp);
++	if (data->ops->get_temp_id)
++		return data->ops->get_temp_id(data->sensor_id,
++					      data->sensor_data, temp);
++
++	return -EINVAL;
+ }
+ 
+ static int of_thermal_set_trips(struct thermal_zone_device *tz,
+@@ -407,8 +413,8 @@ static struct thermal_zone_device_ops of_thermal_ops = {
+ /***   sensor API   ***/
+ 
+ static struct thermal_zone_device *
+-thermal_zone_of_add_sensor(struct device_node *zone,
+-			   struct device_node *sensor, void *data,
++thermal_zone_of_add_sensor(struct device_node *zone, struct device_node *sensor,
++			   int sensor_id, void *data,
+ 			   const struct thermal_zone_of_device_ops *ops)
+ {
+ 	struct thermal_zone_device *tzd;
+@@ -426,6 +432,7 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+ 	mutex_lock(&tzd->lock);
+ 	tz->ops = ops;
+ 	tz->sensor_data = data;
++	tz->sensor_id = sensor_id;
+ 
+ 	tzd->ops->get_temp = of_thermal_get_temp;
+ 	tzd->ops->get_trend = of_thermal_get_trend;
+@@ -516,7 +523,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+ 		}
+ 
+ 		if (sensor_specs.np == sensor_np && id == sensor_id) {
+-			tzd = thermal_zone_of_add_sensor(child, sensor_np,
++			tzd = thermal_zone_of_add_sensor(child, sensor_np, sensor_id,
+ 							 data, ops);
+ 			if (!IS_ERR(tzd))
+ 				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index 5f4705f46c2f..2762d7e6dd86 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -351,6 +351,7 @@ struct thermal_genl_event {
+  *		   hardware.
+  */
+ struct thermal_zone_of_device_ops {
++	int (*get_temp_id)(int, void *, int *);
+ 	int (*get_temp)(void *, int *);
+ 	int (*get_trend)(void *, int, enum thermal_trend *);
+ 	int (*set_trips)(void *, int, int);
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
