@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB8DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20067C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA0A217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1EA3217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368116;
-	bh=/Yo1mGTtFv67WJrWjV208qxiKij7FZQemelRpoEFmgA=;
+	s=default; t=1554368121;
+	bh=FMVVaGvFtVSgZApcofTydT3nCShyD/NF9XvMig0I8gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zKkMRXsPpetTCBivbPxwmhiWjKukoIxvUQjTpHsLgsHK/AmnhV5OCG3mjdUXtznJ3
-	 +gHtOA/xBHFlf1fxN+Th5+fwSJ1VqA8LYiaECCXjTMFTPbZ+QUHTq+KEKlR2SLtEaH
-	 baOD1qpHE73InhUsiDwFCsd3siRaAjoXcW4dKoBs=
+	b=ZM/S9Bx7/dkq65/IkF+9KH1WZpeQqKWRFaJk6L79jX1PBSV1f/FvY2iirsnw62D1Z
+	 TmlHHJmqa9Zo3CAgMwALA5ORtWIL6yFmoQJ6tOh/k7oesBsuvahKfMVJZUNdm5NJPO
+	 q84iXqcQZk9sPzwtjNFUPqotoYBQIoVd6jlFzjEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbfDDIzO (ORCPT
+        id S1730269AbfDDIzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729275AbfDDIzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:09 -0400
+        id S1729490AbfDDIzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CB47217D4;
-        Thu,  4 Apr 2019 08:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B0FD217D4;
+        Thu,  4 Apr 2019 08:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368108;
-        bh=/Yo1mGTtFv67WJrWjV208qxiKij7FZQemelRpoEFmgA=;
+        s=default; t=1554368113;
+        bh=FMVVaGvFtVSgZApcofTydT3nCShyD/NF9XvMig0I8gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAjgurd9B4cMFOrkpc73N+2gPept021agn4W5+cG1Dsp+eW2Rm0KSMezeNFDSgLhh
-         r71UH8gSqtzXX4PhxsTjNJ9VIoZcE+mK4MAUGH4SAZUTCWwtY4atZoeyFGf/IzI4of
-         CkOPcwhEh+PrQB4Tn8atu9qAG2fUyc3RC6RWGMXQ=
+        b=mAxzpDDCDdXKULTVCGpqczqo0CRTIU6zrPBdqYf2+ZDLNMpzQwbR7GGjC/PmpnPuN
+         ELE3a1wsBe6blofLbB5tUKWukHD7Zguuo5op7PLWqkoSzMdmcQrADX7gzxSxFrZ1KC
+         OqzU4ho/gSwihKlu5QlgyynLrYIB2YakYxqKCZZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Peter Chen <peter.chen@nxp.com>,
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 040/121] usb: chipidea: Grab the (legacy) USB PHY by phandle first
-Date:   Thu,  4 Apr 2019 10:47:08 +0200
-Message-Id: <20190404084547.470168311@linuxfoundation.org>
+Subject: [PATCH 4.14 026/121] f2fs: do not use mutex lock in atomic context
+Date:   Thu,  4 Apr 2019 10:46:54 +0200
+Message-Id: <20190404084546.776090316@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,55 +66,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
+[ Upstream commit 9083977dabf3833298ddcd40dee28687f1e6b483 ]
 
-According to the chipidea driver bindings, the USB PHY is specified via
-the "phys" phandle node. However, this only takes effect for USB PHYs
-that use the common PHY framework. For legacy USB PHYs, a simple lookup
-based on the USB PHY type is done instead.
+Fix below warning coming because of using mutex lock in atomic context.
 
-This does not play out well when more than one USB PHY is registered,
-since the first registered PHY matching the type will always be
-returned regardless of what the driver was bound to.
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:98
+in_atomic(): 1, irqs_disabled(): 0, pid: 585, name: sh
+Preemption disabled at: __radix_tree_preload+0x28/0x130
+Call trace:
+ dump_backtrace+0x0/0x2b4
+ show_stack+0x20/0x28
+ dump_stack+0xa8/0xe0
+ ___might_sleep+0x144/0x194
+ __might_sleep+0x58/0x8c
+ mutex_lock+0x2c/0x48
+ f2fs_trace_pid+0x88/0x14c
+ f2fs_set_node_page_dirty+0xd0/0x184
 
-Fix this by looking up the PHY based on the "phys" phandle node.
-Although generic PHYs are rather matched by their "phys-name" and not
-the "phys" phandle directly, there is no helper for similar lookup on
-legacy PHYs and it's probably not worth the effort to add it.
+Do not use f2fs_radix_tree_insert() to avoid doing cond_resched() with
+spin_lock() acquired.
 
-When no legacy USB PHY is found by phandle, fallback to grabbing any
-registered USB2 PHY. This ensures backward compatibility if some users
-were actually relying on this mechanism.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/f2fs/trace.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 43ea5fb87b9a..70306ae039c0 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -938,8 +938,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	} else if (ci->platdata->usb_phy) {
- 		ci->usb_phy = ci->platdata->usb_phy;
- 	} else {
-+		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
-+							  0);
- 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
--		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
-+
-+		/* Fallback to grabbing any registered USB2 PHY */
-+		if (IS_ERR(ci->usb_phy) &&
-+		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
-+			ci->usb_phy = devm_usb_get_phy(dev->parent,
-+						       USB_PHY_TYPE_USB2);
+diff --git a/fs/f2fs/trace.c b/fs/f2fs/trace.c
+index bccbbf2616d2..8ac1851a21c0 100644
+--- a/fs/f2fs/trace.c
++++ b/fs/f2fs/trace.c
+@@ -61,6 +61,7 @@ void f2fs_trace_pid(struct page *page)
  
- 		/* if both generic PHY and USB PHY layers aren't enabled */
- 		if (PTR_ERR(ci->phy) == -ENOSYS &&
+ 	set_page_private(page, (unsigned long)pid);
+ 
++retry:
+ 	if (radix_tree_preload(GFP_NOFS))
+ 		return;
+ 
+@@ -71,7 +72,12 @@ void f2fs_trace_pid(struct page *page)
+ 	if (p)
+ 		radix_tree_delete(&pids, pid);
+ 
+-	f2fs_radix_tree_insert(&pids, pid, current);
++	if (radix_tree_insert(&pids, pid, current)) {
++		spin_unlock(&pids_lock);
++		radix_tree_preload_end();
++		cond_resched();
++		goto retry;
++	}
+ 
+ 	trace_printk("%3x:%3x %4x %-16s\n",
+ 			MAJOR(inode->i_sb->s_dev), MINOR(inode->i_sb->s_dev),
 -- 
 2.19.1
 
