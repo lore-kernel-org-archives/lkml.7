@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866C0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83267C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5825F20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C7B20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369368;
-	bh=oE70Pctxw4FtaVIQz5zH0c9BpOmvUaup7sy04pBiwWU=;
+	s=default; t=1554369370;
+	bh=BbJslJw2A8arY/D7VGkoQqi87TcgSVDRjo0Ue8XeHOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2kkvgWQNbcS0h82vYPUnf36nUI/NVeDTzbgZd5ySX2m0LlMNz9K+DCq5+BjsM8Ean
-	 R+4g5aTcYUhobxPKschOTSry4bFznduGxVU0FscvLtVeHMMSy/H+Xuh7yKLcqGdq1z
-	 lpzy+Gry3k4fT8odxKH8nsFo99n+qLWZWtjxCGkI=
+	b=DBAzM8KzQ1J+se1mYBVVx+nV7u8/YbMT2R83oihcJ3TWN7hGYx80ZfyZSa2qewpEM
+	 7USnVIdOtqALLEgansbk9YgM/OcZN3kCJhR/No6sDjtt3+E5/EPSeZmrObRoG+Gduv
+	 QNAL9oCCvuZWc3ui7NEkeyu975PG0EBB5W0/4ObM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387994AbfDDJQG (ORCPT
+        id S2387600AbfDDJQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57184 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387975AbfDDJQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:01 -0400
+        id S2387993AbfDDJQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AF782075E;
-        Thu,  4 Apr 2019 09:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A0920652;
+        Thu,  4 Apr 2019 09:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369360;
-        bh=oE70Pctxw4FtaVIQz5zH0c9BpOmvUaup7sy04pBiwWU=;
+        s=default; t=1554369365;
+        bh=BbJslJw2A8arY/D7VGkoQqi87TcgSVDRjo0Ue8XeHOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tnp3c3ntwiBFXgyVpNaO1GSn436nVeLyFeivZFHSOpnuzWlBssDx0l9rZNfvqGsi6
-         Mp0Wkw5HlGrtBkxEmdS2vOd5sEZPjHo0qNlQAMcD/AzkZwFmMsVnlquGvCQkzrlpKM
-         R4v1h/xm4ECNRKPtXO1SIInzK4cFFNto7Q7nECcE=
+        b=B1V/nBh4lbpwbNJmV1nWJXPd9RDc1vL5RrivI8FfGcig1/KZ2LsAiRKxfpgYxcJkp
+         fdOJ+TwqMoNMIJQcFmD3q8YPZ1t+KrF8Prc1HDmqU8b8GJatBfGOi4sH8DTx6XYQfk
+         3FbN7npR402uJtllwBylZ9UCFondLxyWFKXFsXdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        "Michael W. Bringmann" <mwb@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 194/246] powerpc/pseries: Perform full re-add of CPU for topology update post-migration
-Date:   Thu,  4 Apr 2019 10:48:14 +0200
-Message-Id: <20190404084625.979616695@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 196/246] ALSA: dice: add support for Solid State Logic Duende Classic/Mini
+Date:   Thu,  4 Apr 2019 10:48:16 +0200
+Message-Id: <20190404084626.050030033@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,107 +65,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 81b61324922c67f73813d8a9c175f3c153f6a1c6 ]
+[ Upstream commit b2e9e1c8810ee05c95f4d55800b8afae70ab01b4 ]
 
-On pseries systems, performing a partition migration can result in
-altering the nodes a CPU is assigned to on the destination system. For
-exampl, pre-migration on the source system CPUs are in node 1 and 3,
-post-migration on the destination system CPUs are in nodes 2 and 3.
+Duende Classic was produced by Solid State Logic in 2006, as a
+first model of Duende DSP series. The following model, Duende Mini
+was produced in 2008. They are designed to receive isochronous
+packets for PCM frames via IEEE 1394 bus, perform signal processing by
+downloaded program, then transfer isochronous packets for converted
+PCM frames.
 
-Handling the node change for a CPU can cause corruption in the slab
-cache if we hit a timing where a CPUs node is changed while cache_reap()
-is invoked. The corruption occurs because the slab cache code appears
-to rely on the CPU and slab cache pages being on the same node.
+These two models includes the same embedded board, consists of several
+ICs below:
+ - Texus Instruments Inc, TSB41AB3 for physical layer of IEEE 1394 bus
+ - WaveFront semiconductor, DICE II STD ASIC for link/protocol layer
+ - Altera MAX 3000A CPLD for programs
+ - Analog devices, SHARC ADSP-21363 for signal processing (4 chips)
 
-The current dynamic updating of a CPUs node done in arch/powerpc/mm/numa.c
-does not prevent us from hitting this scenario.
+This commit adds support for the two models to ALSA dice driver. Like
+support for the other devices, packet streaming is just available.
+Userspace applications should be developed if full features became
+available; e.g. program uploader and parameter controller.
 
-Changing the device tree property update notification handler that
-recognizes an affinity change for a CPU to do a full DLPAR remove and
-add of the CPU instead of dynamically changing its node resolves this
-issue.
+$ ./hinawa-config-rom-printer /dev/fw1
+{ 'bus-info': { 'adj': False,
+                'bmc': False,
+                'chip_ID': 349771402425,
+                'cmc': True,
+                'cyc_clk_acc': 255,
+                'generation': 1,
+                'imc': True,
+                'isc': True,
+                'link_spd': 2,
+                'max_ROM': 1,
+                'max_rec': 512,
+                'name': '1394',
+                'node_vendor_ID': 20674,
+                'pmc': False},
+  'root-directory': [ ['VENDOR', 20674],
+                      ['DESCRIPTOR', 'Solid State Logic'],
+                      ['MODEL', 112],
+                      ['DESCRIPTOR', 'Duende board'],
+                      [ 'NODE_CAPABILITIES',
+                        { 'addressing': {'64': True, 'fix': True, 'prv': True},
+                          'misc': {'int': False, 'ms': False, 'spt': True},
+                          'state': { 'atn': False,
+                                     'ded': False,
+                                     'drq': True,
+                                     'elo': False,
+                                     'init': False,
+                                     'lst': True,
+                                     'off': False},
+                          'testing': {'bas': False, 'ext': False}}],
+                      [ 'UNIT',
+                        [ ['SPECIFIER_ID', 20674],
+                          ['VERSION', 1],
+                          ['MODEL', 112],
+                          ['DESCRIPTOR', 'Duende board']]]]}
 
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Signed-off-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
-Tested-by: Michael W. Bringmann <mwb@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/topology.h          |  2 ++
- arch/powerpc/mm/numa.c                       |  9 +--------
- arch/powerpc/platforms/pseries/hotplug-cpu.c | 19 +++++++++++++++++++
- 3 files changed, 22 insertions(+), 8 deletions(-)
+ sound/firewire/dice/dice.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index a4a718dbfec6..f85e2b01c3df 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -132,6 +132,8 @@ static inline void shared_proc_topology_init(void) {}
- #define topology_sibling_cpumask(cpu)	(per_cpu(cpu_sibling_map, cpu))
- #define topology_core_cpumask(cpu)	(per_cpu(cpu_core_map, cpu))
- #define topology_core_id(cpu)		(cpu_to_core_id(cpu))
-+
-+int dlpar_cpu_readd(int cpu);
- #endif
- #endif
+diff --git a/sound/firewire/dice/dice.c b/sound/firewire/dice/dice.c
+index ed50b222d36e..eee184b05d93 100644
+--- a/sound/firewire/dice/dice.c
++++ b/sound/firewire/dice/dice.c
+@@ -18,6 +18,7 @@ MODULE_LICENSE("GPL v2");
+ #define OUI_ALESIS		0x000595
+ #define OUI_MAUDIO		0x000d6c
+ #define OUI_MYTEK		0x001ee8
++#define OUI_SSL			0x0050c2	// Actually ID reserved by IEEE.
  
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 87f0dd004295..b5d1c45c1475 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1460,13 +1460,6 @@ static void reset_topology_timer(void)
+ #define DICE_CATEGORY_ID	0x04
+ #define WEISS_CATEGORY_ID	0x00
+@@ -196,7 +197,7 @@ static int dice_probe(struct fw_unit *unit,
+ 	struct snd_dice *dice;
+ 	int err;
  
- #ifdef CONFIG_SMP
- 
--static void stage_topology_update(int core_id)
--{
--	cpumask_or(&cpu_associativity_changes_mask,
--		&cpu_associativity_changes_mask, cpu_sibling_mask(core_id));
--	reset_topology_timer();
--}
--
- static int dt_update_callback(struct notifier_block *nb,
- 				unsigned long action, void *data)
- {
-@@ -1479,7 +1472,7 @@ static int dt_update_callback(struct notifier_block *nb,
- 		    !of_prop_cmp(update->prop->name, "ibm,associativity")) {
- 			u32 core_id;
- 			of_property_read_u32(update->dn, "reg", &core_id);
--			stage_topology_update(core_id);
-+			rc = dlpar_cpu_readd(core_id);
- 			rc = NOTIFY_OK;
- 		}
- 		break;
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index 2f8e62163602..97feb6e79f1a 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -802,6 +802,25 @@ static int dlpar_cpu_add_by_count(u32 cpus_to_add)
- 	return rc;
- }
- 
-+int dlpar_cpu_readd(int cpu)
-+{
-+	struct device_node *dn;
-+	struct device *dev;
-+	u32 drc_index;
-+	int rc;
-+
-+	dev = get_cpu_device(cpu);
-+	dn = dev->of_node;
-+
-+	rc = of_property_read_u32(dn, "ibm,my-drc-index", &drc_index);
-+
-+	rc = dlpar_cpu_remove_by_index(drc_index);
-+	if (!rc)
-+		rc = dlpar_cpu_add(drc_index);
-+
-+	return rc;
-+}
-+
- int dlpar_cpu(struct pseries_hp_errorlog *hp_elog)
- {
- 	u32 count, drc_index;
+-	if (!entry->driver_data) {
++	if (!entry->driver_data && entry->vendor_id != OUI_SSL) {
+ 		err = check_dice_category(unit);
+ 		if (err < 0)
+ 			return -ENODEV;
+@@ -361,6 +362,15 @@ static const struct ieee1394_device_id dice_id_table[] = {
+ 		.model_id	= 0x000002,
+ 		.driver_data = (kernel_ulong_t)snd_dice_detect_mytek_formats,
+ 	},
++	// Solid State Logic, Duende Classic and Mini.
++	// NOTE: each field of GUID in config ROM is not compliant to standard
++	// DICE scheme.
++	{
++		.match_flags	= IEEE1394_MATCH_VENDOR_ID |
++				  IEEE1394_MATCH_MODEL_ID,
++		.vendor_id	= OUI_SSL,
++		.model_id	= 0x000070,
++	},
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VERSION,
+ 		.version     = DICE_INTERFACE,
 -- 
 2.19.1
 
