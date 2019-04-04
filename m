@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9061CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2008CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59C772147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF16214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554386320;
-	bh=Z8G3lPmYeQDOmYE7Sl9L0GB4EOM/LxnEmySxhWKBHus=;
+	s=default; t=1554386321;
+	bh=qiTSqO/gM+L9pidfbgcNdBuapGGyPTLqNknNc1RIcaM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ucjGrPLDlpGwjYuBzQD9dVzBeqsnQ152kAc72CVSzSbVZYslDSp3VUqwWIMS/Wzy7
-	 aaZ39rZ1jK++AxR+cmkuvGQZzOmyzErcV+vAx+urPseeb53MaiPbdMx1E/oFtrq73w
-	 acCn41tT0d6js9OaukmbmN2WNitEMJniYsDfkkDY=
+	b=i6sCjWHbvr+joqWUyZozu2uUc+Oncg8x7hg40uS+sKzHAi60H+tLDqu5GtGn5YHg4
+	 2oFr3POWZ8jhqfseVDi1VV0OemlvTnbdO4MiXnkMWald5owt485BlNh3SZE7k6CzFj
+	 ouADExJrA8Fok/A38agfw3Qmm/zNXV8CuSpcMpyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbfDDN6j (ORCPT
+        id S1729122AbfDDN6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:58:39 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60098 "EHLO
+        Thu, 4 Apr 2019 09:58:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60132 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727258AbfDDN6i (ORCPT
+        with ESMTP id S1727333AbfDDN6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:58:38 -0400
+        Thu, 4 Apr 2019 09:58:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=v+Xa6dbmJr7fu6i2szrVrzRxJBaSR2eZR3VTI8mWacs=; b=QnmhC/CZiLvQ
-        LPnA5ztNwVqTaJf84QlBwff7uWn8qsr+WnDJZ1v2sIioQTQGgqdtcaFiUG5YQPbxohfF6B7LA+ung
-        RWNI5SEFkdDU2dU7JpnW8vD9cZuh6lNQ+3k9Vp48CKgQbuTllqbWSFLe0v/Lu5LiCwFTs6rX0xTmR
-        t1gUk=;
+        List-Archive; bh=GrTSV5jZslXZdtu5m74k9QkD/GoCJoICsUDJGagf9FA=; b=bin5ljpS4K5o
+        GaLyRXBQ1OBCWTBxUJekifecX27qgHVMLX1u7ejaORsyuR+wjR51maiJv/SWCMiSY1KDeFZYPGDHa
+        opWQ9I3pF71pGlebq3wR6509nnDITeqFETymC6uikachFSPuvWAdO+Sa3RvalkS6Uj43LyaC3OC6+
+        /gDoQ=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hC2sn-0006cu-Fo; Thu, 04 Apr 2019 13:58:21 +0000
+        id 1hC2sp-0006cv-D6; Thu, 04 Apr 2019 13:58:23 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id E959C441D3B; Thu,  4 Apr 2019 20:58:17 +0700 (+07)
+        id B9248441D3C; Thu,  4 Apr 2019 20:58:20 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Olivier Moysan <olivier.moysan@st.com>
 Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
@@ -56,11 +56,11 @@ Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
         linux-kernel@vger.kernel.org, olivier.moysan@st.com,
         arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
         apatard@mandriva.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: cs42l51: add adc volume control" to the asoc tree
-In-Reply-To:  <1554297817-14154-8-git-send-email-olivier.moysan@st.com>
+Subject: Applied "ASoC: cs42l51: add power management" to the asoc tree
+In-Reply-To:  <1554297817-14154-7-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190404135817.E959C441D3B@finisterre.ee.mobilebroadband>
-Date:   Thu,  4 Apr 2019 20:58:17 +0700 (+07)
+Message-Id: <20190404135820.B9248441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu,  4 Apr 2019 20:58:20 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cs42l51: add adc volume control
+   ASoC: cs42l51: add power management
 
 has been applied to the asoc tree at
 
@@ -93,40 +93,218 @@ to this mail.
 Thanks,
 Mark
 
-From e04232c38190ec4485c62ceff94cf2b1c0caba20 Mon Sep 17 00:00:00 2001
+From 75a714823e89ceeb168092b4c4d0a3f52b415461 Mon Sep 17 00:00:00 2001
 From: Olivier Moysan <olivier.moysan@st.com>
-Date: Wed, 3 Apr 2019 15:23:37 +0200
-Subject: [PATCH] ASoC: cs42l51: add adc volume control
+Date: Wed, 3 Apr 2019 15:23:36 +0200
+Subject: [PATCH] ASoC: cs42l51: add power management
 
-Add ADC boost volume control for CS42L51 codec.
+Add sleep PM callbacks to support system low power modes.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/cs42l51.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/codecs/cs42l51-i2c.c |   7 +-
+ sound/soc/codecs/cs42l51.c     | 122 +++++++++++++++++++++++++++++++++
+ sound/soc/codecs/cs42l51.h     |   2 +
+ 3 files changed, 129 insertions(+), 2 deletions(-)
 
+diff --git a/sound/soc/codecs/cs42l51-i2c.c b/sound/soc/codecs/cs42l51-i2c.c
+index 8333dbf18ea2..116221e581ce 100644
+--- a/sound/soc/codecs/cs42l51-i2c.c
++++ b/sound/soc/codecs/cs42l51-i2c.c
+@@ -29,8 +29,6 @@ static int cs42l51_i2c_probe(struct i2c_client *i2c,
+ 	struct regmap_config config;
+ 
+ 	config = cs42l51_regmap;
+-	config.val_bits = 8;
+-	config.reg_bits = 8;
+ 
+ 	return cs42l51_probe(&i2c->dev, devm_regmap_init_i2c(i2c, &config));
+ }
+@@ -40,10 +38,15 @@ static int cs42l51_i2c_remove(struct i2c_client *i2c)
+ 	return cs42l51_remove(&i2c->dev);
+ }
+ 
++static const struct dev_pm_ops cs42l51_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(cs42l51_suspend, cs42l51_resume)
++};
++
+ static struct i2c_driver cs42l51_i2c_driver = {
+ 	.driver = {
+ 		.name = "cs42l51",
+ 		.of_match_table = cs42l51_of_match,
++		.pm = &cs42l51_pm_ops,
+ 	},
+ 	.probe = cs42l51_i2c_probe,
+ 	.remove = cs42l51_i2c_remove,
 diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
-index b8f43858876a..58ece037d944 100644
+index 397b68901d1c..b8f43858876a 100644
 --- a/sound/soc/codecs/cs42l51.c
 +++ b/sound/soc/codecs/cs42l51.c
-@@ -123,6 +123,7 @@ static const DECLARE_TLV_DB_SCALE(tone_tlv, -1050, 150, 0);
- static const DECLARE_TLV_DB_SCALE(aout_tlv, -10200, 50, 0);
+@@ -56,6 +56,7 @@ struct cs42l51_private {
+ 	enum master_slave_mode func;
+ 	struct regulator_bulk_data supplies[ARRAY_SIZE(cs42l51_supply_names)];
+ 	struct gpio_desc *reset_gpio;
++	struct regmap *regmap;
+ };
  
- static const DECLARE_TLV_DB_SCALE(boost_tlv, 1600, 1600, 0);
-+static const DECLARE_TLV_DB_SCALE(adc_boost_tlv, 2000, 2000, 0);
- static const char *chan_mix[] = {
- 	"L R",
- 	"L+R",
-@@ -151,6 +152,8 @@ static const struct snd_kcontrol_new cs42l51_snd_controls[] = {
- 	SOC_SINGLE("Zero Cross Switch", CS42L51_DAC_CTL, 0, 0, 0),
- 	SOC_DOUBLE_TLV("Mic Boost Volume",
- 			CS42L51_MIC_CTL, 0, 1, 1, 0, boost_tlv),
-+	SOC_DOUBLE_TLV("ADC Boost Volume",
-+		       CS42L51_MIC_CTL, 5, 6, 1, 0, adc_boost_tlv),
- 	SOC_SINGLE_TLV("Bass Volume", CS42L51_TONE_CTL, 0, 0xf, 1, tone_tlv),
- 	SOC_SINGLE_TLV("Treble Volume", CS42L51_TONE_CTL, 4, 0xf, 1, tone_tlv),
- 	SOC_ENUM_EXT("PCM channel mixer",
+ #define CS42L51_FORMATS ( \
+@@ -575,7 +576,106 @@ static const struct snd_soc_component_driver soc_component_device_cs42l51 = {
+ 	.non_legacy_dai_naming	= 1,
+ };
+ 
++static bool cs42l51_writeable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case CS42L51_POWER_CTL1:
++	case CS42L51_MIC_POWER_CTL:
++	case CS42L51_INTF_CTL:
++	case CS42L51_MIC_CTL:
++	case CS42L51_ADC_CTL:
++	case CS42L51_ADC_INPUT:
++	case CS42L51_DAC_OUT_CTL:
++	case CS42L51_DAC_CTL:
++	case CS42L51_ALC_PGA_CTL:
++	case CS42L51_ALC_PGB_CTL:
++	case CS42L51_ADCA_ATT:
++	case CS42L51_ADCB_ATT:
++	case CS42L51_ADCA_VOL:
++	case CS42L51_ADCB_VOL:
++	case CS42L51_PCMA_VOL:
++	case CS42L51_PCMB_VOL:
++	case CS42L51_BEEP_FREQ:
++	case CS42L51_BEEP_VOL:
++	case CS42L51_BEEP_CONF:
++	case CS42L51_TONE_CTL:
++	case CS42L51_AOUTA_VOL:
++	case CS42L51_AOUTB_VOL:
++	case CS42L51_PCM_MIXER:
++	case CS42L51_LIMIT_THRES_DIS:
++	case CS42L51_LIMIT_REL:
++	case CS42L51_LIMIT_ATT:
++	case CS42L51_ALC_EN:
++	case CS42L51_ALC_REL:
++	case CS42L51_ALC_THRES:
++	case CS42L51_NOISE_CONF:
++	case CS42L51_CHARGE_FREQ:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static bool cs42l51_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case CS42L51_STATUS:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static bool cs42l51_readable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case CS42L51_CHIP_REV_ID:
++	case CS42L51_POWER_CTL1:
++	case CS42L51_MIC_POWER_CTL:
++	case CS42L51_INTF_CTL:
++	case CS42L51_MIC_CTL:
++	case CS42L51_ADC_CTL:
++	case CS42L51_ADC_INPUT:
++	case CS42L51_DAC_OUT_CTL:
++	case CS42L51_DAC_CTL:
++	case CS42L51_ALC_PGA_CTL:
++	case CS42L51_ALC_PGB_CTL:
++	case CS42L51_ADCA_ATT:
++	case CS42L51_ADCB_ATT:
++	case CS42L51_ADCA_VOL:
++	case CS42L51_ADCB_VOL:
++	case CS42L51_PCMA_VOL:
++	case CS42L51_PCMB_VOL:
++	case CS42L51_BEEP_FREQ:
++	case CS42L51_BEEP_VOL:
++	case CS42L51_BEEP_CONF:
++	case CS42L51_TONE_CTL:
++	case CS42L51_AOUTA_VOL:
++	case CS42L51_AOUTB_VOL:
++	case CS42L51_PCM_MIXER:
++	case CS42L51_LIMIT_THRES_DIS:
++	case CS42L51_LIMIT_REL:
++	case CS42L51_LIMIT_ATT:
++	case CS42L51_ALC_EN:
++	case CS42L51_ALC_REL:
++	case CS42L51_ALC_THRES:
++	case CS42L51_NOISE_CONF:
++	case CS42L51_STATUS:
++	case CS42L51_CHARGE_FREQ:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ const struct regmap_config cs42l51_regmap = {
++	.reg_bits = 8,
++	.reg_stride = 1,
++	.val_bits = 8,
++	.use_single_write = true,
++	.readable_reg = cs42l51_readable_reg,
++	.volatile_reg = cs42l51_volatile_reg,
++	.writeable_reg = cs42l51_writeable_reg,
+ 	.max_register = CS42L51_CHARGE_FREQ,
+ 	.cache_type = REGCACHE_RBTREE,
+ };
+@@ -596,6 +696,7 @@ int cs42l51_probe(struct device *dev, struct regmap *regmap)
+ 		return -ENOMEM;
+ 
+ 	dev_set_drvdata(dev, cs42l51);
++	cs42l51->regmap = regmap;
+ 
+ 	cs42l51->mclk_handle = devm_clk_get(dev, "MCLK");
+ 	if (IS_ERR(cs42l51->mclk_handle)) {
+@@ -673,6 +774,27 @@ int cs42l51_remove(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(cs42l51_remove);
+ 
++int __maybe_unused cs42l51_suspend(struct device *dev)
++{
++	struct cs42l51_private *cs42l51 = dev_get_drvdata(dev);
++
++	regcache_cache_only(cs42l51->regmap, true);
++	regcache_mark_dirty(cs42l51->regmap);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(cs42l51_suspend);
++
++int __maybe_unused cs42l51_resume(struct device *dev)
++{
++	struct cs42l51_private *cs42l51 = dev_get_drvdata(dev);
++
++	regcache_cache_only(cs42l51->regmap, false);
++
++	return regcache_sync(cs42l51->regmap);
++}
++EXPORT_SYMBOL_GPL(cs42l51_resume);
++
+ const struct of_device_id cs42l51_of_match[] = {
+ 	{ .compatible = "cirrus,cs42l51", },
+ 	{ }
+diff --git a/sound/soc/codecs/cs42l51.h b/sound/soc/codecs/cs42l51.h
+index aef0ede82c7b..79dee01137c8 100644
+--- a/sound/soc/codecs/cs42l51.h
++++ b/sound/soc/codecs/cs42l51.h
+@@ -23,6 +23,8 @@ struct device;
+ extern const struct regmap_config cs42l51_regmap;
+ int cs42l51_probe(struct device *dev, struct regmap *regmap);
+ int cs42l51_remove(struct device *dev);
++int __maybe_unused cs42l51_suspend(struct device *dev);
++int __maybe_unused cs42l51_resume(struct device *dev);
+ extern const struct of_device_id cs42l51_of_match[];
+ 
+ #define CS42L51_CHIP_ID			0x1B
 -- 
 2.20.1
 
