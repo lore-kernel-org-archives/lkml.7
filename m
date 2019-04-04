@@ -7,57 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401B5C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13AAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5B22183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72732183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368811;
-	bh=zF4ja8FXQk+Ov64WOx1eAwOd9XuQkqiwqWkUsGu9QNQ=;
+	s=default; t=1554368813;
+	bh=xzvXvkrtfM/h0rsSkyA3vuJGj6xblDRKXTvSjLsT+cE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eHE8U5Gc0twuDIijMoakavNeRxjLiiv4PnAViJdqArI73rigSc6JBxS209tkhZ3Rt
-	 jxChuoMRK1r77mnr7MV9AUIEfWkv3rRZ0rb6evo1owBe/2161V2n0t1Gk+LoU38i66
-	 2Sxkx0dwHTqdHXNKd61/XS+XicGZCKkn257EbHho=
+	b=SByC/c5jR3TRXL2kslj6euXHRrQ4OPFybYE1U92+uE+sGajuqFwpSa2MgK15KhPlR
+	 Gj+Za1y0yKaUL1XxME2sUpTmr5v3tce90vVv/qGuOp6NJc/izkKpmf5bU7SblqixP7
+	 a7fD2CXg3FXTrHqHXXpeDMDnHGmP/1gj47uslvcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732398AbfDDJGu (ORCPT
+        id S1732407AbfDDJGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45356 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732121AbfDDJGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:06:46 -0400
+        id S1731941AbfDDJGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:06:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42DA3214AF;
-        Thu,  4 Apr 2019 09:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0A8721741;
+        Thu,  4 Apr 2019 09:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368805;
-        bh=zF4ja8FXQk+Ov64WOx1eAwOd9XuQkqiwqWkUsGu9QNQ=;
+        s=default; t=1554368809;
+        bh=xzvXvkrtfM/h0rsSkyA3vuJGj6xblDRKXTvSjLsT+cE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6efFuV7JAV7Bsq2EnhPP7hugeOFU8N9ttO2VUYO/dIlQJZEBOCU4VXRLGf5WPETo
-         DQEa4tOD2Ob+VzHs7T7WzYFPuuDBQqP+HY9qmMnN5DkdGdPMlcbtVtxWTomJXa1Ce3
-         Q0rnKKCOhuHAJMR+v0v/BD3HbUkxDKn+T8NpnYdQ=
+        b=emu/jmn3+E1B0r7dqpRtTWmGs+1jlsKEmCvtsHk/yQQZHU17f0IhYYL/KyrmAzG/6
+         BwhjUpCKxSi7NgSg5kPlpoUKMgfReuGW1kPcueTFkdTdEQx1c7dlWdvVs2HdfIwo3d
+         Nu/IEF1sWUzUY82vw93tJ4MLd8zg68Q36NpaZWdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
-        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Cao Jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tri Vo <trong@android.com>, morbo@google.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 177/187] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
-Date:   Thu,  4 Apr 2019 10:48:34 +0200
-Message-Id: <20190404084611.446549370@linuxfoundation.org>
+        Will Deacon <will.deacon@arm.com>, cai@gmx.us,
+        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        linux-arm-kernel@lists.infradead.org, longman@redhat.com,
+        marc.zyngier@arm.com, mark.rutland@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 162/187] cpu/hotplug: Mute hotplug lockdep during init
+Date:   Thu,  4 Apr 2019 10:48:19 +0200
+Message-Id: <20190404084610.733318212@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -76,73 +74,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
+[ Upstream commit ce48c457b95316b9a01b5aa9d4456ce820df94b4 ]
 
-Accessing per-CPU variables is done by finding the offset of the
-variable in the per-CPU block and adding it to the address of the
-respective CPU's block.
+Since we've had:
 
-Section 3.10.8 of ld.bfd's documentation states:
+  commit cb538267ea1e ("jump_label/lockdep: Assert we hold the hotplug lock for _cpuslocked() operations")
 
-  For expressions involving numbers, relative addresses and absolute
-  addresses, ld follows these rules to evaluate terms:
+we've been getting some lockdep warnings during init, such as on HiKey960:
 
-  Other binary operations, that is, between two relative addresses
-  not in the same section, or between a relative address and an
-  absolute address, first convert any non-absolute term to an
-  absolute address before applying the operator."
+[    0.820495] WARNING: CPU: 4 PID: 0 at kernel/cpu.c:316 lockdep_assert_cpus_held+0x3c/0x48
+[    0.820498] Modules linked in:
+[    0.820509] CPU: 4 PID: 0 Comm: swapper/4 Tainted: G S                4.20.0-rc5-00051-g4cae42a #34
+[    0.820511] Hardware name: HiKey960 (DT)
+[    0.820516] pstate: 600001c5 (nZCv dAIF -PAN -UAO)
+[    0.820520] pc : lockdep_assert_cpus_held+0x3c/0x48
+[    0.820523] lr : lockdep_assert_cpus_held+0x38/0x48
+[    0.820526] sp : ffff00000a9cbe50
+[    0.820528] x29: ffff00000a9cbe50 x28: 0000000000000000
+[    0.820533] x27: 00008000b69e5000 x26: ffff8000bff4cfe0
+[    0.820537] x25: ffff000008ba69e0 x24: 0000000000000001
+[    0.820541] x23: ffff000008fce000 x22: ffff000008ba70c8
+[    0.820545] x21: 0000000000000001 x20: 0000000000000003
+[    0.820548] x19: ffff00000a35d628 x18: ffffffffffffffff
+[    0.820552] x17: 0000000000000000 x16: 0000000000000000
+[    0.820556] x15: ffff00000958f848 x14: 455f3052464d4d34
+[    0.820559] x13: 00000000769dde98 x12: ffff8000bf3f65a8
+[    0.820564] x11: 0000000000000000 x10: ffff00000958f848
+[    0.820567] x9 : ffff000009592000 x8 : ffff00000958f848
+[    0.820571] x7 : ffff00000818ffa0 x6 : 0000000000000000
+[    0.820574] x5 : 0000000000000000 x4 : 0000000000000001
+[    0.820578] x3 : 0000000000000000 x2 : 0000000000000001
+[    0.820582] x1 : 00000000ffffffff x0 : 0000000000000000
+[    0.820587] Call trace:
+[    0.820591]  lockdep_assert_cpus_held+0x3c/0x48
+[    0.820598]  static_key_enable_cpuslocked+0x28/0xd0
+[    0.820606]  arch_timer_check_ool_workaround+0xe8/0x228
+[    0.820610]  arch_timer_starting_cpu+0xe4/0x2d8
+[    0.820615]  cpuhp_invoke_callback+0xe8/0xd08
+[    0.820619]  notify_cpu_starting+0x80/0xb8
+[    0.820625]  secondary_start_kernel+0x118/0x1d0
 
-Note that LLVM's linker does not adhere to the GNU ld's implementation
-and as such requires implicitly-absolute terms to be explicitly marked
-as absolute in the linker script. If not, it fails currently with:
+We've also had a similar warning in sched_init_smp() for every
+asymmetric system that would enable the sched_asym_cpucapacity static
+key, although that was singled out in:
 
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
-  Makefile:1040: recipe for target 'vmlinux' failed
+  commit 40fa3780bac2 ("sched/core: Take the hotplug lock in sched_init_smp()")
 
-This is not a functional change for ld.bfd which converts the term to an
-absolute symbol anyways as specified above.
+Those warnings are actually harmless, since we cannot have hotplug
+operations at the time they appear. Instead of starting to sprinkle
+useless hotplug lock operations in the init codepaths, mute the
+warnings until they start warning about real problems.
 
-Based on a previous submission by Tri Vo <trong@android.com>.
-
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
-[ Update commit message per Boris' and Michael's suggestions. ]
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-[ Massage commit message more, fix typos. ]
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dmitry Golovin <dima@golovin.in>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tri Vo <trong@android.com>
-Cc: dima@golovin.in
-Cc: morbo@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: cai@gmx.us
+Cc: daniel.lezcano@linaro.org
+Cc: dietmar.eggemann@arm.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: longman@redhat.com
+Cc: marc.zyngier@arm.com
+Cc: mark.rutland@arm.com
+Link: https://lkml.kernel.org/r/1545243796-23224-2-git-send-email-valentin.schneider@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cpu.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 5dd3317d761f..c63bab98780c 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -411,7 +411,7 @@ SECTIONS
-  * Per-cpu symbols which need to be offset from __per_cpu_load
-  * for the boot processor.
-  */
--#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
-+#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
- INIT_PER_CPU(gdt_page);
- INIT_PER_CPU(irq_stack_union);
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 9d0ecc4a0e79..dc250ec2c096 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -313,6 +313,15 @@ void cpus_write_unlock(void)
+ 
+ void lockdep_assert_cpus_held(void)
+ {
++	/*
++	 * We can't have hotplug operations before userspace starts running,
++	 * and some init codepaths will knowingly not take the hotplug lock.
++	 * This is all valid, so mute lockdep until it makes sense to report
++	 * unheld locks.
++	 */
++	if (system_state < SYSTEM_RUNNING)
++		return;
++
+ 	percpu_rwsem_assert_held(&cpu_hotplug_lock);
+ }
  
 -- 
 2.19.1
