@@ -2,168 +2,132 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76A8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61260C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F7F20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C91520855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:09:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s74VQzUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbfDDFFa (ORCPT
+        id S1726462AbfDDFJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 01:05:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50816 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfDDFFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 01:05:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EBA84AD8A;
-        Thu,  4 Apr 2019 05:05:27 +0000 (UTC)
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Alex Kogan <alex.kogan@oracle.com>
-Cc:     Waiman Long <longman@redhat.com>, linux@armlinux.org.uk,
-        mingo@redhat.com, will.deacon@arm.com, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, steven.sistare@oracle.com,
-        daniel.m.jordan@oracle.com, dave.dice@oracle.com,
-        rahul.x.yadav@oracle.com
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
- <60a3a2d8-d222-73aa-2df1-64c9d3fa3241@redhat.com>
- <20190402094320.GM11158@hirez.programming.kicks-ass.net>
- <6AEDE4F2-306A-4DF9-9307-9E3517C68A2B@oracle.com>
- <20190403160112.GK4038@hirez.programming.kicks-ass.net>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <faf4ffdd-b0d9-e18b-d394-2d1c19811dc5@suse.com>
-Date:   Thu, 4 Apr 2019 07:05:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 4 Apr 2019 01:09:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41130 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfDDFJo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 01:09:44 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d1so541769plj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 22:09:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RmLw52QFU499QKVl87l87i+PamhSMMPdT6L4OvZV0xs=;
+        b=s74VQzUV6jI0Up6hSBwt3N5+5HN5nhbt6HGjVf4SCrSEAZReV6gHPJoU7RHozRreXc
+         lEsT8cR2bdDQsJeQOm9v5PtFp+vu/hXbw4Qb2gAbmRNPkCuIcp4E8htdEm6NLVMT8YOq
+         EDiUySLXP69T8O9zIphOwFrJXkzbIcFzWIIowjJZAnZs96/MZUk3p2NFJ0T9OSEkiyKw
+         MIV0e3shFgOPYTHVay9iqdB5I/qaAnrAaN9mm20rfvRomG+9+YMDOcKkVDgoPYwLSA1q
+         kcsy1WazMxNReWyKRzx1NL3yvmFQJozYDVljgudNVhV2RnudxyMsY7mG7GNIKsYBeRT0
+         l0KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RmLw52QFU499QKVl87l87i+PamhSMMPdT6L4OvZV0xs=;
+        b=tUbyoMBJ1da/SzH5S0TOA9SrgxXqIkz8xHOlQHMA1J5Fph+ukaa8dExjEq/Bs5tCFK
+         MAgy1uNEkG8D/p4UlkXteIzhACYMG6geCW74Q9py/7+ZV1hlC7ohaOGHa/94UnLUS9fP
+         BNFVb4GyCPEofSbZGUVCe0vcRmsWQ4E6OVwShgmU3LZeZ/ctqBYmAVfN2T+acZCDRqbf
+         OcO3USVA8IwCmYSkkZ+3OmKeJpH/quZxTlxHR9Hgjyi2ECvh17jdJtE4q9KIOGJOKrkL
+         7CVcsaGUlr1RqpP0uh6mx8uNsU9cLjAKWQXdAr0ikjsiUmHgULWKZBUbs2n4YwvS5kFY
+         Mkxw==
+X-Gm-Message-State: APjAAAUxvG01K4WK+uFyPDweW9X9WHCzbQSa+zN6gBl9yHf9/bmssMJj
+        T2l7FMC+IfjfteRBhmqCChLnEg==
+X-Google-Smtp-Source: APXvYqxqN+KLVFxYgy264UzIeI1iplNzLTXCtrNlt8hHPZTOfHToDJQ6bYVRjOTpjn30vi7VCnBW4Q==
+X-Received: by 2002:a17:902:9a83:: with SMTP id w3mr4256626plp.241.1554354583598;
+        Wed, 03 Apr 2019 22:09:43 -0700 (PDT)
+Received: from centauri.imgcgcw.net ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id a129sm50589089pfa.152.2019.04.03.22.09.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Apr 2019 22:09:42 -0700 (PDT)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     jorge.ramirez-ortiz@linaro.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        devicetree@vger.kernel.org
+Subject: [RFC PATCH 0/9] Add support for QCOM Core Power Reduction
+Date:   Thu,  4 Apr 2019 07:09:21 +0200
+Message-Id: <20190404050931.9812-1-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190403160112.GK4038@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/2019 18:01, Peter Zijlstra wrote:
-> On Wed, Apr 03, 2019 at 11:39:09AM -0400, Alex Kogan wrote:
-> 
->>>> The patch that I am looking for is to have a separate
->>>> numa_queued_spinlock_slowpath() that coexists with
->>>> native_queued_spinlock_slowpath() and
->>>> paravirt_queued_spinlock_slowpath(). At boot time, we select the most
->>>> appropriate one for the system at hand.
->> Is this how this selection works today for paravirt?
->> I see a PARAVIRT_SPINLOCKS config option, but IIUC you are talking about a different mechanism here.
->> Can you, please, elaborate or give me a link to a page that explains that?
-> 
-> Oh man, you ask us to explain how paravirt patching works... that's
-> magic :-)
-> 
-> Basically, the compiler will emit a bunch of indirect calls to the
-> various pv_ops.*.* functions.
-> 
-> Then, at alternative_instructions() <- apply_paravirt() it will rewrite
-> all these indirect calls to direct calls to the function pointers that
-> are in the pv_ops structure at that time (+- more magic).
-> 
-> So we initialize the pv_ops.lock.* methods to the normal
-> native_queued_spin*() stuff, if KVM/Xen/whatever setup detectors pv
-> spnlock support changes the methods to the paravirt_queued_*() stuff.
-> 
-> If you wnt more details, you'll just have to read
-> arch/x86/include/asm/paravirt*.h and arch/x86/kernel/paravirt*.c, I
-> don't think there's a coherent writeup of all that.
-> 
->>> Agreed; and until we have static_call, I think we can abuse the paravirt
->>> stuff for this.
->>>
->>> By the time we patch the paravirt stuff:
->>>
->>>  check_bugs()
->>>    alternative_instructions()
->>>      apply_paravirt()
->>>
->>> we should already have enumerated the NODE topology and so nr_node_ids()
->>> should be set.
->>>
->>> So if we frob pv_ops.lock.queued_spin_lock_slowpath to
->>> numa_queued_spin_lock_slowpath before that, it should all get patched
->>> just right.
->>>
->>> That of course means the whole NUMA_AWARE_SPINLOCKS thing depends on
->>> PARAVIRT_SPINLOCK, which is a bit awkward…
-> 
->> Just to mention here, the patch so far does not address paravirt, but
->> our goal is to add this support once we address all the concerns for
->> the native version.  So we will end up with four variants for the
->> queued_spinlock_slowpath() — one for each combination of
->> native/paravirt and NUMA/non-NUMA.  Or perhaps we do not need a
->> NUMA/paravirt variant?
-> 
-> I wouldn't bother with a pv version of the numa aware code at all. If
-> you have overcommitted guests, topology is likely irrelevant anyway. If
-> you have 1:1 pinned guests, they'll not use pv spinlocks anyway.
-> 
-> So keep it to tertiary choice:
-> 
->  - native
->  - native/numa
->  - paravirt
+This is a first RFC for Core Power Reduction (CPR), a form of
+Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
 
-Just for the records: the paravirt variant could easily choose whether
-it wants to include a numa version just by using the existing hooks.
-With PARAVIRT_SPINLOCK configured I guess even the native case would
-need to use the paravirt hooks for selection of native or native/numa.
+Since this is simply an RFC, things like MAINTAINERS hasn't
+been updated yet.
 
-Without PARAVIRT_SPINLOCK this would be just an alternative() then?
+CPR is a technology that reduces core power on a CPU or on other device.
+It reads voltage settings from efuses (that have been written in production),
+it uses these voltage settings as initial values, for each OPP.
 
-Maybe the resulting code would be much more readable if we'd just
-make PARAVIRT_SPINLOCK usable without the other PARAVIRT hooks? So
-splitting up PARAVIRT into PARAVIRT_GUEST (timer hooks et al) and
-the patching infrastructure, with PARAVIRT_GUEST and PARAVIRT_SPINLOCK
-selecting PARAVIRT, and PARAVIRT_XXL selecting PARAVIRT_GUEST.
+After moving to a certain OPP, CPR monitors dynamic factors such as
+temperature, etc. and adjusts the voltage for that frequency accordingly
+to save power and meet silicon characteristic requirements.
+
+This driver is based on an RFC by Stephen Boyd[1], which in turn is
+based on work by others on codeaurora.org[2].
+
+[1] https://lkml.org/lkml/2015/9/18/833
+[2] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/regulator/cpr-regulator.c?h=msm-3.10
 
 
-Juergen
+Jorge Ramirez-Ortiz (3):
+  drivers: regulator: qcom_spmi: enable linear range info
+  cpufreq: qcom: support qcs404 on nvmem driver
+  cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
+
+Niklas Cassel (5):
+  cpufreq: qcom: create a driver struct
+  dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
+  dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+  power: avs: Add support for CPR (Core Power Reduction)
+  arm64: dts: qcom: qcs404: Add CPR and populate OPP tables
+
+Sricharan R (1):
+  cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem
+    based qcom socs
+
+ ...ryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} |   16 +-
+ .../devicetree/bindings/opp/qcom-opp.txt      |   24 +
+ .../bindings/power/avs/qcom,cpr.txt           |  119 ++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  152 +-
+ drivers/cpufreq/Kconfig.arm                   |    4 +-
+ drivers/cpufreq/Makefile                      |    2 +-
+ drivers/cpufreq/cpufreq-dt-platdev.c          |    1 +
+ ...om-cpufreq-kryo.c => qcom-cpufreq-nvmem.c} |  197 +-
+ drivers/power/avs/Kconfig                     |   15 +
+ drivers/power/avs/Makefile                    |    1 +
+ drivers/power/avs/qcom-cpr.c                  | 1777 +++++++++++++++++
+ drivers/regulator/qcom_spmi-regulator.c       |    7 +
+ 12 files changed, 2234 insertions(+), 81 deletions(-)
+ rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (97%)
+ create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+ create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+ rename drivers/cpufreq/{qcom-cpufreq-kryo.c => qcom-cpufreq-nvmem.c} (52%)
+ create mode 100644 drivers/power/avs/qcom-cpr.c
+
+-- 
+2.20.1
+
