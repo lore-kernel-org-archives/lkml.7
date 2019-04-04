@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0A0C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FCBC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96022214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1340921738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554374535;
-	bh=vni2/i4c8GhakK2w2EUjsFfFtDtf4e+bZfULiLKCx4A=;
+	s=default; t=1554374540;
+	bh=IPTfPhu5Qe4Z1M2EE/TqDpjLZTkK3m6gCyCwZA7hiMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GZ1++qoOJ5RxR3ZK0JT4Kio53K4Qq1Ku77GtgzbulUX5gRoBCq+vaZW3b9ud08dZp
-	 xakibmTfhAmumHE35seovrns4XiYhE3+oILc5thI+lw3fkaEk8XM50TYoCS/2paqyo
-	 cChLw0erYY2BZRH3+Bm/G+tkZKddhsN54s46GF+g=
+	b=1APPf+gT2X9Za3rV9mPqfdx17PAQyfn4tBHNHKzpSbhv3UsJt2EHlMGXuDDAULXyc
+	 UPDTQBRRpU8ysclSl4WqBez/SA0n48yVtN1Ui3Lo5Zcohk4sKz95MRq79uCYrZiW7g
+	 OB1GJ6EQWLwjAn8st1PjqN0RsY8wbIQJ1x1DG5sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfDDKmO (ORCPT
+        id S1729509AbfDDKmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:42:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42528 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 06:42:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfDDKmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:42:14 -0400
+        id S1729118AbfDDKmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:42:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7DD20855;
-        Thu,  4 Apr 2019 10:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB6D92171F;
+        Thu,  4 Apr 2019 10:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554374533;
-        bh=vni2/i4c8GhakK2w2EUjsFfFtDtf4e+bZfULiLKCx4A=;
+        s=default; t=1554374536;
+        bh=IPTfPhu5Qe4Z1M2EE/TqDpjLZTkK3m6gCyCwZA7hiMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GzcJi+q6trFS7Mq2dIXK7QE4utVyUV2noHZnmDzsv+2zlH/CyAY0ppCIdlNOHKLA/
-         FBb4iCZlhzlw9x+m5beJ+rD7SB4/JZ4+8Q5vTGyKaXRc+uDmJP5QUpUaTs3jzflkrF
-         qafb+ihQyxHjgQClzdA7zvXIqqFRuly8tP1MdTX0=
+        b=yqfeFbn3VuptIcLDPney2t8nUJc4pMPDjW++cwh5rQ+7+MbzvPocq2LfVh/STd45i
+         +Vlnk+kGXwGHWnXalbA3rD/d30DFrG4cD5iVbmcUfnDyDsU6lDutqpuRzbOUOT6it5
+         YM6gx6Le1LY58hoas6y90DDLYYU2uZ2mpAZ+iOz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -54,12 +54,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mike Galbraith <efault@gmx.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 086/121] sched/debug: Initialize sd_sysctl_cpus if !CONFIG_CPUMASK_OFFSTACK
-Date:   Thu,  4 Apr 2019 10:47:54 +0200
-Message-Id: <20190404084549.907798535@linuxfoundation.org>
+Subject: [PATCH 4.19 132/187] sched/debug: Initialize sd_sysctl_cpus if !CONFIG_CPUMASK_OFFSTACK
+Date:   Thu,  4 Apr 2019 10:47:49 +0200
+Message-Id: <20190404084609.425410063@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
-References: <20190404084545.245659903@linuxfoundation.org>
+In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
+References: <20190404084603.119654039@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -71,7 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -110,10 +110,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 2f93e4a2d9f6..187c04a34ba1 100644
+index 6383aa6a60ca..141ea9ff210e 100644
 --- a/kernel/sched/debug.c
 +++ b/kernel/sched/debug.c
-@@ -339,6 +339,7 @@ void register_sched_domain_sysctl(void)
+@@ -315,6 +315,7 @@ void register_sched_domain_sysctl(void)
  {
  	static struct ctl_table *cpu_entries;
  	static struct ctl_table **cpu_idx;
@@ -121,7 +121,7 @@ index 2f93e4a2d9f6..187c04a34ba1 100644
  	char buf[32];
  	int i;
  
-@@ -368,7 +369,10 @@ void register_sched_domain_sysctl(void)
+@@ -344,7 +345,10 @@ void register_sched_domain_sysctl(void)
  	if (!cpumask_available(sd_sysctl_cpus)) {
  		if (!alloc_cpumask_var(&sd_sysctl_cpus, GFP_KERNEL))
  			return;
