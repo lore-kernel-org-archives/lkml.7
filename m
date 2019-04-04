@@ -2,165 +2,198 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466E2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E33C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 184AF205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370429;
-	bh=PjvEJSwLveVAK3x4vD5USfBqAhTRkx8N2UoGQdY90JQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZnB35pS6uY5Ux7fuBI0ImebAB5V9VQiPTtxg8zFdxjg1IvSU5UV9NsHpgLWm6EZf
-	 7FWLwbyBQ+SUlgr1623ajxTiFYtFHTaTmKnd2weC0t6EW7nULWkzf1Cf3BWKbiJzBk
-	 hkeF3aVapPwAQb/+nD3GTJF+hujMlPvI+6eNjbLM=
+	by mail.kernel.org (Postfix) with ESMTP id 97B03205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OMhosiCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732875AbfDDJdr (ORCPT
+        id S1732757AbfDDJeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732568AbfDDJHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:07:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4B51218FE;
-        Thu,  4 Apr 2019 09:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368869;
-        bh=PjvEJSwLveVAK3x4vD5USfBqAhTRkx8N2UoGQdY90JQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wQSoeHzDGU7+a1Gsw58Y+TFHs6QZOZdOTOeiAIS9doaEf7yo4yivULCow9ZaNJaMD
-         Ax86qoMuh2LrLCmk7QJ02gFyy3z1sdL4uHLJgcRxpS7NjJfcsb3OiVKR14t4RTVrF/
-         bw5cnvL//YtYUh/NqEGenju3vR5p5E3hH3CEMEsQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 004/246] nvme-loop: init nvmet_ctrl fatal_err_work when allocate
-Date:   Thu,  4 Apr 2019 10:45:04 +0200
-Message-Id: <20190404084619.393729813@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 4 Apr 2019 05:34:01 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:37261 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729683AbfDDJHi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:07:38 -0400
+Received: by mail-yb1-f196.google.com with SMTP id p134so27691ybc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 02:07:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0InJLt5zEX9ETbKKZeCIAMspa4OAqmASmMUMSsuwllA=;
+        b=OMhosiCDg7H1c/fXGDxbs8AwaQzQNvU8pTY7oV8r3YeOFRQL962dleYjwuI3A4Tmg7
+         KU5gZU+N/HoYItB8DgNuva8rRQ6xQbh4R3DLDuR/vWPi2POvFILYOFoR/NoV2EhbCwu6
+         ftN5L0xqeIPPeND8Q3MK/z4peO5/RSTj+rT0G8cj7uYiebkZL95J5xtuSPZW9e9FhSUB
+         FFeweFzzIjD6yriTl0tUKBYioh3B6B7/ari0mXgJc6Bw9/3ShJTDRpUCjOG/FOoTwy21
+         s2p2OAIHeIb/HAqcdNQwGO7l/5tm3mRQ6IS0xRx7PH3IdU3b4W00q+rnhd1+ATYGEug5
+         ORFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0InJLt5zEX9ETbKKZeCIAMspa4OAqmASmMUMSsuwllA=;
+        b=i5O4RCgn2W+jLHfHTyU9qCLdicEN5TXnJksIE4m2lSgyI8+SnmN9TnF+UJqV1OWCOc
+         SPa1Jpt6LnG/h1Juy84IheCwotNPkTsDiuEest6EkpzJZWdFHKHU9RZZCOXsijXv8BtR
+         k+f8ctAWehBcwlxXbae13bQYZkVNjczOFIUwI1qyCxkvQwMw27jcAfP/+Sj5h+V3zuA1
+         Q4oLuQlKkyFc3NQHla8EKg86+ahkk8rKz7BHJysF9M0eO5DUKkgdPxPj4IMZ/ipIR/W9
+         wq87g8fyqlzUKuVplGOLgY81oAb3+67dtuJ4/TSX0GtKFxdswqyasZQgd9KgmKsKO6hR
+         Hwig==
+X-Gm-Message-State: APjAAAUjWFM6VcBslMXzVDqoaZhIq0529yIEctgZT70b63eXucKpIppU
+        EMi7fVz4NrxkF+NOse4/gr1zk3dUGxFFLJhxJyRbLA==
+X-Google-Smtp-Source: APXvYqxTO49qBPOQB7swn0ymMM1fNS91K+vmRFTivfpg5nj6c0qhRa7OEZDwrQ27FDCp30M7y6+ljVTzAZKQqdOX4vA=
+X-Received: by 2002:a25:dd6:: with SMTP id 205mr4241205ybn.445.1554368857423;
+ Thu, 04 Apr 2019 02:07:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190404082055.8981-1-olivier.tilmans@nokia-bell-labs.com> <efdc9c07-1feb-d594-7954-e4e6a379a53d@iogearbox.net>
+In-Reply-To: <efdc9c07-1feb-d594-7954-e4e6a379a53d@iogearbox.net>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 4 Apr 2019 02:07:25 -0700
+Message-ID: <CANn89iLMuk3eWa_8zqvRrB7quMJyX2Annz0tscp9hB0FPT0Vsw@mail.gmail.com>
+Subject: Re: [PATCH net-next] tcp: Ensure DCTCP reacts to losses
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>,
+        "De Schepper, Koen (Nokia - BE/Antwerp)" 
+        <koen.de_schepper@nokia-bell-labs.com>,
+        Bob Briscoe <research@bobbriscoe.net>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Florian Westphal <fw@strlen.de>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Andrew Shewmaker <agshew@gmail.com>,
+        Glenn Judd <glenn.judd@morganstanley.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Apr 4, 2019 at 1:47 AM Daniel Borkmann <daniel@iogearbox.net> wrote=
+:
+>
+> On 04/04/2019 10:26 AM, Tilmans, Olivier (Nokia - BE/Antwerp) wrote:
+> > RFC8257 =C2=A73.5 explicitly states that DCTCP should "react to loss
+> > episode in the same way that a conventional TCP".
+> > This is also the behavior on MS Windows.
+> >
+> > Currently, Linux DCTCP performs no ssthresh reduction when losses
+> > are encountered. Optionally, the dctcp_clamp_alpha_on_loss resets
+> > alpha to its maximal value if a RTO happens. This behavior
+> > is sub-optimal for at least two reasons: i) it ignores losses
+> > triggering fast retransmissions; and ii) it causes unnecessary large
+> > cwnd reduction in the future if the loss was isolated as it resets
+> > the historical term of DCTCP's alpha EWMA to its maximal value (i.e.,
+> > denoting a total congestion). The second reason has an especially
+> > noticeable effect when using DCTCP in high BDP environments, where
+> > alpha normally stays at low values.
+> >
+> > This patch replace the clamping of alpha by setting ssthresh to
+> > half of cwnd for both fast retransmissions and RTOs, at most once
+> > per RTT. To reflect the change, the dctcp_clamp_alpha_on_loss option
+> > has been renamed to dctcp_halve_cwnd_on_loss.
+> >
+> > The table below shows experimental results where we measured the
+> > drop probability of a PIE AQM (not applying ECN marks) at a
+> > bottleneck in the presence of a single TCP flow with either the
+> > alpha-clamping option enabled or the cwnd halving proposed by this
+> > patch. Results using reno or cubic are given for comparison.
+> >
+> >                           |  Link   |   RTT    |    Drop
+> >                  TCP CC   |  speed  | base+AQM | probability
+> >         =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> >                     CUBIC |  40Mbps |  7+20ms  |    0.21%
+> >                      RENO |         |          |    0.19%
+> >         DCTCP-CLAMP-ALPHA |         |          |   25.80%
+> >          DCTCP-HALVE-CWND |         |          |    0.22%
+> >         ------------------|---------|----------|------------
+> >                     CUBIC | 100Mbps |  7+20ms  |    0.03%
+> >                      RENO |         |          |    0.02%
+> >         DCTCP-CLAMP-ALPHA |         |          |   23.30%
+> >          DCTCP-HALVE-CWND |         |          |    0.04%
+> >         ------------------|---------|----------|------------
+> >                     CUBIC | 800Mbps |   1+1ms  |    0.04%
+> >                      RENO |         |          |    0.05%
+> >         DCTCP-CLAMP-ALPHA |         |          |   18.70%
+> >          DCTCP-HALVE-CWND |         |          |    0.06%
+> >
+> > We see that, without halving its cwnd for all source of losses,
+> > DCTCP drives the AQM to large drop probabilities in order to keep
+> > the queue length under control (i.e., it repeatedly faces RTOs).
+> > Instead, if DCTCP reacts to all source of losses, it can then be
+> > controlled by the AQM using similar drop levels than cubic or reno.
+> >
+> > Signed-off-by: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+> > Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
+> > Cc: Bob Briscoe <research@bobbriscoe.net>
+> > Cc: Lawrence Brakmo <brakmo@fb.com>
+> > Cc: Florian Westphal <fw@strlen.de>
+> > Cc: Daniel Borkmann <borkmann@iogearbox.net>
+> > Cc: Yuchung Cheng <ycheng@google.com>
+> > Cc: Neal Cardwell <ncardwell@google.com>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Andrew Shewmaker <agshew@gmail.com>
+> > Cc: Glenn Judd <glenn.judd@morganstanley.com>
+> > ---
+> >  net/ipv4/tcp_dctcp.c | 39 ++++++++++++++++++++++-----------------
+> >  1 file changed, 22 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/net/ipv4/tcp_dctcp.c b/net/ipv4/tcp_dctcp.c
+> > index cd4814f7e962..60417243e7d7 100644
+> > --- a/net/ipv4/tcp_dctcp.c
+> > +++ b/net/ipv4/tcp_dctcp.c
+> > @@ -67,10 +67,9 @@ static unsigned int dctcp_alpha_on_init __read_mostl=
+y =3D DCTCP_MAX_ALPHA;
+> >  module_param(dctcp_alpha_on_init, uint, 0644);
+> >  MODULE_PARM_DESC(dctcp_alpha_on_init, "parameter for initial alpha val=
+ue");
+> >
+> > -static unsigned int dctcp_clamp_alpha_on_loss __read_mostly;
+> > -module_param(dctcp_clamp_alpha_on_loss, uint, 0644);
+> > -MODULE_PARM_DESC(dctcp_clamp_alpha_on_loss,
+> > -              "parameter for clamping alpha on loss");
+> > +static unsigned int dctcp_halve_cwnd_on_loss __read_mostly;
+> > +module_param(dctcp_halve_cwnd_on_loss, uint, 0644);
+> > +MODULE_PARM_DESC(dctcp_halve_cwnd_on_loss, "halve cwnd in case of loss=
+es");
+>
+> Is there a reason we still need to keep this module parameter around?
+> The final RFC even says "A DCTCP sender MUST react to loss episodes in
+> the same way as conventional TCP". So it's a MUST requirement in which
+> case it should be enabled by default. The dctcp_clamp_alpha_on_loss was
+> a bit of a hack from very early days..
 
-------------------
+I agree with Daniel and Florian
 
-[ Upstream commit d11de63f2b519f0a162b834013b6d3a46dbf3886 ]
+Please respin the patch removing the modparam
 
-After commit 4d43d395fe (workqueue: Try to catch flush_work() without
-INIT_WORK()), it can cause warning when delete nvme-loop device, trace
-like:
+Also please check your SOB chain
 
-[   76.601272] Call Trace:
-[   76.601646]  ? del_timer+0x72/0xa0
-[   76.602156]  __cancel_work_timer+0x1ae/0x270
-[   76.602791]  cancel_work_sync+0x14/0x20
-[   76.603407]  nvmet_ctrl_free+0x1b7/0x2f0 [nvmet]
-[   76.604091]  ? free_percpu+0x168/0x300
-[   76.604652]  nvmet_sq_destroy+0x106/0x240 [nvmet]
-[   76.605346]  nvme_loop_destroy_admin_queue+0x30/0x60 [nvme_loop]
-[   76.606220]  nvme_loop_shutdown_ctrl+0xc3/0xf0 [nvme_loop]
-[   76.607026]  nvme_loop_delete_ctrl_host+0x19/0x30 [nvme_loop]
-[   76.607871]  nvme_do_delete_ctrl+0x75/0xb0
-[   76.608477]  nvme_sysfs_delete+0x7d/0xc0
-[   76.609057]  dev_attr_store+0x24/0x40
-[   76.609603]  sysfs_kf_write+0x4c/0x60
-[   76.610144]  kernfs_fop_write+0x19a/0x260
-[   76.610742]  __vfs_write+0x1c/0x60
-[   76.611246]  vfs_write+0xfa/0x280
-[   76.611739]  ksys_write+0x6e/0x120
-[   76.612238]  __x64_sys_write+0x1e/0x30
-[   76.612787]  do_syscall_64+0xbf/0x3a0
-[   76.613329]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+If we see :
 
-We fix it by moving fatal_err_work init to nvmet_alloc_ctrl(), which may
-more reasonable.
+Signed-off-by: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
 
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/target/core.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+We expect patch author is Koen De Schepper, not Olivier Tilmans
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 88d260f31835..02c63c463222 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -1171,6 +1171,15 @@ static void nvmet_release_p2p_ns_map(struct nvmet_ctrl *ctrl)
- 	put_device(ctrl->p2p_client);
- }
- 
-+static void nvmet_fatal_error_handler(struct work_struct *work)
-+{
-+	struct nvmet_ctrl *ctrl =
-+			container_of(work, struct nvmet_ctrl, fatal_err_work);
-+
-+	pr_err("ctrl %d fatal error occurred!\n", ctrl->cntlid);
-+	ctrl->ops->delete_ctrl(ctrl);
-+}
-+
- u16 nvmet_alloc_ctrl(const char *subsysnqn, const char *hostnqn,
- 		struct nvmet_req *req, u32 kato, struct nvmet_ctrl **ctrlp)
- {
-@@ -1213,6 +1222,7 @@ u16 nvmet_alloc_ctrl(const char *subsysnqn, const char *hostnqn,
- 	INIT_WORK(&ctrl->async_event_work, nvmet_async_event_work);
- 	INIT_LIST_HEAD(&ctrl->async_events);
- 	INIT_RADIX_TREE(&ctrl->p2p_ns_map, GFP_KERNEL);
-+	INIT_WORK(&ctrl->fatal_err_work, nvmet_fatal_error_handler);
- 
- 	memcpy(ctrl->subsysnqn, subsysnqn, NVMF_NQN_SIZE);
- 	memcpy(ctrl->hostnqn, hostnqn, NVMF_NQN_SIZE);
-@@ -1316,21 +1326,11 @@ void nvmet_ctrl_put(struct nvmet_ctrl *ctrl)
- 	kref_put(&ctrl->ref, nvmet_ctrl_free);
- }
- 
--static void nvmet_fatal_error_handler(struct work_struct *work)
--{
--	struct nvmet_ctrl *ctrl =
--			container_of(work, struct nvmet_ctrl, fatal_err_work);
--
--	pr_err("ctrl %d fatal error occurred!\n", ctrl->cntlid);
--	ctrl->ops->delete_ctrl(ctrl);
--}
--
- void nvmet_ctrl_fatal_error(struct nvmet_ctrl *ctrl)
- {
- 	mutex_lock(&ctrl->lock);
- 	if (!(ctrl->csts & NVME_CSTS_CFS)) {
- 		ctrl->csts |= NVME_CSTS_CFS;
--		INIT_WORK(&ctrl->fatal_err_work, nvmet_fatal_error_handler);
- 		schedule_work(&ctrl->fatal_err_work);
- 	}
- 	mutex_unlock(&ctrl->lock);
--- 
-2.19.1
+So the patch should start by 'From: Koen De Schepper
+<koen.de_schepper@nokia-bell-labs.com>' if sent by Olivier.
 
-
-
+Thanks !
