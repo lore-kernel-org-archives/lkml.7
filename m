@@ -6,37 +6,41 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA434C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6272FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE92075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE1D20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfDDTVT (ORCPT
+        id S1730322AbfDDTVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:21:19 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23637 "EHLO mga03.intel.com"
+        Thu, 4 Apr 2019 15:21:30 -0400
+Received: from mga06.intel.com ([134.134.136.31]:42864 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbfDDTVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:21:19 -0400
+        id S1730298AbfDDTVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 15:21:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 12:21:18 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 12:21:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,309,1549958400"; 
-   d="scan'208";a="137653465"
+   d="scan'208";a="146656209"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Apr 2019 12:21:18 -0700
-Subject: [RFC PATCH 2/5] lib/memregion: Uplevel the pmem "region" ida to a
- global allocator
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Apr 2019 12:21:29 -0700
+Subject: [RFC PATCH 4/5] acpi/hmat: Register special purpose memory as a
+ device
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>, vishal.l.verma@intel.com,
-        x86@kernel.org, linux-mm@kvack.org, keith.busch@intel.com,
-        vishal.l.verma@intel.com, linux-nvdimm@lists.01.org
-Date:   Thu, 04 Apr 2019 12:08:38 -0700
-Message-ID: <155440491849.3190322.17551464505265122881.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        vishal.l.verma@intel.com, x86@kernel.org, linux-mm@kvack.org,
+        keith.busch@intel.com, vishal.l.verma@intel.com,
+        linux-nvdimm@lists.01.org
+Date:   Thu, 04 Apr 2019 12:08:49 -0700
+Message-ID: <155440492988.3190322.4475460421334178449.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
@@ -48,185 +52,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for handling platform differentiated memory types beyond
-persistent memory, uplevel the "region" identifier to a global number
-space. This enables a device-dax instance to be registered to any memory
-type with guaranteed unique names.
+Memory that has been tagged EFI_SPECIAL_PURPOSE, and has performance
+properties described by the ACPI HMAT is expected to have an application
+specific consumer.
 
+Those consumers may want 100% of the memory capacity to be reserved from
+any usage by the kernel. By default, with this enabling, a platform
+device is created to represent this differentiated resource.
+
+A follow on change arranges for device-dax to claim these devices by
+default and provide an mmap interface for the target application.
+However, if the administrator prefers that some or all of the special
+purpose memory is made available to the core-mm the device-dax hotplug
+facility can be used to online the memory with its own numa node.
+
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
 Cc: Keith Busch <keith.busch@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/nvdimm/Kconfig       |    1 +
- drivers/nvdimm/core.c        |    1 -
- drivers/nvdimm/nd-core.h     |    1 -
- drivers/nvdimm/region_devs.c |   13 ++++---------
- include/linux/memregion.h    |    6 ++++++
- lib/Kconfig                  |    6 ++++++
- lib/Makefile                 |    1 +
- lib/memregion.c              |   22 ++++++++++++++++++++++
- 8 files changed, 40 insertions(+), 11 deletions(-)
- create mode 100644 include/linux/memregion.h
- create mode 100644 lib/memregion.c
+ drivers/acpi/hmat/Kconfig |    1 +
+ drivers/acpi/hmat/hmat.c  |   63 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/memregion.h |    3 ++
+ 3 files changed, 67 insertions(+)
 
-diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-index 5e27918e4624..bf26cc5f6d67 100644
---- a/drivers/nvdimm/Kconfig
-+++ b/drivers/nvdimm/Kconfig
-@@ -3,6 +3,7 @@ menuconfig LIBNVDIMM
- 	depends on PHYS_ADDR_T_64BIT
- 	depends on HAS_IOMEM
- 	depends on BLK_DEV
+diff --git a/drivers/acpi/hmat/Kconfig b/drivers/acpi/hmat/Kconfig
+index 95a29964dbea..4fcf76e8aa1d 100644
+--- a/drivers/acpi/hmat/Kconfig
++++ b/drivers/acpi/hmat/Kconfig
+@@ -3,6 +3,7 @@ config ACPI_HMAT
+ 	bool "ACPI Heterogeneous Memory Attribute Table Support"
+ 	depends on ACPI_NUMA
+ 	select HMEM_REPORTING
 +	select MEMREGION
  	help
- 	  Generic support for non-volatile memory devices including
- 	  ACPI-6-NFIT defined resources.  On platforms that define an
-diff --git a/drivers/nvdimm/core.c b/drivers/nvdimm/core.c
-index acce050856a8..75fe651d327d 100644
---- a/drivers/nvdimm/core.c
-+++ b/drivers/nvdimm/core.c
-@@ -463,7 +463,6 @@ static __exit void libnvdimm_exit(void)
- 	nd_region_exit();
- 	nvdimm_exit();
- 	nvdimm_bus_exit();
--	nd_region_devs_exit();
- 	nvdimm_devs_exit();
- }
- 
-diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
-index e5ffd5733540..17561302dfec 100644
---- a/drivers/nvdimm/nd-core.h
-+++ b/drivers/nvdimm/nd-core.h
-@@ -133,7 +133,6 @@ struct nvdimm_bus *walk_to_nvdimm_bus(struct device *nd_dev);
- int __init nvdimm_bus_init(void);
- void nvdimm_bus_exit(void);
- void nvdimm_devs_exit(void);
--void nd_region_devs_exit(void);
- void nd_region_probe_success(struct nvdimm_bus *nvdimm_bus, struct device *dev);
- struct nd_region;
- void nd_region_create_ns_seed(struct nd_region *nd_region);
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index b4ef7d9ff22e..eefdfd2565dd 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -11,6 +11,7 @@
-  * General Public License for more details.
-  */
- #include <linux/scatterlist.h>
+ 	 If set, this option has the kernel parse and report the
+ 	 platform's ACPI HMAT (Heterogeneous Memory Attributes Table),
+diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+index e7ae44c8d359..482360004ea0 100644
+--- a/drivers/acpi/hmat/hmat.c
++++ b/drivers/acpi/hmat/hmat.c
+@@ -13,6 +13,9 @@
+ #include <linux/device.h>
+ #include <linux/init.h>
+ #include <linux/list.h>
++#include <linux/mm.h>
 +#include <linux/memregion.h>
- #include <linux/highmem.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-@@ -27,7 +28,6 @@
-  */
- #include <linux/io-64-nonatomic-hi-lo.h>
- 
--static DEFINE_IDA(region_ida);
- static DEFINE_PER_CPU(int, flush_idx);
- 
- static int nvdimm_map_flush(struct device *dev, struct nvdimm *nvdimm, int dimm,
-@@ -141,7 +141,7 @@ static void nd_region_release(struct device *dev)
- 		put_device(&nvdimm->dev);
- 	}
- 	free_percpu(nd_region->lane);
--	ida_simple_remove(&region_ida, nd_region->id);
-+	memregion_free(nd_region->id);
- 	if (is_nd_blk(dev))
- 		kfree(to_nd_blk_region(dev));
- 	else
-@@ -1036,7 +1036,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 
- 	if (!region_buf)
- 		return NULL;
--	nd_region->id = ida_simple_get(&region_ida, 0, 0, GFP_KERNEL);
-+	nd_region->id = memregion_alloc();
- 	if (nd_region->id < 0)
- 		goto err_id;
- 
-@@ -1090,7 +1090,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 	return nd_region;
- 
-  err_percpu:
--	ida_simple_remove(&region_ida, nd_region->id);
-+	memregion_free(nd_region->id);
-  err_id:
- 	kfree(region_buf);
- 	return NULL;
-@@ -1237,8 +1237,3 @@ int nd_region_conflict(struct nd_region *nd_region, resource_size_t start,
- 
- 	return device_for_each_child(&nvdimm_bus->dev, &ctx, region_conflict);
++#include <linux/platform_device.h>
+ #include <linux/list_sort.h>
+ #include <linux/node.h>
+ #include <linux/sysfs.h>
+@@ -612,6 +615,65 @@ static __init void hmat_register_target_perf(struct memory_target *target)
+ 	node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
  }
--
--void __exit nd_region_devs_exit(void)
--{
--	ida_destroy(&region_ida);
--}
+ 
++static __init void hmat_register_target_device(struct memory_target *target)
++{
++	struct memregion_info info;
++	struct resource res = {
++		.start = target->start,
++		.end = target->start + target->size - 1,
++		.flags = IORESOURCE_MEM,
++		.desc = IORES_DESC_APPLICATION_RESERVED,
++	};
++	struct platform_device *pdev;
++	int rc, id;
++
++	if (region_intersects(target->start, target->size, IORESOURCE_MEM,
++				IORES_DESC_APPLICATION_RESERVED)
++			!= REGION_INTERSECTS)
++		return;
++
++	id = memregion_alloc();
++	if (id < 0) {
++		pr_err("acpi/hmat: memregion allocation failure for %pr\n", &res);
++		return;
++	}
++
++	pdev = platform_device_alloc("hmem", id);
++	if (!pdev) {
++		pr_err("acpi/hmat: hmem device allocation failure for %pr\n", &res);
++		goto out_pdev;
++	}
++
++	pdev->dev.numa_node = acpi_map_pxm_to_online_node(target->processor_pxm);
++	info = (struct memregion_info) {
++		.target_node = acpi_map_pxm_to_node(target->memory_pxm),
++	};
++	rc = platform_device_add_data(pdev, &info, sizeof(info));
++	if (rc < 0) {
++		pr_err("acpi/hmat: hmem memregion_info allocation failure for %pr\n", &res);
++		goto out_pdev;
++	}
++
++	rc = platform_device_add_resources(pdev, &res, 1);
++	if (rc < 0) {
++		pr_err("acpi/hmat: hmem resource allocation failure for %pr\n", &res);
++		goto out_resource;
++	}
++
++	rc = platform_device_add(pdev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "acpi/hmat: device add failed for %pr\n", &res);
++		goto out_resource;
++	}
++
++	return;
++
++out_resource:
++	put_device(&pdev->dev);
++out_pdev:
++	memregion_free(id);
++}
++
+ static __init void hmat_register_targets(void)
+ {
+ 	struct memory_target *target;
+@@ -619,6 +681,7 @@ static __init void hmat_register_targets(void)
+ 	list_for_each_entry(target, &targets, node) {
+ 		hmat_register_target_initiators(target);
+ 		hmat_register_target_perf(target);
++		hmat_register_target_device(target);
+ 	}
+ }
+ 
 diff --git a/include/linux/memregion.h b/include/linux/memregion.h
-new file mode 100644
-index 000000000000..99fa47793b49
---- /dev/null
+index 99fa47793b49..5de2ac7fcf5e 100644
+--- a/include/linux/memregion.h
 +++ b/include/linux/memregion.h
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#ifndef _MEMREGION_H_
-+#define _MEMREGION_H_
-+int memregion_alloc(void);
-+void memregion_free(int id);
-+#endif /* _MEMREGION_H_ */
-diff --git a/lib/Kconfig b/lib/Kconfig
-index a9e56539bd11..0b765d9a1145 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -318,6 +318,12 @@ config DECOMPRESS_LZ4
- config GENERIC_ALLOCATOR
- 	bool
- 
-+#
-+# Generic IDA for memory regions
-+#
-+config MEMREGION
-+	bool
-+
- #
- # reed solomon support is select'ed if needed
- #
-diff --git a/lib/Makefile b/lib/Makefile
-index 3b08673e8881..6e237c4071af 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -122,6 +122,7 @@ obj-$(CONFIG_LIBCRC32C)	+= libcrc32c.o
- obj-$(CONFIG_CRC8)	+= crc8.o
- obj-$(CONFIG_XXHASH)	+= xxhash.o
- obj-$(CONFIG_GENERIC_ALLOCATOR) += genalloc.o
-+obj-$(CONFIG_MEMREGION) += memregion.o
- 
- obj-$(CONFIG_842_COMPRESS) += 842/
- obj-$(CONFIG_842_DECOMPRESS) += 842/
-diff --git a/lib/memregion.c b/lib/memregion.c
-new file mode 100644
-index 000000000000..21f5ff96c2eb
---- /dev/null
-+++ b/lib/memregion.c
-@@ -0,0 +1,22 @@
-+#include <linux/idr.h>
-+#include <linux/module.h>
-+
-+static DEFINE_IDA(region_ida);
-+
-+int memregion_alloc(void)
-+{
-+	return ida_simple_get(&region_ida, 0, 0, GFP_KERNEL);
-+}
-+EXPORT_SYMBOL(memregion_alloc);
-+
-+void memregion_free(int id)
-+{
-+	ida_simple_remove(&region_ida, id);
-+}
-+EXPORT_SYMBOL(memregion_free);
-+
-+static void __exit memregion_exit(void)
-+{
-+	ida_destroy(&region_ida);
-+}
-+module_exit(memregion_exit);
+@@ -1,6 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #ifndef _MEMREGION_H_
+ #define _MEMREGION_H_
++struct memregion_info {
++	int target_node;
++};
+ int memregion_alloc(void);
+ void memregion_free(int id);
+ #endif /* _MEMREGION_H_ */
 
