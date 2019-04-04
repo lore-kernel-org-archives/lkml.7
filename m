@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EB9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B658C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29309206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CAB2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371628;
-	bh=Z7MQF6CGn6Ivk1XdKiCvoEOsMdkDl0A4wqB4IA6KP7w=;
+	s=default; t=1554371637;
+	bh=EekUVwjSsK9PzSI90GZ8qZGvSCRavBt6X5AyfJO5qBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gLQATWcDg8aHSoIWLsJfUxr1XLEUK5QiK9/Pv47L+DHg5gmrWsvHGjHF/TmeR6Xex
-	 mGBV6hJ1a0vVsF2YUWmvdP9zq2tdxU0gAYhQOQnLWVs5CrcHlmi7I5IKEDsgUPI4Rv
-	 M+XK48nl5il4pPjaT6KRwVSdNhFoLM5dVhiiJTvY=
+	b=PUW723YF6BL//r2SVQvfM6KDlMIbkG+0cyE8hKeauVHxj9yp7aZuK3rZy9oLv4IXP
+	 ubCx9by85y/QA8QiGE+QZ8MW8Fka4KJFszSl6APw/k4IrDi3Jw/UvrTX3/M8jvsFlG
+	 LmuhaISLqyijUCYqstWlaIcwo+dgIE4O4LUgoAp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbfDDJxq (ORCPT
+        id S1729997AbfDDJx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55324 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:53:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728906AbfDDIxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:06 -0400
+        id S1729717AbfDDIw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C35F220882;
-        Thu,  4 Apr 2019 08:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A4C20882;
+        Thu,  4 Apr 2019 08:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367985;
-        bh=Z7MQF6CGn6Ivk1XdKiCvoEOsMdkDl0A4wqB4IA6KP7w=;
+        s=default; t=1554367977;
+        bh=EekUVwjSsK9PzSI90GZ8qZGvSCRavBt6X5AyfJO5qBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NE7J/WcTYYMcQ5nLxrKYn7zOLOI7lAqSJVfDnLnq5hlF2vAB02T0OMEfqu9n3C7XT
-         dsRn8LMEbXoV0adz++J8RZTihynVWNztJJWpOsrEcwJ8hGldv83VDZUxn3ewc79tgQ
-         oP2ESTe/z0zPkNDedDPgk951v5tzidtTQexMzsbw=
+        b=xH/7RHKmBqBZ7/SOMw9cEtbjaHZZlzeVgtb1H1jOGq/tgvI7CODPtI7LA7z5lhoNo
+         TmbyGMOjrDWESGBKKZLG2MVh/p8BSGBJJ2GSn88Zg0iSbeQCnABljYIqh/h8SdEGVg
+         RzDowZFfwjI6WmFv3CA3F/JjLLO4qQdokt5xp/KY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 71/91] ARM: avoid Cortex-A9 livelock on tight dmb loops
-Date:   Thu,  4 Apr 2019 10:47:55 +0200
-Message-Id: <20190404084539.562049592@linuxfoundation.org>
+Subject: [PATCH 4.9 83/91] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
+Date:   Thu,  4 Apr 2019 10:48:07 +0200
+Message-Id: <20190404084540.250598625@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,207 +66,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5388a5b82199facacd3d7ac0d05aca6e8f902fed ]
+[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
 
-machine_crash_nonpanic_core() does this:
+The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
 
-	while (1)
-		cpu_relax();
+The problems in below entry:
+  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
 
-because the kernel has crashed, and we have no known safe way to deal
-with the CPU.  So, we place the CPU into an infinite loop which we
-expect it to never exit - at least not until the system as a whole is
-reset by some method.
+1. The off-by-one min_sel causes wrong volatage calculation.
+   The min_sel should be 192.
+2. According to the datasheet[1] Table 7. (on page 43):
+   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
 
-In the absence of erratum 754327, this code assembles to:
+Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
 
-	b	.
+[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
 
-In other words, an infinite loop.  When erratum 754327 is enabled,
-this becomes:
-
-1:	dmb
-	b	1b
-
-It has been observed that on some systems (eg, OMAP4) where, if a
-crash is triggered, the system tries to kexec into the panic kernel,
-but fails after taking the secondary CPU down - placing it into one
-of these loops.  This causes the system to livelock, and the most
-noticable effect is the system stops after issuing:
-
-	Loading crashdump kernel...
-
-to the system console.
-
-The tested as working solution I came up with was to add wfe() to
-these infinite loops thusly:
-
-	while (1) {
-		cpu_relax();
-		wfe();
-	}
-
-which, without 754327 builds to:
-
-1:	wfe
-	b	1b
-
-or with 754327 is enabled:
-
-1:	dmb
-	wfe
-	b	1b
-
-Adding "wfe" does two things depending on the environment we're running
-under:
-- where we're running on bare metal, and the processor implements
-  "wfe", it stops us spinning endlessly in a loop where we're never
-  going to do any useful work.
-- if we're running in a VM, it allows the CPU to be given back to the
-  hypervisor and rescheduled for other purposes (maybe a different VM)
-  rather than wasting CPU cycles inside a crashed VM.
-
-However, in light of erratum 794072, Will Deacon wanted to see 10 nops
-as well - which is reasonable to cover the case where we have erratum
-754327 enabled _and_ we have a processor that doesn't implement the
-wfe hint.
-
-So, we now end up with:
-
-1:      wfe
-        b       1b
-
-when erratum 754327 is disabled, or:
-
-1:      dmb
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        wfe
-        b       1b
-
-when erratum 754327 is enabled.  We also get the dmb + 10 nop
-sequence elsewhere in the kernel, in terminating loops.
-
-This is reasonable - it means we get the workaround for erratum
-794072 when erratum 754327 is enabled, but still relinquish the dead
-processor - either by placing it in a lower power mode when wfe is
-implemented as such or by returning it to the hypervisior, or in the
-case where wfe is a no-op, we use the workaround specified in erratum
-794072 to avoid the problem.
-
-These as two entirely orthogonal problems - the 10 nops addresses
-erratum 794072, and the wfe is an optimisation that makes the system
-more efficient when crashed either in terms of power consumption or
-by allowing the host/other VMs to make use of the CPU.
-
-I don't see any reason not to use kexec() inside a VM - it has the
-potential to provide automated recovery from a failure of the VMs
-kernel with the opportunity for saving a crashdump of the failure.
-A panic() with a reboot timeout won't do that, and reading the
-libvirt documentation, setting on_reboot to "preserve" won't either
-(the documentation states "The preserve action for an on_reboot event
-is treated as a destroy".)  Surely it has to be a good thing to
-avoiding having CPUs spinning inside a VM that is doing no useful
-work.
-
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/barrier.h   | 2 ++
- arch/arm/include/asm/processor.h | 6 +++++-
- arch/arm/kernel/machine_kexec.c  | 5 ++++-
- arch/arm/kernel/smp.c            | 4 +++-
- arch/arm/mach-omap2/prm_common.c | 4 +++-
- 5 files changed, 17 insertions(+), 4 deletions(-)
+ drivers/regulator/act8865-regulator.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/barrier.h b/arch/arm/include/asm/barrier.h
-index 513e03d138ea..8331cb0d3461 100644
---- a/arch/arm/include/asm/barrier.h
-+++ b/arch/arm/include/asm/barrier.h
-@@ -10,6 +10,8 @@
- #define sev()	__asm__ __volatile__ ("sev" : : : "memory")
- #define wfe()	__asm__ __volatile__ ("wfe" : : : "memory")
- #define wfi()	__asm__ __volatile__ ("wfi" : : : "memory")
-+#else
-+#define wfe()	do { } while (0)
- #endif
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 7652477e6a9d..39e8d60df060 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -131,7 +131,7 @@
+  * ACT8865 voltage number
+  */
+ #define	ACT8865_VOLTAGE_NUM	64
+-#define ACT8600_SUDCDC_VOLTAGE_NUM	255
++#define ACT8600_SUDCDC_VOLTAGE_NUM	256
  
- #if __LINUX_ARM_ARCH__ >= 7
-diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
-index 8a1e8e995dae..08509183c7df 100644
---- a/arch/arm/include/asm/processor.h
-+++ b/arch/arm/include/asm/processor.h
-@@ -77,7 +77,11 @@ extern void release_thread(struct task_struct *);
- unsigned long get_wchan(struct task_struct *p);
+ struct act8865 {
+ 	struct regmap *regmap;
+@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
+ 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
+ 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
+-	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
++	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
++	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
+ };
  
- #if __LINUX_ARM_ARCH__ == 6 || defined(CONFIG_ARM_ERRATA_754327)
--#define cpu_relax()			smp_mb()
-+#define cpu_relax()						\
-+	do {							\
-+		smp_mb();					\
-+		__asm__ __volatile__("nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;");	\
-+	} while (0)
- #else
- #define cpu_relax()			barrier()
- #endif
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index b18c1ea56bed..ef6b27fe1d2e 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -87,8 +87,11 @@ void machine_crash_nonpanic_core(void *unused)
- 
- 	set_cpu_online(smp_processor_id(), false);
- 	atomic_dec(&waiting_for_crash_ipi);
--	while (1)
-+
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
- 
- static void machine_kexec_mask_interrupts(void)
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index bc83ec7ed53f..7a5dc011c523 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -602,8 +602,10 @@ static void ipi_cpu_stop(unsigned int cpu)
- 	local_fiq_disable();
- 	local_irq_disable();
- 
--	while (1)
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
- 
- static DEFINE_PER_CPU(struct completion *, cpu_completion);
-diff --git a/arch/arm/mach-omap2/prm_common.c b/arch/arm/mach-omap2/prm_common.c
-index f1ca9479491b..9e14604b9642 100644
---- a/arch/arm/mach-omap2/prm_common.c
-+++ b/arch/arm/mach-omap2/prm_common.c
-@@ -533,8 +533,10 @@ void omap_prm_reset_system(void)
- 
- 	prm_ll_data->reset_system();
- 
--	while (1)
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
- 
- /**
+ static struct regulator_ops act8865_ops = {
 -- 
 2.19.1
 
