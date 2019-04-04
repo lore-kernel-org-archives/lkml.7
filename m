@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DCBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5FA20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A0E20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369001;
-	bh=fwHb9tn8kzv2JzgvKyNGumjUfySFTTmk0D1S7CGp+pI=;
+	s=default; t=1554369005;
+	bh=GHiXkZAloJXwcrj4Qa7/SdV9pTNyQRq0Vl8arTgRe60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C/bvGIXqQIIBYTBK/QLZuFlf5dQ5pgBFQQ203kdyGYha3OhsTSKWMid86kt5jO641
-	 Vjq6x25HCQHYcE2bTslkZ+5VDA2SYpU6lYM+g6BlJQzSqOAZx4HMLen7zbF3cpdZg2
-	 jNPrUd4mhBGlfu2fs2oyXDrFYkTao3stBFMngx9I=
+	b=uX99TfEKmlTgg2wapEfC7yzQl7xZY20X9myn37BJOQDRV2HY2YKENp7Qib2na9dNI
+	 GmTz7FJx5tswoIjrUyjfRmRp/Vvq2GNfIGo2YyK8/bfUsVuW9IqieRsgmVKeTuLpT3
+	 s/FspyegUnxwkeKDP6vQdTEST3ohFk7MJzTo7mw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732925AbfDDJKA (ORCPT
+        id S1732942AbfDDJKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732511AbfDDJJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:57 -0400
+        id S1732920AbfDDJKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 645DD20693;
-        Thu,  4 Apr 2019 09:09:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCE6020693;
+        Thu,  4 Apr 2019 09:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368996;
-        bh=fwHb9tn8kzv2JzgvKyNGumjUfySFTTmk0D1S7CGp+pI=;
+        s=default; t=1554368999;
+        bh=GHiXkZAloJXwcrj4Qa7/SdV9pTNyQRq0Vl8arTgRe60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yC8QwbXpr9BuwypyE7os6aGOZXLOU1W3Lp9NAK0GC8DzY3I1qH2Uqn+6cREyX98Rj
-         qvpuDriC/eUur7GkopA8aa5Ww+c7woZxjrt7AF2txKo6sgsKEmBh4dVAf13O9STzUE
-         j/SkW6Ju/6ZGTvbPe2PV3HJBinXHS/4LsWHGJzEE=
+        b=wCByu3M7ppH8A+fL9L3iUEnJ3lCdWZU6dGZM2O9QAX+uLJCSytrps0CClpRYVhtPh
+         HL+52iRQvVba554vm9lO64YL0mZv6KFlZ9L93xW+SDI2leo9W4sHXinaw77dCSM+1r
+         HBuXek2/FBhuogCaF3NHrjSSjX2vOufPCW6wFPgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
         Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 059/246] wil6210: check null pointer in _wil_cfg80211_merge_extra_ies
-Date:   Thu,  4 Apr 2019 10:45:59 +0200
-Message-Id: <20190404084621.245395669@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 060/246] mt76: fix a leaked reference by adding a missing of_node_put
+Date:   Thu,  4 Apr 2019 10:46:00 +0200
+Message-Id: <20190404084621.274424274@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,66 +72,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit de77a53c2d1e8fb3621e63e8e1f0f0c9a1a99ff7 ]
+[ Upstream commit 34e022d8b780a03902d82fb3997ba7c7b1f40c81 ]
 
-ies1 or ies2 might be null when code inside
-_wil_cfg80211_merge_extra_ies access them.
-Add explicit check for null and make sure ies1/ies2 are not
-accessed in such a case.
+The call to of_find_node_by_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-spos might be null and be accessed inside
-_wil_cfg80211_merge_extra_ies.
-Add explicit check for null in the while condition statement
-and make sure spos is not accessed in such a case.
+Detected by coccinelle with the following warnings:
+./drivers/net/wireless/mediatek/mt76/eeprom.c:58:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:61:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:67:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:70:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+./drivers/net/wireless/mediatek/mt76/eeprom.c:72:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
 
-Signed-off-by: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Felix Fietkau <nbd@nbd.name>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/cfg80211.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mediatek/mt76/eeprom.c | 24 ++++++++++++++-------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
-index 9b2f9f543952..5a44f9d0ff02 100644
---- a/drivers/net/wireless/ath/wil6210/cfg80211.c
-+++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
-@@ -1580,6 +1580,12 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
- 	u8 *buf, *dpos;
- 	const u8 *spos;
+diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
+index 530e5593765c..a1529920d877 100644
+--- a/drivers/net/wireless/mediatek/mt76/eeprom.c
++++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
+@@ -54,22 +54,30 @@ mt76_get_of_eeprom(struct mt76_dev *dev, int len)
+ 		part = np->name;
  
-+	if (!ies1)
-+		ies1_len = 0;
-+
-+	if (!ies2)
-+		ies2_len = 0;
-+
- 	if (ies1_len == 0 && ies2_len == 0) {
- 		*merged_ies = NULL;
- 		*merged_len = 0;
-@@ -1589,17 +1595,19 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
- 	buf = kmalloc(ies1_len + ies2_len, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
--	memcpy(buf, ies1, ies1_len);
-+	if (ies1)
-+		memcpy(buf, ies1, ies1_len);
- 	dpos = buf + ies1_len;
- 	spos = ies2;
--	while (spos + 1 < ies2 + ies2_len) {
-+	while (spos && (spos + 1 < ies2 + ies2_len)) {
- 		/* IE tag at offset 0, length at offset 1 */
- 		u16 ielen = 2 + spos[1];
+ 	mtd = get_mtd_device_nm(part);
+-	if (IS_ERR(mtd))
+-		return PTR_ERR(mtd);
++	if (IS_ERR(mtd)) {
++		ret =  PTR_ERR(mtd);
++		goto out_put_node;
++	}
  
- 		if (spos + ielen > ies2 + ies2_len)
- 			break;
- 		if (spos[0] == WLAN_EID_VENDOR_SPECIFIC &&
--		    !_wil_cfg80211_find_ie(ies1, ies1_len, spos, ielen)) {
-+		    (!ies1 || !_wil_cfg80211_find_ie(ies1, ies1_len,
-+						     spos, ielen))) {
- 			memcpy(dpos, spos, ielen);
- 			dpos += ielen;
- 		}
+-	if (size <= sizeof(*list))
+-		return -EINVAL;
++	if (size <= sizeof(*list)) {
++		ret = -EINVAL;
++		goto out_put_node;
++	}
+ 
+ 	offset = be32_to_cpup(list);
+ 	ret = mtd_read(mtd, offset, len, &retlen, dev->eeprom.data);
+ 	put_mtd_device(mtd);
+ 	if (ret)
+-		return ret;
++		goto out_put_node;
+ 
+-	if (retlen < len)
+-		return -EINVAL;
++	if (retlen < len) {
++		ret = -EINVAL;
++		goto out_put_node;
++	}
+ 
+-	return 0;
++out_put_node:
++	of_node_put(np);
++	return ret;
+ #else
+ 	return -ENOENT;
+ #endif
 -- 
 2.19.1
 
