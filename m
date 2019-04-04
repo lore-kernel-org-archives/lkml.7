@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C70C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140CDC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D67F20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61B920855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370735;
-	bh=aN2qvTfBxzBXAMrTLUcLlfNCWAmU6bJVjF4wJOtL99s=;
+	s=default; t=1554370738;
+	bh=thqcyZ8C0zd5qEWtmSkln0g7ErpUGZ3x1Y58nAytztY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XaajsWKEef3KfyMnYvmrayjO487QzfT1Z3TeskaxrwLci6DPT63APY3QH5KQefqHZ
-	 jshSBSkLsYFwUJGNmbEZtOUrgo5WlhTh2lLf3YlJjRjltVNcjltIStUQwZDFLl3hhh
-	 WlpOpRAl2K6uenSb6f7t7aElHjuNLvZFCmZ3gpBQ=
+	b=ZJ6+h33rRUGj+ZDYBSe0oCWnlnQDlKZ/ROmaBcvaCUqkQGfzUST+IX9T8xymKEBGq
+	 BvoWGMK9DGYUrY1EP3r9BtUeVKLGcTH/a5MErLxajTfFJgvBeqXxtyF3VDomAD8Abx
+	 GWM7fFLbBpJPhY7+I9d9cDRvi1N+go7WNDaom194=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbfDDJEA (ORCPT
+        id S1731907AbfDDJi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731871AbfDDJDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:52 -0400
+        id S1731863AbfDDJDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DC5A21855;
-        Thu,  4 Apr 2019 09:03:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F08221855;
+        Thu,  4 Apr 2019 09:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368632;
-        bh=aN2qvTfBxzBXAMrTLUcLlfNCWAmU6bJVjF4wJOtL99s=;
+        s=default; t=1554368634;
+        bh=thqcyZ8C0zd5qEWtmSkln0g7ErpUGZ3x1Y58nAytztY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhlf5TcBcmKz1kDu1/qO3AYvlN2CG3DvYPB1H9A7L+FW1tQ6vtc/cQxNzLvF+uRA+
-         vDZ4Tc1uCL6CZheBqlA8nrZ6PBk/GeEoTousUseOrNQDqGCqtTxpI8RZ9j6LbLXxbd
-         SL4UaNvKgwhP8N7I2nAgIh3otdw96Q2E9Dh8xg7k=
+        b=BOAS4xcO8+Q2GM3zyNgZciL87bTBRjQJPO8KFx+WIzis0jBFRsZAyjiYKXkqctwZF
+         n9shj3I5IIO/t756uPWd9PL7ExBflIZ6LV0tt8uvAwUMSCLuGsHK8CXTSpWskCT6/7
+         qphPRJ8ddEu8Qw8QAIQPweftNSvOaw8fUSOYdgKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/187] cgroup, rstat: Dont flush subtree root unless necessary
-Date:   Thu,  4 Apr 2019 10:47:12 +0200
-Message-Id: <20190404084607.635838141@linuxfoundation.org>
+Subject: [PATCH 4.19 096/187] jbd2: fix race when writing superblock
+Date:   Thu,  4 Apr 2019 10:47:13 +0200
+Message-Id: <20190404084607.689477623@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -65,70 +66,155 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b4ff1b44bcd384d22fcbac6ebaf9cc0d33debe50 ]
+[ Upstream commit 538bcaa6261b77e71d37f5596c33127c1a3ec3f7 ]
 
-cgroup_rstat_cpu_pop_updated() is used to traverse the updated cgroups
-on flush.  While it was only visiting updated ones in the subtree, it
-was visiting @root unconditionally.  We can easily check whether @root
-is updated or not by looking at its ->updated_next just as with the
-cgroups in the subtree.
+The jbd2 superblock is lockless now, so there is probably a race
+condition between writing it so disk and modifing contents of it, which
+may lead to checksum error. The following race is the one case that we
+have captured.
 
-* Remove the unnecessary cgroup_parent() test.  The system root cgroup
-  is never updated and thus its ->updated_next is always NULL.  No
-  need to test whether cgroup_parent() exists in addition to
-  ->updated_next.
+jbd2                                fsstress
+jbd2_journal_commit_transaction
+ jbd2_journal_update_sb_log_tail
+  jbd2_write_superblock
+   jbd2_superblock_csum_set         jbd2_journal_revoke
+                                     jbd2_journal_set_features(revork)
+                                     modify superblock
+   submit_bh(checksum incorrect)
 
-* Terminate traverse if ->updated_next is NULL.  This can only happen
-  for subtree @root and there's no reason to visit it if it's not
-  marked updated.
+Fix this by locking the buffer head before modifing it.  We always
+write the jbd2 superblock after we modify it, so this just means
+calling the lock_buffer() a little earlier.
 
-This reduces cpu consumption when reading a lot of rstat backed files.
-In a micro benchmark reading stat from ~1600 cgroups, the sys time was
-lowered by >40%.
+This checksum corruption problem can be reproduced by xfstests
+generic/475.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: zhangyi (F) <yi.zhang@huawei.com>
+Suggested-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/rstat.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/jbd2/journal.c | 52 ++++++++++++++++++++++++-----------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index d503d1a9007c..bb95a35e8c2d 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -87,7 +87,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 						   struct cgroup *root, int cpu)
- {
- 	struct cgroup_rstat_cpu *rstatc;
--	struct cgroup *parent;
- 
- 	if (pos == root)
- 		return NULL;
-@@ -115,8 +114,8 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 	 * However, due to the way we traverse, @pos will be the first
- 	 * child in most cases. The only exception is @root.
- 	 */
--	parent = cgroup_parent(pos);
--	if (parent && rstatc->updated_next) {
-+	if (rstatc->updated_next) {
-+		struct cgroup *parent = cgroup_parent(pos);
- 		struct cgroup_rstat_cpu *prstatc = cgroup_rstat_cpu(parent, cpu);
- 		struct cgroup_rstat_cpu *nrstatc;
- 		struct cgroup **nextp;
-@@ -140,9 +139,12 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 		 * updated stat.
- 		 */
- 		smp_mb();
-+
-+		return pos;
- 	}
- 
--	return pos;
-+	/* only happens for @root */
-+	return NULL;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 8ef6b6daaa7a..88f2a49338a1 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1356,6 +1356,10 @@ static int journal_reset(journal_t *journal)
+ 	return jbd2_journal_start_thread(journal);
  }
  
- /* see cgroup_rstat_flush() */
++/*
++ * This function expects that the caller will have locked the journal
++ * buffer head, and will return with it unlocked
++ */
+ static int jbd2_write_superblock(journal_t *journal, int write_flags)
+ {
+ 	struct buffer_head *bh = journal->j_sb_buffer;
+@@ -1365,7 +1369,6 @@ static int jbd2_write_superblock(journal_t *journal, int write_flags)
+ 	trace_jbd2_write_superblock(journal, write_flags);
+ 	if (!(journal->j_flags & JBD2_BARRIER))
+ 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
+-	lock_buffer(bh);
+ 	if (buffer_write_io_error(bh)) {
+ 		/*
+ 		 * Oh, dear.  A previous attempt to write the journal
+@@ -1424,6 +1427,7 @@ int jbd2_journal_update_sb_log_tail(journal_t *journal, tid_t tail_tid,
+ 	jbd_debug(1, "JBD2: updating superblock (start %lu, seq %u)\n",
+ 		  tail_block, tail_tid);
+ 
++	lock_buffer(journal->j_sb_buffer);
+ 	sb->s_sequence = cpu_to_be32(tail_tid);
+ 	sb->s_start    = cpu_to_be32(tail_block);
+ 
+@@ -1454,18 +1458,17 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
+ 	journal_superblock_t *sb = journal->j_superblock;
+ 
+ 	BUG_ON(!mutex_is_locked(&journal->j_checkpoint_mutex));
+-	read_lock(&journal->j_state_lock);
+-	/* Is it already empty? */
+-	if (sb->s_start == 0) {
+-		read_unlock(&journal->j_state_lock);
++	lock_buffer(journal->j_sb_buffer);
++	if (sb->s_start == 0) {		/* Is it already empty? */
++		unlock_buffer(journal->j_sb_buffer);
+ 		return;
+ 	}
++
+ 	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
+ 		  journal->j_tail_sequence);
+ 
+ 	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
+ 	sb->s_start    = cpu_to_be32(0);
+-	read_unlock(&journal->j_state_lock);
+ 
+ 	jbd2_write_superblock(journal, write_op);
+ 
+@@ -1488,9 +1491,8 @@ void jbd2_journal_update_sb_errno(journal_t *journal)
+ 	journal_superblock_t *sb = journal->j_superblock;
+ 	int errcode;
+ 
+-	read_lock(&journal->j_state_lock);
++	lock_buffer(journal->j_sb_buffer);
+ 	errcode = journal->j_errno;
+-	read_unlock(&journal->j_state_lock);
+ 	if (errcode == -ESHUTDOWN)
+ 		errcode = 0;
+ 	jbd_debug(1, "JBD2: updating superblock error (errno %d)\n", errcode);
+@@ -1894,28 +1896,27 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
+ 
+ 	sb = journal->j_superblock;
+ 
++	/* Load the checksum driver if necessary */
++	if ((journal->j_chksum_driver == NULL) &&
++	    INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
++		journal->j_chksum_driver = crypto_alloc_shash("crc32c", 0, 0);
++		if (IS_ERR(journal->j_chksum_driver)) {
++			printk(KERN_ERR "JBD2: Cannot load crc32c driver.\n");
++			journal->j_chksum_driver = NULL;
++			return 0;
++		}
++		/* Precompute checksum seed for all metadata */
++		journal->j_csum_seed = jbd2_chksum(journal, ~0, sb->s_uuid,
++						   sizeof(sb->s_uuid));
++	}
++
++	lock_buffer(journal->j_sb_buffer);
++
+ 	/* If enabling v3 checksums, update superblock */
+ 	if (INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
+ 		sb->s_checksum_type = JBD2_CRC32C_CHKSUM;
+ 		sb->s_feature_compat &=
+ 			~cpu_to_be32(JBD2_FEATURE_COMPAT_CHECKSUM);
+-
+-		/* Load the checksum driver */
+-		if (journal->j_chksum_driver == NULL) {
+-			journal->j_chksum_driver = crypto_alloc_shash("crc32c",
+-								      0, 0);
+-			if (IS_ERR(journal->j_chksum_driver)) {
+-				printk(KERN_ERR "JBD2: Cannot load crc32c "
+-				       "driver.\n");
+-				journal->j_chksum_driver = NULL;
+-				return 0;
+-			}
+-
+-			/* Precompute checksum seed for all metadata */
+-			journal->j_csum_seed = jbd2_chksum(journal, ~0,
+-							   sb->s_uuid,
+-							   sizeof(sb->s_uuid));
+-		}
+ 	}
+ 
+ 	/* If enabling v1 checksums, downgrade superblock */
+@@ -1927,6 +1928,7 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
+ 	sb->s_feature_compat    |= cpu_to_be32(compat);
+ 	sb->s_feature_ro_compat |= cpu_to_be32(ro);
+ 	sb->s_feature_incompat  |= cpu_to_be32(incompat);
++	unlock_buffer(journal->j_sb_buffer);
+ 
+ 	return 1;
+ #undef COMPAT_FEATURE_ON
 -- 
 2.19.1
 
