@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDDEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EB1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796C720820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19BE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371523;
-	bh=TGBQnqmn+5XPHYFSUZddVuHnYi+5v35G53U4l8E1ohg=;
+	s=default; t=1554371540;
+	bh=RBp3h2LGC4XN+JvRF3VRiK8RybwOr/xcmVBkhsJk11M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0OxntGT+izSl/Ud3Oc4sOdC0KaYRmv+m1Ce8R2QPkBbiG5DLqQkzHZF+inSchFEWl
-	 2nvPi15BJlvTEXW/EbOALmrgu3ZNGSHyDqlPOd2CNhP0SHKDSVFobJ4Rf/XSL4gQDN
-	 5GBLkORAQVh2QIIG1cvrcNpUllkw00T1GMsX5TrU=
+	b=G+9OBc9EKcK2NTvkk5OLep0IK55d7e8I9Mt0JwNbgrJABrr5D18eL4FQMUFWVfeN+
+	 SldBj4OHQNnuhseBRptvn5z9pOkD27WZ8xF0GJJZe/L00iEVrUmrQmY0LosfVxtF3D
+	 8EIOEJbCEDwwoHxcxefYqnLhAxdZXDMYp1mwVRy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfDDIyb (ORCPT
+        id S1730284AbfDDJwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:52:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728860AbfDDIy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:29 -0400
+        id S1729218AbfDDIyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE08820652;
-        Thu,  4 Apr 2019 08:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02B6520693;
+        Thu,  4 Apr 2019 08:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368068;
-        bh=TGBQnqmn+5XPHYFSUZddVuHnYi+5v35G53U4l8E1ohg=;
+        s=default; t=1554368052;
+        bh=RBp3h2LGC4XN+JvRF3VRiK8RybwOr/xcmVBkhsJk11M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T8JgMM81VBqGl/qesOj83VCMPEbhu30CuGY42WSCU7ypGaEgBOydL6giCvpVTs9FN
-         XD+pIC6aBMPeXtJbw5R7QbdsGjBpUgRkCCA2DFiXUROwp89gCUaoK5KxYy2RWxY9xE
-         GILXDIL5zwK3FKfx3GCcXK/uwKsvThw3BXKhE7fU=
+        b=T0KytK0rCNXkbJjqztth+hO2RYi1mH3QqFLKCRztN5kCxmmaC57HYPrOp12xi50F5
+         FmhWe5waTSy9xz+ZE2DyoW1qSH8FPEQYZ3szN9iHo3vOYeP2M4jFsYLD+B3+sPwbx0
+         ITs4bTrvPPtGf670J4g/zpyw6kN0NJNleh6R5ey0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiqun Li <jiqun.li@unisoc.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 009/121] f2fs: fix to avoid deadlock in f2fs_read_inline_dir()
-Date:   Thu,  4 Apr 2019 10:46:37 +0200
-Message-Id: <20190404084545.776589928@linuxfoundation.org>
+Subject: [PATCH 4.14 020/121] mm/cma.c: cma_declare_contiguous: correct err handling
+Date:   Thu,  4 Apr 2019 10:46:48 +0200
+Message-Id: <20190404084546.470070996@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,119 +75,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit aadcef64b22f668c1a107b86d3521d9cac915c24 ]
+[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
 
-As Jiqun Li reported in bugzilla:
+In case cma_init_reserved_mem failed, need to free the memblock
+allocated by memblock_reserve or memblock_alloc_range.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=202883
+Quote Catalin's comments:
+  https://lkml.org/lkml/2019/2/26/482
 
-sometimes, dead lock when make system call SYS_getdents64 with fsync() is
-called by another process.
+Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
+ignores the memblock_reserve() as a memblock_alloc() implementation
+detail. It is, however, tolerant to memblock_free() being called on
+a sub-range or just a different range from a previous memblock_alloc().
+So the original patch looks fine to me. FWIW:
 
-monkey running on android9.0
-
-1.  task 9785 held sbi->cp_rwsem and waiting lock_page()
-2.  task 10349 held mm_sem and waiting sbi->cp_rwsem
-3. task 9709 held lock_page() and waiting mm_sem
-
-so this is a dead lock scenario.
-
-task stack is show by crash tools as following
-
-crash_arm64> bt ffffffc03c354080
-PID: 9785   TASK: ffffffc03c354080  CPU: 1   COMMAND: "RxIoScheduler-3"
->> #7 [ffffffc01b50fac0] __lock_page at ffffff80081b11e8
-
-crash-arm64> bt 10349
-PID: 10349  TASK: ffffffc018b83080  CPU: 1   COMMAND: "BUGLY_ASYNC_UPL"
->> #3 [ffffffc01f8cfa40] rwsem_down_read_failed at ffffff8008a93afc
-     PC: 00000033  LR: 00000000  SP: 00000000  PSTATE: ffffffffffffffff
-
-crash-arm64> bt 9709
-PID: 9709   TASK: ffffffc03e7f3080  CPU: 1   COMMAND: "IntentService[A"
->> #3 [ffffffc001e67850] rwsem_down_read_failed at ffffff8008a93afc
->> #8 [ffffffc001e67b80] el1_ia at ffffff8008084fc4
-     PC: ffffff8008274114  [compat_filldir64+120]
-     LR: ffffff80083584d4  [f2fs_fill_dentries+448]
-     SP: ffffffc001e67b80  PSTATE: 80400145
-    X29: ffffffc001e67b80  X28: 0000000000000000  X27: 000000000000001a
-    X26: 00000000000093d7  X25: ffffffc070d52480  X24: 0000000000000008
-    X23: 0000000000000028  X22: 00000000d43dfd60  X21: ffffffc001e67e90
-    X20: 0000000000000011  X19: ffffff80093a4000  X18: 0000000000000000
-    X17: 0000000000000000  X16: 0000000000000000  X15: 0000000000000000
-    X14: ffffffffffffffff  X13: 0000000000000008  X12: 0101010101010101
-    X11: 7f7f7f7f7f7f7f7f  X10: 6a6a6a6a6a6a6a6a   X9: 7f7f7f7f7f7f7f7f
-     X8: 0000000080808000   X7: ffffff800827409c   X6: 0000000080808000
-     X5: 0000000000000008   X4: 00000000000093d7   X3: 000000000000001a
-     X2: 0000000000000011   X1: ffffffc070d52480   X0: 0000000000800238
->> #9 [ffffffc001e67be0] f2fs_fill_dentries at ffffff80083584d0
-     PC: 0000003c  LR: 00000000  SP: 00000000  PSTATE: 000000d9
-    X12: f48a02ff X11: d4678960 X10: d43dfc00  X9: d4678ae4
-     X8: 00000058  X7: d4678994  X6: d43de800  X5: 000000d9
-     X4: d43dfc0c  X3: d43dfc10  X2: d46799c8  X1: 00000000
-     X0: 00001068
-
-Below potential deadlock will happen between three threads:
-Thread A		Thread B		Thread C
-- f2fs_do_sync_file
- - f2fs_write_checkpoint
-  - down_write(&sbi->node_change) -- 1)
-			- do_page_fault
-			 - down_write(&mm->mmap_sem) -- 2)
-			  - do_wp_page
-			   - f2fs_vm_page_mkwrite
-						- getdents64
-						 - f2fs_read_inline_dir
-						  - lock_page -- 3)
-  - f2fs_sync_node_pages
-   - lock_page -- 3)
-			    - __do_map_lock
-			     - down_read(&sbi->node_change) -- 1)
-						  - f2fs_fill_dentries
-						   - dir_emit
-						    - compat_filldir64
-						     - do_page_fault
-						      - down_read(&mm->mmap_sem) -- 2)
-
-Since f2fs_readdir is protected by inode.i_rwsem, there should not be
-any updates in inode page, we're safe to lookup dents in inode page
-without its lock held, so taking off the lock to improve concurrency
-of readdir and avoid potential deadlock.
-
-Reported-by: Jiqun Li <jiqun.li@unisoc.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inline.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ mm/cma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index 888a9dc13677..506e365cf903 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -656,6 +656,12 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
- 	if (IS_ERR(ipage))
- 		return PTR_ERR(ipage);
+diff --git a/mm/cma.c b/mm/cma.c
+index 022e52bd8370..5749c9b3b5d0 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -348,12 +348,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
  
-+	/*
-+	 * f2fs_readdir was protected by inode.i_rwsem, it is safe to access
-+	 * ipage without page's lock held.
-+	 */
-+	unlock_page(ipage);
-+
- 	inline_dentry = inline_data_addr(inode, ipage);
+ 	ret = cma_init_reserved_mem(base, size, order_per_bit, name, res_cma);
+ 	if (ret)
+-		goto err;
++		goto free_mem;
  
- 	make_dentry_ptr_inline(inode, &d, inline_dentry);
-@@ -664,7 +670,7 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
- 	if (!err)
- 		ctx->pos = d.max;
+ 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
+ 		&base);
+ 	return 0;
  
--	f2fs_put_page(ipage, 1);
-+	f2fs_put_page(ipage, 0);
- 	return err < 0 ? err : 0;
- }
- 
++free_mem:
++	memblock_free(base, size);
+ err:
+ 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
+ 	return ret;
 -- 
 2.19.1
 
