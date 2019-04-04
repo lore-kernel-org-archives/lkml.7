@@ -2,135 +2,108 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE2CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80077C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F37206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C88920663
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:51:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AQUQ+/79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbfDDUuf (ORCPT
+        id S1731248AbfDDUvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:50:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39986 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731250AbfDDUue (ORCPT
+        Thu, 4 Apr 2019 16:51:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60218 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730021AbfDDUvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:50:34 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34Km3cu041111
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 16:50:33 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rnpx2pf49-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:50:33 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 4 Apr 2019 21:50:31 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Apr 2019 21:50:26 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34KoPxi18087942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Apr 2019 20:50:25 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C5F10B2065;
-        Thu,  4 Apr 2019 20:50:25 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A71C0B2066;
-        Thu,  4 Apr 2019 20:50:25 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Apr 2019 20:50:25 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 939D316C32DA; Thu,  4 Apr 2019 13:50:27 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 13:50:27 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, stern@rowland.harvard.edu, will.deacon@arm.com,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com
-Subject: Re: [PATCH tip/core/rcu 08/21] tools/memory-model: Add support for
- synchronize_srcu_expedited()
-Reply-To: paulmck@linux.ibm.com
-References: <20190326234114.GA23843@linux.ibm.com>
- <20190326234133.24962-8-paulmck@linux.ibm.com>
- <20190402144911.GA10044@andrea>
+        Thu, 4 Apr 2019 16:51:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xv8cNFmpE8W4+MPi9lMkTvAZTd4wrds89tk7y4AvM6A=; b=AQUQ+/79mrgr1oc2B9fDmmYZ+8
+        h23KfNenVwpdHunMjATl3ndp8GfrNz8h4I3+esuWPMy4otCRhjRdU20ZVfbZvIknNfwcEI/Rm7wBP
+        CmMlgM+uM2lm91OvoaxNPPOrd1lQ/fukjdeUuZYfi3h+5viuxfdIVKRxk800RVHeCNkVqoUsDRHIx
+        FXzqyYvQYaKIOO14wTLK18SfWvfmL2QoJiDV8DHoXCKZj3+Pu1Oilhnj5DIHoHbs0tHrmHwCwCE0g
+        Y0eefLHkreFk8AQ8VJkR6e2YFpppfMEirIuUSljkRtw7ONQukJZ9UCVmEAlCVbr04n4xGVbKIRopi
+        TUoMQNQQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hC9Ku-000645-JW; Thu, 04 Apr 2019 20:51:49 +0000
+Subject: Re: linux-next: Tree for Apr 3 (objtool)
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190403192407.13a99513@canb.auug.org.au>
+ <d37e0909-cacc-7c6c-4376-33891fa69f53@infradead.org>
+ <20190403205305.tqqwttjytunzgtub@treble>
+ <6a2455b9-5c02-99dc-e41c-e6b7d1c3118d@infradead.org>
+ <20190404171618.6u36y5zu3euvd4zp@treble>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <9e4eb742-f306-7aea-a3d7-9abbb244bb55@infradead.org>
+Date:   Thu, 4 Apr 2019 13:51:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190402144911.GA10044@andrea>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040420-0072-0000-0000-00000415A73A
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010873; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01184363; UDB=6.00620129; IPR=6.00965117;
- MB=3.00026298; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-04 20:50:30
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040420-0073-0000-0000-00004BB6725B
-Message-Id: <20190404205027.GM14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904040131
+In-Reply-To: <20190404171618.6u36y5zu3euvd4zp@treble>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2019 at 04:49:11PM +0200, Andrea Parri wrote:
-> On Tue, Mar 26, 2019 at 04:41:20PM -0700, Paul E. McKenney wrote:
-> > Given that synchronize_rcu_expedited() is supported, this commit adds
-> > support for synchronize_srcu_expedited().
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> > ---
-> >  tools/memory-model/linux-kernel.def | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/memory-model/linux-kernel.def b/tools/memory-model/linux-kernel.def
-> > index 0c3f0ef486f4..551eeaa389d4 100644
-> > --- a/tools/memory-model/linux-kernel.def
-> > +++ b/tools/memory-model/linux-kernel.def
-> > @@ -51,6 +51,7 @@ synchronize_rcu_expedited() { __fence{sync-rcu}; }
-> >  srcu_read_lock(X)  __srcu{srcu-lock}(X)
-> >  srcu_read_unlock(X,Y) { __srcu{srcu-unlock}(X,Y); }
-> >  synchronize_srcu(X)  { __srcu{sync-srcu}(X); }
-> > +synchronize_srcu_expedited(X)  { __srcu{sync-srcu}(X); }
+On 4/4/19 10:16 AM, Josh Poimboeuf wrote:
+> On Wed, Apr 03, 2019 at 03:29:17PM -0700, Randy Dunlap wrote:
+>> On 4/3/19 1:53 PM, Josh Poimboeuf wrote:
+>>> On Wed, Apr 03, 2019 at 08:02:43AM -0700, Randy Dunlap wrote:
+>>>> On 4/3/19 1:24 AM, Stephen Rothwell wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> Changes since 20190402:
+>>>>>
+>>>>
+>>>> on x86_64:
+>>>>
+>>>> arch/x86/entry/entry_64.o: warning: objtool: .entry.text+0x909: unreachable instruction
+>>>
+>>> Your .o file looks odd.  I can't recreate the issue when I build the
+>>> same object.
+>>
+>> This (randconfig) build has tracing enabled?  Could that have anything to do
+>> with it?
 > 
-> This and the other patches from the series do not apply to "tip/core/rcu"
-
-Ah, that is instead their hoped-for destination within the -tip tree.
-They are included in -rcu branch "dev".
-
-> (from the Subject), but this seems straightforward enough:
+> No, I can't see any reasonable explanation for it other than a buggy
+> toolchain.
 > 
-> Acked-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-
-Applied, thank you!
-
-							Thanx, Paul
-
->   Andrea
+>> The randconfig file is attached.
 > 
+> I still can't recreate with your randconfig.
 > 
-> >  
-> >  // Atomic
-> >  atomic_read(X) READ_ONCE(*X)
-> > -- 
-> > 2.17.1
-> > 
+>>> Did the issue only just now show up?  Can you bisect it?  What version
+>>> of binutils are you using?
+>>
+>>> ld -v
+>> GNU ld (GNU Binutils; openSUSE Leap 42.3) 2.31.1.20180828-19
+>>
+>>
+>> My build logs show it first occurred (in my randconfig builds) in
+>> linux-next-20190204.
+> 
+> It seems really odd.  Can you do a bisect?
 > 
 
+Sure, I'll give it a try.
+
+-- 
+~Randy
