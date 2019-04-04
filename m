@@ -2,98 +2,108 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E5C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC1B204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554374706;
-	bh=JDYpTwi1zuluXo/2/qUHJHPNhQgtig6DqOKGWlaHbLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LBEex+grpHoreLX0DfnuO0VT77oJ4WfuhXVKsyZ3nhH0/z/Zd7ZDRk1vlJfuNk85f
-	 JAzXfQUy9m9JrO/6c5/Fw5tWUek2k3oKje8dBSY1UjP8jsJoVvFAfi67KmeZJOmy2D
-	 WU4FprR1Az7gb5DqAGYheEOuPu1z4yUp0XJShBmQ=
+	by mail.kernel.org (Postfix) with ESMTP id A7840204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hxNvuI8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbfDDKpF (ORCPT
+        id S1729577AbfDDKpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:45:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43075 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729087AbfDDKpE (ORCPT
+        Thu, 4 Apr 2019 06:45:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35254 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728934AbfDDKpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:45:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f18so1617993lja.10;
-        Thu, 04 Apr 2019 03:45:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XzQvjmCI+0ckfBthskpsNeqIbQ1X/pfU1z+CGkImJtk=;
-        b=RtuLsBa6tCIA1w0fp5vR7zJYEkWtWZ3VNHStKdTQNae61fzBEJEaaMWuC7qdF3fD7O
-         H9JlgtLBA2/gtq4+1tit7gIDGZjzJKjOPwWt55qWCmCaL6LFwuxQ1SaL1ywcEFbzi3ZT
-         x8IgPCFpogoBZC/ibWUQxL17iXd7cfRaNvczHVSrKtF2MIHOZ+AGE8Jk/sZoErKihbwP
-         Oo7kZglXojTBIZctE5FiiyyC2xCWrGFXJkYXgqjzD5DQ3JMYjgm/GQNQYIYbW7PubaP0
-         2ay2+dkuKFHkOxPQiLNjWNQ1YwN0OE0uOzKtHvuGReuXrWQS4iQyMzHkq7QKuzhCMMyv
-         v8HQ==
-X-Gm-Message-State: APjAAAXjfdXo3JOCtpDxAkp08KsUo1QWFjXYMWnVDkZSfXBoslMfCsoj
-        nIVtAnEI+LqVWcqKiWyKd8PD2fWD
-X-Google-Smtp-Source: APXvYqwORWZXGxGhy46KAQGiLwD78jTEvIBFe2rl+z8abcRerNYwVGQCBViuZOp4DIp9ePOc1s2oYQ==
-X-Received: by 2002:a2e:9703:: with SMTP id r3mr2944827lji.88.1554374702568;
-        Thu, 04 Apr 2019 03:45:02 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id c64sm3531882lfg.70.2019.04.04.03.45.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 03:45:01 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hBzs6-0004U0-G7; Thu, 04 Apr 2019 12:45:26 +0200
-Date:   Thu, 4 Apr 2019 12:45:26 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Cc:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
-        johan@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH v2 4/5] dt-bindings: gnss: Add
- u-blox,neo-6m compatible
-Message-ID: <20190404104526.GD29917@localhost>
-References: <20190401115616.21337-1-megous@megous.com>
- <20190401115616.21337-5-megous@megous.com>
- <20190401120209.fhjyvevk4tsc533s@core.my.home>
+        Thu, 4 Apr 2019 06:45:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uKbxkaS4O3vvetKjsQOGzUVgF1/3j86xWVebVWs4s1A=; b=hxNvuI8+BqwGG023VYcl54avy
+        K7alQzyB55oMNxKXAqUGw38hqH4E4JKEsxb2I8X4nPsoHM0Kz70u4FyV/Jimb5Kmuhhefj3580w83
+        T8XFO+Kij52CgAoR1pOTrUYviVtUWI4w7PQTwpWGpkNAWWpMYZn4D6oKGKjUTTsMIHe1oeae0yV8d
+        RLe6gSk1t7o8iMCOpIVLwlt3NfPo7xlgfAMDtBhy86iY88i6HBdSexB7g6933SiMmgR2GspFoTbQ9
+        fMu/jg4d1O8M9QWRevjCKXW0WTF6wbT7zjNQUqfxo//HE8Ex1wKDuD+ZXsUw+Z2dOSQ+PRP/bBv52
+        8xXKcr6gg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hBzsA-00004s-45; Thu, 04 Apr 2019 10:45:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 940C3201AF566; Thu,  4 Apr 2019 12:45:27 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 12:45:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cpumask: Introduce possible_cpu_safe()
+Message-ID: <20190404104527.GX4038@hirez.programming.kicks-ass.net>
+References: <20190404100218.GA26946@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190401120209.fhjyvevk4tsc533s@core.my.home>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190404100218.GA26946@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 02:02:09PM +0200, Ondřej Jirman wrote:
-> On Mon, Apr 01, 2019 at 01:56:15PM +0200, megous via linux-sunxi wrote:
-> > From: Ondrej Jirman <megous@megous.com>
-> > 
-> > Add compatible for u-blox NEO-6M GPS module.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> 
-> Ouch, I forgot to add:
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> I'll do v3 if necessary, for this.
+On Thu, Apr 04, 2019 at 01:02:19PM +0300, Dan Carpenter wrote:
+> There have been two cases recently where we pass user a controlled "cpu"
+> to possible_cpus().  That's not allowed.  If it's invalid, it will
+> trigger a WARN_ONCE() and an out of bounds read which could result in an
+> Oops.
 
-Looks good to me too.
+> +/**
+> + * cpumask_test_cpu_safe - test for a cpu in a cpumask
+> + * @cpu: cpu number
+> + * @cpumask: the cpumask pointer
+> + *
+> + * Returns 1 if @cpu is valid and set in @cpumask, else returns 0
+> + */
+> +static inline int cpumask_test_cpu_safe(int cpu, const struct cpumask *cpumask)
+> +{
+> +	if ((unsigned int)cpu >= nr_cpu_ids)
+> +		return 0;
+> +	cpu = array_index_nospec(cpu, NR_CPUS);
 
-Now applied with Robs ack along with the ubx-driver patch.
+That should be:
 
-Thanks,
-Johan
+	cpu = array_index_nospec(cpu, nr_cpu_ids);
+
+NR_CPUS might still be out-of-bounds for dynamically allocated cpumasks.
+
+> +	return test_bit(cpu, cpumask_bits(cpumask));
+> +}
+
+That said; I don't particularly like this interface not its naming, how
+about something like:
+
+static inline unsigned int cpumask_validate_cpu(unsigned int cpu)
+{
+	if (cpu >= nr_cpumask_bits)
+		return nr_cpumask_bits;
+	return array_index_nospec(cpu, nr_cpumask_bits);
+}
+
+Which you can then use like:
+
+	cpu = cpumask_validate_cpu(user_cpu);
+	if (cpu >= nr_cpu_ids)
+		return -ENORANGE;
+
+	/* @cpu is valid, do what needs doing */
