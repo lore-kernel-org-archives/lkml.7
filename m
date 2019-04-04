@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE55C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C1AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C08CF20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264672054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369136;
-	bh=hL/wpL44RdNuBjBVPNeGvK3tZFHoliXGqWbcmZ3RI+Q=;
+	s=default; t=1554369140;
+	bh=Ly8bQufKb8c0UHYq+OnvJwcaZ+rZ56Cmqiuo/93vuz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOv79iD9+SXtC8d06pmAseaZ3vR8Gt3vwBnv8/Jo2j+W9JxWTAsx6BBqwefx8pNpO
-	 aZnMOkMKjLYMbaPr6Dw0xFT1Tvq88fzI1ioyH6G2QUnEI7d0jqy/8ngVOoFpNJta8I
-	 G0XivuA/iDHMyzyxyoabaHG6ulyIk2eTNKs+5z40=
+	b=NUVwoekPqPF8jDbMU15M5Z9x7UDAwgH/Sqd9MPknT2qSZTNmQvF4gziVJEtyPefrB
+	 gMZWsfBYnRqncVDGkKGffiMTU8E3/Yx2wW96dQnn83NVnUpCKKkbU0AuuJzYJDfaUJ
+	 TqKZSJi4x3xhsjQh43u1wDoT30RaxFsnXKSyIZ0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733291AbfDDJMP (ORCPT
+        id S1732690AbfDDJMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733282AbfDDJML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:11 -0400
+        id S1733093AbfDDJMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 743EC20652;
-        Thu,  4 Apr 2019 09:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08A222184B;
+        Thu,  4 Apr 2019 09:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369130;
-        bh=hL/wpL44RdNuBjBVPNeGvK3tZFHoliXGqWbcmZ3RI+Q=;
+        s=default; t=1554369133;
+        bh=Ly8bQufKb8c0UHYq+OnvJwcaZ+rZ56Cmqiuo/93vuz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRkfk+fCJBwwkXa8dgdBbKnyXp7EfNMTdIOc6mFM2blmQiEWKTUMwugyvKxToHlHg
-         1bywC+U79l/Qh/Z23HbFMmJaWAjotI3NEUYYrEj0p/Xfj906bvJJVvrgNZwTVlpum7
-         pJ9lKn8S3/TgmHYA1Bhzf3RVD2IpxSYogy9NyR5c=
+        b=1v26CSrUSvS7Wd2UbJUUOi5GXT50Ks74DetZoYO6AVBm1L3FnpZD7Uny4ISEKPKmS
+         Pc91j1mSatDmPnrNuyZv04e2gLpGnNebnpZcRKruJ56t7euEoYcRV+mwQEhxPYf/m3
+         MXOJmI4eoVoWJwAC1ersYJOC/NKbwCZjckVqZ1e4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 108/246] perf test: Fix failure of evsel-tp-sched test on s390
-Date:   Thu,  4 Apr 2019 10:46:48 +0200
-Message-Id: <20190404084622.929947447@linuxfoundation.org>
+Subject: [PATCH 5.0 109/246] mwifiex: dont advertise IBSS features without FW support
+Date:   Thu,  4 Apr 2019 10:46:49 +0200
+Message-Id: <20190404084622.965274498@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,118 +66,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 03d309711d687460d1345de8a0363f45b1c8cd11 ]
+[ Upstream commit 6f21ab30469d670de620f758330aca9f3433f693 ]
 
-Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
-causes test case 14 "Parse sched tracepoints fields" to fail on s390.
+As it is, doing something like
 
-This test succeeds on x86.
+  # iw phy phy0 interface add foobar type ibss
 
-In fact this test now fails on all architectures with type char treated
-as type unsigned char.
+on a firmware that doesn't have ad-hoc support just yields failures of
+HostCmd_CMD_SET_BSS_MODE, which happened to return a '-1' error code
+(-EPERM? not really right...) and sometimes may even crash the firmware
+along the way.
 
-The root cause is the signed-ness of character arrays in the tracepoints
-sched_switch for structure members prev_comm and next_comm.
+Let's parse the firmware capability flag while registering the wiphy, so
+we don't allow attempting IBSS at all, and we get a proper -EOPNOTSUPP
+from nl80211 instead.
 
-On s390 the output of:
-
- [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:0;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:0;
-
-reveals the character arrays prev_comm and next_comm are per
-default unsigned char and have values in the range of 0..255.
-
-On x86 both fields are signed as this output shows:
- [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:1;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:1;
-
-and the character arrays prev_comm and next_comm are per default signed
-char and have values in the range of -1..127.  The implementation of
-type char is architecture specific.
-
-Since the character arrays in both tracepoints sched_switch and
-sched_wakeup should contain ascii characters, simply omit the check for
-signedness in the test case.
-
-Output before:
-
-  [root@m35lp76 perf]# ./perf test -F 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
-  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
-  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
-  ---- end ----
-  14: Parse sched tracepoints fields                        : FAILED!
-  [root@m35lp76 perf]#
-
-Output after:
-
-  [root@m35lp76 perf]# ./perf test -Fv 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  ---- end ----
-  Parse sched tracepoints fields: Ok
-  [root@m35lp76 perf]#
-
-Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: e267e71e68ae ("mwifiex: Disable adhoc feature based on firmware capability")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/evsel-tp-sched.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index 5cbba70bcdd0..ea7acf403727 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -43,7 +43,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 		return -1;
- 	}
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 1467af22e394..883752f640b4 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -4310,11 +4310,13 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	wiphy->mgmt_stypes = mwifiex_mgmt_stypes;
+ 	wiphy->max_remain_on_channel_duration = 5000;
+ 	wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+-				 BIT(NL80211_IFTYPE_ADHOC) |
+ 				 BIT(NL80211_IFTYPE_P2P_CLIENT) |
+ 				 BIT(NL80211_IFTYPE_P2P_GO) |
+ 				 BIT(NL80211_IFTYPE_AP);
  
--	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
- 		ret = -1;
++	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
++		wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
++
+ 	wiphy->bands[NL80211_BAND_2GHZ] = &mwifiex_band_2ghz;
+ 	if (adapter->config_bands & BAND_A)
+ 		wiphy->bands[NL80211_BAND_5GHZ] = &mwifiex_band_5ghz;
+@@ -4374,11 +4376,13 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 	wiphy->available_antennas_tx = BIT(adapter->number_of_antenna) - 1;
+ 	wiphy->available_antennas_rx = BIT(adapter->number_of_antenna) - 1;
  
- 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
-@@ -55,7 +55,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
- 		ret = -1;
+-	wiphy->features |= NL80211_FEATURE_HT_IBSS |
+-			   NL80211_FEATURE_INACTIVITY_TIMER |
++	wiphy->features |= NL80211_FEATURE_INACTIVITY_TIMER |
+ 			   NL80211_FEATURE_LOW_PRIORITY_SCAN |
+ 			   NL80211_FEATURE_NEED_OBSS_SCAN;
  
--	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
-@@ -73,7 +73,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 		return -1;
- 	}
- 
--	if (perf_evsel__test_field(evsel, "comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "pid", 4, true))
++	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
++		wiphy->features |= NL80211_FEATURE_HT_IBSS;
++
+ 	if (ISSUPP_RANDOM_MAC(adapter->fw_cap_info))
+ 		wiphy->features |= NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR |
+ 				   NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR |
 -- 
 2.19.1
 
