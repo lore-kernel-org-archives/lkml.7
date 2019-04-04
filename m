@@ -2,124 +2,85 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02C0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5A6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73098206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7B8206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:28:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WiwMZqrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbfDDL1R (ORCPT
+        id S1729233AbfDDL2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 07:27:17 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58568 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727131AbfDDL1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 07:27:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22326EBD;
-        Thu,  4 Apr 2019 04:27:16 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF6303F557;
-        Thu,  4 Apr 2019 04:27:14 -0700 (PDT)
-Subject: Re: [PATCH 23/25] coresight: stm: ACPI support for parsing stimulus
- base
-To:     mathieu.poirier@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, coresight@lists.linaro.org,
-        mike.leach@linaro.org, robert.walker@arm.com, rjw@rjwysocki.net
-References: <1553107783-3340-1-git-send-email-suzuki.poulose@arm.com>
- <1553107783-3340-24-git-send-email-suzuki.poulose@arm.com>
- <20190328204151.GA7163@xps15>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <09baa551-b351-6651-e609-75ed425ae7f4@arm.com>
-Date:   Thu, 4 Apr 2019 12:27:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 07:28:20 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54618 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbfDDL2U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 07:28:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZjwA9bBAqDZG+ml5BFZSkpHCRFNpvjIjCm42eG0iWhk=; b=WiwMZqrwYn/59tRw9u8l9eG2Y
+        9fjZjP7NmBA3EJ9tRt9pWfHJNrrr2pKXExAGvsIPELJOcNdz50XBEvXvUQ08nFSvqpVzi2xOv37dI
+        jouIfPS6QVC+IbhHHVinPRfQriXCoEgDdL5mghWYu9dLC0zNP9qOfrqdpfCKXmZpOhnKkcmPDpS0n
+        cgiz/43tw6DvvWEFvk9jK+v7ehN1LR0S/HcnjCppZcaHFazeTFRg0gbjrO3mi53v+i4t7a4r7OmQo
+        zp8yTb0mYlPb5LJQc2tNJzYbmaQ7miLJLysivGvuI24gVevk1ZKvQq59nOmfwykz1+fCd1cXTV4G5
+        lgPKJedPw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hC0XQ-00038L-Ft; Thu, 04 Apr 2019 11:28:08 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AD34629AA465D; Thu,  4 Apr 2019 13:28:05 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 13:28:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Willem de Bruijn <willemb@google.com>,
+        kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cpumask: Introduce possible_cpu_safe()
+Message-ID: <20190404112805.GZ4038@hirez.programming.kicks-ass.net>
+References: <20190404100218.GA26946@kadam>
+ <20190404103528.GG12864@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190328204151.GA7163@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404103528.GG12864@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
-
-On 28/03/2019 20:41, Mathieu Poirier wrote:
-> On Wed, Mar 20, 2019 at 06:49:40PM +0000, Suzuki K Poulose wrote:
->> The stimulus base for STM device must be listed as the second memory
->> resource, followed by the programming base address. Add support for
->> parsing the information for ACPI.
->>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
-
->> +#ifdef CONFIG_ACPI
->> +static int acpi_stm_get_stimulus_area(struct device *dev, struct resource *res)
->> +{
->> +	int rc;
->> +	bool found_base = false;
->> +	struct resource_entry *rent;
->> +	LIST_HEAD(res_list);
->> +
->> +	struct acpi_device *adev = ACPI_COMPANION(dev);
->> +
->> +	if (!adev)
->> +		return -ENODEV;
->> +	rc = acpi_dev_get_resources(adev, &res_list, NULL, NULL);
->> +	if (rc < 0)
->> +		return rc;
->> +
->> +	rc = -ENOENT;
->> +	list_for_each_entry(rent, &res_list, node) {
->> +		if (resource_type(rent->res) != IORESOURCE_MEM)
->> +			continue;
->> +		if (found_base) {
->> +			*res = *rent->res;
->> +			rc = 0;
->> +			break;
->> +		}
->> +
->> +		found_base = true;
+On Thu, Apr 04, 2019 at 12:35:28PM +0200, Michal Hocko wrote:
+> On Thu 04-04-19 13:02:19, Dan Carpenter wrote:
+> > There have been two cases recently where we pass user a controlled "cpu"
+> > to possible_cpus().  That's not allowed.  If it's invalid, it will
+> > trigger a WARN_ONCE() and an out of bounds read which could result in an
+> > Oops.
+> > 
+> > This patch introduces possible_cpu_safe() which first checks to see if
+> > the cpu is valid, turns off speculation and then checks if the cpu is
+> > possible.
 > 
-> Is the ACPI binding crystal clear on the fact that the second resource region
-> has to be for stimulus ports?
+> Why cannot we do the check in possible_cpu directly? Is it used from any
+> hot path? I am quite skeptical people will use the new helper
+> consistently.
 
-Yes. Section 2.3 Resources in ACPI for CoreSightTM 1.0 (DEN0067) :
+Why only possible? What is to say stop anyone from using garbage (aka.
+user input) in any other of the cpumask APIs.
 
-"Each CoresSight component needs to declare the resources it owns using the _CRS
-method. This must include base address and span covering the MMIO interface of
-the device. In addition those that can raise interrupts must describe the
-interrupts they consume.
-
-For STM two base addresses must be presented, these must be provided in order.
-First the configuration base address, and then external stimuli memory region
-base address"
-
->>   static int stm_get_stimulus_area(struct device *dev, struct resource *res)
->>   {
->>   	if (dev->of_node)
-> 
-> Wouldn't it be better to use is_of_node()?
-
-
-> 
->>   		return of_stm_get_stimulus_area(dev, res);
->> +	else if (is_acpi_node(dev->fwnode)
-> 
-> is_acpi_device_node()?
-> 
-
-Yes, to both the above.
-
-Cheers
-Suzuki
-
+I'd much rather have the explicit validate call and keep assuming @cpu
+as used in the rest of the API is sane.
