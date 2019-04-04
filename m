@@ -2,88 +2,143 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9899EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699C9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5275820643
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35ABD20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:06:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OMPm4L4p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CAT/eN5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfDDIEU (ORCPT
+        id S1727255AbfDDIGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:04:20 -0400
-Received: from mail-ot1-f50.google.com ([209.85.210.50]:43763 "EHLO
-        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfDDIET (ORCPT
+        Thu, 4 Apr 2019 04:06:39 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:53372 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfDDIGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:04:19 -0400
-Received: by mail-ot1-f50.google.com with SMTP id u15so1490436otq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:04:19 -0700 (PDT)
+        Thu, 4 Apr 2019 04:06:38 -0400
+Received: by mail-it1-f196.google.com with SMTP id y204so2347642itf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MZTD5lcSkqdX468EaoI13XNXlQFmwBCat5u7A7aq3SM=;
-        b=OMPm4L4pfKutSn0QGL9bIjz4WEf7RfWVv/S1uWoIsPM/zWEp2ibmX/n5PJE1+a4wh+
-         5PYTb/y8SFuQcFSl7DAmZWpNVFUgwlFeRS7wnO6z4mYQGOMPxocnVhZn/T6bsgDdqLk7
-         yWQYyZ3B04X9gEzCZ6fmfHHeb7JiSdUZD7hkMXihuEkhu4cjbg6O6QTgG9hxqHFecLR6
-         O7qjKN75MyCyfzH3OxOQo3D/irPYpl8EC8NL+CuSYyJKAojUirsHeVHwVECd9BNZ2jE4
-         2Vqhg6ZTmF+FXMvnPUyhV2ZM0JXA4up5G+UM0XynOPtglfPnSQ5sKwjKnpfYIdolmwm4
-         cxeg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=shJdvdGb88860d31wYHMujcMhegndt2m1bOdjIXO+xc=;
+        b=CAT/eN5GQvaUHT/B2oGu2uy902nw2xGiQS04eueuNNfsLLiZ2sZrq1djYQUxHf2ud/
+         n4+1n183QmzwuTPCPClOc+3NaDZIGu3NXptqhAeWzIfBCO4KxPmkBN7QdpGxr02T7WrS
+         5q5MxVvuAl8Hm1ON1Npt1S9VcGhvzKXMtlWpIe24EHTKYIYYcuGISN43xxMMhRiM9tmk
+         TIk2vubJ5B2kxfOOK+yASqUse32MZmoGeqyeS25U8XCv1D+SQIZI85Q6aWOrDxm0MjB4
+         xDf4yd/TjtKrulVw5KQ9WvR7RsC3GO5GQH/tEXLTJb3SlTvGxCp9FKYPkw6wHaP1wIcj
+         DsrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MZTD5lcSkqdX468EaoI13XNXlQFmwBCat5u7A7aq3SM=;
-        b=sclm58VvmHTGQB7k/v6sZmXS2sXMJ58f6BBRF/Zlw+k7GmKdTDF4Cwv39R90wGjxce
-         7WRFn1GsRtHnANkCWxXub299LK3kGdT31PctIYH77QAxYBsDj5oV0pMM4H+hJ9vYwVQS
-         6XG/pSEYPnAtGUvc/hcjqikdjDfvK0zQTkUBEG9JuO92sFcRoSX9HOioWFAV/xoreui+
-         71Mwq87ab0lICCJrhIriPzPbLILQW4Igv4TtYepHrPODYD70Q+kRiNzMGIMsq+66tUlT
-         +9TAFt9pBJaDAH2DPY5tzIjW6D75KWxeejmKHq599SZbQGgfCTyGDXW/OID27qpTLMJF
-         MDMg==
-X-Gm-Message-State: APjAAAU8py8gbg0nz3ZMoDj2coUL1UnfauBxm12J1M55ubvaMDf2tXp1
-        G+a6bAWfYX/0U5keDbEvRAT7OE+VuOvr+siV2YT2eg==
-X-Google-Smtp-Source: APXvYqzFbT5oErZ8ETBmXOvyaDJXGP2LoSdpzZf6KxUYOJqyMx1nd1mVnq18zPFcRApFuoe+/31U91SHRf7bzbv7rKk=
-X-Received: by 2002:a9d:7449:: with SMTP id p9mr3006239otk.325.1554365058979;
- Thu, 04 Apr 2019 01:04:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=shJdvdGb88860d31wYHMujcMhegndt2m1bOdjIXO+xc=;
+        b=jUSpx6MpY4YKBrNds4UiJVbeM9WtROnVyF6Iw4KapXUR2AM+vKQc2n6EWKVxCtL4ML
+         7K89xF3BgF1iRZt7RyFL/vJGuXsWK7vGS6LIf4gMTI1cKgOvdQ2FvmvWLxIn8odlDdMD
+         oNx537ulDFSa3Kfg9lMMxnhi/IeVgrE3Fi5ejBWx4YxiYs98dEBLdhHo3ITlS9/Djod6
+         2KTg7glgPmITWmaxB6oK5YQSJKOrw4mIxtKKqozLKX+qgL37cOFjqRgAajqsbGf0i3TK
+         PdvLq6YhfrtNg+NCzvag8Q/DZ5sJvzwksBZiJX+jtZnrPohG7AIuOqX2hU9lC0QB0VFt
+         iEyw==
+X-Gm-Message-State: APjAAAW/+kBe6r0aG7ieNswEQH4I5ZraI7OuJNP115Vx9piMTaxEipR3
+        ltEqekSNK1qeW9Bg1cjmLiy2hw==
+X-Google-Smtp-Source: APXvYqxnNjN8K03nxu262Y9rYxDVOZyo44d73RJ8HFDjE227lUwvptExYSziV+j6FXd2h9oXxm68Mw==
+X-Received: by 2002:a02:1cc1:: with SMTP id c184mr3629232jac.97.1554365197844;
+        Thu, 04 Apr 2019 01:06:37 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id u19sm8172086iol.16.2019.04.04.01.06.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 01:06:36 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 09:06:23 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
+Message-ID: <20190404080623.GJ6830@dell>
+References: <20190403073152.GM4187@dell>
+ <20190403084732.GA3493@localhost.localdomain>
+ <20190403093015.GJ11301@dell>
+ <20190403101003.GC3493@localhost.localdomain>
+ <20190403112559.GP11301@dell>
+ <85b20828bb4fb51e6df1d5d9d1c1f667db3a7c48.camel@fi.rohmeurope.com>
+ <20190404025234.GB6830@dell>
+ <6775a75d1ee3ab96123d84b077881beedc358d12.camel@fi.rohmeurope.com>
+ <20190404065452.GD6830@dell>
+ <20190404072449.GE3493@localhost.localdomain>
 MIME-Version: 1.0
-References: <20190404075603.11680-1-colin.king@canonical.com>
-In-Reply-To: <20190404075603.11680-1-colin.king@canonical.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Thu, 4 Apr 2019 16:04:07 +0800
-Message-ID: <CAMz4kuKAWqt-2iQ2ASHx-MRoNKqy76BvVO7temV-Me4w=y5nMw@mail.gmail.com>
-Subject: Re: [PATCH][next] ASoC: sprd: Fix spelling mistake "faied" -> "failed"
-To:     Colin King <colin.king@canonical.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        alsa-devel@alsa-project.org, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190404072449.GE3493@localhost.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 at 15:56, Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There are two identical spelling mistakes in dev_err messages. Fix them.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > > ROHM. Also, I am not terribly excited about the option of changing this
+> > > back to function-pointer as I already removed the pointer from parent
+> > > data and this changed parent data is already adapted to all sub drivers
+> > > - so this is all just babbling. Maybe it is just my huge ego shouting
+> > > there - 'I was right, I must have the final say'.
+> > 
+> > No, a call-back function would be a back-step.
+> 
+> You are probably right.
+> 
+> > Ego or no ego, you're wrong. =:-D
+> 
+> I'd rephrase that as "It's not that I am wrong, but you are right." =)
 
-Thanks for fixing my mistakes.
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Works for me.
+
+> > > As a side note, I already did submit v12 with other styling fixes but
+> > > which left the WDT function in MFD. If you still see the WDT functions
+> > > should be exported from WDT - then please ignore the v12. I'll do v13
+> > > at the afternoon (my time, which is only a bit after noon your time I
+> > > guess) which will export these functions from WDT. (Well, I had to try
+> > > once more :D)
+> > 
+> > Please keep the WDT code in the WDT driver.  Create a little stub for
+> > the cases where the WDT driver is not enabled - job done.
+> 
+> Yes Sir.
+
+=;-)
 
 -- 
-Baolin Wang
-Best Regards
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
