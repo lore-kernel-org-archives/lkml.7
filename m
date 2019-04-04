@@ -2,126 +2,173 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251E3C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876D2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E992B206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521A9206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:40:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WKTKCDS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfDDRiJ (ORCPT
+        id S1728846AbfDDRkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 13:38:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60322 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbfDDRiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 13:38:09 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 723BA3167E50;
-        Thu,  4 Apr 2019 17:38:08 +0000 (UTC)
-Received: from krava (unknown [10.40.205.150])
-        by smtp.corp.redhat.com (Postfix) with SMTP id EB4631001E9A;
-        Thu,  4 Apr 2019 17:38:05 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 19:38:04 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [BUG] perf: intel_pt won't display kernel function
-Message-ID: <20190404173804.GB16733@krava>
-References: <20190403145353.GE32553@kernel.org>
- <20190403151548.GF32553@kernel.org>
- <B07CAAC3-D085-443D-BB0C-05E9A8F3AFB2@fb.com>
- <20190403185053.GH32553@kernel.org>
- <124332A9-146A-446F-A82A-910C8319170E@fb.com>
- <425141B8-8908-4D48-90FD-8806BA9E9E12@fb.com>
- <A476B82A-4550-45F1-9A31-B1AA63C07489@fb.com>
- <20190404091438.GB31233@krava>
- <20190404122530.GC31233@krava>
- <678C87FF-A33E-477C-94C1-533026400B95@fb.com>
+        Thu, 4 Apr 2019 13:40:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38159 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfDDRkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 13:40:40 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g37so1509162plb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 10:40:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1oo6K12iJYAWaTym8dlxd2e2ywtWhKNEEV0QcIZh3TY=;
+        b=WKTKCDS5SX0KqUQcE0D0N7nM4M/aSEQe9OsFRBtyRRVbxr0uyRX7IL7idTSRU1pkf1
+         Gbg758em8Gx5KnbCiTBgfxcSuJOMRYuEyQoMUr6KjOtGbexysOF0K/wDHv1fllNHg04J
+         /0USIhszR+3p0EGOXXMUmAwc35MQSFHjQzH9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1oo6K12iJYAWaTym8dlxd2e2ywtWhKNEEV0QcIZh3TY=;
+        b=NX5D8bzydgut1VIdNME2M4A2h+xsA9mBFgQqjOdCQHj1DAVzEUT+hX3G4L2w+8SEGO
+         9JLol9soE4lRG1cVoOJo6qVduW8q/YUj3p2gEet6c0ATUY2iCWK9V2+4VIDdJ3VnZj9i
+         32okLkFywqqC5C7KE6ndBON4wZfD3ZRYhC43QHdi8QCQHAnSm5d9yW1BlrWoLSiG+4YS
+         kMwBUBqFr2mQG64aeS2YFgVjJIaO+8wnmRyH1PGYViMPmYF9Xy/AR3fbQZVfdacVF/bI
+         OOE6XKlyQGJVcurg4gMwMSXPvd1mO8KBp9QKRPD/8Is3/CwNPYpJrDW+XWxK2HvnOE5a
+         ymkw==
+X-Gm-Message-State: APjAAAUAZFQPd9Q+OYGe0P+Dfm/DS14Uiime6Uy2RbVsQci9Hr4+J4NS
+        6QATFPnHgbIoCWV0jM7kuehskw==
+X-Google-Smtp-Source: APXvYqy71JxwZOgC3nc+46J2y+B4DQ0ykfsoVBsr2L61TMkpA+xJ9oqshXGGuWvaaytFg0ra+ZtC1Q==
+X-Received: by 2002:a17:902:28a7:: with SMTP id f36mr7366751plb.169.1554399639526;
+        Thu, 04 Apr 2019 10:40:39 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id j22sm25630655pfn.129.2019.04.04.10.40.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 10:40:38 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 13:40:37 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+        Romulo Silva de Oliveira <romulo.deoliveira@ufsc.br>,
+        paulmck@linux.vnet.ibm.com, Clark Williams <williams@redhat.com>,
+        x86@kernel.org
+Subject: Re: [RFC PATCH 0/7] Early task context tracking
+Message-ID: <20190404174037.GA183378@google.com>
+References: <cover.1554234787.git.bristot@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <678C87FF-A33E-477C-94C1-533026400B95@fb.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 04 Apr 2019 17:38:08 +0000 (UTC)
+In-Reply-To: <cover.1554234787.git.bristot@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 05:08:55PM +0000, Song Liu wrote:
+On Tue, Apr 02, 2019 at 10:03:52PM +0200, Daniel Bristot de Oliveira wrote:
+> Note: do not take it too seriously, it is just a proof of concept.
 > 
+> Some time ago, while using perf to check the automaton model, I noticed
+> that perf was losing events. The same was reproducible with ftrace.
 > 
-> > On Apr 4, 2019, at 5:25 AM, Jiri Olsa <jolsa@redhat.com> wrote:
-> > 
-> > On Thu, Apr 04, 2019 at 11:14:38AM +0200, Jiri Olsa wrote:
-> > 
-> > SNIP
-> > 
-> >> Program received signal SIGABRT, Aborted.
-> >> 0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
-> >> Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-29.fc30.x86_64 elfutils-libelf-0.176-1.fc30.x86_64 elfutils-libs-0.176-1.fc30.x86_64 libgcc-9.0.1-0.10.fc30.x86_64 libunwind-1.3.1-2.fc30.x86_64 libxcrypt-4.4.4-2.fc30.x86_64 numactl-libs-2.0.12-2.fc30.x86_64 perl-libs-5.28.1-434.fc30.x86_64 python2-libs-2.7.16-1.fc30.x86_64 slang-2.3.2-5.fc30.x86_64 xz-libs-5.2.4-5.fc30.x86_64 zlib-1.2.11-15.fc30.x86_64
-> >> (gdb) bt
-> >> #0  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
-> >> #1  0x00007ffff75d0895 in abort () from /lib64/libc.so.6
-> >> #2  0x00007ffff75d0769 in __assert_fail_base.cold () from /lib64/libc.so.6
-> >> #3  0x00007ffff75de596 in __assert_fail () from /lib64/libc.so.6
-> >> #4  0x00000000004fc006 in refcount_sub_and_test (i=1, r=0x1224e88) at /home/jolsa/linux/tools/include/linux/refcount.h:131
-> >> #5  refcount_dec_and_test (r=0x1224e88) at /home/jolsa/linux/tools/include/linux/refcount.h:148
-> >> #6  map__put (map=0x1224df0) at util/map.c:299
-> >> #7  0x00000000004fdb95 in __maps__remove (map=0x1224df0, maps=0xb17d80) at util/map.c:953
-> >> #8  maps__remove (maps=0xb17d80, map=0x1224df0) at util/map.c:959
-> >> #9  0x00000000004f7d8a in map_groups__remove (map=<optimized out>, mg=<optimized out>) at util/map_groups.h:65
-> >> #10 machine__process_ksymbol_unregister (sample=<optimized out>, event=0x7ffff7279670, machine=<optimized out>) at util/machine.c:728
-> >> #11 machine__process_ksymbol (machine=<optimized out>, event=0x7ffff7279670, sample=<optimized out>) at util/machine.c:741
-> >> #12 0x00000000004fffbb in perf_session__deliver_event (session=0xb11390, event=0x7ffff7279670, tool=0x7fffffffc7b0, file_offset=13936) at util/session.c:1362
-> >> #13 0x00000000005039bb in do_flush (show_progress=false, oe=0xb17e80) at util/ordered-events.c:243
-> >> #14 __ordered_events__flush (oe=0xb17e80, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:322
-> >> #15 0x00000000005005e4 in perf_session__process_user_event (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8,
-> >>    file_offset=file_offset@entry=191224) at util/session.c:1402
-> >> #16 0x000000000050091e in perf_session__process_event (file_offset=191224, event=0x7ffff72a4af8, session=0xb11390) at util/session.c:1529
-> >> #17 process_simple (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8, file_offset=file_offset@entry=191224) at util/session.c:1962
-> >> #18 0x0000000000501f44 in reader__process_events (prog=0x7fffffffc680, session=0xb11390, rd=<synthetic pointer>) at util/session.c:1931
-> >> #19 __perf_session__process_events (session=0xb11390) at util/session.c:1985
-> >> #20 perf_session__process_events (session=0xb11390) at util/session.c:2018
-> >> #21 0x000000000045bb42 in __cmd_script (script=0x7fffffffc7b0) at builtin-script.c:2429
-> >> #22 cmd_script (argc=<optimized out>, argv=<optimized out>) at builtin-script.c:3770
-> >> #23 0x00000000004a65cb in run_builtin (p=p@entry=0x994918 <commands+408>, argc=argc@entry=4, argv=argv@entry=0x7fffffffe160) at perf.c:303
-> >> #24 0x000000000042da1e in handle_internal_command (argv=0x7fffffffe160, argc=4) at perf.c:355
-> >> #25 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:399
-> >> #26 main (argc=4, argv=0x7fffffffe160) at perf.c:521
-> > 
+> See: https://www.spinics.net/lists/linux-rt-users/msg19781.html
 > 
-> For some reason, I cannot repro this issue. I tried to load two
-> bpf programs with same name, but that doesn't trigger it either. 
+> Steve pointed to a problem in the identification of the context
+> execution used by the recursion control.
+> 
+> Currently, recursion control uses the preempt_counter to
+> identify the current context. The NMI/HARD/SOFT IRQ counters
+> are set in the preempt_counter in the irq_enter/exit functions.
 
-for some reason I see multiple same name of bpf programs
-on my setup.. need to check for the reason
+Just started looking.
 
-> 
-> 
-> > 
-> > we dont increase the map's reference for same name,
-> > which we need to.. I assume we we re able to hit this
-> > path with bpf maps/dso with same name
-> > 
-> > jirka
-> 
-> Does the following change fix the issue on your side?
+Thinking out loud... can we not just update the preempt_count as early on
+entry and as late on exit, as possible, and fix it that way? (Haven't fully
+yet looked into what could break if we did that.)
 
-yes, I'll post full patch later
+I also feel the context tracking should be unified, right now we already have
+two methods AFAIK - preempt_count and lockdep. Now this is yet another third.
+Granted lockdep cannot be enabled in production, but still. It will be nice
+to unify these tracking methods and if there is a single point of all such
+context tracking that works well, and even better if we can just fix
+preempt_count and use that for non-debugging usecases.
 
-jirka
+Also I feel in_interrupt() etc should be updated to rely on such tracking
+methods if something other than preempt_count is used..
+
+thanks,
+
+ - Joel
+
+
+> In a trace, they are set like this:
+> -------------- %< --------------------
+>  0)   ==========> |
+>  0)               |  do_IRQ() {		/* First C function */
+>  0)               |    irq_enter() {
+>  0)               |      		/* set the IRQ context. */
+>  0)   1.081 us    |    }
+>  0)               |    handle_irq() {
+>  0)               |     		/* IRQ handling code */
+>  0) + 10.290 us   |    }
+>  0)               |    irq_exit() {
+>  0)               |      		/* unset the IRQ context. */
+>  0)   6.657 us    |    }
+>  0) + 18.995 us   |  }
+>  0)   <========== |
+> -------------- >% --------------------
+> 
+> As one can see, functions (and events) that take place before the set
+> and after unset the preempt_counter are identified in the wrong context,
+> causing the miss interpretation that a recursion is taking place.
+> When this happens, events are dropped.
+> 
+> To resolve this problem, the set/unset of the IRQ/NMI context needs to
+> be done before the execution of the first C execution, and after its
+> return. By doing so, and using this method to identify the context in the
+> trace recursion protection, no more events are lost.
+> 
+> A possible solution is to use a per-cpu variable set and unset in the
+> entry point of NMI/IRQs, before calling the C handler. This possible
+> solution is presented in the next patches as a proof of concept, for
+> x86_64. However, other ideas might be better than mine... so...
+> 
+> Daniel Bristot de Oliveira (7):
+>   x86/entry: Add support for early task context tracking
+>   trace: Move the trace recursion context enum to trace.h and reuse it
+>   trace: Optimize trace_get_context_bit()
+>   trace/ring_buffer: Use trace_get_context_bit()
+>   trace: Use early task context tracking if available
+>   events: Create an trace_get_context_bit()
+>   events: Use early task context tracking if available
+> 
+>  arch/x86/entry/entry_64.S       |  9 ++++++
+>  arch/x86/include/asm/irqflags.h | 30 ++++++++++++++++++++
+>  arch/x86/kernel/cpu/common.c    |  4 +++
+>  include/linux/irqflags.h        |  4 +++
+>  kernel/events/internal.h        | 50 +++++++++++++++++++++++++++------
+>  kernel/softirq.c                |  5 +++-
+>  kernel/trace/ring_buffer.c      | 28 ++----------------
+>  kernel/trace/trace.h            | 46 ++++++++++++++++++++++--------
+>  8 files changed, 129 insertions(+), 47 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
