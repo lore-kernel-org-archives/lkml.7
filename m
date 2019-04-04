@@ -2,129 +2,147 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74901C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC76C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B616206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3E0206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Tm7fFYEd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SZZMPKZ/"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="m1OU71/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfDDLsD (ORCPT
+        id S1729456AbfDDLsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 07:48:03 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54644 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfDDLsC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 07:48:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B1CCF60850; Thu,  4 Apr 2019 11:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554378481;
-        bh=B1w0o3Nzhiec6LNozyeMwrtbHIsUCSc7vN3P4LoXAmY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Tm7fFYEdAJ96PZfhiBkiUt5bh4Tj9tz8O/YPruJvXFEgiafMkT7zTXivhwTc6L2R7
-         vC2ZjA2dBN3Wje94+i/YDwxiA09trf0rSfUOOIOm6yeYOOBUPHoW6tf8u6p/WQfZrN
-         22xz7HOlKIajmzRhUrwvkyWeZhrWi92yKgaLv8K8=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0ADF760712;
-        Thu,  4 Apr 2019 11:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554378480;
-        bh=B1w0o3Nzhiec6LNozyeMwrtbHIsUCSc7vN3P4LoXAmY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SZZMPKZ/dxb3qiMTr7uIQE44H7+4qjjuJY4H20UL8YkGefZ2AOxseBUBUq5X8o77n
-         hH1Yqfhvpub7oOh7wDwWpscn+qBcxw30i+z6aQcHr/NFZlYrEcVTavlejbIQOgEnCE
-         IV0rcZ1+ojjwH/2GjhpWMKYD6GpKN2cSqPJq4ZqQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0ADF760712
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] extcon: axp288: Fix build err without CONFIG_ACPI
-To:     Yue Haibing <yuehaibing@huawei.com>, myungjoo.ham@samsung.com,
-        cw00.choi@samsung.com, wens@csie.org, hdegoede@redhat.com
-Cc:     linux-kernel@vger.kernel.org
-References: <20190404104222.23900-1-yuehaibing@huawei.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <81bcf9f0-9ff9-b9c4-975f-594ea2de0d77@codeaurora.org>
-Date:   Thu, 4 Apr 2019 17:17:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190404104222.23900-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Thu, 4 Apr 2019 07:48:33 -0400
+Received: from mail-eopbgr810053.outbound.protection.outlook.com ([40.107.81.53]:11776
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729136AbfDDLsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 07:48:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hEPlsdMlPMysVpTVari4Jta/OvxzUtKOGd3e18hYqp8=;
+ b=m1OU71/V+VrWUfus/CduU3FbU8e2zbUX+2qW7NCOyqXrRhPnQurNAs2bwtStpuuwJ3AvuKNNPcbbfewp7tlIYaQJJ7kXIsG834s95Z1vlbwMOjnThVtEYD8HvDjVMnGONofxD/pFaPDD66rPSmeRF3plyItzudXRJ3delXd6KYo=
+Received: from BN6PR02MB2772.namprd02.prod.outlook.com (10.175.96.7) by
+ BN6PR02MB3345.namprd02.prod.outlook.com (10.161.156.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.20; Thu, 4 Apr 2019 11:48:24 +0000
+Received: from BN6PR02MB2772.namprd02.prod.outlook.com
+ ([fe80::6cf5:d9:3347:151a]) by BN6PR02MB2772.namprd02.prod.outlook.com
+ ([fe80::6cf5:d9:3347:151a%11]) with mapi id 15.20.1750.014; Thu, 4 Apr 2019
+ 11:48:24 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] PCI: xilinx-nwl: Fix Multi MSI data programming
+Thread-Topic: [PATCH v2] PCI: xilinx-nwl: Fix Multi MSI data programming
+Thread-Index: AQHU2AAQCHDXCwr68kiV0ZLjhatkq6YnqKVQgAGD5wCAAtuSMA==
+Date:   Thu, 4 Apr 2019 11:48:24 +0000
+Message-ID: <BN6PR02MB2772E211BC97A597452D6806A5500@BN6PR02MB2772.namprd02.prod.outlook.com>
+References: <1552304759-5394-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <BN6PR02MB2772BFC74C01857BA58FB5C7A5550@BN6PR02MB2772.namprd02.prod.outlook.com>
+ <20190402160814.GA30068@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20190402160814.GA30068@e107981-ln.cambridge.arm.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7b279957-daa7-4abd-d477-08d6b8f371d8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR02MB3345;
+x-ms-traffictypediagnostic: BN6PR02MB3345:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-microsoft-antispam-prvs: <BN6PR02MB33452C04FCA7BEA71BD0075AA5500@BN6PR02MB3345.namprd02.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(136003)(396003)(39860400002)(199004)(53754006)(189003)(6436002)(8936002)(99286004)(74316002)(81166006)(14444005)(5660300002)(81156014)(6916009)(256004)(52536014)(2906002)(8676002)(2501003)(102836004)(68736007)(6506007)(6116002)(3846002)(229853002)(54906003)(71190400001)(86362001)(14454004)(55016002)(4326008)(2351001)(5640700003)(7696005)(6246003)(9686003)(71200400001)(106356001)(25786009)(66066001)(476003)(486006)(97736004)(33656002)(105586002)(478600001)(76176011)(186003)(446003)(7736002)(53936002)(316002)(26005)(305945005)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB3345;H:BN6PR02MB2772.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UyWLMtgMylzf9+JyOq0DDp7X3c+qUyxbH2hojc+XoBrSwOeYTXH12qyiE9xjKdzwqZxYgTgRg7IOOtu8L6XTwRAheHUiylJF0/R/96xmCjseoEC1565Qu1/4DNAHqs9BsUuC1nQrkisu9WyEF+U3Ik5pOiudqjj5JpzeEP1Vw3kOz/0CEygitfjJOfkc+HBAbB++6j81ewRdOaY/dfHEmqyolY+IeGctWJyjSOf4OarWI4X3uvxShwe5DGU9q/yXcJZHdNOzjsMohR/rMtxGandT2n0XM9fGpLJQJlNPM7nnjhKn54V2t8vtLT1hVlUgSG6q0xbcnWJUJwWDQivVYRm4jcEkCg6eM0kY5irGIBf2uQX1VE5Cx2L33vVOlRAeeGn/R+zDJT+Hp2Mi6HfQlk0fZek2+etOCeLqUnOCa3I=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b279957-daa7-4abd-d477-08d6b8f371d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 11:48:24.3891
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB3345
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/4/2019 4:12 PM, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
+> On Mon, Apr 01, 2019 at 05:00:40PM +0000, Bharat Kumar Gogada wrote:
+> > Hi All,
+> >
+> > Please let me know if anyone has any inputs on this.
+> >
+> > Regards,
+> > Bharat
+> > >
+> > > The current Multi MSI data programming fails if multiple end points
+> > > requesting MSI and multi MSI are connected with switch, i.e the
+> > > current multi MSI data being given is not considering the number of
+> > > vectors being requested in case of multi MSI.
+> > > Due to this if multiple end points are connected and requesting MSI
+> > > and multi MSI combination, the multi MSI data is ending up using
+> > > wrong MSI data, which might be used by different device.
+> > >
+> > > Fix Multi MSI data programming with required alignment by using
+> > > number of vectors being requested.
+>=20
+> I still do not understand what you mean I am sorry. An example is worth
+> two thousand words, I would start with that as it stands this commit log
+> does not provide any information on what you are actually fixing.
 >
-> When building CONFIG_ACPI is not set
-> gcc warn this:
->
-> drivers/extcon/extcon-axp288.c: In function 'axp288_extcon_probe':
-> drivers/extcon/extcon-axp288.c:363:20: error: dereferencing pointer to incomplete type
->      put_device(&adev->dev);
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 0cf064db948a ("extcon: axp288: Convert to use acpi_dev_get_first_match_dev()")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-
-Looks fine to me.
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Cheers,
--Mukesh
-
-> ---
->   drivers/extcon/extcon-axp288.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
-> index 50f9402..ed8ac3f 100644
-> --- a/drivers/extcon/extcon-axp288.c
-> +++ b/drivers/extcon/extcon-axp288.c
-> @@ -333,7 +333,6 @@ static int axp288_extcon_probe(struct platform_device *pdev)
->   	struct axp288_extcon_info *info;
->   	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
->   	struct device *dev = &pdev->dev;
-> -	struct acpi_device *adev;
->   	int ret, i, pirq;
->   
->   	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> @@ -357,6 +356,8 @@ static int axp288_extcon_probe(struct platform_device *pdev)
->   		if (ret)
->   			return ret;
->   
-> +#ifdef CONFIG_ACPI
-> +		struct acpi_device *adev;
->   		adev = acpi_dev_get_first_match_dev("INT3496", NULL, -1);
->   		if (adev) {
->   			info->id_extcon = extcon_get_extcon_dev(acpi_dev_name(adev));
-> @@ -365,9 +366,10 @@ static int axp288_extcon_probe(struct platform_device *pdev)
->   				return -EPROBE_DEFER;
->   
->   			dev_info(dev, "controlling USB role\n");
-> -		} else {
-> -			dev_info(dev, "controlling USB role based on Vbus presence\n");
->   		}
-> +#else
-> +		dev_info(dev, "controlling USB role based on Vbus presence\n");
-> +#endif
->   	}
->   
->   	info->vbus_attach = axp288_get_vbus_attach(info);
+Hi Lorenzo, Thanks for your time.=20
+Yes, will add an example to describe the problem.
+=20
+Regards,
+Bharat
+> > > Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL
+> > > PCIe Host
+> > > Controller")
+> > > Signed-off-by: Bharat Kumar Gogada
+> <bharat.kumar.gogada@xilinx.com>
+> > > ---
+> > > V2:
+> > >  - Added more description of fix
+> > > ---
+> > >  drivers/pci/controller/pcie-xilinx-nwl.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > index 81538d7..36669c5 100644
+> > > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > @@ -484,7 +484,7 @@ static int nwl_irq_domain_alloc(struct
+> > > irq_domain *domain, unsigned int virq,
+> > >
+> > >  	mutex_lock(&msi->lock);
+> > >  	bit =3D bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> > > -					 nr_irqs, 0);
+> > > +					 nr_irqs, nr_irqs - 1);
+> > >  	if (bit >=3D INT_PCI_MSI_NR) {
+> > >  		mutex_unlock(&msi->lock);
+> > >  		return -ENOSPC;
+> > > --
+> > > 2.7.4
+> >
