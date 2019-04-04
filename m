@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B79FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19801C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3F92075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8E1206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371705;
-	bh=kgyfasYM6KxQ/QNg8yLG9wXLLoyEqCYPWjzh1hl2JOA=;
+	s=default; t=1554371728;
+	bh=iBUKjHnkcZjCRIHjE/sWsXMda/Dqp2sEpn+w+ty37r0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p7SX1iscpA50rpdjaSIXrCK2GzyV2PpAzstMyql/Ke4xCBTIg7cUjMQ7A7+rF42mo
-	 ipiwQG46YHbFIE3PlBj/ukMPC+ckFUew1AFR5LNjYbOHbla304ABXJpQwOgxmRAkrL
-	 jxQvI+QVVXzv/jSqxK/7fJdnyhIFI7FMje2P1gv4=
+	b=MGpd/336hlOnh42EioHMJqMrPAPZmZS/nPfyrpZobrmeY4KxnqRcdRSTR1Thei0d/
+	 BYvnkoW6ZNXWrcS8cj1EOjoJ5ZQQycvlWvdHweVBEjVy2Zq1tHTlyL8PnR3iaqEjp6
+	 rlklpG3MzAfpou/ecZOYUbwnODOec3YyVMlSkC0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfDDJzE (ORCPT
+        id S1729430AbfDDIvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54070 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729527AbfDDIwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:05 -0400
+        id S1728880AbfDDIvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:51:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B00E217D9;
-        Thu,  4 Apr 2019 08:52:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43C18217D7;
+        Thu,  4 Apr 2019 08:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367924;
-        bh=kgyfasYM6KxQ/QNg8yLG9wXLLoyEqCYPWjzh1hl2JOA=;
+        s=default; t=1554367897;
+        bh=iBUKjHnkcZjCRIHjE/sWsXMda/Dqp2sEpn+w+ty37r0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHAQ2DSBBwpVIopBIPRzblBgcY59XeeDRb5yPFGSZJqsKZfjry+6BywiVLB6j4vaB
-         Rd6lBcu8MH/aRIGzCajxma7tQEjUu5WBko36nm3sngNJF47OF0efLuDxkw4hnOfMHF
-         A+nlp45V3luSbtjkaXSQUWoYxIECvGA/abaoK7fY=
+        b=2UupjopYPZ+nfSRjqjPliz86DRdn6+brHqgzUJ+vpubUvdTEHydEWDYAn4sLh/1jQ
+         lfJ0VWKzWqOyLfeTEnZY/W3zhHsQsxyknnN+AAJ7Zza3GYM6LCsL1zBacrFEehrFMg
+         1/Oj488+tQT0MNaYbGF6mwc0Gkwm1opelUzVFDNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 64/91] cdrom: Fix race condition in cdrom_sysctl_register
-Date:   Thu,  4 Apr 2019 10:47:48 +0200
-Message-Id: <20190404084539.151195982@linuxfoundation.org>
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 38/91] mmc: omap: fix the maximum timeout setting
+Date:   Thu,  4 Apr 2019 10:47:22 +0200
+Message-Id: <20190404084537.664451289@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -65,97 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
+[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
 
-The following traceback is sometimes seen when booting an image in qemu:
+When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
 
-[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
-[   54.611085] Fusion MPT base driver 3.04.20
-[   54.611877] Copyright (c) 1999-2008 LSI Corporation
-[   54.616234] Fusion MPT SAS Host driver 3.04.20
-[   54.635139] sysctl duplicate entry: /dev/cdrom//info
-[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
-[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[   54.641273] Workqueue: events_unbound async_run_entry_fn
-[   54.641273] Call Trace:
-[   54.641273]  dump_stack+0x67/0x90
-[   54.641273]  __register_sysctl_table+0x50b/0x570
-[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
-[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
-[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
-[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
-[   54.646814]  register_cdrom.cold.24+0x2a/0x33
-[   54.646814]  sr_probe+0x4bd/0x580
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  really_probe+0xd6/0x260
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  driver_probe_device+0x4a/0xb0
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  bus_for_each_drv+0x73/0xc0
-[   54.646814]  __device_attach+0xd6/0x130
-[   54.646814]  bus_probe_device+0x9a/0xb0
-[   54.646814]  device_add+0x40c/0x670
-[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
-[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
-[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
-[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
-[   54.646814]  __scsi_add_device+0x116/0x130
-[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
-[   54.646814]  async_run_entry_fn+0x34/0x100
-[   54.646814]  process_one_work+0x237/0x5e0
-[   54.646814]  worker_thread+0x37/0x380
-[   54.646814]  ? rescuer_thread+0x360/0x360
-[   54.646814]  kthread+0x118/0x130
-[   54.646814]  ? kthread_create_on_node+0x60/0x60
-[   54.646814]  ret_from_fork+0x3a/0x50
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	[ad inf.]
 
-The only sensible explanation is that cdrom_sysctl_register() is called
-twice, once from the module init function and once from register_cdrom().
-cdrom_sysctl_register() is not mutex protected and may happily execute
-twice if the second call is made before the first call is complete.
+Emulator warnings appear to be valid. The TI document SPRU680 [1]
+("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
+(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
+cycles and "0xff and 0xfe cannot be used".
 
-Use a static atomic to ensure that the function is executed exactly once.
+Fix by using 0xfd as the maximum timeout.
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
+real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
+(OMAP2420) that MMC works as before.
+
+[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+
+Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/mmc/host/omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index ff4280800cd0..a46f188f679e 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -265,6 +265,7 @@
- /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
- /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
- 
-+#include <linux/atomic.h>
- #include <linux/module.h>
- #include <linux/fs.h>
- #include <linux/major.h>
-@@ -3683,9 +3684,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
- 
- static void cdrom_sysctl_register(void)
- {
--	static int initialized;
-+	static atomic_t initialized = ATOMIC_INIT(0);
- 
--	if (initialized == 1)
-+	if (!atomic_add_unless(&initialized, 1, 1))
- 		return;
- 
- 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
-@@ -3696,8 +3697,6 @@ static void cdrom_sysctl_register(void)
- 	cdrom_sysctl_settings.debug = debug;
- 	cdrom_sysctl_settings.lock = lockdoor;
- 	cdrom_sysctl_settings.check = check_media_type;
--
--	initialized = 1;
+diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
+index a4bf14e21b5e..21dfce21aa63 100644
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -920,7 +920,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
+ 	reg &= ~(1 << 5);
+ 	OMAP_MMC_WRITE(host, SDIO, reg);
+ 	/* Set maximum timeout */
+-	OMAP_MMC_WRITE(host, CTO, 0xff);
++	OMAP_MMC_WRITE(host, CTO, 0xfd);
  }
  
- static void cdrom_sysctl_unregister(void)
+ static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
 -- 
 2.19.1
 
