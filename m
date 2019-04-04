@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19866C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 310A5C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82CD20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D42206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aB70heMo";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B4scPH0s"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W8F2PSS8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E1R9CfqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfDDH0j (ORCPT
+        id S1727209AbfDDH2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:26:39 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50540 "EHLO
+        Thu, 4 Apr 2019 03:28:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51746 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfDDH0j (ORCPT
+        with ESMTP id S1726122AbfDDH2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:26:39 -0400
+        Thu, 4 Apr 2019 03:28:14 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 09A7B611CF; Thu,  4 Apr 2019 07:26:37 +0000 (UTC)
+        id CB48B6044E; Thu,  4 Apr 2019 07:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554362798;
-        bh=cruvqDNvKQYK7r1CTvADytjyadAZMgX23F8Uvvk/Usg=;
+        s=default; t=1554362892;
+        bh=bbPktcGZo2LUunx7pBeq+goNUYG+dVguY4N1A1nvANQ=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aB70heMo2xzq2NtNBc0RXGe977CRcrJxJ8g6rGThCM9BtP0V9wUCAYoXV8TD3iCTe
-         hGw69UK5cEsq1w4IgnPje+R7Br0vVqnZgnTdWNdHr8Qr1XRSJHqYF7TfNN7/idva0G
-         rqfBIpkFWCqcq8/A2iYcCG0SXwWiD9N+SFzwpnBY=
+        b=W8F2PSS8EOX3nKUWrakW7dWiDVvBtlUjSVPlufzNjClbNteENgaQyzew3LfZJ/twD
+         vMtJHisC81H1xCjANihwZhNeOyrww+w8dEf8ZA5uSOeGdmxECE5+pv2Ei2OUikmhxp
+         A4kbtXmi8iE4CZ/uS+43eaZnY6srmChznHQsmfxA=
 Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47CF560790;
-        Thu,  4 Apr 2019 07:26:32 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B44246044E;
+        Thu,  4 Apr 2019 07:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554362795;
-        bh=cruvqDNvKQYK7r1CTvADytjyadAZMgX23F8Uvvk/Usg=;
+        s=default; t=1554362885;
+        bh=bbPktcGZo2LUunx7pBeq+goNUYG+dVguY4N1A1nvANQ=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=B4scPH0sq+l2+s34TfBbPzYiAvjjcQIEfeubqubjcYHQ/FGMBJsp9bgwl92pGDyr6
-         igHkLrM7e1xW5K4FrBnd4mzDyJ6Sm8BKzJ6kBRhtW+sxIVMCHYIORtNulAThhCsBIy
-         K0KBA926SW+9SqQVnJHcnd/eVln6jDBbn0I121Ig=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 47CF560790
+        b=E1R9CfqGbf0D3/3UjsWe3FDxs689gwb7JNDoSVErlWm8w8HFTnP7YFFEU5w9VJHI+
+         5iyl1Q7otHCmoY4Y2b5AO7cgD/iMV6eMR7gRdBWhVWSLC7vbzEqxx2WcqYVnCTZn5g
+         hAHgvjuRdvM0oN4oaVzxRIYz7uxNnmaEqlVnnuYQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B44246044E
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH -next] net: pasemi: remove set but not used variable
- 'cpyhdr'
+Subject: Re: [PATCH -next] ehea: remove set but not used variables 'epa' and
+ 'cq_handle_ref'
 To:     Yue Haibing <yuehaibing@huawei.com>, davem@davemloft.net,
-        mpe@ellerman.id.au, mcgrof@kernel.org
+        dougmill@linux.ibm.com
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190403075027.26744-1-yuehaibing@huawei.com>
+References: <20190403075208.30000-1-yuehaibing@huawei.com>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <d32d829c-a6fe-9e47-5a00-b73b67fa1b65@codeaurora.org>
-Date:   Thu, 4 Apr 2019 12:56:30 +0530
+Message-ID: <1fd03d2c-001b-89d4-eeb1-9666ac8b6d8d@codeaurora.org>
+Date:   Thu, 4 Apr 2019 12:58:00 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190403075027.26744-1-yuehaibing@huawei.com>
+In-Reply-To: <20190403075208.30000-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -70,47 +70,55 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/3/2019 1:20 PM, Yue Haibing wrote:
+On 4/3/2019 1:22 PM, Yue Haibing wrote:
 > From: YueHaibing <yuehaibing@huawei.com>
 >
 > Fixes gcc '-Wunused-but-set-variable' warning:
 >
-> drivers/net/ethernet/pasemi/pasemi_mac.c: In function 'pasemi_mac_queue_csdesc':
-> drivers/net/ethernet/pasemi/pasemi_mac.c:1358:29: warning: variable 'cpyhdr' set but not used [-Wunused-but-set-variable]
+> drivers/net/ethernet/ibm/ehea/ehea_qmr.c: In function 'ehea_create_cq':
+> drivers/net/ethernet/ibm/ehea/ehea_qmr.c:127:7: warning: variable 'cq_handle_ref' set but not used [-Wunused-but-set-variable]
+> drivers/net/ethernet/ibm/ehea/ehea_qmr.c:126:15: warning: variable 'epa' set but not used [-Wunused-but-set-variable]
 >
-> It's never used since commit 8d636d8bc5ff ("pasemi_mac: jumbo
-> frame support") and can be removed.
+> They are never used since commit
+> 7a291083225a ("[PATCH] ehea: IBM eHEA Ethernet Device Driver")
 >
 > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
 Cheers,
 -Mukesh
-
 > ---
->   drivers/net/ethernet/pasemi/pasemi_mac.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
+>   drivers/net/ethernet/ibm/ehea/ehea_qmr.c | 6 +-----
+>   1 file changed, 1 insertion(+), 5 deletions(-)
 >
-> diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
-> index 55d686e..5ffaee9 100644
-> --- a/drivers/net/ethernet/pasemi/pasemi_mac.c
-> +++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
-> @@ -1355,7 +1355,7 @@ static void pasemi_mac_queue_csdesc(const struct sk_buff *skb,
->   	const int nh_off = skb_network_offset(skb);
->   	const int nh_len = skb_network_header_len(skb);
->   	const int nfrags = skb_shinfo(skb)->nr_frags;
-> -	int cs_size, i, fill, hdr, cpyhdr, evt;
-> +	int cs_size, i, fill, hdr, evt;
->   	dma_addr_t csdma;
+> diff --git a/drivers/net/ethernet/ibm/ehea/ehea_qmr.c b/drivers/net/ethernet/ibm/ehea/ehea_qmr.c
+> index 5e4e371..77ce173 100644
+> --- a/drivers/net/ethernet/ibm/ehea/ehea_qmr.c
+> +++ b/drivers/net/ethernet/ibm/ehea/ehea_qmr.c
+> @@ -123,8 +123,7 @@ struct ehea_cq *ehea_create_cq(struct ehea_adapter *adapter,
+>   			       int nr_of_cqe, u64 eq_handle, u32 cq_token)
+>   {
+>   	struct ehea_cq *cq;
+> -	struct h_epa epa;
+> -	u64 *cq_handle_ref, hret, rpage;
+> +	u64 hret, rpage;
+>   	u32 counter;
+>   	int ret;
+>   	void *vpage;
+> @@ -139,8 +138,6 @@ struct ehea_cq *ehea_create_cq(struct ehea_adapter *adapter,
 >   
->   	fund = XCT_FUN_ST | XCT_FUN_RR_8BRES |
-> @@ -1396,7 +1396,6 @@ static void pasemi_mac_queue_csdesc(const struct sk_buff *skb,
->   		fill++;
+>   	cq->adapter = adapter;
 >   
->   	/* Copy the result into the TCP packet */
-> -	cpyhdr = fill;
->   	CS_DESC(csring, fill++) = XCT_FUN_O | XCT_FUN_FUN(csring->fun) |
->   				  XCT_FUN_LLEN(2) | XCT_FUN_SE;
->   	CS_DESC(csring, fill++) = XCT_PTR_LEN(2) | XCT_PTR_ADDR(cs_dest) | XCT_PTR_T;
+> -	cq_handle_ref = &cq->fw_handle;
+> -
+>   	hret = ehea_h_alloc_resource_cq(adapter->handle, &cq->attr,
+>   					&cq->fw_handle, &cq->epas);
+>   	if (hret != H_SUCCESS) {
+> @@ -188,7 +185,6 @@ struct ehea_cq *ehea_create_cq(struct ehea_adapter *adapter,
+>   	}
+>   
+>   	hw_qeit_reset(&cq->hw_queue);
+> -	epa = cq->epas.kernel;
+>   	ehea_reset_cq_ep(cq);
+>   	ehea_reset_cq_n1(cq);
+>   
