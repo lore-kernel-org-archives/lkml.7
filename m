@@ -6,92 +6,112 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE7BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6507C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E79206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC54206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbfDDRE2 (ORCPT
+        id S1729575AbfDDRE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 13:04:28 -0400
-Received: from foss.arm.com ([217.140.101.70]:36106 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726418AbfDDRE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 13:04:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB852168F;
-        Thu,  4 Apr 2019 10:04:27 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A575D3F557;
-        Thu,  4 Apr 2019 10:04:25 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 18:04:23 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        rjw@rjwysocki.net, lenb@kernel.org, mark.rutland@arm.com,
-        sudeep.holla@arm.com, james.morse@arm.com,
-        lorenzo.pieralisi@arm.com, linuxarm@huawei.com
-Subject: Re: [PATCH 4/4] perf: arm_spe: Enable ACPI/Platform automatic module
- loading
-Message-ID: <20190404170423.GC28932@fuggles.cambridge.arm.com>
-References: <20190326223938.5365-1-jeremy.linton@arm.com>
- <20190326223938.5365-5-jeremy.linton@arm.com>
+        Thu, 4 Apr 2019 13:04:58 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:55350 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfDDRE5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 13:04:57 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id C3E298043C;
+        Thu,  4 Apr 2019 19:04:54 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 19:04:53 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v2 1/6] drm: move tinydrm_memcpy() to drm_fb_helper.c
+Message-ID: <20190404170453.GB23897@ravnborg.org>
+References: <20190404152430.8263-1-kraxel@redhat.com>
+ <20190404152430.8263-2-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190326223938.5365-5-jeremy.linton@arm.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+In-Reply-To: <20190404152430.8263-2-kraxel@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=UpRNyd4B c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=20KFwNOVAAAA:8
+        a=7gkXJVJtAAAA:8 a=L4-8VaEhRMSmCmg8aTYA:9 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 05:39:38PM -0500, Jeremy Linton wrote:
-> Lets add the MODULE_TABLE and platform id_table entries so that
-> the SPE driver can attach to the ACPI platform device created by
-> the core pmu code.
+Hi Gerd.
+
+On Thu, Apr 04, 2019 at 05:24:25PM +0200, Gerd Hoffmann wrote:
+> Also rename to drm_fb_memcpy().
+> Pure code motion, no functional change.
 > 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 > ---
->  drivers/perf/arm_spe_pmu.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+>  include/drm/drm_fb_helper.h                   |  3 +++
+>  include/drm/tinydrm/tinydrm-helpers.h         |  2 --
+>  drivers/gpu/drm/drm_fb_helper.c               | 25 +++++++++++++++++++
+>  .../gpu/drm/tinydrm/core/tinydrm-helpers.c    | 24 ------------------
+>  drivers/gpu/drm/tinydrm/mipi-dbi.c            |  3 ++-
+>  5 files changed, 30 insertions(+), 27 deletions(-)
 > 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 7cb766dafe85..ffa2c76c08bb 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -1176,7 +1176,13 @@ static const struct of_device_id arm_spe_pmu_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, arm_spe_pmu_of_match);
->  
-> -static int arm_spe_pmu_device_dt_probe(struct platform_device *pdev)
-> +static const struct platform_device_id arm_spe_match[] = {
-> +	{ "arm,spe-v1", 0},
-
-It would be nice if we could avoid duplicating this string from the ACPI
-parsing code.
-
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, arm_spe_match);
-> +
-> +static int arm_spe_pmu_device_probe(struct platform_device *pdev)
->  {
->  	int ret;
->  	struct arm_spe_pmu *spe_pmu;
-> @@ -1236,11 +1242,12 @@ static int arm_spe_pmu_device_remove(struct platform_device *pdev)
+> diff --git a/include/drm/drm_fb_helper.h b/include/drm/drm_fb_helper.h
+> index 81ae48a0df48..696017b38add 100644
+> --- a/include/drm/drm_fb_helper.h
+> +++ b/include/drm/drm_fb_helper.h
+> @@ -642,4 +642,7 @@ drm_fb_helper_remove_conflicting_pci_framebuffers(struct pci_dev *pdev,
+>  #endif
 >  }
 >  
->  static struct platform_driver arm_spe_pmu_driver = {
-> +	.id_table = arm_spe_match,
->  	.driver	= {
->  		.name		= DRVNAME,
->  		.of_match_table	= of_match_ptr(arm_spe_pmu_of_match),
+> +void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+> +		   struct drm_rect *clip);
+> +
+>  #endif
+> diff --git a/include/drm/tinydrm/tinydrm-helpers.h b/include/drm/tinydrm/tinydrm-helpers.h
+> index ae4a6abc43b5..591ca83330c4 100644
+> --- a/include/drm/tinydrm/tinydrm-helpers.h
+> +++ b/include/drm/tinydrm/tinydrm-helpers.h
+> @@ -46,8 +46,6 @@ int tinydrm_display_pipe_init(struct drm_device *drm,
+>  			      const struct drm_display_mode *mode,
+>  			      unsigned int rotation);
+>  
+> -void tinydrm_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+> -		    struct drm_rect *clip);
+>  void tinydrm_swab16(u16 *dst, void *vaddr, struct drm_framebuffer *fb,
+>  		    struct drm_rect *clip);
+>  void tinydrm_xrgb8888_to_rgb565(u16 *dst, void *vaddr,
+> diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+> index 03749a24e4dd..22d29834bbe9 100644
+> --- a/drivers/gpu/drm/drm_fb_helper.c
+> +++ b/drivers/gpu/drm/drm_fb_helper.c
+> @@ -3353,3 +3353,28 @@ int __init drm_fb_helper_modinit(void)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(drm_fb_helper_modinit);
+> +
+> +/**
+> + * drm_fb_memcpy - Copy clip buffer
+> + * @dst: Destination buffer
+> + * @vaddr: Source buffer
+> + * @fb: DRM framebuffer
+> + * @clip: Clip rectangle area to copy
+> + * @dstclip: Clip destination too.
+> + */
+> +void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+> +		   struct drm_rect *clip)
+Function has no parameter named @dstclip.
 
-Hmm, so some other drivers don't hook .id_table like you do, but instead
-hook .acpi_match_table in the driver structure. Is that not better?
-
-Will
+With this fixed:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
