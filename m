@@ -2,134 +2,134 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79674C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9275BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DC92082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:21:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rB1F5GsG"
+	by mail.kernel.org (Postfix) with ESMTP id 6A2E52082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfDDDVW (ORCPT
+        id S1726721AbfDDDWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:21:22 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46619 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfDDDVW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:21:22 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q1so471053pgv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:21:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ndQikP4SjrFvV/oZQZ3QyYMV6WkPxz0DiWPRCMGs5D0=;
-        b=rB1F5GsGU/vxmhDeBZkYprSYLfZl/7g7lBGPrYjX2Z+GpIQUNRvbScnu5lZg5eHXyR
-         RgQ171oN8Y7Lf7u0hnvhvrrWyzwqtxbpKWPgd+9WnFmQzD3xBHBy2HtMQEE0omBgmkbK
-         PRjmF7XfWEyZ9UIprbCoTvlUkCXL+zbjbHNMkMEDLfEEc12/PtF0b+7bfOql7Vo1bLR4
-         6oXOSNm4rYmc1Rbqvrt2jifahfgsqV8ycIrfBZxmUrQTNsMry5v8ZXm4NRtH4mHsNEbk
-         7i5gsLmKADSIAjGEbajUIDUrodMZU0ekRZqCmjMpvZPqlMTMumsd4r7HOsIMxZQ3Jf6+
-         FRNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ndQikP4SjrFvV/oZQZ3QyYMV6WkPxz0DiWPRCMGs5D0=;
-        b=YBitLX9RD5/4zffxa0HxE86DM5DVIeSjOBbbRVLSdt61YLye/O6jxO5PyQ9j0MJsQY
-         EgCQgwpGLzQzelG78vNo8wsMPivNF4UJu4I0fex9T3O4ZMoYKP+NHJXpK12Aclc26lx9
-         yNZBh1JA1sYML8oSqGrsvWS5WCqFgtgWKsOk7o/NvsJ/xUo28to7ew8X5pqZWTDXXKYu
-         1we76/geU8hIDSOxiU8NLIWCDaRMNWwYCPIljvYmT8cl5KQa7lArasQiMjKamt4Pb2Mc
-         iBgDC6+xHCmmL0wcq1kYqxHUFf6ZNfExNs/5+zVsSMOjCnuEqUqTc2rg2HI0pbeO8aOQ
-         /ISw==
-X-Gm-Message-State: APjAAAV0fEg8eJLofdw+U+Ihixf5OupiTRXeh3xPPTAvFLcLdNO34Eu3
-        KzCoCUHaoGBb/k4cgkJW3xiZdVP0j/KX/Q==
-X-Google-Smtp-Source: APXvYqxdPzeZi+u9mUwmfYh6O0K8TFsiGYcfkzWgPFRnymX5qW6UPdl9+s8Sktru1BJaDhmJUn4/Ow==
-X-Received: by 2002:a63:c64a:: with SMTP id x10mr3228074pgg.12.1554348081166;
-        Wed, 03 Apr 2019 20:21:21 -0700 (PDT)
-Received: from [10.71.14.66] ([147.50.13.10])
-        by smtp.googlemail.com with ESMTPSA id d75sm39023880pga.66.2019.04.03.20.21.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 20:21:20 -0700 (PDT)
-Subject: Re: [PATCH v3 01/13] thermal: qoriq: Remove unnecessary DT node is
- NULL check
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
- <20190401041418.5999-2-andrew.smirnov@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <22f0c6d4-842e-bb91-a684-6edb6345e036@linaro.org>
-Date:   Thu, 4 Apr 2019 05:21:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 3 Apr 2019 23:22:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46928 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbfDDDWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 23:22:46 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6A166309708D;
+        Thu,  4 Apr 2019 03:22:46 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-97.pek2.redhat.com [10.72.12.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F35E76C746;
+        Thu,  4 Apr 2019 03:22:42 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 11:22:38 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     "bhe@redhat.com" <bhe@redhat.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190404032238.GA16267@dhcp-128-65.nay.redhat.com>
+References: <20190403053459.GD1555@localhost.localdomain>
+ <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403072141.GE1555@localhost.localdomain>
+ <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
+ <20190403082305.GG1555@localhost.localdomain>
+ <20190403090210.GH1555@localhost.localdomain>
+ <c8613886-7014-cbd2-788f-a4f29bb5b4a5@ce.jp.nec.com>
+ <20190404025234.GA12658@dhcp-128-65.nay.redhat.com>
+ <20190404030037.GT7627@MiWiFi-R3L-srv>
+ <20190404031030.GU7627@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <20190401041418.5999-2-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404031030.GU7627@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 04 Apr 2019 03:22:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/04/2019 06:14, Andrey Smirnov wrote:
-> This driver is meant to be used with Device Tree and there's no
-> use-case where device's DT node is going to be NULL. Remove code
-> protecting against that.
-
-May be elaborate why is never going to be NULL?
-
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> Cc: linux-imx@nxp.com
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-> ---
->  drivers/thermal/qoriq_thermal.c | 5 -----
->  1 file changed, 5 deletions(-)
+On 04/04/19 at 11:10am, Baoquan He wrote:
+> On 04/04/19 at 11:00am, Baoquan He wrote:
+> > On 04/04/19 at 10:52am, Dave Young wrote:
+> > > On 04/04/19 at 01:23am, Junichi Nomura wrote:
+> > > > Hi Dave and Chao,
+> > > > 
+> > > > On 4/3/19 6:02 PM, Chao Fan wrote:
+> > > > > On Wed, Apr 03, 2019 at 04:23:06PM +0800, Chao Fan wrote:
+> > > > >> On Wed, Apr 03, 2019 at 04:09:16PM +0800, Dave Young wrote:
+> > > > >>> Fix 3.  need more debugging, have you or Junichi run tests on more real
+> > > > >>> hardware, maybe it is easier to reproduce on real hardware, I'm glad to
+> > > > >>> help to try test patch or provide any help. 
+> > > > >>
+> > > > >> I am still testing in real hardware.
+> > > > > 
+> > > > > Hi Dave,
+> > > > > 
+> > > > > I find a Fujitsu Desktop PC to test it.
+> > > > > Without this PATCH, it failed to kexec and kdump.
+> > > > > With this PATCH, it succeed to kexec.
+> > > > > But failed to kdump. From the log, I think it didn't jump to the second
+> > > > > kernel, just reboot after panic. I have not figured out what's the
+> > > > > problem, but it seems not caused by this PATCH.
+> > > > > So I still think this PATCH works for the Fujitsu Desktop PC.
+> > > > > 
+> > > > > As for your issue, I think there may be some problems related to specified
+> > > > > hardware. Are you using a Lenovo laptop?
+> > > > > 
+> > > > > And I am not sure how Nomura tested it.
+> > > > 
+> > > > I've tested 3 different models of EFI-booted baremetal servers with both
+> > > > normal kexec and panic kexec.  So far as I've tried Linus's v5.1-rc3,
+> > > > the problem always reproduced without the patch and disappears with the patch.
+> > > 
+> > > Hmm, both of my two laptops (Thinkpad T480s and T420) failed to boot with kexec.
+> > > 
+> > > I will see if I can find something, but it may need more time because
+> > > early console does not work especially after kexec.
+> > 
+> > Dave, can you try below patch to print debugging message and hang kernel
+> > to check the outputting? The hang is necessary, otherwise later printk
+> > printking will overwrite it.
+> > 
+> > diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+> > index c0d6c560df69..68119547c4aa 100644
+> > --- a/arch/x86/boot/compressed/misc.c
+> > +++ b/arch/x86/boot/compressed/misc.c
+> > @@ -351,9 +351,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+> >  	/* Clear flags intended for solely in-kernel use. */
+> >  	boot_params->hdr.loadflags &= ~KASLR_FLAG;
+> >  
+> > -	/* Save RSDP address for later use. */
+> > -	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+> > -
+> >  	sanitize_boot_params(boot_params);
+> >  
+> >  	if (boot_params->screen_info.orig_video_mode == 7) {
+> > @@ -370,6 +367,10 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+> >  	console_init();
+> >  	debug_putstr("early console in extract_kernel\n");
+> >  
+>  +	/* Save RSDP address for later use. */
+>  +	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+>  +
+>  +	error("Hang kernel for kexec debugging");
 > 
-> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> index 3b5f5b3fb1bc..7b364933bfb1 100644
-> --- a/drivers/thermal/qoriq_thermal.c
-> +++ b/drivers/thermal/qoriq_thermal.c
-> @@ -193,11 +193,6 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
->  	struct qoriq_tmu_data *data;
->  	struct device_node *np = pdev->dev.of_node;
->  
-> -	if (!np) {
-> -		dev_err(&pdev->dev, "Device OF-Node is NULL");
-> -		return -ENODEV;
-> -	}
-> -
->  	data = devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
->  			    GFP_KERNEL);
->  	if (!data)
-> 
+> Sorry, here I means calling error() to hang kernel after calling
+> get_rsdp_addr().
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Thanks, it did not hang, it always reset to firmware/grub boot menu.
+I'm pretty sure now the bug exists in get_rsdp_addr().
