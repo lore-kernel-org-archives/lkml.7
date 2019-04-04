@@ -2,213 +2,102 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539A2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE6EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1766C206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D26217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="R5LnO/YL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbfDDS1o (ORCPT
+        id S1729714AbfDDS3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:27:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfDDS1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:27:44 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E4DA6307B483;
-        Thu,  4 Apr 2019 18:27:43 +0000 (UTC)
-Received: from [10.36.116.63] (ovpn-116-63.ams2.redhat.com [10.36.116.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8854F600C5;
-        Thu,  4 Apr 2019 18:27:42 +0000 (UTC)
-Subject: Re: [PATCH 2/2] mm, memory_hotplug: provide a more generic
- restrictions for memory hotplug
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190404125916.10215-1-osalvador@suse.de>
- <20190404125916.10215-3-osalvador@suse.de>
- <880c5d09-7d4e-2a97-e826-a8a6572216b2@redhat.com>
- <20190404180144.lgpf6qgnp67ib5s7@d104.suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <5f735328-3451-ebd7-048e-e83e74e2c622@redhat.com>
-Date:   Thu, 4 Apr 2019 20:27:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190404180144.lgpf6qgnp67ib5s7@d104.suse.de>
-Content-Type: text/plain; charset=utf-8
+        Thu, 4 Apr 2019 14:29:17 -0400
+Received: from mail-eopbgr780139.outbound.protection.outlook.com ([40.107.78.139]:43390
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727310AbfDDS3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 14:29:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Kw4EefOJ0jVDbHA1+OPQKxiWqYF8Ckg0OhVBFevFPE=;
+ b=R5LnO/YL6YKuS73Sov9u696bbjcEL4WcTkdR9+rPhF19c1q9yHJOa87ermLz7NxZAUXBXyvGpxBjclHB2u6pWLMoPlkEDqn580q4heDiYFt9/16dunvplFygEUa1JtHOLHA2TzhNtqnBlckNXA3oftrAvxPQryP81iaJalCCaHI=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1504.namprd22.prod.outlook.com (10.174.170.153) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.13; Thu, 4 Apr 2019 18:29:14 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765%6]) with mapi id 15.20.1750.017; Thu, 4 Apr 2019
+ 18:29:14 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2] MIPS: generic: Add switchdev,  pinctrl and fit to
+ ocelot_defconfig
+Thread-Topic: [PATCH v2] MIPS: generic: Add switchdev,  pinctrl and fit to
+ ocelot_defconfig
+Thread-Index: AQHU6xRNa9kLMHg3rk2oDsl2wnkHTA==
+Date:   Thu, 4 Apr 2019 18:29:13 +0000
+Message-ID: <MWHPR2201MB1277CF6185BA6140F61F08BEC1500@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <1554366328-16459-1-git-send-email-horatiu.vultur@microchip.com>
+In-Reply-To: <1554366328-16459-1-git-send-email-horatiu.vultur@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 04 Apr 2019 18:27:44 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR03CA0034.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::47) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fe4eb09d-02de-49c2-7b72-08d6b92b7013
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1504;
+x-ms-traffictypediagnostic: MWHPR2201MB1504:
+x-microsoft-antispam-prvs: <MWHPR2201MB150467283CD1B55381684FA0C1500@MWHPR2201MB1504.namprd22.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(396003)(376002)(346002)(366004)(136003)(189003)(199004)(5660300002)(97736004)(53936002)(25786009)(229853002)(14454004)(478600001)(55016002)(6246003)(486006)(3846002)(71190400001)(71200400001)(6116002)(9686003)(446003)(44832011)(476003)(4326008)(11346002)(8936002)(186003)(7696005)(52116002)(7736002)(76176011)(8676002)(81156014)(26005)(305945005)(105586002)(102836004)(68736007)(386003)(256004)(6506007)(66066001)(33656002)(74316002)(106356001)(42882007)(316002)(54906003)(52536014)(99286004)(4744005)(6916009)(2906002)(6436002)(81166006)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1504;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: r12zYX2aQKBUY/H5gAR/QnoeJdi5fkxbrAvFjAApTbDAe8xV+1YhowgH5BkPiaA723cyZZ+Lpls+Thc6nGf2g+reOkY1GyORaT5+8e/pNAZYW5VFxIp3kIfoIp/eAm2M24WhFW1mtfVLFOf99yKToQe/y33qVnVa5BVMlJxYO2WKBEYDk6Ps9gCUPJI9ywZCQ8abw/8MC9zJFwjdg9KYHGESibsNfXELKC1tuxhMtNlktbLC8re3wIe8OijR/X6uMdUNS17Wy1A8tnm8h5e+1TS/5m3pYjMDoXev6KH3IP+Fn5nmGeyXS7xXaWE7S2q6JiaakSr/3CPZBjsN7Fl1GcE9jTwGl3Q60Y7UqQTxmNeP6vGMRF+bZ9VOFGym/dNuwi+lgVJTPnsT4tvqmK7XqrqIrXltnLsCaZynN8kmSI8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe4eb09d-02de-49c2-7b72-08d6b92b7013
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 18:29:13.9645
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.04.19 20:01, Oscar Salvador wrote:
-> On Thu, Apr 04, 2019 at 04:57:03PM +0200, David Hildenbrand wrote:
-> 
->>>  #ifdef CONFIG_MEMORY_HOTPLUG
->>> -int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
->>> -		    bool want_memblock)
->>> +int arch_add_memory(int nid, u64 start, u64 size,
->>> +			struct mhp_restrictions *restrictions)
->>
->> Should the restrictions be marked const?
-> 
-> We could, but maybe some platforms want to override something later on
-> depending on x or y configurations, so we could be more flexible here.
-> 
->>> +/*
->>> + * Do we want sysfs memblock files created. This will allow userspace to online
->>> + * and offline memory explicitly. Lack of this bit means that the caller has to
->>> + * call move_pfn_range_to_zone to finish the initialization.
->>> + */
->>
->> I think you can be more precise here.
->>
->> "Create memory block devices for added pages. This is usually the case
->> for all system ram (and only system ram), as only this way memory can be
->> onlined/offlined by user space and kdump to correctly detect the new
->> memory using udev events."
->>
->> Maybe we should even go a step further and call this
->>
->> MHP_SYSTEM_RAM
->>
->> Because that is what it is right now.
-> 
-> I agree that that is nicer explanation, and I would not mind to add it.
-> In the end, the more information and commented code the better.
-> 
-> But I am not really convinced by MHP_SYSTEM_RAM name, and I think we should stick
-> with MHP_MEMBLOCK_API because it represents __what__ is that flag about and its
-> function, e.g: create memory block devices.
-
-This nicely aligns with the sub-section memory add support discussion.
-
-MHP_MEMBLOCK_API immediately implies that
-
-- memory is used as system ram. Memory can be onlined/offlined. Markers
-  at sections indicate if the section is online/offline.
-- memory has to follow certain restrictions (alignment + size multiple
-  of memory block size)
-
-IOW, if some ZONE_DEVICE memory would set this flag, very bad things
-will happen. Especially, device memory with memory block devices should
-also result in quite some issues (I remember it is checked somewhere).
-
-System ram added without MHP_MEMBLOCK_API? What would happen? Memory can
-never be onlined.
-
-I feel like mixing these two interfaces - adding system memory vs.
-adding device memory wasn't the best design choice. Lot of parameters to
-set, but the some parameters are actually mutually exclusive. Especially
-memory block devices are a difference.
-
-Maybe having actual function cal variants like
-
-__add_system_memory / arch_add_system_memory ...
-
-and
-
-__add_device_memory / arch_add_device_memory
-
-would make things clearer. To me, it feels like we are trying to squeeze
-too many different things into one function call path, allowing people
-do do things that shouldn't be done.
-
-Any opinions on the design/direction on these interfaces in general? I
-don't see us moving away from memory block devices for system ram. But I
-am seeing us moving towards sub-section hot-add support for anything not
-system ram.
-
-> 
->>> @@ -1102,6 +1102,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
->>>  	u64 start, size;
->>>  	bool new_node = false;
->>>  	int ret;
->>> +	struct mhp_restrictions restrictions = {};
->>
->> I'd make this the very first variable.
->>
->> Also eventually
->>
->> struct mhp_restrictions restrictions = {
->> 	.restrictions = MHP_MEMBLOCK_API
->> };
-> 
-> It might be more right.
-> Actually, that is the way we tend to pre-initialize fields in structs.
-> 
-> About the identation, I  am really puzzled, I checked my branch and I
-> cannot see any space that should be a tab.
-> Maybe it got screwed up when sending it.
-
-It's not about spaces that should be tabs, rather about how many tabs to
-use. But this is really just nit picking, because it usually directly
-jumps into my eyes :) On vim with tabstop=8 it didn't look right.
-
-> 
-> Anyway, thanks for the feedback David ;-)
-> 
-
-
--- 
-
-Thanks,
-
-David / dhildenb
+SGVsbG8sDQoNCkhvcmF0aXUgVnVsdHVyIHdyb3RlOg0KPiBTb21lIG9mIHRoZSBjb25maWd1cmF0
+aW9uIHdlcmUgbm90IHNlbGVjdGVkIGJ5IGRlZmF1bHQgYW55bW9yZSwgdGhlcmVmb3JlDQo+IGVu
+YWJsZSB0aGVtIGFnYWluLiBBbHNvIHJlbW92ZSBzb21lIGNvbmZpZ3Mgd2hpY2ggYXJlIHVzZWQg
+Zm9yIE1TQ0MgT2NlbG90Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSG9yYXRpdSBWdWx0dXIgPGhv
+cmF0aXUudnVsdHVyQG1pY3JvY2hpcC5jb20+DQoNCkFwcGxpZWQgdG8gbWlwcy1maXhlcy4NCg0K
+VGhhbmtzLA0KICAgIFBhdWwNCg0KWyBUaGlzIG1lc3NhZ2Ugd2FzIGF1dG8tZ2VuZXJhdGVkOyBp
+ZiB5b3UgYmVsaWV2ZSBhbnl0aGluZyBpcyBpbmNvcnJlY3QNCiAgdGhlbiBwbGVhc2UgZW1haWwg
+cGF1bC5idXJ0b25AbWlwcy5jb20gdG8gcmVwb3J0IGl0LiBdDQo=
