@@ -2,189 +2,154 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71E8C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B31DC10F0D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79992075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C62A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWgpsEKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfDDITQ (ORCPT
+        id S1728918AbfDDITS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 4 Apr 2019 04:19:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39738 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728814AbfDDITQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 04:19:16 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6231 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727258AbfDDITM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:19:12 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D4E3F3E8C7575F03A9DC;
-        Thu,  4 Apr 2019 16:19:09 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 4 Apr 2019 16:19:03 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <sergei.shtylyov@cogentembedded.com>,
-        liuzhongzhu <liuzhongzhu@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 03/12] net: hns3: modify the VF network port media type acquisition method
-Date:   Thu, 4 Apr 2019 16:17:50 +0800
-Message-ID: <1554365879-7932-4-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554365879-7932-1-git-send-email-tanhuazhong@huawei.com>
-References: <1554365879-7932-1-git-send-email-tanhuazhong@huawei.com>
+Received: by mail-pl1-f193.google.com with SMTP id b65so781799plb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 01:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=57oxX9qcqOphMVdsvnbzO1MKoW5/Uo3PTxng3ulbZxc=;
+        b=DWgpsEKuCVhq3+qghF9Mje3JW4HLvMfnwvi9vAOgNIdTAmWFA84uv0F2lFJjeIIMz4
+         11D8C0obQ9vcmoKkJTdnnLlMQXbt6BuaqkPgLKJtFbft7c+/+yhL3qYyZle/gdlHOOlJ
+         FI6TTi09fxqT5Gd1tbq0rfWlCjG0B6VaMtmUoyZx0LbbklM9bGsTxIcX1CMb9/4nWBJ3
+         BEuM88ma0g49xccFFMWvLJPjATrNxSEWp+JI52mDYFc9mHQxhQ41LOdYLpsCuSLLH0Jk
+         8/jFrtLsaQ8Jx8Gr/nbCffDkMG6m7Pou5RB2DJxyUARNQ73Y1ZirJcoOOTQNwfUuTz/B
+         gQfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=57oxX9qcqOphMVdsvnbzO1MKoW5/Uo3PTxng3ulbZxc=;
+        b=Xlk2nVdZQ7VqvfZJk1et/S5fEhUjBCC0Ii9xDio8NwM2xjzmsbXvpV7oizzoKbX0aZ
+         D4V0XDKHvJBlIr/lLlCS9AW43p4G0/e7pnum3JLspAoE7WgKlY1+/sqzr3GVO88ypklw
+         RL4PzJ9WS7cXSrxQxqnkwn3/XJ8FR4mKtZGKGeBvlEGDPBcXP1EbH2XAEQWseFKuW3ju
+         82nqEows83lWVjlaKGsYDcgUuHVXq2AM7igYYDVpeif3LbnJtjWAJIwFlEy+WU4DRW3F
+         +nYHcoQfY5+z5JsQYmMSI9Afg9whkch8vhvHE991iCfZ/5bNqf+EHRQsrTC4YxLsQ2gO
+         oxaw==
+X-Gm-Message-State: APjAAAX6NbxPZrhcTUjnhS5x0thulvkrspUSh68tt5byrcujueuX87vF
+        lajfilgQBX0g7LympUB/3YD/bw==
+X-Google-Smtp-Source: APXvYqxG4yu6j/4daY79hPbnOSByWUCvtGINPKzh6/WwG7DeTksBO1xJ6EU7ira/ifYUJ8eiaS10QA==
+X-Received: by 2002:a17:902:e382:: with SMTP id ch2mr4882080plb.94.1554365955743;
+        Thu, 04 Apr 2019 01:19:15 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id p66sm7472793pfb.4.2019.04.04.01.19.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 01:19:15 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 09:19:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH 1/5] dt-bindings: mfd: Update the ramp up/down property
+Message-ID: <20190404081907.GO6830@dell>
+References: <20190325142403.30447-1-dmurphy@ti.com>
+ <20190325142403.30447-2-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190325142403.30447-2-dmurphy@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: liuzhongzhu <liuzhongzhu@huawei.com>
+On Mon, 25 Mar 2019, Dan Murphy wrote:
 
-Method for obtaining the media type of the VF network port periodically,
-regular tasks will not run until the network port UP. When the network
-port is DOWN, the network port cannot obtain the media type.
-Modifies the madie type obtained when initializing the VF network port.
+> Modify the ramp-up/down property and add the property description
+> to the binding.
 
-Signed-off-by: liuzhongzhu <liuzhongzhu@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  1 +
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 23 ++++++++++++++++++----
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 23 ++++++++++++++++++++++
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  1 -
- 4 files changed, 43 insertions(+), 5 deletions(-)
+This is the 'what', but where is the 'why'?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-index 299b277..9d3d45f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-@@ -43,6 +43,7 @@ enum HCLGE_MBX_OPCODE {
- 	HCLGE_MBX_GET_QID_IN_PF,	/* (VF -> PF) get queue id in pf */
- 	HCLGE_MBX_LINK_STAT_MODE,	/* (PF -> VF) link mode has changed */
- 	HCLGE_MBX_GET_LINK_MODE,	/* (VF -> PF) get the link mode of pf */
-+	HCLGE_MBX_GET_MEDIA_TYPE,       /* (VF -> PF) get media type */
- 
- 	HCLGE_MBX_GET_VF_FLR_STATUS = 200, /* (M7 -> PF) get vf reset status */
- };
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index 306a23e..9aa9c64 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -385,24 +385,32 @@ static int hclge_get_vf_queue_depth(struct hclge_vport *vport,
- 				    HCLGE_TQPS_DEPTH_INFO_LEN);
- }
- 
-+static int hclge_get_vf_media_type(struct hclge_vport *vport,
-+				   struct hclge_mbx_vf_to_pf_cmd *mbx_req)
-+{
-+	struct hclge_dev *hdev = vport->back;
-+	u8 resp_data;
-+
-+	resp_data = hdev->hw.mac.media_type;
-+	return hclge_gen_resp_to_vf(vport, mbx_req, 0, &resp_data,
-+				    sizeof(resp_data));
-+}
-+
- static int hclge_get_link_info(struct hclge_vport *vport,
- 			       struct hclge_mbx_vf_to_pf_cmd *mbx_req)
- {
- 	struct hclge_dev *hdev = vport->back;
- 	u16 link_status;
--	u8 msg_data[10];
--	u16 media_type;
-+	u8 msg_data[8];
- 	u8 dest_vfid;
- 	u16 duplex;
- 
- 	/* mac.link can only be 0 or 1 */
- 	link_status = (u16)hdev->hw.mac.link;
- 	duplex = hdev->hw.mac.duplex;
--	media_type = hdev->hw.mac.media_type;
- 	memcpy(&msg_data[0], &link_status, sizeof(u16));
- 	memcpy(&msg_data[2], &hdev->hw.mac.speed, sizeof(u32));
- 	memcpy(&msg_data[6], &duplex, sizeof(u16));
--	memcpy(&msg_data[8], &media_type, sizeof(u16));
- 	dest_vfid = mbx_req->mbx_src_vfid;
- 
- 	/* send this requested info to VF */
-@@ -662,6 +670,13 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
- 			hclge_rm_vport_all_vlan_table(vport, true);
- 			mutex_unlock(&hdev->vport_cfg_mutex);
- 			break;
-+		case HCLGE_MBX_GET_MEDIA_TYPE:
-+			ret = hclge_get_vf_media_type(vport, req);
-+			if (ret)
-+				dev_err(&hdev->pdev->dev,
-+					"PF fail(%d) to media type for VF\n",
-+					ret);
-+			break;
- 		default:
- 			dev_err(&hdev->pdev->dev,
- 				"un-supported mailbox message, code = %d\n",
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 65bdc68..509ff93 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -307,6 +307,25 @@ static u16 hclgevf_get_qid_global(struct hnae3_handle *handle, u16 queue_id)
- 	return qid_in_pf;
- }
- 
-+static int hclgevf_get_pf_media_type(struct hclgevf_dev *hdev)
-+{
-+	u8 resp_msg;
-+	int ret;
-+
-+	ret = hclgevf_send_mbx_msg(hdev, HCLGE_MBX_GET_MEDIA_TYPE, 0, NULL, 0,
-+				   true, &resp_msg, sizeof(resp_msg));
-+	if (ret) {
-+		dev_err(&hdev->pdev->dev,
-+			"VF request to get the pf port media type failed %d",
-+			ret);
-+		return ret;
-+	}
-+
-+	hdev->hw.mac.media_type = resp_msg;
-+
-+	return 0;
-+}
-+
- static int hclgevf_alloc_tqps(struct hclgevf_dev *hdev)
- {
- 	struct hclgevf_tqp *tqp;
-@@ -1824,6 +1843,10 @@ static int hclgevf_configure(struct hclgevf_dev *hdev)
- 	if (ret)
- 		return ret;
- 
-+	ret = hclgevf_get_pf_media_type(hdev);
-+	if (ret)
-+		return ret;
-+
- 	/* get tc configuration from PF */
- 	return hclgevf_get_tc_info(hdev);
- }
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index 7dc3c9f..3bcf49b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -272,7 +272,6 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
- 			link_status = le16_to_cpu(msg_q[1]);
- 			memcpy(&speed, &msg_q[2], sizeof(speed));
- 			duplex = (u8)le16_to_cpu(msg_q[4]);
--			hdev->hw.mac.media_type = (u8)le16_to_cpu(msg_q[5]);
- 
- 			/* update upper layer with new link link status */
- 			hclgevf_update_link_status(hdev, link_status);
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/mfd/ti-lmu.txt        | 20 ++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> index 980394d701a7..d9d529de6dc1 100644
+> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> @@ -25,6 +25,12 @@ Required properties:
+>  
+>  Optional property:
+>    - enable-gpios: A GPIO specifier for hardware enable pin.
+> +  - ramp-up-ms: Current ramping from one brightness level to
+> +		the a higher brightness level.
+> +		Range from 2048 us - 117.44 s
+> +  - ramp-down-ms: Current ramping from one brightness level to
+> +		  the a lower brightness level.
+> +		  Range from 2048 us - 117.44 s
+>  
+>  Required node:
+>    - backlight: All LMU devices have backlight child nodes.
+> @@ -90,7 +96,7 @@ lm3631@29 {
+>  
+>  		lcd_bl {
+>  			led-sources = <0 1>;
+> -			ramp-up-msec = <300>;
+> +			ramp-up-ms = <300>;
+>  		};
+>  	};
+>  };
+> @@ -152,15 +158,15 @@ lm3633@36 {
+>  		main {
+>  			label = "main_lcd";
+>  			led-sources = <1 2>;
+> -			ramp-up-msec = <500>;
+> -			ramp-down-msec = <500>;
+> +			ramp-up-ms = <500>;
+> +			ramp-down-ms = <500>;
+>  		};
+>  
+>  		front {
+>  			label = "front_lcd";
+>  			led-sources = <0>;
+> -			ramp-up-msec = <1000>;
+> -			ramp-down-msec = <0>;
+> +			ramp-up-ms = <1000>;
+> +			ramp-down-ms = <0>;
+>  		};
+>  	};
+>  
+> @@ -212,8 +218,8 @@ lm3697@36 {
+>  
+>  		lcd {
+>  			led-sources = <0 1 2>;
+> -			ramp-up-msec = <200>;
+> -			ramp-down-msec = <200>;
+> +			ramp-up-ms = <200>;
+> +			ramp-down-ms = <200>;
+>  		};
+>  	};
+>  
+
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
