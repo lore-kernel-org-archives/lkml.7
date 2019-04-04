@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24064C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16908C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E858A21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC7222184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367887;
-	bh=K+1WuSFZxd2JdPw6D1Qf9DkgZj3eSHut412qGPfGUB8=;
+	s=default; t=1554367890;
+	bh=OYd5Iltv+ble0Zc4yPMCmipK+YNiJYdaRjtdsR8eS9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NEYIvBnuLVAxXriQB+aR9xfRgUFQGDBON2yfiackbKp6v3FuMOO8wJRLlXhbDphC9
-	 0/fiQtLqltnD4DAWda1lHWP82lMO/V99HzlM+AlqLfZbWJKDMk7EzToUX1CbhJKjQu
-	 EK0moCPTWQezbbYoL6KGbbdjGkSiLCbx6DBqiA2M=
+	b=hUUFgdnyArrKqaGEvKcLFetL7ThLr5oiEKqzP0BHuWnqHs6ZiNwOrYHgV8wX1BHNh
+	 qAEIhVUnOsCYjAfQAiGIvwm2rvpXkAOm16fl9vSqU7+IwvNRdFDh3pQCL854/x0gDI
+	 xWGPTSmZxejrcZh7oaaQgAXAhk9xrxEo7e4c9B4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbfDDIvZ (ORCPT
+        id S1729382AbfDDIv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:51:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53152 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:51:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbfDDIvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:51:22 -0400
+        id S1729363AbfDDIvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:51:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3FBE2177E;
-        Thu,  4 Apr 2019 08:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56A2D217D7;
+        Thu,  4 Apr 2019 08:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367882;
-        bh=K+1WuSFZxd2JdPw6D1Qf9DkgZj3eSHut412qGPfGUB8=;
+        s=default; t=1554367884;
+        bh=OYd5Iltv+ble0Zc4yPMCmipK+YNiJYdaRjtdsR8eS9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pkw3xo3BEVa4TMlN5lOWZXgA/dJRktt7FmK0O5vS5ye+FadCF/bDYI8EISkz/347n
-         gAJYB7jQWMOkCOLSlmzF6qMmNZQD5KgF0f4WuljH3PQmLJ1nhM2piONLYjlj8kvssU
-         3TUf8kej/CF3VbdOiy5LHJLcano2M93mHOyfjFzE=
+        b=XoGTCrWNZVgJt9FzPprm1JZskP/MtFBcSMyz3UxhGVmL4rnSTq4ipdJCgir5qt1t7
+         VCazX7o7s9TEk/nb1yPRekqZplXpRDgC/nr8HAM2wGg5kpHURoLvsrh8aOFa7MIiiN
+         z0aPhcFQAq/w4OUERILVH2KjGHsL3WlFMZwjMshQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Peter Chen <peter.chen@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 48/91] media: mx2_emmaprp: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:47:32 +0200
-Message-Id: <20190404084538.264027859@linuxfoundation.org>
+Subject: [PATCH 4.9 33/91] usb: chipidea: Grab the (legacy) USB PHY by phandle first
+Date:   Thu,  4 Apr 2019 10:47:17 +0200
+Message-Id: <20190404084537.381417961@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -67,59 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8d20dcefe471763f23ad538369ec65b51993ffff ]
+[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+According to the chipidea driver bindings, the USB PHY is specified via
+the "phys" phandle node. However, this only takes effect for USB PHYs
+that use the common PHY framework. For legacy USB PHYs, a simple lookup
+based on the USB PHY type is done instead.
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+This does not play out well when more than one USB PHY is registered,
+since the first registered PHY matching the type will always be
+returned regardless of what the driver was bound to.
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+Fix this by looking up the PHY based on the "phys" phandle node.
+Although generic PHYs are rather matched by their "phys-name" and not
+the "phys" phandle directly, there is no helper for similar lookup on
+legacy PHYs and it's probably not worth the effort to add it.
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
+When no legacy USB PHY is found by phandle, fallback to grabbing any
+registered USB2 PHY. This ensures backward compatibility if some users
+were actually relying on this mechanism.
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mx2_emmaprp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/chipidea/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
-index e68d271b10af..8354ad20865a 100644
---- a/drivers/media/platform/mx2_emmaprp.c
-+++ b/drivers/media/platform/mx2_emmaprp.c
-@@ -288,7 +288,7 @@ static void emmaprp_device_run(void *priv)
- {
- 	struct emmaprp_ctx *ctx = priv;
- 	struct emmaprp_q_data *s_q_data, *d_q_data;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct emmaprp_dev *pcdev = ctx->dev;
- 	unsigned int s_width, s_height;
- 	unsigned int d_width, d_height;
-@@ -308,8 +308,8 @@ static void emmaprp_device_run(void *priv)
- 	d_height = d_q_data->height;
- 	d_size = d_width * d_height;
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 64c6af2c8559..e96e3a5808b3 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -901,8 +901,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	} else if (ci->platdata->usb_phy) {
+ 		ci->usb_phy = ci->platdata->usb_phy;
+ 	} else {
++		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
++							  0);
+ 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
+-		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
++
++		/* Fallback to grabbing any registered USB2 PHY */
++		if (IS_ERR(ci->usb_phy) &&
++		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
++			ci->usb_phy = devm_usb_get_phy(dev->parent,
++						       USB_PHY_TYPE_USB2);
  
--	p_in = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	p_out = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-+	p_in = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
-+	p_out = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
- 	if (!p_in || !p_out) {
- 		v4l2_err(&pcdev->v4l2_dev,
- 			 "Acquiring kernel pointers to buffers failed\n");
+ 		/* if both generic PHY and USB PHY layers aren't enabled */
+ 		if (PTR_ERR(ci->phy) == -ENOSYS &&
 -- 
 2.19.1
 
