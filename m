@@ -4,62 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B16C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5DEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9025620651
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B6720651
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554355846;
-	bh=AMAbd68xJyGXHK5y0Fs7Iu39qAvQ4SaWNERhPnW6MCY=;
+	s=default; t=1554355948;
+	bh=m2O0idEz7qzLnuts5p7+xeJ2BXq92ygBST9FJiGUuOc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JO0n3dH5s83nnuzZwBUtxnHzUxFzA3xTUxU2pgx485WQ23OK3aYRH+DW+esp957DM
-	 yHo8ETUqg3TeiMQSei5OdGi4OKuhzO4cG2tP8chAmKFvHW7sMA8GeTVA33dkP4Z2lU
-	 cQbzPjtg41aC4nHNlvjNNK8/MZONAYkO1g+DtFY8=
+	b=r5J/N6C3idYrfotT5hBbQBg+zqZLmcbD+pXEAZxeV7TQFHbwH198LaJnU8CYJE0NS
+	 oh8g0FFpP66zrDSD500zp9LoZyVkdamMpt39/UmwlG5znSACstyaGBPlfcaxwmDiOB
+	 mEP2P8/VceQ9V53U86QJ2J1XtlWgMWXjqDa9MHMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfDDFap (ORCPT
+        id S1726738AbfDDFc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 01:30:45 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53918 "EHLO
+        Thu, 4 Apr 2019 01:32:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56790 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfDDFap (ORCPT
+        with ESMTP id S1726122AbfDDFc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 01:30:45 -0400
+        Thu, 4 Apr 2019 01:32:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=R3YnONeW4GuNowGK8+rUVUUC1ZebQJvRknzgmI/FUB4=; b=uxYRLqLOo5nNAHCm50Q16OTGr
-        nLTQxwMm9kreOLWRTUOWprJuK9oIIhN6k4xBWKYMUR3gHLzKAs1kUKKn2IVJ3Qc5q0rpb3fY255bC
-        e24EwTPEf3qW9N5v8WzOFZRLl0gCSzgM1TC857g/ryEbt7OsY7yiIg/VZ4kHQQkMgqUSY=;
+         bh=1GddzkAupY5SqXV8ojWTvt6lZGSazWMwnmp47hzTNr4=; b=ivBGbHsr67IB3TawJ/uw152LS
+        6kvOP3TAfjJEkZiXafAXAVLB28WATMkXsFL2lvfFFmTQbXkOlZBiHqhnlrU5sZEr/mXGVqwS+ebPP
+        HgQp1Iy5Otgl/mNmxesoRmd80TPt/qXu9wmoFdSQOkDJ/b8WrwnWole1r5WfwtkqQVlLM=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hBuxV-00044T-Nn; Thu, 04 Apr 2019 05:30:42 +0000
+        id 1hBuyq-00045U-7M; Thu, 04 Apr 2019 05:32:04 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 6A1B4441D3C; Thu,  4 Apr 2019 12:30:37 +0700 (+07)
-Date:   Thu, 4 Apr 2019 12:30:37 +0700
+        id D6FEC441D3C; Thu,  4 Apr 2019 12:32:00 +0700 (+07)
+Date:   Thu, 4 Apr 2019 12:32:00 +0700
 From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Axel Lin <axel.lin@ingics.com>
-Subject: Re: [PATCH AUTOSEL 5.0 209/262] regulator: mcp16502: Include
- linux/gpio/consumer.h to fix build error
-Message-ID: <20190404053037.GK5748@sirena.org.uk>
-References: <20190327180158.10245-1-sashal@kernel.org>
- <20190327180158.10245-209-sashal@kernel.org>
- <20190327193211.GC11404@sirena.org.uk>
- <20190404004608.GG16241@sasha-vm>
+To:     Fletcher Woodruff <fletcherw@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
+        Bard Liao <bardliao@realtek.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        alsa-devel@alsa-project.org, Ross Zwisler <zwisler@google.com>
+Subject: Re: [PATCH 1/2] ASoC: rt5677: allow multiple interrupt sources
+Message-ID: <20190404053200.GL5748@sirena.org.uk>
+References: <20190401205519.34023-1-fletcherw@chromium.org>
+ <20190402050236.GV2059@sirena.org.uk>
+ <CAN-6NYaO0bah_vFgTGrnU5_pUM95B+voDxsUR6K6o5wj5ZRD6w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cEobB2knsyc5ebfU"
+        protocol="application/pgp-signature"; boundary="Jl+DbTnyraiZ/loT"
 Content-Disposition: inline
-In-Reply-To: <20190404004608.GG16241@sasha-vm>
+In-Reply-To: <CAN-6NYaO0bah_vFgTGrnU5_pUM95B+voDxsUR6K6o5wj5ZRD6w@mail.gmail.com>
 X-Cookie: Replace with same type.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,43 +72,38 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---cEobB2knsyc5ebfU
-Content-Type: text/plain; charset=utf-8
+--Jl+DbTnyraiZ/loT
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 03, 2019 at 08:46:08PM -0400, Sasha Levin wrote:
-> On Wed, Mar 27, 2019 at 07:32:11PM +0000, Mark Brown wrote:
+On Wed, Apr 03, 2019 at 03:32:04PM -0600, Fletcher Woodruff wrote:
+> On Mon, Apr 1, 2019 at 11:02 PM Mark Brown <broonie@kernel.org> wrote:
 
-> > > Fix below build error:
-> > > drivers/regulator/mcp16502.c: In function =E2=80=98mcp16502_gpio_set_=
-mode=E2=80=99:
-> > > drivers/regulator/mcp16502.c:135:3: error: implicit declaration of fu=
-nction =E2=80=98gpiod_set_value=E2=80=99; did you mean =E2=80=98gpio_set_va=
-lue=E2=80=99? [-Werror=3Dimplicit-function-declaration]
-> > >    gpiod_set_value(mcp->lpm, 0);
+> > This looks unrelated to the polarity of the interupt?
 
-> > Does this error actually manifest in v5.0?
+> Yes this is separate. If a plug/unplug happens after regmap_read and
+> before regmap_write, it will not be registered, so we loop to make
+> sure that it's caught in a later iteration. I can clarify this in the
+> patch notes.
 
-> I couldn't reproduce the error on f3c6a1a194317f^ so I assumed it
-> requires a specialized config.
+Please submit one patch per change, each with a clear changelog, as
+covered in SubmittingPatches.  This makes it much easier to review
+things since it's easier to tell if the patch does what it was intended
+to do.
 
-I suspect you will find this is a fix for a change that was only merged
-in v5.1.
-
---cEobB2knsyc5ebfU
+--Jl+DbTnyraiZ/loT
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyllnoACgkQJNaLcl1U
-h9B+Ogf9HjUb/rIFl+hWvDW8mQGrXYPsVLeJ4ixhnUW4/JzJGy1l0HeZGn2sPgax
-V6aQd9EOcc2zK8HxWU88QR3mtpyfjQwXRvKkiaCnmnW9EcogA9tKUJHwBhuibE74
-47ZvfWs4BocMbXfb+DbglUHXK76zgmqrwdNaD02N80K2cPHbqUrvrzIaGi142ulY
-QclkaOuOG7gfXvC4JHMmV2A90bQWMovrV+2JpZmY/1ESFjp0muGRD3lEmiOtnV7s
-gcKMqtIwxkbST+99Ee7BxMc8QRkT7nOA6cfJOraabjnofS3L8/Q8DFut8DNQsuj+
-9id9cke4JJ4QWCk42Z/zCbGDZM9xbw==
-=Gykn
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlylltAACgkQJNaLcl1U
+h9AcpQgAhQoDgeHNiUlHeU0PJoxiogKu9AGs2BjWc1nxPz7wc8b+m1nXie49QDIW
+4I146o6NR3lHRK/wYNKMAVYegAx2Zl6aq2jlzcOagg0DQW7AxYnZ2QZqv9q6iOZ7
+LkjqeEKTE9xoncKyjYRyJQ52KAyeEh8c61AXzMUUWbKN4pOfXWYb7oX7DEI7Nk04
+yt63rjdiDv+R9hNw4vyFt/gV/LyGWcHcHlfhQV0LCKVPwFX4328aZ/XA1lpFlX+6
+9B/sj3megqEG2lRajQeUsEitb4M7RU8BpR0TYJfQPW9mW13+AD7FmLD0PeHgS0oh
+ZuAmSf0Kmxp/zymL4h2dANsiAHE2DA==
+=PlIW
 -----END PGP SIGNATURE-----
 
---cEobB2knsyc5ebfU--
+--Jl+DbTnyraiZ/loT--
