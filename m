@@ -2,108 +2,393 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5DEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC24C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B6720651
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554355948;
-	bh=m2O0idEz7qzLnuts5p7+xeJ2BXq92ygBST9FJiGUuOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r5J/N6C3idYrfotT5hBbQBg+zqZLmcbD+pXEAZxeV7TQFHbwH198LaJnU8CYJE0NS
-	 oh8g0FFpP66zrDSD500zp9LoZyVkdamMpt39/UmwlG5znSACstyaGBPlfcaxwmDiOB
-	 mEP2P8/VceQ9V53U86QJ2J1XtlWgMWXjqDa9MHMk=
+	by mail.kernel.org (Postfix) with ESMTP id 516B12075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfDDFc1 (ORCPT
+        id S1726574AbfDDFj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 01:32:27 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56790 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbfDDFc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 01:32:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1GddzkAupY5SqXV8ojWTvt6lZGSazWMwnmp47hzTNr4=; b=ivBGbHsr67IB3TawJ/uw152LS
-        6kvOP3TAfjJEkZiXafAXAVLB28WATMkXsFL2lvfFFmTQbXkOlZBiHqhnlrU5sZEr/mXGVqwS+ebPP
-        HgQp1Iy5Otgl/mNmxesoRmd80TPt/qXu9wmoFdSQOkDJ/b8WrwnWole1r5WfwtkqQVlLM=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBuyq-00045U-7M; Thu, 04 Apr 2019 05:32:04 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id D6FEC441D3C; Thu,  4 Apr 2019 12:32:00 +0700 (+07)
-Date:   Thu, 4 Apr 2019 12:32:00 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Fletcher Woodruff <fletcherw@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
-        Bard Liao <bardliao@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        alsa-devel@alsa-project.org, Ross Zwisler <zwisler@google.com>
-Subject: Re: [PATCH 1/2] ASoC: rt5677: allow multiple interrupt sources
-Message-ID: <20190404053200.GL5748@sirena.org.uk>
-References: <20190401205519.34023-1-fletcherw@chromium.org>
- <20190402050236.GV2059@sirena.org.uk>
- <CAN-6NYaO0bah_vFgTGrnU5_pUM95B+voDxsUR6K6o5wj5ZRD6w@mail.gmail.com>
+        Thu, 4 Apr 2019 01:39:28 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52002 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725927AbfDDFj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 01:39:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 368E780D;
+        Wed,  3 Apr 2019 22:39:27 -0700 (PDT)
+Received: from [10.162.40.100] (p8cg001049571a15.blr.arm.com [10.162.40.100])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BC743F721;
+        Wed,  3 Apr 2019 22:39:20 -0700 (PDT)
+Subject: Re: [PATCH 2/6] arm64/mm: Enable memory hot remove
+To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com
+Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
+        mark.rutland@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        logang@deltatee.com, pasha.tatashin@oracle.com, david@redhat.com,
+        cai@lca.pw, Steven Price <steven.price@arm.com>
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-3-git-send-email-anshuman.khandual@arm.com>
+ <ed4ceac4-b92c-47f4-33b0-ed1d0833b40d@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <55278a57-39bc-be27-5999-81d0da37b746@arm.com>
+Date:   Thu, 4 Apr 2019 11:09:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Jl+DbTnyraiZ/loT"
-Content-Disposition: inline
-In-Reply-To: <CAN-6NYaO0bah_vFgTGrnU5_pUM95B+voDxsUR6K6o5wj5ZRD6w@mail.gmail.com>
-X-Cookie: Replace with same type.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ed4ceac4-b92c-47f4-33b0-ed1d0833b40d@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Jl+DbTnyraiZ/loT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Apr 03, 2019 at 03:32:04PM -0600, Fletcher Woodruff wrote:
-> On Mon, Apr 1, 2019 at 11:02 PM Mark Brown <broonie@kernel.org> wrote:
+On 04/03/2019 06:07 PM, Robin Murphy wrote:
+> [ +Steve ]
+> 
+> Hi Anshuman,
+> 
+> On 03/04/2019 05:30, Anshuman Khandual wrote:
+>> Memory removal from an arch perspective involves tearing down two different
+>> kernel based mappings i.e vmemmap and linear while releasing related page
+>> table pages allocated for the physical memory range to be removed.
+>>
+>> Define a common kernel page table tear down helper remove_pagetable() which
+>> can be used to unmap given kernel virtual address range. In effect it can
+>> tear down both vmemap or kernel linear mappings. This new helper is called
+>> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
+>> The argument 'direct' here identifies kernel linear mappings.
+>>
+>> Vmemmap mappings page table pages are allocated through sparse mem helper
+>> functions like vmemmap_alloc_block() which does not cycle the pages through
+>> pgtable_page_ctor() constructs. Hence while removing it skips corresponding
+>> destructor construct pgtable_page_dtor().
+>>
+>> While here update arch_add_mempory() to handle __add_pages() failures by
+>> just unmapping recently added kernel linear mapping. Now enable memory hot
+>> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
+>>
+>> This implementation is overall inspired from kernel page table tear down
+>> procedure on X86 architecture.
+> 
+> A bit of a nit, but since this depends on at least patch #4 to work properly, it would be good to reorder the series appropriately.
 
-> > This looks unrelated to the polarity of the interupt?
+Sure will move up the generic changes forward.
 
-> Yes this is separate. If a plug/unplug happens after regmap_read and
-> before regmap_write, it will not be registered, so we loop to make
-> sure that it's caught in a later iteration. I can clarify this in the
-> patch notes.
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   arch/arm64/Kconfig               |   3 +
+>>   arch/arm64/include/asm/pgtable.h |  14 +++
+>>   arch/arm64/mm/mmu.c              | 227 ++++++++++++++++++++++++++++++++++++++-
+>>   3 files changed, 241 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index a2418fb..db3e625 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -266,6 +266,9 @@ config HAVE_GENERIC_GUP
+>>   config ARCH_ENABLE_MEMORY_HOTPLUG
+>>       def_bool y
+>>   +config ARCH_ENABLE_MEMORY_HOTREMOVE
+>> +    def_bool y
+>> +
+>>   config ARCH_MEMORY_PROBE
+>>       bool "Enable /sys/devices/system/memory/probe interface"
+>>       depends on MEMORY_HOTPLUG
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index de70c1e..858098e 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -355,6 +355,18 @@ static inline int pmd_protnone(pmd_t pmd)
+>>   }
+>>   #endif
+>>   +#if (CONFIG_PGTABLE_LEVELS > 2)
+>> +#define pmd_large(pmd)    (pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT))
+>> +#else
+>> +#define pmd_large(pmd) 0
+>> +#endif
+>> +
+>> +#if (CONFIG_PGTABLE_LEVELS > 3)
+>> +#define pud_large(pud)    (pud_val(pud) && !(pud_val(pud) & PUD_TABLE_BIT))
+>> +#else
+>> +#define pud_large(pmd) 0
+>> +#endif
+> 
+> These seem rather different from the versions that Steve is proposing in the generic pagewalk series - can you reach an agreement on which implementation is preferred?
 
-Please submit one patch per change, each with a clear changelog, as
-covered in SubmittingPatches.  This makes it much easier to review
-things since it's easier to tell if the patch does what it was intended
-to do.
+Sure will take a look.
 
---Jl+DbTnyraiZ/loT
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+>> +
+>>   /*
+>>    * THP definitions.
+>>    */
+>> @@ -555,6 +567,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
+>>     #else
+>>   +#define pmd_index(addr) 0
+>>   #define pud_page_paddr(pud)    ({ BUILD_BUG(); 0; })
+>>     /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
+>> @@ -612,6 +625,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
+>>     #else
+>>   +#define pud_index(adrr)    0
+>>   #define pgd_page_paddr(pgd)    ({ BUILD_BUG(); 0;})
+>>     /* Match pud_offset folding in <asm/generic/pgtable-nopud.h> */
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index e97f018..ae0777b 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -714,6 +714,198 @@ int kern_addr_valid(unsigned long addr)
+>>         return pfn_valid(pte_pfn(pte));
+>>   }
+>> +
+>> +#ifdef CONFIG_MEMORY_HOTPLUG
+>> +static void __meminit free_pagetable(struct page *page, int order)
+> 
+> Do these need to be __meminit? AFAICS it's effectively redundant with the containing #ifdef, and removal feels like it's inherently a later-than-init thing anyway.
 
------BEGIN PGP SIGNATURE-----
+I was confused here a bit but even X86 does exactly the same. All these functions
+are still labeled __meminit and all wrapped under CONFIG_MEMORY_HOTPLUG. Is there
+any concern to have __meminit here ?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlylltAACgkQJNaLcl1U
-h9AcpQgAhQoDgeHNiUlHeU0PJoxiogKu9AGs2BjWc1nxPz7wc8b+m1nXie49QDIW
-4I146o6NR3lHRK/wYNKMAVYegAx2Zl6aq2jlzcOagg0DQW7AxYnZ2QZqv9q6iOZ7
-LkjqeEKTE9xoncKyjYRyJQ52KAyeEh8c61AXzMUUWbKN4pOfXWYb7oX7DEI7Nk04
-yt63rjdiDv+R9hNw4vyFt/gV/LyGWcHcHlfhQV0LCKVPwFX4328aZ/XA1lpFlX+6
-9B/sj3megqEG2lRajQeUsEitb4M7RU8BpR0TYJfQPW9mW13+AD7FmLD0PeHgS0oh
-ZuAmSf0Kmxp/zymL4h2dANsiAHE2DA==
-=PlIW
------END PGP SIGNATURE-----
+> 
+>> +{
+>> +    unsigned long magic;
+>> +    unsigned int nr_pages = 1 << order;
+>> +
+>> +    if (PageReserved(page)) {
+>> +        __ClearPageReserved(page);
+>> +
+>> +        magic = (unsigned long)page->freelist;
+>> +        if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
+>> +            while (nr_pages--)
+>> +                put_page_bootmem(page++);
+>> +        } else
+>> +            while (nr_pages--)
+>> +                free_reserved_page(page++);
+>> +    } else
+>> +        free_pages((unsigned long)page_address(page), order);
+>> +}
+>> +
+>> +#if (CONFIG_PGTABLE_LEVELS > 2)
+>> +static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd, bool direct)
+>> +{
+>> +    pte_t *pte;
+>> +    int i;
+>> +
+>> +    for (i = 0; i < PTRS_PER_PTE; i++) {
+>> +        pte = pte_start + i;
+>> +        if (!pte_none(*pte))
+>> +            return;
+>> +    }
+>> +
+>> +    if (direct)
+>> +        pgtable_page_dtor(pmd_page(*pmd));
+>> +    free_pagetable(pmd_page(*pmd), 0);
+>> +    spin_lock(&init_mm.page_table_lock);
+>> +    pmd_clear(pmd);
+>> +    spin_unlock(&init_mm.page_table_lock);
+>> +}
+>> +#else
+>> +static void __meminit free_pte_table(pte_t *pte_start, pmd_t *pmd, bool direct)
+>> +{
+>> +}
+>> +#endif
+>> +
+>> +#if (CONFIG_PGTABLE_LEVELS > 3)
+>> +static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud, bool direct)
+>> +{
+>> +    pmd_t *pmd;
+>> +    int i;
+>> +
+>> +    for (i = 0; i < PTRS_PER_PMD; i++) {
+>> +        pmd = pmd_start + i;
+>> +        if (!pmd_none(*pmd))
+>> +            return;
+>> +    }
+>> +
+>> +    if (direct)
+>> +        pgtable_page_dtor(pud_page(*pud));
+>> +    free_pagetable(pud_page(*pud), 0);
+>> +    spin_lock(&init_mm.page_table_lock);
+>> +    pud_clear(pud);
+>> +    spin_unlock(&init_mm.page_table_lock);
+>> +}
+>> +
+>> +static void __meminit free_pud_table(pud_t *pud_start, pgd_t *pgd, bool direct)
+>> +{
+>> +    pud_t *pud;
+>> +    int i;
+>> +
+>> +    for (i = 0; i < PTRS_PER_PUD; i++) {
+>> +        pud = pud_start + i;
+>> +        if (!pud_none(*pud))
+>> +            return;
+>> +    }
+>> +
+>> +    if (direct)
+>> +        pgtable_page_dtor(pgd_page(*pgd));
+>> +    free_pagetable(pgd_page(*pgd), 0);
+>> +    spin_lock(&init_mm.page_table_lock);
+>> +    pgd_clear(pgd);
+>> +    spin_unlock(&init_mm.page_table_lock);
+>> +}
+>> +#else
+>> +static void __meminit free_pmd_table(pmd_t *pmd_start, pud_t *pud, bool direct)
+>> +{
+>> +}
+>> +
+>> +static void __meminit free_pud_table(pud_t *pud_start, pgd_t *pgd, bool direct)
+>> +{
+>> +}
+>> +#endif
+>> +
+>> +static void __meminit
+>> +remove_pte_table(pte_t *pte_start, unsigned long addr,
+>> +            unsigned long end, bool direct)
+>> +{
+>> +    pte_t *pte;
+>> +
+>> +    pte = pte_start + pte_index(addr);
+>> +    for (; addr < end; addr += PAGE_SIZE, pte++) {
+>> +        if (!pte_present(*pte))
+>> +            continue;
+>> +
+>> +        if (!direct)
+>> +            free_pagetable(pte_page(*pte), 0);
+>> +        spin_lock(&init_mm.page_table_lock);
+>> +        pte_clear(&init_mm, addr, pte);
+>> +        spin_unlock(&init_mm.page_table_lock);
+>> +    }
+>> +}
+>> +
+>> +static void __meminit
+>> +remove_pmd_table(pmd_t *pmd_start, unsigned long addr,
+>> +            unsigned long end, bool direct)
+>> +{
+>> +    unsigned long next;
+>> +    pte_t *pte_base;
+>> +    pmd_t *pmd;
+>> +
+>> +    pmd = pmd_start + pmd_index(addr);
+>> +    for (; addr < end; addr = next, pmd++) {
+>> +        next = pmd_addr_end(addr, end);
+>> +        if (!pmd_present(*pmd))
+>> +            continue;
+>> +
+>> +        if (pmd_large(*pmd)) {
+>> +            if (!direct)
+>> +                free_pagetable(pmd_page(*pmd),
+>> +                        get_order(PMD_SIZE));
+>> +            spin_lock(&init_mm.page_table_lock);
+>> +            pmd_clear(pmd);
+>> +            spin_unlock(&init_mm.page_table_lock);
+>> +            continue;
+>> +        }
+>> +        pte_base = pte_offset_kernel(pmd, 0UL);
+>> +        remove_pte_table(pte_base, addr, next, direct);
+>> +        free_pte_table(pte_base, pmd, direct);
+>> +    }
+>> +}
+>> +
+>> +static void __meminit
+>> +remove_pud_table(pud_t *pud_start, unsigned long addr,
+>> +            unsigned long end, bool direct)
+>> +{
+>> +    unsigned long next;
+>> +    pmd_t *pmd_base;
+>> +    pud_t *pud;
+>> +
+>> +    pud = pud_start + pud_index(addr);
+>> +    for (; addr < end; addr = next, pud++) {
+>> +        next = pud_addr_end(addr, end);
+>> +        if (!pud_present(*pud))
+>> +            continue;
+>> +
+>> +        if (pud_large(*pud)) {
+>> +            if (!direct)
+>> +                free_pagetable(pud_page(*pud),
+>> +                        get_order(PUD_SIZE));
+>> +            spin_lock(&init_mm.page_table_lock);
+>> +            pud_clear(pud);
+>> +            spin_unlock(&init_mm.page_table_lock);
+>> +            continue;
+>> +        }
+>> +        pmd_base = pmd_offset(pud, 0UL);
+>> +        remove_pmd_table(pmd_base, addr, next, direct);
+>> +        free_pmd_table(pmd_base, pud, direct);
+>> +    }
+>> +}
+>> +
+>> +static void __meminit
+>> +remove_pagetable(unsigned long start, unsigned long end, bool direct)
+>> +{
+>> +    unsigned long addr, next;
+>> +    pud_t *pud_base;
+>> +    pgd_t *pgd;
+>> +
+>> +    for (addr = start; addr < end; addr = next) {
+>> +        next = pgd_addr_end(addr, end);
+>> +        pgd = pgd_offset_k(addr);
+>> +        if (!pgd_present(*pgd))
+>> +            continue;
+>> +
+>> +        pud_base = pud_offset(pgd, 0UL);
+>> +        remove_pud_table(pud_base, addr, next, direct);
+>> +        free_pud_table(pud_base, pgd, direct);
+>> +    }
+>> +    flush_tlb_kernel_range(start, end);
+>> +}
+>> +#endif
+>> +
+>>   #ifdef CONFIG_SPARSEMEM_VMEMMAP
+>>   #if !ARM64_SWAPPER_USES_SECTION_MAPS
+>>   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>> @@ -758,9 +950,12 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>>       return 0;
+>>   }
+>>   #endif    /* CONFIG_ARM64_64K_PAGES */
+>> -void vmemmap_free(unsigned long start, unsigned long end,
+>> +void __ref vmemmap_free(unsigned long start, unsigned long end,
+> 
+> Why is the __ref needed? Presumably it's avoidable by addressing the __meminit thing above.
 
---Jl+DbTnyraiZ/loT--
+Right.
+
+> 
+>>           struct vmem_altmap *altmap)
+>>   {
+>> +#ifdef CONFIG_MEMORY_HOTPLUG
+>> +    remove_pagetable(start, end, false);
+>> +#endif
+>>   }
+>>   #endif    /* CONFIG_SPARSEMEM_VMEMMAP */
+>>   @@ -1046,10 +1241,16 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+>>   }
+>>     #ifdef CONFIG_MEMORY_HOTPLUG
+>> +static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
+>> +{
+>> +    WARN_ON(pgdir != init_mm.pgd);
+>> +    remove_pagetable(start, start + size, true);
+>> +}
+>> +
+>>   int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+>>               bool want_memblock)
+>>   {
+>> -    int flags = 0;
+>> +    int flags = 0, ret = 0;
+> 
+> Initialising ret here is unnecessary.
+
+Sure. Will change.
