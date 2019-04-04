@@ -2,58 +2,52 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F526C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C0CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F70921734
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A624920882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367806;
-	bh=2D9HwfeDx4RmRFRxo/go3xKWSwOSo8DcDXf22Gp9sr8=;
+	s=default; t=1554367808;
+	bh=iouHP23JlbYJcKTO/45ZGEzmwc8akcQetbw1YNNZUgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hF08UUV92uJanTTOQ3EUiK5Wf2zj2hmHAFQ/AdbKwPuddK7AHirOl0iBAvCtTqroC
-	 twmfRbeTUAFeof7ivjwcSW5+eAMK56tE/bQNU0IaQ/pnHq6Y8KnR+Ru4ZxKFFLu86V
-	 JsYGa3X3bj8Kxly222O3Z7Szf5w6nmcf7dfS3f1w=
+	b=N93+FEGhyOlnJoaEzxvzoDKAXpGkBYMHKeKjxaW3X46gIO+bZRYbcVMBXk4pGUYTs
+	 UgwT+om6N53Yb1Hd+10LAV5Ek2bm0EOMUhQ0aiWX6LzrP1MyNeJgcJRdMVZfPK13Na
+	 n0ujOcHPnhBK98WZ+HkpRkLwAKSZlBwgwnvxnmZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbfDDIuE (ORCPT
+        id S1728997AbfDDIuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:50:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50926 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:50:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728960AbfDDIuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:50:02 -0400
+        id S1728901AbfDDIuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:50:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A1152171F;
-        Thu,  4 Apr 2019 08:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E078F20882;
+        Thu,  4 Apr 2019 08:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367801;
-        bh=2D9HwfeDx4RmRFRxo/go3xKWSwOSo8DcDXf22Gp9sr8=;
+        s=default; t=1554367804;
+        bh=iouHP23JlbYJcKTO/45ZGEzmwc8akcQetbw1YNNZUgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1HchOWUUzVly0B3uEOzMWDWh3lX7qY7Mv0t4dLwgWMdiQc/qLejsE4qn8OpMQHGB
-         RHAceS+mo5CoYAubjpbgOt0gg2DVuWUlRr9zFRcgF6UbjIKOeHGe9spejzmQIoEZGt
-         ODzWFuyKVj1eJ/er9Gr5Fvo1WhOjXgn7N+scvxHA=
+        b=qeyOu1nfWLfBdTm3Op8dwfYwoFdFCF1tzb+6LDK6GTHi1iYNJrTVLnBDDVeuofVrX
+         GTwDdZYjHZbug1n7DupPXIItiVKxUh56z9FR6+zX6LmqX/FQ2IoaUVExbpdb3Bq6up
+         miv4OGUUngXOZBMWyidUHUo2OAWm2mILs/gIxXfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Cyril Hrubis <chrubis@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rafael Aquini <aquini@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 07/91] mm: mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified
-Date:   Thu,  4 Apr 2019 10:46:51 +0200
-Message-Id: <20190404084535.840500365@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jeremy Compostella <jeremy.compostella@intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org,
+        Connor OBrien <connoro@google.com>
+Subject: [PATCH 4.9 08/91] i2c: core-smbus: prevent stack corruption on read I2C_BLOCK_DATA
+Date:   Thu,  4 Apr 2019 10:46:52 +0200
+Message-Id: <20190404084535.890179653@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -72,89 +66,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Jeremy Compostella <jeremy.compostella@intel.com>
 
-commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 upstream.
+commit 89c6efa61f5709327ecfa24bff18e57a4e80c7fa upstream.
 
-When MPOL_MF_STRICT was specified and an existing page was already on a
-node that does not follow the policy, mbind() should return -EIO.  But
-commit 6f4576e3687b ("mempolicy: apply page table walker on
-queue_pages_range()") broke the rule.
+On a I2C_SMBUS_I2C_BLOCK_DATA read request, if data->block[0] is
+greater than I2C_SMBUS_BLOCK_MAX + 1, the underlying I2C driver writes
+data out of the msgbuf1 array boundary.
 
-And commit c8633798497c ("mm: mempolicy: mbind and migrate_pages support
-thp migration") didn't return the correct value for THP mbind() too.
+It is possible from a user application to run into that issue by
+calling the I2C_SMBUS ioctl with data.block[0] greater than
+I2C_SMBUS_BLOCK_MAX + 1.
 
-If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it
-reaches queue_pages_to_pte_range() or queue_pages_pmd() to check if an
-existing page was already on a node that does not follow the policy.
-And, non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
-MPOL_MF_MOVE_ALL was specified.
+This patch makes the code compliant with
+Documentation/i2c/dev-interface by raising an error when the requested
+size is larger than 32 bytes.
 
-Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
+Call Trace:
+ [<ffffffff8139f695>] dump_stack+0x67/0x92
+ [<ffffffff811802a4>] panic+0xc5/0x1eb
+ [<ffffffff810ecb5f>] ? vprintk_default+0x1f/0x30
+ [<ffffffff817456d3>] ? i2cdev_ioctl_smbus+0x303/0x320
+ [<ffffffff8109a68b>] __stack_chk_fail+0x1b/0x20
+ [<ffffffff817456d3>] i2cdev_ioctl_smbus+0x303/0x320
+ [<ffffffff81745aed>] i2cdev_ioctl+0x4d/0x1e0
+ [<ffffffff811f761a>] do_vfs_ioctl+0x2ba/0x490
+ [<ffffffff81336e43>] ? security_file_ioctl+0x43/0x60
+ [<ffffffff811f7869>] SyS_ioctl+0x79/0x90
+ [<ffffffff81a22e97>] entry_SYSCALL_64_fastpath+0x12/0x6a
 
-[akpm@linux-foundation.org: tweak code comment]
-Link: http://lkml.kernel.org/r/1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Reported-by: Cyril Hrubis <chrubis@suse.cz>
-Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: David Rientjes <rientjes@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jeremy Compostella <jeremy.compostella@intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
+[connoro@google.com: 4.9 backport: adjust filename]
+Signed-off-by: Connor O'Brien <connoro@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mempolicy.c |   18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/i2c/i2c-core.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -547,11 +547,16 @@ retry:
- 			goto retry;
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -3250,16 +3250,16 @@ static s32 i2c_smbus_xfer_emulated(struc
+ 				   the underlying bus driver */
+ 		break;
+ 	case I2C_SMBUS_I2C_BLOCK_DATA:
++		if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
++			dev_err(&adapter->dev, "Invalid block %s size %d\n",
++				read_write == I2C_SMBUS_READ ? "read" : "write",
++				data->block[0]);
++			return -EINVAL;
++		}
+ 		if (read_write == I2C_SMBUS_READ) {
+ 			msg[1].len = data->block[0];
+ 		} else {
+ 			msg[0].len = data->block[0] + 1;
+-			if (msg[0].len > I2C_SMBUS_BLOCK_MAX + 1) {
+-				dev_err(&adapter->dev,
+-					"Invalid block write size %d\n",
+-					data->block[0]);
+-				return -EINVAL;
+-			}
+ 			for (i = 1; i <= data->block[0]; i++)
+ 				msgbuf0[i] = data->block[i];
  		}
- 
--		migrate_page_add(page, qp->pagelist, flags);
-+		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
-+			if (!vma_migratable(vma))
-+				break;
-+			migrate_page_add(page, qp->pagelist, flags);
-+		} else
-+			break;
- 	}
- 	pte_unmap_unlock(pte - 1, ptl);
- 	cond_resched();
--	return 0;
-+	return addr != end ? -EIO : 0;
- }
- 
- static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
-@@ -623,7 +628,12 @@ static int queue_pages_test_walk(unsigne
- 	unsigned long endvma = vma->vm_end;
- 	unsigned long flags = qp->flags;
- 
--	if (!vma_migratable(vma))
-+	/*
-+	 * Need check MPOL_MF_STRICT to return -EIO if possible
-+	 * regardless of vma_migratable
-+	 */
-+	if (!vma_migratable(vma) &&
-+	    !(flags & MPOL_MF_STRICT))
- 		return 1;
- 
- 	if (endvma > end)
-@@ -650,7 +660,7 @@ static int queue_pages_test_walk(unsigne
- 	}
- 
- 	/* queue pages from current vma */
--	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
-+	if (flags & MPOL_MF_VALID)
- 		return 0;
- 	return 1;
- }
 
 
