@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EA4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377C6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A2B206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04827206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371181;
-	bh=nY/kJbbYhRphes7oApJ7tyR+3bZNUls8kGVAovfAOvs=;
+	s=default; t=1554371196;
+	bh=iX2jgEps/dyBJ2LUYyyoY34KUGz4HrCahPJNsGCRQrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eagSLLWsG92xx68gNOMchKM96tWlOA64TseKJf/K44UgQr6qBNgg3ZT2K1yA1KzvU
-	 QJQ/ySLBHFeVtmmYr0gaxYdKUxvVQBjmMQyUsQABYcbXSmn2mAx6IJDpEsZTPE2you
-	 6D7yp3YZBEomO9YaBvufHV9I2AHv0pcXLvxv91P4=
+	b=EwYHqY7VesK/ZXrOQ2kDRMlZMIYajplDOPEgeX6dEkxp7nhCGcA0CCTt8bBT4b5UW
+	 UmZbWQaTkxVzCPpin7P04xBwzHM7ZhFbUwbU7sLs7lTIN4SC7kOrKXZTxoPTtWX5X+
+	 lggPeikTCHEqgwgsM48M4HXVJN4YX4voF6Hc5xAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbfDDJqT (ORCPT
+        id S1730426AbfDDJqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34542 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729320AbfDDI6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:58:34 -0400
+        id S1729743AbfDDI6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:58:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CA9A20693;
-        Thu,  4 Apr 2019 08:58:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 595E0217D9;
+        Thu,  4 Apr 2019 08:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368313;
-        bh=nY/kJbbYhRphes7oApJ7tyR+3bZNUls8kGVAovfAOvs=;
+        s=default; t=1554368299;
+        bh=iX2jgEps/dyBJ2LUYyyoY34KUGz4HrCahPJNsGCRQrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8O/xD+xWF0SkROEcbkXoIY/74cUBO/4oU+sDz8QLdAzxoP6NNOCOH65HzaPoiG7j
-         URji3x2NuFAEqjaTCQArksasHftsoTJx6j0O4L3HI2nGRouo+Vz91dtChIVeoELBWh
-         oar3N50uXgQoN6/CeCxiq8rBqCwE3ygr15hRjDgg=
+        b=Mx2pTgmlSIAQ13uUgV4ZbSB8/aOC9+F2TEbBxKpFujFnqXi0kt+avmnbtMxZZdW7O
+         PKuZMQTTBPS/YPxqEbcbkSBay2qiqqgjH3F54OPz5H8SkQWPgDt5xWEYrQcp1sHLgq
+         LOQC5cjVSEk8jMYtW3CXHo79kaw6F11WBTDtmbLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Tolnay <dtolnay@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/121] hwrng: virtio - Avoid repeated init of completion
-Date:   Thu,  4 Apr 2019 10:48:09 +0200
-Message-Id: <20190404084550.756742891@linuxfoundation.org>
+Subject: [PATCH 4.14 111/121] regulator: act8865: Fix act8600_sudcdc_voltage_ranges setting
+Date:   Thu,  4 Apr 2019 10:48:19 +0200
+Message-Id: <20190404084551.282346547@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,55 +66,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
+[ Upstream commit f01a7beb6791f1c419424c1a6958b7d0a289c974 ]
 
-The virtio-rng driver uses a completion called have_data to wait for a
-virtio read to be fulfilled by the hypervisor. The completion is reset
-before placing a buffer on the virtio queue and completed by the virtio
-callback once data has been written into the buffer.
+The act8600_sudcdc_voltage_ranges setting does not match the datasheet.
 
-Prior to this commit, the driver called init_completion on this
-completion both during probe as well as when registering virtio buffers
-as part of a hwrng read operation. The second of these init_completion
-calls should instead be reinit_completion because the have_data
-completion has already been inited by probe. As described in
-Documentation/scheduler/completion.txt, "Calling init_completion() twice
-on the same completion object is most likely a bug".
+The problems in below entry:
+  REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
 
-This bug was present in the initial implementation of virtio-rng in
-f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
-then the have_data completion was a single static completion rather than
-a member of one of potentially multiple virtrng_info structs as
-implemented later by 08e53fbdb85c ("virtio-rng: support multiple
-virtio-rng devices"). The original driver incorrectly used
-init_completion rather than INIT_COMPLETION to reset have_data during
-read.
+1. The off-by-one min_sel causes wrong volatage calculation.
+   The min_sel should be 192.
+2. According to the datasheet[1] Table 7. (on page 43):
+   The selector 248 (0b11111000) ~ 255 (0b11111111) are 41.400V.
 
-Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
-Chrome OS virtual machine monitor, and confirming that the virtio-rng
-driver successfully produces random bytes from the host.
+Also fix off-by-one for ACT8600_SUDCDC_VOLTAGE_NUM.
 
-Signed-off-by: David Tolnay <dtolnay@gmail.com>
-Tested-by: David Tolnay <dtolnay@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[1] https://active-semi.com/wp-content/uploads/ACT8600_Datasheet.pdf
+
+Fixes: df3a950e4e73 ("regulator: act8865: Add act8600 support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hw_random/virtio-rng.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/act8865-regulator.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index 3fa2f8a009b3..1c5c4314c6b5 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 7652477e6a9d..39e8d60df060 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -131,7 +131,7 @@
+  * ACT8865 voltage number
+  */
+ #define	ACT8865_VOLTAGE_NUM	64
+-#define ACT8600_SUDCDC_VOLTAGE_NUM	255
++#define ACT8600_SUDCDC_VOLTAGE_NUM	256
  
- 	if (!vi->busy) {
- 		vi->busy = true;
--		init_completion(&vi->have_data);
-+		reinit_completion(&vi->have_data);
- 		register_buffer(vi, buf, size);
- 	}
+ struct act8865 {
+ 	struct regmap *regmap;
+@@ -222,7 +222,8 @@ static const struct regulator_linear_range act8600_sudcdc_voltage_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(3000000, 0, 63, 0),
+ 	REGULATOR_LINEAR_RANGE(3000000, 64, 159, 100000),
+ 	REGULATOR_LINEAR_RANGE(12600000, 160, 191, 200000),
+-	REGULATOR_LINEAR_RANGE(19000000, 191, 255, 400000),
++	REGULATOR_LINEAR_RANGE(19000000, 192, 247, 400000),
++	REGULATOR_LINEAR_RANGE(41400000, 248, 255, 0),
+ };
  
+ static struct regulator_ops act8865_ops = {
 -- 
 2.19.1
 
