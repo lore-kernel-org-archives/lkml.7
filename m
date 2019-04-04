@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45929C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363F1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070832147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DC52133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qiT6ObVV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TRzKh2vO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfDDDf6 (ORCPT
+        id S1726994AbfDDDgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:35:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35469 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDDDf5 (ORCPT
+        Wed, 3 Apr 2019 23:36:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45221 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfDDDgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:35:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w24so446244plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:35:56 -0700 (PDT)
+        Wed, 3 Apr 2019 23:36:00 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bf11so420734plb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PWODwCYQDDzzbPW6Achm9IFb7pPJ4tsTqEyeFjus50Q=;
-        b=qiT6ObVVNr3Ag9oPswoT6G7Cx8iqiCsE6UmCVZbRHZCc3e7ACYSYOrZGcSaaXvLaUU
-         UMN7QnaPCcDT+FbETiRyczLquxSHirJorI0xwJym4b+c3ZFBEhJHZnH890/fDF7+MG71
-         9oHnHCO9KlgT4IzJjJjmPTJO3Tm3YJq9DA07FvpOf+nob8IIlOnXt9zUqb52ef3SMNto
-         9VqxYGbWcujjNzGK+i7D93Z/BFRxRofteY03vvmlZcjNGC4pcOvRUu/iVO6i4tqQXzw1
-         +gnrIEf2urnZzYvTdPaoDPakZSK9onlqHI4EaKX8DAx9AOzafZlcyf9jYUiyna0+5BaU
-         yBwQ==
+        bh=rHFVznWd3K/zryT+Tds7l4sZTdfDnutsgyti8B8Scew=;
+        b=TRzKh2vOPOa2ZvsJuRkYqzZnXGyMeGuX67tGMNah46Ls86ESxy2T98bYlcFr3XX5Pk
+         DKraZC1Md0//SeUaIhNQnCiQN2gQL4PFWNCaADEOZP4LpbFIACrY3Acn17x1LBbF85uw
+         HJ3Cnm5HyTQErLC5YJqMSvvMdallW1tG/HC4NlV/b49PYn5ywYQ+mjNIGNciTAfGPbzn
+         AdAhdAvw0pcWhT2TwZEbx6PnamyEkghvns7tqXOixdD5VKZRFqFwm1QLStM8JKC1ikfB
+         ayyaufqpk1qc4Zwd7fF977eZdwWMGhCjNXb8jVSHrNQps8slJQw0rHTS7BEzsgZGhcQJ
+         NVeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=PWODwCYQDDzzbPW6Achm9IFb7pPJ4tsTqEyeFjus50Q=;
-        b=OJCib52KyHP/172fMYQ6EzddWGrNHva+oP2vzwF8z1lCSXZB7m8yACyhKo2UjRGynR
-         F34Nbdr11pTiXjRUsjBtfG2rAeBqnD6D+NH5G9qde9pzS2Pf7lxlimzhwMP2RyKl8//9
-         UcFFHzvoOfa5WsM/aMYQUv2MQ0fU+2v32kckbkouCVkLF5Dl2L3RmhYXpsSmaKAjry4F
-         ntejrZLJP23YPK0ijyr3k3Q8dGrxChi8akkn+r6Pencpk3HXzmXTrrk869X0czBvcSf8
-         Vd4Hv4wH4tjnlRV0iCvLV1jOI/7euBssCJoCRaX51R2XDMws7Lm5a5yAu4MJVGoGf/BI
-         OMBQ==
-X-Gm-Message-State: APjAAAU9shl5QKftuDjTPiojmeAKbQJqrEbc4ajZpsLI8XqYNsLR5+jI
-        5RrF3S3Ty6/TNTwnrqvS9dkGtQ==
-X-Google-Smtp-Source: APXvYqwu63lRmEa4h8K/r7hKbNzwwfCPQBfLCYs9bJZdKe0GKL57Vk1TbmGrLBAaJu66rYgA9yuWnQ==
-X-Received: by 2002:a17:902:4681:: with SMTP id p1mr3884423pld.42.1554348956257;
-        Wed, 03 Apr 2019 20:35:56 -0700 (PDT)
+        bh=rHFVznWd3K/zryT+Tds7l4sZTdfDnutsgyti8B8Scew=;
+        b=EHFboj9AcYGqMwv3dcSO0Urav/JaIlHgsRVI12Av6O2VM23iyvINbozH/N+4joUUMl
+         +c0Sff9oWL2hEnp420E3mQNjKntlRFOeuqmBfhgcCItS6ls1Qb+y2vznHA+rr0vKEGbi
+         HIkABimTMYp9DYl3+ep3GaTPES+OFbRYe+1qNjyH3zI+hFmvJ28OjLYyucoJP0ecr9aE
+         29p+h+QO0/DDWfibs5WfXvB81wFysz62S3JS8hYnJX+DR3feavL0IPB8J2x5yUxK24TY
+         Glo6vzoWBhi03DCJZxoTI+EkifJu2qP8P87kqLWOqaZQwxdcmVbXQP3oMmvShRueXydU
+         006Q==
+X-Gm-Message-State: APjAAAWlHjf2RjP3pSKvJON7Sks+kR0W/vfAF0cqErBmvpZspWuz9zTz
+        gCQlsMbjnTwUu5n9oVKbVpcVHA==
+X-Google-Smtp-Source: APXvYqytpomhj0mjfSVM/ijFF454SAG2sPiKLFlp7k9sL+o0fxnfoV1qjz3gARA+mBuLtY969NEIDQ==
+X-Received: by 2002:a17:902:403:: with SMTP id 3mr3816530ple.48.1554348960246;
+        Wed, 03 Apr 2019 20:36:00 -0700 (PDT)
 Received: from xps15.imgcgcw.net ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.35.52
+        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.35.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 20:35:55 -0700 (PDT)
+        Wed, 03 Apr 2019 20:35:59 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
         suzuki.poulose@arm.com, mike.leach@arm.com, leo.yan@linaro.org,
         coresight@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/20] coresight: etm4x: Add kernel configuration for CONTEXTID
-Date:   Wed,  3 Apr 2019 21:35:23 -0600
-Message-Id: <20190404033541.14072-3-mathieu.poirier@linaro.org>
+Subject: [PATCH v3 03/20] coresight: etm4x: Skip selector pair 0
+Date:   Wed,  3 Apr 2019 21:35:24 -0600
+Message-Id: <20190404033541.14072-4-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190404033541.14072-1-mathieu.poirier@linaro.org>
 References: <20190404033541.14072-1-mathieu.poirier@linaro.org>
@@ -71,102 +71,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the proper bit in the configuration register when contextID tracing
-has been requested by user space.  That way PE_CONTEXT elements are
-generated by the tracers when a process is installed on a CPU.
+Resource selector pair 0 is always implemented and reserved.  As such
+it should not be explicitly programmed.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/Kconfig              | 1 +
- drivers/hwtracing/coresight/coresight-etm-perf.c | 2 ++
- drivers/hwtracing/coresight/coresight-etm4x.c    | 5 +++++
- include/linux/coresight-pmu.h                    | 2 ++
- tools/include/linux/coresight-pmu.h              | 2 ++
- 5 files changed, 12 insertions(+)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index ad34380cac49..44d1650f398e 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -75,6 +75,7 @@ config CORESIGHT_SOURCE_ETM4X
- 	bool "CoreSight Embedded Trace Macrocell 4.x driver"
- 	depends on ARM64
- 	select CORESIGHT_LINKS_AND_SINKS
-+	select PID_IN_CONTEXTIDR
- 	help
- 	  This driver provides support for the ETM4.x tracer module, tracing the
- 	  instructions that a processor is executing. This is primarily useful
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 25ae56e924bb..bbfed70b3402 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -29,6 +29,7 @@ static DEFINE_PER_CPU(struct coresight_device *, csdev_src);
- 
- /* ETMv3.5/PTM's ETMCR is 'config' */
- PMU_FORMAT_ATTR(cycacc,		"config:" __stringify(ETM_OPT_CYCACC));
-+PMU_FORMAT_ATTR(contextid,	"config:" __stringify(ETM_OPT_CTXTID));
- PMU_FORMAT_ATTR(timestamp,	"config:" __stringify(ETM_OPT_TS));
- PMU_FORMAT_ATTR(retstack,	"config:" __stringify(ETM_OPT_RETSTK));
- /* Sink ID - same for all ETMs */
-@@ -36,6 +37,7 @@ PMU_FORMAT_ATTR(sinkid,		"config2:0-31");
- 
- static struct attribute *etm_config_formats_attr[] = {
- 	&format_attr_cycacc.attr,
-+	&format_attr_contextid.attr,
- 	&format_attr_timestamp.attr,
- 	&format_attr_retstack.attr,
- 	&format_attr_sinkid.attr,
 diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 08ce37c9475d..732ae12fca9b 100644
+index 732ae12fca9b..d64192c29860 100644
 --- a/drivers/hwtracing/coresight/coresight-etm4x.c
 +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -239,6 +239,11 @@ static int etm4_parse_event_config(struct etmv4_drvdata *drvdata,
- 	if (attr->config & BIT(ETM_OPT_TS))
- 		/* bit[11], Global timestamp tracing bit */
- 		config->cfg |= BIT(11);
-+
-+	if (attr->config & BIT(ETM_OPT_CTXTID))
-+		/* bit[6], Context ID tracing bit */
-+		config->cfg |= BIT(ETM4_CFG_BIT_CTXTID);
-+
- 	/* return stack - enable if selected and supported */
- 	if ((attr->config & BIT(ETM_OPT_RETSTK)) && drvdata->retstack)
- 		/* bit[12], Return stack enable bit */
-diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-index a1a959ba24ff..b0e35eec6499 100644
---- a/include/linux/coresight-pmu.h
-+++ b/include/linux/coresight-pmu.h
-@@ -12,11 +12,13 @@
+@@ -138,8 +138,11 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
+ 			       drvdata->base + TRCCNTVRn(i));
+ 	}
  
- /* ETMv3.5/PTM's ETMCR config bit */
- #define ETM_OPT_CYCACC  12
-+#define ETM_OPT_CTXTID	14
- #define ETM_OPT_TS      28
- #define ETM_OPT_RETSTK	29
- 
- /* ETMv4 CONFIGR programming bits for the ETM OPTs */
- #define ETM4_CFG_BIT_CYCACC	4
-+#define ETM4_CFG_BIT_CTXTID	6
- #define ETM4_CFG_BIT_TS		11
- #define ETM4_CFG_BIT_RETSTK	12
- 
-diff --git a/tools/include/linux/coresight-pmu.h b/tools/include/linux/coresight-pmu.h
-index a1a959ba24ff..b0e35eec6499 100644
---- a/tools/include/linux/coresight-pmu.h
-+++ b/tools/include/linux/coresight-pmu.h
-@@ -12,11 +12,13 @@
- 
- /* ETMv3.5/PTM's ETMCR config bit */
- #define ETM_OPT_CYCACC  12
-+#define ETM_OPT_CTXTID	14
- #define ETM_OPT_TS      28
- #define ETM_OPT_RETSTK	29
- 
- /* ETMv4 CONFIGR programming bits for the ETM OPTs */
- #define ETM4_CFG_BIT_CYCACC	4
-+#define ETM4_CFG_BIT_CTXTID	6
- #define ETM4_CFG_BIT_TS		11
- #define ETM4_CFG_BIT_RETSTK	12
+-	/* Resource selector pair 0 is always implemented and reserved */
+-	for (i = 0; i < drvdata->nr_resource * 2; i++)
++	/*
++	 * Resource selector pair 0 is always implemented and reserved.  As
++	 * such start at 2.
++	 */
++	for (i = 2; i < drvdata->nr_resource * 2; i++)
+ 		writel_relaxed(config->res_ctrl[i],
+ 			       drvdata->base + TRCRSCTLRn(i));
  
 -- 
 2.17.1
