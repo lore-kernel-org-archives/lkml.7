@@ -2,207 +2,150 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDB0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E779C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089B1217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A079217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxW/7Lw7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XHbNTv+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbfDDWYJ (ORCPT
+        id S1730437AbfDDWm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 18:24:09 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42808 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbfDDWYI (ORCPT
+        Thu, 4 Apr 2019 18:42:29 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40094 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730291AbfDDWm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 18:24:08 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cv12so1864844plb.9;
-        Thu, 04 Apr 2019 15:24:07 -0700 (PDT)
+        Thu, 4 Apr 2019 18:42:28 -0400
+Received: by mail-yw1-f67.google.com with SMTP id p64so1617160ywg.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 15:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AJP9ku+4VTvbuY88ZKcwjNfIqdPNT6HLBZK//U6fpF8=;
-        b=lxW/7Lw7YusDY8xBDirOiwcpNRZoeFkPBfCFpNtMyVv79zOWl7+i1ouF9ZXAjMQC38
-         ENljdFzfOHZE9DuqoVf0b8tQUY3TLc96OEZTAWjdpShu5OrFbiHwQXf28etNzCpigXbc
-         vTYQUCzgV+RZRElqDlBlsouhGO2ZWhnqP0GItHIeiO65pTah1X96p2ODdHeeYoQRlWPX
-         EY/7Gj+/88b5F5NgFqc5YuCstkB0knogf9Iz12csVK5iu9vAZz7SqpXIuPJ1WGbvA0h5
-         LV6RmHeoSB2yKihb59DPJVXNX13H9LmfTvXpB7Jnk57WUuDih5TitdOmK2z3JsfIc371
-         6Q3A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=61QcS1XaF8rISpIrfzv8F98PUZe7iaNJHTu+xZl/mz8=;
+        b=XHbNTv+WHgdO6QncIaQtXkLWCN/ThEmFWDRuL+cPsIxaAh38/zokY9qbE636Twt083
+         BqiilbDUVskuuOmVhhcVr0NnPH5uUZWypYPAQHhqa1FTR8HVq0hDbt44jNQeGtLq1rn3
+         EMH/MaBTX+KDpC3EVSZV6q0LTgZGhZbQuO5ktd7+MFtydWW1uM1VR4JWUKuTRpNxRYnf
+         ftuZM4wc3lC2P0TRoGDcMslwmo+k3GyTAAr2NcXzTUFxCC964s6OkPgIYZpWn2LNkfN3
+         zT80khl98ZCRWrRC8A9II7ouUuSdVoq+3szA+l79oWEZlNclk+9PnYIWlOdl3K+YIXde
+         eYLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AJP9ku+4VTvbuY88ZKcwjNfIqdPNT6HLBZK//U6fpF8=;
-        b=lhru9hmBgJtDb9DSxikiyVEGmOD8/Uj3p/fWWbO0NhTq8LcVJjnKxmmmxkRTJJ2fro
-         2qIhHmfGDqd5IsmODrPxDIOcj9NDPCqZ7l1mm6yiH0MXN4OtWV+0JPyQdx7PWpaR906C
-         9hIUkknQUdCB2GZzScdlvTMGG2SEIhmPH46dXyXKtUG0JGNQ1DrT9ju0P43Yecrty6vr
-         hzFZrBHL22Fe41NaU4lU+aDBet38QjxdIJpJGrFy2q+CLJecVT1GRgGnLcWhlcfQsoR2
-         lnWq4/D7xii4xjJB3XuniVXLyw5SBT0U/ty4hkfgU0kVmZBBPjJoPy6AKaBHUMbNTdFx
-         hnjA==
-X-Gm-Message-State: APjAAAXOueClDFYJFqiaslTAvI1GpzQy9xvlreDzKdpfAMaePzb/nMNs
-        sJg5mNqCs+bygPL2wlYWv8o=
-X-Google-Smtp-Source: APXvYqwA8uKdYkdkeet9fgvFcCh2cDRXoaKz5KPvuhdaStrlrc6Y2Yffi3m1jOmfmnOt2N5DHnM54Q==
-X-Received: by 2002:a17:902:e709:: with SMTP id co9mr9216291plb.86.1554416645926;
-        Thu, 04 Apr 2019 15:24:05 -0700 (PDT)
-Received: from [192.168.11.2] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id z20sm29364570pgf.70.2019.04.04.15.24.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 15:24:05 -0700 (PDT)
-Subject: Re: [PATCH tip/core/rcu 04/21] docs/memory-barriers.txt: Rewrite
- "KERNEL I/O BARRIER EFFECTS" section
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, stern@rowland.harvard.edu,
-        andrea.parri@amarulasolutions.com, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Mikulas Patocka <mpatocka@redhat.com>
-References: <20190326234114.GA23843@linux.ibm.com>
- <20190326234133.24962-4-paulmck@linux.ibm.com>
- <20190402130346.GA14559@fuggles.cambridge.arm.com>
- <7c0b1afc-9308-e060-d1cc-7389a2330e97@gmail.com>
- <20190404164022.GB28932@fuggles.cambridge.arm.com>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <1a30f6ec-cbf9-7bb0-3b08-ab785156a144@gmail.com>
-Date:   Fri, 5 Apr 2019 07:23:59 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=61QcS1XaF8rISpIrfzv8F98PUZe7iaNJHTu+xZl/mz8=;
+        b=JSpyg3qygO5K8GhGqKFlG/L1vKni1syyQUdJ7tqhdaA6rXsKxJ4JZOyEcZzIFkb0NJ
+         7Gbl65Ps2Y1BmeMNSheYLAM/V9fquJNl1ss9K2HM4MMzXaGtJaKCebBIEjzLi5ASFDSs
+         3fSOHi4j48MJPzWg9GafhQ4vcR6zlxvOGdwX/deS5FM28rKJPnJD4RhWvhiCmi8ouqLD
+         +ZjlEMNBj3A55uq+4NoVZURhH2aXd5jLWtPp5MNnEI0KQ8aXZsjd8G7jlDbHltnLlq/l
+         jspGXXvHqOP969uduuwDPpIpycfyn/lAlIvCeOjyuWn4uLBEhycwDo8md9fGVqjbRd7i
+         X89A==
+X-Gm-Message-State: APjAAAV9ZZSZ9+LScu+iz0HkvPAlLcRLzu9n3LDnEB/gg/z7ktw3GUuq
+        WSQATBkIMYlaKApi1Ct5nBTI4ZyJbjMmiabFSQ7vdw==
+X-Google-Smtp-Source: APXvYqyPwee/SWTgDW8QirABp7eIipjaRV83Hudbgo/Ih9kf25YRqGxgVnL6O0cPimcuqQCE35RRPLifdQ6YAdsmC5A=
+X-Received: by 2002:a81:3c14:: with SMTP id j20mr7228426ywa.367.1554417747586;
+ Thu, 04 Apr 2019 15:42:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190404164022.GB28932@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190404185919.GB27340@amd> <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
+ <20190404191931.GA29984@amd> <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
+ <20190404200658.GD29984@amd> <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
+ <20190404202042.GF29984@amd> <CAE_wzQ-8XwzptH7EqNrELxjBzY2+0oHJGB3Va=vZwwK3csu_aA@mail.gmail.com>
+ <20190404204207.GH29984@amd> <CAE_wzQ8xe=x0uYcZkDRVKpUAQ_1vVdEPHU3XnEV1=_WN1-AMfw@mail.gmail.com>
+ <20190404220509.GA14690@amd>
+In-Reply-To: <20190404220509.GA14690@amd>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Thu, 4 Apr 2019 15:42:15 -0700
+Message-ID: <CABXOdTeQgjd2-T+eZCMdTDWBGLHEk6kvnYR0DjJYR7zuvVTMsQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dmitry Torokhov <dtor@google.com>,
+        Nick Crews <ncrews@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 17:40:22 +0100, Will Deacon wrote:
-> Hi Akira,
-> 
-> On Fri, Apr 05, 2019 at 12:58:36AM +0900, Akira Yokosawa wrote:
->> On Tue, 2 Apr 2019 14:03:46 +0100, Will Deacon wrote:
->>> On Tue, Mar 26, 2019 at 04:41:16PM -0700, Paul E. McKenney wrote:
->>>> From: Will Deacon <will.deacon@arm.com>
->>>>
->>>> The "KERNEL I/O BARRIER EFFECTS" section of memory-barriers.txt is vague,
->>>> x86-centric, out-of-date, incomplete and demonstrably incorrect in places.
->>>> This is largely because I/O ordering is a horrible can of worms, but also
->>>> because the document has stagnated as our understanding has evolved.
->>>>
->>>> Attempt to address some of that, by rewriting the section based on
->>>> recent(-ish) discussions with Arnd, BenH and others. Maybe one day we'll
->>>> find a way to formalise this stuff, but for now let's at least try to
->>>> make the English easier to understand.
->>>>
->>>> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
->>>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>>> Cc: Arnd Bergmann <arnd@arndb.de>
->>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>> Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
->>>> Cc: Palmer Dabbelt <palmer@sifive.com>
->>>> Cc: Daniel Lustig <dlustig@nvidia.com>
->>>> Cc: David Howells <dhowells@redhat.com>
->>>> Cc: Alan Stern <stern@rowland.harvard.edu>
->>>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
->>>> Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
->>>> Cc: Mikulas Patocka <mpatocka@redhat.com>
->>>> Signed-off-by: Will Deacon <will.deacon@arm.com>
->>>> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
->>>> ---
->>>>  Documentation/memory-barriers.txt | 115 ++++++++++++++++++------------
->>>>  1 file changed, 70 insertions(+), 45 deletions(-)
->>>
->>> If somebody could provide an Ack on this patch, I'd really appreciate it,
->>> please. Whilst the portable ordering guarantees that I've documented are
->>> fairly conservative, I do think that this change is a big improvement and
->>> gives you what you need if you're writing a portable device driver for a new
->>> piece of hardware. I'm tackling the removal of MMIOWB as a separate series.
->>>
->>> I think Paul now requires an Ack before he'll send a patch to mainline,
->>> hence the grovelling.
->>
->> I'm afraid I'm not that qualified to provide an Ack to this patch,
->> but please find a nit fix below.
-> 
-> Oh well, thanks for having a look anyway!
-> 
->>>> + (*) insX(), outsX():
->>>> +
->>>> +     As above, the insX() and outX() accessors provide the same ordering
->>                                   outsX()
-> 
-> Thanks; I'll fix that.
-> 
->>>> +     guarantees as readsX() and writesX() respectively when accessing a mapping
->>>> +     with the default I/O attributes.
->>>>  
->>>>   (*) ioreadX(), iowriteX()
->>>>  
->>>>       These will perform appropriately for the type of access they're actually
->>>>       doing, be it inX()/outX() or readX()/writeX().
->>>>  
->>>> +All of these accessors assume that the underlying peripheral is little-endian,
->>>> +and will therefore perform byte-swapping operations on big-endian architectures.
->>>> +
->>>> +Composing I/O ordering barriers with SMP ordering barriers and LOCK/UNLOCK
->>>> +operations is a dangerous sport which may require the use of mmiowb(). See the
->>>> +subsection "Acquires vs I/O accesses" for more information.
->>>>  
->>>>  ========================================
->>>>  ASSUMED MINIMUM EXECUTION ORDERING MODEL
->>>> -- 
->>>> 2.17.1
->>>>
->>
->> JFYI, there is another document Documentation/driver-api/device-io.rst,
->> which is somewhat related to this update. It looks like this one also needs
->> some update, as Jon commented in transforming to .rst format in commit
->> 8a8a602fdb83 ("docs: Convert the deviceio template to RST"):
->> <quote>
->>     Like the rest of our documentation, this one could use some work.  There's
->>     no mention of ioremap() and friends, no mention of io_read*() and friends.
->>     But we have nice documentation for all those folks writing new drivers that
->>     do port I/O :).
->> </quote>
->>
->> This commit was merged in v4.11 cycle. And there has been no update whatsoever
->> since. mmiowb() is lightly mentioned therein. IMHO, just updating
->> memory-barriers.txt would widen the gap of information.
->>
->> Thoughts?
-> 
-> I have a subsequent patch which kills mmiowb() entirely:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/mmiowb&id=3c1a2050c08fb8193777b60b49e60320254a156c
-> 
-> and that one does hit device-io.rst.
+On Thu, Apr 4, 2019 at 3:05 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Thu 2019-04-04 14:48:35, Dmitry Torokhov wrote:
+> > On Thu, Apr 4, 2019 at 1:42 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > Hi!
+> > >
+> > > > > > And what to do if internal keyboard is not platform but USB? Like
+> > > > > > Google "Whiskers"? (I am not sure why you decided to drop my mention
+> > > > > > of internal USB keyboards completely off your reply).
+> > > > >
+> > > > > I don't have answers for everything. Even if you have USB keyboard, you'll
+> > > > > likely still have backlight connected to embedded controller. If not,
+> > > > > then maybe you have exception userland needs to know about.
+> > > > >
+> > > > > Still better than making everything an exception.
+> > > >
+> > > > You do not need to make everything exception. You just need to look
+> > > > beyond the name, and see how the device is connected. And then apply
+> > > > your exceptions for "weird" devices.
+> > >
+> > > "Where it is connected" is not interesting to the userland. "Is it
+> > > backlight for internal keyboard" is the right question. It may be
+> > > connected to embedded controller or some kind of controller over
+> > > i2c... my shell scripts should not need to know about architecture of
+> > > every notebook out there.
+> >
+> > Then your scripts will be failing for some setups.
+>
+> Well, yes. Do you want to guess what "lp5523:kb3" is?
+>
 
-Ah, I see.
-So can somebody else have a look at this patch and provide an Ack, please?
+Oh, please. The discussion is about the driver name part, which you
+want to overload with some string to mean "internal", which in turn
+is, if anything, part of the functionality.
 
-        Thanks, Akira
+With "platform", you'll at some point have two
+"platform::kbd_backlight" entries. Remind me to send you a "told you
+so" when that happens.
 
-> 
-> Will
-> 
+Guenter
 
+> > > But I don't see why I should do additional work when its trivial for
+> > > kernel to just name the LED in an useful way.
+> > >
+> > > "platform::kbd_backlight" has no disadvantages compared to
+> > > "wilco::kbd_backlight" ... so lets just use it.
+> >
+> > It has disadvantages because it promises more than it can deliver IMO.
+> > If device name != "platform::kbd_backlight" it does not mean that it
+> > is not internal keyboard.
+>
+> My promise is if "platform::kbd_backlight" exists, it is backlight for
+> internal keyboard. (And second half is "if it is easy for kernel, we
+> name backlight for internal keyboard platform::kbd_backlight").
+>
+> > And you still have not resolved how you will
+> > handle cases when there is more than one deice that can be considered
+> > internal and may have a backlight.
+>
+> Is that realistic? How would that device look like?
+>
+>                                                                         Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
