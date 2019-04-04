@@ -2,101 +2,147 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B59CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD636C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4E52075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aNp6+AH/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Em1TVFgx"
+	by mail.kernel.org (Postfix) with ESMTP id 8BD9120652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554369487;
+	bh=4khj+k7PQKSxoEeN29uyK5NJOWDdryAXdUeXsXAeBPc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gzJHsdqAt2A6VW3JLFOPcyH2IaS05wy3R8CMalw/2u27Px9ox/1dfUcfDEogg8Q5z
+	 bhlhXwsn1H+1tBovF0DZRsS6nyfVtP/+Sxe5AtElfV4eI/IbYfz4FFPqycUW5aj5cn
+	 WbZLO6k2wBYV0yptPA4SWRJP5Ot8MwfPq6NbNmZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388330AbfDDJSA (ORCPT
+        id S2388332AbfDDJSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:18:00 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35056 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387974AbfDDJRx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:53 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5387A61D01; Thu,  4 Apr 2019 09:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554369472;
-        bh=70+klM7HkAHNKNJEJn15T8+408yDaacIKqZu5m9VSbc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aNp6+AH/UzhH/u/iS2vNEf+SgpXhVK2q9po4CxLLhxQGkDB0DMdvZLQyPPx80IXBh
-         2it3+9fsdL/TDq1IQH/pa0HujSO+JENagd/7Wb7xz0Pm3J5OWPEVhrXRzfbTgHerWy
-         H1hZ1HnJCPWjTYybwDhURxhVOpMcXOB0UE0LrgD8=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 4 Apr 2019 05:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387867AbfDDJSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:18:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75AEC61D8B;
-        Thu,  4 Apr 2019 09:17:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554369467;
-        bh=70+klM7HkAHNKNJEJn15T8+408yDaacIKqZu5m9VSbc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Em1TVFgxo5IplLHTbXiDnVMw5DAbCae0iYJrQ5AYzI5zW68eOZBGb5ynIyhdLPcQB
-         R8pUsAGLBuTffo9prnFqwal9GB1E/wUov1muoq4X2yCfJI3rLL2rvgWC+YzQCHwfGW
-         IzsJdXoIcCh0w3D44rO53+S24F/VCnecaTFh+bw0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 75AEC61D8B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] remoteproc: silence an uninitialized variable warning
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Andy Gross <andy.gross@linaro.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190404084204.GA20193@kadam>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <a08db945-44d3-ff99-7a89-75367f314855@codeaurora.org>
-Date:   Thu, 4 Apr 2019 14:47:39 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 37DD920693;
+        Thu,  4 Apr 2019 09:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554369480;
+        bh=4khj+k7PQKSxoEeN29uyK5NJOWDdryAXdUeXsXAeBPc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CbdBpC2IskkjH8n0QzOBvsfdTNuKwLddDwP2xcjy3u1YgRVEZaFtWCVhVljERBytU
+         koePrugR1Szzk4z/yPLg/6qXW1sGcbrkKxaO91Mp518yBNyDF15EpjenOJcMPOZzXX
+         cYz8tQE2aBzQnMJWpm4M3+mOMowDn5lOKk6tL+oo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jianxin Pan <jianxin.pan@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Emiliano Ingrassia <ingrassia@epigenesys.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 224/246] pinctrl: meson: meson8b: add the eth_rxd2 and eth_rxd3 pins
+Date:   Thu,  4 Apr 2019 10:48:44 +0200
+Message-Id: <20190404084627.059904182@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
+References: <20190404084619.236418459@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190404084204.GA20193@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-On 4/4/2019 2:12 PM, Dan Carpenter wrote:
-> Smatch complains that "ret" might be uninitialized.  I can see why it
-> generates the warning, but I don't know if it's actually possible.
-> Anyway initializing "ret" here is harmless.
->
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->   drivers/soc/qcom/mdt_loader.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
-> index 1c488024c698..fc58d660692f 100644
-> --- a/drivers/soc/qcom/mdt_loader.c
-> +++ b/drivers/soc/qcom/mdt_loader.c
-> @@ -188,7 +188,7 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
->   
->   	if (reloc_base)
->   		*reloc_base = mem_reloc;
-> -
-> +	ret = 0;
+------------------
+
+[ Upstream commit 6daae00243e622dd3feec7965bfe421ad6dd317e ]
+
+Gigabit Ethernet requires the Ethernet TXD0..3 and RXD0..3 data lines.
+Add the missing eth_rxd2 and eth_rxd3 definitions so we don't have to
+rely on the bootloader to set them up correctly.
+
+The vendor u-boot sources for Odroid-C1 use the following Ethernet
+pinmux configuration:
+  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, 0x3f4f);
+  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_7, 0xf00000);
+This translates to the following pin groups in the mainline kernel:
+- register 6 bit  0: eth_rxd1 (DIF_0_P)
+- register 6 bit  1: eth_rxd0 (DIF_0_N)
+- register 6 bit  2: eth_rx_dv (DIF_1_P)
+- register 6 bit  3: eth_rx_clk (DIF_1_N)
+- register 6 bit  6: eth_tx_en (DIF_3_P)
+- register 6 bit  8: eth_ref_clk (DIF_3_N)
+- register 6 bit  9: eth_mdc (DIF_4_P)
+- register 6 bit 10: eth_mdio_en (DIF_4_N)
+- register 6 bit 11: eth_tx_clk (GPIOH_9)
+- register 6 bit 12: eth_txd2 (GPIOH_8)
+- register 6 bit 13: eth_txd3 (GPIOH_7)
+- register 7 bit 20: eth_txd0_0 (GPIOH_6)
+- register 7 bit 21: eth_txd1_0 (GPIOH_5)
+- register 7 bit 22: eth_rxd3 (DIF_2_P)
+- register 7 bit 23: eth_rxd2 (DIF_2_N)
+
+All functions except eth_rxd2 and eth_rxd3 are already supported by the
+pinctrl-meson8b driver.
+
+Suggested-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Tested-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Reviewed-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/meson/pinctrl-meson8b.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+index 0f140a802137..7f76000cc12e 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson8b.c
++++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+@@ -346,6 +346,8 @@ static const unsigned int eth_rx_dv_pins[]	= { DIF_1_P };
+ static const unsigned int eth_rx_clk_pins[]	= { DIF_1_N };
+ static const unsigned int eth_txd0_1_pins[]	= { DIF_2_P };
+ static const unsigned int eth_txd1_1_pins[]	= { DIF_2_N };
++static const unsigned int eth_rxd3_pins[]	= { DIF_2_P };
++static const unsigned int eth_rxd2_pins[]	= { DIF_2_N };
+ static const unsigned int eth_tx_en_pins[]	= { DIF_3_P };
+ static const unsigned int eth_ref_clk_pins[]	= { DIF_3_N };
+ static const unsigned int eth_mdc_pins[]	= { DIF_4_P };
+@@ -599,6 +601,8 @@ static struct meson_pmx_group meson8b_cbus_groups[] = {
+ 	GROUP(eth_ref_clk,	6,	8),
+ 	GROUP(eth_mdc,		6,	9),
+ 	GROUP(eth_mdio_en,	6,	10),
++	GROUP(eth_rxd3,		7,	22),
++	GROUP(eth_rxd2,		7,	23),
+ };
+ 
+ static struct meson_pmx_group meson8b_aobus_groups[] = {
+@@ -748,7 +752,7 @@ static const char * const ethernet_groups[] = {
+ 	"eth_tx_clk", "eth_tx_en", "eth_txd1_0", "eth_txd1_1",
+ 	"eth_txd0_0", "eth_txd0_1", "eth_rx_clk", "eth_rx_dv",
+ 	"eth_rxd1", "eth_rxd0", "eth_mdio_en", "eth_mdc", "eth_ref_clk",
+-	"eth_txd2", "eth_txd3"
++	"eth_txd2", "eth_txd3", "eth_rxd3", "eth_rxd2"
+ };
+ 
+ static const char * const i2c_a_groups[] = {
+-- 
+2.19.1
 
 
-You are overriding the value here, better keep it at the start.
-Thanks,
-Mukesh
 
->   out:
->   	kfree(fw_name);
->   
