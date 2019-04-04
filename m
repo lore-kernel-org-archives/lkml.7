@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30B9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D6AC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954BD21850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6109E20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368073;
-	bh=rqq9+YCxar3/+6CMACzDKsAjOdCFnVjDvBg79kpCGjY=;
+	s=default; t=1554368078;
+	bh=Y387+yMMcxa4O++XVayTazcL2ePhULRcXulW57xsLnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DSrgtDTUi/VoXryo5j86rRGJPN8YDlvZhpQNMlRUW6mvCtp7H6YbZwtEzGM8Y8jLx
-	 AoHN4iiujvEX20Q+ZfxbciGn0pxL0sWY/xPHcXJRwvSxG+TatZkBkmFmQv3f2cwwwx
-	 7QRFdTOmAaednEOSLy3TQ5P4Pcmes925965/N8Rg=
+	b=Di6nIn7xN8PZ9x+gDURj1f8i+TZoeXMRZdFGhI8jTE2TOyry1ZZqGwnHgJomib+md
+	 xkaOPX1uz4fAHUdRZr3KsYaOaPtxMIefXrIPRufJgDhngjFA8rcZ7pu3krVEgIqGuE
+	 aVFLQBw+E8SCgkpCy4fgsoEBB6umVdNCpLXXwHJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfDDIyc (ORCPT
+        id S1730088AbfDDIyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57102 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbfDDIy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:26 -0400
+        id S1729546AbfDDIyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FD24217D4;
-        Thu,  4 Apr 2019 08:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38A1020652;
+        Thu,  4 Apr 2019 08:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368065;
-        bh=rqq9+YCxar3/+6CMACzDKsAjOdCFnVjDvBg79kpCGjY=;
+        s=default; t=1554368073;
+        bh=Y387+yMMcxa4O++XVayTazcL2ePhULRcXulW57xsLnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eEhyPZvBzTVvfr6CiHeA7QTzp2PiHvoizDQEItFUOJPjihp0Tb7SfLHiHStTzpbQE
-         NJFDlWYdIPESuKCv3JaGdagzgNJIFAax4vA6oAeFpFqgNAGuFfkXR6mxy68B92n2nS
-         16lwGJwCUDDOqyoomzfgYSPpixrW36b+kOl6s+QM=
+        b=WuJ8lQATnTi2XAuvAxV/XZAOmP/73CraEhXBUxXv4L9iZCn4j1ECONZetm58tpKPE
+         MZqChPDxS+ooGgN0HEJNo7bU+gwYhH1cWZMXNch1AsDXhYOQbg4iTLYH2ueXBZCdz7
+         8oP8bRTlGFXTIre4u3IVg1nU+IrGnwsjplmmLyMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Mohamad Haj Yahia <mohamad@mellanox.com>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 008/121] h8300: use cc-cross-prefix instead of hardcoding h8300-unknown-linux-
-Date:   Thu,  4 Apr 2019 10:46:36 +0200
-Message-Id: <20190404084545.719737857@linuxfoundation.org>
+Subject: [PATCH 4.14 011/121] net/mlx5: Avoid panic when setting vport rate
+Date:   Thu,  4 Apr 2019 10:46:39 +0200
+Message-Id: <20190404084545.913418661@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,59 +68,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit fc2b47b55f17fd996f7a01975ce1c33c2f2513f6 ]
+[ Upstream commit 24319258660a84dd77f4be026a55b10a12524919 ]
 
-It believe it is a bad idea to hardcode a specific compiler prefix
-that may or may not be installed on a user's system. It is annoying
-when testing features that should not require compilers at all.
+If we try to set VFs rate on a VF (not PF) net device, the kernel
+will be crash. The commands are show as below:
 
-For example, mrproper, headers_install, etc. should work without
-any compiler.
+$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
+$ ip link set $MLX_VF0 vf 0 max_tx_rate 2 min_tx_rate 1
 
-They look like follows on my machine.
+If not applied the first patch ("net/mlx5: Avoid panic when setting
+vport mac, getting vport config"), the command:
 
-$ make ARCH=h8300 mrproper
-./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
-./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
-make: h8300-unknown-linux-gcc: Command not found
-make: h8300-unknown-linux-gcc: Command not found
-  [ a bunch of the same error messages continue ]
+$ ip link set $MLX_VF0 vf 0 rate 100
 
-$ make ARCH=h8300 headers_install
-./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
-./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
-make: h8300-unknown-linux-gcc: Command not found
-  HOSTCC  scripts/basic/fixdep
-make: h8300-unknown-linux-gcc: Command not found
-  WRAP    arch/h8300/include/generated/uapi/asm/kvm_para.h
-  [ snip ]
+can also crash the kernel.
 
-The solution is to delete this line, or to use cc-cross-prefix like
-some architectures do. I chose the latter as a moderate fixup.
+[ 1650.006388] RIP: 0010:mlx5_eswitch_set_vport_rate+0x1f/0x260 [mlx5_core]
+[ 1650.007092]  do_setlink+0x982/0xd20
+[ 1650.007129]  __rtnl_newlink+0x528/0x7d0
+[ 1650.007374]  rtnl_newlink+0x43/0x60
+[ 1650.007407]  rtnetlink_rcv_msg+0x2a2/0x320
+[ 1650.007484]  netlink_rcv_skb+0xcb/0x100
+[ 1650.007519]  netlink_unicast+0x17f/0x230
+[ 1650.007554]  netlink_sendmsg+0x2d2/0x3d0
+[ 1650.007592]  sock_sendmsg+0x36/0x50
+[ 1650.007625]  ___sys_sendmsg+0x280/0x2a0
+[ 1650.007963]  __sys_sendmsg+0x58/0xa0
+[ 1650.007998]  do_syscall_64+0x5b/0x180
+[ 1650.009438]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-I added an alternative 'h8300-linux-' because it is available at:
-
-https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Fixes: c9497c98901c ("net/mlx5: Add support for setting VF min rate")
+Cc: Mohamad Haj Yahia <mohamad@mellanox.com>
+Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/h8300/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/h8300/Makefile b/arch/h8300/Makefile
-index e1c02ca230cb..073bba6f9f60 100644
---- a/arch/h8300/Makefile
-+++ b/arch/h8300/Makefile
-@@ -23,7 +23,7 @@ KBUILD_AFLAGS += $(aflags-y)
- LDFLAGS += $(ldflags-y)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 2f93e6e9dc9e..2aec0c021b6c 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -1966,19 +1966,24 @@ static int normalize_vports_min_rate(struct mlx5_eswitch *esw, u32 divider)
+ int mlx5_eswitch_set_vport_rate(struct mlx5_eswitch *esw, int vport,
+ 				u32 max_rate, u32 min_rate)
+ {
+-	u32 fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
+-	bool min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
+-					fw_max_bw_share >= MLX5_MIN_BW_SHARE;
+-	bool max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
+ 	struct mlx5_vport *evport;
++	u32 fw_max_bw_share;
+ 	u32 previous_min_rate;
+ 	u32 divider;
++	bool min_rate_supported;
++	bool max_rate_supported;
+ 	int err = 0;
  
- ifeq ($(CROSS_COMPILE),)
--CROSS_COMPILE := h8300-unknown-linux-
-+CROSS_COMPILE := $(call cc-cross-prefix, h8300-unknown-linux- h8300-linux-)
- endif
+ 	if (!ESW_ALLOWED(esw))
+ 		return -EPERM;
+ 	if (!LEGAL_VPORT(esw, vport))
+ 		return -EINVAL;
++
++	fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
++	min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
++				fw_max_bw_share >= MLX5_MIN_BW_SHARE;
++	max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
++
+ 	if ((min_rate && !min_rate_supported) || (max_rate && !max_rate_supported))
+ 		return -EOPNOTSUPP;
  
- core-y	+= arch/$(ARCH)/kernel/ arch/$(ARCH)/mm/
 -- 
 2.19.1
 
