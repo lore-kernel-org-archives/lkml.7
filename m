@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301A4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43016C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0065E20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA702054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369015;
-	bh=uFlpdJl0cQzqWgIMyjGzl2Ckkbs5ykVYUAJLFddGLBU=;
+	s=default; t=1554369017;
+	bh=CqeR2CI6/9xaSTcwyumMPxTrXsljIx0W6R1OwqHd2wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVLqelr/sfmrD/NGFmVaGF0KhGEYpCPZAVFKKAvCHpAWh0e5ghNkeBFyxA32DcOHw
-	 jGm0B0eq8ajNRwfTE04KB9cC8vfZILYtpzDg0JMgyJWrj8usuizNq1cD8Ni9jev+PA
-	 03y8b8YrzP0ECx0M+hBGVz8f22q8YIqO8gJkmlbc=
+	b=sV2+NqvLP6a1EbKrdSVUYD1X4kyR0FVdpfVzTwQtR6pdLnl3xaxur5qs/YW3xPGP2
+	 Jj5+Em1VVTvO+UDcd+ESxSV+Vi/GX4wGzR3tVUlvB3G+DE/gwz8wmWxwzNHhr9+JLr
+	 itZjF6r4n0eWzQm+zE1g+3tOyWJsbgshLEB/6/uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732974AbfDDJKN (ORCPT
+        id S1732986AbfDDJKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49698 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:10:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732961AbfDDJKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:10 -0400
+        id S1732970AbfDDJKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4282E20693;
-        Thu,  4 Apr 2019 09:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D50A32177E;
+        Thu,  4 Apr 2019 09:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369009;
-        bh=uFlpdJl0cQzqWgIMyjGzl2Ckkbs5ykVYUAJLFddGLBU=;
+        s=default; t=1554369012;
+        bh=CqeR2CI6/9xaSTcwyumMPxTrXsljIx0W6R1OwqHd2wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p5gLfrjwDyuRqs9pZd8M0e5y1avBkLOJHdFNY+jvfgmViQNdgZl6s0NO3yp55qSud
-         R/ZaXnB2NHFN8aEBjdV1daMuD8ILElhalENz7I1BPimZcIYBlmuOs9f0Q1X0uyu8o+
-         AVXmY2BJKLSCORv1CtuhsqaPdEPhs+HeMJXqGe4E=
+        b=k8o4Yec1CgRBEOJCVnUsygUZZyOwtG4onLpuTKHhszcXZR95d++scguEcagdnw4t/
+         GL5fVnduMha/ly+wSYnIKLzPrhYhUxAPnB8acebTMrKFuAO2nwK8roY0CUAI0anRB7
+         9dmPsDqtnHKRfc1/ilyoriNq9t5EEc+s5kLhyxVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Slavomir Kaslev <kaslevs@vmware.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 047/246] fs: Make splice() and tee() take into account O_NONBLOCK flag on pipes
-Date:   Thu,  4 Apr 2019 10:45:47 +0200
-Message-Id: <20190404084620.671108728@linuxfoundation.org>
+Subject: [PATCH 5.0 048/246] perf beauty msg_flags: Add missing %s lost when adding prefix suppression logic
+Date:   Thu,  4 Apr 2019 10:45:48 +0200
+Message-Id: <20190404084620.703993088@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,96 +70,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ee5e001196d1345b8fee25925ff5f1d67936081e ]
+[ Upstream commit c3b81a500f35241a4c16febe0a015e572cf2c492 ]
 
-The current implementation of splice() and tee() ignores O_NONBLOCK set
-on pipe file descriptors and checks only the SPLICE_F_NONBLOCK flag for
-blocking on pipe arguments.  This is inconsistent since splice()-ing
-from/to non-pipe file descriptors does take O_NONBLOCK into
-consideration.
+When the prefix suppresion/enabling logic was added, I forgot to add an
+extra %, which ended up chopping off the strings:
 
-Fix this by promoting O_NONBLOCK, when set on a pipe, to
-SPLICE_F_NONBLOCK.
+Before:
 
-Some context for how the current implementation of splice() leads to
-inconsistent behavior.  In the ongoing work[1] to add VM tracing
-capability to trace-cmd we stream tracing data over named FIFOs or
-vsockets from guests back to the host.
+  # perf trace -e *mmsg --map-dump syscalls
+  [299] = 1,
+  [307] = 1,
+  DNS Res~ver #3/14587 sendmmsg(106<socket:[3462393]>, 0x7f252b0fcaf0, 2, MSG_) = 2
+  chronyd/1053 recvmmsg(4, 0x558542ca5740, 4, MSG_, NULL) = 1
+  DNS Res~ver #2/14445 sendmmsg(106<socket:[3461475]>, 0x7f252ab09af0, 2, MSG_) = 2
+  DNS Res~ver #2/14444 sendmmsg(146<socket:[3457863]>, 0x7f2521a7aaf0, 2, MSG_) = 2
+  DNS Res~ver #2/14445 sendmmsg(106<socket:[3461475]>, 0x7f252ab09af0, 2, MSG_) = 2
+  DNS Res~ver #3/14587 sendmmsg(148<socket:[3460636]>, 0x7f252b0fcaf0, 2, MSG_) = 2
+  DNS Res~ver #2/14444 sendmmsg(146<socket:[3457863]>, 0x7f2521a7aaf0, 2, MSG_) = 2
+  ^C#
 
-When we receive SIGINT from user to stop tracing, we set O_NONBLOCK on
-the input file descriptor and set SPLICE_F_NONBLOCK for the next call to
-splice().  If splice() was blocked waiting on data from the input FIFO,
-after SIGINT splice() restarts with the same arguments (no
-SPLICE_F_NONBLOCK) and blocks again instead of returning -EAGAIN when no
-data is available.
+After:
 
-This differs from the splice() behavior when reading from a vsocket or
-when we're doing a traditional read()/write() loop (trace-cmd's
---nosplice argument).
+  # perf trace -e *mmsg --map-dump syscalls
+  [299] = 1,
+  [307] = 1,
+  NetworkManager/17467 sendmmsg(22<socket:[3466493]>, 0x7f28927f9bb0, 2, MSG_NOSIGNAL) = 2
+  pool/17478 sendmmsg(10<socket:[3466523]>, 0x7f2769f95e90, 2, MSG_NOSIGNAL) = 2
+  DNS Res~ver #3/14587 sendmmsg(121<socket:[3466132]>, 0x7f252b0fcaf0, 2, MSG_NOSIGNAL) = 2
+  chronyd/1053 recvmmsg(4, 0x558542ca5740, 4, MSG_DONTWAIT, NULL) = 1
+  Socket Thread/17433 sendmmsg(121<socket:[3460903]>, 0x7f252668baf0, 2, MSG_NOSIGNAL) = 2
+  ^C#
 
-With this patch applied we get the same behavior in all situations after
-setting O_NONBLOCK which also matches the behavior of doing a
-read()/write() loop instead of splice().
-
-This change does have potential of breaking users who don't expect
-EAGAIN from splice() when SPLICE_F_NONBLOCK is not set.  OTOH programs
-that set O_NONBLOCK and don't anticipate EAGAIN are arguably buggy[2].
-
- [1] https://github.com/skaslev/trace-cmd/tree/vsock
- [2] https://github.com/torvalds/linux/blob/d47e3da1759230e394096fd742aad423c291ba48/fs/read_write.c#L1425
-
-Signed-off-by: Slavomir Kaslev <kaslevs@vmware.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: c65c83ffe904 ("perf trace: Allow asking for not suppressing common string prefixes")
+Link: https://lkml.kernel.org/n/tip-t2eu1rqx710k6jr4814mlzg7@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/splice.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ tools/perf/trace/beauty/msg_flags.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 90c29675d573..f568273ac336 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1123,6 +1123,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- 		if (ipipe == opipe)
- 			return -EINVAL;
- 
-+		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		return splice_pipe_to_pipe(ipipe, opipe, len, flags);
+diff --git a/tools/perf/trace/beauty/msg_flags.c b/tools/perf/trace/beauty/msg_flags.c
+index d66c66315987..ea68db08b8e7 100644
+--- a/tools/perf/trace/beauty/msg_flags.c
++++ b/tools/perf/trace/beauty/msg_flags.c
+@@ -29,7 +29,7 @@ static size_t syscall_arg__scnprintf_msg_flags(char *bf, size_t size,
+ 		return scnprintf(bf, size, "NONE");
+ #define	P_MSG_FLAG(n) \
+ 	if (flags & MSG_##n) { \
+-		printed += scnprintf(bf + printed, size - printed, "%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
++		printed += scnprintf(bf + printed, size - printed, "%s%s%s", printed ? "|" : "", show_prefix ? prefix : "", #n); \
+ 		flags &= ~MSG_##n; \
  	}
  
-@@ -1148,6 +1151,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- 		if (unlikely(ret < 0))
- 			return ret;
- 
-+		if (in->f_flags & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		file_start_write(out);
- 		ret = do_splice_from(ipipe, out, &offset, len, flags);
- 		file_end_write(out);
-@@ -1172,6 +1178,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- 			offset = in->f_pos;
- 		}
- 
-+		if (out->f_flags & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		pipe_lock(opipe);
- 		ret = wait_for_space(opipe, flags);
- 		if (!ret)
-@@ -1721,6 +1730,9 @@ static long do_tee(struct file *in, struct file *out, size_t len,
- 	 * copying the data.
- 	 */
- 	if (ipipe && opipe && ipipe != opipe) {
-+		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		/*
- 		 * Keep going, unless we encounter an error. The ipipe/opipe
- 		 * ordering doesn't really matter.
 -- 
 2.19.1
 
