@@ -3,119 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E757CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D4EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB6D20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D47A206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfDDN2I (ORCPT
+        id S1729486AbfDDN2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfDDN2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:28:08 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD7A0206B7;
-        Thu,  4 Apr 2019 13:28:04 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 09:28:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Roland McGrath <roland@hack.frob.com>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH 0/6 v3] sycalls: Remove args i and n from
- syscall_get_arguments()
-Message-ID: <20190404092803.1bffd135@gandalf.local.home>
-In-Reply-To: <20190401134104.676620247@goodmis.org>
-References: <20190401134104.676620247@goodmis.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 4 Apr 2019 09:28:43 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33617 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfDDN2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 09:28:43 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k14so3214386qtb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 06:28:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7yyf+HgxleLYBHaKJbIu80u0jEokOC4UH8AehtEvcEM=;
+        b=MM0lL9E+r6d+hZgeFBX2WIxyAmlUBqi3r3LSOUw4eURXRTvwIrNwI+bjnml/7wCoYS
+         1kguwPZeW1HH+dM4474c3k4Ty/WlTOeQqFb4kxzViOV6qnBI6BBse0pswbZp4Al1+T8z
+         PCdwYQmT+yko2zd+SN6IzAPH3OyCO7m5neDsB4O2R7EV1CF/EZclNc59DwdpLvvXiyO5
+         Bxe1u2e5AW/cSLJHZzVznWTi/BZHj6kL1jyhdgeCNz02PHABvTPHk3jDWg2okg/m1mdg
+         k5PdMUvPDDXRkw5WUjFp+vZm3t6hGLSN0C9sjUb83zAQdhHWVJQToQsHwXqiwuky7whu
+         d0hg==
+X-Gm-Message-State: APjAAAX0QRG/s6+ndMhR0Uo6/7Tf7U+qLY56WW0tWlGKSSnVqmcn9JO0
+        M7XPH6H+DikOqtxz4eN6RwapTw==
+X-Google-Smtp-Source: APXvYqyGfRXpzQFNaSliZNlz6/G8SzOU+HMRc8xYFoGZ0ZQbt0QhYGmCO8b8oYZ6Q0w9Htvlju38sw==
+X-Received: by 2002:ac8:28e9:: with SMTP id j38mr5244597qtj.297.1554384522144;
+        Thu, 04 Apr 2019 06:28:42 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id q51sm12443768qtc.38.2019.04.04.06.28.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 06:28:41 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 09:28:38 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+Subject: Re: On guest free page hinting and OOM
+Message-ID: <20190404083321-mutt-send-email-mst@kernel.org>
+References: <29e11829-c9ac-a21b-b2f1-ed833e4ca449@redhat.com>
+ <dc14a711-a306-d00b-c4ce-c308598ee386@redhat.com>
+ <20190401104608-mutt-send-email-mst@kernel.org>
+ <CAKgT0UcJuD-t+MqeS9geiGE1zsUiYUgZzeRrOJOJbOzn2C-KOw@mail.gmail.com>
+ <6a612adf-e9c3-6aff-3285-2e2d02c8b80d@redhat.com>
+ <CAKgT0Ue_By3Z0=5ZEvscmYAF2P40Bdyo-AXhH8sZv5VxUGGLvA@mail.gmail.com>
+ <1249f9dd-d22d-9e19-ee33-767581a30021@redhat.com>
+ <CAKgT0UeqX8Q8BYAo4COfQ2TQGBduzctAf5Ko+0mUmSw-aemOSg@mail.gmail.com>
+ <0fdc41fb-b2ba-c6e6-36b9-97ad5a6eb54c@redhat.com>
+ <CAKgT0UcrkXKjMgYy2H3MKQxG71ScNqhwqxwti7QjvPSxtb8FBg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UcrkXKjMgYy2H3MKQxG71ScNqhwqxwti7QjvPSxtb8FBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 01 Apr 2019 09:41:04 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, Apr 02, 2019 at 04:43:03PM -0700, Alexander Duyck wrote:
+> Yes, but hopefully it should be a small enough amount that nobody will
+> notice. In many cases devices such as NICs can consume much more than
+> this regularly for just their Rx buffers and it is not an issue. There
+> has to be a certain amount of overhead that any given device is
+> allowed to consume. If we contain the balloon hinting to just 64M that
+> should be a small enough amount that nobody would notice in practice.
 
-> [ Looking for acks ]
-> 
+I am still inclined to add ability for balloon to exit to host on OOM
+if any hints are outstanding.
 
-I got a couple.
+If nothing else will be helpful for stats.
 
-> Two and a half years ago I sent out 3 patches and a title letter that
-> had this[1]:
-
-Linus,
-
-Is this something that can go into this -rc release or would you want
-me to wait till the next merge window?
-
-The reason I ask, is that there's two arch patches in this series that
-have stable tags attached to them. But I moved things around such that
-they are applied before the global arch patches are and can be applied
-independently.
-
-Should I move those two patches up front and just add those to this
-release cycle, or would you like the entire series now?
-
--- Steve
-
-
-> ----
->  arch/arc/include/asm/syscall.h        |   7 +-
->  arch/arm/include/asm/syscall.h        |  47 ++---------
->  arch/arm64/include/asm/syscall.h      |  46 ++---------
->  arch/c6x/include/asm/syscall.h        |  79 ++++---------------
->  arch/csky/include/asm/syscall.h       |  26 ++-----
->  arch/h8300/include/asm/syscall.h      |  34 ++------
->  arch/hexagon/include/asm/syscall.h    |   4 +-
->  arch/ia64/include/asm/syscall.h       |  13 +---
->  arch/ia64/kernel/ptrace.c             |   7 +-
->  arch/microblaze/include/asm/syscall.h |   8 +-
->  arch/mips/include/asm/syscall.h       |   3 +-
->  arch/mips/kernel/ptrace.c             |   2 +-
->  arch/nds32/include/asm/syscall.h      |  62 +++------------
->  arch/nios2/include/asm/syscall.h      |  84 ++++----------------
->  arch/openrisc/include/asm/syscall.h   |  12 +--
->  arch/parisc/include/asm/syscall.h     |  30 ++-----
->  arch/powerpc/include/asm/syscall.h    |  15 ++--
->  arch/riscv/include/asm/syscall.h      |  24 ++----
->  arch/s390/include/asm/syscall.h       |  28 +++----
->  arch/sh/include/asm/syscall_32.h      |  47 +++--------
->  arch/sh/include/asm/syscall_64.h      |   8 +-
->  arch/sparc/include/asm/syscall.h      |  11 ++-
->  arch/um/include/asm/syscall-generic.h |  78 +++----------------
->  arch/x86/include/asm/syscall.h        | 142 ++++++++--------------------------
->  arch/xtensa/include/asm/syscall.h     |  33 ++------
->  fs/proc/base.c                        |  17 ++--
->  include/asm-generic/syscall.h         |  21 ++---
->  include/linux/ptrace.h                |  11 ++-
->  include/trace/events/syscalls.h       |   2 +-
->  kernel/seccomp.c                      |   2 +-
->  kernel/trace/trace_syscalls.c         |   9 ++-
->  lib/syscall.c                         |  57 ++++++--------
->  32 files changed, 247 insertions(+), 722 deletions(-)
-
+-- 
+MST
