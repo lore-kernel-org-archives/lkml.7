@@ -2,126 +2,102 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4D6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE77C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73E1206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D4D206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2K3ho6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbfDDM1K (ORCPT
+        id S1729864AbfDDM1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 08:27:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:28135 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbfDDM1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 08:27:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 05:27:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,308,1549958400"; 
-   d="scan'208";a="158698520"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Apr 2019 05:27:09 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hC1SW-0005DM-85; Thu, 04 Apr 2019 15:27:08 +0300
-Date:   Thu, 4 Apr 2019 15:27:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: Add support for Merrifield Basin Cove PMIC
-Message-ID: <20190404122708.GS9224@smile.fi.intel.com>
-References: <20190318095316.69278-1-andriy.shevchenko@linux.intel.com>
- <20190402051211.GR4187@dell>
- <20190402122001.GM9224@smile.fi.intel.com>
- <20190404070004.GE6830@dell>
- <20190404070357.GF6830@dell>
- <20190404082138.GF9224@smile.fi.intel.com>
- <20190404090314.GT6830@dell>
- <20190404092617.GO9224@smile.fi.intel.com>
- <20190404094459.GV6830@dell>
+        Thu, 4 Apr 2019 08:27:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55910 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfDDM1k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 08:27:40 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o25so2815175wmf.5;
+        Thu, 04 Apr 2019 05:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fwAOpYjNzXKsO8Sq287Ti3QPb3uJDsGdvAedp4I+PGE=;
+        b=k2K3ho6N82j0FLhWLBurtHR2RsONMLliG6huSfwD2+ioyWj3ncpLhqsqFLzZEpJz5N
+         G54pZQ0M5u1mFX+TKLVWwoMjQ/JO8XklBvU+pFH/pmrqcUcuFLQYwHo/YTO9iBkoF3lW
+         MjLwsH242hhFFaJFso+Xf0VcIAfH6RkTinpXgN6gIBqnGR93iQEIWSyjVQAsC9MJ/0wo
+         WIARPltQPFKPW6KwWJlZ59RcVnNi8+GVn14kPRUBAoVvIRS+/cucE0sm0tAh7vlmh30i
+         wldPf8V1tpHxm1rAC8peotNlcejk1AMHnqiLm0RjH79XwQjLySBW9AEiUnun08ixB0yA
+         gH+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fwAOpYjNzXKsO8Sq287Ti3QPb3uJDsGdvAedp4I+PGE=;
+        b=BST1pU+9qLSdr9CDZbb+qwr2J7TWIabY17ybwZU00xPO0PxCMYlnQ30hMzeHnmf3CW
+         Ls2Ycy9gievATuYlc3v6ee1soPws6EiTD6CpGb4m9pDjO/PtCL4cb/G1bJ5oen8ggEg8
+         pl7a11On8ikdz2vLggX/7FLkN9a1ilPMlFpsd59NGJHNyCwQmINg6KIIyZurw5ScTL+S
+         ml0LQMQEXeooxuJnZlmR+jqOaJWiflf/phiG0NK7Y9S6XQQClXVXjw1FVwXWFecVYs5A
+         AdaHkyZ2KUYEoaTKYhzR+ejQiukXvNesWjCbjWhP5jj1CgrvrhLqmmZzV9m+o42I7JqS
+         /rRw==
+X-Gm-Message-State: APjAAAUEGkEn8+G8AtwM1eLPSOfagHKk3RuCq15fw1sAdKHMP24RrJ/v
+        VvzlbKIad23X7UApzdCmP8A=
+X-Google-Smtp-Source: APXvYqxiIv0R/6z6mPh8DP1PyQAW6XIONCr1Lsw8Hq4BwNdt4viyn5Tu2swxtF6C7N8GdE9bCdtZqg==
+X-Received: by 2002:a1c:e0c6:: with SMTP id x189mr3923674wmg.4.1554380858694;
+        Thu, 04 Apr 2019 05:27:38 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
+        by smtp.gmail.com with ESMTPSA id h2sm38031178wro.11.2019.04.04.05.27.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 05:27:37 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: vendor-prefixes: add AZW
+Date:   Thu,  4 Apr 2019 14:45:03 +0200
+Message-Id: <20190404124504.11137-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404094459.GV6830@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 10:44:59AM +0100, Lee Jones wrote:
-> On Thu, 04 Apr 2019, Andy Shevchenko wrote:
-> > On Thu, Apr 04, 2019 at 10:03:14AM +0100, Lee Jones wrote:
-> > > On Thu, 04 Apr 2019, Andy Shevchenko wrote:
-> > > > On Thu, Apr 04, 2019 at 08:03:57AM +0100, Lee Jones wrote:
-> > > > > On Thu, 04 Apr 2019, Lee Jones wrote:
-> > > > > > On Tue, 02 Apr 2019, Andy Shevchenko wrote:
+Shenzhen AZW Technology Co. Ltd. is a manufacturer specialized in Android
+smart TV boxes, Intel mini PCs and home cloud TV boxes with NAS.
 
-> > > > > > From the child:
-> > > > > > 
-> > > > > >   platform_get_irq(dev->parent, CLIENT_ID);
-> > > > 
-> > > > So, instead of keeping a fragile approach in one driver, we will spread this
-> > > > to all of them.
-> > > 
-> > > No, the fragileness goes away with implicit definitions of IDs.
-> > 
-> > Did you mean "explicit"?
-> 
-> Yes.  Thank you for correcting my English. :)
-> 
-> > Something like we need to have a shared map of those indices?
-> 
-> Defining the IDs of the devices would lead to a more robust
-> implementation, yes.
+Add the vendor prefix for AZW.
 
-This would make children to know that they are springs of exact MFD parent driver
-that makes them dependent and inflexible.
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > > > There is one device node with several IRQ and other resources.
-> > > > In pseudo code:
-> > > > 
-> > > > 	device node {
-> > > > 		device ID,
-> > > > 		IRQ 0,
-> > > > 		IRQ 1,
-> > > > 		...
-> > > > 		MMIO 0,
-> > > > 		...
-> > > > 	}
-> > > 
-> > > Sure.  Thanks for the explanation.
-> > > 
-> > > Very well.  I guess it's not too bad as it is.
-> > 
-> > It represent real hardware 1:1.
-> > Just out of curiosity how this case can be described in DT?
-> 
-> In DT you can have a sub-node for each child which can contain the
-> IRQ.  Without a sub-node you would define the IRQs in this file.  If
-> these IRQs do not change, that option is still available to you.
-> 
-> I can't think of an example where all of the children's IRQs have been
-> listed in the parent's DT node in this way.
-
-I see. Something similar is done in ACPI table for Intel Galileo Gen2
-(see intel_quark_i2c_gpio.c), though it's a PCI device with shared
-interrupt line.
-
-If it would be a case like above, MFD would have propagated IRQ resources from
-them to the children anyway.
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 8b4ae37629b2..8313edbaf52e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -54,6 +54,7 @@ avic	Shanghai AVIC Optoelectronics Co., Ltd.
+ avnet	Avnet, Inc.
+ axentia	Axentia Technologies AB
+ axis	Axis Communications AB
++azw     Shenzhen AZW Technology Co., Ltd.
+ bananapi BIPAI KEJI LIMITED
+ bhf	Beckhoff Automation GmbH & Co. KG
+ bitmain	Bitmain Technologies
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
