@@ -2,144 +2,123 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6902EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0272C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C0721738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:02:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="T4WqQqKY"
+	by mail.kernel.org (Postfix) with ESMTP id 98F432082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbfDDVCn (ORCPT
+        id S1731385AbfDDVFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 17:02:43 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44688 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729116AbfDDVCm (ORCPT
+        Thu, 4 Apr 2019 17:05:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44022 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729116AbfDDVFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 17:02:42 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d24so3659427otl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 14:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+DrsGVUC4CyXvDtjSn1pg35i8ssXhg0MFwCOyyl15ho=;
-        b=T4WqQqKYK6FMJ1y32LoSrxeA+KO0QpDj1ISaVQLh2tPAsPni+zmP0inWEuDw/xB3kI
-         Dul6rR8vQ9Jja1D10S8Et2qKWkkRBsq3vpXJXWkhuhy7kmVr26AK5iOptICGkOJU4Ha1
-         zH8tiyg15L76OrapwbxB9PcC+9PUAb9VtdUH8vz2PrwJnic3YlK+UJZKaSSEeIGG13yN
-         OcMDzJPWEXqNJMaKjR3w1PsDXR07bPoic71WK+9UU6vnrEgpICixDNZdk5CeoxrPssK6
-         Kl6St+YQJ1fKHQT8fi2KkJgdpGqfqCynTKB6y+WgNW2Q/iQKwoefucD8SjYzHt91iACR
-         tkUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+DrsGVUC4CyXvDtjSn1pg35i8ssXhg0MFwCOyyl15ho=;
-        b=TOMicoq1OOtQoCASfglWINOxHom/3mwz3E2l4csZwaY38IB3DS7JZ0uCBv8e0wFGvN
-         5WtlmIUkx8UwHmq53ootZPLSLkvrY1H4UMURkeBB6pwquhGkjLDPdbxWsPOG2I4+TSFM
-         AAvyzuLgmw5GMH0OOoI4yv1pZug8mAE1OJUVuSJ9aZc5jfmOYhfIEzjBqKKA0lO/dB3X
-         kDjiHhF1OoH7lw0ufINLDToWE03/AyOzL9kht+62YorsC+WD9QgKuFYjU+5e5B/tzgNg
-         CfxsLXCXwzKTODiHmVB9o0Mg//oUtN6yfZiQ2UYMPMjc+VQjRmOSEQEAYsy9H/hCkgnv
-         MFWA==
-X-Gm-Message-State: APjAAAVWnj3+JZIuN5qMLwC7N68PsuE8qYp6ezvrJ4AicEJYVaoqWKBC
-        A+XPa5Yarn0EGza7Q4D4U3BZXKGJ0m18Xzfe5RZUgQ==
-X-Google-Smtp-Source: APXvYqxIBXEFW2Oy96NM35Uo/yMBoE4dKe5/MW9hq8vfTI0GX74IQg8bFAmtM8KkdIDrIdLtElSUadW0IP3KmaaUMDI=
-X-Received: by 2002:a9d:5c86:: with SMTP id a6mr5763686oti.118.1554411761776;
- Thu, 04 Apr 2019 14:02:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155440491849.3190322.17551464505265122881.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190404193211.GK22763@bombadil.infradead.org>
-In-Reply-To: <20190404193211.GK22763@bombadil.infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 4 Apr 2019 14:02:30 -0700
-Message-ID: <CAPcyv4hruLHWpEq_fT=_uFeO8X6KLjLsR2=s577iXey+NUFz4Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/5] lib/memregion: Uplevel the pmem "region" ida to a
- global allocator
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thu, 4 Apr 2019 17:05:05 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34L3jCJ174708
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 17:05:04 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rnsa40hrk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 17:05:04 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 4 Apr 2019 22:05:02 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Apr 2019 22:04:56 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34L4tnd22151220
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Apr 2019 21:04:55 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C76AB2064;
+        Thu,  4 Apr 2019 21:04:55 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0970B2068;
+        Thu,  4 Apr 2019 21:04:54 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Apr 2019 21:04:54 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id DCD2516C34BA; Thu,  4 Apr 2019 14:04:56 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 14:04:56 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     rcu@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Dumazet <edumazet@google.com>, fweisbec@gmail.com,
+        Oleg Nesterov <oleg@redhat.com>, joel@joelfernandes.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        X86 ML <x86@kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Dave Jiang <dave.jiang@intel.com>, Tejun Heo <tj@kernel.org>,
         linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH RFC tip/core/rcu 1/4] dax/super: Dynamically allocate
+ dax_srcu
+Reply-To: paulmck@linux.ibm.com
+References: <20190402142816.GA13084@linux.ibm.com>
+ <20190402142933.14547-1-paulmck@linux.ibm.com>
+ <CAPcyv4gOQ_KpZm8ediav4O-cLzqP6Fsd3ZmFC-AKeAh77i0N+A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gOQ_KpZm8ediav4O-cLzqP6Fsd3ZmFC-AKeAh77i0N+A@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040421-2213-0000-0000-000003718965
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010873; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01184368; UDB=6.00620132; IPR=6.00965121;
+ MB=3.00026298; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-04 21:05:01
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040421-2214-0000-0000-00005DE7BF12
+Message-Id: <20190404210456.GN14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904040134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 12:32 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Thu, Apr 04, 2019 at 12:08:38PM -0700, Dan Williams wrote:
-> > +++ b/lib/Kconfig
-> > @@ -318,6 +318,12 @@ config DECOMPRESS_LZ4
-> >  config GENERIC_ALLOCATOR
-> >       bool
+On Wed, Apr 03, 2019 at 11:31:01AM -0700, Dan Williams wrote:
+> On Tue, Apr 2, 2019 at 7:29 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
 > >
-> > +#
-> > +# Generic IDA for memory regions
-> > +#
->
-> Leaky abstraction -- nobody needs know that it's implemented as an IDA.
-> Suggest:
->
-> # Memory region ID allocation
->
+> > Having DEFINE_SRCU() or DEFINE_STATIC_SRCU() in a loadable module
+> > requires that the size of the reserved region be increased, which is
+> > not something we really want to be doing.  This commit therefore removes
+> > the DEFINE_STATIC_SRCU() from drivers/dax/super.c in favor of defining
+> > dax_srcu as a simple srcu_struct, initializing it in dax_core_init(),
+> > and cleaning it up in dax_core_exit().
+> >
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-Looks good to me.
+Applied, thank you!
 
-> ...
->
-> > +++ b/lib/memregion.c
-> > @@ -0,0 +1,22 @@
-> > +#include <linux/idr.h>
-> > +#include <linux/module.h>
-> > +
-> > +static DEFINE_IDA(region_ida);
-> > +
-> > +int memregion_alloc(void)
-> > +{
-> > +     return ida_simple_get(&region_ida, 0, 0, GFP_KERNEL);
-> > +}
-> > +EXPORT_SYMBOL(memregion_alloc);
-> > +
-> > +void memregion_free(int id)
-> > +{
-> > +     ida_simple_remove(&region_ida, id);
-> > +}
-> > +EXPORT_SYMBOL(memregion_free);
-> > +
-> > +static void __exit memregion_exit(void)
-> > +{
-> > +     ida_destroy(&region_ida);
-> > +}
-> > +module_exit(memregion_exit);
->
->  - Should these be EXPORT_SYMBOL_GPL?
+							Thanx, Paul
 
-I don't see the need. These are simple wrappers around existing
-EXPORT_SYMBOL() exports, and there's little concern that these
-interfaces might disappear in the future causing us pain with out of
-tree modules as these don't touch anything in the core.
-
->  - Can we use the new interface, ida_alloc() and ida_free()?
-
-Sure.
-
->  - Do we really want memregion_exit() to happen while there are still IDs
->    allocated in the IDA?  I think this might well be better as:
->
->         BUG_ON(!ida_empty(&region_ida));
-
-True, or just delete the module_exit because this functionality can't
-be built as a module, so the exit path is already dead code.
-
-> Also, do we really want to call the structure the region_ida?  Why not
-> region_ids?
-
-Sure, sounds good.
