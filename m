@@ -7,47 +7,59 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4251EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D864C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E62720820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACE02147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369162;
-	bh=kT8noxhhktJYFLqiPWfRFLsAsE6QlEMk6WzL95RDXDo=;
+	s=default; t=1554369165;
+	bh=4yhN77EOLYFcGkjfV+IALldrkCmuquQJZIuLaHIOxiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrAlPaY5TxAwctRA5efL3KHrOS4ac3J4FigwalcX0RTVqZlI8E61UQmES4EOGH3hz
-	 OAz1Qd2m8BYb4w2BV0uzIXm6VOoYrpjEgg7AiAljvjN8dcois+02xMvPmupB5iHqOc
-	 5QXYka88XW3a77xvZrH15qTAqH3+6gEYVfL9LsMk=
+	b=Br29jJ9/+I0JpztcvGolauvm5BdBpwMkydtS8PabWELe1Pq0/hFJbWiFTb/jciQq7
+	 /JOt243lTawfVI8jDWAA9LFvXmcCYG1TiDSq+h9Et25LLm270byB122Qrfk71QXJzb
+	 /tmaWK9zsQW7dAIEtok1jrz7j+rY3XvlnhpkU17U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387433AbfDDJMk (ORCPT
+        id S1732958AbfDDJMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:12:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52708 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733139AbfDDJMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:38 -0400
+        id S2387429AbfDDJMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5F072054F;
-        Thu,  4 Apr 2019 09:12:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 403912054F;
+        Thu,  4 Apr 2019 09:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369157;
-        bh=kT8noxhhktJYFLqiPWfRFLsAsE6QlEMk6WzL95RDXDo=;
+        s=default; t=1554369159;
+        bh=4yhN77EOLYFcGkjfV+IALldrkCmuquQJZIuLaHIOxiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCbM3f+kn3/FXWbn/cgPMTIGEMELQThk49ec0zm5N25SXHGFk83K9PHDxiOryNU3/
-         9ctmy+Njg6NFqUi0WZ8e5AFIZnAW4xNfrYTY2aJdAmoDPaS7hzaZNO4C/9A2L6Qb+v
-         pTOtof2q+fRDwp7vk3bylSXLYZVCb7W4sLpmJxh0=
+        b=FUnJdeeP2auqKa5lhLSdjDp+9Kgztt8RZpQYA3WTCEGewtJ8M3WMtAyjeQlczoHCU
+         IZD5FJY4VbKrO9xrfppZblrKoGHAKZGPT+aygTu2nHIj+w4VV6dpXslrheRVjir0n8
+         mA+lmJWgbFCS4iKTYuzl1yOzS5xyH0EQQkKTfLpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 095/246] loop: set GENHD_FL_NO_PART_SCAN after blkdev_reread_part()
-Date:   Thu,  4 Apr 2019 10:46:35 +0200
-Message-Id: <20190404084622.469047554@linuxfoundation.org>
+Subject: [PATCH 5.0 111/246] SoC: imx-sgtl5000: add missing put_device()
+Date:   Thu,  4 Apr 2019 10:46:51 +0200
+Message-Id: <20190404084623.036295138@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,84 +78,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 758a58d0bc67457f1215321a536226654a830eeb ]
+[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
 
-Commit 0da03cab87e6
-("loop: Fix deadlock when calling blkdev_reread_part()") moves
-blkdev_reread_part() out of the loop_ctl_mutex. However,
-GENHD_FL_NO_PART_SCAN is set before __blkdev_reread_part(). As a result,
-__blkdev_reread_part() will fail the check of GENHD_FL_NO_PART_SCAN and
-will not rescan the loop device to delete all partitions.
+The of_find_device_by_node() takes a reference to the underlying device
+structure, we should release that reference.
 
-Below are steps to reproduce the issue:
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
+call of_find_device_by_node on line 105, but without a corresponding
+object release within this function.
+./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
+call of_find_device_by_node on line 105, but without a corresponding
+object release within this function.
 
-step1 # dd if=/dev/zero of=tmp.raw bs=1M count=100
-step2 # losetup -P /dev/loop0 tmp.raw
-step3 # parted /dev/loop0 mklabel gpt
-step4 # parted -a none -s /dev/loop0 mkpart primary 64s 1
-step5 # losetup -d /dev/loop0
-
-Step5 will not be able to delete /dev/loop0p1 (introduced by step4) and
-there is below kernel warning message:
-
-[  464.414043] __loop_clr_fd: partition scan of loop0 failed (rc=-22)
-
-This patch sets GENHD_FL_NO_PART_SCAN after blkdev_reread_part().
-
-Fixes: 0da03cab87e6 ("loop: Fix deadlock when calling blkdev_reread_part()")
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ sound/soc/fsl/imx-sgtl5000.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 2faefdd6f420..9a8d83bc1e75 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1089,16 +1089,12 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 		kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
+diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
+index c29200cf755a..9b9a7ec52905 100644
+--- a/sound/soc/fsl/imx-sgtl5000.c
++++ b/sound/soc/fsl/imx-sgtl5000.c
+@@ -108,6 +108,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
+ 		ret = -EPROBE_DEFER;
+ 		goto fail;
  	}
- 	mapping_set_gfp_mask(filp->f_mapping, gfp);
--	lo->lo_state = Lo_unbound;
- 	/* This is safe: open() is still holding a reference. */
- 	module_put(THIS_MODULE);
- 	blk_mq_unfreeze_queue(lo->lo_queue);
- 
- 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
- 	lo_number = lo->lo_number;
--	lo->lo_flags = 0;
--	if (!part_shift)
--		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	loop_unprepare_queue(lo);
- out_unlock:
- 	mutex_unlock(&loop_ctl_mutex);
-@@ -1120,6 +1116,23 @@ out_unlock:
- 		/* Device is gone, no point in returning error */
- 		err = 0;
- 	}
-+
-+	/*
-+	 * lo->lo_state is set to Lo_unbound here after above partscan has
-+	 * finished.
-+	 *
-+	 * There cannot be anybody else entering __loop_clr_fd() as
-+	 * lo->lo_backing_file is already cleared and Lo_rundown state
-+	 * protects us from all the other places trying to change the 'lo'
-+	 * device.
-+	 */
-+	mutex_lock(&loop_ctl_mutex);
-+	lo->lo_flags = 0;
-+	if (!part_shift)
-+		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
-+	lo->lo_state = Lo_unbound;
-+	mutex_unlock(&loop_ctl_mutex);
-+
- 	/*
- 	 * Need not hold loop_ctl_mutex to fput backing file.
- 	 * Calling fput holding loop_ctl_mutex triggers a circular
++	put_device(&ssi_pdev->dev);
+ 	codec_dev = of_find_i2c_device_by_node(codec_np);
+ 	if (!codec_dev) {
+ 		dev_err(&pdev->dev, "failed to find codec platform device\n");
 -- 
 2.19.1
 
