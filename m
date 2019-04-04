@@ -2,119 +2,165 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0F9C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7B9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE6E20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u3rggirp"
+	by mail.kernel.org (Postfix) with ESMTP id E026220855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfDDGlh (ORCPT
+        id S1727067AbfDDGll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 02:41:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39663 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfDDGlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 02:41:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f10so1341490otb.6;
-        Wed, 03 Apr 2019 23:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J3o3hk6OVGvyTuD006lhhVSPuAvQZCtMla/eC+dyNEc=;
-        b=u3rggirpZx4SYJfUDWxhPjiAYjpGsAA4c01aQ3oXdURfjfpuk2J4cjPJSyTgqgLutX
-         F6lUX+3tMGXgxZaqWBcrwPJRwVJg56qfCZjM/4ofQFMyXACOND2dS4GOaQKRob8+fqGe
-         n7UlolNHGIsKr6SFXxk29V0JyZz0wM/HsURbhW37X3vf+GAQnRvjHqxytiH0fU5sHp6O
-         3ROMiERyf/bQTBKMSg3ClYA6/lKePamSYmH218+TBchbsY+X+i2EhkOT/MBW6i1A/5XM
-         QGgwAQZpZ8YaSqkzmpty1bTLb+j9Ao0WK0SvdYFo8kA5S1LQqxq+Y4ZNd9uUuIi4x29R
-         JL5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J3o3hk6OVGvyTuD006lhhVSPuAvQZCtMla/eC+dyNEc=;
-        b=f72Yb1tT3Ll+bCOxnEIhfePIdspxifZMKbIfqEdUUGcjX0IQVyVR+tJwxqn8J/M4zq
-         s0qDs/mBj8dVDdHD1n+DsJcLwWZa17EMxwiL83CjRR+43OgRErgcXt5itGRyUdc1A3X6
-         aADvg+an4OZ/krc+FXrvo7byic5OHs2O6R2OblNV0O/SiDlePfvADytzH9QlH9jTc3Qb
-         RbCoKgoE7xvKKNPmj4xoD18WT31VLOSY8fkbMsJ2WN31qOYMX6wtBKrNPvQS7KBM/smS
-         zG0+WyDCVxL/LIJs1mkZS4ZOxV35KrJbYennZobOvQ+xxYsI2mZcUIUt4TTkrHlg1+2F
-         OiLg==
-X-Gm-Message-State: APjAAAWpdNj7kjSUsXww4zOPhd6dk6jWqnzdCRYS2gljf7rHO3RjjlLC
-        EyDmX9r3idTBHVHpLKepxGd3VatRrhN8FUzK9cpXkGKK
-X-Google-Smtp-Source: APXvYqy5GdrEL7QuSGpt08SxOeW9RNLquDzFWn5848TAl8OBDnq6Ks1c+uXjfgOJ4ExLZG8TctTytKtTeh2DVXh95bo=
-X-Received: by 2002:a9d:5f06:: with SMTP id f6mr2995772oti.18.1554360095632;
- Wed, 03 Apr 2019 23:41:35 -0700 (PDT)
+        Thu, 4 Apr 2019 02:41:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48690 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbfDDGli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 02:41:38 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1EFA081E1E;
+        Thu,  4 Apr 2019 06:41:38 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-97.pek2.redhat.com [10.72.12.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A2F4817C38;
+        Thu,  4 Apr 2019 06:41:34 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 14:41:30 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     "bhe@redhat.com" <bhe@redhat.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190404064130.GA5530@dhcp-128-65.nay.redhat.com>
+References: <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403072141.GE1555@localhost.localdomain>
+ <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
+ <20190403082305.GG1555@localhost.localdomain>
+ <20190403090210.GH1555@localhost.localdomain>
+ <c8613886-7014-cbd2-788f-a4f29bb5b4a5@ce.jp.nec.com>
+ <20190404025234.GA12658@dhcp-128-65.nay.redhat.com>
+ <20190404030037.GT7627@MiWiFi-R3L-srv>
+ <20190404031030.GU7627@MiWiFi-R3L-srv>
+ <20190404032238.GA16267@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <20190403204502.28917-1-lucasseikioshiro@gmail.com>
-In-Reply-To: <20190403204502.28917-1-lucasseikioshiro@gmail.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Thu, 4 Apr 2019 09:41:24 +0300
-Message-ID: <CA+U=DsoYcNA4JUiFrLWWdDO+CmMWBy15x4WVEUTp803HT5EzUg@mail.gmail.com>
-Subject: Re: [PATCH] staging: iio: cdc: ad7746: Replace bitshift by BIT
-To:     Lucas Oshiro <lucasseikioshiro@gmail.com>
-Cc:     lars@metafoo.de,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        stefan.popa@analog.com, Jonathan Cameron <jic23@kernel.org>,
-        knaack.h@gmx.de, Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-usp@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404032238.GA16267@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 04 Apr 2019 06:41:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 11:46 PM Lucas Oshiro <lucasseikioshiro@gmail.com> wrote:
->
-> Replace bitshifts on lines 54, 56 and 78 of ad7746.c.
->
+On 04/04/19 at 11:22am, Dave Young wrote:
+> On 04/04/19 at 11:10am, Baoquan He wrote:
+> > On 04/04/19 at 11:00am, Baoquan He wrote:
+> > > On 04/04/19 at 10:52am, Dave Young wrote:
+> > > > On 04/04/19 at 01:23am, Junichi Nomura wrote:
+> > > > > Hi Dave and Chao,
+> > > > > 
+> > > > > On 4/3/19 6:02 PM, Chao Fan wrote:
+> > > > > > On Wed, Apr 03, 2019 at 04:23:06PM +0800, Chao Fan wrote:
+> > > > > >> On Wed, Apr 03, 2019 at 04:09:16PM +0800, Dave Young wrote:
+> > > > > >>> Fix 3.  need more debugging, have you or Junichi run tests on more real
+> > > > > >>> hardware, maybe it is easier to reproduce on real hardware, I'm glad to
+> > > > > >>> help to try test patch or provide any help. 
+> > > > > >>
+> > > > > >> I am still testing in real hardware.
+> > > > > > 
+> > > > > > Hi Dave,
+> > > > > > 
+> > > > > > I find a Fujitsu Desktop PC to test it.
+> > > > > > Without this PATCH, it failed to kexec and kdump.
+> > > > > > With this PATCH, it succeed to kexec.
+> > > > > > But failed to kdump. From the log, I think it didn't jump to the second
+> > > > > > kernel, just reboot after panic. I have not figured out what's the
+> > > > > > problem, but it seems not caused by this PATCH.
+> > > > > > So I still think this PATCH works for the Fujitsu Desktop PC.
+> > > > > > 
+> > > > > > As for your issue, I think there may be some problems related to specified
+> > > > > > hardware. Are you using a Lenovo laptop?
+> > > > > > 
+> > > > > > And I am not sure how Nomura tested it.
+> > > > > 
+> > > > > I've tested 3 different models of EFI-booted baremetal servers with both
+> > > > > normal kexec and panic kexec.  So far as I've tried Linus's v5.1-rc3,
+> > > > > the problem always reproduced without the patch and disappears with the patch.
+> > > > 
+> > > > Hmm, both of my two laptops (Thinkpad T480s and T420) failed to boot with kexec.
+> > > > 
+> > > > I will see if I can find something, but it may need more time because
+> > > > early console does not work especially after kexec.
+> > > 
+> > > Dave, can you try below patch to print debugging message and hang kernel
+> > > to check the outputting? The hang is necessary, otherwise later printk
+> > > printking will overwrite it.
+> > > 
+> > > diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+> > > index c0d6c560df69..68119547c4aa 100644
+> > > --- a/arch/x86/boot/compressed/misc.c
+> > > +++ b/arch/x86/boot/compressed/misc.c
+> > > @@ -351,9 +351,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+> > >  	/* Clear flags intended for solely in-kernel use. */
+> > >  	boot_params->hdr.loadflags &= ~KASLR_FLAG;
+> > >  
+> > > -	/* Save RSDP address for later use. */
+> > > -	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+> > > -
+> > >  	sanitize_boot_params(boot_params);
+> > >  
+> > >  	if (boot_params->screen_info.orig_video_mode == 7) {
+> > > @@ -370,6 +367,10 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+> > >  	console_init();
+> > >  	debug_putstr("early console in extract_kernel\n");
+> > >  
+> >  +	/* Save RSDP address for later use. */
+> >  +	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+> >  +
+> >  +	error("Hang kernel for kexec debugging");
+> > 
+> > Sorry, here I means calling error() to hang kernel after calling
+> > get_rsdp_addr().
+> 
+> Thanks, it did not hang, it always reset to firmware/grub boot menu.
+> I'm pretty sure now the bug exists in get_rsdp_addr().
 
-Hey,
-This is only partially done.
-If doing conversions to BIT(x) macro, I would say to do them for all cases.
-
+static acpi_physical_address kexec_get_rsdp_addr(void)
+{
+...
+        /* Get systab from boot params. */
+        systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
+        if (!systab)
+              error("EFI system table not found in kexec boot_params.");
+ 
+...
+  -> add error("hang me") here will have a hang
+...
+        return __efi_get_rsdp_addr((unsigned long)esd->tables,
+                                   systab->nr_tables, true);
+ 
+But add error("hang me") in __efi_get_rsdp_addr it did not hang.
+ 
+It seems reference the systab pointer cause a system reset.
+ 
+A question is does the identity mapping covered the memory address of
+systab?
+ 
+In my case it is 0xdad9ef18
+ 
+If the memory is mapped on demand, then there will be problems, it
+should cover setup_data and efi table space.
+ 
 Thanks
-Alex
+Dave
 
-> Signed-off-by: Lucas Oshiro <lucasseikioshiro@gmail.com>
-> ---
->  drivers/staging/iio/cdc/ad7746.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/staging/iio/cdc/ad7746.c b/drivers/staging/iio/cdc/ad7746.c
-> index 0eb28fea876e..ea48b14cee72 100644
-> --- a/drivers/staging/iio/cdc/ad7746.c
-> +++ b/drivers/staging/iio/cdc/ad7746.c
-> @@ -51,9 +51,9 @@
->  #define AD7746_CAPSETUP_CACHOP         BIT(0)
->
->  /* Voltage/Temperature Setup Register Bit Designations (AD7746_REG_VT_SETUP) */
-> -#define AD7746_VTSETUP_VTEN            (1 << 7)
-> +#define AD7746_VTSETUP_VTEN            BIT(7)
->  #define AD7746_VTSETUP_VTMD_INT_TEMP   (0 << 5)
-> -#define AD7746_VTSETUP_VTMD_EXT_TEMP   (1 << 5)
-> +#define AD7746_VTSETUP_VTMD_EXT_TEMP   BIT(5)
->  #define AD7746_VTSETUP_VTMD_VDD_MON    (2 << 5)
->  #define AD7746_VTSETUP_VTMD_EXT_VIN    (3 << 5)
->  #define AD7746_VTSETUP_EXTREF          BIT(4)
-> @@ -75,7 +75,7 @@
->  #define AD7746_CONF_VTFS_MASK          GENMASK(7, 6)
->  #define AD7746_CONF_CAPFS_MASK         GENMASK(5, 3)
->  #define AD7746_CONF_MODE_IDLE          (0 << 0)
-> -#define AD7746_CONF_MODE_CONT_CONV     (1 << 0)
-> +#define AD7746_CONF_MODE_CONT_CONV     BIT(0)
->  #define AD7746_CONF_MODE_SINGLE_CONV   (2 << 0)
->  #define AD7746_CONF_MODE_PWRDN         (3 << 0)
->  #define AD7746_CONF_MODE_OFFS_CAL      (5 << 0)
-> --
-> 2.21.0
->
