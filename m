@@ -2,505 +2,108 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A140FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E54FC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DCD206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B627206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="GCHI+aRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbfDDQPM (ORCPT
+        id S1728824AbfDDQRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:15:12 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56320 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727152AbfDDQPL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:15:11 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34G6wDt008294;
-        Thu, 4 Apr 2019 18:14:54 +0200
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rmh5ykqw1-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 04 Apr 2019 18:14:54 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 77F4C31;
-        Thu,  4 Apr 2019 16:14:51 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 49F932D0B;
-        Thu,  4 Apr 2019 16:14:51 +0000 (GMT)
-Received: from [10.48.0.131] (10.75.127.46) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 4 Apr
- 2019 18:14:50 +0200
-Subject: Re: [PATCH 2/2] tty: add rpmsg driver
-To:     xiang xiao <xiaoxiang781216@gmail.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-References: <1553183239-13253-1-git-send-email-fabien.dessenne@st.com>
- <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
- <CAH2Cfb8K5hB=UeMOeTEXud1XZVp12Qbw9NYoxJ0XQK4FFuF3wQ@mail.gmail.com>
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=arnaud.pouliquen@st.com; prefer-encrypt=mutual; keydata=
- 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
- 8mOik8I/F6EW8XyQAA2P
-Message-ID: <4857555a-812d-0b96-9a70-2984ffb50ca9@st.com>
-Date:   Thu, 4 Apr 2019 18:14:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <CAH2Cfb8K5hB=UeMOeTEXud1XZVp12Qbw9NYoxJ0XQK4FFuF3wQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 4 Apr 2019 12:17:03 -0400
+Received: from mail-eopbgr770053.outbound.protection.outlook.com ([40.107.77.53]:51214
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726888AbfDDQRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:17:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EymxYHaPeDUTlBmeSEpaYNBSRYwM8425vz9VnIsMfuo=;
+ b=GCHI+aRl3Q4f+TM+3Np06qlfofZgFav7BOrCaP28zrsKeoZmJvmtfguNBGOim6ZVX6aaLJCkte/H//yYC9JvPY+4QpBRtppuRS4LDz8DEaiITAdPlvJgEmrep6fLVNkGS1oY+LWdN/nIMuC4RUtTIap4gXP31jvmhaU6quJJCTM=
+Received: from MWHPR0501MB3772.namprd05.prod.outlook.com (10.167.163.156) by
+ MWHPR0501MB3772.namprd05.prod.outlook.com (10.167.163.156) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.6; Thu, 4 Apr 2019 16:16:58 +0000
+Received: from MWHPR0501MB3772.namprd05.prod.outlook.com
+ ([fe80::b9a6:ba16:fc53:bb41]) by MWHPR0501MB3772.namprd05.prod.outlook.com
+ ([fe80::b9a6:ba16:fc53:bb41%5]) with mapi id 15.20.1771.007; Thu, 4 Apr 2019
+ 16:16:57 +0000
+From:   Slavomir Kaslev <kaslevs@vmware.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>
+Subject: Re: [PATCH 5.0 047/246] fs: Make splice() and tee() take into account
+ O_NONBLOCK flag on pipes
+Thread-Topic: [PATCH 5.0 047/246] fs: Make splice() and tee() take into
+ account O_NONBLOCK flag on pipes
+Thread-Index: AQHU6sY2Pn205P5KREilSENlZa0YQqYsLhWA
+Date:   Thu, 4 Apr 2019 16:16:57 +0000
+Message-ID: <3fa8b886ccb1ea2229344091be9ac769021f69a4.camel@vmware.com>
+References: <20190404084619.236418459@linuxfoundation.org>
+         <20190404084620.671108728@linuxfoundation.org>
+In-Reply-To: <20190404084620.671108728@linuxfoundation.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_08:,,
- signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kaslevs@vmware.com; 
+x-originating-ip: [213.145.108.55]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d79d41e1-fea3-4ac6-1f64-08d6b918f622
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0501MB3772;
+x-ms-traffictypediagnostic: MWHPR0501MB3772:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR0501MB37723E4E69E9D7952DC3FC4CDA500@MWHPR0501MB3772.namprd05.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(396003)(346002)(376002)(199004)(189003)(5660300002)(2906002)(86362001)(76176011)(14454004)(105586002)(106356001)(6512007)(36756003)(4326008)(6306002)(71190400001)(71200400001)(25786009)(6506007)(6246003)(99286004)(68736007)(102836004)(8936002)(66066001)(53936002)(7736002)(305945005)(486006)(478600001)(26005)(256004)(11346002)(476003)(2501003)(446003)(966005)(2616005)(8676002)(229853002)(110136005)(81166006)(54906003)(118296001)(81156014)(6436002)(6116002)(186003)(316002)(3846002)(6486002)(97736004);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR0501MB3772;H:MWHPR0501MB3772.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PlKbPsI1pnpav5Aprig+b7BNM7gbzGtB6FxyqrCO0q1wJA8FXy4avLM4jogEzuyqkaMzV/3Vl1VGRPY6NBj/LDQvYKz7E0bhVTYwh4L8uElH6Bc7zYBk3OF3hPJXpsvAdNbPEypUBarV5KOM+F7tOkSK49UpfDhh8i/H0rJFXG7PUMdItxXpMtP2w3w++BDeemK96XFQ08xehputQX9kUYiiyFQc2p81KvM5SiI668iVgWlilJLgXZw9dU4YTSC0nH930E59PfjXf40reJKUhXl27mTPu5Rs932ePrjvFBor2KyfpvtU46CM3zEgqCMWUnQPdJQxvhMna0IWmr1aHGWcmqRC+H1gRoHxxTb217VenZCRTKRmyJkTP7BIEFc6Hw9dU9VTDdPD3MOsjT12RTricfd7zbE/u0XSSx/Baw0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1F2D8C722AD3A5449E6415395A804657@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d79d41e1-fea3-4ac6-1f64-08d6b918f622
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 16:16:57.7467
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0501MB3772
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Xiang,
-
-
-On 4/3/19 2:47 PM, xiang xiao wrote:
-> On Thu, Mar 21, 2019 at 11:48 PM Fabien Dessenne <fabien.dessenne@st.com> wrote:
->>
->> This driver exposes a standard tty interface on top of the rpmsg
->> framework through the "rpmsg-tty-channel" rpmsg service.
->>
->> This driver supports multi-instances, offering a /dev/ttyRPMSGx entry
->> per rpmsg endpoint.
->>
-> 
-> How to support multi-instances from the same remoteproc instance? I
-> saw that the channel name is fixed to "rpmsg-tty-channel" which mean
-> only one channel can be created for each remote side.
-The driver is multi-instance based on muti-endpoints on top of the
-"rpmsg-tty-channel" service.
-On remote side you just have to call rpmsg_create_ept with destination
-address set to ANY. The result is a NS service announcement that trigs a
- probe with a new endpoint.
-You can find code example for the remote side here:
-https://github.com/STMicroelectronics/STM32CubeMP1/blob/master/Projects/STM32MP157C-DK2/Applications/OpenAMP/OpenAMP_TTY_echo/Src/main.c
-using some wrapper functions available here:
-https://github.com/STMicroelectronics/STM32CubeMP1/tree/master/Middlewares/Third_Party/OpenAMP
-
-
-Best Regards
-Arnaud
-
-> 
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
->> ---
->>  drivers/tty/Kconfig     |   9 ++
->>  drivers/tty/Makefile    |   1 +
->>  drivers/tty/rpmsg_tty.c | 309 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 319 insertions(+)
->>  create mode 100644 drivers/tty/rpmsg_tty.c
->>
->> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
->> index 0840d27..42696e6 100644
->> --- a/drivers/tty/Kconfig
->> +++ b/drivers/tty/Kconfig
->> @@ -441,4 +441,13 @@ config VCC
->>         depends on SUN_LDOMS
->>         help
->>           Support for Sun logical domain consoles.
->> +
->> +config RPMSG_TTY
->> +       tristate "RPMSG tty driver"
->> +       depends on RPMSG
->> +       help
->> +         Say y here to export rpmsg endpoints as tty devices, usually found
->> +         in /dev/ttyRPMSGx.
->> +         This makes it possible for user-space programs to send and receive
->> +         rpmsg messages as a standard tty protocol.
->>  endif # TTY
->> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
->> index c72cafd..90a98a2 100644
->> --- a/drivers/tty/Makefile
->> +++ b/drivers/tty/Makefile
->> @@ -33,5 +33,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
->>  obj-$(CONFIG_GOLDFISH_TTY)     += goldfish.o
->>  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
->>  obj-$(CONFIG_VCC)              += vcc.o
->> +obj-$(CONFIG_RPMSG_TTY)                += rpmsg_tty.o
->>
->>  obj-y += ipwireless/
->> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
->> new file mode 100644
->> index 0000000..9c2a629
->> --- /dev/null
->> +++ b/drivers/tty/rpmsg_tty.c
->> @@ -0,0 +1,309 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
->> + * Authors: Arnaud Pouliquen <arnaud.pouliquen@st.com> for STMicroelectronics.
->> + *          Fabien Dessenne <fabien.dessenne@st.com> for STMicroelectronics.
->> + * Derived from the imx-rpmsg and omap-rpmsg implementations.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/rpmsg.h>
->> +#include <linux/slab.h>
->> +#include <linux/tty.h>
->> +#include <linux/tty_flip.h>
->> +
->> +#define MAX_TTY_RPMSG          32
->> +
->> +static DEFINE_IDR(tty_idr);            /* tty instance id */
->> +static DEFINE_MUTEX(idr_lock);         /* protects tty_idr */
->> +
->> +static struct tty_driver *rpmsg_tty_driver;
->> +
->> +struct rpmsg_tty_port {
->> +       struct tty_port         port;   /* TTY port data */
->> +       unsigned int            id;     /* TTY rpmsg index */
->> +       spinlock_t              rx_lock; /* message reception lock */
->> +       struct rpmsg_device     *rpdev; /* rpmsg device */
->> +};
->> +
->> +static int rpmsg_tty_cb(struct rpmsg_device *rpdev, void *data, int len,
->> +                       void *priv, u32 src)
->> +{
->> +       int space;
->> +       unsigned char *cbuf;
->> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
->> +
->> +       dev_dbg(&rpdev->dev, "msg(<- src 0x%x) len %d\n", src, len);
->> +
->> +       print_hex_dump_debug(__func__, DUMP_PREFIX_NONE, 16, 1, data, len,
->> +                            true);
->> +
->> +       /* Flush the recv-ed none-zero data to tty node */
->> +       if (!len)
->> +               return -EINVAL;
->> +
->> +       spin_lock(&cport->rx_lock);
->> +       space = tty_prepare_flip_string(&cport->port, &cbuf, len);
->> +       if (space <= 0) {
->> +               dev_err(&rpdev->dev, "No memory for tty_prepare_flip_string\n");
->> +               spin_unlock(&cport->rx_lock);
->> +               return -ENOMEM;
->> +       }
->> +
->> +       if (space != len)
->> +               dev_warn(&rpdev->dev, "Trunc buffer from %d to %d\n",
->> +                        len, space);
->> +
->> +       memcpy(cbuf, data, space);
->> +       tty_flip_buffer_push(&cport->port);
->> +       spin_unlock(&cport->rx_lock);
->> +
->> +       return 0;
->> +}
->> +
->> +static int rpmsg_tty_install(struct tty_driver *driver, struct tty_struct *tty)
->> +{
->> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
->> +
->> +       if (!cport) {
->> +               dev_err(tty->dev, "cannot get cport\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       return tty_port_install(&cport->port, driver, tty);
->> +}
->> +
->> +static int rpmsg_tty_open(struct tty_struct *tty, struct file *filp)
->> +{
->> +       return tty_port_open(tty->port, tty, filp);
->> +}
->> +
->> +static void rpmsg_tty_close(struct tty_struct *tty, struct file *filp)
->> +{
->> +       return tty_port_close(tty->port, tty, filp);
->> +}
->> +
->> +static int rpmsg_tty_write(struct tty_struct *tty, const unsigned char *buf,
->> +                          int total)
->> +{
->> +       int count, ret = 0;
->> +       const unsigned char *tbuf;
->> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
->> +       struct rpmsg_device *rpdev;
->> +       int msg_size;
->> +
->> +       if (!cport) {
->> +               dev_err(tty->dev, "cannot get cport\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       rpdev = cport->rpdev;
->> +
->> +       dev_dbg(&rpdev->dev, "%s: send message from tty->index = %d\n",
->> +               __func__, tty->index);
->> +
->> +       if (!buf) {
->> +               dev_err(&rpdev->dev, "buf shouldn't be null.\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       msg_size = rpmsg_get_buf_payload_size(rpdev->ept);
->> +       if (msg_size < 0)
->> +               return msg_size;
->> +
->> +       count = total;
->> +       tbuf = buf;
->> +       do {
->> +               /* send a message to our remote processor */
->> +               ret = rpmsg_send(rpdev->ept, (void *)tbuf,
->> +                                min(count, msg_size));
->> +               if (ret) {
->> +                       dev_err(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
->> +                       return ret;
->> +               }
->> +
->> +               if (count > msg_size) {
->> +                       count -= msg_size;
->> +                       tbuf += msg_size;
->> +               } else {
->> +                       count = 0;
->> +               }
->> +       } while (count > 0);
->> +
-> 
-> We need the flow control(or handshake) here, otherwise it's very easy
-> to lose the data if kernel keep send the data as fast as possible.
-> 
->> +       return total;
->> +}
->> +
->> +static int rpmsg_tty_write_room(struct tty_struct *tty)
->> +{
->> +       struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
->> +
->> +       if (!cport) {
->> +               dev_err(tty->dev, "cannot get cport\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       /* report the space in the rpmsg buffer */
->> +       return rpmsg_get_buf_payload_size(cport->rpdev->ept);
->> +}
->> +
->> +static const struct tty_operations rpmsg_tty_ops = {
->> +       .install        = rpmsg_tty_install,
->> +       .open           = rpmsg_tty_open,
->> +       .close          = rpmsg_tty_close,
->> +       .write          = rpmsg_tty_write,
->> +       .write_room     = rpmsg_tty_write_room,
->> +};
->> +
->> +struct rpmsg_tty_port *rpmsg_tty_alloc_cport(void)
->> +{
->> +       struct rpmsg_tty_port *cport;
->> +
->> +       cport = kzalloc(sizeof(*cport), GFP_KERNEL);
->> +       if (!cport)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       mutex_lock(&idr_lock);
->> +       cport->id = idr_alloc(&tty_idr, cport, 0, MAX_TTY_RPMSG, GFP_KERNEL);
->> +       mutex_unlock(&idr_lock);
->> +
->> +       if (cport->id < 0) {
->> +               kfree(cport);
->> +               return ERR_PTR(-ENOSPC);
->> +       }
->> +
->> +       return cport;
->> +}
->> +
->> +static void rpmsg_tty_release_cport(struct rpmsg_tty_port *cport)
->> +{
->> +       mutex_lock(&idr_lock);
->> +       idr_remove(&tty_idr, cport->id);
->> +       mutex_unlock(&idr_lock);
->> +
->> +       kfree(cport);
->> +}
->> +
->> +static int rpmsg_tty_probe(struct rpmsg_device *rpdev)
->> +{
->> +       struct rpmsg_tty_port *cport;
->> +       struct device *tty_dev;
->> +       int ret;
->> +
->> +       cport = rpmsg_tty_alloc_cport();
->> +       if (IS_ERR(cport)) {
->> +               dev_err(&rpdev->dev, "failed to alloc tty port\n");
->> +               return PTR_ERR(cport);
->> +       }
->> +
->> +       tty_port_init(&cport->port);
->> +       cport->port.low_latency = cport->port.flags | ASYNC_LOW_LATENCY;
->> +
->> +       tty_dev = tty_port_register_device(&cport->port, rpmsg_tty_driver,
->> +                                          cport->id, &rpdev->dev);
->> +       if (IS_ERR(tty_dev)) {
->> +               dev_err(&rpdev->dev, "failed to register tty port\n");
->> +               ret = PTR_ERR(tty_dev);
->> +               goto err_destroy;
->> +       }
->> +
->> +       spin_lock_init(&cport->rx_lock);
->> +       cport->rpdev = rpdev;
->> +
->> +       dev_set_drvdata(&rpdev->dev, cport);
->> +
->> +       dev_info(&rpdev->dev, "new channel: 0x%x -> 0x%x : ttyRPMSG%d\n",
->> +                rpdev->src, rpdev->dst, cport->id);
->> +
->> +       return 0;
->> +
->> +err_destroy:
->> +       tty_port_destroy(&cport->port);
->> +       rpmsg_tty_release_cport(cport);
->> +       return ret;
->> +}
->> +
->> +static void rpmsg_tty_remove(struct rpmsg_device *rpdev)
->> +{
->> +       struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
->> +
->> +       dev_info(&rpdev->dev, "removing rpmsg tty device %d\n", cport->id);
->> +
->> +       /* User hang up to release the tty */
->> +       if (tty_port_initialized(&cport->port))
->> +               tty_port_tty_hangup(&cport->port, false);
->> +
->> +       tty_unregister_device(rpmsg_tty_driver, cport->id);
->> +       tty_port_destroy(&cport->port);
->> +
->> +       rpmsg_tty_release_cport(cport);
->> +}
->> +
->> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
->> +       { .name = "rpmsg-tty-channel" },
->> +       { },
->> +};
->> +MODULE_DEVICE_TABLE(rpmsg, rpmsg_driver_tty_id_table);
->> +
->> +static struct rpmsg_driver rpmsg_tty_rpmsg_drv = {
->> +       .drv.name       = KBUILD_MODNAME,
->> +       .id_table       = rpmsg_driver_tty_id_table,
->> +       .probe          = rpmsg_tty_probe,
->> +       .callback       = rpmsg_tty_cb,
->> +       .remove         = rpmsg_tty_remove,
->> +};
->> +
->> +static int __init rpmsg_tty_init(void)
->> +{
->> +       int err;
->> +
->> +       rpmsg_tty_driver = tty_alloc_driver(MAX_TTY_RPMSG, TTY_DRIVER_REAL_RAW |
->> +                                           TTY_DRIVER_DYNAMIC_DEV);
->> +       if (IS_ERR(rpmsg_tty_driver))
->> +               return PTR_ERR(rpmsg_tty_driver);
->> +
->> +       rpmsg_tty_driver->driver_name = "rpmsg_tty";
->> +       rpmsg_tty_driver->name = "ttyRPMSG";
->> +       rpmsg_tty_driver->major = 0;
->> +       rpmsg_tty_driver->type = TTY_DRIVER_TYPE_CONSOLE;
->> +       rpmsg_tty_driver->init_termios = tty_std_termios;
->> +
->> +       tty_set_operations(rpmsg_tty_driver, &rpmsg_tty_ops);
->> +
->> +       err = tty_register_driver(rpmsg_tty_driver);
->> +       if (err < 0) {
->> +               pr_err("Couldn't install rpmsg tty driver: err %d\n", err);
->> +               goto error_put;
->> +       }
->> +
->> +       err = register_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
->> +       if (err < 0) {
->> +               pr_err("Couldn't register rpmsg tty driver: err %d\n", err);
->> +               goto error_unregister;
->> +       }
->> +
->> +       return 0;
->> +
->> +error_unregister:
->> +       tty_unregister_driver(rpmsg_tty_driver);
->> +
->> +error_put:
->> +       put_tty_driver(rpmsg_tty_driver);
->> +
->> +       return err;
->> +}
->> +
->> +static void __exit rpmsg_tty_exit(void)
->> +{
->> +       unregister_rpmsg_driver(&rpmsg_tty_rpmsg_drv);
->> +       tty_unregister_driver(rpmsg_tty_driver);
->> +       put_tty_driver(rpmsg_tty_driver);
->> +       idr_destroy(&tty_idr);
->> +}
->> +
->> +module_init(rpmsg_tty_init);
->> +module_exit(rpmsg_tty_exit);
->> +
->> +MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen@st.com>");
->> +MODULE_AUTHOR("Fabien Dessenne <fabien.dessenne@st.com>");
->> +MODULE_DESCRIPTION("virtio remote processor messaging tty driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 2.7.4
->>
+T24gVGh1LCAyMDE5LTA0LTA0IGF0IDEwOjQ1ICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
+dGU6DQo+IDUuMC1zdGFibGUgcmV2aWV3IHBhdGNoLiAgSWYgYW55b25lIGhhcyBhbnkgb2JqZWN0
+aW9ucywgcGxlYXNlIGxldCBtZQ0KPiBrbm93Lg0KPiANCj4gLS0tLS0tLS0tLS0tLS0tLS0tDQo+
+IA0KPiBbIFVwc3RyZWFtIGNvbW1pdCBlZTVlMDAxMTk2ZDEzNDViOGZlZTI1OTI1ZmY1ZjFkNjc5
+MzYwODFlIF0NCj4gDQo+IFRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIG9mIHNwbGljZSgpIGFu
+ZCB0ZWUoKSBpZ25vcmVzIE9fTk9OQkxPQ0sNCj4gc2V0DQo+IG9uIHBpcGUgZmlsZSBkZXNjcmlw
+dG9ycyBhbmQgY2hlY2tzIG9ubHkgdGhlIFNQTElDRV9GX05PTkJMT0NLIGZsYWcNCj4gZm9yDQo+
+IGJsb2NraW5nIG9uIHBpcGUgYXJndW1lbnRzLiAgVGhpcyBpcyBpbmNvbnNpc3RlbnQgc2luY2Ug
+c3BsaWNlKCktaW5nDQo+IGZyb20vdG8gbm9uLXBpcGUgZmlsZSBkZXNjcmlwdG9ycyBkb2VzIHRh
+a2UgT19OT05CTE9DSyBpbnRvDQo+IGNvbnNpZGVyYXRpb24uDQo+IA0KPiBGaXggdGhpcyBieSBw
+cm9tb3RpbmcgT19OT05CTE9DSywgd2hlbiBzZXQgb24gYSBwaXBlLCB0bw0KPiBTUExJQ0VfRl9O
+T05CTE9DSy4NCg0KWy4uLl0NCg0KPiBUaGlzIGNoYW5nZSBkb2VzIGhhdmUgcG90ZW50aWFsIG9m
+IGJyZWFraW5nIHVzZXJzIHdobyBkb24ndCBleHBlY3QNCj4gRUFHQUlOIGZyb20gc3BsaWNlKCkg
+d2hlbiBTUExJQ0VfRl9OT05CTE9DSyBpcyBub3Qgc2V0LiAgT1RPSA0KPiBwcm9ncmFtcw0KPiB0
+aGF0IHNldCBPX05PTkJMT0NLIGFuZCBkb24ndCBhbnRpY2lwYXRlIEVBR0FJTiBhcmUgYXJndWFi
+bHkNCj4gYnVnZ3lbMl0uDQoNCkhpIEdyZWcsDQoNCkNhbiB5b3UgZHJvcCB0aGlzIG9uZSBmcm9t
+IHRoZSBzdGFibGUgcXVldWVzPyBXZSBkaXNjdXNzZWQgaXQgd2l0aA0KU2FzaGFbMV0gYWxyZWFk
+eSBpbiB0aGUgYXV0b3NlbCBwYXRjaGVzIHRocmVhZC4NCg0KWzFdIGh0dHBzOi8vbGttbC5vcmcv
+bGttbC8yMDE5LzQvMy84MTENCg0KLS0gU2xhdmkNCg==
