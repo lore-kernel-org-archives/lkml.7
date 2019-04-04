@@ -3,109 +3,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E73C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6E7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3A18204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CA7204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbfDDKwF (ORCPT
+        id S1729600AbfDDKwT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:52:05 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:52777 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDDKwF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:52:05 -0400
-Received: from [192.168.1.110] ([95.114.151.90]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MEV7U-1hALGF1NrG-00G3DV; Thu, 04 Apr 2019 12:51:37 +0200
-Subject: Re: [PATCH] pinctrl: intel: Implements gpio free function
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        zhuchangchun <zhuchangchun@cvte.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        hendychu@aliyun.com
-References: <1553135724-38331-1-git-send-email-zhuchangchun@cvte.com>
- <20190321084420.GG3622@lahna.fi.intel.com>
- <20190321092330.GK9224@smile.fi.intel.com>
- <140c6ec0-7c11-6aa9-8434-f14d77be9a8c@metux.net>
- <CACRpkdZ1xPJ=NS=o=-PYqCO4d-VVZM1=f=xBZa5Dwx78LFPYtA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <cb643914-2c3f-0c63-13e4-8171fa9a37e7@metux.net>
-Date:   Thu, 4 Apr 2019 12:51:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 4 Apr 2019 06:52:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51552 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfDDKwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:52:18 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 584D5C05D3F9;
+        Thu,  4 Apr 2019 10:52:17 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E052B9880;
+        Thu,  4 Apr 2019 10:52:16 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 72F813FB10;
+        Thu,  4 Apr 2019 10:52:16 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 06:52:16 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Adam Borowski <kilobyte@angband.pl>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        darrick wong <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        dan j williams <dan.j.williams@intel.com>,
+        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
+        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger kernel <adilger.kernel@dilger.ca>,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        cohuck@redhat.com,
+        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>
+Message-ID: <511760533.17430856.1554375136102.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190404095649.GB8738@angband.pl>
+References: <20190403104018.23947-1-pagupta@redhat.com> <20190403104018.23947-6-pagupta@redhat.com> <20190403220912.GB26298@dastard> <1518295599.17367903.1554358350929.JavaMail.zimbra@redhat.com> <20190404095649.GB8738@angband.pl>
+Subject: Re: [PATCH v4 5/5] xfs: disable map_sync for async flush
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZ1xPJ=NS=o=-PYqCO4d-VVZM1=f=xBZa5Dwx78LFPYtA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:9NyvXIJz5mvYfcj/sH8HQPWASMEHcXLJF8cEB+E+DyLBlkRyI7h
- RxnxYWqQCKM6aALgtBwM7FbnhBCRWsqPE9HjjokkOCf11dxqjB+QkXfP//ZbsZPPs3N4Cln
- KbwVlJtq3KWLQEiTSeO5snqw9lyI3gCT5bJfQXaqgNXuAQsDUA9Z2kJ0TFSIGqT1qXx7OOy
- oehbEMrWAQA1zd9QtxYIQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EsGcX/CTXgg=:MmuXYMcQlJw6/zjfbPNfiH
- R3OeIouR+sel6hRcA+7LPIwpmcdig+uPTDZvns4whi4FW6Aryx0q60zGXe+NUCSDeSBHc+E0X
- k+f/bNFIiPIPj90kAQbd0PpRDYKOGP6KJdNgT67TYuToj7twL1YBohzoKJrcpefSKRxQ7T50S
- 6PZJJ65uJ4Uj2OGUu0VxyE7zjWCHNPrOKkFmI2H/ZpjH4dYUV6NJ/+1RG2GHyBP3/cL6wFceg
- UCmHIj7Zjc0ExB1Hoh4Fb/z7kHnggHjXz2lV+Wif+Lx6RePbNM87/ZOR4VSc6LyhXp6bRVP93
- 9eA4BV8tc5TIEnaE/TcAfNdRiaaejxCj4WhnudO5B5QdzDcQ2v13w4O8XugQ1Q7YsDy/Rl7Zw
- 3h0hdHz+58pBIzWiR8mW4Qc88RhfD7UQ8wtEcYFoFKNe/Pfpl6IpSuHdVWc8TZrm5atmWRyzn
- iw098wrN7siQB7mDdMjm6h8d+2MFmskKGtXW2ieStlXKJpMVwObihdPOz464ON1f2RLs/xGjF
- YOzJY82WXbHRSHTNbd6tBVnIhzEGPalP839Eyn7xKOuqKv6zmCKY3nGflon63ZcD06LlptlZH
- kGJrPkJGSYYGiLgycObAtoX9lyedJRwqbuXZdOZF6AwzCgyIuf14KQE97JyXWkFkj/0VYetIC
- U2Z/ypuMV9aJ+cMD/O+Yw44WIIhewZp7wSihdh7l/BL1sY//dFRwyNfaaNR15lEBzYAWcFY5S
- 1hGXkRMomdZNZ7SjBAxNVnTcpeXwpX5eY3U/uHbPa6db9JDNM/P9LRPSuVY=
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.67.116.146, 10.4.195.15]
+Thread-Topic: disable map_sync for async flush
+Thread-Index: GSPGZe3LJnzVq67kTWZ5Pd+VWv3BqA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 04 Apr 2019 10:52:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.04.19 06:13, Linus Walleij wrote:
 
-> But the chardev on the other hand will protect you from all this.> > If the program crashes, the lines will be free:ed.> > If two scripts
-try to access the same GPIO, they will be denied.
-Right, when you want this concurrency protection and cleanup stiff
-the chardev is the better choice. But I've already had several cases
-where the simplicity of the sysfs interface is a big win - all you need
-few trivial fs operations.
+> 
+> On Thu, Apr 04, 2019 at 02:12:30AM -0400, Pankaj Gupta wrote:
+> > > All this ad hoc IS_DAX conditional logic is getting pretty nasty.
+> > > 
+> > > xfs_file_mmap(
+> > > ....
+> > > {
+> > > 	struct inode	*inode = file_inode(filp);
+> > > 
+> > > 	if (vma->vm_flags & VM_SYNC) {
+> > > 		if (!IS_DAX(inode))
+> > > 			return -EOPNOTSUPP;
+> > > 		if (!dax_synchronous(xfs_find_daxdev_for_inode(inode))
+> > > 			return -EOPNOTSUPP;
+> > > 	}
+> > > 
+> > > 	file_accessed(filp);
+> > > 	vma->vm_ops = &xfs_file_vm_ops;
+> > > 	if (IS_DAX(inode))
+> > > 		vma->vm_flags |= VM_HUGEPAGE;
+> > > 	return 0;
+> > > }
+> > 
+> > Sure, this is better.
+> 
+> > > Even better, factor out all the "MAP_SYNC supported" checks into a
+> > > helper so that the filesystem code just doesn't have to care about
+> > > the details of checking for DAX+MAP_SYNC support....
+> > 
+> > o.k. Will add one common helper function for both ext4 & xfs filesystems.
+> 
+> Note this pending patch for Goldwyn Rodrigues' patchset for btrfs:
+> 
+> https://lore.kernel.org/linux-btrfs/20190328102418.5466-1-kilobyte@angband.pl/
+> 
+> We might want to coordinate.
 
-That's also nice for exporting in a grid, eg. via 9P (eg. nice for
-quickly building up HIL environments)
+Sure. Good to know.
 
-ioctls have the bad side effect that they can't be exported via
-network in a generic way - your remote fs protocol must support all of
-them - even worse: it needs to cope with overlapping ioctl-nr's that
-can have entirely different data structures depending on the actual
-device. And now try to do that w/ reasonable effort and w/o creating
-a shared memory between server and client :p
+Thanks for the pointer. Will have a look.
 
-Another interesting usecase is permission handling:
+Best regards,
+Pankaj 
 
-a) some ioctls need special privileges (oh, how I hate all these "if
-   (!capable(CAP_SYS_ADMIN)) ..." lines in the drivers), but you wanna
-   give some unprivileged user access to them
-b) you wanna give an unprivileged user access to specific gpio's,
-   but not to all at once.
-
-With pure filesystem based approach, you can easly define permissions
-for each filesystem object.
-
-Yes, these usecases aren't so common for average Jon Doe, but the gpio
-subsystem is used that way, out there in the field, and it would be bad
-if that functionality would go away someday.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> 
+> 
+> Meow!
+> --
+> ⢀⣴⠾⠻⢶⣦⠀
+> ⣾⠁⢠⠒⠀⣿⡁ Did ya know that typing "test -j8" instead of "ctest -j8"
+> ⢿⡄⠘⠷⠚⠋⠀ will make your testsuite pass much faster, and fix bugs?
+> ⠈⠳⣄⠀⠀⠀⠀
+> 
