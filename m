@@ -2,119 +2,209 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF0EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43793C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B1F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lRihCIzm"
+	by mail.kernel.org (Postfix) with ESMTP id 0FA1A20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbfDDQAN (ORCPT
+        id S1728987AbfDDQA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:00:13 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37859 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbfDDQAN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:00:13 -0400
-Received: by mail-oi1-f193.google.com with SMTP id v84so2333700oif.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UKZUuNxE2XJZtIURFNQMaVLPXWArE1bGhRGvq9+Yjsk=;
-        b=lRihCIzmEYvDVh/7D3Secm48UdD4EZ2zyNzAEhZxgfwc/NLBuTNV9YVqgnWvgKG5DC
-         PGcESvwjTBLG1ECExKz1QcVkZ2o5UtDJZnpEkAKHkFAChUY9lTmT29K3w4ZgLddUvou7
-         6+ZUjp+159HWT82yq6/egeHOt6kITdDWJjBySs1axjrtW592jvezJX/I5rP/0w1ErOYY
-         /DGxhJ8d+sPNoXFZG3E5QCx7Zne5PkU7K4OrriYn8bKpOVKwuASgN/p73NBYKIsKfh40
-         6kGROwpKC/84WNb7LEEbMEViljgH5wDDLMn+P36MD9yABWuDkd/NHbPT/FDY9C3+gUHR
-         ykJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UKZUuNxE2XJZtIURFNQMaVLPXWArE1bGhRGvq9+Yjsk=;
-        b=NPfacrBXcGccY2Ggo/yMvH7z3opYPvEWNbfVPDaPTzVSUahk5sugTbTkAi1A3bDkQk
-         w0cMCiL0eoTVaQrgOuj3/Dcgn344ALyW1LjMS6LsyY8UEM5r6QOSK2aD7qoBaWHNaqbR
-         HZ7wV+oovn1nannOouiPKtuUO+I2s9RUgdyWey5sKgbJvqYP//m5Fk2doqJpHqGYnq2j
-         10iw+vWO9qk4UKc2RUDICN1bvFKyt3covoL/DKgSuM37rUXLsUr7LeVFjFCVCcD8OALz
-         UgUEeOukOJ6aUo+mjyVRwQkEKjhWFlSVX/X58i7/phtceJ4Fs3deWWnoG4CFrMT/Q2OE
-         RQ4Q==
-X-Gm-Message-State: APjAAAUu7Gn0wXxYQZJDtBhveaI95rPgdEHnHu4uuhXsDDfeGN9d/Bb5
-        jFfsuL7+cAr/2gwTsUWAEx+iRxwvyAepJ7fhKegIDA==
-X-Google-Smtp-Source: APXvYqz9h+vKCqyRQnYKcR3VxUHdHUvReWq1I4PJvPYiwelMLFx20qnH3g3V01Z4IbXoCvFw6o2ZTSrB5LoOttvmzyo=
-X-Received: by 2002:aca:3c8a:: with SMTP id j132mr3663926oia.38.1554393612328;
- Thu, 04 Apr 2019 09:00:12 -0700 (PDT)
+        Thu, 4 Apr 2019 12:00:28 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42708 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726888AbfDDQA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:00:27 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CB6438943CF24F2DBB85;
+        Fri,  5 Apr 2019 00:00:23 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 5 Apr 2019 00:00:17 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <bhelgaas@google.com>, <rafael@kernel.org>, <arnd@arndb.de>,
+        <lorenzo.pieralisi@arm.com>
+CC:     <linux@roeck-us.net>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <bp@suse.de>,
+        <wangkefeng.wang@huawei.com>, <linuxarm@huawei.com>,
+        <andy.shevchenko@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, John Garry <john.garry@huawei.com>
+Subject: [RFC PATCH v3 1/4] resource: Request IO port regions from children of ioport_resource
+Date:   Thu, 4 Apr 2019 23:59:59 +0800
+Message-ID: <1554393602-152448-2-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
+References: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-References: <CABXOdTeE5=iF24+2JxwjvGtVtFmneYJWC4yXgX1Ah4y+=+ecEg@mail.gmail.com>
- <20190403224036.203632-1-egranata@chromium.org>
-In-Reply-To: <20190403224036.203632-1-egranata@chromium.org>
-From:   =?UTF-8?Q?Jett_=E2=9C=88_Rink?= <jettrink@google.com>
-Date:   Thu, 4 Apr 2019 10:00:00 -0600
-Message-ID: <CAK+PMK7cGVy-o_GX_p4asEMSsB9KoNK+x5WdNo2b+pXUFzJZGw@mail.gmail.com>
-Subject: Re: [PATCH v2] mfd: cros_ec: check for NULL transfer function
-To:     egranata@chromium.org
-Cc:     Guenter Roeck <groeck@google.com>,
-        Benson Leung <bleung@chromium.org>, gwendal@chromium.org,
-        amstan@chromium.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Jett Rink <jettrink@chromium.org>
+Currently request_region() requests an IO port region directly from the
+top resource, ioport_resource.
 
-On Wed, Apr 3, 2019 at 4:40 PM <egranata@chromium.org> wrote:
->
-> From: Enrico Granata <egranata@chromium.org>
->
-> As new transfer mechanisms are added to the EC codebase, they may
-> not support v2 of the EC protocol.
->
-> If the v3 initial handshake transfer fails, the kernel will try
-> and call cmd_xfer as a fallback. If v2 is not supported, cmd_xfer
-> will be NULL, and the code will end up causing a kernel panic.
->
-> Add a check for NULL before calling the transfer function, along
-> with a helpful comment explaining how one might end up in this
-> situation.
->
-> Signed-off-by: Enrico Granata <egranata@chromium.org>
-> ---
->  drivers/platform/chrome/cros_ec_proto.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 97a068dff192d..55691656a3c27 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -56,6 +56,16 @@ static int send_command(struct cros_ec_device *ec_dev,
->         else
->                 xfer_fxn = ec_dev->cmd_xfer;
->
-> +       if (xfer_fxn == NULL) {
-> +               /* This error can happen if a communication error happened and
-> +                * the EC is trying to use protocol v2, on an underlying
-> +                * communication mechanism that does not support v2.
-> +                */
-> +               dev_err_once(ec_dev->dev,
-> +                       "missing EC transfer API, cannot send command\n");
-> +               return -EIO;
-> +       }
-> +
->         ret = (*xfer_fxn)(ec_dev, msg);
->         if (msg->result == EC_RES_IN_PROGRESS) {
->                 int i;
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
+There is an issue here, in that drivers may successfully request an IO
+port region even if the IO port region has not even been mapped in
+(in pci_remap_iospace()).
+
+This may lead to crashes when the system has no PCI host, or, has a host
+but it has failed enumeration, while drivers still attempt to access PCI
+IO ports, as below:
+
+root@(none)$root@(none)$ insmod f71882fg.ko
+ Unable to handle kernel paging request at virtual address ffff7dfffee0002e
+ Mem abort info:
+   ESR = 0x96000046
+   Exception class = DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+ Data abort info:
+   ISV = 0, ISS = 0x00000046
+   CM = 0, WnR = 1
+ swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+ [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
+ Internal error: Oops: 96000046 [#1] PREEMPT SMP
+ Modules linked in: f71882fg(+)
+ CPU: 8 PID: 2732 Comm: insmod Not tainted 5.1.0-rc1-00002-gab1a0e9200b8-dirty #102
+ Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
+ pstate: 80000005 (Nzcv daif -PAN -UAO)
+ pc : logic_outb+0x54/0xb8
+ lr : f71882fg_find+0x64/0x390 [f71882fg]
+ sp : ffff000013393aa0
+ x29: ffff000013393aa0 x28: ffff000008b98b10
+ x27: ffff000013393df0 x26: 0000000000000100
+ x25: ffff801f8c872d30 x24: ffff000011420000
+ x23: ffff801fb49d2940 x22: ffff000011291000
+ x21: 000000000000002e x20: 0000000000000087
+ x19: ffff000013393b44 x18: ffffffffffffffff
+ x17: 0000000000000000 x16: 0000000000000000
+ x15: ffff00001127d6c8 x14: ffff801f8cfd691c
+ x13: 0000000000000000 x12: 0000000000000000
+ x11: 0000000000000003 x10: 0000801feace2000
+ x9 : 0000000000000000 x8 : ffff841fa654f280
+ x7 : 0000000000000000 x6 : 0000000000ffc0e3
+ x5 : ffff000011291360 x4 : ffff801fb4949f00
+ x3 : 0000000000ffbffe x2 : 76e767a63713d500
+ x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
+ Process insmod (pid: 2732, stack limit = 0x(____ptrval____))
+ Call trace:
+  logic_outb+0x54/0xb8
+  f71882fg_find+0x64/0x390 [f71882fg]
+  f71882fg_init+0x38/0xc70 [f71882fg]
+  do_one_initcall+0x5c/0x198
+  do_init_module+0x54/0x1b0
+  load_module+0x1dc4/0x2158
+  __se_sys_init_module+0x14c/0x1e8
+  __arm64_sys_init_module+0x18/0x20
+  el0_svc_common+0x5c/0x100
+  el0_svc_handler+0x2c/0x80
+  el0_svc+0x8/0xc
+ Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
+ ---[ end trace fd4f35b610829a48 ]---
+Segmentation fault
+root@(none)$
+
+Note that the f71882fg driver correctly calls request_muxed_region().
+
+This issue was originally reported in [1].
+
+This patch changes the functionality of request{muxed_}_region() to
+request a region from a direct child descendent of the top
+ioport_resource.
+
+In this, if the IO port region has not been mapped for a particular IO
+region, the PCI IO resource would also not have been inserted, and so a
+suitable child region will not exist. As such,
+request_{muxed_}region() calls will fail.
+
+A side note: there are many drivers in the kernel which fail to even call
+request_{muxed_}region() prior to IO port accesses, and they also need to
+be fixed (to call request_{muxed_}region(), as appropriate) separately.
+
+[1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ include/linux/ioport.h | 11 ++++++++---
+ kernel/resource.c      | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index da0ebaec25f0..76288b8783ff 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -217,15 +217,20 @@ static inline bool resource_contains(struct resource *r1, struct resource *r2)
+ 
+ 
+ /* Convenience shorthand with allocation */
+-#define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
+-#define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
++#define request_region(start, n, name)		__request_region_from_children(&ioport_resource, (start), (n), (name), 0)
++#define request_muxed_region(start, n, name)	__request_region_from_children(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
+ #define __request_mem_region(start,n,name, excl) __request_region(&iomem_resource, (start), (n), (name), excl)
+ #define request_mem_region(start,n,name) __request_region(&iomem_resource, (start), (n), (name), 0)
+ #define request_mem_region_exclusive(start,n,name) \
+ 	__request_region(&iomem_resource, (start), (n), (name), IORESOURCE_EXCLUSIVE)
+ #define rename_region(region, newname) do { (region)->name = (newname); } while (0)
+ 
+-extern struct resource * __request_region(struct resource *,
++extern struct resource *__request_region(struct resource *,
++					resource_size_t start,
++					resource_size_t n,
++					const char *name, int flags);
++
++extern struct resource *__request_region_from_children(struct resource *,
+ 					resource_size_t start,
+ 					resource_size_t n,
+ 					const char *name, int flags);
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 92190f62ebc5..87ed200eda8b 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1097,6 +1097,34 @@ resource_size_t resource_alignment(struct resource *res)
+ 
+ static DECLARE_WAIT_QUEUE_HEAD(muxed_resource_wait);
+ 
++/**
++ * __request_region_from_children - create a new busy region from a child
++ * @parent: parent resource descriptor
++ * @start: resource start address
++ * @n: resource region size
++ * @name: reserving caller's ID string
++ * @flags: IO resource flags
++ */
++struct resource *__request_region_from_children(struct resource *parent,
++						resource_size_t start,
++						resource_size_t n,
++						const char *name, int flags)
++{
++	struct resource *res = __request_region(parent, start, n, name, flags);
++
++	if (res && res->parent == parent) {
++		/*
++		 * This is a direct descendent of the parent, which is
++		 * what we didn't want.
++		 */
++		__release_region(parent, start, n);
++		res = NULL;
++	}
++
++	return res;
++}
++EXPORT_SYMBOL(__request_region_from_children);
++
+ /**
+  * __request_region - create a new busy resource region
+  * @parent: parent resource descriptor
+-- 
+2.17.1
+
