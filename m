@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB6CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0574C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1051D2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14CF214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368783;
-	bh=IhGawaN2KfIJ9n+wtWT+LKOfr+xZ1cvA65WGRUNO7js=;
+	s=default; t=1554368786;
+	bh=32TWSW/ZvrlqYYaXjzABeW9LB7gb0nz4m9nGHeV+bJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vc5LN/XaKQQeJ2iopM/yYTbTAM0bLwEhEyQY6L5ygC2X8hxMICj9VlDvkIEhWJnnu
-	 Z+9wFXraK7r2yMQGGhec+Cer2PwsVacZKEKrxaYa7e4aglryVlIQWTQXOpe8g+W8zX
-	 br8NgbRsnE3xoRtK2sexRQf6YcMKaC9kyTQekSEE=
+	b=XEtQ8kooF3XjIyix6trvLDsTeXlABR7aVGslN/x0nH6MAt4QpusdmTjvsa/lncPgp
+	 RYbjy/tBSWrvACN3bXNMZJYOoaBm+PFfclmT9BNSi5PQeWqnUp4K/UiS0yJ+XMmIv1
+	 FKS9bKzGTBdco5mYhGEUMKdcyP0AryngrepAg7SI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732298AbfDDJGV (ORCPT
+        id S1731842AbfDDJGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44730 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732284AbfDDJGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:06:18 -0400
+        id S1732284AbfDDJGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:06:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A61021872;
-        Thu,  4 Apr 2019 09:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BEC214AF;
+        Thu,  4 Apr 2019 09:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368777;
-        bh=IhGawaN2KfIJ9n+wtWT+LKOfr+xZ1cvA65WGRUNO7js=;
+        s=default; t=1554368782;
+        bh=32TWSW/ZvrlqYYaXjzABeW9LB7gb0nz4m9nGHeV+bJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eg7K/UoH7lUz5s/s5Za9g+t2YRz6zUfHnWRKB1P7WquET7xKfcx4vMJ2G/Ft5W/N7
-         MKyZySaEiDRvG7NyE26oMrOq1qrGtJsvnGWVMYl9uqMfdrVcJvpDR0YkOZRmOoDu6P
-         wM/NGQ5vCexewvBapLNXZNlXjUOBGAeh/x0cS4wA=
+        b=HYeSQTuuD4kEto6PcHDc73tDc/tGsdqfuiHuVHlsVlqHLX3rkEbr+AW8mPG0cXnV6
+         NlPKzcs0ZcHnl6wOMTZE68yf1gYfX3CvR7k6grZLi+XGbgLApFHfueHUp0IimuSAlI
+         BQ6NT73avWDpCh9PPmGvZMSiOJgZgE3mZmCbjmM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Sun peng Li <Sunpeng.Li@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 150/187] drm/amd/display: Enable vblank interrupt during CRC capture
-Date:   Thu,  4 Apr 2019 10:48:07 +0200
-Message-Id: <20190404084610.200427582@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 142/187] block, bfq: fix in-service-queue check for queue merging
+Date:   Thu,  4 Apr 2019 10:47:59 +0200
+Message-Id: <20190404084609.861344715@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -70,131 +65,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 428da2bdb05d76c48d0bd8fbfa2e4c102685be08 ]
+[ Upstream commit 058fdecc6de7cdecbf4c59b851e80eb2d6c5295f ]
 
-[Why]
-In order to read CRC events when CRC capture is enabled the vblank
-interrput handler needs to be running for the CRTC. The handler is
-enabled while there is an active vblank reference.
+When a new I/O request arrives for a bfq_queue, say Q, bfq checks
+whether that request is close to
+(a) the head request of some other queue waiting to be served, or
+(b) the last request dispatched for the in-service queue (in case Q
+itself is not the in-service queue)
 
-When running IGT tests there will often be no active vblank reference
-but the test expects to read a CRC value. This is valid usage (and
-works on i915 since they have a CRC interrupt handler) so the reference
-to the vblank should be grabbed while capture is active.
+If a queue, say Q2, is found for which the above condition holds, then
+bfq merges Q and Q2, to hopefully get a more sequential I/O in the
+resulting merged queue, and thus a possibly higher throughput.
 
-This issue was found running:
+Case (b) is checked by comparing the new request for Q with the last
+request dispatched, assuming that the latter necessarily belonged to the
+in-service queue. Unfortunately, this assumption is no longer always
+correct, since commit d0edc2473be9 ("block, bfq: inject other-queue I/O
+into seeky idle queues on NCQ flash").
 
-igt@kms_plane_multiple@atomic-pipe-b-tiling-none
+When the assumption does not hold, queues that must not be merged may be
+merged, causing unexpected loss of control on per-queue service
+guarantees.
 
-The pipe-b is the only one in the initial commit and was not previously
-active so no vblank reference is grabbed. The vblank interrupt is
-not enabled and the test times out.
+This commit solves this problem by adding an extra field, which stores
+the actual last request dispatched for the in-service queue, and by
+using this new field to correctly check case (b).
 
-[How]
-Keep a reference to the vblank as long as CRC capture is enabled.
-If userspace never explicitly disables it then the reference is
-also dropped when removing the CRTC from the context (stream = NULL).
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Harry Wentland <Harry.Wentland@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
-Acked-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 14 ++++++-
- .../drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c | 42 +++++++++----------
- 2 files changed, 34 insertions(+), 22 deletions(-)
+ block/bfq-iosched.c | 5 ++++-
+ block/bfq-iosched.h | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index c57e85f08e23..2b8b892eb846 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4390,10 +4390,22 @@ static int amdgpu_dm_atomic_commit(struct drm_device *dev,
- 	 */
- 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
- 		struct dm_crtc_state *dm_old_crtc_state = to_dm_crtc_state(old_crtc_state);
-+		struct dm_crtc_state *dm_new_crtc_state = to_dm_crtc_state(new_crtc_state);
- 		struct amdgpu_crtc *acrtc = to_amdgpu_crtc(crtc);
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 653100fb719e..c5e2c5a01182 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2215,7 +2215,8 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
  
--		if (drm_atomic_crtc_needs_modeset(new_crtc_state) && dm_old_crtc_state->stream)
-+		if (drm_atomic_crtc_needs_modeset(new_crtc_state)
-+		    && dm_old_crtc_state->stream) {
-+			/*
-+			 * CRC capture was enabled but not disabled.
-+			 * Release the vblank reference.
-+			 */
-+			if (dm_new_crtc_state->crc_enabled) {
-+				drm_crtc_vblank_put(crtc);
-+				dm_new_crtc_state->crc_enabled = false;
-+			}
-+
- 			manage_dm_interrupts(adev, acrtc, false);
-+		}
- 	}
- 	/* Add check here for SoC's that support hardware cursor plane, to
- 	 * unset legacy_cursor_update */
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c
-index 6a6d977ddd7a..36a0bed9af07 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crc.c
-@@ -51,6 +51,7 @@ int amdgpu_dm_crtc_set_crc_source(struct drm_crtc *crtc, const char *src_name,
- {
- 	struct dm_crtc_state *crtc_state = to_dm_crtc_state(crtc->state);
- 	struct dc_stream_state *stream_state = crtc_state->stream;
-+	bool enable;
+ 	if (in_service_bfqq && in_service_bfqq != bfqq &&
+ 	    likely(in_service_bfqq != &bfqd->oom_bfqq) &&
+-	    bfq_rq_close_to_sector(io_struct, request, bfqd->last_position) &&
++	    bfq_rq_close_to_sector(io_struct, request,
++				   bfqd->in_serv_last_pos) &&
+ 	    bfqq->entity.parent == in_service_bfqq->entity.parent &&
+ 	    bfq_may_be_close_cooperator(bfqq, in_service_bfqq)) {
+ 		new_bfqq = bfq_setup_merge(bfqq, in_service_bfqq);
+@@ -2755,6 +2756,8 @@ update_rate_and_reset:
+ 	bfq_update_rate_reset(bfqd, rq);
+ update_last_values:
+ 	bfqd->last_position = blk_rq_pos(rq) + blk_rq_sectors(rq);
++	if (RQ_BFQQ(rq) == bfqd->in_service_queue)
++		bfqd->in_serv_last_pos = bfqd->last_position;
+ 	bfqd->last_dispatch = now_ns;
+ }
  
- 	enum amdgpu_dm_pipe_crc_source source = dm_parse_crc_source(src_name);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index a8a2e5aca4d4..d5e9e60cb1a5 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -469,6 +469,9 @@ struct bfq_data {
+ 	/* on-disk position of the last served request */
+ 	sector_t last_position;
  
-@@ -65,28 +66,27 @@ int amdgpu_dm_crtc_set_crc_source(struct drm_crtc *crtc, const char *src_name,
- 		return -EINVAL;
- 	}
++	/* position of the last served request for the in-service queue */
++	sector_t in_serv_last_pos;
++
+ 	/* time of last request completion (ns) */
+ 	u64 last_completion;
  
-+	enable = (source == AMDGPU_DM_PIPE_CRC_SOURCE_AUTO);
-+
-+	if (!dc_stream_configure_crc(stream_state->ctx->dc, stream_state,
-+				     enable, enable))
-+		return -EINVAL;
-+
- 	/* When enabling CRC, we should also disable dithering. */
--	if (source == AMDGPU_DM_PIPE_CRC_SOURCE_AUTO) {
--		if (dc_stream_configure_crc(stream_state->ctx->dc,
--					    stream_state,
--					    true, true)) {
--			crtc_state->crc_enabled = true;
--			dc_stream_set_dither_option(stream_state,
--						    DITHER_OPTION_TRUN8);
--		}
--		else
--			return -EINVAL;
--	} else {
--		if (dc_stream_configure_crc(stream_state->ctx->dc,
--					    stream_state,
--					    false, false)) {
--			crtc_state->crc_enabled = false;
--			dc_stream_set_dither_option(stream_state,
--						    DITHER_OPTION_DEFAULT);
--		}
--		else
--			return -EINVAL;
--	}
-+	dc_stream_set_dither_option(stream_state,
-+				    enable ? DITHER_OPTION_TRUN8
-+					   : DITHER_OPTION_DEFAULT);
-+
-+	/*
-+	 * Reading the CRC requires the vblank interrupt handler to be
-+	 * enabled. Keep a reference until CRC capture stops.
-+	 */
-+	if (!crtc_state->crc_enabled && enable)
-+		drm_crtc_vblank_get(crtc);
-+	else if (crtc_state->crc_enabled && !enable)
-+		drm_crtc_vblank_put(crtc);
-+
-+	crtc_state->crc_enabled = enable;
- 
- 	*values_cnt = 3;
- 	/* Reset crc_skipped on dm state */
 -- 
 2.19.1
 
