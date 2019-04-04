@@ -2,114 +2,113 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0660FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDE2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A47205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oXI61zRe"
+	by mail.kernel.org (Postfix) with ESMTP id 485D5205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554370637;
+	bh=fperMca8X9y+RuhVlWfPNVHQgXhrUvnYR+6dxBKry8s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D4h+LPGFflFdKLlXhECCdG024qfvTV9k845Bn9GdZnrBJlEbn4Pmt+0uM32efk4YQ
+	 BcG9yGUsGIMwZMAVxY0FNUYKiTHHTeInzlxL+LqFyZ+NQsPhK3l8Bg5K9rauTqXjKR
+	 LqpaLfphFhYF3hRiMH4a4f3w5yMD1rzaCo8IC1mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfDDJhE (ORCPT
+        id S1732086AbfDDJFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:37:04 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:52894 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730308AbfDDJhB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:37:01 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x349TI8W129850;
-        Thu, 4 Apr 2019 09:36:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=IXlz+Q3u/scfUGUwG3oVp51Em8wLiz4akJ/lg2lxtis=;
- b=oXI61zReLX4AmFB5nUW+MmsHw6NlmYdE/dRjv0vMNjyNOj9tk7HWtvKNkyyVG6wrFq/z
- rHnnq+uWiG4j13HO71aUZD/VCWUTNwVu2hGOxDx78Nxk/D6wbl1ceRExJlO92l6PmuGN
- EDG/X1twWyhfYEvI64761Zo3kaiistzP2mWxuT8BjoJtkqalq60U42Q/Z9F2cZFl1F5o
- YfSwX/PImYmpv6lEwmCecsoSlpugz7zweUU6JyyDG30bWOW+vp2Zl3uaNf37s00M3bph
- 1Zu8r+ny99xji8YdJytqcB9xLu0bTzhwTpTMvy8NVwUc6JkJYXdyQLN5IWsplEkGmJtD jQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2rhwyde60w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 09:36:56 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x349ZLEa012745;
-        Thu, 4 Apr 2019 09:36:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2rm8f5ta0k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 09:36:56 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x349atLS022772;
-        Thu, 4 Apr 2019 09:36:55 GMT
-Received: from kadam (/41.202.241.37)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Apr 2019 02:36:34 -0700
-Date:   Thu, 4 Apr 2019 12:36:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] remoteproc: silence an uninitialized variable warning
-Message-ID: <20190404093622.GM32613@kadam>
-References: <20190404084204.GA20193@kadam>
- <a08db945-44d3-ff99-7a89-75367f314855@codeaurora.org>
+        Thu, 4 Apr 2019 05:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727525AbfDDJFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8D32177E;
+        Thu,  4 Apr 2019 09:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554368703;
+        bh=fperMca8X9y+RuhVlWfPNVHQgXhrUvnYR+6dxBKry8s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y21JHzCvX+UmvT1vQprRbYXrx7ulj6l+YFa2s3hPNB/Sxp/iNs7kWZ6v3AQK2/w0w
+         aPfyJiZ9vUEHMw+A4G2aUmYhod0tHGVMylAEjTSS2Y70lLenqwGRY/XQt4MdiEPUXz
+         zvbTVBvj+KiE418pk1/rLiP7bysAzbNRhQs+5yrQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 138/187] soc: qcom: gsbi: Fix error handling in gsbi_probe()
+Date:   Thu,  4 Apr 2019 10:47:55 +0200
+Message-Id: <20190404084609.695941782@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
+References: <20190404084603.119654039@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a08db945-44d3-ff99-7a89-75367f314855@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040067
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904040067
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 02:47:39PM +0530, Mukesh Ojha wrote:
-> 
-> On 4/4/2019 2:12 PM, Dan Carpenter wrote:
-> > Smatch complains that "ret" might be uninitialized.  I can see why it
-> > generates the warning, but I don't know if it's actually possible.
-> > Anyway initializing "ret" here is harmless.
-> > 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> >   drivers/soc/qcom/mdt_loader.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
-> > index 1c488024c698..fc58d660692f 100644
-> > --- a/drivers/soc/qcom/mdt_loader.c
-> > +++ b/drivers/soc/qcom/mdt_loader.c
-> > @@ -188,7 +188,7 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
-> >   	if (reloc_base)
-> >   		*reloc_base = mem_reloc;
-> > -
-> > +	ret = 0;
-> 
-> 
-> You are overriding the value here, better keep it at the start.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-I like how I wrote it.  It makes it clear that this is the success path.
+------------------
 
-regards,
-dan carpenter
+[ Upstream commit 8cd09a3dd3e176c62da67efcd477a44a8d87185e ]
+
+If of_platform_populate() fails in gsbi_probe(),
+gsbi->hclk is left undisabled.
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/soc/qcom/qcom_gsbi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
+index 09c669e70d63..038abc377fdb 100644
+--- a/drivers/soc/qcom/qcom_gsbi.c
++++ b/drivers/soc/qcom/qcom_gsbi.c
+@@ -138,7 +138,7 @@ static int gsbi_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	struct gsbi_info *gsbi;
+-	int i;
++	int i, ret;
+ 	u32 mask, gsbi_num;
+ 	const struct crci_config *config = NULL;
+ 
+@@ -221,7 +221,10 @@ static int gsbi_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, gsbi);
+ 
+-	return of_platform_populate(node, NULL, NULL, &pdev->dev);
++	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
++	if (ret)
++		clk_disable_unprepare(gsbi->hclk);
++	return ret;
+ }
+ 
+ static int gsbi_remove(struct platform_device *pdev)
+-- 
+2.19.1
+
+
 
