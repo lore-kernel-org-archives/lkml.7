@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50713C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADB8C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174582177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6179F2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367794;
-	bh=LANuRkDV/JUWq5ISBpOXVKiO1WvAw/jhjkX2kHKe9rM=;
+	s=default; t=1554367798;
+	bh=jItkgQt/kKflLl0PAR5WinIoJot+r5yLBxoil5ETJbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C1Hc1eQHHJl2Vk9KuATNkU+fiGmDY1Va61V71dguygcxgjQziHJGeMkuBJx5FaPNN
-	 QD7wjRQhVxYieJcIRzrNDocrjlXSKQXkL/qKCnEDnF7W/lkaJrPYPWQGbJph223EEJ
-	 29UD9HyJw7Lg5jOg8hDRrrG/S76hexFPadMShruo=
+	b=mHrJNlaIBDWZSRsJCE4D1o8bmaYy7We+fGuq8PcdSw1REedomH5rhod7eXggWE9j0
+	 XbIxwmhJtXdKNxn5/v3C6ULSXXHpJ58sMm97f8QOuAG0HBkSEtn+a1uyIdGKHzP0Zl
+	 SGcgEanHg+S09TAoHU/+hhjEKqhtMt5KnvhueZII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfDDItx (ORCPT
+        id S1728876AbfDDIt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50620 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbfDDItu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:49:50 -0400
+        id S1728843AbfDDItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:49:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25F7C21738;
-        Thu,  4 Apr 2019 08:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC8722171F;
+        Thu,  4 Apr 2019 08:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367788;
-        bh=LANuRkDV/JUWq5ISBpOXVKiO1WvAw/jhjkX2kHKe9rM=;
+        s=default; t=1554367791;
+        bh=jItkgQt/kKflLl0PAR5WinIoJot+r5yLBxoil5ETJbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SyVz8u1Tq68dOFy6YBZI8wOo6aI9TR/xzIovv16bIWJv4OKl1NoNNAO/aeaNhxGva
-         EeGHi+WfsS+4T6tXtIXsOfP3Nq5bMm8+3HWjirag9St+i7pfsAgPlBHmzRN2Lra/uI
-         iVPhTeFL3PiE/6t02KXpapswha81S0bVylJix28c=
+        b=pgC4yC7Yxx27GdHbUcoabUaAsW/ITWGwAnKv2PO7QlYmiAanAPWApiPddgQaeQmFV
+         O86yRKoB18zBJgrqpO/I2VYFWQgivvCRHbMIV/691nUlKiGQzykI3l20CSb3rB9eYh
+         Gna2g8oa1lHOZFYhN/4GD9cUCNCCzYdoMr0YLaPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.9 02/91] arm64: debug: Ensure debug handlers check triggering exception level
-Date:   Thu,  4 Apr 2019 10:46:46 +0200
-Message-Id: <20190404084535.571049514@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jari Ruusu <jari.ruusu@gmail.com>
+Subject: [PATCH 4.9 03/91] ext4: cleanup bh release code in ext4_ind_remove_space()
+Date:   Thu,  4 Apr 2019 10:46:47 +0200
+Message-Id: <20190404084535.624035856@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,93 +66,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Will Deacon <will.deacon@arm.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit 6bd288569b50bc89fa5513031086746968f585cb upstream.
+commit 5e86bdda41534e17621d5a071b294943cae4376e upstream.
 
-Debug exception handlers may be called for exceptions generated both by
-user and kernel code. In many cases, this is checked explicitly, but
-in other cases things either happen to work by happy accident or they
-go slightly wrong. For example, executing 'brk #4' from userspace will
-enter the kprobes code and be ignored, but the instruction will be
-retried forever in userspace instead of delivering a SIGTRAP.
+Currently, we are releasing the indirect buffer where we are done with
+it in ext4_ind_remove_space(), so we can see the brelse() and
+BUFFER_TRACE() everywhere.  It seems fragile and hard to read, and we
+may probably forget to release the buffer some day.  This patch cleans
+up the code by putting of the code which releases the buffers to the
+end of the function.
 
-Fix this issue in the most stable-friendly fashion by simply adding
-explicit checks of the triggering exception level to all of our debug
-exception handlers.
-
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Jari Ruusu <jari.ruusu@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- arch/arm64/kernel/kgdb.c           |   15 ++++++++++++---
- arch/arm64/kernel/probes/kprobes.c |    6 ++++++
- 2 files changed, 18 insertions(+), 3 deletions(-)
+ fs/ext4/indirect.c |   47 ++++++++++++++++++++++-------------------------
+ 1 file changed, 22 insertions(+), 25 deletions(-)
 
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -231,24 +231,33 @@ int kgdb_arch_handle_exception(int excep
+--- a/fs/ext4/indirect.c
++++ b/fs/ext4/indirect.c
+@@ -1217,6 +1217,7 @@ int ext4_ind_remove_space(handle_t *hand
+ 	ext4_lblk_t offsets[4], offsets2[4];
+ 	Indirect chain[4], chain2[4];
+ 	Indirect *partial, *partial2;
++	Indirect *p = NULL, *p2 = NULL;
+ 	ext4_lblk_t max_block;
+ 	__le32 nr = 0, nr2 = 0;
+ 	int n = 0, n2 = 0;
+@@ -1258,7 +1259,7 @@ int ext4_ind_remove_space(handle_t *hand
+ 		}
  
- static int kgdb_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
+ 
+-		partial = ext4_find_shared(inode, n, offsets, chain, &nr);
++		partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
+ 		if (nr) {
+ 			if (partial == chain) {
+ 				/* Shared branch grows from the inode */
+@@ -1283,13 +1284,11 @@ int ext4_ind_remove_space(handle_t *hand
+ 				partial->p + 1,
+ 				(__le32 *)partial->bh->b_data+addr_per_block,
+ 				(chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+ 			partial--;
+ 		}
+ 
+ end_range:
+-		partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
++		partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+ 		if (nr2) {
+ 			if (partial2 == chain2) {
+ 				/*
+@@ -1319,16 +1318,14 @@ end_range:
+ 					   (__le32 *)partial2->bh->b_data,
+ 					   partial2->p,
+ 					   (chain2+n2-1) - partial2);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
+ 			partial2--;
+ 		}
+ 		goto do_indirects;
+ 	}
+ 
+ 	/* Punch happened within the same level (n == n2) */
+-	partial = ext4_find_shared(inode, n, offsets, chain, &nr);
+-	partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
++	partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
++	partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+ 
+ 	/* Free top, but only if partial2 isn't its subtree. */
+ 	if (nr) {
+@@ -1385,15 +1382,7 @@ end_range:
+ 					   partial->p + 1,
+ 					   partial2->p,
+ 					   (chain+n-1) - partial);
+-			while (partial > chain) {
+-				BUFFER_TRACE(partial->bh, "call brelse");
+-				brelse(partial->bh);
+-			}
+-			while (partial2 > chain2) {
+-				BUFFER_TRACE(partial2->bh, "call brelse");
+-				brelse(partial2->bh);
+-			}
+-			return 0;
++			goto cleanup;
+ 		}
+ 
+ 		/*
+@@ -1408,8 +1397,6 @@ end_range:
+ 					   partial->p + 1,
+ 					   (__le32 *)partial->bh->b_data+addr_per_block,
+ 					   (chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+ 			partial--;
+ 		}
+ 		if (partial2 > chain2 && depth2 <= depth) {
+@@ -1417,11 +1404,21 @@ end_range:
+ 					   (__le32 *)partial2->bh->b_data,
+ 					   partial2->p,
+ 					   (chain2+n2-1) - partial2);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
+ 			partial2--;
+ 		}
+ 	}
 +
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
++cleanup:
++	while (p && p > chain) {
++		BUFFER_TRACE(p->bh, "call brelse");
++		brelse(p->bh);
++		p--;
++	}
++	while (p2 && p2 > chain2) {
++		BUFFER_TRACE(p2->bh, "call brelse");
++		brelse(p2->bh);
++		p2--;
++	}
+ 	return 0;
+ 
+ do_indirects:
+@@ -1429,7 +1426,7 @@ do_indirects:
+ 	switch (offsets[0]) {
+ 	default:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_IND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
+@@ -1437,7 +1434,7 @@ do_indirects:
+ 		}
+ 	case EXT4_IND_BLOCK:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_DIND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
+@@ -1445,7 +1442,7 @@ do_indirects:
+ 		}
+ 	case EXT4_DIND_BLOCK:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_TIND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
+@@ -1454,5 +1451,5 @@ do_indirects:
+ 	case EXT4_TIND_BLOCK:
+ 		;
+ 	}
 -	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_brk_fn)
- 
- static int kgdb_compiled_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	compiled_break = 1;
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
- 
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_compiled_brk_fn);
- 
- static int kgdb_step_brk_fn(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kgdb_handle_exception(1, SIGTRAP, 0, regs);
--	return 0;
-+	return DBG_HOOK_HANDLED;
- }
- NOKPROBE_SYMBOL(kgdb_step_brk_fn);
- 
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -450,6 +450,9 @@ kprobe_single_step_handler(struct pt_reg
- 	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
- 	int retval;
- 
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	/* return error if this is not our step */
- 	retval = kprobe_ss_hit(kcb, instruction_pointer(regs));
- 
-@@ -466,6 +469,9 @@ kprobe_single_step_handler(struct pt_reg
- int __kprobes
- kprobe_breakpoint_handler(struct pt_regs *regs, unsigned int esr)
- {
-+	if (user_mode(regs))
-+		return DBG_HOOK_ERROR;
-+
- 	kprobe_handler(regs);
- 	return DBG_HOOK_HANDLED;
++	goto cleanup;
  }
 
 
