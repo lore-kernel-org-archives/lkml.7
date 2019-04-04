@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7079CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E389BC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF8B205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F332075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370871;
-	bh=Q6jLdWe/2krEEj43oJu1KsqtDVyyaet9NzI74Z2Nrr8=;
+	s=default; t=1554370882;
+	bh=pVsK13d6DUu3CFEPfeLsxY2F4XaZlJu9KpyzT9qOgmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XlzE9G+85F11XQznGeCbtzWSYSHe2R+lYVmxyJ3WhTs/7HAvDT1qM6OQ1JNb5inCb
-	 UtIsV6Q/0ZNj4XnbKFGyMT/MFqgj6sK1P6jDTE2tDWj8I56LfDF7CNc4tgqR96XuXl
-	 Ihu2gcFxUMjAjI+o1LusYVBN8GmX/oeRBAGiLcOk=
+	b=s57iSWfEJiBNsSYtA5A9AOHLlcDlxSXZVpeN1TyhyCwcQA+iMSejAEZOvDoPew3Nv
+	 VFAFwZx7OXHXhbCVEl6TlmCCs0y7FST3EUghl40fAq0L+GbRCVtrsjelC6o08kVMn/
+	 nC53sGnYMSBqy3mD09IXu6mBGtYW0C+uSG8nkehU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbfDDJlJ (ORCPT
+        id S1731148AbfDDJCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40000 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:02:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731200AbfDDJCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:02:36 -0400
+        id S1731581AbfDDJCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:02:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945F42183E;
-        Thu,  4 Apr 2019 09:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC9402183E;
+        Thu,  4 Apr 2019 09:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368555;
-        bh=Q6jLdWe/2krEEj43oJu1KsqtDVyyaet9NzI74Z2Nrr8=;
+        s=default; t=1554368535;
+        bh=pVsK13d6DUu3CFEPfeLsxY2F4XaZlJu9KpyzT9qOgmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qbyx+kMC+pm77z4ICArLg8Q4S7OwdJLcb4b4vjVv07LXy6mGSBvBZAOG382yoCsm7
-         zU59PxsOJfW/gqndJgi/SeXpUcr/pcVm0OifZU6XtIpE4llgnI/FBKtTcqUNsmZO7D
-         bBuiw0laXJ81y6/8s5TsB5LlrHhii38tkJp6u5Vc=
+        b=ncoDAYGboMIf0TalmYPOL+a1SlaHShxTRYLP+wHz96AUZDmVpti0A7LfYyl6eAGIO
+         KWZIrmi/drvxp5rnZTsE6abEN/a24NrQlVZR/ekhHfg9FIpE4FOcPXfniwXOQYIIIP
+         k0wlpTPTHsvjS+7Z5zwneOJ4dAYBMy7s/4iLBXlo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, He Kuang <hekuang@huawei.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/187] perf report: Dont shadow inlined symbol with different addr range
-Date:   Thu,  4 Apr 2019 10:46:59 +0200
-Message-Id: <20190404084606.904780668@linuxfoundation.org>
+Subject: [PATCH 4.19 059/187] ARM: 8840/1: use a raw_spinlock_t in unwind
+Date:   Thu,  4 Apr 2019 10:46:36 +0200
+Message-Id: <20190404084605.861934902@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -71,69 +67,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7346195e8643482968f547483e0d823ec1982fab ]
+[ Upstream commit 74ffe79ae538283bbf7c155e62339f1e5c87b55a ]
 
-We can't assume inlined symbols with the same name are equal, because
-their address range may be different. This will cause the symbols with
-different addresses be shadowed when adding to the hist entry, and lead
-to ERANGE error when checking the symbol address during sample parse,
-the addr should be within the range of [sym.start, sym.end].
+Mostly unwind is done with irqs enabled however SLUB may call it with
+irqs disabled while creating a new SLUB cache.
 
-The error message is like: "0x36aea60 [0x8]: failed to process type: 68".
+I had system freeze while loading a module which called
+kmem_cache_create() on init. That means SLUB's __slab_alloc() disabled
+interrupts and then
 
-The second parameter of symbol__new() is the length of the fake symbol
-for the inline frame, which is the subtraction of the end and start
-address of base_sym.
+->new_slab_objects()
+ ->new_slab()
+  ->setup_object()
+   ->setup_object_debug()
+    ->init_tracking()
+     ->set_track()
+      ->save_stack_trace()
+       ->save_stack_trace_tsk()
+        ->walk_stackframe()
+         ->unwind_frame()
+          ->unwind_find_idx()
+           =>spin_lock_irqsave(&unwind_lock);
 
-Signed-off-by: He Kuang <hekuang@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: aa441895f7b4 ("perf report: Compare symbol name for inlined frames when sorting")
-Link: http://lkml.kernel.org/r/20190219130531.15692-1-hekuang@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/sort.c    | 10 ++++++++--
- tools/perf/util/srcline.c |  2 +-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/kernel/unwind.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index b284276ec963..46daa22b86e3 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -229,8 +229,14 @@ static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
- 	if (sym_l == sym_r)
- 		return 0;
+diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+index 0bee233fef9a..314cfb232a63 100644
+--- a/arch/arm/kernel/unwind.c
++++ b/arch/arm/kernel/unwind.c
+@@ -93,7 +93,7 @@ extern const struct unwind_idx __start_unwind_idx[];
+ static const struct unwind_idx *__origin_unwind_idx;
+ extern const struct unwind_idx __stop_unwind_idx[];
  
--	if (sym_l->inlined || sym_r->inlined)
--		return strcmp(sym_l->name, sym_r->name);
-+	if (sym_l->inlined || sym_r->inlined) {
-+		int ret = strcmp(sym_l->name, sym_r->name);
-+
-+		if (ret)
-+			return ret;
-+		if ((sym_l->start <= sym_r->end) && (sym_l->end >= sym_r->start))
-+			return 0;
-+	}
+-static DEFINE_SPINLOCK(unwind_lock);
++static DEFINE_RAW_SPINLOCK(unwind_lock);
+ static LIST_HEAD(unwind_tables);
  
- 	if (sym_l->start != sym_r->start)
- 		return (int64_t)(sym_r->start - sym_l->start);
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index e767c4a9d4d2..af3f9b9f1e8b 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -104,7 +104,7 @@ static struct symbol *new_inline_sym(struct dso *dso,
- 	} else {
- 		/* create a fake symbol for the inline frame */
- 		inline_sym = symbol__new(base_sym ? base_sym->start : 0,
--					 base_sym ? base_sym->end : 0,
-+					 base_sym ? (base_sym->end - base_sym->start) : 0,
- 					 base_sym ? base_sym->binding : 0,
- 					 base_sym ? base_sym->type : 0,
- 					 funcname);
+ /* Convert a prel31 symbol to an absolute address */
+@@ -201,7 +201,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
+ 		/* module unwind tables */
+ 		struct unwind_table *table;
+ 
+-		spin_lock_irqsave(&unwind_lock, flags);
++		raw_spin_lock_irqsave(&unwind_lock, flags);
+ 		list_for_each_entry(table, &unwind_tables, list) {
+ 			if (addr >= table->begin_addr &&
+ 			    addr < table->end_addr) {
+@@ -213,7 +213,7 @@ static const struct unwind_idx *unwind_find_idx(unsigned long addr)
+ 				break;
+ 			}
+ 		}
+-		spin_unlock_irqrestore(&unwind_lock, flags);
++		raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 	}
+ 
+ 	pr_debug("%s: idx = %p\n", __func__, idx);
+@@ -529,9 +529,9 @@ struct unwind_table *unwind_table_add(unsigned long start, unsigned long size,
+ 	tab->begin_addr = text_addr;
+ 	tab->end_addr = text_addr + text_size;
+ 
+-	spin_lock_irqsave(&unwind_lock, flags);
++	raw_spin_lock_irqsave(&unwind_lock, flags);
+ 	list_add_tail(&tab->list, &unwind_tables);
+-	spin_unlock_irqrestore(&unwind_lock, flags);
++	raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 
+ 	return tab;
+ }
+@@ -543,9 +543,9 @@ void unwind_table_del(struct unwind_table *tab)
+ 	if (!tab)
+ 		return;
+ 
+-	spin_lock_irqsave(&unwind_lock, flags);
++	raw_spin_lock_irqsave(&unwind_lock, flags);
+ 	list_del(&tab->list);
+-	spin_unlock_irqrestore(&unwind_lock, flags);
++	raw_spin_unlock_irqrestore(&unwind_lock, flags);
+ 
+ 	kfree(tab);
+ }
 -- 
 2.19.1
 
