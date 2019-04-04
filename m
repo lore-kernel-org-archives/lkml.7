@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0C6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D20C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CF9205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0E6205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370590;
-	bh=Q2h3aC1LFV/OMNug+ftgeLvbBsBaCBSDPMKm3wseYm4=;
+	s=default; t=1554370602;
+	bh=m1chJ3oGxsatMQf5Zt1rKaUxtrZX/6F+yXkExyWmBTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYzNOc0bZ1VdudKMbfKvvAgKfHCVcRc5wX1W8ONPiXXUJm5zg7qTwidK+FG7doY53
-	 7LhP+QaEIJNXvGkBbhyR5Ih2nvboQ17ZDo3luu7IPt7hpb5iU91mMgom/80AuxX1d3
-	 xQa0yLuDhrlxnb9OtfcnlBeSB87e2zzKzPNi/4Xs=
+	b=pYkFcBFARLBqgBloMJGWfSJAlhxO1GgguUcoj7HGJbg9x6bxT4YWi1FdfgKQuhcf7
+	 I7696nttqSZCy7+BgLmDlWvbOFFiSQVUnP8Izwo4AFFCkjArwAQ7UCtcZ1Lh7hVqCX
+	 4arRmMaI70yacHPSFZc6WpFXUANcTfoj45oj4tq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732191AbfDDJFo (ORCPT
+        id S1732418AbfDDJgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:05:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43840 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731960AbfDDJFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:40 -0400
+        id S1729416AbfDDJFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEAA121855;
-        Thu,  4 Apr 2019 09:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3674A2186A;
+        Thu,  4 Apr 2019 09:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368739;
-        bh=Q2h3aC1LFV/OMNug+ftgeLvbBsBaCBSDPMKm3wseYm4=;
+        s=default; t=1554368736;
+        bh=m1chJ3oGxsatMQf5Zt1rKaUxtrZX/6F+yXkExyWmBTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LRehPuGmVntDiHHyJqyejcLLIPYX8jyhay/5YXTVNsXvXDQrf/2jrH+wrWGWpAzv5
-         /OqLzC8t7wxiwykJxuogFRZ19eNjCHa5GyaUDx1PM8QfUHtlVZsyFTm/fvRp8joj8u
-         Iyb31wJjnF4kS1tkO4tKW3DE9+Zh2vO01FejENjA=
+        b=Caqs9e3YOT1h7E2GDgRQG0BlkFrqE6pSS8cu+FMewupanoTzYEkDqCfJ6UnQupNkV
+         mlouFpciCgk5Boxi2mTeTQG78OyMnlgug9TAphcbhM78FfNE773q5qP2H9paMWXaUf
+         7evlja0UMLvy/1Azx5Ll4EwdX8qkC5NO2Oc47rek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 152/187] usb: dwc3: gadget: Fix OTG events when gadget driver isnt loaded
-Date:   Thu,  4 Apr 2019 10:48:09 +0200
-Message-Id: <20190404084610.283046710@linuxfoundation.org>
+Subject: [PATCH 4.19 143/187] bpf: fix missing prototype warnings
+Date:   Thu,  4 Apr 2019 10:48:00 +0200
+Message-Id: <20190404084609.903142625@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,44 +67,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 169e3b68cadb5775daca009ced4faf01ffd97dcf ]
+[ Upstream commit 116bfa96a255123ed209da6544f74a4f2eaca5da ]
 
-On v3.10a in dual-role mode, if port is in device mode
-and gadget driver isn't loaded, the OTG event interrupts don't
-come through.
+Compiling with W=1 generates warnings:
 
-It seems that if the core is configured to be OTG2.0 only,
-then we can't leave the DCFG.DEVSPD at Super-speed (default)
-if we expect OTG to work properly. It must be set to High-speed.
+  CC      kernel/bpf/core.o
+kernel/bpf/core.c:721:12: warning: no previous prototype for ?bpf_jit_alloc_exec_limit? [-Wmissing-prototypes]
+  721 | u64 __weak bpf_jit_alloc_exec_limit(void)
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~
+kernel/bpf/core.c:757:14: warning: no previous prototype for ?bpf_jit_alloc_exec? [-Wmissing-prototypes]
+  757 | void *__weak bpf_jit_alloc_exec(unsigned long size)
+      |              ^~~~~~~~~~~~~~~~~~
+kernel/bpf/core.c:762:13: warning: no previous prototype for ?bpf_jit_free_exec? [-Wmissing-prototypes]
+  762 | void __weak bpf_jit_free_exec(void *addr)
+      |             ^~~~~~~~~~~~~~~~~
 
-Fix this issue by configuring DCFG.DEVSPD to the supported
-maximum speed at gadget init. Device tree still needs to provide
-correct supported maximum speed for this to work.
+All three are weak functions that archs can override, provide
+proper prototypes for when a new arch provides their own.
 
-This issue wasn't present on v2.40a but is seen on v3.10a.
-It doesn't cause any side effects on v2.40a.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/filter.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 700fb626ad03..524104eed8a7 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -3233,6 +3233,8 @@ int dwc3_gadget_init(struct dwc3 *dwc)
- 		goto err4;
- 	}
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 1a39d57eb88f..037610845892 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -844,7 +844,9 @@ bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
+ 		     unsigned int alignment,
+ 		     bpf_jit_fill_hole_t bpf_fill_ill_insns);
+ void bpf_jit_binary_free(struct bpf_binary_header *hdr);
+-
++u64 bpf_jit_alloc_exec_limit(void);
++void *bpf_jit_alloc_exec(unsigned long size);
++void bpf_jit_free_exec(void *addr);
+ void bpf_jit_free(struct bpf_prog *fp);
  
-+	dwc3_gadget_set_speed(&dwc->gadget, dwc->maximum_speed);
-+
- 	return 0;
- 
- err4:
+ struct bpf_prog *bpf_jit_blind_constants(struct bpf_prog *fp);
 -- 
 2.19.1
 
