@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF682C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CBDC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A20218FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDC621855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368613;
-	bh=+rhhA4lt0OxCjBffbaVOtmMZTAebDZ1uTa9UCA8QEk0=;
+	s=default; t=1554368618;
+	bh=uHgB5ZdaTzcTqqBr9MCRuld4ivKjGfBCXHpLjGVF0MY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPR7FoETsWzcoqRYD2jbVmorFnHQgg9ZhZqVQxg2D2FZET8Jk+YZ2+Y0yHcNcHYM+
-	 p8GbyGoEGSSBSPQwEXGweUvgHKfF6N4NgNt03YT1eeHsnx+Tmq2Y2rgX/E4xgspr6n
-	 MH4LESWaBm9GT4ZtqWJi+EJaFUbyYd+/C1SlS96Q=
+	b=i1m2/SplPs0sTNzj/NgQXGd9dO3dnPyZZJtxqZY9TYvLsq2TLwGNf9Sf6h+Kz/cRV
+	 tAaM4JjZTeMR28gKZ67/3slghRlnqHlUfvkRCwjCUOA556hJS+SmqEnxYowxFHpKSo
+	 4airhWG1ck1PP8To5ywIJc861xcH/bwBZEV7/Jvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbfDDJDc (ORCPT
+        id S1731825AbfDDJDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:03:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41190 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730827AbfDDJDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:31 -0400
+        id S1730827AbfDDJDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C70CB21741;
-        Thu,  4 Apr 2019 09:03:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60E3A21850;
+        Thu,  4 Apr 2019 09:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368611;
-        bh=+rhhA4lt0OxCjBffbaVOtmMZTAebDZ1uTa9UCA8QEk0=;
+        s=default; t=1554368613;
+        bh=uHgB5ZdaTzcTqqBr9MCRuld4ivKjGfBCXHpLjGVF0MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBJoqax7myvY/T8NmjhLrDy8OFSJK+U72JUsCcReoxk/1oGeETll17ArnY4upFDJa
-         dbGC192s4cdGrKzkJIrKVqtQmXquyNCxC/RUISTim1605XG1+jVyY0k/383gtbAjiC
-         3dE80T7qiOB5QgqmrwD7GGjVyZlbxq1iLLA2bRKg=
+        b=LUVKtJLAupQhwxot/X6i/jx0c+VnqsdAedGcZgZMOmBJjjhbLcA9FhjbKSy7GwYck
+         WmoJ+2YewBtSbsOc8xhIk3ulnIw21EeTNq/nZHf44uABBjSn6hxlrxMw4mmznlPeya
+         hJxS8IxT/D5rfK2L8cX/JoT3G5fUZIycUlch7mao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/187] kprobes: Prohibit probing on RCU debug routine
-Date:   Thu,  4 Apr 2019 10:47:20 +0200
-Message-Id: <20190404084608.072585576@linuxfoundation.org>
+        stable@vger.kernel.org, Chieh-Min Wang <chiehminw@synology.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 104/187] netfilter: conntrack: fix cloned unconfirmed skb->_nfct race in __nf_conntrack_confirm
+Date:   Thu,  4 Apr 2019 10:47:21 +0200
+Message-Id: <20190404084608.139998174@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -74,56 +66,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a39f15b9644fac3f950f522c39e667c3af25c588 ]
+[ Upstream commit 13f5251fd17088170c18844534682d9cab5ff5aa ]
 
-Since kprobe itself depends on RCU, probing on RCU debug
-routine can cause recursive breakpoint bugs.
+For bridge(br_flood) or broadcast/multicast packets, they could clone
+skb with unconfirmed conntrack which break the rule that unconfirmed
+skb->_nfct is never shared.  With nfqueue running on my system, the race
+can be easily reproduced with following warning calltrace:
 
-Prohibit probing on RCU debug routines.
+[13257.707525] CPU: 0 PID: 12132 Comm: main Tainted: P        W       4.4.60 #7744
+[13257.707568] Hardware name: Qualcomm (Flattened Device Tree)
+[13257.714700] [<c021f6dc>] (unwind_backtrace) from [<c021bce8>] (show_stack+0x10/0x14)
+[13257.720253] [<c021bce8>] (show_stack) from [<c0449e10>] (dump_stack+0x94/0xa8)
+[13257.728240] [<c0449e10>] (dump_stack) from [<c022a7e0>] (warn_slowpath_common+0x94/0xb0)
+[13257.735268] [<c022a7e0>] (warn_slowpath_common) from [<c022a898>] (warn_slowpath_null+0x1c/0x24)
+[13257.743519] [<c022a898>] (warn_slowpath_null) from [<c06ee450>] (__nf_conntrack_confirm+0xa8/0x618)
+[13257.752284] [<c06ee450>] (__nf_conntrack_confirm) from [<c0772670>] (ipv4_confirm+0xb8/0xfc)
+[13257.761049] [<c0772670>] (ipv4_confirm) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
+[13257.769725] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
+[13257.777108] [<c06e7af0>] (nf_hook_slow) from [<c07f20b4>] (br_nf_post_routing+0x274/0x31c)
+[13257.784486] [<c07f20b4>] (br_nf_post_routing) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
+[13257.792556] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
+[13257.800458] [<c06e7af0>] (nf_hook_slow) from [<c07e5580>] (br_forward_finish+0x94/0xa4)
+[13257.808010] [<c07e5580>] (br_forward_finish) from [<c07f22ac>] (br_nf_forward_finish+0x150/0x1ac)
+[13257.815736] [<c07f22ac>] (br_nf_forward_finish) from [<c06e8df0>] (nf_reinject+0x108/0x170)
+[13257.824762] [<c06e8df0>] (nf_reinject) from [<c06ea854>] (nfqnl_recv_verdict+0x3d8/0x420)
+[13257.832924] [<c06ea854>] (nfqnl_recv_verdict) from [<c06e940c>] (nfnetlink_rcv_msg+0x158/0x248)
+[13257.841256] [<c06e940c>] (nfnetlink_rcv_msg) from [<c06e5564>] (netlink_rcv_skb+0x54/0xb0)
+[13257.849762] [<c06e5564>] (netlink_rcv_skb) from [<c06e4ec8>] (netlink_unicast+0x148/0x23c)
+[13257.858093] [<c06e4ec8>] (netlink_unicast) from [<c06e5364>] (netlink_sendmsg+0x2ec/0x368)
+[13257.866348] [<c06e5364>] (netlink_sendmsg) from [<c069fb8c>] (sock_sendmsg+0x34/0x44)
+[13257.874590] [<c069fb8c>] (sock_sendmsg) from [<c06a03dc>] (___sys_sendmsg+0x1ec/0x200)
+[13257.882489] [<c06a03dc>] (___sys_sendmsg) from [<c06a11c8>] (__sys_sendmsg+0x3c/0x64)
+[13257.890300] [<c06a11c8>] (__sys_sendmsg) from [<c0209b40>] (ret_fast_syscall+0x0/0x34)
 
-int3
- ->do_int3()
-   ->ist_enter()
-     ->RCU_LOCKDEP_WARN()
-       ->debug_lockdep_rcu_enabled() -> int3
+The original code just triggered the warning but do nothing. It will
+caused the shared conntrack moves to the dying list and the packet be
+droppped (nf_ct_resolve_clash returns NF_DROP for dying conntrack).
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrea Righi <righi.andrea@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/154998807741.31052.11229157537816341591.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+- Reproduce steps:
+
++----------------------------+
+|          br0(bridge)       |
+|                            |
++-+---------+---------+------+
+  | eth0|   | eth1|   | eth2|
+  |     |   |     |   |     |
+  +--+--+   +--+--+   +---+-+
+     |         |          |
+     |         |          |
+  +--+-+     +-+--+    +--+-+
+  | PC1|     | PC2|    | PC3|
+  +----+     +----+    +----+
+
+iptables -A FORWARD -m mark --mark 0x1000000/0x1000000 -j NFQUEUE --queue-num 100 --queue-bypass
+
+ps: Our nfq userspace program will set mark on packets whose connection
+has already been processed.
+
+PC1 sends broadcast packets simulated by hping3:
+
+hping3 --rand-source --udp 192.168.1.255 -i u100
+
+- Broadcast racing flow chart is as follow:
+
+br_handle_frame
+  BR_HOOK(NFPROTO_BRIDGE, NF_BR_PRE_ROUTING, br_handle_frame_finish)
+  // skb->_nfct (unconfirmed conntrack) is constructed at PRE_ROUTING stage
+  br_handle_frame_finish
+    // check if this packet is broadcast
+    br_flood_forward
+      br_flood
+        list_for_each_entry_rcu(p, &br->port_list, list) // iterate through each port
+          maybe_deliver
+            deliver_clone
+              skb = skb_clone(skb)
+              __br_forward
+                BR_HOOK(NFPROTO_BRIDGE, NF_BR_FORWARD,...)
+                // queue in our nfq and received by our userspace program
+                // goto __nf_conntrack_confirm with process context on CPU 1
+    br_pass_frame_up
+      BR_HOOK(NFPROTO_BRIDGE, NF_BR_LOCAL_IN,...)
+      // goto __nf_conntrack_confirm with softirq context on CPU 0
+
+Because conntrack confirm can happen at both INPUT and POSTROUTING
+stage.  So with NFQUEUE running, skb->_nfct with the same unconfirmed
+conntrack could race on different core.
+
+This patch fixes a repeating kernel splat, now it is only displayed
+once.
+
+Signed-off-by: Chieh-Min Wang <chiehminw@synology.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/update.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/netfilter/nf_conntrack_core.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 39cb23d22109..81688a133552 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -52,6 +52,7 @@
- #include <linux/tick.h>
- #include <linux/rcupdate_wait.h>
- #include <linux/sched/isolation.h>
-+#include <linux/kprobes.h>
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 895171a2e1f1..9a249478abf2 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -901,10 +901,18 @@ __nf_conntrack_confirm(struct sk_buff *skb)
+ 	 * REJECT will give spurious warnings here.
+ 	 */
  
- #define CREATE_TRACE_POINTS
- 
-@@ -253,6 +254,7 @@ int notrace debug_lockdep_rcu_enabled(void)
- 	       current->lockdep_recursion == 0;
- }
- EXPORT_SYMBOL_GPL(debug_lockdep_rcu_enabled);
-+NOKPROBE_SYMBOL(debug_lockdep_rcu_enabled);
- 
- /**
-  * rcu_read_lock_held() - might we be in RCU read-side critical section?
+-	/* No external references means no one else could have
+-	 * confirmed us.
++	/* Another skb with the same unconfirmed conntrack may
++	 * win the race. This may happen for bridge(br_flood)
++	 * or broadcast/multicast packets do skb_clone with
++	 * unconfirmed conntrack.
+ 	 */
+-	WARN_ON(nf_ct_is_confirmed(ct));
++	if (unlikely(nf_ct_is_confirmed(ct))) {
++		WARN_ON_ONCE(1);
++		nf_conntrack_double_unlock(hash, reply_hash);
++		local_bh_enable();
++		return NF_DROP;
++	}
++
+ 	pr_debug("Confirming conntrack %p\n", ct);
+ 	/* We have to check the DYING flag after unlink to prevent
+ 	 * a race against nf_ct_get_next_corpse() possibly called from
 -- 
 2.19.1
 
