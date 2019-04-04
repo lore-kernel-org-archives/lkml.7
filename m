@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627A6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088B2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C675206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF68206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371787;
-	bh=mC3D5EJmCA9gP2f9vmsUU+baiHoRPZqUWok9g5Z5kz8=;
+	s=default; t=1554371797;
+	bh=APbG2CdKbMIYUXfO5GSX3xBF6ZDHMVRO2mii7RHk5DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqAEKw2mHzc+IC/8nvpsGP7K6Ze0ICNqwrDjH/rN2XYqINh34zi7dLshmK4zp7prH
-	 Yh42B5U5YMN7ggsgLeDYrW2zrAJtN08vfIHUq8pS8qX6QuoqZq3P7QgG1mhN4Us+SB
-	 mp07os0aHquU1NvScmlD4uLHOLRXOpQx5RbB3AZI=
+	b=IC9PTl0nnpyvZDe+nox+TYGfg67K31Opo+26+Za+KTQisGwvj+1j/xZsthutg8D5Y
+	 OLaGH1FQ0jxSg4rXdm5LHQiELWa+s2kL2gGGQBjUyGGfTp8LFQrrkpbVHHM20BXO5u
+	 4v4OR4D80IhsUhiIlheWkAeJLv+HTwRTdSyc1zwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfDDJ40 (ORCPT
+        id S1729513AbfDDJ4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52308 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:56:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfDDIuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:50:54 -0400
+        id S1728589AbfDDIuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:50:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B615E21734;
-        Thu,  4 Apr 2019 08:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 236312147C;
+        Thu,  4 Apr 2019 08:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367853;
-        bh=mC3D5EJmCA9gP2f9vmsUU+baiHoRPZqUWok9g5Z5kz8=;
+        s=default; t=1554367845;
+        bh=APbG2CdKbMIYUXfO5GSX3xBF6ZDHMVRO2mii7RHk5DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yFKkfiXH5RBUuumF3GLGGBUi8fHUCaZ/Tg26RX/l6L2qqW68slh11/xsL4rPxSkh/
-         odXEVqofd9KMSjAyGOW1O7tpc63SvGIuW6+xFBRHni9EHfs3FoE9aC2WMDenWdFSEA
-         bBvSfHlr63tuGvEp4H2Qo7+6p/L/MYec+iNDST0o=
+        b=deu3mB+G7aB+8mSSappRF6uf+Povk/pbnx27uia0w4O1B5n0Hnw1fAvf2UkK9GbM3
+         7E+RhC1ZWqWvFKckGqg9hnuz2pNIhzcoxYQVrjB13dIo38HqZqPeZNbnI/PBnSe+HX
+         c7FG0bjAOtfKyjMT1eNTNVVJh/TsnwEt/tJ2THWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia Guo <guojia12@huawei.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 21/91] ocfs2: fix a panic problem caused by o2cb_ctl
-Date:   Thu,  4 Apr 2019 10:47:05 +0200
-Message-Id: <20190404084536.645991493@linuxfoundation.org>
+Subject: [PATCH 4.9 18/91] mm/page_ext.c: fix an imbalance with kmemleak
+Date:   Thu,  4 Apr 2019 10:47:02 +0200
+Message-Id: <20190404084536.485835761@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -72,68 +68,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
+[ Upstream commit 0c81585499601acd1d0e1cbf424cabfaee60628c ]
 
-In the process of creating a node, it will cause NULL pointer
-dereference in kernel if o2cb_ctl failed in the interval (mkdir,
-o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
+After offlining a memory block, kmemleak scan will trigger a crash, as
+it encounters a page ext address that has already been freed during
+memory offlining.  At the beginning in alloc_page_ext(), it calls
+kmemleak_alloc(), but it does not call kmemleak_free() in
+free_page_ext().
 
-The node num is initialized to 0 in function o2nm_node_group_make_item,
-o2nm_node_group_drop_item will mistake the node number 0 for a valid
-node number when we delete the node before the node number is set
-correctly.  If the local node number of the current host happens to be
-0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
-o2hb_thread still running.  The panic stack is generated as follows:
+    BUG: unable to handle kernel paging request at ffff888453d00000
+    PGD 128a01067 P4D 128a01067 PUD 128a04067 PMD 47e09e067 PTE 800ffffbac2ff060
+    Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+    CPU: 1 PID: 1594 Comm: bash Not tainted 5.0.0-rc8+ #15
+    Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20 10/25/2017
+    RIP: 0010:scan_block+0xb5/0x290
+    Code: 85 6e 01 00 00 48 b8 00 00 30 f5 81 88 ff ff 48 39 c3 0f 84 5b 01 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 0f 85 87 01 00 00 <4c> 8b 3b e8 f3 0c fa ff 4c 39 3d 0c 6b 4c 01 0f 87 08 01 00 00 4c
+    RSP: 0018:ffff8881ec57f8e0 EFLAGS: 00010082
+    RAX: 0000000000000000 RBX: ffff888453d00000 RCX: ffffffffa61e5a54
+    RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888453d00000
+    RBP: ffff8881ec57f920 R08: fffffbfff4ed588d R09: fffffbfff4ed588c
+    R10: fffffbfff4ed588c R11: ffffffffa76ac463 R12: dffffc0000000000
+    R13: ffff888453d00ff9 R14: ffff8881f80cef48 R15: ffff8881f80cef48
+    FS:  00007f6c0e3f8740(0000) GS:ffff8881f7680000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: ffff888453d00000 CR3: 00000001c4244003 CR4: 00000000001606a0
+    Call Trace:
+     scan_gray_list+0x269/0x430
+     kmemleak_scan+0x5a8/0x10f0
+     kmemleak_write+0x541/0x6ca
+     full_proxy_write+0xf8/0x190
+     __vfs_write+0xeb/0x980
+     vfs_write+0x15a/0x4f0
+     ksys_write+0xd2/0x1b0
+     __x64_sys_write+0x73/0xb0
+     do_syscall_64+0xeb/0xaaa
+     entry_SYSCALL_64_after_hwframe+0x44/0xa9
+    RIP: 0033:0x7f6c0dad73b8
+    Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 8d 05 65 63 2d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49 89 d4 55
+    RSP: 002b:00007ffd5b863cb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+    RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007f6c0dad73b8
+    RDX: 0000000000000005 RSI: 000055a9216e1710 RDI: 0000000000000001
+    RBP: 000055a9216e1710 R08: 000000000000000a R09: 00007ffd5b863840
+    R10: 000000000000000a R11: 0000000000000246 R12: 00007f6c0dda9780
+    R13: 0000000000000005 R14: 00007f6c0dda4740 R15: 0000000000000005
+    Modules linked in: nls_iso8859_1 nls_cp437 vfat fat kvm_intel kvm irqbypass efivars ip_tables x_tables xfs sd_mod ahci libahci igb i2c_algo_bit libata i2c_core dm_mirror dm_region_hash dm_log dm_mod efivarfs
+    CR2: ffff888453d00000
+    ---[ end trace ccf646c7456717c5 ]---
+    Kernel panic - not syncing: Fatal exception
+    Shutting down cpus with NMI
+    Kernel Offset: 0x24c00000 from 0xffffffff81000000 (relocation range:
+    0xffffffff80000000-0xffffffffbfffffff)
+    ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-  o2hb_thread
-      \-o2hb_do_disk_heartbeat
-          \-o2hb_check_own_slot
-              |-slot = &reg->hr_slots[o2nm_this_node()];
-              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
-
-We need to check whether the node number is set when we delete the node.
-
-Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
-Signed-off-by: Jia Guo <guojia12@huawei.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Acked-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
+Link: http://lkml.kernel.org/r/20190227173147.75650-1-cai@lca.pw
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ mm/page_ext.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
-index c204ac9b49e5..81a0d5d82757 100644
---- a/fs/ocfs2/cluster/nodemanager.c
-+++ b/fs/ocfs2/cluster/nodemanager.c
-@@ -621,13 +621,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
- 	struct o2nm_node *node = to_o2nm_node(item);
- 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
+diff --git a/mm/page_ext.c b/mm/page_ext.c
+index 121dcffc4ec1..a7be1c7a79f6 100644
+--- a/mm/page_ext.c
++++ b/mm/page_ext.c
+@@ -286,6 +286,7 @@ static void free_page_ext(void *addr)
+ 		table_size = get_entry_size() * PAGES_PER_SECTION;
  
--	o2net_disconnect_node(node);
-+	if (cluster->cl_nodes[node->nd_num] == node) {
-+		o2net_disconnect_node(node);
- 
--	if (cluster->cl_has_local &&
--	    (cluster->cl_local_node == node->nd_num)) {
--		cluster->cl_has_local = 0;
--		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
--		o2net_stop_listening(node);
-+		if (cluster->cl_has_local &&
-+		    (cluster->cl_local_node == node->nd_num)) {
-+			cluster->cl_has_local = 0;
-+			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
-+			o2net_stop_listening(node);
-+		}
+ 		BUG_ON(PageReserved(page));
++		kmemleak_free(addr);
+ 		free_pages_exact(addr, table_size);
  	}
- 
- 	/* XXX call into net to stop this node from trading messages */
+ }
 -- 
 2.19.1
 
