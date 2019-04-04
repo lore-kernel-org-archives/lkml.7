@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD92FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41955C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8622054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131C020820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369302;
-	bh=dzFEw8RibLK6I7O5VaLffKsuRIfzw+3nMAgw1SvXEi0=;
+	s=default; t=1554369307;
+	bh=07OUOamTalkmWoYkRL9TEN6G0bf+k2gjAZYa0H/MvRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u4dUdK8U7ALUYrSeH09wifq2BnPlDlFrWWXa2+NNUmDWqPHstnQP55MpKSQgbxzGD
-	 cRLn3l9oqq+P3uTHnvDQT+tzPYinp2z4gqyDg/kEiMLxIl36FX7hPqNdg7JtiEazjQ
-	 nmItXd4Iqvo+TvNr2fT4vzkqkfRratcFejsuYiiU=
+	b=oGyX/LtNRmThsqvTWIp6hcnNqrgFWKqLG8RoQmREbNMrwgiWRjRbEsEJgoFpczKY9
+	 vXw9a/wrS8NYjwAEgPuA1eCzuLJitqf2yJExxcWnh/8BeecTbCDuHC2N4AdhOuvnYi
+	 xTjwrpH+RxK5eXT1XOwdbXlOTs5HK2Wjh92Z/1Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387812AbfDDJPB (ORCPT
+        id S2387818AbfDDJPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55840 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387798AbfDDJO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:59 -0400
+        id S2387403AbfDDJPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0F562054F;
-        Thu,  4 Apr 2019 09:14:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845AF2075E;
+        Thu,  4 Apr 2019 09:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369298;
-        bh=dzFEw8RibLK6I7O5VaLffKsuRIfzw+3nMAgw1SvXEi0=;
+        s=default; t=1554369301;
+        bh=07OUOamTalkmWoYkRL9TEN6G0bf+k2gjAZYa0H/MvRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WcbVEJsKhXFVJ6OY2yIZXaIhhjwIslv1HO0lwfgfsT6bXRFMVNV03V/DvzOwV25Lp
-         8IdPudTuWEhP1xWI/1L62zK1fPLI5vDiKimvFk5tVxndpoCgm5yrls5q1FCenme//a
-         xCyA/hojzjr0zPq4h/27p5vW4/S4vyZQnKWGlZ98=
+        b=gW3DESzDObwM2eiNPl5WhyZwmX/e1/NSkGjNY5UAvRSTCiIjX6JuBpNtOi03FEh5O
+         anufMX6wU9U0ACE07GEe9gUyTbQ8E8to3fOb/R6v20AEOY3pxNzk5da8BuPMn9bLYP
+         zAPQL4JcHzCrsmR9VN/J7W49rf+LgS5e13bb59tk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 158/246] fbdev: fbmem: fix memory access if logo is bigger than the screen
-Date:   Thu,  4 Apr 2019 10:47:38 +0200
-Message-Id: <20190404084624.702648189@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 159/246] cdrom: Fix race condition in cdrom_sysctl_register
+Date:   Thu,  4 Apr 2019 10:47:39 +0200
+Message-Id: <20190404084624.737237834@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,50 +65,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
+[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
 
-There is no clipping on the x or y axis for logos larger that the framebuffer
-size. Therefore: a logo bigger than screen size leads to invalid memory access:
+The following traceback is sometimes seen when booting an image in qemu:
 
-[    1.254664] Backtrace:
-[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
-[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
-[    1.254774]  r4:c6a3e800
-[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
-[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
-[    1.254852]  r4:c6808c00
-[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
-[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
-[    1.254928]  r4:c6808c00
-[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
-[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
+[   54.611085] Fusion MPT base driver 3.04.20
+[   54.611877] Copyright (c) 1999-2008 LSI Corporation
+[   54.616234] Fusion MPT SAS Host driver 3.04.20
+[   54.635139] sysctl duplicate entry: /dev/cdrom//info
+[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
+[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[   54.641273] Workqueue: events_unbound async_run_entry_fn
+[   54.641273] Call Trace:
+[   54.641273]  dump_stack+0x67/0x90
+[   54.641273]  __register_sysctl_table+0x50b/0x570
+[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
+[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
+[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
+[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
+[   54.646814]  register_cdrom.cold.24+0x2a/0x33
+[   54.646814]  sr_probe+0x4bd/0x580
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  really_probe+0xd6/0x260
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  driver_probe_device+0x4a/0xb0
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  bus_for_each_drv+0x73/0xc0
+[   54.646814]  __device_attach+0xd6/0x130
+[   54.646814]  bus_probe_device+0x9a/0xb0
+[   54.646814]  device_add+0x40c/0x670
+[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
+[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
+[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
+[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
+[   54.646814]  __scsi_add_device+0x116/0x130
+[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
+[   54.646814]  async_run_entry_fn+0x34/0x100
+[   54.646814]  process_one_work+0x237/0x5e0
+[   54.646814]  worker_thread+0x37/0x380
+[   54.646814]  ? rescuer_thread+0x360/0x360
+[   54.646814]  kthread+0x118/0x130
+[   54.646814]  ? kthread_create_on_node+0x60/0x60
+[   54.646814]  ret_from_fork+0x3a/0x50
 
-So prevent displaying a logo bigger than screen size and avoid invalid
-memory access.
+The only sensible explanation is that cdrom_sysctl_register() is called
+twice, once from the module init function and once from register_cdrom().
+cdrom_sysctl_register() is not mutex protected and may happily execute
+twice if the second call is made before the first call is complete.
 
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Use a static atomic to ensure that the function is executed exactly once.
+
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/cdrom/cdrom.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index cb43a2258c51..4721491e6c8c 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -431,6 +431,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
- {
- 	unsigned int x;
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 614ecdbb4ab7..933268b8d6a5 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -265,6 +265,7 @@
+ /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
+ /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
  
-+	if (image->width > info->var.xres || image->height > info->var.yres)
-+		return;
-+
- 	if (rotate == FB_ROTATE_UR) {
- 		for (x = 0;
- 		     x < num && image->dx + image->width <= info->var.xres;
++#include <linux/atomic.h>
+ #include <linux/module.h>
+ #include <linux/fs.h>
+ #include <linux/major.h>
+@@ -3692,9 +3693,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
+ 
+ static void cdrom_sysctl_register(void)
+ {
+-	static int initialized;
++	static atomic_t initialized = ATOMIC_INIT(0);
+ 
+-	if (initialized == 1)
++	if (!atomic_add_unless(&initialized, 1, 1))
+ 		return;
+ 
+ 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
+@@ -3705,8 +3706,6 @@ static void cdrom_sysctl_register(void)
+ 	cdrom_sysctl_settings.debug = debug;
+ 	cdrom_sysctl_settings.lock = lockdoor;
+ 	cdrom_sysctl_settings.check = check_media_type;
+-
+-	initialized = 1;
+ }
+ 
+ static void cdrom_sysctl_unregister(void)
 -- 
 2.19.1
 
