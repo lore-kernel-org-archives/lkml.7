@@ -2,145 +2,111 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B3BC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94662C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A438205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370303;
-	bh=LhOHW4mCyl2nmaBN0ZS+FKNTjFjxewPlG8t8dfWyp68=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KbdYovVYl5/QqCHszGiJhY/WyRJcbw5YKojMY2UHqZrXcCyIBLvxJIYNpnwF5SqMB
-	 1OVofNiuH0djFneTocvruIGCkoD+awHkHDsJ4jAvT2rYvhgA7JetxyP7YJDqEct0L4
-	 6Eg1khUq92/mRUyzRD13LKYzzeOkqyZ0plOqGjaY=
+	by mail.kernel.org (Postfix) with ESMTP id 61401205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C7qFtYY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732799AbfDDJJS (ORCPT
+        id S1733089AbfDDJbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731894AbfDDJJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E8622075E;
-        Thu,  4 Apr 2019 09:09:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368951;
-        bh=LhOHW4mCyl2nmaBN0ZS+FKNTjFjxewPlG8t8dfWyp68=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qda5zGXge91TtmkkW2jgoiCWtbmQhIKaNyFj0vJDvQCx5Xrsjt6XeJKPTwQZByF9k
-         Jx/pV/U7DYpj96FhWH31cHmGkhijwdECzgvXE7mM2K/5nG19xk/rYCUN12iJ4MxhJ0
-         BVX2aLcJLLKsqknf08pTIQh+RgJWVONiD2z9SvQU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
-        Steve French <stfrench@microsoft.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 042/246] cifs: use correct format characters
-Date:   Thu,  4 Apr 2019 10:45:42 +0200
-Message-Id: <20190404084620.507441471@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 4 Apr 2019 05:31:47 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60572 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732782AbfDDJJR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:17 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3499C0P117841;
+        Thu, 4 Apr 2019 09:09:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=JDv010dhrPLwC3J9tGRK6LOYCBaVzJNmY5i8WbNcgdQ=;
+ b=C7qFtYY6NqlsORS5QT0Dt7MxbLbujKXHyAnD7RvXys2129o2alTpAet6FClcGGE5N1EJ
+ N1hQTWRAroqn5M0wsuVcj9/LhPC+6wTu8d8I3WeRQD9WXpRKwzhAUkcMn03VUCFATYJm
+ CXpRzVEycfKgbyvSjspeZYJYO2Tg0EBUDOalQd8Gh92Pu1KdrDw4xlciOzwgAhNoAtPq
+ bkSfhQd1d5q4y7JzRrWhQyYYHzOMV8v4yKHrhgpjZDTJKZ6bKrP5Dcw7VKAfAbdGBpBC
+ 39PRXg+Qp+muUXa5OWNGCeWLyyPxm4Wm15dnATLczf9+Ys4xGaMikzXXn7UVTo+gYi/T sQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2rj13qdsu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:09:12 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3498I7d147321;
+        Thu, 4 Apr 2019 09:09:11 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2rm8f5hxsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:09:11 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x34999dE015665;
+        Thu, 4 Apr 2019 09:09:11 GMT
+Received: from kadam (/41.202.241.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 02:09:09 -0700
+Date:   Thu, 4 Apr 2019 12:09:00 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Staging: rtlwifi: Remove unwanted parentheses
+Message-ID: <20190404090900.GH32590@kadam>
+References: <20190403223851.22524-1-madhumithabiw@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403223851.22524-1-madhumithabiw@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040065
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+You should probably update the subject line because now it's not just
+about parentheses any more.
 
-------------------
+[PATCH v2] Staging: rtlwifi: clean up crc16_ccitt()
 
-[ Upstream commit 259594bea574e515a148171b5cd84ce5cbdc028a ]
+So the one thing per patch rule is a little bit about selling your
+patch.  We never allow "Clean up whole_file.c" but we do sometimes allow
+"Clean up a function()" so long as the patch description sells it in
+the right way.
 
-When compiling with -Wformat, clang emits the following warnings:
+Blah blah function does "BIT(0) << i" instead of "BIT(i)".  Using !!
+is slightly shorter than "foo ? 1 : 0".  Blah blah, etc.
 
-fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
-short' but the argument has type 'unsigned int' [-Wformat]
-                         tgt_total_cnt, total_in_tgt);
-                                        ^~~~~~~~~~~~
+On Wed, Apr 03, 2019 at 05:38:51PM -0500, Madhumitha Prabakaran wrote:
+> @@ -351,13 +351,13 @@ static u16 crc16_ccitt(u8 data, u16 crc)
+>  		else
+>  			result |= BIT(0);
+>  
+> -		crc_bit11 = ((crc & BIT(11)) ? 1 : 0) ^ shift_in;
+> +		crc_bit11 = !!(crc & BIT(11)) ^ shift_in;
+>  		if (crc_bit11 == 0)
+>  			result &= (~BIT(12));
+                                  ^        ^
+I thought your Coccinelle script was going to complain about these
+parentheses.  Probably the &= confuses it?  There are a couple others
+in the same function.
 
-fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->flags, ref->server_type);
-                 ^~~~~~~~~~
-
-fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->flags, ref->server_type);
-                             ^~~~~~~~~~~~~~~~
-
-fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->ref_flag, ref->path_consumed);
-                 ^~~~~~~~~~~~~
-
-fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->ref_flag, ref->path_consumed);
-                                ^~~~~~~~~~~~~~~~~~
-The types of these arguments are unconditionally defined, so this patch
-updates the format character to the correct ones for ints and unsigned
-ints.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/cifs/cifs_dfs_ref.c | 4 ++--
- fs/cifs/smb1ops.c      | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
-index d9b99abe1243..5d83c924cc47 100644
---- a/fs/cifs/cifs_dfs_ref.c
-+++ b/fs/cifs/cifs_dfs_ref.c
-@@ -285,9 +285,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
- {
- 	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
- 	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
--	cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
-+	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
- 		 ref->flags, ref->server_type);
--	cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
-+	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
- 		 ref->ref_flag, ref->path_consumed);
- }
- 
-diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
-index 32a6c020478f..20a88776f04d 100644
---- a/fs/cifs/smb1ops.c
-+++ b/fs/cifs/smb1ops.c
-@@ -308,7 +308,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
- 	remaining = tgt_total_cnt - total_in_tgt;
- 
- 	if (remaining < 0) {
--		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
-+		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
- 			 tgt_total_cnt, total_in_tgt);
- 		return -EPROTO;
- 	}
--- 
-2.19.1
-
-
-
+regards,
+dan carpenter
