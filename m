@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A695C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2511BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4292C2133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E544E2133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="rm2vS3tR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qgwfMbcI"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="uNeajQ0V";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="st5240RR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfDDCLg (ORCPT
+        id S1728656AbfDDCLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:11:36 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:47935 "EHLO
+        Wed, 3 Apr 2019 22:11:39 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:39403 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726199AbfDDCJq (ORCPT
+        by vger.kernel.org with ESMTP id S1726436AbfDDCJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 22:09:46 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 248E822540;
-        Wed,  3 Apr 2019 22:01:54 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 73C3222205;
+        Wed,  3 Apr 2019 22:01:21 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:54 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm3; bh=K0zKEQYNg9vA6
-        LlAqXa0LlxwYDj+DZBEdtgFhqGYyMM=; b=rm2vS3tR5QUYYMFHtm8drYY7K3zaL
-        sGwtg1jQk5nmv9aRvOn2yTFkVZMbcmx2noGILAdtXSJQKJZhGXVj475iLEw1Vhwo
-        cEaHc2UwdMeekVirdkE0dRaABzomvqv1NwGXHSJy5BTKzF7t/O+NWKwth2p31Va+
-        aVdoA7juNsP/FGYEdxktwlzwhFPnwrUQxZ7GS7gJSNlLQcoewZake+DQCwIieR6E
-        rUsgFHjpfRpqRR291tNhpmNM5a3ppbhUG1oPxajV5NwmObv5/hHGJbhbdjhuRh7v
-        U55/Yd9cmsIG2mKLqhT9CyoABkBqdB/YgSS59KAncLVmW/wUS67k1Ezcg==
+        :mime-version:content-transfer-encoding; s=fm3; bh=lg2BrG+7fYw7q
+        7Cq2sx/23jUXOHpzN8JkKb4HEWmLsw=; b=uNeajQ0VmyZrTaaKNxl7RQ6fUnbft
+        HfoH4ce85/rJbvEi+CBqtoLJtqZyFMMlQlEStmcyVUcAjrVglB+yyZbiZo24q6L1
+        KQTQUHeJA/wzXfBDhYRXZADV2wN6UPVYjXI9yvcURTE1qn/I5n2NROOjS6/nSgu+
+        qgzKPIJPVf0AYKvnce2HOqcQthA7gXL29ObEO/J8kn9BELEPsJvj2KWK/4ep7r3h
+        CEzAUvxtYO8JHjbO5FCasFxIzZA2cogG/bxz2DRpBkl3Z98GlFRJcgVpmCI07J2m
+        rLBju+P4I7ACY3XmHB9i6Bf0ene5A+R9Efnra7Kbpt9ygm978Hgrf9BYA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=K0zKEQYNg9vA6LlAqXa0LlxwYDj+DZBEdtgFhqGYyMM=; b=qgwfMbcI
-        eBFpaV6MMHzN5rIerjMrDKrbAWBiNNEtFg9eDeybWW7/wCBOzaFqhqHES6LQ3vHq
-        /5wNJJIo9YwTCOXPzoe2sxzzynOOn4HIhs+sOQmRXtJ8xTXS2NK1hKA1b8GuOgXG
-        /NR4yJ6BTLhqEQtRAnexNhRWE80XHcJL+YaM/9H9tQ2h68lyracLdVumqMymMbej
-        jkUwuNchlfU8V9S7Ju78YYN02EDsLJKB4XYmAcjwjnHUvUSP3WuoGso4mU1mEXXB
-        wM84Dh5ud02Zhvx8CQ/66sz/7W0L/DmwQxnwvlZSqJZ3r2WaRTfdnEVjnUphhSf0
-        jajSPBQ7AP5RTA==
-X-ME-Sender: <xms:kWWlXEs5Dq_JMO7cybYJO6ksoCaKsxMCSjWpBJigsEqPhMg2WCQkGA>
+        fm2; bh=lg2BrG+7fYw7q7Cq2sx/23jUXOHpzN8JkKb4HEWmLsw=; b=st5240RR
+        dYFUN5ooCSyxrStwKafWNdgADoCKkzOnri6niAKYhRbzjvvmOB2n/IGnbhzs3Rdr
+        BzFAI7LWFHIaSfd4C1wnUYKAjfCRjYPSiZr2T6l9a7AtPuvd/Wc+c5iMwLi5TJ/8
+        3FbeCLHf8/+YCi+Kfq1+meQ1qMQncoTqjUr8eUBhYnfyqSRN0L83PwDnahGfVrFj
+        KSS9R6Ebdc5Mdjz2oGrlKUfR8yTa+AhU22GyAFAn4nyUwKKrB5i+U9yExQRb5ejx
+        F5jr4MpsizRiOzgjGUqu/7yx/HlMEc4xbZbbXQP/Yi+lhMx+dIKT+/fKyeaumUic
+        8C4Nqe6TaDtLzQ==
+X-ME-Sender: <xms:cWWlXBJ0tCYwW-CZHqsy9eb_wxV2t7i_AxDMY_94c6klTDuw7SFErQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdehudculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
     hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddt
     necuhfhrohhmpegkihcujggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucfkph
     epvdduiedrvddvkedrudduvddrvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdr
-    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepvddu
-X-ME-Proxy: <xmx:kWWlXFu80Myacqe5Y92e45_25KuGyiBFI55Ciwf14p6XcZcsJCd0ew>
-    <xmx:kWWlXKzhqA0Eevizp4Tun2j8HHmFvMlCTiBhORmDDx7zWKVNviEovQ>
-    <xmx:kWWlXLinN82foMVnpT-C-usELmyZaUy4cLvHjdyYAu9mX9modxYzgA>
-    <xmx:kmWlXJ04_JKiIOGYPEP97vn9M5yq1QNNWx97C4YU-l7BdCpSeUZf3w>
+    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepge
+X-ME-Proxy: <xmx:cWWlXInlS4YJ2bJx51uJAd8I58Np6Ahz-dcbJLO_el5beZXwMbQBIw>
+    <xmx:cWWlXNPkwE5lW_JHQ2LQQXofcZZo96Llcy8IpEWPEyLBld69ibXTJw>
+    <xmx:cWWlXG3mZ92JiwiFjpcEorcWW-t13CG1O-QxHfgjuRVGovID_i3XKg>
+    <xmx:cWWlXEj2kykTJDNHdPnEC8mfx94DmUfX1OKWJxg_MBpkICnTIxJIKg>
 Received: from nvrsysarch5.nvidia.com (thunderhill.nvidia.com [216.228.112.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 222CA1030F;
-        Wed,  3 Apr 2019 22:01:52 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 64B1610393;
+        Wed,  3 Apr 2019 22:01:19 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
@@ -81,9 +81,9 @@ Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         Nitin Gupta <nigupta@nvidia.com>,
         Javier Cabezas <jcabezas@nvidia.com>,
         David Nellans <dnellans@nvidia.com>, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 23/25] memory manage: page migration based page manipulation between NUMA nodes.
-Date:   Wed,  3 Apr 2019 19:00:44 -0700
-Message-Id: <20190404020046.32741-24-zi.yan@sent.com>
+Subject: [RFC PATCH 05/25] mm: migrate: Add vm.accel_page_copy in sysfs to control page copy acceleration.
+Date:   Wed,  3 Apr 2019 19:00:26 -0700
+Message-Id: <20190404020046.32741-6-zi.yan@sent.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
 References: <20190404020046.32741-1-zi.yan@sent.com>
@@ -97,333 +97,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-Users are expected to set memcg max size to reflect their memory
-resource allocation policy. The syscall simply migrates pages belong
-to the application's memcg between from_node to to_node, where
-from_node is considered fast memory and to_node is considered slow
-memory. In common cases, active(hot) pages are migrated from to_node
-to from_node and inactive(cold) pages are migrated from from_node to
-to_node.
-
-Separate migration for base pages and huge pages to achieve high
-throughput.
-
-1. They are migrated via different calls.
-2. 4KB base pages are not transferred via multi-threaded.
-3. All pages are migrated together if no optimization is used.
+Since base page migration did not gain any speedup from
+multi-threaded methods, we only accelerate the huge page case.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- mm/memory_manage.c | 275 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 275 insertions(+)
+ kernel/sysctl.c | 11 +++++++++++
+ mm/migrate.c    |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/mm/memory_manage.c b/mm/memory_manage.c
-index e8dddbf..d63ad25 100644
---- a/mm/memory_manage.c
-+++ b/mm/memory_manage.c
-@@ -6,6 +6,7 @@
- #include <linux/cpuset.h>
- #include <linux/mempolicy.h>
- #include <linux/memcontrol.h>
-+#include <linux/migrate.h>
- #include <linux/mm_inline.h>
- #include <linux/nodemask.h>
- #include <linux/rmap.h>
-@@ -15,6 +16,11 @@
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index e5da394..3d8490e 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -101,6 +101,8 @@
+ 
+ #if defined(CONFIG_SYSCTL)
+ 
++extern int accel_page_copy;
++
+ /* External variables not in a header file. */
+ extern int suid_dumpable;
+ #ifdef CONFIG_COREDUMP
+@@ -1430,6 +1432,15 @@ static struct ctl_table vm_table[] = {
+ 		.extra2			= &one,
+ 	},
+ #endif
++	{
++		.procname	= "accel_page_copy",
++		.data		= &accel_page_copy,
++		.maxlen		= sizeof(accel_page_copy),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &zero,
++		.extra2		= &one,
++	},
+ 	 {
+ 		.procname	= "hugetlb_shm_group",
+ 		.data		= &sysctl_hugetlb_shm_group,
+diff --git a/mm/migrate.c b/mm/migrate.c
+index dd6ccbe..8a344e2 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -55,6 +55,8 @@
  
  #include "internal.h"
  
-+enum isolate_action {
-+	ISOLATE_COLD_PAGES = 1,
-+	ISOLATE_HOT_PAGES,
-+	ISOLATE_HOT_AND_COLD_PAGES,
-+};
++int accel_page_copy = 1;
++
+ /*
+  * migrate_prep() needs to be called before we start compiling a list of pages
+  * to be migrated using isolate_lru_page(). If scheduling work on other CPUs is
+@@ -589,6 +591,10 @@ static void copy_huge_page(struct page *dst, struct page *src,
+ 		nr_pages = hpage_nr_pages(src);
+ 	}
  
- static unsigned long shrink_lists_node_memcg(pg_data_t *pgdat,
- 	struct mem_cgroup *memcg, unsigned long nr_to_scan)
-@@ -78,6 +84,272 @@ static int shrink_lists(struct task_struct *p, struct mm_struct *mm,
- 	return err;
- }
++	/* Try to accelerate page migration if it is not specified in mode  */
++	if (accel_page_copy)
++		mode |= MIGRATE_MT;
++
+ 	if (mode & MIGRATE_MT)
+ 		rc = copy_page_multithread(dst, src, nr_pages);
  
-+static unsigned long isolate_pages_from_lru_list(pg_data_t *pgdat,
-+		struct mem_cgroup *memcg, unsigned long nr_pages,
-+		struct list_head *base_page_list,
-+		struct list_head *huge_page_list,
-+		unsigned long *nr_taken_base_page,
-+		unsigned long *nr_taken_huge_page,
-+		enum isolate_action action)
-+{
-+	struct lruvec *lruvec = mem_cgroup_lruvec(pgdat, memcg);
-+	enum lru_list lru;
-+	unsigned long nr_all_taken = 0;
-+
-+	if (nr_pages == ULONG_MAX)
-+		nr_pages = memcg_size_node(memcg, pgdat->node_id);
-+
-+	lru_add_drain_all();
-+
-+	for_each_evictable_lru(lru) {
-+		unsigned long nr_scanned, nr_taken;
-+		int file = is_file_lru(lru);
-+		struct scan_control sc = {.may_unmap = 1};
-+
-+		if (action == ISOLATE_COLD_PAGES && is_active_lru(lru))
-+			continue;
-+		if (action == ISOLATE_HOT_PAGES && !is_active_lru(lru))
-+			continue;
-+
-+		spin_lock_irq(&pgdat->lru_lock);
-+
-+		/* Isolate base pages */
-+		sc.isolate_only_base_page = 1;
-+		nr_taken = isolate_lru_pages(nr_pages, lruvec, base_page_list,
-+					&nr_scanned, &sc, lru);
-+		/* Isolate huge pages */
-+		sc.isolate_only_base_page = 0;
-+		sc.isolate_only_huge_page = 1;
-+		nr_taken += isolate_lru_pages(nr_pages - nr_scanned, lruvec,
-+					huge_page_list, &nr_scanned, &sc, lru);
-+
-+		__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, nr_taken);
-+
-+		spin_unlock_irq(&pgdat->lru_lock);
-+
-+		nr_all_taken += nr_taken;
-+
-+		if (nr_all_taken > nr_pages)
-+			break;
-+	}
-+
-+	return nr_all_taken;
-+}
-+
-+static int migrate_to_node(struct list_head *page_list, int nid,
-+		enum migrate_mode mode)
-+{
-+	bool migrate_concur = mode & MIGRATE_CONCUR;
-+	int num = 0;
-+	int from_nid;
-+	int err;
-+
-+	if (list_empty(page_list))
-+		return num;
-+
-+	from_nid = page_to_nid(list_first_entry(page_list, struct page, lru));
-+
-+	if (migrate_concur)
-+		err = migrate_pages_concur(page_list, alloc_new_node_page,
-+			NULL, nid, mode, MR_SYSCALL);
-+	else
-+		err = migrate_pages(page_list, alloc_new_node_page,
-+			NULL, nid, mode, MR_SYSCALL);
-+
-+	if (err) {
-+		struct page *page;
-+
-+		list_for_each_entry(page, page_list, lru)
-+			num += hpage_nr_pages(page);
-+		pr_debug("%d pages failed to migrate from %d to %d\n",
-+			num, from_nid, nid);
-+
-+		putback_movable_pages(page_list);
-+	}
-+	return num;
-+}
-+
-+static inline int _putback_overflow_pages(unsigned long max_nr_pages,
-+		struct list_head *page_list, unsigned long *nr_remaining_pages)
-+{
-+	struct page *page;
-+	LIST_HEAD(putback_list);
-+
-+	if (list_empty(page_list))
-+		return max_nr_pages;
-+
-+	*nr_remaining_pages = 0;
-+	/* in case we need to drop the whole list */
-+	page = list_first_entry(page_list, struct page, lru);
-+	if (max_nr_pages <= (2 * hpage_nr_pages(page))) {
-+		max_nr_pages = 0;
-+		putback_movable_pages(page_list);
-+		goto out;
-+	}
-+
-+	list_for_each_entry(page, page_list, lru) {
-+		int nr_pages = hpage_nr_pages(page);
-+		/* drop just one more page to avoid using up free space  */
-+		if (max_nr_pages <= (2 * nr_pages)) {
-+			max_nr_pages = 0;
-+			break;
-+		}
-+		max_nr_pages -= nr_pages;
-+		*nr_remaining_pages += nr_pages;
-+	}
-+
-+	/* we did not scan all pages in page_list, we need to put back some */
-+	if (&page->lru != page_list) {
-+		list_cut_position(&putback_list, page_list, &page->lru);
-+		putback_movable_pages(page_list);
-+		list_splice(&putback_list, page_list);
-+	}
-+out:
-+	return max_nr_pages;
-+}
-+
-+static int putback_overflow_pages(unsigned long max_nr_base_pages,
-+		unsigned long max_nr_huge_pages,
-+		long nr_free_pages,
-+		struct list_head *base_page_list,
-+		struct list_head *huge_page_list,
-+		unsigned long *nr_base_pages,
-+		unsigned long *nr_huge_pages)
-+{
-+	if (nr_free_pages < 0) {
-+		if ((-nr_free_pages) > max_nr_base_pages) {
-+			nr_free_pages += max_nr_base_pages;
-+			max_nr_base_pages = 0;
-+		}
-+
-+		if ((-nr_free_pages) > max_nr_huge_pages) {
-+			nr_free_pages = 0;
-+			max_nr_base_pages = 0;
-+		}
-+	}
-+	/*
-+	 * counting pages in page lists and substract the number from max_nr_*
-+	 * when max_nr_* go to zero, drop the remaining pages
-+	 */
-+	max_nr_huge_pages += _putback_overflow_pages(nr_free_pages/2 + max_nr_base_pages,
-+			base_page_list, nr_base_pages);
-+	return _putback_overflow_pages(nr_free_pages/2 + max_nr_huge_pages,
-+			huge_page_list, nr_huge_pages);
-+}
-+
-+static int do_mm_manage(struct task_struct *p, struct mm_struct *mm,
-+		const nodemask_t *slow, const nodemask_t *fast,
-+		unsigned long nr_pages, int flags)
-+{
-+	bool migrate_mt = flags & MPOL_MF_MOVE_MT;
-+	bool migrate_concur = flags & MPOL_MF_MOVE_CONCUR;
-+	bool migrate_dma = flags & MPOL_MF_MOVE_DMA;
-+	bool move_hot_and_cold_pages = flags & MPOL_MF_MOVE_ALL;
-+	struct mem_cgroup *memcg = mem_cgroup_from_task(p);
-+	int err = 0;
-+	unsigned long nr_isolated_slow_pages;
-+	unsigned long nr_isolated_slow_base_pages = 0;
-+	unsigned long nr_isolated_slow_huge_pages = 0;
-+	unsigned long nr_isolated_fast_pages;
-+	/* in case no migration from to node, we migrate all isolated pages from
-+	 * slow node  */
-+	unsigned long nr_isolated_fast_base_pages = ULONG_MAX;
-+	unsigned long nr_isolated_fast_huge_pages = ULONG_MAX;
-+	unsigned long max_nr_pages_fast_node, nr_pages_fast_node;
-+	unsigned long nr_pages_slow_node, nr_active_pages_slow_node;
-+	long nr_free_pages_fast_node;
-+	int slow_nid, fast_nid;
-+	enum migrate_mode mode = MIGRATE_SYNC |
-+		(migrate_mt ? MIGRATE_MT : MIGRATE_SINGLETHREAD) |
-+		(migrate_dma ? MIGRATE_DMA : MIGRATE_SINGLETHREAD) |
-+		(migrate_concur ? MIGRATE_CONCUR : MIGRATE_SINGLETHREAD);
-+	enum isolate_action isolate_action =
-+		move_hot_and_cold_pages?ISOLATE_HOT_AND_COLD_PAGES:ISOLATE_HOT_PAGES;
-+	LIST_HEAD(slow_base_page_list);
-+	LIST_HEAD(slow_huge_page_list);
-+
-+	if (!memcg)
-+		return 0;
-+	/* Let's handle simplest situation first */
-+	if (!(nodes_weight(*slow) == 1 && nodes_weight(*fast) == 1))
-+		return 0;
-+
-+	/* Only work on specific cgroup not the global root */
-+	if (memcg == root_mem_cgroup)
-+		return 0;
-+
-+	slow_nid = first_node(*slow);
-+	fast_nid = first_node(*fast);
-+
-+	max_nr_pages_fast_node = memcg_max_size_node(memcg, fast_nid);
-+	nr_pages_fast_node = memcg_size_node(memcg, fast_nid);
-+	nr_active_pages_slow_node = active_inactive_size_memcg_node(memcg,
-+			slow_nid, true);
-+	nr_pages_slow_node = memcg_size_node(memcg, slow_nid);
-+
-+	nr_free_pages_fast_node = max_nr_pages_fast_node - nr_pages_fast_node;
-+
-+	/* do not migrate in more pages than fast node can hold */
-+	nr_pages = min_t(unsigned long, max_nr_pages_fast_node, nr_pages);
-+	/* do not migrate away more pages than slow node has */
-+	nr_pages = min_t(unsigned long, nr_pages_slow_node, nr_pages);
-+
-+	/* if fast node has enough space, migrate all possible pages in slow node */
-+	if (nr_pages != ULONG_MAX &&
-+		nr_free_pages_fast_node > 0 &&
-+		nr_active_pages_slow_node < nr_free_pages_fast_node) {
-+		isolate_action = ISOLATE_HOT_AND_COLD_PAGES;
-+	}
-+
-+	nr_isolated_slow_pages = isolate_pages_from_lru_list(NODE_DATA(slow_nid),
-+			memcg, nr_pages, &slow_base_page_list, &slow_huge_page_list,
-+			&nr_isolated_slow_base_pages, &nr_isolated_slow_huge_pages,
-+			isolate_action);
-+
-+	if (max_nr_pages_fast_node != ULONG_MAX &&
-+		(nr_free_pages_fast_node < 0 ||
-+		 nr_free_pages_fast_node < nr_isolated_slow_pages)) {
-+		LIST_HEAD(fast_base_page_list);
-+		LIST_HEAD(fast_huge_page_list);
-+
-+		nr_isolated_fast_base_pages = 0;
-+		nr_isolated_fast_huge_pages = 0;
-+		/* isolate pages on fast node to make space */
-+		nr_isolated_fast_pages = isolate_pages_from_lru_list(NODE_DATA(fast_nid),
-+			memcg,
-+			nr_isolated_slow_pages - nr_free_pages_fast_node,
-+			&fast_base_page_list, &fast_huge_page_list,
-+			&nr_isolated_fast_base_pages, &nr_isolated_fast_huge_pages,
-+			move_hot_and_cold_pages?ISOLATE_HOT_AND_COLD_PAGES:ISOLATE_COLD_PAGES);
-+
-+		/* Migrate pages to slow node */
-+		/* No multi-threaded migration for base pages */
-+		nr_isolated_fast_base_pages -=
-+			migrate_to_node(&fast_base_page_list, slow_nid, mode & ~MIGRATE_MT);
-+
-+		nr_isolated_fast_huge_pages -=
-+			migrate_to_node(&fast_huge_page_list, slow_nid, mode);
-+	}
-+
-+	if (nr_isolated_fast_base_pages != ULONG_MAX &&
-+		nr_isolated_fast_huge_pages != ULONG_MAX)
-+		putback_overflow_pages(nr_isolated_fast_base_pages,
-+				nr_isolated_fast_huge_pages, nr_free_pages_fast_node,
-+				&slow_base_page_list, &slow_huge_page_list,
-+				&nr_isolated_slow_base_pages,
-+				&nr_isolated_slow_huge_pages);
-+
-+	/* Migrate pages to fast node */
-+	/* No multi-threaded migration for base pages */
-+	nr_isolated_slow_base_pages -=
-+		migrate_to_node(&slow_base_page_list, fast_nid, mode & ~MIGRATE_MT);
-+
-+	nr_isolated_slow_huge_pages -=
-+		migrate_to_node(&slow_huge_page_list, fast_nid, mode);
-+
-+	return err;
-+}
-+
- SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
- 		unsigned long, maxnode,
- 		const unsigned long __user *, slow_nodes,
-@@ -167,6 +439,9 @@ SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
- 	if (flags & MPOL_MF_SHRINK_LISTS)
- 		shrink_lists(task, mm, slow, fast, nr_pages);
- 
-+	if (flags & MPOL_MF_MOVE)
-+		err = do_mm_manage(task, mm, slow, fast, nr_pages, flags);
-+
- 	clear_bit(MMF_MM_MANAGE, &mm->flags);
- 	mmput(mm);
- out:
 -- 
 2.7.4
 
