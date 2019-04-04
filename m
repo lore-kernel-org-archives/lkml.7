@@ -2,243 +2,203 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE8EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65026C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEEC2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2452082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X9FzMvn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbfDDOnJ (ORCPT
+        id S1729089AbfDDOnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:43:09 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44501 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfDDOnI (ORCPT
+        Thu, 4 Apr 2019 10:43:33 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:36411 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726888AbfDDOnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:43:08 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d11so2436185edp.11;
-        Thu, 04 Apr 2019 07:43:06 -0700 (PDT)
+        Thu, 4 Apr 2019 10:43:32 -0400
+Received: by mail-yw1-f65.google.com with SMTP id u197so1066694ywf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5jqSUMDXuUIcrTWy9nA2fKg/yCZpKxCQ4pUqYUqUnAQ=;
+        b=X9FzMvn8QcWoKSc8XM2YoDmk+lSNcYEgPlO62cyHvitbZBwMqksrNzqQ10vF5nbu1U
+         AHN24wCAIUVTx8u/DfdOFvSPleaTqsfUZffpsOgAXr8m3Bl9aPbThD3C9C0QFu/1oq5v
+         7K58DgSppoh6w6BhGnH2E5kUX14sK67ndYs28mYMKtC7CDHf5NQUdKDIsYlIKoByF96f
+         tmpC2tIjJtfUd+6VVUmXeCWYWKt71CVNZen6sgYp1aqAmA6/skhkaKtgmWIi874lPLaK
+         tyCxOJv4Y244nxXwewFsuzCvJRTOJY/nQzSrTf6mOUoXS0PRIggWFg7VLd0PhPFiZiTA
+         pqmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nnmDJsRN//8GWWwn19teE/B0LTp6P8qcvFQeTuk4I9A=;
-        b=HdkduZ+TlF4sUuZNmBt8uge84YyRjPK+mjqQA7I+7l3PcNRe33M0STGvUppzGcAiZ/
-         KfYBifM3iU37kAvGztxcYiNX3yN4FIGFulG9ST58Dq4AnRVKwnttjFLwFt2n8zEexiFn
-         lREUdR6zkp0JA5q1/XiwFOAewqJ7y08QnpY1wtDBa/QdW0jL5Ks7ypqObdlG17hgdXqZ
-         lcIPLRmEr8g9B5yHgZ0JFsHs/9Hm4j0X8PPH4UGQyZ/b/1W9HgvaeIR40PzLE9WMIg7q
-         YulAxs3oZzfdL6FVq4kmE2EBTfCBQ14GUhdutlI3YYSc8lgM4NJyxETL8TWMFfR+2daA
-         cfRw==
-X-Gm-Message-State: APjAAAW96YVjfALhWHrKqjh2+JYGDdLuN6wDE3XyMriv8bbbXRaELBOv
-        RlFfirhU7c5uEILO19g4zZOA0EpMSHg=
-X-Google-Smtp-Source: APXvYqy3LItIStSlX7rCnwClT5ha9JtGSFw/ghaV4Q7B0iUGl1h1AcJBAvqF/8cIKu5OQ0Plyy1yOw==
-X-Received: by 2002:aa7:da51:: with SMTP id w17mr4075839eds.71.1554388985526;
-        Thu, 04 Apr 2019 07:43:05 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id bz3sm3637088ejb.52.2019.04.04.07.43.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 07:43:03 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id r4so4126333wrq.8;
-        Thu, 04 Apr 2019 07:43:03 -0700 (PDT)
-X-Received: by 2002:a5d:4750:: with SMTP id o16mr2009265wrs.206.1554388982858;
- Thu, 04 Apr 2019 07:43:02 -0700 (PDT)
+        bh=5jqSUMDXuUIcrTWy9nA2fKg/yCZpKxCQ4pUqYUqUnAQ=;
+        b=LnyFELgjTcIcsBoZdkAjmL/mtfeJvE7Cx8cJ818OIjIQBxMeGA+J/+Z9p5Uo/eQfmI
+         saYATq4Wz7oHXN2+2lEDpznHewHYUKxU2gtSw6g2Jvq8RRM/zZGhnZ/mtSD3HYD4OcSP
+         ZXcnLdTILy4Nw4T+0I4NgcbcM1s6ap5fm/adj/kOp3qBAb3Ew4fPKh39wcvAH2VvG7SM
+         HcX3EpU0/kCRwuNW8vj16R8rYQAsiBqC9UW6MoFOsix6khQ6+DjRGPuQMEAW9629EoQn
+         qWf2hb0nVI3okdxwP5UgcJEy7hAPwyI1xXIwhsFuSa9ANHRQGXK8g143qaRvv2B34vu1
+         /w2g==
+X-Gm-Message-State: APjAAAXyajInVJgG1y0e7VFa/Gj66P/IJldnlN3hANjSoGbmmNr9TCsB
+        ciOSH6jCYBfScsS0zT79qbl+/sovnGUwY9gSgPi2Xg==
+X-Google-Smtp-Source: APXvYqx9r0zQ5W9DoAk2kSgpZL5UMuypHRK7dgMOsuqJil5d+zKkldTqirfnx7BaZ8TJeKD13pX1UI+H/FoDfYfiIu8=
+X-Received: by 2002:a81:1054:: with SMTP id 81mr4998261ywq.48.1554389011700;
+ Thu, 04 Apr 2019 07:43:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.bfe197a82766125bea21dd26fd3de85893a921ac.1554380738.git-series.maxime.ripard@bootlin.com>
- <7cd913545cfc80fa9999839c62c4bf7b354a7904.1554380738.git-series.maxime.ripard@bootlin.com>
- <CAAFQd5ASMJL2_ovNeFOhCh2JoD86KMtV5XO+7OgM37ckxrxmfA@mail.gmail.com>
-In-Reply-To: <CAAFQd5ASMJL2_ovNeFOhCh2JoD86KMtV5XO+7OgM37ckxrxmfA@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 4 Apr 2019 22:42:50 +0800
-X-Gmail-Original-Message-ID: <CAGb2v642__AF3iHO+d9FKazJ4=uRAQSfxAN_uCUWagH6Jz2twQ@mail.gmail.com>
-Message-ID: <CAGb2v642__AF3iHO+d9FKazJ4=uRAQSfxAN_uCUWagH6Jz2twQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v7 1/2] media: uapi: Add H264 low-level decoder API
- compound controls.
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Jens Kuske <jenskuske@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>
+References: <20190403213428.89920-1-evgreen@chromium.org> <20190403213428.89920-3-evgreen@chromium.org>
+In-Reply-To: <20190403213428.89920-3-evgreen@chromium.org>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Thu, 4 Apr 2019 07:43:20 -0700
+Message-ID: <CABXOdTesrROU-N=TGA+KCPjWXM+1vmJbanARdV-J6b1eBoSJMw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] platform/chrome: Add support for v1 of host sleep event
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 8:54 PM Tomasz Figa <tfiga@chromium.org> wrote:
+On Wed, Apr 3, 2019 at 2:34 PM Evan Green <evgreen@chromium.org> wrote:
 >
-> Hi,
+> Add support in code for the new forms of the host sleep event.
+> Detects the presence of this version of the command at runtime,
+> and use whichever form the EC supports. At this time, always
+> request the default timeout, and only report the failing response
+> via a WARN_ONCE(). Future versions could accept the sleep parameter
+> from outside the driver, and return the response information to
+> usermode or elsewhere.
 >
-> On Thu, Apr 4, 2019 at 9:26 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > From: Pawel Osciak <posciak@chromium.org>
-> >
-> > Stateless video codecs will require both the H264 metadata and slices in
-> > order to be able to decode frames.
-> >
-> > This introduces the definitions for a new pixel format for H264 slices that
-> > have been parsed, as well as the structures used to pass the metadata from
-> > the userspace to the kernel.
-> >
-> > Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-> > Signed-off-by: Pawel Osciak <posciak@chromium.org>
-> > Signed-off-by: Guenter Roeck <groeck@chromium.org>
-> > Co-developed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  Documentation/media/uapi/v4l/biblio.rst            |   9 +-
-> >  Documentation/media/uapi/v4l/ext-ctrls-codec.rst   | 569 ++++++++++++++-
-> >  Documentation/media/uapi/v4l/pixfmt-compressed.rst |  19 +-
-> >  Documentation/media/uapi/v4l/vidioc-queryctrl.rst  |  30 +-
-> >  Documentation/media/videodev2.h.rst.exceptions     |   5 +-
-> >  drivers/media/v4l2-core/v4l2-ctrls.c               |  42 +-
-> >  drivers/media/v4l2-core/v4l2-ioctl.c               |   1 +-
-> >  include/media/h264-ctrls.h                         | 192 +++++-
-> >  include/media/v4l2-ctrls.h                         |  13 +-
-> >  include/uapi/linux/videodev2.h                     |   1 +-
-> >  10 files changed, 880 insertions(+), 1 deletion(-)
-> >  create mode 100644 include/media/h264-ctrls.h
-> >
-> > diff --git a/Documentation/media/uapi/v4l/biblio.rst b/Documentation/media/uapi/v4l/biblio.rst
-> > index ec33768c055e..8f4eb8823d82 100644
-> > --- a/Documentation/media/uapi/v4l/biblio.rst
-> > +++ b/Documentation/media/uapi/v4l/biblio.rst
-> > @@ -122,6 +122,15 @@ ITU BT.1119
-> >
-> >  :author:    International Telecommunication Union (http://www.itu.ch)
-> >
-> > +.. _h264:
-> > +
-> > +ITU-T Rec. H.264 Specification (04/2017 Edition)
-> > +================================================
-> > +
-> > +:title:     ITU-T Recommendation H.264 "Advanced Video Coding for Generic Audiovisual Services"
-> > +
-> > +:author:    International Telecommunication Union (http://www.itu.ch)
-> > +
-> >  .. _jfif:
-> >
-> >  JFIF
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > index 67a122339c0e..1285bfec7d3d 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> > @@ -1371,6 +1371,575 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >        - Layer number
-> >
-> >
-> > +.. _v4l2-mpeg-h264:
-> > +
-> > +``V4L2_CID_MPEG_VIDEO_H264_SPS (struct)``
-> > +    Specifies the sequence parameter set (as extracted from the
-> > +    bitstream) for the associated H264 slice data. This includes the
-> > +    necessary parameters for configuring a stateless hardware decoding
-> > +    pipeline for H264. The bitstream parameters are defined according
-> > +    to :ref:`h264`, section 7.4.2.1.1 "Sequence Parameter Set Data
-> > +    Semantics". For further documentation, refer to the above
-> > +    specification, unless there is an explicit comment stating
-> > +    otherwise.
-> > +
-> > +    .. note::
-> > +
-> > +       This compound control is not yet part of the public kernel API and
-> > +       it is expected to change.
-> > +
-> > +.. c:type:: v4l2_ctrl_h264_sps
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. flat-table:: struct v4l2_ctrl_h264_sps
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - __u8
-> > +      - ``profile_idc``
-> > +      -
-> > +    * - __u8
-> > +      - ``constraint_set_flags``
-> > +      - See :ref:`Sequence Parameter Set Constraints Set Flags <h264_sps_constraints_set_flags>`
-> > +    * - __u8
-> > +      - ``level_idc``
-> > +      -
-> > +    * - __u8
-> > +      - ``seq_parameter_set_id``
-> > +      -
-> > +    * - __u8
-> > +      - ``chroma_format_idc``
-> > +      -
-> > +    * - __u8
-> > +      - ``bit_depth_luma_minus8``
-> > +      -
-> > +    * - __u8
-> > +      - ``bit_depth_chroma_minus8``
-> > +      -
-> > +    * - __u8
-> > +      - ``log2_max_frame_num_minus4``
-> > +      -
-> > +    * - __u8
-> > +      - ``pic_order_cnt_type``
-> > +      -
-> > +    * - __u8
-> > +      - ``log2_max_pic_order_cnt_lsb_minus4``
-> > +      -
-> > +    * - __u8
-> > +      - ``max_num_ref_frames``
-> > +      -
-> > +    * - __u8
-> > +      - ``num_ref_frames_in_pic_order_cnt_cycle``
-> > +      -
-> > +    * - __s32
-> > +      - ``offset_for_ref_frame[255]``
-> > +      -
-> > +    * - __s32
-> > +      - ``offset_for_non_ref_pic``
-> > +      -
-> > +    * - __s32
-> > +      - ``offset_for_top_to_bottom_field``
-> > +      -
-> > +    * - __u16
-> > +      - ``pic_width_in_mbs_minus1``
-> > +      -
-> > +    * - __u16
-> > +      - ``pic_height_in_map_units_minus1``
-> > +      -
+> Signed-off-by: Evan Green <evgreen@chromium.org>
 >
-> We recently had some reflection with Alex that this is redundant with
-> the width and height in the OUTPUT format. It may also apply to some
-> other fields in these structs. I feel like they should be removed and
-> passed via corresponding generic V4L2 properties - format, selection,
-> etc.
->
-> The same problem is also present in the MPEG2 controls. In fact, there
-> was a patch already which used some fields from the controls to
-> calculate the destination buffer strides, rather than bytesperline in
-> the format.
->
-> Since we're in staging, it could be done with a follow-up patch, though.
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
 
-Just my two cents. I played with some codecs a while back. IIRC some
-specify a "codec" size in addition to the actual picture size, like
-when the encoder does padding to fit the requirements of the codec
-(spec). Is this needed anywhere?
-
-ChenYu
+> ---
+>
+> Changes in v3:
+> - Consolidated boolean logic for host_sleep_v1 (Guenter)
+>
+> Changes in v2:
+> - Removed unnecessary version assignment (Guenter)
+> - Changed WARN to WARN_ONCE (Guenter)
+> - Fixed C code to use anonymous unions
+> - insize is only bigger for resume events.
+>
+>  drivers/mfd/cros_ec.c                   | 39 +++++++++++++++++++++----
+>  drivers/platform/chrome/cros_ec_proto.c |  6 ++++
+>  include/linux/mfd/cros_ec.h             |  2 ++
+>  3 files changed, 42 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+> index 6acfe036d522..bd2bcdd4718b 100644
+> --- a/drivers/mfd/cros_ec.c
+> +++ b/drivers/mfd/cros_ec.c
+> @@ -75,20 +75,49 @@ static irqreturn_t ec_irq_thread(int irq, void *data)
+>
+>  static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+>  {
+> +       int ret;
+>         struct {
+>                 struct cros_ec_command msg;
+> -               struct ec_params_host_sleep_event req;
+> +               union {
+> +                       struct ec_params_host_sleep_event req0;
+> +                       struct ec_params_host_sleep_event_v1 req1;
+> +                       struct ec_response_host_sleep_event_v1 resp1;
+> +               } u;
+>         } __packed buf;
+>
+>         memset(&buf, 0, sizeof(buf));
+>
+> -       buf.req.sleep_event = sleep_event;
+> +       if (ec_dev->host_sleep_v1) {
+> +               buf.u.req1.sleep_event = sleep_event;
+> +               buf.u.req1.suspend_params.sleep_timeout_ms =
+> +                               EC_HOST_SLEEP_TIMEOUT_DEFAULT;
+> +
+> +               buf.msg.outsize = sizeof(buf.u.req1);
+> +               if ((sleep_event == HOST_SLEEP_EVENT_S3_RESUME) ||
+> +                   (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
+> +                       buf.msg.insize = sizeof(buf.u.resp1);
+> +
+> +               buf.msg.version = 1;
+> +
+> +       } else {
+> +               buf.u.req0.sleep_event = sleep_event;
+> +               buf.msg.outsize = sizeof(buf.u.req0);
+> +       }
+>
+>         buf.msg.command = EC_CMD_HOST_SLEEP_EVENT;
+> -       buf.msg.version = 0;
+> -       buf.msg.outsize = sizeof(buf.req);
+>
+> -       return cros_ec_cmd_xfer(ec_dev, &buf.msg);
+> +       ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
+> +
+> +       /* For now, report failure to transition to S0ix with a warning. */
+> +       if (ret >= 0 && ec_dev->host_sleep_v1 &&
+> +           (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
+> +               WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+> +                         EC_HOST_RESUME_SLEEP_TIMEOUT,
+> +                         "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
+> +                         buf.u.resp1.resume_response.sleep_transitions &
+> +                         EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
+> +
+> +       return ret;
+>  }
+>
+>  int cros_ec_register(struct cros_ec_device *ec_dev)
+> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+> index 97a068dff192..52ca564a64e7 100644
+> --- a/drivers/platform/chrome/cros_ec_proto.c
+> +++ b/drivers/platform/chrome/cros_ec_proto.c
+> @@ -414,6 +414,12 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
+>         else
+>                 ec_dev->mkbp_event_supported = 1;
+>
+> +       /* Probe if host sleep v1 is supported for S0ix failure detection. */
+> +       ret = cros_ec_get_host_command_version_mask(ec_dev,
+> +                                                   EC_CMD_HOST_SLEEP_EVENT,
+> +                                                   &ver_mask);
+> +       ec_dev->host_sleep_v1 = (ret >= 0 && (ver_mask & EC_VER_MASK(1)));
+> +
+>         /*
+>          * Get host event wake mask, assume all events are wake events
+>          * if unavailable.
+> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+> index 8f2a8918bfa3..b6442201f77f 100644
+> --- a/include/linux/mfd/cros_ec.h
+> +++ b/include/linux/mfd/cros_ec.h
+> @@ -120,6 +120,7 @@ struct cros_ec_command {
+>   * @pkt_xfer: Send packet to EC and get response.
+>   * @lock: One transaction at a time.
+>   * @mkbp_event_supported: True if this EC supports the MKBP event protocol.
+> + * @host_sleep_v1: True if this EC supports the sleep v1 command.
+>   * @event_notifier: Interrupt event notifier for transport devices.
+>   * @event_data: Raw payload transferred with the MKBP event.
+>   * @event_size: Size in bytes of the event data.
+> @@ -153,6 +154,7 @@ struct cros_ec_device {
+>                         struct cros_ec_command *msg);
+>         struct mutex lock;
+>         bool mkbp_event_supported;
+> +       bool host_sleep_v1;
+>         struct blocking_notifier_head event_notifier;
+>
+>         struct ec_response_get_next_event_v1 event_data;
+> --
+> 2.20.1
+>
