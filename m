@@ -2,106 +2,177 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE37AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37283C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD27A20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DB120882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h/3IuQG4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7bPQAZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfDDG7g (ORCPT
+        id S1727212AbfDDHAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 02:59:36 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51334 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfDDG7g (ORCPT
+        Thu, 4 Apr 2019 03:00:09 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36598 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfDDHAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 02:59:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 4so1664201wmf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 23:59:35 -0700 (PDT)
+        Thu, 4 Apr 2019 03:00:09 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 85so756126pgc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 00:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4OI2X7uNcXKI7Is6dOdjhTMwUYHuLvBfHv+jMTJYdkQ=;
-        b=h/3IuQG4lGHS76otSwV/lkkio5En6Ji+z/rXcoXCpStNWRtUSW8yU7Bsd7dARWKtvD
-         NO5oGeE/BoFtlroCJto2bxVOSex6A66cBaRRY+VPQp2PB2JCdW2Gl1sCQLnGhI9AWw3C
-         voNaS/o7UC0qCgvVCDOBbxb9bXm9PS/mZyAF40bEAadJZWvBHeIlcooD+0RWSfNFR3mz
-         ONF25cMtwPzWlltjG33pcDUNMGJcHtJNcPgze8QOO4g2q8uI5qAJH432lXhlt+beB34h
-         DoKQfdW7M7IEwTzZJX8KrYFRQ+q3yH0E6iGssj2gjuRHRRmdJFzZ3TnHWjiejBhCRJug
-         2r0g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2TbX2m9Mo5+Yude4vc+MgPqlktN4swLTewAecGSJQoA=;
+        b=M7bPQAZYYBJVsmfcGCucimLpQIlOM4d0Yre+zcZRk3QOVsnLszdjIzcSwbM54Ml9VH
+         00QhNtZeABYeysQYLhQRu5jPN8wSN+GL5MGiSiNGJxL64T9HtMozmypxF2j6qynejN/G
+         PdctJMylI8GFNteA5dwLvDpnebQY63DZ2z4pMZypX8dMvIhUWEM2MrqSTTWcmYAAARKH
+         K07vr8y9WBBhCk+1t8EGR41w7zMmxgntlTls1VuGix3lM8U0x06FuPXjP1+7po28L5qt
+         NFvsZw0R3Uf00oUV5zJw7zoSa3u3FZQ8XVQBJ2239HViah5OJaRqUbDkGi/P2nw600Mf
+         +ceg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4OI2X7uNcXKI7Is6dOdjhTMwUYHuLvBfHv+jMTJYdkQ=;
-        b=Pza3xzoVACq3Ji+wDF48eJYLvLv33OhRuk+jXGVJodO4vWb4wN2gvOsQbD5Lew14SF
-         zbPT4YuGsA1BIcbeViPMu4DzxXn06AL3o/Q/f1wyHzjlMp8mRJGS83HX1EtWvgnrES66
-         bQwm6On2ZNIVm2dooLZkrABHuyDFEmxMoX9Ln3WSBaIcQrRCXMOwob9dhlHytZVkUA3k
-         aSjnh2wX9PBS2vSk9upNOIHeJ+Wvo1KEjGcnsXIhcWU3a4AKcyfaYNpaRBW01MSexX2x
-         //oGyUAcaKBkOCKmzc/tAlriGDht+6td/XAd4snhf0QrTyWu3KjGxyrbW7t3pYucSjo/
-         mtzg==
-X-Gm-Message-State: APjAAAUFB+Bl7ynR2U/zlggnjaoWRh8a8qYVU8ma/N6zt0tADPhbGrTO
-        5Q8z9sKOqKI040s0jpiPYI8VHnkQFhCN9w==
-X-Google-Smtp-Source: APXvYqynUaG6lGjPSQq1d2N+qn+QmofNG5Dxb6XzrSqeGRskCHncU0KCdEkti1BI1N3T4RqV5axAsQ==
-X-Received: by 2002:a1c:cf83:: with SMTP id f125mr2727292wmg.96.1554361174680;
-        Wed, 03 Apr 2019 23:59:34 -0700 (PDT)
-Received: from [192.168.1.2] (200.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.200])
-        by smtp.gmail.com with ESMTPSA id a11sm19336099wrx.5.2019.04.03.23.59.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 23:59:34 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/9] drivers: regulator: qcom_spmi: enable linear
- range info
-To:     Mark Brown <broonie@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190404050931.9812-1-niklas.cassel@linaro.org>
- <20190404050931.9812-2-niklas.cassel@linaro.org>
- <20190404055502.GA5683@sirena.org.uk>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <184d1953-533d-2484-3e01-380ae871c4ce@linaro.org>
-Date:   Thu, 4 Apr 2019 08:59:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2TbX2m9Mo5+Yude4vc+MgPqlktN4swLTewAecGSJQoA=;
+        b=RXqqKEU0+qbrK6QshHRP7QDANYV/J0uinOOIR1muPpEWxgEmehrre3CqhQI8LaPZrG
+         IWTfqaqToHUvf6B1T3GA8+ueas0D5i/ASX6eWcK3oi69M6ffK5LDGh3ORjUkvu9oh6OO
+         cS1EzpggGr5s5rvuHNdYwSgqecTwyG1EN9scB7B4wlmlVHyl7IlWWsaq94RghfZlYuCr
+         kPzRdibrzDRP+qB/nI+guEf+5fQY8pIHt3zi99I8Di/ZYfcYHkqZzDKVQYUw5ZaNhB9N
+         LrHgDOq3mCfNU9GdkDYdImZbqyfaF6RBSDTWaqPN+/8JtfKlE89SghJwSYsirNGngOvd
+         VHLw==
+X-Gm-Message-State: APjAAAW/RIqkeQhaaYBUrdYARGisvOLAid5c/BdHOZrwtKThZ1mfiNgw
+        ichOmaZZJ+nwJjDeZ/4JcZTnVjn8qZBOLA==
+X-Google-Smtp-Source: APXvYqxrVluAO4Jmg+xyuf2r/ORYdT8Cq0Zodco6/Ea0tgk41aJGrSR8oY3eXN6ZlmbJ6YHNdvBU6g==
+X-Received: by 2002:a63:28c:: with SMTP id 134mr4290512pgc.278.1554361208762;
+        Thu, 04 Apr 2019 00:00:08 -0700 (PDT)
+Received: from dell ([147.50.13.10])
+        by smtp.gmail.com with ESMTPSA id p26sm37317150pfa.49.2019.04.04.00.00.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 00:00:07 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 08:00:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: Add support for Merrifield Basin Cove PMIC
+Message-ID: <20190404070004.GE6830@dell>
+References: <20190318095316.69278-1-andriy.shevchenko@linux.intel.com>
+ <20190402051211.GR4187@dell>
+ <20190402122001.GM9224@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190404055502.GA5683@sirena.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190402122001.GM9224@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 07:55, Mark Brown wrote:
-> On Thu, Apr 04, 2019 at 07:09:22AM +0200, Niklas Cassel wrote:
->> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->>
->> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->> ---
->>  drivers/regulator/qcom_spmi-regulator.c | 7 +++++++
->>  1 file changed, 7 insertions(+)
-> 
-> This doesn't build:
-> 
->   CC      drivers/regulator/qcom_spmi-regulator.o
-> drivers/regulator/qcom_spmi-regulator.c: In function ‘qcom_spmi_regulator_probe’:
-> drivers/regulator/qcom_spmi-regulator.c:1837:29: error: ‘SPMI_REGULATOR_LOGICAL_TYPE_HFS430’ undeclared (first use in this function); did you mean ‘SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS’?
->    if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430) {
->                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->                              SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS
-> drivers/regulator/qcom_spmi-regulator.c:1837:29: note: each undeclared identifier is reported only once for each function it appears in
-> 
+On Tue, 02 Apr 2019, Andy Shevchenko wrote:
 
-yeah, the SPMI regulator changes are still pending [1]
+> On Tue, Apr 02, 2019 at 06:12:11AM +0100, Lee Jones wrote:
+> > On Mon, 18 Mar 2019, Andy Shevchenko wrote:
+> > 
+> > > Add an mfd driver for Intel Merrifield Basin Cove PMIC.
+> > 
+> > Nit: s/mfd/MFD/
+> 
+> Noted. And changed for v2.
+> 
+> > > +static const struct mfd_cell bcove_dev[] = {
+> > > +	{
+> > > +		.name = "mrfld_bcove_pwrbtn",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[0],
+> > > +	}, {
+> > > +		.name = "mrfld_bcove_tmu",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[1],
+> > > +	}, {
+> > > +		.name = "mrfld_bcove_thermal",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[2],
+> > > +	}, {
+> > > +		.name = "mrfld_bcove_bcu",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[3],
+> > > +	}, {
+> > > +		.name = "mrfld_bcove_adc",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[4],
+> > > +	}, {
+> > > +		.name = "mrfld_bcove_charger",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[5],
+> > > +	}, {
+> > > +		.name = "mrfld_bcove_extcon",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[5],
+> > > +	}, {
+> > > +		.name = "mrfld_bcove_gpio",
+> > > +		.num_resources = 1,
+> > > +		.resources = &irq_level2_resources[6],
+> > > +	},
+> > > +	{	.name = "mrfld_bcove_region", },
+> > > +};
+> 
+> > > +static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
+> > 
+> > Prefixing these with regmap is pretty confusing, since this it not
+> > part of the Regmap API.  Better to provide them with local names
+> > instead.
+> > 
+> >   bcove_ipc_byte_reg_read()
+> 
+> Good point. And changed for v2.
+> 
+> > > +	for (i = 0; i < ARRAY_SIZE(irq_level2_resources); i++) {
+> > > +		ret = platform_get_irq(pdev, i);
+> > > +		if (ret < 0)
+> > > +			return ret;
+> > > +
+> > > +		irq_level2_resources[i].start = ret;
+> > > +		irq_level2_resources[i].end = ret;
+> > > +	}
+> > 
+> > Although succinct, dragging values from one platform device into
+> > another doesn't sound that neat.
+> 
+> So, how to split resources given in one _physical_ multi-functional device to
+> several of them?  Isn't it what MFD framework for?
+> 
+> Any other approach here? I'm all ears!
 
-[1] https://lore.kernel.org/patchwork/patch/1036105/
+From the child:
+
+  platform_get_irq(dev->parent, CLIENT_ID);
+
+> > Also, since the ordering of the
+> > devices is critical in this implementation, it also comes across as
+> > fragile.
+> 
+> How fragile? In ACPI we don't have IRQ labeling scheme. Index is used for that.
+> 
+> > Any reason why ACPI can't register all of the child devices, or for
+> > the child devices to obtain their IRQ directly from the tables?
+> 
+> And how are we supposed to enumerated them taking into consideration single
+> ACPI ID given?
+
+This question was a little whimsical, since I have no idea how the
+ACPI tables you're working with are laid out.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
