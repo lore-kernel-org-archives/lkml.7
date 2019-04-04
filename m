@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1CEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BE9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6A721850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2659621741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368663;
-	bh=0Jud5Nh/Vdv45lDXuUCMCtmE07O1Wdz6ghktKJvGbeU=;
+	s=default; t=1554368666;
+	bh=1lfBzk8SrmoxwSDnma05OF4zxIGJE/MaHosHdZmKu8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oWMV7nIoSRIpdMg7QxvCZHvWR0AbQmil61eb3PXe9fxJzGQS7X0X7uGxccA/CfqhU
-	 ml06QNPlksYIe8C9GjVsqxrlxLKoOtyJ8ycHiZqooNa8jMmvtRKZ/6ufbygWQT8Fbl
-	 Plq72uUSIjwCRpexx8J1qdz/KIPpUhi+Mrk5JaiI=
+	b=08nQydoOn9a3/Nfn9tmgjpXBEPaEHSmt4tJcJWxgx2+kCzbV1EaaEaVrzA6/KOQzq
+	 8zhjI22s4xvyU7EnoFwJFN9D66AvrUBM6loK26glPlRvUXR5yjwzTdblWPmZEVxkrQ
+	 XjAu+XE4JDu1EH+5U0lMr6GXte+2id9vmRvQE+F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbfDDJEW (ORCPT
+        id S1731964AbfDDJEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731502AbfDDJEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:20 -0400
+        id S1729879AbfDDJEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21BEC2147C;
-        Thu,  4 Apr 2019 09:04:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3EE221741;
+        Thu,  4 Apr 2019 09:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368659;
-        bh=0Jud5Nh/Vdv45lDXuUCMCtmE07O1Wdz6ghktKJvGbeU=;
+        s=default; t=1554368662;
+        bh=1lfBzk8SrmoxwSDnma05OF4zxIGJE/MaHosHdZmKu8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XGm4m81nao+Wod4RMNMLDY969ynirNb1C4/rBPyLWNlqxwMaE995Xv8UbyQHZHDrR
-         W7U7YFYwk2456rlm20MUyuRZ7uG97C9o6Eg8F2mG3PnPFFCP6YIkh59eFPiZwcNjxJ
-         NYV/hroZaghCaytjTamKhdOOPlocpKJ7xZ3wXk3I=
+        b=DWflh9ubTynXgc0lFt8Nt2922JjKODoslYV0YdWJQR0XYcmJV1oAKtUa4uHY0gAEB
+         uMdlFKEgDVYDrucElcGt16oSguKl1adSGPqTTSAilbC8jajVgKKNGWMxG45+PXtLK6
+         r5KwS+TNBlQBs9mtu45pors3NCyE7sHvELFTt0pA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Sun peng Li <Sunpeng.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/187] drm: rcar-du: add missing of_node_put
-Date:   Thu,  4 Apr 2019 10:47:38 +0200
-Message-Id: <20190404084608.942573298@linuxfoundation.org>
+Subject: [PATCH 4.19 122/187] drm/amd/display: Dont re-program planes for DPMS changes
+Date:   Thu,  4 Apr 2019 10:47:39 +0200
+Message-Id: <20190404084608.987667855@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,62 +70,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4c6d8fc20b09f9684743afd72e4dbc3f15524479 ]
+[ Upstream commit 5062b797db4103218fa00ee254417b8ecaab7401 ]
 
-Add an of_node_put when the result of of_graph_get_remote_port_parent is
-not available.
+[Why]
+There are opt1c lock warnings and CRTC read timeouts when running the
+"igt@kms_plane@plane-position-hole-dpms-pipe-*" tests. These are
+caused by trying to reprogram planes that are not in the current
+context.
 
-Add a second of_node_put if no encoder is selected (encoder remains NULL).
+DPMS off removes the stream from the context. In this case:
 
-The semantic match that finds the first problem is as follows
-(http://coccinelle.lip6.fr):
+new_crtc_state->active_changed = true
+new_crtc_state->mode_changed = false
 
-// <smpl>
-@r exists@
-local idexpression e;
-expression x;
-@@
-e = of_graph_get_remote_port_parent(...);
-... when != x = e
-    when != true e == NULL
-    when != of_node_put(e)
-    when != of_fwnode_handle(e)
-(
-return e;
-|
-*return ...;
-)
-// </smpl>
+The planes are reprogrammed before the stream is removed from the
+context because stream_state->mode_changed = false.
 
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+For DPMS adds the stream and planes back to the context:
+
+new_crtc_state->active_changed = true
+new_crtc_state->mode_changed = false
+
+The planes are also reprogrammed here before the stream is added to the
+context because stream_state->mode_changed = true. They were not
+previously in the current context so warnings occur here.
+
+[How]
+Set stream_state->mode_changed = true when
+new_crtc_state->active_changed = true too.
+
+This prevents reprogramming before the context is applied in DC. The
+programming will be done after the context is applied.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Acked-by: Tony Cheng <Tony.Cheng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_du_kms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-index fb46df56f0c4..0386b454e221 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-@@ -300,6 +300,7 @@ static int rcar_du_encoders_init_one(struct rcar_du_device *rcdu,
- 		dev_dbg(rcdu->dev,
- 			"connected entity %pOF is disabled, skipping\n",
- 			entity);
-+		of_node_put(entity);
- 		return -ENODEV;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index c5ba9128b736..c57e85f08e23 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -4368,7 +4368,8 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
+ 						struct dc_stream_state *stream_state)
+ {
+-	stream_state->mode_changed = crtc_state->mode_changed;
++	stream_state->mode_changed =
++		crtc_state->mode_changed || crtc_state->active_changed;
+ }
  
-@@ -335,6 +336,7 @@ static int rcar_du_encoders_init_one(struct rcar_du_device *rcdu,
- 		dev_warn(rcdu->dev,
- 			 "no encoder found for endpoint %pOF, skipping\n",
- 			 ep->local_node);
-+		of_node_put(entity);
- 		return -ENODEV;
- 	}
- 
+ static int amdgpu_dm_atomic_commit(struct drm_device *dev,
 -- 
 2.19.1
 
