@@ -2,121 +2,157 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443B8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF88C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F76A20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEF820449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554369843;
+	bh=rVA1DBi9XIiA5AnMCaFKe5ECXppAhtrkTBbRmdpHPh0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xY4pT+WZAn/r7eaIPPUGAc0/urRaHc2/Nv+jezW9mDZyhZe9CqTgQEVj13wxLbfJA
+	 82yu9NEIWji+QeA+a4eGdA9d+gIYf7DbadypP7M7CkwgeZUijxRocFTuDoGM5SN7E5
+	 fAe1Mxa1x5grRn7ifOjLxxLor1G1GWMUaHHwZhQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733074AbfDDJXz (ORCPT
+        id S2387774AbfDDJOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:23:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35374 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387593AbfDDJO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 88A78ACA8;
-        Thu,  4 Apr 2019 09:14:53 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 11:14:51 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     Joao Moreira <jmoreira@suse.de>, live-patching@vger.kernel.org,
-        pmladek@suse.cz, jikos@suse.cz, nstange@suse.de,
-        jpoimboe@redhat.com, khlebnikov@yandex-team.ru, jeyu@kernel.org,
-        matz@suse.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        michal.lkml@markovi.net
-Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
-In-Reply-To: <651eb328-b13a-9f31-d4da-9d2e965914e3@redhat.com>
-Message-ID: <alpine.LSU.2.21.1904041113160.32428@pobox.suse.cz>
-References: <20190301141313.15057-1-jmoreira@suse.de> <20190301141313.15057-3-jmoreira@suse.de> <20190318191926.GA23138@redhat.com> <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz> <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de> <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
- <699e78da-36ba-8217-c509-2e9b443bd380@suse.de> <1b6ee81b-5699-a1cc-9a85-02df0eeaed12@redhat.com> <20190328201703.GA8658@redhat.com> <20190401193529.GA26375@redhat.com> <alpine.LSU.2.21.1904031444020.18182@pobox.suse.cz>
- <651eb328-b13a-9f31-d4da-9d2e965914e3@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 4 Apr 2019 05:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387757AbfDDJOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:14:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49F192075E;
+        Thu,  4 Apr 2019 09:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554369287;
+        bh=rVA1DBi9XIiA5AnMCaFKe5ECXppAhtrkTBbRmdpHPh0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JwFLc8XBMgHQUcLnDc08o5cWfIQDxk0l18aOI2dRyEFezLEHtqzeDQIcsi5a6odjp
+         WJTiSRQOXb/quxuuO5n0OrzfExUB9nuPD2vs+k+lc60oJO7+4O63n0pctr3X8FGnVq
+         l5sEPuWl0IekbCpiFH9Q0Sviarv74KBR/CstByrc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 167/246] e1000e: fix cyclic resets at link up with active tx
+Date:   Thu,  4 Apr 2019 10:47:47 +0200
+Message-Id: <20190404084625.021756506@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
+References: <20190404084619.236418459@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019, Joe Lawrence wrote:
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-> On 4/3/19 8:48 AM, Miroslav Benes wrote:
-> > 
-> >> and it looks like the combined KLP_MODULE_RELOC still contains the two
-> >> unique symbol position values (2 and 3):
-> >>
-> >>    % objcopy -O binary --only-section=.klp.module_relocs.vmlinux lib/livepatch/test_klp_convert.klp.o >(hexdump -C)
-> >>    00000000  00 00 00 00 00 00 00 00  02 00 00 00 00 00 00 00  |................|
-> >>    00000010  00 00 00 00 00 00 00 00  03 00 00 00              |............|
-> >>    0000001c
-> > 
-> > Nice :/
-> >   
-> >> Maybe we can work around this by modifying the annotation macros and/or
-> >> klp-convert, or live with this for now.
-> > 
-> > The question is (and I'll check later. I cannot wrap my head around it
-> > now) if it at least works if there are two references of the same symbol
-> > in two different .o. It would be same state_show in this case and not two
-> > different ones. If it works then I think we can live with it for a while,
-> > because after all duplicate symbols are quite rare in the kernel.
-> 
-> Possibly, but in testing that scenario I found another issue.  Check out what
-> happens to the combined .klp.module_relocs.vmlinux section for:
-> 
->   test_klp_convert_a.c
->   KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_a[] = {
->           KLP_SYMPOS(state_show, 2)
->           KLP_SYMPOS(joe, 10)
->           KLP_SYMPOS(joe2, 11)
->   };
-> 
->   test_klp_convert_b.c
->   KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_b[] = {
->           KLP_SYMPOS(state_show, 2)
->   };
-> 
-> The second file's klp_module_reloc are not aligned with the first,
-> so I think there is additional padding to push the second set to a
-> word boundary:
-> 
->   % objcopy -O binary --only-section=.klp.module_relocs.vmlinux lib/livepatch/test_klp_convert.klp.o >(hexdump -C)
->   00000000  00 00 00 00 00 00 00 00  02 00 00 00 00 00 00 00
->             |-*sym----------------|  |--sympos-| |-*sym-----
-> 
->   00000010  00 00 00 00 0a 00 00 00  00 00 00 00 00 00 00 00
->             ----------| |--sympos-|  |-*sym----------------|
-> 
->   00000020  0b 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
->             |-sympos--|              |-*sym----------------|
-> 
->                         ^^^^^^^^^^^
->                         padding
->   00000030  02 00 00 00
->             |-sympos--|
->
-> 
-> in this case, klp-convert thought the last symbol's sympos was
-> incorrectly 0 and not 2.
+------------------
 
-Ugh. It's getting better and better.
+[ Upstream commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61 ]
+
+I'm seeing series of e1000e resets (sometimes endless) at system boot
+if something generates tx traffic at this time. In my case this is
+netconsole who sends message "e1000e 0000:02:00.0: Some CPU C-states
+have been disabled in order to enable jumbo frames" from e1000e itself.
+As result e1000_watchdog_task sees used tx buffer while carrier is off
+and start this reset cycle again.
+
+[   17.794359] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   17.794714] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
+[   22.936455] e1000e 0000:02:00.0 eth1: changing MTU from 1500 to 9000
+[   23.033336] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   26.102364] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   27.174495] 8021q: 802.1Q VLAN Support v1.8
+[   27.174513] 8021q: adding VLAN 0 to HW filter on device eth1
+[   30.671724] cgroup: cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation
+[   30.898564] netpoll: netconsole: local port 6666
+[   30.898566] netpoll: netconsole: local IPv6 address 2a02:6b8:0:80b:beae:c5ff:fe28:23f8
+[   30.898567] netpoll: netconsole: interface 'eth1'
+[   30.898568] netpoll: netconsole: remote port 6666
+[   30.898568] netpoll: netconsole: remote IPv6 address 2a02:6b8:b000:605c:e61d:2dff:fe03:3790
+[   30.898569] netpoll: netconsole: remote ethernet address b0:a8:6e:f4:ff:c0
+[   30.917747] console [netcon0] enabled
+[   30.917749] netconsole: network logging started
+[   31.453353] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.185730] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.321840] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.465822] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.597423] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.745417] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.877356] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.005441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.157376] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.289362] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.417441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   37.790342] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+
+This patch flushes tx buffers only once when carrier is off
+rather than at each watchdog iteration.
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/e1000e/netdev.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 23eae3df01a9..ca48a75be4f2 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5309,8 +5309,13 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 			/* 8000ES2LAN requires a Rx packet buffer work-around
+ 			 * on link down event; reset the controller to flush
+ 			 * the Rx packet buffer.
++			 *
++			 * If the link is lost the controller stops DMA, but
++			 * if there is queued Tx work it cannot be done.  So
++			 * reset the controller to flush the Tx packet buffers.
+ 			 */
+-			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
++			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
++			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
+ 				adapter->flags |= FLAG_RESTART_NOW;
+ 			else
+ 				pm_schedule_suspend(netdev->dev.parent,
+@@ -5333,14 +5338,6 @@ link_up:
+ 	adapter->gotc_old = adapter->stats.gotc;
+ 	spin_unlock(&adapter->stats64_lock);
  
-> If the packed attribute is merely a space optimization, can we
-> simply pull that (or can we specify slightly looser alignment to
-> account for the padding)?
+-	/* If the link is lost the controller stops DMA, but
+-	 * if there is queued Tx work it cannot be done.  So
+-	 * reset the controller to flush the Tx packet buffers.
+-	 */
+-	if (!netif_carrier_ok(netdev) &&
+-	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
+-		adapter->flags |= FLAG_RESTART_NOW;
+-
+ 	/* If reset is necessary, do it outside of interrupt context. */
+ 	if (adapter->flags & FLAG_RESTART_NOW) {
+ 		schedule_work(&adapter->reset_task);
+-- 
+2.19.1
 
-I think so.
 
-> I'll continue working on putting together v3 and add this new item
-> to the TODO list.
 
-Great job btw. Thanks.
-
-Miroslav
