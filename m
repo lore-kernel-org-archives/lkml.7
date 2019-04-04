@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F0DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61D6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7117A217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76A5217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368219;
-	bh=wJ74kGGv1lMzcHPDGzV96IPrARubRdOkfKjq4zHxfvk=;
+	s=default; t=1554368221;
+	bh=/Bd8Gc07YYv2Y58iJVCprt7QPBnrQ7ivEY0oUxMbngw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pM01tJ21Yzcd64FuhGjaD/8ngMVuv2lACqTCITA+zr2v+D18bAwpS18fomoqiptBk
-	 sMslh/ULOLmdfrG03tszrG9450T/oTHDqbzIa7plg5Ihifj2UWJQQLGc8peQRAeMd/
-	 VtJ2sIk+dmMW03YZ+ViuVQIJPfRlYxvGKO4niC1g=
+	b=0aGkgB7n42W1DA3D1Of9hQA1P7X/N2yyuhao/eDNG9W118/Zsh+QfzURxGVny+s6I
+	 vF6EqNEFm0sq0zi/Qn+8cLMBjeIHEGaUWp94W6B4GZdLi+uaTOcH7h3ehRDnbvPn9i
+	 WTk9FSDY2XLZxUJKo05K0Vn1EK6mbI4mPBusE2Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbfDDI45 (ORCPT
+        id S1730601AbfDDI5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60494 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:57:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730576AbfDDI4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:55 -0400
+        id S1729893AbfDDI45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21CC820882;
-        Thu,  4 Apr 2019 08:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B872177E;
+        Thu,  4 Apr 2019 08:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368214;
-        bh=wJ74kGGv1lMzcHPDGzV96IPrARubRdOkfKjq4zHxfvk=;
+        s=default; t=1554368217;
+        bh=/Bd8Gc07YYv2Y58iJVCprt7QPBnrQ7ivEY0oUxMbngw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJjR8rxRx32ke3H3+5WIoca1rERior22S6WTT/EtDN3lGfgmFK9wlzZjao1cyKVlP
-         B9eoiT9K2MKm7S1FYqzAuFBCYM2OkAw6yRE60r1udq7b/vFrnLsQEdw/nlllzi1izV
-         aGqoquKXCsKpC/lgH0srn0RzM+3YV49p0qcBBPYY=
+        b=xTwPekT73neEx+EueqgXdDPv1rltvUDG5ZN0iBS0SJzZJfeya0zo5Nlos5t8zZ/hy
+         PAsQ37Swdy559SxAxpBve7pVE8UhE6WGLbV6qZ2849uR5xF+8LNCytfLQD5R4WxBKu
+         U1sQD3XwLrLym+a9l7NdlZuhnd2TdJV+sazxLBCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 064/121] vfs: fix preadv64v2 and pwritev64v2 compat syscalls with offset == -1
-Date:   Thu,  4 Apr 2019 10:47:32 +0200
-Message-Id: <20190404084548.710638055@linuxfoundation.org>
+        stable@vger.kernel.org, Hong Liu <hong.liu@intel.com>,
+        Hongyan Song <hongyan.song@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 065/121] HID: intel-ish-hid: avoid binding wrong ishtp_cl_device
+Date:   Thu,  4 Apr 2019 10:47:33 +0200
+Message-Id: <20190404084548.770065645@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,53 +67,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cc4b1242d7e3b42eed73881fc749944146493e4f ]
+[ Upstream commit 0d28f49412405d87d3aae83da255070a46e67627 ]
 
-The preadv2 and pwritev2 syscalls are supposed to emulate the readv and
-writev syscalls when offset == -1. Therefore the compat code should
-check for offset before calling do_compat_preadv64 and
-do_compat_pwritev64. This is the case for the preadv2 and pwritev2
-syscalls, but handling of offset == -1 is missing in their 64-bit
-equivalent.
+When performing a warm reset in ishtp bus driver, the ishtp_cl_device
+will not be removed, its fw_client still points to the already freed
+ishtp_device.fw_clients array.
 
-This patch fixes that, calling do_compat_readv and do_compat_writev when
-offset == -1. This fixes the following glibc tests on x32:
- - misc/tst-preadvwritev2
- - misc/tst-preadvwritev64v2
+Later after driver finishing ishtp client enumeration, this dangling
+pointer may cause driver to bind the wrong ishtp_cl_device to the new
+client, causing wrong callback to be called for messages intended for
+the new client.
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+This helps in development of firmware where frequent switching of
+firmwares is required without Linux reboot.
+
+Signed-off-by: Hong Liu <hong.liu@intel.com>
+Tested-by: Hongyan Song <hongyan.song@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/hid/intel-ish-hid/ishtp/bus.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 57a00ef895b2..1c3eada2fe25 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1235,6 +1235,9 @@ COMPAT_SYSCALL_DEFINE5(preadv64v2, unsigned long, fd,
- 		const struct compat_iovec __user *,vec,
- 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
- {
-+	if (pos == -1)
-+		return do_compat_readv(fd, vec, vlen, flags);
-+
- 	return do_compat_preadv64(fd, vec, vlen, pos, flags);
- }
- #endif
-@@ -1341,6 +1344,9 @@ COMPAT_SYSCALL_DEFINE5(pwritev64v2, unsigned long, fd,
- 		const struct compat_iovec __user *,vec,
- 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
- {
-+	if (pos == -1)
-+		return do_compat_writev(fd, vec, vlen, flags);
-+
- 	return do_compat_pwritev64(fd, vec, vlen, pos, flags);
- }
- #endif
+diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
+index 2623a567ffba..f546635e9ac9 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/bus.c
++++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
+@@ -623,7 +623,8 @@ int ishtp_cl_device_bind(struct ishtp_cl *cl)
+ 	spin_lock_irqsave(&cl->dev->device_list_lock, flags);
+ 	list_for_each_entry(cl_device, &cl->dev->device_list,
+ 			device_link) {
+-		if (cl_device->fw_client->client_id == cl->fw_client_id) {
++		if (cl_device->fw_client &&
++		    cl_device->fw_client->client_id == cl->fw_client_id) {
+ 			cl->device = cl_device;
+ 			rv = 0;
+ 			break;
+@@ -683,6 +684,7 @@ void ishtp_bus_remove_all_clients(struct ishtp_device *ishtp_dev,
+ 	spin_lock_irqsave(&ishtp_dev->device_list_lock, flags);
+ 	list_for_each_entry_safe(cl_device, n, &ishtp_dev->device_list,
+ 				 device_link) {
++		cl_device->fw_client = NULL;
+ 		if (warm_reset && cl_device->reference_count)
+ 			continue;
+ 
 -- 
 2.19.1
 
