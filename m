@@ -2,54 +2,53 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0835C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB0FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0C52183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BDFF20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368123;
-	bh=4w0y1qw+Glwe8NECzBGrrnGe0swyFf61ADnwidXutZk=;
+	s=default; t=1554368127;
+	bh=nUWEoMp6/CEvEP9paKb5elULMi+ZuR7NiDHO3PkPobY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPZ3P5npH+Mq97J2T9YbB2xfxD7jtUWPihc0BK4Lg+eO1yntCEOHgYHJuL09aAq3v
-	 Fqt1YjR8Us2iJXswvQb7hnrTPV5r5nesL2DgMs4PFQb4hXsQV21gcGsC/yYcnBkD6X
-	 JqVYyHj7zL0Njlfg+PB2z8KrVdQwr7TskDWZ+MAg=
+	b=yGnprvKrCTs+YnMVb/Z1NBd37eqlDbQndjOw8V29yfmJlJlT948juBiql3w/lf3io
+	 t+0RcHpzYGIcj8aJF2Cp8rsmVC5aXGwFEQQdGf/fIto9eIbzTvIMa/WWRWc+hbRlOk
+	 Ury6sXhf42gSDmV5m478f2DsODp1qjVvP/OstYko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730282AbfDDIzW (ORCPT
+        id S1730291AbfDDIz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58246 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729824AbfDDIzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:19 -0400
+        id S1730275AbfDDIzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B7C217D4;
-        Thu,  4 Apr 2019 08:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C83A720652;
+        Thu,  4 Apr 2019 08:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368118;
-        bh=4w0y1qw+Glwe8NECzBGrrnGe0swyFf61ADnwidXutZk=;
+        s=default; t=1554368121;
+        bh=nUWEoMp6/CEvEP9paKb5elULMi+ZuR7NiDHO3PkPobY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7DN/Md/2kVHZ2XdwAx/rjqc1C73tTFVp6rz4cF0kP2Y1KqsKIvP/Zw6RT+bnNIPb
-         iTs6xfcD39JroJleKRL0v3O6mc3DZiydVIlAovjauqBkGPxLNh8VClLqHpRwh4eaU3
-         A3usCKZuQYsNKkmFCM3Q7R06w2liHZO/opwuLZTo=
+        b=v26o6TBuEGK0uGMTNAuaBzXuCgLCGKY8sVNvxsVOHsVU0eavGWElmSjfBdQv3OVJc
+         zFWfaxwHOQf6+9YVMdFfVVarIynhFUZOyStzSU+p814RSIHpTZ7eeuzDjKgYcnji5X
+         u/vqoIuqlh2f0+hrqBnrTWelTeQguItBwblsk4j8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
+        Steve French <stfrench@microsoft.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 028/121] page_poison: play nicely with KASAN
-Date:   Thu,  4 Apr 2019 10:46:56 +0200
-Message-Id: <20190404084546.877285284@linuxfoundation.org>
+Subject: [PATCH 4.14 029/121] cifs: use correct format characters
+Date:   Thu,  4 Apr 2019 10:46:57 +0200
+Message-Id: <20190404084546.929604116@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -68,91 +67,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4117992df66a26fa33908b4969e04801534baab1 ]
+[ Upstream commit 259594bea574e515a148171b5cd84ce5cbdc028a ]
 
-KASAN does not play well with the page poisoning (CONFIG_PAGE_POISONING).
-It triggers false positives in the allocation path:
+When compiling with -Wformat, clang emits the following warnings:
 
-  BUG: KASAN: use-after-free in memchr_inv+0x2ea/0x330
-  Read of size 8 at addr ffff88881f800000 by task swapper/0
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc1+ #54
-  Call Trace:
-   dump_stack+0xe0/0x19a
-   print_address_description.cold.2+0x9/0x28b
-   kasan_report.cold.3+0x7a/0xb5
-   __asan_report_load8_noabort+0x19/0x20
-   memchr_inv+0x2ea/0x330
-   kernel_poison_pages+0x103/0x3d5
-   get_page_from_freelist+0x15e7/0x4d90
+fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
+short' but the argument has type 'unsigned int' [-Wformat]
+                         tgt_total_cnt, total_in_tgt);
+                                        ^~~~~~~~~~~~
 
-because KASAN has not yet unpoisoned the shadow page for allocation
-before it checks memchr_inv() but only found a stale poison pattern.
+fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                 ^~~~~~~~~~
 
-Also, false positives in free path,
+fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                             ^~~~~~~~~~~~~~~~
 
-  BUG: KASAN: slab-out-of-bounds in kernel_poison_pages+0x29e/0x3d5
-  Write of size 4096 at addr ffff8888112cc000 by task swapper/0/1
-  CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc1+ #55
-  Call Trace:
-   dump_stack+0xe0/0x19a
-   print_address_description.cold.2+0x9/0x28b
-   kasan_report.cold.3+0x7a/0xb5
-   check_memory_region+0x22d/0x250
-   memset+0x28/0x40
-   kernel_poison_pages+0x29e/0x3d5
-   __free_pages_ok+0x75f/0x13e0
+fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                 ^~~~~~~~~~~~~
 
-due to KASAN adds poisoned redzones around slab objects, but the page
-poisoning needs to poison the whole page.
+fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                                ^~~~~~~~~~~~~~~~~~
+The types of these arguments are unconditionally defined, so this patch
+updates the format character to the correct ones for ints and unsigned
+ints.
 
-Link: http://lkml.kernel.org/r/20190114233405.67843-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
+
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c  | 2 +-
- mm/page_poison.c | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ fs/cifs/cifs_dfs_ref.c | 4 ++--
+ fs/cifs/smb1ops.c      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 40075c1946b3..923deb33bf34 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1764,8 +1764,8 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
- 
- 	arch_alloc_page(page, order);
- 	kernel_map_pages(page, 1 << order, 1);
--	kernel_poison_pages(page, 1 << order, 1);
- 	kasan_alloc_pages(page, order);
-+	kernel_poison_pages(page, 1 << order, 1);
- 	set_page_owner(page, order, gfp_flags);
- }
- 
-diff --git a/mm/page_poison.c b/mm/page_poison.c
-index e83fd44867de..a7ba9e315a12 100644
---- a/mm/page_poison.c
-+++ b/mm/page_poison.c
-@@ -6,6 +6,7 @@
- #include <linux/page_ext.h>
- #include <linux/poison.h>
- #include <linux/ratelimit.h>
-+#include <linux/kasan.h>
- 
- static bool want_page_poisoning __read_mostly;
- 
-@@ -34,7 +35,10 @@ static void poison_page(struct page *page)
+diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
+index 6b61df117fd4..563e2f6268c3 100644
+--- a/fs/cifs/cifs_dfs_ref.c
++++ b/fs/cifs/cifs_dfs_ref.c
+@@ -271,9 +271,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
  {
- 	void *addr = kmap_atomic(page);
- 
-+	/* KASAN still think the page is in-use, so skip it. */
-+	kasan_disable_current();
- 	memset(addr, PAGE_POISON, PAGE_SIZE);
-+	kasan_enable_current();
- 	kunmap_atomic(addr);
+ 	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
+ 	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
+-	cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
++	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
+ 		 ref->flags, ref->server_type);
+-	cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
++	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
+ 		 ref->ref_flag, ref->path_consumed);
  }
  
+diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
+index d8cd82001c1c..f50d3d0b9b87 100644
+--- a/fs/cifs/smb1ops.c
++++ b/fs/cifs/smb1ops.c
+@@ -306,7 +306,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
+ 	remaining = tgt_total_cnt - total_in_tgt;
+ 
+ 	if (remaining < 0) {
+-		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
++		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
+ 			 tgt_total_cnt, total_in_tgt);
+ 		return -EPROTO;
+ 	}
 -- 
 2.19.1
 
