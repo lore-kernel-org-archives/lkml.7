@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A73C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BE6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73542183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BD62183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368517;
-	bh=U/ISEtmAbFDSWDBOws/rt17KURHFkUzg6AxUwn+wHWQ=;
+	s=default; t=1554368522;
+	bh=ReCXjDPib65EYZYt2ERVLdD8NZTQhP04oQGom1ItsJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O/jObikVSOY+teH8tidZaXRKxDbQsltIw7MvX5fPMvruz56Qpo0RrLzxV/L3PNEx8
-	 x9sTBhIRwbIIBTjB1wPgWGc5zl74mMraL4wm+BMatzlkL9XHJ6RmVmMvz590SYdT42
-	 FoVZ10ejGMPjBwbFDdUnU/S8gUTCpQwDkKhKbR+Q=
+	b=t7WO3UnZ+N24jQfYCCL4p0HfTjeBA8KRIk1ruyi4M7B1w9ytlsxOUDJLRCeEL+x3a
+	 L4vZWFcQrEeBJHpfrLbOC/gfLJ+NpN9pwIQd4K1nB9X0ljvguyqvrcMR2lcLEdyJIq
+	 K7Ar/O6odPONLT/SoQDgTWSNBFef849c58o/4Ebc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbfDDJB4 (ORCPT
+        id S1731539AbfDDJCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39148 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730264AbfDDJBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:53 -0400
+        id S1731521AbfDDJB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A3A21741;
-        Thu,  4 Apr 2019 09:01:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0533221741;
+        Thu,  4 Apr 2019 09:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368513;
-        bh=U/ISEtmAbFDSWDBOws/rt17KURHFkUzg6AxUwn+wHWQ=;
+        s=default; t=1554368518;
+        bh=ReCXjDPib65EYZYt2ERVLdD8NZTQhP04oQGom1ItsJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UuBTu8IeLDoJpv74emDbF3332G95ccewUokiXLtwSdzCNS6K4TGpv7cLhZRORSria
-         MOIQKNYZ8Mv1kJynsjW2+qpRWDvF3nSCn+bQmaRF/KKHmxrsmOHPW4BfrLJiV5vzBD
-         SZBaTu7gZk+leMfjNnXh77M87LcoiBHxMiRt1+XI=
+        b=UMa5Sljespp+2fwyOiiouCjmgR2ZPu/yKHRw3/LWbld4pYo77uoRVAUYtV2PKbGWZ
+         83MYo9ga6UwyoHs66AXe1AazdMqKrQzdVnvtnSuJ1awrkWaLht+dF9vvs5Dcnv7f2H
+         //atpheFj47e5OEkD7zquNFN2MoQLL3I0Ns4+8VI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Fan <nullptr.cpp@gmail.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 067/187] platform/x86: ideapad-laptop: Fix no_hw_rfkill_list for Lenovo RESCUER R720-15IKBN
-Date:   Thu,  4 Apr 2019 10:46:44 +0200
-Message-Id: <20190404084606.209141037@linuxfoundation.org>
+Subject: [PATCH 4.19 069/187] loop: set GENHD_FL_NO_PART_SCAN after blkdev_reread_part()
+Date:   Thu,  4 Apr 2019 10:46:46 +0200
+Message-Id: <20190404084606.297660347@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,56 +66,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4d9b2864a415fec39150bc13efc730c7eb88711e ]
+[ Upstream commit 758a58d0bc67457f1215321a536226654a830eeb ]
 
-Commit ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER
-R720-15IKBN to no_hw_rfkill_list") added
-    DMI_MATCH(DMI_BOARD_NAME, "80WW")
-for Lenovo RESCUER R720-15IKBN.
+Commit 0da03cab87e6
+("loop: Fix deadlock when calling blkdev_reread_part()") moves
+blkdev_reread_part() out of the loop_ctl_mutex. However,
+GENHD_FL_NO_PART_SCAN is set before __blkdev_reread_part(). As a result,
+__blkdev_reread_part() will fail the check of GENHD_FL_NO_PART_SCAN and
+will not rescan the loop device to delete all partitions.
 
-But DMI_BOARD_NAME does not match 80WW on Lenovo RESCUER R720-15IKBN,
-thus cause Wireless LAN still be hard blocked.
+Below are steps to reproduce the issue:
 
-On Lenovo RESCUER R720-15IKBN:
-    ~$ cat /sys/class/dmi/id/sys_vendor
-    LENOVO
-    ~$ cat /sys/class/dmi/id/board_name
-    Provence-5R3
-    ~$ cat /sys/class/dmi/id/product_name
-    80WW
-    ~$ cat /sys/class/dmi/id/product_version
-    Lenovo R720-15IKBN
+step1 # dd if=/dev/zero of=tmp.raw bs=1M count=100
+step2 # losetup -P /dev/loop0 tmp.raw
+step3 # parted /dev/loop0 mklabel gpt
+step4 # parted -a none -s /dev/loop0 mkpart primary 64s 1
+step5 # losetup -d /dev/loop0
 
-So on Lenovo RESCUER R720-15IKBN:
-    DMI_SYS_VENDOR should match "LENOVO",
-    DMI_BOARD_NAME should match "Provence-5R3",
-    DMI_PRODUCT_NAME should match "80WW",
-    DMI_PRODUCT_VERSION should match "Lenovo R720-15IKBN".
+Step5 will not be able to delete /dev/loop0p1 (introduced by step4) and
+there is below kernel warning message:
 
-Fix it, and in according with other entries in no_hw_rfkill_list,
-use DMI_PRODUCT_VERSION instead of DMI_BOARD_NAME.
+[  464.414043] __loop_clr_fd: partition scan of loop0 failed (rc=-22)
 
-Fixes: ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER R720-15IKBN to no_hw_rfkill_list")
-Signed-off-by: Yang Fan <nullptr.cpp@gmail.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+This patch sets GENHD_FL_NO_PART_SCAN after blkdev_reread_part().
+
+Fixes: 0da03cab87e6 ("loop: Fix deadlock when calling blkdev_reread_part()")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/ideapad-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/loop.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index d4f1259ff5a2..62d4b94e2531 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -989,7 +989,7 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
- 		.ident = "Lenovo RESCUER R720-15IKBN",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
--			DMI_MATCH(DMI_BOARD_NAME, "80WW"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
- 		},
- 	},
- 	{
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 0c5aeab4d23a..a63da9e07341 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1090,16 +1090,12 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+ 		kobject_uevent(&disk_to_dev(bdev->bd_disk)->kobj, KOBJ_CHANGE);
+ 	}
+ 	mapping_set_gfp_mask(filp->f_mapping, gfp);
+-	lo->lo_state = Lo_unbound;
+ 	/* This is safe: open() is still holding a reference. */
+ 	module_put(THIS_MODULE);
+ 	blk_mq_unfreeze_queue(lo->lo_queue);
+ 
+ 	partscan = lo->lo_flags & LO_FLAGS_PARTSCAN && bdev;
+ 	lo_number = lo->lo_number;
+-	lo->lo_flags = 0;
+-	if (!part_shift)
+-		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
+ 	loop_unprepare_queue(lo);
+ out_unlock:
+ 	mutex_unlock(&loop_ctl_mutex);
+@@ -1121,6 +1117,23 @@ out_unlock:
+ 		/* Device is gone, no point in returning error */
+ 		err = 0;
+ 	}
++
++	/*
++	 * lo->lo_state is set to Lo_unbound here after above partscan has
++	 * finished.
++	 *
++	 * There cannot be anybody else entering __loop_clr_fd() as
++	 * lo->lo_backing_file is already cleared and Lo_rundown state
++	 * protects us from all the other places trying to change the 'lo'
++	 * device.
++	 */
++	mutex_lock(&loop_ctl_mutex);
++	lo->lo_flags = 0;
++	if (!part_shift)
++		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
++	lo->lo_state = Lo_unbound;
++	mutex_unlock(&loop_ctl_mutex);
++
+ 	/*
+ 	 * Need not hold loop_ctl_mutex to fput backing file.
+ 	 * Calling fput holding loop_ctl_mutex triggers a circular
 -- 
 2.19.1
 
