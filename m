@@ -2,91 +2,126 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82570C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551DBC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46026206B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EjVaaQx0";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aN4n385L"
+	by mail.kernel.org (Postfix) with ESMTP id 133CD205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554370152;
+	bh=HAUtNYxJXUFNH3/jJY7qhC5vTm36Hd/J3VUHtFjnfPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hWCV78PBlcWu0b58rZ7IzrvACDp0PArIJmK4lwxC5ttKoREaq8gLm2Ypce7RYfroU
+	 PsSW8P9wgzc/rl+iQh8Vx6zGHsmRSEH7tEaO5x9p+sQbNmKzjfYneNoHGHEkeRhlqP
+	 aLdzgu0eWHVzzUJtyQOlC4OIgvawUodqanVOKm5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbfDDJ25 (ORCPT
+        id S1733286AbfDDJ3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:28:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:48664 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729275AbfDDJ2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:28:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 58765614B5; Thu,  4 Apr 2019 09:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554370134;
-        bh=0Kvu+k7olBLdhhfbWZY3bUkOtIN9a4rTe3VpQTjAPjQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=EjVaaQx078VvzlNQl2b5s2/9X8zkexxkwgEtpngYr3E6k9geQTaQCeeQ93HNyaX17
-         4/euP7z5cb5Wwww+RB/B+W8+cdELCKWUBIkmGZWH6QkWLHpNI87cxqANt81mW2yEKr
-         oh7/lbnOWD1MvsyMD/+33FPmVkG5jy1ZZwKoBRhw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Thu, 4 Apr 2019 05:29:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731411AbfDDJLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:11:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F01FD619D2;
-        Thu,  4 Apr 2019 09:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554370133;
-        bh=0Kvu+k7olBLdhhfbWZY3bUkOtIN9a4rTe3VpQTjAPjQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=aN4n385Lh+W/3/LzSNhVU5wJ6Z2+OGOKrRAO883iCXKB7oIj7FWx1cVOezreYQaH3
-         TGDC83wB04rQeIh11droL4epwSpBF26xr9k0wXJlgJFCsh+aPPNSCwxtRJQLGJSdfe
-         NJb2k+WNXzLFM6F+sq1Z/msxOHeJKfmg6ES4MyZU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F01FD619D2
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.kernel.org (Postfix) with ESMTPSA id 819B620652;
+        Thu,  4 Apr 2019 09:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554369076;
+        bh=HAUtNYxJXUFNH3/jJY7qhC5vTm36Hd/J3VUHtFjnfPg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OxgxU4UQnmCR1dGu+DvPw+xWfbilObCLVYUDvhdJ/DLfqDMtIBJsn57DuTA8HZ+I0
+         GmEhLFYSYBN+2AkFm/PMZw2VKxoUgSUngfXUPAZGcsRCEzxFhhfQRcC2nJY8E18GQE
+         3D4Es3gwZWQD245+wD+sulUIW9nU9MXaFNraEhZ0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 063/246] crypto: crypto4xx - add missing of_node_put after of_device_is_available
+Date:   Thu,  4 Apr 2019 10:46:03 +0200
+Message-Id: <20190404084621.367419870@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
+References: <20190404084619.236418459@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] net: mwifiex: fix a NULL pointer dereference
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190323035711.23882-1-kjlu@umn.edu>
-References: <20190323035711.23882-1-kjlu@umn.edu>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     kjlu@umn.edu, pakki001@umn.edu,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190404092854.58765614B5@smtp.codeaurora.org>
-Date:   Thu,  4 Apr 2019 09:28:53 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kangjie Lu <kjlu@umn.edu> wrote:
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-> In case dev_alloc_skb fails, the fix returns -ENOMEM to avoid
-> NULL pointer dereference.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+------------------
 
-There is a similar patch submitted:
+[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
 
-https://patchwork.kernel.org/patch/10851669/
+Add an of_node_put when a tested device node is not available.
 
-Patch set to Superseded.
+The semantic patch that fixes this problem is as follows
+(http://coccinelle.lip6.fr):
 
+// <smpl>
+@@
+identifier f;
+local idexpression e;
+expression x;
+@@
+
+e = f(...);
+... when != of_node_put(e)
+    when != x = e
+    when != e = x
+    when any
+if (<+...of_device_is_available(e)...+>) {
+  ... when != of_node_put(e)
+(
+  return e;
+|
++ of_node_put(e);
+  return ...;
+)
+}
+// </smpl>
+
+Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
+index 5e63742b0d22..53ab1f140a26 100644
+--- a/drivers/crypto/amcc/crypto4xx_trng.c
++++ b/drivers/crypto/amcc/crypto4xx_trng.c
+@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
+ 
+ 	/* Find the TRNG device node and map it */
+ 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
+-	if (!trng || !of_device_is_available(trng))
++	if (!trng || !of_device_is_available(trng)) {
++		of_node_put(trng);
+ 		return;
++	}
+ 
+ 	dev->trng_base = of_iomap(trng, 0);
+ 	of_node_put(trng);
 -- 
-https://patchwork.kernel.org/patch/10866749/
+2.19.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
 
