@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53EEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59ABC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950E220652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1EF2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369021;
-	bh=1aocFFN7czNLmJgbsmMdpuvADc09IZYWEvWl5xCWgio=;
+	s=default; t=1554369024;
+	bh=G6qygJ2/oHrBKADi3uGwExn6csKwL8GQz/ZKMhbVwR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pUg/+0WhWUNFP9vwNgqVjSIZpUfsV7JfgyNzD86j/0HH30KCVZITOwg5bRX/Li5+G
-	 lvKUp5PG1M4Ip0XX6EqeCtgpYhf9+yO6L9FcJY/o4Ux08aRiO1L3RhwL8yod52sAxA
-	 KBrAOocl0umh8A6Tfk48lVuPYCpFDH/b60/0O4cU=
+	b=SAXUqJzmceZHi57G9Duxofsn+afJC3CUuNl9dvz0Yow/39wF4BEcOr8U2RKg6DJ1T
+	 B0IZffN5B3ZjuiCF3qHN5NzPLUrqQ1AbQwPSjndw+yb3W8a4CVBwS8lGbZ7NDMBKRY
+	 j2zYcw2elJ/LXgSIjckv1T2biQSSqr+qXKWAMNPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbfDDJKU (ORCPT
+        id S1733008AbfDDJKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49818 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732982AbfDDJKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:15 -0400
+        id S1732982AbfDDJKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70A772075E;
-        Thu,  4 Apr 2019 09:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A878E2054F;
+        Thu,  4 Apr 2019 09:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369014;
-        bh=1aocFFN7czNLmJgbsmMdpuvADc09IZYWEvWl5xCWgio=;
+        s=default; t=1554369020;
+        bh=G6qygJ2/oHrBKADi3uGwExn6csKwL8GQz/ZKMhbVwR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dv3b4Lh1r1eoIPR2SGgSRQyBk1GekOLqugnxZlqJJ4nT7NIGViOzsh20Quww9rBvS
-         ghwnP1rztIi35J71U729Vq9SR1v9WtFkm7XNH3IklWuAyafpuRufvceIC5cU76vJwe
-         RuR8cie6oNj0bRX48bLAtgI1h9UBNdpTjdHUeLG8=
+        b=bYBuLXx5TcZvHdUE20dC0OgZHxl1Rg+CjT/4MDUjORpdelIBmOCjVQzhfP+v7hki1
+         svzB51jWQrCpHU50/RDXUEYixw/AjQdt9ZU/saJ3Fq53AJFuDRkohSKylgpsvcuxtz
+         dhvWn6dXKh1QZD1WAreH5OQfMtY1HEXTheQSXlNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Zhang Yu <zhangyu31@baidu.com>,
-        Li RongQing <lirongqing@baidu.com>,
+        stable@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 049/246] netfilter: nf_tables: check the result of dereferencing base_chain->stats
-Date:   Thu,  4 Apr 2019 10:45:49 +0200
-Message-Id: <20190404084620.737945312@linuxfoundation.org>
+Subject: [PATCH 5.0 051/246] netfilter: conntrack: tcp: only close if RST matches exact sequence
+Date:   Thu,  4 Apr 2019 10:45:51 +0200
+Message-Id: <20190404084620.805315519@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,67 +68,211 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a9f5e78c403d2d62ade4f4c85040efc85f4049b8 ]
+[ Upstream commit be0502a3f2e94211a8809a09ecbc3a017189b8fb ]
 
-Check the result of dereferencing base_chain->stats, instead of result
-of this_cpu_ptr with NULL.
+TCP resets cause instant transition from established to closed state
+provided the reset is in-window.  Endpoints that implement RFC 5961
+require resets to match the next expected sequence number.
+RST segments that are in-window (but that do not match RCV.NXT) are
+ignored, and a "challenge ACK" is sent back.
 
-base_chain->stats maybe be changed to NULL when a chain is updated and a
-new NULL counter can be attached.
+Main problem for conntrack is that its a middlebox, i.e.  whereas an end
+host might have ACK'd SEQ (and would thus accept an RST with this
+sequence number), conntrack might not have seen this ACK (yet).
 
-And we do not need to check returning of this_cpu_ptr since
-base_chain->stats is from percpu allocator if it is non-NULL,
-this_cpu_ptr returns a valid value.
+Therefore we can't simply flag RSTs with non-exact match as invalid.
 
-And fix two sparse error by replacing rcu_access_pointer and
-rcu_dereference with READ_ONCE under rcu_read_lock.
+This updates RST processing as follows:
 
-Thanks for Eric's help to finish this patch.
+1. If the connection is in a state other than ESTABLISHED, nothing is
+   changed, RST is subject to normal in-window check.
 
-Fixes: 009240940e84c1 ("netfilter: nf_tables: don't assume chain stats are set when jumplabel is set")
-Signed-off-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
+2. If the RSTs sequence number either matches exactly RCV.NXT,
+   connection state moves to CLOSE.
+
+3. The same applies if the RST sequence number aligns with a previous
+   packet in the same direction.
+
+In all other cases, the connection remains in ESTABLISHED state.
+If the normal-in-window check passes, the timeout will be lowered
+to that of CLOSE.
+
+If the peer sends a challenge ack, connection timeout will be reset.
+
+If the challenge ACK triggers another RST (RST was valid after all),
+this 2nd RST will match expected sequence and conntrack state changes to
+CLOSE.
+
+If no challenge ACK is received, the connection will time out after
+CLOSE seconds (10 seconds by default), just like without this patch.
+
+Packetdrill test case:
+
+0.000 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+0.000 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+0.000 bind(3, ..., ...) = 0
+0.000 listen(3, 1) = 0
+
+0.100 < S 0:0(0) win 32792 <mss 1460,sackOK,nop,nop,nop,wscale 7>
+0.100 > S. 0:0(0) ack 1 win 64240 <mss 1460,nop,nop,sackOK,nop,wscale 7>
+0.200 < . 1:1(0) ack 1 win 257
+0.200 accept(3, ..., ...) = 4
+
+// Receive a segment.
+0.210 < P. 1:1001(1000) ack 1 win 46
+0.210 > . 1:1(0) ack 1001
+
+// Application writes 1000 bytes.
+0.250 write(4, ..., 1000) = 1000
+0.250 > P. 1:1001(1000) ack 1001
+
+// First reset, old sequence. Conntrack (correctly) considers this
+// invalid due to failed window validation (regardless of this patch).
+0.260 < R  2:2(0) ack 1001 win 260
+
+// 2nd reset, but too far ahead sequence.  Same: correctly handled
+// as invalid.
+0.270 < R 99990001:99990001(0) ack 1001 win 260
+
+// in-window, but not exact sequence.
+// Current Linux kernels might reply with a challenge ack, and do not
+// remove connection.
+// Without this patch, conntrack state moves to CLOSE.
+// With patch, timeout is lowered like CLOSE, but connection stays
+// in ESTABLISHED state.
+0.280 < R 1010:1010(0) ack 1001 win 260
+
+// Expect challenge ACK
+0.281 > . 1001:1001(0) ack 1001 win 501
+
+// With or without this patch, RST will cause connection
+// to move to CLOSE (sequence number matches)
+// 0.282 < R 1001:1001(0) ack 1001 win 260
+
+// ACK
+0.300 < . 1001:1001(0) ack 1001 win 257
+
+// more data could be exchanged here, connection
+// is still established
+
+// Client closes the connection.
+0.610 < F. 1001:1001(0) ack 1001 win 260
+0.650 > . 1001:1001(0) ack 1002
+
+// Close the connection without reading outstanding data
+0.700 close(4) = 0
+
+// so one more reset.  Will be deemed acceptable with patch as well:
+// connection is already closing.
+0.701 > R. 1001:1001(0) ack 1002 win 501
+// End packetdrill test case.
+
+With patch, this generates following conntrack events:
+   [NEW] 120 SYN_SENT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [UNREPLIED]
+[UPDATE] 60 SYN_RECV src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80
+[UPDATE] 432000 ESTABLISHED src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+[UPDATE] 120 FIN_WAIT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+[UPDATE] 60 CLOSE_WAIT src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+[UPDATE] 10 CLOSE src=10.0.2.1 dst=10.0.0.1 sport=5437 dport=80 [ASSURED]
+
+Without patch, first RST moves connection to close, whereas socket state
+does not change until FIN is received.
+   [NEW] 120 SYN_SENT src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [UNREPLIED]
+[UPDATE] 60 SYN_RECV src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80
+[UPDATE] 432000 ESTABLISHED src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [ASSURED]
+[UPDATE] 10 CLOSE src=10.0.2.1 dst=10.0.0.1 sport=5141 dport=80 [ASSURED]
+
+Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ net/netfilter/nf_conntrack_proto_tcp.c | 50 ++++++++++++++++++++------
+ 1 file changed, 40 insertions(+), 10 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_core.c b/net/netfilter/nf_tables_core.c
-index a50500232b0a..7e8dae82ca52 100644
---- a/net/netfilter/nf_tables_core.c
-+++ b/net/netfilter/nf_tables_core.c
-@@ -98,21 +98,23 @@ static noinline void nft_update_chain_stats(const struct nft_chain *chain,
- 					    const struct nft_pktinfo *pkt)
- {
- 	struct nft_base_chain *base_chain;
-+	struct nft_stats __percpu *pstats;
- 	struct nft_stats *stats;
- 
- 	base_chain = nft_base_chain(chain);
--	if (!rcu_access_pointer(base_chain->stats))
--		return;
- 
--	local_bh_disable();
--	stats = this_cpu_ptr(rcu_dereference(base_chain->stats));
--	if (stats) {
-+	rcu_read_lock();
-+	pstats = READ_ONCE(base_chain->stats);
-+	if (pstats) {
-+		local_bh_disable();
-+		stats = this_cpu_ptr(pstats);
- 		u64_stats_update_begin(&stats->syncp);
- 		stats->pkts++;
- 		stats->bytes += pkt->skb->len;
- 		u64_stats_update_end(&stats->syncp);
-+		local_bh_enable();
- 	}
--	local_bh_enable();
-+	rcu_read_unlock();
+diff --git a/net/netfilter/nf_conntrack_proto_tcp.c b/net/netfilter/nf_conntrack_proto_tcp.c
+index 4dcbd51a8e97..74fb3fa34db4 100644
+--- a/net/netfilter/nf_conntrack_proto_tcp.c
++++ b/net/netfilter/nf_conntrack_proto_tcp.c
+@@ -828,6 +828,12 @@ static noinline bool tcp_new(struct nf_conn *ct, const struct sk_buff *skb,
+ 	return true;
  }
  
- struct nft_jumpstack {
++static bool nf_conntrack_tcp_established(const struct nf_conn *ct)
++{
++	return ct->proto.tcp.state == TCP_CONNTRACK_ESTABLISHED &&
++	       test_bit(IPS_ASSURED_BIT, &ct->status);
++}
++
+ /* Returns verdict for packet, or -1 for invalid. */
+ static int tcp_packet(struct nf_conn *ct,
+ 		      struct sk_buff *skb,
+@@ -1030,16 +1036,38 @@ static int tcp_packet(struct nf_conn *ct,
+ 			new_state = TCP_CONNTRACK_ESTABLISHED;
+ 		break;
+ 	case TCP_CONNTRACK_CLOSE:
+-		if (index == TCP_RST_SET
+-		    && (ct->proto.tcp.seen[!dir].flags & IP_CT_TCP_FLAG_MAXACK_SET)
+-		    && before(ntohl(th->seq), ct->proto.tcp.seen[!dir].td_maxack)) {
+-			/* Invalid RST  */
+-			spin_unlock_bh(&ct->lock);
+-			nf_ct_l4proto_log_invalid(skb, ct, "invalid rst");
+-			return -NF_ACCEPT;
++		if (index != TCP_RST_SET)
++			break;
++
++		if (ct->proto.tcp.seen[!dir].flags & IP_CT_TCP_FLAG_MAXACK_SET) {
++			u32 seq = ntohl(th->seq);
++
++			if (before(seq, ct->proto.tcp.seen[!dir].td_maxack)) {
++				/* Invalid RST  */
++				spin_unlock_bh(&ct->lock);
++				nf_ct_l4proto_log_invalid(skb, ct, "invalid rst");
++				return -NF_ACCEPT;
++			}
++
++			if (!nf_conntrack_tcp_established(ct) ||
++			    seq == ct->proto.tcp.seen[!dir].td_maxack)
++				break;
++
++			/* Check if rst is part of train, such as
++			 *   foo:80 > bar:4379: P, 235946583:235946602(19) ack 42
++			 *   foo:80 > bar:4379: R, 235946602:235946602(0)  ack 42
++			 */
++			if (ct->proto.tcp.last_index == TCP_ACK_SET &&
++			    ct->proto.tcp.last_dir == dir &&
++			    seq == ct->proto.tcp.last_end)
++				break;
++
++			/* ... RST sequence number doesn't match exactly, keep
++			 * established state to allow a possible challenge ACK.
++			 */
++			new_state = old_state;
+ 		}
+-		if (index == TCP_RST_SET
+-		    && ((test_bit(IPS_SEEN_REPLY_BIT, &ct->status)
++		if (((test_bit(IPS_SEEN_REPLY_BIT, &ct->status)
+ 			 && ct->proto.tcp.last_index == TCP_SYN_SET)
+ 			|| (!test_bit(IPS_ASSURED_BIT, &ct->status)
+ 			    && ct->proto.tcp.last_index == TCP_ACK_SET))
+@@ -1055,7 +1083,7 @@ static int tcp_packet(struct nf_conn *ct,
+ 			 * segments we ignored. */
+ 			goto in_window;
+ 		}
+-		/* Just fall through */
++		break;
+ 	default:
+ 		/* Keep compilers happy. */
+ 		break;
+@@ -1090,6 +1118,8 @@ static int tcp_packet(struct nf_conn *ct,
+ 	if (ct->proto.tcp.retrans >= tn->tcp_max_retrans &&
+ 	    timeouts[new_state] > timeouts[TCP_CONNTRACK_RETRANS])
+ 		timeout = timeouts[TCP_CONNTRACK_RETRANS];
++	else if (unlikely(index == TCP_RST_SET))
++		timeout = timeouts[TCP_CONNTRACK_CLOSE];
+ 	else if ((ct->proto.tcp.seen[0].flags | ct->proto.tcp.seen[1].flags) &
+ 		 IP_CT_TCP_FLAG_DATA_UNACKNOWLEDGED &&
+ 		 timeouts[new_state] > timeouts[TCP_CONNTRACK_UNACK])
 -- 
 2.19.1
 
