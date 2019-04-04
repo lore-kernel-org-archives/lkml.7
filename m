@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB5CC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2F1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5A421850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A1421741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368341;
-	bh=v+nuqGqM4NGYw41yw+uY/T6nuoyhHi8ovOwZlnE2Ldc=;
+	s=default; t=1554368347;
+	bh=UepO2QG41JDKi4+vqqeiJ9xdbbGIf7Cb2y0WZ17ulA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xh5zIu7KJ9IXfWBkF8SxYQ/PJnHL8JRNtDPtgDLXcBBHZCSY3Q9ruDMZBD1UIgALd
-	 j+EMUjXeWmaj+JCnl/VZH/z3oGv9oqAQol0phyhbrne3jkArUYt0uRGt0pDydsPVMo
-	 xdrNlVRQlLqHPAdSh9okmZ1/4Z+52Q93m1T8xpqc=
+	b=cgLsYn2uSLc1JGw1m8CdxLzt5sx3Q9yUpHa/hK4m65HIv+cT6BzgdsFZFIXaSq5+x
+	 zH2B/arY7IqQkw6vVgC/jVF2mSNnWTKMw0aNTln6qzD1Y8ZMnFzKS0JIvBcPJEGsx3
+	 NWFXqiUQw1jfNtoD+Y4rHfvXJg4PgS3J7kyZp6Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbfDDI67 (ORCPT
+        id S1731024AbfDDI7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730630AbfDDI64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:58:56 -0400
+        id S1730614AbfDDI7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28F9C2190A;
-        Thu,  4 Apr 2019 08:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4077721741;
+        Thu,  4 Apr 2019 08:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368335;
-        bh=v+nuqGqM4NGYw41yw+uY/T6nuoyhHi8ovOwZlnE2Ldc=;
+        s=default; t=1554368340;
+        bh=UepO2QG41JDKi4+vqqeiJ9xdbbGIf7Cb2y0WZ17ulA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRL9dQdk4jlWtyhv5eFP1bYo2kuhfxWt5uTRVloGQwPoRl1yeMZ0KXWe3ZuVgfnDa
-         NR8HJBVcmZEeGwnw7yCxrURuRMtzoO7S17QuXk1Wc4b/NE5LRDC8lLUBpWbpLhow1W
-         rj4/o1bcKLdirjukmq/uB7OcZYpLJN9Sy9JxhK/Q=
+        b=KLPxVFMGMIrlT5okC9lkhkgVM2GaNcq7+A/oiolhyJ/FZ3/NT7Idv9IlFDOYhi8iH
+         W6waSsIAA+plQkeUtOkmFXYHCDEarLpOlAvENh2jLhjrCiIJKhL/GImPABuL6UDDcG
+         gQHsGOBgoItvZbqRL1ZB3cQokZlyQxo6wW5H3mdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zumeng Chen <zumeng.chen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 116/121] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
-Date:   Thu,  4 Apr 2019 10:48:24 +0200
-Message-Id: <20190404084551.532564440@linuxfoundation.org>
+Subject: [PATCH 4.14 118/121] clk: rockchip: fix frac settings of GPLL clock for rk3328
+Date:   Thu,  4 Apr 2019 10:48:26 +0200
+Message-Id: <20190404084551.624973613@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,57 +67,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
+[ Upstream commit a0e447b0c50240a90ab84b7126b3c06b0bab4adc ]
 
-Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
-failed instead of meaningless goto out to avoid the following memory leak
-reports(Only the last one listed):
+This patch fixes settings of GPLL frequency in fractional mode for
+rk3328. In this mode, FOUTVCO is calcurated by following formula:
+  FOUTVCO = FREF * FBDIV / REFDIV + ((FREF * FRAC / REFDIV) >> 24)
 
-unreferenced object 0xc28a9a00 (size 512):
-  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<6624adab>] kmemleak_alloc+0x40/0x74
-    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
-    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
-    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
-    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
-    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
-    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
-    [<7e1d425a>] process_one_work+0x284/0x42c
-    [<55f9432e>] worker_thread+0x2fc/0x48c
-    [<abb582c6>] kthread+0x148/0x160
-    [<63144b13>] ret_from_fork+0x14/0x2c
-    [< (null)>] (null)
-    [<1f6e7715>] 0xffffffff
+The problem is in FREF * FRAC >> 24 term. This result always lacks
+one from target value is specified by rate member. For example first
+itme of rk3328_pll_frac_rate originally has
+  - rate  : 1016064000
+  - refdiv: 3
+  - fbdiv : 127
+  - frac  : 134217
+  - FREF * FBDIV / REFDIV        = 1016000000
+  - (FREF * FRAC / REFDIV) >> 24 = 63999
+Thus calculated rate is 1016063999. It seems wrong.
 
-Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+If frac has 134218 (it is increased 1 from original value), second
+term is 64000. All other items have same situation. So this patch
+adds 1 to frac member in all items of rk3328_pll_frac_rate.
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Acked-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/clk/rockchip/clk-rk3328.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index c346c021b999..eb3a7971c1d3 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -1058,8 +1058,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
- 		goto out;
+diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
+index b04f29774ee7..559abf76891e 100644
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -78,17 +78,17 @@ static struct rockchip_pll_rate_table rk3328_pll_rates[] = {
  
- 	ret = wl12xx_fetch_firmware(wl, plt);
--	if (ret < 0)
--		goto out;
-+	if (ret < 0) {
-+		kfree(wl->fw_status);
-+		kfree(wl->raw_fw_status);
-+		kfree(wl->tx_res_if);
-+	}
- 
- out:
- 	return ret;
+ static struct rockchip_pll_rate_table rk3328_pll_frac_rates[] = {
+ 	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
+-	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134217),
++	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134218),
+ 	/* vco = 1016064000 */
+-	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671088),
++	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671089),
+ 	/* vco = 983040000 */
+-	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671088),
++	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671089),
+ 	/* vco = 983040000 */
+-	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671088),
++	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671089),
+ 	/* vco = 860156000 */
+-	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797894),
++	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797895),
+ 	/* vco = 903168000 */
+-	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066329),
++	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066330),
+ 	/* vco = 819200000 */
+ 	{ /* sentinel */ },
+ };
 -- 
 2.19.1
 
