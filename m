@@ -2,90 +2,113 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B535C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A595BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A7920882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740222147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HBZ1rZ/1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YzFXdKbe";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bSH/uYWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfDDKOW (ORCPT
+        id S1729178AbfDDKO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:14:22 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37346 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDDKOV (ORCPT
+        Thu, 4 Apr 2019 06:14:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38396 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDDKOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:14:21 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34AEFHh172140;
-        Thu, 4 Apr 2019 10:14:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=hd2+/lKA9BOh2Qt67zskSgieqYosQLw2g/kZ5JHJz5o=;
- b=HBZ1rZ/1PK984GiXHh6C9uIFMEu8ntbYzY0+DoQLT0hxxDJk5najrz9n0J8eU4FbRAwb
- vQ2JEPNnKJRwsKdsyolxa0pNFQj8OqwzUMuQeFDaY9efyD8ZbPUVaubqFq2C7PttTEiB
- nf/KrAUV84VLfC2pEwXA3pFtvOFQlDgD39rjT7hOQsUk8XEL/Fb3u39llDlB46I6NDPL
- /9i9LIM70hfL9fGkYJws1xC07brxacHlJ5Kjxbvoui3lEdXL1eO+BKBy2UAyzfapi1zP
- pUW+jOCnJpOYYWv/HO+Tqz9P9NaI4FYXoNkfUevqbozbTcTbJW7WgrzB6hgLobKqzNIz /w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2rj13qe3fn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 10:14:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34AEFik102604;
-        Thu, 4 Apr 2019 10:14:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2rm8f5jth3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 10:14:15 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x34AE92C008823;
-        Thu, 4 Apr 2019 10:14:09 GMT
-Received: from kadam (/41.202.241.37)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Apr 2019 03:14:00 -0700
-Date:   Thu, 4 Apr 2019 13:13:46 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Timur Tabi <timur@freescale.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>
-Subject: Re: [PATCH 1/2] fsl_hypervisor: dereferencing error pointers in ioctl
-Message-ID: <20190404101346.GO32613@kadam>
-References: <20181218082003.GD32567@kadam>
+        Thu, 4 Apr 2019 06:14:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7C6CF61C62; Thu,  4 Apr 2019 10:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554372863;
+        bh=QDEe9C84mKzr/8f+eseZNo6aGm6/nWFvW/JpXMBHZaY=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=YzFXdKbe9TnTD3PYbdKL/xIEVmIcr54Os6xt2lPbSrZ/XwNrfVpiwL5qZnSMAsPMX
+         S/Bc5ixutpOwEp/hEu1KKtRbubbt+O4IIfHyvmhqwZrAStQC3bYEUJ1lzk9e8hQVMy
+         gSbBuYmA9GjqlEoGN1R4jdyK9YAx0hJ1UVHdKpK8=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E308761701;
+        Thu,  4 Apr 2019 10:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554372860;
+        bh=QDEe9C84mKzr/8f+eseZNo6aGm6/nWFvW/JpXMBHZaY=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=bSH/uYWtJ1hexBizuorT5QJXCE7nctHSbKA+7QIF5LBgatWTWlg6ZnejNmntpdgjF
+         bcY1xoFFnoFBMi0OYHardCvkXMv7krn84wgCeVYJdfYMChBFysSexAaq24P0GBPl3n
+         fPjKR42RcxkX0CqTZxsRQPoHtrNN/nEuocU8pp1U=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E308761701
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181218082003.GD32567@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=762
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040072
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=813 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040072
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] b43: shut up clang -Wuninitialized variable warning
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190322143725.1332353-1-arnd@arndb.de>
+References: <20190322143725.1332353-1-arnd@arndb.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Arnd Bergmann <arnd@arndb.de>, Priit Laes <plaes@plaes.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190404101423.7C6CF61C62@smtp.codeaurora.org>
+Date:   Thu,  4 Apr 2019 10:14:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I sent this patch series right before Christmas so everyone was on
-holiday.  It still applies fine.  Could you take a look at it?
+Arnd Bergmann <arnd@arndb.de> wrote:
 
-regards,
-dan carpenter
+> Clang warns about what is clearly a case of passing an uninitalized
+> variable into a static function:
+> 
+> drivers/net/wireless/broadcom/b43/phy_lp.c:1852:23: error: variable 'gains' is uninitialized when used here
+>       [-Werror,-Wuninitialized]
+>                 lpphy_papd_cal(dev, gains, 0, 1, 30);
+>                                     ^~~~~
+> drivers/net/wireless/broadcom/b43/phy_lp.c:1838:2: note: variable 'gains' is declared here
+>         struct lpphy_tx_gains gains, oldgains;
+>         ^
+> 1 error generated.
+> 
+> However, this function is empty, and its arguments are never evaluated,
+> so gcc in contrast does not warn here. Both compilers behave in a
+> reasonable way as far as I can tell, so we should change the code
+> to avoid the warning everywhere.
+> 
+> We could just eliminate the lpphy_papd_cal() function entirely,
+> given that it has had the TODO comment in it for 10 years now
+> and is rather unlikely to ever get done. I'm doing a simpler
+> change here, and just pass the 'oldgains' variable in that has
+> been initialized, based on the guess that this is what was
+> originally meant.
+> 
+> Fixes: 2c0d6100da3e ("b43: LP-PHY: Begin implementing calibration & software RFKILL support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+d825db346270 b43: shut up clang -Wuninitialized variable warning
+
+-- 
+https://patchwork.kernel.org/patch/10865933/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
