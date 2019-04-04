@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16908C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E4AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7222184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2767621850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367890;
-	bh=OYd5Iltv+ble0Zc4yPMCmipK+YNiJYdaRjtdsR8eS9k=;
+	s=default; t=1554367895;
+	bh=kWdYROo6GTUSEnc8p8usAVuYfJoqD4I+pTp55goTjOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hUUFgdnyArrKqaGEvKcLFetL7ThLr5oiEKqzP0BHuWnqHs6ZiNwOrYHgV8wX1BHNh
-	 qAEIhVUnOsCYjAfQAiGIvwm2rvpXkAOm16fl9vSqU7+IwvNRdFDh3pQCL854/x0gDI
-	 xWGPTSmZxejrcZh7oaaQgAXAhk9xrxEo7e4c9B4I=
+	b=1IMfrPvgOTgN++vr6FhGF6U5pQpZQgzFEPmOwclm4iQMWjCPSQKUu9XsF0Tdjv7Wa
+	 qr5JI2YoIFEehFoBG2a6Ll9r3hOga2RfZxyT+M2MjSfEA1bqkhL6S2tibRzdk+KFxN
+	 iGdqSYIJPTrYsQci0efECz0jsz74MnFTMEEtCjm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfDDIv3 (ORCPT
+        id S1729399AbfDDIvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53212 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:51:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbfDDIvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:51:25 -0400
+        id S1729363AbfDDIvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:51:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A2D217D7;
-        Thu,  4 Apr 2019 08:51:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6806B217D7;
+        Thu,  4 Apr 2019 08:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367884;
-        bh=OYd5Iltv+ble0Zc4yPMCmipK+YNiJYdaRjtdsR8eS9k=;
+        s=default; t=1554367889;
+        bh=kWdYROo6GTUSEnc8p8usAVuYfJoqD4I+pTp55goTjOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XoGTCrWNZVgJt9FzPprm1JZskP/MtFBcSMyz3UxhGVmL4rnSTq4ipdJCgir5qt1t7
-         VCazX7o7s9TEk/nb1yPRekqZplXpRDgC/nr8HAM2wGg5kpHURoLvsrh8aOFa7MIiiN
-         z0aPhcFQAq/w4OUERILVH2KjGHsL3WlFMZwjMshQ=
+        b=MoU90/cljLlWM8xT+TzLyJaVM4r9ODub8Mg33C35X5TCPDpAk6Fxam1j0BVBWT86d
+         NvStToWDrfzFw3mx0al3xuSEsQIZe0JSgWhnsoDsL4jM04kcl+tri35juRAZYmVoxn
+         ekc0YQHRG/sjJkmxpMgQ4/5wv/H/BGYwEpFDq+JU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Peter Chen <peter.chen@nxp.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 33/91] usb: chipidea: Grab the (legacy) USB PHY by phandle first
-Date:   Thu,  4 Apr 2019 10:47:17 +0200
-Message-Id: <20190404084537.381417961@linuxfoundation.org>
+Subject: [PATCH 4.9 35/91] coresight: etm4x: Add support to enable ETMv4.2
+Date:   Thu,  4 Apr 2019 10:47:19 +0200
+Message-Id: <20190404084537.495353967@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -67,55 +68,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 68ef236274793066b9ba3154b16c0acc1c891e5c ]
+[ Upstream commit 5666dfd1d8a45a167f0d8b4ef47ea7f780b1f24a ]
 
-According to the chipidea driver bindings, the USB PHY is specified via
-the "phys" phandle node. However, this only takes effect for USB PHYs
-that use the common PHY framework. For legacy USB PHYs, a simple lookup
-based on the USB PHY type is done instead.
+SDM845 has ETMv4.2 and can use the existing etm4x driver.
+But the current etm driver checks only for ETMv4.0 and
+errors out for other etm4x versions. This patch adds this
+missing support to enable SoC's with ETMv4x to use same
+driver by checking only the ETM architecture major version
+number.
 
-This does not play out well when more than one USB PHY is registered,
-since the first registered PHY matching the type will always be
-returned regardless of what the driver was bound to.
+Without this change, we get below error during etm probe:
 
-Fix this by looking up the PHY based on the "phys" phandle node.
-Although generic PHYs are rather matched by their "phys-name" and not
-the "phys" phandle directly, there is no helper for similar lookup on
-legacy PHYs and it's probably not worth the effort to add it.
+/ # dmesg | grep etm
+[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
 
-When no legacy USB PHY is found by phandle, fallback to grabbing any
-registered USB2 PHY. This ensures backward compatibility if some users
-were actually relying on this mechanism.
+With this change, etm probe is successful:
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+/ # dmesg | grep etm
+[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index 64c6af2c8559..e96e3a5808b3 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -901,8 +901,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	} else if (ci->platdata->usb_phy) {
- 		ci->usb_phy = ci->platdata->usb_phy;
- 	} else {
-+		ci->usb_phy = devm_usb_get_phy_by_phandle(dev->parent, "phys",
-+							  0);
- 		ci->phy = devm_phy_get(dev->parent, "usb-phy");
--		ci->usb_phy = devm_usb_get_phy(dev->parent, USB_PHY_TYPE_USB2);
-+
-+		/* Fallback to grabbing any registered USB2 PHY */
-+		if (IS_ERR(ci->usb_phy) &&
-+		    PTR_ERR(ci->usb_phy) != -EPROBE_DEFER)
-+			ci->usb_phy = devm_usb_get_phy(dev->parent,
-+						       USB_PHY_TYPE_USB2);
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 4db8d6a4d0cb..da27f8edba50 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -61,7 +61,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
  
- 		/* if both generic PHY and USB PHY layers aren't enabled */
- 		if (PTR_ERR(ci->phy) == -ENOSYS &&
+ static bool etm4_arch_supported(u8 arch)
+ {
+-	switch (arch) {
++	/* Mask out the minor version number */
++	switch (arch & 0xf0) {
+ 	case ETM_ARCH_V4:
+ 		break;
+ 	default:
 -- 
 2.19.1
 
