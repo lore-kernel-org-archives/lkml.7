@@ -2,94 +2,237 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFD8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174FEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17766206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FtjgQa8Q"
+	by mail.kernel.org (Postfix) with ESMTP id DB9B520855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbfDDK7u (ORCPT
+        id S1729895AbfDDK75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:59:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35303 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbfDDK7u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:59:50 -0400
-Received: by mail-pg1-f193.google.com with SMTP id g8so1066629pgf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 03:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=C2n7auR9XrmVNuGRtjtTiE7lCR/G7AjBp8rceLUifX4=;
-        b=FtjgQa8QBtP8156KCcRWnTJIsouy7GvP2tTbQdVSHsnYIvzAGHH2q65jSZ9eAAOCVV
-         Aeb7Y6OguOWRG3YUzAlEklyL9osSM4RYr4JeIofKKpr4m4ipmZsWrg3s/YddT53nOPui
-         U3PRD6xZCp74KwYNJly03PZ03cgEvG6nJq4p7RhO9eN6q2A8F7zxbSxjlx8L2bbLCAVb
-         5GLJvo5h5E4FCNZrpD84VZ59IcfpeZp59NPlz8+ng418sdiFlsUYUt3MEXk0MRUZ02vy
-         bgGI4hL6u3p3TrvkVHQcSLXwoPEp5g8bey17JnTseIyr62moiJeNGDrbUcbpfI1BuPaB
-         ZRNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C2n7auR9XrmVNuGRtjtTiE7lCR/G7AjBp8rceLUifX4=;
-        b=o5kWxqO0rzeL3Clwers1awM/JrGXswNSk3+knT2mNF3kUuouhXuR53JQ2aQ6G/ndUg
-         zzfBLu7MvoENqX6YqMSrlpJDc/7zq1pjZXHP23EQuK+L7hveC8TcF9TWhBHZsccwP98r
-         s0W/G6Q4co/Q6GykaoT00lZUod0hcFHvSNDYO9McU6BQkskFda8r87CyMxr2ne424vOQ
-         mqketSAzn289K23ZVkywY/ftgsdkAHN50Z65OMaYooVE3Lxzua0K0Rf5FLWQrxDE1xZc
-         ayTMYxV6zSZc4oLaJmcgHAo/o6nRDrEboX38eVDqLYqXxCunYG1W/Xt4hntbyPyrGDRQ
-         TOsA==
-X-Gm-Message-State: APjAAAV2QbkGUTe/dYRKE9LKrQsjq2FriG6oktfHU6hxKG/o25tnxi9+
-        BFrg8/I71ny4SCU6IASYwF6WXzcv+6c=
-X-Google-Smtp-Source: APXvYqz2ul2rSae9gOSMV4gw1hDC9j7OcPciN6R8z1jOODR9E6BgMS741fvu0u0CGUwfoRUZiapJYA==
-X-Received: by 2002:aa7:9211:: with SMTP id 17mr5184092pfo.220.1554375589314;
-        Thu, 04 Apr 2019 03:59:49 -0700 (PDT)
-Received: from [10.71.9.192] ([147.50.13.10])
-        by smtp.googlemail.com with ESMTPSA id i1sm40543613pgc.63.2019.04.04.03.59.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 03:59:48 -0700 (PDT)
-Subject: Re: [PATCH v2 4/5] nvmem: sunxi-sid: add new reg_read func
-To:     Yangtao Li <tiny.windzz@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190402154514.11284-1-tiny.windzz@gmail.com>
- <20190402154514.11284-5-tiny.windzz@gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <7dc60dd9-3bbb-f215-4554-a0051c0cfbfd@linaro.org>
-Date:   Thu, 4 Apr 2019 11:59:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190402154514.11284-5-tiny.windzz@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 4 Apr 2019 06:59:57 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58136 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727108AbfDDK7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:59:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 117FCA78;
+        Thu,  4 Apr 2019 03:59:55 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3ED073F557;
+        Thu,  4 Apr 2019 03:59:51 -0700 (PDT)
+Date:   Thu, 04 Apr 2019 11:59:49 +0100
+Message-ID: <86imvu3uje.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     "Tangnianyao (ICT)" <tangnianyao@huawei.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <guoheyi@huawei.com>, <kvm@vger.kernel.org>,
+        <xuwei5@huawei.com>
+Subject: Re: [RFC] Question about enable doorbell irq and halt_poll process
+In-Reply-To: <e32d81ed-d1f5-ce0b-7845-d4b680d556df@huawei.com>
+References: <0fb3c9ba-8428-ea6c-2973-952624f601cc@huawei.com>
+        <20190320170219.510f2e1e@why.wild-wind.fr.eu.org>
+        <5df934fd-06d5-55f2-68a5-6f4985e4ac1b@huawei.com>
+        <86zhpc66jl.wl-marc.zyngier@arm.com>
+        <e32d81ed-d1f5-ce0b-7845-d4b680d556df@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/04/2019 16:45, Yangtao Li wrote:
-> Because there was an endianness issue. It seems that reg_read
-> function which the nvmem the driver currently exposes is wrong.
-> So add the new read function, the new function is used when the
-> native_endian flag is set.
+On Thu, 04 Apr 2019 11:07:59 +0100,
+"Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> 
+> 
+> On 2019/3/30 17:43, Marc Zyngier wrote:
+> 
+> Hi, Marc
+> 
+> > On Sat, 30 Mar 2019 08:42:58 +0000,
+> > "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
+> >>
+> >> Hi, Marc
+> >>
+> >> On 2019/3/21 1:02, Marc Zyngier Wrote:
+> >>> On Tue, 19 Mar 2019 21:25:47 +0800
+> >>> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
+> >>>
+> >>>> Hi, all
+> >>>>
+> >>>> Using gicv4, when guest is waiting for irq, it sends wfi and traps to kvm.
+> >>>> When vlpi is forwarded to PE after its_vpe_deschedule, before halt_poll in
+> >>>> kvm_vcpu_block, halt_poll may increase latency for this vlpi getting to guest.
+> >>>> In halt_poll process, it checks if there's pending irq for vcpu using pending_last.
+> >>>> However, doorbell is not enable at this moment and vlpi or doorbell can not set
+> >>>> pending_last true, to stop halt_poll. It will run until halt_poll time ends, if
+> >>>> there's no other physical irq coming in the meantime. And then vcpu is scheduled out.
+> >>>> This pending vlpi has to wait for vcpu getting schedule in next time.
+> >>>>
+> >>>> Should we enable doorbell before halt_poll process ?
+> >>>
+> >>> Enabling doorbells can be quite expensive. Depending on the HW, this is
+> >>> either:
+> >>>
+> >>> - a write to memory (+DSB, potential cache maintenance), a write to the
+> >>>   INVLPI register, and a poll of the SYNC register
+> >>> - a write to memory (+DSB, potential cache maintenance), potentially
+> >>>   a string of DISCARD+SYNC+MAPI+SYNC commands, and an INV+SYNC command
+> >>>
+> >> I have tested average cost of kvm_vgic_v4_enable_doorbell in our machine.
+> >> When gic_rdists->has_direct_lpi is 1, it costs 0.35 us.
+> >> When gic_rdists->has_direct_lpi is 0, it costs 1.4 us.
+> > 
+> > This looks pretty low. Which HW is that on? How about on something
+> > like D05?
+> 
+> I tested it on D06.
+> D05 doesn't not support gicv4 and I haven't tested on D05.
 
-This patch and 5/5 does not apply cleanly on nvmem-next.
-Also I would need an ack from Maxime to be able to apply it.
+I'm afraid you're mistaken. D05 does have GICv4. I have a pretty good
+idea it does because that's the system I used to write the SW
+support. So please dig one out of the cupboard and test on it. I'm
+pretty sure you're at the right place to do so.
 
-thanks,
-srini
+> 
+> > 
+> >> Compared to default halt_poll_ns, 500000ns, enabling doorbells is not
+> >> large at all.
+> > 
+> > Sure. But I'm not sure this is a universal figure.
+> > 
+> >>
+> >>> Frankly, you want to be careful with that. I'd rather enable them late
+> >>> and have a chance of not blocking because of another (virtual)
+> >>> interrupt, which saves us the doorbell business.
+> >>>
+> >>> I wonder if you wouldn't be in a better position by drastically
+> >>> reducing halt_poll_ns for vcpu that can have directly injected
+> >>> interrupts.
+> >>>
+> >>
+> >> If we set halt_poll_ns to a small value, the chance of
+> >> not blocking and vcpu scheduled out becomes larger. The cost
+> >> of vcpu scheduled out is quite expensive.
+> >> In many cases, one pcpu is assigned to only
+> >> one vcpu, and halt_poll_ns is set quite large, to increase
+> >> chance of halt_poll process got terminated. This is the
+> >> reason we want to set halt_poll_ns large. And We hope vlpi
+> >> stop halt_poll process in time.
+> > 
+> > Fair enough. It is certainly realistic to strictly partition the
+> > system when GICv4 is in use, so I can see some potential benefit.
+> > 
+> >> Though it will check whether vcpu is runnable again by
+> >> kvm_vcpu_check_block. Vlpi can prevent scheduling vcpu out.
+> >> However it's somewhat later if halt_poll_ns is larger.
+> >>
+> >>> In any case, this is something that we should measure, not guess.
+> > 
+> > Please post results of realistic benchmarks that we can reproduce,
+> > with and without this change. I'm willing to entertain the idea, but I
+> > need more than just a vague number.
+> > 
+> > Thanks,
+> > 
+> > 	M.
+> > 
+> 
+> I tested it with and without change (patch attached in the last).
+> halt_poll_ns is keep default, 500000ns.
+> I have merged the patch "arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled"
+> to my test kernel, to make sure ICH_HCR_EL2.EN=1 in guest.
+> 
+> netperf result:
+> D06 as server, intel 8180 server as client
+> with change:
+> package 512 bytes - 5400 Mbits/s
+> package 64 bytes - 740 Mbits/s
+> without change:
+> package 512 bytes - 5000 Mbits/s
+> package 64 bytes - 710 Mbits/s
+> 
+> Also I have tested D06 as client, intel machine as server,
+> with the change, the result remains the same.
+
+So anywhere between 4% and 8% improvement. Please post results for D05
+once you've found one.
+
+> 
+> 
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 55fe8e2..0f56904 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -2256,6 +2256,16 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+>  	if (vcpu->halt_poll_ns) {
+>  		ktime_t stop = ktime_add_ns(ktime_get(), vcpu->halt_poll_ns);
+> 
+> +#ifdef CONFIG_ARM64
+> +		/*
+> +		 * When using gicv4, enable doorbell before halt pool wait
+> +		 * so that direct vlpi can stop halt poll.
+> +		 */
+> +		if (vcpu->arch.vgic_cpu.vgic_v3.its_vpe.its_vm) {
+> +			kvm_vgic_v4_enable_doorbell(vcpu);
+> +		}
+> +#endif
+> +
+
+Irk. No. You're now leaving doorbells enabled when going back to the
+guest, and that's pretty bad as the whole logic relies on doorbells
+being disabled if the guest can run.
+
+So please try this instead on top of mainline. And it has to be on top
+of mainline as we've changed the way timer interrupts work in 5.1 --
+see accb99bcd0ca ("KVM: arm/arm64: Simplify bg_timer programming").
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index f25aa98a94df..0ae4ad5dcb12 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2252,6 +2252,8 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+ 	bool waited = false;
+ 	u64 block_ns;
+ 
++	kvm_arch_vcpu_blocking(vcpu);
++
+ 	start = cur = ktime_get();
+ 	if (vcpu->halt_poll_ns) {
+ 		ktime_t stop = ktime_add_ns(ktime_get(), vcpu->halt_poll_ns);
+@@ -2272,8 +2274,6 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+ 		} while (single_task_running() && ktime_before(cur, stop));
+ 	}
+ 
+-	kvm_arch_vcpu_blocking(vcpu);
+-
+ 	for (;;) {
+ 		prepare_to_swait_exclusive(&vcpu->wq, &wait, TASK_INTERRUPTIBLE);
+ 
+@@ -2287,8 +2287,8 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+ 	finish_swait(&vcpu->wq, &wait);
+ 	cur = ktime_get();
+ 
+-	kvm_arch_vcpu_unblocking(vcpu);
+ out:
++	kvm_arch_vcpu_unblocking(vcpu);
+ 	block_ns = ktime_to_ns(cur) - ktime_to_ns(start);
+ 
+ 	if (!vcpu_valid_wakeup(vcpu))
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smell funny.
