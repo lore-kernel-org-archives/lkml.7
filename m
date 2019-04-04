@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30B0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC967C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B6A2184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4717A217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368408;
-	bh=So8D3m/GzPHLJY4Cf6N/XuYD0lN1CmjdlglUaX4ZTQo=;
+	s=default; t=1554368413;
+	bh=HyiRK5TXYbUZAnhey+B+rcvNUqgHyMYi4D17qHDW10w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pvs5Z1IC+U1Q44j18oUGEFkHnUSW8OxrrFtBKVst1uON1sNIXaP4F9Q9uWLH+z0UB
-	 GkKyLAVWOTRV/o+tTL8ZjuvnuxwoVZ2yCwmyvCaw+BDiUlzJyqqsWIXNZ6nrfGvidY
-	 YQWdIJ+3qkzkSXvT53pZg8MVURdjS8DQ5e3aNDRM=
+	b=rcAHfPFJS4PBRAahjEdhEorc6rOf7kIeauE6TRivM/0G+hKVmfWD4HJguKR7hAsxQ
+	 cUlQX1wzNnF9jtBhfwATGiXPnkztz7O6M7yVO7QR4NyS/k4/46RkQpTJzwn9GLOBc8
+	 tidTGbF9IWZ9qaJvHnD/8+iYx2u9aN5ievKBRs9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbfDDJAG (ORCPT
+        id S1731209AbfDDJAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:00:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36616 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbfDDJAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:00:05 -0400
+        id S1726790AbfDDJAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7898D21855;
-        Thu,  4 Apr 2019 09:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A77D2147C;
+        Thu,  4 Apr 2019 09:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368404;
-        bh=So8D3m/GzPHLJY4Cf6N/XuYD0lN1CmjdlglUaX4ZTQo=;
+        s=default; t=1554368407;
+        bh=HyiRK5TXYbUZAnhey+B+rcvNUqgHyMYi4D17qHDW10w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tzyd2nwxLi4L7ZLPjxm/izRVH7kZUcvNpeevpAREF1hEnSGCjM1Y32PUQFDYvcXH9
-         fRATkbVo3tfJ/aYCrOe6sRikeUCRxb6mfSOvcgI7ac7uUV4RYCNV/TJH3TGf8enDcf
-         jsNWvQucE3SRDT/YnP15cziNa+NJ/0oddbslVe70=
+        b=MV2du5rPgG5KmcMjh30cRf9X116Xa97gpqX7RPb4ut3h9F165GcvDXS2OCTZ4M+LK
+         E6e1xWJHYju5jfnRtUNwtVkD4GdF5rPkYf8dOG8l6m4mHCVXedcnG5raU2qx/Ypr8a
+         lqgIeTJV5YOjN9qIKXDijMi0PL0VPw1UdzHvWqNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 019/187] scsi: hisi_sas: Fix a timeout race of driver internal and SMP IO
-Date:   Thu,  4 Apr 2019 10:45:56 +0200
-Message-Id: <20190404084604.001760444@linuxfoundation.org>
+Subject: [PATCH 4.19 028/187] memcg: killed threads should not invoke memcg OOM killer
+Date:   Thu,  4 Apr 2019 10:46:05 +0200
+Message-Id: <20190404084604.405337736@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,59 +72,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4790595723d4b833b18c994973d39f9efb842887 ]
+[ Upstream commit 7775face207922ea62a4e96b9cd45abfdc7b9840 ]
 
-For internal IO and SMP IO, there is a time-out timer for them. In the
-timer handler, it checks whether IO is done according to the flag
-task->task_state_lock.
+If a memory cgroup contains a single process with many threads
+(including different process group sharing the mm) then it is possible
+to trigger a race when the oom killer complains that there are no oom
+elible tasks and complain into the log which is both annoying and
+confusing because there is no actual problem.  The race looks as
+follows:
 
-There is an issue which may cause system suspended: internal IO or SMP IO
-is sent, but at that time because of hardware exception (such as inject
-2Bit ECC error), so IO is not completed and also not timeout. But, at that
-time, the SAS controller reset occurs to recover system. It will release
-the resource and set the status of IO to be SAS_TASK_STATE_DONE, so when IO
-timeout, it will never complete the completion of IO and wait for ever.
+P1				oom_reaper		P2
+try_charge						try_charge
+  mem_cgroup_out_of_memory
+    mutex_lock(oom_lock)
+      out_of_memory
+        oom_kill_process(P1,P2)
+         wake_oom_reaper
+    mutex_unlock(oom_lock)
+    				oom_reap_task
+							  mutex_lock(oom_lock)
+							    select_bad_process # no victim
 
-[  729.123632] Call trace:
-[  729.126791] [<ffff00000808655c>] __switch_to+0x94/0xa8
-[  729.133106] [<ffff000008d96e98>] __schedule+0x1e8/0x7fc
-[  729.138975] [<ffff000008d974e0>] schedule+0x34/0x8c
-[  729.144401] [<ffff000008d9b000>] schedule_timeout+0x1d8/0x3cc
-[  729.150690] [<ffff000008d98218>] wait_for_common+0xdc/0x1a0
-[  729.157101] [<ffff000008d98304>] wait_for_completion+0x28/0x34
-[  729.165973] [<ffff000000dcefb4>] hisi_sas_internal_task_abort+0x2a0/0x424 [hisi_sas_test_main]
-[  729.176447] [<ffff000000dd18f4>] hisi_sas_abort_task+0x244/0x2d8 [hisi_sas_test_main]
-[  729.185258] [<ffff000008971714>] sas_eh_handle_sas_errors+0x1c8/0x7b8
-[  729.192391] [<ffff000008972774>] sas_scsi_recover_host+0x130/0x398
-[  729.199237] [<ffff00000894d8a8>] scsi_error_handler+0x148/0x5c0
-[  729.206009] [<ffff0000080f4118>] kthread+0x10c/0x138
-[  729.211563] [<ffff0000080855dc>] ret_from_fork+0x10/0x18
+The problem is more visible with many threads.
 
-To solve the issue, callback function task_done of those IOs need to be
-called when on SAS controller reset.
+Fix this by checking for fatal_signal_pending from
+mem_cgroup_out_of_memory when the oom_lock is already held.
 
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The oom bypass is safe because we do the same early in the try_charge
+path already.  The situation migh have changed in the mean time.  It
+should be safe to check for fatal_signal_pending and tsk_is_oom_victim
+but for a better code readability abstract the current charge bypass
+condition into should_force_charge and reuse it from that path.  "
+
+Link: http://lkml.kernel.org/r/01370f70-e1f6-ebe4-b95e-0df21a0bc15e@i-love.sakura.ne.jp
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/memcontrol.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index c25f3a9b0b9f..fd9d82c9033d 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -810,7 +810,8 @@ static void hisi_sas_do_release_task(struct hisi_hba *hisi_hba, struct sas_task
- 		spin_lock_irqsave(&task->task_state_lock, flags);
- 		task->task_state_flags &=
- 			~(SAS_TASK_STATE_PENDING | SAS_TASK_AT_INITIATOR);
--		task->task_state_flags |= SAS_TASK_STATE_DONE;
-+		if (!slot->is_internal && task->task_proto != SAS_PROTOCOL_SMP)
-+			task->task_state_flags |= SAS_TASK_STATE_DONE;
- 		spin_unlock_irqrestore(&task->task_state_lock, flags);
- 	}
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 9518aefd8cbb..7c712c4565e6 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -248,6 +248,12 @@ enum res_type {
+ 	     iter != NULL;				\
+ 	     iter = mem_cgroup_iter(NULL, iter, NULL))
  
++static inline bool should_force_charge(void)
++{
++	return tsk_is_oom_victim(current) || fatal_signal_pending(current) ||
++		(current->flags & PF_EXITING);
++}
++
+ /* Some nice accessors for the vmpressure. */
+ struct vmpressure *memcg_to_vmpressure(struct mem_cgroup *memcg)
+ {
+@@ -1382,8 +1388,13 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 	};
+ 	bool ret;
+ 
+-	mutex_lock(&oom_lock);
+-	ret = out_of_memory(&oc);
++	if (mutex_lock_killable(&oom_lock))
++		return true;
++	/*
++	 * A few threads which were not waiting at mutex_lock_killable() can
++	 * fail to bail out. Therefore, check again after holding oom_lock.
++	 */
++	ret = should_force_charge() || out_of_memory(&oc);
+ 	mutex_unlock(&oom_lock);
+ 	return ret;
+ }
+@@ -2200,9 +2211,7 @@ retry:
+ 	 * bypass the last charges so that they can exit quickly and
+ 	 * free their memory.
+ 	 */
+-	if (unlikely(tsk_is_oom_victim(current) ||
+-		     fatal_signal_pending(current) ||
+-		     current->flags & PF_EXITING))
++	if (unlikely(should_force_charge()))
+ 		goto force;
+ 
+ 	/*
 -- 
 2.19.1
 
