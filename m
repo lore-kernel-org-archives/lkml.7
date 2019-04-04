@@ -2,96 +2,98 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0340BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE23C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3403206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l2nEv98x"
+	by mail.kernel.org (Postfix) with ESMTP id 27867206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbfDDOpW (ORCPT
+        id S1729202AbfDDOqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:45:22 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48452 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbfDDOpW (ORCPT
+        Thu, 4 Apr 2019 10:46:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57674 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbfDDOqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:45:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34EhXjn015119;
-        Thu, 4 Apr 2019 14:45:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=hEWQx+qTRlFcckUv+V2Ni7L+PIzD+ydRhkEUr5xqT/8=;
- b=l2nEv98xtqGrrnWFD3Mg5S20cbLYlQ1YQeioZYcwWqtMDTFALrF0ny7pbRXXoYQqhVPN
- r/3iI9tfnbEybQeelk/AwrqNcX5U0pte6+Zu1nuly9ccteQsXMp51PXk2U1fwE0YGOeA
- P4EQPl/UNmE9mdoDzw+9XZPi+IVn0y4uIzIHEdxWY9Ph64Sahx9UXgtf5I3xypu3Dcxb
- b85HaJagAExctNzNFc3vQpz5/g1OkGDztnFbUGgWdDkoU3PKs2MqLkLdIcuUChj9JxUa
- I7mR3s8sILwxEq371jikmNjN0YrP5p5A2OrfInMdgqFES/VQ8ckdBWWvqa8vxL0zc5rv HA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2rj13qfg82-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 14:45:14 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34EhoNN031579;
-        Thu, 4 Apr 2019 14:45:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2rm8f6qejm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 14:45:14 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x34EjCXZ015683;
-        Thu, 4 Apr 2019 14:45:13 GMT
-Received: from kadam (/41.202.241.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Apr 2019 07:45:11 -0700
-Date:   Thu, 4 Apr 2019 17:45:03 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Beatriz Martins de Carvalho <martinsdecarvalhobeatriz@gmail.com>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
-Subject: Re: [PATCH v2] staging: rtl8723bs: hal: replace spaces by tabs.
-Message-ID: <20190404144503.GK32590@kadam>
-References: <20190404130930.7437-1-martinsdecarvalhobeatriz@gmail.com>
+        Thu, 4 Apr 2019 10:46:11 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hC3cx-0002JK-H6; Thu, 04 Apr 2019 14:46:03 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tcp: remove redundant check on tskb
+Date:   Thu,  4 Apr 2019 15:46:03 +0100
+Message-Id: <20190404144603.27682-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404130930.7437-1-martinsdecarvalhobeatriz@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=796
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040096
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=853 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040096
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 10:09:30AM -0300, Beatriz Martins de Carvalho wrote:
-> Fix checkpatch error "ERROR: code indent should use tabs where possible"
-> in hal_com_phycfg.c:1726.
-> 
-> Signed-off-by: Beatriz Martins de Carvalho <martinsdecarvalhobeatriz@gmail.com>
-> ---
+From: Colin Ian King <colin.king@canonical.com>
 
-Looks good.  Thanks!
+The non-null check on tskb is always false because it is in an else
+path of a check on tskb and hence tskb is null in this code block.
+This is check is therefore redundant and can be removed as well
+as the label coalesc.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+if (tsbk) {
+        ...
+} else {
+        ...
+        if (unlikely(!skb)) {
+                if (tskb)       /* can never be true, redundant code */
+                        goto coalesc;
+                return;
+        }
+}
 
-regards,
-dan carpenter
+Addresses-Coverity: ("Logically dead code")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ net/ipv4/tcp_output.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index e265d1aeeb66..32061928b054 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3088,7 +3088,6 @@ void tcp_send_fin(struct sock *sk)
+ 		tskb = skb_rb_last(&sk->tcp_rtx_queue);
+ 
+ 	if (tskb) {
+-coalesce:
+ 		TCP_SKB_CB(tskb)->tcp_flags |= TCPHDR_FIN;
+ 		TCP_SKB_CB(tskb)->end_seq++;
+ 		tp->write_seq++;
+@@ -3104,11 +3103,9 @@ void tcp_send_fin(struct sock *sk)
+ 		}
+ 	} else {
+ 		skb = alloc_skb_fclone(MAX_TCP_HEADER, sk->sk_allocation);
+-		if (unlikely(!skb)) {
+-			if (tskb)
+-				goto coalesce;
++		if (unlikely(!skb))
+ 			return;
+-		}
++
+ 		INIT_LIST_HEAD(&skb->tcp_tsorted_anchor);
+ 		skb_reserve(skb, MAX_TCP_HEADER);
+ 		sk_forced_mem_schedule(sk, skb->truesize);
+-- 
+2.20.1
 
