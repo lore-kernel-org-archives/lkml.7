@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBA6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF1A20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D359C2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369440;
-	bh=cjtxhAYYAcIj1K6z5Piztr+1bMldhmBvEbfnugOxn9o=;
+	s=default; t=1554369443;
+	bh=aAetAkVo2pPmZBondOpcOOb9LSUlVbeHNvQWcXTp2+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKNB/UG8ZoXB4YxqvgA5LSTt04NO2b0p/34K6icwoDZrzx2zm0PSIcHmp3wIMy6/C
-	 x5PmfXVIwzVbe2B470QF4EfbkZNQJq2dRlRAEccCxU/oLMkwM5UJlT5x/U10l20e7M
-	 F88nV/JSEyU3NiAGbJmZsUb08/K1HoYu5hOEZQY0=
+	b=n63PuPNH8zIUORtIbn3mSUTKqCQKpyot8tkcgZgINYTivC3UWDrTncS/sL2D720PD
+	 3yJ1Ju9KrHaIdq4aNXawcMEIkQZmPUMhYuFBx+IW17sGc28uWWAGhRW5QjQQ7ZrT5W
+	 2ZwlHJxlgl4zgQXDEHIKfCfhGAkNbC2zMZeHcK68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388185AbfDDJRT (ORCPT
+        id S2388195AbfDDJRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:17:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58818 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388168AbfDDJRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:14 -0400
+        id S2388178AbfDDJRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED4BB2054F;
-        Thu,  4 Apr 2019 09:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC8B02177E;
+        Thu,  4 Apr 2019 09:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369433;
-        bh=cjtxhAYYAcIj1K6z5Piztr+1bMldhmBvEbfnugOxn9o=;
+        s=default; t=1554369436;
+        bh=aAetAkVo2pPmZBondOpcOOb9LSUlVbeHNvQWcXTp2+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVt1JcoGUGbx50ZHwwHWc48FgvbR+OGEpp9rxIkT4ej3NmqshBP9UGYTFxEdRLiXk
-         t9mW4xmNEDKa6s2sYTsAGivaWdXYtt34Bj4zOIumc/g4PZXH1fl5OzKmq/Dg7xv4kg
-         CX9djuKhtF8pIuYWaloNpimudUc4XidVnkc3IoSc=
+        b=SR8SAtiYWHcgWeD9abdUP9gyveXxCghRmFJEUNBaOHRMNi361zZVLyr3tH2B/k3Xt
+         lTOYvQWTaIc7bSyhgaSdXOjl+QyxbUNu0gQG5pFeNozOgkF4O9NluL+opWVmRwQ1b8
+         w7oMcYYUQZ9hUaMXgvLTfuB8fIbvu+cNJ7ujjtmQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislav Fomichev <sdf@google.com>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 206/246] selftests/bpf: suppress readelf stderr when probing for BTF support
-Date:   Thu,  4 Apr 2019 10:48:26 +0200
-Message-Id: <20190404084626.403076071@linuxfoundation.org>
+        stable@vger.kernel.org, Song Hongyan <hongyan.song@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 207/246] HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
+Date:   Thu,  4 Apr 2019 10:48:27 +0200
+Message-Id: <20190404084626.438220495@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,55 +66,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2f0921262ba943fe9d9f59037a033927d8c4789b ]
+[ Upstream commit 2edefc056e4f0e6ec9508dd1aca2c18fa320efef ]
 
-Before:
-$ make -s -C tools/testing/selftests/bpf
-readelf: Error: Missing knowledge of 32-bit reloc types used in DWARF
-sections of machine number 247
-readelf: Warning: unable to apply unsupported reloc type 10 to section
-.debug_info
-readelf: Warning: unable to apply unsupported reloc type 1 to section
-.debug_info
-readelf: Warning: unable to apply unsupported reloc type 10 to section
-.debug_info
+Host driver should handle interrupt mask register earlier than wake up ish FW
+else there will be conditions when FW interrupt comes, host PIMR register still
+not set ready, so move the interrupt mask setting before ish_wakeup.
 
-After:
-$ make -s -C tools/testing/selftests/bpf
+Clear PISR busy_clear bit in ish_irq_handler. If not clear, there will be
+conditions host driver received a busy_clear interrupt (before the busy_clear
+mask bit is ready), it will return IRQ_NONE after check_generated_interrupt,
+the interrupt will never be cleared, causing the DEVICE not sending following
+IRQ.
 
-v2:
-* use llvm-readelf instead of redirecting binutils' readelf stderr to
-  /dev/null
+Since PISR clear should not be called for the CHV device we do this change.
+After the change, both ISH2HOST interrupt and busy_clear interrupt will be
+considered as interrupt from ISH, busy_clear interrupt will return IRQ_HANDLED
+from IPC_IS_BUSY check.
 
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Song Hongyan <hongyan.song@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/intel-ish-hid/ipc/ipc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 41ab7a3668b3..936f726f7cd9 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -96,6 +96,7 @@ $(BPFOBJ): force
- CLANG ?= clang
- LLC   ?= llc
- LLVM_OBJCOPY ?= llvm-objcopy
-+LLVM_READELF ?= llvm-readelf
- BTF_PAHOLE ?= pahole
+diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
+index 742191bb24c6..45e33c7ba9a6 100644
+--- a/drivers/hid/intel-ish-hid/ipc/ipc.c
++++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
+@@ -91,7 +91,10 @@ static bool check_generated_interrupt(struct ishtp_device *dev)
+ 			IPC_INT_FROM_ISH_TO_HOST_CHV_AB(pisr_val);
+ 	} else {
+ 		pisr_val = ish_reg_read(dev, IPC_REG_PISR_BXT);
+-		interrupt_generated = IPC_INT_FROM_ISH_TO_HOST_BXT(pisr_val);
++		interrupt_generated = !!pisr_val;
++		/* only busy-clear bit is RW, others are RO */
++		if (pisr_val)
++			ish_reg_write(dev, IPC_REG_PISR_BXT, pisr_val);
+ 	}
  
- PROBE := $(shell $(LLC) -march=bpf -mcpu=probe -filetype=null /dev/null 2>&1)
-@@ -132,7 +133,7 @@ BTF_PAHOLE_PROBE := $(shell $(BTF_PAHOLE) --help 2>&1 | grep BTF)
- BTF_OBJCOPY_PROBE := $(shell $(LLVM_OBJCOPY) --help 2>&1 | grep -i 'usage.*llvm')
- BTF_LLVM_PROBE := $(shell echo "int main() { return 0; }" | \
- 			  $(CLANG) -target bpf -O2 -g -c -x c - -o ./llvm_btf_verify.o; \
--			  readelf -S ./llvm_btf_verify.o | grep BTF; \
-+			  $(LLVM_READELF) -S ./llvm_btf_verify.o | grep BTF; \
- 			  /bin/rm -f ./llvm_btf_verify.o)
+ 	return interrupt_generated;
+@@ -839,11 +842,11 @@ int ish_hw_start(struct ishtp_device *dev)
+ {
+ 	ish_set_host_rdy(dev);
  
- ifneq ($(BTF_LLVM_PROBE),)
++	set_host_ready(dev);
++
+ 	/* After that we can enable ISH DMA operation and wakeup ISHFW */
+ 	ish_wakeup(dev);
+ 
+-	set_host_ready(dev);
+-
+ 	/* wait for FW-initiated reset flow */
+ 	if (!dev->recvd_hw_ready)
+ 		wait_event_interruptible_timeout(dev->wait_hw_ready,
 -- 
 2.19.1
 
