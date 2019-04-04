@@ -2,120 +2,126 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF2AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F03C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FD6217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:55:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DzvcegBs"
+	by mail.kernel.org (Postfix) with ESMTP id F1062217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbfDDWzE (ORCPT
+        id S1730575AbfDDW4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 18:55:04 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37843 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbfDDWzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 18:55:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id c16so3940410otn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 15:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IdMAMLWMySzZoM2y9V5V7l1L+Kbq9iXYZN0/lJ9+Alo=;
-        b=DzvcegBsnjFs328s5xju5h9GjY3Orpq91DpfSXEic6LpCpWqEVLaUdnaQANmMoM9VR
-         XQNRa3XhCuUCzksbQ94dO6PwAlchSBQNKsd0TgIv/tQLvEFlxofqLtluRo4ra6UbeD5V
-         RPWWVYL6wWYOxYx6+3UZ57+Jn4Q0rUDRteVkEgLtXas3Zjp7szHCAJkJKWVxX7zis0Se
-         hKwrH26N4Fqy34QFeI//O8ZX6eQx8bzBrqUndS5ZiKQhIh2PHvxCxodoDwN/Gxthyak0
-         cnl0GNY8ztSMhJuvMk9CK+IT3EeYQKRuv8BuwtoGzpFXth2pFafthGtkfudD4hON4N7h
-         zeVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IdMAMLWMySzZoM2y9V5V7l1L+Kbq9iXYZN0/lJ9+Alo=;
-        b=U9rrMzn3RFRSr3SCb+KgH/GpgouBWyKsDsexW6xKuG/TDhfCwV6E0y90N6JCLh9878
-         IrvAUcnwQ6YHw2c0aIwZhDA5YpBXcnGfz80/yWPcPvfBW3DwRtIJ0XIFDQXq28KrRYgC
-         4YKg4Cg510JlhYtOcdFc+58/cJKCbYPv+d97IF3NOQXfHAUUuYkbxRIVbfbpr/tutzNk
-         ijXaDhFDxy+LSqXCIF3sbgq9GhfMBNYmUkD/W3TUPqcYPX4/+tzU5D+Ky7tCEsTYHbQ5
-         czWL06Ov54Q+f/0m4B+rwugbSQTjb2tpUSfavD+9ZDZGMKfLbOqF1lCkLalNDmQQwcD9
-         hzcQ==
-X-Gm-Message-State: APjAAAUyHmt5xqaCxZpwHPpqM3jljv5emcBGKNclHSvazGM6l2tHRXQh
-        ta/PuPd67AOmKk4Nqindn0OoerDH2+9YXVw8oYbvqQ==
-X-Google-Smtp-Source: APXvYqyZdhbcd14nD2Yw43Q5OASxcSRFDzY+0RUGLcfcYnoFha6W5EI/+DvlBGTXfGZ9SKedy8MEtcz/AvhcirUDWrM=
-X-Received: by 2002:a9d:6d05:: with SMTP id o5mr6125227otp.175.1554418502777;
- Thu, 04 Apr 2019 15:55:02 -0700 (PDT)
+        Thu, 4 Apr 2019 18:56:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:55973 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729009AbfDDW4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 18:56:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 15:56:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,309,1549958400"; 
+   d="scan'208";a="128734818"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 04 Apr 2019 15:56:53 -0700
+Date:   Thu, 4 Apr 2019 15:49:13 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v6 10/20] x86/split_lock: Handle #AC exception for split
+ lock
+Message-ID: <20190404224913.GB178488@romley-ivt3.sc.intel.com>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+ <1554326526-172295-11-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1904041921460.1802@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20190404111128.131157-1-jannh@google.com> <20190404162753.GG22539@zn.tnic>
- <CAG48ez1wPdCZE07SeK_=yL3gWRnekLm3+YP3rvyw2YL_3+uNJw@mail.gmail.com> <20190404164741.GH22539@zn.tnic>
-In-Reply-To: <20190404164741.GH22539@zn.tnic>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 5 Apr 2019 00:54:31 +0200
-Message-ID: <CAG48ez3aExeF8Bg=TQxH4MxV7Dgr-oXFfCmSMPEfBJLNAhi7zQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/microcode: Refactor Intel microcode loading
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        David Laight <David.Laight@aculab.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904041921460.1802@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 6:47 PM Borislav Petkov <bp@alien8.de> wrote:
-> On Thu, Apr 04, 2019 at 06:31:37PM +0200, Jann Horn wrote:
-> > Uuuh. I *definitely* tested this. I ran this yesterday evening on my
-> > home machine, on top of commit
-> > 14c741de93861749dfb60b4964028541f5c506ca from Linus' tree, plus two
-> > cherry-picked fixes for drm/ttm. I specifically made sure that I had
-> > the old microcode version before reloading these ways and I had the
-> > new version after reloading. And the verbose dmesg logs also looked
-> > okay.
->
-> How did you check the microcode revision before and after? /proc/cpuinfo?
->
-> Because that old method doesn't say anything in dmesg if there's no
-> debugging output, only the iucode_tool says something like the below if
-> you enable verbose output:
->
-> # iucode-tool -v --kernel=/dev/cpu/microcode /lib/firmware/intel-ucode/06-3a-09
-> iucode-tool: processed 1 valid microcode(s), 1 signature(s), 1 unique signature(s)
-> iucode-tool: selected 1 microcode(s), 1 signature(s)
-> iucode-tool: Uploading selected microcodes to: /dev/cpu/microcode
-> iucode-tool: /dev/cpu/microcode: 1 microcode entries uploaded, 13312 bytes
+On Thu, Apr 04, 2019 at 07:31:59PM +0200, Thomas Gleixner wrote:
+> On Wed, 3 Apr 2019, Fenghua Yu wrote:
+> > +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
+> > +{
+> > +	unsigned int trapnr = X86_TRAP_AC;
+> > +	char str[] = "alignment check";
+> > +	int signr = SIGBUS;
+> > +
+> > +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+> > +
+> > +	/*
+> > +	 * WARN*()s end up here; fix them up before we call the
+> > +	 * notifier chain.
+> > +	 */
+> 
+> How exactly is WARN*() ending up here?
+> 
+> > +	if (!user_mode(regs) && fixup_bug(regs, trapnr))
+> 
+> And that fixup_bug() check does what?
+> 
+> int fixup_bug(struct pt_regs *regs, int trapnr)
+> {
+>  	if (trapnr != X86_TRAP_UD)
+>                 return 0;
+> 
+> Copy and paste from do_error_trap() ....
 
-Ah, dammit. I'm re-testing it now, and as you said, the microcode
-isn't actually loading. I was testing with
-arch/x86/kernel/cpu/{core,intel}.c added to
-/sys/kernel/debug/dynamic_debug/control, I guess I must have decided
-that it worked when I saw this:
+As you can see, do_alignment_check() is copied from do_error_trap().
+But seems this part of code is irrelevant to #AC handler.
 
-[  159.485550] microcode: CPU0 found a matching microcode update with
-version 0x25 (current=0x19)
-[  159.485588] microcode: CPU1 found a matching microcode update with
-version 0x25 (current=0x19)
-[  159.485615] microcode: CPU2 found a matching microcode update with
-version 0x25 (current=0x19)
-[  159.485640] microcode: CPU3 found a matching microcode update with
-version 0x25 (current=0x19)
-[  159.485664] microcode: CPU4 found a matching microcode update with
-version 0x25 (current=0x19)
-[  159.485689] microcode: CPU5 found a matching microcode update with
-version 0x25 (current=0x19)
-[  159.485713] microcode: CPU6 found a matching microcode update with
-version 0x25 (current=0x19)
-[  159.485731] microcode: CPU7 found a matching microcode update with
-version 0x25 (current=0x19)
+So I will remove the "if (!user_mode(regs) && fixup_bug(regs, trapnr))"
+and surrounding code, right?
 
-I thought I had checked /sys/devices/system/cpu/cpu0/microcode/version
-afterwards. But apparently I didn't. Bleh. Sorry about that.
+> 
+> > +		return;
+> > +
+> > +	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) ==
+> > +		       NOTIFY_STOP)
+> > +		return;
+> > +
+> > +	cond_local_irq_enable(regs);
+> > +	if (!user_mode(regs) &&
+> > +	    static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT)) {
+> > +		/*
+> > +		 * Only split lock can generate #AC from kernel at this point.
+> > +		 * Warn and disable split lock detection on this CPU. The
+> > +		 * faulting instruction will be executed without generating
+> > +		 * another #AC fault. User needs to check the warning and
+> > +		 * fix the split lock issue in the faulting instruction.
+> 
+>   "User needs to check the warning and fix the issue ..."
+> 
+> I'm looking forward to all the fixes from Joe Users.
+> 
+> Please remove that sentence. It's useless. Users report warnings if at all
+> and the kernel developers who actually look at them surely don't need an
+> advice like that.
+
+Sure. Will do this.
+
+Thanks.
+
+-Fenghua
