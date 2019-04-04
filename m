@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31156C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3E7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DE72075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801432075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369120;
-	bh=4ZHzu6Nj+eNcUD3b8X7xVuToNRpq6124yjPBYt2rJjw=;
+	s=default; t=1554369123;
+	bh=rM0EA0zD2WR19du+gsiWT3H3beJYzEzKElwSdEG216E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1k70f4cKkYhhmQri2TI+9uRD+uInwsncDpSc9xTSq9v8yw/2XbkhSS5qCObSbvyas
-	 gewP+Bsny2naRGflT5ezJFsZoj2ovgKzp+S6JhA1tDpGfvaUWPmF4vPMlx+1MTL/iO
-	 icybqBsg02hNG50OBHopjLlz2Fh6H0ZTwDaDMU7E=
+	b=N+qiVj8GcekegR+CK93jpTuyaBHwGtJBPeArWeQ4uvZ9SYD6tli0jC8wTg8Tszmh5
+	 gGBQ3aSc5mpr3moR6aM8gipSDIZEkeR3zvZifKb5zu8REYyRp+N4Fr2TR1UknPN52a
+	 MOtfjmSY9GLyLs+MtnBw5bOrrHb0CfVoUJBZqaS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733247AbfDDJL6 (ORCPT
+        id S1733255AbfDDJMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:11:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51880 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733030AbfDDJL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:57 -0400
+        id S1733030AbfDDJMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40EE32054F;
-        Thu,  4 Apr 2019 09:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F091D20652;
+        Thu,  4 Apr 2019 09:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369116;
-        bh=4ZHzu6Nj+eNcUD3b8X7xVuToNRpq6124yjPBYt2rJjw=;
+        s=default; t=1554369119;
+        bh=rM0EA0zD2WR19du+gsiWT3H3beJYzEzKElwSdEG216E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NwykczK2eONtSH7JDdp8vXGEOrme1dqkJbUPPVYh58Rxm7MY71Oz1wr3ca8a17ts5
-         6qRjgZVd2nKFqS0jlxszdTOKBXXTmjTwiQqn4q/PC9SUNzTYoq6GSf2HVAckd64l8p
-         DY8j20F79L8LTWckyr26A/WJ/wmIQwQ6RuKplfvw=
+        b=IU3QaLT55TW6YU5n9mD69TgPAUTmoFM4Mnj9nme3QiQQTvd3DBdiUoFca6gwKH1gi
+         ofaUvJEsHCgL3ZbwXq36Df2Urh6KmuJ0I7OzU63Ez5K/ZvuLlFOLBBPkvRSdbBpUwx
+         dhWT9+Vt8zvh8sOZgrVKKLu4j8CvwT7Anz1ZvWVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Dufour <ldufour@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 080/246] powerpc/hugetlb: Handle mmap_min_addr correctly in get_unmapped_area callback
-Date:   Thu,  4 Apr 2019 10:46:20 +0200
-Message-Id: <20190404084621.935017873@linuxfoundation.org>
+Subject: [PATCH 5.0 096/246] i2c: designware: Do not allow i2c_dw_xfer() calls while suspended
+Date:   Thu,  4 Apr 2019 10:46:36 +0200
+Message-Id: <20190404084622.504413176@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,67 +67,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5330367fa300742a97e20e953b1f77f48392faae ]
+[ Upstream commit 2751541555382dfa7661bcfaac3ee0fac49f505d ]
 
-After we ALIGN up the address we need to make sure we didn't overflow
-and resulted in zero address. In that case, we need to make sure that
-the returned address is greater than mmap_min_addr.
+On most Intel Bay- and Cherry-Trail systems the PMIC is connected over I2C
+and the PMIC is accessed through various means by the _PS0 and _PS3 ACPI
+methods (power on / off methods) of various devices.
 
-This fixes selftest va_128TBswitch --run-hugetlb reporting failures when
-run as non root user for
+This leads to suspend/resume ordering problems where a device may be
+resumed and get its _PS0 method executed before the I2C controller is
+resumed. On Cherry Trail this leads to errors like these:
 
-mmap(-1, MAP_HUGETLB)
+     i2c_designware 808622C1:06: controller timed out
+     ACPI Error: AE_ERROR, Returned by Handler for [UserDefinedRegion]
+     ACPI Error: Method parse/execution failed \_SB.P18W._ON, AE_ERROR
+     video LNXVIDEO:00: Failed to change power state to D0
 
-The bug is that a non-root user requesting address -1 will be given address 0
-which will then fail, whereas they should have been given something else that
-would have succeeded.
+But on Bay Trail this caused I2C reads to seem to succeed, but they end
+up returning wrong data, which ends up getting written back by the typical
+read-modify-write cycle done to turn on various power-resources.
 
-We also avoid the first mmap(-1, MAP_HUGETLB) returning NULL address as mmap address
-with this change. So we think this is not a security issue, because it only affects
-whether we choose an address below mmap_min_addr, not whether we
-actually allow that address to be mapped. ie. there are existing capability
-checks to prevent a user mapping below mmap_min_addr and those will still be
-honoured even without this fix.
+Debugging the problems caused by this silent data corruption is quite
+nasty. This commit adds a check which disallows i2c_dw_xfer() calls to
+happen until the controller's resume method has completed.
 
-Fixes: 484837601d4d ("powerpc/mm: Add radix support for hugetlb")
-Reviewed-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Which turns the silent data corruption into getting these errors in
+dmesg instead:
+
+    i2c_designware 80860F41:04: Error i2c_dw_xfer call while suspended
+    ACPI Error: AE_ERROR, Returned by Handler for [UserDefinedRegion]
+    ACPI Error: Method parse/execution failed \_SB.PCI0.GFX0._PS0, AE_ERROR
+
+Which is much better.
+
+Note the above errors are an example of issues which this patch will
+help to debug, the actual fix requires fixing the suspend order and
+this has been fixed by a different commit.
+
+Note the setting / clearing of the suspended flag in the suspend / resume
+methods is NOT protected by i2c_lock_bus(). This is intentional as these
+methods get called from i2c_dw_xfer() (through pm_runtime_get/put) a nd
+i2c_dw_xfer() is called with the i2c_bus_lock held, so otherwise we would
+deadlock. This means that there is a theoretical race between a non runtime
+suspend and the suspended check in i2c_dw_xfer(), this is not a problem
+since normally we should not hit the race and this check is primarily a
+debugging tool so hitting the check if there are suspend/resume ordering
+problems does not need to be 100% reliable.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hugetlbpage-radix.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-designware-core.h    | 2 ++
+ drivers/i2c/busses/i2c-designware-master.c  | 6 ++++++
+ drivers/i2c/busses/i2c-designware-pcidrv.c  | 7 ++++++-
+ drivers/i2c/busses/i2c-designware-platdrv.c | 3 +++
+ 4 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/hugetlbpage-radix.c b/arch/powerpc/mm/hugetlbpage-radix.c
-index 2486bee0f93e..97c7a39ebc00 100644
---- a/arch/powerpc/mm/hugetlbpage-radix.c
-+++ b/arch/powerpc/mm/hugetlbpage-radix.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/mm.h>
- #include <linux/hugetlb.h>
-+#include <linux/security.h>
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
- #include <asm/cacheflush.h>
-@@ -73,7 +74,7 @@ radix__hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 	if (addr) {
- 		addr = ALIGN(addr, huge_page_size(h));
- 		vma = find_vma(mm, addr);
--		if (high_limit - len >= addr &&
-+		if (high_limit - len >= addr && addr >= mmap_min_addr &&
- 		    (!vma || addr + len <= vm_start_gap(vma)))
- 			return addr;
- 	}
-@@ -83,7 +84,7 @@ radix__hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
- 	 */
- 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
- 	info.length = len;
--	info.low_limit = PAGE_SIZE;
-+	info.low_limit = max(PAGE_SIZE, mmap_min_addr);
- 	info.high_limit = mm->mmap_base + (high_limit - DEFAULT_MAP_WINDOW);
- 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
- 	info.align_offset = 0;
+diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+index b4a0b2b99a78..6b4ef1d38fb2 100644
+--- a/drivers/i2c/busses/i2c-designware-core.h
++++ b/drivers/i2c/busses/i2c-designware-core.h
+@@ -215,6 +215,7 @@
+  * @disable_int: function to disable all interrupts
+  * @init: function to initialize the I2C hardware
+  * @mode: operation mode - DW_IC_MASTER or DW_IC_SLAVE
++ * @suspended: set to true if the controller is suspended
+  *
+  * HCNT and LCNT parameters can be used if the platform knows more accurate
+  * values than the one computed based only on the input clock frequency.
+@@ -270,6 +271,7 @@ struct dw_i2c_dev {
+ 	int			(*set_sda_hold_time)(struct dw_i2c_dev *dev);
+ 	int			mode;
+ 	struct i2c_bus_recovery_info rinfo;
++	bool			suspended;
+ };
+ 
+ #define ACCESS_SWAP		0x00000001
+diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
+index 8d1bc44d2530..bb8e3f149979 100644
+--- a/drivers/i2c/busses/i2c-designware-master.c
++++ b/drivers/i2c/busses/i2c-designware-master.c
+@@ -426,6 +426,12 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+ 
+ 	pm_runtime_get_sync(dev->dev);
+ 
++	if (dev->suspended) {
++		dev_err(dev->dev, "Error %s call while suspended\n", __func__);
++		ret = -ESHUTDOWN;
++		goto done_nolock;
++	}
++
+ 	reinit_completion(&dev->cmd_complete);
+ 	dev->msgs = msgs;
+ 	dev->msgs_num = num;
+diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
+index d50f80487214..76810deb2de6 100644
+--- a/drivers/i2c/busses/i2c-designware-pcidrv.c
++++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
+@@ -176,6 +176,7 @@ static int i2c_dw_pci_suspend(struct device *dev)
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct dw_i2c_dev *i_dev = pci_get_drvdata(pdev);
+ 
++	i_dev->suspended = true;
+ 	i_dev->disable(i_dev);
+ 
+ 	return 0;
+@@ -185,8 +186,12 @@ static int i2c_dw_pci_resume(struct device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct dw_i2c_dev *i_dev = pci_get_drvdata(pdev);
++	int ret;
+ 
+-	return i_dev->init(i_dev);
++	ret = i_dev->init(i_dev);
++	i_dev->suspended = false;
++
++	return ret;
+ }
+ #endif
+ 
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 9eaac3be1f63..ead5e7de3e4d 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -454,6 +454,8 @@ static int dw_i2c_plat_suspend(struct device *dev)
+ {
+ 	struct dw_i2c_dev *i_dev = dev_get_drvdata(dev);
+ 
++	i_dev->suspended = true;
++
+ 	if (i_dev->shared_with_punit)
+ 		return 0;
+ 
+@@ -471,6 +473,7 @@ static int dw_i2c_plat_resume(struct device *dev)
+ 		i2c_dw_prepare_clk(i_dev, true);
+ 
+ 	i_dev->init(i_dev);
++	i_dev->suspended = false;
+ 
+ 	return 0;
+ }
 -- 
 2.19.1
 
