@@ -7,57 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37707C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072F9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F5B205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99D0205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370320;
-	bh=QdAIqRtdBfpxX6mDe/c/UCu3ModpzT5aE2JphyKTeF4=;
+	s=default; t=1554370327;
+	bh=abc/yBM6mwV69oXayACHXR3xzyDY+qEyfLczEaOsnJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Obigk0s+oZb9hJD+W/HavuToHBT6inOyYL0LRzRixxNxPMIlvBVrrf7rmvW/+kDpa
-	 OdhH9ADqEKSXSejiRP8nROsB7rEE/h3FJUiMBzBLAy3FBDff2GYaVZ27GNR3XthOwU
-	 69XeHq/EPEZvraKJDJom5/HVNQsyP1Pce3ot3E0E=
+	b=jVyDhr3HrBAIwfC9H6vTHVh2wZhtQcY9QTE/KEZ3dWhPkLt5sJz6UxqgbSbRdPNJn
+	 Yg/flSxREM5J/FdJeGkcwbdHS8koABX+3mY/8D1o7/kFoyA5W0rnCQiRWLu/FviwIL
+	 LMRIE6o7KuBXy8uUg2WtkpEbm1ZhVss8jw5hxWIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733014AbfDDJb6 (ORCPT
+        id S1733103AbfDDJcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48288 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728723AbfDDJJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:09 -0400
+        id S1732324AbfDDJJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 708ED20652;
-        Thu,  4 Apr 2019 09:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FF6620693;
+        Thu,  4 Apr 2019 09:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368948;
-        bh=QdAIqRtdBfpxX6mDe/c/UCu3ModpzT5aE2JphyKTeF4=;
+        s=default; t=1554368943;
+        bh=abc/yBM6mwV69oXayACHXR3xzyDY+qEyfLczEaOsnJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=koZ+5HtGfYQa/1jb9a18iqDDMNLqCBtx/EoNcFQ/lLNn7H0xYwKetSU389JpvU/LU
-         Qclxu+gaFoIzX86GjYagaJNa6sKqgQWhTOpYFfFAE+I5+aiimVy3qEClKh/QnNlc07
-         QdSCIq9/eqCbWyVfiupjJzpGRONPr9Mop3yXiSUU=
+        b=yDBx4pCF8Z0i7jxe6r8NXGldx0mHDhl8/QBUznn4p36NtEjGsfmdX7Bdhr6lG+OCR
+         iQyLHC1HRJ/fodV74BDl+Gj0vBpUHeSzxrN/RuJz4toQH3ZeVmlSN5i8dpsjShfge7
+         n7Lbv/kZVk1gBKUxgag77ZjG9sJgqLsnzlHeKzm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
+        stable@vger.kernel.org, Richard Zhang <zhang.zijian@h3c.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH 5.0 041/246] kasan: fix kasan_check_read/write definitions
-Date:   Thu,  4 Apr 2019 10:45:41 +0200
-Message-Id: <20190404084620.474868772@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 039/246] fs/file.c: initialize init_files.resize_wait
+Date:   Thu,  4 Apr 2019 10:45:39 +0200
+Message-Id: <20190404084620.411951039@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -76,69 +68,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit bcf6f55a0d05eedd8ebb6ecc60ae3f93205ad833 ]
+[ Upstream commit 5704a06810682683355624923547b41540e2801a ]
 
-Building little-endian allmodconfig kernels on arm64 started failing
-with the generated atomic.h implementation, since we now try to call
-kasan helpers from the EFI stub:
+(Taken from https://bugzilla.kernel.org/show_bug.cgi?id=200647)
 
-  aarch64-linux-gnu-ld: drivers/firmware/efi/libstub/arm-stub.stub.o: in function `atomic_set':
-  include/generated/atomic-instrumented.h:44: undefined reference to `__efistub_kasan_check_write'
+'get_unused_fd_flags' in kthread cause kernel crash.  It works fine on
+4.1, but causes crash after get 64 fds.  It also cause crash on
+ubuntu1404/1604/1804, centos7.5, and the crash messages are almost the
+same.
 
-I suspect that we get similar problems in other files that explicitly
-disable KASAN for some reason but call atomic_t based helper functions.
+The crash message on centos7.5 shows below:
 
-We can fix this by checking the predefined __SANITIZE_ADDRESS__ macro
-that the compiler sets instead of checking CONFIG_KASAN, but this in
-turn requires a small hack in mm/kasan/common.c so we do see the extern
-declaration there instead of the inline function.
+  start fd 61
+  start fd 62
+  start fd 63
+  BUG: unable to handle kernel NULL pointer dereference at           (null)
+  IP: __wake_up_common+0x2e/0x90
+  PGD 0
+  Oops: 0000 [#1] SMP
+  Modules linked in: test(OE) xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 tun bridge stp llc ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter devlink sunrpc kvm_intel kvm irqbypass crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd sg ppdev pcspkr virtio_balloon parport_pc parport i2c_piix4 joydev ip_tables xfs libcrc32c sr_mod cdrom sd_mod crc_t10dif crct10dif_generic ata_generic pata_acpi virtio_scsi virtio_console virtio_net cirrus drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm crct10dif_pclmul crct10dif_common crc32c_intel drm ata_piix serio_raw libata virtio_pci virtio_ring i2c_core
+   virtio floppy dm_mirror dm_region_hash dm_log dm_mod
+  CPU: 2 PID: 1820 Comm: test_fd Kdump: loaded Tainted: G           OE  ------------   3.10.0-862.3.3.el7.x86_64 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
+  task: ffff8e92b9431fa0 ti: ffff8e94247a0000 task.ti: ffff8e94247a0000
+  RIP: 0010:__wake_up_common+0x2e/0x90
+  RSP: 0018:ffff8e94247a2d18  EFLAGS: 00010086
+  RAX: 0000000000000000 RBX: ffffffff9d09daa0 RCX: 0000000000000000
+  RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffffffff9d09daa0
+  RBP: ffff8e94247a2d50 R08: 0000000000000000 R09: ffff8e92b95dfda8
+  R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff9d09daa8
+  R13: 0000000000000003 R14: 0000000000000000 R15: 0000000000000003
+  FS:  0000000000000000(0000) GS:ffff8e9434e80000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 000000017c686000 CR4: 00000000000207e0
+  Call Trace:
+    __wake_up+0x39/0x50
+    expand_files+0x131/0x250
+    __alloc_fd+0x47/0x170
+    get_unused_fd_flags+0x30/0x40
+    test_fd+0x12a/0x1c0 [test]
+    kthread+0xd1/0xe0
+    ret_from_fork_nospec_begin+0x21/0x21
+  Code: 66 90 55 48 89 e5 41 57 41 89 f7 41 56 41 89 ce 41 55 41 54 49 89 fc 49 83 c4 08 53 48 83 ec 10 48 8b 47 08 89 55 cc 4c 89 45 d0 <48> 8b 08 49 39 c4 48 8d 78 e8 4c 8d 69 e8 75 08 eb 3b 4c 89 ef
+  RIP   __wake_up_common+0x2e/0x90
+   RSP <ffff8e94247a2d18>
+  CR2: 0000000000000000
 
-Link: http://lkml.kernel.org/r/20181211133453.2835077-1-arnd@arndb.de
-Fixes: b1864b828644 ("locking/atomics: build atomic headers as required")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+This issue exists since CentOS 7.5 3.10.0-862 and CentOS 7.4
+(3.10.0-693.21.1 ) is ok.  Root cause: the item 'resize_wait' is not
+initialized before being used.
+
+Reported-by: Richard Zhang <zhang.zijian@h3c.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/kasan-checks.h | 2 +-
- mm/kasan/common.c            | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ fs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/kasan-checks.h b/include/linux/kasan-checks.h
-index d314150658a4..a61dc075e2ce 100644
---- a/include/linux/kasan-checks.h
-+++ b/include/linux/kasan-checks.h
-@@ -2,7 +2,7 @@
- #ifndef _LINUX_KASAN_CHECKS_H
- #define _LINUX_KASAN_CHECKS_H
+diff --git a/fs/file.c b/fs/file.c
+index 3209ee271c41..a10487aa0a84 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -457,6 +457,7 @@ struct files_struct init_files = {
+ 		.full_fds_bits	= init_files.full_fds_bits_init,
+ 	},
+ 	.file_lock	= __SPIN_LOCK_UNLOCKED(init_files.file_lock),
++	.resize_wait	= __WAIT_QUEUE_HEAD_INITIALIZER(init_files.resize_wait),
+ };
  
--#ifdef CONFIG_KASAN
-+#if defined(__SANITIZE_ADDRESS__) || defined(__KASAN_INTERNAL)
- void kasan_check_read(const volatile void *p, unsigned int size);
- void kasan_check_write(const volatile void *p, unsigned int size);
- #else
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 09b534fbba17..80bbe62b16cd 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -14,6 +14,8 @@
-  *
-  */
- 
-+#define __KASAN_INTERNAL
-+
- #include <linux/export.h>
- #include <linux/interrupt.h>
- #include <linux/init.h>
+ static unsigned int find_next_fd(struct fdtable *fdt, unsigned int start)
 -- 
 2.19.1
 
