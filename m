@@ -2,193 +2,94 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ECCC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFD8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B00206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17766206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FtjgQa8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbfDDK7g (ORCPT
+        id S1729787AbfDDK7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:59:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45562 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728345AbfDDK7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:59:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6B8AFAC32;
-        Thu,  4 Apr 2019 10:59:32 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 12:59:30 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     Joao Moreira <jmoreira@suse.de>, live-patching@vger.kernel.org,
-        pmladek@suse.cz, jikos@suse.cz, nstange@suse.de,
-        jpoimboe@redhat.com, khlebnikov@yandex-team.ru, jeyu@kernel.org,
-        matz@suse.de, linux-kernel@vger.kernel.org,
-        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
-        michal.lkml@markovi.net
-Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
-In-Reply-To: <alpine.LSU.2.21.1904031444020.18182@pobox.suse.cz>
-Message-ID: <alpine.LSU.2.21.1904041253300.32428@pobox.suse.cz>
-References: <20190301141313.15057-1-jmoreira@suse.de> <20190301141313.15057-3-jmoreira@suse.de> <20190318191926.GA23138@redhat.com> <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz> <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de> <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
- <699e78da-36ba-8217-c509-2e9b443bd380@suse.de> <1b6ee81b-5699-a1cc-9a85-02df0eeaed12@redhat.com> <20190328201703.GA8658@redhat.com> <20190401193529.GA26375@redhat.com> <alpine.LSU.2.21.1904031444020.18182@pobox.suse.cz>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 4 Apr 2019 06:59:50 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35303 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728737AbfDDK7u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:59:50 -0400
+Received: by mail-pg1-f193.google.com with SMTP id g8so1066629pgf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 03:59:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=C2n7auR9XrmVNuGRtjtTiE7lCR/G7AjBp8rceLUifX4=;
+        b=FtjgQa8QBtP8156KCcRWnTJIsouy7GvP2tTbQdVSHsnYIvzAGHH2q65jSZ9eAAOCVV
+         Aeb7Y6OguOWRG3YUzAlEklyL9osSM4RYr4JeIofKKpr4m4ipmZsWrg3s/YddT53nOPui
+         U3PRD6xZCp74KwYNJly03PZ03cgEvG6nJq4p7RhO9eN6q2A8F7zxbSxjlx8L2bbLCAVb
+         5GLJvo5h5E4FCNZrpD84VZ59IcfpeZp59NPlz8+ng418sdiFlsUYUt3MEXk0MRUZ02vy
+         bgGI4hL6u3p3TrvkVHQcSLXwoPEp5g8bey17JnTseIyr62moiJeNGDrbUcbpfI1BuPaB
+         ZRNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C2n7auR9XrmVNuGRtjtTiE7lCR/G7AjBp8rceLUifX4=;
+        b=o5kWxqO0rzeL3Clwers1awM/JrGXswNSk3+knT2mNF3kUuouhXuR53JQ2aQ6G/ndUg
+         zzfBLu7MvoENqX6YqMSrlpJDc/7zq1pjZXHP23EQuK+L7hveC8TcF9TWhBHZsccwP98r
+         s0W/G6Q4co/Q6GykaoT00lZUod0hcFHvSNDYO9McU6BQkskFda8r87CyMxr2ne424vOQ
+         mqketSAzn289K23ZVkywY/ftgsdkAHN50Z65OMaYooVE3Lxzua0K0Rf5FLWQrxDE1xZc
+         ayTMYxV6zSZc4oLaJmcgHAo/o6nRDrEboX38eVDqLYqXxCunYG1W/Xt4hntbyPyrGDRQ
+         TOsA==
+X-Gm-Message-State: APjAAAV2QbkGUTe/dYRKE9LKrQsjq2FriG6oktfHU6hxKG/o25tnxi9+
+        BFrg8/I71ny4SCU6IASYwF6WXzcv+6c=
+X-Google-Smtp-Source: APXvYqz2ul2rSae9gOSMV4gw1hDC9j7OcPciN6R8z1jOODR9E6BgMS741fvu0u0CGUwfoRUZiapJYA==
+X-Received: by 2002:aa7:9211:: with SMTP id 17mr5184092pfo.220.1554375589314;
+        Thu, 04 Apr 2019 03:59:49 -0700 (PDT)
+Received: from [10.71.9.192] ([147.50.13.10])
+        by smtp.googlemail.com with ESMTPSA id i1sm40543613pgc.63.2019.04.04.03.59.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 03:59:48 -0700 (PDT)
+Subject: Re: [PATCH v2 4/5] nvmem: sunxi-sid: add new reg_read func
+To:     Yangtao Li <tiny.windzz@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190402154514.11284-1-tiny.windzz@gmail.com>
+ <20190402154514.11284-5-tiny.windzz@gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <7dc60dd9-3bbb-f215-4554-a0051c0cfbfd@linaro.org>
+Date:   Thu, 4 Apr 2019 11:59:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190402154514.11284-5-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Apr 2019, Miroslav Benes wrote:
 
+
+On 02/04/2019 16:45, Yangtao Li wrote:
+> Because there was an endianness issue. It seems that reg_read
+> function which the nvmem the driver currently exposes is wrong.
+> So add the new read function, the new function is used when the
+> native_endian flag is set.
 > 
-> > > Hmm, maybe I spoke too soon.
-> > >
-> > > I am having issues if I have a two-object livepatch module in which each
-> > > object file needs to specify its own KLP_MODULE_RELOC for the same
-> > > symbol name.
-> > >
-> > > For example: I have test_klp_convert.ko which is comprised of
-> > > test_klp_convert_a.o. which needs to refer to state_show,1 and
-> > > test_klp_convert_b.o. which needs to refer to state_show,2.
-> > >
-> > >   % make
-> > >   ...
-> > >     KLP     lib/livepatch/test_klp_convert.ko
-> > >   klp-convert: Conflicting KLP_SYMPOS definition: vmlinux.state_show,0 vs. vmlinux.state_show,1.
-> > >   klp-convert: Unable to load user-provided sympos
-> > >   make[2]: *** [scripts/Makefile.modpost:148: lib/livepatch/test_klp_convert.ko] Error 255
-> > >   make[1]: *** [/home/cloud-user/disk/linux/Makefile:1282: modules] Error 2
-> > >   make: *** [Makefile:170: sub-make] Error 2
-> > >
-> > > I take a closer look next week, but in the meantime, see the source
-> > > files below.
-> > 
-> > Okay, with a fresh set of eyes today, I think the issue can be
-> > summarized as:
-> > 
-> >   * "Special" livepatch symbols, as processed by klp-convert, require
-> >     external linkage, otherwise a new local storage instance will be
-> >     created and miss klp-convert altogether
-> > 
-> >   * When linking together two object files, their combined symbol table
-> >     will include a de-duped list of uniquly named global symbols
-> > 
-> > So if we are to run klp-convert on the combined module object file (as
-> > per v2 plus suggested changes in this thread), we are going to run into
-> > problems if ...
-> > 
-> > 
-> > Example
-> > =======
-> > 
-> > (quoted in previous reply), test_klp_convert_a and test_klp_convert_b
-> > have their own "state_show" variable in which each wishes to resolve to
-> > unique symbol positions (2 and 3 accordingly).
-> > 
-> > 
-> > test_klp_convert_a
-> > ------------------
-> > 
-> > We get one symbol table entry and one relocation as expected.
-> > 
-> >   % eu-readelf --symbols lib/livepatch/test_klp_convert_a.o
-> > 
-> >   Symbol table [27] '.symtab' contains 38 entries:
-> >    29 local symbols  String table: [28] '.strtab'
-> >     Num:            Value   Size Type    Bind   Vis          Ndx Name
-> >     ...
-> >      30: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
-> >     ...
-> > 
-> >   % eu-readelf --relocs lib/livepatch/test_klp_convert_a.o
-> > 
-> >   Relocation section [12] '.rela.klp.module_relocs.vmlinux' for section [11] '.klp.module_relocs.vmlinux' at offset 0x4b8 contains 1 entry:
-> >     Offset              Type            Value               Addend Name
-> >     000000000000000000  X86_64_64       000000000000000000      +0 state_show
-> > 
-> > 
-> > test_klp_convert_b
-> > ------------------
-> > 
-> > Just like the other object file, one symbol table entry and one
-> > relocation:
-> > 
-> >   % eu-readelf --symbols lib/livepatch/test_klp_convert_a.o
-> >   Symbol table [24] '.symtab' contains 23 entries:
-> >    19 local symbols  String table: [25] '.strtab'
-> >     Num:            Value   Size Type    Bind   Vis          Ndx Name
-> >     ...
-> >      20: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
-> >     ...
-> > 
-> >   % eu-readelf --relocs lib/livepatch/test_klp_convert_b.o
-> > 
-> >   Relocation section [ 9] '.rela.klp.module_relocs.vmlinux' for section [ 8] '.klp.module_relocs.vmlinux' at offset 0x118 contains 1 entry:
-> >     Offset              Type            Value               Addend Name
-> >     000000000000000000  X86_64_64       000000000000000000      +0 state_show
-> > 
-> > 
-> > test_klp_convert
-> > ----------------
-> > 
-> > But the combined test_klp_convert.klp.o file has only a single
-> > unresolved "state_show" symbol in its symbol table:
-> > 
-> >   % eu-readelf --symbols lib/livepatch/test_klp_convert.klp.o
-> > 
-> >   Symbol table [35] '.symtab' contains 57 entries:
-> >    47 local symbols  String table: [36] '.strtab'
-> >     Num:            Value   Size Type    Bind   Vis          Ndx Name
-> >     ...
-> >      52: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
-> >     ...
-> > 
-> > though the .rela.klp.module_relocs.vmlinux relocation section has two
-> > entries:
-> > 
-> >   % eu-readelf --relocs lib/livepatch/test_klp_convert.klp.o
-> > 
-> >   Relocation section [17] '.rela.klp.module_relocs.vmlinux' for section [16] '.klp.module_relocs.vmlinux' at offset 0x446c8 contains 2 entries:
-> >     Offset              Type            Value               Addend Name
-> >     000000000000000000  X86_64_64       000000000000000000      +0 state_show
-> >     0x0000000000000010  X86_64_64       000000000000000000      +0 state_show
-> > 
-> > and it looks like the combined KLP_MODULE_RELOC still contains the two
-> > unique symbol position values (2 and 3):
-> > 
-> >   % objcopy -O binary --only-section=.klp.module_relocs.vmlinux lib/livepatch/test_klp_convert.klp.o >(hexdump -C)
-> >   00000000  00 00 00 00 00 00 00 00  02 00 00 00 00 00 00 00  |................|
-> >   00000010  00 00 00 00 00 00 00 00  03 00 00 00              |............|
-> >   0000001c
-> 
-> Nice :/
->  
-> > Maybe we can work around this by modifying the annotation macros and/or
-> > klp-convert, or live with this for now.
-> 
-> The question is (and I'll check later. I cannot wrap my head around it 
-> now) if it at least works if there are two references of the same symbol 
-> in two different .o. It would be same state_show in this case and not two 
-> different ones. If it works then I think we can live with it for a while, 
-> because after all duplicate symbols are quite rare in the kernel.
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-I think it should work. There is only one case which causes problems. 
-There exists an ambiguous local symbol in one parent object and a 
-livepatch needs to reference two (or more) different versions of the 
-symbol. In that case there have to be more sympos records provided by a 
-user to help klp-convert distinguish between the cases. klp-convert is of 
-course confused because it currently cannot cope with that.
+This patch and 5/5 does not apply cleanly on nvmem-next.
+Also I would need an ack from Maxime to be able to apply it.
 
-All other cases should be fine (theoretically).
-
-So we need to come up with a solution which would help klp-convert 
-recognize the cases (symbol usage sites). Some sort of user annotation, 
-but I cannot think of anything right now.
- 
-Miroslav
+thanks,
+srini
