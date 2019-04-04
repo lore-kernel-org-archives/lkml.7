@@ -2,163 +2,62 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEB5C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9804C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B66206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797EC206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="QCkR8nbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfDDQka (ORCPT
+        id S1729520AbfDDQky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:40:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35420 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbfDDQk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:40:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9F88169E;
-        Thu,  4 Apr 2019 09:40:28 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B7223F557;
-        Thu,  4 Apr 2019 09:40:25 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 17:40:22 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, stern@rowland.harvard.edu,
-        andrea.parri@amarulasolutions.com, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Mikulas Patocka <mpatocka@redhat.com>
-Subject: Re: [PATCH tip/core/rcu 04/21] docs/memory-barriers.txt: Rewrite
- "KERNEL I/O BARRIER EFFECTS" section
-Message-ID: <20190404164022.GB28932@fuggles.cambridge.arm.com>
-References: <20190326234114.GA23843@linux.ibm.com>
- <20190326234133.24962-4-paulmck@linux.ibm.com>
- <20190402130346.GA14559@fuggles.cambridge.arm.com>
- <7c0b1afc-9308-e060-d1cc-7389a2330e97@gmail.com>
+        Thu, 4 Apr 2019 12:40:54 -0400
+Received: from a9-92.smtp-out.amazonses.com ([54.240.9.92]:33912 "EHLO
+        a9-92.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727051AbfDDQkx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:40:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1554396052;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=28+09XFOqkmUno0MP/WfSRXRXy04JRnokQl+mHKKxO4=;
+        b=QCkR8nbvGPc46188u3FKsmfoRKR+C8SJcpzLMQepDco+/v/jNbIM1i9oRzKcsRGJ
+        u4bwBFfxfBEwpyaeWRQUN77Wh7CMdEUPsGcX/QH5IPyDlUTiZjZS9yRsV10kZfiS1On
+        C2yv3QO2mEYO/RwYRw5MUIOZhGdUdYfLEenOnXIk=
+Date:   Thu, 4 Apr 2019 16:40:52 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Vlastimil Babka <vbabka@suse.cz>
+cc:     linux-mm@kvack.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 2/2] mm, slub: add missing kmem_cache_debug() checks
+In-Reply-To: <20190404091531.9815-3-vbabka@suse.cz>
+Message-ID: <01000169e9397c8b-5e09e11d-50f7-4622-b369-d684d17856c9-000000@email.amazonses.com>
+References: <20190404091531.9815-1-vbabka@suse.cz> <20190404091531.9815-3-vbabka@suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c0b1afc-9308-e060-d1cc-7389a2330e97@gmail.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.04.04-54.240.9.92
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akira,
+On Thu, 4 Apr 2019, Vlastimil Babka wrote:
 
-On Fri, Apr 05, 2019 at 12:58:36AM +0900, Akira Yokosawa wrote:
-> On Tue, 2 Apr 2019 14:03:46 +0100, Will Deacon wrote:
-> > On Tue, Mar 26, 2019 at 04:41:16PM -0700, Paul E. McKenney wrote:
-> >> From: Will Deacon <will.deacon@arm.com>
-> >>
-> >> The "KERNEL I/O BARRIER EFFECTS" section of memory-barriers.txt is vague,
-> >> x86-centric, out-of-date, incomplete and demonstrably incorrect in places.
-> >> This is largely because I/O ordering is a horrible can of worms, but also
-> >> because the document has stagnated as our understanding has evolved.
-> >>
-> >> Attempt to address some of that, by rewriting the section based on
-> >> recent(-ish) discussions with Arnd, BenH and others. Maybe one day we'll
-> >> find a way to formalise this stuff, but for now let's at least try to
-> >> make the English easier to understand.
-> >>
-> >> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> >> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> >> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> >> Cc: Arnd Bergmann <arnd@arndb.de>
-> >> Cc: Peter Zijlstra <peterz@infradead.org>
-> >> Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-> >> Cc: Palmer Dabbelt <palmer@sifive.com>
-> >> Cc: Daniel Lustig <dlustig@nvidia.com>
-> >> Cc: David Howells <dhowells@redhat.com>
-> >> Cc: Alan Stern <stern@rowland.harvard.edu>
-> >> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> >> Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
-> >> Cc: Mikulas Patocka <mpatocka@redhat.com>
-> >> Signed-off-by: Will Deacon <will.deacon@arm.com>
-> >> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> >> ---
-> >>  Documentation/memory-barriers.txt | 115 ++++++++++++++++++------------
-> >>  1 file changed, 70 insertions(+), 45 deletions(-)
-> > 
-> > If somebody could provide an Ack on this patch, I'd really appreciate it,
-> > please. Whilst the portable ordering guarantees that I've documented are
-> > fairly conservative, I do think that this change is a big improvement and
-> > gives you what you need if you're writing a portable device driver for a new
-> > piece of hardware. I'm tackling the removal of MMIOWB as a separate series.
-> > 
-> > I think Paul now requires an Ack before he'll send a patch to mainline,
-> > hence the grovelling.
-> 
-> I'm afraid I'm not that qualified to provide an Ack to this patch,
-> but please find a nit fix below.
+> Some debugging checks in SLUB are not hidden behind kmem_cache_debug() check.
+> Add the check so that those places can also benefit from reduced overhead
+> thanks to the the static key added by the previous patch.
 
-Oh well, thanks for having a look anyway!
-
-> >> + (*) insX(), outsX():
-> >> +
-> >> +     As above, the insX() and outX() accessors provide the same ordering
->                                   outsX()
-
-Thanks; I'll fix that.
-
-> >> +     guarantees as readsX() and writesX() respectively when accessing a mapping
-> >> +     with the default I/O attributes.
-> >>  
-> >>   (*) ioreadX(), iowriteX()
-> >>  
-> >>       These will perform appropriately for the type of access they're actually
-> >>       doing, be it inX()/outX() or readX()/writeX().
-> >>  
-> >> +All of these accessors assume that the underlying peripheral is little-endian,
-> >> +and will therefore perform byte-swapping operations on big-endian architectures.
-> >> +
-> >> +Composing I/O ordering barriers with SMP ordering barriers and LOCK/UNLOCK
-> >> +operations is a dangerous sport which may require the use of mmiowb(). See the
-> >> +subsection "Acquires vs I/O accesses" for more information.
-> >>  
-> >>  ========================================
-> >>  ASSUMED MINIMUM EXECUTION ORDERING MODEL
-> >> -- 
-> >> 2.17.1
-> >>
-> 
-> JFYI, there is another document Documentation/driver-api/device-io.rst,
-> which is somewhat related to this update. It looks like this one also needs
-> some update, as Jon commented in transforming to .rst format in commit
-> 8a8a602fdb83 ("docs: Convert the deviceio template to RST"):
-> <quote>
->     Like the rest of our documentation, this one could use some work.  There's
->     no mention of ioremap() and friends, no mention of io_read*() and friends.
->     But we have nice documentation for all those folks writing new drivers that
->     do port I/O :).
-> </quote>
-> 
-> This commit was merged in v4.11 cycle. And there has been no update whatsoever
-> since. mmiowb() is lightly mentioned therein. IMHO, just updating
-> memory-barriers.txt would widen the gap of information.
-> 
-> Thoughts?
-
-I have a subsequent patch which kills mmiowb() entirely:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/mmiowb&id=3c1a2050c08fb8193777b60b49e60320254a156c
-
-and that one does hit device-io.rst.
-
-Will
+Hmmm... I would not expect too much of a benefit from these changes since
+most of the stuff is actually not on the hot path.
