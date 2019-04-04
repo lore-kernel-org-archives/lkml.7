@@ -2,79 +2,69 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0CDC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECB2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94CD214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C225B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfDDHct (ORCPT
+        id S1727152AbfDDHeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:32:49 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49299 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDDHcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:32:48 -0400
-X-Originating-IP: 90.88.30.125
-Received: from localhost (aaubervilliers-681-1-89-125.w90-88.abo.wanadoo.fr [90.88.30.125])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 4AB3D1C000F;
-        Thu,  4 Apr 2019 07:32:46 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 09:32:45 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] clk: sunxi-ng: H6 related clock fixes
-Message-ID: <20190404073245.ql7qnind4oxmp6t3@flea>
-References: <20190403151404.26542-1-jernej.skrabec@siol.net>
+        Thu, 4 Apr 2019 03:34:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5662 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726031AbfDDHet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 03:34:49 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [10.3.19.207])
+        by Forcepoint Email with ESMTP id 00F4FB6C860712811FE0;
+        Thu,  4 Apr 2019 15:34:46 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 4 Apr 2019 15:34:37 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH] genirq: Fix uninitialized request_mutex
+Date:   Thu, 4 Apr 2019 15:45:12 +0800
+Message-ID: <20190404074512.145533-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qot2ytx7br4g6d22"
-Content-Disposition: inline
-In-Reply-To: <20190403151404.26542-1-jernej.skrabec@siol.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When !CONFIG_SPARSE_IRQ, request_mutex of struct irq_desc won't
+be initialiezed, it leads to system hung, fix it.
 
---qot2ytx7br4g6d22
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: 9114014cf4e6 ("genirq: Add mutex to irq desc to serialize request/free_irq()")
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ kernel/irq/irqdesc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Wed, Apr 03, 2019 at 05:14:02PM +0200, Jernej Skrabec wrote:
-> During linux-next testing on Allwinner H6, I found several issues with
-> clock driver. This patch series fixes them.
->
-> Patch 1 allows video and vpu related clocks to set parent rate.
-> Patch 2 adds a comment with short explanation why zero width check is
-> needed.
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 13539e12cd80..9f8a709337cf 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -558,6 +558,7 @@ int __init early_irq_init(void)
+ 		alloc_masks(&desc[i], node);
+ 		raw_spin_lock_init(&desc[i].lock);
+ 		lockdep_set_class(&desc[i].lock, &irq_desc_lock_class);
++		mutex_init(&desc[i].request_mutex);
+ 		desc_set_defaults(i, &desc[i], node, NULL, NULL);
+ 	}
+ 	return arch_early_irq_init();
+-- 
+2.20.1
 
-Applied both, thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---qot2ytx7br4g6d22
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXKWzHQAKCRDj7w1vZxhR
-xSHhAQCwC5Cv8J55Jo4wFRF8Dw5qW46cNd89HthqB7KqgAadAwD8C7YeoAXhzkls
-1kpw8ccV1gD2k/TaWWh2Nm//UrhSQQ0=
-=Je6v
------END PGP SIGNATURE-----
-
---qot2ytx7br4g6d22--
