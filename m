@@ -2,142 +2,163 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71628C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEB5C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6AB206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="g8ut8LyD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gV3uonkc"
+	by mail.kernel.org (Postfix) with ESMTP id 28B66206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfDDQkN (ORCPT
+        id S1729513AbfDDQka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:40:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43294 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfDDQkM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:40:12 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1A96A60746; Thu,  4 Apr 2019 16:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554396011;
-        bh=gGxqswoSC8eyw2H1E80LMaN0g64Olwvj3RMSqJJYLYQ=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=g8ut8LyDMbhIFK9oiU6YpFyZIXFGi+TiomvzGy+Tc9uGyWYoC9JxFdYoVJ+Yy9h7m
-         JxFFlxNEOQl/cG/DNNl06Tr5rUKHp8STX/Sai6rWWHecYuK3LTGRVKaA2ijlNtdxND
-         1kLHNb0VroZNYU5OME0l2gdNG0qiULjXkUnUTKiY=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4238560350;
-        Thu,  4 Apr 2019 16:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554396010;
-        bh=gGxqswoSC8eyw2H1E80LMaN0g64Olwvj3RMSqJJYLYQ=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=gV3uonkcBikVeo1pPwwneFXwapnPVs8SaFW5+OSquWc+rju5CjnSW73hjei0UTEkH
-         DhmL6vH/MG3rY2kP7dpQ4p2pbxWkpzxgdIrsEifHbdRLlZ0lXuG28iKFqL+sZhI/RQ
-         MfyxskMDSnzcBMCeJozRCMqdu5nhaaBCx2IVwPxc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4238560350
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] qtnfmac: replace qtnf_cmd_acl_data_size() with struct_size()
-References: <20190403170236.GA31637@embeddedor>
-        <20190404133234.2uatru2vlw3ntrmv@bars>
-        <e56579c6-da6e-4cb2-90b1-89e7774debf9@embeddedor.com>
-        <3baa19c1-a213-3dcf-2f03-23b058ec419a@embeddedor.com>
-Date:   Thu, 04 Apr 2019 19:40:06 +0300
-In-Reply-To: <3baa19c1-a213-3dcf-2f03-23b058ec419a@embeddedor.com> (Gustavo A.
-        R. Silva's message of "Thu, 4 Apr 2019 11:33:56 -0500")
-Message-ID: <87imvtsp09.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 4 Apr 2019 12:40:30 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35420 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727152AbfDDQk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:40:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9F88169E;
+        Thu,  4 Apr 2019 09:40:28 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B7223F557;
+        Thu,  4 Apr 2019 09:40:25 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 17:40:22 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, stern@rowland.harvard.edu,
+        andrea.parri@amarulasolutions.com, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Mikulas Patocka <mpatocka@redhat.com>
+Subject: Re: [PATCH tip/core/rcu 04/21] docs/memory-barriers.txt: Rewrite
+ "KERNEL I/O BARRIER EFFECTS" section
+Message-ID: <20190404164022.GB28932@fuggles.cambridge.arm.com>
+References: <20190326234114.GA23843@linux.ibm.com>
+ <20190326234133.24962-4-paulmck@linux.ibm.com>
+ <20190402130346.GA14559@fuggles.cambridge.arm.com>
+ <7c0b1afc-9308-e060-d1cc-7389a2330e97@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c0b1afc-9308-e060-d1cc-7389a2330e97@gmail.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+Hi Akira,
 
-> On 4/4/19 11:01 AM, Gustavo A. R. Silva wrote:
->> 
->> 
->> On 4/4/19 8:32 AM, Sergey Matyukevich wrote:
->>>> One of the more common cases of allocation size calculations is finding
->>>> the size of a structure that has a zero-sized array at the end, along
->>>> with memory for some number of elements for that array. For example:
->>>>
->>>> struct foo {
->>>>     int stuff;
->>>>     struct boo entry[];
->>>> };
->>>>
->>>> size = sizeof(struct foo) + count * sizeof(struct boo);
->>>> instance = kzalloc(size, GFP_KERNEL)
->>>>
->>>> Instead of leaving these open-coded and prone to type mistakes, we can
->>>> now use the new struct_size() helper:
->>>>
->>>> size = struct_size(instance, entry, count);
->>>>
->>>> or
->>>>
->>>> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
->>>>
->>>> Based on the above, replace qtnf_cmd_acl_data_size() with the
->>>> new struct_size() helper.
->>>>
->>>> This code was detected with the help of Coccinelle.
->>>>
->>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>>> ---
->>>>  drivers/net/wireless/quantenna/qtnfmac/commands.c | 15 ++++-----------
->>>>  1 file changed, 4 insertions(+), 11 deletions(-)
->>>
->>> Hi Gustavo,
->>>
->> 
->> Hey Sergey,
->> 
->>> Thanks for the patch! By the way, it does not apply cleanly, so it needs
->>> to be rebased on top of the up-to-date wireless-drivers-next tree. Let
->>> me know if you would prefer me to care about rebase. Then I will
->>> add this patch to the upcoming series of qtnfmac fixes.
->>>
->> 
->> Don't worry. I'll do it and send this again.
->> 
->
-> Hmm... I just applied it cleanly on top of wireless-drivers-next/master:
->
-> 973a99be7943 (HEAD) qtnfmac: replace qtnf_cmd_acl_data_size() with struct_size()
-> 38bb0baea310 (wireless-drivers-next/master) rtlwifi: move spin_lock_bh
-> to spin_lock in tasklet
-> 60209d482b97 rtlwifi: fix potential NULL pointer dereference
-> 765976285a8c rtlwifi: fix a potential NULL pointer dereference
->
-> Do you see any issues with this?
+On Fri, Apr 05, 2019 at 12:58:36AM +0900, Akira Yokosawa wrote:
+> On Tue, 2 Apr 2019 14:03:46 +0100, Will Deacon wrote:
+> > On Tue, Mar 26, 2019 at 04:41:16PM -0700, Paul E. McKenney wrote:
+> >> From: Will Deacon <will.deacon@arm.com>
+> >>
+> >> The "KERNEL I/O BARRIER EFFECTS" section of memory-barriers.txt is vague,
+> >> x86-centric, out-of-date, incomplete and demonstrably incorrect in places.
+> >> This is largely because I/O ordering is a horrible can of worms, but also
+> >> because the document has stagnated as our understanding has evolved.
+> >>
+> >> Attempt to address some of that, by rewriting the section based on
+> >> recent(-ish) discussions with Arnd, BenH and others. Maybe one day we'll
+> >> find a way to formalise this stuff, but for now let's at least try to
+> >> make the English easier to understand.
+> >>
+> >> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> >> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> >> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> >> Cc: Arnd Bergmann <arnd@arndb.de>
+> >> Cc: Peter Zijlstra <peterz@infradead.org>
+> >> Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
+> >> Cc: Palmer Dabbelt <palmer@sifive.com>
+> >> Cc: Daniel Lustig <dlustig@nvidia.com>
+> >> Cc: David Howells <dhowells@redhat.com>
+> >> Cc: Alan Stern <stern@rowland.harvard.edu>
+> >> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> >> Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
+> >> Cc: Mikulas Patocka <mpatocka@redhat.com>
+> >> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> >> Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+> >> ---
+> >>  Documentation/memory-barriers.txt | 115 ++++++++++++++++++------------
+> >>  1 file changed, 70 insertions(+), 45 deletions(-)
+> > 
+> > If somebody could provide an Ack on this patch, I'd really appreciate it,
+> > please. Whilst the portable ordering guarantees that I've documented are
+> > fairly conservative, I do think that this change is a big improvement and
+> > gives you what you need if you're writing a portable device driver for a new
+> > piece of hardware. I'm tackling the removal of MMIOWB as a separate series.
+> > 
+> > I think Paul now requires an Ack before he'll send a patch to mainline,
+> > hence the grovelling.
+> 
+> I'm afraid I'm not that qualified to provide an Ack to this patch,
+> but please find a nit fix below.
 
-Yeah, I also was able to apply it without problems. So it's in w-d-next
-now :)
+Oh well, thanks for having a look anyway!
 
--- 
-Kalle Valo
+> >> + (*) insX(), outsX():
+> >> +
+> >> +     As above, the insX() and outX() accessors provide the same ordering
+>                                   outsX()
+
+Thanks; I'll fix that.
+
+> >> +     guarantees as readsX() and writesX() respectively when accessing a mapping
+> >> +     with the default I/O attributes.
+> >>  
+> >>   (*) ioreadX(), iowriteX()
+> >>  
+> >>       These will perform appropriately for the type of access they're actually
+> >>       doing, be it inX()/outX() or readX()/writeX().
+> >>  
+> >> +All of these accessors assume that the underlying peripheral is little-endian,
+> >> +and will therefore perform byte-swapping operations on big-endian architectures.
+> >> +
+> >> +Composing I/O ordering barriers with SMP ordering barriers and LOCK/UNLOCK
+> >> +operations is a dangerous sport which may require the use of mmiowb(). See the
+> >> +subsection "Acquires vs I/O accesses" for more information.
+> >>  
+> >>  ========================================
+> >>  ASSUMED MINIMUM EXECUTION ORDERING MODEL
+> >> -- 
+> >> 2.17.1
+> >>
+> 
+> JFYI, there is another document Documentation/driver-api/device-io.rst,
+> which is somewhat related to this update. It looks like this one also needs
+> some update, as Jon commented in transforming to .rst format in commit
+> 8a8a602fdb83 ("docs: Convert the deviceio template to RST"):
+> <quote>
+>     Like the rest of our documentation, this one could use some work.  There's
+>     no mention of ioremap() and friends, no mention of io_read*() and friends.
+>     But we have nice documentation for all those folks writing new drivers that
+>     do port I/O :).
+> </quote>
+> 
+> This commit was merged in v4.11 cycle. And there has been no update whatsoever
+> since. mmiowb() is lightly mentioned therein. IMHO, just updating
+> memory-barriers.txt would widen the gap of information.
+> 
+> Thoughts?
+
+I have a subsequent patch which kills mmiowb() entirely:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/mmiowb&id=3c1a2050c08fb8193777b60b49e60320254a156c
+
+and that one does hit device-io.rst.
+
+Will
