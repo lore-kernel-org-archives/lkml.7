@@ -2,108 +2,108 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B489C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A861C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D730D206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:35:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fugdT4e3"
+	by mail.kernel.org (Postfix) with ESMTP id 45E26206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfDDQfl (ORCPT
+        id S1729421AbfDDQfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:35:41 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34973 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfDDQfl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:35:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u21so2300586lfu.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZahOLCtnRUM/rJE2XZcCtlHO18auI/np1DEkNkySzNU=;
-        b=fugdT4e3CvBSOxu5/YfZUkYaeDjNh9+FQc1Q6Emh9LLiieXHPklC1J1w3zpi67Q+W2
-         QG3LPu21hYJ7hftP6NfKLvip4gsOuzK5c4/9Y+2d7lb16INUzYlHbV/KV+6EXu5yitAb
-         rXwlC5HUkqpRYd6irP+j9fNOsfks+1RGCmy3JzUKaL8la7XKFbhPTqKGTdbQ1ic64HFP
-         IXM3C5M+h+JeSF0bdUmzIFqqiLhvIXwu9SpjRz3jyXIIymtDHnFTArF48drS4JqhRVHu
-         HeSxR5Vjwy+msvNoytQBJuMN1yjIJHvSlHAR0c9tNuBo9eboPEgvv0AzIQDJwNOz8WrV
-         m5tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZahOLCtnRUM/rJE2XZcCtlHO18auI/np1DEkNkySzNU=;
-        b=EroNaXK6cfyavePuucMBXTM1RURzY/Ww6fveFK9CeRng13bDGUp3/7AkelEMnlqYEe
-         oTI1PQcIU4ew7FJO4qIzwR8Gbu4D8uieGLf+J+pYW1ITiPXyUgYVH1iDkCbiXOPivUlT
-         7MJNqWBEDTrzbOFymGWM68/AulXRnKR/dUmKkwIKqyhgG65cWTx4MWb1fKpHyL5Ou95D
-         66bgWZo1WCZ1ulwocQAjE+hA9DhkJiCzSP6jk03EsZx/PN+J4aUrY8Ei8Uz3tal/xYnn
-         Br/tV/ZgBeufezJB4SLjXvdfD6QPcmupCgAQc+Dk3nHWlcPm038H30kw8uWuR8Vg++6C
-         SsTw==
-X-Gm-Message-State: APjAAAVKfjiUxGlAfP9AmRoQez6JtMEUCCC6ftWXf+ttkfTBgbjU7fSP
-        GJW9yqEAPNdOgiSK5MCLgnJ/11fCHrC5x3C4yzNsFw==
-X-Google-Smtp-Source: APXvYqyjKtOvNcmGc7HR5b9ygo6gcFyLXV4tWsC+Lf0el1ky2PNSnWI4AI3xWUzK1JYp4UTAyaoHv/1xFyYvE2grRHI=
-X-Received: by 2002:ac2:54b0:: with SMTP id w16mr3970632lfk.138.1554395739090;
- Thu, 04 Apr 2019 09:35:39 -0700 (PDT)
+        Thu, 4 Apr 2019 12:35:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:16322 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727039AbfDDQfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:35:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 09:35:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,308,1549958400"; 
+   d="scan'208";a="128641824"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga007.jf.intel.com with ESMTP; 04 Apr 2019 09:35:45 -0700
+Date:   Thu, 4 Apr 2019 09:35:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Fenghua Yu' <fenghua.yu@intel.com>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Borislav Petkov' <bp@alien8.de>,
+        'H Peter Anvin' <hpa@zytor.com>,
+        'Dave Hansen' <dave.hansen@intel.com>,
+        'Paolo Bonzini' <pbonzini@redhat.com>,
+        'Ashok Raj' <ashok.raj@intel.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Kalle Valo' <kvalo@codeaurora.org>,
+        'Xiaoyao Li ' <xiaoyao.li@intel.com>,
+        'Michael Chan' <michael.chan@broadcom.com>,
+        'Ravi V Shankar' <ravi.v.shankar@intel.com>,
+        'linux-kernel' <linux-kernel@vger.kernel.org>,
+        'x86' <x86@kernel.org>,
+        "'linux-wireless@vger.kernel.org'" <linux-wireless@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v6 04/20] x86/split_lock: Align x86_capability to
+ unsigned long to avoid split locked access
+Message-ID: <20190404163545.GE9911@linux.intel.com>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+ <1554326526-172295-5-git-send-email-fenghua.yu@intel.com>
+ <73ecc9de54c3424da3cddd1a34cb8701@AcuMS.aculab.com>
+ <c0d43317cce34389ac4a1e91e97d909b@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com> <1554257354-7440-6-git-send-email-chunfeng.yun@mediatek.com>
-In-Reply-To: <1554257354-7440-6-git-send-email-chunfeng.yun@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Apr 2019 23:35:27 +0700
-Message-ID: <CACRpkdatNdzZ+97pZNBudyPNVtQDLKU_o31MSe=T7kJzWtaWUg@mail.gmail.com>
-Subject: Re: [v3 PATCH 5/6] usb: roles: add USB Type-B GPIO connector driver
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c0d43317cce34389ac4a1e91e97d909b@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 9:09 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+On Thu, Apr 04, 2019 at 04:24:15PM +0000, David Laight wrote:
+> From: David Laight
+> > Sent: 04 April 2019 15:45
+> > 
+> > From: Fenghua Yu
+> > > Sent: 03 April 2019 22:22
+> > > set_cpu_cap() calls locked BTS and clear_cpu_cap() calls locked BTR to
+> > > operate on bitmap defined in x86_capability.
+> > >
+> > > Locked BTS/BTR accesses a single unsigned long location. In 64-bit mode,
+> > > the location is at:
+> > > base address of x86_capability + (bit offset in x86_capability / 64) * 8
+> > >
+> > > Since base address of x86_capability may not be aligned to unsigned long,
+> > > the single unsigned long location may cross two cache lines and
+> > > accessing the location by locked BTS/BTR introductions will trigger #AC.
+> > 
+> > That is not true.
+> > The BTS/BTR instructions access the memory word that contains the
+> > expected bit.
+> > The 'operand size' only affects the size of the register use for the
+> > bit offset.
+> > If the 'operand size' is 16 bits wide (+/- 32k bit offset) the cpu might
+> > do an aligned 16bit memory access, otherwise (32 or 64bit bit offset) it
+> > might do an aligned 32 bit access.
+> > It should never do an 64bit access and never a misaligned one (even if
+> > the base address is misaligned).
+> 
+> Hmmm... I may have misread things slightly.
+> The accessed address is 'Effective Address + (4 ∗ (BitOffset DIV 32))'.
+> However nothing suggests that it ever does 64bit accesses.
+> 
+> If it does do 64bit accesses when the operand size is 64 bits then the
+> asm stubs ought to be changed to only specify 32bit operand size.
 
-> Due to the requirement of usb-connector.txt binding, the old way
-> using extcon to support USB Dual-Role switch is now deprecated
-> when use Type-B connector.
-> This patch introduces a driver of Type-B connector which typically
-> uses an input GPIO to detect USB ID pin, and try to replace the
-> function provided by extcon-usb-gpio driver
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-(...)
-> +#include <linux/gpio.h>
+Heh, we had this discussion before[1], the op size dictates the size of
+the memory access and can generate unaligned accesses.
 
-If you need this include in a consumer, something is wrong. Just delete it,
-
-> +       info->id_gpiod = devm_gpiod_get_from_of_node(
-> +                               dev, child, "id-gpios", 0, GPIOD_IN, "idpin");
-
-This is OK if the child does not have any Linux device (struct platform_device
-etc) created from it. Is this the case?
-
-Yours,
-Linus Walleij
+[1] https://lkml.kernel.org/r/20181127195153.GE27075@linux.intel.com
