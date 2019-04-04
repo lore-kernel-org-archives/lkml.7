@@ -2,98 +2,111 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76485C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF89C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB2B20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:48:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554356881;
-	bh=0edM/x1veO9YkGG0MTWeLyypWU0/EBKr6udjJleruQU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vWEjJoIMGcdEUDp0awjd7x26PY3fzMb7HZ943dMZzehUUeKUetLZ3zBcrLmtgAUvO
-	 Z5nklcc2zoy0C7uh2GTianOsGB38jtLtc1yRDMvOPdV1oQWBnpengNKhUXilYD6h3R
-	 MnH38NFWx5CzfWY0CjWVaz/WVHrRpKJngXp9v65w=
+	by mail.kernel.org (Postfix) with ESMTP id 017CF20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 05:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfDDFr7 (ORCPT
+        id S1726530AbfDDFvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 01:47:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54630 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfDDFr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 01:47:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0edM/x1veO9YkGG0MTWeLyypWU0/EBKr6udjJleruQU=; b=EaAqlwFfJK0yXvxhfmMR1AUDS
-        ZVufeTCC5/Ew2X2SA88dQ6m8nWT4xeaXXzL8kEd9h+WrQ1NprowUijHfaQaN+2PZFjvS2LY0y7r/p
-        IBJvG+d2DMJtrLQqW3Zg8yjlZ3Vp8aJRVYsk8CmxNUNLUN8skedeveFduK05oGqpzROeM=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBvDQ-0004CU-Jq; Thu, 04 Apr 2019 05:47:09 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 0472B441D3C; Thu,  4 Apr 2019 12:47:04 +0700 (+07)
-Date:   Thu, 4 Apr 2019 12:47:04 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com,
-        benjamin.gaignard@st.com, apatard@mandriva.com
-Subject: Re: [PATCH 5/7] ASoC: cs42l51: change mic bias DAPM
-Message-ID: <20190404054704.GN5748@sirena.org.uk>
-References: <1554297817-14154-1-git-send-email-olivier.moysan@st.com>
- <1554297817-14154-6-git-send-email-olivier.moysan@st.com>
+        Thu, 4 Apr 2019 01:51:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58062 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbfDDFvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 01:51:00 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A9D833078AAE;
+        Thu,  4 Apr 2019 05:50:59 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-22.ams2.redhat.com [10.36.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE72D5FCC4;
+        Thu,  4 Apr 2019 05:50:56 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 1AE8116E2D; Thu,  4 Apr 2019 07:50:56 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 07:50:56 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     David Airlie <airlied@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH] drm/cirrus: rewrite and modernize driver.
+Message-ID: <20190404055056.ddc2bdgjbgjj7tby@sirius.home.kraxel.org>
+References: <20190403072318.31507-1-kraxel@redhat.com>
+ <CAMwc25o=DZSVE5Qf5mow6es06Gk3=+6+8offXPY-JPgUkG_Shw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wwtQuX191/I956S7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1554297817-14154-6-git-send-email-olivier.moysan@st.com>
-X-Cookie: Replace with same type.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMwc25o=DZSVE5Qf5mow6es06Gk3=+6+8offXPY-JPgUkG_Shw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 04 Apr 2019 05:51:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 04, 2019 at 12:58:09PM +1000, David Airlie wrote:
+> On Wed, Apr 3, 2019 at 5:23 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> >
+> > Time to kill some bad sample code people are copying from ;)
+> >
+> > This is a complete rewrite of the cirrus driver.  The cirrus_mode_set()
+> > function is pretty much the only function which is carried over largely
+> > unmodified.  Everything else is upside down.
+> >
+> > It is a single monster patch.  But given that it does some pretty
+> > fundamental changes to the drivers workflow and also reduces the code
+> > size by roughly 70% I think it'll still be alot easier to review than a
+> > longish baby-step patch series.
+> >
+> > Changes summary:
+> >  - Given the small amout of video memory (4 MB) the cirrus device has
+> >    the rewritten driver doesn't try to manage buffers there.  Instead
+> >    it will blit (memcpy) the active framebuffer to video memory.
+> 
+> Does it get any slower, with TTM I just wrote it to migrate just the
+> frontbuffer in/out of VRAM on modeset, won't we end up with more
+> copies now?
 
---wwtQuX191/I956S7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I didn't benchmark it, but if you care about performance you should not
+be using cirrus anyway ...
 
-On Wed, Apr 03, 2019 at 03:23:35PM +0200, Olivier Moysan wrote:
-> Use SND_SOC_DAPM_SUPPLY for mic bias DAPM
-> instead of deprecated SND_SOC_DAPM_MICBIAS.
+For fbcon it probably doesn't make much of a difference, fbcon used a
+shadow framebuffer before (for fbdev mmap and dirty tracking).
 
-There are existing users in mainline, have they all been updated to be
-compatible with this, or verified that they don't need updates?
+xorg probably ends up with more copying.
 
---wwtQuX191/I956S7
-Content-Type: application/pgp-signature; name="signature.asc"
+Anything doing display updates with page flips (i.e wayland) should end
+up with less copying, because you have one copy (blit) instead of two
+copies (migrate old frontbuffer out of vram, migrate new frontbuffer
+into vram) on pageflip.
 
------BEGIN PGP SIGNATURE-----
+Speaking of wayland:  Seems at least gnome-shell insists on using XR24.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlylmlgACgkQJNaLcl1U
-h9BOnAf+PPQFLLTsRJ7K59cQlzHC/KzeoMMsp5NZ8ya8aE9dR0f0Qsmdd9C2TBbv
-7DQectXbqeSTHvK+lKeRDOaqLseOulblX5eioaayMSXrXgaQbSISOEp/jkonZI9Y
-pc5qLhabKNKYGcYBFRwIUyTI/S/vBmbvQdbl9cTHiUmbTWpDmQi7rDzsB+XcM1RS
-mYU7U1klquugB3orcCCoKe19wnOA75kfwKZVPFPv0QhUUJFU1qk35C/wjYKF6z8b
-xXT+4cYj2YtSZ7O7Uoh5h0p+qSTSMfFToG2ry6qJ2UTKIg8Lp2TgU4epGz22uA0v
-zwBJPJ0xTEqrG/a55i1+QI7I71w+MQ==
-=GYiY
------END PGP SIGNATURE-----
+> >  - Only DRM_FORMAT_RGB565 (depth 16) is supported.  The old driver does
+> >    that too by default.  There was a module parameter which enables 24/32
+> >    bpp support and disables higher resolutions (due to cirrus hardware
+> >    constrains).  That parameter wasn't reimplemented.
 
---wwtQuX191/I956S7--
+> This might be the big sticking point, this is a userspace regression
+> for a feature that was explicitly added a few years ago, can we really
+> get away without it?
+
+Well, I can reintroduce the module option.  I don't see any other
+reasonable way to support 32bpp.  If the driver reports XR24 as
+supported and also adds the higher resolutions (which work with RG16
+only) to the mode list userspace will of course try the higher
+resolutions with XR24 and struggle ...
+
+cheers,
+  Gerd
+
