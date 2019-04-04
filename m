@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBC9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B121C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC862184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AED021741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368494;
-	bh=YfOk10ptb9wvE4vNH4VAQ8gxJD74QhSZ0IUivauz3qc=;
+	s=default; t=1554368502;
+	bh=VG6+nVD+xW5CxoFq429VEowshVGnrzPArN3789qZBSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoxVdYc3NnF7ACDIFJb5P8tSBFrppFjO8OhXknElfPPoB8JyxnfKSOhfKJ5aA97Sf
-	 SJ2QU2xR0m2ch8G8UHqzNJ7SIzx1nsmY/yZhgLw0E3YgF6r4UCm+fWNN3WELnNpytu
-	 6R23GUYWsBmHCLtvYhihuD098xleeq736HBU+EWI=
+	b=U9j+9ahASDiXZqk20ELit8oLfVGOA/h+5eDx0jcV1mR6QBozOcUcLo1hK72YaSOLU
+	 MfNg+vXJAtO2bmcremm2cN8S74ilDdOrkHjYKiDXwEh3OWug3IbP85VIM2H+L4/n3i
+	 xRAqviEhp3j8pT/M3Kekg6KRzflT6D+/4QixLVBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbfDDJBd (ORCPT
+        id S1731472AbfDDJBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38660 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731430AbfDDJB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:29 -0400
+        id S1731006AbfDDJBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCEAB2147C;
-        Thu,  4 Apr 2019 09:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D772184B;
+        Thu,  4 Apr 2019 09:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368488;
-        bh=YfOk10ptb9wvE4vNH4VAQ8gxJD74QhSZ0IUivauz3qc=;
+        s=default; t=1554368496;
+        bh=VG6+nVD+xW5CxoFq429VEowshVGnrzPArN3789qZBSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcsATU9On2GzVw5Epb7jI/2P9SG/AAHylXJamaBXD2aQCkYh3VobijDsT/LsBx7uZ
-         viDvkDYavcgpVM6+UAO43iXpR3ap/DYGDeiUPPUugGZCjtwiFB8Tp6L7IURU0hNP6d
-         7TIRTaJf8Wv0ewfj1MGammMFecy+fxWqdDs1wr8c=
+        b=fF3e0RUw8lzHYFB7QOCVqimeY70CZfiU8t5jOtl89735KNdG80gtTuAcjT64ytRfF
+         m0zildk2E5JElXaK8xo6IKtLx1gBEbGsAJ7doIl2pI3mU+Ab4tLQYePVdOoC25O2rI
+         A7sSyaOsAFqTxHCt9zSCrs3+bjQojlnMgkMpBfw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Zhang Yu <zhangyu31@baidu.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/187] netfilter: nf_tables: check the result of dereferencing base_chain->stats
-Date:   Thu,  4 Apr 2019 10:46:19 +0200
-Message-Id: <20190404084605.063924036@linuxfoundation.org>
+Subject: [PATCH 4.19 035/187] page_poison: play nicely with KASAN
+Date:   Thu,  4 Apr 2019 10:46:12 +0200
+Message-Id: <20190404084604.723902158@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,67 +68,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a9f5e78c403d2d62ade4f4c85040efc85f4049b8 ]
+[ Upstream commit 4117992df66a26fa33908b4969e04801534baab1 ]
 
-Check the result of dereferencing base_chain->stats, instead of result
-of this_cpu_ptr with NULL.
+KASAN does not play well with the page poisoning (CONFIG_PAGE_POISONING).
+It triggers false positives in the allocation path:
 
-base_chain->stats maybe be changed to NULL when a chain is updated and a
-new NULL counter can be attached.
+  BUG: KASAN: use-after-free in memchr_inv+0x2ea/0x330
+  Read of size 8 at addr ffff88881f800000 by task swapper/0
+  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc1+ #54
+  Call Trace:
+   dump_stack+0xe0/0x19a
+   print_address_description.cold.2+0x9/0x28b
+   kasan_report.cold.3+0x7a/0xb5
+   __asan_report_load8_noabort+0x19/0x20
+   memchr_inv+0x2ea/0x330
+   kernel_poison_pages+0x103/0x3d5
+   get_page_from_freelist+0x15e7/0x4d90
 
-And we do not need to check returning of this_cpu_ptr since
-base_chain->stats is from percpu allocator if it is non-NULL,
-this_cpu_ptr returns a valid value.
+because KASAN has not yet unpoisoned the shadow page for allocation
+before it checks memchr_inv() but only found a stale poison pattern.
 
-And fix two sparse error by replacing rcu_access_pointer and
-rcu_dereference with READ_ONCE under rcu_read_lock.
+Also, false positives in free path,
 
-Thanks for Eric's help to finish this patch.
+  BUG: KASAN: slab-out-of-bounds in kernel_poison_pages+0x29e/0x3d5
+  Write of size 4096 at addr ffff8888112cc000 by task swapper/0/1
+  CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc1+ #55
+  Call Trace:
+   dump_stack+0xe0/0x19a
+   print_address_description.cold.2+0x9/0x28b
+   kasan_report.cold.3+0x7a/0xb5
+   check_memory_region+0x22d/0x250
+   memset+0x28/0x40
+   kernel_poison_pages+0x29e/0x3d5
+   __free_pages_ok+0x75f/0x13e0
 
-Fixes: 009240940e84c1 ("netfilter: nf_tables: don't assume chain stats are set when jumplabel is set")
-Signed-off-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+due to KASAN adds poisoned redzones around slab objects, but the page
+poisoning needs to poison the whole page.
+
+Link: http://lkml.kernel.org/r/20190114233405.67843-1-cai@lca.pw
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ mm/page_alloc.c  | 2 +-
+ mm/page_poison.c | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_core.c b/net/netfilter/nf_tables_core.c
-index 60f258f2c707..a3850414dba2 100644
---- a/net/netfilter/nf_tables_core.c
-+++ b/net/netfilter/nf_tables_core.c
-@@ -98,21 +98,23 @@ static noinline void nft_update_chain_stats(const struct nft_chain *chain,
- 					    const struct nft_pktinfo *pkt)
- {
- 	struct nft_base_chain *base_chain;
-+	struct nft_stats __percpu *pstats;
- 	struct nft_stats *stats;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ef99971c13dd..8e6932a140b8 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1922,8 +1922,8 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
  
- 	base_chain = nft_base_chain(chain);
--	if (!rcu_access_pointer(base_chain->stats))
--		return;
- 
--	local_bh_disable();
--	stats = this_cpu_ptr(rcu_dereference(base_chain->stats));
--	if (stats) {
-+	rcu_read_lock();
-+	pstats = READ_ONCE(base_chain->stats);
-+	if (pstats) {
-+		local_bh_disable();
-+		stats = this_cpu_ptr(pstats);
- 		u64_stats_update_begin(&stats->syncp);
- 		stats->pkts++;
- 		stats->bytes += pkt->skb->len;
- 		u64_stats_update_end(&stats->syncp);
-+		local_bh_enable();
- 	}
--	local_bh_enable();
-+	rcu_read_unlock();
+ 	arch_alloc_page(page, order);
+ 	kernel_map_pages(page, 1 << order, 1);
+-	kernel_poison_pages(page, 1 << order, 1);
+ 	kasan_alloc_pages(page, order);
++	kernel_poison_pages(page, 1 << order, 1);
+ 	set_page_owner(page, order, gfp_flags);
  }
  
- struct nft_jumpstack {
+diff --git a/mm/page_poison.c b/mm/page_poison.c
+index aa2b3d34e8ea..6cfa8e7d7213 100644
+--- a/mm/page_poison.c
++++ b/mm/page_poison.c
+@@ -6,6 +6,7 @@
+ #include <linux/page_ext.h>
+ #include <linux/poison.h>
+ #include <linux/ratelimit.h>
++#include <linux/kasan.h>
+ 
+ static bool want_page_poisoning __read_mostly;
+ 
+@@ -34,7 +35,10 @@ static void poison_page(struct page *page)
+ {
+ 	void *addr = kmap_atomic(page);
+ 
++	/* KASAN still think the page is in-use, so skip it. */
++	kasan_disable_current();
+ 	memset(addr, PAGE_POISON, PAGE_SIZE);
++	kasan_enable_current();
+ 	kunmap_atomic(addr);
+ }
+ 
 -- 
 2.19.1
 
