@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE08C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6F0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899FB20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B987A20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369407;
-	bh=gMxPcSo2/t1c+QqJNyP83ACaOA53yIaf1HtTknBEPlo=;
+	s=default; t=1554369412;
+	bh=BvjuZ0m2CIC2YgjOvgOIcFzprWbKCHyP1cezF2QDwpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzYzYPC+jIcPeE1WnJE5SHUPb5ZaaWV9d6eu+IPiOOC6N2iStk6BRfUquSNb0z4oW
-	 wiLwp+AH7DhDB7qUFYhPxti1mLToy9aanQMVe7Q4Jl0TUC/SXdfoX9bSpGNrxhzI5L
-	 BXD7tCs7nOIUNPlK23F6MM/CMKNsKfklhz4x9NZ0=
+	b=1nNxm67Vm7/06cHXeNhyACsUPDky2qFuXsXcbtfgsn8IXxoI2BHlSOynE9w4ayUO0
+	 RCeHVIAvf5k2z62NVMNop39VjPo2ZCFtS3bJ/l2lEdw7yhg+uo4fitSwrK9rSbueHB
+	 7ho/0OMk8IF2Hv6E1hh/82B8/3KufaO9f9nXEKdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388109AbfDDJQq (ORCPT
+        id S2388115AbfDDJQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57974 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387868AbfDDJQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:43 -0400
+        id S2387691AbfDDJQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AEE720693;
-        Thu,  4 Apr 2019 09:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B72072054F;
+        Thu,  4 Apr 2019 09:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369402;
-        bh=gMxPcSo2/t1c+QqJNyP83ACaOA53yIaf1HtTknBEPlo=;
+        s=default; t=1554369405;
+        bh=BvjuZ0m2CIC2YgjOvgOIcFzprWbKCHyP1cezF2QDwpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c33hpvnPtVJRgKFoiSA/bd6Hn2WtSCAnlT/ymfRlUf5yXRSrN2PtDVJhvbKUDlXyo
-         P9fVwxjxO0ALY4JHlELV1xJZ7TFa4/z+unuAGri1sWiR3DflHUQz51fGBzLki27bDd
-         QHCC1bfFCS0T87T4HPFIXJZhgcv2B8RaZ7sysTn4=
+        b=0s3H9YXAti1pV1MQRLia9gsXjXl4RJwjvnaX25Okg/QkwgNSzdEg6Uk04NXZVKHOJ
+         2eq0lLpvCWz5GfV/agpPZ6E7SqlzCi+ZJkPvc5qb+ljQAe8H6kx5tZ1RAu4lqGtlht
+         WifC0Cc7YcvXVnaBaTmRi49oqFWZs6UGdSmkhWKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 202/246] perf script python: Add trace_context extension module to sys.modules
-Date:   Thu,  4 Apr 2019 10:48:22 +0200
-Message-Id: <20190404084626.262531646@linuxfoundation.org>
+Subject: [PATCH 5.0 211/246] pinctrl: meson: fix G12A ao pull registers base address
+Date:   Thu,  4 Apr 2019 10:48:31 +0200
+Message-Id: <20190404084626.579585540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -71,116 +68,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cc437642255224e4140fed1f3e3156fc8ad91903 ]
+[ Upstream commit e66dd48e8b0dee104d16417d30361074b08baca8 ]
 
-In Python3, the result of PyModule_Create (called from
-scripts/python/Perf-Trace-Util/Context.c) is not automatically added to
-sys.modules.  See: https://bugs.python.org/issue4592
+Since Meson G12A SoC, Introduce new ao registers AO_RTI_PULL_UP_EN_REG
+and AO_GPIO_O.
 
-Below is the observed behavior without the fix:
+These bits of controlling output level are remapped to the new register
+AO_GPIO_O, and the AO_GPIO_O_EN_N support only controlling output enable.
 
-  # ldd /usr/bin/perf | grep -i python
-	libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
+These bits of controlling pull enable are remapped to the new register
+AO_RTI_PULL_UP_EN_REG, and the AO_RTI_PULL_UP_REG support only controlling
+pull type(up/down).
 
-  # perf record /bin/false
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.015 MB perf.data (17 samples) ]
+The new layout of ao gpio/pull registers is as follows:
+- AO_GPIO_O_EN_N        [offset: 0x9 << 2]
+- AO_GPIO_I             [offset: 0xa << 2]
+- AO_RTI_PULL_UP_REG    [offset: 0xb << 2]
+- AO_RTI_PULL_UP_EN_REG [offset: 0xc << 2]
+- AO_GPIO_O             [offset: 0xd << 2]
 
-  # perf script -g python | cat
-  generated Python script: perf-script.py
+>From above, we can see ao GPIO registers region has been separated by the
+ao pull registers. In order to ensure the continuity of the region on
+software, the ao GPIO and ao pull registers use the same base address, but
+can be identified by the offset.
 
-  # perf script -s ./perf-script.py
-  Traceback (most recent call last):
-    File "./perf-script.py", line 18, in <module>
-      from perf_trace_context import *
-  ModuleNotFoundError: No module named 'perf_trace_context'
-  Error running python script ./perf-script.py
-  #
-
-Committer notes:
-
-To build with python3 use:
-
-  $ make -C tools/perf PYTHON=python3
-
-Use a non-const variable to pass the 'name' arg to
-PyImport_AppendInittab(), as python2.6 has that as 'char *', which ends
-up trowing this in some environments:
-
-   CC       /tmp/build/perf/util/parse-branch-options.o
-  util/scripting-engines/trace-event-python.c: In function 'python_start_script':
-  util/scripting-engines/trace-event-python.c:1520:2: error: passing argument 1 of 'PyImport_AppendInittab' discards 'const' qualifier from pointer target type [-Werror]
-    PyImport_AppendInittab("perf_trace_context", initfunc);
-    ^
-  In file included from /usr/include/python2.6/Python.h:130:0,
-                   from util/scripting-engines/trace-event-python.c:22:
-  /usr/include/python2.6/import.h:54:17: note: expected 'char *' but argument is of type 'const char *'
-   PyAPI_FUNC(int) PyImport_AppendInittab(char *name, void (*initfunc)(void));
-                   ^
-  cc1: all warnings being treated as errors
-
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jaroslav Škarvada <jskarvad@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
-Link: http://lkml.kernel.org/r/20190124005229.16146-2-tonyj@suse.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 29ae0952e85f ("pinctrl: meson-g12a: add pinctrl driver support")
+Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../perf/util/scripting-engines/trace-event-python.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 2fe3cc43526f..7059d1be2d09 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1493,34 +1493,40 @@ static void _free_command_line(wchar_t **command_line, int num)
- static int python_start_script(const char *script, int argc, const char **argv)
- {
- 	struct tables *tables = &tables_global;
-+	PyMODINIT_FUNC (*initfunc)(void);
- #if PY_MAJOR_VERSION < 3
- 	const char **command_line;
- #else
- 	wchar_t **command_line;
- #endif
--	char buf[PATH_MAX];
-+	/*
-+	 * Use a non-const name variable to cope with python 2.6's
-+	 * PyImport_AppendInittab prototype
-+	 */
-+	char buf[PATH_MAX], name[19] = "perf_trace_context";
- 	int i, err = 0;
- 	FILE *fp;
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index ea87d739f534..a4ae1ac5369e 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -31,6 +31,9 @@
+  * In some cases the register ranges for pull enable and pull
+  * direction are the same and thus there are only 3 register ranges.
+  *
++ * Since Meson G12A SoC, the ao register ranges for gpio, pull enable
++ * and pull direction are the same, so there are only 2 register ranges.
++ *
+  * For the pull and GPIO configuration every bank uses a contiguous
+  * set of bits in the register sets described above; the same register
+  * can be shared by more banks with different offsets.
+@@ -488,23 +491,22 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 		return PTR_ERR(pc->reg_mux);
+ 	}
  
- #if PY_MAJOR_VERSION < 3
-+	initfunc = initperf_trace_context;
- 	command_line = malloc((argc + 1) * sizeof(const char *));
- 	command_line[0] = script;
- 	for (i = 1; i < argc + 1; i++)
- 		command_line[i] = argv[i - 1];
- #else
-+	initfunc = PyInit_perf_trace_context;
- 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
- 	command_line[0] = Py_DecodeLocale(script, NULL);
- 	for (i = 1; i < argc + 1; i++)
- 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
- #endif
+-	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
+-	if (IS_ERR(pc->reg_pull)) {
+-		dev_err(pc->dev, "pull registers not found\n");
+-		return PTR_ERR(pc->reg_pull);
++	pc->reg_gpio = meson_map_resource(pc, gpio_np, "gpio");
++	if (IS_ERR(pc->reg_gpio)) {
++		dev_err(pc->dev, "gpio registers not found\n");
++		return PTR_ERR(pc->reg_gpio);
+ 	}
  
-+	PyImport_AppendInittab(name, initfunc);
- 	Py_Initialize();
++	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
++	/* Use gpio region if pull one is not present */
++	if (IS_ERR(pc->reg_pull))
++		pc->reg_pull = pc->reg_gpio;
++
+ 	pc->reg_pullen = meson_map_resource(pc, gpio_np, "pull-enable");
+ 	/* Use pull region if pull-enable one is not present */
+ 	if (IS_ERR(pc->reg_pullen))
+ 		pc->reg_pullen = pc->reg_pull;
  
- #if PY_MAJOR_VERSION < 3
--	initperf_trace_context();
- 	PySys_SetArgv(argc + 1, (char **)command_line);
- #else
--	PyInit_perf_trace_context();
- 	PySys_SetArgv(argc + 1, command_line);
- #endif
+-	pc->reg_gpio = meson_map_resource(pc, gpio_np, "gpio");
+-	if (IS_ERR(pc->reg_gpio)) {
+-		dev_err(pc->dev, "gpio registers not found\n");
+-		return PTR_ERR(pc->reg_gpio);
+-	}
+-
+ 	return 0;
+ }
  
 -- 
 2.19.1
