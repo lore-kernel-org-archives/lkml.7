@@ -8,64 +8,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFC4C10F0B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C62CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503EA2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22562206B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="fdG7ZhJt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ndTS5P7P"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="jSVkSs1r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jtoOK51R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbfDDCLs (ORCPT
+        id S1726585AbfDDCOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:11:48 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:51809 "EHLO
+        Wed, 3 Apr 2019 22:14:45 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:42243 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbfDDCJp (ORCPT
+        by vger.kernel.org with ESMTP id S1726167AbfDDCOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 22:09:45 -0400
-X-Greylist: delayed 509 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Apr 2019 22:09:44 EDT
+        Wed, 3 Apr 2019 22:14:45 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id BE5D922B6A;
-        Wed,  3 Apr 2019 22:01:55 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id CC6CC22349;
+        Wed,  3 Apr 2019 22:01:24 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:55 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm3; bh=3T42stGTEO5ya
-        BeosRcIHJtycIIQs381815PCz0cSnU=; b=fdG7ZhJtpi82VTO5NK8xh0TlTw62C
-        8chyJiNLcSRPLCPCzhQNGJA6pRCfAlbglgqgay1XkS7iR8kiNcXOMUBKUSsWmue5
-        leWLYppitvB7QhkUcBz/BEGJnbQkl2+ae5++jORUQZHoRQ/EfFnfrIHb6zaVyGpy
-        +odnxxnOrMYnjyBER2Chm0ZliVIQYufit4BkU0ZTZxWYy++QR3uR6tKLecYqpGXE
-        hY7Tg13vEWZ+uOH4cGGumZAZ0EBPIz+LhMMJEK0quK7aQF1Ap0eq34R3q1bj760H
-        2G9gkIruWkuWmGtX6+CjKXA100hig8M5kexoPWP9WBmuwmJoh4BYLTC/g==
+        :mime-version:content-transfer-encoding; s=fm3; bh=g7J5EGJkF982n
+        eBEIpQt+y8NYDKq8lV93wLGcNRGrUg=; b=jSVkSs1rwApArJJjueU/Y1eE6QFai
+        I7aySDXdakm6FTGtVY90fGPEfYRnfabDBiMF/46y6vtkbaSWlBgx0GxQ0wpR6KzY
+        lIWQ90i+kEMssaE275N1SF5NIc1GHAaDmNt3yfwxU1gmG/a5JXN3wUtCt9vzHhgO
+        XABVtqqtZxdKHuhhMfmOEaTe6z19aflOYV1hulx4kIOZctp9cGSAPghX8q8+jAsQ
+        o8DcQIvN5vH9WcEcAAedNRUGimVk7PHlR6Nze1kNehNbssIXhxuXgL51viGllNd6
+        clTLSZt/H8zbnzmJ1n7GzBRpobSSlG+jarYPhgnlqV+dobnGbwUFexd7g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=3T42stGTEO5yaBeosRcIHJtycIIQs381815PCz0cSnU=; b=ndTS5P7P
-        Qxd+Ar6roAAVVpGH9xCeYy7Geo+mo94CLKb/oUbWs0cCIEiyGxakuKff58A66qvj
-        kgdDO62ecGWtQYlO1OjXrqAjMjH+05dLReIYoEcUqF9KEnVytE2DeZnl/rb/Po0E
-        JMA1ZkWN9x4sTXtvU7BGC0Mr4FCyczgPnHoRomZuvnWkmAXlrta5j3Fybc45HQ6m
-        BtBNbaFeQ2/ENDSfZrwMxeFLzvi15B81siMXbk6Pf3HsKcAVIDW9ujxUZEZLSUim
-        K0aV/eavecjeWXfz67rnUexfMsvqvDJQA6T/TT/oh7/GFQr70ZyOhIsengZEh0qk
-        qj3WXk5xsgjW7g==
-X-ME-Sender: <xms:k2WlXEYsKwVboEkNg4yPp-hFC6sTIZaL4yFO1rhbgTEYXsBg_L37UA>
+        fm2; bh=g7J5EGJkF982neBEIpQt+y8NYDKq8lV93wLGcNRGrUg=; b=jtoOK51R
+        zy2Eaf8VRvQ6u4ssXI9X3RRF9upJUM1hxNW+RYxexrXDcxg9nx72SESIcFGVqo3J
+        +A7Wdt+y3HlXgKYSqqncBSwe7XWDgWqSh+xQjHTvfIT57DMQmQXlWgbpn3wfeSXE
+        Qc/aMkRJFYbm8/Se4Kx79aw2qkv0WUSdefLs4txlJRkgdvILfJvE8JYPGsZ/OsJJ
+        Ei+0BiCbxjuD8bljF2XBRo7nBhGpBZkhipuAcTx7fP/ydO9fr/jJalTQEo1M8iGA
+        tHAAnao64a8KcN/UTP/2cz3VMRhmoj1MzSj7r8/uAgsm18tHOWMryON6RHuaZbEw
+        p062fZGSIw+npQ==
+X-ME-Sender: <xms:dGWlXEEzEwqgUjBKG3CUWhZEvlpoKplSMKeX5pRZhwWc4h-YGkYytA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdehudculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
     hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddt
     necuhfhrohhmpegkihcujggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucfkph
     epvdduiedrvddvkedrudduvddrvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdr
-    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepvddu
-X-ME-Proxy: <xmx:k2WlXM6gnvsxDK2bGl2lCLqIDJYQQdk605pnXCfvAiJGjwlWE4WnvQ>
-    <xmx:k2WlXBl_sSb8wd1O4FkG8JxSfe5tDKvofaEh_8ItYwlJQEE23mgBwQ>
-    <xmx:k2WlXEHhRpLRryFESMkImObinS6l7x5lgX04b9bDI0gxLVleOvWOkg>
-    <xmx:k2WlXHu4Cu86GMcXqOAkMY4hH1c8DAfa0sIhaEnnIHFSZvnHt5K7xg>
+    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepge
+X-ME-Proxy: <xmx:dGWlXAiW-ETY4h78s2Ob9cSINpViXXwEqAwJJyuJEQuks_hozl2YpQ>
+    <xmx:dGWlXE8nMG0G143LYy_pPyyN2Uv0LQIiWV8nH33n8ZgJ8eQhLuEZHQ>
+    <xmx:dGWlXLLTNh2LVzzs18qek3AVYrbi9UJ2MFkmYQFRlDfKyFMRHvnLxg>
+    <xmx:dGWlXPiqjjAy9qLyJU3F-ct5dJQky0qTST4K8DYaPzIej-TdOvqzAA>
 Received: from nvrsysarch5.nvidia.com (thunderhill.nvidia.com [216.228.112.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C218010310;
-        Wed,  3 Apr 2019 22:01:53 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id A6B321030F;
+        Wed,  3 Apr 2019 22:01:21 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
@@ -83,9 +82,9 @@ Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         Nitin Gupta <nigupta@nvidia.com>,
         Javier Cabezas <jcabezas@nvidia.com>,
         David Nellans <dnellans@nvidia.com>, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 24/25] memory manage: limit migration batch size.
-Date:   Wed,  3 Apr 2019 19:00:45 -0700
-Message-Id: <20190404020046.32741-25-zi.yan@sent.com>
+Subject: [RFC PATCH 06/25] mm: migrate: Make the number of copy threads adjustable via sysctl.
+Date:   Wed,  3 Apr 2019 19:00:27 -0700
+Message-Id: <20190404020046.32741-7-zi.yan@sent.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
 References: <20190404020046.32741-1-zi.yan@sent.com>
@@ -99,150 +98,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-Make migration batch size adjustable to avoid excessive migration
-overheads when a lot of pages are under migration.
-
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- kernel/sysctl.c    |  8 ++++++++
- mm/memory_manage.c | 60 ++++++++++++++++++++++++++++++++++++------------------
- 2 files changed, 48 insertions(+), 20 deletions(-)
+ kernel/sysctl.c | 9 +++++++++
+ mm/copy_page.c  | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index b8712eb..b92e2da9 100644
+index 3d8490e..0eae0b8 100644
 --- a/kernel/sysctl.c
 +++ b/kernel/sysctl.c
-@@ -105,6 +105,7 @@ extern int accel_page_copy;
- extern unsigned int limit_mt_num;
- extern int use_all_dma_chans;
- extern int limit_dma_chans;
-+extern int migration_batch_size;
+@@ -102,6 +102,7 @@
+ #if defined(CONFIG_SYSCTL)
+ 
+ extern int accel_page_copy;
++extern unsigned int limit_mt_num;
  
  /* External variables not in a header file. */
  extern int suid_dumpable;
-@@ -1470,6 +1471,13 @@ static struct ctl_table vm_table[] = {
+@@ -1441,6 +1442,14 @@ static struct ctl_table vm_table[] = {
  		.extra1		= &zero,
- 	 },
- 	 {
-+		.procname	= "migration_batch_size",
-+		.data		= &migration_batch_size,
-+		.maxlen		= sizeof(migration_batch_size),
+ 		.extra2		= &one,
+ 	},
++	{
++		.procname	= "limit_mt_num",
++		.data		= &limit_mt_num,
++		.maxlen		= sizeof(limit_mt_num),
 +		.mode		= 0644,
 +		.proc_handler	= proc_dointvec,
-+	 },
-+	 {
++		.extra1		= &zero,
++	},
+ 	 {
  		.procname	= "hugetlb_shm_group",
  		.data		= &sysctl_hugetlb_shm_group,
- 		.maxlen		= sizeof(gid_t),
-diff --git a/mm/memory_manage.c b/mm/memory_manage.c
-index d63ad25..8b76fcf 100644
---- a/mm/memory_manage.c
-+++ b/mm/memory_manage.c
-@@ -16,6 +16,8 @@
+diff --git a/mm/copy_page.c b/mm/copy_page.c
+index 9cf849c..6665e3d 100644
+--- a/mm/copy_page.c
++++ b/mm/copy_page.c
+@@ -23,7 +23,7 @@
+ #include <linux/freezer.h>
  
- #include "internal.h"
  
-+int migration_batch_size = 16;
-+
- enum isolate_action {
- 	ISOLATE_COLD_PAGES = 1,
- 	ISOLATE_HOT_PAGES,
-@@ -137,35 +139,49 @@ static unsigned long isolate_pages_from_lru_list(pg_data_t *pgdat,
- }
+-const unsigned int limit_mt_num = 4;
++unsigned int limit_mt_num = 4;
  
- static int migrate_to_node(struct list_head *page_list, int nid,
--		enum migrate_mode mode)
-+		enum migrate_mode mode, int batch_size)
- {
- 	bool migrate_concur = mode & MIGRATE_CONCUR;
-+	bool unlimited_batch_size = (batch_size <=0 || !migrate_concur);
- 	int num = 0;
--	int from_nid;
-+	int from_nid = -1;
- 	int err;
+ /* ======================== multi-threaded copy page ======================== */
  
- 	if (list_empty(page_list))
- 		return num;
- 
--	from_nid = page_to_nid(list_first_entry(page_list, struct page, lru));
-+	while (!list_empty(page_list)) {
-+		LIST_HEAD(batch_page_list);
-+		int i;
- 
--	if (migrate_concur)
--		err = migrate_pages_concur(page_list, alloc_new_node_page,
--			NULL, nid, mode, MR_SYSCALL);
--	else
--		err = migrate_pages(page_list, alloc_new_node_page,
--			NULL, nid, mode, MR_SYSCALL);
-+		/* it should move all pages to batch_page_list if !migrate_concur */
-+		for (i = 0; i < batch_size || unlimited_batch_size; i++) {
-+			struct page *item = list_first_entry_or_null(page_list, struct page, lru);
-+			if (!item)
-+				break;
-+			list_move(&item->lru, &batch_page_list);
-+		}
- 
--	if (err) {
--		struct page *page;
-+		from_nid = page_to_nid(list_first_entry(&batch_page_list, struct page, lru));
- 
--		list_for_each_entry(page, page_list, lru)
--			num += hpage_nr_pages(page);
--		pr_debug("%d pages failed to migrate from %d to %d\n",
--			num, from_nid, nid);
-+		if (migrate_concur)
-+			err = migrate_pages_concur(&batch_page_list, alloc_new_node_page,
-+				NULL, nid, mode, MR_SYSCALL);
-+		else
-+			err = migrate_pages(&batch_page_list, alloc_new_node_page,
-+				NULL, nid, mode, MR_SYSCALL);
- 
--		putback_movable_pages(page_list);
-+		if (err) {
-+			struct page *page;
-+
-+			list_for_each_entry(page, &batch_page_list, lru)
-+				num += hpage_nr_pages(page);
-+
-+			putback_movable_pages(&batch_page_list);
-+		}
- 	}
-+	pr_debug("%d pages failed to migrate from %d to %d\n",
-+		num, from_nid, nid);
- 	return num;
- }
- 
-@@ -325,10 +341,12 @@ static int do_mm_manage(struct task_struct *p, struct mm_struct *mm,
- 		/* Migrate pages to slow node */
- 		/* No multi-threaded migration for base pages */
- 		nr_isolated_fast_base_pages -=
--			migrate_to_node(&fast_base_page_list, slow_nid, mode & ~MIGRATE_MT);
-+			migrate_to_node(&fast_base_page_list, slow_nid,
-+				mode & ~MIGRATE_MT, migration_batch_size);
- 
- 		nr_isolated_fast_huge_pages -=
--			migrate_to_node(&fast_huge_page_list, slow_nid, mode);
-+			migrate_to_node(&fast_huge_page_list, slow_nid, mode,
-+				migration_batch_size);
- 	}
- 
- 	if (nr_isolated_fast_base_pages != ULONG_MAX &&
-@@ -342,10 +360,12 @@ static int do_mm_manage(struct task_struct *p, struct mm_struct *mm,
- 	/* Migrate pages to fast node */
- 	/* No multi-threaded migration for base pages */
- 	nr_isolated_slow_base_pages -=
--		migrate_to_node(&slow_base_page_list, fast_nid, mode & ~MIGRATE_MT);
-+		migrate_to_node(&slow_base_page_list, fast_nid, mode & ~MIGRATE_MT,
-+				migration_batch_size);
- 
- 	nr_isolated_slow_huge_pages -=
--		migrate_to_node(&slow_huge_page_list, fast_nid, mode);
-+		migrate_to_node(&slow_huge_page_list, fast_nid, mode,
-+				migration_batch_size);
- 
- 	return err;
- }
 -- 
 2.7.4
 
