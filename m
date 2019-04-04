@@ -2,58 +2,55 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E6CC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE55C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7FD20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C08CF20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369129;
-	bh=/dZnz9sZxXo0PdxlBubaW9x3kepSKf1OB3z5koBBKX8=;
+	s=default; t=1554369136;
+	bh=hL/wpL44RdNuBjBVPNeGvK3tZFHoliXGqWbcmZ3RI+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u737cKZFeLkpY6uCrc7WdkvQArNTBAiwWUgWztcjBKKtAKUB7qG4yRTw8F1llcr3Y
-	 y8B2L/TqzI9fFLDgqBK4C9cwi8em2Y9heha5ah/30ad+0ZaBPUqgC5p25ZzkYL7H8t
-	 SLbxd/fx6CPdaWZ44dblORQmdNPD1YpwxsbRNhqs=
+	b=rOv79iD9+SXtC8d06pmAseaZ3vR8Gt3vwBnv8/Jo2j+W9JxWTAsx6BBqwefx8pNpO
+	 aZnMOkMKjLYMbaPr6Dw0xFT1Tvq88fzI1ioyH6G2QUnEI7d0jqy/8ngVOoFpNJta8I
+	 G0XivuA/iDHMyzyxyoabaHG6ulyIk2eTNKs+5z40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfDDJMI (ORCPT
+        id S1733291AbfDDJMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52054 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732852AbfDDJMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:06 -0400
+        id S1733282AbfDDJML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2594C20820;
-        Thu,  4 Apr 2019 09:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 743EC20652;
+        Thu,  4 Apr 2019 09:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369124;
-        bh=/dZnz9sZxXo0PdxlBubaW9x3kepSKf1OB3z5koBBKX8=;
+        s=default; t=1554369130;
+        bh=hL/wpL44RdNuBjBVPNeGvK3tZFHoliXGqWbcmZ3RI+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MqQL8XQBb4V/CamzEGohkISe9QNTT6a6q/1uizbdI19/6WQLCuuM7J6EyyqOo6qmE
-         My1uS7kKnOg4TfZthgme0E6UkjtF6o7Sgl7V3TCsmB+O0NkoU//C3jtNYQEBQ6v/ww
-         ngMA3sBnUdgUsL3PB+e1Sdni6xu79xxJqlytcDks=
+        b=vRkfk+fCJBwwkXa8dgdBbKnyXp7EfNMTdIOc6mFM2blmQiEWKTUMwugyvKxToHlHg
+         1bywC+U79l/Qh/Z23HbFMmJaWAjotI3NEUYYrEj0p/Xfj906bvJJVvrgNZwTVlpum7
+         pJ9lKn8S3/TgmHYA1Bhzf3RVD2IpxSYogy9NyR5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 106/246] scsi: fcoe: make use of fip_mode enum complete
-Date:   Thu,  4 Apr 2019 10:46:46 +0200
-Message-Id: <20190404084622.858815706@linuxfoundation.org>
+Subject: [PATCH 5.0 108/246] perf test: Fix failure of evsel-tp-sched test on s390
+Date:   Thu,  4 Apr 2019 10:46:48 +0200
+Message-Id: <20190404084622.929947447@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -72,147 +69,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8beb90aaf334a6efa3e924339926b5f93a234dbb ]
+[ Upstream commit 03d309711d687460d1345de8a0363f45b1c8cd11 ]
 
-commit 1917d42d14b7 ("fcoe: use enum for fip_mode") introduces a separate
-enum for the fip_mode that shall be used during initialisation handling
-until it is passed to fcoe_ctrl_link_up to set the initial fip_state.  That
-change was incomplete and gcc quietly converted in various places between
-the fip_mode and the fip_state enum values with implicit enum conversions,
-which fortunately cannot cause any issues in the actual code's execution.
+Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+causes test case 14 "Parse sched tracepoints fields" to fail on s390.
 
-clang however warns about these implicit enum conversions in the scsi
-drivers. This commit consolidates the use of the two enums, guided by
-clang's enum-conversion warnings.
+This test succeeds on x86.
 
-This commit now completes the use of the fip_mode: It expects and uses
-fip_mode in {bnx2fc,fcoe}_interface_create and fcoe_ctlr_init, and it calls
-fcoe_ctrl_set_set() with the correct values in fcoe_ctlr_link_up().  It
-also breaks the association between FIP_MODE_AUTO and FIP_ST_AUTO to
-indicate these two enums are distinct.
+In fact this test now fails on all architectures with type char treated
+as type unsigned char.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/151
-Fixes: 1917d42d14b7 ("fcoe: use enum for fip_mode")
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Original-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-CC: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-CC: Nick Desaulniers <ndesaulniers@google.com>
-CC: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The root cause is the signed-ness of character arrays in the tracepoints
+sched_switch for structure members prev_comm and next_comm.
+
+On s390 the output of:
+
+ [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:0;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:0;
+
+reveals the character arrays prev_comm and next_comm are per
+default unsigned char and have values in the range of 0..255.
+
+On x86 both fields are signed as this output shows:
+ [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:1;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:1;
+
+and the character arrays prev_comm and next_comm are per default signed
+char and have values in the range of -1..127.  The implementation of
+type char is architecture specific.
+
+Since the character arrays in both tracepoints sched_switch and
+sched_wakeup should contain ascii characters, simply omit the check for
+signedness in the test case.
+
+Output before:
+
+  [root@m35lp76 perf]# ./perf test -F 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
+  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
+  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
+  ---- end ----
+  14: Parse sched tracepoints fields                        : FAILED!
+  [root@m35lp76 perf]#
+
+Output after:
+
+  [root@m35lp76 perf]# ./perf test -Fv 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  ---- end ----
+  Parse sched tracepoints fields: Ok
+  [root@m35lp76 perf]#
+
+Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bnx2fc/bnx2fc_fcoe.c  | 2 +-
- drivers/scsi/fcoe/fcoe.c           | 2 +-
- drivers/scsi/fcoe/fcoe_ctlr.c      | 7 +++++--
- drivers/scsi/fcoe/fcoe_transport.c | 2 +-
- drivers/scsi/qedf/qedf_main.c      | 2 +-
- include/scsi/libfcoe.h             | 4 ++--
- 6 files changed, 11 insertions(+), 8 deletions(-)
+ tools/perf/tests/evsel-tp-sched.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_fcoe.c b/drivers/scsi/bnx2fc/bnx2fc_fcoe.c
-index 2e4e7159ebf9..a75e74ad1698 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_fcoe.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_fcoe.c
-@@ -1438,7 +1438,7 @@ bind_err:
- static struct bnx2fc_interface *
- bnx2fc_interface_create(struct bnx2fc_hba *hba,
- 			struct net_device *netdev,
--			enum fip_state fip_mode)
-+			enum fip_mode fip_mode)
- {
- 	struct fcoe_ctlr_device *ctlr_dev;
- 	struct bnx2fc_interface *interface;
-diff --git a/drivers/scsi/fcoe/fcoe.c b/drivers/scsi/fcoe/fcoe.c
-index cd19be3f3405..8ba8862d3292 100644
---- a/drivers/scsi/fcoe/fcoe.c
-+++ b/drivers/scsi/fcoe/fcoe.c
-@@ -389,7 +389,7 @@ static int fcoe_interface_setup(struct fcoe_interface *fcoe,
-  * Returns: pointer to a struct fcoe_interface or NULL on error
-  */
- static struct fcoe_interface *fcoe_interface_create(struct net_device *netdev,
--						    enum fip_state fip_mode)
-+						    enum fip_mode fip_mode)
- {
- 	struct fcoe_ctlr_device *ctlr_dev;
- 	struct fcoe_ctlr *ctlr;
-diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
-index 54da3166da8d..7dc4ffa24430 100644
---- a/drivers/scsi/fcoe/fcoe_ctlr.c
-+++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-@@ -147,7 +147,7 @@ static void fcoe_ctlr_map_dest(struct fcoe_ctlr *fip)
-  * fcoe_ctlr_init() - Initialize the FCoE Controller instance
-  * @fip: The FCoE controller to initialize
-  */
--void fcoe_ctlr_init(struct fcoe_ctlr *fip, enum fip_state mode)
-+void fcoe_ctlr_init(struct fcoe_ctlr *fip, enum fip_mode mode)
- {
- 	fcoe_ctlr_set_state(fip, FIP_ST_LINK_WAIT);
- 	fip->mode = mode;
-@@ -454,7 +454,10 @@ void fcoe_ctlr_link_up(struct fcoe_ctlr *fip)
- 		mutex_unlock(&fip->ctlr_mutex);
- 		fc_linkup(fip->lp);
- 	} else if (fip->state == FIP_ST_LINK_WAIT) {
--		fcoe_ctlr_set_state(fip, fip->mode);
-+		if (fip->mode == FIP_MODE_NON_FIP)
-+			fcoe_ctlr_set_state(fip, FIP_ST_NON_FIP);
-+		else
-+			fcoe_ctlr_set_state(fip, FIP_ST_AUTO);
- 		switch (fip->mode) {
- 		default:
- 			LIBFCOE_FIP_DBG(fip, "invalid mode %d\n", fip->mode);
-diff --git a/drivers/scsi/fcoe/fcoe_transport.c b/drivers/scsi/fcoe/fcoe_transport.c
-index f4909cd206d3..f15d5e1d56b1 100644
---- a/drivers/scsi/fcoe/fcoe_transport.c
-+++ b/drivers/scsi/fcoe/fcoe_transport.c
-@@ -873,7 +873,7 @@ static int fcoe_transport_create(const char *buffer,
- 	int rc = -ENODEV;
- 	struct net_device *netdev = NULL;
- 	struct fcoe_transport *ft = NULL;
--	enum fip_state fip_mode = (enum fip_state)(long)kp->arg;
-+	enum fip_mode fip_mode = (enum fip_mode)kp->arg;
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index 5cbba70bcdd0..ea7acf403727 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -43,7 +43,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 		return -1;
+ 	}
  
- 	mutex_lock(&ft_mutex);
+-	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
+ 		ret = -1;
  
-diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
-index 9bbc19fc190b..9f9431a4cc0e 100644
---- a/drivers/scsi/qedf/qedf_main.c
-+++ b/drivers/scsi/qedf/qedf_main.c
-@@ -1418,7 +1418,7 @@ static struct libfc_function_template qedf_lport_template = {
+ 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
+@@ -55,7 +55,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
+ 		ret = -1;
  
- static void qedf_fcoe_ctlr_setup(struct qedf_ctx *qedf)
- {
--	fcoe_ctlr_init(&qedf->ctlr, FIP_ST_AUTO);
-+	fcoe_ctlr_init(&qedf->ctlr, FIP_MODE_AUTO);
+-	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
+ 		ret = -1;
  
- 	qedf->ctlr.send = qedf_fip_send;
- 	qedf->ctlr.get_src_addr = qedf_get_src_mac;
-diff --git a/include/scsi/libfcoe.h b/include/scsi/libfcoe.h
-index cb8a273732cf..bb8092fa1e36 100644
---- a/include/scsi/libfcoe.h
-+++ b/include/scsi/libfcoe.h
-@@ -79,7 +79,7 @@ enum fip_state {
-  * It must not change after fcoe_ctlr_init() sets it.
-  */
- enum fip_mode {
--	FIP_MODE_AUTO = FIP_ST_AUTO,
-+	FIP_MODE_AUTO,
- 	FIP_MODE_NON_FIP,
- 	FIP_MODE_FABRIC,
- 	FIP_MODE_VN2VN,
-@@ -250,7 +250,7 @@ struct fcoe_rport {
- };
+ 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
+@@ -73,7 +73,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 		return -1;
+ 	}
  
- /* FIP API functions */
--void fcoe_ctlr_init(struct fcoe_ctlr *, enum fip_state);
-+void fcoe_ctlr_init(struct fcoe_ctlr *, enum fip_mode);
- void fcoe_ctlr_destroy(struct fcoe_ctlr *);
- void fcoe_ctlr_link_up(struct fcoe_ctlr *);
- int fcoe_ctlr_link_down(struct fcoe_ctlr *);
+-	if (perf_evsel__test_field(evsel, "comm", 16, true))
++	if (perf_evsel__test_field(evsel, "comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "pid", 4, true))
 -- 
 2.19.1
 
