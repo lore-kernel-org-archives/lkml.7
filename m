@@ -2,106 +2,100 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00ECC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA947C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807DE20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554362620;
-	bh=vpKAg7PduDdyzEpGHCQ1rwx8fAJ7UhJRV/ZQIYJdbZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UDSDQ+/IDySFEVV1sFfZgQ4lsHuDp7WMeL5fs51QKmFZu8Y4fZfvK1LVwzKTMANfB
-	 Q3N87yxST6reRKNBk2YTUauISv83e+T+R0Rfi5/ssdq70e3uUesYhGYvAMChaotX8I
-	 1Fv/bJQpzR8TbJd2pm5AL8smn4no/wjRylYa2xNg=
+	by mail.kernel.org (Postfix) with ESMTP id 827C620855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="D0YTJdMS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OGGHmYpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfDDHXj (ORCPT
+        id S1727272AbfDDHXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:23:39 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33106 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbfDDHXi (ORCPT
+        Thu, 4 Apr 2019 03:23:49 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49280 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbfDDHXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:23:38 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v14so1038472lfi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 00:23:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cOtFRp3tT+XzxfQtCf8FddN72A2buzuK/r8cjXcC3nw=;
-        b=S5+iXLSKHd98eUKwxTNB+qyqLrs7gJg0L2ORk0wiZ4iIiWX7Gj3XtP4SvCkv58ymDL
-         bqjnHN4utb4PNSQLrtqlPTT3lQFOPT5NazIV+fWCjtOM+jKYDkE+I1M9Cjo3LkVzYHkU
-         gJJpO0h7hm2dKGpkvo5r79Ew8+s+bowOyafNXToVE0+b07/ZCdGjtwr/O8l6ymNl3Z2H
-         Kfxn1cIvkveszmLPILI8yoPWHKYqzcmbyP1azYtVfL+pCwnQRpnrWhMGBzqfv7vSqBOk
-         dBaGS86/l9tPmer4VSHe5BVYM+unCySB/BzHzbK2Ht8LkoCZ1Qb4Foa17pnleXXFs+nG
-         QLTg==
-X-Gm-Message-State: APjAAAVLyt9BWXcX9F/kL/gYRVqAoTtTUBCMS/Hfvs323Z8ucLQBOawe
-        UJ50InefPyTJ5Y953TEKeKc=
-X-Google-Smtp-Source: APXvYqysRV9EWa13TJKRfo7AracsfrK7COohCczcwHDpF/LWOm1HW9PJJTMytxeYinJqEsKK9eFOdQ==
-X-Received: by 2002:ac2:5205:: with SMTP id a5mr2271569lfl.102.1554362616593;
-        Thu, 04 Apr 2019 00:23:36 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id w22sm3744689ljd.42.2019.04.04.00.23.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 00:23:35 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hBwjA-0003SU-Gf; Thu, 04 Apr 2019 09:24:00 +0200
-Date:   Thu, 4 Apr 2019 09:24:00 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Rui Miguel Silva <rmfrfs@gmail.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: greybus: power_supply: Use struct_size() helper
-Message-ID: <20190404072400.GA29917@localhost>
-References: <20190403205801.GA19762@embeddedor>
- <m37ecap7pc.fsf@gmail.com>
+        Thu, 4 Apr 2019 03:23:48 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5627F60FED; Thu,  4 Apr 2019 07:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554362628;
+        bh=obGkrUehF/h9hNDdMsTlI39/H2wgylWR9nuY2DmDsX0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=D0YTJdMS0P32AuARlavhH70J9ZeyFuVvK9ezvJkZK/V71mT6KiJbD9gduxdjUTF5Q
+         Ja/ot1P/YE9ldWu3Qc1TuwM2yJYpku2+220J5FyJ4O9G0hDTX4EIF/KMH4rbhltVF5
+         K6hHzx4dEvRclFr3I0DHSZ6qKc3dImMaQf+gvgyo=
+Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E47F4619B4;
+        Thu,  4 Apr 2019 07:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554362627;
+        bh=obGkrUehF/h9hNDdMsTlI39/H2wgylWR9nuY2DmDsX0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OGGHmYpyFBb5ZbWLBPfpiXIf6cIWB1GTdJ878iqG76UKJZcHWm5Ij1iUh1K4pcR/K
+         VBEhQFUZB7Szsy178jGmBWPWXlSIjf278CwaG/MjT7BSGJkvi/1OAs5O6g6gxJj4oO
+         MSb/fVeUG30XUaeQVlo+1iOnt0PhXnIdfxsMeSqQ=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E47F4619B4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH -next] ehea: Fix a copy-paste err in ehea_init_port_res
+To:     Yue Haibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        dougmill@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190403074759.13496-1-yuehaibing@huawei.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <ed410447-3ee4-72d4-81cd-406c07a4d18c@codeaurora.org>
+Date:   Thu, 4 Apr 2019 12:53:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <m37ecap7pc.fsf@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190403074759.13496-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 08:09:51AM +0100, Rui Miguel Silva wrote:
-> Hi Gustavo,
-> Thanks a lot for the patch.
-> 
-> On Wed 03 Apr 2019 at 21:58, Gustavo A. R. Silva wrote:
-> > Make use of the struct_size() helper instead of an open-coded 
-> > version
-> > in order to avoid any potential type mistakes, in particular in 
-> > the
-> > context in which this code is being used.
-> >
-> > So, replace code of the following form:
-> >
-> > sizeof(*resp) + props_count * sizeof(struct 
-> > gb_power_supply_props_desc)
-> >
-> > with:
-> >
-> > struct_size(resp, props, props_count)
-> >
-> > This code was detected with the help of Coccinelle.
-> >
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> What are the odds of 2 people changing same code in greybus in
-> the same day :).
 
-Well, I only noticed the bug in the current code, when reviewing
-Gustavo's diff. ;)
+On 4/3/2019 1:17 PM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> pr->tx_bytes should be assigned to tx_bytes other than
+> rx_bytes.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: ce45b873028f ("ehea: Fixing statistics")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Johan
+Cheers,
+-Mukesh
+> ---
+>   drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> index 90b62c1..707c8ba 100644
+> --- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> +++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+> @@ -1463,7 +1463,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
+>   
+>   	memset(pr, 0, sizeof(struct ehea_port_res));
+>   
+> -	pr->tx_bytes = rx_bytes;
+> +	pr->tx_bytes = tx_bytes;
+>   	pr->tx_packets = tx_packets;
+>   	pr->rx_bytes = rx_bytes;
+>   	pr->rx_packets = rx_packets;
