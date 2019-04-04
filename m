@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B90C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EB4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844F120449
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D7F20449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369865;
-	bh=47S0Pso0HxbbKdpbq6SywImh7Wj1h6QJUSbOOZBo/Fg=;
+	s=default; t=1554369869;
+	bh=Sge524wtbEGLP1Fgee0ladk6Co39L53MMFu5z/9qCfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l/viptdpxhlTIL/viZyP8xJBl2DxXfhSLo7mqDgltKRrxLV+TIdVXwYsvlPXIY420
-	 nBEa3JDWfrRK+0fZvfdBaVe5sQgrjuhiwHum+Jb4x50PxVwDMbXzKSIoIZt/fA8JsP
-	 29phkAaa16JkhuFRtJ3zKoNUf2RpoBU+jxEA+4Kg=
+	b=DQgGB38yigWkGWdFPN0kQoCJw5khjgIpcikgXj9B4gnYpiXx+s3NImkYuhLbedxZU
+	 3uTlRSFkoibKoKCq2RJhj5kdPhiAWVuU5v8S8WhN5r9O0xHyb1dWR96IP9T/IVt9AU
+	 hSTHJRcoUFJyuQqWVlh4v02f4ki0DfihRMgTN0Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387964AbfDDJYY (ORCPT
+        id S2387520AbfDDJO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55252 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:14:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733047AbfDDJOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:35 -0400
+        id S2387698AbfDDJOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:14:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CE7F2147C;
-        Thu,  4 Apr 2019 09:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A2D21734;
+        Thu,  4 Apr 2019 09:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369274;
-        bh=47S0Pso0HxbbKdpbq6SywImh7Wj1h6QJUSbOOZBo/Fg=;
+        s=default; t=1554369259;
+        bh=Sge524wtbEGLP1Fgee0ladk6Co39L53MMFu5z/9qCfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CgpOVq12bDVJuGQ/IXbSZQRuQ7CaZjN/o9gFbJpMRxjPfIvbObe+368WGsJthZnYu
-         bOe/lgA2PllP5yRpxjpi47vxtXhlmuE0kKoKuFT8RataMY1M6EWmJVziPH6+SCD319
-         fU68BxSHmYXgik+y5nUWdqfLDJBGL0Eaf3bRbDio=
+        b=NYez6fO0Z3eLefKfb7wkn7DZ4rLIOzqodAAgzArbgTJ0gOR7sdc9cerq7/J7z1mJX
+         SdC2DE2yfJ/DD1NOYSTxkPlS+7aVMvMaPsB/+3RByjE9QlR6E8OTLhXzgzkysrDF0e
+         ru/g4T6Vn3JBHUa5ouJnY6ZWUseEghReVFg/JZOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 149/246] sched/topology: Fix percpu data types in struct sd_data & struct s_data
-Date:   Thu,  4 Apr 2019 10:47:29 +0200
-Message-Id: <20190404084624.386574660@linuxfoundation.org>
+        stable@vger.kernel.org, Chieh-Min Wang <chiehminw@synology.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 143/246] netfilter: conntrack: fix cloned unconfirmed skb->_nfct race in __nf_conntrack_confirm
+Date:   Thu,  4 Apr 2019 10:47:23 +0200
+Message-Id: <20190404084624.174384112@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,78 +66,128 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 99687cdbb3f6c8e32bcc7f37496e811f30460e48 ]
+[ Upstream commit 13f5251fd17088170c18844534682d9cab5ff5aa ]
 
-The percpu members of struct sd_data and s_data are declared as:
+For bridge(br_flood) or broadcast/multicast packets, they could clone
+skb with unconfirmed conntrack which break the rule that unconfirmed
+skb->_nfct is never shared.  With nfqueue running on my system, the race
+can be easily reproduced with following warning calltrace:
 
-	struct ... ** __percpu member;
+[13257.707525] CPU: 0 PID: 12132 Comm: main Tainted: P        W       4.4.60 #7744
+[13257.707568] Hardware name: Qualcomm (Flattened Device Tree)
+[13257.714700] [<c021f6dc>] (unwind_backtrace) from [<c021bce8>] (show_stack+0x10/0x14)
+[13257.720253] [<c021bce8>] (show_stack) from [<c0449e10>] (dump_stack+0x94/0xa8)
+[13257.728240] [<c0449e10>] (dump_stack) from [<c022a7e0>] (warn_slowpath_common+0x94/0xb0)
+[13257.735268] [<c022a7e0>] (warn_slowpath_common) from [<c022a898>] (warn_slowpath_null+0x1c/0x24)
+[13257.743519] [<c022a898>] (warn_slowpath_null) from [<c06ee450>] (__nf_conntrack_confirm+0xa8/0x618)
+[13257.752284] [<c06ee450>] (__nf_conntrack_confirm) from [<c0772670>] (ipv4_confirm+0xb8/0xfc)
+[13257.761049] [<c0772670>] (ipv4_confirm) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
+[13257.769725] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
+[13257.777108] [<c06e7af0>] (nf_hook_slow) from [<c07f20b4>] (br_nf_post_routing+0x274/0x31c)
+[13257.784486] [<c07f20b4>] (br_nf_post_routing) from [<c06e7a60>] (nf_iterate+0x48/0xa8)
+[13257.792556] [<c06e7a60>] (nf_iterate) from [<c06e7af0>] (nf_hook_slow+0x30/0xb0)
+[13257.800458] [<c06e7af0>] (nf_hook_slow) from [<c07e5580>] (br_forward_finish+0x94/0xa4)
+[13257.808010] [<c07e5580>] (br_forward_finish) from [<c07f22ac>] (br_nf_forward_finish+0x150/0x1ac)
+[13257.815736] [<c07f22ac>] (br_nf_forward_finish) from [<c06e8df0>] (nf_reinject+0x108/0x170)
+[13257.824762] [<c06e8df0>] (nf_reinject) from [<c06ea854>] (nfqnl_recv_verdict+0x3d8/0x420)
+[13257.832924] [<c06ea854>] (nfqnl_recv_verdict) from [<c06e940c>] (nfnetlink_rcv_msg+0x158/0x248)
+[13257.841256] [<c06e940c>] (nfnetlink_rcv_msg) from [<c06e5564>] (netlink_rcv_skb+0x54/0xb0)
+[13257.849762] [<c06e5564>] (netlink_rcv_skb) from [<c06e4ec8>] (netlink_unicast+0x148/0x23c)
+[13257.858093] [<c06e4ec8>] (netlink_unicast) from [<c06e5364>] (netlink_sendmsg+0x2ec/0x368)
+[13257.866348] [<c06e5364>] (netlink_sendmsg) from [<c069fb8c>] (sock_sendmsg+0x34/0x44)
+[13257.874590] [<c069fb8c>] (sock_sendmsg) from [<c06a03dc>] (___sys_sendmsg+0x1ec/0x200)
+[13257.882489] [<c06a03dc>] (___sys_sendmsg) from [<c06a11c8>] (__sys_sendmsg+0x3c/0x64)
+[13257.890300] [<c06a11c8>] (__sys_sendmsg) from [<c0209b40>] (ret_fast_syscall+0x0/0x34)
 
-So their type is:
+The original code just triggered the warning but do nothing. It will
+caused the shared conntrack moves to the dying list and the packet be
+droppped (nf_ct_resolve_clash returns NF_DROP for dying conntrack).
 
-	__percpu pointer to pointer to struct ...
+- Reproduce steps:
 
-But looking at how they're used, their type should be:
++----------------------------+
+|          br0(bridge)       |
+|                            |
++-+---------+---------+------+
+  | eth0|   | eth1|   | eth2|
+  |     |   |     |   |     |
+  +--+--+   +--+--+   +---+-+
+     |         |          |
+     |         |          |
+  +--+-+     +-+--+    +--+-+
+  | PC1|     | PC2|    | PC3|
+  +----+     +----+    +----+
 
-	pointer to __percpu pointer to struct ...
+iptables -A FORWARD -m mark --mark 0x1000000/0x1000000 -j NFQUEUE --queue-num 100 --queue-bypass
 
-and they should thus be declared as:
+ps: Our nfq userspace program will set mark on packets whose connection
+has already been processed.
 
-	struct ... * __percpu *member;
+PC1 sends broadcast packets simulated by hping3:
 
-So fix the placement of '__percpu' in the definition of these
-structures.
+hping3 --rand-source --udp 192.168.1.255 -i u100
 
-This addresses a bunch of Sparse's warnings like:
+- Broadcast racing flow chart is as follow:
 
-	warning: incorrect type in initializer (different address spaces)
-	  expected void const [noderef] <asn:3> *__vpp_verify
-	  got struct sched_domain **
+br_handle_frame
+  BR_HOOK(NFPROTO_BRIDGE, NF_BR_PRE_ROUTING, br_handle_frame_finish)
+  // skb->_nfct (unconfirmed conntrack) is constructed at PRE_ROUTING stage
+  br_handle_frame_finish
+    // check if this packet is broadcast
+    br_flood_forward
+      br_flood
+        list_for_each_entry_rcu(p, &br->port_list, list) // iterate through each port
+          maybe_deliver
+            deliver_clone
+              skb = skb_clone(skb)
+              __br_forward
+                BR_HOOK(NFPROTO_BRIDGE, NF_BR_FORWARD,...)
+                // queue in our nfq and received by our userspace program
+                // goto __nf_conntrack_confirm with process context on CPU 1
+    br_pass_frame_up
+      BR_HOOK(NFPROTO_BRIDGE, NF_BR_LOCAL_IN,...)
+      // goto __nf_conntrack_confirm with softirq context on CPU 0
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190118144936.79158-1-luc.vanoostenryck@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Because conntrack confirm can happen at both INPUT and POSTROUTING
+stage.  So with NFQUEUE running, skb->_nfct with the same unconfirmed
+conntrack could race on different core.
+
+This patch fixes a repeating kernel splat, now it is only displayed
+once.
+
+Signed-off-by: Chieh-Min Wang <chiehminw@synology.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched/topology.h | 8 ++++----
- kernel/sched/topology.c        | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ net/netfilter/nf_conntrack_core.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index c31d3a47a47c..57c7ed3fe465 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -176,10 +176,10 @@ typedef int (*sched_domain_flags_f)(void);
- #define SDTL_OVERLAP	0x01
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index db4d46332e86..9dd4c2048a2b 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -901,10 +901,18 @@ __nf_conntrack_confirm(struct sk_buff *skb)
+ 	 * REJECT will give spurious warnings here.
+ 	 */
  
- struct sd_data {
--	struct sched_domain **__percpu sd;
--	struct sched_domain_shared **__percpu sds;
--	struct sched_group **__percpu sg;
--	struct sched_group_capacity **__percpu sgc;
-+	struct sched_domain *__percpu *sd;
-+	struct sched_domain_shared *__percpu *sds;
-+	struct sched_group *__percpu *sg;
-+	struct sched_group_capacity *__percpu *sgc;
- };
- 
- struct sched_domain_topology_level {
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 3f35ba1d8fde..efca2489d881 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -676,7 +676,7 @@ cpu_attach_domain(struct sched_domain *sd, struct root_domain *rd, int cpu)
- }
- 
- struct s_data {
--	struct sched_domain ** __percpu sd;
-+	struct sched_domain * __percpu *sd;
- 	struct root_domain	*rd;
- };
- 
+-	/* No external references means no one else could have
+-	 * confirmed us.
++	/* Another skb with the same unconfirmed conntrack may
++	 * win the race. This may happen for bridge(br_flood)
++	 * or broadcast/multicast packets do skb_clone with
++	 * unconfirmed conntrack.
+ 	 */
+-	WARN_ON(nf_ct_is_confirmed(ct));
++	if (unlikely(nf_ct_is_confirmed(ct))) {
++		WARN_ON_ONCE(1);
++		nf_conntrack_double_unlock(hash, reply_hash);
++		local_bh_enable();
++		return NF_DROP;
++	}
++
+ 	pr_debug("Confirming conntrack %p\n", ct);
+ 	/* We have to check the DYING flag after unlink to prevent
+ 	 * a race against nf_ct_get_next_corpse() possibly called from
 -- 
 2.19.1
 
