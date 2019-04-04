@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2511BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2ABC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E544E2133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4679D2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="uNeajQ0V";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="st5240RR"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="Gfm1ydd0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Mu+YIkDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfDDCLj (ORCPT
+        id S1728663AbfDDCLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:11:39 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:39403 "EHLO
+        Wed, 3 Apr 2019 22:11:48 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:34021 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726436AbfDDCJq (ORCPT
+        by vger.kernel.org with ESMTP id S1726376AbfDDCJp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 22:09:46 -0400
+        Wed, 3 Apr 2019 22:09:45 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 73C3222205;
-        Wed,  3 Apr 2019 22:01:21 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id D651B226C0;
+        Wed,  3 Apr 2019 22:01:31 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:21 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm3; bh=lg2BrG+7fYw7q
-        7Cq2sx/23jUXOHpzN8JkKb4HEWmLsw=; b=uNeajQ0VmyZrTaaKNxl7RQ6fUnbft
-        HfoH4ce85/rJbvEi+CBqtoLJtqZyFMMlQlEStmcyVUcAjrVglB+yyZbiZo24q6L1
-        KQTQUHeJA/wzXfBDhYRXZADV2wN6UPVYjXI9yvcURTE1qn/I5n2NROOjS6/nSgu+
-        qgzKPIJPVf0AYKvnce2HOqcQthA7gXL29ObEO/J8kn9BELEPsJvj2KWK/4ep7r3h
-        CEzAUvxtYO8JHjbO5FCasFxIzZA2cogG/bxz2DRpBkl3Z98GlFRJcgVpmCI07J2m
-        rLBju+P4I7ACY3XmHB9i6Bf0ene5A+R9Efnra7Kbpt9ygm978Hgrf9BYA==
+        :mime-version:content-transfer-encoding; s=fm3; bh=fFiPOXcG+taga
+        wAnsTiiPFqaNASH1sdzyZFszg1HWpM=; b=Gfm1ydd0rEKEmAh6YCF/WLq52HFoN
+        uiTjw6U6R4ewtBPRLPopBIVKqrLS3oaxHPx2JysLOdHndECZQV3mzJToXrf0CfSZ
+        8uNotHy9s7Lxwj6l+Ac1XYU1xPa8loNBctcDGy+HTTnaucve2eGtFfpTg87f2rmZ
+        8KMWUCKSSN4soiPwjyIhc3FjbC5oOXSxmp1EWqwKgtq0rC4KvbNdUID83tLhT44/
+        nXTrD5q0BzNuDKkd5HAqTpWFoyQpDimuLK98s2K1KwbyrmWH5H2XsP07lHuS3IDR
+        IZeejK9F1vRWL3lJ2En4W6zO8nJnlXk61vcAorwgrQ4+KGaIycNgAgE+w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=lg2BrG+7fYw7q7Cq2sx/23jUXOHpzN8JkKb4HEWmLsw=; b=st5240RR
-        dYFUN5ooCSyxrStwKafWNdgADoCKkzOnri6niAKYhRbzjvvmOB2n/IGnbhzs3Rdr
-        BzFAI7LWFHIaSfd4C1wnUYKAjfCRjYPSiZr2T6l9a7AtPuvd/Wc+c5iMwLi5TJ/8
-        3FbeCLHf8/+YCi+Kfq1+meQ1qMQncoTqjUr8eUBhYnfyqSRN0L83PwDnahGfVrFj
-        KSS9R6Ebdc5Mdjz2oGrlKUfR8yTa+AhU22GyAFAn4nyUwKKrB5i+U9yExQRb5ejx
-        F5jr4MpsizRiOzgjGUqu/7yx/HlMEc4xbZbbXQP/Yi+lhMx+dIKT+/fKyeaumUic
-        8C4Nqe6TaDtLzQ==
-X-ME-Sender: <xms:cWWlXBJ0tCYwW-CZHqsy9eb_wxV2t7i_AxDMY_94c6klTDuw7SFErQ>
+        fm2; bh=fFiPOXcG+tagawAnsTiiPFqaNASH1sdzyZFszg1HWpM=; b=Mu+YIkDB
+        Twp8/EFWuJX/uJEN9yZF70j/31sYOwPAsAyX0cV086LDxC6ULQiCS6w/31s24Qra
+        cKaPx+dKXMOy1in6YoLMO7VgEkQG2Ljj3P8pi5nNg4V/iOxpIbNoFS2RjzNzBzDs
+        agys7n9q4mqfUry4ncDiNQj90GMagvs+zgbtibF0PcjtYF4GG3VqN8a/BW0ooHnz
+        knZ6mEI1qZb2+XJXDJ8XR+BzLML2I0+fGFNRkMj/J5Znh3NCpfl38W18WHCRpyko
+        +W7YVyNYYZZk3IDP7TB4RZs6rn6pVi9gpy/tT6gPty5+hOMEZnBhmoz5l1VwGr+D
+        A9q7qCTiuWVfFA==
+X-ME-Sender: <xms:e2WlXMHcDLyxiSUMhxVDgajUDVDbEOBobLPxmj81zZJgfsxZyJVOOg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdehudculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
     hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddt
     necuhfhrohhmpegkihcujggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucfkph
     epvdduiedrvddvkedrudduvddrvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdr
-    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepge
-X-ME-Proxy: <xmx:cWWlXInlS4YJ2bJx51uJAd8I58Np6Ahz-dcbJLO_el5beZXwMbQBIw>
-    <xmx:cWWlXNPkwE5lW_JHQ2LQQXofcZZo96Llcy8IpEWPEyLBld69ibXTJw>
-    <xmx:cWWlXG3mZ92JiwiFjpcEorcWW-t13CG1O-QxHfgjuRVGovID_i3XKg>
-    <xmx:cWWlXEj2kykTJDNHdPnEC8mfx94DmUfX1OKWJxg_MBpkICnTIxJIKg>
+    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepje
+X-ME-Proxy: <xmx:e2WlXIlsObTUPbnuEpWRrOJU1JilLD6y0fKsmgWXz3RB_pO8tfnGyQ>
+    <xmx:e2WlXPnPDBm8LwXitp7HH7cl4YaWZN2pO2Iz2t9v4H9xT457slv8eA>
+    <xmx:e2WlXJu-Oz9eAL-JubY7kfuDhhq6qaZzz3owRLdj4gXKOWH2j2A06Q>
+    <xmx:e2WlXBvZkTc0rI8Q8YTbxV3s7l30b7KHxd8qNs-OOy5Xn5867MqEKA>
 Received: from nvrsysarch5.nvidia.com (thunderhill.nvidia.com [216.228.112.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 64B1610393;
-        Wed,  3 Apr 2019 22:01:19 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1474710310;
+        Wed,  3 Apr 2019 22:01:30 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
@@ -81,9 +82,9 @@ Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         Nitin Gupta <nigupta@nvidia.com>,
         Javier Cabezas <jcabezas@nvidia.com>,
         David Nellans <dnellans@nvidia.com>, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 05/25] mm: migrate: Add vm.accel_page_copy in sysfs to control page copy acceleration.
-Date:   Wed,  3 Apr 2019 19:00:26 -0700
-Message-Id: <20190404020046.32741-6-zi.yan@sent.com>
+Subject: [RFC PATCH 10/25] mm: migrate: copy_page_lists_mt() to copy a page list using multi-threads.
+Date:   Wed,  3 Apr 2019 19:00:31 -0700
+Message-Id: <20190404020046.32741-11-zi.yan@sent.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
 References: <20190404020046.32741-1-zi.yan@sent.com>
@@ -97,68 +98,161 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-Since base page migration did not gain any speedup from
-multi-threaded methods, we only accelerate the huge page case.
+This prepare the support for migrate_page_concur(), which migrates
+multiple pages at the same time.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- kernel/sysctl.c | 11 +++++++++++
- mm/migrate.c    |  6 ++++++
- 2 files changed, 17 insertions(+)
+ mm/copy_page.c | 123 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ mm/internal.h  |   2 +
+ 2 files changed, 125 insertions(+)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index e5da394..3d8490e 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -101,6 +101,8 @@
+diff --git a/mm/copy_page.c b/mm/copy_page.c
+index 84f1c02..d2fd67e 100644
+--- a/mm/copy_page.c
++++ b/mm/copy_page.c
+@@ -126,6 +126,129 @@ int copy_page_multithread(struct page *to, struct page *from, int nr_pages)
  
- #if defined(CONFIG_SYSCTL)
- 
-+extern int accel_page_copy;
+ 	return err;
+ }
 +
- /* External variables not in a header file. */
- extern int suid_dumpable;
- #ifdef CONFIG_COREDUMP
-@@ -1430,6 +1432,15 @@ static struct ctl_table vm_table[] = {
- 		.extra2			= &one,
- 	},
- #endif
-+	{
-+		.procname	= "accel_page_copy",
-+		.data		= &accel_page_copy,
-+		.maxlen		= sizeof(accel_page_copy),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &zero,
-+		.extra2		= &one,
-+	},
- 	 {
- 		.procname	= "hugetlb_shm_group",
- 		.data		= &sysctl_hugetlb_shm_group,
-diff --git a/mm/migrate.c b/mm/migrate.c
-index dd6ccbe..8a344e2 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -55,6 +55,8 @@
- 
- #include "internal.h"
- 
-+int accel_page_copy = 1;
++int copy_page_lists_mt(struct page **to, struct page **from, int nr_items)
++{
++	int err = 0;
++	unsigned int total_mt_num = limit_mt_num;
++	int to_node = page_to_nid(*to);
++	int i;
++	struct copy_page_info *work_items[NR_CPUS] = {0};
++	const struct cpumask *per_node_cpumask = cpumask_of_node(to_node);
++	int cpu_id_list[NR_CPUS] = {0};
++	int cpu;
++	int max_items_per_thread;
++	int item_idx;
 +
- /*
-  * migrate_prep() needs to be called before we start compiling a list of pages
-  * to be migrated using isolate_lru_page(). If scheduling work on other CPUs is
-@@ -589,6 +591,10 @@ static void copy_huge_page(struct page *dst, struct page *src,
- 		nr_pages = hpage_nr_pages(src);
- 	}
- 
-+	/* Try to accelerate page migration if it is not specified in mode  */
-+	if (accel_page_copy)
-+		mode |= MIGRATE_MT;
++	total_mt_num = min_t(unsigned int, total_mt_num,
++						 cpumask_weight(per_node_cpumask));
 +
- 	if (mode & MIGRATE_MT)
- 		rc = copy_page_multithread(dst, src, nr_pages);
++
++	if (total_mt_num > num_online_cpus())
++		return -ENODEV;
++
++	/* Each threads get part of each page, if nr_items < totla_mt_num */
++	if (nr_items < total_mt_num)
++		max_items_per_thread = nr_items;
++	else
++		max_items_per_thread = (nr_items / total_mt_num) +
++				((nr_items % total_mt_num)?1:0);
++
++
++	for (cpu = 0; cpu < total_mt_num; ++cpu) {
++		work_items[cpu] = kzalloc(sizeof(struct copy_page_info) +
++					sizeof(struct copy_item)*max_items_per_thread, GFP_KERNEL);
++		if (!work_items[cpu]) {
++			err = -ENOMEM;
++			goto free_work_items;
++		}
++	}
++
++	i = 0;
++	for_each_cpu(cpu, per_node_cpumask) {
++		if (i >= total_mt_num)
++			break;
++		cpu_id_list[i] = cpu;
++		++i;
++	}
++
++	if (nr_items < total_mt_num) {
++		for (cpu = 0; cpu < total_mt_num; ++cpu) {
++			INIT_WORK((struct work_struct *)work_items[cpu],
++					  copy_page_work_queue_thread);
++			work_items[cpu]->num_items = max_items_per_thread;
++		}
++
++		for (item_idx = 0; item_idx < nr_items; ++item_idx) {
++			unsigned long chunk_size = PAGE_SIZE * hpage_nr_pages(from[item_idx]) / total_mt_num;
++			char *vfrom = kmap(from[item_idx]);
++			char *vto = kmap(to[item_idx]);
++			VM_BUG_ON(PAGE_SIZE * hpage_nr_pages(from[item_idx]) % total_mt_num);
++			BUG_ON(hpage_nr_pages(to[item_idx]) !=
++				   hpage_nr_pages(from[item_idx]));
++
++			for (cpu = 0; cpu < total_mt_num; ++cpu) {
++				work_items[cpu]->item_list[item_idx].to = vto + chunk_size * cpu;
++				work_items[cpu]->item_list[item_idx].from = vfrom + chunk_size * cpu;
++				work_items[cpu]->item_list[item_idx].chunk_size =
++					chunk_size;
++			}
++		}
++
++		for (cpu = 0; cpu < total_mt_num; ++cpu)
++			queue_work_on(cpu_id_list[cpu],
++						  system_highpri_wq,
++						  (struct work_struct *)work_items[cpu]);
++	} else {
++		item_idx = 0;
++		for (cpu = 0; cpu < total_mt_num; ++cpu) {
++			int num_xfer_per_thread = nr_items / total_mt_num;
++			int per_cpu_item_idx;
++
++			if (cpu < (nr_items % total_mt_num))
++				num_xfer_per_thread += 1;
++
++			INIT_WORK((struct work_struct *)work_items[cpu],
++					  copy_page_work_queue_thread);
++
++			work_items[cpu]->num_items = num_xfer_per_thread;
++			for (per_cpu_item_idx = 0; per_cpu_item_idx < work_items[cpu]->num_items;
++				 ++per_cpu_item_idx, ++item_idx) {
++				work_items[cpu]->item_list[per_cpu_item_idx].to = kmap(to[item_idx]);
++				work_items[cpu]->item_list[per_cpu_item_idx].from =
++					kmap(from[item_idx]);
++				work_items[cpu]->item_list[per_cpu_item_idx].chunk_size =
++					PAGE_SIZE * hpage_nr_pages(from[item_idx]);
++
++				BUG_ON(hpage_nr_pages(to[item_idx]) !=
++					   hpage_nr_pages(from[item_idx]));
++			}
++
++			queue_work_on(cpu_id_list[cpu],
++						  system_highpri_wq,
++						  (struct work_struct *)work_items[cpu]);
++		}
++		if (item_idx != nr_items)
++			pr_err("%s: only %d out of %d pages are transferred\n", __func__,
++				item_idx - 1, nr_items);
++	}
++
++	/* Wait until it finishes  */
++	for (i = 0; i < total_mt_num; ++i)
++		flush_work((struct work_struct *)work_items[i]);
++
++	for (i = 0; i < nr_items; ++i) {
++			kunmap(to[i]);
++			kunmap(from[i]);
++	}
++
++free_work_items:
++	for (cpu = 0; cpu < total_mt_num; ++cpu)
++		if (work_items[cpu])
++			kfree(work_items[cpu]);
++
++	return err;
++}
+ /* ======================== DMA copy page ======================== */
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+diff --git a/mm/internal.h b/mm/internal.h
+index cb1a610..51f5e1b 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -558,5 +558,7 @@ extern struct page *alloc_new_node_page(struct page *page, unsigned long node);
  
+ extern int copy_page_lists_dma_always(struct page **to,
+ 			struct page **from, int nr_pages);
++extern int copy_page_lists_mt(struct page **to,
++			struct page **from, int nr_pages);
+ 
+ #endif	/* __MM_INTERNAL_H */
 -- 
 2.7.4
 
