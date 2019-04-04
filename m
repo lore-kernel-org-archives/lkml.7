@@ -2,114 +2,95 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A25BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C62CC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CCB20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369345;
-	bh=Af3h5OFom3yq4cVZVDyZu11KurHu0glSCVEcGZNdDto=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ruFvCS14gqTxsVunG9lJHxPmbsXobnTBmjflZj2xaEgX9sobJYHryRm5UuY2opcRA
-	 Z1q7S2Es7NdUuGloTzUHBggEGvU8xa6v28itpVgVjPEcW+NLb/l4JOkXg8b5JXotm6
-	 AhIts0Bx/1IIFX3aQsIdysLDT4hkYSzRH1sg7sGI=
+	by mail.kernel.org (Postfix) with ESMTP id EBA392177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387713AbfDDJPn (ORCPT
+        id S2387734AbfDDJPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387925AbfDDJPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 636272054F;
-        Thu,  4 Apr 2019 09:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369337;
-        bh=Af3h5OFom3yq4cVZVDyZu11KurHu0glSCVEcGZNdDto=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIp6cPFu2PCH/pnCxKQ+F4lb/TwCHafVqH5OB0vAXmxgbSmUDO2lWxbhyF5zxaLZT
-         /f7HWYe+fqwtKxLWjVEKdiGcV5wu/nG1JEPD1Tiv3bllgLbOjMv+Bxnr5GZhrENpas
-         AjM11Bjf4t+HIAUw/o01wLmcb8Dmeug7uolUPkNc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmil.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 173/246] ASoC: fsl-asoc-card: fix object reference leaks in fsl_asoc_card_probe
-Date:   Thu,  4 Apr 2019 10:47:53 +0200
-Message-Id: <20190404084625.233846333@linuxfoundation.org>
+        Thu, 4 Apr 2019 05:15:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35644 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387523AbfDDJPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 49E73ACFA;
+        Thu,  4 Apr 2019 09:15:43 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     linux-mm@kvack.org
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: [RFC 2/2] mm, slub: add missing kmem_cache_debug() checks
+Date:   Thu,  4 Apr 2019 11:15:31 +0200
+Message-Id: <20190404091531.9815-3-vbabka@suse.cz>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+In-Reply-To: <20190404091531.9815-1-vbabka@suse.cz>
+References: <20190404091531.9815-1-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+Some debugging checks in SLUB are not hidden behind kmem_cache_debug() check.
+Add the check so that those places can also benefit from reduced overhead
+thanks to the the static key added by the previous patch.
 
-------------------
-
-[ Upstream commit 11907e9d3533648615db08140e3045b829d2c141 ]
-
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
-
-Signed-off-by: Wen Yang <yellowriver2010@hotmil.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/slub.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 81f2fe2c6d23..60f87a0d99f4 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -689,6 +689,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- asrc_fail:
- 	of_node_put(asrc_np);
- 	of_node_put(codec_np);
-+	put_device(&cpu_pdev->dev);
- fail:
- 	of_node_put(cpu_np);
+diff --git a/mm/slub.c b/mm/slub.c
+index 398e53e16e2e..9d1b0e5e8593 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1086,6 +1086,13 @@ static inline void dec_slabs_node(struct kmem_cache *s, int node, int objects)
+ static void setup_object_debug(struct kmem_cache *s, struct page *page,
+ 								void *object)
+ {
++	/*
++	 * __OBJECT_POISON implies SLAB_POISON which is covered by
++	 * kmem_cache_debug()
++	 */
++	if (!kmem_cache_debug(s))
++		return;
++
+ 	if (!(s->flags & (SLAB_STORE_USER|SLAB_RED_ZONE|__OBJECT_POISON)))
+ 		return;
  
+@@ -1095,6 +1102,9 @@ static void setup_object_debug(struct kmem_cache *s, struct page *page,
+ 
+ static void setup_page_debug(struct kmem_cache *s, void *addr, int order)
+ {
++	if (!kmem_cache_debug(s))
++		return;
++
+ 	if (!(s->flags & SLAB_POISON))
+ 		return;
+ 
+@@ -1734,7 +1744,7 @@ static void __free_slab(struct kmem_cache *s, struct page *page)
+ 	int order = compound_order(page);
+ 	int pages = 1 << order;
+ 
+-	if (s->flags & SLAB_CONSISTENCY_CHECKS) {
++	if (kmem_cache_debug(s) && s->flags & SLAB_CONSISTENCY_CHECKS) {
+ 		void *p;
+ 
+ 		slab_pad_check(s, page);
 -- 
-2.19.1
-
-
+2.21.0
 
