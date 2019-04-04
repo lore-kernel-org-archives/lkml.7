@@ -2,65 +2,53 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AD1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69937C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADA92186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3430C2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368450;
-	bh=/GAgLW5ZlDvOCUP9XUY91tMQDAFIvyvhAZNkx6yAlkE=;
+	s=default; t=1554368454;
+	bh=9FvT18zG5ZSLuuIfxd3sw3/cGx63jsMKhDSI4Fuilvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M1Z1AMV7P6pdqgMRp7120qqmUM/RoqVjxnJq6hpYf52PlBGSXy81O6ohDI+Qttax0
-	 kB2jMc/N03wfPanKHZs6uyRLJpGKa//x5pV0bCUwZvJThWWf3HGwHrx6nCLAH+Qr+F
-	 9mA4h2hvudmQRpADEBjD+2Jiv0oxYzK7HIJzBUkk=
+	b=LwaXTR5BQwQRJgPV/8ti6sa0Pv6+0CCT2+aSIZ08kRbbrr2+9Qd6RFFCzkzpNFRL8
+	 rg6tjGDESAA1AazaHBqYCmx0DskXNJG8zKQEntZotL4vRPB24tQ1x3HtLtT/fSnSJm
+	 zi8vI28m6pCs1XfGmDQbc/oiUvePF3Pm/L7+pcgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731302AbfDDJAs (ORCPT
+        id S1730425AbfDDJAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:00:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731063AbfDDJAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:00:43 -0400
+        id S1731063AbfDDJAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E70A82147C;
-        Thu,  4 Apr 2019 09:00:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDCD72184B;
+        Thu,  4 Apr 2019 09:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368442;
-        bh=/GAgLW5ZlDvOCUP9XUY91tMQDAFIvyvhAZNkx6yAlkE=;
+        s=default; t=1554368450;
+        bh=9FvT18zG5ZSLuuIfxd3sw3/cGx63jsMKhDSI4Fuilvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+5Rii09wHT49hBv5+7qa4qwGcGT1X9JbXEOuD1ulq3N3q82y1N5y9/RWAuoiGTuB
-         nwjpO33V7LC/dn+BBIvNhPVHUIzevGCsQBLxGe2sHMA3VsQu90QJyV+xmjWmHua5aI
-         72LprNczb4LN1uFBbPi7gdf+KDn/oFziXYRLLJc4=
+        b=VUKCeLg/kXE79jqUBw/1O1IuSv/xAEl2LQ6unohsjwKx9rmTJIkeM6me7edKhuAnR
+         69l1UnDFC5S8jOutqqDQG8iL2kZ//dFmEnfHAVTHLn2dUtZ8/eZebOjgLBRWzA2sZD
+         gTDomXfsr6mJKTCG1jLYIrEagpRoibCJTc67s+ao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Omar Sandoval <osandov@fb.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Shaohua Li <shli@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
+        Steve French <stfrench@microsoft.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 026/187] mm, swap: bounds check swap_info array accesses to avoid NULL derefs
-Date:   Thu,  4 Apr 2019 10:46:03 +0200
-Message-Id: <20190404084604.319839010@linuxfoundation.org>
+Subject: [PATCH 4.19 036/187] cifs: use correct format characters
+Date:   Thu,  4 Apr 2019 10:46:13 +0200
+Message-Id: <20190404084604.767331398@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -79,211 +67,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c10d38cc8d3e43f946b6c2bf4602c86791587f30 ]
+[ Upstream commit 259594bea574e515a148171b5cd84ce5cbdc028a ]
 
-Dan Carpenter reports a potential NULL dereference in
-get_swap_page_of_type:
+When compiling with -Wformat, clang emits the following warnings:
 
-  Smatch complains that the NULL checks on "si" aren't consistent.  This
-  seems like a real bug because we have not ensured that the type is
-  valid and so "si" can be NULL.
+fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
+short' but the argument has type 'unsigned int' [-Wformat]
+                         tgt_total_cnt, total_in_tgt);
+                                        ^~~~~~~~~~~~
 
-Add the missing check for NULL, taking care to use a read barrier to
-ensure CPU1 observes CPU0's updates in the correct order:
+fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                 ^~~~~~~~~~
 
-     CPU0                           CPU1
-     alloc_swap_info()              if (type >= nr_swapfiles)
-       swap_info[type] = p              /* handle invalid entry */
-       smp_wmb()                    smp_rmb()
-       ++nr_swapfiles               p = swap_info[type]
+fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                             ^~~~~~~~~~~~~~~~
 
-Without smp_rmb, CPU1 might observe CPU0's write to nr_swapfiles before
-CPU0's write to swap_info[type] and read NULL from swap_info[type].
+fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                 ^~~~~~~~~~~~~
 
-Ying Huang noticed other places in swapfile.c don't order these reads
-properly.  Introduce swap_type_to_swap_info to encourage correct usage.
+fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                                ^~~~~~~~~~~~~~~~~~
+The types of these arguments are unconditionally defined, so this patch
+updates the format character to the correct ones for ints and unsigned
+ints.
 
-Use READ_ONCE and WRITE_ONCE to follow the Linux Kernel Memory Model
-(see tools/memory-model/Documentation/explanation.txt).
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
 
-This ordering need not be enforced in places where swap_lock is held
-(e.g.  si_swapinfo) because swap_lock serializes updates to nr_swapfiles
-and the swap_info array.
-
-Link: http://lkml.kernel.org/r/20190131024410.29859-1-daniel.m.jordan@oracle.com
-Fixes: ec8acf20afb8 ("swap: add per-partition lock for swapfile")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Suggested-by: "Huang, Ying" <ying.huang@intel.com>
-Reviewed-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Omar Sandoval <osandov@fb.com>
-Cc: Paul McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Shaohua Li <shli@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swapfile.c | 51 +++++++++++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 22 deletions(-)
+ fs/cifs/cifs_dfs_ref.c | 4 ++--
+ fs/cifs/smb1ops.c      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 340ef3177686..0047dcaf9369 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -98,6 +98,15 @@ static atomic_t proc_poll_event = ATOMIC_INIT(0);
- 
- atomic_t nr_rotate_swap = ATOMIC_INIT(0);
- 
-+static struct swap_info_struct *swap_type_to_swap_info(int type)
-+{
-+	if (type >= READ_ONCE(nr_swapfiles))
-+		return NULL;
-+
-+	smp_rmb();	/* Pairs with smp_wmb in alloc_swap_info. */
-+	return READ_ONCE(swap_info[type]);
-+}
-+
- static inline unsigned char swap_count(unsigned char ent)
+diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
+index 6b61df117fd4..563e2f6268c3 100644
+--- a/fs/cifs/cifs_dfs_ref.c
++++ b/fs/cifs/cifs_dfs_ref.c
+@@ -271,9 +271,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
  {
- 	return ent & ~SWAP_HAS_CACHE;	/* may include COUNT_CONTINUED flag */
-@@ -1030,12 +1039,14 @@ noswap:
- /* The only caller of this function is now suspend routine */
- swp_entry_t get_swap_page_of_type(int type)
- {
--	struct swap_info_struct *si;
-+	struct swap_info_struct *si = swap_type_to_swap_info(type);
- 	pgoff_t offset;
+ 	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
+ 	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
+-	cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
++	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
+ 		 ref->flags, ref->server_type);
+-	cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
++	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
+ 		 ref->ref_flag, ref->path_consumed);
+ }
  
--	si = swap_info[type];
-+	if (!si)
-+		goto fail;
-+
- 	spin_lock(&si->lock);
--	if (si && (si->flags & SWP_WRITEOK)) {
-+	if (si->flags & SWP_WRITEOK) {
- 		atomic_long_dec(&nr_swap_pages);
- 		/* This is called for allocating swap entry, not cache */
- 		offset = scan_swap_map(si, 1);
-@@ -1046,6 +1057,7 @@ swp_entry_t get_swap_page_of_type(int type)
- 		atomic_long_inc(&nr_swap_pages);
+diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
+index 378151e09e91..47db8eb6cbcf 100644
+--- a/fs/cifs/smb1ops.c
++++ b/fs/cifs/smb1ops.c
+@@ -308,7 +308,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
+ 	remaining = tgt_total_cnt - total_in_tgt;
+ 
+ 	if (remaining < 0) {
+-		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
++		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
+ 			 tgt_total_cnt, total_in_tgt);
+ 		return -EPROTO;
  	}
- 	spin_unlock(&si->lock);
-+fail:
- 	return (swp_entry_t) {0};
- }
- 
-@@ -1057,9 +1069,9 @@ static struct swap_info_struct *__swap_info_get(swp_entry_t entry)
- 	if (!entry.val)
- 		goto out;
- 	type = swp_type(entry);
--	if (type >= nr_swapfiles)
-+	p = swap_type_to_swap_info(type);
-+	if (!p)
- 		goto bad_nofile;
--	p = swap_info[type];
- 	if (!(p->flags & SWP_USED))
- 		goto bad_device;
- 	offset = swp_offset(entry);
-@@ -1708,10 +1720,9 @@ int swap_type_of(dev_t device, sector_t offset, struct block_device **bdev_p)
- sector_t swapdev_block(int type, pgoff_t offset)
- {
- 	struct block_device *bdev;
-+	struct swap_info_struct *si = swap_type_to_swap_info(type);
- 
--	if ((unsigned int)type >= nr_swapfiles)
--		return 0;
--	if (!(swap_info[type]->flags & SWP_WRITEOK))
-+	if (!si || !(si->flags & SWP_WRITEOK))
- 		return 0;
- 	return map_swap_entry(swp_entry(type, offset), &bdev);
- }
-@@ -2269,7 +2280,7 @@ static sector_t map_swap_entry(swp_entry_t entry, struct block_device **bdev)
- 	struct swap_extent *se;
- 	pgoff_t offset;
- 
--	sis = swap_info[swp_type(entry)];
-+	sis = swp_swap_info(entry);
- 	*bdev = sis->bdev;
- 
- 	offset = swp_offset(entry);
-@@ -2707,9 +2718,7 @@ static void *swap_start(struct seq_file *swap, loff_t *pos)
- 	if (!l)
- 		return SEQ_START_TOKEN;
- 
--	for (type = 0; type < nr_swapfiles; type++) {
--		smp_rmb();	/* read nr_swapfiles before swap_info[type] */
--		si = swap_info[type];
-+	for (type = 0; (si = swap_type_to_swap_info(type)); type++) {
- 		if (!(si->flags & SWP_USED) || !si->swap_map)
- 			continue;
- 		if (!--l)
-@@ -2729,9 +2738,7 @@ static void *swap_next(struct seq_file *swap, void *v, loff_t *pos)
- 	else
- 		type = si->type + 1;
- 
--	for (; type < nr_swapfiles; type++) {
--		smp_rmb();	/* read nr_swapfiles before swap_info[type] */
--		si = swap_info[type];
-+	for (; (si = swap_type_to_swap_info(type)); type++) {
- 		if (!(si->flags & SWP_USED) || !si->swap_map)
- 			continue;
- 		++*pos;
-@@ -2838,14 +2845,14 @@ static struct swap_info_struct *alloc_swap_info(void)
- 	}
- 	if (type >= nr_swapfiles) {
- 		p->type = type;
--		swap_info[type] = p;
-+		WRITE_ONCE(swap_info[type], p);
- 		/*
- 		 * Write swap_info[type] before nr_swapfiles, in case a
- 		 * racing procfs swap_start() or swap_next() is reading them.
- 		 * (We never shrink nr_swapfiles, we never free this entry.)
- 		 */
- 		smp_wmb();
--		nr_swapfiles++;
-+		WRITE_ONCE(nr_swapfiles, nr_swapfiles + 1);
- 	} else {
- 		kvfree(p);
- 		p = swap_info[type];
-@@ -3365,7 +3372,7 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
- {
- 	struct swap_info_struct *p;
- 	struct swap_cluster_info *ci;
--	unsigned long offset, type;
-+	unsigned long offset;
- 	unsigned char count;
- 	unsigned char has_cache;
- 	int err = -EINVAL;
-@@ -3373,10 +3380,10 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
- 	if (non_swap_entry(entry))
- 		goto out;
- 
--	type = swp_type(entry);
--	if (type >= nr_swapfiles)
-+	p = swp_swap_info(entry);
-+	if (!p)
- 		goto bad_file;
--	p = swap_info[type];
-+
- 	offset = swp_offset(entry);
- 	if (unlikely(offset >= p->max))
- 		goto out;
-@@ -3473,7 +3480,7 @@ int swapcache_prepare(swp_entry_t entry)
- 
- struct swap_info_struct *swp_swap_info(swp_entry_t entry)
- {
--	return swap_info[swp_type(entry)];
-+	return swap_type_to_swap_info(swp_type(entry));
- }
- 
- struct swap_info_struct *page_swap_info(struct page *page)
 -- 
 2.19.1
 
