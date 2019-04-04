@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE85C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD36FC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048A12075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5FD2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370268;
-	bh=asIwt7HyMKcoeQfg3Onkisk36hEQVRz4u29ZOskGH0s=;
+	s=default; t=1554370273;
+	bh=2BshZfdsnGRVHrOyV5pKRD5ZNwlfOgEWc6N6Fq3n3I0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yOghRdwKENQWDyLu841WR1bPS2g5L5p0W4uaM/FotLKysxsrgM/3JyuZZw2W2GlEH
-	 y+sr755WFBJgUp33vKwJmzaxkIhLBiDFEHv51XYyOinzEhuX7N/PAn61a7xJHzU+fJ
-	 2FVlbVJBLNjbdEAmJ82CeUkLhrCLnepGLz0ke/JE=
+	b=KwYCasmprh/T4p36LV5KsRltqrViyyBP2ZFr2HGgnwpjcgIqfWVzyZkoBvs6M9sGh
+	 cNa1h9JvtNDhRB2rUoUBvgXdUfqKlpbTxoNhc3fEBGDVOklkT68EGps/ZgeeV5t2ZL
+	 3UB1C3GvOd/FebzsZ+Rc6Da2EDVn9lE8dgOY4PWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733090AbfDDJbH (ORCPT
+        id S1732856AbfDDJJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732458AbfDDJJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:39 -0400
+        id S1732840AbfDDJJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43A6E217D9;
-        Thu,  4 Apr 2019 09:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8035A217D9;
+        Thu,  4 Apr 2019 09:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368977;
-        bh=asIwt7HyMKcoeQfg3Onkisk36hEQVRz4u29ZOskGH0s=;
+        s=default; t=1554368970;
+        bh=2BshZfdsnGRVHrOyV5pKRD5ZNwlfOgEWc6N6Fq3n3I0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IK1axkKaeRxaC2CBtvsFs9nx/mhhVb84GEMhYjOq2vWlq5n8j4Y5URumGdTmHVd9f
-         j6ReSAizv0xmRvmXGLyP3MK+DT7C+4AP7ulW8rpCqVqBdiohVGDcddBKYt2I5ehbHt
-         L+jFW6B8LbOLNaZu61u1ykn68kqnCecsHh/EEKL4=
+        b=PrgQUm4up4QhDYjuOWhgVEcgtyuL/ILyR+aSIV9Oxs+rMthUUwe1Zt2Ny9aOf2Ak8
+         +BttllroRr2sdRY35ifJ7i3h0xVIGZefq5klffNjWVP5WgNeK4C73Gx0/CEY2nbyE5
+         3k62z93P0l8aFL5tWADQzymQ8GPK9lQ4qpPNPdhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Catalin Marinas <catalin.marinas@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 028/246] mm/page_ext.c: fix an imbalance with kmemleak
-Date:   Thu,  4 Apr 2019 10:45:28 +0200
-Message-Id: <20190404084620.090786137@linuxfoundation.org>
+Subject: [PATCH 5.0 035/246] mm/slab.c: kmemleak no scan alien caches
+Date:   Thu,  4 Apr 2019 10:45:35 +0200
+Message-Id: <20190404084620.290455935@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,80 +72,149 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0c81585499601acd1d0e1cbf424cabfaee60628c ]
+[ Upstream commit 92d1d07daad65c300c7d0b68bbef8867e9895d54 ]
 
-After offlining a memory block, kmemleak scan will trigger a crash, as
-it encounters a page ext address that has already been freed during
-memory offlining.  At the beginning in alloc_page_ext(), it calls
-kmemleak_alloc(), but it does not call kmemleak_free() in
-free_page_ext().
+Kmemleak throws endless warnings during boot due to in
+__alloc_alien_cache(),
 
-    BUG: unable to handle kernel paging request at ffff888453d00000
-    PGD 128a01067 P4D 128a01067 PUD 128a04067 PMD 47e09e067 PTE 800ffffbac2ff060
-    Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-    CPU: 1 PID: 1594 Comm: bash Not tainted 5.0.0-rc8+ #15
-    Hardware name: HP ProLiant DL180 Gen9/ProLiant DL180 Gen9, BIOS U20 10/25/2017
-    RIP: 0010:scan_block+0xb5/0x290
-    Code: 85 6e 01 00 00 48 b8 00 00 30 f5 81 88 ff ff 48 39 c3 0f 84 5b 01 00 00 48 89 d8 48 c1 e8 03 42 80 3c 20 00 0f 85 87 01 00 00 <4c> 8b 3b e8 f3 0c fa ff 4c 39 3d 0c 6b 4c 01 0f 87 08 01 00 00 4c
-    RSP: 0018:ffff8881ec57f8e0 EFLAGS: 00010082
-    RAX: 0000000000000000 RBX: ffff888453d00000 RCX: ffffffffa61e5a54
-    RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff888453d00000
-    RBP: ffff8881ec57f920 R08: fffffbfff4ed588d R09: fffffbfff4ed588c
-    R10: fffffbfff4ed588c R11: ffffffffa76ac463 R12: dffffc0000000000
-    R13: ffff888453d00ff9 R14: ffff8881f80cef48 R15: ffff8881f80cef48
-    FS:  00007f6c0e3f8740(0000) GS:ffff8881f7680000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffff888453d00000 CR3: 00000001c4244003 CR4: 00000000001606a0
-    Call Trace:
-     scan_gray_list+0x269/0x430
-     kmemleak_scan+0x5a8/0x10f0
-     kmemleak_write+0x541/0x6ca
-     full_proxy_write+0xf8/0x190
-     __vfs_write+0xeb/0x980
-     vfs_write+0x15a/0x4f0
-     ksys_write+0xd2/0x1b0
-     __x64_sys_write+0x73/0xb0
-     do_syscall_64+0xeb/0xaaa
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    RIP: 0033:0x7f6c0dad73b8
-    Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 8d 05 65 63 2d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49 89 d4 55
-    RSP: 002b:00007ffd5b863cb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-    RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007f6c0dad73b8
-    RDX: 0000000000000005 RSI: 000055a9216e1710 RDI: 0000000000000001
-    RBP: 000055a9216e1710 R08: 000000000000000a R09: 00007ffd5b863840
-    R10: 000000000000000a R11: 0000000000000246 R12: 00007f6c0dda9780
-    R13: 0000000000000005 R14: 00007f6c0dda4740 R15: 0000000000000005
-    Modules linked in: nls_iso8859_1 nls_cp437 vfat fat kvm_intel kvm irqbypass efivars ip_tables x_tables xfs sd_mod ahci libahci igb i2c_algo_bit libata i2c_core dm_mirror dm_region_hash dm_log dm_mod efivarfs
-    CR2: ffff888453d00000
-    ---[ end trace ccf646c7456717c5 ]---
-    Kernel panic - not syncing: Fatal exception
-    Shutting down cpus with NMI
-    Kernel Offset: 0x24c00000 from 0xffffffff81000000 (relocation range:
-    0xffffffff80000000-0xffffffffbfffffff)
-    ---[ end Kernel panic - not syncing: Fatal exception ]---
+    alc = kmalloc_node(memsize, gfp, node);
+    init_arraycache(&alc->ac, entries, batch);
+    kmemleak_no_scan(ac);
 
-Link: http://lkml.kernel.org/r/20190227173147.75650-1-cai@lca.pw
+Kmemleak does not track the array cache (alc->ac) but the alien cache
+(alc) instead, so let it track the latter by lifting kmemleak_no_scan()
+out of init_arraycache().
+
+There is another place that calls init_arraycache(), but
+alloc_kmem_cache_cpus() uses the percpu allocation where will never be
+considered as a leak.
+
+  kmemleak: Found object by alias at 0xffff8007b9aa7e38
+  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
+  Call trace:
+   dump_backtrace+0x0/0x168
+   show_stack+0x24/0x30
+   dump_stack+0x88/0xb0
+   lookup_object+0x84/0xac
+   find_and_get_object+0x84/0xe4
+   kmemleak_no_scan+0x74/0xf4
+   setup_kmem_cache_node+0x2b4/0x35c
+   __do_tune_cpucache+0x250/0x2d4
+   do_tune_cpucache+0x4c/0xe4
+   enable_cpucache+0xc8/0x110
+   setup_cpu_cache+0x40/0x1b8
+   __kmem_cache_create+0x240/0x358
+   create_cache+0xc0/0x198
+   kmem_cache_create_usercopy+0x158/0x20c
+   kmem_cache_create+0x50/0x64
+   fsnotify_init+0x58/0x6c
+   do_one_initcall+0x194/0x388
+   kernel_init_freeable+0x668/0x688
+   kernel_init+0x18/0x124
+   ret_from_fork+0x10/0x18
+  kmemleak: Object 0xffff8007b9aa7e00 (size 256):
+  kmemleak:   comm "swapper/0", pid 1, jiffies 4294697137
+  kmemleak:   min_count = 1
+  kmemleak:   count = 0
+  kmemleak:   flags = 0x1
+  kmemleak:   checksum = 0
+  kmemleak:   backtrace:
+       kmemleak_alloc+0x84/0xb8
+       kmem_cache_alloc_node_trace+0x31c/0x3a0
+       __kmalloc_node+0x58/0x78
+       setup_kmem_cache_node+0x26c/0x35c
+       __do_tune_cpucache+0x250/0x2d4
+       do_tune_cpucache+0x4c/0xe4
+       enable_cpucache+0xc8/0x110
+       setup_cpu_cache+0x40/0x1b8
+       __kmem_cache_create+0x240/0x358
+       create_cache+0xc0/0x198
+       kmem_cache_create_usercopy+0x158/0x20c
+       kmem_cache_create+0x50/0x64
+       fsnotify_init+0x58/0x6c
+       do_one_initcall+0x194/0x388
+       kernel_init_freeable+0x668/0x688
+       kernel_init+0x18/0x124
+  kmemleak: Not scanning unknown object at 0xffff8007b9aa7e38
+  CPU: 190 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc2+ #2
+  Call trace:
+   dump_backtrace+0x0/0x168
+   show_stack+0x24/0x30
+   dump_stack+0x88/0xb0
+   kmemleak_no_scan+0x90/0xf4
+   setup_kmem_cache_node+0x2b4/0x35c
+   __do_tune_cpucache+0x250/0x2d4
+   do_tune_cpucache+0x4c/0xe4
+   enable_cpucache+0xc8/0x110
+   setup_cpu_cache+0x40/0x1b8
+   __kmem_cache_create+0x240/0x358
+   create_cache+0xc0/0x198
+   kmem_cache_create_usercopy+0x158/0x20c
+   kmem_cache_create+0x50/0x64
+   fsnotify_init+0x58/0x6c
+   do_one_initcall+0x194/0x388
+   kernel_init_freeable+0x668/0x688
+   kernel_init+0x18/0x124
+   ret_from_fork+0x10/0x18
+
+Link: http://lkml.kernel.org/r/20190129184518.39808-1-cai@lca.pw
+Fixes: 1fe00d50a9e8 ("slab: factor out initialization of array cache")
 Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_ext.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/slab.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index 8c78b8d45117..f116431c3dee 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -273,6 +273,7 @@ static void free_page_ext(void *addr)
- 		table_size = get_entry_size() * PAGES_PER_SECTION;
+diff --git a/mm/slab.c b/mm/slab.c
+index b3e74b56a468..2f2aa8eaf7d9 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -550,14 +550,6 @@ static void start_cpu_timer(int cpu)
  
- 		BUG_ON(PageReserved(page));
-+		kmemleak_free(addr);
- 		free_pages_exact(addr, table_size);
- 	}
+ static void init_arraycache(struct array_cache *ac, int limit, int batch)
+ {
+-	/*
+-	 * The array_cache structures contain pointers to free object.
+-	 * However, when such objects are allocated or transferred to another
+-	 * cache the pointers are not cleared and they could be counted as
+-	 * valid references during a kmemleak scan. Therefore, kmemleak must
+-	 * not scan such objects.
+-	 */
+-	kmemleak_no_scan(ac);
+ 	if (ac) {
+ 		ac->avail = 0;
+ 		ac->limit = limit;
+@@ -573,6 +565,14 @@ static struct array_cache *alloc_arraycache(int node, int entries,
+ 	struct array_cache *ac = NULL;
+ 
+ 	ac = kmalloc_node(memsize, gfp, node);
++	/*
++	 * The array_cache structures contain pointers to free object.
++	 * However, when such objects are allocated or transferred to another
++	 * cache the pointers are not cleared and they could be counted as
++	 * valid references during a kmemleak scan. Therefore, kmemleak must
++	 * not scan such objects.
++	 */
++	kmemleak_no_scan(ac);
+ 	init_arraycache(ac, entries, batchcount);
+ 	return ac;
  }
+@@ -667,6 +667,7 @@ static struct alien_cache *__alloc_alien_cache(int node, int entries,
+ 
+ 	alc = kmalloc_node(memsize, gfp, node);
+ 	if (alc) {
++		kmemleak_no_scan(alc);
+ 		init_arraycache(&alc->ac, entries, batch);
+ 		spin_lock_init(&alc->lock);
+ 	}
 -- 
 2.19.1
 
