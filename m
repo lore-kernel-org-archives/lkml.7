@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A057AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A90C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B69E2133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A752133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="MBp3j9bH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qkA7/ZD2"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="kHdvF9pN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="muwx5J5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfDDCKN (ORCPT
+        id S1727053AbfDDCK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:10:13 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41925 "EHLO
+        Wed, 3 Apr 2019 22:10:29 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38637 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbfDDCJr (ORCPT
+        by vger.kernel.org with ESMTP id S1726524AbfDDCJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 22:09:47 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6AC0C225E4;
-        Wed,  3 Apr 2019 22:01:52 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id A7A9D228BA;
+        Wed,  3 Apr 2019 22:01:45 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:52 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm3; bh=KCLXIWPn2wPPa
-        X//haXWVGdcpCWLncsANSVaA+4FczE=; b=MBp3j9bHaCgiDCWMOpc0eYvTzoFNl
-        s7ncTpUi6YimkWJAvnpJXe2/pxIoit8B37S2iW96yrfE9kQppfYJ0pwggJs0cmUy
-        xB9nKLHyLu2p30mI7rcE3MnP0Sh4qtVRVcJP1RXyuVyhTjdLkS4rwCPrZ5mG6O71
-        OuFXXZTTPa4nA10XVB36jkHMifJhn3w0JGZbukdGdEwY+IkeYzDL09uR1Fowdv+M
-        qRuTTxsMVJYa+mSnQqEVsi5WPx0ORmn1SBkmcPwbg//2Kf+vRPUcHl5u0w8vYXIf
-        4B/J3ziemsBolK4WwIha0UB8jtlu1LNz5bzEouikNurPJSX3S5kWx7Nmw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=bogrl8ykXE3AE
+        9N3lxqf7+kaVmqboUoXMwOaBKi4kwI=; b=kHdvF9pNWcw8D8b8/t/kv8mKy+ArM
+        dg62fTqmQKSItiP6KA8Vwk35fnN/5YjdeJl3B6KUd7eTC/44vtAzvWx6+U+A6P4X
+        Piy2T6tLbpFFwvQ2a+hjWkv7JxOSb3ASu/brFlmlG25yt/ggco4UjZ0r0ZyOI67S
+        ElbA4KNk3VnvoJiER8XoetoJ1c8TnScHn8u4vfIovZovy+2iI437NaUZRPfhB5eR
+        uyHiLxigKLp4sKsJEHX9L2eZYqI0HSZ4xleKLKbRdexU3Yjb8nlHav1EKRYvV1H8
+        el5AC2pwrLUpjoi2D0HLOyaMF/whe2L9GoIA9+WHf8Jlz6WMIEXvp2e1w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=KCLXIWPn2wPPaX//haXWVGdcpCWLncsANSVaA+4FczE=; b=qkA7/ZD2
-        BwJSpBIjr3CaPbOcDkKoKiLpDUkEkU9dcNfFob2cHnp678IE9w9gJLV/gj9qLvSn
-        oFrkoEAHO+3J19psvJpUD2SZtW6j6MQ9l5VPh5PbNIuatOdH9CN+ZtW+SG2n1gcn
-        vglhxwxtIwEy3RRqsoN/Z49KbgQzzY5ZOJoWrAIASga+CzSfhjuuAItExIbh/QII
-        Nnu00rv4J6PuSESCkSLUexyqIFd8JWoSJc8dyvlEyigjWg4ETm4SrTD282za36Gi
-        ndcy1l5Fl6rcFdF5iysSdfmopADJ5KfQnmmbnuxGPG+6gGiJtrKwB1KFi6p7K4lT
-        oibgye0lHPX39Q==
-X-ME-Sender: <xms:kGWlXHizyVJ8E7yZbxNtnDt-3yo_hfpSXP9o1q2JxZ0fPbvDWI_CLA>
+        fm2; bh=bogrl8ykXE3AE9N3lxqf7+kaVmqboUoXMwOaBKi4kwI=; b=muwx5J5m
+        gMAQYmtcbAweMtV01l1pPYxfGsXWSAAJLKYJxEBbotutU98jcz+0Tg/k8yGEgEYA
+        8LClxo10euoBJ8Y0ZNiglPT9zpe0Ey4c3ztZJ91rFOzgjR88n6xGNFMjyNuKgmlq
+        qNSkfJPXkAZtYav7jjUYgyhgBx9SU4WeK+VY+bB+DhCzq574mFK3E29FJJ+HB3Dd
+        /a73q69lHQO66YxPnncSr7j/XIAvs602pTfDQNiQK35gcPc18+qIhkLsZkdYLm9S
+        vYLVnDBAqbX4eM6pQ5ZFHxvCUImu4cajiwkt5yFije7ipZXkBXsYB4xvnXKkcHA4
+        IrTV2gn+rhDmxg==
+X-ME-Sender: <xms:iWWlXD-YuOXTjzAJ1ccCNATl3kvH47tsdIovXsrPgw3wtouIJTtb1w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdehudculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
     hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddt
     necuhfhrohhmpegkihcujggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucfkph
     epvdduiedrvddvkedrudduvddrvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdr
-    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepvddu
-X-ME-Proxy: <xmx:kGWlXF6irVzBaekNnZjU8djm101xOTs8wkv21QD2BWxOtklunBL3xw>
-    <xmx:kGWlXLvSNrOzVp-5jBR0GVU7z36TTLkbbP3n6lhYdCepoe248LlS8Q>
-    <xmx:kGWlXCwEeZET18Rh8_gcpMyr4Y6e_V5ZWXCgz8X_6IGmTRg8WPytrw>
-    <xmx:kGWlXIXNaZCkjKwtUMD3Ai5Go7gWviEIwDy-3It2GKSJZwNFKqjh_g>
+    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepudej
+X-ME-Proxy: <xmx:iWWlXCARb0FZvIxhcRN1bQQAff_ydbcPvtQHs_yo9HjWSlnaSpjU2g>
+    <xmx:iWWlXPtnAEyQ2x2UQyBFCqD3jwjNbRf6ZzqiiJFMm6_hHf9svqx0xw>
+    <xmx:iWWlXMbdKLicKAyVSHbL6l33Tchuh8AhAmV1_NJfs9q5CUTVt6oTUQ>
+    <xmx:iWWlXFWNznFnfHdMmp5vwO9J09zND2pNp8DD5ujIc1JzW8SCVoJs6w>
 Received: from nvrsysarch5.nvidia.com (thunderhill.nvidia.com [216.228.112.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7306E10319;
-        Wed,  3 Apr 2019 22:01:50 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id B84C610319;
+        Wed,  3 Apr 2019 22:01:43 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
@@ -82,9 +82,9 @@ Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         Nitin Gupta <nigupta@nvidia.com>,
         Javier Cabezas <jcabezas@nvidia.com>,
         David Nellans <dnellans@nvidia.com>, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 22/25] memory manage: active/inactive page list manipulation in memcg.
-Date:   Wed,  3 Apr 2019 19:00:43 -0700
-Message-Id: <20190404020046.32741-23-zi.yan@sent.com>
+Subject: [RFC PATCH 18/25] memcg: Add per node memory usage&max stats in memcg.
+Date:   Wed,  3 Apr 2019 19:00:39 -0700
+Message-Id: <20190404020046.32741-19-zi.yan@sent.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
 References: <20190404020046.32741-1-zi.yan@sent.com>
@@ -98,394 +98,217 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-The syscall allows users to trigger page list scanning to actively
-move pages between active/inactive lists according to page
-references. This is limited to the memcg which the process belongs
-to. It would not impact the global LRU lists, which is the root
-memcg.
+It prepares for the following patches to enable memcg-based NUMA
+node page migration. We are going to limit memory usage in each node
+on a per-memcg basis.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- include/uapi/linux/mempolicy.h |  1 +
- mm/internal.h                  | 93 +++++++++++++++++++++++++++++++++++++++++-
- mm/memory_manage.c             | 76 +++++++++++++++++++++++++++++++++-
- mm/vmscan.c                    | 90 ++++++++--------------------------------
- 4 files changed, 184 insertions(+), 76 deletions(-)
+ include/linux/cgroup-defs.h |  1 +
+ include/linux/memcontrol.h  | 67 +++++++++++++++++++++++++++++++++++++
+ mm/memcontrol.c             | 80 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 148 insertions(+)
 
-diff --git a/include/uapi/linux/mempolicy.h b/include/uapi/linux/mempolicy.h
-index 4722bb7..dac474a 100644
---- a/include/uapi/linux/mempolicy.h
-+++ b/include/uapi/linux/mempolicy.h
-@@ -53,6 +53,7 @@ enum {
- #define MPOL_MF_MOVE_MT  (1<<6)	/* Use multi-threaded page copy routine */
- #define MPOL_MF_MOVE_CONCUR  (1<<7)	/* Move pages in a batch */
- #define MPOL_MF_EXCHANGE	(1<<8)	/* Exchange pages */
-+#define MPOL_MF_SHRINK_LISTS	(1<<9)	/* Exchange pages */
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 1c70803..7e87f5e 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -531,6 +531,7 @@ struct cftype {
+ 	struct cgroup_subsys *ss;	/* NULL for cgroup core files */
+ 	struct list_head node;		/* anchored at ss->cfts */
+ 	struct kernfs_ops *kf_ops;
++	int numa_node_id;
  
- #define MPOL_MF_VALID	(MPOL_MF_STRICT   | 	\
- 			 MPOL_MF_MOVE     | 	\
-diff --git a/mm/internal.h b/mm/internal.h
-index 94feb14..eec88de 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -564,7 +564,7 @@ extern int copy_page_lists_mt(struct page **to,
- extern int exchange_page_mthread(struct page *to, struct page *from,
- 			int nr_pages);
- extern int exchange_page_lists_mthread(struct page **to,
--						  struct page **from, 
-+						  struct page **from,
- 						  int nr_pages);
+ 	int (*open)(struct kernfs_open_file *of);
+ 	void (*release)(struct kernfs_open_file *of);
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 1f3d880..3e40321 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -130,6 +130,7 @@ struct mem_cgroup_per_node {
+ 	atomic_long_t		lruvec_stat[NR_VM_NODE_STAT_ITEMS];
  
- extern int exchange_two_pages(struct page *page1, struct page *page2);
-@@ -577,4 +577,95 @@ int expected_page_refs(struct address_space *mapping, struct page *page);
- int get_nodes(nodemask_t *nodes, const unsigned long __user *nmask,
- 		     unsigned long maxnode);
+ 	unsigned long		lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS];
++	unsigned long		max_nr_base_pages;
  
-+unsigned move_active_pages_to_lru(struct lruvec *lruvec,
-+				     struct list_head *list,
-+				     struct list_head *pages_to_free,
-+				     enum lru_list lru);
-+void putback_inactive_pages(struct lruvec *lruvec, struct list_head *page_list);
-+
-+struct scan_control {
-+	/* How many pages shrink_list() should reclaim */
-+	unsigned long nr_to_reclaim;
-+
-+	/*
-+	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
-+	 * are scanned.
-+	 */
-+	nodemask_t	*nodemask;
-+
-+	/*
-+	 * The memory cgroup that hit its limit and as a result is the
-+	 * primary target of this reclaim invocation.
-+	 */
-+	struct mem_cgroup *target_mem_cgroup;
-+
-+	/* Writepage batching in laptop mode; RECLAIM_WRITE */
-+	unsigned int may_writepage:1;
-+
-+	/* Can mapped pages be reclaimed? */
-+	unsigned int may_unmap:1;
-+
-+	/* Can pages be swapped as part of reclaim? */
-+	unsigned int may_swap:1;
-+
-+	/* e.g. boosted watermark reclaim leaves slabs alone */
-+	unsigned int may_shrinkslab:1;
-+
-+	/*
-+	 * Cgroups are not reclaimed below their configured memory.low,
-+	 * unless we threaten to OOM. If any cgroups are skipped due to
-+	 * memory.low and nothing was reclaimed, go back for memory.low.
-+	 */
-+	unsigned int memcg_low_reclaim:1;
-+	unsigned int memcg_low_skipped:1;
-+
-+	unsigned int hibernation_mode:1;
-+
-+	/* One of the zones is ready for compaction */
-+	unsigned int compaction_ready:1;
-+
-+	unsigned int isolate_only_huge_page:1;
-+	unsigned int isolate_only_base_page:1;
-+	unsigned int no_reclaim:1;
-+
-+	/* Allocation order */
-+	s8 order;
-+
-+	/* Scan (total_size >> priority) pages at once */
-+	s8 priority;
-+
-+	/* The highest zone to isolate pages for reclaim from */
-+	s8 reclaim_idx;
-+
-+	/* This context's GFP mask */
-+	gfp_t gfp_mask;
-+
-+	/* Incremented by the number of inactive pages that were scanned */
-+	unsigned long nr_scanned;
-+
-+	/* Number of pages freed so far during a call to shrink_zones() */
-+	unsigned long nr_reclaimed;
-+
-+	struct {
-+		unsigned int dirty;
-+		unsigned int unqueued_dirty;
-+		unsigned int congested;
-+		unsigned int writeback;
-+		unsigned int immediate;
-+		unsigned int file_taken;
-+		unsigned int taken;
-+	} nr;
-+};
-+
-+unsigned long isolate_lru_pages(unsigned long nr_to_scan,
-+		struct lruvec *lruvec, struct list_head *dst,
-+		unsigned long *nr_scanned, struct scan_control *sc,
-+		enum lru_list lru);
-+void shrink_active_list(unsigned long nr_to_scan,
-+			       struct lruvec *lruvec,
-+			       struct scan_control *sc,
-+			       enum lru_list lru);
-+unsigned long shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
-+		     struct scan_control *sc, enum lru_list lru);
-+
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/memory_manage.c b/mm/memory_manage.c
-index b8f3654..e8dddbf 100644
---- a/mm/memory_manage.c
-+++ b/mm/memory_manage.c
-@@ -5,13 +5,79 @@
- #include <linux/sched/mm.h>
- #include <linux/cpuset.h>
- #include <linux/mempolicy.h>
-+#include <linux/memcontrol.h>
-+#include <linux/mm_inline.h>
- #include <linux/nodemask.h>
-+#include <linux/rmap.h>
- #include <linux/security.h>
-+#include <linux/swap.h>
- #include <linux/syscalls.h>
+ 	struct mem_cgroup_reclaim_iter	iter[DEF_PRIORITY + 1];
  
- #include "internal.h"
+@@ -797,6 +798,51 @@ static inline void memcg_memory_event_mm(struct mm_struct *mm,
+ void mem_cgroup_split_huge_fixup(struct page *head);
+ #endif
  
- 
-+static unsigned long shrink_lists_node_memcg(pg_data_t *pgdat,
-+	struct mem_cgroup *memcg, unsigned long nr_to_scan)
++static inline unsigned long lruvec_size_memcg_node(enum lru_list lru,
++	struct mem_cgroup *memcg, int nid)
 +{
-+	struct lruvec *lruvec = mem_cgroup_lruvec(pgdat, memcg);
++	if (nid == MAX_NUMNODES)
++		return 0;
++
++	VM_BUG_ON(lru < 0 || lru >= NR_LRU_LISTS);
++	return mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(lru));
++}
++
++static inline unsigned long active_inactive_size_memcg_node(struct mem_cgroup *memcg, int nid, bool active)
++{
++	unsigned long val = 0;
 +	enum lru_list lru;
 +
 +	for_each_evictable_lru(lru) {
-+		unsigned long nr_to_scan_local = lruvec_size_memcg_node(lru, memcg,
-+				pgdat->node_id) / 2;
-+		struct scan_control sc = {.may_unmap = 1, .no_reclaim = 1};
-+		/*nr_reclaimed += shrink_list(lru, nr_to_scan, lruvec, memcg, sc);*/
-+		/*
-+		 * for slow node, we want active list, we start from the top of
-+		 * the active list. For pages in the bottom of
-+		 * the inactive list, we can place it to the top of inactive list
-+		 */
-+		/*
-+		 * for fast node, we want inactive list, we start from the bottom of
-+		 * the inactive list. For pages in the active list, we just keep them.
-+		 */
-+		/*
-+		 * A key question is how many pages to scan each time, and what criteria
-+		 * to use to move pages between active/inactive page lists.
-+		 *  */
-+		if (is_active_lru(lru))
-+			shrink_active_list(nr_to_scan_local, lruvec, &sc, lru);
-+		else
-+			shrink_inactive_list(nr_to_scan_local, lruvec, &sc, lru);
++		if ((active  && is_active_lru(lru)) ||
++			(!active && !is_active_lru(lru)))
++			val += mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(lru));
 +	}
-+	cond_resched();
++
++	return val;
++}
++
++static inline unsigned long memcg_size_node(struct mem_cgroup *memcg, int nid)
++{
++	unsigned long val = 0;
++	int i;
++
++	if (nid == MAX_NUMNODES)
++		return val;
++
++	for (i = 0; i < NR_LRU_LISTS; i++)
++		val += mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(i));
++
++	return val;
++}
++
++static inline unsigned long memcg_max_size_node(struct mem_cgroup *memcg, int nid)
++{
++	if (nid == MAX_NUMNODES)
++		return 0;
++	return memcg->nodeinfo[nid]->max_nr_base_pages;
++}
++
+ #else /* CONFIG_MEMCG */
+ 
+ #define MEM_CGROUP_ID_SHIFT	0
+@@ -1123,6 +1169,27 @@ static inline
+ void count_memcg_event_mm(struct mm_struct *mm, enum vm_event_item idx)
+ {
+ }
++
++static inline unsigned long lruvec_size_memcg_node(enum lru_list lru,
++	struct mem_cgroup *memcg, int nid)
++{
++	return 0;
++}
++
++static inline unsigned long active_inactive_size_memcg_node(struct mem_cgroup *memcg, int nid, bool active)
++{
++	return 0;
++}
++
++static inline unsigned long memcg_size_node(struct mem_cgroup *memcg, int nid)
++{
++	return 0;
++}
++static inline unsigned long memcg_max_size_node(struct mem_cgroup *memcg, int nid)
++{
++	return 0;
++}
++
+ #endif /* CONFIG_MEMCG */
+ 
+ /* idx can be of type enum memcg_stat_item or node_stat_item */
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 532e0e2..478d216 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4394,6 +4394,7 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+ 	pn->usage_in_excess = 0;
+ 	pn->on_tree = false;
+ 	pn->memcg = memcg;
++	pn->max_nr_base_pages = PAGE_COUNTER_MAX;
+ 
+ 	memcg->nodeinfo[node] = pn;
+ 	return 0;
+@@ -6700,4 +6701,83 @@ static int __init mem_cgroup_swap_init(void)
+ }
+ subsys_initcall(mem_cgroup_swap_init);
+ 
++static int memory_per_node_stat_show(struct seq_file *m, void *v)
++{
++	struct mem_cgroup *memcg = mem_cgroup_from_css(seq_css(m));
++	struct cftype *cur_file = seq_cft(m);
++	int nid = cur_file->numa_node_id;
++	unsigned long val = 0;
++	int i;
++
++	for (i = 0; i < NR_LRU_LISTS; i++)
++		val += mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(i));
++
++	seq_printf(m, "%llu\n", (u64)val * PAGE_SIZE);
 +
 +	return 0;
 +}
 +
-+static int shrink_lists(struct task_struct *p, struct mm_struct *mm,
-+		const nodemask_t *slow, const nodemask_t *fast, unsigned long nr_to_scan)
++static int memory_per_node_max_show(struct seq_file *m, void *v)
 +{
-+	struct mem_cgroup *memcg = mem_cgroup_from_task(p);
-+	int slow_nid, fast_nid;
-+	int err = 0;
++	struct mem_cgroup *memcg = mem_cgroup_from_css(seq_css(m));
++	struct cftype *cur_file = seq_cft(m);
++	int nid = cur_file->numa_node_id;
++	unsigned long max = READ_ONCE(memcg->nodeinfo[nid]->max_nr_base_pages);
 +
-+	if (!memcg)
-+		return 0;
-+	/* Let's handle simplest situation first */
-+	if (!(nodes_weight(*slow) == 1 && nodes_weight(*fast) == 1))
-+		return 0;
++	if (max == PAGE_COUNTER_MAX)
++		seq_puts(m, "max\n");
++	else
++		seq_printf(m, "%llu\n", (u64)max * PAGE_SIZE);
 +
-+	if (memcg == root_mem_cgroup)
-+		return 0;
-+
-+	slow_nid = first_node(*slow);
-+	fast_nid = first_node(*fast);
-+
-+	/* move pages between page lists in slow node */
-+	shrink_lists_node_memcg(NODE_DATA(slow_nid), memcg, nr_to_scan);
-+
-+	/* move pages between page lists in fast node */
-+	shrink_lists_node_memcg(NODE_DATA(fast_nid), memcg, nr_to_scan);
-+
-+	return err;
++	return 0;
 +}
 +
- SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
- 		unsigned long, maxnode,
- 		const unsigned long __user *, slow_nodes,
-@@ -42,10 +108,14 @@ SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
- 		goto out;
- 
- 	/* Check flags */
--	if (flags & ~(MPOL_MF_MOVE_MT|
-+	if (flags & ~(
-+				  MPOL_MF_MOVE|
-+				  MPOL_MF_MOVE_MT|
- 				  MPOL_MF_MOVE_DMA|
- 				  MPOL_MF_MOVE_CONCUR|
--				  MPOL_MF_EXCHANGE))
-+				  MPOL_MF_EXCHANGE|
-+				  MPOL_MF_SHRINK_LISTS|
-+				  MPOL_MF_MOVE_ALL))
- 		return -EINVAL;
- 
- 	/* Find the mm_struct */
-@@ -94,6 +164,8 @@ SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
- 		set_bit(MMF_MM_MANAGE, &mm->flags);
- 	}
- 
-+	if (flags & MPOL_MF_SHRINK_LISTS)
-+		shrink_lists(task, mm, slow, fast, nr_pages);
- 
- 	clear_bit(MMF_MM_MANAGE, &mm->flags);
- 	mmput(mm);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 1d539d6..3693550 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -63,75 +63,6 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/vmscan.h>
- 
--struct scan_control {
--	/* How many pages shrink_list() should reclaim */
--	unsigned long nr_to_reclaim;
--
--	/*
--	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
--	 * are scanned.
--	 */
--	nodemask_t	*nodemask;
--
--	/*
--	 * The memory cgroup that hit its limit and as a result is the
--	 * primary target of this reclaim invocation.
--	 */
--	struct mem_cgroup *target_mem_cgroup;
--
--	/* Writepage batching in laptop mode; RECLAIM_WRITE */
--	unsigned int may_writepage:1;
--
--	/* Can mapped pages be reclaimed? */
--	unsigned int may_unmap:1;
--
--	/* Can pages be swapped as part of reclaim? */
--	unsigned int may_swap:1;
--
--	/* e.g. boosted watermark reclaim leaves slabs alone */
--	unsigned int may_shrinkslab:1;
--
--	/*
--	 * Cgroups are not reclaimed below their configured memory.low,
--	 * unless we threaten to OOM. If any cgroups are skipped due to
--	 * memory.low and nothing was reclaimed, go back for memory.low.
--	 */
--	unsigned int memcg_low_reclaim:1;
--	unsigned int memcg_low_skipped:1;
--
--	unsigned int hibernation_mode:1;
--
--	/* One of the zones is ready for compaction */
--	unsigned int compaction_ready:1;
--
--	/* Allocation order */
--	s8 order;
--
--	/* Scan (total_size >> priority) pages at once */
--	s8 priority;
--
--	/* The highest zone to isolate pages for reclaim from */
--	s8 reclaim_idx;
--
--	/* This context's GFP mask */
--	gfp_t gfp_mask;
--
--	/* Incremented by the number of inactive pages that were scanned */
--	unsigned long nr_scanned;
--
--	/* Number of pages freed so far during a call to shrink_zones() */
--	unsigned long nr_reclaimed;
--
--	struct {
--		unsigned int dirty;
--		unsigned int unqueued_dirty;
--		unsigned int congested;
--		unsigned int writeback;
--		unsigned int immediate;
--		unsigned int file_taken;
--		unsigned int taken;
--	} nr;
--};
- 
- #ifdef ARCH_HAS_PREFETCH
- #define prefetch_prev_lru_page(_page, _base, _field)			\
-@@ -1261,6 +1192,13 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			; /* try to reclaim the page below */
- 		}
- 
-+		/* We keep the page in inactive list for migration in the next
-+		 * step */
-+		if (sc->no_reclaim) {
-+			stat->nr_ref_keep++;
-+			goto keep_locked;
-+		}
++static ssize_t memory_per_node_max_write(struct kernfs_open_file *of,
++				char *buf, size_t nbytes, loff_t off)
++{
++	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
++	struct cftype *cur_file = of_cft(of);
++	int nid = cur_file->numa_node_id;
++	unsigned long max;
++	int err;
 +
- 		/*
- 		 * Anonymous process memory has backing store?
- 		 * Try to allocate it some swap space here.
-@@ -1613,7 +1551,7 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
-  *
-  * returns how many pages were moved onto *@dst.
-  */
--static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
-+unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 		struct lruvec *lruvec, struct list_head *dst,
- 		unsigned long *nr_scanned, struct scan_control *sc,
- 		enum lru_list lru)
-@@ -1634,6 +1572,13 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 		struct page *page;
- 
- 		page = lru_to_page(src);
-+		nr_pages = hpage_nr_pages(page);
++	buf = strstrip(buf);
++	err = page_counter_memparse(buf, "max", &max);
++	if (err)
++		return err;
 +
-+		if (sc->isolate_only_base_page && nr_pages != 1)
-+			continue;
-+		if (sc->isolate_only_huge_page && nr_pages == 1)
-+			continue;
++	xchg(&memcg->nodeinfo[nid]->max_nr_base_pages, max);
 +
- 		prefetchw_prev_lru_page(page, src, flags);
- 
- 		VM_BUG_ON_PAGE(!PageLRU(page), page);
-@@ -1653,7 +1598,6 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 		scan++;
- 		switch (__isolate_lru_page(page, mode)) {
- 		case 0:
--			nr_pages = hpage_nr_pages(page);
- 			nr_taken += nr_pages;
- 			nr_zone_taken[page_zonenum(page)] += nr_pages;
- 			list_move(&page->lru, dst);
-@@ -1855,7 +1799,7 @@ static int current_may_throttle(void)
-  * shrink_inactive_list() is a helper for shrink_node().  It returns the number
-  * of reclaimed pages
-  */
--static noinline_for_stack unsigned long
-+noinline_for_stack unsigned long
- shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
- 		     struct scan_control *sc, enum lru_list lru)
- {
-@@ -2029,7 +1973,7 @@ unsigned move_active_pages_to_lru(struct lruvec *lruvec,
- 	return nr_moved;
- }
- 
--static void shrink_active_list(unsigned long nr_to_scan,
-+void shrink_active_list(unsigned long nr_to_scan,
- 			       struct lruvec *lruvec,
- 			       struct scan_control *sc,
- 			       enum lru_list lru)
++	return nbytes;
++}
++
++static struct cftype memcg_per_node_stats_files[N_MEMORY];
++static struct cftype memcg_per_node_max_files[N_MEMORY];
++
++static int __init mem_cgroup_per_node_init(void)
++{
++	int nid;
++
++	for_each_node_state(nid, N_MEMORY) {
++		snprintf(memcg_per_node_stats_files[nid].name, MAX_CFTYPE_NAME,
++				"size_at_node:%d", nid);
++		memcg_per_node_stats_files[nid].flags = CFTYPE_NOT_ON_ROOT;
++		memcg_per_node_stats_files[nid].seq_show = memory_per_node_stat_show;
++		memcg_per_node_stats_files[nid].numa_node_id = nid;
++
++		snprintf(memcg_per_node_max_files[nid].name, MAX_CFTYPE_NAME,
++				"max_at_node:%d", nid);
++		memcg_per_node_max_files[nid].flags = CFTYPE_NOT_ON_ROOT;
++		memcg_per_node_max_files[nid].seq_show = memory_per_node_max_show;
++		memcg_per_node_max_files[nid].write = memory_per_node_max_write;
++		memcg_per_node_max_files[nid].numa_node_id = nid;
++	}
++	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys,
++				memcg_per_node_stats_files));
++	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys,
++				memcg_per_node_max_files));
++	return 0;
++}
++subsys_initcall(mem_cgroup_per_node_init);
++
+ #endif /* CONFIG_MEMCG_SWAP */
 -- 
 2.7.4
 
