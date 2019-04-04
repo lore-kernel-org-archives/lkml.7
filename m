@@ -2,147 +2,138 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CEFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3221C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B92206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43F320882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asVSXgG8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJ9aqoeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbfDDUWq (ORCPT
+        id S1730825AbfDDUYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:22:46 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46949 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729547AbfDDUWq (ORCPT
+        Thu, 4 Apr 2019 16:24:04 -0400
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:33105 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729433AbfDDUYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:22:46 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r25so2712969lfn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:22:44 -0700 (PDT)
+        Thu, 4 Apr 2019 16:24:04 -0400
+Received: by mail-yb1-f201.google.com with SMTP id j8so2749972ybh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LDB19/flcBLRE+mVvIbsKM280+QDIORWb0KeJBezj7Q=;
-        b=asVSXgG866QtHlkNamrkOa2pfr45oWcj+XTF/VoBa7SIwhNRakmemU0v1n+WaXt3j5
-         ttnoT/sbzwWyiWkes7F5O1RuMTWXzM97mXPwhUGDKu3ytX0+r1Ak2FkK2zbntH7QWaXi
-         /QEx1czjHpNp5HcI7ZjR7z5/hX8e4Dz0T1TGQFzxAkibO1Xnf6Jq93+x3QfJ7vqCfJev
-         JsFybOQ4A19qG4KGDR0G3djHEtOeHwiw4RI3DpApJYJ0ItokqJdS0OHwEBoGLMUn/17v
-         T42NbzcZC0nJWtfMn7du7ZM432qgUjfqh+t1yKsa0HzM5/b+LmFt42bHdz2Fx75rjs7V
-         K7Ow==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=6sOLFOHDFXTunsmV2eys8G03orm7eMnBLakMzQ3gFIk=;
+        b=YJ9aqoeoFLzb44VJhlBW4d+pUzTWv8Y4dv+lDJDet7pRuQLNX3Avj7jZotZIP4X48Y
+         3quXy49xmIk4MwD3zbWNJ3S729pU9QktfmM0XvucPbp09R/+jj1agexdoAYnnxb9LR+d
+         n86JIj2W9+YIF4xDrx9pPJoiR6cdWqScopMOq7q7GMysWESNhSg31u5qRi4PMx0Knv0n
+         bZ7w+ra/oe33/NE/uNFwGzzL8Ubhmq2Fskv5mihTWLTn4QIFHxSj4uGqadwe4ZvihwRZ
+         D8OvJHFOOEO02tc3+KB145tpjldMMhqpFj0n6OQFiC2kxuhwq/5Y6nph19kfuX4SNagw
+         vHqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LDB19/flcBLRE+mVvIbsKM280+QDIORWb0KeJBezj7Q=;
-        b=LduABVyC4ddHdDP4PQI0Nn1GKCOkasYI/SJRo9RD8fOjwVXwg8Gat4xaKuJClJyhL2
-         HZhvUTPEileD54wN/iaALnr4TI7QTBXJgL2Ij8DkzzO4AAR2O8Iy1Y0W5J+9swUYcdCs
-         GJ1YIXa2CWoHix3L/LFQ8dRQfYUYgEnKw24Oc5qTNAPn2VL6zXAS3nC5CBbd8t4al3Qr
-         +8FDi6X4ZtpFoNt0H/JS7eZt68WujhYc9yHClZj0qRi7T/Xmroky/OjmSv0hBEiRc/uW
-         UOeSXi5CntE7/lphlUtG9JqhYdkeI2wgBqWpodjBE1q3wUQheqhCSeP389trwOBtdEMY
-         pEpw==
-X-Gm-Message-State: APjAAAVuFrSAjzuJGyP50bR3NijhQgCZR86B/xlXaFkK9mUzqZAoI9HL
-        dp1fwej7iEaDuRK/0+B3+cxLvzzX+NAtvc0xDrGtAA==
-X-Google-Smtp-Source: APXvYqyn65zSY0THd0T3RfPyxGJP4qblSfeolDzI64ikDMJUnkMSuZ0fWf3OGLlZdIh1s8I/SafkqIobHXORpv1Pk6A=
-X-Received: by 2002:a19:ae0a:: with SMTP id f10mr4073594lfc.118.1554409363509;
- Thu, 04 Apr 2019 13:22:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190308203801.57920-1-ncrews@chromium.org> <20190308210843.GA16125@amd>
- <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com>
- <20190404112415.GB18653@amd> <CAE_wzQ96MkKb7uSoVBNkOZexevUKPf4jHyQZneg7YNCEs7SHfQ@mail.gmail.com>
- <20190404190326.GC27340@amd> <CAE_wzQ8mr1OMKB+ASfsCdGcs70YrzEMN4Htfg1+O51=ByhXchw@mail.gmail.com>
- <20190404192331.GB29984@amd> <CAE_wzQ_4Jb+4dDTFGQ7+sbQ-M8Qm8U_k7ug2DoZKKjTbf6pPTQ@mail.gmail.com>
- <20190404201103.GE29984@amd>
-In-Reply-To: <20190404201103.GE29984@amd>
-From:   Dmitry Torokhov <dtor@google.com>
-Date:   Thu, 4 Apr 2019 13:22:32 -0700
-Message-ID: <CAE_wzQ-iOkM08u42Q3v0wcJhS_bo1UY-vt1qMwyvm4W7kSXQ9A@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs support
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=6sOLFOHDFXTunsmV2eys8G03orm7eMnBLakMzQ3gFIk=;
+        b=JhUGUvEr0oWc5bI61OlPKk5G+Bno3xsdo4sQAcVSakjUORzxb9mKvpztA2zqW3yhKF
+         7qTKmyS2F6OfsbdXSVpqd4E7w3E0QGMHOx2FMCEflJoJM8u9d441mruUsX2OwnMKMLwN
+         tQUCVaotb+PvVdpULMOoTt0l72xyVt1iY6OAIL2XleBJqO6os/aavE127merGNuxbAO3
+         a+u3un7dC5hEhsr7o7+GN7vu4X1mA4MscGCkBuMxC5SDFw+bAb1fHombvDwnznKPpl+P
+         /B29FfdygTKH21ibBh7fo2BNZC5RmHASsI1wZT0jDuUSYys1GnSSTmQnL/mHyPVI4bQN
+         EOjQ==
+X-Gm-Message-State: APjAAAXcYQYOLIegpSQhT4xj+0feNHs9vHBl42ljFAk+VkBl4+gJ7P2H
+        CA7lR8Fw6y7s76QqAaw/XVs6scV0
+X-Google-Smtp-Source: APXvYqyFaoHGS3HNPj5EWd2K/BhPSlUcoTmVHBLr0Z5zTPlAZeE70MMV7qFTBOEVT7TpcMEfZut11KZU
+X-Received: by 2002:a81:6184:: with SMTP id v126mr1721915ywb.17.1554409443175;
+ Thu, 04 Apr 2019 13:24:03 -0700 (PDT)
+Date:   Thu,  4 Apr 2019 16:23:42 -0400
+Message-Id: <20190404202345.133553-1-brho@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+Subject: [PATCH v3 0/3] kvm: Use huge pages for DAX-backed files
+From:   Barret Rhoden <brho@google.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yu.c.zhang@intel.com,
+        yi.z.zhang@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 1:11 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> On Thu 2019-04-04 13:07:39, Dmitry Torokhov wrote:
-> > On Thu, Apr 4, 2019 at 12:23 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > >
-> > > Hi!
-> > >
-> > > > > > > Yeah, well, we not let the cros_kbd_led_backlight.c use chromeos:: in
-> > > > > > > the first place. But it happened. We want all backlights for the
-> > > > > > > system keyboard to use common name, and "chromeos" is not really
-> > > > > > > suitable for that. "platform" is.
-> > > > > >
-> > > > > > Pavel, who exactly wants this and why? Looking at today's -next I see:
-> > > > > >
-> > > > > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-> > > > > > "::kbd_backlight" | wc -l
-> > > > > > 18
-> > > > > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-> > > > > > "platform::kbd_backlight" | wc -l
-> > > > > > 0
-> > > > > >
-> > > > > > so there isn't a single instance of "platform::kbd_backlight" and we
-> > > > > > definitely not changing existing names.
-> > > > >
-> > > > > Yeah, we made mistakes in the past. We _don't_ want userspace to have
-> > > > > ever growing list of names for userspace to follow.
-> > > > >
-> > > > > Backlight of internal keyboard is pretty common concept and there
-> > > > > should be one name for it.
-> > > >
-> > > > It is the *function* that is interesting to userspace, not full name,
-> > > > and we have proper standardization there.
-> > >
-> > > Well, if full name is not interesting, as you argue, why do we have
-> > > this discussion?
-> >
-> > Because I need to understand why you believe that device name for
-> > kbd_backlight matters, and having wilco::kbd_backlight is a bad idea,
-> > but, for example, having max77650::kbd_backlight is perfectly fine if
-> > somebody decided to wire it in this way.
->
-> max77650::kbd_backlight is not fine and we'll try to prevent that in
-> future.
+This patch series depends on DAX pages not being PageReserved.  Once
+that is in place, these changes will let KVM use huge pages with
+DAX-backed files.
 
-You do not control DTS for systems though.
+From previous discussions[1], it sounds like DAX might not need to keep
+the PageReserved bit, but that it hadn't been sorted out yet.
 
->
-> We want one name for internal keyboard backlight. What exactly that
-> name is is not _that_ important, but platform::kbd_backlight seems
-> like reasonable choice.
+Without the PageReserved change, KVM and DAX still work with these
+patches, simply without huge pages - which is the current situation.
 
-And I am trying to show that depending on device and product (as in
-entire computing device) the same driver could be used in multitude of
-ways and expecting that all devices that can be internal will always
-have "platform::" prefix is not realistic. It will also fail if you
-have multiples of devices, as you need unique names, and that is what
-<device> component in name provides you with.
+If you want to test the huge-page functionality as if DAX pages weren't
+PageReserved for KVM, this hack does the trick:
 
-You need smarter userspace to implement policy that is best suited for
-your product. Maybe you can help it by adding additional properties to
-LED devices, like we have connection_type in USB ports, to tell
-whether device is internal or not, but I'd leave the naming alone.
+------------------
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index c44985375e7f..ee539eec1fb8 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -153,6 +153,10 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+ 
+ bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+ {
++       // XXX hack
++       if (is_zone_device_page(pfn_to_page(pfn)))
++               return false;
++
+        if (pfn_valid(pfn))
+                return PageReserved(pfn_to_page(pfn));
+ 
+------------------
 
+Perhaps if we are going to leave DAX pages marked PageReserved, then I
+can make that hack into a proper commit and have KVM alone treat DAX
+pages as if they are not reserved.
 
-Thanks.
+v2 -> v3:
+v2: https://lore.kernel.org/lkml/20181114215155.259978-1-brho@google.com/
+- Updated Acks/Reviewed-by
+- Rebased onto linux-next
+
+v1 -> v2:
+https://lore.kernel.org/lkml/20181109203921.178363-1-brho@google.com/
+- Updated Acks/Reviewed-by
+- Minor touchups
+- Added patch to remove redundant PageReserved() check
+- Rebased onto linux-next
+
+RFC/discussion thread:
+https://lore.kernel.org/lkml/20181029210716.212159-1-brho@google.com/
+
+[1] https://lore.kernel.org/lkml/ee8cc068-903c-d87e-f418-ade46786249e@redhat.com/
+
+Barret Rhoden (3):
+  mm: make dev_pagemap_mapping_shift() externally visible
+  kvm: Use huge pages for DAX-backed files
+  kvm: remove redundant PageReserved() check
+
+ arch/x86/kvm/mmu.c  | 33 +++++++++++++++++++++++++++++++--
+ include/linux/mm.h  |  3 +++
+ mm/memory-failure.c | 38 +++-----------------------------------
+ mm/util.c           | 34 ++++++++++++++++++++++++++++++++++
+ virt/kvm/kvm_main.c |  8 ++------
+ 5 files changed, 73 insertions(+), 43 deletions(-)
 
 -- 
-Dmitry
+2.21.0.392.gf8f6787159e-goog
+
