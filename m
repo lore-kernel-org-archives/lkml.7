@@ -2,123 +2,126 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B24C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698DAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA472075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1E920820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oShr81BX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qNSUVG/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfDDSzl (ORCPT
+        id S1730041AbfDDSzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:55:41 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:39270 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfDDSzk (ORCPT
+        Thu, 4 Apr 2019 14:55:44 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40030 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729925AbfDDSzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:55:40 -0400
-Received: by mail-yb1-f196.google.com with SMTP id b88so1436698ybi.6;
-        Thu, 04 Apr 2019 11:55:39 -0700 (PDT)
+        Thu, 4 Apr 2019 14:55:41 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q66so3036791ljq.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 11:55:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=25sghkzH7+QQTBx8fQe0oQc1kNQMTCVYK21rCY5qth4=;
-        b=oShr81BXfJmMNACrlPJNe3qZjMk8TVDODP/4DOZSEiguPFnp1XoQQSzj2L+/S7OgcZ
-         xlRxsRSl3LKCT8cceZDc18vbr0akZuu8eHO9YvBuQC+ZF/Bg8Nd03nDvnFvPx3DTgSB8
-         stQjWpAL9qfP/+KDg6paUcBuFqxkPiT8XzUlvjf8FjjvD7SiRbtUnQVK6FFEUypEDtYr
-         qEOfIrGQMIzPvqW5P7S02ntouLCBWfQfbcVkwPGrsbjjwDMVuxZQUHNol5XmKFpEaG1w
-         tH/XQqKdk0d4pVTwSgCh0Dh/8KyNP9gBybXk1tsa55B2gmsPvleeNJBUVZHmlKELfyUB
-         hvLA==
+        bh=IABmWUk7Ma/eFMtoGIGHc3YEKnB3XWGMSYVSlgvw1zo=;
+        b=qNSUVG/h25dEIaiFNlw22kwfRQCXlh+gsiELe8gpJB7CSlWyLh3rnQtot2DMZLk2gg
+         7lDFGlJG1PgEBY8+gmZOuGyJyiPsgebpbmweknL6SppKNwVoRsQFpZlhLCUqptHbhyKI
+         C52eoDuzeuGoODW0JFleKhAj1/ogtQMb7EQj6VdXjhlGXKb3sqRlEIIIoE3uRKB6F0IB
+         HPkhc3oSGuuHlCf53CxMg3ht5EIOBRYhpm/OVRvlU98SzT1aXqNJIDCKCfxWr4Lpayem
+         l7c0qoYsdBF1yrcB3TTLc2b8zMjN4YeKOFLac8g6Nee2nd5wBSfhezer6xbJ5RJqPBfB
+         vj1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=25sghkzH7+QQTBx8fQe0oQc1kNQMTCVYK21rCY5qth4=;
-        b=QH/Zp5hjqFssyt5jMr0iNkwZlmUInoU2/O0B1WBiRHxfP+FQqRfNGWcNttquLQTid9
-         Wg4HAxlyzoCZZDlBkmHZX4rJlJgwJOW9DFo26ZY4H0Ck9SvSbbbCJwgM4C9BjVaKHheu
-         6dZoHIwDEYB0VmBsIMzP6Kma12pM9ApYoW7MPyq+H3CgOp1d/C5DE4VNMRYg2h65T4tP
-         zBE0OPyyt9qrCd15he5zCpfUYnemlb+4AgSttv8gleFBKp53Ybqg9V9WNGU3CjAz8aGY
-         1Y1ru8jQIvC6tq8aOoVnZ/762eSosAJgJgM2YNiZWtoRQR2Iol/vNo6/LQkDIXPpU95+
-         Gn4A==
-X-Gm-Message-State: APjAAAV5Rm+tfuTs5ab+BLeroFuO9xHAzKBwSdhTytxIVx/YEL+Vw6HI
-        spQp7cgDFwKa6elEigtlITHPzmuYPPJaENJaIvFcFf83pnU=
-X-Google-Smtp-Source: APXvYqzh21O0ITqX+GxLGlXQTKYy8XTPMJsQuockVZOBkdbHKpkJnf7AUuLxdh0xNW+jLZEdFbPk0yqWF+qcuNBCN9g=
-X-Received: by 2002:a25:6e56:: with SMTP id j83mr7056113ybc.16.1554404139647;
- Thu, 04 Apr 2019 11:55:39 -0700 (PDT)
+        bh=IABmWUk7Ma/eFMtoGIGHc3YEKnB3XWGMSYVSlgvw1zo=;
+        b=Gr2vAFYy6/7ZgWxEHlwRWctdpEs27D83gOvIghvoWtK5YxrLRqRLSp9SKS1JfMroDR
+         GFh0hX7HwAMnC/qykOOmcY714IqNweSEugumgN344RanVU97iK/ANDbRZ1p2oQglIc9d
+         4QUqYKcOV62vH4IjX+SyBT0tIw90dikUbYQDas82dYYR4logsEt1lROkbTwF0G2lIIIf
+         YOBnIfOMMgjs7nO9aWpxaLE3wTjVRVHb1sCm3tLKp7S9/zM/qtUgeg7VebsILNuzLyQw
+         vX3wILNIGtLQiDt20MA1+cegWThsA2nMquzg3LOAr8PB/QAab1O3YcQ7HHjATvhrB8At
+         5fBA==
+X-Gm-Message-State: APjAAAUf4CWJ8fRXXmczKCi+s0yMJzcU9n7J72vFdDyh1qO6/sNv2JSd
+        GvWZ/PXruLdjfB7VuxaSwPyFtxU65kfgMZBAYZsxXg==
+X-Google-Smtp-Source: APXvYqzxnyvc41OL8JmWmu69WHQkqegCcwKGsxhFh7mYcIlPBC6ukR06/KWxknfiMa6ubR3j5e7rlMTUoujSQ55e4mM=
+X-Received: by 2002:a2e:219:: with SMTP id 25mr4358340ljc.34.1554404138712;
+ Thu, 04 Apr 2019 11:55:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190401134104.676620247@goodmis.org> <20190401134421.442323029@goodmis.org>
-In-Reply-To: <20190401134421.442323029@goodmis.org>
-From:   Max Filippov <jcmvbkbc@gmail.com>
-Date:   Thu, 4 Apr 2019 11:55:29 -0700
-Message-ID: <CAMo8BfLooVJgKCPQFDXUAfieH3XAF=Bhz2PmAb+3t7BhVBW5FQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6 v3] syscalls: Remove start and number from
- syscall_set_arguments() args
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Roland McGrath <roland@hack.frob.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Dave Martin <dave.martin@arm.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        "moderated list:H8/300 ARCHITECTURE" 
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        "open list:IA64 (Itanium) PL..." <linux-ia64@vger.kernel.org>,
-        linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org,
-        openrisc@lists.librecores.org,
-        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org
+References: <20190404171007.160878-1-ncrews@chromium.org> <20190404171007.160878-3-ncrews@chromium.org>
+ <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
+ <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com> <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
+In-Reply-To: <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
+From:   Dmitry Torokhov <dtor@google.com>
+Date:   Thu, 4 Apr 2019 11:55:27 -0700
+Message-ID: <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 1, 2019 at 6:45 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, Apr 4, 2019 at 11:41 AM Nick Crews <ncrews@chromium.org> wrote:
 >
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> On Thu, Apr 4, 2019 at 11:43 AM Dmitry Torokhov <dtor@google.com> wrote:
+> >
+> > On Thu, Apr 4, 2019 at 10:36 AM Guenter Roeck <groeck@google.com> wrote:
+> > >
+> > > On Thu, Apr 4, 2019 at 10:11 AM Nick Crews <ncrews@chromium.org> wrote:
+> > > >
+> > > > We want all backlights for the system keyboard to
+> > > > use a common name, so the name "platform::kbd_backlight"
+> > > > would be better than the current "chromeos::kbd_backlight"
+> > > > name. Normally this wouldn't be worth changing, but the new
+> > > > Wilco keyboard backlight driver uses the "platform" name.
+> > > > We want to make it so all Chrome OS devices are consistent,
+> > > > so we'll change the name here too.
+> > > >
+> > >
+> > > Wondering - who is the "we" you are talking about ?
 >
-> After removing the start and count arguments of syscall_get_arguments() it
-> seems reasonable to remove them from syscall_set_arguments(). Note, as of
-> today, there are no users of syscall_set_arguments(). But we are told that
-> there will be soon. But for now, at least make it consistent with
-> syscall_get_arguments().
+> You're right, I should have been more precise.
+> I was referring to Pavel, Enric, and myself. Pavel had this opinion here:
+> https://lkml.org/lkml/2019/4/4/1040. I don't know what Pavel meant by "we"
+> in that comment, but I would guess that could mean the other LED maintainers
+> as well? I talked with Enric 1:1 and he didn't see the problem with changing it,
+> though perhaps he was only considering our use of the LED via powerd,
+> and not users in general. I'm guessing Pavel's and Enric's meanings though,
+> excuse me if I am misinterpreting.
+>
+> >
+> > This also has a potential of breaking existing setups if somebody did
+> > happen to match on entire name instead of suffix. Such changes have to
+> > be considered very carefully; at this point I am against of doing
+> > this.
+>
+> Would it make sense to keep the old name as is, and only make the new
+> Wilco name begin with "platform:"? What would you think is best?
 
-[...]
+Given that we do not have a single instance of platform::kbd_backlight
+in kernel at this time I have no idea why Pavel is trying to push this
+for Wilco driver.
 
->  arch/xtensa/include/asm/syscall.h     | 17 ++-----
-
-For xtensa changes:
-Acked-by: Max Filippov <jcmvbkbc@gmail.com>
+Thanks.
 
 -- 
-Thanks.
--- Max
+Dmitry
