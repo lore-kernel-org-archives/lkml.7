@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFFDC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D56C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1FA2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FCC20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367850;
-	bh=yv1o5/j85EVecMMCkYEcVYOxDHki20SP7NVhKXLCWbI=;
+	s=default; t=1554367853;
+	bh=x8ROTxO6SljMswVLZaroARyaVpTLY+jgQkEGhbLJUN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhoRHvyQvhiN7m4I1dmpTaazCTpyFIqxguAl6KgG9l1hvSvTbxdBe8hEOQ4K7mV6b
-	 6msnVvwVeU0PtR45iHoJUfQA/F18qfNF4hQPWQRj1eEdPAYtf6n0MFy2gPEVg4va3w
-	 ykeXKfiTweJGL2i4yqQ57NcWsaOlJa3ZZwRPNvm4=
+	b=2e+KxSAdLeGG48fpQqCmXXQ96jQlJg1DL8xSPrVauKRwa/nXkt6765xVYCEMTQmCZ
+	 5K1WS/kFgbc6DyqNXOGF09A+MOqlWRumaO7P7WRRCc+k5+D2xZ3+qJchLIIarABl0N
+	 pyessLY12wQwHSdE4dHTJlLx9iKxEtSb73yIi2KE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbfDDIus (ORCPT
+        id S1729204AbfDDIuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:50:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51994 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729173AbfDDIun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:50:43 -0400
+        id S1729189AbfDDIus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:50:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69CEA21734;
-        Thu,  4 Apr 2019 08:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA5162171F;
+        Thu,  4 Apr 2019 08:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367842;
-        bh=yv1o5/j85EVecMMCkYEcVYOxDHki20SP7NVhKXLCWbI=;
+        s=default; t=1554367848;
+        bh=x8ROTxO6SljMswVLZaroARyaVpTLY+jgQkEGhbLJUN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msir5tvWzMaVxEyV95rhSFdOD8pOL4/BK3EA0/qlV1UZTqZK9dR0/+l9KdqKM1SqF
-         55LnZIZmSHtVc4wWgGx7nZY2I5S7HmkLYT+cEZqwry7OoA58SlVKlXn8dq0U1EkhpX
-         u4w88c6boaSA6MmimS1W7/M0NUs04riOo/dpYlzw=
+        b=ldXQbY4K34Sr4Mb47JJ70rjE0W6qE6A8xkHpaqNWQ3MW1UHGKI1fKH/WvRN7vvWrl
+         F1ggBmfdOwI0hkQFuD9pBOBjcQS5drVlYygP7NtyNsi7kP1TOqAqqNeX1UdKyCsZUz
+         myPKm99Gml/+Z63y7NOsD4cte8W4Td/tdUoZiDd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
+        stable@vger.kernel.org,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@elte.hu>,
+        Joel Fernandes <joelaf@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/91] mm/cma.c: cma_declare_contiguous: correct err handling
-Date:   Thu,  4 Apr 2019 10:47:01 +0200
-Message-Id: <20190404084536.419267774@linuxfoundation.org>
+Subject: [PATCH 4.9 19/91] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
+Date:   Thu,  4 Apr 2019 10:47:03 +0200
+Message-Id: <20190404084536.538175301@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -75,57 +77,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
+[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
 
-In case cma_init_reserved_mem failed, need to free the memblock
-allocated by memblock_reserve or memblock_alloc_range.
+One of the vmalloc stress test case triggers the kernel BUG():
 
-Quote Catalin's comments:
-  https://lkml.org/lkml/2019/2/26/482
+  <snip>
+  [60.562151] ------------[ cut here ]------------
+  [60.562154] kernel BUG at mm/vmalloc.c:512!
+  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
+  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
+  <snip>
 
-Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
-ignores the memblock_reserve() as a memblock_alloc() implementation
-detail. It is, however, tolerant to memblock_free() being called on
-a sub-range or just a different range from a previous memblock_alloc().
-So the original patch looks fine to me. FWIW:
+it can happen due to big align request resulting in overflowing of
+calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
 
-Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Fix it by checking if calculated address is within vstart/vend range.
+
+Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Garnier <thgarnie@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/vmalloc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 397687fc51f9..b5d8847497a3 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -339,12 +339,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index e6aa073f01df..73afe460caf0 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -459,7 +459,11 @@ nocache:
+ 	}
  
- 	ret = cma_init_reserved_mem(base, size, order_per_bit, res_cma);
- 	if (ret)
--		goto err;
-+		goto free_mem;
+ found:
+-	if (addr + size > vend)
++	/*
++	 * Check also calculated address against the vstart,
++	 * because it can be 0 because of big align request.
++	 */
++	if (addr + size > vend || addr < vstart)
+ 		goto overflow;
  
- 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
- 		&base);
- 	return 0;
- 
-+free_mem:
-+	memblock_free(base, size);
- err:
- 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
- 	return ret;
+ 	va->va_start = addr;
 -- 
 2.19.1
 
