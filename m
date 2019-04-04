@@ -2,143 +2,118 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FECCC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0CEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C881206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43FA206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+TVd74L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbfDDUUn (ORCPT
+        id S1730792AbfDDUUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 4 Apr 2019 16:20:43 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33886 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729184AbfDDUUm (ORCPT
+Received: from mail-lj1-f171.google.com ([209.85.208.171]:38259 "EHLO
+        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729143AbfDDUUm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 16:20:42 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 39D79802DD; Thu,  4 Apr 2019 22:20:31 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 22:20:42 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dmitry Torokhov <dtor@google.com>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Guenter Roeck <groeck@google.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Simon Glass <sjg@google.com>
-Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
- backlight name
-Message-ID: <20190404202042.GF29984@amd>
-References: <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
- <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
- <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
- <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
- <20190404185919.GB27340@amd>
- <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
- <20190404191931.GA29984@amd>
- <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
- <20190404200658.GD29984@amd>
- <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
+Received: by mail-lj1-f171.google.com with SMTP id p14so3255016ljg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8QJbnXOUvADE0Qah4ZClcKXsmDrF7a+jpH3MNG+arH4=;
+        b=W+TVd74LOWUVETDKZHJj8pCZZyreygeolXGDNFyNsYmn8DHfQcJvEWKeD0/maduOSq
+         2i+6rmq3VEHHcjxuoQoIC/uHTRhgCEjK7LAhvqsdsVqIk+NVXdjxv4MGRTuRol7RynG+
+         h7vB5FyTVxH8+0h7/EBJWj9CFS5Ort1BNY289oT/YKTE4YoMsmCU6e/c3++EB0OijoRj
+         1kNwCnYTf9KhBXS8nad4OUCr02fjtiP82cXThtEADy5Ltg5TnbkWxqSAqeKqIJ74oKdY
+         ftIYrUWS+Q+u36pOKf39+t7YoYgqtyA+nnl0cQ00jNNGPceH9wopyeg9eJMa1kkhNVz0
+         1BAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8QJbnXOUvADE0Qah4ZClcKXsmDrF7a+jpH3MNG+arH4=;
+        b=csUSmoFTRr2efdagVPEyhMZMjaAjlBqW6Xmu+ZSmpOiU0wSCCoCeWpMG3MKjOBiptV
+         Nctms2JhzU2X9sB0BrhRwIZQvBd7IfAWjj26VNz0mmqT6ZOBtvLYoCWQlvpJRtp86tuc
+         jn/vrtpg/I1ZUm9DKf4bTSR2fSt66SQ77MripCXL2x0yQrF9j0eHD1nMuG8Xp/fkCHeJ
+         Tkzo2Er/omw9dbusM3e++6RtWNTLsw4WNyyZ5At/s6Gyy2lYS7tt29tAxuJU7AUrWoc5
+         wiMg9+MOamcsM+0P+CN09/xYtUSqkKdlbG5l5yL2/lxXZSD7RBUen2Vap/O3eD98htkL
+         KkrA==
+X-Gm-Message-State: APjAAAUDNNAao+RG/PHFS0iZt/Kf6oaVmndoTRKectCKSdkU3d+p3lGp
+        ZBUPu2SthG8e0gb2E9F9dWs=
+X-Google-Smtp-Source: APXvYqwZGPZ3dQk8mwC2c3bqWEoqW4yrFzTmhxhN2KWly2e9RVbUYUQOAlttQjvCnmyG/2yUUequpA==
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr4587405ljj.54.1554409240435;
+        Thu, 04 Apr 2019 13:20:40 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id x2sm3835319lfg.59.2019.04.04.13.20.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 13:20:38 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 7BD8B460472; Thu,  4 Apr 2019 23:20:38 +0300 (MSK)
+Date:   Thu, 4 Apr 2019 23:20:38 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: perf: perf_fuzzer crashes on Pentium 4 systems
+Message-ID: <20190404202038.GT1421@uranus.lan>
+References: <alpine.DEB.2.21.1904031043170.29188@macbook-air>
+ <20190403191944.GH1421@uranus.lan>
+ <20190403203144.GI1421@uranus.lan>
+ <alpine.DEB.2.21.1904040922350.3758@macbook-air>
+ <20190404133327.GP1421@uranus.lan>
+ <alpine.DEB.2.21.1904041234340.5098@macbook-air>
+ <20190404164700.GR1421@uranus.lan>
+ <alpine.DEB.2.21.1904041454290.5597@macbook-air>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="R6sEYoIZpp9JErk7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <alpine.DEB.2.21.1904041454290.5597@macbook-air>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 04, 2019 at 03:01:14PM -0400, Vince Weaver wrote:
+> 
+> I do have a lot of this automated already from tracking down past bugs, 
+> but it turns out that most of the fuzzer-found bugs aren't deterministic 
+> so it doesn't always work.
+> 
+> For example this bug, while I can easily repeat it, doesn't happen at 
+> the same time each time.  I suspect something corrupts things, but the
+> crash doesn't trigger until a context switch happens.
 
---R6sEYoIZpp9JErk7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I fear so, I've readin code around to figure out where it might came
+from but without much luck yet.
 
-On Thu 2019-04-04 13:13:34, Dmitry Torokhov wrote:
-> On Thu, Apr 4, 2019 at 1:06 PM Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > Hi!
-> >
-> > > > > It is *function* and maybe color that userspace is interested in,=
- and
-> > > > > here we have proper standardization in form of "kbd_backlight". D=
-evice
-> > > > > name is, well, device name. It should uniquely identify the devic=
-e led
-> > > > > is attached to, but otherwise is rarely interesting. If userspace=
- is
-> > > > > really concerned what kind of keyboard backlight it is it should
-> > > > > investigate parent device(s) and see what they end up with.
-> > > >
-> > > > That does not work. Userspace wants to know if it is internal keybo=
-ard
-> > > > or USB keyboard, not what kind of i2c controller the LED is connect=
-ed
-> > > > to.
-> > >
-> > > Why does userspace want to know it?
-> >
-> > For example to turn off backlight on internal keyboard when the lid is =
-closed.
->=20
-> Would you not want to turn off external as well?
+> For what it's worth I've put code in p4_pmu_enable_all() to see what's 
+> going on when the NULL dereference happens, and sure enough the printk is 
+> triggered where I'd expect.
+> 
+> [  138.132889] VMW: p4_pmu_enable_all: idx 4 is NULL
+...
+> 
+> the machine still crashes after this, but not right away.
 
-Not really. If I'm using machine with lid closed, external monitor and
-USB keyboard attached, I want to control backlight of USB keyboard,
-but backlight of internal keyboard can stay off.
-
-> And what to do if internal keyboard is not platform but USB? Like
-> Google "Whiskers"? (I am not sure why you decided to drop my mention
-> of internal USB keyboards completely off your reply).
-
-I don't have answers for everything. Even if you have USB keyboard, you'll
-likely still have backlight connected to embedded controller. If not,
-then maybe you have exception userland needs to know about.
-
-Still better than making everything an exception.
-
-> > > > grep for platform::mic_mute .
-> > > >
-> > > > (And platform is even pretty good match for how the LED is connected
-> > > > in your case).
-> > >
-> > > Until we get a secondary interface that is also "platform"...
-> >
-> > How would that happen?
->=20
-> It won't happen on Wilco, but you can't imagine that several blocks
-> get reused in the same device and they end up clashing?
-
-In the end, there will be just one internal keyboard backlight, right?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---R6sEYoIZpp9JErk7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlymZxoACgkQMOfwapXb+vLn5QCfSbNvjo91bsUzD0yC/OdKMe60
-gKoAnjqsLnPZ538cfiN5/TCl3hIXhsG7
-=Dr/v
------END PGP SIGNATURE-----
-
---R6sEYoIZpp9JErk7--
+yes, exactly, if look into disasm code we will see that 0x158
+offset points to hwc from event. Vince, gimme some time, probably
+the weekend so I would dive into the perf code more deeply and
+will try to make some debugging patch for more precise tracking
+of events. The kernel you're running is the latest -tip?
