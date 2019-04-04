@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0641C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24064C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94EEF21871
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E858A21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367882;
-	bh=SnPS103roq/68/DTqYaO9bmHjaFCMql4KhK2Sr4ZV4Y=;
+	s=default; t=1554367887;
+	bh=K+1WuSFZxd2JdPw6D1Qf9DkgZj3eSHut412qGPfGUB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hb3latbej2PrDBBXjquNvVeAqOSJCdE/jWRjhSSlFPvfGayT9GZ4ESnIAyW3JKQ+k
-	 YFGfU5K1SzSEQY+giKW9Qah1uu77GvrzpdPN8ngmI+25lv+VAcxAC+hByEbnW8cjRB
-	 hjI9YW8HxIsV7mY38w92/+haBtDlFuj6cbY3PXtA=
+	b=NEYIvBnuLVAxXriQB+aR9xfRgUFQGDBON2yfiackbKp6v3FuMOO8wJRLlXhbDphC9
+	 0/fiQtLqltnD4DAWda1lHWP82lMO/V99HzlM+AlqLfZbWJKDMk7EzToUX1CbhJKjQu
+	 EK0moCPTWQezbbYoL6KGbbdjGkSiLCbx6DBqiA2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbfDDIvV (ORCPT
+        id S1729366AbfDDIvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52986 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:51:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729316AbfDDIvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:51:18 -0400
+        id S1728690AbfDDIvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:51:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63B522171F;
-        Thu,  4 Apr 2019 08:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3FBE2177E;
+        Thu,  4 Apr 2019 08:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367876;
-        bh=SnPS103roq/68/DTqYaO9bmHjaFCMql4KhK2Sr4ZV4Y=;
+        s=default; t=1554367882;
+        bh=K+1WuSFZxd2JdPw6D1Qf9DkgZj3eSHut412qGPfGUB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JlxXe8fvxIEJh3FCNOviTyp8uMV0Xa7MupRVPcbAU31L7KW1bhyXwwEbnOshmx8Sw
-         rHjWC64iR4elahrnr/73FWIxRODgsg331OUDLMd8xDnl4z5InW1e8V3Z4jP8UZ88cS
-         aJBb9SCDjLT9WuLD1lgU75S9dQ6gt7uhB7YZ9Zw4=
+        b=Pkw3xo3BEVa4TMlN5lOWZXgA/dJRktt7FmK0O5vS5ye+FadCF/bDYI8EISkz/347n
+         gAJYB7jQWMOkCOLSlmzF6qMmNZQD5KgF0f4WuljH3PQmLJ1nhM2piONLYjlj8kvssU
+         3TUf8kej/CF3VbdOiy5LHJLcano2M93mHOyfjFzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 46/91] media: s5p-jpeg: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:47:30 +0200
-Message-Id: <20190404084538.139857716@linuxfoundation.org>
+Subject: [PATCH 4.9 48/91] media: mx2_emmaprp: Correct return type for mem2mem buffer helpers
+Date:   Thu,  4 Apr 2019 10:47:32 +0200
+Message-Id: <20190404084538.264027859@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -67,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4a88f89885c7cf65c62793f385261a6e3315178a ]
+[ Upstream commit 8d20dcefe471763f23ad538369ec65b51993ffff ]
 
 Fix the assigned type of mem2mem buffer handling API.
 Namely, these functions:
@@ -93,171 +93,33 @@ Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 38 ++++++++++-----------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ drivers/media/platform/mx2_emmaprp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-index 1da2c94e1dca..06e2b72d07ca 100644
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -789,14 +789,14 @@ static void skip(struct s5p_jpeg_buffer *buf, long len);
- static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
+diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
+index e68d271b10af..8354ad20865a 100644
+--- a/drivers/media/platform/mx2_emmaprp.c
++++ b/drivers/media/platform/mx2_emmaprp.c
+@@ -288,7 +288,7 @@ static void emmaprp_device_run(void *priv)
  {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	unsigned int word;
- 	int c, x, components;
- 
- 	jpeg_buffer.size = 2; /* Ls */
- 	jpeg_buffer.data =
--		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sos + 2;
-+		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sos + 2;
- 	jpeg_buffer.curr = 0;
- 
- 	word = 0;
-@@ -826,14 +826,14 @@ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	unsigned int word;
- 	int c, i, n, j;
- 
- 	for (j = 0; j < ctx->out_q.dht.n; ++j) {
- 		jpeg_buffer.size = ctx->out_q.dht.len[j];
--		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
-+		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
- 				   ctx->out_q.dht.marker[j];
- 		jpeg_buffer.curr = 0;
- 
-@@ -885,13 +885,13 @@ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	int c, x, components;
- 
- 	jpeg_buffer.size = ctx->out_q.sof_len;
- 	jpeg_buffer.data =
--		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sof;
-+		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sof;
- 	jpeg_buffer.curr = 0;
- 
- 	skip(&jpeg_buffer, 5); /* P, Y, X */
-@@ -916,14 +916,14 @@ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_parse_q_tbl(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-+	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	struct s5p_jpeg_buffer jpeg_buffer;
- 	unsigned int word;
- 	int c, i, j;
- 
- 	for (j = 0; j < ctx->out_q.dqt.n; ++j) {
- 		jpeg_buffer.size = ctx->out_q.dqt.len[j];
--		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
-+		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
- 				   ctx->out_q.dqt.marker[j];
- 		jpeg_buffer.curr = 0;
- 
-@@ -2027,15 +2027,15 @@ static void s5p_jpeg_device_run(void *priv)
- {
- 	struct s5p_jpeg_ctx *ctx = priv;
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
+ 	struct emmaprp_ctx *ctx = priv;
+ 	struct emmaprp_q_data *s_q_data, *d_q_data;
 -	struct vb2_buffer *src_buf, *dst_buf;
 +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	unsigned long src_addr, dst_addr, flags;
+ 	struct emmaprp_dev *pcdev = ctx->dev;
+ 	unsigned int s_width, s_height;
+ 	unsigned int d_width, d_height;
+@@ -308,8 +308,8 @@ static void emmaprp_device_run(void *priv)
+ 	d_height = d_q_data->height;
+ 	d_size = d_width * d_height;
  
- 	spin_lock_irqsave(&ctx->jpeg->slock, flags);
- 
- 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
--	src_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	dst_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-+	src_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
-+	dst_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
- 
- 	s5p_jpeg_reset(jpeg->regs);
- 	s5p_jpeg_poweron(jpeg->regs);
-@@ -2108,7 +2108,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
- 	struct s5p_jpeg_fmt *fmt;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	struct s5p_jpeg_addr jpeg_addr = {};
- 	u32 pix_size, padding_bytes = 0;
- 
-@@ -2127,7 +2127,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- 		vb = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
- 	}
- 
--	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 
- 	if (fmt->colplanes == 2) {
- 		jpeg_addr.cb = jpeg_addr.y + pix_size - padding_bytes;
-@@ -2145,7 +2145,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	unsigned int jpeg_addr = 0;
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
-@@ -2153,7 +2153,7 @@ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- 	else
- 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 
--	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 	if (jpeg->variant->version == SJPEG_EXYNOS5433 &&
- 	    ctx->mode == S5P_JPEG_DECODE)
- 		jpeg_addr += ctx->out_q.sos;
-@@ -2268,7 +2268,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
- 	struct s5p_jpeg_fmt *fmt;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	struct s5p_jpeg_addr jpeg_addr = {};
- 	u32 pix_size;
- 
-@@ -2282,7 +2282,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- 		fmt = ctx->cap_q.fmt;
- 	}
- 
--	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 
- 	if (fmt->colplanes == 2) {
- 		jpeg_addr.cb = jpeg_addr.y + pix_size;
-@@ -2300,7 +2300,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
- static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- {
- 	struct s5p_jpeg *jpeg = ctx->jpeg;
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	unsigned int jpeg_addr = 0;
- 
- 	if (ctx->mode == S5P_JPEG_ENCODE)
-@@ -2308,7 +2308,7 @@ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
- 	else
- 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 
--	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
- 	exynos3250_jpeg_jpgadr(jpeg->regs, jpeg_addr);
- }
- 
+-	p_in = vb2_dma_contig_plane_dma_addr(src_buf, 0);
+-	p_out = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
++	p_in = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
++	p_out = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+ 	if (!p_in || !p_out) {
+ 		v4l2_err(&pcdev->v4l2_dev,
+ 			 "Acquiring kernel pointers to buffers failed\n");
 -- 
 2.19.1
 
