@@ -2,95 +2,97 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7200FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4184C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451DE20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554364296;
-	bh=H05f1Z5LsoZNx375DxJQSq2d7uvBQKpJoHdLd8HeYJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w90a65Wk65I/yb2600Imb3knHj7+PYNepHfuxZFg++5J0WdQEI434fIMIsEfDDrt6
-	 zld4DXT9yqYHnElk8WbFlkuIAAvQmyt75YvCZDEFWOr0xKL5n79AN2E/+oz1PMZGvX
-	 hcye6raoF4pnVlWbfwkcXOkfv9PS9u3ikYrzlVdU=
+	by mail.kernel.org (Postfix) with ESMTP id CB92F20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 07:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfDDHvf (ORCPT
+        id S1727273AbfDDHxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 03:51:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36194 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfDDHve (ORCPT
+        Thu, 4 Apr 2019 03:53:11 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43812 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfDDHxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 03:51:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=H05f1Z5LsoZNx375DxJQSq2d7uvBQKpJoHdLd8HeYJo=; b=CF9o1n+kCB86Kx7tY2PBlyHGo
-        EbXx5IXyojpopHxCTauZ0HwwHRa+E0bO/pEHG8vWGL20RyeQCI80tggh68FooLmPkDte7FgEcVcs8
-        rg3qm48ly7sc1g2J9qkEVipsI0PoqCu3N1OlQuKtRmEZZv0rUZgmIOgRtlxbm8RrPr0oE=;
-Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hBx9c-0004mL-KW; Thu, 04 Apr 2019 07:51:20 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BC2EB441D3C; Thu,  4 Apr 2019 14:51:17 +0700 (+07)
-Date:   Thu, 4 Apr 2019 14:51:17 +0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc:     heiko@sntech.de, linux-rockchip@lists.infradead.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 02/12] ASoC: rockchip: pdm: using left justified store
- mode
-Message-ID: <20190404075117.GP5748@sirena.org.uk>
-References: <1554298856-59028-1-git-send-email-sugar.zhang@rock-chips.com>
- <1554298856-59028-3-git-send-email-sugar.zhang@rock-chips.com>
+        Thu, 4 Apr 2019 03:53:10 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hBxAR-0000ST-TQ; Thu, 04 Apr 2019 09:52:12 +0200
+Date:   Thu, 4 Apr 2019 09:52:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Roland McGrath <roland@hack.frob.com>,
+        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/6 v3] ptrace: Remove maxargs from
+ task_current_syscall()
+In-Reply-To: <20190401134420.601152379@goodmis.org>
+Message-ID: <alpine.DEB.2.21.1904040951200.1833@nanos.tec.linutronix.de>
+References: <20190401134104.676620247@goodmis.org> <20190401134420.601152379@goodmis.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2uzDqHpccQJpqF2n"
-Content-Disposition: inline
-In-Reply-To: <1554298856-59028-3-git-send-email-sugar.zhang@rock-chips.com>
-X-Cookie: Replace with same type.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 1 Apr 2019, Steven Rostedt wrote:
 
---2uzDqHpccQJpqF2n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>
+> 
+> task_current_syscall() has a single user that passes in 6 for maxargs, which
+> is the maximum arguments that can be used to get system calls from
+> syscall_get_arguments(). Instead of passing in a number of arguments to
+> grab, just get 6 arguments. The args argument even specifies that it's an
+> array of 6 items.
+> 
+> This will also allow changing syscall_get_arguments() to not get a variable
+> number of arguments, but always grab 6.
+> 
+> Linus also suggested not passing in a bunch of arguments to
+> task_current_syscall() but to instead pass in a pointer to a structure, and
+> just fill the structure. struct seccomp_data has almost all the parameters
+> that is needed except for the stack pointer (sp). As seccomp_data is part of
+> uapi, and I'm afraid to change it, a new structure was created
+> "syscall_info", which includes seccomp_data and adds the "sp" field.
+> 
+> Link: http://lkml.kernel.org/r/20161107213233.466776454@goodmis.org
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-On Wed, Apr 03, 2019 at 09:40:46PM +0800, Sugar Zhang wrote:
-> This patch set left justified store mode default.
-
-The changelog should really explain why you're doing this.
-
---2uzDqHpccQJpqF2n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlylt3QACgkQJNaLcl1U
-h9BM/wf/RDkvVsQZ3WG2fWsFHy3bW6rpEvIQA/G/4sQqjHPgLKxzvxkLkblE7uo7
-s/3H5SR3CiWNPaOkpli7sFpirI+PxwlgtrnlJQrf2/ayJybXYA0xtFirscA5tR9a
-Samz9fs5UWF00szRHtw6TXsBAGIB2OiQi1Y6CqaB+LbzuXvkeLdPEAk2atJUmA5Z
-W3lbpUcJ6b54lhLsPdr+gUOOL9GTYSYbyY7fFM8DZ3KGvTszZm10qX3RVkuOwbYi
-DddxyWQI83tfR1cKIX+eQ3IeEPwfOv73tnvKYSL66ls0ge5UTkf1tzPjAgwDoiHf
-ZMa97NGXs1Qm2KFWnnwCTmiW77qV/w==
-=369W
------END PGP SIGNATURE-----
-
---2uzDqHpccQJpqF2n--
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
