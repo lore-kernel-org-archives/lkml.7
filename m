@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17AFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76A7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F2321738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D5521738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368278;
-	bh=jywrBpSf+I5VUZ6NP9cEfmVhW/9hON1rle3N1AE9fRk=;
+	s=default; t=1554368283;
+	bh=3EUsfnFt4d5ET/Yta5awHzg3z7TbkPWilwUU6+3hg+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rVxvt/4WrZ6fYgUCCfgtdjEIHEUv28X+r+kssG8aeiYrDqq/oHr11MkeZwuZba1Wy
-	 cyuafOwONv/DpyGKpwfgmqPz2dPbLpupghHntNDHQenVHO7MFQ7R5oGBGxfeeXCAwL
-	 wSxcW+SGVRwW35iGnqE559bu/sbwnvMbKU/wB01s=
+	b=RvVZUAIDiilMBbjgdzBXKCqIjKOkyfpob9Zhx1alB04015JAt36TdXPR5P3N7Xmzy
+	 1Pa2tXYRVtlStEnphKstvpLr5Y7Z4EXl9UHebxdxiM4Q+8squhRuUnucD1xgMqgWDl
+	 RfSNTLv7lOQx8xjumCUkQiCx0ZFEzFmN/S8SuGr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbfDDI55 (ORCPT
+        id S1730788AbfDDI6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:57:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33574 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:58:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbfDDI5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:54 -0400
+        id S1730767AbfDDI55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:57:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA3A220693;
-        Thu,  4 Apr 2019 08:57:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CCE221738;
+        Thu,  4 Apr 2019 08:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368274;
-        bh=jywrBpSf+I5VUZ6NP9cEfmVhW/9hON1rle3N1AE9fRk=;
+        s=default; t=1554368276;
+        bh=3EUsfnFt4d5ET/Yta5awHzg3z7TbkPWilwUU6+3hg+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9gBFHblwIDiGxLWqtwh5RqwSjJAfDRVzblH38LxwfpRQLjjzSBM33DzBH1aNP1Q2
-         kU8t4MSOAksSXmWxQQ5BxknCr8xm7FNpCTTgODoNEKH/gEbRNrGJHpBtGhu94bt2Mb
-         Mm5wSyjqCMtH8LPQ/Q/HG4ANSo6HQ2EZP7niij5U=
+        b=UThOXDYUcdj4gHpPwsEJ3n4x91IpfLl89zDO5mKjFzO6efAj7nS3AOgwsKE8xgQ2v
+         PBe2By32VuvorawibXM81CCTVVN67M18hTvjyaV450IMo/lIf1s5t7YHqk6BAy3hrW
+         qrjUAEc8paahFaHbQJ4cpvCNYfK4dqQziImceDXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmil.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/121] ASoC: fsl-asoc-card: fix object reference leaks in fsl_asoc_card_probe
-Date:   Thu,  4 Apr 2019 10:47:53 +0200
-Message-Id: <20190404084549.841800501@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 076/121] bcache: fix input overflow to cache set sysfs file io_error_halflife
+Date:   Thu,  4 Apr 2019 10:47:44 +0200
+Message-Id: <20190404084549.384093843@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -73,41 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 11907e9d3533648615db08140e3045b829d2c141 ]
+[ Upstream commit a91fbda49f746119828f7e8ad0f0aa2ab0578f65 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+Cache set sysfs entry io_error_halflife is used to set c->error_decay.
+c->error_decay is in type unsigned int, and it is converted by
+strtoul_or_return(), therefore overflow to c->error_decay is possible
+for a large input value.
 
-Signed-off-by: Wen Yang <yellowriver2010@hotmil.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch fixes the overflow by using strtoul_safe_clamp() to convert
+input string to an unsigned long value in range [0, UINT_MAX], then
+divides by 88 and set it to c->error_decay.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/bcache/sysfs.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 2db4d0c80d33..393100edd5fd 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -689,6 +689,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- asrc_fail:
- 	of_node_put(asrc_np);
- 	of_node_put(codec_np);
-+	put_device(&cpu_pdev->dev);
- fail:
- 	of_node_put(cpu_np);
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index 5d81cd06af00..43ff7fbcbc7c 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -660,8 +660,17 @@ STORE(__bch_cache_set)
+ 		c->error_limit = strtoul_or_return(buf) << IO_ERROR_SHIFT;
  
+ 	/* See count_io_errors() for why 88 */
+-	if (attr == &sysfs_io_error_halflife)
+-		c->error_decay = strtoul_or_return(buf) / 88;
++	if (attr == &sysfs_io_error_halflife) {
++		unsigned long v = 0;
++		ssize_t ret;
++
++		ret = strtoul_safe_clamp(buf, v, 0, UINT_MAX);
++		if (!ret) {
++			c->error_decay = v / 88;
++			return size;
++		}
++		return ret;
++	}
+ 
+ 	sysfs_strtoul(journal_delay_ms,		c->journal_delay_ms);
+ 	sysfs_strtoul(verify,			c->verify);
 -- 
 2.19.1
 
