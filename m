@@ -2,51 +2,47 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BC2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E191C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE152075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0989C2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfDDTVI (ORCPT
+        id S1730278AbfDDTVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:21:08 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48503 "EHLO mga17.intel.com"
+        Thu, 4 Apr 2019 15:21:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:47788 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbfDDTVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:21:08 -0400
+        id S1729287AbfDDTVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 15:21:13 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 12:21:07 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 12:21:12 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,309,1549958400"; 
-   d="scan'208";a="128686099"
+   d="scan'208";a="288767543"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga007.jf.intel.com with ESMTP; 04 Apr 2019 12:21:07 -0700
-Subject: [RFC PATCH 0/5] EFI Special Purpose Memory Support
+  by orsmga004.jf.intel.com with ESMTP; 04 Apr 2019 12:21:12 -0700
+Subject: [RFC PATCH 1/5] efi: Detect UEFI 2.8 Special Purpose Memory
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ingo Molnar <mingo@redhat.com>, Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86@kernel.org,
-        linux-mm@kvack.org, keith.busch@intel.com,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>, vishal.l.verma@intel.com,
+        x86@kernel.org, linux-mm@kvack.org, keith.busch@intel.com,
         vishal.l.verma@intel.com, linux-nvdimm@lists.01.org
-Date:   Thu, 04 Apr 2019 12:08:28 -0700
-Message-ID: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Thu, 04 Apr 2019 12:08:33 -0700
+Message-ID: <155440491334.3190322.44013027330479237.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <155440490809.3190322.15060922240602775809.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -56,72 +52,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EFI 2.8 Specification [1] introduces the EFI_MEMORY_SP ("special
-purpose") memory attribute. This attribute bit replaces the deprecated
-"reservation hint" that was introduced in ACPI 6.2 and removed in ACPI
-6.3.
+UEFI 2.8 defines an EFI_MEMORY_SP attribute bit to augment the
+interpretation of the EFI Memory Types as "reserved for a special
+purpose".
 
-Given the increasing diversity of memory types that might be advertised
-to the operating system, there is a need for platform firmware to hint
-which memory ranges are free for the OS to use as general purpose memory
-and which ranges are intended for application specific usage. For
-example, an application with prior knowledge of the platform may expect
-to be able to exclusively allocate a precious / limited pool of high
-bandwidth memory. Alternatively, for the general purpose case, the
-operating system may want to make the memory available on a best effort
-basis as a unique numa-node with performance properties by the new
-CONFIG_HMEM_REPORTING [2] facility.
+The proposed Linux behavior for special purpose memory is that it is
+reserved for direct-access (device-dax) by default and not available for
+any kernel usage, not even as an OOM fallback. Later, through udev
+scripts or another init mechanism, these device-dax claimed ranges can
+be reconfigured and hot-added to the available System-RAM with a unique
+node identifier.
 
-In support of allowing for both exclusive and core-kernel-mm managed
-access to differentiated memory, claim EFI_MEMORY_SP ranges for exposure
-as device-dax instances by default. Those instances can be directly
-owned / mapped by a platform-topology-aware application. However, with
-the new kmem facility [3], the administrator has the option to instead
-designate that those memory ranges be hot-added to the core-kernel-mm as
-a unique memory numa-node. In short, allow for the decision about what
-software agent manages special purpose memory to be made at runtime.
+A follow-on patch integrates parsing of the ACPI HMAT to identify the
+node and sub-range boundaries of EFI_MEMORY_SP designated memory. For
+now, arrange for EFI_MEMORY_SP memory to be reserved.
 
-The patches are based on v8 of Keith's "HMEM" series currently in Greg's
-driver-core-testing branch [4], and have not been tested. This is an RFC
-proposal on how to handle the new EFI memory attribute.
-
-[1]: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-testing&id=b6efba75c449
-[3]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c221c0b0308f
-[4]: https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/log/?h=driver-core-testing
-
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
+ arch/x86/Kconfig                  |   18 ++++++++++++++++++
+ arch/x86/boot/compressed/eboot.c  |    5 ++++-
+ arch/x86/boot/compressed/kaslr.c  |    2 +-
+ arch/x86/include/asm/e820/types.h |    9 +++++++++
+ arch/x86/kernel/e820.c            |    9 +++++++--
+ arch/x86/platform/efi/efi.c       |   10 +++++++++-
+ include/linux/efi.h               |   14 ++++++++++++++
+ include/linux/ioport.h            |    1 +
+ 8 files changed, 63 insertions(+), 5 deletions(-)
 
-Dan Williams (5):
-      efi: Detect UEFI 2.8 Special Purpose Memory
-      lib/memregion: Uplevel the pmem "region" ida to a global allocator
-      acpi/hmat: Track target address ranges
-      acpi/hmat: Register special purpose memory as a device
-      device-dax: Add a driver for "hmem" devices
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c1f9b3cf437c..cb9ca27de7a5 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1961,6 +1961,24 @@ config EFI_MIXED
+ 
+ 	   If unsure, say N.
+ 
++config EFI_SPECIAL_MEMORY
++	bool "EFI Special Purpose Memory Support"
++	depends on EFI
++	---help---
++	  On systems that have mixed performance classes of memory EFI
++	  may indicate special purpose memory with an attribute (See
++	  EFI_MEMORY_SP in UEFI 2.8). A memory range tagged with this
++	  attribute may have unique performance characteristics compared
++	  to the system's general purpose "System RAM" pool. On the
++	  expectation that such memory has application specific usage
++	  answer Y to arrange for the kernel to reserve it for
++	  direct-access (device-dax) by default. The memory range can
++	  later be optionally assigned to the page allocator by system
++	  administrator policy. Say N to have the kernel treat this
++	  memory as general purpose by default.
++
++	  If unsure, say Y.
++
+ config SECCOMP
+ 	def_bool y
+ 	prompt "Enable seccomp to safely compute untrusted bytecode"
+diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
+index 544ac4fafd11..9b90fae21abe 100644
+--- a/arch/x86/boot/compressed/eboot.c
++++ b/arch/x86/boot/compressed/eboot.c
+@@ -560,7 +560,10 @@ setup_e820(struct boot_params *params, struct setup_data *e820ext, u32 e820ext_s
+ 		case EFI_BOOT_SERVICES_CODE:
+ 		case EFI_BOOT_SERVICES_DATA:
+ 		case EFI_CONVENTIONAL_MEMORY:
+-			e820_type = E820_TYPE_RAM;
++			if (is_efi_special(d))
++				e820_type = E820_TYPE_SPECIAL;
++			else
++				e820_type = E820_TYPE_RAM;
+ 			break;
+ 
+ 		case EFI_ACPI_MEMORY_NVS:
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 2e53c056ba20..897e46eb9714 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -757,7 +757,7 @@ process_efi_entries(unsigned long minimum, unsigned long image_size)
+ 		 *
+ 		 * Only EFI_CONVENTIONAL_MEMORY is guaranteed to be free.
+ 		 */
+-		if (md->type != EFI_CONVENTIONAL_MEMORY)
++		if (md->type != EFI_CONVENTIONAL_MEMORY || is_efi_special(md))
+ 			continue;
+ 
+ 		if (efi_mirror_found &&
+diff --git a/arch/x86/include/asm/e820/types.h b/arch/x86/include/asm/e820/types.h
+index c3aa4b5e49e2..0ab8abae2e8b 100644
+--- a/arch/x86/include/asm/e820/types.h
++++ b/arch/x86/include/asm/e820/types.h
+@@ -28,6 +28,15 @@ enum e820_type {
+ 	 */
+ 	E820_TYPE_PRAM		= 12,
+ 
++	/*
++	 * Special-purpose / application-specific memory is indicated to
++	 * the system via the EFI_MEMORY_SP attribute. Define an e820
++	 * translation of this memory type for the purpose of
++	 * reserving this range and marking it with the
++	 * IORES_DESC_APPLICATION_RESERVED designation.
++	 */
++	E820_TYPE_SPECIAL	= 0xefffffff,
++
+ 	/*
+ 	 * Reserved RAM used by the kernel itself if
+ 	 * CONFIG_INTEL_TXT=y is enabled, memory of this type
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 2879e234e193..9f50dd0bbb04 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -176,6 +176,7 @@ static void __init e820_print_type(enum e820_type type)
+ 	switch (type) {
+ 	case E820_TYPE_RAM:		/* Fall through: */
+ 	case E820_TYPE_RESERVED_KERN:	pr_cont("usable");			break;
++	case E820_TYPE_SPECIAL:		/* Fall through: */
+ 	case E820_TYPE_RESERVED:	pr_cont("reserved");			break;
+ 	case E820_TYPE_ACPI:		pr_cont("ACPI data");			break;
+ 	case E820_TYPE_NVS:		pr_cont("ACPI NVS");			break;
+@@ -1023,6 +1024,7 @@ static const char *__init e820_type_to_string(struct e820_entry *entry)
+ 	case E820_TYPE_UNUSABLE:	return "Unusable memory";
+ 	case E820_TYPE_PRAM:		return "Persistent Memory (legacy)";
+ 	case E820_TYPE_PMEM:		return "Persistent Memory";
++	case E820_TYPE_SPECIAL:		/* Fall-through: */
+ 	case E820_TYPE_RESERVED:	return "Reserved";
+ 	default:			return "Unknown E820 type";
+ 	}
+@@ -1038,6 +1040,7 @@ static unsigned long __init e820_type_to_iomem_type(struct e820_entry *entry)
+ 	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+ 	case E820_TYPE_PRAM:		/* Fall-through: */
+ 	case E820_TYPE_PMEM:		/* Fall-through: */
++	case E820_TYPE_SPECIAL:		/* Fall-through: */
+ 	case E820_TYPE_RESERVED:	/* Fall-through: */
+ 	default:			return IORESOURCE_MEM;
+ 	}
+@@ -1050,6 +1053,7 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+ 	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
+ 	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
+ 	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
++	case E820_TYPE_SPECIAL:		return IORES_DESC_APPLICATION_RESERVED;
+ 	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
+ 	case E820_TYPE_RAM:		/* Fall-through: */
+ 	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+@@ -1065,13 +1069,14 @@ static bool __init do_mark_busy(enum e820_type type, struct resource *res)
+ 		return true;
+ 
+ 	/*
+-	 * Treat persistent memory like device memory, i.e. reserve it
+-	 * for exclusive use of a driver
++	 * Treat persistent memory and other special memory ranges like
++	 * device memory, i.e. reserve it for exclusive use of a driver
+ 	 */
+ 	switch (type) {
+ 	case E820_TYPE_RESERVED:
+ 	case E820_TYPE_PRAM:
+ 	case E820_TYPE_PMEM:
++	case E820_TYPE_SPECIAL:
+ 		return false;
+ 	case E820_TYPE_RESERVED_KERN:
+ 	case E820_TYPE_RAM:
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index e1cb01a22fa8..d227751f331b 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -139,7 +139,9 @@ static void __init do_add_efi_memmap(void)
+ 		case EFI_BOOT_SERVICES_CODE:
+ 		case EFI_BOOT_SERVICES_DATA:
+ 		case EFI_CONVENTIONAL_MEMORY:
+-			if (md->attribute & EFI_MEMORY_WB)
++			if (is_efi_special(md))
++				e820_type = E820_TYPE_SPECIAL;
++			else if (md->attribute & EFI_MEMORY_WB)
+ 				e820_type = E820_TYPE_RAM;
+ 			else
+ 				e820_type = E820_TYPE_RESERVED;
+@@ -753,6 +755,12 @@ static bool should_map_region(efi_memory_desc_t *md)
+ 	if (IS_ENABLED(CONFIG_X86_32))
+ 		return false;
+ 
++	/*
++	 * Special purpose memory is not mapped by default.
++	 */
++	if (is_efi_special(md))
++		return false;
++
+ 	/*
+ 	 * Map all of RAM so that we can access arguments in the 1:1
+ 	 * mapping when making EFI runtime calls.
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 54357a258b35..cecbc2bda1da 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -112,6 +112,7 @@ typedef	struct {
+ #define EFI_MEMORY_MORE_RELIABLE \
+ 				((u64)0x0000000000010000ULL)	/* higher reliability */
+ #define EFI_MEMORY_RO		((u64)0x0000000000020000ULL)	/* read-only */
++#define EFI_MEMORY_SP		((u64)0x0000000000040000ULL)	/* special purpose */
+ #define EFI_MEMORY_RUNTIME	((u64)0x8000000000000000ULL)	/* range requires runtime mapping */
+ #define EFI_MEMORY_DESCRIPTOR_VERSION	1
+ 
+@@ -128,6 +129,19 @@ typedef struct {
+ 	u64 attribute;
+ } efi_memory_desc_t;
+ 
++#ifdef CONFIG_EFI_SPECIAL_MEMORY
++static inline bool is_efi_special(efi_memory_desc_t *md)
++{
++	return md->type == EFI_CONVENTIONAL_MEMORY
++		&& (md->attribute & EFI_MEMORY_SP);
++}
++#else
++static inline bool is_efi_special(efi_memory_desc_t *md)
++{
++	return false;
++}
++#endif
++
+ typedef struct {
+ 	efi_guid_t guid;
+ 	u32 headersize;
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index da0ebaec25f0..2d79841ee9b9 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -133,6 +133,7 @@ enum {
+ 	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
+ 	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
+ 	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
++	IORES_DESC_APPLICATION_RESERVED		= 8,
+ };
+ 
+ /* helpers to define resources */
 
-
- arch/x86/Kconfig                  |   18 +++++
- arch/x86/boot/compressed/eboot.c  |    5 +
- arch/x86/boot/compressed/kaslr.c  |    2 -
- arch/x86/include/asm/e820/types.h |    9 ++
- arch/x86/kernel/e820.c            |    9 ++
- arch/x86/platform/efi/efi.c       |   10 ++-
- drivers/acpi/hmat/Kconfig         |    1 
- drivers/acpi/hmat/hmat.c          |  140 +++++++++++++++++++++++++++++++------
- drivers/dax/Kconfig               |   26 ++++++-
- drivers/dax/Makefile              |    2 +
- drivers/dax/hmem.c                |   58 +++++++++++++++
- drivers/nvdimm/Kconfig            |    1 
- drivers/nvdimm/core.c             |    1 
- drivers/nvdimm/nd-core.h          |    1 
- drivers/nvdimm/region_devs.c      |   13 +--
- include/linux/efi.h               |   14 ++++
- include/linux/ioport.h            |    1 
- include/linux/memregion.h         |    9 ++
- lib/Kconfig                       |    6 ++
- lib/Makefile                      |    1 
- lib/memregion.c                   |   22 ++++++
- 21 files changed, 304 insertions(+), 45 deletions(-)
- create mode 100644 drivers/dax/hmem.c
- create mode 100644 include/linux/memregion.h
- create mode 100644 lib/memregion.c
