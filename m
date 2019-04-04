@@ -2,195 +2,175 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35BBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D60C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D2F20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EB220693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554368964;
+	bh=KfA2FK+K1AHShGqUOE8hW0pmJpVAB01cqGsPzAkhphc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nkBV0Syy+pGoY2sfKhkfIdceiwfV5EiyWv93QXEboLS7+bInEPFn35MZXud+G/0Ya
+	 7Wi8acPX4cDfS4+DMdHc1DIV8NP0X9fnyAAsKAfedOdCCtBBdcSo5l/Oar7rVVb5Hi
+	 oKsnPZbL5F/NX1wYPs9+MW+O8oiZR9gjpTK/yK2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbfDDJJU (ORCPT
+        id S1732817AbfDDJJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:09:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59218 "EHLO mx1.redhat.com"
+        Thu, 4 Apr 2019 05:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732776AbfDDJJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:12 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1731213AbfDDJJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 65D43C057E09;
-        Thu,  4 Apr 2019 09:09:11 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D1065DD97;
-        Thu,  4 Apr 2019 09:09:11 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 8748941F3C;
-        Thu,  4 Apr 2019 09:09:10 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 05:09:10 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        dan j williams <dan.j.williams@intel.com>,
-        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
-        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger kernel <adilger.kernel@dilger.ca>,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        cohuck@redhat.com,
-        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>
-Message-ID: <651986267.17402634.1554368950178.JavaMail.zimbra@redhat.com>
-In-Reply-To: <1508883801.17367965.1554358418550.JavaMail.zimbra@redhat.com>
-References: <20190403104018.23947-1-pagupta@redhat.com> <20190403104018.23947-6-pagupta@redhat.com> <20190403220912.GB26298@dastard> <20190403223921.GM5147@magnolia> <1508883801.17367965.1554358418550.JavaMail.zimbra@redhat.com>
-Subject: Re: [PATCH v4 5/5] xfs: disable map_sync for async flush
+        by mail.kernel.org (Postfix) with ESMTPSA id CA79820652;
+        Thu,  4 Apr 2019 09:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554368954;
+        bh=KfA2FK+K1AHShGqUOE8hW0pmJpVAB01cqGsPzAkhphc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KCC4GlBtqZGiYyTACEYMOdKlJFSTFmJkjEpNvnMIv3iSPAjNibleV42eiSPJIVPQO
+         HwSCaRHfgEO+1Zj4b0CNVbf3Ist+8Fxg5/KyudHdj/wpB8ybC1x3tr89C+Wu7Y08DB
+         l+z5ihUnF6rBFvnh6iHSystwds84V9sUu3AYhm14=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Jason Cai (Xiang Feng)" <jason.cai@linux.alibaba.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 043/246] dm thin: add sanity checks to thin-pool and external snapshot creation
+Date:   Thu,  4 Apr 2019 10:45:43 +0200
+Message-Id: <20190404084620.540051711@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
+References: <20190404084619.236418459@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.161.59, 10.4.195.10]
-Thread-Topic: disable map_sync for async flush
-Thread-Index: 3lcRs/qAvRTCJfnvvKOwPX3OPYStPt5rTV2c
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 04 Apr 2019 09:09:12 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-> > On Thu, Apr 04, 2019 at 09:09:12AM +1100, Dave Chinner wrote:
-> > > On Wed, Apr 03, 2019 at 04:10:18PM +0530, Pankaj Gupta wrote:
-> > > > Virtio pmem provides asynchronous host page cache flush
-> > > > mechanism. we don't support 'MAP_SYNC' with virtio pmem
-> > > > and xfs.
-> > > > 
-> > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > > > ---
-> > > >  fs/xfs/xfs_file.c | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > > 
-> > > > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> > > > index 1f2e2845eb76..dced2eb8c91a 100644
-> > > > --- a/fs/xfs/xfs_file.c
-> > > > +++ b/fs/xfs/xfs_file.c
-> > > > @@ -1203,6 +1203,14 @@ xfs_file_mmap(
-> > > >  	if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
-> > > >  		return -EOPNOTSUPP;
-> > > >  
-> > > > +	/* We don't support synchronous mappings with DAX files if
-> > > > +	 * dax_device is not synchronous.
-> > > > +	 */
-> > > > +	if (IS_DAX(file_inode(filp)) && !dax_synchronous(
-> > > > +		xfs_find_daxdev_for_inode(file_inode(filp))) &&
-> > > > +					(vma->vm_flags & VM_SYNC))
-> > > > +		return -EOPNOTSUPP;
-> > > > +
-> > > >  	file_accessed(filp);
-> > > >  	vma->vm_ops = &xfs_file_vm_ops;
-> > > >  	if (IS_DAX(file_inode(filp)))
-> > > 
-> > > All this ad hoc IS_DAX conditional logic is getting pretty nasty.
-> > > 
-> > > xfs_file_mmap(
-> > > ....
-> > > {
-> > > 	struct inode	*inode = file_inode(filp);
-> > > 
-> > > 	if (vma->vm_flags & VM_SYNC) {
-> > > 		if (!IS_DAX(inode))
-> > > 			return -EOPNOTSUPP;
-> > > 		if (!dax_synchronous(xfs_find_daxdev_for_inode(inode))
-> > > 			return -EOPNOTSUPP;
-> > > 	}
-> > > 
-> > > 	file_accessed(filp);
-> > > 	vma->vm_ops = &xfs_file_vm_ops;
-> > > 	if (IS_DAX(inode))
-> > > 		vma->vm_flags |= VM_HUGEPAGE;
-> > > 	return 0;
-> > > }
-> > > 
-> > > 
-> > > Even better, factor out all the "MAP_SYNC supported" checks into a
-> > > helper so that the filesystem code just doesn't have to care about
-> > > the details of checking for DAX+MAP_SYNC support....
-> > 
-> > Seconded, since ext4 has nearly the same flag validation logic.
-> 
+------------------
 
-Only issue with this I see is we need the helper function only for supported
-filesystems ext4 & xfs (right now). If I create the function in "fs.h" it 
-will be compiled for every filesystem, even for those don't need it.  
+[ Upstream commit 70de2cbda8a5d788284469e755f8b097d339c240 ]
 
-Sample patch below, does below patch is near to what you have in mind?
+Invoking dm_get_device() twice on the same device path with different
+modes is dangerous.  Because in that case, upgrade_mode() will alloc a
+new 'dm_dev' and free the old one, which may be referenced by a previous
+caller.  Dereferencing the dangling pointer will trigger kernel NULL
+pointer dereference.
 
-=================
+The following two cases can reproduce this issue.  Actually, they are
+invalid setups that must be disallowed, e.g.:
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 1f2e2845eb76..614995170cac 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1196,12 +1196,17 @@ xfs_file_mmap(
-        struct file     *filp,
-        struct vm_area_struct *vma)
- {
-+       struct dax_device *dax_dev = xfs_find_daxdev_for_inode(file_inode(filp));
-+
-        /*
--        * We don't support synchronous mappings for non-DAX files. At least
--        * until someone comes with a sensible use case.
-+        * We don't support synchronous mappings for non-DAX files and
-+        * for DAX files if underneath dax_device is not synchronous.
-         */
--       if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
--               return -EOPNOTSUPP;
-+       if (vma->vm_flags & VM_SYNC) {
-+               int err = is_synchronous(filp, dax_dev);
-+               if (err)
-+                       return err;
-+       }
+1. Creating a thin-pool with read_only mode, and the same device as
+both metadata and data.
+
+dmsetup create thinp --table \
+    "0 41943040 thin-pool /dev/vdb /dev/vdb 128 0 1 read_only"
+
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
+...
+Call Trace:
+ new_read+0xfb/0x110 [dm_bufio]
+ dm_bm_read_lock+0x43/0x190 [dm_persistent_data]
+ ? kmem_cache_alloc_trace+0x15c/0x1e0
+ __create_persistent_data_objects+0x65/0x3e0 [dm_thin_pool]
+ dm_pool_metadata_open+0x8c/0xf0 [dm_thin_pool]
+ pool_ctr.cold.79+0x213/0x913 [dm_thin_pool]
+ ? realloc_argv+0x50/0x70 [dm_mod]
+ dm_table_add_target+0x14e/0x330 [dm_mod]
+ table_load+0x122/0x2e0 [dm_mod]
+ ? dev_status+0x40/0x40 [dm_mod]
+ ctl_ioctl+0x1aa/0x3e0 [dm_mod]
+ dm_ctl_ioctl+0xa/0x10 [dm_mod]
+ do_vfs_ioctl+0xa2/0x600
+ ? handle_mm_fault+0xda/0x200
+ ? __do_page_fault+0x26c/0x4f0
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+2. Creating a external snapshot using the same thin-pool device.
+
+dmsetup create thinp --table \
+    "0 41943040 thin-pool /dev/vdc /dev/vdb 128 0 2 ignore_discard"
+dmsetup message /dev/mapper/thinp 0 "create_thin 0"
+dmsetup create snap --table \
+            "0 204800 thin /dev/mapper/thinp 0 /dev/mapper/thinp"
+
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+...
+Call Trace:
+? __alloc_pages_nodemask+0x13c/0x2e0
+retrieve_status+0xa5/0x1f0 [dm_mod]
+? dm_get_live_or_inactive_table.isra.7+0x20/0x20 [dm_mod]
+ table_status+0x61/0xa0 [dm_mod]
+ ctl_ioctl+0x1aa/0x3e0 [dm_mod]
+ dm_ctl_ioctl+0xa/0x10 [dm_mod]
+ do_vfs_ioctl+0xa2/0x600
+ ksys_ioctl+0x60/0x90
+ ? ksys_write+0x4f/0xb0
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Jason Cai (Xiang Feng) <jason.cai@linux.alibaba.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/md/dm-thin.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
+index e83b63608262..254c26eb963a 100644
+--- a/drivers/md/dm-thin.c
++++ b/drivers/md/dm-thin.c
+@@ -3283,6 +3283,13 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	as.argc = argc;
+ 	as.argv = argv;
  
-        file_accessed(filp);
-        vma->vm_ops = &xfs_file_vm_ops;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 8b42df09b04c..add017de3dd7 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2162,6 +2162,20 @@ static inline void file_accessed(struct file *file)
-                touch_atime(&file->f_path);
- }
++	/* make sure metadata and data are different devices */
++	if (!strcmp(argv[0], argv[1])) {
++		ti->error = "Error setting metadata or data device";
++		r = -EINVAL;
++		goto out_unlock;
++	}
++
+ 	/*
+ 	 * Set default pool features.
+ 	 */
+@@ -4167,6 +4174,12 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	tc->sort_bio_list = RB_ROOT;
  
-+struct dax_device;
-+extern bool dax_synchronous(struct dax_device *dax_dev);
-+static inline int is_synchronous(struct file *filp, struct dax_device *dax_dev)
-+{
-+       struct inode *inode = file_inode(filp);
+ 	if (argc == 3) {
++		if (!strcmp(argv[0], argv[2])) {
++			ti->error = "Error setting origin device";
++			r = -EINVAL;
++			goto bad_origin_dev;
++		}
 +
-+       if (!IS_DAX(inode))
-+               return -EOPNOTSUPP;
-+       if (!dax_synchronous(dax_dev))
-+               return -EOPNOTSUPP;
-+
-+       return 0;
-+}
-+
- int sync_inode(struct inode *inode, struct writeback_control *wbc);
- int sync_inode_metadata(struct inode *inode, int wait);
- 
----------
-
-Thanks,
-Pankaj
+ 		r = dm_get_device(ti, argv[2], FMODE_READ, &origin_dev);
+ 		if (r) {
+ 			ti->error = "Error opening origin device";
+-- 
+2.19.1
 
 
 
