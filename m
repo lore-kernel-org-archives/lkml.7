@@ -2,140 +2,124 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2804BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7883C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E874220449
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369979;
-	bh=pr7wRFi4rYvVi4I5EGh+MuGTOyqXG5mlnUalXXuwVlY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z+VfFdrDOcrgcc3emXCwgEUgkkIQELcYgHmYu7NVapLfcf59Rtw9D6Sh48KAfEuDS
-	 CYq7XgftGhfC4kqjQLtWufBGQD44BeDPlT7lycpeBIbw+xDlkZcIt7HannqvYLflPI
-	 bahdTw3TdDoB19lmlgyW2lF1P+s1lcP6//Gaglhk=
+	by mail.kernel.org (Postfix) with ESMTP id BE91C20449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387793AbfDDJ0R (ORCPT
+        id S2387822AbfDDJ0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:26:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:4013 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733014AbfDDJNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:13:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C373520693;
-        Thu,  4 Apr 2019 09:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369197;
-        bh=pr7wRFi4rYvVi4I5EGh+MuGTOyqXG5mlnUalXXuwVlY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LOmPfNKRlqVEPdBTy/gOreGqpijBfkfhxgpdWOgInUJF6kO3Kfhcv1cv+FV/5jX37
-         OnX/mMCVJIonyUkec+cB37r499AKdhYYO5k0G9F13vqP3Kf+vHD3CpDbcjJokuR2rQ
-         2S+p7pGtM3gXFcAp08CAU84S5+sxn5GW+MAOR1ms=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, He Kuang <hekuang@huawei.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 110/246] perf report: Dont shadow inlined symbol with different addr range
-Date:   Thu,  4 Apr 2019 10:46:50 +0200
-Message-Id: <20190404084623.000473746@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1733145AbfDDJ0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:26:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 02:26:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
+   d="scan'208";a="147967903"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga002.jf.intel.com with ESMTP; 04 Apr 2019 02:26:18 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hBydV-0003lj-Ou; Thu, 04 Apr 2019 12:26:17 +0300
+Date:   Thu, 4 Apr 2019 12:26:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: Add support for Merrifield Basin Cove PMIC
+Message-ID: <20190404092617.GO9224@smile.fi.intel.com>
+References: <20190318095316.69278-1-andriy.shevchenko@linux.intel.com>
+ <20190402051211.GR4187@dell>
+ <20190402122001.GM9224@smile.fi.intel.com>
+ <20190404070004.GE6830@dell>
+ <20190404070357.GF6830@dell>
+ <20190404082138.GF9224@smile.fi.intel.com>
+ <20190404090314.GT6830@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404090314.GT6830@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Apr 04, 2019 at 10:03:14AM +0100, Lee Jones wrote:
+> On Thu, 04 Apr 2019, Andy Shevchenko wrote:
+> > On Thu, Apr 04, 2019 at 08:03:57AM +0100, Lee Jones wrote:
+> > > On Thu, 04 Apr 2019, Lee Jones wrote:
+> > > > On Tue, 02 Apr 2019, Andy Shevchenko wrote:
+> > > > > On Tue, Apr 02, 2019 at 06:12:11AM +0100, Lee Jones wrote:
+> > > > > > On Mon, 18 Mar 2019, Andy Shevchenko wrote:
 
-------------------
+> > > > > > Although succinct, dragging values from one platform device into
+> > > > > > another doesn't sound that neat.
+> > > > > 
+> > > > > So, how to split resources given in one _physical_ multi-functional device to
+> > > > > several of them?  Isn't it what MFD framework for?
+> > > > > 
+> > > > > Any other approach here? I'm all ears!
+> > > > 
+> > > > From the child:
+> > > > 
+> > > >   platform_get_irq(dev->parent, CLIENT_ID);
+> > 
+> > So, instead of keeping a fragile approach in one driver, we will spread this
+> > to all of them.
+> 
+> No, the fragileness goes away with implicit definitions of IDs.
 
-[ Upstream commit 7346195e8643482968f547483e0d823ec1982fab ]
+Did you mean "explicit"?
+Something like we need to have a shared map of those indices?
 
-We can't assume inlined symbols with the same name are equal, because
-their address range may be different. This will cause the symbols with
-different addresses be shadowed when adding to the hist entry, and lead
-to ERANGE error when checking the symbol address during sample parse,
-the addr should be within the range of [sym.start, sym.end].
+> > > > > > Also, since the ordering of the
+> > > > > > devices is critical in this implementation, it also comes across as
+> > > > > > fragile.
+> > > > > 
+> > > > > How fragile? In ACPI we don't have IRQ labeling scheme. Index is used for that.
+> > > > > 
+> > > > > > Any reason why ACPI can't register all of the child devices, or for
+> > > > > > the child devices to obtain their IRQ directly from the tables?
+> > > > > 
+> > > > > And how are we supposed to enumerated them taking into consideration single
+> > > > > ACPI ID given?
+> > > > 
+> > > > This question was a little whimsical, since I have no idea how the
+> > > > ACPI tables you're working with are laid out.
+> > 
+> > There is one device node with several IRQ and other resources.
+> > In pseudo code:
+> > 
+> > 	device node {
+> > 		device ID,
+> > 		IRQ 0,
+> > 		IRQ 1,
+> > 		...
+> > 		MMIO 0,
+> > 		...
+> > 	}
+> 
+> Sure.  Thanks for the explanation.
+> 
+> Very well.  I guess it's not too bad as it is.
 
-The error message is like: "0x36aea60 [0x8]: failed to process type: 68".
+It represent real hardware 1:1.
+Just out of curiosity how this case can be described in DT?
 
-The second parameter of symbol__new() is the length of the fake symbol
-for the inline frame, which is the subtraction of the end and start
-address of base_sym.
-
-Signed-off-by: He Kuang <hekuang@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Milian Wolff <milian.wolff@kdab.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: aa441895f7b4 ("perf report: Compare symbol name for inlined frames when sorting")
-Link: http://lkml.kernel.org/r/20190219130531.15692-1-hekuang@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/sort.c    | 10 ++++++++--
- tools/perf/util/srcline.c |  2 +-
- 2 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 6c1a83768eb0..d0334c33da54 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -230,8 +230,14 @@ static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
- 	if (sym_l == sym_r)
- 		return 0;
- 
--	if (sym_l->inlined || sym_r->inlined)
--		return strcmp(sym_l->name, sym_r->name);
-+	if (sym_l->inlined || sym_r->inlined) {
-+		int ret = strcmp(sym_l->name, sym_r->name);
-+
-+		if (ret)
-+			return ret;
-+		if ((sym_l->start <= sym_r->end) && (sym_l->end >= sym_r->start))
-+			return 0;
-+	}
- 
- 	if (sym_l->start != sym_r->start)
- 		return (int64_t)(sym_r->start - sym_l->start);
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index dc86597d0cc4..ccf42c4e83f0 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -104,7 +104,7 @@ static struct symbol *new_inline_sym(struct dso *dso,
- 	} else {
- 		/* create a fake symbol for the inline frame */
- 		inline_sym = symbol__new(base_sym ? base_sym->start : 0,
--					 base_sym ? base_sym->end : 0,
-+					 base_sym ? (base_sym->end - base_sym->start) : 0,
- 					 base_sym ? base_sym->binding : 0,
- 					 base_sym ? base_sym->type : 0,
- 					 funcname);
 -- 
-2.19.1
-
+With Best Regards,
+Andy Shevchenko
 
 
