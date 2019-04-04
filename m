@@ -4,65 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FDBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABACC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEDF218C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BAC214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368742;
-	bh=wsDAUNT6TxIsUJpuWNBkvTckEDZoiHtwHQNgn4dQ2Z0=;
+	s=default; t=1554368748;
+	bh=ihjSHTqdLvC9fBc7wFroTxIx2XqecVcGxgP1WDWeMak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4GbDJvWjSZlzLjXtiUcPM9zw97s1AGgfFqAEgjfIUcsV3czVQ4mEx7Gg5yAoEjfB
-	 +4jXpCguSqQrI9fUslyt0vEdyiatjHzIAaJlXifnJShcZ7iCGYHUOsnST8jxAKM8P7
-	 DLIgrR6LrrfEIGzR6PtwQbagb5Xu+orwpyWTXiYw=
+	b=ol/usHK2OliKX2nMIE1vRy4BVi76hjTAFnX3LQt9l+izL2CMhvUrnsj5IfiwAzK3Z
+	 L5EUcwUiVS2lo4uoIejgTmbNm/CYstcC2tR0rqN+xXgPySHLpC/3gEzhQXub1RlUs+
+	 6wmxnJl8zmSf8RHOTxPCmSOYsEKmTZT1kuYW5hLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbfDDJFl (ORCPT
+        id S1732204AbfDDJFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:05:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43680 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:05:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731440AbfDDJFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:35 -0400
+        id S1732187AbfDDJFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F0AE2183E;
-        Thu,  4 Apr 2019 09:05:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF4321855;
+        Thu,  4 Apr 2019 09:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368734;
-        bh=wsDAUNT6TxIsUJpuWNBkvTckEDZoiHtwHQNgn4dQ2Z0=;
+        s=default; t=1554368742;
+        bh=ihjSHTqdLvC9fBc7wFroTxIx2XqecVcGxgP1WDWeMak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0boyLGPiFuD5ndyQqe7gy+4g31vOSdPX3/vrhLEmY4bTsEOc00+gFTgs9PHWP3xWZ
-         Uh36PQqmmXSGIlc1XWHtjX7GyJDoVGisdRfEIDWcB+q+3uFemJLdDOEHvlQzaQKH6X
-         BGazP9AIgTZnW1nEIid/TA+NGAnalpDblARSb6Kg=
+        b=MiLGHjRU9vv844dxlH/DBDnHlnMwmoilFJ3VFHbL9Jx03mnEm4d8Rr8i5Uk/vJyqA
+         y5i9t+xi+rG1atAf7PKYEGsHU0oy//fFvTKyBqlkv5z2UIEmum9LCUl7X9OVsfLsv1
+         55mbTL/zS9vmwpGXwvR+5IHxboIjDNLueIX3kKzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tristian Celestin <tristian.celestin@outlook.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?= 
+        <jerome.debretagne@gmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 124/187] perf/aux: Make perf_event accessible to setup_aux()
-Date:   Thu,  4 Apr 2019 10:47:41 +0200
-Message-Id: <20190404084609.076931407@linuxfoundation.org>
+Subject: [PATCH 4.19 153/187] platform/x86: intel-hid: Missing power button release on some Dell models
+Date:   Thu,  4 Apr 2019 10:48:10 +0200
+Message-Id: <20190404084610.328165511@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -81,172 +70,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 840018668ce2d96783356204ff282d6c9b0e5f66 ]
+[ Upstream commit e97a34563d18606ee5db93e495382a967f999cd4 ]
 
-When pmu::setup_aux() is called the coresight PMU needs to know which
-sink to use for the session by looking up the information in the
-event's attr::config2 field.
+Power button suspend for some Dell models was added in:
 
-As such simply replace the cpu information by the complete perf_event
-structure and change all affected customers.
+commit 821b85366284 ("platform/x86: intel-hid: Power button suspend on Dell Latitude 7275")
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suzuki Poulouse <suzuki.poulose@arm.com>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-s390@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190131184714.20388-2-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+by checking against the power button press notification (0xCE) to report
+the power button press event. The corresponding power button release
+notification (0xCF) was caught and ignored to stop it from being reported
+as an "unknown event" in the logs.
+
+The missing button release event is creating issues on Android-x86, as
+reported on the project mailing list for a Dell Latitude 5175 model, since
+the events are expected in down/up pairs.
+
+Report the power button release event to fix this issue.
+
+Link: https://groups.google.com/forum/#!topic/android-x86/aSwZK9Nf9Ro
+Tested-by: Tristian Celestin <tristian.celestin@outlook.com>
+Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+[dvhart: corrected commit reference format per checkpatch]
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c                  | 6 +++---
- arch/x86/events/intel/bts.c                      | 4 +++-
- arch/x86/events/intel/pt.c                       | 5 +++--
- drivers/hwtracing/coresight/coresight-etm-perf.c | 6 +++---
- drivers/perf/arm_spe_pmu.c                       | 6 +++---
- include/linux/perf_event.h                       | 2 +-
- kernel/events/ring_buffer.c                      | 2 +-
- 7 files changed, 17 insertions(+), 14 deletions(-)
+ drivers/platform/x86/intel-hid.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 5c53e977be62..44404836e9d1 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1600,7 +1600,7 @@ static void aux_sdb_init(unsigned long sdb)
- 
- /*
-  * aux_buffer_setup() - Setup AUX buffer for diagnostic mode sampling
-- * @cpu:	On which to allocate, -1 means current
-+ * @event:	Event the buffer is setup for, event->cpu == -1 means current
-  * @pages:	Array of pointers to buffer pages passed from perf core
-  * @nr_pages:	Total pages
-  * @snapshot:	Flag for snapshot mode
-@@ -1612,8 +1612,8 @@ static void aux_sdb_init(unsigned long sdb)
-  *
-  * Return the private AUX buffer structure if success or NULL if fails.
-  */
--static void *aux_buffer_setup(int cpu, void **pages, int nr_pages,
--			      bool snapshot)
-+static void *aux_buffer_setup(struct perf_event *event, void **pages,
-+			      int nr_pages, bool snapshot)
- {
- 	struct sf_buffer *sfb;
- 	struct aux_buffer *aux;
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 24ffa1e88cf9..7139f6bf27ad 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -77,10 +77,12 @@ static size_t buf_size(struct page *page)
- }
- 
- static void *
--bts_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool overwrite)
-+bts_buffer_setup_aux(struct perf_event *event, void **pages,
-+		     int nr_pages, bool overwrite)
- {
- 	struct bts_buffer *buf;
- 	struct page *page;
-+	int cpu = event->cpu;
- 	int node = (cpu == -1) ? cpu : cpu_to_node(cpu);
- 	unsigned long offset;
- 	size_t size = nr_pages << PAGE_SHIFT;
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 8d016ce5b80d..8f4c98fdd03c 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1104,10 +1104,11 @@ static int pt_buffer_init_topa(struct pt_buffer *buf, unsigned long nr_pages,
-  * Return:	Our private PT buffer structure.
-  */
- static void *
--pt_buffer_setup_aux(int cpu, void **pages, int nr_pages, bool snapshot)
-+pt_buffer_setup_aux(struct perf_event *event, void **pages,
-+		    int nr_pages, bool snapshot)
- {
- 	struct pt_buffer *buf;
--	int node, ret;
-+	int node, ret, cpu = event->cpu;
- 
- 	if (!nr_pages)
- 		return NULL;
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 677695635211..0f5e03e4df22 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -181,15 +181,15 @@ static void etm_free_aux(void *data)
- 	schedule_work(&event_data->work);
- }
- 
--static void *etm_setup_aux(int event_cpu, void **pages,
-+static void *etm_setup_aux(struct perf_event *event, void **pages,
- 			   int nr_pages, bool overwrite)
- {
--	int cpu;
-+	int cpu = event->cpu;
- 	cpumask_t *mask;
- 	struct coresight_device *sink;
- 	struct etm_event_data *event_data = NULL;
- 
--	event_data = alloc_event_data(event_cpu);
-+	event_data = alloc_event_data(cpu);
- 	if (!event_data)
- 		return NULL;
- 	INIT_WORK(&event_data->work, free_event_data);
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index e1a77b2de78a..3623f6489f49 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -824,10 +824,10 @@ static void arm_spe_pmu_read(struct perf_event *event)
- {
- }
- 
--static void *arm_spe_pmu_setup_aux(int cpu, void **pages, int nr_pages,
--				   bool snapshot)
-+static void *arm_spe_pmu_setup_aux(struct perf_event *event, void **pages,
-+				   int nr_pages, bool snapshot)
- {
--	int i;
-+	int i, cpu = event->cpu;
- 	struct page **pglist;
- 	struct arm_spe_pmu_buf *buf;
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index c2876e740514..42fc852bf512 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -409,7 +409,7 @@ struct pmu {
- 	/*
- 	 * Set up pmu-private data structures for an AUX area
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 6cf9b7fa5bf0..3201a83073b5 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -373,7 +373,7 @@ wakeup:
+ 	 * the 5-button array, but still send notifies with power button
+ 	 * event code to this device object on power button actions.
+ 	 *
+-	 * Report the power button press; catch and ignore the button release.
++	 * Report the power button press and release.
  	 */
--	void *(*setup_aux)		(int cpu, void **pages,
-+	void *(*setup_aux)		(struct perf_event *event, void **pages,
- 					 int nr_pages, bool overwrite);
- 					/* optional */
+ 	if (!priv->array) {
+ 		if (event == 0xce) {
+@@ -382,8 +382,11 @@ wakeup:
+ 			return;
+ 		}
  
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 5631af940316..474b2ccdbe69 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -648,7 +648,7 @@ int rb_alloc_aux(struct ring_buffer *rb, struct perf_event *event,
- 			goto out;
+-		if (event == 0xcf)
++		if (event == 0xcf) {
++			input_report_key(priv->input_dev, KEY_POWER, 0);
++			input_sync(priv->input_dev);
+ 			return;
++		}
  	}
  
--	rb->aux_priv = event->pmu->setup_aux(event->cpu, rb->aux_pages, nr_pages,
-+	rb->aux_priv = event->pmu->setup_aux(event, rb->aux_pages, nr_pages,
- 					     overwrite);
- 	if (!rb->aux_priv)
- 		goto out;
+ 	/* 0xC0 is for HID events, other values are for 5 button array */
 -- 
 2.19.1
 
