@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0991C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F276C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA90214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CFA2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554386335;
-	bh=zkFqvPtOmbeGU97xqUbQ8LEKDyVCL2579KmZY/R0X5o=;
+	s=default; t=1554386340;
+	bh=OL3UsMRx2ft4924hE6G/TazY0Rwe/hh0SKS0nFU2ETk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=y0SFWd6YOFmTUIXjR1r2MSRaHXUBS3Zbu1RqN6vKd9NoGQbbLmb53jnqxjbAaiFmv
-	 AR+KoqdoL9jJy7+jkn+TDE68dZExw5J1ZuhMcrsuugTWvvDUndsrwmokV998ktEgER
-	 dyS5Ys5BWSSwkWWwEaa1+z6cC2cSP0BWtLuo0GSA=
+	b=WxsPb0k4kPjnrhSXmQPBKUd1MtVOPRKpBBjwVp8Z8dAugDwloZ4zGM4Sm62R3W8zQ
+	 tW59pkYG3+WllUk9VHWOhzgj25fnToz+LQpZD8l0a2aAX8o84aNdfOpU1borVUeaqX
+	 XM36bbs4u5i4Jvku6hMy7MwXN8fnLXLxIGV7g82Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfDDN6y (ORCPT
+        id S1729668AbfDDN66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:58:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60134 "EHLO
+        Thu, 4 Apr 2019 09:58:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60620 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbfDDN6j (ORCPT
+        with ESMTP id S1729514AbfDDN64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:58:39 -0400
+        Thu, 4 Apr 2019 09:58:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=o9qc8BULGi8SzKzz3FPvxxn43t/KoOJY1dafcoG2Yo8=; b=l4VWODum7BOp
-        QyyiIPpR0MD0ZyjYzVDUJo0CNw4AbcoRK45+BE3n8fkOc1qEP3qLXRfLHQuCwgn0vVF3umbbsvn4V
-        MRlL81OrmWJXvwnr+4lfszgRcFwXFYMjJ9pA2NMmWQoOSqA8Z3XiY/KTNiuyWZvwqBQFHRvflzB3E
-        3zZqs=;
+        List-Archive; bh=oWDoha4VVfxGFviUMKrKt8Ehle+H0bKg97aqkOx4Tc4=; b=rxuiCQpcLwIs
+        lmXmCsVAAA3LDPooj2GVdS2hrb3b0CxfhlUQPTlWCToRd1RIjVCGX901pfjdXvhivdOe57EYyygh4
+        ePnHUDafdbbu62ddSypaUcCYDwb8t+lPzXlUatrtCHYZi+5bbp5BgrdHqtnHRKChWxDBAInaLLk8q
+        LWRUo=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hC2su-0006d1-VW; Thu, 04 Apr 2019 13:58:29 +0000
+        id 1hC2sx-0006d6-Pi; Thu, 04 Apr 2019 13:58:32 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 22337441D3C; Thu,  4 Apr 2019 20:58:26 +0700 (+07)
+        id 1A94A441D3B; Thu,  4 Apr 2019 20:58:29 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Olivier Moysan <olivier.moysan@st.com>
 Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
@@ -56,11 +56,11 @@ Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
         linux-kernel@vger.kernel.org, olivier.moysan@st.com,
         arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
         apatard@mandriva.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: cs42l51: add reset management" to the asoc tree
-In-Reply-To:  <1554297817-14154-4-git-send-email-olivier.moysan@st.com>
+Subject: Applied "ASoC: cs42l51: add regulator management" to the asoc tree
+In-Reply-To:  <1554297817-14154-3-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190404135826.22337441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu,  4 Apr 2019 20:58:26 +0700 (+07)
+Message-Id: <20190404135829.1A94A441D3B@finisterre.ee.mobilebroadband>
+Date:   Thu,  4 Apr 2019 20:58:29 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cs42l51: add reset management
+   ASoC: cs42l51: add regulator management
 
 has been applied to the asoc tree at
 
@@ -93,66 +93,150 @@ to this mail.
 Thanks,
 Mark
 
-From 11b9cd748e3107df5c5e040a4daa986a3c6d8b75 Mon Sep 17 00:00:00 2001
+From f77b6ea70f3a672092e2d7eca2e67be09c0b8c54 Mon Sep 17 00:00:00 2001
 From: Olivier Moysan <olivier.moysan@st.com>
-Date: Wed, 3 Apr 2019 15:23:33 +0200
-Subject: [PATCH] ASoC: cs42l51: add reset management
+Date: Wed, 3 Apr 2019 15:23:32 +0200
+Subject: [PATCH] ASoC: cs42l51: add regulator management
 
-Manage cs42l51 audio codec reset pin.
+Add cs42l51 audio codec power supply management
+through regulator framework.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/cs42l51.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ sound/soc/codecs/cs42l51-i2c.c |  6 +++++
+ sound/soc/codecs/cs42l51.c     | 44 +++++++++++++++++++++++++++++++++-
+ sound/soc/codecs/cs42l51.h     |  1 +
+ 3 files changed, 50 insertions(+), 1 deletion(-)
 
+diff --git a/sound/soc/codecs/cs42l51-i2c.c b/sound/soc/codecs/cs42l51-i2c.c
+index 4b5731a41876..8333dbf18ea2 100644
+--- a/sound/soc/codecs/cs42l51-i2c.c
++++ b/sound/soc/codecs/cs42l51-i2c.c
+@@ -35,12 +35,18 @@ static int cs42l51_i2c_probe(struct i2c_client *i2c,
+ 	return cs42l51_probe(&i2c->dev, devm_regmap_init_i2c(i2c, &config));
+ }
+ 
++static int cs42l51_i2c_remove(struct i2c_client *i2c)
++{
++	return cs42l51_remove(&i2c->dev);
++}
++
+ static struct i2c_driver cs42l51_i2c_driver = {
+ 	.driver = {
+ 		.name = "cs42l51",
+ 		.of_match_table = cs42l51_of_match,
+ 	},
+ 	.probe = cs42l51_i2c_probe,
++	.remove = cs42l51_i2c_remove,
+ 	.id_table = cs42l51_i2c_id,
+ };
+ 
 diff --git a/sound/soc/codecs/cs42l51.c b/sound/soc/codecs/cs42l51.c
-index f43eb51d2d8d..9b3ffa16b204 100644
+index 80da3cd73e04..f43eb51d2d8d 100644
 --- a/sound/soc/codecs/cs42l51.c
 +++ b/sound/soc/codecs/cs42l51.c
-@@ -30,6 +30,7 @@
- #include <sound/initval.h>
+@@ -31,6 +31,7 @@
  #include <sound/pcm_params.h>
  #include <sound/pcm.h>
-+#include <linux/gpio/consumer.h>
  #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
++#include <linux/regulator/consumer.h>
  
-@@ -54,6 +55,7 @@ struct cs42l51_private {
+ #include "cs42l51.h"
+ 
+@@ -40,11 +41,19 @@ enum master_slave_mode {
+ 	MODE_MASTER,
+ };
+ 
++static const char * const cs42l51_supply_names[] = {
++	"VL",
++	"VD",
++	"VA",
++	"VAHP",
++};
++
+ struct cs42l51_private {
+ 	unsigned int mclk;
+ 	struct clk *mclk_handle;
  	unsigned int audio_mode;	/* The mode (I2S or left-justified) */
  	enum master_slave_mode func;
- 	struct regulator_bulk_data supplies[ARRAY_SIZE(cs42l51_supply_names)];
-+	struct gpio_desc *reset_gpio;
++	struct regulator_bulk_data supplies[ARRAY_SIZE(cs42l51_supply_names)];
  };
  
  #define CS42L51_FORMATS ( \
-@@ -595,6 +597,17 @@ int cs42l51_probe(struct device *dev, struct regmap *regmap)
- 		return ret;
+@@ -550,7 +559,7 @@ int cs42l51_probe(struct device *dev, struct regmap *regmap)
+ {
+ 	struct cs42l51_private *cs42l51;
+ 	unsigned int val;
+-	int ret;
++	int ret, i;
+ 
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+@@ -569,6 +578,23 @@ int cs42l51_probe(struct device *dev, struct regmap *regmap)
+ 		cs42l51->mclk_handle = NULL;
  	}
  
-+	cs42l51->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-+						      GPIOD_OUT_LOW);
-+	if (IS_ERR(cs42l51->reset_gpio))
-+		return PTR_ERR(cs42l51->reset_gpio);
++	for (i = 0; i < ARRAY_SIZE(cs42l51->supplies); i++)
++		cs42l51->supplies[i].supply = cs42l51_supply_names[i];
 +
-+	if (cs42l51->reset_gpio) {
-+		dev_dbg(dev, "Release reset gpio\n");
-+		gpiod_set_value_cansleep(cs42l51->reset_gpio, 0);
-+		mdelay(2);
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(cs42l51->supplies),
++				      cs42l51->supplies);
++	if (ret != 0) {
++		dev_err(dev, "Failed to request supplies: %d\n", ret);
++		return ret;
++	}
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(cs42l51->supplies),
++				    cs42l51->supplies);
++	if (ret != 0) {
++		dev_err(dev, "Failed to enable supplies: %d\n", ret);
++		return ret;
 +	}
 +
  	/* Verify that we have a CS42L51 */
  	ret = regmap_read(regmap, CS42L51_CHIP_REV_ID, &val);
  	if (ret < 0) {
-@@ -629,6 +642,8 @@ int cs42l51_remove(struct device *dev)
- {
- 	struct cs42l51_private *cs42l51 = dev_get_drvdata(dev);
+@@ -587,11 +613,27 @@ int cs42l51_probe(struct device *dev, struct regmap *regmap)
  
-+	gpiod_set_value_cansleep(cs42l51->reset_gpio, 1);
+ 	ret = devm_snd_soc_register_component(dev,
+ 			&soc_component_device_cs42l51, &cs42l51_dai, 1);
++	if (ret < 0)
++		goto error;
 +
- 	return regulator_bulk_disable(ARRAY_SIZE(cs42l51->supplies),
- 				      cs42l51->supplies);
++	return 0;
++
+ error:
++	regulator_bulk_disable(ARRAY_SIZE(cs42l51->supplies),
++			       cs42l51->supplies);
+ 	return ret;
  }
+ EXPORT_SYMBOL_GPL(cs42l51_probe);
+ 
++int cs42l51_remove(struct device *dev)
++{
++	struct cs42l51_private *cs42l51 = dev_get_drvdata(dev);
++
++	return regulator_bulk_disable(ARRAY_SIZE(cs42l51->supplies),
++				      cs42l51->supplies);
++}
++EXPORT_SYMBOL_GPL(cs42l51_remove);
++
+ const struct of_device_id cs42l51_of_match[] = {
+ 	{ .compatible = "cirrus,cs42l51", },
+ 	{ }
+diff --git a/sound/soc/codecs/cs42l51.h b/sound/soc/codecs/cs42l51.h
+index 0ca805492ac4..aef0ede82c7b 100644
+--- a/sound/soc/codecs/cs42l51.h
++++ b/sound/soc/codecs/cs42l51.h
+@@ -22,6 +22,7 @@ struct device;
+ 
+ extern const struct regmap_config cs42l51_regmap;
+ int cs42l51_probe(struct device *dev, struct regmap *regmap);
++int cs42l51_remove(struct device *dev);
+ extern const struct of_device_id cs42l51_of_match[];
+ 
+ #define CS42L51_CHIP_ID			0x1B
 -- 
 2.20.1
 
