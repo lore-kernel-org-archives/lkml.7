@@ -2,82 +2,86 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562D7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74523C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF81217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554410354;
-	bh=rTs5v1L17kQH/iEWdJ4/swpmSDYtyjqb2Nkp1p5ObKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B5HMjs2cZIOglSRD+X2Lxr92LC0PtgxjI+LrqwYjCF/+Caid+e/cA6FFZX0Y9vITE
-	 TyEPNhQskXfrbgtgJamO/N4y3zFlMQ70MXTJyPYEsCLWOz3g0Q+hlly29IHEX8tVAx
-	 y8RyhEjSHIq2b17Dpkrubz2Xbs/6I3GPDd43UXVg=
+	by mail.kernel.org (Postfix) with ESMTP id 48C3C206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbfDDUjM (ORCPT
+        id S1731113AbfDDUlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfDDUjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:39:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D03C20663;
-        Thu,  4 Apr 2019 20:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554410351;
-        bh=rTs5v1L17kQH/iEWdJ4/swpmSDYtyjqb2Nkp1p5ObKE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zE+P+rp/ETe04cjbzKS31qh05RU0YiFMuceQpAypUXPuG56ErfkdzSGbkiwYhoc52
-         51FhLRO18scbDATcAwyf0aygupANWtpfUMp4YpismLHpQpqXARBGzXYik5pe2cgAj9
-         fXYziRQN6as0sgtvv6/9W8/5byxDGZAAiqu8yUTs=
-Date:   Thu, 4 Apr 2019 22:35:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Okash Khawaja <okash.khawaja@gmail.com>
-Cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Gregory Nowak <greg@gregn.net>, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Jiri Slaby <jslaby@suse.com>, speakup@linux-speakup.org,
-        John Covici <covici@ccs.covici.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Chris Brannon <chris@the-brannons.com>
-Subject: Re: [PATCH 1/2] vt: selection: allow functions to be called from
- inside kernel
-Message-ID: <20190404203549.GA9319@kroah.com>
-References: <20190404194530.1170-1-okash.khawaja@gmail.com>
- <20190404194530.1170-2-okash.khawaja@gmail.com>
+        Thu, 4 Apr 2019 16:41:00 -0400
+Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:52420 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729958AbfDDUk7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 16:40:59 -0400
+Received: from belgarion ([90.76.58.102])
+        by mwinf5d74 with ME
+        id wLgh1z0032CLFkS03Lgnxj; Thu, 04 Apr 2019 22:40:56 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Thu, 04 Apr 2019 22:40:56 +0200
+X-ME-IP: 90.76.58.102
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, Guan Xuetao <gxt@pku.edu.cn>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Mack <daniel@zonque.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-mips@vger.kernel.org (open list:MIPS)
+Subject: Re: [PATCH 1/7] thermal/drivers/core: Remove the module Kconfig's option
+References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Thu, 04 Apr 2019 22:40:41 +0200
+In-Reply-To: <20190402161256.11044-1-daniel.lezcano@linaro.org> (Daniel
+        Lezcano's message of "Tue, 2 Apr 2019 18:12:44 +0200")
+Message-ID: <87h8bdpkqe.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404194530.1170-2-okash.khawaja@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 08:45:29PM +0100, Okash Khawaja wrote:
-> diff --git a/include/linux/selection.h b/include/linux/selection.h
-> index a8f5b97b216f..171d77dfc825 100644
-> --- a/include/linux/selection.h
-> +++ b/include/linux/selection.h
-> @@ -11,13 +11,12 @@
->  #include <linux/tiocl.h>
->  #include <linux/vt_buffer.h>
->  
-> -struct tty_struct;
-> -
+Daniel Lezcano <daniel.lezcano@linaro.org> writes:
 
-Nit, why remove these lines?
+> The module support for the thermal subsystem makes little sense:
+>  - some subsystems relying on it are not modules, thus forcing the
+>    framework to be compiled in
+>  - it is compiled in for almost every configs, the remaining ones
+>    are a few platforms where I don't see why we can not switch the thermal
+>    to 'y'. The drivers can stay in tristate.
+>  - platforms need the thermal to be ready as soon as possible at boot time
+>    in order to mitigate
+>
+> Usually the subsystems framework are compiled-in and the plugs are as module.
+>
+> Remove the module option. The removal of the module related dead code will
+> come after this patch gets in or is acked.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Guenter Roeck <groeck@chromium.org>
+> For mini2440:
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+For pxa:
+Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-thanks,
+Cheers.
 
-greg k-h
+--
+Robert
