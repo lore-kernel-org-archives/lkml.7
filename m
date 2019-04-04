@@ -2,118 +2,98 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D9EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23D9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7517E20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71DB20657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvFX4Kgh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="snJzknT+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbfDDSso (ORCPT
+        id S1730017AbfDDStV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:48:44 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46994 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfDDSso (ORCPT
+        Thu, 4 Apr 2019 14:49:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37877 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729785AbfDDStT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:48:44 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r25so2526712lfn.13;
-        Thu, 04 Apr 2019 11:48:42 -0700 (PDT)
+        Thu, 4 Apr 2019 14:49:19 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so1671589pgc.4;
+        Thu, 04 Apr 2019 11:49:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CbQ1/qZ4MVf6FqHTg8C0Lq5KKGzXWo9GvZYsM+qwvNE=;
-        b=KvFX4KghzayWZJ80TDY84sZNp9DtdXo33KAPQgENuvfwx+vRDZx91Z5IS3UrkBi5Lr
-         nPJCDndUuqPDGNjQfQ/HHJ3Wk4HRxzvzs2X2RzfW3uyGkTDw7lL0bd2OIr2DyP7uZKOt
-         jQL1natlMcdmccABNj6mJ3HqU+64KFy39f3ph33kyhwNSveoYkc77wbsw1vFcTQcnweO
-         S87IHfgTdpaU72GsD1v/NfPrOznjthpBbsuDh1JsDwnPv5Y4HEZ6b/JcFW5SYeR98y4M
-         HRaCj0VYR8EH2BvgqzMXHB7/0JvKO9f1bs5KzVVFa40efw+Gu1OErCSSBhFqHVz1CXW4
-         k24Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fhthWg+4bb693ryKXhtxexq2d6YkIfwzg1YQYQPDMWw=;
+        b=snJzknT+5byfixTSvxn0tDY92jhUa4M73mHtAY8HODDdECwTVCSMTlWTTdwDWG+hB0
+         62DAxKrSzFRxU3/miEZHDBbE6axSjnkQE0mr37xO6wijyimOMcnz5joNGjcQtk29TUEV
+         6Ip6ahAr9N+DJCrC5XqZo+XIoX5RmdEX9F9ZUAyRg7t12m2SFnguu+HQgWwoXvPQT1rN
+         j/3rhZ/lMGb78MM9ZDatlK/QigcggHM46u2yMfZVbrvgNLhI771zjP8wpPZSAWlIn0kg
+         ptkxTl4oeQ8FMkQSvTZHQlrwnZx4aSOC2tkzP+6/SDCWv2u6nFSJpgKATLvdEiZw3SIP
+         EGKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CbQ1/qZ4MVf6FqHTg8C0Lq5KKGzXWo9GvZYsM+qwvNE=;
-        b=YFOVti9msjpCvz0Gm3TEkH4eIeI1M58YVhRvekP7GwkI8ahk0O69EVoEiGKddYDXXo
-         viJNpTkl7wwnF/T1vODM42Y8ZJD4ShrxwNTeVR8XNohJjkQGxcv6tXo7uiUt13qa91SS
-         nGv3CCf1d7lPlHerCsRcon0aIX56OkFVOSkZ0zPc4IMlB0B/6AWor2Qhmv8Di8purpow
-         U7QLC/0YU4xH8rC/zwwRRpGKof55cYkf1PVlUqWgBtV5MJrXrihKRTCizeFwrzySJGbP
-         4xq653jF6I55d+1uWLmvTwydjkOlciu6OqgdK8BLkn4GGoWWII6goVmiTSEwsfqPLybf
-         3UjA==
-X-Gm-Message-State: APjAAAWuq5gacPIAq+31WneoLRHGykRoOu0yNpnglzDvU75gRc9lYMdi
-        tzwsWVFu7wSds5hKBsfhg4+X1cMR
-X-Google-Smtp-Source: APXvYqwEfTlrdJxtSDZYdf6Tc02WeA8Eamd0tW3lLjoFicL+olb4TS15VwotcdyEIxzYfdwkiQ6l/Q==
-X-Received: by 2002:ac2:5325:: with SMTP id f5mr4406521lfh.77.1554403721863;
-        Thu, 04 Apr 2019 11:48:41 -0700 (PDT)
-Received: from [192.168.1.19] (dkj99.neoplus.adsl.tpnet.pl. [83.24.13.99])
-        by smtp.gmail.com with ESMTPSA id z83sm4179863ljb.48.2019.04.04.11.48.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 11:48:40 -0700 (PDT)
-Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
-To:     Tony Lindgren <tony@atomide.com>, Dan Murphy <dmurphy@ti.com>
-Cc:     robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
-References: <20190321142838.22985-1-dmurphy@ti.com>
- <20190321142838.22985-4-dmurphy@ti.com> <20190404000909.GY49658@atomide.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <f4c0a946-fd0f-0071-0039-cfaea2f27ccc@gmail.com>
-Date:   Thu, 4 Apr 2019 20:48:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fhthWg+4bb693ryKXhtxexq2d6YkIfwzg1YQYQPDMWw=;
+        b=PEQeapKaqnyv7IOjKLaTvT6yxUPOl1rJ/ry19QQjmloLJAsAupcXQyWnKjXc7zFgBg
+         Gxf5OdB71lmylgMYmjl81kjJHCNCS4lhj/Z1B4kAQji28J65qou/ld9hjnwqjG5Lvtdp
+         816PmNE+kDlOi2OYrgoE0GLFJlgaHyJAbg4RGUKQKatjoGznbFlityNU1TNDr5q4UvSy
+         QeEu+s5eguCKRFuChZk3cXilwAEFE3seU2pSD+jApIncD21/LfB9lvxPA/FfXKBsYKlF
+         INVRqPLqWozFD5r+v8OlFTSqjU7sjj7ujERDNBSd3xMl1j6tnp/oJdxVq+/qdRXr7tPE
+         r2LA==
+X-Gm-Message-State: APjAAAV18nmwGUsgoERzHIAME40B7aZoSXG4hSfM+04uzOtmdi8CDVvC
+        hyaSoCn1CHowxcA4oNYbsJs=
+X-Google-Smtp-Source: APXvYqwa/u6rGfPiP1HzQO/KPTKSCAhsc28jq8l48RBohgkD9RjOLuZlNyPB19+4pjXto8k2tt0tig==
+X-Received: by 2002:a65:4489:: with SMTP id l9mr7303425pgq.1.1554403758480;
+        Thu, 04 Apr 2019 11:49:18 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id m69sm30537817pfi.151.2019.04.04.11.49.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 11:49:17 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 11:49:15 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     megous@megous.com
+Cc:     maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org,
+        mark.rutland@arm.com, Ziping Chen <techping.chan@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-input@vger.kernel.org, hdegoede@redhat.com
+Subject: Re: [PATCH RESEND v4 1/4] input: sun4i-a10-lradc-keys: Add support
+ for A83T
+Message-ID: <20190404184915.GB116898@dtor-ws>
+References: <20190327023339.25975-1-megous@megous.com>
+ <20190327023339.25975-2-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <20190404000909.GY49658@atomide.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190327023339.25975-2-megous@megous.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Wed, Mar 27, 2019 at 03:33:36AM +0100, megous@megous.com wrote:
+> From: Ziping Chen <techping.chan@gmail.com>
+> 
+> Allwinner A83T SoC has a low res adc like the one in Allwinner A10 SoC,
+> however, the A10 SoC's vref of lradc internally is divided by 2/3 and
+> the A83T SoC's vref of lradc internally is divided by 3/4, thus add
+> a hardware variant for it to be compatible with various devices.
+> 
+> Signed-off-by: Ziping Chen <techping.chan@gmail.com>
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Thanks for the feedback.
+Applied, this and binding patch; the dts changes should go through other
+relevant trees I believe.
 
-On 4/4/19 2:09 AM, Tony Lindgren wrote:
-> * Dan Murphy <dmurphy@ti.com> [190321 14:29]:
->> Introduce the Texas Instruments LM3532 White LED driver.
->> The driver supports ALS configurability or manual brightness
->> control.
->>
->> The driver also supports associating LED strings with specific
->> control banks in a group or as individually controlled strings.
-> 
-> I'm seeing slightly different naming under /sys/class/leds:
-> 
-> lm3532:backlight
-> lm3532:platform::kbd_backlight
-
-The problem is in the "platform:" being a part of DT
-label property. It should not be included there if devicename
-section is added in the driver.
-
-> 
-> Not sure if this is correct with the the "platform" and
-> "::" there for the kbd_backlight?
-> 
-> With the dts change I posted, I've tested this with
-> linux-next and Sebastian's DSI command mode patches
-> "[PATCHv6 0/4] omapdrm: DSI command mode panel support".
-> 
-> So feel free to add:
-> 
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> 
+Thanks.
 
 -- 
-Best regards,
-Jacek Anaszewski
+Dmitry
