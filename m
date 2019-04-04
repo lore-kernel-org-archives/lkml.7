@@ -2,87 +2,99 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D24BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBD7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FBF20645
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:39:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qMh8zSet"
+	by mail.kernel.org (Postfix) with ESMTP id 01D8D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbfDDPjA (ORCPT
+        id S1728974AbfDDPkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 11:39:00 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34314 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfDDPi7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 11:38:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j89so2536237ljb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 08:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/fdPQ/COXOFDgaHILjHxj4hoJZJg9QfhmE6Shb3yiqo=;
-        b=qMh8zSetyu1VMTZBXA3TLuGukIIWTkaJm0X9gluiHmYSBAkwQm6xV38V5TVOFrA9/l
-         EZTLVKTKzYH4MaRX7kt0QD1z2TSY1UNunqytYPqmTA1qC6eHh9a2NJTcqJiXHN5WdiPd
-         a7R3g2/97/pVHvDV2PThxmhyj2qPHrjjE3aBMmvi4IrOq2terIZxs/VkuQQ2Ma3RCXLH
-         7CpqIVymXlHHP5kDi8WUzqt5Ygv0W8enEtZKxWossvTUH16weXukWSjuiX61brWefe49
-         7sIZWaz/bNLLY/Gy8r4iJepsjZK+0ouyznVYtehrtyTTy1CTVcw/h+TDlB6JX+skSkF0
-         c8FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/fdPQ/COXOFDgaHILjHxj4hoJZJg9QfhmE6Shb3yiqo=;
-        b=EuZT5orTwUZGZXbXd+eHsiqguSYET0sQzNYs1ALZRa3hiSJbwuaY4YZ26BrzZrKIVF
-         WmfuQBfB7QetOLK8A8CmG4bWELUal3ssO2cYR5s/xQArI1fyRiLi3Dn2lqOz10K6T3ql
-         z46Lo+UTw/jmoLxbpHkn0wLNte7Ii9qxfV8bmqeBCmsFQDgG6ZhvMQh5+srbPvomOwVY
-         0Bm/E0JUrrvSKXqisUQoDf23h4nF39QxJPi/7s0AiQVaPQPRcI+HSUoE8LH3PsgyRRRw
-         KLoA7zurF3MhNtoIryAXAuQ2wvcxVHkErgWPQOhFOoBgQeCVMXcEJouUIpRGi1MGpfcb
-         dBCg==
-X-Gm-Message-State: APjAAAXP5fI3ayPzNK9Fy9BOLrEpMaiZkkdlWQHpwOl06ARkgCBTRUkz
-        jxiKylmxlo/0ScpNszifdaoCRIX/80GVXwUHgv/9Rg==
-X-Google-Smtp-Source: APXvYqzTD1ZOG5UlWynnlODB8x3xxch1LutzmqRufAuT173oALBbpiLbCA5yILNE7sIjOLdcIRpiYHbhLuRp4ihu9l0=
-X-Received: by 2002:a2e:808e:: with SMTP id i14mr4087348ljg.103.1554392337308;
- Thu, 04 Apr 2019 08:38:57 -0700 (PDT)
+        Thu, 4 Apr 2019 11:40:10 -0400
+Received: from nat.nue.novell.com ([195.135.221.2]:36978 "EHLO suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726269AbfDDPkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 11:40:10 -0400
+Received: by suse.de (Postfix, from userid 1000)
+        id 3CFB14824; Thu,  4 Apr 2019 17:40:09 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 17:40:09 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/2] mm, memory_hotplug: cleanup memory offline path
+Message-ID: <20190404154006.ywtpwb3c3frkajzk@d104.suse.de>
+References: <20190404125916.10215-1-osalvador@suse.de>
+ <20190404125916.10215-2-osalvador@suse.de>
+ <f2360f11-4360-b678-f095-c4ebbf7cd0ec@redhat.com>
+ <20190404132506.kaqzop4qs6m56plu@d104.suse.de>
+ <7874ef85-adc7-95a8-87f4-1f15eb21c677@redhat.com>
 MIME-Version: 1.0
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com> <20190403124019.8947-11-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190403124019.8947-11-wsa+renesas@sang-engineering.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Apr 2019 22:38:45 +0700
-Message-ID: <CACRpkdanoV-cx8sy5=imdznud3Q_=6N+QnROoqWg9OtPqgbwmw@mail.gmail.com>
-Subject: Re: [PATCH 10/12] i2c: stu300: use xfer_atomic callback to bail out early
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Peter Rosin <peda@axentia.se>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7874ef85-adc7-95a8-87f4-1f15eb21c677@redhat.com>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2019 at 7:40 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
+On Thu, Apr 04, 2019 at 04:47:43PM +0200, David Hildenbrand wrote:
+> On 04.04.19 15:25, Oscar Salvador wrote:
+> > On Thu, Apr 04, 2019 at 03:18:00PM +0200, David Hildenbrand wrote:
+> >>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> >>> index f206b8b66af1..d8a3e9554aec 100644
+> >>> --- a/mm/memory_hotplug.c
+> >>> +++ b/mm/memory_hotplug.c
+> >>> @@ -1451,15 +1451,11 @@ static int
+> >>>  offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
+> >>>  			void *data)
+> >>>  {
+> >>> -	__offline_isolated_pages(start, start + nr_pages);
+> >>> -	return 0;
+> >>> -}
+> >>> +	unsigned long offlined_pages;
+> >>>  
+> >>> -static void
+> >>> -offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
+> >>> -{
+> >>> -	walk_system_ram_range(start_pfn, end_pfn - start_pfn, NULL,
+> >>> -				offline_isolated_pages_cb);
+> >>> +	offlined_pages = __offline_isolated_pages(start, start + nr_pages);
+> >>> +	*(unsigned long *)data += offlined_pages;
+> >>
+> >> unsigned long *offlined_pages = data;
+> >>
+> >> *offlined_pages += __offline_isolated_pages(start, start + nr_pages);
+> > 
+> > Yeah, more readable.
+> > 
+> >> Only nits
+> > 
+> > About the identation, I double checked the code and it looks fine to me.
+> > In [1] looks fine too, might be your mail client?
+> > 
+> > [1] https://patchwork.kernel.org/patch/10885571/
+> 
+> Double checked, alignment on the parameter on the new line is very weird.
 
-> Use the new callback to reject atomic transfers.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Uhm, are not you confused because we removed the "while (off...)", and
+"ret =" gets idented right below "/*check again*".
 
-OK that is a reasonable placeholder.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Try to apply the patch and check whether you still see the issue.
+I just checked out the branch and it looks fine to me.
 
-Yours,
-Linus Walleij
+> And both lines cross 80 lines per line ... nit :)
+
+Yeah, 81 characters, but I decided to go with that rather than start doing
+tricky things to accomplish 80 characters.
+Maybe Andrew agrees, or he might slap me.
+
+-- 
+Oscar Salvador
+SUSE L3
