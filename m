@@ -2,187 +2,202 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146DEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F26C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E116C2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655ED20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:08:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="sg9krI2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfDDKIN (ORCPT
+        id S1729033AbfDDKIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:08:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36688 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727053AbfDDKIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:08:11 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 735E07C0B5798CEDC192;
-        Thu,  4 Apr 2019 18:08:08 +0800 (CST)
-Received: from [127.0.0.1] (10.67.78.74) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Thu, 4 Apr 2019
- 18:08:00 +0800
-Subject: Re: [RFC] Question about enable doorbell irq and halt_poll process
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <guoheyi@huawei.com>, <kvm@vger.kernel.org>,
-        <xuwei5@huawei.com>
-References: <0fb3c9ba-8428-ea6c-2973-952624f601cc@huawei.com>
- <20190320170219.510f2e1e@why.wild-wind.fr.eu.org>
- <5df934fd-06d5-55f2-68a5-6f4985e4ac1b@huawei.com>
- <86zhpc66jl.wl-marc.zyngier@arm.com>
-From:   "Tangnianyao (ICT)" <tangnianyao@huawei.com>
-Message-ID: <e32d81ed-d1f5-ce0b-7845-d4b680d556df@huawei.com>
-Date:   Thu, 4 Apr 2019 18:07:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Thu, 4 Apr 2019 06:08:36 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:26413 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfDDKIg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:08:36 -0400
+X-IronPort-AV: E=Sophos;i="5.60,308,1549954800"; 
+   d="scan'208";a="26742747"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 04 Apr 2019 03:08:35 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Thu, 4 Apr 2019 03:08:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XnP+OqlrDBkUjTnDbremAKJRdZ2QhOQyQZmW9ja2DQU=;
+ b=sg9krI2CiH+9eEw56heMQc+Eu6Pq6gjClqGT4vHLK5mPT9n5FVtbSMeUCbA9NXwGOKJEl5AVaukjMlN6xt2PHuTe3LfqhTSHTyYevoxU6M1+TtzsF48zjyp5A6d1+ed0in+4rY9LDPk9LTBZmTQ+twpdVi0htOGYikJf0hf7j2M=
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
+ MWHPR11MB1661.namprd11.prod.outlook.com (10.172.55.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1750.17; Thu, 4 Apr 2019 10:08:24 +0000
+Received: from MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::65cd:b698:41:54d6]) by MWHPR11MB1662.namprd11.prod.outlook.com
+ ([fe80::65cd:b698:41:54d6%2]) with mapi id 15.20.1750.017; Thu, 4 Apr 2019
+ 10:08:24 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>
+CC:     <gregory.clement@bootlin.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] ARM: dts: sama5d{2,4}: use SPDX-License-Identifier
+Thread-Topic: [PATCH v2 1/4] ARM: dts: sama5d{2,4}: use
+ SPDX-License-Identifier
+Thread-Index: AQHU6s5WjznPokvnPUa2lz3A45bIPg==
+Date:   Thu, 4 Apr 2019 10:08:24 +0000
+Message-ID: <6e680e5d-6549-a0b0-22d9-cf83e424fc9a@microchip.com>
+References: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190403205219.26098-1-alexandre.belloni@bootlin.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0179.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a::23) To MWHPR11MB1662.namprd11.prod.outlook.com
+ (2603:10b6:301:e::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Nicolas.Ferre@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [195.6.168.232]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3cdf64ea-8469-4e07-f02f-08d6b8e57936
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1661;
+x-ms-traffictypediagnostic: MWHPR11MB1661:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <MWHPR11MB16611A90E958199FDC2D435EE0500@MWHPR11MB1661.namprd11.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(39860400002)(396003)(199004)(189003)(31686004)(6116002)(76176011)(26005)(316002)(6486002)(6506007)(8936002)(446003)(386003)(36756003)(6436002)(106356001)(11346002)(71190400001)(3846002)(478600001)(99286004)(71200400001)(476003)(53936002)(2616005)(486006)(105586002)(72206003)(86362001)(25786009)(52116002)(6246003)(6306002)(6512007)(186003)(54906003)(53546011)(2906002)(66066001)(6636002)(7736002)(102836004)(14444005)(97736004)(966005)(5660300002)(68736007)(110136005)(305945005)(8676002)(81166006)(81156014)(229853002)(14454004)(256004)(4326008)(31696002)(32563001)(2004002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1661;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: P6WvqJ7CREy4siJEPgOq+fKKKoashaMgSviV8M6Lax7uWQLfeitgnAxJmFonffWcGO+vgzmH2K21SD1lOXqsumWGEozwTQ93a8VgYzJDSkcWEsR2Vi8n/hHcIUcOO3n0zVvhWZ/wX9ikvprcGfd7m1/NcASB8eU0El92wtAupjNcSCoTuvFImWIz9435caZw/huU8ZtqBLm9/0muLDBDQ2lY/0ph9hSogiBSSYtLPCWrnJXFQW4RXtA5HpjQnYH9NZFEUdShI7kABM/nqt0TuKjbnKRfbIitR8bbMq3gg02T6hae+XelCBexM7vItKGfug1tyGoDvu6Xb8wiH+WPdTjnjfT1QLE7HoTcvQrlzCriEKkKxuL0wGpYdrLWumCdwhO+e9IiZOHg9V6V30fql0ePpMmaIgaVnMJ7deyLhHY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F22C170EF773EF4BB07DA330E03FD675@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <86zhpc66jl.wl-marc.zyngier@arm.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.78.74]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cdf64ea-8469-4e07-f02f-08d6b8e57936
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 10:08:24.4022
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1661
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/3/30 17:43, Marc Zyngier wrote:
-
-Hi, Marc
-
-> On Sat, 30 Mar 2019 08:42:58 +0000,
-> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
->>
->> Hi, Marc
->>
->> On 2019/3/21 1:02, Marc Zyngier Wrote:
->>> On Tue, 19 Mar 2019 21:25:47 +0800
->>> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
->>>
->>>> Hi, all
->>>>
->>>> Using gicv4, when guest is waiting for irq, it sends wfi and traps to kvm.
->>>> When vlpi is forwarded to PE after its_vpe_deschedule, before halt_poll in
->>>> kvm_vcpu_block, halt_poll may increase latency for this vlpi getting to guest.
->>>> In halt_poll process, it checks if there's pending irq for vcpu using pending_last.
->>>> However, doorbell is not enable at this moment and vlpi or doorbell can not set
->>>> pending_last true, to stop halt_poll. It will run until halt_poll time ends, if
->>>> there's no other physical irq coming in the meantime. And then vcpu is scheduled out.
->>>> This pending vlpi has to wait for vcpu getting schedule in next time.
->>>>
->>>> Should we enable doorbell before halt_poll process ?
->>>
->>> Enabling doorbells can be quite expensive. Depending on the HW, this is
->>> either:
->>>
->>> - a write to memory (+DSB, potential cache maintenance), a write to the
->>>   INVLPI register, and a poll of the SYNC register
->>> - a write to memory (+DSB, potential cache maintenance), potentially
->>>   a string of DISCARD+SYNC+MAPI+SYNC commands, and an INV+SYNC command
->>>
->> I have tested average cost of kvm_vgic_v4_enable_doorbell in our machine.
->> When gic_rdists->has_direct_lpi is 1, it costs 0.35 us.
->> When gic_rdists->has_direct_lpi is 0, it costs 1.4 us.
-> 
-> This looks pretty low. Which HW is that on? How about on something
-> like D05?
-
-I tested it on D06.
-D05 doesn't not support gicv4 and I haven't tested on D05.
-
-> 
->> Compared to default halt_poll_ns, 500000ns, enabling doorbells is not
->> large at all.
-> 
-> Sure. But I'm not sure this is a universal figure.
-> 
->>
->>> Frankly, you want to be careful with that. I'd rather enable them late
->>> and have a chance of not blocking because of another (virtual)
->>> interrupt, which saves us the doorbell business.
->>>
->>> I wonder if you wouldn't be in a better position by drastically
->>> reducing halt_poll_ns for vcpu that can have directly injected
->>> interrupts.
->>>
->>
->> If we set halt_poll_ns to a small value, the chance of
->> not blocking and vcpu scheduled out becomes larger. The cost
->> of vcpu scheduled out is quite expensive.
->> In many cases, one pcpu is assigned to only
->> one vcpu, and halt_poll_ns is set quite large, to increase
->> chance of halt_poll process got terminated. This is the
->> reason we want to set halt_poll_ns large. And We hope vlpi
->> stop halt_poll process in time.
-> 
-> Fair enough. It is certainly realistic to strictly partition the
-> system when GICv4 is in use, so I can see some potential benefit.
-> 
->> Though it will check whether vcpu is runnable again by
->> kvm_vcpu_check_block. Vlpi can prevent scheduling vcpu out.
->> However it's somewhat later if halt_poll_ns is larger.
->>
->>> In any case, this is something that we should measure, not guess.
-> 
-> Please post results of realistic benchmarks that we can reproduce,
-> with and without this change. I'm willing to entertain the idea, but I
-> need more than just a vague number.
-> 
-> Thanks,
-> 
-> 	M.
-> 
-
-I tested it with and without change (patch attached in the last).
-halt_poll_ns is keep default, 500000ns.
-I have merged the patch "arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled"
-to my test kernel, to make sure ICH_HCR_EL2.EN=1 in guest.
-
-netperf result:
-D06 as server, intel 8180 server as client
-with change:
-package 512 bytes - 5400 Mbits/s
-package 64 bytes - 740 Mbits/s
-without change:
-package 512 bytes - 5000 Mbits/s
-package 64 bytes - 710 Mbits/s
-
-Also I have tested D06 as client, intel machine as server,
-with the change, the result remains the same.
-
-
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 55fe8e2..0f56904 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2256,6 +2256,16 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
- 	if (vcpu->halt_poll_ns) {
- 		ktime_t stop = ktime_add_ns(ktime_get(), vcpu->halt_poll_ns);
-
-+#ifdef CONFIG_ARM64
-+		/*
-+		 * When using gicv4, enable doorbell before halt pool wait
-+		 * so that direct vlpi can stop halt poll.
-+		 */
-+		if (vcpu->arch.vgic_cpu.vgic_v3.its_vpe.its_vm) {
-+			kvm_vgic_v4_enable_doorbell(vcpu);
-+		}
-+#endif
-+
- 		++vcpu->stat.halt_attempted_poll;
- 		do {
- 			/*
-
-
-Thanks,
-Nianyao Tang		
-
-
-
-
+T24gMDMvMDQvMjAxOSBhdCAyMjo1MiwgQWxleGFuZHJlIEJlbGxvbmkgd3JvdGU6DQo+IEV4dGVy
+bmFsIEUtTWFpbA0KPiANCj4gDQo+IFRoZSBYMTEgbGljZW5zZSB0ZXh0IFsxXSBpcyBleHBsaWNp
+dGx5IGZvciB0aGUgWCBDb25zb3J0aXVtIGFuZCBoYXMgYQ0KPiBjb3VwbGUgb2YgZXh0cmEgY2xh
+dXNlcy4gVGhlIE1JVCBsaWNlbnNlIHRleHQgWzJdIGlzIGFjdHVhbGx5IHdoYXQgdGhlDQo+IGN1
+cnJlbnQgRFQgZmlsZXMgY2xhaW0uDQo+IA0KPiBbMV0gaHR0cHM6Ly9zcGR4Lm9yZy9saWNlbnNl
+cy9YMTEuaHRtbA0KPiBbMl0gaHR0cHM6Ly9zcGR4Lm9yZy9saWNlbnNlcy9NSVQuaHRtbA0KPiAN
+Cj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRyZS5iZWxsb25pQGJv
+b3RsaW4uY29tPg0KDQp3aG9sZSBzZXJpZXM6DQpBY2tlZC1ieTogTmljb2xhcyBGZXJyZSA8bmlj
+b2xhcy5mZXJyZUBtaWNyb2NoaXAuY29tPg0KDQo+IC0tLQ0KPiAgIGFyY2gvYXJtL2Jvb3QvZHRz
+L3NhbWE1ZDIuZHRzaSB8IDM5ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4g
+ICBhcmNoL2FybS9ib290L2R0cy9zYW1hNWQ0LmR0c2kgfCAzOSArLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDc2
+IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1
+ZDIuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaQ0KPiBpbmRleCBkMTU5ZWU0
+MmVmMjkuLjI2YWU2YjM0ZTMyOSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc2Ft
+YTVkMi5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDIuZHRzaQ0KPiBAQCAt
+MSw0NiArMSw5IEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjArIE9S
+IE1JVCkNCj4gICAvKg0KPiAgICAqIHNhbWE1ZDIuZHRzaSAtIERldmljZSBUcmVlIEluY2x1ZGUg
+ZmlsZSBmb3IgU0FNQTVEMiBmYW1pbHkgU29DDQo+ICAgICoNCj4gICAgKiAgQ29weXJpZ2h0IChD
+KSAyMDE1IEF0bWVsLA0KPiAgICAqICAgICAgICAgICAgICAgIDIwMTUgTHVkb3ZpYyBEZXNyb2No
+ZXMgPGx1ZG92aWMuZGVzcm9jaGVzQGF0bWVsLmNvbT4NCj4gLSAqDQo+IC0gKiBUaGlzIGZpbGUg
+aXMgZHVhbC1saWNlbnNlZDogeW91IGNhbiB1c2UgaXQgZWl0aGVyIHVuZGVyIHRoZSB0ZXJtcw0K
+PiAtICogb2YgdGhlIEdQTCBvciB0aGUgWDExIGxpY2Vuc2UsIGF0IHlvdXIgb3B0aW9uLiBOb3Rl
+IHRoYXQgdGhpcyBkdWFsDQo+IC0gKiBsaWNlbnNpbmcgb25seSBhcHBsaWVzIHRvIHRoaXMgZmls
+ZSwgYW5kIG5vdCB0aGlzIHByb2plY3QgYXMgYQ0KPiAtICogd2hvbGUuDQo+IC0gKg0KPiAtICog
+IGEpIFRoaXMgZmlsZSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBh
+bmQvb3INCj4gLSAqICAgICBtb2RpZnkgaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2Vu
+ZXJhbCBQdWJsaWMgTGljZW5zZSBhcw0KPiAtICogICAgIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBT
+b2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZQ0KPiAtICogICAgIExp
+Y2Vuc2UsIG9yIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uDQo+IC0gKg0KPiAt
+ICogICAgIFRoaXMgZmlsZSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwg
+YmUgdXNlZnVsLA0KPiAtICogICAgIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBl
+dmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mDQo+IC0gKiAgICAgTUVSQ0hBTlRBQklMSVRZIG9y
+IEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiAtICogICAgIEdO
+VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuDQo+IC0gKg0KPiAtICog
+T3IsIGFsdGVybmF0aXZlbHksDQo+IC0gKg0KPiAtICogIGIpIFBlcm1pc3Npb24gaXMgaGVyZWJ5
+IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdlLCB0byBhbnkgcGVyc29uDQo+IC0gKiAgICAgb2J0YWlu
+aW5nIGEgY29weSBvZiB0aGlzIHNvZnR3YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24N
+Cj4gLSAqICAgICBmaWxlcyAodGhlICJTb2Z0d2FyZSIpLCB0byBkZWFsIGluIHRoZSBTb2Z0d2Fy
+ZSB3aXRob3V0DQo+IC0gKiAgICAgcmVzdHJpY3Rpb24sIGluY2x1ZGluZyB3aXRob3V0IGxpbWl0
+YXRpb24gdGhlIHJpZ2h0cyB0byB1c2UsDQo+IC0gKiAgICAgY29weSwgbW9kaWZ5LCBtZXJnZSwg
+cHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwgYW5kL29yDQo+IC0gKiAgICAgc2VsbCBj
+b3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUN
+Cj4gLSAqICAgICBTb2Z0d2FyZSBpcyBmdXJuaXNoZWQgdG8gZG8gc28sIHN1YmplY3QgdG8gdGhl
+IGZvbGxvd2luZw0KPiAtICogICAgIGNvbmRpdGlvbnM6DQo+IC0gKg0KPiAtICogICAgIFRoZSBh
+Ym92ZSBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIHNoYWxsIGJl
+DQo+IC0gKiAgICAgaW5jbHVkZWQgaW4gYWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9u
+cyBvZiB0aGUgU29mdHdhcmUuDQo+IC0gKg0KPiAtICogICAgIFRIRSBTT0ZUV0FSRSBJUyBQUk9W
+SURFRCAiQVMgSVMiLCBXSVRIT1VUIFdBUlJBTlRZIE9GIEFOWSBLSU5ELA0KPiAtICogICAgIEVY
+UFJFU1MgT1IgSU1QTElFRCwgSU5DTFVESU5HIEJVVCBOT1QgTElNSVRFRCBUTyBUSEUgV0FSUkFO
+VElFUw0KPiAtICogICAgIE9GIE1FUkNIQU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNV
+TEFSIFBVUlBPU0UgQU5EDQo+IC0gKiAgICAgTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBT
+SEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZUklHSFQNCj4gLSAqICAgICBIT0xERVJTIEJFIExJQUJM
+RSBGT1IgQU5ZIENMQUlNLCBEQU1BR0VTIE9SIE9USEVSIExJQUJJTElUWSwNCj4gLSAqICAgICBX
+SEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJ
+TkcNCj4gLSAqICAgICBGUk9NLCBPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZU
+V0FSRSBPUiBUSEUgVVNFIE9SDQo+IC0gKiAgICAgT1RIRVIgREVBTElOR1MgSU4gVEhFIFNPRlRX
+QVJFLg0KPiAgICAqLw0KPiAgIA0KPiAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9kbWEvYXQ5MS5o
+Pg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpDQo+IGluZGV4IDZjMWU0MWY5NDU0OS4uNmFiMjdhN2Iz
+ODhkIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zYW1hNWQ0LmR0c2kNCj4gKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpDQo+IEBAIC0xLDQ2ICsxLDkgQEANCj4g
+Ky8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCsgT1IgTUlUKQ0KPiAgIC8qDQo+
+ICAgICogc2FtYTVkNC5kdHNpIC0gRGV2aWNlIFRyZWUgSW5jbHVkZSBmaWxlIGZvciBTQU1BNUQ0
+IGZhbWlseSBTb0MNCj4gICAgKg0KPiAgICAqICBDb3B5cmlnaHQgKEMpIDIwMTQgQXRtZWwsDQo+
+ICAgICogICAgICAgICAgICAgICAgMjAxNCBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQGF0
+bWVsLmNvbT4NCj4gLSAqDQo+IC0gKiBUaGlzIGZpbGUgaXMgZHVhbC1saWNlbnNlZDogeW91IGNh
+biB1c2UgaXQgZWl0aGVyIHVuZGVyIHRoZSB0ZXJtcw0KPiAtICogb2YgdGhlIEdQTCBvciB0aGUg
+WDExIGxpY2Vuc2UsIGF0IHlvdXIgb3B0aW9uLiBOb3RlIHRoYXQgdGhpcyBkdWFsDQo+IC0gKiBs
+aWNlbnNpbmcgb25seSBhcHBsaWVzIHRvIHRoaXMgZmlsZSwgYW5kIG5vdCB0aGlzIHByb2plY3Qg
+YXMgYQ0KPiAtICogd2hvbGUuDQo+IC0gKg0KPiAtICogIGEpIFRoaXMgZmlsZSBpcyBmcmVlIHNv
+ZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3INCj4gLSAqICAgICBtb2RpZnkg
+aXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcw0K
+PiAtICogICAgIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRo
+ZXIgdmVyc2lvbiAyIG9mIHRoZQ0KPiAtICogICAgIExpY2Vuc2UsIG9yIChhdCB5b3VyIG9wdGlv
+bikgYW55IGxhdGVyIHZlcnNpb24uDQo+IC0gKg0KPiAtICogICAgIFRoaXMgZmlsZSBpcyBkaXN0
+cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLA0KPiAtICogICAgIGJ1
+dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5
+IG9mDQo+IC0gKiAgICAgTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxB
+UiBQVVJQT1NFLiAgU2VlIHRoZQ0KPiAtICogICAgIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNl
+IGZvciBtb3JlIGRldGFpbHMuDQo+IC0gKg0KPiAtICogT3IsIGFsdGVybmF0aXZlbHksDQo+IC0g
+Kg0KPiAtICogIGIpIFBlcm1pc3Npb24gaXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdl
+LCB0byBhbnkgcGVyc29uDQo+IC0gKiAgICAgb2J0YWluaW5nIGEgY29weSBvZiB0aGlzIHNvZnR3
+YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24NCj4gLSAqICAgICBmaWxlcyAodGhlICJT
+b2Z0d2FyZSIpLCB0byBkZWFsIGluIHRoZSBTb2Z0d2FyZSB3aXRob3V0DQo+IC0gKiAgICAgcmVz
+dHJpY3Rpb24sIGluY2x1ZGluZyB3aXRob3V0IGxpbWl0YXRpb24gdGhlIHJpZ2h0cyB0byB1c2Us
+DQo+IC0gKiAgICAgY29weSwgbW9kaWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3Vi
+bGljZW5zZSwgYW5kL29yDQo+IC0gKiAgICAgc2VsbCBjb3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBh
+bmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUNCj4gLSAqICAgICBTb2Z0d2FyZSBpcyBm
+dXJuaXNoZWQgdG8gZG8gc28sIHN1YmplY3QgdG8gdGhlIGZvbGxvd2luZw0KPiAtICogICAgIGNv
+bmRpdGlvbnM6DQo+IC0gKg0KPiAtICogICAgIFRoZSBhYm92ZSBjb3B5cmlnaHQgbm90aWNlIGFu
+ZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIHNoYWxsIGJlDQo+IC0gKiAgICAgaW5jbHVkZWQgaW4g
+YWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9ucyBvZiB0aGUgU29mdHdhcmUuDQo+IC0g
+Kg0KPiAtICogICAgIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMiLCBXSVRIT1VUIFdB
+UlJBTlRZIE9GIEFOWSBLSU5ELA0KPiAtICogICAgIEVYUFJFU1MgT1IgSU1QTElFRCwgSU5DTFVE
+SU5HIEJVVCBOT1QgTElNSVRFRCBUTyBUSEUgV0FSUkFOVElFUw0KPiAtICogICAgIE9GIE1FUkNI
+QU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UgQU5EDQo+IC0gKiAg
+ICAgTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZ
+UklHSFQNCj4gLSAqICAgICBIT0xERVJTIEJFIExJQUJMRSBGT1IgQU5ZIENMQUlNLCBEQU1BR0VT
+IE9SIE9USEVSIExJQUJJTElUWSwNCj4gLSAqICAgICBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBD
+T05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJTkcNCj4gLSAqICAgICBGUk9NLCBPVVQg
+T0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SDQo+IC0g
+KiAgICAgT1RIRVIgREVBTElOR1MgSU4gVEhFIFNPRlRXQVJFLg0KPiAgICAqLw0KPiAgIA0KPiAg
+ICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9hdDkxLmg+DQo+IA0KDQoNCi0tIA0KTmljb2xh
+cyBGZXJyZQ0K
