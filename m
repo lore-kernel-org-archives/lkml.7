@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BC8C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7942C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809D4217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C032075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368225;
-	bh=GzgLndgA6aydJvvcQnCnsjcj4o2rTbGcpsyhlAMR1Vk=;
+	s=default; t=1554368228;
+	bh=2e1LqygtJEdA9ngxf+TGxzbIunJIsUaRfssRSeWr1lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J84zEN/YsbpdvrQZCyjGi+7M5OceOgC9s9eAqkXr09fjxaMtxW6PkMv/c9ZGJ7shR
-	 MTthprL6Ni9EVMUB4h2TxpfBFxKZWcVzfI4+4tuwLkWvfPhtjkZOJ17bdKrxgD6xsa
-	 JF4r47gVylA/eujREYsCwT5pA1Ku1SFNSDvE8y0U=
+	b=Ask04tL7rweeeU/sUKMhyybHEcfX0dIF0X9ac16CuSgphSJ+q7+s+YjBsrZSAbRR4
+	 jkYMUiUGqfrPmKae1x8cCUocJhB91HgcLoVl9B8uzlQt/XUZy3a7q2zlqg+OW3LQMf
+	 +rhhPZms7VeVxqg9EDMDq+n6ofFVBsb3ZA3egIVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbfDDI5E (ORCPT
+        id S1730620AbfDDI5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:57:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60614 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730597AbfDDI5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:01 -0400
+        id S1730602AbfDDI5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:57:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 576D12177E;
-        Thu,  4 Apr 2019 08:56:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A422217D4;
+        Thu,  4 Apr 2019 08:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368219;
-        bh=GzgLndgA6aydJvvcQnCnsjcj4o2rTbGcpsyhlAMR1Vk=;
+        s=default; t=1554368222;
+        bh=2e1LqygtJEdA9ngxf+TGxzbIunJIsUaRfssRSeWr1lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jx7LdsrKdyx+OFUTzTVSh2nu/+huOYg+h6s84fpGt6LgDuDxZrfVBdYEMTrUkEwaC
-         MCC7qiej2p0SxyHXIwi8avOIpFl7Vcpb276gss/P0Emg4iwvZt8boL1satmN1qNDzg
-         47XGc6XB7dsamjXaRurmjXFAaFEcOfkwnmo+TdIY=
+        b=ObA5orv99ovrrjB/zfxpKJ/mB6SGJjVxLYCyzkJqkfHnrk8mVafXuEGW4o/Zkd4Yz
+         MA4orHVoKSMjcEx3isVo6eUGw/MedR/hG0JmVlQ2aWygLT059zoF9Xe9+ViW+PzcAi
+         jDtaKfgWZzrslZAIE5T6liwsyAi2Gwc+dxZRIR/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Michal Kazior <michal@plume.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/121] jbd2: fix race when writing superblock
-Date:   Thu,  4 Apr 2019 10:47:34 +0200
-Message-Id: <20190404084548.833478116@linuxfoundation.org>
+Subject: [PATCH 4.14 067/121] leds: lp55xx: fix null deref on firmware load failure
+Date:   Thu,  4 Apr 2019 10:47:35 +0200
+Message-Id: <20190404084548.903514853@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,155 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 538bcaa6261b77e71d37f5596c33127c1a3ec3f7 ]
+[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
 
-The jbd2 superblock is lockless now, so there is probably a race
-condition between writing it so disk and modifing contents of it, which
-may lead to checksum error. The following race is the one case that we
-have captured.
+I've stumbled upon a kernel crash and the logs
+pointed me towards the lp5562 driver:
 
-jbd2                                fsstress
-jbd2_journal_commit_transaction
- jbd2_journal_update_sb_log_tail
-  jbd2_write_superblock
-   jbd2_superblock_csum_set         jbd2_journal_revoke
-                                     jbd2_journal_set_features(revork)
-                                     modify superblock
-   submit_bh(checksum incorrect)
+> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
+> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
+> ...
+> <3>[306073.924886] lp5562 0-0030: firmware request failed
+> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
+> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
+> ...
 
-Fix this by locking the buffer head before modifing it.  We always
-write the jbd2 superblock after we modify it, so this just means
-calling the lock_buffer() a little earlier.
+After taking a look I noticed firmware_release()
+could be called with either NULL or a dangling
+pointer.
 
-This checksum corruption problem can be reproduced by xfstests
-generic/475.
-
-Reported-by: zhangyi (F) <yi.zhang@huawei.com>
-Suggested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
+Signed-off-by: Michal Kazior <michal@plume.com>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 52 ++++++++++++++++++++++++-----------------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+ drivers/leds/leds-lp55xx-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 61d48f0c41a1..0c8f77db60e2 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1343,6 +1343,10 @@ static int journal_reset(journal_t *journal)
- 	return jbd2_journal_start_thread(journal);
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 5377f22ff994..e2655953667c 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -201,7 +201,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+ 
+ 	if (!fw) {
+ 		dev_err(dev, "firmware request failed\n");
+-		goto out;
++		return;
+ 	}
+ 
+ 	/* handling firmware data is chip dependent */
+@@ -214,9 +214,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+-out:
+ 	/* firmware should be released for other channel use */
+ 	release_firmware(chip->fw);
++	chip->fw = NULL;
  }
  
-+/*
-+ * This function expects that the caller will have locked the journal
-+ * buffer head, and will return with it unlocked
-+ */
- static int jbd2_write_superblock(journal_t *journal, int write_flags)
- {
- 	struct buffer_head *bh = journal->j_sb_buffer;
-@@ -1352,7 +1356,6 @@ static int jbd2_write_superblock(journal_t *journal, int write_flags)
- 	trace_jbd2_write_superblock(journal, write_flags);
- 	if (!(journal->j_flags & JBD2_BARRIER))
- 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
--	lock_buffer(bh);
- 	if (buffer_write_io_error(bh)) {
- 		/*
- 		 * Oh, dear.  A previous attempt to write the journal
-@@ -1411,6 +1414,7 @@ int jbd2_journal_update_sb_log_tail(journal_t *journal, tid_t tail_tid,
- 	jbd_debug(1, "JBD2: updating superblock (start %lu, seq %u)\n",
- 		  tail_block, tail_tid);
- 
-+	lock_buffer(journal->j_sb_buffer);
- 	sb->s_sequence = cpu_to_be32(tail_tid);
- 	sb->s_start    = cpu_to_be32(tail_block);
- 
-@@ -1441,18 +1445,17 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
- 	journal_superblock_t *sb = journal->j_superblock;
- 
- 	BUG_ON(!mutex_is_locked(&journal->j_checkpoint_mutex));
--	read_lock(&journal->j_state_lock);
--	/* Is it already empty? */
--	if (sb->s_start == 0) {
--		read_unlock(&journal->j_state_lock);
-+	lock_buffer(journal->j_sb_buffer);
-+	if (sb->s_start == 0) {		/* Is it already empty? */
-+		unlock_buffer(journal->j_sb_buffer);
- 		return;
- 	}
-+
- 	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
- 		  journal->j_tail_sequence);
- 
- 	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
- 	sb->s_start    = cpu_to_be32(0);
--	read_unlock(&journal->j_state_lock);
- 
- 	jbd2_write_superblock(journal, write_op);
- 
-@@ -1475,9 +1478,8 @@ void jbd2_journal_update_sb_errno(journal_t *journal)
- 	journal_superblock_t *sb = journal->j_superblock;
- 	int errcode;
- 
--	read_lock(&journal->j_state_lock);
-+	lock_buffer(journal->j_sb_buffer);
- 	errcode = journal->j_errno;
--	read_unlock(&journal->j_state_lock);
- 	if (errcode == -ESHUTDOWN)
- 		errcode = 0;
- 	jbd_debug(1, "JBD2: updating superblock error (errno %d)\n", errcode);
-@@ -1881,28 +1883,27 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
- 
- 	sb = journal->j_superblock;
- 
-+	/* Load the checksum driver if necessary */
-+	if ((journal->j_chksum_driver == NULL) &&
-+	    INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
-+		journal->j_chksum_driver = crypto_alloc_shash("crc32c", 0, 0);
-+		if (IS_ERR(journal->j_chksum_driver)) {
-+			printk(KERN_ERR "JBD2: Cannot load crc32c driver.\n");
-+			journal->j_chksum_driver = NULL;
-+			return 0;
-+		}
-+		/* Precompute checksum seed for all metadata */
-+		journal->j_csum_seed = jbd2_chksum(journal, ~0, sb->s_uuid,
-+						   sizeof(sb->s_uuid));
-+	}
-+
-+	lock_buffer(journal->j_sb_buffer);
-+
- 	/* If enabling v3 checksums, update superblock */
- 	if (INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
- 		sb->s_checksum_type = JBD2_CRC32C_CHKSUM;
- 		sb->s_feature_compat &=
- 			~cpu_to_be32(JBD2_FEATURE_COMPAT_CHECKSUM);
--
--		/* Load the checksum driver */
--		if (journal->j_chksum_driver == NULL) {
--			journal->j_chksum_driver = crypto_alloc_shash("crc32c",
--								      0, 0);
--			if (IS_ERR(journal->j_chksum_driver)) {
--				printk(KERN_ERR "JBD2: Cannot load crc32c "
--				       "driver.\n");
--				journal->j_chksum_driver = NULL;
--				return 0;
--			}
--
--			/* Precompute checksum seed for all metadata */
--			journal->j_csum_seed = jbd2_chksum(journal, ~0,
--							   sb->s_uuid,
--							   sizeof(sb->s_uuid));
--		}
- 	}
- 
- 	/* If enabling v1 checksums, downgrade superblock */
-@@ -1914,6 +1915,7 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
- 	sb->s_feature_compat    |= cpu_to_be32(compat);
- 	sb->s_feature_ro_compat |= cpu_to_be32(ro);
- 	sb->s_feature_incompat  |= cpu_to_be32(incompat);
-+	unlock_buffer(journal->j_sb_buffer);
- 
- 	return 1;
- #undef COMPAT_FEATURE_ON
+ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
 -- 
 2.19.1
 
