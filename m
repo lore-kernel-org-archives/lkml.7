@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16020C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8C5C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9BA221850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A9C21738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368007;
-	bh=FlFBmuAMY+DY/P172A7FJW7Jgybyhq9UzpMNTwKhVLQ=;
+	s=default; t=1554368010;
+	bh=xt+o5RMMnogdbD0w0AU1R6fdfjt+8U4RcS7eXo8qSc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eIKEIedDl2A4Af0hvJZ75D+4w2o9MdidbHN5He81OCL5AkNfDindFH8Mgkrh1Cw2R
-	 qa8f0bB0hotjoGGarqyq3g1WsLXybUWJ2JcFVUYH/2PvPJqRgECLyVJT0CYZ/g9ZXk
-	 +kxQJpkwPigsh9yejpHaMvEqNE6kyHFHoBKorfAU=
+	b=cLArINdq+viAP5pwBC4jb5H9XHu5BEEoIR8FbYImLPEsqMurajtkjnlGzqm4Rete7
+	 rkpCmeMxDkSLZ6xbY7F6srpjy4bGmaOpcvo19YbjjKDqU/lGanWFRm9eWGdWgGXWMW
+	 MIf8r7Kcecl2f866EkDsauTWjGwHBPsXD/ocIA/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfDDIx1 (ORCPT
+        id S1729076AbfDDIx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55678 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:53:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729076AbfDDIxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:25 -0400
+        id S1729357AbfDDIx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A10C2184B;
-        Thu,  4 Apr 2019 08:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349A521738;
+        Thu,  4 Apr 2019 08:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368003;
-        bh=FlFBmuAMY+DY/P172A7FJW7Jgybyhq9UzpMNTwKhVLQ=;
+        s=default; t=1554368005;
+        bh=xt+o5RMMnogdbD0w0AU1R6fdfjt+8U4RcS7eXo8qSc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMqzp/pnRFk4epmB7+FWwepluyeIq62Q7+bL2O7QxLNxLl2AvuVCinypvmbkONHYx
-         7fj7pfHq+XhXAeB10kd/hh7GhT/tkl7A5NgmjwSfN46zCpR3cXHpBQqF3N5m6ru05i
-         KTzEQMV7vuX5eUJgwOG65AHlWbkDtFmbPBw4HqzU=
+        b=nOXPTsph7UVAE+VQzroGE/r+agVDsTwYTJoV2GU9/9SSrGETbvsxG4UwvYcX6DzAO
+         Ip9WglBc247edAvWp6QwsS3OnranC+hRsu+1tOcw3rXLf4NvCoCohhvpJsHcbwzIDv
+         Vf0ivY7zcqeqljctx2+MXZlOz3HBxfOM+liY/QvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        George Rimar <grimar@accesssoftek.com>,
-        Tri Vo <trong@android.com>, Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Michael Matz <matz@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>, morbo@google.com,
-        ruiu@google.com, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 85/91] x86/build: Specify elf_i386 linker emulation explicitly for i386 objects
-Date:   Thu,  4 Apr 2019 10:48:09 +0200
-Message-Id: <20190404084540.398204743@linuxfoundation.org>
+Subject: [PATCH 4.9 86/91] selinux: do not override context on context mounts
+Date:   Thu,  4 Apr 2019 10:48:10 +0200
+Message-Id: <20190404084540.456444146@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -72,88 +67,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 927185c124d62a9a4d35878d7f6d432a166b74e3 ]
+[ Upstream commit 53e0c2aa9a59a48e3798ef193d573ade85aa80f5 ]
 
-The kernel uses the OUTPUT_FORMAT linker script command in it's linker
-scripts. Most of the time, the -m option is passed to the linker with
-correct architecture, but sometimes (at least for x86_64) the -m option
-contradicts the OUTPUT_FORMAT directive.
+Ignore all selinux_inode_notifysecctx() calls on mounts with SBLABEL_MNT
+flag unset. This is achived by returning -EOPNOTSUPP for this case in
+selinux_inode_setsecurtity() (because that function should not be called
+in such case anyway) and translating this error to 0 in
+selinux_inode_notifysecctx().
 
-Specifically, arch/x86/boot and arch/x86/realmode/rm produce i386 object
-files, but are linked with the -m elf_x86_64 linker flag when building
-for x86_64.
+This fixes behavior of kernfs-based filesystems when mounted with the
+'context=' option. Before this patch, if a node's context had been
+explicitly set to a non-default value and later the filesystem has been
+remounted with the 'context=' option, then this node would show up as
+having the manually-set context and not the mount-specified one.
 
-The GNU linker manpage doesn't explicitly state any tie-breakers between
--m and OUTPUT_FORMAT. But with BFD and Gold linkers, OUTPUT_FORMAT
-overrides the emulation value specified with the -m option.
+Steps to reproduce:
+    # mount -t cgroup2 cgroup2 /sys/fs/cgroup/unified
+    # chcon unconfined_u:object_r:user_home_t:s0 /sys/fs/cgroup/unified/cgroup.stat
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.threads
+    # umount /sys/fs/cgroup/unified
+    # mount -o context=system_u:object_r:tmpfs_t:s0 -t cgroup2 cgroup2 /sys/fs/cgroup/unified
 
-LLVM lld has a different behavior, however. When supplied with
-contradicting -m and OUTPUT_FORMAT values it fails with the following
-error message:
+Result before:
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.threads
 
-  ld.lld: error: arch/x86/realmode/rm/header.o is incompatible with elf_x86_64
+Result after:
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.threads
 
-Therefore, just add the correct -m after the incorrect one (it overrides
-it), so the linker invocation looks like this:
-
-  ld -m elf_x86_64 -z max-page-size=0x200000 -m elf_i386 --emit-relocs -T \
-    realmode.lds header.o trampoline_64.o stack.o reboot.o -o realmode.elf
-
-This is not a functional change for GNU ld, because (although not
-explicitly documented) OUTPUT_FORMAT overrides -m EMULATION.
-
-Tested by building x86_64 kernel with GNU gcc/ld toolchain and booting
-it in QEMU.
-
- [ bp: massage and clarify text. ]
-
-Suggested-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: George Rimar <grimar@accesssoftek.com>
-Signed-off-by: Tri Vo <trong@android.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Tri Vo <trong@android.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Michael Matz <matz@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: morbo@google.com
-Cc: ndesaulniers@google.com
-Cc: ruiu@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190111201012.71210-1-trong@android.com
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/Makefile        | 2 +-
- arch/x86/realmode/rm/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ security/selinux/hooks.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 3b7156f46bc1..3b16935b22bc 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -100,7 +100,7 @@ $(obj)/zoffset.h: $(obj)/compressed/vmlinux FORCE
- AFLAGS_header.o += -I$(objtree)/$(obj)
- $(obj)/header.o: $(obj)/zoffset.h
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index d293b546a2aa..9bd6f97ccd21 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -3265,12 +3265,16 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
+ 				     const void *value, size_t size, int flags)
+ {
+ 	struct inode_security_struct *isec = inode_security_novalidate(inode);
++	struct superblock_security_struct *sbsec = inode->i_sb->s_security;
+ 	u32 newsid;
+ 	int rc;
  
--LDFLAGS_setup.elf	:= -T
-+LDFLAGS_setup.elf	:= -m elf_i386 -T
- $(obj)/setup.elf: $(src)/setup.ld $(SETUP_OBJS) FORCE
- 	$(call if_changed,ld)
+ 	if (strcmp(name, XATTR_SELINUX_SUFFIX))
+ 		return -EOPNOTSUPP;
  
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index 25012abc3409..ce5f431e6823 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -47,7 +47,7 @@ $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
- targets += realmode.lds
- $(obj)/realmode.lds: $(obj)/pasyms.h
++	if (!(sbsec->flags & SBLABEL_MNT))
++		return -EOPNOTSUPP;
++
+ 	if (!value || !size)
+ 		return -EACCES;
  
--LDFLAGS_realmode.elf := --emit-relocs -T
-+LDFLAGS_realmode.elf := -m elf_i386 --emit-relocs -T
- CPPFLAGS_realmode.lds += -P -C -I$(objtree)/$(obj)
+@@ -5984,7 +5988,10 @@ static void selinux_inode_invalidate_secctx(struct inode *inode)
+  */
+ static int selinux_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen)
+ {
+-	return selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX, ctx, ctxlen, 0);
++	int rc = selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX,
++					   ctx, ctxlen, 0);
++	/* Do not return error when suppressing label (SBLABEL_MNT not set). */
++	return rc == -EOPNOTSUPP ? 0 : rc;
+ }
  
- targets += realmode.elf
+ /*
 -- 
 2.19.1
 
