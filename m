@@ -2,106 +2,142 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C13EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71628C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57023206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6AB206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:40:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="N9O/P989"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="g8ut8LyD";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gV3uonkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfDDQjR (ORCPT
+        id S1729497AbfDDQkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:39:17 -0400
-Received: from mail-yw1-f43.google.com ([209.85.161.43]:46902 "EHLO
-        mail-yw1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfDDQjR (ORCPT
+        Thu, 4 Apr 2019 12:40:13 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43294 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfDDQkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:39:17 -0400
-Received: by mail-yw1-f43.google.com with SMTP id v127so1194968ywe.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sVZzefylPUert59vxaZI/oiiATEF9PQOgxdOg2fXoEs=;
-        b=N9O/P989CYq5nDJ+5cfuaXQTyO9yPFp/1/eKojWhp/i7Y2K8efOxl8h5pcHtpCFXpV
-         2/Fgk3oF02TPKWP0j2FhXquqaxWo7pcBk+LSDFbvbP6L7+AKKu3P8X1Bc/ih1Un5oAHW
-         lidSBfVBXnjoYtvNI8yPV/jeLc7aSm1KqADr4p45hgk+VpTgdmNZgYK7a9ZtS8/nOvWv
-         Ze6qWGbBNiCJZnPke88ZMLvYVM1HMR/817cLJax12DTXw/4xn7MrjL1SOwjZX3E93CRT
-         n9tNcxv2bv+8v9aEkys2lEACvHlf/xG0dxvVaY7Mo0mI/Orl1g12urtpIGjl1Q1vKsWG
-         eLEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sVZzefylPUert59vxaZI/oiiATEF9PQOgxdOg2fXoEs=;
-        b=IT45/cG4k3LUEVdE5SAVDZr5UZlDVPAG/GgTJV0rIxq1hNhZZGpn6VrR1KYqeHRseF
-         V6Pc/wcAe1Y99B6k9p+9MpAZX0Otdb90XHyAOoWvRF8RUIkVCvrcCylJK1GOg2tn/SI/
-         H3zjQxWbNSoygtcoLtN311tDlczsGohyu3p05uhhQfQBI9HMUWGTvp12Ou3ACtvAPJLB
-         dLh/8IT8WIXgdxxb3gYS8PxRrIn1+PkxdR50Am/BqciL4J9a6TTb4YMNrrIVvHGLJvZw
-         TYJzrbuE7b8XcZ0Tk6tkOql1/8DK+YxIMEMoQoSz2YPVEQIforCSk54VEUgQvUt5vClD
-         H/WA==
-X-Gm-Message-State: APjAAAWO08OmmLNEzDvg+1VBFQ+udUfSmrzUndf3D7dTO/0asEnjF4ND
-        FvfGqR1pqkGBd11n4QTQpL346Q==
-X-Google-Smtp-Source: APXvYqzilLKYDRMZlOnegsGNrRHGCTLtWjZZcd0Pk6bBZMtt4KU1a29LEu2clZfsFtRi2mMQ7fOucw==
-X-Received: by 2002:a81:4d8b:: with SMTP id a133mr5725050ywb.122.1554395956113;
-        Thu, 04 Apr 2019 09:39:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:200::1:af4])
-        by smtp.gmail.com with ESMTPSA id j187sm6563806ywj.32.2019.04.04.09.39.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 09:39:15 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 12:39:14 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm:workingset use real time to judge activity of the
- file page
-Message-ID: <20190404163914.GA4229@cmpxchg.org>
-References: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
+        Thu, 4 Apr 2019 12:40:12 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1A96A60746; Thu,  4 Apr 2019 16:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554396011;
+        bh=gGxqswoSC8eyw2H1E80LMaN0g64Olwvj3RMSqJJYLYQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=g8ut8LyDMbhIFK9oiU6YpFyZIXFGi+TiomvzGy+Tc9uGyWYoC9JxFdYoVJ+Yy9h7m
+         JxFFlxNEOQl/cG/DNNl06Tr5rUKHp8STX/Sai6rWWHecYuK3LTGRVKaA2ijlNtdxND
+         1kLHNb0VroZNYU5OME0l2gdNG0qiULjXkUnUTKiY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4238560350;
+        Thu,  4 Apr 2019 16:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1554396010;
+        bh=gGxqswoSC8eyw2H1E80LMaN0g64Olwvj3RMSqJJYLYQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=gV3uonkcBikVeo1pPwwneFXwapnPVs8SaFW5+OSquWc+rju5CjnSW73hjei0UTEkH
+         DhmL6vH/MG3rY2kP7dpQ4p2pbxWkpzxgdIrsEifHbdRLlZ0lXuG28iKFqL+sZhI/RQ
+         MfyxskMDSnzcBMCeJozRCMqdu5nhaaBCx2IVwPxc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4238560350
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Igor Mitsyanko <imitsyanko@quantenna.com>,
+        Avinash Patil <avinashp@quantenna.com>,
+        Sergey Matyukevich <smatyukevich@quantenna.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] qtnfmac: replace qtnf_cmd_acl_data_size() with struct_size()
+References: <20190403170236.GA31637@embeddedor>
+        <20190404133234.2uatru2vlw3ntrmv@bars>
+        <e56579c6-da6e-4cb2-90b1-89e7774debf9@embeddedor.com>
+        <3baa19c1-a213-3dcf-2f03-23b058ec419a@embeddedor.com>
+Date:   Thu, 04 Apr 2019 19:40:06 +0300
+In-Reply-To: <3baa19c1-a213-3dcf-2f03-23b058ec419a@embeddedor.com> (Gustavo A.
+        R. Silva's message of "Thu, 4 Apr 2019 11:33:56 -0500")
+Message-ID: <87imvtsp09.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 11:30:17AM +0800, Zhaoyang Huang wrote:
-> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> 
-> In previous implementation, the number of refault pages is used
-> for judging the refault period of each page, which is not precised as
-> eviction of other files will be affect a lot on current cache.
-> We introduce the timestamp into the workingset's entry and refault ratio
-> to measure the file page's activity. It helps to decrease the affection
-> of other files(average refault ratio can reflect the view of whole system
-> 's memory).
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
 
-I don't understand what exactly you're saying here, can you please
-elaborate?
+> On 4/4/19 11:01 AM, Gustavo A. R. Silva wrote:
+>> 
+>> 
+>> On 4/4/19 8:32 AM, Sergey Matyukevich wrote:
+>>>> One of the more common cases of allocation size calculations is finding
+>>>> the size of a structure that has a zero-sized array at the end, along
+>>>> with memory for some number of elements for that array. For example:
+>>>>
+>>>> struct foo {
+>>>>     int stuff;
+>>>>     struct boo entry[];
+>>>> };
+>>>>
+>>>> size = sizeof(struct foo) + count * sizeof(struct boo);
+>>>> instance = kzalloc(size, GFP_KERNEL)
+>>>>
+>>>> Instead of leaving these open-coded and prone to type mistakes, we can
+>>>> now use the new struct_size() helper:
+>>>>
+>>>> size = struct_size(instance, entry, count);
+>>>>
+>>>> or
+>>>>
+>>>> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
+>>>>
+>>>> Based on the above, replace qtnf_cmd_acl_data_size() with the
+>>>> new struct_size() helper.
+>>>>
+>>>> This code was detected with the help of Coccinelle.
+>>>>
+>>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>>> ---
+>>>>  drivers/net/wireless/quantenna/qtnfmac/commands.c | 15 ++++-----------
+>>>>  1 file changed, 4 insertions(+), 11 deletions(-)
+>>>
+>>> Hi Gustavo,
+>>>
+>> 
+>> Hey Sergey,
+>> 
+>>> Thanks for the patch! By the way, it does not apply cleanly, so it needs
+>>> to be rebased on top of the up-to-date wireless-drivers-next tree. Let
+>>> me know if you would prefer me to care about rebase. Then I will
+>>> add this patch to the upcoming series of qtnfmac fixes.
+>>>
+>> 
+>> Don't worry. I'll do it and send this again.
+>> 
+>
+> Hmm... I just applied it cleanly on top of wireless-drivers-next/master:
+>
+> 973a99be7943 (HEAD) qtnfmac: replace qtnf_cmd_acl_data_size() with struct_size()
+> 38bb0baea310 (wireless-drivers-next/master) rtlwifi: move spin_lock_bh
+> to spin_lock in tasklet
+> 60209d482b97 rtlwifi: fix potential NULL pointer dereference
+> 765976285a8c rtlwifi: fix a potential NULL pointer dereference
+>
+> Do you see any issues with this?
 
-The reason it's using distances instead of absolute time is because
-the ordering of the LRU is relative and not based on absolute time.
+Yeah, I also was able to apply it without problems. So it's in w-d-next
+now :)
 
-E.g. if a page is accessed every 500ms, it depends on all other pages
-to determine whether this page is at the head or the tail of the LRU.
-
-So when you refault, in order to determine the relative position of
-the refaulted page in the LRU, you have to compare it to how fast that
-LRU is moving. The absolute refault time, or the average time between
-refaults, is not comparable to what's already in memory.
+-- 
+Kalle Valo
