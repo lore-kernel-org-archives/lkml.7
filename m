@@ -2,96 +2,69 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9145DC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83965C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C51521738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:29:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fTgcRVc1"
+	by mail.kernel.org (Postfix) with ESMTP id 4F73C20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554359410;
+	bh=N1cjutw3r+8Q+pbVRsLiDXC1ty1m5AvYGNg2ctpc5dQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=o9Ct2aQEZte5riYgFTPjD49V1+2ZbL8cd0P455thuQABfuXKkiRzfoja+rh09jhdP
+	 LZBMSms6wbOU1mcBzOu2RmqTr2KA2/YbnVnQ07GWUZbud5WEywoxZf2XEqv3Sx6z0O
+	 cLxqssW99cF9FJAx6HMCqU8Ucdo4ulRj2ubSpNF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfDDG3S (ORCPT
+        id S1726921AbfDDGaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 02:29:18 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:24376 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDDG3S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 02:29:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1554359354;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=TWOuqIAYnWnAAX/SrCaBGBo5LU8X1ZuLAepkUJVZeVc=;
-        b=fTgcRVc1FFfcNqblZt+cYLw+OeksNQ+TkUBpe4kYUOupq7WTOAi3dP3eh4i13olhdK
-        mu5jTqUkcdMSSE2SLiamRzeQyCGzEV5caBOv+0UbUV1wFe31V6QkCwYvOoWaZ8JaJNWz
-        dRZd1v7Wvsr5ykh4LbYgp77ov+4/RYbHRDTfZXO5Kap6wzM9Xqu9IaMkmVkpMzvjHmAR
-        HcR6Oj3n7xwY2Nyml38bRjoBAWRMPoZZyb2ALPJG3feKUdQB5po08efwoSNcS4LyjQa8
-        MtnN8xcHAgGXH/0mpim8/fLW++gDJEnWNrh6HdR5nXI08ICYnlVEPvrwSGCX3h4uApd3
-        ocUQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrtwDOsr48="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id K07648v346TArbI
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 4 Apr 2019 08:29:10 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190303153201.440ac325@archlinux>
-Date:   Thu, 4 Apr 2019 08:29:12 +0200
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Song Qiang <songqiang1304521@gmail.com>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        Martin Kelly <mkelly@xevo.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3A50A918-61AB-4710-B9DA-DF041A898944@goldelico.com>
-References: <cover.1550768574.git.hns@goldelico.com> <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com> <20190303153201.440ac325@archlinux>
-To:     Jonathan Cameron <jic23@kernel.org>
-X-Mailer: Apple Mail (2.3124)
+        Thu, 4 Apr 2019 02:30:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbfDDGaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 02:30:09 -0400
+Subject: Re: [GIT PULL] SMB3 Fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554359408;
+        bh=N1cjutw3r+8Q+pbVRsLiDXC1ty1m5AvYGNg2ctpc5dQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=XFsGIPyrd70j9F13YbtXhVamXkQWAxZFZ1OpOV8a7Nn8NsRhHeONKn2qzv9YIfHIV
+         12wTWL1x4jQYGLTlTx3L8oW99X4WrUzuU3U8LTvbQHzL+pklEYns6+uEo/sGyCFCzv
+         Jo+OYKB4GPRc8kJnip/C8/1Yz6MY8mYTEJB9wFdw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAH2r5mv70K=Mj7ehKB2iAZc95emcWGYC5eBKOV-1tkD=euyatQ@mail.gmail.com>
+References: <CAH2r5mv70K=Mj7ehKB2iAZc95emcWGYC5eBKOV-1tkD=euyatQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5mv70K=Mj7ehKB2iAZc95emcWGYC5eBKOV-1tkD=euyatQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/5.1-rc3-smb3-fixes
+X-PR-Tracked-Commit-Id: 4811e3096daaa56e145a1d2bec45e2e9fe790729
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 145f47c7381d43c789cbad55d4dbfd28fc6c46a4
+Message-Id: <155435940868.29869.8423602875865195219.pr-tracker-bot@kernel.org>
+Date:   Thu, 04 Apr 2019 06:30:08 +0000
+To:     Steve French <smfrench@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+The pull request you sent on Wed, 3 Apr 2019 13:03:47 -0500:
 
-> Am 03.03.2019 um 16:32 schrieb Jonathan Cameron <jic23@kernel.org>:
->=20
-> Thanks to Linus and Andy for reviews.
-> I've picked up all but they documentation patch.  I think
-> it is 'very nearly there', but would like a few really minor
-> tweaks.  Seemed silly to stall the other patches on that though!
+> git://git.samba.org/sfrench/cifs-2.6.git tags/5.1-rc3-smb3-fixes
 
-Seems they have stalled elsewhere since they did not yet arrive in =
-linux-next.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/145f47c7381d43c789cbad55d4dbfd28fc6c46a4
 
-The documentation patch is still on my todo list and will need a little =
-more time
-but that should not block the others.
+Thank you!
 
-BR and thanks,
-Nikolaus
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
