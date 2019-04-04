@@ -2,153 +2,166 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F361C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0836C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 396EA2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F1B20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jDJG+FHe"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="xN/6sspu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B/R4rO1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbfDDU25 (ORCPT
+        id S1731005AbfDDU3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:28:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37067 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729657AbfDDU24 (ORCPT
+        Thu, 4 Apr 2019 16:29:50 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:34711 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729529AbfDDU3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:28:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 8so1934262pfr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:28:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4qUk8W0GAzWA97FnJKu3eUQ+vGfAvxqnmlQdPm3iJDk=;
-        b=jDJG+FHekDqus5RI2HRReA5lJyBIce30V90l3z6R0EapIUZyJVM/pE1M4DjiBuF/nK
-         tRF7L3aHXW76V+03de5yuxJSU6/UY0tpKqdgh+nVTT8/MPtETM4H7Ehfk+K3xwGje/3C
-         up20w6cBeDi8xG4N2EAdHOxsFnRqMxLJspG7hJSiPoLwDGevUnIGq1/OsWOn2iooJjyl
-         EL9H4CsplNsDhLuPN4v7FGdmJJO100k3bnaS8P6E4qN59gb0A7jV1pEVAKf/Gpx/w1TE
-         rjAVdHdOA//eUxwjlp+OuowIZmz+RcRQ0p+taq50XA/eiESMkSua3xIhHaUNPmePiop+
-         bc7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4qUk8W0GAzWA97FnJKu3eUQ+vGfAvxqnmlQdPm3iJDk=;
-        b=ZuZsywZbwy7OnV2sDkhuoN9xzLbJBieAcbt1sPdWokUpC39DGYbsQCAb2GWVBeUgRE
-         B8qDhjaNJ45rrD4fiFSKgi8f60u4BapyAL671nKkTjo/MuabQwjfRpFOwnbnLZZmTs9g
-         CVwMFHK0ksG+yVgYQ5JudxuFygn7eK/1pV5TZajjSeunVO+XFg+67QDalkccaMly4FaD
-         a+sTBNLKpJU+b+3O5Th+PvuISFhRYE8OFTEj5+OJ2ECVKzkAYGbQ7hx+pJm6/ath1ppz
-         ybmJuu6Ims76EDH29DOiuzr7tEbOii4fW8ngU1j0+IaUTemSlny3q2Q1ZqdDhZNwYi7d
-         om3A==
-X-Gm-Message-State: APjAAAUxTn9L2S0ITtamkTxRjjDPvAZXw5n31LkUPHIkCxiODT2iamkP
-        tQwZdSySjNjbm98nTxszmD2Z+1SkIiI=
-X-Google-Smtp-Source: APXvYqykvrNarnYRrmQ39P2Tb9+d1I8m6DUa+RGJC8yzMyWYP+buLoJAWvAE40aaaXJAY9zYZnL+Ww==
-X-Received: by 2002:a63:2c3:: with SMTP id 186mr7675400pgc.161.1554409735180;
-        Thu, 04 Apr 2019 13:28:55 -0700 (PDT)
-Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:ad22:1cbb:d8fa:7d55])
-        by smtp.googlemail.com with ESMTPSA id e21sm28301337pfd.177.2019.04.04.13.28.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 13:28:54 -0700 (PDT)
-Subject: Re: [PATCH v3 0/3] kvm: Use huge pages for DAX-backed files
-From:   Barret Rhoden <brho@google.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yu.c.zhang@intel.com
-References: <20190404202345.133553-1-brho@google.com>
-Message-ID: <ac4e061c-429d-2306-2f7b-b7f8e6fc362b@google.com>
-Date:   Thu, 4 Apr 2019 16:28:51 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 4 Apr 2019 16:29:49 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 579542560B;
+        Thu,  4 Apr 2019 16:29:48 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 04 Apr 2019 16:29:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=/iXR9Etw+vhQyqWT29ovFK7pHcL
+        2BRgAxfihaLYxNSU=; b=xN/6sspuUWSZGBi1Y6IP5bVBNnkKiHLfPK1+bKTm9Iw
+        1O5SJgWLRSrlQdM1AXjda/qvl79TwazNyHRdJX0ojkh+eJdhTJuEKEDushjL/+3t
+        KTy82aJF+JGQ7orgX4IY8sMbT9Hdbn8IySArnOsjNkNmVLI2rI/mEVF93hcf17Y/
+        PqYzhBIEoOGV74MQFREp/dcAEZkkWnwRBoxqZ524KzkylBI4yvNHLzUulthkCo3t
+        hH1FBJHkgJDAEKE9DWz5v/mXDcb4js+kCj1lR0mpRhbHcR4VC4nUdPn9mf8n8ZIC
+        3XV0+GW6RaQb0OEGGNL5qDeJzLMN61hkpLsEDyTghPQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/iXR9E
+        tw+vhQyqWT29ovFK7pHcL2BRgAxfihaLYxNSU=; b=B/R4rO1GDI3kRmLYZKv8WB
+        SeLe+A21iuCN3AH0ZebZTI5QlSHszd82qxn+XLOZPPO/B9lXXZxDvbGqyQieWojm
+        AdctTyhduWde6j2UdB0rED2s0kaYdGkV1VehppMy2likLREes6HG+i3rLuot3KHY
+        OW7YDXrKQEQSOsrCqe4Mh0bj7OoIHb4ko+v48B+ECyBCzDQir4zu+Zw2pJdinzo4
+        JH0eKbMqbnoeyiuOk9i9IvNXlYHQSPf2KjBiTQ1/9KJD/VWeGQJrT7kgeZk35A2t
+        jYgZL+Bz3qmnbP4c2P39QIC+PUJmuuT2hKcOPz1zZQyotoAQMiBn7pl779BZUTOQ
+        ==
+X-ME-Sender: <xms:OmmmXHNr6umUKOcAIwbc6Wg9kBWMxrc_lwkgqeY5oYDasRTpCW26sw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdehgddugeekucdltddurdeguddtrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffk
+    fhggtggujgfofgesthdtredtofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrh
+    guihhnghdfuceomhgvsehtohgsihhnrdgttgeqnecukfhppeduvdegrddugeelrdduudeg
+    rdekieenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlh
+    hushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:OmmmXIEWjJgt9a4gB3SR_KeJV-Pd52QAVK3sHw3mVFOFkwONm8nezw>
+    <xmx:OmmmXL0ihRfvXIYC9bNXWaQ-ZYDKBaw-dFKOwfwv6GGeLrcimzwgcw>
+    <xmx:OmmmXPE1R9PuTxd4BwO0_Oa4Z_w9exI7UCcncptmc6fN_ZYvzblexQ>
+    <xmx:PGmmXKbm_HihBPB5nhLDVkeamBj1I_r5a8ABzHLN--z-dXB7G1oysA>
+Received: from localhost (124-149-114-86.dyn.iinet.net.au [124.149.114.86])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B63B3E452B;
+        Thu,  4 Apr 2019 16:29:44 -0400 (EDT)
+Date:   Fri, 5 Apr 2019 07:29:14 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 14/14] dcache: Implement object migration
+Message-ID: <20190404202914.GA16709@eros.localdomain>
+References: <20190403042127.18755-1-tobin@kernel.org>
+ <20190403042127.18755-15-tobin@kernel.org>
+ <20190403170811.GR2217@ZenIV.linux.org.uk>
+ <20190403171920.GS2217@ZenIV.linux.org.uk>
+ <20190403174855.GT2217@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190404202345.133553-1-brho@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190403174855.GT2217@ZenIV.linux.org.uk>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 03, 2019 at 06:48:55PM +0100, Al Viro wrote:
+> On Wed, Apr 03, 2019 at 06:19:21PM +0100, Al Viro wrote:
+> > On Wed, Apr 03, 2019 at 06:08:11PM +0100, Al Viro wrote:
+> > 
+> > > Oh, *brilliant*
+> > > 
+> > > Let's do d_invalidate() on random dentries and hope they go away.
+> > > With convoluted and brittle logics for deciding which ones to
+> > > spare, which is actually wrong.  This will pick mountpoints
+> > > and tear them out, to start with.
+> > > 
+> > > NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
+> > > 
+> > > And this is a NAK for the entire approach; if it has a positive refcount,
+> > > LEAVE IT ALONE.  Period.  Don't play this kind of games, they are wrong.
+> > > d_invalidate() is not something that can be done to an arbitrary dentry.
+> > 
+> > PS: "try to evict what can be evicted out of this set" can be done, but
+> > you want something like
+> > 	start with empty list
+> > 	go through your array of references
+> > 		grab dentry->d_lock
+> > 		if dentry->d_lockref.count is not zero
+> > 			unlock and continue
+> > 		if dentry->d_flags & DCACHE_SHRINK_LIST
+> > 			ditto, it's not for us to play with
+> >                 if (dentry->d_flags & DCACHE_LRU_LIST)
+> >                         d_lru_del(dentry);
+> > 		d_shrink_add(dentry, &list);
+> > 		unlock
+> > 
+> > on the collection phase and
+> > 	if the list is not empty by the end of that loop
+> > 		shrink_dentry_list(&list);
+> > on the disposal.
+> 
+> Note, BTW, that your constructor is wrong - all it really needs to do
+> is spin_lock_init() and setting ->d_lockref.count same as lockref_mark_dead()
+> does, to match the state of dentries being torn down.
 
--yi.z.zhang@intel.com (Bad email address / failure)
+Thanks for looking at this Al.
 
-Sorry about that.
+> __d_alloc() is not holding ->d_lock, since the object is not visible to
+> anybody else yet; with your changes it *is* visible.
 
-On 4/4/19 4:23 PM, Barret Rhoden wrote:
-> This patch series depends on DAX pages not being PageReserved.  Once
-> that is in place, these changes will let KVM use huge pages with
-> DAX-backed files.
-> 
->  From previous discussions[1], it sounds like DAX might not need to keep
-> the PageReserved bit, but that it hadn't been sorted out yet.
-> 
-> Without the PageReserved change, KVM and DAX still work with these
-> patches, simply without huge pages - which is the current situation.
-> 
-> If you want to test the huge-page functionality as if DAX pages weren't
-> PageReserved for KVM, this hack does the trick:
-> 
-> ------------------
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index c44985375e7f..ee539eec1fb8 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -153,6 +153,10 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
->   
->   bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
->   {
-> +       // XXX hack
-> +       if (is_zone_device_page(pfn_to_page(pfn)))
-> +               return false;
-> +
->          if (pfn_valid(pfn))
->                  return PageReserved(pfn_to_page(pfn));
->   
-> ------------------
-> 
-> Perhaps if we are going to leave DAX pages marked PageReserved, then I
-> can make that hack into a proper commit and have KVM alone treat DAX
-> pages as if they are not reserved.
-> 
-> v2 -> v3:
-> v2: https://lore.kernel.org/lkml/20181114215155.259978-1-brho@google.com/
-> - Updated Acks/Reviewed-by
-> - Rebased onto linux-next
-> 
-> v1 -> v2:
-> https://lore.kernel.org/lkml/20181109203921.178363-1-brho@google.com/
-> - Updated Acks/Reviewed-by
-> - Minor touchups
-> - Added patch to remove redundant PageReserved() check
-> - Rebased onto linux-next
-> 
-> RFC/discussion thread:
-> https://lore.kernel.org/lkml/20181029210716.212159-1-brho@google.com/
-> 
-> [1] https://lore.kernel.org/lkml/ee8cc068-903c-d87e-f418-ade46786249e@redhat.com/
-> 
-> Barret Rhoden (3):
->    mm: make dev_pagemap_mapping_shift() externally visible
->    kvm: Use huge pages for DAX-backed files
->    kvm: remove redundant PageReserved() check
-> 
->   arch/x86/kvm/mmu.c  | 33 +++++++++++++++++++++++++++++++--
->   include/linux/mm.h  |  3 +++
->   mm/memory-failure.c | 38 +++-----------------------------------
->   mm/util.c           | 34 ++++++++++++++++++++++++++++++++++
->   virt/kvm/kvm_main.c |  8 ++------
->   5 files changed, 73 insertions(+), 43 deletions(-)
-> 
+I don't quite understand this comment.  How is the object visible?  The
+constructor is only called when allocating a new page to the slab and
+this is done with interrupts disabled.
 
+>  However, if the
+> assignment to ->d_lockref.count in __d_alloc() is guaranteed to be
+> non-zero to non-zero, the above should be safe.
+
+I've done as you suggest and set it to -128
+
+Thanks for schooling me on the VFS stuff.
+
+
+	Tobin
