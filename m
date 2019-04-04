@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E0C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D1CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6302220882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40A120882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbfDDITd (ORCPT
+        id S1728664AbfDDITf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:19:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6241 "EHLO huawei.com"
+        Thu, 4 Apr 2019 04:19:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6242 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728909AbfDDITT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728911AbfDDITT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 04:19:19 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 11342FE9F908159C1A9E;
+        by Forcepoint Email with ESMTP id 0C64676D174FF46DCF3D;
         Thu,  4 Apr 2019 16:19:15 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 4 Apr 2019 16:19:05 +0800
+ 14.3.408.0; Thu, 4 Apr 2019 16:19:06 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -33,9 +33,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Jian Shen <shenjian15@huawei.com>,
         "Peng Li" <lipeng321@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 08/12] net: hns3: add protect when handling mac addr list
-Date:   Thu, 4 Apr 2019 16:17:55 +0800
-Message-ID: <1554365879-7932-9-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 12/12] net: hns3: split function hnae3_match_n_instantiate()
+Date:   Thu, 4 Apr 2019 16:17:59 +0800
+Message-ID: <1554365879-7932-13-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1554365879-7932-1-git-send-email-tanhuazhong@huawei.com>
 References: <1554365879-7932-1-git-send-email-tanhuazhong@huawei.com>
@@ -50,67 +50,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jian Shen <shenjian15@huawei.com>
 
-It used netdev->uc and netdev->mc list in function
-hns3_recover_hw_addr() and hns3_remove_hw_addr().
-We should add protect for them.
+The function hnae3_match_n_instantiate() was called both by
+initializing or uninitializing client. For uninitializing, the
+return value was never used.
 
-Fixes: f05e21097121 ("net: hns3: Clear mac vlan table entries when unload driver or function reset")
+To make it more clear, this patch splits it to two functions,
+hnae3_init_client_instance() and hnae3_uninit_client_instance().
+
 Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.c | 40 ++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 5b34d2e..476c23d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3791,12 +3791,13 @@ static int hns3_recover_hw_addr(struct net_device *ndev)
- 	struct netdev_hw_addr *ha, *tmp;
- 	int ret = 0;
- 
-+	netif_addr_lock_bh(ndev);
- 	/* go through and sync uc_addr entries to the device */
- 	list = &ndev->uc;
- 	list_for_each_entry_safe(ha, tmp, &list->list, list) {
- 		ret = hns3_nic_uc_sync(ndev, ha->addr);
- 		if (ret)
--			return ret;
-+			goto out;
- 	}
- 
- 	/* go through and sync mc_addr entries to the device */
-@@ -3804,9 +3805,11 @@ static int hns3_recover_hw_addr(struct net_device *ndev)
- 	list_for_each_entry_safe(ha, tmp, &list->list, list) {
- 		ret = hns3_nic_mc_sync(ndev, ha->addr);
- 		if (ret)
--			return ret;
-+			goto out;
- 	}
- 
-+out:
-+	netif_addr_unlock_bh(ndev);
- 	return ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+index 17ab4f4..fa8b850 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+@@ -76,8 +76,8 @@ static int hnae3_get_client_init_flag(struct hnae3_client *client,
+ 	return inited;
  }
  
-@@ -3817,6 +3820,7 @@ static void hns3_remove_hw_addr(struct net_device *netdev)
+-static int hnae3_match_n_instantiate(struct hnae3_client *client,
+-				     struct hnae3_ae_dev *ae_dev, bool is_reg)
++static int hnae3_init_client_instance(struct hnae3_client *client,
++				      struct hnae3_ae_dev *ae_dev)
+ {
+ 	int ret;
  
- 	hns3_nic_uc_unsync(netdev, netdev->dev_addr);
+@@ -87,23 +87,27 @@ static int hnae3_match_n_instantiate(struct hnae3_client *client,
+ 		return 0;
+ 	}
  
-+	netif_addr_lock_bh(netdev);
- 	/* go through and unsync uc_addr entries to the device */
- 	list = &netdev->uc;
- 	list_for_each_entry_safe(ha, tmp, &list->list, list)
-@@ -3827,6 +3831,8 @@ static void hns3_remove_hw_addr(struct net_device *netdev)
- 	list_for_each_entry_safe(ha, tmp, &list->list, list)
- 		if (ha->refcount > 1)
- 			hns3_nic_mc_unsync(netdev, ha->addr);
+-	/* now, (un-)instantiate client by calling lower layer */
+-	if (is_reg) {
+-		ret = ae_dev->ops->init_client_instance(client, ae_dev);
+-		if (ret)
+-			dev_err(&ae_dev->pdev->dev,
+-				"fail to instantiate client, ret = %d\n", ret);
++	ret = ae_dev->ops->init_client_instance(client, ae_dev);
++	if (ret)
++		dev_err(&ae_dev->pdev->dev,
++			"fail to instantiate client, ret = %d\n", ret);
+ 
+-		return ret;
+-	}
++	return ret;
++}
 +
-+	netif_addr_unlock_bh(netdev);
++static void hnae3_uninit_client_instance(struct hnae3_client *client,
++					 struct hnae3_ae_dev *ae_dev)
++{
++	/* check if this client matches the type of ae_dev */
++	if (!(hnae3_client_match(client->type, ae_dev->dev_type) &&
++	      hnae3_get_bit(ae_dev->flag, HNAE3_DEV_INITED_B)))
++		return;
+ 
+ 	if (hnae3_get_client_init_flag(client, ae_dev)) {
+ 		ae_dev->ops->uninit_client_instance(client, ae_dev);
+ 
+ 		hnae3_set_client_init_flag(client, ae_dev, 0);
+ 	}
+-
+-	return 0;
  }
  
- static void hns3_clear_tx_ring(struct hns3_enet_ring *ring)
+ int hnae3_register_client(struct hnae3_client *client)
+@@ -129,7 +133,7 @@ int hnae3_register_client(struct hnae3_client *client)
+ 		/* if the client could not be initialized on current port, for
+ 		 * any error reasons, move on to next available port
+ 		 */
+-		ret = hnae3_match_n_instantiate(client, ae_dev, true);
++		ret = hnae3_init_client_instance(client, ae_dev);
+ 		if (ret)
+ 			dev_err(&ae_dev->pdev->dev,
+ 				"match and instantiation failed for port, ret = %d\n",
+@@ -153,7 +157,7 @@ void hnae3_unregister_client(struct hnae3_client *client)
+ 	mutex_lock(&hnae3_common_lock);
+ 	/* un-initialize the client on every matched port */
+ 	list_for_each_entry(ae_dev, &hnae3_ae_dev_list, node) {
+-		hnae3_match_n_instantiate(client, ae_dev, false);
++		hnae3_uninit_client_instance(client, ae_dev);
+ 	}
+ 
+ 	list_del(&client->node);
+@@ -205,7 +209,7 @@ void hnae3_register_ae_algo(struct hnae3_ae_algo *ae_algo)
+ 		 * initialize the figure out client instance
+ 		 */
+ 		list_for_each_entry(client, &hnae3_client_list, node) {
+-			ret = hnae3_match_n_instantiate(client, ae_dev, true);
++			ret = hnae3_init_client_instance(client, ae_dev);
+ 			if (ret)
+ 				dev_err(&ae_dev->pdev->dev,
+ 					"match and instantiation failed, ret = %d\n",
+@@ -243,7 +247,7 @@ void hnae3_unregister_ae_algo(struct hnae3_ae_algo *ae_algo)
+ 		 * un-initialize the figure out client instance
+ 		 */
+ 		list_for_each_entry(client, &hnae3_client_list, node)
+-			hnae3_match_n_instantiate(client, ae_dev, false);
++			hnae3_uninit_client_instance(client, ae_dev);
+ 
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
+@@ -301,7 +305,7 @@ int hnae3_register_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	 * initialize the figure out client instance
+ 	 */
+ 	list_for_each_entry(client, &hnae3_client_list, node) {
+-		ret = hnae3_match_n_instantiate(client, ae_dev, true);
++		ret = hnae3_init_client_instance(client, ae_dev);
+ 		if (ret)
+ 			dev_err(&ae_dev->pdev->dev,
+ 				"match and instantiation failed, ret = %d\n",
+@@ -343,7 +347,7 @@ void hnae3_unregister_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 			continue;
+ 
+ 		list_for_each_entry(client, &hnae3_client_list, node)
+-			hnae3_match_n_instantiate(client, ae_dev, false);
++			hnae3_uninit_client_instance(client, ae_dev);
+ 
+ 		ae_algo->ops->uninit_ae_dev(ae_dev);
+ 		hnae3_set_bit(ae_dev->flag, HNAE3_DEV_INITED_B, 0);
 -- 
 2.7.4
 
