@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A350C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022ADC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC07021738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C144721738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367865;
-	bh=YAE7BH9SC5t3i+8eIu7rqjD4INcc54UD3G7ZVP4HnhM=;
+	s=default; t=1554367868;
+	bh=C7ByZcpsiLVcFvYkatQ/Lq6x/XXPBufstxhJLhDrsu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wk/1uXam4962AMwhzpDseur1C6cVlJKvEXZPatwviHKyEYvvCrw3bvmX9keY5gkDo
-	 BXnJ0/kUhdU1kJzD6b9AfNRr+csLRLAUpXOlVRrM8aRS1tmfDM6rPteHpNN3mPlo5k
-	 69Y+0Qv9CQJvV//OHFWMGVsm0nKkwXQQO83o+WVk=
+	b=dUVwzE+CPnXAOwO5jhjYZW0DrLkVfjoVwEZNtqhBUXvxWxwJ6bvyyAAEW9VDvKhpU
+	 oEbo6g4EWNVLcC5nn4T2nbyWm4S43McPsD3e6nf/N9YH109EmGzyS+MgQyfA8+CGvr
+	 nVKXscWt0G9rBtLt9CXN9gzirjeL90XPZRQDc7ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfDDIvE (ORCPT
+        id S1729279AbfDDIvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:51:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfDDIvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:51:02 -0400
+        id S1729263AbfDDIvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:51:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0FD020855;
-        Thu,  4 Apr 2019 08:51:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5760A20882;
+        Thu,  4 Apr 2019 08:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367861;
-        bh=YAE7BH9SC5t3i+8eIu7rqjD4INcc54UD3G7ZVP4HnhM=;
+        s=default; t=1554367863;
+        bh=C7ByZcpsiLVcFvYkatQ/Lq6x/XXPBufstxhJLhDrsu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bx82kgLD8UGBm5hk9cp2u8w2jDr5wpNufjwOqj1k/EMKVFgca7PypR6xR++E6lN2g
-         WQQkqlDRejwC/LCe4FqB0tW9ieeqF0Q/k2SHqkAEqpcLcZwNbX40Bo+nNAnKhWzjtl
-         QT+2eQ+1vXbiQJbksMKheKKwlbHW5d+zdHy++sXA=
+        b=AjW319hrIll22Gb8IMIHxxrcPo7G4v9sEApzkIyKCWluIVaUpC+t6e9siOGLo5L4b
+         aIuN7dihaC25QpSfcD0H3OtpskAfAJxFQA1DFd55fmiHXEsHp9+fJ3tmEpozZUJEcB
+         tRkUSO5T9DQrhhH96OI/gPIGry2XNiMw/y22EfSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 32/91] crypto: crypto4xx - add missing of_node_put after of_device_is_available
-Date:   Thu,  4 Apr 2019 10:47:16 +0200
-Message-Id: <20190404084537.327000635@linuxfoundation.org>
+Subject: [PATCH 4.9 41/91] IB/mlx4: Increase the timeout for CM cache
+Date:   Thu,  4 Apr 2019 10:47:25 +0200
+Message-Id: <20190404084537.842527034@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,60 +68,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
+[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
 
-Add an of_node_put when a tested device node is not available.
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
 
-The semantic patch that fixes this problem is as follows
-(http://coccinelle.lip6.fr):
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
+in a cache.
 
-// <smpl>
-@@
-identifier f;
-local idexpression e;
-expression x;
-@@
+Following the RDMA Connection Manager (CM) protocol, it is clear when
+an entry has to evicted form the cache. But life is not perfect,
+remote peers may die or be rebooted. Hence, it's a timeout to wipe out
+a cache entry, when the PF driver assumes the remote peer has gone.
 
-e = f(...);
-... when != of_node_put(e)
-    when != x = e
-    when != e = x
-    when any
-if (<+...of_device_is_available(e)...+>) {
-  ... when != of_node_put(e)
-(
-  return e;
-|
-+ of_node_put(e);
-  return ...;
-)
-}
-// </smpl>
+During workloads where a high number of QPs are destroyed concurrently,
+excessive amount of CM DREQ retries has been observed
 
-Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The problem can be demonstrated in a bare-metal environment, where two
+nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
+have 16 vPorts per physical server.
+
+64 processes are associated with each vPort and creates and destroys
+one QP for each of the remote 64 processes. That is, 1024 QPs per
+vPort, all in all 16K QPs. The QPs are created/destroyed using the
+CM.
+
+When tearing down these 16K QPs, excessive CM DREQ retries (and
+duplicates) are observed. With some cat/paste/awk wizardry on the
+infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
+nodes:
+
+cm_rx_duplicates:
+      dreq  2102
+cm_rx_msgs:
+      drep  1989
+      dreq  6195
+       rep  3968
+       req  4224
+       rtu  4224
+cm_tx_msgs:
+      drep  4093
+      dreq 27568
+       rep  4224
+       req  3968
+       rtu  3968
+cm_tx_retries:
+      dreq 23469
+
+Note that the active/passive side is equally distributed between the
+two nodes.
+
+Enabling pr_debug in cm.c gives tons of:
+
+[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
+1,sl_cm_id: 0xd393089f} is NULL!
+
+By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
+tear-down phase of the application is reduced from approximately 90 to
+50 seconds. Retries/duplicates are also significantly reduced:
+
+cm_rx_duplicates:
+      dreq  2460
+[]
+cm_tx_retries:
+      dreq  3010
+       req    47
+
+Increasing the timeout further didn't help, as these duplicates and
+retries stems from a too short CMA timeout, which was 20 (~4 seconds)
+on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
+numbers fell down to about 10 for both of them.
+
+Adjustment of the CMA timeout is not part of this commit.
+
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
-index 677ca17fd223..368c5599515e 100644
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
+diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
+index 39a488889fc7..5dc920fe1326 100644
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -39,7 +39,7 @@
  
- 	/* Find the TRNG device node and map it */
- 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
--	if (!trng || !of_device_is_available(trng))
-+	if (!trng || !of_device_is_available(trng)) {
-+		of_node_put(trng);
- 		return;
-+	}
+ #include "mlx4_ib.h"
  
- 	dev->trng_base = of_iomap(trng, 0);
- 	of_node_put(trng);
+-#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
++#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
+ 
+ struct id_map_entry {
+ 	struct rb_node node;
 -- 
 2.19.1
 
