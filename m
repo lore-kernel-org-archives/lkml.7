@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9ACC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE08C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967E42054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899FB20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369403;
-	bh=BaTOscRvP/3TwjepuMepZt9ssror7ywwkasILrDryxI=;
+	s=default; t=1554369407;
+	bh=gMxPcSo2/t1c+QqJNyP83ACaOA53yIaf1HtTknBEPlo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvHYB0XAVPI6bFqxf3tMxB7264pjz0Cqd9muEK/osDMUbTlVndxjF/si8qmLwlMn4
-	 Kw59XkFtAWUPmLueNjbhfs7x6woWLN1F1Vg+f6QTG48DoqwqGe98iAf/JUYJmBW8Hs
-	 Ut04bwQ5mrX+fglUteT3FXI1coKUlX09CSemDYEc=
+	b=zzYzYPC+jIcPeE1WnJE5SHUPb5ZaaWV9d6eu+IPiOOC6N2iStk6BRfUquSNb0z4oW
+	 wiLwp+AH7DhDB7qUFYhPxti1mLToy9aanQMVe7Q4Jl0TUC/SXdfoX9bSpGNrxhzI5L
+	 BXD7tCs7nOIUNPlK23F6MM/CMKNsKfklhz4x9NZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbfDDJQl (ORCPT
+        id S2388109AbfDDJQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57756 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388075AbfDDJQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:34 -0400
+        id S2387868AbfDDJQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1620220820;
-        Thu,  4 Apr 2019 09:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AEE720693;
+        Thu,  4 Apr 2019 09:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369392;
-        bh=BaTOscRvP/3TwjepuMepZt9ssror7ywwkasILrDryxI=;
+        s=default; t=1554369402;
+        bh=gMxPcSo2/t1c+QqJNyP83ACaOA53yIaf1HtTknBEPlo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ha6RuFHiCk8Jbh/v213XDolwbe45wblYxCFpLtP3DGlWZUThj0rvt4EANqVccKjdZ
-         1u9fktJx12cqZWbpgNjaFXQ0pPOl957PPf8/IFnkZkhWY4dtGCsPet0irDh5Bet3tJ
-         vPgB3S5WKOUJxUmPdZhrmLKZIUtgqxSlmkjKnbOQ=
+        b=c33hpvnPtVJRgKFoiSA/bd6Hn2WtSCAnlT/ymfRlUf5yXRSrN2PtDVJhvbKUDlXyo
+         P9fVwxjxO0ALY4JHlELV1xJZ7TFa4/z+unuAGri1sWiR3DflHUQz51fGBzLki27bDd
+         QHCC1bfFCS0T87T4HPFIXJZhgcv2B8RaZ7sysTn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Herton R. Krzesinski" <hkrzesin@redhat.com>,
-        Jan Stancek <jstancek@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>, Tejun Heo <tj@kernel.org>,
+        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 191/246] cgroup/pids: turn cgroup_subsys->free() into cgroup_subsys->release() to fix the accounting
-Date:   Thu,  4 Apr 2019 10:48:11 +0200
-Message-Id: <20190404084625.873080315@linuxfoundation.org>
+Subject: [PATCH 5.0 202/246] perf script python: Add trace_context extension module to sys.modules
+Date:   Thu,  4 Apr 2019 10:48:22 +0200
+Message-Id: <20190404084626.262531646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,169 +71,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 51bee5abeab2058ea5813c5615d6197a23dbf041 ]
+[ Upstream commit cc437642255224e4140fed1f3e3156fc8ad91903 ]
 
-The only user of cgroup_subsys->free() callback is pids_cgrp_subsys which
-needs pids_free() to uncharge the pid.
+In Python3, the result of PyModule_Create (called from
+scripts/python/Perf-Trace-Util/Context.c) is not automatically added to
+sys.modules.  See: https://bugs.python.org/issue4592
 
-However, ->free() is called from __put_task_struct()->cgroup_free() and this
-is too late. Even the trivial program which does
+Below is the observed behavior without the fix:
 
-	for (;;) {
-		int pid = fork();
-		assert(pid >= 0);
-		if (pid)
-			wait(NULL);
-		else
-			exit(0);
-	}
+  # ldd /usr/bin/perf | grep -i python
+	libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
 
-can run out of limits because release_task()->call_rcu(delayed_put_task_struct)
-implies an RCU gp after the task/pid goes away and before the final put().
+  # perf record /bin/false
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.015 MB perf.data (17 samples) ]
 
-Test-case:
+  # perf script -g python | cat
+  generated Python script: perf-script.py
 
-	mkdir -p /tmp/CG
-	mount -t cgroup2 none /tmp/CG
-	echo '+pids' > /tmp/CG/cgroup.subtree_control
+  # perf script -s ./perf-script.py
+  Traceback (most recent call last):
+    File "./perf-script.py", line 18, in <module>
+      from perf_trace_context import *
+  ModuleNotFoundError: No module named 'perf_trace_context'
+  Error running python script ./perf-script.py
+  #
 
-	mkdir /tmp/CG/PID
-	echo 2 > /tmp/CG/PID/pids.max
+Committer notes:
 
-	perl -e 'while ($p = fork) { wait; } $p // die "fork failed: $!\n"' &
-	echo $! > /tmp/CG/PID/cgroup.procs
+To build with python3 use:
 
-Without this patch the forking process fails soon after migration.
+  $ make -C tools/perf PYTHON=python3
 
-Rename cgroup_subsys->free() to cgroup_subsys->release() and move the callsite
-into the new helper, cgroup_release(), called by release_task() which actually
-frees the pid(s).
+Use a non-const variable to pass the 'name' arg to
+PyImport_AppendInittab(), as python2.6 has that as 'char *', which ends
+up trowing this in some environments:
 
-Reported-by: Herton R. Krzesinski <hkrzesin@redhat.com>
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+   CC       /tmp/build/perf/util/parse-branch-options.o
+  util/scripting-engines/trace-event-python.c: In function 'python_start_script':
+  util/scripting-engines/trace-event-python.c:1520:2: error: passing argument 1 of 'PyImport_AppendInittab' discards 'const' qualifier from pointer target type [-Werror]
+    PyImport_AppendInittab("perf_trace_context", initfunc);
+    ^
+  In file included from /usr/include/python2.6/Python.h:130:0,
+                   from util/scripting-engines/trace-event-python.c:22:
+  /usr/include/python2.6/import.h:54:17: note: expected 'char *' but argument is of type 'const char *'
+   PyAPI_FUNC(int) PyImport_AppendInittab(char *name, void (*initfunc)(void));
+                   ^
+  cc1: all warnings being treated as errors
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jaroslav Škarvada <jskarvad@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
+Link: http://lkml.kernel.org/r/20190124005229.16146-2-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cgroup-defs.h |  2 +-
- include/linux/cgroup.h      |  2 ++
- kernel/cgroup/cgroup.c      | 15 +++++++++------
- kernel/cgroup/pids.c        |  4 ++--
- kernel/exit.c               |  1 +
- 5 files changed, 15 insertions(+), 9 deletions(-)
+ .../perf/util/scripting-engines/trace-event-python.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 8fcbae1b8db0..120d1d40704b 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -602,7 +602,7 @@ struct cgroup_subsys {
- 	void (*cancel_fork)(struct task_struct *task);
- 	void (*fork)(struct task_struct *task);
- 	void (*exit)(struct task_struct *task);
--	void (*free)(struct task_struct *task);
-+	void (*release)(struct task_struct *task);
- 	void (*bind)(struct cgroup_subsys_state *root_css);
- 
- 	bool early_init:1;
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index 9968332cceed..81f58b4a5418 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -121,6 +121,7 @@ extern int cgroup_can_fork(struct task_struct *p);
- extern void cgroup_cancel_fork(struct task_struct *p);
- extern void cgroup_post_fork(struct task_struct *p);
- void cgroup_exit(struct task_struct *p);
-+void cgroup_release(struct task_struct *p);
- void cgroup_free(struct task_struct *p);
- 
- int cgroup_init_early(void);
-@@ -697,6 +698,7 @@ static inline int cgroup_can_fork(struct task_struct *p) { return 0; }
- static inline void cgroup_cancel_fork(struct task_struct *p) {}
- static inline void cgroup_post_fork(struct task_struct *p) {}
- static inline void cgroup_exit(struct task_struct *p) {}
-+static inline void cgroup_release(struct task_struct *p) {}
- static inline void cgroup_free(struct task_struct *p) {}
- 
- static inline int cgroup_init_early(void) { return 0; }
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 503bba3c4bae..f84bf28f36ba 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -197,7 +197,7 @@ static u64 css_serial_nr_next = 1;
-  */
- static u16 have_fork_callback __read_mostly;
- static u16 have_exit_callback __read_mostly;
--static u16 have_free_callback __read_mostly;
-+static u16 have_release_callback __read_mostly;
- static u16 have_canfork_callback __read_mostly;
- 
- /* cgroup namespace for init task */
-@@ -5316,7 +5316,7 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
- 
- 	have_fork_callback |= (bool)ss->fork << ss->id;
- 	have_exit_callback |= (bool)ss->exit << ss->id;
--	have_free_callback |= (bool)ss->free << ss->id;
-+	have_release_callback |= (bool)ss->release << ss->id;
- 	have_canfork_callback |= (bool)ss->can_fork << ss->id;
- 
- 	/* At system boot, before all subsystems have been
-@@ -5752,16 +5752,19 @@ void cgroup_exit(struct task_struct *tsk)
- 	} while_each_subsys_mask();
- }
- 
--void cgroup_free(struct task_struct *task)
-+void cgroup_release(struct task_struct *task)
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 2fe3cc43526f..7059d1be2d09 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1493,34 +1493,40 @@ static void _free_command_line(wchar_t **command_line, int num)
+ static int python_start_script(const char *script, int argc, const char **argv)
  {
--	struct css_set *cset = task_css_set(task);
- 	struct cgroup_subsys *ss;
- 	int ssid;
+ 	struct tables *tables = &tables_global;
++	PyMODINIT_FUNC (*initfunc)(void);
+ #if PY_MAJOR_VERSION < 3
+ 	const char **command_line;
+ #else
+ 	wchar_t **command_line;
+ #endif
+-	char buf[PATH_MAX];
++	/*
++	 * Use a non-const name variable to cope with python 2.6's
++	 * PyImport_AppendInittab prototype
++	 */
++	char buf[PATH_MAX], name[19] = "perf_trace_context";
+ 	int i, err = 0;
+ 	FILE *fp;
  
--	do_each_subsys_mask(ss, ssid, have_free_callback) {
--		ss->free(task);
-+	do_each_subsys_mask(ss, ssid, have_release_callback) {
-+		ss->release(task);
- 	} while_each_subsys_mask();
-+}
+ #if PY_MAJOR_VERSION < 3
++	initfunc = initperf_trace_context;
+ 	command_line = malloc((argc + 1) * sizeof(const char *));
+ 	command_line[0] = script;
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = argv[i - 1];
+ #else
++	initfunc = PyInit_perf_trace_context;
+ 	command_line = malloc((argc + 1) * sizeof(wchar_t *));
+ 	command_line[0] = Py_DecodeLocale(script, NULL);
+ 	for (i = 1; i < argc + 1; i++)
+ 		command_line[i] = Py_DecodeLocale(argv[i - 1], NULL);
+ #endif
  
-+void cgroup_free(struct task_struct *task)
-+{
-+	struct css_set *cset = task_css_set(task);
- 	put_css_set(cset);
- }
++	PyImport_AppendInittab(name, initfunc);
+ 	Py_Initialize();
  
-diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
-index 9829c67ebc0a..c9960baaa14f 100644
---- a/kernel/cgroup/pids.c
-+++ b/kernel/cgroup/pids.c
-@@ -247,7 +247,7 @@ static void pids_cancel_fork(struct task_struct *task)
- 	pids_uncharge(pids, 1);
- }
- 
--static void pids_free(struct task_struct *task)
-+static void pids_release(struct task_struct *task)
- {
- 	struct pids_cgroup *pids = css_pids(task_css(task, pids_cgrp_id));
- 
-@@ -342,7 +342,7 @@ struct cgroup_subsys pids_cgrp_subsys = {
- 	.cancel_attach 	= pids_cancel_attach,
- 	.can_fork	= pids_can_fork,
- 	.cancel_fork	= pids_cancel_fork,
--	.free		= pids_free,
-+	.release	= pids_release,
- 	.legacy_cftypes	= pids_files,
- 	.dfl_cftypes	= pids_files,
- 	.threaded	= true,
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2639a30a8aa5..2166c2d92ddc 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -219,6 +219,7 @@ repeat:
- 	}
- 
- 	write_unlock_irq(&tasklist_lock);
-+	cgroup_release(p);
- 	release_thread(p);
- 	call_rcu(&p->rcu, delayed_put_task_struct);
+ #if PY_MAJOR_VERSION < 3
+-	initperf_trace_context();
+ 	PySys_SetArgv(argc + 1, (char **)command_line);
+ #else
+-	PyInit_perf_trace_context();
+ 	PySys_SetArgv(argc + 1, command_line);
+ #endif
  
 -- 
 2.19.1
