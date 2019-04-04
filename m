@@ -2,107 +2,89 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D599EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C77C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C502075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PkK5MxeH"
+	by mail.kernel.org (Postfix) with ESMTP id 80E48206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbfDDRLS (ORCPT
+        id S1728824AbfDDRQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 13:11:18 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:50728 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729491AbfDDRLQ (ORCPT
+        Thu, 4 Apr 2019 13:16:08 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:41198 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728479AbfDDRQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 13:11:16 -0400
-Received: by mail-it1-f196.google.com with SMTP id q14so4989049itk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 10:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=r56PFnvFNbkuu6fKIPqWW2CUTLL5qPhK0vfa3csRPuE=;
-        b=PkK5MxeH5h066Qhv09erVQWVTLxlE6pEuLIU0AAtl+njj1I5SDAWgP+qA9ViIwwcY9
-         AuggGttzToFJsyK0YY/mroiAl1AhqnqnLsrHcIFnH6a28cLeq8AtDM4ylXDeCJdLfWCs
-         U+eFwW2GOvNMv4Z5MDb8zbqrgw+KuwYDNAcT0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=r56PFnvFNbkuu6fKIPqWW2CUTLL5qPhK0vfa3csRPuE=;
-        b=UqAlKCEjfu3OeQfy9cPZlnANHkGDTjDG1wiJKLEpWpUlVO7RfV1sQFY9bfXFwk7ntN
-         Os0aIGJE/XJ7F6lMErxnoDXEn4LW+Ve++nzhTA1RCN7ncyIH/7UYahaqUW9wpfHlmmfr
-         1rOsdb099oFTBMWh7fcredGLYYlYCmHlA6tlBIoAmt+1m2K17dIKrFAJpGw2dOKJ12TP
-         EqVp/hvXLv8NlSjT/hMS2f763FxNA3iH7y4aij7ueMZ50TRqR7BcSAG+oCplaMXBDih3
-         GLCdqoEvfwlnn1Uc6F1ZWrzu6jB2VQknSOjCzHqR9P2zL0o2R0ZGA/CmmMMuIQoZj3Ss
-         CnkA==
-X-Gm-Message-State: APjAAAVJ/8+X7VJBPo//Oyuo0SR6lxAnVt/cb3g28QGAKgzCZEcFEbZ2
-        5aSmoC9BNZZBEqfjUf5WFUmS7O9ZHZ8=
-X-Google-Smtp-Source: APXvYqzkbqd/0TCxfzOWucLzq0jXN7nLIrFonMQevGkXf46yS6UtKcGI+qygW7+OPbYSdPaFwxLhXw==
-X-Received: by 2002:a02:8c59:: with SMTP id j25mr5796250jal.4.1554397875814;
-        Thu, 04 Apr 2019 10:11:15 -0700 (PDT)
-Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:8140:8e3f:aea5:bcdf])
-        by smtp.gmail.com with ESMTPSA id d133sm9559835ita.5.2019.04.04.10.11.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 04 Apr 2019 10:11:15 -0700 (PDT)
-From:   Nick Crews <ncrews@chromium.org>
-To:     enric.balletbo@collabora.com, bleung@chromium.org,
-        linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        pavel@ucw.cz, alexandre.belloni@bootlin.com, a.zummo@towertech.it,
-        linux-rtc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org, sjg@google.com,
-        groeck@google.com, dtor@google.com,
-        Nick Crews <ncrews@chromium.org>
-Subject: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard backlight name
-Date:   Thu,  4 Apr 2019 11:10:10 -0600
-Message-Id: <20190404171007.160878-3-ncrews@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190404171007.160878-1-ncrews@chromium.org>
-References: <20190404171007.160878-1-ncrews@chromium.org>
+        Thu, 4 Apr 2019 13:16:08 -0400
+Received: (qmail 4442 invoked by uid 2102); 4 Apr 2019 13:16:06 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 4 Apr 2019 13:16:06 -0400
+Date:   Thu, 4 Apr 2019 13:16:06 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jesse Hathaway <jesse@mbuki-mvuki.org>
+cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+In-Reply-To: <CANSNSoXOmExO2RSp1gS8myUuiDpva4=0GeGpv+t8+X9p0u0H_w@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1904041303090.1288-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want all backlights for the system keyboard to
-use a common name, so the name "platform::kbd_backlight"
-would be better than the current "chromeos::kbd_backlight"
-name. Normally this wouldn't be worth changing, but the new
-Wilco keyboard backlight driver uses the "platform" name.
-We want to make it so all Chrome OS devices are consistent,
-so we'll change the name here too.
+On Thu, 4 Apr 2019, Jesse Hathaway wrote:
 
-The Power Manager daemon only looks for LEDs that match the
-pattern "*:kbd_backlight", so this change won't affect that.
+> On Tue, Apr 2, 2019 at 9:29 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > Most likely the problem occurs somewhere inside
+> > quirk_usb_handoff_xhci().  Can Jesse add debugging statements to that
+> > routine in order to pin down exactly where the problem lies?
+> 
+> Alan,
+> 
+> I added debug statements to quirk_usb_early_handoff, quirk_usb_disable_ehci &
+> ehci_bios_handoff. The box hangs right before calling:
+> 
+> pci_write_config_byte(pdev, offset + 3, 1);
 
-Signed-off-by: Nick Crews <ncrews@chromium.org>
----
- drivers/platform/chrome/cros_kbd_led_backlight.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right _before_ that line?  Not _after_ it?
 
-diff --git a/drivers/platform/chrome/cros_kbd_led_backlight.c b/drivers/platform/chrome/cros_kbd_led_backlight.c
-index aa409f0201fb..c56c8405f39c 100644
---- a/drivers/platform/chrome/cros_kbd_led_backlight.c
-+++ b/drivers/platform/chrome/cros_kbd_led_backlight.c
-@@ -77,7 +77,7 @@ static int keyboard_led_probe(struct platform_device *pdev)
- 	if (!cdev)
- 		return -ENOMEM;
- 
--	cdev->name = "chromeos::kbd_backlight";
-+	cdev->name = "platform::kbd_backlight";
- 	cdev->max_brightness = ACPI_KEYBOARD_BACKLIGHT_MAX;
- 	cdev->flags |= LED_CORE_SUSPENDRESUME;
- 	cdev->brightness_set = keyboard_led_set_brightness;
--- 
-2.20.1
+That's surprising because the two preceding lines of code are the 
+condition of an "if" statement and a dev_dbg() call.  I don't see how 
+either of them could cause a hang.
+
+Maybe the hang is a delayed reaction to something happening somewhere
+else.  But on the assumption that it isn't, you could try commenting 
+out various parts of ehci_bios_handoff to see which ones make a 
+difference.
+
+> which is in ehci_bios_handoff:
+> 
+> [   10.698240] DEBUG: Passed quirk_usb_early_handoff 1300
+> [   10.704271] DEBUG: Passed quirk_usb_early_handoff 1308
+> [   10.710206] DEBUG: Passed quirk_usb_disable_ehci 939
+> [   10.715949] DEBUG: Passed quirk_usb_disable_ehci 945
+> [   10.721685] DEBUG: Passed quirk_usb_disable_ehci 950
+> [   10.727423] DEBUG: Passed quirk_usb_disable_ehci 958
+> [   10.733160] DEBUG: Passed quirk_usb_disable_ehci 964
+> [   10.738897] DEBUG: Passed quirk_usb_disable_ehci 968
+> [   10.744633] DEBUG: Passed ehci_bios_handoff 849
+> [   10.749884] DEBUG: Passed ehci_bios_handoff 884
+> 
+> I have attached the debug output, and my modified pci-quirks.c file
+> to the bug report, let me know what else I can do to help.
+
+Nothing was attached.
+
+Alan Stern
 
