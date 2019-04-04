@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45064C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15249C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E782147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD472183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369493;
-	bh=+zKuW0HZgiQF9OEoFDuJjBs2ZaUAj4wq8PdBa8thb5E=;
+	s=default; t=1554369495;
+	bh=wIhn27Ad3dmZoc+LudQ6V2c88fZYopziN/hPzs7GpfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Geok578t/RNTZmSJBoP90x53s6/OWMEAn/74ELCnEojPrq6fWKvjI0nraYfni8cda
-	 Y9c77ln2/r+jWIhKqOd95vgKZHpDxXj4zDx09DyBCO4w/0VkPZJbQ4NlThB3l97tC+
-	 atL+g871P9b9RoujyRohZHNl5o9DgBtWzd5ZquHU=
+	b=rpEs3znZNP0TRuxhr0Jpn/oIDCct/UaRhsH6WExo7WuqXsUYjtmYcbz3QVZgNu5Bn
+	 QiliYtbJp6VbZMCl2Dp8G3APy2IbSDkQ7tYoyI0kyzHW+Dvja+MQdeyJ6gHoYRiHh+
+	 gs08KWcxa0cZ+GosogvjJp3gyMQ5pXXJ7iw2WQxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbfDDJSL (ORCPT
+        id S2388141AbfDDJSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387905AbfDDJSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:18:06 -0400
+        id S2388096AbfDDJSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:18:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 685FB20693;
-        Thu,  4 Apr 2019 09:18:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7511620693;
+        Thu,  4 Apr 2019 09:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369485;
-        bh=+zKuW0HZgiQF9OEoFDuJjBs2ZaUAj4wq8PdBa8thb5E=;
+        s=default; t=1554369490;
+        bh=wIhn27Ad3dmZoc+LudQ6V2c88fZYopziN/hPzs7GpfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnlYd9dm40US8tvXnUOuqmbzt0vvmDjJtBDm0eRV6sZzuxwpWX70nBApqMhQAtrJG
-         hDkwqsj9HDemnjxfskjsXK0N3puei8AHiy6+gD3EPedaUeRiPI8GqrLsgeUKupoEeD
-         BQJk7mrhn+cVpNmnhlVi2Om6hdfEYGZxvludgxBk=
+        b=o2B/dV/hWkSgtuBaLSdz7cH5KoJXTXQT+PNJe7LYi0WylXUPrSnSpO0D5303/WfCy
+         YCSvUJQtXZqXQwu1G7kTrrfRksKS8Z0ouj1/YZbjIyTZK3280JD81LJJ3d9wmTHdI4
+         ElrSBiQJmfOJr7Q7lsQ/maSR9h2jigtOA5S9y+5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.0 226/246] drm/nouveau: Stop using drm_crtc_force_disable
-Date:   Thu,  4 Apr 2019 10:48:46 +0200
-Message-Id: <20190404084627.140410223@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 228/246] selinux: do not override context on context mounts
+Date:   Thu,  4 Apr 2019 10:48:48 +0200
+Message-Id: <20190404084627.225938417@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,43 +67,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 934c5b32a5e43d8de2ab4f1566f91d7c3bf8cb64 ]
+[ Upstream commit 53e0c2aa9a59a48e3798ef193d573ade85aa80f5 ]
 
-The correct way for legacy drivers to update properties that need to
-do a full modeset, is to do a full modeset.
+Ignore all selinux_inode_notifysecctx() calls on mounts with SBLABEL_MNT
+flag unset. This is achived by returning -EOPNOTSUPP for this case in
+selinux_inode_setsecurtity() (because that function should not be called
+in such case anyway) and translating this error to 0 in
+selinux_inode_notifysecctx().
 
-Note that we don't need to call the drm_mode_config_internal helper
-because we're not changing any of the refcounted paramters.
+This fixes behavior of kernfs-based filesystems when mounted with the
+'context=' option. Before this patch, if a node's context had been
+explicitly set to a non-default value and later the filesystem has been
+remounted with the 'context=' option, then this node would show up as
+having the manually-set context and not the mount-specified one.
 
-v2: Fixup error handling (Ville). Since the old code didn't bother
-I decided to just delete it instead of adding even more code for just
-error handling.
+Steps to reproduce:
+    # mount -t cgroup2 cgroup2 /sys/fs/cgroup/unified
+    # chcon unconfined_u:object_r:user_home_t:s0 /sys/fs/cgroup/unified/cgroup.stat
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:cgroup_t:s0        0 Dec 13 10:41 cgroup.threads
+    # umount /sys/fs/cgroup/unified
+    # mount -o context=system_u:object_r:tmpfs_t:s0 -t cgroup2 cgroup2 /sys/fs/cgroup/unified
 
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com> (v1)
-Cc: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181217194303.14397-2-daniel.vetter@ffwll.ch
+Result before:
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0         0 Dec 13 10:41 cgroup.threads
+
+Result after:
+    # ls -lZ /sys/fs/cgroup/unified
+    total 0
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.controllers
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.depth
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.max.descendants
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.procs
+    -r--r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.stat
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.subtree_control
+    -rw-r--r--. 1 root root system_u:object_r:tmpfs_t:s0 0 Dec 13 10:41 cgroup.threads
+
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv04/tvnv17.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ security/selinux/hooks.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-index 6a4ca139cf5d..8fd8124d72ba 100644
---- a/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-+++ b/drivers/gpu/drm/nouveau/dispnv04/tvnv17.c
-@@ -750,7 +750,9 @@ static int nv17_tv_set_property(struct drm_encoder *encoder,
- 		/* Disable the crtc to ensure a full modeset is
- 		 * performed whenever it's turned on again. */
- 		if (crtc)
--			drm_crtc_force_disable(crtc);
-+			drm_crtc_helper_set_mode(crtc, &crtc->mode,
-+						 crtc->x, crtc->y,
-+						 crtc->primary->fb);
- 	}
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index cf20dd36a30f..07b11b5aaf1f 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -3244,12 +3244,16 @@ static int selinux_inode_setsecurity(struct inode *inode, const char *name,
+ 				     const void *value, size_t size, int flags)
+ {
+ 	struct inode_security_struct *isec = inode_security_novalidate(inode);
++	struct superblock_security_struct *sbsec = inode->i_sb->s_security;
+ 	u32 newsid;
+ 	int rc;
  
- 	return 0;
+ 	if (strcmp(name, XATTR_SELINUX_SUFFIX))
+ 		return -EOPNOTSUPP;
+ 
++	if (!(sbsec->flags & SBLABEL_MNT))
++		return -EOPNOTSUPP;
++
+ 	if (!value || !size)
+ 		return -EACCES;
+ 
+@@ -6398,7 +6402,10 @@ static void selinux_inode_invalidate_secctx(struct inode *inode)
+  */
+ static int selinux_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen)
+ {
+-	return selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX, ctx, ctxlen, 0);
++	int rc = selinux_inode_setsecurity(inode, XATTR_SELINUX_SUFFIX,
++					   ctx, ctxlen, 0);
++	/* Do not return error when suppressing label (SBLABEL_MNT not set). */
++	return rc == -EOPNOTSUPP ? 0 : rc;
+ }
+ 
+ /*
 -- 
 2.19.1
 
