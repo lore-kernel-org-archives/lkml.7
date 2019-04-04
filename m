@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140CDC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0BFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61B920855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C1F205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370738;
-	bh=thqcyZ8C0zd5qEWtmSkln0g7ErpUGZ3x1Y58nAytztY=;
+	s=default; t=1554370748;
+	bh=KwdVpJZ+MP89vBIPPHZswq4vptUzvKKRoU+eqM2qmq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZJ6+h33rRUGj+ZDYBSe0oCWnlnQDlKZ/ROmaBcvaCUqkQGfzUST+IX9T8xymKEBGq
-	 BvoWGMK9DGYUrY1EP3r9BtUeVKLGcTH/a5MErLxajTfFJgvBeqXxtyF3VDomAD8Abx
-	 GWM7fFLbBpJPhY7+I9d9cDRvi1N+go7WNDaom194=
+	b=f9lIsxDlLFN4Ehu9S/MkpBhuDQTs2CIxqKe475NTwXNPnUJj5iIBPE9++P2HScGpZ
+	 brrO8uMfvKwdIm/5yZJ3SzMprO/6h33ItO8fXMmHIoIn7smoIGNnG0r/l7rqzxJHxX
+	 l6wVnBHoCQO0JvyatgPP75GgYKRnGMqrYCzYxJ70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731907AbfDDJi5 (ORCPT
+        id S1732000AbfDDJjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:38:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41648 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:39:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731863AbfDDJDz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:55 -0400
+        id S1731843AbfDDJDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F08221855;
-        Thu,  4 Apr 2019 09:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A8782184B;
+        Thu,  4 Apr 2019 09:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368634;
-        bh=thqcyZ8C0zd5qEWtmSkln0g7ErpUGZ3x1Y58nAytztY=;
+        s=default; t=1554368626;
+        bh=KwdVpJZ+MP89vBIPPHZswq4vptUzvKKRoU+eqM2qmq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOAS4xcO8+Q2GM3zyNgZciL87bTBRjQJPO8KFx+WIzis0jBFRsZAyjiYKXkqctwZF
-         n9shj3I5IIO/t756uPWd9PL7ExBflIZ6LV0tt8uvAwUMSCLuGsHK8CXTSpWskCT6/7
-         qphPRJ8ddEu8Qw8QAIQPweftNSvOaw8fUSOYdgKE=
+        b=mYdIN/1Z/xaoBPwx81P+1QLCoOfgPnGdABJTo313VBM43IJNT1W3n9Y+uiAVPCy6l
+         SQsdmEJkLbZceBvRFFANLnRtilnbgCrcwXgX3ELF5Tk0n562qT7vAKmdjkCkTbUg1H
+         3b5ZqAMKHXlSEHYVwxPYOxpXzXHJTHGemcoiR/Ac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        Aurelien Jarno <aurelien@aurel32.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/187] jbd2: fix race when writing superblock
-Date:   Thu,  4 Apr 2019 10:47:13 +0200
-Message-Id: <20190404084607.689477623@linuxfoundation.org>
+Subject: [PATCH 4.19 093/187] vfs: fix preadv64v2 and pwritev64v2 compat syscalls with offset == -1
+Date:   Thu,  4 Apr 2019 10:47:10 +0200
+Message-Id: <20190404084607.528446133@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,155 +67,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 538bcaa6261b77e71d37f5596c33127c1a3ec3f7 ]
+[ Upstream commit cc4b1242d7e3b42eed73881fc749944146493e4f ]
 
-The jbd2 superblock is lockless now, so there is probably a race
-condition between writing it so disk and modifing contents of it, which
-may lead to checksum error. The following race is the one case that we
-have captured.
+The preadv2 and pwritev2 syscalls are supposed to emulate the readv and
+writev syscalls when offset == -1. Therefore the compat code should
+check for offset before calling do_compat_preadv64 and
+do_compat_pwritev64. This is the case for the preadv2 and pwritev2
+syscalls, but handling of offset == -1 is missing in their 64-bit
+equivalent.
 
-jbd2                                fsstress
-jbd2_journal_commit_transaction
- jbd2_journal_update_sb_log_tail
-  jbd2_write_superblock
-   jbd2_superblock_csum_set         jbd2_journal_revoke
-                                     jbd2_journal_set_features(revork)
-                                     modify superblock
-   submit_bh(checksum incorrect)
+This patch fixes that, calling do_compat_readv and do_compat_writev when
+offset == -1. This fixes the following glibc tests on x32:
+ - misc/tst-preadvwritev2
+ - misc/tst-preadvwritev64v2
 
-Fix this by locking the buffer head before modifing it.  We always
-write the jbd2 superblock after we modify it, so this just means
-calling the lock_buffer() a little earlier.
-
-This checksum corruption problem can be reproduced by xfstests
-generic/475.
-
-Reported-by: zhangyi (F) <yi.zhang@huawei.com>
-Suggested-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 52 ++++++++++++++++++++++++-----------------------
- 1 file changed, 27 insertions(+), 25 deletions(-)
+ fs/read_write.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 8ef6b6daaa7a..88f2a49338a1 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1356,6 +1356,10 @@ static int journal_reset(journal_t *journal)
- 	return jbd2_journal_start_thread(journal);
- }
- 
-+/*
-+ * This function expects that the caller will have locked the journal
-+ * buffer head, and will return with it unlocked
-+ */
- static int jbd2_write_superblock(journal_t *journal, int write_flags)
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 8a2737f0d61d..562974a0616c 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1241,6 +1241,9 @@ COMPAT_SYSCALL_DEFINE5(preadv64v2, unsigned long, fd,
+ 		const struct compat_iovec __user *,vec,
+ 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
  {
- 	struct buffer_head *bh = journal->j_sb_buffer;
-@@ -1365,7 +1369,6 @@ static int jbd2_write_superblock(journal_t *journal, int write_flags)
- 	trace_jbd2_write_superblock(journal, write_flags);
- 	if (!(journal->j_flags & JBD2_BARRIER))
- 		write_flags &= ~(REQ_FUA | REQ_PREFLUSH);
--	lock_buffer(bh);
- 	if (buffer_write_io_error(bh)) {
- 		/*
- 		 * Oh, dear.  A previous attempt to write the journal
-@@ -1424,6 +1427,7 @@ int jbd2_journal_update_sb_log_tail(journal_t *journal, tid_t tail_tid,
- 	jbd_debug(1, "JBD2: updating superblock (start %lu, seq %u)\n",
- 		  tail_block, tail_tid);
- 
-+	lock_buffer(journal->j_sb_buffer);
- 	sb->s_sequence = cpu_to_be32(tail_tid);
- 	sb->s_start    = cpu_to_be32(tail_block);
- 
-@@ -1454,18 +1458,17 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
- 	journal_superblock_t *sb = journal->j_superblock;
- 
- 	BUG_ON(!mutex_is_locked(&journal->j_checkpoint_mutex));
--	read_lock(&journal->j_state_lock);
--	/* Is it already empty? */
--	if (sb->s_start == 0) {
--		read_unlock(&journal->j_state_lock);
-+	lock_buffer(journal->j_sb_buffer);
-+	if (sb->s_start == 0) {		/* Is it already empty? */
-+		unlock_buffer(journal->j_sb_buffer);
- 		return;
- 	}
++	if (pos == -1)
++		return do_compat_readv(fd, vec, vlen, flags);
 +
- 	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
- 		  journal->j_tail_sequence);
- 
- 	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
- 	sb->s_start    = cpu_to_be32(0);
--	read_unlock(&journal->j_state_lock);
- 
- 	jbd2_write_superblock(journal, write_op);
- 
-@@ -1488,9 +1491,8 @@ void jbd2_journal_update_sb_errno(journal_t *journal)
- 	journal_superblock_t *sb = journal->j_superblock;
- 	int errcode;
- 
--	read_lock(&journal->j_state_lock);
-+	lock_buffer(journal->j_sb_buffer);
- 	errcode = journal->j_errno;
--	read_unlock(&journal->j_state_lock);
- 	if (errcode == -ESHUTDOWN)
- 		errcode = 0;
- 	jbd_debug(1, "JBD2: updating superblock error (errno %d)\n", errcode);
-@@ -1894,28 +1896,27 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
- 
- 	sb = journal->j_superblock;
- 
-+	/* Load the checksum driver if necessary */
-+	if ((journal->j_chksum_driver == NULL) &&
-+	    INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
-+		journal->j_chksum_driver = crypto_alloc_shash("crc32c", 0, 0);
-+		if (IS_ERR(journal->j_chksum_driver)) {
-+			printk(KERN_ERR "JBD2: Cannot load crc32c driver.\n");
-+			journal->j_chksum_driver = NULL;
-+			return 0;
-+		}
-+		/* Precompute checksum seed for all metadata */
-+		journal->j_csum_seed = jbd2_chksum(journal, ~0, sb->s_uuid,
-+						   sizeof(sb->s_uuid));
-+	}
+ 	return do_compat_preadv64(fd, vec, vlen, pos, flags);
+ }
+ #endif
+@@ -1347,6 +1350,9 @@ COMPAT_SYSCALL_DEFINE5(pwritev64v2, unsigned long, fd,
+ 		const struct compat_iovec __user *,vec,
+ 		unsigned long, vlen, loff_t, pos, rwf_t, flags)
+ {
++	if (pos == -1)
++		return do_compat_writev(fd, vec, vlen, flags);
 +
-+	lock_buffer(journal->j_sb_buffer);
-+
- 	/* If enabling v3 checksums, update superblock */
- 	if (INCOMPAT_FEATURE_ON(JBD2_FEATURE_INCOMPAT_CSUM_V3)) {
- 		sb->s_checksum_type = JBD2_CRC32C_CHKSUM;
- 		sb->s_feature_compat &=
- 			~cpu_to_be32(JBD2_FEATURE_COMPAT_CHECKSUM);
--
--		/* Load the checksum driver */
--		if (journal->j_chksum_driver == NULL) {
--			journal->j_chksum_driver = crypto_alloc_shash("crc32c",
--								      0, 0);
--			if (IS_ERR(journal->j_chksum_driver)) {
--				printk(KERN_ERR "JBD2: Cannot load crc32c "
--				       "driver.\n");
--				journal->j_chksum_driver = NULL;
--				return 0;
--			}
--
--			/* Precompute checksum seed for all metadata */
--			journal->j_csum_seed = jbd2_chksum(journal, ~0,
--							   sb->s_uuid,
--							   sizeof(sb->s_uuid));
--		}
- 	}
- 
- 	/* If enabling v1 checksums, downgrade superblock */
-@@ -1927,6 +1928,7 @@ int jbd2_journal_set_features (journal_t *journal, unsigned long compat,
- 	sb->s_feature_compat    |= cpu_to_be32(compat);
- 	sb->s_feature_ro_compat |= cpu_to_be32(ro);
- 	sb->s_feature_incompat  |= cpu_to_be32(incompat);
-+	unlock_buffer(journal->j_sb_buffer);
- 
- 	return 1;
- #undef COMPAT_FEATURE_ON
+ 	return do_compat_pwritev64(fd, vec, vlen, pos, flags);
+ }
+ #endif
 -- 
 2.19.1
 
