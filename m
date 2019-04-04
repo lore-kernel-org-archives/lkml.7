@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A36C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A057AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF616214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B69E2133D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="fCpfmq6r";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xXsEe6Si"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="MBp3j9bH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qkA7/ZD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfDDCKP (ORCPT
+        id S1726913AbfDDCKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:10:15 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:42827 "EHLO
+        Wed, 3 Apr 2019 22:10:13 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41925 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726571AbfDDCJr (ORCPT
+        by vger.kernel.org with ESMTP id S1726548AbfDDCJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 22:09:47 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E70A7228D4;
-        Wed,  3 Apr 2019 22:01:38 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 6AC0C225E4;
+        Wed,  3 Apr 2019 22:01:52 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:38 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm3; bh=wYGW67q2hX0Ye
-        FGfjhSH69JcgDm6ztcqTDnUJ+CdMVc=; b=fCpfmq6ri4dvlPq3glhihZTgdw/hw
-        y57u+VkeKxBP8eQp2qDCAalNUl2bFcPcG+Ve9QXMaA1tUHpGszvCvsnuYG7YTCDw
-        qjy1kW4mGX21k0APvAHWLqMcWpB1W8Ml7PHpOJFvvtwEumCCUThHvi0YszBgtMZD
-        tzzIbtMx0K8nVBkI3vN/D1blcoUge/fgWytVPLBjvZig3t3G+68jSWbOYiPexSC7
-        0shMeh+zTCp/miMOrmSb94BbkaxcOhVyUXUZGOnFaqsiwrmb6MG+sHfx52+6zlat
-        vObGBzHTGr0yKm4WimYoMD75+c7kFcl8JwN8DLvrqeuxc1f08OUWmVgjA==
+        :mime-version:content-transfer-encoding; s=fm3; bh=KCLXIWPn2wPPa
+        X//haXWVGdcpCWLncsANSVaA+4FczE=; b=MBp3j9bHaCgiDCWMOpc0eYvTzoFNl
+        s7ncTpUi6YimkWJAvnpJXe2/pxIoit8B37S2iW96yrfE9kQppfYJ0pwggJs0cmUy
+        xB9nKLHyLu2p30mI7rcE3MnP0Sh4qtVRVcJP1RXyuVyhTjdLkS4rwCPrZ5mG6O71
+        OuFXXZTTPa4nA10XVB36jkHMifJhn3w0JGZbukdGdEwY+IkeYzDL09uR1Fowdv+M
+        qRuTTxsMVJYa+mSnQqEVsi5WPx0ORmn1SBkmcPwbg//2Kf+vRPUcHl5u0w8vYXIf
+        4B/J3ziemsBolK4WwIha0UB8jtlu1LNz5bzEouikNurPJSX3S5kWx7Nmw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=wYGW67q2hX0YeFGfjhSH69JcgDm6ztcqTDnUJ+CdMVc=; b=xXsEe6Si
-        1I8CPRa6jVORnOP1UG1J9zV9dqjQzPZvEgfE042iVdXe2PsHYWRZMFVE3Hbrwopa
-        f+2YKs/HkBjAI4/ULj6tMuc532L/+pTneOm7/rr5pmiDGrkA4LAv6C0BbB7XdbzQ
-        2+yRetPTS0NnCZ8Nce1z4SQbI/PImyqWsP6XhIVud4EzCRTMhcpsaZwzDlOdJ/XE
-        UZzwJlpSsbzvvt3//rRdOw20NnW025+HOW5ePBYqsFaDvzxsqsctyvOWTPfvGm7d
-        PTEs6huvl02cUunBGyokQTxwIfcOaKmAIb32fbOpFMDzLmL0bFym7APyDbd/o9hQ
-        G/hxmkHOS+3PBQ==
-X-ME-Sender: <xms:gmWlXHKMIsoQDWOcX3TfNs0F8LfH1oPqXuLL-m38NfZjRZCU0fhexA>
+        fm2; bh=KCLXIWPn2wPPaX//haXWVGdcpCWLncsANSVaA+4FczE=; b=qkA7/ZD2
+        BwJSpBIjr3CaPbOcDkKoKiLpDUkEkU9dcNfFob2cHnp678IE9w9gJLV/gj9qLvSn
+        oFrkoEAHO+3J19psvJpUD2SZtW6j6MQ9l5VPh5PbNIuatOdH9CN+ZtW+SG2n1gcn
+        vglhxwxtIwEy3RRqsoN/Z49KbgQzzY5ZOJoWrAIASga+CzSfhjuuAItExIbh/QII
+        Nnu00rv4J6PuSESCkSLUexyqIFd8JWoSJc8dyvlEyigjWg4ETm4SrTD282za36Gi
+        ndcy1l5Fl6rcFdF5iysSdfmopADJ5KfQnmmbnuxGPG+6gGiJtrKwB1KFi6p7K4lT
+        oibgye0lHPX39Q==
+X-ME-Sender: <xms:kGWlXHizyVJ8E7yZbxNtnDt-3yo_hfpSXP9o1q2JxZ0fPbvDWI_CLA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdehudculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
     hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddt
     necuhfhrohhmpegkihcujggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucfkph
     epvdduiedrvddvkedrudduvddrvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdr
-    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepuddt
-X-ME-Proxy: <xmx:gmWlXPYEJEKNf8tS-K03P9wEb93pnhCjaf39HSX5otNlDu3-JH545Q>
-    <xmx:gmWlXMrYenYz42pjJWEXQtMsWi-zY_aE8snQoyfaGrny5miv7ah3JQ>
-    <xmx:gmWlXPFK27rBuEv-BhL0zmSdBdE3nbGiXSeIWKPLIkeQQnOEQMiBZA>
-    <xmx:gmWlXFa5jiHcmTMZy5xq7dHQ5LCZM7bHAKLcezKkapmBexRvIZei-w>
+    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepvddu
+X-ME-Proxy: <xmx:kGWlXF6irVzBaekNnZjU8djm101xOTs8wkv21QD2BWxOtklunBL3xw>
+    <xmx:kGWlXLvSNrOzVp-5jBR0GVU7z36TTLkbbP3n6lhYdCepoe248LlS8Q>
+    <xmx:kGWlXCwEeZET18Rh8_gcpMyr4Y6e_V5ZWXCgz8X_6IGmTRg8WPytrw>
+    <xmx:kGWlXIXNaZCkjKwtUMD3Ai5Go7gWviEIwDy-3It2GKSJZwNFKqjh_g>
 Received: from nvrsysarch5.nvidia.com (thunderhill.nvidia.com [216.228.112.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D4DCF10310;
-        Wed,  3 Apr 2019 22:01:36 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7306E10319;
+        Wed,  3 Apr 2019 22:01:50 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
@@ -82,9 +82,9 @@ Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         Nitin Gupta <nigupta@nvidia.com>,
         Javier Cabezas <jcabezas@nvidia.com>,
         David Nellans <dnellans@nvidia.com>, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 14/25] exchange pages: concurrent exchange pages.
-Date:   Wed,  3 Apr 2019 19:00:35 -0700
-Message-Id: <20190404020046.32741-15-zi.yan@sent.com>
+Subject: [RFC PATCH 22/25] memory manage: active/inactive page list manipulation in memcg.
+Date:   Wed,  3 Apr 2019 19:00:43 -0700
+Message-Id: <20190404020046.32741-23-zi.yan@sent.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
 References: <20190404020046.32741-1-zi.yan@sent.com>
@@ -98,445 +98,394 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-It unmaps two lists of pages, then exchange them in
-exchange_page_lists_mthread(), and finally remaps both lists of
-pages.
+The syscall allows users to trigger page list scanning to actively
+move pages between active/inactive lists according to page
+references. This is limited to the memcg which the process belongs
+to. It would not impact the global LRU lists, which is the root
+memcg.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- include/linux/exchange.h |   2 +
- mm/exchange.c            | 397 +++++++++++++++++++++++++++++++++++++++++++++++
- mm/exchange_page.c       |   1 -
- 3 files changed, 399 insertions(+), 1 deletion(-)
+ include/uapi/linux/mempolicy.h |  1 +
+ mm/internal.h                  | 93 +++++++++++++++++++++++++++++++++++++++++-
+ mm/memory_manage.c             | 76 +++++++++++++++++++++++++++++++++-
+ mm/vmscan.c                    | 90 ++++++++--------------------------------
+ 4 files changed, 184 insertions(+), 76 deletions(-)
 
-diff --git a/include/linux/exchange.h b/include/linux/exchange.h
-index 778068e..20d2184 100644
---- a/include/linux/exchange.h
-+++ b/include/linux/exchange.h
-@@ -20,4 +20,6 @@ struct exchange_page_info {
- int exchange_pages(struct list_head *exchange_list,
- 			enum migrate_mode mode,
- 			int reason);
-+int exchange_pages_concur(struct list_head *exchange_list,
-+		enum migrate_mode mode, int reason);
- #endif /* _LINUX_EXCHANGE_H */
-diff --git a/mm/exchange.c b/mm/exchange.c
-index ce2c899..bbada58 100644
---- a/mm/exchange.c
-+++ b/mm/exchange.c
-@@ -600,3 +600,400 @@ int exchange_pages(struct list_head *exchange_list,
- 	}
- 	return failed;
- }
+diff --git a/include/uapi/linux/mempolicy.h b/include/uapi/linux/mempolicy.h
+index 4722bb7..dac474a 100644
+--- a/include/uapi/linux/mempolicy.h
++++ b/include/uapi/linux/mempolicy.h
+@@ -53,6 +53,7 @@ enum {
+ #define MPOL_MF_MOVE_MT  (1<<6)	/* Use multi-threaded page copy routine */
+ #define MPOL_MF_MOVE_CONCUR  (1<<7)	/* Move pages in a batch */
+ #define MPOL_MF_EXCHANGE	(1<<8)	/* Exchange pages */
++#define MPOL_MF_SHRINK_LISTS	(1<<9)	/* Exchange pages */
+ 
+ #define MPOL_MF_VALID	(MPOL_MF_STRICT   | 	\
+ 			 MPOL_MF_MOVE     | 	\
+diff --git a/mm/internal.h b/mm/internal.h
+index 94feb14..eec88de 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -564,7 +564,7 @@ extern int copy_page_lists_mt(struct page **to,
+ extern int exchange_page_mthread(struct page *to, struct page *from,
+ 			int nr_pages);
+ extern int exchange_page_lists_mthread(struct page **to,
+-						  struct page **from, 
++						  struct page **from,
+ 						  int nr_pages);
+ 
+ extern int exchange_two_pages(struct page *page1, struct page *page2);
+@@ -577,4 +577,95 @@ int expected_page_refs(struct address_space *mapping, struct page *page);
+ int get_nodes(nodemask_t *nodes, const unsigned long __user *nmask,
+ 		     unsigned long maxnode);
+ 
++unsigned move_active_pages_to_lru(struct lruvec *lruvec,
++				     struct list_head *list,
++				     struct list_head *pages_to_free,
++				     enum lru_list lru);
++void putback_inactive_pages(struct lruvec *lruvec, struct list_head *page_list);
 +
-+
-+static int unmap_pair_pages_concur(struct exchange_page_info *one_pair,
-+				int force, enum migrate_mode mode)
-+{
-+	int rc = -EAGAIN;
-+	struct anon_vma *anon_vma_from_page = NULL, *anon_vma_to_page = NULL;
-+	struct page *from_page = one_pair->from_page;
-+	struct page *to_page = one_pair->to_page;
-+
-+	/* from_page lock down  */
-+	if (!trylock_page(from_page)) {
-+		if (!force || ((mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC))
-+			goto out;
-+
-+		lock_page(from_page);
-+	}
-+
-+	BUG_ON(PageWriteback(from_page));
-+
-+	/*
-+	 * By try_to_unmap(), page->mapcount goes down to 0 here. In this case,
-+	 * we cannot notice that anon_vma is freed while we migrates a page.
-+	 * This get_anon_vma() delays freeing anon_vma pointer until the end
-+	 * of migration. File cache pages are no problem because of page_lock()
-+	 * File Caches may use write_page() or lock_page() in migration, then,
-+	 * just care Anon page here.
-+	 *
-+	 * Only page_get_anon_vma() understands the subtleties of
-+	 * getting a hold on an anon_vma from outside one of its mms.
-+	 * But if we cannot get anon_vma, then we won't need it anyway,
-+	 * because that implies that the anon page is no longer mapped
-+	 * (and cannot be remapped so long as we hold the page lock).
-+	 */
-+	if (PageAnon(from_page) && !PageKsm(from_page))
-+		one_pair->from_anon_vma = anon_vma_from_page
-+					= page_get_anon_vma(from_page);
-+
-+	/* to_page lock down  */
-+	if (!trylock_page(to_page)) {
-+		if (!force || ((mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC))
-+			goto out_unlock;
-+
-+		lock_page(to_page);
-+	}
-+
-+	BUG_ON(PageWriteback(to_page));
++struct scan_control {
++	/* How many pages shrink_list() should reclaim */
++	unsigned long nr_to_reclaim;
 +
 +	/*
-+	 * By try_to_unmap(), page->mapcount goes down to 0 here. In this case,
-+	 * we cannot notice that anon_vma is freed while we migrates a page.
-+	 * This get_anon_vma() delays freeing anon_vma pointer until the end
-+	 * of migration. File cache pages are no problem because of page_lock()
-+	 * File Caches may use write_page() or lock_page() in migration, then,
-+	 * just care Anon page here.
-+	 *
-+	 * Only page_get_anon_vma() understands the subtleties of
-+	 * getting a hold on an anon_vma from outside one of its mms.
-+	 * But if we cannot get anon_vma, then we won't need it anyway,
-+	 * because that implies that the anon page is no longer mapped
-+	 * (and cannot be remapped so long as we hold the page lock).
++	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
++	 * are scanned.
 +	 */
-+	if (PageAnon(to_page) && !PageKsm(to_page))
-+		one_pair->to_anon_vma = anon_vma_to_page = page_get_anon_vma(to_page);
++	nodemask_t	*nodemask;
 +
 +	/*
-+	 * Corner case handling:
-+	 * 1. When a new swap-cache page is read into, it is added to the LRU
-+	 * and treated as swapcache but it has no rmap yet.
-+	 * Calling try_to_unmap() against a page->mapping==NULL page will
-+	 * trigger a BUG.  So handle it here.
-+	 * 2. An orphaned page (see truncate_complete_page) might have
-+	 * fs-private metadata. The page can be picked up due to memory
-+	 * offlining.  Everywhere else except page reclaim, the page is
-+	 * invisible to the vm, so the page can not be migrated.  So try to
-+	 * free the metadata, so the page can be freed.
++	 * The memory cgroup that hit its limit and as a result is the
++	 * primary target of this reclaim invocation.
 +	 */
-+	if (!from_page->mapping) {
-+		VM_BUG_ON_PAGE(PageAnon(from_page), from_page);
-+		if (page_has_private(from_page)) {
-+			try_to_free_buffers(from_page);
-+			goto out_unlock_both;
-+		}
-+	} else if (page_mapped(from_page)) {
-+		/* Establish migration ptes */
-+		VM_BUG_ON_PAGE(PageAnon(from_page) && !PageKsm(from_page) &&
-+					   !anon_vma_from_page, from_page);
-+		try_to_unmap(from_page,
-+			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
++	struct mem_cgroup *target_mem_cgroup;
 +
-+		one_pair->from_page_was_mapped = 1;
-+	}
++	/* Writepage batching in laptop mode; RECLAIM_WRITE */
++	unsigned int may_writepage:1;
 +
-+	if (!to_page->mapping) {
-+		VM_BUG_ON_PAGE(PageAnon(to_page), to_page);
-+		if (page_has_private(to_page)) {
-+			try_to_free_buffers(to_page);
-+			goto out_unlock_both;
-+		}
-+	} else if (page_mapped(to_page)) {
-+		/* Establish migration ptes */
-+		VM_BUG_ON_PAGE(PageAnon(to_page) && !PageKsm(to_page) &&
-+					   !anon_vma_to_page, to_page);
-+		try_to_unmap(to_page,
-+			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
++	/* Can mapped pages be reclaimed? */
++	unsigned int may_unmap:1;
 +
-+		one_pair->to_page_was_mapped = 1;
-+	}
++	/* Can pages be swapped as part of reclaim? */
++	unsigned int may_swap:1;
 +
-+	return MIGRATEPAGE_SUCCESS;
++	/* e.g. boosted watermark reclaim leaves slabs alone */
++	unsigned int may_shrinkslab:1;
 +
-+out_unlock_both:
-+	if (anon_vma_to_page)
-+		put_anon_vma(anon_vma_to_page);
-+	unlock_page(to_page);
-+out_unlock:
-+	/* Drop an anon_vma reference if we took one */
-+	if (anon_vma_from_page)
-+		put_anon_vma(anon_vma_from_page);
-+	unlock_page(from_page);
-+out:
++	/*
++	 * Cgroups are not reclaimed below their configured memory.low,
++	 * unless we threaten to OOM. If any cgroups are skipped due to
++	 * memory.low and nothing was reclaimed, go back for memory.low.
++	 */
++	unsigned int memcg_low_reclaim:1;
++	unsigned int memcg_low_skipped:1;
 +
-+	return rc;
-+}
++	unsigned int hibernation_mode:1;
 +
-+static int exchange_page_mapping_concur(struct list_head *unmapped_list_ptr,
-+					   struct list_head *exchange_list_ptr,
-+						enum migrate_mode mode)
++	/* One of the zones is ready for compaction */
++	unsigned int compaction_ready:1;
++
++	unsigned int isolate_only_huge_page:1;
++	unsigned int isolate_only_base_page:1;
++	unsigned int no_reclaim:1;
++
++	/* Allocation order */
++	s8 order;
++
++	/* Scan (total_size >> priority) pages at once */
++	s8 priority;
++
++	/* The highest zone to isolate pages for reclaim from */
++	s8 reclaim_idx;
++
++	/* This context's GFP mask */
++	gfp_t gfp_mask;
++
++	/* Incremented by the number of inactive pages that were scanned */
++	unsigned long nr_scanned;
++
++	/* Number of pages freed so far during a call to shrink_zones() */
++	unsigned long nr_reclaimed;
++
++	struct {
++		unsigned int dirty;
++		unsigned int unqueued_dirty;
++		unsigned int congested;
++		unsigned int writeback;
++		unsigned int immediate;
++		unsigned int file_taken;
++		unsigned int taken;
++	} nr;
++};
++
++unsigned long isolate_lru_pages(unsigned long nr_to_scan,
++		struct lruvec *lruvec, struct list_head *dst,
++		unsigned long *nr_scanned, struct scan_control *sc,
++		enum lru_list lru);
++void shrink_active_list(unsigned long nr_to_scan,
++			       struct lruvec *lruvec,
++			       struct scan_control *sc,
++			       enum lru_list lru);
++unsigned long shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
++		     struct scan_control *sc, enum lru_list lru);
++
+ #endif	/* __MM_INTERNAL_H */
+diff --git a/mm/memory_manage.c b/mm/memory_manage.c
+index b8f3654..e8dddbf 100644
+--- a/mm/memory_manage.c
++++ b/mm/memory_manage.c
+@@ -5,13 +5,79 @@
+ #include <linux/sched/mm.h>
+ #include <linux/cpuset.h>
+ #include <linux/mempolicy.h>
++#include <linux/memcontrol.h>
++#include <linux/mm_inline.h>
+ #include <linux/nodemask.h>
++#include <linux/rmap.h>
+ #include <linux/security.h>
++#include <linux/swap.h>
+ #include <linux/syscalls.h>
+ 
+ #include "internal.h"
+ 
+ 
++static unsigned long shrink_lists_node_memcg(pg_data_t *pgdat,
++	struct mem_cgroup *memcg, unsigned long nr_to_scan)
 +{
-+	int rc = -EBUSY;
-+	int nr_failed = 0;
-+	struct address_space *to_page_mapping, *from_page_mapping;
-+	struct exchange_page_info *one_pair, *one_pair2;
++	struct lruvec *lruvec = mem_cgroup_lruvec(pgdat, memcg);
++	enum lru_list lru;
 +
-+	list_for_each_entry_safe(one_pair, one_pair2, unmapped_list_ptr, list) {
-+		struct page *from_page = one_pair->from_page;
-+		struct page *to_page = one_pair->to_page;
-+
-+		VM_BUG_ON_PAGE(!PageLocked(from_page), from_page);
-+		VM_BUG_ON_PAGE(!PageLocked(to_page), to_page);
-+
-+		/* copy page->mapping not use page_mapping()  */
-+		to_page_mapping = page_mapping(to_page);
-+		from_page_mapping = page_mapping(from_page);
-+
-+		BUG_ON(from_page_mapping);
-+		BUG_ON(to_page_mapping);
-+
-+		BUG_ON(PageWriteback(from_page));
-+		BUG_ON(PageWriteback(to_page));
-+
-+		/* actual page mapping exchange */
-+		rc = exchange_page_move_mapping(to_page_mapping, from_page_mapping,
-+							to_page, from_page, mode, 0, 0);
-+
-+		if (rc) {
-+			if (one_pair->from_page_was_mapped)
-+				remove_migration_ptes(from_page, from_page, false);
-+			if (one_pair->to_page_was_mapped)
-+				remove_migration_ptes(to_page, to_page, false);
-+
-+			if (one_pair->from_anon_vma)
-+				put_anon_vma(one_pair->from_anon_vma);
-+			unlock_page(from_page);
-+
-+			if (one_pair->to_anon_vma)
-+				put_anon_vma(one_pair->to_anon_vma);
-+			unlock_page(to_page);
-+
-+			mod_node_page_state(page_pgdat(from_page), NR_ISOLATED_ANON +
-+					page_is_file_cache(from_page), -hpage_nr_pages(from_page));
-+			putback_lru_page(from_page);
-+
-+			mod_node_page_state(page_pgdat(to_page), NR_ISOLATED_ANON +
-+					page_is_file_cache(to_page), -hpage_nr_pages(to_page));
-+			putback_lru_page(to_page);
-+
-+			one_pair->from_page = NULL;
-+			one_pair->to_page = NULL;
-+
-+			list_move(&one_pair->list, exchange_list_ptr);
-+			++nr_failed;
-+		}
++	for_each_evictable_lru(lru) {
++		unsigned long nr_to_scan_local = lruvec_size_memcg_node(lru, memcg,
++				pgdat->node_id) / 2;
++		struct scan_control sc = {.may_unmap = 1, .no_reclaim = 1};
++		/*nr_reclaimed += shrink_list(lru, nr_to_scan, lruvec, memcg, sc);*/
++		/*
++		 * for slow node, we want active list, we start from the top of
++		 * the active list. For pages in the bottom of
++		 * the inactive list, we can place it to the top of inactive list
++		 */
++		/*
++		 * for fast node, we want inactive list, we start from the bottom of
++		 * the inactive list. For pages in the active list, we just keep them.
++		 */
++		/*
++		 * A key question is how many pages to scan each time, and what criteria
++		 * to use to move pages between active/inactive page lists.
++		 *  */
++		if (is_active_lru(lru))
++			shrink_active_list(nr_to_scan_local, lruvec, &sc, lru);
++		else
++			shrink_inactive_list(nr_to_scan_local, lruvec, &sc, lru);
 +	}
-+
-+	return nr_failed;
-+}
-+
-+static int exchange_page_data_concur(struct list_head *unmapped_list_ptr,
-+									enum migrate_mode mode)
-+{
-+	struct exchange_page_info *one_pair;
-+	int num_pages = 0, idx = 0;
-+	struct page **src_page_list = NULL, **dst_page_list = NULL;
-+	unsigned long size = 0;
-+	int rc = -EFAULT;
-+
-+	if (list_empty(unmapped_list_ptr))
-+		return 0;
-+
-+	/* form page list  */
-+	list_for_each_entry(one_pair, unmapped_list_ptr, list) {
-+		++num_pages;
-+		size += PAGE_SIZE * hpage_nr_pages(one_pair->from_page);
-+	}
-+
-+	src_page_list = kzalloc(sizeof(struct page *)*num_pages, GFP_KERNEL);
-+	if (!src_page_list)
-+		return -ENOMEM;
-+	dst_page_list = kzalloc(sizeof(struct page *)*num_pages, GFP_KERNEL);
-+	if (!dst_page_list)
-+		return -ENOMEM;
-+
-+	list_for_each_entry(one_pair, unmapped_list_ptr, list) {
-+		src_page_list[idx] = one_pair->from_page;
-+		dst_page_list[idx] = one_pair->to_page;
-+		++idx;
-+	}
-+
-+	BUG_ON(idx != num_pages);
-+
-+
-+	if (mode & MIGRATE_MT)
-+		rc = exchange_page_lists_mthread(dst_page_list, src_page_list,
-+				num_pages);
-+
-+	if (rc) {
-+		list_for_each_entry(one_pair, unmapped_list_ptr, list) {
-+			if (PageHuge(one_pair->from_page) ||
-+				PageTransHuge(one_pair->from_page)) {
-+				exchange_huge_page(one_pair->to_page, one_pair->from_page);
-+			} else {
-+				exchange_highpage(one_pair->to_page, one_pair->from_page);
-+			}
-+		}
-+	}
-+
-+	kfree(src_page_list);
-+	kfree(dst_page_list);
-+
-+	list_for_each_entry(one_pair, unmapped_list_ptr, list) {
-+		exchange_page_flags(one_pair->to_page, one_pair->from_page);
-+	}
-+
-+	return rc;
-+}
-+
-+static int remove_migration_ptes_concur(struct list_head *unmapped_list_ptr)
-+{
-+	struct exchange_page_info *iterator;
-+
-+	list_for_each_entry(iterator, unmapped_list_ptr, list) {
-+		remove_migration_ptes(iterator->from_page, iterator->to_page, false);
-+		remove_migration_ptes(iterator->to_page, iterator->from_page, false);
-+
-+
-+		if (iterator->from_anon_vma)
-+			put_anon_vma(iterator->from_anon_vma);
-+		unlock_page(iterator->from_page);
-+
-+
-+		if (iterator->to_anon_vma)
-+			put_anon_vma(iterator->to_anon_vma);
-+		unlock_page(iterator->to_page);
-+
-+
-+		putback_lru_page(iterator->from_page);
-+		iterator->from_page = NULL;
-+
-+		putback_lru_page(iterator->to_page);
-+		iterator->to_page = NULL;
-+	}
++	cond_resched();
 +
 +	return 0;
 +}
 +
-+int exchange_pages_concur(struct list_head *exchange_list,
-+		enum migrate_mode mode, int reason)
++static int shrink_lists(struct task_struct *p, struct mm_struct *mm,
++		const nodemask_t *slow, const nodemask_t *fast, unsigned long nr_to_scan)
 +{
-+	struct exchange_page_info *one_pair, *one_pair2;
-+	int pass = 0;
-+	int retry = 1;
-+	int nr_failed = 0;
-+	int nr_succeeded = 0;
-+	int rc = 0;
-+	LIST_HEAD(serialized_list);
-+	LIST_HEAD(unmapped_list);
++	struct mem_cgroup *memcg = mem_cgroup_from_task(p);
++	int slow_nid, fast_nid;
++	int err = 0;
 +
-+	for(pass = 0; pass < 1 && retry; pass++) {
-+		retry = 0;
++	if (!memcg)
++		return 0;
++	/* Let's handle simplest situation first */
++	if (!(nodes_weight(*slow) == 1 && nodes_weight(*fast) == 1))
++		return 0;
 +
-+		/* unmap and get new page for page_mapping(page) == NULL */
-+		list_for_each_entry_safe(one_pair, one_pair2, exchange_list, list) {
-+			struct page *from_page = one_pair->from_page;
-+			struct page *to_page = one_pair->to_page;
-+			cond_resched();
++	if (memcg == root_mem_cgroup)
++		return 0;
 +
-+			if (page_count(from_page) == 1) {
-+				/* page was freed from under us. So we are done  */
-+				ClearPageActive(from_page);
-+				ClearPageUnevictable(from_page);
++	slow_nid = first_node(*slow);
++	fast_nid = first_node(*fast);
 +
-+				put_page(from_page);
-+				dec_node_page_state(from_page, NR_ISOLATED_ANON +
-+						page_is_file_cache(from_page));
++	/* move pages between page lists in slow node */
++	shrink_lists_node_memcg(NODE_DATA(slow_nid), memcg, nr_to_scan);
 +
-+				if (page_count(to_page) == 1) {
-+					ClearPageActive(to_page);
-+					ClearPageUnevictable(to_page);
-+					put_page(to_page);
-+				} else {
-+					mod_node_page_state(page_pgdat(to_page), NR_ISOLATED_ANON +
-+							page_is_file_cache(to_page), -hpage_nr_pages(to_page));
-+					putback_lru_page(to_page);
-+				}
-+				list_del(&one_pair->list);
++	/* move pages between page lists in fast node */
++	shrink_lists_node_memcg(NODE_DATA(fast_nid), memcg, nr_to_scan);
 +
-+				continue;
-+			}
++	return err;
++}
 +
-+			if (page_count(to_page) == 1) {
-+				/* page was freed from under us. So we are done  */
-+				ClearPageActive(to_page);
-+				ClearPageUnevictable(to_page);
-+
-+				put_page(to_page);
-+
-+				dec_node_page_state(to_page, NR_ISOLATED_ANON +
-+						page_is_file_cache(to_page));
-+
-+				mod_node_page_state(page_pgdat(from_page), NR_ISOLATED_ANON +
-+						page_is_file_cache(from_page), -hpage_nr_pages(from_page));
-+				putback_lru_page(from_page);
-+
-+				list_del(&one_pair->list);
-+				continue;
-+			}
-+		/* We do not exchange huge pages and file-backed pages concurrently */
-+			if (PageHuge(one_pair->from_page) || PageHuge(one_pair->to_page)) {
-+				rc = -ENODEV;
-+			}
-+			else if ((page_mapping(one_pair->from_page) != NULL) ||
-+					 (page_mapping(one_pair->from_page) != NULL)) {
-+				rc = -ENODEV;
-+			}
-+			else
-+				rc = unmap_pair_pages_concur(one_pair, 1, mode);
-+
-+			switch(rc) {
-+			case -ENODEV:
-+				list_move(&one_pair->list, &serialized_list);
-+				break;
-+			case -ENOMEM:
-+				goto out;
-+			case -EAGAIN:
-+				retry++;
-+				break;
-+			case MIGRATEPAGE_SUCCESS:
-+				list_move(&one_pair->list, &unmapped_list);
-+				nr_succeeded++;
-+				break;
-+			default:
-+				/*
-+				 * Permanent failure (-EBUSY, -ENOSYS, etc.):
-+				 * unlike -EAGAIN case, the failed page is
-+				 * removed from migration page list and not
-+				 * retried in the next outer loop.
-+				 */
-+				list_move(&one_pair->list, &serialized_list);
-+				nr_failed++;
-+				break;
-+			}
+ SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
+ 		unsigned long, maxnode,
+ 		const unsigned long __user *, slow_nodes,
+@@ -42,10 +108,14 @@ SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
+ 		goto out;
+ 
+ 	/* Check flags */
+-	if (flags & ~(MPOL_MF_MOVE_MT|
++	if (flags & ~(
++				  MPOL_MF_MOVE|
++				  MPOL_MF_MOVE_MT|
+ 				  MPOL_MF_MOVE_DMA|
+ 				  MPOL_MF_MOVE_CONCUR|
+-				  MPOL_MF_EXCHANGE))
++				  MPOL_MF_EXCHANGE|
++				  MPOL_MF_SHRINK_LISTS|
++				  MPOL_MF_MOVE_ALL))
+ 		return -EINVAL;
+ 
+ 	/* Find the mm_struct */
+@@ -94,6 +164,8 @@ SYSCALL_DEFINE6(mm_manage, pid_t, pid, unsigned long, nr_pages,
+ 		set_bit(MMF_MM_MANAGE, &mm->flags);
+ 	}
+ 
++	if (flags & MPOL_MF_SHRINK_LISTS)
++		shrink_lists(task, mm, slow, fast, nr_pages);
+ 
+ 	clear_bit(MMF_MM_MANAGE, &mm->flags);
+ 	mmput(mm);
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 1d539d6..3693550 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -63,75 +63,6 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/vmscan.h>
+ 
+-struct scan_control {
+-	/* How many pages shrink_list() should reclaim */
+-	unsigned long nr_to_reclaim;
+-
+-	/*
+-	 * Nodemask of nodes allowed by the caller. If NULL, all nodes
+-	 * are scanned.
+-	 */
+-	nodemask_t	*nodemask;
+-
+-	/*
+-	 * The memory cgroup that hit its limit and as a result is the
+-	 * primary target of this reclaim invocation.
+-	 */
+-	struct mem_cgroup *target_mem_cgroup;
+-
+-	/* Writepage batching in laptop mode; RECLAIM_WRITE */
+-	unsigned int may_writepage:1;
+-
+-	/* Can mapped pages be reclaimed? */
+-	unsigned int may_unmap:1;
+-
+-	/* Can pages be swapped as part of reclaim? */
+-	unsigned int may_swap:1;
+-
+-	/* e.g. boosted watermark reclaim leaves slabs alone */
+-	unsigned int may_shrinkslab:1;
+-
+-	/*
+-	 * Cgroups are not reclaimed below their configured memory.low,
+-	 * unless we threaten to OOM. If any cgroups are skipped due to
+-	 * memory.low and nothing was reclaimed, go back for memory.low.
+-	 */
+-	unsigned int memcg_low_reclaim:1;
+-	unsigned int memcg_low_skipped:1;
+-
+-	unsigned int hibernation_mode:1;
+-
+-	/* One of the zones is ready for compaction */
+-	unsigned int compaction_ready:1;
+-
+-	/* Allocation order */
+-	s8 order;
+-
+-	/* Scan (total_size >> priority) pages at once */
+-	s8 priority;
+-
+-	/* The highest zone to isolate pages for reclaim from */
+-	s8 reclaim_idx;
+-
+-	/* This context's GFP mask */
+-	gfp_t gfp_mask;
+-
+-	/* Incremented by the number of inactive pages that were scanned */
+-	unsigned long nr_scanned;
+-
+-	/* Number of pages freed so far during a call to shrink_zones() */
+-	unsigned long nr_reclaimed;
+-
+-	struct {
+-		unsigned int dirty;
+-		unsigned int unqueued_dirty;
+-		unsigned int congested;
+-		unsigned int writeback;
+-		unsigned int immediate;
+-		unsigned int file_taken;
+-		unsigned int taken;
+-	} nr;
+-};
+ 
+ #ifdef ARCH_HAS_PREFETCH
+ #define prefetch_prev_lru_page(_page, _base, _field)			\
+@@ -1261,6 +1192,13 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 			; /* try to reclaim the page below */
+ 		}
+ 
++		/* We keep the page in inactive list for migration in the next
++		 * step */
++		if (sc->no_reclaim) {
++			stat->nr_ref_keep++;
++			goto keep_locked;
 +		}
 +
-+		/* move page->mapping to new page, only -EAGAIN could happen  */
-+		exchange_page_mapping_concur(&unmapped_list, exchange_list, mode);
+ 		/*
+ 		 * Anonymous process memory has backing store?
+ 		 * Try to allocate it some swap space here.
+@@ -1613,7 +1551,7 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
+  *
+  * returns how many pages were moved onto *@dst.
+  */
+-static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
++unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+ 		struct lruvec *lruvec, struct list_head *dst,
+ 		unsigned long *nr_scanned, struct scan_control *sc,
+ 		enum lru_list lru)
+@@ -1634,6 +1572,13 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+ 		struct page *page;
+ 
+ 		page = lru_to_page(src);
++		nr_pages = hpage_nr_pages(page);
 +
++		if (sc->isolate_only_base_page && nr_pages != 1)
++			continue;
++		if (sc->isolate_only_huge_page && nr_pages == 1)
++			continue;
 +
-+		/* copy pages in unmapped_list */
-+		exchange_page_data_concur(&unmapped_list, mode);
-+
-+
-+		/* remove migration pte, if old_page is NULL?, unlock old and new
-+		 * pages, put anon_vma, put old and new pages */
-+		remove_migration_ptes_concur(&unmapped_list);
-+	}
-+
-+	nr_failed += retry;
-+	rc = nr_failed;
-+
-+	exchange_pages(&serialized_list, mode, reason);
-+out:
-+	list_splice(&unmapped_list, exchange_list);
-+	list_splice(&serialized_list, exchange_list);
-+
-+	return nr_failed?-EFAULT:0;
-+}
-diff --git a/mm/exchange_page.c b/mm/exchange_page.c
-index 6054697..5dba0a6 100644
---- a/mm/exchange_page.c
-+++ b/mm/exchange_page.c
-@@ -126,7 +126,6 @@ int exchange_page_lists_mthread(struct page **to, struct page **from, int nr_pag
- 	int to_node = page_to_nid(*to);
- 	int i;
- 	struct copy_page_info *work_items;
--	int nr_pages_per_page = hpage_nr_pages(*from);
- 	const struct cpumask *per_node_cpumask = cpumask_of_node(to_node);
- 	int cpu_id_list[32] = {0};
- 	int cpu;
+ 		prefetchw_prev_lru_page(page, src, flags);
+ 
+ 		VM_BUG_ON_PAGE(!PageLRU(page), page);
+@@ -1653,7 +1598,6 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+ 		scan++;
+ 		switch (__isolate_lru_page(page, mode)) {
+ 		case 0:
+-			nr_pages = hpage_nr_pages(page);
+ 			nr_taken += nr_pages;
+ 			nr_zone_taken[page_zonenum(page)] += nr_pages;
+ 			list_move(&page->lru, dst);
+@@ -1855,7 +1799,7 @@ static int current_may_throttle(void)
+  * shrink_inactive_list() is a helper for shrink_node().  It returns the number
+  * of reclaimed pages
+  */
+-static noinline_for_stack unsigned long
++noinline_for_stack unsigned long
+ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+ 		     struct scan_control *sc, enum lru_list lru)
+ {
+@@ -2029,7 +1973,7 @@ unsigned move_active_pages_to_lru(struct lruvec *lruvec,
+ 	return nr_moved;
+ }
+ 
+-static void shrink_active_list(unsigned long nr_to_scan,
++void shrink_active_list(unsigned long nr_to_scan,
+ 			       struct lruvec *lruvec,
+ 			       struct scan_control *sc,
+ 			       enum lru_list lru)
 -- 
 2.7.4
 
