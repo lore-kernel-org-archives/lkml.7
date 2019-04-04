@@ -2,174 +2,351 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC52FC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A419A20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B7D20449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554369971;
+	bh=ReyITiF0yYBsidp7+YxQ4WT/NeAtQpMoh7R3bEEe9O0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Drf81MZ2jTFHL2oSRGxxjLcEVQsZfX1AchK1i8+OgFC8b4bMjExE0SGXRqdAd1/35
+	 XnAsWAnoYl8W15RAkxKOc4vSW/kP7l22SzgC5CdI35F+myFnt4+E9E1nO0LsKHwC4d
+	 DZkyoobaisn7Nr0i4IYOMAsAuIY5EiBPG90hHxOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387775AbfDDJ0F (ORCPT
+        id S1733091AbfDDJNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:26:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36512 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729574AbfDDJ0D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:26:03 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x349OedV135250
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 05:26:02 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rncb29yd1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 05:26:02 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Thu, 4 Apr 2019 10:15:43 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Apr 2019 10:15:40 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x349Fdx052035736
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Apr 2019 09:15:39 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E0BB52052;
-        Thu,  4 Apr 2019 09:15:39 +0000 (GMT)
-Received: from oc3784624756.ibm.com (unknown [9.152.212.134])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5B22452050;
-        Thu,  4 Apr 2019 09:15:39 +0000 (GMT)
-Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     acme@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
- <20190403104103.GE4038@hirez.programming.kicks-ass.net>
-From:   Thomas-Mich Richter <tmricht@linux.ibm.com>
-Organization: IBM
-Date:   Thu, 4 Apr 2019 11:15:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 4 Apr 2019 05:13:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387537AbfDDJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:13:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7429D2075E;
+        Thu,  4 Apr 2019 09:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554369199;
+        bh=ReyITiF0yYBsidp7+YxQ4WT/NeAtQpMoh7R3bEEe9O0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HnI2x1y+JIR/fCavkRAo19vykBSb60glDNsK/NPfxWq4tf9fybclT5JFiCb3NlNJz
+         bKy4KXEVmRtuxJkW4cj1ch2F1dehfCxHTh38eIUvrl13Yc+DiPcv8ey5NEVZVSBqOt
+         xxCMVTP6iCB986NOFRmKAk98HG6Bj53RszDgjhFI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 126/246] efi: Fix build error due to enum collision between efi.h and ima.h
+Date:   Thu,  4 Apr 2019 10:47:06 +0200
+Message-Id: <20190404084623.569776787@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
+References: <20190404084619.236418459@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190403104103.GE4038@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19040409-0008-0000-0000-000002D627C0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040409-0009-0000-0000-000022423603
-Message-Id: <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904040066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/19 12:41 PM, Peter Zijlstra wrote:
-> On Wed, Apr 03, 2019 at 11:47:00AM +0200, Thomas-Mich Richter wrote:
->> I use linux 5.1.0-rc3 on s390 and got this WARN_ON_ONCE message:
->>
->> WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
->>                 event_function_local.constprop.79+0xe2/0xe8
->>
->> which was introduced with
->>    commit cca2094605ef ("perf/core: Fix event_function_local()").
->> ..snip.... 
->>
->> Any ideas or hints who to avoid/fix this warning?
-> 
-> Some thoughts here:
-> 
->   https://lkml.kernel.org/r/20190213101644.GN32534@hirez.programming.kicks-ass.net
-> 
-> tl;dr, I've no frigging clue.
-> 
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-I have read this thread and at the end you mentioned:
+------------------
 
-    Humm, but in that case:
+[ Upstream commit 5c418dc789a3898717ebf2caa5716ba91a7150b2 ]
 
-   context_switch()
-    prepare_task_switch()
-      perf_event_task_sched_out()
-        __perf_event_task_sched_out()
-	  perf_event_context_sched_out()
-	    task_ctx_sched_out()
-	      ctx_sched_out()
-	        group_sched_out()
-		  event_sched_out()
-		    if (event->pending_disable)
+The following commit:
 
-   Would have already cleared the pending_disable state, so the IPI would
-   not have ran perf_event_disable_local() in the first place.
+  a893ea15d764 ("tpm: move tpm_chip definition to include/linux/tpm.h")
 
-Our test system is configured to panic in WARN_ON_ONCE(). I looked
-at the dump. The event triggering WARN_ON_ONCE:
+introduced a build error when both IMA and EFI are enabled:
 
-crash> struct perf_event.oncpu 0x1f9b24800
-  oncpu = 0
-crash> struct perf_event.state 0x1f9b24800
-  state = PERF_EVENT_STATE_ACTIVE
-crash> 
+    In file included from ../security/integrity/ima/ima_fs.c:30:
+    ../security/integrity/ima/ima.h:176:7: error: redeclaration of enumerator "NONE"
 
-This means the code in 
-static void event_sched_out(....)
-{
-        ....
-        event->pmu->del(event, 0);
-        event->oncpu = -1;
+What happens is that both headers (ima.h and efi.h) defines the same
+'NONE' constant, and it broke when they started getting included from
+the same file:
 
-        if (event->pending_disable) {
-                event->pending_disable = 0;
-                state = PERF_EVENT_STATE_OFF;
-        }
-        perf_event_set_state(event, state);
-        ...
-}
+Rework to prefix the EFI enum with 'EFI_*'.
 
-has not finished and returned from this function. So the task was not completely context-switched
-out from CPU 0 while the interrupt handler was executing on CPU 15:
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190215165551.12220-2-ard.biesheuvel@linaro.org
+[ Cleaned up the changelog a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/platform/efi/quirks.c          |  4 +--
+ drivers/firmware/efi/runtime-wrappers.c | 48 ++++++++++++-------------
+ include/linux/efi.h                     | 26 +++++++-------
+ 3 files changed, 39 insertions(+), 39 deletions(-)
 
-static void perf_pending_event(...)
-{
-        ....
-        if (event->pending_disable) {
-                event->pending_disable = 0;
-                perf_event_disable_local(event);  <--- Causes the WARN_ON_ONCE()
-        }
-        .....
-}
-
-I think there is a race, especially when the interrupt handler on CPU 15
-was invoked via timer interrupt an runs on a different CPU.
-
-> 
-> Does it reproduce on x86 without virt on? I don't have a PPC LPAR to
-> test things on.
-> 
-
-s390 LPARs run under hipervisor control, no chance to run any OS without it.
-
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 17456a1d3f04..6c571ae86947 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -717,7 +717,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * "efi_mm" cannot be used to check if the page fault had occurred
+ 	 * in the firmware context because efi=old_map doesn't use efi_pgd.
+ 	 */
+-	if (efi_rts_work.efi_rts_id == NONE)
++	if (efi_rts_work.efi_rts_id == EFI_NONE)
+ 		return;
+ 
+ 	/*
+@@ -742,7 +742,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * because this case occurs *very* rarely and hence could be improved
+ 	 * on a need by basis.
+ 	 */
+-	if (efi_rts_work.efi_rts_id == RESET_SYSTEM) {
++	if (efi_rts_work.efi_rts_id == EFI_RESET_SYSTEM) {
+ 		pr_info("efi_reset_system() buggy! Reboot through BIOS\n");
+ 		machine_real_restart(MRR_BIOS);
+ 		return;
+diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
+index e2abfdb5cee6..698745c249e8 100644
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -85,7 +85,7 @@ struct efi_runtime_work efi_rts_work;
+ 		pr_err("Failed to queue work to efi_rts_wq.\n");	\
+ 									\
+ exit:									\
+-	efi_rts_work.efi_rts_id = NONE;					\
++	efi_rts_work.efi_rts_id = EFI_NONE;				\
+ 	efi_rts_work.status;						\
+ })
+ 
+@@ -175,50 +175,50 @@ static void efi_call_rts(struct work_struct *work)
+ 	arg5 = efi_rts_work.arg5;
+ 
+ 	switch (efi_rts_work.efi_rts_id) {
+-	case GET_TIME:
++	case EFI_GET_TIME:
+ 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
+ 				       (efi_time_cap_t *)arg2);
+ 		break;
+-	case SET_TIME:
++	case EFI_SET_TIME:
+ 		status = efi_call_virt(set_time, (efi_time_t *)arg1);
+ 		break;
+-	case GET_WAKEUP_TIME:
++	case EFI_GET_WAKEUP_TIME:
+ 		status = efi_call_virt(get_wakeup_time, (efi_bool_t *)arg1,
+ 				       (efi_bool_t *)arg2, (efi_time_t *)arg3);
+ 		break;
+-	case SET_WAKEUP_TIME:
++	case EFI_SET_WAKEUP_TIME:
+ 		status = efi_call_virt(set_wakeup_time, *(efi_bool_t *)arg1,
+ 				       (efi_time_t *)arg2);
+ 		break;
+-	case GET_VARIABLE:
++	case EFI_GET_VARIABLE:
+ 		status = efi_call_virt(get_variable, (efi_char16_t *)arg1,
+ 				       (efi_guid_t *)arg2, (u32 *)arg3,
+ 				       (unsigned long *)arg4, (void *)arg5);
+ 		break;
+-	case GET_NEXT_VARIABLE:
++	case EFI_GET_NEXT_VARIABLE:
+ 		status = efi_call_virt(get_next_variable, (unsigned long *)arg1,
+ 				       (efi_char16_t *)arg2,
+ 				       (efi_guid_t *)arg3);
+ 		break;
+-	case SET_VARIABLE:
++	case EFI_SET_VARIABLE:
+ 		status = efi_call_virt(set_variable, (efi_char16_t *)arg1,
+ 				       (efi_guid_t *)arg2, *(u32 *)arg3,
+ 				       *(unsigned long *)arg4, (void *)arg5);
+ 		break;
+-	case QUERY_VARIABLE_INFO:
++	case EFI_QUERY_VARIABLE_INFO:
+ 		status = efi_call_virt(query_variable_info, *(u32 *)arg1,
+ 				       (u64 *)arg2, (u64 *)arg3, (u64 *)arg4);
+ 		break;
+-	case GET_NEXT_HIGH_MONO_COUNT:
++	case EFI_GET_NEXT_HIGH_MONO_COUNT:
+ 		status = efi_call_virt(get_next_high_mono_count, (u32 *)arg1);
+ 		break;
+-	case UPDATE_CAPSULE:
++	case EFI_UPDATE_CAPSULE:
+ 		status = efi_call_virt(update_capsule,
+ 				       (efi_capsule_header_t **)arg1,
+ 				       *(unsigned long *)arg2,
+ 				       *(unsigned long *)arg3);
+ 		break;
+-	case QUERY_CAPSULE_CAPS:
++	case EFI_QUERY_CAPSULE_CAPS:
+ 		status = efi_call_virt(query_capsule_caps,
+ 				       (efi_capsule_header_t **)arg1,
+ 				       *(unsigned long *)arg2, (u64 *)arg3,
+@@ -242,7 +242,7 @@ static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_TIME, tm, tc, NULL, NULL, NULL);
++	status = efi_queue_work(EFI_GET_TIME, tm, tc, NULL, NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+ }
+@@ -253,7 +253,7 @@ static efi_status_t virt_efi_set_time(efi_time_t *tm)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(SET_TIME, tm, NULL, NULL, NULL, NULL);
++	status = efi_queue_work(EFI_SET_TIME, tm, NULL, NULL, NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+ }
+@@ -266,7 +266,7 @@ static efi_status_t virt_efi_get_wakeup_time(efi_bool_t *enabled,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_WAKEUP_TIME, enabled, pending, tm, NULL,
++	status = efi_queue_work(EFI_GET_WAKEUP_TIME, enabled, pending, tm, NULL,
+ 				NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -278,7 +278,7 @@ static efi_status_t virt_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
++	status = efi_queue_work(EFI_SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
+ 				NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -294,7 +294,7 @@ static efi_status_t virt_efi_get_variable(efi_char16_t *name,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_VARIABLE, name, vendor, attr, data_size,
++	status = efi_queue_work(EFI_GET_VARIABLE, name, vendor, attr, data_size,
+ 				data);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -308,7 +308,7 @@ static efi_status_t virt_efi_get_next_variable(unsigned long *name_size,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_NEXT_VARIABLE, name_size, name, vendor,
++	status = efi_queue_work(EFI_GET_NEXT_VARIABLE, name_size, name, vendor,
+ 				NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -324,7 +324,7 @@ static efi_status_t virt_efi_set_variable(efi_char16_t *name,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(SET_VARIABLE, name, vendor, &attr, &data_size,
++	status = efi_queue_work(EFI_SET_VARIABLE, name, vendor, &attr, &data_size,
+ 				data);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -359,7 +359,7 @@ static efi_status_t virt_efi_query_variable_info(u32 attr,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(QUERY_VARIABLE_INFO, &attr, storage_space,
++	status = efi_queue_work(EFI_QUERY_VARIABLE_INFO, &attr, storage_space,
+ 				remaining_space, max_variable_size, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -391,7 +391,7 @@ static efi_status_t virt_efi_get_next_high_mono_count(u32 *count)
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
++	status = efi_queue_work(EFI_GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
+ 				NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -407,7 +407,7 @@ static void virt_efi_reset_system(int reset_type,
+ 			"could not get exclusive access to the firmware\n");
+ 		return;
+ 	}
+-	efi_rts_work.efi_rts_id = RESET_SYSTEM;
++	efi_rts_work.efi_rts_id = EFI_RESET_SYSTEM;
+ 	__efi_call_virt(reset_system, reset_type, status, data_size, data);
+ 	up(&efi_runtime_lock);
+ }
+@@ -423,7 +423,7 @@ static efi_status_t virt_efi_update_capsule(efi_capsule_header_t **capsules,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(UPDATE_CAPSULE, capsules, &count, &sg_list,
++	status = efi_queue_work(EFI_UPDATE_CAPSULE, capsules, &count, &sg_list,
+ 				NULL, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+@@ -441,7 +441,7 @@ static efi_status_t virt_efi_query_capsule_caps(efi_capsule_header_t **capsules,
+ 
+ 	if (down_interruptible(&efi_runtime_lock))
+ 		return EFI_ABORTED;
+-	status = efi_queue_work(QUERY_CAPSULE_CAPS, capsules, &count,
++	status = efi_queue_work(EFI_QUERY_CAPSULE_CAPS, capsules, &count,
+ 				max_size, reset_type, NULL);
+ 	up(&efi_runtime_lock);
+ 	return status;
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 28604a8d0aa9..a86485ac7c87 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1699,19 +1699,19 @@ extern int efi_tpm_eventlog_init(void);
+  * fault happened while executing an efi runtime service.
+  */
+ enum efi_rts_ids {
+-	NONE,
+-	GET_TIME,
+-	SET_TIME,
+-	GET_WAKEUP_TIME,
+-	SET_WAKEUP_TIME,
+-	GET_VARIABLE,
+-	GET_NEXT_VARIABLE,
+-	SET_VARIABLE,
+-	QUERY_VARIABLE_INFO,
+-	GET_NEXT_HIGH_MONO_COUNT,
+-	RESET_SYSTEM,
+-	UPDATE_CAPSULE,
+-	QUERY_CAPSULE_CAPS,
++	EFI_NONE,
++	EFI_GET_TIME,
++	EFI_SET_TIME,
++	EFI_GET_WAKEUP_TIME,
++	EFI_SET_WAKEUP_TIME,
++	EFI_GET_VARIABLE,
++	EFI_GET_NEXT_VARIABLE,
++	EFI_SET_VARIABLE,
++	EFI_QUERY_VARIABLE_INFO,
++	EFI_GET_NEXT_HIGH_MONO_COUNT,
++	EFI_RESET_SYSTEM,
++	EFI_UPDATE_CAPSULE,
++	EFI_QUERY_CAPSULE_CAPS,
+ };
+ 
+ /*
 -- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.19.1
+
+
 
