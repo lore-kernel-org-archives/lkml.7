@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E05DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FB5C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616F42075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBDA20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:00:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjJAumft"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qA/p8iBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfDDTAI (ORCPT
+        id S1730126AbfDDTAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:00:08 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52209 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729789AbfDDTAH (ORCPT
+        Thu, 4 Apr 2019 15:00:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33586 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729818AbfDDTAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:00:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 4so4257358wmf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 12:00:06 -0700 (PDT)
+        Thu, 4 Apr 2019 15:00:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id q1so5152585wrp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 12:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=w9qSlfOttP+8Rf/TKo+6QSsCY8pdbQMEOp9+VSTfS7I=;
-        b=mjJAumftLYEEgDmm4NxO/nWITLLT87Pjbumz0O/CzD9Luz/6ja88GNYDbiw/5LSZOx
-         VXcV+/O3bOGCLigRT3N5cfaQoxWtu8SOJTMxtsIFupcfwADQEkiXfIin2UDm2+9NAcpo
-         DePQFK+6DOBErUrw6Zq/sazbDDRJ3T2u+nDuJi+naimOr22ZotiaPu7JGxIdabu2E32J
-         EO5vE95tD1SEfOTe10u/FKThmBNt6fiMApim4JmT/2O9bYhCkVSWyk6Ips2ksmAoBeRy
-         xfSfK/NtCOZt1IT2A8ugbpRDMojERJtY/bFB09vLN/59mRp7J9dmm1AloZdy6M2ztmZR
-         dPwQ==
+        bh=SOz1OmdzQOrel82sMUNuuIJyu/ODztQH13IvPDSDVDM=;
+        b=qA/p8iBYWTOCkNWpXuCACDqEHahCcXAwrJDrTCLlKI04hUda/b7fNO1I/2xWnokacA
+         jNkQiq67fhIt9qhAvKvNJpizS936id8T2DutBN217iTRUjLdJCZ3pxJdWpBcc95Uz0To
+         z0o2UUZL/W2XRLMilYeW/WGtYYzu8I+Q5jMTO6RHNSKv0wBt30N1V8U0Xh2Ffbjh4L8N
+         KOB0DWygEad4qjuUXF3MKuGHOWg53wbsPYLXYAfYp6WX/O5n8BXnAyfPE1gl11kFWO7E
+         wgTWKFn0iI3U/qXgnDc0eK3HQYzN69NonPVcIb45pHxogQMRtKmjsh+AaewmwfSyoPMr
+         v+rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=w9qSlfOttP+8Rf/TKo+6QSsCY8pdbQMEOp9+VSTfS7I=;
-        b=GWjleL6JyYTxMcbpAc8bn3nrznEjaoJmxoh8HpT1tQHNf++AOcMXLU+1emuf/zNgVt
-         9dIf59RF61oXIBdHMighmnNbQYwQ/QACLdCD1xqEkullvf4a9W7VsgiC8pDhpMQXynHN
-         pJLrlcu1GhFggRHcZkasUCJx/U54KqWM/LkFrll0dudvEaGgcZpeCuwOzS9F+hQARTTS
-         8S38KvZ5VSXsqfxBhMARTqcGrzGP54eDdzbcvbLpo+P7SMBxk4s07pxwjBVNnjylWumT
-         G6Ag+t3k8FZtHAlXNrPwbz4TuwKnytMjnlo7ls17Z62pZooNGS3yKfBnBlIAGYqMgcqw
-         jcSQ==
-X-Gm-Message-State: APjAAAU24RrrGKg4zfyiZCfwNF3YaTtpAcAm8PALhsX5F8AVh3xxhd3x
-        othwD+DwaCQ/zxNZtdP0UgetXLhQ
-X-Google-Smtp-Source: APXvYqxyElzVHQybImhuLZ8zibsjOWdttvD0aVZT3pu2GV6gJgGXMJkFB8iUot+XHTNwrqzUEUNC0Q==
-X-Received: by 2002:a7b:cc91:: with SMTP id p17mr5144802wma.38.1554404405352;
-        Thu, 04 Apr 2019 12:00:05 -0700 (PDT)
+        bh=SOz1OmdzQOrel82sMUNuuIJyu/ODztQH13IvPDSDVDM=;
+        b=JLdUaCYx07Lb0aXdM9+PcXBljUiwFvOp0tV3aEWvQUDcWlkTZIXemCOle5QjwEmD1w
+         qR4z9Wh9KQFEd4aF4AzWSOvU9aTgcHUjcbH3VpTeOwz7xCPcTLNT9ck7zlYaZo1lqMxt
+         9sSK0roigeJzxC1yDaJG2YWj8AVKUjUmgwa/OxSE6e3SRmScJ0JMOSkf7ZBq0wt4nTB5
+         OsT1C7wzZJYeP6YpVBLRgL379xUQciywQrTd7aLjk4NJxau7+xiiGKnhYctYt770STPc
+         qw4rPIGFz6X+mmjCmELcCNpDP6JQdcSoXpqNXZR9w5pYGZFx0jI/pSUl+Zbksg0+ATt1
+         4bHA==
+X-Gm-Message-State: APjAAAWQ1sMTC3XIPO6i3lDFh6CgQnXl/POp0Bfq5dZptcvUhyC28YKo
+        gmkdbbv0Z1Qws80S7yGMTHJ+C0U6
+X-Google-Smtp-Source: APXvYqxLhiv0m0N8ruem4Lzu4asQKkQ/hyY8jLa+73Ln/2/6fNxX0T9fY9XIRE29NV7Lq8YQsMYAdw==
+X-Received: by 2002:adf:ee50:: with SMTP id w16mr5146931wro.293.1554404406524;
+        Thu, 04 Apr 2019 12:00:06 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id o4sm41137280wmo.20.2019.04.04.12.00.04
+        by smtp.gmail.com with ESMTPSA id o4sm41137280wmo.20.2019.04.04.12.00.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 12:00:04 -0700 (PDT)
+        Thu, 04 Apr 2019 12:00:06 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 2/3] habanalabs: ASIC_AUTO_DETECT enum value is redundant
-Date:   Thu,  4 Apr 2019 22:00:00 +0300
-Message-Id: <20190404190001.28337-2-oded.gabbay@gmail.com>
+Subject: [PATCH 3/3] habanalabs: split mmu/no-mmu code paths in memory ioctl
+Date:   Thu,  4 Apr 2019 22:00:01 +0300
+Message-Id: <20190404190001.28337-3-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190404190001.28337-1-oded.gabbay@gmail.com>
 References: <20190404190001.28337-1-oded.gabbay@gmail.com>
@@ -69,66 +69,219 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the enum value of ASIC_AUTO_DETECT because we can use
-the validity of the pdev variable to know whether we have a real device or
-a simulator. For a real device, we detect the asic type from the device ID
-while for a simulator, the simulator code calls create_hdev() with the
-specified ASIC type.
-
-Set ASIC_INVALID as the first option in the enum to make sure that no
-other enum value will receive the value 0 (which indicates a non-existing
-entry in the simulator array).
+To make the memory ioctl code more readable, this patch moves the
+legacy/debug code path of mmu-disabled to a separate function, which is
+called (if necessary) from the main memory ioctl function.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/habanalabs.h     | 8 +++-----
- drivers/misc/habanalabs/habanalabs_drv.c | 4 ++--
- 2 files changed, 5 insertions(+), 7 deletions(-)
+ drivers/misc/habanalabs/memory.c | 177 ++++++++++++++++---------------
+ 1 file changed, 92 insertions(+), 85 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 535d4f9531f6..2f02bb55f66a 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -390,14 +390,12 @@ struct hl_eq {
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index e9e163545584..05919f913300 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -1090,6 +1090,64 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 	return rc;
+ }
  
- /**
-  * enum hl_asic_type - supported ASIC types.
-- * @ASIC_AUTO_DETECT: ASIC type will be automatically set.
-- * @ASIC_GOYA: Goya device.
-  * @ASIC_INVALID: Invalid ASIC type.
-+ * @ASIC_GOYA: Goya device.
-  */
- enum hl_asic_type {
--	ASIC_AUTO_DETECT,
--	ASIC_GOYA,
--	ASIC_INVALID
-+	ASIC_INVALID,
-+	ASIC_GOYA
- };
++static int mem_ioctl_no_mmu(struct hl_fpriv *hpriv, union hl_mem_args *args)
++{
++	struct hl_device *hdev = hpriv->hdev;
++	struct hl_ctx *ctx = hpriv->ctx;
++	u64 device_addr = 0;
++	u32 handle = 0;
++	int rc;
++
++	switch (args->in.op) {
++	case HL_MEM_OP_ALLOC:
++		if (args->in.alloc.mem_size == 0) {
++			dev_err(hdev->dev,
++				"alloc size must be larger than 0\n");
++			rc = -EINVAL;
++			goto out;
++		}
++
++		/* Force contiguous as there are no real MMU
++		 * translations to overcome physical memory gaps
++		 */
++		args->in.flags |= HL_MEM_CONTIGUOUS;
++		rc = alloc_device_memory(ctx, &args->in, &handle);
++
++		memset(args, 0, sizeof(*args));
++		args->out.handle = (__u64) handle;
++		break;
++
++	case HL_MEM_OP_FREE:
++		rc = free_device_memory(ctx, args->in.free.handle);
++		break;
++
++	case HL_MEM_OP_MAP:
++		if (args->in.flags & HL_MEM_USERPTR) {
++			device_addr = args->in.map_host.host_virt_addr;
++			rc = 0;
++		} else {
++			rc = get_paddr_from_handle(ctx, &args->in,
++					&device_addr);
++		}
++
++		memset(args, 0, sizeof(*args));
++		args->out.device_virt_addr = device_addr;
++		break;
++
++	case HL_MEM_OP_UNMAP:
++		rc = 0;
++		break;
++
++	default:
++		dev_err(hdev->dev, "Unknown opcode for memory IOCTL\n");
++		rc = -ENOTTY;
++		break;
++	}
++
++out:
++	return rc;
++}
++
+ int hl_mem_ioctl(struct hl_fpriv *hpriv, void *data)
+ {
+ 	union hl_mem_args *args = data;
+@@ -1105,100 +1163,49 @@ int hl_mem_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		return -EBUSY;
+ 	}
  
- struct hl_cs_parser;
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index b697339d3904..1667df7ca64c 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -218,7 +218,7 @@ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
- 	hdev->disabled = true;
- 	hdev->pdev = pdev; /* can be NULL in case of simulator device */
+-	if (hdev->mmu_enable) {
+-		switch (args->in.op) {
+-		case HL_MEM_OP_ALLOC:
+-			if (!hdev->dram_supports_virtual_memory) {
+-				dev_err(hdev->dev,
+-					"DRAM alloc is not supported\n");
+-				rc = -EINVAL;
+-				goto out;
+-			}
+-			if (args->in.alloc.mem_size == 0) {
+-				dev_err(hdev->dev,
+-					"alloc size must be larger than 0\n");
+-				rc = -EINVAL;
+-				goto out;
+-			}
+-			rc = alloc_device_memory(ctx, &args->in, &handle);
+-
+-			memset(args, 0, sizeof(*args));
+-			args->out.handle = (__u64) handle;
+-			break;
+-
+-		case HL_MEM_OP_FREE:
+-			if (!hdev->dram_supports_virtual_memory) {
+-				dev_err(hdev->dev,
+-					"DRAM free is not supported\n");
+-				rc = -EINVAL;
+-				goto out;
+-			}
+-			rc = free_device_memory(ctx, args->in.free.handle);
+-			break;
+-
+-		case HL_MEM_OP_MAP:
+-			rc = map_device_va(ctx, &args->in, &device_addr);
+-
+-			memset(args, 0, sizeof(*args));
+-			args->out.device_virt_addr = device_addr;
+-			break;
++	if (!hdev->mmu_enable)
++		return mem_ioctl_no_mmu(hpriv, args);
  
--	if (asic_type == ASIC_AUTO_DETECT) {
-+	if (pdev) {
- 		hdev->asic_type = get_asic_type(pdev->device);
- 		if (hdev->asic_type == ASIC_INVALID) {
- 			dev_err(&pdev->dev, "Unsupported ASIC\n");
-@@ -337,7 +337,7 @@ static int hl_pci_probe(struct pci_dev *pdev,
- 		 " device found [%04x:%04x] (rev %x)\n",
- 		 (int)pdev->vendor, (int)pdev->device, (int)pdev->revision);
+-		case HL_MEM_OP_UNMAP:
+-			rc = unmap_device_va(ctx,
+-					args->in.unmap.device_virt_addr);
+-			break;
+-
+-		default:
+-			dev_err(hdev->dev, "Unknown opcode for memory IOCTL\n");
+-			rc = -ENOTTY;
+-			break;
++	switch (args->in.op) {
++	case HL_MEM_OP_ALLOC:
++		if (!hdev->dram_supports_virtual_memory) {
++			dev_err(hdev->dev, "DRAM alloc is not supported\n");
++			rc = -EINVAL;
++			goto out;
+ 		}
+-	} else {
+-		switch (args->in.op) {
+-		case HL_MEM_OP_ALLOC:
+-			if (args->in.alloc.mem_size == 0) {
+-				dev_err(hdev->dev,
+-					"alloc size must be larger than 0\n");
+-				rc = -EINVAL;
+-				goto out;
+-			}
  
--	rc = create_hdev(&hdev, pdev, ASIC_AUTO_DETECT, -1);
-+	rc = create_hdev(&hdev, pdev, ASIC_INVALID, -1);
- 	if (rc)
- 		return rc;
+-			/* Force contiguous as there are no real MMU
+-			 * translations to overcome physical memory gaps
+-			 */
+-			args->in.flags |= HL_MEM_CONTIGUOUS;
+-			rc = alloc_device_memory(ctx, &args->in, &handle);
++		if (args->in.alloc.mem_size == 0) {
++			dev_err(hdev->dev,
++				"alloc size must be larger than 0\n");
++			rc = -EINVAL;
++			goto out;
++		}
++		rc = alloc_device_memory(ctx, &args->in, &handle);
  
+-			memset(args, 0, sizeof(*args));
+-			args->out.handle = (__u64) handle;
+-			break;
++		memset(args, 0, sizeof(*args));
++		args->out.handle = (__u64) handle;
++		break;
+ 
+-		case HL_MEM_OP_FREE:
+-			rc = free_device_memory(ctx, args->in.free.handle);
+-			break;
++	case HL_MEM_OP_FREE:
++		rc = free_device_memory(ctx, args->in.free.handle);
++		break;
+ 
+-		case HL_MEM_OP_MAP:
+-			if (args->in.flags & HL_MEM_USERPTR) {
+-				device_addr = args->in.map_host.host_virt_addr;
+-				rc = 0;
+-			} else {
+-				rc = get_paddr_from_handle(ctx, &args->in,
+-						&device_addr);
+-			}
++	case HL_MEM_OP_MAP:
++		rc = map_device_va(ctx, &args->in, &device_addr);
+ 
+-			memset(args, 0, sizeof(*args));
+-			args->out.device_virt_addr = device_addr;
+-			break;
++		memset(args, 0, sizeof(*args));
++		args->out.device_virt_addr = device_addr;
++		break;
+ 
+-		case HL_MEM_OP_UNMAP:
+-			rc = 0;
+-			break;
++	case HL_MEM_OP_UNMAP:
++		rc = unmap_device_va(ctx,
++				args->in.unmap.device_virt_addr);
++		break;
+ 
+-		default:
+-			dev_err(hdev->dev, "Unknown opcode for memory IOCTL\n");
+-			rc = -ENOTTY;
+-			break;
+-		}
++	default:
++		dev_err(hdev->dev, "Unknown opcode for memory IOCTL\n");
++		rc = -ENOTTY;
++		break;
+ 	}
+ 
+ out:
 -- 
 2.17.1
 
