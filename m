@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD68C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0851CC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A901720652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7A421738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368045;
-	bh=T5itJ5loGx/PWyHCBLywXFnwYOXO2Ts7Dms546GWZuc=;
+	s=default; t=1554368049;
+	bh=05SdunXKnUk6b8Z8vQdioJhQ9NZt3LOfslNNBY2dBPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpBEw+zLVg/cfvYvWiqXH/z9E26slZYLVPvulZ+xen0C1kqdbvwVShralsw2Pbc+G
-	 shSC+HEqfuqm9rxR0C++eCpDY1EODhWzfbYarPrNLl7/nQ3vUZEkMtkfg6cKFS6u70
-	 sDY/uqRmN4CKJn30AQ9lF7u0ms3jD85v4IaG5rS0=
+	b=m13O/p7foLgKYhBYVNbd9y3yzlWy4wFuFuAcxzg76rWO76aM/1yHzfdABlF7m7qm0
+	 FEpX1QEtS+irFBuVGDaUJ1kZtY4051oLODlUGu3Eu3W/1pnsgWLDPXbI4wz5lTWedp
+	 UucyAXzfW8RuO+3YfV1k/aaqTg8jNF9gQ4DtRrsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfDDIyD (ORCPT
+        id S1729961AbfDDIyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56490 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729940AbfDDIx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:57 -0400
+        id S1729908AbfDDIyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2092186A;
-        Thu,  4 Apr 2019 08:53:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2E3020652;
+        Thu,  4 Apr 2019 08:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368037;
-        bh=T5itJ5loGx/PWyHCBLywXFnwYOXO2Ts7Dms546GWZuc=;
+        s=default; t=1554368042;
+        bh=05SdunXKnUk6b8Z8vQdioJhQ9NZt3LOfslNNBY2dBPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YzLLP18DEZQVfwnJRp0SAzPNADGIs5Rb0l3tjeMkxjL5Su1zP/p68V478JfjTnBqC
-         +nIZzAv01r+C47O6HZhdbyZywi5GXB1FWieaTObDoMcGHVP9l1a+kQ8UZtnGfqGh3U
-         Rbmn578y+LQi/4Qq9QbV1qU6ppDulFQwiIYTgixA=
+        b=GNst1Xtrbul+sngdeZ4xn5vxYe2MPv8MXxi2As37Nk+xGH7jLOKZjvolxxbK5G/Tb
+         5Dxy41agpdHCtSTBqachTy3dzQoLswmctGqJr46Hk65pQlrWM+DZ4+YlmCDfM0ItWy
+         KjNOA8kcF4neEzD1jmnEFD2mU2x4O0fp21sjw5hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Jens Axboe <axboe@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 014/121] include/linux/relay.h: fix percpu annotation in struct rchan
-Date:   Thu,  4 Apr 2019 10:46:42 +0200
-Message-Id: <20190404084546.103408107@linuxfoundation.org>
+Subject: [PATCH 4.14 016/121] enic: fix build warning without CONFIG_CPUMASK_OFFSTACK
+Date:   Thu,  4 Apr 2019 10:46:44 +0200
+Message-Id: <20190404084546.246591774@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -70,51 +67,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 62461ac2e5b6520b6d65fc6d7d7b4b8df4b848d8 ]
+[ Upstream commit 43d281662fdb46750d49417559b71069f435298d ]
 
-The percpu member of this structure is declared as:
-	struct ... ** __percpu member;
-So its type is:
-	__percpu pointer to pointer to struct ...
+The enic driver relies on the CONFIG_CPUMASK_OFFSTACK feature to
+dynamically allocate a struct member, but this is normally intended for
+local variables.
 
-But looking at how it's used, its type should be:
-	pointer to __percpu pointer to struct ...
-and it should thus be declared as:
-	struct ... * __percpu *member;
+Building with clang, I get a warning for a few locations that check the
+address of the cpumask_var_t:
 
-So fix the placement of '__percpu' in the definition of this
-structures.
+drivers/net/ethernet/cisco/enic/enic_main.c:122:22: error: address of array 'enic->msix[i].affinity_mask' will always evaluate to 'true' [-Werror,-Wpointer-bool-conversion]
 
-This silents a few Sparse's warnings like:
-	warning: incorrect type in initializer (different address spaces)
-	  expected void const [noderef] <asn:3> *__vpp_verify
-	  got struct sched_domain **
+As far as I can tell, the code is still correct, as the truth value of
+the pointer is what we need in this configuration. To get rid of
+the warning, use cpumask_available() instead of checking the
+pointer directly.
 
-Link: http://lkml.kernel.org/r/20190118144902.79065-1-luc.vanoostenryck@gmail.com
-Fixes: 017c59c042d01 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc: Jens Axboe <axboe@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 322cf7e3a4e8 ("enic: assign affinity hint to interrupts")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/relay.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cisco/enic/enic_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/relay.h b/include/linux/relay.h
-index e1bdf01a86e2..c759f96e39c1 100644
---- a/include/linux/relay.h
-+++ b/include/linux/relay.h
-@@ -66,7 +66,7 @@ struct rchan
- 	struct kref kref;		/* channel refcount */
- 	void *private_data;		/* for user-defined data */
- 	size_t last_toobig;		/* tried to log event > subbuf size */
--	struct rchan_buf ** __percpu buf; /* per-cpu channel buffers */
-+	struct rchan_buf * __percpu *buf; /* per-cpu channel buffers */
- 	int is_global;			/* One global buffer ? */
- 	struct list_head list;		/* for channel list */
- 	struct dentry *parent;		/* parent dentry passed to open */
+diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+index ced348e15a63..19f374b180fc 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -119,7 +119,7 @@ static void enic_init_affinity_hint(struct enic *enic)
+ 
+ 	for (i = 0; i < enic->intr_count; i++) {
+ 		if (enic_is_err_intr(enic, i) || enic_is_notify_intr(enic, i) ||
+-		    (enic->msix[i].affinity_mask &&
++		    (cpumask_available(enic->msix[i].affinity_mask) &&
+ 		     !cpumask_empty(enic->msix[i].affinity_mask)))
+ 			continue;
+ 		if (zalloc_cpumask_var(&enic->msix[i].affinity_mask,
+@@ -148,7 +148,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+ 	for (i = 0; i < enic->intr_count; i++) {
+ 		if (enic_is_err_intr(enic, i)		||
+ 		    enic_is_notify_intr(enic, i)	||
+-		    !enic->msix[i].affinity_mask	||
++		    !cpumask_available(enic->msix[i].affinity_mask) ||
+ 		    cpumask_empty(enic->msix[i].affinity_mask))
+ 			continue;
+ 		err = irq_set_affinity_hint(enic->msix_entry[i].vector,
+@@ -161,7 +161,7 @@ static void enic_set_affinity_hint(struct enic *enic)
+ 	for (i = 0; i < enic->wq_count; i++) {
+ 		int wq_intr = enic_msix_wq_intr(enic, i);
+ 
+-		if (enic->msix[wq_intr].affinity_mask &&
++		if (cpumask_available(enic->msix[wq_intr].affinity_mask) &&
+ 		    !cpumask_empty(enic->msix[wq_intr].affinity_mask))
+ 			netif_set_xps_queue(enic->netdev,
+ 					    enic->msix[wq_intr].affinity_mask,
 -- 
 2.19.1
 
