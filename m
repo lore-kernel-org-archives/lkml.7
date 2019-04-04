@@ -7,60 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE54C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17E0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113D92184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DDB2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368710;
-	bh=raSn79RSNTnafN/VUm7GW8giaHkFyfmWj21Le62sZsQ=;
+	s=default; t=1554368713;
+	bh=DsI/ZyImROBynRK2RMsgidlIXGrGzoEA3ZqUDd9GKdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9Itu1zjfiuRh4WSkGnA2qNM/aK4+4bl9el3hDdv1B1ixtwKmvW08KHfwTJbIp954
-	 WyUeUEFGq0V5VTB3WQFBnstJzijrtZ7+/zzItfUR4EHJ1r2Dw36uAwDJyNn4S0+bvV
-	 YKhfFVY4zu5sSx/jXXE+W3WJUCxI3D2XDY1DroO0=
+	b=pbt4OaCBx6KQ35K4PKz8eDx6upbUGXQtMkUVsffG3hmnT9JZAmfM5Pg8USozMa2jw
+	 wjGBhqRQzwPVwQEltaAfGjyxqVezE4YU2rS1aNxo3p4/Xovx+XwPfNBJPLBASHM3wr
+	 M1Pd2y4sDVFKIthc0YHbanTN9+4Au/Td9eOgS7uI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbfDDJFJ (ORCPT
+        id S1732106AbfDDJFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:05:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42986 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731804AbfDDJFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:02 -0400
+        id S1731804AbfDDJFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98C38214AF;
-        Thu,  4 Apr 2019 09:05:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F042177E;
+        Thu,  4 Apr 2019 09:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368701;
-        bh=raSn79RSNTnafN/VUm7GW8giaHkFyfmWj21Le62sZsQ=;
+        s=default; t=1554368709;
+        bh=DsI/ZyImROBynRK2RMsgidlIXGrGzoEA3ZqUDd9GKdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TBs/8nCUFzmuEGuOE0PpweL+IpN0JkkXwzANQnGrgAtvWljWbR2dYJmazSe1tuntG
-         FIS0ynr7KtblkSxf0TLH0+Wuc78UVdFHBtqKYEbEAEAkCGmdfOV7l0OwCaVVinihVf
-         t1wVQWvtZmokJovjV649Kmo73csyVQBQWd53ArhI=
+        b=Me0PMCX7jbIEFS6UhQpjMl1HtVxCHenApXOvpXc/iOeoYuH7ZzySZqOLtvpDgvYPR
+         lf6ddv+4orTROysqSW7yxGJbjstrAWHJxkCqCYLS0wm8gDBd5S0BEqfPPHtgOs+HSZ
+         0L2nsRWwa8laApKh7LOt0yckzJ1x7dJV/0aIwTbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Alexander Graf <agraf@suse.de>, Borislav Petkov <bp@alien8.de>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 137/187] efi/arm/arm64: Allow SetVirtualAddressMap() to be omitted
-Date:   Thu,  4 Apr 2019 10:47:54 +0200
-Message-Id: <20190404084609.649118556@linuxfoundation.org>
+Subject: [PATCH 4.19 140/187] ARM: 8830/1: NOMMU: Toggle only bits in EXC_RETURN we are really care of
+Date:   Thu,  4 Apr 2019 10:47:57 +0200
+Message-Id: <20190404084609.778263338@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -79,151 +66,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4e46c2a956215482418d7b315749fb1b6c6bc224 ]
+[ Upstream commit 72cd4064fccaae15ab84d40d4be23667402df4ed ]
 
-The UEFI spec revision 2.7 errata A section 8.4 has the following to
-say about the virtual memory runtime services:
+ARMv8M introduces support for Security extension to M class, among
+other things it affects exception handling, especially, encoding of
+EXC_RETURN.
 
-  "This section contains function definitions for the virtual memory
-  support that may be optionally used by an operating system at runtime.
-  If an operating system chooses to make EFI runtime service calls in a
-  virtual addressing mode instead of the flat physical mode, then the
-  operating system must use the services in this section to switch the
-  EFI runtime services from flat physical addressing to virtual
-  addressing."
+The new bits have been added:
 
-So it is pretty clear that calling SetVirtualAddressMap() is entirely
-optional, and so there is no point in doing so unless it achieves
-anything useful for us.
+Bit [6]	Secure or Non-secure stack
+Bit [5]	Default callee register stacking
+Bit [0]	Exception Secure
 
-This is not the case for 64-bit ARM. The identity mapping used by the
-firmware is arbitrarily converted into another permutation of userland
-addresses (i.e., bits [63:48] cleared), and the runtime code could easily
-deal with the original layout in exactly the same way as it deals with
-the converted layout. However, due to constraints related to page size
-differences if the OS is not running with 4k pages, and related to
-systems that may expose the individual sections of PE/COFF runtime
-modules as different memory regions, creating the virtual layout is a
-bit fiddly, and requires us to sort the memory map and reason about
-adjacent regions with identical memory types etc etc.
+which conflicts with hard-coded value of EXC_RETURN:
 
-So the obvious fix is to stop calling SetVirtualAddressMap() altogether
-on arm64 systems. However, to avoid surprises, which are notoriously
-hard to diagnose when it comes to OS<->firmware interactions, let's
-start by making it an opt-out feature, and implement support for the
-'efi=novamap' kernel command line parameter on ARM and arm64 systems.
+In fact, we only care of few bits:
 
-( Note that 32-bit ARM generally does require SetVirtualAddressMap() to be
-  used, given that the physical memory map and the kernel virtual address
-  map are not guaranteed to be non-overlapping like on arm64. However,
-  having support for efi=novamap,noruntime on 32-bit ARM, combined with
-  the recently proposed support for earlycon=efifb, is likely to be useful
-  to diagnose boot issues on such systems if they have no accessible serial
-  port. )
+Bit [3]	 Mode (0 - Handler, 1 - Thread)
+Bit [2]	 Stack pointer selection (0 - Main, 1 - Process)
 
-Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190202094119.13230-8-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+We can toggle only those bits and left other bits as they were on
+exception entry.
+
+It is basically, what patch does - saves EXC_RETURN when we do
+transition form Thread to Handler mode (it is first svc), so later
+saved value is used instead of EXC_RET_THREADMODE_PROCESSSTACK.
+
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/arm-stub.c        |  5 +++++
- drivers/firmware/efi/libstub/efi-stub-helper.c | 10 ++++++++++
- drivers/firmware/efi/libstub/efistub.h         |  1 +
- drivers/firmware/efi/libstub/fdt.c             |  3 +++
- 4 files changed, 19 insertions(+)
+ arch/arm/include/asm/v7m.h     | 2 +-
+ arch/arm/kernel/entry-header.S | 3 ++-
+ arch/arm/kernel/entry-v7m.S    | 4 ++++
+ arch/arm/mm/proc-v7m.S         | 3 +++
+ 4 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
-index 6920033de6d4..6c09644d620e 100644
---- a/drivers/firmware/efi/libstub/arm-stub.c
-+++ b/drivers/firmware/efi/libstub/arm-stub.c
-@@ -340,6 +340,11 @@ void efi_get_virtmap(efi_memory_desc_t *memory_map, unsigned long map_size,
- 		paddr = in->phys_addr;
- 		size = in->num_pages * EFI_PAGE_SIZE;
+diff --git a/arch/arm/include/asm/v7m.h b/arch/arm/include/asm/v7m.h
+index 187ccf6496ad..2cb00d15831b 100644
+--- a/arch/arm/include/asm/v7m.h
++++ b/arch/arm/include/asm/v7m.h
+@@ -49,7 +49,7 @@
+  * (0 -> msp; 1 -> psp). Bits [1:0] are fixed to 0b01.
+  */
+ #define EXC_RET_STACK_MASK			0x00000004
+-#define EXC_RET_THREADMODE_PROCESSSTACK		0xfffffffd
++#define EXC_RET_THREADMODE_PROCESSSTACK		(3 << 2)
  
-+		if (novamap()) {
-+			in->virt_addr = in->phys_addr;
-+			continue;
-+		}
-+
- 		/*
- 		 * Make the mapping compatible with 64k pages: this allows
- 		 * a 4k page size kernel to kexec a 64k page size kernel and
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index e94975f4655b..442f51c2a53d 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -34,6 +34,7 @@ static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
+ /* Cache related definitions */
  
- static int __section(.data) __nokaslr;
- static int __section(.data) __quiet;
-+static int __section(.data) __novamap;
+diff --git a/arch/arm/kernel/entry-header.S b/arch/arm/kernel/entry-header.S
+index 773424843d6e..62db1c9746cb 100644
+--- a/arch/arm/kernel/entry-header.S
++++ b/arch/arm/kernel/entry-header.S
+@@ -127,7 +127,8 @@
+          */
+ 	.macro	v7m_exception_slow_exit ret_r0
+ 	cpsid	i
+-	ldr	lr, =EXC_RET_THREADMODE_PROCESSSTACK
++	ldr	lr, =exc_ret
++	ldr	lr, [lr]
  
- int __pure nokaslr(void)
- {
-@@ -43,6 +44,10 @@ int __pure is_quiet(void)
- {
- 	return __quiet;
- }
-+int __pure novamap(void)
-+{
-+	return __novamap;
-+}
- 
- #define EFI_MMAP_NR_SLACK_SLOTS	8
- 
-@@ -482,6 +487,11 @@ efi_status_t efi_parse_options(char const *cmdline)
- 			__chunk_size = -1UL;
- 		}
- 
-+		if (!strncmp(str, "novamap", 7)) {
-+			str += strlen("novamap");
-+			__novamap = 1;
-+		}
-+
- 		/* Group words together, delimited by "," */
- 		while (*str && *str != ' ' && *str != ',')
- 			str++;
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 32799cf039ef..337b52c4702c 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -27,6 +27,7 @@
- 
- extern int __pure nokaslr(void);
- extern int __pure is_quiet(void);
-+extern int __pure novamap(void);
- 
- #define pr_efi(sys_table, msg)		do {				\
- 	if (!is_quiet()) efi_printk(sys_table, "EFI stub: "msg);	\
-diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-index 0c0d2312f4a8..dba296a44f4e 100644
---- a/drivers/firmware/efi/libstub/fdt.c
-+++ b/drivers/firmware/efi/libstub/fdt.c
-@@ -327,6 +327,9 @@ efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
- 	if (status == EFI_SUCCESS) {
- 		efi_set_virtual_address_map_t *svam;
- 
-+		if (novamap())
-+			return EFI_SUCCESS;
-+
- 		/* Install the new virtual address map */
- 		svam = sys_table->runtime->set_virtual_address_map;
- 		status = svam(runtime_entry_count * desc_size, desc_size,
+ 	@ read original r12, sp, lr, pc and xPSR
+ 	add	r12, sp, #S_IP
+diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
+index abcf47848525..19d2dcd6530d 100644
+--- a/arch/arm/kernel/entry-v7m.S
++++ b/arch/arm/kernel/entry-v7m.S
+@@ -146,3 +146,7 @@ ENTRY(vector_table)
+ 	.rept	CONFIG_CPU_V7M_NUM_IRQ
+ 	.long	__irq_entry		@ External Interrupts
+ 	.endr
++	.align	2
++	.globl	exc_ret
++exc_ret:
++	.space	4
+diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
+index 47a5acc64433..92e84181933a 100644
+--- a/arch/arm/mm/proc-v7m.S
++++ b/arch/arm/mm/proc-v7m.S
+@@ -139,6 +139,9 @@ __v7m_setup_cont:
+ 	cpsie	i
+ 	svc	#0
+ 1:	cpsid	i
++	ldr	r0, =exc_ret
++	orr	lr, lr, #EXC_RET_THREADMODE_PROCESSSTACK
++	str	lr, [r0]
+ 	ldmia	sp, {r0-r3, r12}
+ 	str	r5, [r12, #11 * 4]	@ restore the original SVC vector entry
+ 	mov	lr, r6			@ restore LR
 -- 
 2.19.1
 
