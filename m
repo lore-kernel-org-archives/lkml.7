@@ -2,88 +2,83 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D8FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A247C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2233204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A183206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOD+G23Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbfDDQyA convert rfc822-to-8bit (ORCPT
+        id S1729393AbfDDQ5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:54:00 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34123 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727415AbfDDQx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:53:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 09:53:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,308,1549958400"; 
-   d="scan'208";a="131480547"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga008.jf.intel.com with ESMTP; 04 Apr 2019 09:53:57 -0700
-Received: from fmsmsx123.amr.corp.intel.com (10.18.125.38) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 4 Apr 2019 09:53:57 -0700
-Received: from crsmsx152.amr.corp.intel.com (172.18.7.35) by
- fmsmsx123.amr.corp.intel.com (10.18.125.38) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 4 Apr 2019 09:53:56 -0700
-Received: from crsmsx101.amr.corp.intel.com ([169.254.1.94]) by
- CRSMSX152.amr.corp.intel.com ([169.254.5.30]) with mapi id 14.03.0415.000;
- Thu, 4 Apr 2019 10:53:54 -0600
-From:   "Weiny, Ira" <ira.weiny@intel.com>
-To:     William Kucharski <william.kucharski@oracle.com>,
-        Huang Shijie <sjhuang@iluvatar.ai>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] mm/gup.c: fix the wrong comments
-Thread-Topic: [PATCH] mm/gup.c: fix the wrong comments
-Thread-Index: AQHU6rdootqQqf6MVU2Y2vuXC43Qn6YsVAoA///ka7A=
-Date:   Thu, 4 Apr 2019 16:53:53 +0000
-Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E79C99E19@CRSMSX101.amr.corp.intel.com>
-References: <20190404072347.3440-1-sjhuang@iluvatar.ai>
- <3D9A544A-D447-4FD2-87A5-211588D6F3E5@oracle.com>
-In-Reply-To: <3D9A544A-D447-4FD2-87A5-211588D6F3E5@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNWUxNTc1MTUtNzE0Yy00ZDI0LWI3OWMtMDlmNGMyZWI3YzJhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicTBnNXhTUlFqVktYb0lncnA4QVJsSFlLaHZIQ3VUTHdDUUVzQVJ0ODd6ZHFLVUtBYnlxZ09SNXkraEFZQXBcL2UifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [172.18.205.10]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Thu, 4 Apr 2019 12:57:33 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:42543 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfDDQ5d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 12:57:33 -0400
+Received: by mail-pg1-f181.google.com with SMTP id p6so1521043pgh.9;
+        Thu, 04 Apr 2019 09:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Um6oni1SDHEKK6vDK5CNnvZd9AgYA0ZYByeEx8gtbyk=;
+        b=TOD+G23Ys76fvSt0aknXQKqtd2aI7nwGjFp4TEpkiPzjbP0si8qDR9UXkMuWnv48J1
+         oUw7iKTz3EhX6XWkL6E88DOld3Sqs1m2KHTahBS5BXf8kbZmVdx5FYeJ+Lw3r3YIhxWj
+         Q8x/kK1kgbKWEiU26WvgVPKnLrb1vXvBOJMhW95zdeDGQIvuo6L2fj07qbtzBPobuDV2
+         g+lpxYvHNMksau5zQWDgdFWOJVIWELgVDOfgf/vhjO6rFOBREc+YEOFsm9K+fQ81MS83
+         64G8ozk8j7ayMI/Bn9Ng+iaPg7wRvL3mbWMjaooAKYkR8Wd0dbiRcZcpdzVO/1YJWdJb
+         7oQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Um6oni1SDHEKK6vDK5CNnvZd9AgYA0ZYByeEx8gtbyk=;
+        b=DlIXavmDsQOZrzX7JaNWEy3Byx2PZRk5tJsrcBgpRtVxbTh5yaYkAc8rEKZZVOufif
+         btkIk/XPxwRQeMjolDVHeV+f3uGyeIY5NzSC8sl3GSCYyceOBmVGjoFuEf+/s5bQf386
+         GnH+QI2Lq5uU5FvuB8dfohTiXp30Ota9Ds2wwDzz7k20BlF1n7+w5+L5GdGsA0uRmtMK
+         5TeXL5+yrTPWxmSYXcBv5QgNDY/GZYW0clF5kDTgsD8+RnnpaHWrzpJgizdhjnXN4Zis
+         T9vFd89bk7R33q1LxluuTDWVSX6d9x3bQQ2yFnEeMgXsf6BXht6jSfCHOBajiPAej48d
+         ywXA==
+X-Gm-Message-State: APjAAAUmAawrWeco5Z95DADjOAYPoR06nDQBuOpkD3BaPVqAREF9Him+
+        XT82FHafwB3593rFqPHm5O8=
+X-Google-Smtp-Source: APXvYqwLEFmUJ5BghmjIAPSCgYTIPVkpUlIRjZq9iqNMy0HVwZhDL7K6VwxrHyTUXYGuRj6dpsmX1A==
+X-Received: by 2002:a63:2c55:: with SMTP id s82mr6658457pgs.356.1554397052684;
+        Thu, 04 Apr 2019 09:57:32 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id f63sm22674233pfc.180.2019.04.04.09.57.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 09:57:31 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, srinivas.kandagatla@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+Subject: [RESEND 0/2] nvmem: sunxi-sid: add SID controller support for H6
+Date:   Thu,  4 Apr 2019 12:57:24 -0400
+Message-Id: <20190404165726.13149-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > On Apr 4, 2019, at 1:23 AM, Huang Shijie <sjhuang@iluvatar.ai> wrote:
-> >
-> >
-> > + * This function is different from the get_user_pages_unlocked():
-> > + *      The @pages may has different page order with the result
-> > + *      got by get_user_pages_unlocked().
-> > + *
-> 
-> I suggest a slight rewrite of the comment, something like:
-> 
-> * Note this routine may fill the pages array with entries in a
-> * different order than get_user_pages_unlocked(), which may cause
-> * issues for callers expecting the routines to be equivalent.
+Add SID's support for H6.
 
-This is good too.  :-D
+Yangtao Li (2):
+  nvmem: sunxi_sid: Support SID on H6
+  arm64: dts: sunxi: h6: Add device node for SID
 
-Ira
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 5 +++++
+ drivers/nvmem/sunxi_sid.c                    | 6 ++++++
+ 2 files changed, 11 insertions(+)
+
+-- 
+2.17.0
 
