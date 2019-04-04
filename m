@@ -7,47 +7,58 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EBEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05120C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766842177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6488217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368132;
-	bh=ieBQNIgSiQ9+gB3xplbCYuWvqaDekaGn/78dZGmAWXg=;
+	s=default; t=1554368138;
+	bh=kqLKYtvM22l4cbA3Uq0iKUzBH2Mm0w5EkAZWtCkpEaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lA8YWD4tksa5GNxiLjHJqZdxmEzHBqY3W1UeDsJiL4wE7ozlgEd1ZS4oCydCl3/zs
-	 l3gOZ26dSlNGAHBQDKGvD7pndC4AAHNrk3bfGA+CiUN2r2tinP6pPBz9vbnjYPDmd5
-	 66eTrkh2Cj5aWpW76qddCnIHPfn6MaFdlzzqpLbU=
+	b=HhUSwx0dVxA6n0VhZZcntQ9ZmzzO79j+NJxGhJoTLFwrsnBaCnsvedEGuqGoCI3t1
+	 8+sPLHTCTM6XPhrVZqgRN9DTPNVNL6BGPwVeJKDjk4tU2P1d6iaCblMKzhRT9g4DiZ
+	 i0qwWhnf1YfIL50WxY6KuBdcRmESaanp8h3j6hu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfDDIza (ORCPT
+        id S1730331AbfDDIzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730275AbfDDIz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:27 -0400
+        id S1729827AbfDDIzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C1C22177E;
-        Thu,  4 Apr 2019 08:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE8320882;
+        Thu,  4 Apr 2019 08:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368126;
-        bh=ieBQNIgSiQ9+gB3xplbCYuWvqaDekaGn/78dZGmAWXg=;
+        s=default; t=1554368132;
+        bh=kqLKYtvM22l4cbA3Uq0iKUzBH2Mm0w5EkAZWtCkpEaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7uLJn9BGMOoLZj3AKE+c7T/kbAGfI71BHE/bF1QXguA+Ry3nZX1Sp36HZcQ2cssX
-         SYdtGxQTh82WJKO4jvGH4k1AV4gMAmAyLIWWpkwMi+BqwGvhsmFufXpjrb3gCnMDW0
-         p88fRfNXTOWY+Eq/ifCF9O138FwZGMgXY+HrVw1k=
+        b=m6Qxy1KDG9AQVSOTmmUSATQ+RhPuwz5Wld8yKoBaN53zGCdULtOVbfRKvXZbgkJBw
+         Q2GFqJ2nWFCYe+NY3wl5LicGOPZoCH6/hWYLBJFaXaVkgK3eFaO3sZHq3KKu3lWn5Q
+         QWUw3QifFl1cEH5h/RxallzIjeG7q1+b36TQuMIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
-        Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@elte.hu>,
+        Joel Fernandes <joelaf@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 031/121] cifs: Fix NULL pointer dereference of devname
-Date:   Thu,  4 Apr 2019 10:46:59 +0200
-Message-Id: <20190404084547.031772892@linuxfoundation.org>
+Subject: [PATCH 4.14 023/121] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
+Date:   Thu,  4 Apr 2019 10:46:51 +0200
+Message-Id: <20190404084546.623023949@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,58 +77,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
+[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
 
-There is a NULL pointer dereference of devname in strspn()
+One of the vmalloc stress test case triggers the kernel BUG():
 
-The oops looks something like:
+  <snip>
+  [60.562151] ------------[ cut here ]------------
+  [60.562154] kernel BUG at mm/vmalloc.c:512!
+  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
+  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
+  <snip>
 
-  CIFS: Attempting to mount (null)
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:strspn+0x0/0x50
-  ...
-  Call Trace:
-   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
-   ? cifs_get_volume_info+0x2f/0x80 [cifs]
-   cifs_setup_volume_info+0x20/0x190 [cifs]
-   cifs_get_volume_info+0x50/0x80 [cifs]
-   cifs_smb3_do_mount+0x59/0x630 [cifs]
-   ? ida_alloc_range+0x34b/0x3d0
-   cifs_do_mount+0x11/0x20 [cifs]
-   mount_fs+0x52/0x170
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+it can happen due to big align request resulting in overflowing of
+calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
 
-Fix this by adding a NULL check on devname in cifs_parse_devname()
+Fix it by checking if calculated address is within vstart/vend range.
 
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Garnier <thgarnie@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ mm/vmalloc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 48aa854c564a..33cd844579ae 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1265,6 +1265,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
- 	const char *delims = "/\\";
- 	size_t len;
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 8d9f636d0c98..6c906f6f16cc 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -498,7 +498,11 @@ nocache:
+ 	}
  
-+	if (unlikely(!devname || !*devname)) {
-+		cifs_dbg(VFS, "Device name not specified.\n");
-+		return -EINVAL;
-+	}
-+
- 	/* make sure we have a valid UNC double delimiter prefix */
- 	len = strspn(devname, delims);
- 	if (len != 2)
+ found:
+-	if (addr + size > vend)
++	/*
++	 * Check also calculated address against the vstart,
++	 * because it can be 0 because of big align request.
++	 */
++	if (addr + size > vend || addr < vstart)
+ 		goto overflow;
+ 
+ 	va->va_start = addr;
 -- 
 2.19.1
 
