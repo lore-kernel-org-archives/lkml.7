@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96064C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EA4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66B32214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5E421872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368822;
-	bh=+wLpZvZHeueROCSTZd3BN8y75xg/eJrVs6/iUISw68Y=;
+	s=default; t=1554368825;
+	bh=HMNc2xFExbwXHSPs8UBqqANyYgeyBhw7Xr+1WDzumPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ir3TgUpN195Dn4C1aYWik9YeBK6c7Nban5oFBdt00l20ypX+1WS6XHCPeN0WWr3Ic
-	 uaElCJzotxhq3RhGCcYBpLetju0mCr2XSSbFbR5uFViwsN3J5sHwXTTY/ScJl/Ym5r
-	 cW0SjbfP+mdUV3MV3uiRXCaZvvGmENzCypgo81y0=
+	b=PVySgEVPJLw0YeBBPOxeumJC9s+C1B0yIpP/pKj4RvaFxHQWih6Yk4MH8EyeNc6uE
+	 lFnLg9EclbkdplsQx3aLhK1NvU0Dz50wWYAc05WbE827lVNylFSilrAZ9dWl6C/C1F
+	 EfEaeJ6SFnNOV+NuAKMdcR6ByFiCjs5O+PpLAmsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732433AbfDDJHB (ORCPT
+        id S1732445AbfDDJHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45722 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:07:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732423AbfDDJG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:06:59 -0400
+        id S1732196AbfDDJHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:07:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D2A2184B;
-        Thu,  4 Apr 2019 09:06:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 565982177E;
+        Thu,  4 Apr 2019 09:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368818;
-        bh=+wLpZvZHeueROCSTZd3BN8y75xg/eJrVs6/iUISw68Y=;
+        s=default; t=1554368820;
+        bh=HMNc2xFExbwXHSPs8UBqqANyYgeyBhw7Xr+1WDzumPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HKdZ3JkbOcuGfQiCgwsa4EUBkdueK91pyYMJ09ubQ04QuVmA42Q9r5ph+kziVcnmO
-         E61jWcn2AcrZJLy7Mh+7nVCabzaBLLHNUZAPAeXenWd8g/ukMO0vBCGxeiJCqe7kqE
-         HEtm2Um1ldzHLWzNCW0w0+IrCP7VvZZXSDBfJtx4=
+        b=YeioSg/L6kjDYdoByWStvL9OIyTGm/LZe/Xox7qYiL5RgVBmmcyTlpIMXLpgG7PMc
+         h57lG2wZzIjsbxu52shHHHTAJt0+Ju88uomMh14DCE16m7lR6JXPNDBp8iwxPVkvng
+         RXkzapHXE7lFhQ95MpRA+cum7AL+8mMKT6Ouj6rI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joey Zheng <yu.zheng@hxt-semitech.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Shunyong Yang <shunyong.yang@hxt-semitech.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 165/187] dmaengine: qcom_hidma: initialize tx flags in hidma_prep_dma_*
-Date:   Thu,  4 Apr 2019 10:48:22 +0200
-Message-Id: <20190404084610.866528419@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 166/187] netfilter: physdev: relax br_netfilter dependency
+Date:   Thu,  4 Apr 2019 10:48:23 +0200
+Message-Id: <20190404084610.908904623@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,53 +66,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 875aac8a46424e5b73a9ff7f40b83311b609e407 ]
+[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
 
-In async_tx_test_ack(), it uses flags in struct dma_async_tx_descriptor
-to check the ACK status. As hidma reuses the descriptor in a free list
-when hidma_prep_dma_*(memcpy/memset) is called, the flag will keep ACKed
-if the descriptor has been used before. This will cause a BUG_ON in
-async_tx_quiesce().
+Following command:
+  iptables -D FORWARD -m physdev ...
+causes connectivity loss in some setups.
 
-  kernel BUG at crypto/async_tx/async_tx.c:282!
-  Internal error: Oops - BUG: 0 1 SMP
-  ...
-  task: ffff8017dd3ec000 task.stack: ffff8017dd3e8000
-  PC is at async_tx_quiesce+0x54/0x78 [async_tx]
-  LR is at async_trigger_callback+0x98/0x110 [async_tx]
+Reason is that iptables userspace will probe kernel for the module revision
+of the physdev patch, and physdev has an artificial dependency on
+br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
+is loaded).
 
-This patch initializes flags in dma_async_tx_descriptor by the flags
-passed from the caller when hidma_prep_dma_*(memcpy/memset) is called.
+This causes the "phydev" module to be loaded, which in turn enables the
+"call-iptables" infrastructure.
 
-Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
-Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+bridged packets might then get dropped by the iptables ruleset.
+
+The better fix would be to change the "call-iptables" defaults to 0 and
+enforce explicit setting to 1, but that breaks backwards compatibility.
+
+This does the next best thing: add a request_module call to checkentry.
+This was a stray '-D ... -m physdev' won't activate br_netfilter
+anymore.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/qcom/hidma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/net/netfilter/br_netfilter.h | 1 -
+ net/bridge/br_netfilter_hooks.c      | 5 -----
+ net/netfilter/xt_physdev.c           | 9 +++++++--
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index ea219bca116d..411f91fde734 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -416,6 +416,7 @@ hidma_prep_dma_memcpy(struct dma_chan *dmach, dma_addr_t dest, dma_addr_t src,
- 	if (!mdesc)
- 		return NULL;
+diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
+index 74af19c3a8f7..a4ba601b5d04 100644
+--- a/include/net/netfilter/br_netfilter.h
++++ b/include/net/netfilter/br_netfilter.h
+@@ -49,7 +49,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
+ }
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     src, dest, len, flags,
- 				     HIDMA_TRE_MEMCPY);
-@@ -448,6 +449,7 @@ hidma_prep_dma_memset(struct dma_chan *dmach, dma_addr_t dest, int value,
- 	if (!mdesc)
- 		return NULL;
+ struct net_device *setup_pre_routing(struct sk_buff *skb);
+-void br_netfilter_enable(void);
  
-+	mdesc->desc.flags = flags;
- 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
- 				     value, dest, len, flags,
- 				     HIDMA_TRE_MEMSET);
+ #if IS_ENABLED(CONFIG_IPV6)
+ int br_validate_ipv6(struct net *net, struct sk_buff *skb);
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index e07a7e62c705..3b0a03b92080 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -884,11 +884,6 @@ static const struct nf_br_ops br_ops = {
+ 	.br_dev_xmit_hook =	br_nf_dev_xmit,
+ };
+ 
+-void br_netfilter_enable(void)
+-{
+-}
+-EXPORT_SYMBOL_GPL(br_netfilter_enable);
+-
+ /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
+  * br_dev_queue_push_xmit is called afterwards */
+ static const struct nf_hook_ops br_nf_ops[] = {
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index 9d6d67b953ac..05f00fb20b04 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -96,8 +96,7 @@ match_outdev:
+ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ {
+ 	const struct xt_physdev_info *info = par->matchinfo;
+-
+-	br_netfilter_enable();
++	static bool brnf_probed __read_mostly;
+ 
+ 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
+ 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
+@@ -111,6 +110,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+ 			return -EINVAL;
+ 	}
++
++	if (!brnf_probed) {
++		brnf_probed = true;
++		request_module("br_netfilter");
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.19.1
 
