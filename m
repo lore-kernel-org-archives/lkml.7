@@ -2,231 +2,86 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41FCC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98147C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74CE206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371264;
-	bh=LqcGMgBo5Gg2+sw0oDlru1+dVxUXUdl8jPHJmcAEu9I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5uUl/FOWPe3aKZ1k+Y1VqY4rpgsrCKNACFrHGn2UWB5shiFQ/v5KuPVUesxytaHF
-	 fUhuW9nAeZNatMiuRVUSBd+Msx83Jovw+KivGAhN/QaDNA0ES68wAz2I2rCg5OYaAO
-	 buAA70mpC/t8E94ToYsR44onlDGYkA7B/zvlTFEE=
+	by mail.kernel.org (Postfix) with ESMTP id 67A9C206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PG0J+FYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731012AbfDDJrn (ORCPT
+        id S1731161AbfDDJru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730720AbfDDI5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C350020652;
-        Thu,  4 Apr 2019 08:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368258;
-        bh=LqcGMgBo5Gg2+sw0oDlru1+dVxUXUdl8jPHJmcAEu9I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O74EdeMgBXtr2hcyHyaCoDOPX0jRzn9mIsApP9YAK9YdFedRnKIY/kzrB91oKAeN0
-         /VIiDLtUksx85ohPtkRTssA+OLXJIh8xGK+WV4Pb8BfbbTnVdcM4hTfrE1708gUdzU
-         AWPB82swZz+34pXg8cCaeEYaIM/n/LlW96ljODgM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/121] genirq: Avoid summation loops for /proc/stat
-Date:   Thu,  4 Apr 2019 10:47:47 +0200
-Message-Id: <20190404084549.542093618@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
-References: <20190404084545.245659903@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 4 Apr 2019 05:47:50 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38502 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730481AbfDDJrr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:47:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1554371265; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=pC7IhBU1DSC3dGwjIZTkxjmjv2SxALVB8x57y+wbglU=;
+        b=PG0J+FYJ6gyXUbUJuQ8IPYFXUSQDC/mXCB6ZVmucUAayf22IFCvub/9l5IkcfPttxKnqF4
+        Oq+2kZUD9hiqy1vZ2T3cH2d4FdsBJchU++0ZqF2hrzw1bFtr0pqHNm8dx0xJ3SouaxkXEo
+        bg5o1Gx9B5oQoBJ/7FV9y4OH+YWr2Mo=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, Bin Liu <b-liu@ti.com>
+Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/3] dt-bindings: usb: Add usb-phy property to the jz4740-musb node
+Date:   Thu,  4 Apr 2019 11:47:37 +0200
+Message-Id: <20190404094739.23503-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+Add a required 'usb-phy' property, to obtain a phandle to the USB PHY
+from devicetree.
 
-------------------
-
-[ Upstream commit 1136b0728969901a091f0471968b2b76ed14d9ad ]
-
-Waiman reported that on large systems with a large amount of interrupts the
-readout of /proc/stat takes a long time to sum up the interrupt
-statistics. In principle this is not a problem. but for unknown reasons
-some enterprise quality software reads /proc/stat with a high frequency.
-
-The reason for this is that interrupt statistics are accounted per cpu. So
-the /proc/stat logic has to sum up the interrupt stats for each interrupt.
-
-This can be largely avoided for interrupts which are not marked as
-'PER_CPU' interrupts by simply adding a per interrupt summation counter
-which is incremented along with the per interrupt per cpu counter.
-
-The PER_CPU interrupts need to avoid that and use only per cpu accounting
-because they share the interrupt number and the interrupt descriptor and
-concurrent updates would conflict or require unwanted synchronization.
-
-Reported-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Waiman Long <longman@redhat.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lkml.kernel.org/r/20190208135020.925487496@linutronix.de
-
-8<-------------
-
-v2: Undo the unintentional layout change of struct irq_desc.
-
- include/linux/irqdesc.h |    1 +
- kernel/irq/chip.c       |   12 ++++++++++--
- kernel/irq/internals.h  |    8 +++++++-
- kernel/irq/irqdesc.c    |    7 ++++++-
- 4 files changed, 24 insertions(+), 4 deletions(-)
-
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- include/linux/irqdesc.h |  1 +
- kernel/irq/chip.c       | 12 ++++++++++--
- kernel/irq/internals.h  |  8 +++++++-
- kernel/irq/irqdesc.c    |  7 ++++++-
- 4 files changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/irqdesc.h b/include/linux/irqdesc.h
-index b6084898d330..234f0d1f8dca 100644
---- a/include/linux/irqdesc.h
-+++ b/include/linux/irqdesc.h
-@@ -65,6 +65,7 @@ struct irq_desc {
- 	unsigned int		core_internal_state__do_not_mess_with_it;
- 	unsigned int		depth;		/* nested irq disables */
- 	unsigned int		wake_depth;	/* nested wake enables */
-+	unsigned int		tot_count;
- 	unsigned int		irq_count;	/* For detecting broken IRQs */
- 	unsigned long		last_unhandled;	/* Aging timer for unhandled count */
- 	unsigned int		irqs_unhandled;
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 5a2ef92c2782..0fa7ef74303b 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -834,7 +834,11 @@ void handle_percpu_irq(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
+Notes:
+    v2: Change "usb-phy" DT property to "phys"
+
+ Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+index 620355cee63f..16808721f3ff 100644
+--- a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+@@ -8,9 +8,15 @@ Required properties:
+ - interrupt-names: must be "mc"
+ - clocks: phandle to the "udc" clock
+ - clock-names: must be "udc"
++- phys: phandle to the USB PHY
  
--	kstat_incr_irqs_this_cpu(desc);
-+	/*
-+	 * PER CPU interrupts are not serialized. Do not touch
-+	 * desc->tot_count.
-+	 */
-+	__kstat_incr_irqs_this_cpu(desc);
+ Example:
  
- 	if (chip->irq_ack)
- 		chip->irq_ack(&desc->irq_data);
-@@ -863,7 +867,11 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
- 	unsigned int irq = irq_desc_get_irq(desc);
- 	irqreturn_t res;
- 
--	kstat_incr_irqs_this_cpu(desc);
-+	/*
-+	 * PER CPU interrupts are not serialized. Do not touch
-+	 * desc->tot_count.
-+	 */
-+	__kstat_incr_irqs_this_cpu(desc);
- 
- 	if (chip->irq_ack)
- 		chip->irq_ack(&desc->irq_data);
-diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
-index 44ed5f8c8759..4ef7f3b820ce 100644
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -240,12 +240,18 @@ static inline void irq_state_set_masked(struct irq_desc *desc)
- 
- #undef __irqd_to_state
- 
--static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
-+static inline void __kstat_incr_irqs_this_cpu(struct irq_desc *desc)
- {
- 	__this_cpu_inc(*desc->kstat_irqs);
- 	__this_cpu_inc(kstat.irqs_sum);
- }
- 
-+static inline void kstat_incr_irqs_this_cpu(struct irq_desc *desc)
-+{
-+	__kstat_incr_irqs_this_cpu(desc);
-+	desc->tot_count++;
-+}
++usb_phy: usb-phy@0 {
++	compatible = "usb-nop-xceiv";
++	#phy-cells = <0>;
++};
 +
- static inline int irq_desc_get_node(struct irq_desc *desc)
- {
- 	return irq_common_data_get_node(&desc->irq_common_data);
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index e97bbae947f0..c2bfb11a9d05 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -119,6 +119,7 @@ static void desc_set_defaults(unsigned int irq, struct irq_desc *desc, int node,
- 	desc->depth = 1;
- 	desc->irq_count = 0;
- 	desc->irqs_unhandled = 0;
-+	desc->tot_count = 0;
- 	desc->name = NULL;
- 	desc->owner = owner;
- 	for_each_possible_cpu(cpu)
-@@ -895,11 +896,15 @@ unsigned int kstat_irqs_cpu(unsigned int irq, int cpu)
- unsigned int kstat_irqs(unsigned int irq)
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
--	int cpu;
- 	unsigned int sum = 0;
-+	int cpu;
+ udc: usb@13040000 {
+ 	compatible = "ingenic,jz4740-musb";
+ 	reg = <0x13040000 0x10000>;
+@@ -21,4 +27,6 @@ udc: usb@13040000 {
  
- 	if (!desc || !desc->kstat_irqs)
- 		return 0;
-+	if (!irq_settings_is_per_cpu_devid(desc) &&
-+	    !irq_settings_is_per_cpu(desc))
-+	    return desc->tot_count;
+ 	clocks = <&cgu JZ4740_CLK_UDC>;
+ 	clock-names = "udc";
 +
- 	for_each_possible_cpu(cpu)
- 		sum += *per_cpu_ptr(desc->kstat_irqs, cpu);
- 	return sum;
++	phys = <&usb_phy>;
+ };
 -- 
-2.19.1
-
-
+2.11.0
 
