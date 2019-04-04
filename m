@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580A8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F43C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2734B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E672075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369784;
-	bh=kCVN6nSKa5vON9Fhi4l0oXnAHt5l1l+fKjeUX1kMFTs=;
+	s=default; t=1554369795;
+	bh=CcZjScWXPLh7pz8wYtuTcSpmmo+TuxX8oB5fP9kbW2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvQmJGCZy8QL3fn3gELcQTxDUYS4bsFSOJgFYYcrvMuz2YkxKtXKUcq2f1TgsftHO
-	 +mP4hAPrp9DlgwfYLD/7PNfsGO4w73+IzD5NMQydO1fm15g1FYcXQM9JxnCbdLsLko
-	 oNDThpZVSCen+F9BcQRe+V/RwVau9y2u/oGU15xc=
+	b=pRCx59VOsJ11newbIUobVuA7/eUvDwkNJPn2K5FZxw0BqvpJk5vQXxxDiSVcg9rc9
+	 nOBHpSoCdmsFNo1BXPFXMCcFTzQ3Mpm0rTZt+X02NN5bhb1GVZ2rwtyDje6q3lEMuR
+	 1rg4sLefE476Qp2Wc+dZD5FX1du7R3BsY7ie1oLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbfDDJW5 (ORCPT
+        id S2387906AbfDDJPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387693AbfDDJPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:45 -0400
+        id S2387897AbfDDJPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CD552075E;
-        Thu,  4 Apr 2019 09:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B23932054F;
+        Thu,  4 Apr 2019 09:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369344;
-        bh=kCVN6nSKa5vON9Fhi4l0oXnAHt5l1l+fKjeUX1kMFTs=;
+        s=default; t=1554369329;
+        bh=CcZjScWXPLh7pz8wYtuTcSpmmo+TuxX8oB5fP9kbW2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hnowGBfQdLlQWWfEwugCRm/4sdbBAmKJPv+1OL7EafHD/RRFpX/pWOXW+hQ68VHiD
-         6AmxzhRte9JExWF+oyOJF/KIyjLde2/CWYfVG64mIC66R4664uzDssaRjocAb8rpyM
-         MsDuwo2tr5n8rX0bsQKKV7ugN/9KddjxpsxGyuz8=
+        b=RpwuK518PHy55vwoNJMe6gPuzHCksNfgKkSjiPRakPE1GLx0O1blNvxnsqVd+SN97
+         p52LhfXXxlAN98HL96Y+FI3I7RqFQDlO8yGzmtJtZR5zfRJUGYuO7pnH1a7Hw2wqEO
+         aEi7+zuZb5kmeOGzOd8fwr3vzykFO/vOom5gxz68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 176/246] sched/core: Use READ_ONCE()/WRITE_ONCE() in move_queued_task()/task_rq_lock()
-Date:   Thu,  4 Apr 2019 10:47:56 +0200
-Message-Id: <20190404084625.341155513@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        Rajesh Yadav <ryadav@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 182/246] drm/msm/dpu: Convert to a chained irq chip
+Date:   Thu,  4 Apr 2019 10:48:02 +0200
+Message-Id: <20190404084625.554215418@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -73,112 +70,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c546951d9c9300065bad253ecdf1ac59ce9d06c8 ]
+[ Upstream commit 070e64dc1bbc879b7e0e9fffccd9dd139baf89f0 ]
 
-move_queued_task() synchronizes with task_rq_lock() as follows:
+Devices that make up DPU, i.e. graphics card, request their interrupts
+from this "virtual" interrupt chip. The interrupt chip builds upon a GIC
+SPI interrupt that raises high when any of the interrupts in the DPU's
+irq status register are triggered. From the kernel's perspective this is
+a chained irq chip, so requesting a flow handler for the GIC SPI and
+then calling generic IRQ handling code from that irq handler is not
+completely proper. It's better to convert this to a chained irq so that
+the GIC SPI irq doesn't appear in /proc/interrupts, can't have CPU
+affinity changed, and won't be accounted for with irq stats. Doing this
+also silences a recursive lockdep warning because we can specify a
+different lock class for the chained interrupts, silencing a warning
+that is easy to see with 'threadirqs' on the kernel commandline.
 
-	move_queued_task()		task_rq_lock()
+ WARNING: inconsistent lock state
+ 4.19.10 #76 Tainted: G        W
+ --------------------------------
+ inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+ irq/40-dpu_mdss/203 [HC0[0]:SC0[2]:HE1:SE0] takes:
+ 0000000053ea9021 (&irq_desc_lock_class){?.-.}, at: handle_level_irq+0x34/0x26c
+ {IN-HARDIRQ-W} state was registered at:
+   lock_acquire+0x244/0x360
+   _raw_spin_lock+0x64/0xa0
+   handle_fasteoi_irq+0x54/0x2ec
+   generic_handle_irq+0x44/0x5c
+   __handle_domain_irq+0x9c/0x11c
+   gic_handle_irq+0x208/0x260
+   el1_irq+0xb4/0x130
+   arch_cpu_idle+0x178/0x3cc
+   default_idle_call+0x3c/0x54
+   do_idle+0x1a8/0x3dc
+   cpu_startup_entry+0x24/0x28
+   rest_init+0x240/0x270
+   start_kernel+0x5a8/0x6bc
+ irq event stamp: 18
+ hardirqs last  enabled at (17): [<ffffff9042385e80>] _raw_spin_unlock_irq+0x40/0xc0
+ hardirqs last disabled at (16): [<ffffff904237a1f4>] __schedule+0x20c/0x1bbc
+ softirqs last  enabled at (0): [<ffffff9040f318d0>] copy_process+0xb50/0x3964
+ softirqs last disabled at (18): [<ffffff9041036364>] local_bh_disable+0x8/0x20
 
-	[S] ->on_rq = MIGRATING		[L] rq = task_rq()
-	WMB (__set_task_cpu())		ACQUIRE (rq->lock);
-	[S] ->cpu = new_cpu		[L] ->on_rq
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
 
-where "[L] rq = task_rq()" is ordered before "ACQUIRE (rq->lock)" by an
-address dependency and, in turn, "ACQUIRE (rq->lock)" is ordered before
-"[L] ->on_rq" by the ACQUIRE itself.
+        CPU0
+        ----
+   lock(&irq_desc_lock_class);
+   <Interrupt>
+     lock(&irq_desc_lock_class);
 
-Use READ_ONCE() to load ->cpu in task_rq() (c.f., task_cpu()) to honor
-this address dependency.  Also, mark the accesses to ->cpu and ->on_rq
-with READ_ONCE()/WRITE_ONCE() to comply with the LKMM.
+  *** DEADLOCK ***
 
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/20190121155240.27173-1-andrea.parri@amarulasolutions.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+ no locks held by irq/40-dpu_mdss/203.
+
+ stack backtrace:
+ CPU: 0 PID: 203 Comm: irq/40-dpu_mdss Tainted: G        W         4.19.10 #76
+ Call trace:
+  dump_backtrace+0x0/0x2f8
+  show_stack+0x20/0x2c
+  __dump_stack+0x20/0x28
+  dump_stack+0xcc/0x10c
+  mark_lock+0xbe0/0xe24
+  __lock_acquire+0x4cc/0x2708
+  lock_acquire+0x244/0x360
+  _raw_spin_lock+0x64/0xa0
+  handle_level_irq+0x34/0x26c
+  generic_handle_irq+0x44/0x5c
+  dpu_mdss_irq+0x64/0xec
+  irq_forced_thread_fn+0x58/0x9c
+  irq_thread+0x120/0x1dc
+  kthread+0x248/0x260
+  ret_from_fork+0x10/0x18
+ ------------[ cut here ]------------
+ irq 169 handler irq_default_primary_handler+0x0/0x18 enabled interrupts
+
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Jayant Shekhar <jshekhar@codeaurora.org>
+Cc: Rajesh Yadav <ryadav@codeaurora.org>
+Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched.h | 4 ++--
- kernel/sched/core.c   | 9 +++++----
- kernel/sched/sched.h  | 6 +++---
- 3 files changed, 10 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 36 ++++++++++++++----------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f9b43c989577..9b35aff09f70 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1748,9 +1748,9 @@ static __always_inline bool need_resched(void)
- static inline unsigned int task_cpu(const struct task_struct *p)
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+index cb307a2abf06..7316b4ab1b85 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+@@ -23,11 +23,14 @@ struct dpu_mdss {
+ 	struct dpu_irq_controller irq_controller;
+ };
+ 
+-static irqreturn_t dpu_mdss_irq(int irq, void *arg)
++static void dpu_mdss_irq(struct irq_desc *desc)
  {
- #ifdef CONFIG_THREAD_INFO_IN_TASK
--	return p->cpu;
-+	return READ_ONCE(p->cpu);
- #else
--	return task_thread_info(p)->cpu;
-+	return READ_ONCE(task_thread_info(p)->cpu);
- #endif
+-	struct dpu_mdss *dpu_mdss = arg;
++	struct dpu_mdss *dpu_mdss = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	u32 interrupts;
+ 
++	chained_irq_enter(chip, desc);
++
+ 	interrupts = readl_relaxed(dpu_mdss->mmio + HW_INTR_STATUS);
+ 
+ 	while (interrupts) {
+@@ -39,20 +42,20 @@ static irqreturn_t dpu_mdss_irq(int irq, void *arg)
+ 					   hwirq);
+ 		if (mapping == 0) {
+ 			DRM_ERROR("couldn't find irq mapping for %lu\n", hwirq);
+-			return IRQ_NONE;
++			break;
+ 		}
+ 
+ 		rc = generic_handle_irq(mapping);
+ 		if (rc < 0) {
+ 			DRM_ERROR("handle irq fail: irq=%lu mapping=%u rc=%d\n",
+ 				  hwirq, mapping, rc);
+-			return IRQ_NONE;
++			break;
+ 		}
+ 
+ 		interrupts &= ~(1 << hwirq);
+ 	}
+ 
+-	return IRQ_HANDLED;
++	chained_irq_exit(chip, desc);
  }
  
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index d8d76a65cfdd..01a2489de94e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -107,11 +107,12 @@ struct rq *task_rq_lock(struct task_struct *p, struct rq_flags *rf)
- 		 *					[L] ->on_rq
- 		 *	RELEASE (rq->lock)
- 		 *
--		 * If we observe the old CPU in task_rq_lock, the acquire of
-+		 * If we observe the old CPU in task_rq_lock(), the acquire of
- 		 * the old rq->lock will fully serialize against the stores.
- 		 *
--		 * If we observe the new CPU in task_rq_lock, the acquire will
--		 * pair with the WMB to ensure we must then also see migrating.
-+		 * If we observe the new CPU in task_rq_lock(), the address
-+		 * dependency headed by '[L] rq = task_rq()' and the acquire
-+		 * will pair with the WMB to ensure we then also see migrating.
- 		 */
- 		if (likely(rq == task_rq(p) && !task_on_rq_migrating(p))) {
- 			rq_pin_lock(rq, rf);
-@@ -928,7 +929,7 @@ static struct rq *move_queued_task(struct rq *rq, struct rq_flags *rf,
- {
- 	lockdep_assert_held(&rq->lock);
+ static void dpu_mdss_irq_mask(struct irq_data *irqd)
+@@ -83,16 +86,16 @@ static struct irq_chip dpu_mdss_irq_chip = {
+ 	.irq_unmask = dpu_mdss_irq_unmask,
+ };
  
--	p->on_rq = TASK_ON_RQ_MIGRATING;
-+	WRITE_ONCE(p->on_rq, TASK_ON_RQ_MIGRATING);
- 	dequeue_task(rq, p, DEQUEUE_NOCLOCK);
- 	set_task_cpu(p, new_cpu);
- 	rq_unlock(rq, rf);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index d04530bf251f..425a5589e5f6 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1460,9 +1460,9 @@ static inline void __set_task_cpu(struct task_struct *p, unsigned int cpu)
- 	 */
- 	smp_wmb();
- #ifdef CONFIG_THREAD_INFO_IN_TASK
--	p->cpu = cpu;
-+	WRITE_ONCE(p->cpu, cpu);
- #else
--	task_thread_info(p)->cpu = cpu;
-+	WRITE_ONCE(task_thread_info(p)->cpu, cpu);
- #endif
- 	p->wake_cpu = cpu;
- #endif
-@@ -1563,7 +1563,7 @@ static inline int task_on_rq_queued(struct task_struct *p)
- 
- static inline int task_on_rq_migrating(struct task_struct *p)
++static struct lock_class_key dpu_mdss_lock_key, dpu_mdss_request_key;
++
+ static int dpu_mdss_irqdomain_map(struct irq_domain *domain,
+ 		unsigned int irq, irq_hw_number_t hwirq)
  {
--	return p->on_rq == TASK_ON_RQ_MIGRATING;
-+	return READ_ONCE(p->on_rq) == TASK_ON_RQ_MIGRATING;
+ 	struct dpu_mdss *dpu_mdss = domain->host_data;
+-	int ret;
+ 
++	irq_set_lockdep_class(irq, &dpu_mdss_lock_key, &dpu_mdss_request_key);
+ 	irq_set_chip_and_handler(irq, &dpu_mdss_irq_chip, handle_level_irq);
+-	ret = irq_set_chip_data(irq, dpu_mdss);
+-
+-	return ret;
++	return irq_set_chip_data(irq, dpu_mdss);
  }
  
- /*
+ static const struct irq_domain_ops dpu_mdss_irqdomain_ops = {
+@@ -159,11 +162,13 @@ static void dpu_mdss_destroy(struct drm_device *dev)
+ 	struct msm_drm_private *priv = dev->dev_private;
+ 	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
+ 	struct dss_module_power *mp = &dpu_mdss->mp;
++	int irq;
+ 
+ 	pm_runtime_suspend(dev->dev);
+ 	pm_runtime_disable(dev->dev);
+ 	_dpu_mdss_irq_domain_fini(dpu_mdss);
+-	free_irq(platform_get_irq(pdev, 0), dpu_mdss);
++	irq = platform_get_irq(pdev, 0);
++	irq_set_chained_handler_and_data(irq, NULL, NULL);
+ 	msm_dss_put_clk(mp->clk_config, mp->num_clk);
+ 	devm_kfree(&pdev->dev, mp->clk_config);
+ 
+@@ -187,6 +192,7 @@ int dpu_mdss_init(struct drm_device *dev)
+ 	struct dpu_mdss *dpu_mdss;
+ 	struct dss_module_power *mp;
+ 	int ret = 0;
++	int irq;
+ 
+ 	dpu_mdss = devm_kzalloc(dev->dev, sizeof(*dpu_mdss), GFP_KERNEL);
+ 	if (!dpu_mdss)
+@@ -219,12 +225,12 @@ int dpu_mdss_init(struct drm_device *dev)
+ 	if (ret)
+ 		goto irq_domain_error;
+ 
+-	ret = request_irq(platform_get_irq(pdev, 0),
+-			dpu_mdss_irq, 0, "dpu_mdss_isr", dpu_mdss);
+-	if (ret) {
+-		DPU_ERROR("failed to init irq: %d\n", ret);
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
+ 		goto irq_error;
+-	}
++
++	irq_set_chained_handler_and_data(irq, dpu_mdss_irq,
++					 dpu_mdss);
+ 
+ 	pm_runtime_enable(dev->dev);
+ 
 -- 
 2.19.1
 
