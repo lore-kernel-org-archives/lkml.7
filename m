@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5CFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D400CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 315002186A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5463218FF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368840;
-	bh=QW5DUS6pz2+BjaMs3rleFvD4NQXGRGfc+iLvi+sce0o=;
+	s=default; t=1554368845;
+	bh=/n3CilU3J04TV2dZ6/tGDdZ2xh1ITRtX9ypyEVjD3PY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vbBKttZuWdkMYSybpjk0FF9G6H6krHGHbWqD5QmyS57h4cBlhQD8x1m+pIO7dUfy6
-	 WYfDkT6j4FpjeVIudDn1xrE41SRzkFRhTU5RHG2bc0bJLeKiUTGFfffkOpUCrOmkqT
-	 t2u2+DlhHsmE1oovBL+VohRpzq0B0S2dOgxrxe9o=
+	b=n3uwTbn/HCkF/urAWye55EERUhnIF2SfFTq4/mC6Ty74fQxfBe1oPI40W24S2F7Cb
+	 qOnPtvEu+k/mSwlMD+ww7ZeMLv2hmJatWsDfIvBysMW4HybpjjfBBOMf813gXvWx9O
+	 Tfkd1ciSxjWE56Xj/iNzkMwy7ppOo6YU4cx05QDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbfDDJHS (ORCPT
+        id S1732503AbfDDJHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46030 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732216AbfDDJHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:07:14 -0400
+        id S1732485AbfDDJHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:07:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9765A2183E;
-        Thu,  4 Apr 2019 09:07:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E252183E;
+        Thu,  4 Apr 2019 09:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368834;
-        bh=QW5DUS6pz2+BjaMs3rleFvD4NQXGRGfc+iLvi+sce0o=;
+        s=default; t=1554368839;
+        bh=/n3CilU3J04TV2dZ6/tGDdZ2xh1ITRtX9ypyEVjD3PY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f7GgwCBBDIdE7WEFT0m7x44zB5z73eUEC4zxkfTS/qak3ShMQNtho97ygrm14umrc
-         o8uIEYYr7unTLWtLcRTt55bKWUSX38AfktspZrTPkgA9arUHxJQ+9Xw/mmIy/SVCue
-         uhYWR5liYsYgYA54J3avWU6RstWGGt5PFCyWaPxA=
+        b=GRpjIg12+cNBipXW5BTlgV86YwWCKaG1gLoWHzoHcaO4ga5Qr8Lc6koRAbhNUOvNB
+         eRhgK4XkI//0emUlkskbBrFR9IPZGg/O5UTyaiyNtZ4MMHIJq73SFeVt8Pa5u6opnI
+         2z7ZjY1XK3Mm/dI6N17UgIFGajxrOWdPQOdlBHQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 179/187] clk: meson: clean-up clock registration
-Date:   Thu,  4 Apr 2019 10:48:36 +0200
-Message-Id: <20190404084611.558652834@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 181/187] dmaengine: tegra: avoid overflow of byte tracking
+Date:   Thu,  4 Apr 2019 10:48:38 +0200
+Message-Id: <20190404084611.652835657@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,54 +67,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8d9981efbcab066d17af4d3c85c169200f6f78df ]
+[ Upstream commit e486df39305864604b7e25f2a95d51039517ac57 ]
 
-Order, ids and size  between the table of regmap clocks and the onecell
-data table could be different.
+The dma_desc->bytes_transferred counter tracks the number of bytes
+moved by the DMA channel. This is then used to calculate the information
+passed back in the in the tegra_dma_tx_status callback, which is usually
+fine.
 
-Set regmap pointer in all the regmap clocks before starting the
-registration using the onecell data, to make sure we don't
-get into an incoherent situation.
+When the DMA channel is configured as continous, then the bytes_transferred
+counter will increase over time and eventually overflow to become negative
+so the residue count will become invalid and the ALSA sound-dma code will
+report invalid hardware pointer values to the application. This results in
+some users becoming confused about the playout position and putting audio
+data in the wrong place.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lkml.kernel.org/r/20181221160239.26265-3-jbrunet@baylibre.com
+To fix this issue, always ensure the bytes_transferred field is modulo the
+size of the request. We only do this for the case of the cyclic transfer
+done ISR as anyone attempting to move 2GiB of DMA data in one transfer
+is unlikely.
+
+Note, we don't fix the issue that we should /never/ transfer a negative
+number of bytes so we could make those fields unsigned.
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/meson-aoclk.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/meson/meson-aoclk.c b/drivers/clk/meson/meson-aoclk.c
-index f965845917e3..258c8d259ea1 100644
---- a/drivers/clk/meson/meson-aoclk.c
-+++ b/drivers/clk/meson/meson-aoclk.c
-@@ -65,15 +65,20 @@ int meson_aoclkc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 9a558e30c461..8219ab88a507 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -636,7 +636,10 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
  
--	/*
--	 * Populate regmap and register all clks
--	 */
--	for (clkid = 0; clkid < data->num_clks; clkid++) {
-+	/* Populate regmap */
-+	for (clkid = 0; clkid < data->num_clks; clkid++)
- 		data->clks[clkid]->map = regmap;
+ 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
+ 	dma_desc = sgreq->dma_desc;
+-	dma_desc->bytes_transferred += sgreq->req_len;
++	/* if we dma for long enough the transfer count will wrap */
++	dma_desc->bytes_transferred =
++		(dma_desc->bytes_transferred + sgreq->req_len) %
++		dma_desc->bytes_requested;
  
-+	/* Register all clks */
-+	for (clkid = 0; clkid < data->hw_data->num; clkid++) {
-+		if (!data->hw_data->hws[clkid])
-+			continue;
-+
- 		ret = devm_clk_hw_register(dev, data->hw_data->hws[clkid]);
--		if (ret)
-+		if (ret) {
-+			dev_err(dev, "Clock registration failed\n");
- 			return ret;
-+		}
- 	}
- 
- 	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+ 	/* Callback need to be call */
+ 	if (!dma_desc->cb_count)
 -- 
 2.19.1
 
