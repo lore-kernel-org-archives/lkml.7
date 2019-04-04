@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FFEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F50C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C8320652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA51D20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369474;
-	bh=kvnlPMiVNhVn9LycacgLUjcdAKTGvR+IF+BURDI4/sM=;
+	s=default; t=1554369479;
+	bh=eXC2nuX2/486qIzrwRlo/NVAbuI/KQYuGQEmQ1AmwUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Etipg/da10h5sglJbJd5BKHs2d3tvXeuuB/pQp2p0ljxYvzRWotFoKbSb5o4KQWLB
-	 yfmfDYLyARf4gpueAQyOjBlRI7r45Bbl0ZiRMEkHs8q0SAvxV8Ow7gu7YUVOHQIufv
-	 WNPjl3QmAMdEFMY/sEgQcWTKgeQWHv1Tg69rLMuA=
+	b=N9SZ1P77XPnEgnvCSmcSRp8nWLueG7yY9P2hO7m9QA/tfTk3OtQeYbc+OSzlbKtE/
+	 KhZtS5EFW5bv5eLwndvOR6n0uQ22AzijE5FORO4tD5PeFAnNLFtDhL41GTjZeg15oW
+	 W4U01B0MEJ6d1BDl8l4OaAe7hE7fAIGT5qtp4sL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388309AbfDDJRx (ORCPT
+        id S2388074AbfDDJR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:17:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388283AbfDDJRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:48 -0400
+        id S2387981AbfDDJRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B3462075E;
-        Thu,  4 Apr 2019 09:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20B812054F;
+        Thu,  4 Apr 2019 09:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369467;
-        bh=kvnlPMiVNhVn9LycacgLUjcdAKTGvR+IF+BURDI4/sM=;
+        s=default; t=1554369472;
+        bh=eXC2nuX2/486qIzrwRlo/NVAbuI/KQYuGQEmQ1AmwUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fuSALumnTs1dkt9jjNV/Rg/8Z1QRN5yxpVl1P9LxWy5wh5Hd3A/ZVQ0TqROijNBGW
-         5NOWChlSgKycAZ4gCXfdq1qPERSPrfiTQShOp4zzUyXeoxKReJsThS5EudJrMOzD5D
-         hYWeWH6nu9xSnrWhGFKeRz64dWb1SbQXjfRJgSPQ=
+        b=UqFeHETGTgixdV3dubxSQDSMtqi9bx8OsC2PVNH1Qeyaosu9aNfqYaO0U1jgFHSuw
+         1W0wdzsBYwNHhAoRUPzM6OKU6kNwNQ36KfFvJ7qVeMwgM9aZHxYePph1L3vHj9h+Tn
+         G3m3vdVpXjLnZXWNrJrHp9JirMHsxbiPr8L/T2vc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 235/246] clk: rockchip: fix frac settings of GPLL clock for rk3328
-Date:   Thu,  4 Apr 2019 10:48:55 +0200
-Message-Id: <20190404084627.513774759@linuxfoundation.org>
+Subject: [PATCH 5.0 221/246] PCI: pciehp: Assign ctrl->slot_ctrl before writing it to hardware
+Date:   Thu,  4 Apr 2019 10:48:41 +0200
+Message-Id: <20190404084626.941335838@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,63 +69,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a0e447b0c50240a90ab84b7126b3c06b0bab4adc ]
+[ Upstream commit 25bd879ec16ad3b83a5b1c3f16faa55e696bfccb ]
 
-This patch fixes settings of GPLL frequency in fractional mode for
-rk3328. In this mode, FOUTVCO is calcurated by following formula:
-  FOUTVCO = FREF * FBDIV / REFDIV + ((FREF * FRAC / REFDIV) >> 24)
+Shameerali reported that running v4.20-rc1 as QEMU guest, the PCIe hotplug
+port times out during boot:
 
-The problem is in FREF * FRAC >> 24 term. This result always lacks
-one from target value is specified by rate member. For example first
-itme of rk3328_pll_frac_rate originally has
-  - rate  : 1016064000
-  - refdiv: 3
-  - fbdiv : 127
-  - frac  : 134217
-  - FREF * FBDIV / REFDIV        = 1016000000
-  - (FREF * FRAC / REFDIV) >> 24 = 63999
-Thus calculated rate is 1016063999. It seems wrong.
+  pciehp 0000:00:01.0:pcie004: Timeout on hotplug command 0x03f1 (issued 1016 msec ago)
+  pciehp 0000:00:01.0:pcie004: Timeout on hotplug command 0x03f1 (issued 1024 msec ago)
+  pciehp 0000:00:01.0:pcie004: Failed to check link status
+  pciehp 0000:00:01.0:pcie004: Timeout on hotplug command 0x02f1 (issued 2520 msec ago)
 
-If frac has 134218 (it is increased 1 from original value), second
-term is 64000. All other items have same situation. So this patch
-adds 1 to frac member in all items of rk3328_pll_frac_rate.
+The issue was bisected down to commit 720d6a671a6e ("PCI: pciehp: Do not
+handle events if interrupts are masked") and was further analyzed by the
+reporter to be caused by the fact that pciehp first updates the hardware
+and only then cache the ctrl->slot_ctrl in pcie_do_write_cmd().  If the
+interrupt happens before we cache the value, pciehp_isr() reads value 0 and
+decides that the interrupt was not meant for it causing the above timeout
+to trigger.
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Acked-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fix by moving ctrl->slot_ctrl assignment to happen before it is written to
+the hardware.
+
+Fixes: 720d6a671a6e ("PCI: pciehp: Do not handle events if interrupts are masked")
+Link: https://lore.kernel.org/linux-pci/5FC3163CFD30C246ABAA99954A238FA8387DD344@FRAEML521-MBX.china.huawei.com
+Reported-by: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3328.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index faa94adb2a37..65ab5c2f48b0 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -78,17 +78,17 @@ static struct rockchip_pll_rate_table rk3328_pll_rates[] = {
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index c0fb64ace05a..8bfcb8cd0900 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -156,9 +156,9 @@ static void pcie_do_write_cmd(struct controller *ctrl, u16 cmd,
+ 	slot_ctrl |= (cmd & mask);
+ 	ctrl->cmd_busy = 1;
+ 	smp_mb();
++	ctrl->slot_ctrl = slot_ctrl;
+ 	pcie_capability_write_word(pdev, PCI_EXP_SLTCTL, slot_ctrl);
+ 	ctrl->cmd_started = jiffies;
+-	ctrl->slot_ctrl = slot_ctrl;
  
- static struct rockchip_pll_rate_table rk3328_pll_frac_rates[] = {
- 	/* _mhz, _refdiv, _fbdiv, _postdiv1, _postdiv2, _dsmpd, _frac */
--	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134217),
-+	RK3036_PLL_RATE(1016064000, 3, 127, 1, 1, 0, 134218),
- 	/* vco = 1016064000 */
--	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671088),
-+	RK3036_PLL_RATE(983040000, 24, 983, 1, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671088),
-+	RK3036_PLL_RATE(491520000, 24, 983, 2, 1, 0, 671089),
- 	/* vco = 983040000 */
--	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671088),
-+	RK3036_PLL_RATE(61440000, 6, 215, 7, 2, 0, 671089),
- 	/* vco = 860156000 */
--	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797894),
-+	RK3036_PLL_RATE(56448000, 12, 451, 4, 4, 0, 9797895),
- 	/* vco = 903168000 */
--	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066329),
-+	RK3036_PLL_RATE(40960000, 12, 409, 4, 5, 0, 10066330),
- 	/* vco = 819200000 */
- 	{ /* sentinel */ },
- };
+ 	/*
+ 	 * Controllers with the Intel CF118 and similar errata advertise
 -- 
 2.19.1
 
