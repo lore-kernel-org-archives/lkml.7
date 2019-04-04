@@ -7,60 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4982C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BACC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692172075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C005A20657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369800;
-	bh=2aJV4E/mwfB/WxWgT613H63US+yEHb/NzqxFjYb3HIs=;
+	s=default; t=1554369806;
+	bh=8yO6qQI9qiLj4V24RjoKB8N2g8LJSVHHH+JuntZkMdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gk10/6O7sshUxhf0NV+JrB1wS04LwD8HRXzW2QY6vraEP74AGnBGLZfilsCmomafI
-	 ycdJ8Ky7p96pvrrr7s7gkXrDl+0mab3ilhVf1WwxkfgteQAxSI3hiEM3KnEz5ep1mV
-	 vYfSlgcB9kIgX9DiMwjbTyBEdGbJirhZl7jeLcrE=
+	b=1kXrrewyWynfCGOJUvkKm0GZA1prajZjo1pRFV9N62565/O5fRl+L6d5Xl2KtMm+1
+	 w+VP09Ii5iKx8pFh/MJvHhpkjovVc8RIHMZsv6gF1eX7fIpl4RlGGve/0qfzla8D5v
+	 b1dQZDmye7xFCUox57NEhC9F70Bl9iZK/qM7/c/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733178AbfDDJP2 (ORCPT
+        id S2387871AbfDDJPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56364 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387875AbfDDJPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:24 -0400
+        id S2387857AbfDDJPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 780BD214AF;
-        Thu,  4 Apr 2019 09:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 722C6214AF;
+        Thu,  4 Apr 2019 09:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369323;
-        bh=2aJV4E/mwfB/WxWgT613H63US+yEHb/NzqxFjYb3HIs=;
+        s=default; t=1554369318;
+        bh=8yO6qQI9qiLj4V24RjoKB8N2g8LJSVHHH+JuntZkMdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=feIBQeZw0U9kRzHmpn1qMrQD36uuJwT/3jBb+xp+kCWQeqc9S6wfoTmLpmGjOf8vo
-         LLocCT4XVYdTlsiwzzyFW4IsHLxXGe3yr/Esb37oZ2qZ1RMp3JJLnh/k6xI/fSgOd2
-         VtisTOTmCKFDCvHJaSau527ordieFA8rjcPjJilY=
+        b=BzpkpcSST/84/uIoqV6SSec85bVmXH6KPTh2qtSroU0+G0EJcKRzpEKolmd1xVgJ5
+         SnHn6yF2u2B9LZJHjfrScsnwDZYQflu5g2J4+6tt3pg1R1SVePWJpykrTp+p541s96
+         kXek8VI2hU3cr2qiDef5rpwiIf0Wn2tBG3vryUzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Alexander Graf <agraf@suse.de>, Borislav Petkov <bp@alien8.de>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Leif Lindholm <leif.lindholm@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 180/246] efi/arm/arm64: Allow SetVirtualAddressMap() to be omitted
-Date:   Thu,  4 Apr 2019 10:48:00 +0200
-Message-Id: <20190404084625.482886012@linuxfoundation.org>
+Subject: [PATCH 5.0 155/246] net: marvell: mvpp2: fix stuck in-band SGMII negotiation
+Date:   Thu,  4 Apr 2019 10:47:35 +0200
+Message-Id: <20190404084624.598251022@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -79,151 +67,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4e46c2a956215482418d7b315749fb1b6c6bc224 ]
+[ Upstream commit 316734fdcf70900a83065360cff11a5826919067 ]
 
-The UEFI spec revision 2.7 errata A section 8.4 has the following to
-say about the virtual memory runtime services:
+It appears that the mvpp22 can get stuck with SGMII negotiation.  The
+symptoms are that in-band negotiation never completes and the partner
+(eg, PHY) never reports SGMII link up, or if it supports negotiation
+bypass, goes into negotiation bypass mode (which will happen when the
+PHY sees that the MAC is alive but gets no response.)
 
-  "This section contains function definitions for the virtual memory
-  support that may be optionally used by an operating system at runtime.
-  If an operating system chooses to make EFI runtime service calls in a
-  virtual addressing mode instead of the flat physical mode, then the
-  operating system must use the services in this section to switch the
-  EFI runtime services from flat physical addressing to virtual
-  addressing."
+Triggering the PHY end of the link to re-negotiate results in the
+bypass bit clearing on the PHY, and then re-setting - indicating that
+the problem is at the mvpp22 GMAC end.
 
-So it is pretty clear that calling SetVirtualAddressMap() is entirely
-optional, and so there is no point in doing so unless it achieves
-anything useful for us.
+Asserting the GMAC reset and de-asserting it resolves the issue.
+Arrange to assert the GMAC reset at probe time, and deassert it only
+after we have configured the GMAC for the appropriate mode.  This
+resolves the issue.
 
-This is not the case for 64-bit ARM. The identity mapping used by the
-firmware is arbitrarily converted into another permutation of userland
-addresses (i.e., bits [63:48] cleared), and the runtime code could easily
-deal with the original layout in exactly the same way as it deals with
-the converted layout. However, due to constraints related to page size
-differences if the OS is not running with 4k pages, and related to
-systems that may expose the individual sections of PE/COFF runtime
-modules as different memory regions, creating the virtual layout is a
-bit fiddly, and requires us to sort the memory map and reason about
-adjacent regions with identical memory types etc etc.
-
-So the obvious fix is to stop calling SetVirtualAddressMap() altogether
-on arm64 systems. However, to avoid surprises, which are notoriously
-hard to diagnose when it comes to OS<->firmware interactions, let's
-start by making it an opt-out feature, and implement support for the
-'efi=novamap' kernel command line parameter on ARM and arm64 systems.
-
-( Note that 32-bit ARM generally does require SetVirtualAddressMap() to be
-  used, given that the physical memory map and the kernel virtual address
-  map are not guaranteed to be non-overlapping like on arm64. However,
-  having support for efi=novamap,noruntime on 32-bit ARM, combined with
-  the recently proposed support for earlycon=efifb, is likely to be useful
-  to diagnose boot issues on such systems if they have no accessible serial
-  port. )
-
-Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Alexander Graf <agraf@suse.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190202094119.13230-8-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/arm-stub.c        |  5 +++++
- drivers/firmware/efi/libstub/efi-stub-helper.c | 10 ++++++++++
- drivers/firmware/efi/libstub/efistub.h         |  1 +
- drivers/firmware/efi/libstub/fdt.c             |  3 +++
- 4 files changed, 19 insertions(+)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
-index c037c6c5d0b7..04e6ecd72cd9 100644
---- a/drivers/firmware/efi/libstub/arm-stub.c
-+++ b/drivers/firmware/efi/libstub/arm-stub.c
-@@ -367,6 +367,11 @@ void efi_get_virtmap(efi_memory_desc_t *memory_map, unsigned long map_size,
- 		paddr = in->phys_addr;
- 		size = in->num_pages * EFI_PAGE_SIZE;
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 16066c2d5b3a..931beac3359d 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1380,13 +1380,9 @@ static void mvpp2_port_reset(struct mvpp2_port *port)
+ 	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
+ 		mvpp2_read_count(port, &mvpp2_ethtool_regs[i]);
  
-+		if (novamap()) {
-+			in->virt_addr = in->phys_addr;
-+			continue;
-+		}
-+
- 		/*
- 		 * Make the mapping compatible with 64k pages: this allows
- 		 * a 4k page size kernel to kexec a 64k page size kernel and
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index e94975f4655b..442f51c2a53d 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -34,6 +34,7 @@ static unsigned long __chunk_size = EFI_READ_CHUNK_SIZE;
- 
- static int __section(.data) __nokaslr;
- static int __section(.data) __quiet;
-+static int __section(.data) __novamap;
- 
- int __pure nokaslr(void)
- {
-@@ -43,6 +44,10 @@ int __pure is_quiet(void)
- {
- 	return __quiet;
+-	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
+-		    ~MVPP2_GMAC_PORT_RESET_MASK;
++	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) |
++	      MVPP2_GMAC_PORT_RESET_MASK;
+ 	writel(val, port->base + MVPP2_GMAC_CTRL_2_REG);
+-
+-	while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
+-	       MVPP2_GMAC_PORT_RESET_MASK)
+-		continue;
  }
-+int __pure novamap(void)
-+{
-+	return __novamap;
-+}
  
- #define EFI_MMAP_NR_SLACK_SLOTS	8
+ /* Change maximum receive size of the port */
+@@ -4543,12 +4539,15 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
+ 			      const struct phylink_link_state *state)
+ {
+ 	u32 an, ctrl0, ctrl2, ctrl4;
++	u32 old_ctrl2;
  
-@@ -482,6 +487,11 @@ efi_status_t efi_parse_options(char const *cmdline)
- 			__chunk_size = -1UL;
- 		}
+ 	an = readl(port->base + MVPP2_GMAC_AUTONEG_CONFIG);
+ 	ctrl0 = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
+ 	ctrl2 = readl(port->base + MVPP2_GMAC_CTRL_2_REG);
+ 	ctrl4 = readl(port->base + MVPP22_GMAC_CTRL_4_REG);
  
-+		if (!strncmp(str, "novamap", 7)) {
-+			str += strlen("novamap");
-+			__novamap = 1;
-+		}
++	old_ctrl2 = ctrl2;
 +
- 		/* Group words together, delimited by "," */
- 		while (*str && *str != ' ' && *str != ',')
- 			str++;
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 32799cf039ef..337b52c4702c 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -27,6 +27,7 @@
- 
- extern int __pure nokaslr(void);
- extern int __pure is_quiet(void);
-+extern int __pure novamap(void);
- 
- #define pr_efi(sys_table, msg)		do {				\
- 	if (!is_quiet()) efi_printk(sys_table, "EFI stub: "msg);	\
-diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-index 0dc7b4987cc2..f8f89f995e9d 100644
---- a/drivers/firmware/efi/libstub/fdt.c
-+++ b/drivers/firmware/efi/libstub/fdt.c
-@@ -327,6 +327,9 @@ efi_status_t allocate_new_fdt_and_exit_boot(efi_system_table_t *sys_table,
- 	if (status == EFI_SUCCESS) {
- 		efi_set_virtual_address_map_t *svam;
- 
-+		if (novamap())
-+			return EFI_SUCCESS;
+ 	/* Force link down */
+ 	an &= ~MVPP2_GMAC_FORCE_LINK_PASS;
+ 	an |= MVPP2_GMAC_FORCE_LINK_DOWN;
+@@ -4621,6 +4620,12 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
+ 	writel(ctrl2, port->base + MVPP2_GMAC_CTRL_2_REG);
+ 	writel(ctrl4, port->base + MVPP22_GMAC_CTRL_4_REG);
+ 	writel(an, port->base + MVPP2_GMAC_AUTONEG_CONFIG);
 +
- 		/* Install the new virtual address map */
- 		svam = sys_table->runtime->set_virtual_address_map;
- 		status = svam(runtime_entry_count * desc_size, desc_size,
++	if (old_ctrl2 & MVPP2_GMAC_PORT_RESET_MASK) {
++		while (readl(port->base + MVPP2_GMAC_CTRL_2_REG) &
++		       MVPP2_GMAC_PORT_RESET_MASK)
++			continue;
++	}
+ }
+ 
+ static void mvpp2_mac_config(struct net_device *dev, unsigned int mode,
 -- 
 2.19.1
 
