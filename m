@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551DBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC25C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133CD205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A482075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370152;
-	bh=HAUtNYxJXUFNH3/jJY7qhC5vTm36Hd/J3VUHtFjnfPg=;
+	s=default; t=1554370163;
+	bh=JR4+tyxpKyD/mTB0HUBZPGfNa1mphDzubkquWGgPgVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hWCV78PBlcWu0b58rZ7IzrvACDp0PArIJmK4lwxC5ttKoREaq8gLm2Ypce7RYfroU
-	 PsSW8P9wgzc/rl+iQh8Vx6zGHsmRSEH7tEaO5x9p+sQbNmKzjfYneNoHGHEkeRhlqP
-	 aLdzgu0eWHVzzUJtyQOlC4OIgvawUodqanVOKm5Q=
+	b=sIaFTB7Zsq8LtJToQ7ZsS8tPqg05VlhDSIQ/d9bN+mFgyo44eTdfkPVr6VJikXMpu
+	 1trYL0h80el8YIaXqMrT5s6Y85o14WpC+Ff4RhDBcw1sApR62ofe+I5m1bLTOD1tV8
+	 LwwNOLsvcgljnZC+kOcj3VK+1yW2Di+jNr1i95Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733286AbfDDJ3L (ORCPT
+        id S1733312AbfDDJ3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51112 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:29:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731411AbfDDJLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:16 -0400
+        id S1732449AbfDDJLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:11:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819B620652;
-        Thu,  4 Apr 2019 09:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1425621741;
+        Thu,  4 Apr 2019 09:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369076;
-        bh=HAUtNYxJXUFNH3/jJY7qhC5vTm36Hd/J3VUHtFjnfPg=;
+        s=default; t=1554369060;
+        bh=JR4+tyxpKyD/mTB0HUBZPGfNa1mphDzubkquWGgPgVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OxgxU4UQnmCR1dGu+DvPw+xWfbilObCLVYUDvhdJ/DLfqDMtIBJsn57DuTA8HZ+I0
-         GmEhLFYSYBN+2AkFm/PMZw2VKxoUgSUngfXUPAZGcsRCEzxFhhfQRcC2nJY8E18GQE
-         3D4Es3gwZWQD245+wD+sulUIW9nU9MXaFNraEhZ0=
+        b=P3Re1FGN8HdWAco5M/muDrCdPto7ATmESI6Qk+u2yMtU6szt41o0pzJJktoD1Vl9A
+         QkHIposI/W/P2LHergpAr5Vf15ALUYx9Z8LH4GICUDrkZLrg1Jz8q0nSQpVVIGGWtK
+         YW6tVMqHTiuvcEb5p7qOpeltVcL1RoPvttQSGD5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 063/246] crypto: crypto4xx - add missing of_node_put after of_device_is_available
-Date:   Thu,  4 Apr 2019 10:46:03 +0200
-Message-Id: <20190404084621.367419870@linuxfoundation.org>
+Subject: [PATCH 5.0 068/246] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
+Date:   Thu,  4 Apr 2019 10:46:08 +0200
+Message-Id: <20190404084621.527712817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,60 +67,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8c2b43d2d85b48a97d2f8279278a4aac5b45f925 ]
+[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
 
-Add an of_node_put when a tested device node is not available.
+We had a test-report where, under memory pressure, adding LUNs to the
+systems would fail (the tests add LUNs strictly in sequence):
 
-The semantic patch that fixes this problem is as follows
-(http://coccinelle.lip6.fr):
+[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
+[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
+[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
+[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
+[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
+[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
+[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
+[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 5525.857838]  sdk: sdk1
+[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
+[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
+[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-// <smpl>
-@@
-identifier f;
-local idexpression e;
-expression x;
-@@
+Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
+there seems to be no reason to use GFP_ATMOIC here. All the different
+call-contexts use a mutex at some point, and nothing in between that
+requires no sleeping, as far as I could see. Additionally, the code that
+later allocates the block queue for the device (scsi_mq_alloc_queue())
+already uses GFP_KERNEL.
 
-e = f(...);
-... when != of_node_put(e)
-    when != x = e
-    when != e = x
-    when any
-if (<+...of_device_is_available(e)...+>) {
-  ... when != of_node_put(e)
-(
-  return e;
-|
-+ of_node_put(e);
-  return ...;
-)
-}
-// </smpl>
+There are similar allocations in two other functions:
+scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
+GFP_KERNEL.
 
-Fixes: 5343e674f32fb ("crypto4xx: integrate ppc4xx-rng into crypto4xx")
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Here is the contexts for the three functions so far:
+
+    scsi_alloc_sdev()
+        scsi_probe_and_add_lun()
+            scsi_sequential_lun_scan()
+                __scsi_scan_target()
+                    scsi_scan_target()
+                        mutex_lock()
+                    scsi_scan_channel()
+                        scsi_scan_host_selected()
+                            mutex_lock()
+            scsi_report_lun_scan()
+                __scsi_scan_target()
+    	            ...
+            __scsi_add_device()
+                mutex_lock()
+            __scsi_scan_target()
+                ...
+        scsi_report_lun_scan()
+            ...
+        scsi_get_host_dev()
+            mutex_lock()
+
+    scsi_probe_and_add_lun()
+        ...
+
+    scsi_add_lun()
+        scsi_probe_and_add_lun()
+            ...
+
+So replace all these, and give them a bit of a better chance to succeed,
+with more chances of reclaim.
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/amcc/crypto4xx_trng.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/amcc/crypto4xx_trng.c b/drivers/crypto/amcc/crypto4xx_trng.c
-index 5e63742b0d22..53ab1f140a26 100644
---- a/drivers/crypto/amcc/crypto4xx_trng.c
-+++ b/drivers/crypto/amcc/crypto4xx_trng.c
-@@ -80,8 +80,10 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev)
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index dd0d516f65e2..53380e07b40e 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
+ 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
  
- 	/* Find the TRNG device node and map it */
- 	trng = of_find_matching_node(NULL, ppc4xx_trng_match);
--	if (!trng || !of_device_is_available(trng))
-+	if (!trng || !of_device_is_available(trng)) {
-+		of_node_put(trng);
- 		return;
-+	}
+ 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
+-		       GFP_ATOMIC);
++		       GFP_KERNEL);
+ 	if (!sdev)
+ 		goto out;
  
- 	dev->trng_base = of_iomap(trng, 0);
- 	of_node_put(trng);
+@@ -788,7 +788,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	sdev->inquiry = kmemdup(inq_result,
+ 				max_t(size_t, sdev->inquiry_len, 36),
+-				GFP_ATOMIC);
++				GFP_KERNEL);
+ 	if (sdev->inquiry == NULL)
+ 		return SCSI_SCAN_NO_RESPONSE;
+ 
+@@ -1079,7 +1079,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
+ 	if (!sdev)
+ 		goto out;
+ 
+-	result = kmalloc(result_len, GFP_ATOMIC |
++	result = kmalloc(result_len, GFP_KERNEL |
+ 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
+ 	if (!result)
+ 		goto out_free_sdev;
 -- 
 2.19.1
 
