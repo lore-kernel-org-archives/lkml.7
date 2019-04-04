@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B656DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479E8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DF02171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A252171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367977;
-	bh=9i9p2RE9ocVNq5TbDAKWZrZ5Xp963ZjToOiscC8M+QA=;
+	s=default; t=1554367981;
+	bh=VfnnB7An0fGf7stQVSm2p9DOftpbW0VYZpz3zHsWEqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LLIyunuyiuzQ/vhl9mCIsU7VMjcPPtJ3UCh/4mjj0a9vZGUlMzCA0tbWmeQRhi05O
-	 9kJHnMSTiRb9kWTpgq9bTZe735+OGNNHyt1dJhiyYrb1BegRKcWfHtfB/bPeqYgqub
-	 qMwLGNbCQV32DFitOwh0paxfi/cFN8aa0D7sR9tU=
+	b=spii1PVXj/I0rHmw8xq4GgbVn4Q23dKXK6oCaCcxIPwreHde/FRm7WHGDMW7EiZue
+	 VLSKRpBO0gkpfdjwN0svNWm6ntA4MEIzLk7yOIzTzZMT1s+wxvnHVJiADDEdvtwg6b
+	 ZpedVBr/y6rDa5a3zzDAzxdfvkNStxxJ6t9dkieQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729711AbfDDIw4 (ORCPT
+        id S1729723AbfDDIw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:52:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:52:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbfDDIwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:53 -0400
+        id S1729703AbfDDIwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A403221850;
-        Thu,  4 Apr 2019 08:52:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5312220882;
+        Thu,  4 Apr 2019 08:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367972;
-        bh=9i9p2RE9ocVNq5TbDAKWZrZ5Xp963ZjToOiscC8M+QA=;
+        s=default; t=1554367974;
+        bh=VfnnB7An0fGf7stQVSm2p9DOftpbW0VYZpz3zHsWEqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CYmbLWzjFE9dyLSPuJMGrGrI0z26wwEjuWnMwX8QlRpMo6M/+JBtM/KiB+6foCnvV
-         gdmp3siegqKo4/yO1jJkoUBsZGtmr0bVLlSioqrixjh9euX3rhbLYDQ7/sHVnrJOYN
-         Ia2mzd2+EpknbOw4PtKA/wrlzJkKzeflOKf/bARw=
+        b=hcC9tBzig+WKU0nHYAPb4MQEoGo6MOx5ZbEKsjzhCqT1YiIQmyO36HvnLz1tuXRuY
+         u5szkdOXHzPvVvuY4Ai3eus0CXQQ3vnk6SzWOUSXOwAN1ZWa8aGlCV6lYKDagpvWZt
+         +o6hy2esYKI53jD4rC9Z0/WGh8ZB2b9iqyLxWQzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 81/91] netfilter: physdev: relax br_netfilter dependency
-Date:   Thu,  4 Apr 2019 10:48:05 +0200
-Message-Id: <20190404084540.132141892@linuxfoundation.org>
+Subject: [PATCH 4.9 82/91] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
+Date:   Thu,  4 Apr 2019 10:48:06 +0200
+Message-Id: <20190404084540.196898062@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,93 +68,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8e2f311a68494a6677c1724bdcb10bada21af37c ]
+[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
 
-Following command:
-  iptables -D FORWARD -m physdev ...
-causes connectivity loss in some setups.
+Previously when doing format enumeration, it was returning all
+ formats supported by driver, even if they're not supported by hw.
+Add missing check for fmt_ver_flag, so it'll be fixed and only those
+ supported by hw will be returned. Similar thing is already done
+ in s5p_jpeg_find_format.
 
-Reason is that iptables userspace will probe kernel for the module revision
-of the physdev patch, and physdev has an artificial dependency on
-br_netfilter (xt_physdev use makes no sense unless a br_netfilter module
-is loaded).
+It was found by using v4l2-compliance tool and checking result
+ of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
+and using v4l2-ctl to get list of all supported formats.
 
-This causes the "phydev" module to be loaded, which in turn enables the
-"call-iptables" infrastructure.
+Tested on s5pv210-galaxys (Samsung i9000 phone).
 
-bridged packets might then get dropped by the iptables ruleset.
+Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
 
-The better fix would be to change the "call-iptables" defaults to 0 and
-enforce explicit setting to 1, but that breaks backwards compatibility.
-
-This does the next best thing: add a request_module call to checkentry.
-This was a stray '-D ... -m physdev' won't activate br_netfilter
-anymore.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/br_netfilter.h | 1 -
- net/bridge/br_netfilter_hooks.c      | 5 -----
- net/netfilter/xt_physdev.c           | 9 +++++++--
- 3 files changed, 7 insertions(+), 8 deletions(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/include/net/netfilter/br_netfilter.h b/include/net/netfilter/br_netfilter.h
-index 0b0c35c37125..238d1b83a45a 100644
---- a/include/net/netfilter/br_netfilter.h
-+++ b/include/net/netfilter/br_netfilter.h
-@@ -48,7 +48,6 @@ static inline struct rtable *bridge_parent_rtable(const struct net_device *dev)
- }
- 
- struct net_device *setup_pre_routing(struct sk_buff *skb);
--void br_netfilter_enable(void);
- 
- #if IS_ENABLED(CONFIG_IPV6)
- int br_validate_ipv6(struct net *net, struct sk_buff *skb);
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 7e42c0d1f55b..38865deab3ac 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -878,11 +878,6 @@ static const struct nf_br_ops br_ops = {
- 	.br_dev_xmit_hook =	br_nf_dev_xmit,
- };
- 
--void br_netfilter_enable(void)
--{
--}
--EXPORT_SYMBOL_GPL(br_netfilter_enable);
--
- /* For br_nf_post_routing, we need (prio = NF_BR_PRI_LAST), because
-  * br_dev_queue_push_xmit is called afterwards */
- static struct nf_hook_ops br_nf_ops[] __read_mostly = {
-diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
-index bb33598e4530..ec247d8370e8 100644
---- a/net/netfilter/xt_physdev.c
-+++ b/net/netfilter/xt_physdev.c
-@@ -96,8 +96,7 @@ match_outdev:
- static int physdev_mt_check(const struct xt_mtchk_param *par)
- {
- 	const struct xt_physdev_info *info = par->matchinfo;
--
--	br_netfilter_enable();
-+	static bool brnf_probed __read_mostly;
- 
- 	if (!(info->bitmask & XT_PHYSDEV_OP_MASK) ||
- 	    info->bitmask & ~XT_PHYSDEV_OP_MASK)
-@@ -113,6 +112,12 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
- 		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
- 			return -EINVAL;
- 	}
-+
-+	if (!brnf_probed) {
-+		brnf_probed = true;
-+		request_module("br_netfilter");
-+	}
-+
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 06e2b72d07ca..c89922fb42ce 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -1264,13 +1264,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
  	return 0;
  }
  
+-static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
++static int enum_fmt(struct s5p_jpeg_ctx *ctx,
++		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
+ 		    struct v4l2_fmtdesc *f, u32 type)
+ {
+ 	int i, num = 0;
++	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
+ 
+ 	for (i = 0; i < n; ++i) {
+-		if (sjpeg_formats[i].flags & type) {
++		if (sjpeg_formats[i].flags & type &&
++		    sjpeg_formats[i].flags & fmt_ver_flag) {
+ 			/* index-th format of type type found ? */
+ 			if (num == f->index)
+ 				break;
+@@ -1297,11 +1300,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_CAPTURE);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_CAPTURE);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_CAPTURE);
+ }
+ 
+ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+@@ -1310,11 +1313,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_OUTPUT);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_OUTPUT);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_OUTPUT);
+ }
+ 
+ static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
 2.19.1
 
