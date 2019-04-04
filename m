@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7A2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AE3C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74320205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7C92075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370771;
-	bh=+1l8iLf6Qth8czlK3I4pdhaR5nodkp0FUerYR+6krUo=;
+	s=default; t=1554370776;
+	bh=IdPP1kgzsjD8Wb3v67ymoOb7gX7zlYTjymgD1SDsHo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRRqECCuQ2n9TRcr8swB6d4SPYR2YD0OErwgongx8WNzAZGPZqoXuqXmfkwrAdMtg
-	 XuSCxDzC1fWj/Hcz34oFLhjvX/6ZLE72zPXD5TYrAkmLOVnvQrfAXC7Aur6H6kV5Pg
-	 IZ4dH99bbWQmY5sVs2FsmSRIty0y9UN9EvZYUTK4=
+	b=0YbM1K9JgaPWge1ERHdu06Amuhvd18ilEoCjISJQVAQcXq9EJ8RkFqO6/YVI0ZkLk
+	 cWLd0+lHoNJaWk54zAnxsgZzNSGQO5SftLCfkrMulgyHifylOkoLCFhhn3tEulGjBD
+	 AyoSuSrTVBZa2mKeU9biBQnuNw5dfeLgIiNETn3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbfDDJja (ORCPT
+        id S1731799AbfDDJD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41136 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:03:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731800AbfDDJD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:29 -0400
+        id S1731321AbfDDJD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 555012147C;
-        Thu,  4 Apr 2019 09:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D41782147C;
+        Thu,  4 Apr 2019 09:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368608;
-        bh=+1l8iLf6Qth8czlK3I4pdhaR5nodkp0FUerYR+6krUo=;
+        s=default; t=1554368606;
+        bh=IdPP1kgzsjD8Wb3v67ymoOb7gX7zlYTjymgD1SDsHo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iwd9Zu3gFDE+IesdEAgH6FXkZywZoZ4Co1ZaC+H2tLvZ0PxzBTeVw9zwVtQt1D6zB
-         Ynx2CuF+mBpZ+PMS5OdTa5g7Fghyo3gGB4x5bPrf+HVb5OcOe/3yRryjj2JqMqWBFv
-         pJ+oOh7QgPKDIZ24DkUXWA43gz3vx6OVa6rg29SU=
+        b=iqPGNSFIGIsVjah3Y/8JvpPQKmq57azujtG34gmssKzEtA7+UP8mkFKA2rgiXuUmi
+         UR6Sxwi1Pu/LPpZC+1eUZ1/hj2q3P0Qa2acrw5ZC+bW5iDUaa07/ZWfSef50hFwSQm
+         o1lNKRcXIHvBxOF78IB6EH6hKdzJZrDIFaBBqFaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/187] kprobes: Prohibit probing on bsearch()
-Date:   Thu,  4 Apr 2019 10:47:19 +0200
-Message-Id: <20190404084608.017921661@linuxfoundation.org>
+        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 101/187] selftests: skip seccomp get_metadata test if not real root
+Date:   Thu,  4 Apr 2019 10:47:18 +0200
+Message-Id: <20190404084607.952046935@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -74,54 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 02106f883cd745523f7766d90a739f983f19e650 ]
+[ Upstream commit 3aa415dd2128e478ea3225b59308766de0e94d6b ]
 
-Since kprobe breakpoing handler is using bsearch(), probing on this
-routine can cause recursive breakpoint problem.
+The get_metadata() test requires real root, so let's skip it if we're not
+real root.
 
-int3
- ->do_int3()
-   ->ftrace_int3_handler()
-     ->ftrace_location()
-       ->ftrace_location_range()
-         ->bsearch() -> int3
+Note that I used XFAIL here because that's what the test does later if
+CONFIG_CHEKCKPOINT_RESTORE happens to not be enabled. After looking at the
+code, there doesn't seem to be a nice way to skip tests defined as TEST(),
+since there's no return code (I tried exit(KSFT_SKIP), but that didn't work
+either...). So let's do it this way to be consistent, and easier to fix
+when someone comes along and fixes it.
 
-Prohibit probing on bsearch().
-
-Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/154998813406.31052.8791425358974650922.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/bsearch.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/lib/bsearch.c b/lib/bsearch.c
-index 18b445b010c3..82512fe7b33c 100644
---- a/lib/bsearch.c
-+++ b/lib/bsearch.c
-@@ -11,6 +11,7 @@
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 83057fa9d391..14cad657bc6a 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -2920,6 +2920,12 @@ TEST(get_metadata)
+ 	struct seccomp_metadata md;
+ 	long ret;
  
- #include <linux/export.h>
- #include <linux/bsearch.h>
-+#include <linux/kprobes.h>
++	/* Only real root can get metadata. */
++	if (geteuid()) {
++		XFAIL(return, "get_metadata requires real root");
++		return;
++	}
++
+ 	ASSERT_EQ(0, pipe(pipefd));
  
- /*
-  * bsearch - binary search an array of elements
-@@ -53,3 +54,4 @@ void *bsearch(const void *key, const void *base, size_t num, size_t size,
- 	return NULL;
- }
- EXPORT_SYMBOL(bsearch);
-+NOKPROBE_SYMBOL(bsearch);
+ 	pid = fork();
 -- 
 2.19.1
 
