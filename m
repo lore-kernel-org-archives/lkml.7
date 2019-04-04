@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72705C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7C020855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B78E20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369026;
-	bh=d5RwVlPz9BmFcnVJtSY8fE+nDJ8BYaCSDn8bRU/Ws5Y=;
+	s=default; t=1554369030;
+	bh=iDGQD9qiaYfPJgmJlsBcjonOvoZufFMvJKajNQ+v5xE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hU/UlIoKC1D1vZZDECPOgPZ/XBQjLHAnG0LORHzwACyhmLHjcGS06aTCiUT8Pmf78
-	 aCRKKyTjOSuuJqcUqf7+X/d4kWORI11rzlySAgCImZ+BOP/DZJ5ehwMzQ7mqX2e9pf
-	 tS3RtI9QQQwP1nAns6X4shkzTTvEwRYVH04td1gA=
+	b=iHUSk0zx2NwxEn4aF976bqe/y5MBYxZsd9WWXSM1iA/wGllzD9672lOjRhsOTbuP2
+	 tnx/nuRWAoPk2aOSG18vtm9jBWJ7q0pAcRjpwesar/uJHBfZ2PFfZ6hsSTmZohVmUB
+	 M0FmXIk0mr2oUiZDbMAOBe8MCmTrfaJSehiH6zMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732759AbfDDJKY (ORCPT
+        id S1733024AbfDDJK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733003AbfDDJKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:23 -0400
+        id S1730867AbfDDJK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52EAD20652;
-        Thu,  4 Apr 2019 09:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E263720693;
+        Thu,  4 Apr 2019 09:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369022;
-        bh=d5RwVlPz9BmFcnVJtSY8fE+nDJ8BYaCSDn8bRU/Ws5Y=;
+        s=default; t=1554369026;
+        bh=iDGQD9qiaYfPJgmJlsBcjonOvoZufFMvJKajNQ+v5xE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXg5U/VACwp782cfcyD4TyuyWd0eVA/GJGtbk3NnI9cK5RYKx5BVUgQwR0r5AQk9U
-         XAYz3mgYg+yhyUz6w88+EVnpelIG3e+HfgclitPaONXXufTmCOBv/um8HjvEd+P0lf
-         YrNYEjvOPokh47SBV5hFlixJPWboq7zTrUK5OXzg=
+        b=dACTriJwNwdzXulR4FuEKgF5PwxyY1cTsdAymPPzIQ7L+GDIaV/+1Q07adsL7Zo3r
+         ggpyLm0yxXXYhzRkmsdvvLRIER7MArhALvasPjL2jl/LISLHIhp6kWpW8SdRs/Mfm2
+         fvHOc5DiYfXFDhqJPgbWJ/J3Q01+YeyTkef2tNko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 052/246] iommu/vt-d: Disable ATS support on untrusted devices
-Date:   Thu,  4 Apr 2019 10:45:52 +0200
-Message-Id: <20190404084620.839695349@linuxfoundation.org>
+        stable@vger.kernel.org, luojiajun <luojiajun3@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 053/246] jbd2: fix invalid descriptor block checksum
+Date:   Thu,  4 Apr 2019 10:45:53 +0200
+Message-Id: <20190404084620.874016268@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,45 +66,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d8b8591054575f33237556c32762d54e30774d28 ]
+[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
 
-Commit fb58fdcd295b9 ("iommu/vt-d: Do not enable ATS for untrusted
-devices") disables ATS support on the devices which have been marked
-as untrusted. Unfortunately this is not enough to fix the DMA attack
-vulnerabiltiies because IOMMU driver allows translated requests as
-long as a device advertises the ATS capability. Hence a malicious
-peripheral device could use this to bypass IOMMU.
+In jbd2_journal_commit_transaction(), if we are in abort mode,
+we may flush the buffer without setting descriptor block checksum
+by goto start_journal_io. Then fs is mounted,
+jbd2_descriptor_block_csum_verify() failed.
 
-This disables the ATS support on untrusted devices by clearing the
-internal per-device ATS mark. As the result, IOMMU driver will block
-any translated requests from any device marked as untrusted.
+[  271.379811] EXT4-fs (vdd): shut down requested (2)
+[  271.381827] Aborting journal on device vdd-8.
+[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
+[  271.598023] JBD2: recovery failed
+[  271.598484] EXT4-fs (vdd): error loading journal
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: fb58fdcd295b9 ("iommu/vt-d: Do not enable ATS for untrusted devices")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fix this problem by keep setting descriptor block checksum if the
+descriptor buffer is not NULL.
+
+This checksum problem can be reproduced by xfstests generic/388.
+
+Signed-off-by: luojiajun <luojiajun3@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/jbd2/commit.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 78188bf7e90d..dbd6824dfffa 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2485,7 +2485,8 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 	if (dev && dev_is_pci(dev)) {
- 		struct pci_dev *pdev = to_pci_dev(info->dev);
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 2eb55c3361a8..efd0ce9489ae 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -694,9 +694,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+                            the last tag we set up. */
  
--		if (!pci_ats_disabled() &&
-+		if (!pdev->untrusted &&
-+		    !pci_ats_disabled() &&
- 		    ecap_dev_iotlb_support(iommu->ecap) &&
- 		    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ATS) &&
- 		    dmar_find_matched_atsr_unit(pdev))
+ 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
+-
+-			jbd2_descriptor_block_csum_set(journal, descriptor);
+ start_journal_io:
++			if (descriptor)
++				jbd2_descriptor_block_csum_set(journal,
++							descriptor);
++
+ 			for (i = 0; i < bufs; i++) {
+ 				struct buffer_head *bh = wbuf[i];
+ 				/*
 -- 
 2.19.1
 
