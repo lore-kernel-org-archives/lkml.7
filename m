@@ -2,108 +2,111 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2564AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7840204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:45:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hxNvuI8+"
+	by mail.kernel.org (Postfix) with ESMTP id E7F4E204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbfDDKpe (ORCPT
+        id S1729434AbfDDKqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:45:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfDDKpd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:45:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uKbxkaS4O3vvetKjsQOGzUVgF1/3j86xWVebVWs4s1A=; b=hxNvuI8+BqwGG023VYcl54avy
-        K7alQzyB55oMNxKXAqUGw38hqH4E4JKEsxb2I8X4nPsoHM0Kz70u4FyV/Jimb5Kmuhhefj3580w83
-        T8XFO+Kij52CgAoR1pOTrUYviVtUWI4w7PQTwpWGpkNAWWpMYZn4D6oKGKjUTTsMIHe1oeae0yV8d
-        RLe6gSk1t7o8iMCOpIVLwlt3NfPo7xlgfAMDtBhy86iY88i6HBdSexB7g6933SiMmgR2GspFoTbQ9
-        fMu/jg4d1O8M9QWRevjCKXW0WTF6wbT7zjNQUqfxo//HE8Ex1wKDuD+ZXsUw+Z2dOSQ+PRP/bBv52
-        8xXKcr6gg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hBzsA-00004s-45; Thu, 04 Apr 2019 10:45:30 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 940C3201AF566; Thu,  4 Apr 2019 12:45:27 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 12:45:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Willem de Bruijn <willemb@google.com>,
-        kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] cpumask: Introduce possible_cpu_safe()
-Message-ID: <20190404104527.GX4038@hirez.programming.kicks-ass.net>
-References: <20190404100218.GA26946@kadam>
+        Thu, 4 Apr 2019 06:46:54 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57880 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfDDKqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:46:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E660CA78;
+        Thu,  4 Apr 2019 03:46:53 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4734E3F557;
+        Thu,  4 Apr 2019 03:46:52 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] perf/arm-ccn: Remove broken race mitigation
+To:     robin.murphy@arm.com, will.deacon@arm.com
+Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        bigeasy@linutronix.de, peterz@infradead.org,
+        clabbe.montjoie@gmail.com, Meng.Li@windriver.com
+References: <cover.1554310292.git.robin.murphy@arm.com>
+ <49087b08f2685bed112dfc90b97ae59b8de8f6cf.1554310292.git.robin.murphy@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <2cbf5e2c-8a79-f2da-680f-ce20792ae2af@arm.com>
+Date:   Thu, 4 Apr 2019 11:46:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404100218.GA26946@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <49087b08f2685bed112dfc90b97ae59b8de8f6cf.1554310292.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 01:02:19PM +0300, Dan Carpenter wrote:
-> There have been two cases recently where we pass user a controlled "cpu"
-> to possible_cpus().  That's not allowed.  If it's invalid, it will
-> trigger a WARN_ONCE() and an out of bounds read which could result in an
-> Oops.
+Hi Robin,
 
-> +/**
-> + * cpumask_test_cpu_safe - test for a cpu in a cpumask
-> + * @cpu: cpu number
-> + * @cpumask: the cpumask pointer
-> + *
-> + * Returns 1 if @cpu is valid and set in @cpumask, else returns 0
-> + */
-> +static inline int cpumask_test_cpu_safe(int cpu, const struct cpumask *cpumask)
-> +{
-> +	if ((unsigned int)cpu >= nr_cpu_ids)
-> +		return 0;
-> +	cpu = array_index_nospec(cpu, NR_CPUS);
+On 03/04/2019 18:10, Robin Murphy wrote:
+> Like arm-cci, arm-ccn has the same issue of disabling preemption around
+> operations which can take mutexes. Again, remove the definite bug by
+> simply not trying to fight the theoretical races. And since we are
+> touching the hotplug handling code, take the opportunity to streamline
+> it, as there's really no need to store a full-sized cpumask to keep
+> track of a single CPU ID.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>   drivers/perf/arm-ccn.c | 23 +++++++++++------------
+>   1 file changed, 11 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
+> index 2ae76026e947..a0214308b0cd 100644
+> --- a/drivers/perf/arm-ccn.c
+> +++ b/drivers/perf/arm-ccn.c
 
-That should be:
+>   	/* Pick one CPU which we will use to collect data from CCN... */
+> -	cpumask_set_cpu(get_cpu(), &ccn->dt.cpu);
+> +	ccn->dt.cpu = raw_smp_processor_id();
+>   
+>   	/* Also make sure that the overflow interrupt is handled by this CPU */
+>   	if (ccn->irq) {
+> -		err = irq_set_affinity_hint(ccn->irq, &ccn->dt.cpu);
+> +		err = irq_set_affinity_hint(ccn->irq, cpumask_of(ccn->dt.cpu));
+>   		if (err) {
+>   			dev_err(ccn->dev, "Failed to set interrupt affinity!\n");
+>   			goto error_set_affinity;
+>   		}
+>   	}
+>   
+> +	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
+> +					 &ccn->dt.node);
+> +
+>   	err = perf_pmu_register(&ccn->dt.pmu, name, -1);
+>   	if (err)
+>   		goto error_pmu_register;
 
-	cpu = array_index_nospec(cpu, nr_cpu_ids);
+Should we not remove the above instance, in case we fail to register
+the PMU ? Similarly for the CCI driver, we may have to reset the g_cci_pmu
+if we fail.
 
-NR_CPUS might still be out-of-bounds for dynamically allocated cpumasks.
+Cheers
+Suzuki
 
-> +	return test_bit(cpu, cpumask_bits(cpumask));
-> +}
 
-That said; I don't particularly like this interface not its naming, how
-about something like:
-
-static inline unsigned int cpumask_validate_cpu(unsigned int cpu)
-{
-	if (cpu >= nr_cpumask_bits)
-		return nr_cpumask_bits;
-	return array_index_nospec(cpu, nr_cpumask_bits);
-}
-
-Which you can then use like:
-
-	cpu = cpumask_validate_cpu(user_cpu);
-	if (cpu >= nr_cpu_ids)
-		return -ENORANGE;
-
-	/* @cpu is valid, do what needs doing */
+>   
+> -	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
+> -					 &ccn->dt.node);
+> -	put_cpu();
+>   	return 0;
+>   
+>   error_pmu_register:
+>   error_set_affinity:
+> -	put_cpu();
+>   error_choose_name:
+>   	ida_simple_remove(&arm_ccn_pmu_ida, ccn->dt.id);
+>   	for (i = 0; i < ccn->num_xps; i++)
+> 
