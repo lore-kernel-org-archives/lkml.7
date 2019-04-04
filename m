@@ -2,127 +2,150 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F05EC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C9BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0EC2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB27F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J4/GFTF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbfDDTFK (ORCPT
+        id S1730077AbfDDTFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:05:10 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52520 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729818AbfDDTFJ (ORCPT
+        Thu, 4 Apr 2019 15:05:54 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35260 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730021AbfDDTFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:05:09 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hC7ff-0004e3-3u; Thu, 04 Apr 2019 19:05:07 +0000
-Date:   Thu, 4 Apr 2019 20:05:07 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v2] acct: fix possible deadlock in acct_pin_kill
-Message-ID: <20190404190506.GE2217@ZenIV.linux.org.uk>
-References: <20190404105255.12189-1-amir73il@gmail.com>
- <20190404184448.GC2217@ZenIV.linux.org.uk>
- <20190404184944.GD2217@ZenIV.linux.org.uk>
+        Thu, 4 Apr 2019 15:05:54 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u21so2628716lfu.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 12:05:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wKp1rToFdUGex172LVCX0S/Lj/+9JfBGYyB2ooa9bw8=;
+        b=J4/GFTF6WiD2eqrOe/qDLL+4K0u79+9aUDktAtydDNX5hWx0OHDh2X7kJpjzwPpchV
+         SiWfee8aMiHpq1J5aSp3kZ1IibqcozEXsT200sZ+Nk5JL9PCRCZlYxeAex1+8/9ZCfmG
+         YyCpUc/8lROQ7J9Nregwatwr7R5QYLZhkUZ4U0Q8v+cXVqTkzhVTmXe8b2/kyw6qfDca
+         Cf3gEs97AG5NYPWLQQaxwyCju/kBzaOjRhp4ngkT51sPzd6tIl1CjXiC3RTccZvoB72z
+         d89G8uVn8unlC4TLC3lMJJF8DKuKdc/aRrJ9nSa2PQbx7JoRjvmoteEyeJ2LL8YaL8qb
+         zARg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wKp1rToFdUGex172LVCX0S/Lj/+9JfBGYyB2ooa9bw8=;
+        b=Vr0dMeIW0Tz0e8pbJi0QGfntxoaUa6dkkBWc1fA96julN1giCWcRiY5uytDxuI5n6r
+         aThowLp0QsUVKn0dmPdbR9qi/SwFt0rr1S/YOK2kAAhCFhsmBfxJURzqx4Sur+CFNStW
+         A4VTh+KJpDIACCQffJEArgIIG8mf0EbyrSRmcQI33rwqoHRT+gnR4aYX8BXIqFr7XxlU
+         sslgLjyAyFGkNICskTyuW93XMngNCGomSpdvLeK1phaDlbTXLGikHY7f6HrM0E9uyQfP
+         4DrOUsa5s+HJpXNO92r25dPA3O0RJi1vBBzeATpndEzSIJf8zj9GE+Mp6jYYzZ+lTDcn
+         paHQ==
+X-Gm-Message-State: APjAAAVmmmaoqM2WARWwctd6rNIXWITfq6RqxNDgbfA4riyFxGTsAEfJ
+        sXAFqOl0WD83dFIsHQmPsWvcQBDlo3sHzzSPUECbaw==
+X-Google-Smtp-Source: APXvYqy0gbMNmAyjyQz0nO3CKzDALY2qplhIL0ptFdNPIDI/FCG2gdRKxASq06bVTpt4VNdECbYRa36LsUMUHP6KtjQ=
+X-Received: by 2002:ac2:42c8:: with SMTP id n8mr4302514lfl.28.1554404751351;
+ Thu, 04 Apr 2019 12:05:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404184944.GD2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190404171007.160878-1-ncrews@chromium.org> <20190404171007.160878-3-ncrews@chromium.org>
+ <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
+ <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
+ <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
+ <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com> <20190404185919.GB27340@amd>
+In-Reply-To: <20190404185919.GB27340@amd>
+From:   Dmitry Torokhov <dtor@google.com>
+Date:   Thu, 4 Apr 2019 12:05:39 -0700
+Message-ID: <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 07:49:44PM +0100, Al Viro wrote:
-> On Thu, Apr 04, 2019 at 07:44:48PM +0100, Al Viro wrote:
-> 
-> > Huh?  sb_writers is taken when we *open* the new file.  Then we replace
-> > its ->path.mnt with a clone and transfer the write count from the original
-> > to new one.  And close the old file while we are at it.
-> > 
-> > >From sb_writers POV mainline has
-> > 	sb_start_write(new_sb)	// in open
-> > 	sb_start_write(new_sb)	// mnt_want_write() on clone
-> > 	last write to old_sb, then sb_end_write(old_sb) // acct_pin_kill()
-> > 	sb_end_write(new_sb)	// mnt_drop_write(mnt)
-> > and you flip the order of the last two lines.
-> > 
-> > Could you explain how exactly does your patch help whatever
-> > problem overlayfs has?
-> 
-> Ow...  Sorry, -ENOCOFFEE...
-> 
-> Let me wake up properly and look at that thing again.
+On Thu, Apr 4, 2019 at 11:59 AM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Thu 2019-04-04 11:55:27, Dmitry Torokhov wrote:
+> > On Thu, Apr 4, 2019 at 11:41 AM Nick Crews <ncrews@chromium.org> wrote:
+> > >
+> > > On Thu, Apr 4, 2019 at 11:43 AM Dmitry Torokhov <dtor@google.com> wrote:
+> > > >
+> > > > On Thu, Apr 4, 2019 at 10:36 AM Guenter Roeck <groeck@google.com> wrote:
+> > > > >
+> > > > > On Thu, Apr 4, 2019 at 10:11 AM Nick Crews <ncrews@chromium.org> wrote:
+> > > > > >
+> > > > > > We want all backlights for the system keyboard to
+> > > > > > use a common name, so the name "platform::kbd_backlight"
+> > > > > > would be better than the current "chromeos::kbd_backlight"
+> > > > > > name. Normally this wouldn't be worth changing, but the new
+> > > > > > Wilco keyboard backlight driver uses the "platform" name.
+> > > > > > We want to make it so all Chrome OS devices are consistent,
+> > > > > > so we'll change the name here too.
+> > > > > >
+> > > > >
+> > > > > Wondering - who is the "we" you are talking about ?
+> > >
+> > > You're right, I should have been more precise.
+> > > I was referring to Pavel, Enric, and myself. Pavel had this opinion here:
+> > > https://lkml.org/lkml/2019/4/4/1040. I don't know what Pavel meant by "we"
+> > > in that comment, but I would guess that could mean the other LED maintainers
+> > > as well? I talked with Enric 1:1 and he didn't see the problem with changing it,
+> > > though perhaps he was only considering our use of the LED via powerd,
+> > > and not users in general. I'm guessing Pavel's and Enric's meanings though,
+> > > excuse me if I am misinterpreting.
+> > >
+> > > >
+> > > > This also has a potential of breaking existing setups if somebody did
+> > > > happen to match on entire name instead of suffix. Such changes have to
+> > > > be considered very carefully; at this point I am against of doing
+> > > > this.
+> > >
+> > > Would it make sense to keep the old name as is, and only make the new
+> > > Wilco name begin with "platform:"? What would you think is best?
+> >
+> > Given that we do not have a single instance of platform::kbd_backlight
+> > in kernel at this time I have no idea why Pavel is trying to push this
+> > for Wilco driver.
+>
+> See the documentation in the email I sent few seconds ago. I hope it
+> explains my reasoning, if not, I'll explain it.
 
-OK, so...  My first reaction had been complete BS.  However, the
-same goes for your analysis - it's not an ordering problem at all.
-What happens is that we are replacing file->path.mnt with a clone
-and we want the write count contribution (file is opened for write)
-to be transferred.  That's it.  We do *NOT* want any kind of
-freeze protection for the duration of switchover.
+Yes, I see the doc and I do not think I agree with it. If you look at
+the LED docs you will see:
 
-IOW, the solution is to switch to __mnt_{want,drop}_write() for that
-switchover; we don't want to mess with freeze protection at all.
+LED Device Naming
+=================
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/internal.h b/fs/internal.h
-index 6a8b71643af4..2e7362837a6e 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -89,9 +89,7 @@ extern int sb_prepare_remount_readonly(struct super_block *);
- 
- extern void __init mnt_init(void);
- 
--extern int __mnt_want_write(struct vfsmount *);
- extern int __mnt_want_write_file(struct file *);
--extern void __mnt_drop_write(struct vfsmount *);
- extern void __mnt_drop_write_file(struct file *);
- 
- /*
-diff --git a/include/linux/mount.h b/include/linux/mount.h
-index 9197ddbf35fb..bf8cc4108b8f 100644
---- a/include/linux/mount.h
-+++ b/include/linux/mount.h
-@@ -87,6 +87,8 @@ extern bool mnt_may_suid(struct vfsmount *mnt);
- 
- struct path;
- extern struct vfsmount *clone_private_mount(const struct path *path);
-+extern int __mnt_want_write(struct vfsmount *);
-+extern void __mnt_drop_write(struct vfsmount *);
- 
- struct file_system_type;
- extern struct vfsmount *fc_mount(struct fs_context *fc);
-diff --git a/kernel/acct.c b/kernel/acct.c
-index addf7732fb56..81f9831a7859 100644
---- a/kernel/acct.c
-+++ b/kernel/acct.c
-@@ -227,7 +227,7 @@ static int acct_on(struct filename *pathname)
- 		filp_close(file, NULL);
- 		return PTR_ERR(internal);
- 	}
--	err = mnt_want_write(internal);
-+	err = __mnt_want_write(internal);
- 	if (err) {
- 		mntput(internal);
- 		kfree(acct);
-@@ -252,7 +252,7 @@ static int acct_on(struct filename *pathname)
- 	old = xchg(&ns->bacct, &acct->pin);
- 	mutex_unlock(&acct->lock);
- 	pin_kill(old);
--	mnt_drop_write(mnt);
-+	__mnt_drop_write(mnt);
- 	mntput(mnt);
- 	return 0;
- }
+Is currently of the form:
+
+"devicename:colour:function"
+
+It is *function* and maybe color that userspace is interested in, and
+here we have proper standardization in form of "kbd_backlight". Device
+name is, well, device name. It should uniquely identify the device led
+is attached to, but otherwise is rarely interesting. If userspace is
+really concerned what kind of keyboard backlight it is it should
+investigate parent device(s) and see what they end up with.
+
+Thanks.
+
+--
+Dmitry
