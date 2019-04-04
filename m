@@ -4,70 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA35C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE07C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56152147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DE82147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 00:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EuvZBJXk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f4X9nbNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfDDAeY (ORCPT
+        id S1728727AbfDDAed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 20:34:24 -0400
-Received: from mail-it1-f202.google.com ([209.85.166.202]:43553 "EHLO
-        mail-it1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728570AbfDDAdy (ORCPT
+        Wed, 3 Apr 2019 20:34:33 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:53907 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728483AbfDDAdt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 20:33:54 -0400
-Received: by mail-it1-f202.google.com with SMTP id m192so683025ita.8
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:33:54 -0700 (PDT)
+        Wed, 3 Apr 2019 20:33:49 -0400
+Received: by mail-pl1-f202.google.com with SMTP id 102so605697plb.20
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 17:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=H3HRoHYDWMArQkaxv1MNV9sbVAN4QTLQDsX3m+S9eoU=;
-        b=EuvZBJXktt6F0ubAptUi55XvRrS0bKkJnnv1U/zgt6sGHkb46NdO1QZ+G9sI+ZkhfA
-         JelD4bF/2Pj/hihb+SKHwlJ8aIjjC7e63Pu3qmQ3SlJe54ayQ6S9xdyfaTuT1jP09UZQ
-         p5n1e8v2LdA/LRCQEeXI2QKFxaPLp8FNAWrgShmJIxnE1H6AkZMQwuPTyOGlFYMSR0nh
-         NoyORJSv21az9frVzup98ATuqYeUtUG0Av2bSGPCU2zcN9wclGUw3JzELE6GzV1KxhFy
-         l5/lV4gzrWlUE08BglDw/kUo6esP+LKLYEMhsER7SVRCEC7kdasgVUQWuHjLBMDqKmDc
-         8qtg==
+        bh=J18ALo3LueGVhn7lBcFJjxgV6Duc6Nrvg9c6IUw3gFk=;
+        b=f4X9nbNHfY4KPoiY2rsTDeZzZS0xVYDSJh48T/INc5xcxO6l06XtPToGB5Yf4apcsF
+         QO9MOn/GG22R7EaKsFZ5VoOMO2fyeDZ2nLv5NFyTUIcChYQg+eLUp5gALnVlBXrYfTQp
+         RPpFDlg7gyi/RfbU/aUNdvCAMzBbq4Ux9qoL8qcq3qckUGaWWU5ehr//0EPmpZuM51fH
+         rEXxgeXSu9SkJgqz7FnM2j66Vm7PfIenJp7rjiBnINO41wb0GMcbfQdm+vCGGxCVXqra
+         UAy733GzeE5eTRjvF98IFUyGNKiT5Sa5nKXo2vH8rdjB/GkvJoZbfYLJS/M4g3VQ751b
+         SkEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=H3HRoHYDWMArQkaxv1MNV9sbVAN4QTLQDsX3m+S9eoU=;
-        b=XN1BZLOi27A77JDN6EwuCAzNzANdVhPbXnFLq61oLpDlgcBeBnPNzGhUvK6TrLbm48
-         N5gN8Hn/nu/4Fxo3J0a+ciTj/GiqnBEQSz55oHRWXXW5vDffuYpSFc754dDZQ3vtU3HU
-         pzJi5p/1Yc64+NVQj3GNy8O/VOjt11ZkWg1JWhUElmo1Et0dLXo/aKqMaNreTTh69tsi
-         bZYoi3RPUC1CTR6QNjmAKV4M9rLUzJmV1vugfDzsS8XYGyw/fjUORROI0SAN8ypjzwn1
-         Ys6YGDZEGa4HtBSwvmlYmGe9TDMys510E9tojdUKZYVqQ6gMxJKezLVtg9Yn/drqaQJD
-         2X7w==
-X-Gm-Message-State: APjAAAW1vB+zicUVO8A8/jdNzM98z6zYQli1eD+dZELQURB8i2D2xoGu
-        7Sznbf4OJRUjE95bXK4H+8hO4T++Xis5kR50i66MkQ==
-X-Google-Smtp-Source: APXvYqx2eKKhEOnybJeNgu76/wWUtSGW35RuZ+QQ32lRZx5l58gboRDh908+pCXmRC8kk88E8Ad7UHpBCodo1958l2JfVg==
-X-Received: by 2002:a24:7f52:: with SMTP id r79mr581420itc.33.1554338033807;
- Wed, 03 Apr 2019 17:33:53 -0700 (PDT)
-Date:   Wed,  3 Apr 2019 17:32:45 -0700
+        bh=J18ALo3LueGVhn7lBcFJjxgV6Duc6Nrvg9c6IUw3gFk=;
+        b=GcsHVW9dk3M1Refn56zCkqtriBdgTaYeO0shG0Txz7W7+bP7XoxoBIidElPRHDl+bS
+         jtxQUnpUpDHHB/dpUPBJu2a88DP+GNf1wQ3JA0WU6QeB11wYAOiOKgt05ZyvRUuUnQ5F
+         P9sdFjchorfKOXHFJ7myPB0FemVr2k4wvuS6B3o3IJTq+Jlx2JuTvrLNo1oT0BtaZ4ot
+         sRuOcQZdyljXoFDT1gC5FxR9Pb9g7dbOApmaA03qG2dQBZnN48dM5TaS+Hu1N9g4ZhQK
+         yFy4baTfl67zViMDoptpjAmJq7c5+ooThZ8eHZdkphVcRrS+URhhJcUUkvAnHS51vAgo
+         jEOg==
+X-Gm-Message-State: APjAAAU0GM5SnjyWYq4Q+WMR1eKnr+H/pJkY5Q85nkJoGdciVfaI87Yn
+        r9l0AmSeaoOa+PcOgRTJfwabTe2A/HM3gQHgwJgXTg==
+X-Google-Smtp-Source: APXvYqz4j3QeuhcSeCpssrYno1HhWQWSUHEQbxzBBQkzAYaBEuGhtUI12IUFX6VGtthFChJDwz6dBYHGr0vkhfKiuAft8A==
+X-Received: by 2002:a65:6483:: with SMTP id e3mr60177pgv.12.1554338028850;
+ Wed, 03 Apr 2019 17:33:48 -0700 (PDT)
+Date:   Wed,  3 Apr 2019 17:32:43 -0700
 In-Reply-To: <20190404003249.14356-1-matthewgarrett@google.com>
-Message-Id: <20190404003249.14356-24-matthewgarrett@google.com>
+Message-Id: <20190404003249.14356-22-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <20190404003249.14356-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH V32 23/27] Lock down perf when in confidentiality mode
+Subject: [PATCH V32 21/27] Lock down tracing and perf kprobes when in
+ confidentiality mode
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, dhowells@redhat.com,
         linux-api@vger.kernel.org, luto@kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Matthew Garrett <mjg59@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        davem@davemloft.net, Masami Hiramatsu <mhiramat@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,35 +78,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-Disallow the use of certain perf facilities that might allow userspace to
-access kernel data.
+Disallow the creation of perf and ftrace kprobes when the kernel is
+locked down in confidentiality mode by preventing their registration.
+This prevents kprobes from being used to access kernel memory to steal
+crypto data, but continues to allow the use of kprobes from signed
+modules.
 
+Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: davem@davemloft.net
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/events/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/trace/trace_kprobe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3cd13a30f732..6ad3d83c091c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10461,6 +10461,12 @@ SYSCALL_DEFINE5(perf_event_open,
- 			return -EINVAL;
- 	}
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index d5fb09ebba8b..5c70acd80344 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -420,6 +420,9 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
+ {
+ 	int i, ret;
  
-+	if ((attr.sample_type & PERF_SAMPLE_REGS_INTR) &&
-+	    kernel_is_locked_down("PERF_SAMPLE_REGS_INTR",
-+				  LOCKDOWN_CONFIDENTIALITY))
-+		/* REGS_INTR can leak data, lockdown must prevent this */
++	if (kernel_is_locked_down("Use of kprobes", LOCKDOWN_CONFIDENTIALITY))
 +		return -EPERM;
 +
- 	/* Only privileged users can get physical addresses */
- 	if ((attr.sample_type & PERF_SAMPLE_PHYS_ADDR) &&
- 	    perf_paranoid_kernel() && !capable(CAP_SYS_ADMIN))
+ 	if (trace_probe_is_registered(&tk->tp))
+ 		return -EINVAL;
+ 
 -- 
 2.21.0.392.gf8f6787159e-goog
 
