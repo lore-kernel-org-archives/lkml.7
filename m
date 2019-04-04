@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7942C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27E0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C032075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0BA2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368228;
-	bh=2e1LqygtJEdA9ngxf+TGxzbIunJIsUaRfssRSeWr1lw=;
+	s=default; t=1554368235;
+	bh=HwT4S1LMgP7NkfXQ0N+Qjxbb0wvi7rtuDj05zYFIQ2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ask04tL7rweeeU/sUKMhyybHEcfX0dIF0X9ac16CuSgphSJ+q7+s+YjBsrZSAbRR4
-	 jkYMUiUGqfrPmKae1x8cCUocJhB91HgcLoVl9B8uzlQt/XUZy3a7q2zlqg+OW3LQMf
-	 +rhhPZms7VeVxqg9EDMDq+n6ofFVBsb3ZA3egIVk=
+	b=Q+/v9u2oHaTic4/mhgY2flh7inpxh4zdX+XTropxLaUElWod4dpYJgbi5KCQRTMzx
+	 AWSYZlJd9burr0zQUt6YxM+snSev8q2cVedRDLsiTa4BMqR96ZPtaucoYsyfBqMb15
+	 8BY637PbQ+LCTFyJy0R6PBDKyZfuqW6SX1DYpj1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbfDDI5G (ORCPT
+        id S1730265AbfDDI5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60680 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730602AbfDDI5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:03 -0400
+        id S1730631AbfDDI5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:57:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A422217D4;
-        Thu,  4 Apr 2019 08:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 209532186A;
+        Thu,  4 Apr 2019 08:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368222;
-        bh=2e1LqygtJEdA9ngxf+TGxzbIunJIsUaRfssRSeWr1lw=;
+        s=default; t=1554368230;
+        bh=HwT4S1LMgP7NkfXQ0N+Qjxbb0wvi7rtuDj05zYFIQ2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ObA5orv99ovrrjB/zfxpKJ/mB6SGJjVxLYCyzkJqkfHnrk8mVafXuEGW4o/Zkd4Yz
-         MA4orHVoKSMjcEx3isVo6eUGw/MedR/hG0JmVlQ2aWygLT059zoF9Xe9+ViW+PzcAi
-         jDtaKfgWZzrslZAIE5T6liwsyAi2Gwc+dxZRIR/g=
+        b=FuNDAjzfoaEK8M0Ph2hfnu02/PvKO99xPbVS/yBmcFbK97GHuyOsSxj/jqQAR0AtE
+         +E05j3SbXw34m7btYhImDqp9Rs4Z4R1s47xVkvyRsthcZYplAVvSc8AjtYg84c+XsG
+         JcEBhVeAlt1/S3+Ein5ssN0NpfW154uHrUxk2hHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Kazior <michal@plume.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 067/121] leds: lp55xx: fix null deref on firmware load failure
-Date:   Thu,  4 Apr 2019 10:47:35 +0200
-Message-Id: <20190404084548.903514853@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 077/121] bcache: fix input overflow to sequential_cutoff
+Date:   Thu,  4 Apr 2019 10:47:45 +0200
+Message-Id: <20190404084549.443621559@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,56 +65,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
+[ Upstream commit 8c27a3953e92eb0b22dbb03d599f543a05f9574e ]
 
-I've stumbled upon a kernel crash and the logs
-pointed me towards the lp5562 driver:
+People may set sequential_cutoff of a cached device via sysfs file,
+but current code does not check input value overflow. E.g. if value
+4294967295 (UINT_MAX) is written to file sequential_cutoff, its value
+is 4GB, but if 4294967296 (UINT_MAX + 1) is written into, its value
+will be 0. This is an unexpected behavior.
 
-> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
-> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
-> ...
-> <3>[306073.924886] lp5562 0-0030: firmware request failed
-> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
-> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
-> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
-> ...
+This patch replaces d_strtoi_h() by sysfs_strtoul_clamp() to convert
+input string to unsigned integer value, and limit its range in
+[0, UINT_MAX]. Then the input overflow can be fixed.
 
-After taking a look I noticed firmware_release()
-could be called with either NULL or a dangling
-pointer.
-
-Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
-Signed-off-by: Michal Kazior <michal@plume.com>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lp55xx-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/bcache/sysfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index 5377f22ff994..e2655953667c 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -201,7 +201,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index 43ff7fbcbc7c..def9c3478b89 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -217,7 +217,9 @@ STORE(__cached_dev)
+ 	d_strtoul(writeback_rate_d_term);
+ 	d_strtoul_nonzero(writeback_rate_p_term_inverse);
  
- 	if (!fw) {
- 		dev_err(dev, "firmware request failed\n");
--		goto out;
-+		return;
- 	}
+-	d_strtoi_h(sequential_cutoff);
++	sysfs_strtoul_clamp(sequential_cutoff,
++			    dc->sequential_cutoff,
++			    0, UINT_MAX);
+ 	d_strtoi_h(readahead);
  
- 	/* handling firmware data is chip dependent */
-@@ -214,9 +214,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
- 
- 	mutex_unlock(&chip->lock);
- 
--out:
- 	/* firmware should be released for other channel use */
- 	release_firmware(chip->fw);
-+	chip->fw = NULL;
- }
- 
- static int lp55xx_request_firmware(struct lp55xx_chip *chip)
+ 	if (attr == &sysfs_clear_stats)
 -- 
 2.19.1
 
