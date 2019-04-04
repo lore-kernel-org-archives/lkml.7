@@ -2,78 +2,193 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AE2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ECCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FB6206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B00206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfDDK66 (ORCPT
+        id S1729863AbfDDK7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:58:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56924 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729585AbfDDK6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:58:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A752FC06586D;
-        Thu,  4 Apr 2019 10:58:54 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-117-25.ams2.redhat.com [10.36.117.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AF601001DC9;
-        Thu,  4 Apr 2019 10:58:52 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH RFC 3/4] vsock/virtio: change the maximum packet size allowed
-Date:   Thu,  4 Apr 2019 12:58:37 +0200
-Message-Id: <20190404105838.101559-4-sgarzare@redhat.com>
-In-Reply-To: <20190404105838.101559-1-sgarzare@redhat.com>
-References: <20190404105838.101559-1-sgarzare@redhat.com>
+        Thu, 4 Apr 2019 06:59:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45562 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728345AbfDDK7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:59:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6B8AFAC32;
+        Thu,  4 Apr 2019 10:59:32 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 12:59:30 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     Joao Moreira <jmoreira@suse.de>, live-patching@vger.kernel.org,
+        pmladek@suse.cz, jikos@suse.cz, nstange@suse.de,
+        jpoimboe@redhat.com, khlebnikov@yandex-team.ru, jeyu@kernel.org,
+        matz@suse.de, linux-kernel@vger.kernel.org,
+        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
+        michal.lkml@markovi.net
+Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
+In-Reply-To: <alpine.LSU.2.21.1904031444020.18182@pobox.suse.cz>
+Message-ID: <alpine.LSU.2.21.1904041253300.32428@pobox.suse.cz>
+References: <20190301141313.15057-1-jmoreira@suse.de> <20190301141313.15057-3-jmoreira@suse.de> <20190318191926.GA23138@redhat.com> <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz> <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de> <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
+ <699e78da-36ba-8217-c509-2e9b443bd380@suse.de> <1b6ee81b-5699-a1cc-9a85-02df0eeaed12@redhat.com> <20190328201703.GA8658@redhat.com> <20190401193529.GA26375@redhat.com> <alpine.LSU.2.21.1904031444020.18182@pobox.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 04 Apr 2019 10:58:54 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since now we are able to split packets, we can avoid limiting
-their sizes to VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE.
-Instead, we can use VIRTIO_VSOCK_MAX_PKT_BUF_SIZE as the max
-packet size.
+On Wed, 3 Apr 2019, Miroslav Benes wrote:
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- net/vmw_vsock/virtio_transport_common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> > > Hmm, maybe I spoke too soon.
+> > >
+> > > I am having issues if I have a two-object livepatch module in which each
+> > > object file needs to specify its own KLP_MODULE_RELOC for the same
+> > > symbol name.
+> > >
+> > > For example: I have test_klp_convert.ko which is comprised of
+> > > test_klp_convert_a.o. which needs to refer to state_show,1 and
+> > > test_klp_convert_b.o. which needs to refer to state_show,2.
+> > >
+> > >   % make
+> > >   ...
+> > >     KLP     lib/livepatch/test_klp_convert.ko
+> > >   klp-convert: Conflicting KLP_SYMPOS definition: vmlinux.state_show,0 vs. vmlinux.state_show,1.
+> > >   klp-convert: Unable to load user-provided sympos
+> > >   make[2]: *** [scripts/Makefile.modpost:148: lib/livepatch/test_klp_convert.ko] Error 255
+> > >   make[1]: *** [/home/cloud-user/disk/linux/Makefile:1282: modules] Error 2
+> > >   make: *** [Makefile:170: sub-make] Error 2
+> > >
+> > > I take a closer look next week, but in the meantime, see the source
+> > > files below.
+> > 
+> > Okay, with a fresh set of eyes today, I think the issue can be
+> > summarized as:
+> > 
+> >   * "Special" livepatch symbols, as processed by klp-convert, require
+> >     external linkage, otherwise a new local storage instance will be
+> >     created and miss klp-convert altogether
+> > 
+> >   * When linking together two object files, their combined symbol table
+> >     will include a de-duped list of uniquly named global symbols
+> > 
+> > So if we are to run klp-convert on the combined module object file (as
+> > per v2 plus suggested changes in this thread), we are going to run into
+> > problems if ...
+> > 
+> > 
+> > Example
+> > =======
+> > 
+> > (quoted in previous reply), test_klp_convert_a and test_klp_convert_b
+> > have their own "state_show" variable in which each wishes to resolve to
+> > unique symbol positions (2 and 3 accordingly).
+> > 
+> > 
+> > test_klp_convert_a
+> > ------------------
+> > 
+> > We get one symbol table entry and one relocation as expected.
+> > 
+> >   % eu-readelf --symbols lib/livepatch/test_klp_convert_a.o
+> > 
+> >   Symbol table [27] '.symtab' contains 38 entries:
+> >    29 local symbols  String table: [28] '.strtab'
+> >     Num:            Value   Size Type    Bind   Vis          Ndx Name
+> >     ...
+> >      30: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
+> >     ...
+> > 
+> >   % eu-readelf --relocs lib/livepatch/test_klp_convert_a.o
+> > 
+> >   Relocation section [12] '.rela.klp.module_relocs.vmlinux' for section [11] '.klp.module_relocs.vmlinux' at offset 0x4b8 contains 1 entry:
+> >     Offset              Type            Value               Addend Name
+> >     000000000000000000  X86_64_64       000000000000000000      +0 state_show
+> > 
+> > 
+> > test_klp_convert_b
+> > ------------------
+> > 
+> > Just like the other object file, one symbol table entry and one
+> > relocation:
+> > 
+> >   % eu-readelf --symbols lib/livepatch/test_klp_convert_a.o
+> >   Symbol table [24] '.symtab' contains 23 entries:
+> >    19 local symbols  String table: [25] '.strtab'
+> >     Num:            Value   Size Type    Bind   Vis          Ndx Name
+> >     ...
+> >      20: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
+> >     ...
+> > 
+> >   % eu-readelf --relocs lib/livepatch/test_klp_convert_b.o
+> > 
+> >   Relocation section [ 9] '.rela.klp.module_relocs.vmlinux' for section [ 8] '.klp.module_relocs.vmlinux' at offset 0x118 contains 1 entry:
+> >     Offset              Type            Value               Addend Name
+> >     000000000000000000  X86_64_64       000000000000000000      +0 state_show
+> > 
+> > 
+> > test_klp_convert
+> > ----------------
+> > 
+> > But the combined test_klp_convert.klp.o file has only a single
+> > unresolved "state_show" symbol in its symbol table:
+> > 
+> >   % eu-readelf --symbols lib/livepatch/test_klp_convert.klp.o
+> > 
+> >   Symbol table [35] '.symtab' contains 57 entries:
+> >    47 local symbols  String table: [36] '.strtab'
+> >     Num:            Value   Size Type    Bind   Vis          Ndx Name
+> >     ...
+> >      52: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
+> >     ...
+> > 
+> > though the .rela.klp.module_relocs.vmlinux relocation section has two
+> > entries:
+> > 
+> >   % eu-readelf --relocs lib/livepatch/test_klp_convert.klp.o
+> > 
+> >   Relocation section [17] '.rela.klp.module_relocs.vmlinux' for section [16] '.klp.module_relocs.vmlinux' at offset 0x446c8 contains 2 entries:
+> >     Offset              Type            Value               Addend Name
+> >     000000000000000000  X86_64_64       000000000000000000      +0 state_show
+> >     0x0000000000000010  X86_64_64       000000000000000000      +0 state_show
+> > 
+> > and it looks like the combined KLP_MODULE_RELOC still contains the two
+> > unique symbol position values (2 and 3):
+> > 
+> >   % objcopy -O binary --only-section=.klp.module_relocs.vmlinux lib/livepatch/test_klp_convert.klp.o >(hexdump -C)
+> >   00000000  00 00 00 00 00 00 00 00  02 00 00 00 00 00 00 00  |................|
+> >   00000010  00 00 00 00 00 00 00 00  03 00 00 00              |............|
+> >   0000001c
+> 
+> Nice :/
+>  
+> > Maybe we can work around this by modifying the annotation macros and/or
+> > klp-convert, or live with this for now.
+> 
+> The question is (and I'll check later. I cannot wrap my head around it 
+> now) if it at least works if there are two references of the same symbol 
+> in two different .o. It would be same state_show in this case and not two 
+> different ones. If it works then I think we can live with it for a while, 
+> because after all duplicate symbols are quite rare in the kernel.
 
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index f32301d823f5..822e5d07a4ec 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -167,8 +167,8 @@ static int virtio_transport_send_pkt_info(struct vsock_sock *vsk,
- 	vvs = vsk->trans;
+I think it should work. There is only one case which causes problems. 
+There exists an ambiguous local symbol in one parent object and a 
+livepatch needs to reference two (or more) different versions of the 
+symbol. In that case there have to be more sympos records provided by a 
+user to help klp-convert distinguish between the cases. klp-convert is of 
+course confused because it currently cannot cope with that.
+
+All other cases should be fine (theoretically).
+
+So we need to come up with a solution which would help klp-convert 
+recognize the cases (symbol usage sites). Some sort of user annotation, 
+but I cannot think of anything right now.
  
- 	/* we can send less than pkt_len bytes */
--	if (pkt_len > VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE)
--		pkt_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
-+	if (pkt_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
-+		pkt_len = VIRTIO_VSOCK_MAX_PKT_BUF_SIZE;
- 
- 	/* virtio_transport_get_credit might return less than pkt_len credit */
- 	pkt_len = virtio_transport_get_credit(vvs, pkt_len);
--- 
-2.20.1
-
+Miroslav
