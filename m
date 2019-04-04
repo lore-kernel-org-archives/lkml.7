@@ -2,96 +2,125 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B09C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D192C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332DD206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99173206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9uq1pgM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OTRZOngC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfDDQNL (ORCPT
+        id S1728939AbfDDQNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:13:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40021 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbfDDQNL (ORCPT
+        Thu, 4 Apr 2019 12:13:41 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45369 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728803AbfDDQNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:13:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c207so1600290pfc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:13:11 -0700 (PDT)
+        Thu, 4 Apr 2019 12:13:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 5so2189095lft.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TYyeiQLL73tEM/u50L/tx+FHr1FUO0o/H2RVwcC12A0=;
-        b=E9uq1pgMKWm6hxKKCzFDwA8icMbuzNd/D7sKhUDXQ/BDu79Odyz+1dWRAZ1rlcgrv7
-         PwQXAx251zhxWx5dPpSjVvBF95ymHXS855YoOZ7B0KQEsxdbdMUebEqfDacC4NG6INtg
-         P6Qons//YqdYx8sUjTo+SvlLlQapTqB8HYRT2qfIBxtaIf3cgy8CSzWr9je5+SMDGxPJ
-         Pj7vTP7/ciw5k86VV7Z/BmVWg678iEJXm/+MQfBPrWTBKXorOn9hO1VBeEdLMGdbnqEo
-         QcGv/1RTgY4XpVJN+ZjYs0uJq4v36/r1noldIGrK2TDDKhMt7FlksDJi0s7Ma18SuGcy
-         x0Jw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w7cqMoh/o/5tquQe82yVz0UF1UW9cmylA3d/Z3b+co8=;
+        b=OTRZOngCg0aOonpHNoOqaoSbmnkYrjCvrhoB+grs4kKkC83w0G+OGlXSaMZf3VJi0f
+         fTBZmLlNrRkAX0XtFEFsx+CNQrUL7LXop2xTbAvI3K0Po+ukkfqCbxqNF/l3BuKbVPCZ
+         PGoAX/KHxSJEiIoX7UpD3HA1Nm1WGoik0EBEY6dYlahio0Vqnk0XVJhwXOX677pWOE2G
+         pen+lZ7WY/qPyMao/o/BKa5zXn7CO01Xp7gOXNj3UEEiMfqQ7onhFK8xJjG7sEzxBpD1
+         /ESQ36hS/Lh+9iACGiDJww9SnmAyQGVSlwUT/on6bgdUXOj9X7IM5A0ZEZdVXHzrV/M3
+         Pw0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TYyeiQLL73tEM/u50L/tx+FHr1FUO0o/H2RVwcC12A0=;
-        b=a2/k1EUF5JIoSG2CJII7oP6g3rUw856KW4jU8+9BcfCWBtpTGaCwq3Ij+05addNgr6
-         sR2MChemH7Ol1EWkRMfCurnACKCj3UnT/Z2O8oMD1DuyzM1acB7dUj8pxT/xp8AcJT+b
-         VMJcEK2M2YD8T1ptB8LSVgeyd/2yvGCiYvwVI/cS31a9OOTb3oJm8wOfGH/EPnrvVLSH
-         XgjiXatVPNHqVEoNlhehE+g+Wf6Vry7VNjr5pjbWIyyX24jKOztTm1xtMaO93gHOxddf
-         /GBcZiKN+rPrcJA5Rjx4mKaQv6trvA3QlIaJgLs2vnl/ADHZXSNKkx41hB4tM+zBt7xI
-         Wlqg==
-X-Gm-Message-State: APjAAAWzm50PDecggPdaAd64f8MUW6ELCRJ7yWOr/ozqtkRs4JMBMlKR
-        1hVe3xa3a0gbarpIEcqho/U=
-X-Google-Smtp-Source: APXvYqymu8xV98295h044l/TmWIuGnlvH5wX/hIriNKRBYKHx3vda37Ev7l/oBw9UBFwZ1/woz3zDg==
-X-Received: by 2002:a62:62c3:: with SMTP id w186mr6728151pfb.73.1554394390701;
-        Thu, 04 Apr 2019 09:13:10 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:9681:c7ba:deef:ba65:b868:9005])
-        by smtp.gmail.com with ESMTPSA id c17sm28507738pfd.76.2019.04.04.09.13.09
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 04 Apr 2019 09:13:10 -0700 (PDT)
-From:   Nilesh Hase <nilhase25@gmail.com>
-To:     matthias.bgg@gmail.com
-Cc:     gregkh@linuxfoundation.org, neil@brown.name, sr@denx.de,
-        sankalpnegi2310@gmail.com, gch981213@gmail.com,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nilesh Hase <nilhase25@gmail.com>
-Subject: [PATCH] MT7621-SPI: spi-mt7621: Fix alignment and style problems     Fixed Coding function and style issues
-Date:   Thu,  4 Apr 2019 01:01:07 +0530
-Message-Id: <20190403193107.23873-1-nilhase25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w7cqMoh/o/5tquQe82yVz0UF1UW9cmylA3d/Z3b+co8=;
+        b=ucYcMsMBSpaAURHi0DEZlX0VFUuLMs2T2huqPN9joP/hvReaJDV8eMQg+Hg3cEF1rz
+         P3baIw6RCizmwzJmrWHcC8j+jnwx609Wfn3DOyHcnJfE4Ovhyu9yO3/PJc1hkTn4ZUMN
+         vLoeVd6bA01YzuWIPRa3BBra5kTh8e6vlY3B9S5TsiWZ3UYVv4ZQCrw6zjJJgUwoCEa8
+         brZIvG/0y8Hlh2In9WLYqOJ8T39kRaC0V+QdAw/9czJ9uW0p0RSFjRgEeWpGQk9cj5+L
+         11Lxh/yJ7Acff+yEO9hQX+Q6BaPGexpM9VUYA2N8M0/9DaWCkYxHsK/Mlqf2CqnRumyD
+         nW6A==
+X-Gm-Message-State: APjAAAViHn7BxEtAFjq+0R36H8j2KAB7GZA9j4xGEW5pezNQqzhnTxnv
+        1YYDjPHfLgKIpoRhAEC7zjbFPbmbVCQgKncLtMDAYQ==
+X-Google-Smtp-Source: APXvYqzNx1n/oaadf0cP1rmbjjaMBtlRxxJa7fuaXngE8m5VuYNunaWVG5GB6pP8glSR7qJXBkyPKl9c1pRJ02axOKw=
+X-Received: by 2002:a19:ae0a:: with SMTP id f10mr3488781lfc.118.1554394418516;
+ Thu, 04 Apr 2019 09:13:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190308203801.57920-1-ncrews@chromium.org> <20190308210843.GA16125@amd>
+ <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com> <20190404112415.GB18653@amd>
+In-Reply-To: <20190404112415.GB18653@amd>
+From:   Dmitry Torokhov <dtor@google.com>
+Date:   Thu, 4 Apr 2019 09:13:27 -0700
+Message-ID: <CAE_wzQ96MkKb7uSoVBNkOZexevUKPf4jHyQZneg7YNCEs7SHfQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs support
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Daniel Erat <derat@google.com>,
+        Guenter Roeck <groeck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Nilesh Hase <nilhase25@gmail.com>
----
- drivers/staging/mt7621-spi/spi-mt7621.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Apr 4, 2019 at 4:24 AM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Mon 2019-03-11 09:29:06, Nick Crews wrote:
+> > Thanks for looking this over. I will fix most of your concerns, but
+> > have one question.
+> >
+> > On Fri, Mar 8, 2019 at 2:08 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > On Fri 2019-03-08 13:38:02, Nick Crews wrote:
+> > > > This patch is meant to be applied on top of the for-next
+> > > > branch of the platform/chrome repository, as it uses some of
+> > > > the code staged there.
+> > > >
+> > > > The EC is in charge of controlling the keyboard backlight on
+> > > > the Wilco platform. We expose a standard LED class device at
+> > > > /sys/class/leds/wilco::kbd_backlight. This driver is modeled
+> > > > after the standard Chrome OS keyboard backlight driver at
+> > > > drivers/platform/chrome/cros_kbd_led_backlight.c
+> > >
+> > > Can you make it "platform::kbd_backlight"? We want some consistency
+> > > there.
+> >
+> > The analogous name in the standard driver
+> > drivers/platform/chrome/cros_kbd_led_backlight.c is
+> > "chromeos::kbd_backlight", and I thought "wilco" was a better
+> > substitute for "chromeos" than "platform" would be. What other thing
+> > are you saying "platform" would be consistent with?
+>
+> Yeah, well, we not let the cros_kbd_led_backlight.c use chromeos:: in
+> the first place. But it happened. We want all backlights for the
+> system keyboard to use common name, and "chromeos" is not really
+> suitable for that. "platform" is.
 
-diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
-index b509f9fe3346..6fa9876f5a92 100644
---- a/drivers/staging/mt7621-spi/spi-mt7621.c
-+++ b/drivers/staging/mt7621-spi/spi-mt7621.c
-@@ -303,7 +303,7 @@ static int mt7621_spi_setup(struct spi_device *spi)
- 	struct mt7621_spi *rs = spidev_to_mt7621_spi(spi);
- 
- 	if ((spi->max_speed_hz == 0) ||
--		(spi->max_speed_hz > (rs->sys_freq / 2)))
-+	    (spi->max_speed_hz > (rs->sys_freq / 2)))
- 		spi->max_speed_hz = (rs->sys_freq / 2);
- 
- 	if (spi->max_speed_hz < (rs->sys_freq / 4097)) {
+Pavel, who exactly wants this and why? Looking at today's -next I see:
+
+dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
+"::kbd_backlight" | wc -l
+18
+dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
+"platform::kbd_backlight" | wc -l
+0
+
+so there isn't a single instance of "platform::kbd_backlight" and we
+definitely not changing existing names.
+
+Thanks.
+
 -- 
-2.20.1
-
+Dmitry
