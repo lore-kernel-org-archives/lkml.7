@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DE1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26904C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B6D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DBC2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369092;
-	bh=o9mCRSO52kTNYGasdcQaU7KNAhzHmz+0LMi4XWaspcQ=;
+	s=default; t=1554369097;
+	bh=8ofB9mGq0Ysuh/8d9RIlNFh9yWXt5I9D82g0eufEBQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lM4SxpjEdXWS8KAk0aJySDnFpAVJh4nPK44ZAaqRzHvQioCtROEGEooV/vlRkzcG5
-	 rUMDTikxmGqdaK8O3UtmVXRXJtth/f8o11NVZVSdDpVqHFfQaOKNTADmpRgjbj3sMo
-	 d6FEoYPAo4EDgQgmIn+HQiUBj8cwgKztYLsGYZ5Y=
+	b=08PPuzPkpO2wQ3Bv3vH04u69yKaiXVFqolXaqGk0nB8+IzNjlS3x5zGmE2ogp3kDk
+	 xNU+LwbRRDuTs48J6GL52ehdtf6E2fiQMgal5EeVLo1tv/H9QfwZg8qWlTIYfEroJk
+	 nAtYlk6c7IWc6lIuEqug5LEL2v0qDoyx+Xqx7pyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733176AbfDDJLb (ORCPT
+        id S1733185AbfDDJLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51324 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733162AbfDDJL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:27 -0400
+        id S1733171AbfDDJLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:11:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5D520693;
-        Thu,  4 Apr 2019 09:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E693620693;
+        Thu,  4 Apr 2019 09:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369086;
-        bh=o9mCRSO52kTNYGasdcQaU7KNAhzHmz+0LMi4XWaspcQ=;
+        s=default; t=1554369089;
+        bh=8ofB9mGq0Ysuh/8d9RIlNFh9yWXt5I9D82g0eufEBQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1FIoWsLalWrcWTibHzxy+2PXtJnxnLs3BsojnYnfp21uVD8SZU0P9v3ZO4jLxZvpp
-         dGFZhAJ0SwczNx643opRfQvj1PgH9J2sACSDNiMgU4dlfIqT9+ElUxKOk+Bwd9CElr
-         spxBEOP167S9S80VGcwh2UTk0eVDjQoDbPwpICsA=
+        b=rv74lQda8LYV0MHl4ZWuhoDS2LAH31MIi/x1yYRcj8814vA+x8K4UWhynUWmS/I4+
+         JJiykBKwlWXXD97JAKZjCSq51g0qEAsoGn5epsTsYFPxrr0s5OJu7UD8/51iHtU1Mr
+         q0qeXMfc2e9ffZnKbd4xrdO/+X/YaGpYau432g/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Broadus <jbroadus@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Yang Fan <nullptr.cpp@gmail.com>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 092/246] i2c: Allow recovery of the initial IRQ by an I2C client device.
-Date:   Thu,  4 Apr 2019 10:46:32 +0200
-Message-Id: <20190404084622.366590957@linuxfoundation.org>
+Subject: [PATCH 5.0 093/246] platform/x86: ideapad-laptop: Fix no_hw_rfkill_list for Lenovo RESCUER R720-15IKBN
+Date:   Thu,  4 Apr 2019 10:46:33 +0200
+Message-Id: <20190404084622.401549363@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,73 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 93b6604c5a669d84e45fe5129294875bf82eb1ff ]
+[ Upstream commit 4d9b2864a415fec39150bc13efc730c7eb88711e ]
 
-A previous change allowed I2C client devices to discover new IRQs upon
-reprobe by clearing the IRQ in i2c_device_remove. However, if an IRQ was
-assigned in i2c_new_device, that information is lost.
+Commit ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER
+R720-15IKBN to no_hw_rfkill_list") added
+    DMI_MATCH(DMI_BOARD_NAME, "80WW")
+for Lenovo RESCUER R720-15IKBN.
 
-For example, the touchscreen and trackpad devices on a Dell Inspiron laptop
-are I2C devices whose IRQs are defined by ACPI extended IRQ types. The
-client device structures are initialized during an ACPI walk. After
-removing the i2c_hid device, modprobe fails.
+But DMI_BOARD_NAME does not match 80WW on Lenovo RESCUER R720-15IKBN,
+thus cause Wireless LAN still be hard blocked.
 
-This change caches the initial IRQ value in i2c_new_device and then resets
-the client device IRQ to the initial value in i2c_device_remove.
+On Lenovo RESCUER R720-15IKBN:
+    ~$ cat /sys/class/dmi/id/sys_vendor
+    LENOVO
+    ~$ cat /sys/class/dmi/id/board_name
+    Provence-5R3
+    ~$ cat /sys/class/dmi/id/product_name
+    80WW
+    ~$ cat /sys/class/dmi/id/product_version
+    Lenovo R720-15IKBN
 
-Fixes: 6f108dd70d30 ("i2c: Clear client->irq in i2c_device_remove")
-Signed-off-by: Jim Broadus <jbroadus@gmail.com>
-Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-[wsa: this is an easy to backport fix for the regression. We will
-refactor the code to handle irq assignments better in general.]
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+So on Lenovo RESCUER R720-15IKBN:
+    DMI_SYS_VENDOR should match "LENOVO",
+    DMI_BOARD_NAME should match "Provence-5R3",
+    DMI_PRODUCT_NAME should match "80WW",
+    DMI_PRODUCT_VERSION should match "Lenovo R720-15IKBN".
+
+Fix it, and in according with other entries in no_hw_rfkill_list,
+use DMI_PRODUCT_VERSION instead of DMI_BOARD_NAME.
+
+Fixes: ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER R720-15IKBN to no_hw_rfkill_list")
+Signed-off-by: Yang Fan <nullptr.cpp@gmail.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-core-base.c | 9 +++++----
- include/linux/i2c.h         | 1 +
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 28460f6a60cc..af87a16ac3a5 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -430,7 +430,7 @@ static int i2c_device_remove(struct device *dev)
- 	dev_pm_clear_wake_irq(&client->dev);
- 	device_init_wakeup(&client->dev, false);
- 
--	client->irq = 0;
-+	client->irq = client->init_irq;
- 
- 	return status;
- }
-@@ -741,10 +741,11 @@ i2c_new_device(struct i2c_adapter *adap, struct i2c_board_info const *info)
- 	client->flags = info->flags;
- 	client->addr = info->addr;
- 
--	client->irq = info->irq;
--	if (!client->irq)
--		client->irq = i2c_dev_irq_from_resources(info->resources,
-+	client->init_irq = info->irq;
-+	if (!client->init_irq)
-+		client->init_irq = i2c_dev_irq_from_resources(info->resources,
- 							 info->num_resources);
-+	client->irq = client->init_irq;
- 
- 	strlcpy(client->name, info->type, sizeof(client->name));
- 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 65b4eaed1d96..7e748648c7d3 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -333,6 +333,7 @@ struct i2c_client {
- 	char name[I2C_NAME_SIZE];
- 	struct i2c_adapter *adapter;	/* the adapter we sit on	*/
- 	struct device dev;		/* the device structure		*/
-+	int init_irq;			/* irq set at initialization	*/
- 	int irq;			/* irq issued by device		*/
- 	struct list_head detected;
- #if IS_ENABLED(CONFIG_I2C_SLAVE)
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 1589dffab9fa..8b53a9ceb897 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -989,7 +989,7 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		.ident = "Lenovo RESCUER R720-15IKBN",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_BOARD_NAME, "80WW"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
+ 		},
+ 	},
+ 	{
 -- 
 2.19.1
 
