@@ -5,66 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA5BC10F06
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611B1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEA92133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1052520820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="q6z6NMOG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fMkp9+Bf"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="p1od3tTn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nDodF2tW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfDDCLN (ORCPT
+        id S1728553AbfDDCLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:11:13 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:45289 "EHLO
+        Wed, 3 Apr 2019 22:11:11 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:59387 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbfDDCJq (ORCPT
+        by vger.kernel.org with ESMTP id S1726530AbfDDCJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 22:09:46 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7C0B222826;
-        Wed,  3 Apr 2019 22:01:35 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id AAAF5221BF;
+        Wed,  3 Apr 2019 22:01:14 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:35 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm3; bh=yK2eUC0I9aY6x
-        1nEEB/U0Fv2Pko7D0eSucs6UTRXLHU=; b=q6z6NMOGCfnvgFrtoi86cET1Cc2ja
-        E3zSKbA6IHmp5gGp9/W95Aj7SnuptDIou0/g1dV6Eksldx/RrUFSBstcIR3BSOHy
-        1Js9KXkez7HJ5A1NdiwAJlBfgv3VnPSmmPqXFut3gQ0GtotYnZJpTuYJ7DQ0SQ6E
-        itXy+JmonkkrUErFsNPn+/CSYF2mgsP3oFAWvXMCZ1I+Ieh7IMNBX28n1LNh7huu
-        vvm3IwC74efbWWYmIDCXKX+QJgeYI5c4F90u8AfCg25T2mi1Q1QcM+mrVMjG/Gq8
-        bmk6PfVHqrV+NHavozQdYhqGS7bevriR5W1D0aAzdBa8X5c95IcoMG/mw==
+        :mime-version:content-transfer-encoding; s=fm3; bh=4EpfoQzzzw77q
+        n7dCDXDDJUXpnn7Bnp/NAwQ6GdLHWQ=; b=p1od3tTnJY6BUbGgwrwNqkOZzp7q+
+        o6DwVSpwMhxqIKGDeCP7E5zQkDGlCI0y8hAEtS/nzGxKVnZDLZrs7xdQrMjjTqBO
+        P5mPv06kOjHwRa7kQPr5QVxSmt+n8ra4tUpqoch9dFrPqBnu1OUPVDDJhu0xoV5I
+        KdqJfDwr8/vQmBor5jxfckfOTMXAWOgPjlyztkA/5xZfE3ojZXFKCk6SwjEA+gPR
+        7F65EsldaMSOr/6o4tmrb/3t8WUiQMteG4eKBqpP/FasBrdgVMBRGNieyX6qMRdX
+        01h1pLwVY478z7ojm696nb4qcOgeiG9TrYwIzk3Wm8zSY5PM38EmJjBlQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=yK2eUC0I9aY6x1nEEB/U0Fv2Pko7D0eSucs6UTRXLHU=; b=fMkp9+Bf
-        g/fn2PPQYRra7dNca9xApuTL6t1n8eZ3gOIYDly+suAEQA8lEKFFygEwigy0zthL
-        xwbu3jYzsCgT4eQQF02+7OssBKNd1IHIG9t4qjh8fbKMiX26GHVKg9HF/dSoEghv
-        venpMBWrAezIbOY0tPVd3HKYPArf85P5bNxKJrHrBVdT+TuS91SDQKMIakHN33cJ
-        4tYMDhBYcvBf/d2Tez8VIUtBrmRQ6ciCzSE/GOMYewaw98bsncKpQfn1RpbDRPy9
-        12b9DsqPl8BX62zv1UM2qXLl5iGOjD1snFplc7jj3IgfMmsL+X1hdL+TZMX8AR3s
-        WN+EjFGnXY8Bcg==
-X-ME-Sender: <xms:f2WlXOip0AbUzE6PQWDj_g7X533D52cfhpfxCxENOWgLc9x-NeNQBQ>
+        fm2; bh=4EpfoQzzzw77qn7dCDXDDJUXpnn7Bnp/NAwQ6GdLHWQ=; b=nDodF2tW
+        QaRaADQt2eaHQvTkogTS9TRDdSzKUn+hyDGwYRg4RVHvxSp/7i5INpea0cbjYfFK
+        JgZSCYRYsv21ARjce5XdM5SlXDQHCbTQjv0paeuePDNVTMfGpQF2JLx3UeI7LCxG
+        XssFt4LoPYsHtDE84rkKPLo4EsDyWwucVIevOAnDcb8l1Z6MlNL5mOxjy/pT6NUo
+        orje26OW1bg2G1lTFXk7kzmTeyoZezYs+9h33bZU0Lbnk4wH9n2lGLlNl7Bc4N1b
+        xI6jE84PUZX309zo4yL+TWh50v5IgmzqEhA13RzK3b+o4W7gAYEKsvWd8C08xOqN
+        0PkOBYWYJS1mpA==
+X-ME-Sender: <xms:amWlXIzcyy_Kjiex-5cCzRY1Qhuzw78VaKlvBz5CNeFadxi0ps4fjw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdehudculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
     hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddt
     necuhfhrohhmpegkihcujggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucfkph
     epvdduiedrvddvkedrudduvddrvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdr
-    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepuddt
-X-ME-Proxy: <xmx:f2WlXMqC_n7jpW0L_YzgXJ1pdwP2_dAZJoxhZnAMfnSPY7rycRQVeQ>
-    <xmx:f2WlXNe9T0kTFbgk0iv6rRjhsyLhRz1J-kwM1qshgPX8H9i6-UBg-w>
-    <xmx:f2WlXPfK3iFC6_ESBdLD3gBNiYKji_CA3SJNw4daMgGcDduINScpmg>
-    <xmx:f2WlXOz2No8RtFPppiKXtBM8qm3wFGvjfszVxpc_re6bAZQKCLxFQQ>
+    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:amWlXINuR4QoUb3oJyt4hHALD4HfQgvpGQNiTQOlNSzMEsABvHE9Rg>
+    <xmx:amWlXAdcWb0-RBn4x5jIMO-LOw2VGN0zQFaj_ruOA-X1NA2t_kxPUA>
+    <xmx:amWlXM5R1PLJZ3Icxlh7-qaYFETg3_m1x53l_FnV8NysfdqEHaz3JQ>
+    <xmx:amWlXNK5C4SASQfyV_fgRcJNOaBqC8pc9JGhbMbPi5ZTQdnYxb6AsQ>
 Received: from nvrsysarch5.nvidia.com (thunderhill.nvidia.com [216.228.112.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 60CC41030F;
-        Wed,  3 Apr 2019 22:01:33 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id B77671030F;
+        Wed,  3 Apr 2019 22:01:12 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
@@ -82,9 +81,9 @@ Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         Nitin Gupta <nigupta@nvidia.com>,
         Javier Cabezas <jcabezas@nvidia.com>,
         David Nellans <dnellans@nvidia.com>, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 12/25] exchange pages: new page migration mechanism: exchange_pages()
-Date:   Wed,  3 Apr 2019 19:00:33 -0700
-Message-Id: <20190404020046.32741-13-zi.yan@sent.com>
+Subject: [RFC PATCH 01/25] mm: migrate: Change migrate_mode to support combination migration modes.
+Date:   Wed,  3 Apr 2019 19:00:22 -0700
+Message-Id: <20190404020046.32741-2-zi.yan@sent.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
 References: <20190404020046.32741-1-zi.yan@sent.com>
@@ -98,736 +97,342 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-It exchanges two pages by unmapping both first, then exchanging the
-data of the pages using a u64 register, and finally remapping both
-pages.
-
-It saves the overheads of allocating two new pages in two
-back-to-back migrate_pages().
+No functionality is changed. Prepare for the following patches,
+which add parallel, concurrent page migration modes in conjunction
+to the existing modes.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- include/linux/exchange.h |  23 ++
- include/linux/ksm.h      |   4 +
- mm/Makefile              |   1 +
- mm/exchange.c            | 597 +++++++++++++++++++++++++++++++++++++++++++++++
- mm/ksm.c                 |  35 +++
- 5 files changed, 660 insertions(+)
- create mode 100644 include/linux/exchange.h
- create mode 100644 mm/exchange.c
+ fs/aio.c                     | 10 +++++-----
+ fs/f2fs/data.c               |  4 ++--
+ fs/hugetlbfs/inode.c         |  2 +-
+ fs/iomap.c                   |  2 +-
+ fs/ubifs/file.c              |  2 +-
+ include/linux/migrate_mode.h |  2 ++
+ mm/balloon_compaction.c      |  2 +-
+ mm/compaction.c              | 22 +++++++++++-----------
+ mm/migrate.c                 | 18 +++++++++---------
+ mm/zsmalloc.c                |  2 +-
+ 10 files changed, 34 insertions(+), 32 deletions(-)
 
-diff --git a/include/linux/exchange.h b/include/linux/exchange.h
-new file mode 100644
-index 0000000..778068e
---- /dev/null
-+++ b/include/linux/exchange.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_EXCHANGE_H
-+#define _LINUX_EXCHANGE_H
-+
-+#include <linux/migrate.h>
-+
-+struct exchange_page_info {
-+	struct page *from_page;
-+	struct page *to_page;
-+
-+	struct anon_vma *from_anon_vma;
-+	struct anon_vma *to_anon_vma;
-+
-+	int from_page_was_mapped;
-+	int to_page_was_mapped;
-+
-+	struct list_head list;
-+};
-+
-+int exchange_pages(struct list_head *exchange_list,
-+			enum migrate_mode mode,
-+			int reason);
-+#endif /* _LINUX_EXCHANGE_H */
-diff --git a/include/linux/ksm.h b/include/linux/ksm.h
-index e48b1e4..170312d 100644
---- a/include/linux/ksm.h
-+++ b/include/linux/ksm.h
-@@ -55,6 +55,7 @@ void rmap_walk_ksm(struct page *page, struct rmap_walk_control *rwc);
- void ksm_migrate_page(struct page *newpage, struct page *oldpage);
- bool reuse_ksm_page(struct page *page,
- 			struct vm_area_struct *vma, unsigned long address);
-+void ksm_exchange_page(struct page *to_page, struct page *from_page);
+diff --git a/fs/aio.c b/fs/aio.c
+index 38b741a..0a88dfd 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -389,7 +389,7 @@ static int aio_migratepage(struct address_space *mapping, struct page *new,
+ 	 * happen under the ctx->completion_lock. That does not work with the
+ 	 * migration workflow of MIGRATE_SYNC_NO_COPY.
+ 	 */
+-	if (mode == MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) == MIGRATE_SYNC_NO_COPY)
+ 		return -EINVAL;
  
- #else  /* !CONFIG_KSM */
+ 	rc = 0;
+@@ -1300,10 +1300,10 @@ static long read_events(struct kioctx *ctx, long min_nr, long nr,
+  *	Create an aio_context capable of receiving at least nr_events.
+  *	ctxp must not point to an aio_context that already exists, and
+  *	must be initialized to 0 prior to the call.  On successful
+- *	creation of the aio_context, *ctxp is filled in with the resulting 
++ *	creation of the aio_context, *ctxp is filled in with the resulting
+  *	handle.  May fail with -EINVAL if *ctxp is not initialized,
+- *	if the specified nr_events exceeds internal limits.  May fail 
+- *	with -EAGAIN if the specified nr_events exceeds the user's limit 
++ *	if the specified nr_events exceeds internal limits.  May fail
++ *	with -EAGAIN if the specified nr_events exceeds the user's limit
+  *	of available events.  May fail with -ENOMEM if insufficient kernel
+  *	resources are available.  May fail with -EFAULT if an invalid
+  *	pointer is passed for ctxp.  Will fail with -ENOSYS if not
+@@ -1373,7 +1373,7 @@ COMPAT_SYSCALL_DEFINE2(io_setup, unsigned, nr_events, u32 __user *, ctx32p)
+ #endif
  
-@@ -92,6 +93,9 @@ static inline bool reuse_ksm_page(struct page *page,
- 			struct vm_area_struct *vma, unsigned long address)
- {
- 	return false;
-+static inline void ksm_exchange_page(struct page *to_page,
-+				struct page *from_page)
-+{
- }
- #endif /* CONFIG_MMU */
- #endif /* !CONFIG_KSM */
-diff --git a/mm/Makefile b/mm/Makefile
-index fa02a9f..5e6c591 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -45,6 +45,7 @@ obj-y += init-mm.o
- obj-y += memblock.o
+ /* sys_io_destroy:
+- *	Destroy the aio_context specified.  May cancel any outstanding 
++ *	Destroy the aio_context specified.  May cancel any outstanding
+  *	AIOs and block on completion.  Will fail with -ENOSYS if not
+  *	implemented.  May fail with -EINVAL if the context pointed to
+  *	is invalid.
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 97279441..e7f0e3a 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2792,7 +2792,7 @@ int f2fs_migrate_page(struct address_space *mapping,
  
- obj-y += copy_page.o
-+obj-y += exchange.o
- 
- ifdef CONFIG_MMU
- 	obj-$(CONFIG_ADVISE_SYSCALLS)	+= madvise.o
-diff --git a/mm/exchange.c b/mm/exchange.c
-new file mode 100644
-index 0000000..626bbea
---- /dev/null
-+++ b/mm/exchange.c
-@@ -0,0 +1,597 @@
-+/*
-+ * Exchange two in-use pages. Page flags and page->mapping are exchanged
-+ * as well. Only anonymous pages are supported.
-+ *
-+ * Copyright (C) 2016 NVIDIA, Zi Yan <ziy@nvidia.com>
-+ *
-+ * This work is licensed under the terms of the GNU GPL, version 2.
-+ */
-+
-+#include <linux/syscalls.h>
-+#include <linux/migrate.h>
-+#include <linux/exchange.h>
-+#include <linux/security.h>
-+#include <linux/cpuset.h>
-+#include <linux/hugetlb.h>
-+#include <linux/mm_inline.h>
-+#include <linux/page_idle.h>
-+#include <linux/page-flags.h>
-+#include <linux/ksm.h>
-+#include <linux/memcontrol.h>
-+#include <linux/balloon_compaction.h>
-+#include <linux/buffer_head.h>
-+
-+
-+#include "internal.h"
-+
-+/*
-+ * Move a list of individual pages
-+ */
-+struct pages_to_node {
-+	unsigned long from_addr;
-+	int from_status;
-+
-+	unsigned long to_addr;
-+	int to_status;
-+};
-+
-+struct page_flags {
-+	unsigned int page_error :1;
-+	unsigned int page_referenced:1;
-+	unsigned int page_uptodate:1;
-+	unsigned int page_active:1;
-+	unsigned int page_unevictable:1;
-+	unsigned int page_checked:1;
-+	unsigned int page_mappedtodisk:1;
-+	unsigned int page_dirty:1;
-+	unsigned int page_is_young:1;
-+	unsigned int page_is_idle:1;
-+	unsigned int page_swapcache:1;
-+	unsigned int page_writeback:1;
-+	unsigned int page_private:1;
-+	unsigned int __pad:3;
-+};
-+
-+
-+static void exchange_page(char *to, char *from)
-+{
-+	u64 tmp;
-+	int i;
-+
-+	for (i = 0; i < PAGE_SIZE; i += sizeof(tmp)) {
-+		tmp = *((u64*)(from + i));
-+		*((u64*)(from + i)) = *((u64*)(to + i));
-+		*((u64*)(to + i)) = tmp;
-+	}
-+}
-+
-+static inline void exchange_highpage(struct page *to, struct page *from)
-+{
-+	char *vfrom, *vto;
-+
-+	vfrom = kmap_atomic(from);
-+	vto = kmap_atomic(to);
-+	exchange_page(vto, vfrom);
-+	kunmap_atomic(vto);
-+	kunmap_atomic(vfrom);
-+}
-+
-+static void __exchange_gigantic_page(struct page *dst, struct page *src,
-+				int nr_pages)
-+{
-+	int i;
-+	struct page *dst_base = dst;
-+	struct page *src_base = src;
-+
-+	for (i = 0; i < nr_pages; ) {
-+		cond_resched();
-+		exchange_highpage(dst, src);
-+
-+		i++;
-+		dst = mem_map_next(dst, dst_base, i);
-+		src = mem_map_next(src, src_base, i);
-+	}
-+}
-+
-+static void exchange_huge_page(struct page *dst, struct page *src)
-+{
-+	int i;
-+	int nr_pages;
-+
-+	if (PageHuge(src)) {
-+		/* hugetlbfs page */
-+		struct hstate *h = page_hstate(src);
-+		nr_pages = pages_per_huge_page(h);
-+
-+		if (unlikely(nr_pages > MAX_ORDER_NR_PAGES)) {
-+			__exchange_gigantic_page(dst, src, nr_pages);
-+			return;
-+		}
-+	} else {
-+		/* thp page */
-+		BUG_ON(!PageTransHuge(src));
-+		nr_pages = hpage_nr_pages(src);
-+	}
-+
-+	for (i = 0; i < nr_pages; i++) {
-+		cond_resched();
-+		exchange_highpage(dst + i, src + i);
-+	}
-+}
-+
-+/*
-+ * Copy the page to its new location without polluting cache
-+ */
-+static void exchange_page_flags(struct page *to_page, struct page *from_page)
-+{
-+	int from_cpupid, to_cpupid;
-+	struct page_flags from_page_flags, to_page_flags;
-+	struct mem_cgroup *to_memcg = page_memcg(to_page),
-+					  *from_memcg = page_memcg(from_page);
-+
-+	from_cpupid = page_cpupid_xchg_last(from_page, -1);
-+
-+	from_page_flags.page_error = TestClearPageError(from_page);
-+	from_page_flags.page_referenced = TestClearPageReferenced(from_page);
-+	from_page_flags.page_uptodate = PageUptodate(from_page);
-+	ClearPageUptodate(from_page);
-+	from_page_flags.page_active = TestClearPageActive(from_page);
-+	from_page_flags.page_unevictable = TestClearPageUnevictable(from_page);
-+	from_page_flags.page_checked = PageChecked(from_page);
-+	ClearPageChecked(from_page);
-+	from_page_flags.page_mappedtodisk = PageMappedToDisk(from_page);
-+	ClearPageMappedToDisk(from_page);
-+	from_page_flags.page_dirty = PageDirty(from_page);
-+	ClearPageDirty(from_page);
-+	from_page_flags.page_is_young = test_and_clear_page_young(from_page);
-+	from_page_flags.page_is_idle = page_is_idle(from_page);
-+	clear_page_idle(from_page);
-+	from_page_flags.page_swapcache = PageSwapCache(from_page);
-+	from_page_flags.page_private = PagePrivate(from_page);
-+	ClearPagePrivate(from_page);
-+	from_page_flags.page_writeback = test_clear_page_writeback(from_page);
-+
-+
-+	to_cpupid = page_cpupid_xchg_last(to_page, -1);
-+
-+	to_page_flags.page_error = TestClearPageError(to_page);
-+	to_page_flags.page_referenced = TestClearPageReferenced(to_page);
-+	to_page_flags.page_uptodate = PageUptodate(to_page);
-+	ClearPageUptodate(to_page);
-+	to_page_flags.page_active = TestClearPageActive(to_page);
-+	to_page_flags.page_unevictable = TestClearPageUnevictable(to_page);
-+	to_page_flags.page_checked = PageChecked(to_page);
-+	ClearPageChecked(to_page);
-+	to_page_flags.page_mappedtodisk = PageMappedToDisk(to_page);
-+	ClearPageMappedToDisk(to_page);
-+	to_page_flags.page_dirty = PageDirty(to_page);
-+	ClearPageDirty(to_page);
-+	to_page_flags.page_is_young = test_and_clear_page_young(to_page);
-+	to_page_flags.page_is_idle = page_is_idle(to_page);
-+	clear_page_idle(to_page);
-+	to_page_flags.page_swapcache = PageSwapCache(to_page);
-+	to_page_flags.page_private = PagePrivate(to_page);
-+	ClearPagePrivate(to_page);
-+	to_page_flags.page_writeback = test_clear_page_writeback(to_page);
-+
-+	/* set to_page */
-+	if (from_page_flags.page_error)
-+		SetPageError(to_page);
-+	if (from_page_flags.page_referenced)
-+		SetPageReferenced(to_page);
-+	if (from_page_flags.page_uptodate)
-+		SetPageUptodate(to_page);
-+	if (from_page_flags.page_active) {
-+		VM_BUG_ON_PAGE(from_page_flags.page_unevictable, from_page);
-+		SetPageActive(to_page);
-+	} else if (from_page_flags.page_unevictable)
-+		SetPageUnevictable(to_page);
-+	if (from_page_flags.page_checked)
-+		SetPageChecked(to_page);
-+	if (from_page_flags.page_mappedtodisk)
-+		SetPageMappedToDisk(to_page);
-+
-+	/* Move dirty on pages not done by migrate_page_move_mapping() */
-+	if (from_page_flags.page_dirty)
-+		SetPageDirty(to_page);
-+
-+	if (from_page_flags.page_is_young)
-+		set_page_young(to_page);
-+	if (from_page_flags.page_is_idle)
-+		set_page_idle(to_page);
-+
-+	/* set from_page */
-+	if (to_page_flags.page_error)
-+		SetPageError(from_page);
-+	if (to_page_flags.page_referenced)
-+		SetPageReferenced(from_page);
-+	if (to_page_flags.page_uptodate)
-+		SetPageUptodate(from_page);
-+	if (to_page_flags.page_active) {
-+		VM_BUG_ON_PAGE(to_page_flags.page_unevictable, from_page);
-+		SetPageActive(from_page);
-+	} else if (to_page_flags.page_unevictable)
-+		SetPageUnevictable(from_page);
-+	if (to_page_flags.page_checked)
-+		SetPageChecked(from_page);
-+	if (to_page_flags.page_mappedtodisk)
-+		SetPageMappedToDisk(from_page);
-+
-+	/* Move dirty on pages not done by migrate_page_move_mapping() */
-+	if (to_page_flags.page_dirty)
-+		SetPageDirty(from_page);
-+
-+	if (to_page_flags.page_is_young)
-+		set_page_young(from_page);
-+	if (to_page_flags.page_is_idle)
-+		set_page_idle(from_page);
-+
-+	/*
-+	 * Copy NUMA information to the new page, to prevent over-eager
-+	 * future migrations of this same page.
-+	 */
-+	page_cpupid_xchg_last(to_page, from_cpupid);
-+	page_cpupid_xchg_last(from_page, to_cpupid);
-+
-+	ksm_exchange_page(to_page, from_page);
-+	/*
-+	 * Please do not reorder this without considering how mm/ksm.c's
-+	 * get_ksm_page() depends upon ksm_migrate_page() and PageSwapCache().
-+	 */
-+	ClearPageSwapCache(to_page);
-+	ClearPageSwapCache(from_page);
-+	if (from_page_flags.page_swapcache)
-+		SetPageSwapCache(to_page);
-+	if (to_page_flags.page_swapcache)
-+		SetPageSwapCache(from_page);
-+
-+
-+#ifdef CONFIG_PAGE_OWNER
-+	/* exchange page owner  */
-+	BUG();
-+#endif
-+	/* exchange mem cgroup  */
-+	to_page->mem_cgroup = from_memcg;
-+	from_page->mem_cgroup = to_memcg;
-+
-+}
-+
-+/*
-+ * Replace the page in the mapping.
-+ *
-+ * The number of remaining references must be:
-+ * 1 for anonymous pages without a mapping
-+ * 2 for pages with a mapping
-+ * 3 for pages with a mapping and PagePrivate/PagePrivate2 set.
-+ */
-+
-+static int exchange_page_move_mapping(struct address_space *to_mapping,
-+			struct address_space *from_mapping,
-+			struct page *to_page, struct page *from_page,
-+			enum migrate_mode mode,
-+			int to_extra_count, int from_extra_count)
-+{
-+	int to_expected_count = 1 + to_extra_count,
-+		from_expected_count = 1 + from_extra_count;
-+	unsigned long from_page_index = page_index(from_page),
-+				  to_page_index = page_index(to_page);
-+	int to_swapbacked = PageSwapBacked(to_page),
-+		from_swapbacked = PageSwapBacked(from_page);
-+	struct address_space *to_mapping_value = to_page->mapping,
-+						 *from_mapping_value = from_page->mapping;
-+
-+
-+	if (!to_mapping) {
-+		/* Anonymous page without mapping */
-+		if (page_count(to_page) != to_expected_count)
-+			return -EAGAIN;
-+	}
-+
-+	if (!from_mapping) {
-+		/* Anonymous page without mapping */
-+		if (page_count(from_page) != from_expected_count)
-+			return -EAGAIN;
-+	}
-+
-+	/*
-+	 * Now we know that no one else is looking at the page:
-+	 * no turning back from here.
-+	 */
-+	/* from_page  */
-+	from_page->index = to_page_index;
-+	from_page->mapping = to_mapping_value;
-+
-+	ClearPageSwapBacked(from_page);
-+	if (to_swapbacked)
-+		SetPageSwapBacked(from_page);
-+
-+
-+	/* to_page  */
-+	to_page->index = from_page_index;
-+	to_page->mapping = from_mapping_value;
-+
-+	ClearPageSwapBacked(to_page);
-+	if (from_swapbacked)
-+		SetPageSwapBacked(to_page);
-+
-+	return MIGRATEPAGE_SUCCESS;
-+}
-+
-+static int exchange_from_to_pages(struct page *to_page, struct page *from_page,
-+				enum migrate_mode mode)
-+{
-+	int rc = -EBUSY;
-+	struct address_space *to_page_mapping, *from_page_mapping;
-+
-+	VM_BUG_ON_PAGE(!PageLocked(from_page), from_page);
-+	VM_BUG_ON_PAGE(!PageLocked(to_page), to_page);
-+
-+	/* copy page->mapping not use page_mapping()  */
-+	to_page_mapping = page_mapping(to_page);
-+	from_page_mapping = page_mapping(from_page);
-+
-+	BUG_ON(from_page_mapping);
-+	BUG_ON(to_page_mapping);
-+
-+	BUG_ON(PageWriteback(from_page));
-+	BUG_ON(PageWriteback(to_page));
-+
-+	/* actual page mapping exchange */
-+	rc = exchange_page_move_mapping(to_page_mapping, from_page_mapping,
-+						to_page, from_page, mode, 0, 0);
-+	/* actual page data exchange  */
-+	if (rc != MIGRATEPAGE_SUCCESS)
-+		return rc;
-+
-+	rc = -EFAULT;
-+
-+	if (PageHuge(from_page) || PageTransHuge(from_page))
-+		exchange_huge_page(to_page, from_page);
-+	else
-+		exchange_highpage(to_page, from_page);
-+	rc = 0;
-+
-+	exchange_page_flags(to_page, from_page);
-+
-+	return rc;
-+}
-+
-+static int unmap_and_exchange(struct page *from_page, struct page *to_page,
-+				enum migrate_mode mode)
-+{
-+	int rc = -EAGAIN;
-+	int from_page_was_mapped = 0, to_page_was_mapped = 0;
-+	pgoff_t from_index, to_index;
-+	struct anon_vma *from_anon_vma = NULL, *to_anon_vma = NULL;
-+
-+	/* from_page lock down  */
-+	if (!trylock_page(from_page)) {
-+		if ((mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC)
-+			goto out;
-+
-+		lock_page(from_page);
-+	}
-+
-+	BUG_ON(PageWriteback(from_page));
-+
-+	/*
-+	 * By try_to_unmap(), page->mapcount goes down to 0 here. In this case,
-+	 * we cannot notice that anon_vma is freed while we migrates a page.
-+	 * This get_anon_vma() delays freeing anon_vma pointer until the end
-+	 * of migration. File cache pages are no problem because of page_lock()
-+	 * File Caches may use write_page() or lock_page() in migration, then,
-+	 * just care Anon page here.
-+	 *
-+	 * Only page_get_anon_vma() understands the subtleties of
-+	 * getting a hold on an anon_vma from outside one of its mms.
-+	 * But if we cannot get anon_vma, then we won't need it anyway,
-+	 * because that implies that the anon page is no longer mapped
-+	 * (and cannot be remapped so long as we hold the page lock).
-+	 */
-+	if (PageAnon(from_page) && !PageKsm(from_page))
-+		from_anon_vma = page_get_anon_vma(from_page);
-+
-+	/* to_page lock down  */
-+	if (!trylock_page(to_page)) {
-+		if ((mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC)
-+			goto out_unlock;
-+
-+		lock_page(to_page);
-+	}
-+
-+	BUG_ON(PageWriteback(to_page));
-+
-+	/*
-+	 * By try_to_unmap(), page->mapcount goes down to 0 here. In this case,
-+	 * we cannot notice that anon_vma is freed while we migrates a page.
-+	 * This get_anon_vma() delays freeing anon_vma pointer until the end
-+	 * of migration. File cache pages are no problem because of page_lock()
-+	 * File Caches may use write_page() or lock_page() in migration, then,
-+	 * just care Anon page here.
-+	 *
-+	 * Only page_get_anon_vma() understands the subtleties of
-+	 * getting a hold on an anon_vma from outside one of its mms.
-+	 * But if we cannot get anon_vma, then we won't need it anyway,
-+	 * because that implies that the anon page is no longer mapped
-+	 * (and cannot be remapped so long as we hold the page lock).
-+	 */
-+	if (PageAnon(to_page) && !PageKsm(to_page))
-+		to_anon_vma = page_get_anon_vma(to_page);
-+
-+	from_index = from_page->index;
-+	to_index = to_page->index;
-+
-+	/*
-+	 * Corner case handling:
-+	 * 1. When a new swap-cache page is read into, it is added to the LRU
-+	 * and treated as swapcache but it has no rmap yet.
-+	 * Calling try_to_unmap() against a page->mapping==NULL page will
-+	 * trigger a BUG.  So handle it here.
-+	 * 2. An orphaned page (see truncate_complete_page) might have
-+	 * fs-private metadata. The page can be picked up due to memory
-+	 * offlining.  Everywhere else except page reclaim, the page is
-+	 * invisible to the vm, so the page can not be migrated.  So try to
-+	 * free the metadata, so the page can be freed.
-+	 */
-+	if (!from_page->mapping) {
-+		VM_BUG_ON_PAGE(PageAnon(from_page), from_page);
-+		if (page_has_private(from_page)) {
-+			try_to_free_buffers(from_page);
-+			goto out_unlock_both;
-+		}
-+	} else if (page_mapped(from_page)) {
-+		/* Establish migration ptes */
-+		VM_BUG_ON_PAGE(PageAnon(from_page) && !PageKsm(from_page) &&
-+					   !from_anon_vma, from_page);
-+		try_to_unmap(from_page,
-+			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
-+		from_page_was_mapped = 1;
-+	}
-+
-+	if (!to_page->mapping) {
-+		VM_BUG_ON_PAGE(PageAnon(to_page), to_page);
-+		if (page_has_private(to_page)) {
-+			try_to_free_buffers(to_page);
-+			goto out_unlock_both_remove_from_migration_pte;
-+		}
-+	} else if (page_mapped(to_page)) {
-+		/* Establish migration ptes */
-+		VM_BUG_ON_PAGE(PageAnon(to_page) && !PageKsm(to_page) &&
-+					   !to_anon_vma, to_page);
-+		try_to_unmap(to_page,
-+			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
-+		to_page_was_mapped = 1;
-+	}
-+
-+	if (!page_mapped(from_page) && !page_mapped(to_page))
-+		rc = exchange_from_to_pages(to_page, from_page, mode);
-+
-+	/* In remove_migration_ptes(), page_walk_vma() assumes
-+	 * from_page and to_page have the same index.
-+	 * Thus, we restore old_page->index here.
-+	 * Here to_page is the old_page.
-+	 */
-+	if (to_page_was_mapped) {
-+		if (rc == MIGRATEPAGE_SUCCESS)
-+			swap(to_page->index, to_index);
-+
-+		remove_migration_ptes(to_page,
-+			rc == MIGRATEPAGE_SUCCESS ? from_page : to_page, false);
-+
-+		if (rc == MIGRATEPAGE_SUCCESS)
-+			swap(to_page->index, to_index);
-+	}
-+
-+out_unlock_both_remove_from_migration_pte:
-+	if (from_page_was_mapped) {
-+		if (rc == MIGRATEPAGE_SUCCESS)
-+			swap(from_page->index, from_index);
-+
-+		remove_migration_ptes(from_page,
-+			rc == MIGRATEPAGE_SUCCESS ? to_page : from_page, false);
-+
-+		if (rc == MIGRATEPAGE_SUCCESS)
-+			swap(from_page->index, from_index);
-+	}
-+
-+
-+
-+out_unlock_both:
-+	if (to_anon_vma)
-+		put_anon_vma(to_anon_vma);
-+	unlock_page(to_page);
-+out_unlock:
-+	/* Drop an anon_vma reference if we took one */
-+	if (from_anon_vma)
-+		put_anon_vma(from_anon_vma);
-+	unlock_page(from_page);
-+out:
-+
-+	return rc;
-+}
-+
-+/*
-+ * Exchange pages in the exchange_list
-+ *
-+ * Caller should release the exchange_list resource.
-+ *
-+ * */
-+int exchange_pages(struct list_head *exchange_list,
-+			enum migrate_mode mode,
-+			int reason)
-+{
-+	struct exchange_page_info *one_pair, *one_pair2;
-+	int failed = 0;
-+
-+	list_for_each_entry_safe(one_pair, one_pair2, exchange_list, list) {
-+		struct page *from_page = one_pair->from_page;
-+		struct page *to_page = one_pair->to_page;
-+		int rc;
-+		int retry = 0;
-+
-+again:
-+		if (page_count(from_page) == 1) {
-+			/* page was freed from under us. So we are done  */
-+			ClearPageActive(from_page);
-+			ClearPageUnevictable(from_page);
-+
-+			put_page(from_page);
-+			dec_node_page_state(from_page, NR_ISOLATED_ANON +
-+					page_is_file_cache(from_page));
-+
-+			if (page_count(to_page) == 1) {
-+				ClearPageActive(to_page);
-+				ClearPageUnevictable(to_page);
-+				put_page(to_page);
-+			} else
-+				goto putback_to_page;
-+
-+			continue;
-+		}
-+
-+		if (page_count(to_page) == 1) {
-+			/* page was freed from under us. So we are done  */
-+			ClearPageActive(to_page);
-+			ClearPageUnevictable(to_page);
-+
-+			put_page(to_page);
-+
-+			dec_node_page_state(to_page, NR_ISOLATED_ANON +
-+					page_is_file_cache(to_page));
-+
-+			dec_node_page_state(from_page, NR_ISOLATED_ANON +
-+					page_is_file_cache(from_page));
-+			putback_lru_page(from_page);
-+			continue;
-+		}
-+
-+		/* TODO: compound page not supported */
-+		if (PageCompound(from_page) || page_mapping(from_page)) {
-+			++failed;
-+			goto putback;
-+		}
-+
-+		rc = unmap_and_exchange(from_page, to_page, mode);
-+
-+		if (rc == -EAGAIN && retry < 3) {
-+			++retry;
-+			goto again;
-+		}
-+
-+		if (rc != MIGRATEPAGE_SUCCESS)
-+			++failed;
-+
-+putback:
-+		dec_node_page_state(from_page, NR_ISOLATED_ANON +
-+				page_is_file_cache(from_page));
-+
-+		putback_lru_page(from_page);
-+putback_to_page:
-+		dec_node_page_state(to_page, NR_ISOLATED_ANON +
-+				page_is_file_cache(to_page));
-+
-+		putback_lru_page(to_page);
-+
-+	}
-+	return failed;
-+}
-diff --git a/mm/ksm.c b/mm/ksm.c
-index fc64874..e5b492b 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -2716,6 +2716,41 @@ void ksm_migrate_page(struct page *newpage, struct page *oldpage)
- 		set_page_stable_node(oldpage, NULL);
+ 	/* migrating an atomic written page is safe with the inmem_lock hold */
+ 	if (atomic_written) {
+-		if (mode != MIGRATE_SYNC)
++		if ((mode & MIGRATE_MODE_MASK) != MIGRATE_SYNC)
+ 			return -EBUSY;
+ 		if (!mutex_trylock(&fi->inmem_lock))
+ 			return -EAGAIN;
+@@ -2825,7 +2825,7 @@ int f2fs_migrate_page(struct address_space *mapping,
+ 		f2fs_clear_page_private(page);
  	}
- }
-+
-+void ksm_exchange_page(struct page *to_page, struct page *from_page)
-+{
-+	struct stable_node *to_stable_node, *from_stable_node;
-+
-+	VM_BUG_ON_PAGE(!PageLocked(to_page), to_page);
-+	VM_BUG_ON_PAGE(!PageLocked(from_page), from_page);
-+
-+	to_stable_node = page_stable_node(to_page);
-+	from_stable_node = page_stable_node(from_page);
-+	if (to_stable_node) {
-+		VM_BUG_ON_PAGE(to_stable_node->kpfn != page_to_pfn(from_page),
-+					from_page);
-+		to_stable_node->kpfn = page_to_pfn(to_page);
-+		/*
-+		 * newpage->mapping was set in advance; now we need smp_wmb()
-+		 * to make sure that the new stable_node->kpfn is visible
-+		 * to get_ksm_page() before it can see that oldpage->mapping
-+		 * has gone stale (or that PageSwapCache has been cleared).
-+		 */
-+		smp_wmb();
-+	}
-+	if (from_stable_node) {
-+		VM_BUG_ON_PAGE(from_stable_node->kpfn != page_to_pfn(to_page),
-+					to_page);
-+		from_stable_node->kpfn = page_to_pfn(from_page);
-+		/*
-+		 * newpage->mapping was set in advance; now we need smp_wmb()
-+		 * to make sure that the new stable_node->kpfn is visible
-+		 * to get_ksm_page() before it can see that oldpage->mapping
-+		 * has gone stale (or that PageSwapCache has been cleared).
-+		 */
-+		smp_wmb();
-+	}
-+}
- #endif /* CONFIG_MIGRATION */
  
- #ifdef CONFIG_MEMORY_HOTREMOVE
+-	if (mode != MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) != MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+ 		migrate_page_states(newpage, page);
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index ec32fec..04ba8bb 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -885,7 +885,7 @@ static int hugetlbfs_migrate_page(struct address_space *mapping,
+ 		set_page_private(page, 0);
+ 	}
+ 
+-	if (mode != MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) != MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+ 		migrate_page_states(newpage, page);
+diff --git a/fs/iomap.c b/fs/iomap.c
+index abdd18e..8ee3f9f 100644
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -584,7 +584,7 @@ iomap_migrate_page(struct address_space *mapping, struct page *newpage,
+ 		SetPagePrivate(newpage);
+ 	}
+ 
+-	if (mode != MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) != MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+ 		migrate_page_states(newpage, page);
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index 5d2ffb1..2bb8788 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1490,7 +1490,7 @@ static int ubifs_migrate_page(struct address_space *mapping,
+ 		SetPagePrivate(newpage);
+ 	}
+ 
+-	if (mode != MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) != MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+ 		migrate_page_states(newpage, page);
+diff --git a/include/linux/migrate_mode.h b/include/linux/migrate_mode.h
+index 883c992..59d75fc 100644
+--- a/include/linux/migrate_mode.h
++++ b/include/linux/migrate_mode.h
+@@ -17,6 +17,8 @@ enum migrate_mode {
+ 	MIGRATE_SYNC_LIGHT,
+ 	MIGRATE_SYNC,
+ 	MIGRATE_SYNC_NO_COPY,
++
++	MIGRATE_MODE_MASK = 3,
+ };
+ 
+ #endif		/* MIGRATE_MODE_H_INCLUDED */
+diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+index ef858d5..5acb55f 100644
+--- a/mm/balloon_compaction.c
++++ b/mm/balloon_compaction.c
+@@ -158,7 +158,7 @@ int balloon_page_migrate(struct address_space *mapping,
+ 	 * is unlikely to be use with ballon pages. See include/linux/hmm.h for
+ 	 * user of the MIGRATE_SYNC_NO_COPY mode.
+ 	 */
+-	if (mode == MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) == MIGRATE_SYNC_NO_COPY)
+ 		return -EINVAL;
+ 
+ 	VM_BUG_ON_PAGE(!PageLocked(page), page);
+diff --git a/mm/compaction.c b/mm/compaction.c
+index f171a83..bfcbe08 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -408,7 +408,7 @@ static void update_cached_migrate(struct compact_control *cc, unsigned long pfn)
+ 
+ 	if (pfn > zone->compact_cached_migrate_pfn[0])
+ 		zone->compact_cached_migrate_pfn[0] = pfn;
+-	if (cc->mode != MIGRATE_ASYNC &&
++	if ((cc->mode & MIGRATE_MODE_MASK) != MIGRATE_ASYNC &&
+ 	    pfn > zone->compact_cached_migrate_pfn[1])
+ 		zone->compact_cached_migrate_pfn[1] = pfn;
+ }
+@@ -475,7 +475,7 @@ static bool compact_lock_irqsave(spinlock_t *lock, unsigned long *flags,
+ 						struct compact_control *cc)
+ {
+ 	/* Track if the lock is contended in async mode */
+-	if (cc->mode == MIGRATE_ASYNC && !cc->contended) {
++	if (((cc->mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC) && !cc->contended) {
+ 		if (spin_trylock_irqsave(lock, *flags))
+ 			return true;
+ 
+@@ -792,7 +792,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 	 */
+ 	while (unlikely(too_many_isolated(pgdat))) {
+ 		/* async migration should just abort */
+-		if (cc->mode == MIGRATE_ASYNC)
++		if ((cc->mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC)
+ 			return 0;
+ 
+ 		congestion_wait(BLK_RW_ASYNC, HZ/10);
+@@ -803,7 +803,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 
+ 	cond_resched();
+ 
+-	if (cc->direct_compaction && (cc->mode == MIGRATE_ASYNC)) {
++	if (cc->direct_compaction && ((cc->mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC)) {
+ 		skip_on_failure = true;
+ 		next_skip_pfn = block_end_pfn(low_pfn, cc->order);
+ 	}
+@@ -1117,7 +1117,7 @@ static bool suitable_migration_source(struct compact_control *cc,
+ 	if (pageblock_skip_persistent(page))
+ 		return false;
+ 
+-	if ((cc->mode != MIGRATE_ASYNC) || !cc->direct_compaction)
++	if (((cc->mode & MIGRATE_MODE_MASK) != MIGRATE_ASYNC) || !cc->direct_compaction)
+ 		return true;
+ 
+ 	block_mt = get_pageblock_migratetype(page);
+@@ -1216,7 +1216,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn, unsigned long
+ 		return;
+ 
+ 	/* Minimise scanning during async compaction */
+-	if (cc->direct_compaction && cc->mode == MIGRATE_ASYNC)
++	if (cc->direct_compaction && (cc->mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC)
+ 		return;
+ 
+ 	/* Pageblock boundaries */
+@@ -1448,7 +1448,7 @@ static void isolate_freepages(struct compact_control *cc)
+ 	block_end_pfn = min(block_start_pfn + pageblock_nr_pages,
+ 						zone_end_pfn(zone));
+ 	low_pfn = pageblock_end_pfn(cc->migrate_pfn);
+-	stride = cc->mode == MIGRATE_ASYNC ? COMPACT_CLUSTER_MAX : 1;
++	stride = (cc->mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC ? COMPACT_CLUSTER_MAX : 1;
+ 
+ 	/*
+ 	 * Isolate free pages until enough are available to migrate the
+@@ -1734,7 +1734,7 @@ static isolate_migrate_t isolate_migratepages(struct zone *zone,
+ 	struct page *page;
+ 	const isolate_mode_t isolate_mode =
+ 		(sysctl_compact_unevictable_allowed ? ISOLATE_UNEVICTABLE : 0) |
+-		(cc->mode != MIGRATE_SYNC ? ISOLATE_ASYNC_MIGRATE : 0);
++		(((cc->mode & MIGRATE_MODE_MASK) != MIGRATE_SYNC) ? ISOLATE_ASYNC_MIGRATE : 0);
+ 	bool fast_find_block;
+ 
+ 	/*
+@@ -1907,7 +1907,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
+ 			 * to sync compaction, as async compaction operates
+ 			 * on pageblocks of the same migratetype.
+ 			 */
+-			if (cc->mode == MIGRATE_ASYNC ||
++			if ((cc->mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC ||
+ 					IS_ALIGNED(cc->migrate_pfn,
+ 							pageblock_nr_pages)) {
+ 				return COMPACT_SUCCESS;
+@@ -2063,7 +2063,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 	unsigned long start_pfn = cc->zone->zone_start_pfn;
+ 	unsigned long end_pfn = zone_end_pfn(cc->zone);
+ 	unsigned long last_migrated_pfn;
+-	const bool sync = cc->mode != MIGRATE_ASYNC;
++	const bool sync = (cc->mode & MIGRATE_MODE_MASK) != MIGRATE_ASYNC;
+ 	bool update_cached;
+ 
+ 	cc->migratetype = gfpflags_to_migratetype(cc->gfp_mask);
+@@ -2195,7 +2195,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 			 * order-aligned block, so skip the rest of it.
+ 			 */
+ 			if (cc->direct_compaction &&
+-						(cc->mode == MIGRATE_ASYNC)) {
++						((cc->mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC)) {
+ 				cc->migrate_pfn = block_end_pfn(
+ 						cc->migrate_pfn - 1, cc->order);
+ 				/* Draining pcplists is useless in this case */
+diff --git a/mm/migrate.c b/mm/migrate.c
+index ac6f493..c161c03 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -691,7 +691,7 @@ int migrate_page(struct address_space *mapping,
+ 	if (rc != MIGRATEPAGE_SUCCESS)
+ 		return rc;
+ 
+-	if (mode != MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) !=  MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+ 		migrate_page_states(newpage, page);
+@@ -707,7 +707,7 @@ static bool buffer_migrate_lock_buffers(struct buffer_head *head,
+ 	struct buffer_head *bh = head;
+ 
+ 	/* Simple case, sync compaction */
+-	if (mode != MIGRATE_ASYNC) {
++	if ((mode & MIGRATE_MODE_MASK) != MIGRATE_ASYNC) {
+ 		do {
+ 			lock_buffer(bh);
+ 			bh = bh->b_this_page;
+@@ -804,7 +804,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
+ 
+ 	SetPagePrivate(newpage);
+ 
+-	if (mode != MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) !=  MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+ 		migrate_page_states(newpage, page);
+@@ -895,7 +895,7 @@ static int fallback_migrate_page(struct address_space *mapping,
+ {
+ 	if (PageDirty(page)) {
+ 		/* Only writeback pages in full synchronous migration */
+-		switch (mode) {
++		switch (mode & MIGRATE_MODE_MASK) {
+ 		case MIGRATE_SYNC:
+ 		case MIGRATE_SYNC_NO_COPY:
+ 			break;
+@@ -911,7 +911,7 @@ static int fallback_migrate_page(struct address_space *mapping,
+ 	 */
+ 	if (page_has_private(page) &&
+ 	    !try_to_release_page(page, GFP_KERNEL))
+-		return mode == MIGRATE_SYNC ? -EAGAIN : -EBUSY;
++		return (mode & MIGRATE_MODE_MASK) == MIGRATE_SYNC ? -EAGAIN : -EBUSY;
+ 
+ 	return migrate_page(mapping, newpage, page, mode);
+ }
+@@ -1009,7 +1009,7 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+ 	bool is_lru = !__PageMovable(page);
+ 
+ 	if (!trylock_page(page)) {
+-		if (!force || mode == MIGRATE_ASYNC)
++		if (!force || ((mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC))
+ 			goto out;
+ 
+ 		/*
+@@ -1038,7 +1038,7 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+ 		 * the retry loop is too short and in the sync-light case,
+ 		 * the overhead of stalling is too much
+ 		 */
+-		switch (mode) {
++		switch (mode & MIGRATE_MODE_MASK) {
+ 		case MIGRATE_SYNC:
+ 		case MIGRATE_SYNC_NO_COPY:
+ 			break;
+@@ -1303,9 +1303,9 @@ static int unmap_and_move_huge_page(new_page_t get_new_page,
+ 		return -ENOMEM;
+ 
+ 	if (!trylock_page(hpage)) {
+-		if (!force)
++		if (!force || ((mode & MIGRATE_MODE_MASK) != MIGRATE_SYNC))
+ 			goto out;
+-		switch (mode) {
++		switch (mode & MIGRATE_MODE_MASK) {
+ 		case MIGRATE_SYNC:
+ 		case MIGRATE_SYNC_NO_COPY:
+ 			break;
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index 0787d33..018bb51 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -1981,7 +1981,7 @@ static int zs_page_migrate(struct address_space *mapping, struct page *newpage,
+ 	 * happen under the zs lock, which does not work with
+ 	 * MIGRATE_SYNC_NO_COPY workflow.
+ 	 */
+-	if (mode == MIGRATE_SYNC_NO_COPY)
++	if ((mode & MIGRATE_MODE_MASK) == MIGRATE_SYNC_NO_COPY)
+ 		return -EINVAL;
+ 
+ 	VM_BUG_ON_PAGE(!PageMovable(page), page);
 -- 
 2.7.4
 
