@@ -2,108 +2,107 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20186C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74F3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E250E20643
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8105F20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QupdzH8o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p1g34ePl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfDDNyX (ORCPT
+        id S1729331AbfDDNzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:54:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34872 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbfDDNyV (ORCPT
+        Thu, 4 Apr 2019 09:55:38 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43482 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728661AbfDDNzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:54:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w1so3955496wrp.2;
-        Thu, 04 Apr 2019 06:54:20 -0700 (PDT)
+        Thu, 4 Apr 2019 09:55:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id u15so2367049otq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 06:55:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=moejC13WZI797yQmS6ECZGHivYF61Sd4vvOyZQQMR2M=;
-        b=QupdzH8oRaY2N8vZjswij3QuRi0BbgBD4drvhBOHcdRFTpTbxoStsCQx5AS1Mk5HWU
-         zDPKhC0TqOKj5tAbSndvWs8cNAo4JL0oNIapNijcLumVF3Ss/2hSlzwJUvDHboB0gw9l
-         126Irvq7N/HSMH6sZKqTnpO+X68mnbP+pClyJflmOr2q87Yfh6X/IW5iqtCAq7lvlb3c
-         aUXhZxBWMTcLSvDb589gPIXDo1cG+TrQkVB8LxPGlv2BweZmDQ1UeNcan/wM4r6YD5fa
-         A5295z0c32BA01kDDUMHDvi9Wyk0EGv4HFLZASHLakxEY3rPfrownTmTdDwh1+qb+2F6
-         blYw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SM7br/73jaRvXeycgmb7b5oDcueCBzlpPV8Gowg7u9c=;
+        b=p1g34ePlDqZiwR32PySBrWU4K1IUFYORtvBNbBzJDr2bG1svX3GZxvT0TMs0thSRmW
+         eFjyuek+j2wWIkx1+J4W2FJQwJFc0seICi9v7eouOhX0mF98YT4xJ6ClVIYDWEZh8wvV
+         GljcnT3r3XJSz6gRYIup2fOAgr6vzakbOT+7/EcYSIQH0m1atk8aq2IbMK81Jk6RTyEJ
+         AiuEIe9FbS1Krb7eAL6MZaFIHuO9vsBbLE1R/egaWrM14X57yEg+fo5y9GukVp0RFd7R
+         bSFMz+1LbcJhHZOLviM4+SA2iydJNyTESxA1F8IfNDSSFITBh4MuzJbikNVwJdb+nirS
+         d7qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=moejC13WZI797yQmS6ECZGHivYF61Sd4vvOyZQQMR2M=;
-        b=kOSxRvSvuueBXZuJTshIEMTu6hw4Xmn7P2t3B1tXHffmr5Z+pQfTt/tiIulVIiYc56
-         LuZxVoc5/4PeL2f9B+sdq9PEDhOVaRE/KuQKbDFjXImS1TlHRFCmILomx/1rVJ2cPhpv
-         jJ0ziJ6iL3YAe01itFT8qoEMT+iJhEKgxQGTCqCQfEOwmrSEIncDibvtMm47MrSZXr/d
-         kYVTMzkfVjV/DmfNekXL7dYDOysIWS5nveczqxqYZT/I3hYXWoHCOuq90h/KYqRbFkmn
-         cLroNR1Q3KbYVgzPhzyUfrmRteCP/YPSLAv9ewsJiUfwaNYA9iqeuSt6Qn54pOPUcAR3
-         QPVg==
-X-Gm-Message-State: APjAAAUgzA3PwSnoNjUAWT2c2zLrezqiSs3imheLmqxfdOEwY64pTkpF
-        DDZdXTFBsbPSmkyP+sgec38=
-X-Google-Smtp-Source: APXvYqwaq7BnOsNVLOoSWrDW/TgCswdPY7TvwGMIrAguJ1bdh1ASsZNCQ+pfOYeQwXxiHojjYqV/Ow==
-X-Received: by 2002:adf:b6a4:: with SMTP id j36mr4126033wre.55.1554386059245;
-        Thu, 04 Apr 2019 06:54:19 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::df7e:4a05])
-        by smtp.gmail.com with ESMTPSA id w18sm28998092wru.24.2019.04.04.06.54.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 06:54:18 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: h6: Add watchdog node
-Date:   Thu,  4 Apr 2019 15:57:36 +0200
-Message-Id: <20190404135736.8491-2-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190404135736.8491-1-peron.clem@gmail.com>
-References: <20190404135736.8491-1-peron.clem@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SM7br/73jaRvXeycgmb7b5oDcueCBzlpPV8Gowg7u9c=;
+        b=l+EjHkEop2BVoIBKXNBg1CWCYYh54SMzc9+sWR4+dp89UVLtl6JgMr4I4cSn5mBSuK
+         BsGITRZqbO15CFdeMhbPmTNitnJGkDKSyx+RYhZkJympWNydLDj1sRjzcJhCE/bCs0pA
+         ADo8e412TOBIhl69tpol4sEkR094LBBULlxdFhONcTIylZlwwImk4nraCKiBzq+oc46+
+         fUCX9IRX6riNhBLOhkY7wfePicc2jpchHqehdTb3AzBPv2cvjem6YmhaQCZWUHTORPiw
+         deUc+6u4vUCKX3HSsOaw70uJMS1L8p/Qqhs5HfCUKBb5O1RfbM01NyAjai3ZFO9nL6Oe
+         oRbg==
+X-Gm-Message-State: APjAAAXAdqwjZcMfWhTcDKLQhFaGUdbE/nA6VQQVQ8qEluta4hpT5kKQ
+        eYfq2oVijJahpXPd0WgklRPq+EHpH9S+MP4D3LoR+Q==
+X-Google-Smtp-Source: APXvYqwnCv+EI6vu/nhv/4nBkoBEHJSpJkjOmG46rmFwfq6sRYOaTRQEgeHZs+nGEhCOZsCpMO8lw+Tv7WiIo8bP+Nw=
+X-Received: by 2002:a9d:dc4:: with SMTP id 62mr4137734ots.211.1554386136503;
+ Thu, 04 Apr 2019 06:55:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190404121731.13917-1-olivier.tilmans@nokia-bell-labs.com> <CADVnQy=hsPrDwXoym18j7YzCc36669NJ1kVBR76y+FgK6Meytw@mail.gmail.com>
+In-Reply-To: <CADVnQy=hsPrDwXoym18j7YzCc36669NJ1kVBR76y+FgK6Meytw@mail.gmail.com>
+From:   Neal Cardwell <ncardwell@google.com>
+Date:   Thu, 4 Apr 2019 09:55:19 -0400
+Message-ID: <CADVnQyks1T8KZibJF+UWR0zWGvqs+fUBkCYPJFxATx5PU-csSQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] tcp: Ensure DCTCP reacts to losses
+To:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>
+Cc:     "De Schepper, Koen (Nokia - BE/Antwerp)" 
+        <koen.de_schepper@nokia-bell-labs.com>,
+        Bob Briscoe <research@bobbriscoe.net>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Florian Westphal <fw@strlen.de>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Yuchung Cheng <ycheng@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Andrew Shewmaker <agshew@gmail.com>,
+        Glenn Judd <glenn.judd@morganstanley.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 has a watchog compatible with A31.
+On Thu, Apr 4, 2019 at 9:48 AM Neal Cardwell <ncardwell@google.com> wrote:
+>
+> On Thu, Apr 4, 2019 at 8:24 AM Tilmans, Olivier (Nokia - BE/Antwerp)
+> <olivier.tilmans@nokia-bell-labs.com> wrote:
+> >
+> > From: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+> >
+> > RFC8257 =C2=A73.5 explicitly states that "A DCTCP sender MUST react to
+> > loss episodes in the same way as conventional TCP".
+> ...
+> > This patch replace the clamping of alpha by setting ssthresh to
+> > half of cwnd for both fast retransmissions and RTOs, at most once
+> > per RTT. Consequently, the dctcp_clamp_alpha_on_loss module parameter
+> > has been removed.
+>
+> Acked-by: Neal Cardwell <ncardwell@google.com>
+>
+> Thanks!
 
-Declare it in the device tree.
+FWIW, my vote is that this is an important bug fix that is appropriate
+for the net branch and -stable releases, rather than net-next.
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index bc5dc44171b7..3c2d6d0538b7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -203,6 +203,12 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		watchdog@30090a0 {
-+			compatible = "allwinner,sun50i-h6-wdt","allwinner,sun6i-a31-wdt";
-+			reg = <0x030090a0 0x20>;
-+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		pio: pinctrl@300b000 {
- 			compatible = "allwinner,sun50i-h6-pinctrl";
- 			reg = <0x0300b000 0x400>;
--- 
-2.17.1
-
+neal
