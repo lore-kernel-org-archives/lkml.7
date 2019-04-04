@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E636C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E177C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9CE206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D15206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371544;
-	bh=5qervVgcMwJU2T1v7a2Iedn937RYPqqwqqjiXaOa2QY=;
+	s=default; t=1554371552;
+	bh=khffCaXlBhpBIYtc3FYCv/JQC6N0wooRn0c43PdfCzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fz58DwXEFKnNnJiWqnUMpEQJ5bJ0ZlETcx65MfNoZIa8gVVriokivDqTeRtMCYPPy
-	 ZrgoS3PCKKN0Odsc3HRu1N29l6fmLmqG/XDPosboRUzstSL9WDu4yJZtrPTRpOAGPc
-	 RoBbE0FObPaSDlsqHEYOfKHdxae4Z1pM/APooWsc=
+	b=zNkSggGPcLEGTPXCBrjB6btUsGsVJGlP7/LlDFdPSk3Y3AasymU4Q2NNA0p+0cBda
+	 Dd/kDky5QWeeoSHoHXDmEqzX/D9VR81bbAK4r2s1/oUbTqhkiIU/4gz0ZIdvM9dPwg
+	 JWpfji+PE4Hf8be3sCJwIN2vChaYzJ2Pjk34PT0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbfDDIyM (ORCPT
+        id S1730309AbfDDJwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729218AbfDDIyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:05 -0400
+        id S1729964AbfDDIyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E71420882;
-        Thu,  4 Apr 2019 08:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6228020882;
+        Thu,  4 Apr 2019 08:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368044;
-        bh=5qervVgcMwJU2T1v7a2Iedn937RYPqqwqqjiXaOa2QY=;
+        s=default; t=1554368049;
+        bh=khffCaXlBhpBIYtc3FYCv/JQC6N0wooRn0c43PdfCzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APvSeVUwEnTCGOPNJGLxx+kdxzh49Mg9msvBH6s8P99ytnERZCZ8jIdtboThwi+9E
-         rc1lWBuRvWS73kWO+p44PjwP2M34FxlDLwmMjxyTsOe3bwYspqaIYHoucgDrKXfrdc
-         YF8FqU9PxuaRGGp9xR9QQXwa3aNd3oAOPvj1idaY=
+        b=y/NfVjCfYuxfSjkArXCR1gXnPUMzQ9ZOr7UlH8A7TkabvE+ZmYgL53Jsy3jpbgbDg
+         6UpbRv43MkcUDeNQf9up494ZC5p6vamuZ6VXri2vLK+tg2f26GLIKf6YvyYR13PIM8
+         YlXgtx6o55MtlOcqoJyjbykrbCvTQ6iTpfqePdlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Nageswara R Sastry <nasastry@in.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 017/121] scsi: hisi_sas: Set PHY linkrate when disconnected
-Date:   Thu,  4 Apr 2019 10:46:45 +0200
-Message-Id: <20190404084546.302923215@linuxfoundation.org>
+Subject: [PATCH 4.14 019/121] perf c2c: Fix c2c report for empty numa node
+Date:   Thu,  4 Apr 2019 10:46:47 +0200
+Message-Id: <20190404084546.404735244@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,79 +73,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit efdcad62e7b8a02fcccc5ccca57806dce1482ac8 ]
+[ Upstream commit e34c940245437f36d2c492edd1f8237eff391064 ]
 
-When the PHY comes down, we currently do not set the negotiated linkrate:
+Ravi Bangoria reported that we fail with an empty NUMA node with the
+following message:
 
-root@(none)$ pwd
-/sys/class/sas_phy/phy-0:0
-root@(none)$ more enable
-1
-root@(none)$ more negotiated_linkrate
-12.0 Gbit
-root@(none)$ echo 0 > enable
-root@(none)$ more negotiated_linkrate
-12.0 Gbit
-root@(none)$
+  $ lscpu
+  NUMA node0 CPU(s):
+  NUMA node1 CPU(s):   0-4
 
-This patch fixes the driver code to set it properly when the PHY comes
-down.
+  $ sudo ./perf c2c report
+  node/cpu topology bugFailed setup nodes
 
-If the PHY had been enabled, then set unknown; otherwise, flag as disabled.
+Fix this by detecting the empty node and keeping its CPU set empty.
 
-The logical place to set the negotiated linkrate for this scenario is PHY
-down routine, which is called from the PHY down ISR.
-
-However, it is not possible to know if the PHY comes down due to PHY
-disable or loss of link, as sas_phy.enabled member is not set until after
-the transport disable routine is complete, which races with the PHY down
-ISR.
-
-As an imperfect solution, use sas_phy_data.enable as the flag to know if
-the PHY is down due to disable. It's imperfect, as sas_phy_data is internal
-to libsas.
-
-I can't see another way without adding a new field to hisi_sas_phy and
-managing it, or changing SCSI SAS transport.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190305152536.21035-2-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/perf/builtin-c2c.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 8fa9bb336ad4..b167411580ba 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -10,6 +10,7 @@
-  */
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index fb76423022e8..32e64a8a6443 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -1935,6 +1935,12 @@ static int setup_nodes(struct perf_session *session)
+ 		if (!set)
+ 			return -ENOMEM;
  
- #include "hisi_sas.h"
-+#include "../libsas/sas_internal.h"
- #define DRV_NAME "hisi_sas"
- 
- #define DEV_IS_GONE(dev) \
-@@ -1508,9 +1509,18 @@ static void hisi_sas_port_formed(struct asd_sas_phy *sas_phy)
- 
- static void hisi_sas_phy_disconnected(struct hisi_sas_phy *phy)
- {
-+	struct asd_sas_phy *sas_phy = &phy->sas_phy;
-+	struct sas_phy *sphy = sas_phy->phy;
-+	struct sas_phy_data *d = sphy->hostdata;
++		nodes[node] = set;
 +
- 	phy->phy_attached = 0;
- 	phy->phy_type = 0;
- 	phy->port = NULL;
++		/* empty node, skip */
++		if (cpu_map__empty(map))
++			continue;
 +
-+	if (d->enable)
-+		sphy->negotiated_linkrate = SAS_LINK_RATE_UNKNOWN;
-+	else
-+		sphy->negotiated_linkrate = SAS_PHY_DISABLED;
- }
+ 		for (cpu = 0; cpu < map->nr; cpu++) {
+ 			set_bit(map->map[cpu], set);
  
- void hisi_sas_phy_down(struct hisi_hba *hisi_hba, int phy_no, int rdy)
+@@ -1943,8 +1949,6 @@ static int setup_nodes(struct perf_session *session)
+ 
+ 			cpu2node[map->map[cpu]] = node;
+ 		}
+-
+-		nodes[node] = set;
+ 	}
+ 
+ 	setup_nodes_header();
 -- 
 2.19.1
 
