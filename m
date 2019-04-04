@@ -2,132 +2,188 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5721C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C94C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A5320651
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F122183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfDDULD (ORCPT
+        id S1730687AbfDDULo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:11:03 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33631 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729497AbfDDULD (ORCPT
+        Thu, 4 Apr 2019 16:11:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35166 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729712AbfDDUKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:11:03 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id E142F802F6; Thu,  4 Apr 2019 22:10:52 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 22:11:03 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dmitry Torokhov <dtor@google.com>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs
- support
-Message-ID: <20190404201103.GE29984@amd>
-References: <20190308203801.57920-1-ncrews@chromium.org>
- <20190308210843.GA16125@amd>
- <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com>
- <20190404112415.GB18653@amd>
- <CAE_wzQ96MkKb7uSoVBNkOZexevUKPf4jHyQZneg7YNCEs7SHfQ@mail.gmail.com>
- <20190404190326.GC27340@amd>
- <CAE_wzQ8mr1OMKB+ASfsCdGcs70YrzEMN4Htfg1+O51=ByhXchw@mail.gmail.com>
- <20190404192331.GB29984@amd>
- <CAE_wzQ_4Jb+4dDTFGQ7+sbQ-M8Qm8U_k7ug2DoZKKjTbf6pPTQ@mail.gmail.com>
+        Thu, 4 Apr 2019 16:10:45 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34K3Shc028312
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 16:10:43 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rnqkkk4e6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:10:43 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 4 Apr 2019 21:10:42 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Apr 2019 21:10:38 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34KAbms25231442
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Apr 2019 20:10:37 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB885B2064;
+        Thu,  4 Apr 2019 20:10:37 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8CE4CB205F;
+        Thu,  4 Apr 2019 20:10:37 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Apr 2019 20:10:37 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6EDAE16C2A41; Thu,  4 Apr 2019 13:10:39 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 13:10:39 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, oleg@redhat.com, jannh@google.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-doc@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] doc/rcuref: Document real world examples in kernel
+Reply-To: paulmck@linux.ibm.com
+References: <20190329140555.118463-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Oiv9uiLrevHtW1RS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAE_wzQ_4Jb+4dDTFGQ7+sbQ-M8Qm8U_k7ug2DoZKKjTbf6pPTQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190329140555.118463-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19040420-2213-0000-0000-000003718407
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010873; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01184350; UDB=6.00620121; IPR=6.00965103;
+ MB=3.00026298; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-04 20:10:41
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040420-2214-0000-0000-00005DE7A305
+Message-Id: <20190404201039.GL14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904040127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 29, 2019 at 10:05:55AM -0400, Joel Fernandes (Google) wrote:
+> Document similar real world examples in the kernel corresponding to the
+> second and third code snippets. Also correct an issue in
+> release_referenced() in the code snippet example.
+> 
+> Cc: oleg@redhat.com
+> Cc: jannh@google.com
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
---Oiv9uiLrevHtW1RS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good catch, thank you!
 
-On Thu 2019-04-04 13:07:39, Dmitry Torokhov wrote:
-> On Thu, Apr 4, 2019 at 12:23 PM Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > Hi!
-> >
-> > > > > > Yeah, well, we not let the cros_kbd_led_backlight.c use chromeo=
-s:: in
-> > > > > > the first place. But it happened. We want all backlights for the
-> > > > > > system keyboard to use common name, and "chromeos" is not really
-> > > > > > suitable for that. "platform" is.
-> > > > >
-> > > > > Pavel, who exactly wants this and why? Looking at today's -next I=
- see:
-> > > > >
-> > > > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-> > > > > "::kbd_backlight" | wc -l
-> > > > > 18
-> > > > > dtor@dtor-ws:~/kernel/linux-next ((next-20190404))$ git grep
-> > > > > "platform::kbd_backlight" | wc -l
-> > > > > 0
-> > > > >
-> > > > > so there isn't a single instance of "platform::kbd_backlight" and=
- we
-> > > > > definitely not changing existing names.
-> > > >
-> > > > Yeah, we made mistakes in the past. We _don't_ want userspace to ha=
-ve
-> > > > ever growing list of names for userspace to follow.
-> > > >
-> > > > Backlight of internal keyboard is pretty common concept and there
-> > > > should be one name for it.
-> > >
-> > > It is the *function* that is interesting to userspace, not full name,
-> > > and we have proper standardization there.
-> >
-> > Well, if full name is not interesting, as you argue, why do we have
-> > this discussion?
->=20
-> Because I need to understand why you believe that device name for
-> kbd_backlight matters, and having wilco::kbd_backlight is a bad idea,
-> but, for example, having max77650::kbd_backlight is perfectly fine if
-> somebody decided to wire it in this way.
+As usual, I could not resist doing a bit of wordsmithing.  Please let me
+know if I messed anything up in the version shown below.
 
-max77650::kbd_backlight is not fine and we'll try to prevent that in
-future.
+								Thanx, Paul
 
-We want one name for internal keyboard backlight. What exactly that
-name is is not _that_ important, but platform::kbd_backlight seems
-like reasonable choice.
+------------------------------------------------------------------------
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+commit adcd92c0ab303b57b28a3cd097bd9ece824c14f6
+Author: Joel Fernandes (Google) <joel@joelfernandes.org>
+Date:   Fri Mar 29 10:05:55 2019 -0400
 
---Oiv9uiLrevHtW1RS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+    doc/rcuref: Document real world examples in kernel
+    
+    Document similar real world examples in the kernel corresponding to the
+    second and third code snippets. Also correct an issue in
+    release_referenced() in the code snippet example.
+    
+    Cc: oleg@redhat.com
+    Cc: jannh@google.com
+    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+    [ paulmck: Do a bit of wordsmithing. ]
+    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+diff --git a/Documentation/RCU/rcuref.txt b/Documentation/RCU/rcuref.txt
+index 613033ff2b9b..c0bab7fb57e7 100644
+--- a/Documentation/RCU/rcuref.txt
++++ b/Documentation/RCU/rcuref.txt
+@@ -12,6 +12,7 @@ please read on.
+ Reference counting on elements of lists which are protected by traditional
+ reader/writer spinlocks or semaphores are straightforward:
+ 
++CODE LISTING A:
+ 1.				2.
+ add()				search_and_reference()
+ {				{
+@@ -28,7 +29,8 @@ add()				search_and_reference()
+ release_referenced()			delete()
+ {					{
+     ...					    write_lock(&list_lock);
+-    atomic_dec(&el->rc, relfunc)	    ...
++    if(atomic_dec_and_test(&el->rc))	    ...
++	kfree(el);
+     ...					    remove_element
+ }					    write_unlock(&list_lock);
+  					    ...
+@@ -44,6 +46,7 @@ search_and_reference() could potentially hold reference to an element which
+ has already been deleted from the list/array.  Use atomic_inc_not_zero()
+ in this scenario as follows:
+ 
++CODE LISTING B:
+ 1.					2.
+ add()					search_and_reference()
+ {					{
+@@ -79,6 +82,7 @@ search_and_reference() code path.  In such cases, the
+ atomic_dec_and_test() may be moved from delete() to el_free()
+ as follows:
+ 
++CODE LISTING C:
+ 1.					2.
+ add()					search_and_reference()
+ {					{
+@@ -114,6 +118,16 @@ element can therefore safely be freed.  This in turn guarantees that if
+ any reader finds the element, that reader may safely acquire a reference
+ without checking the value of the reference counter.
+ 
++A clear advantage of the RCU-based pattern in listing C over the one
++in listing B is that any call to search_and_reference() that locates
++a given object will succeed in obtaining a reference to that object,
++even given a concurrent invocation of delete() for that same object.
++Similarly, a call to delete() is not delayed even if there are an
++arbitrarily large number of calls to search_and_reference() searching
++for the same object that delete() was invoked on.  Instead, all that is
++delayed is the eventual invocation of kfree(), which is usually not a
++problem on modern computer systems, even the small ones.
++
+ In cases where delete() can sleep, synchronize_rcu() can be called from
+ delete(), so that el_free() can be subsumed into delete as follows:
+ 
+@@ -130,3 +144,7 @@ delete()
+     	kfree(el);
+     ...
+ }
++
++As additional examples in the kernel, the pattern in listing C is used by
++reference counting of struct pid, while the pattern in listing B is used by
++struct posix_acl.
 
-iEYEARECAAYFAlymZNcACgkQMOfwapXb+vJMuQCgtpXHKiya8+IaL3HEtsjJ0nwK
-vB0An3F53T4uI6dDdvkfyntFVdX6tY5Y
-=Ex99
------END PGP SIGNATURE-----
-
---Oiv9uiLrevHtW1RS--
