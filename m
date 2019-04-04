@@ -2,126 +2,89 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD6AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90944C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9151E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:11:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pkh47teP"
+	by mail.kernel.org (Postfix) with ESMTP id 67A8C20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbfDDOLa (ORCPT
+        id S1728699AbfDDOMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:11:30 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34849 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbfDDOL3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:11:29 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j132so2008588oib.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rKIumIW4/pqk9mqvGkSZcYMVkb26vhngqjq/5DBwZgQ=;
-        b=Pkh47tePszMlIZGUWv2KJ/O9eEZpY0s1yE8lY+JhWob/SHGaPy4MTsnBlqfcvnObIh
-         782FRqtopZhjYhLma1XzQwPHzh9oewNTkKCpeAgopzP/hdup3JF+SbgEI5F4ywTBmQ3b
-         Rrfnd4fCJm2BBxsbT9Ml6RC8N+5QrXPxR/xzE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rKIumIW4/pqk9mqvGkSZcYMVkb26vhngqjq/5DBwZgQ=;
-        b=CdDOGZaJ5BRD/E2l8MeE8BPL2GqN9gu9mW+PWqNtwE+LlW0y9hX5Z9Mg1ym2YldeVl
-         okuFpEefx076niewRfWEgPf6VUsJzZpDYTScV5Gim55QdFwa0GKJzFPsFPjod+ji1Bvz
-         ipdwmI+H95pIhdX2AJym+L2jutr/5eikTCC4zbLBcwE2ieSIIFHsWC+bckze0dR0KA/r
-         3rMcafhgD2EWA2pedo9/zkNpVsT9OSbM2Ma6mzyhzJZHU02/fJGVOIExEaSYFkbBxhXK
-         h7aXHrscbTzFOcuB2ppcX6g8NbbKwipLuXUXXNADfq9yxJVPfpCFLbKdfoiK3p9wfrZj
-         6HDQ==
-X-Gm-Message-State: APjAAAVODQrfPRMSJBSYdxf6varHumjVHFshiYVq61LxfOAbmC3L+0MK
-        mx001WvCno+nwS3L4/YPmKPTg8A/cdg=
-X-Google-Smtp-Source: APXvYqx7o7gcS19V2uTteqwXmEGztjFtDfGfqjJi0VNod39z/cRQWFXZZWV4RMpwlrMYqg6Wk9S0vw==
-X-Received: by 2002:aca:b607:: with SMTP id g7mr3518128oif.6.1554387088848;
-        Thu, 04 Apr 2019 07:11:28 -0700 (PDT)
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com. [209.85.210.54])
-        by smtp.gmail.com with ESMTPSA id p205sm7474394oia.49.2019.04.04.07.11.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 07:11:27 -0700 (PDT)
-Received: by mail-ot1-f54.google.com with SMTP id m10so2468771otp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:11:27 -0700 (PDT)
-X-Received: by 2002:a9d:61cf:: with SMTP id h15mr4235102otk.140.1554387087097;
- Thu, 04 Apr 2019 07:11:27 -0700 (PDT)
+        Thu, 4 Apr 2019 10:12:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44501 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727191AbfDDOMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 10:12:49 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 86389313F864;
+        Thu,  4 Apr 2019 14:12:49 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-97.pek2.redhat.com [10.72.12.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C95D19C69;
+        Thu,  4 Apr 2019 14:12:45 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 22:12:41 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190404141241.GB7789@dhcp-128-65.nay.redhat.com>
+References: <20190325231000.GA9184@jeru.linux.bs1.fc.nec.co.jp>
+ <20190326135714.GG1867@zn.tnic>
+ <20190327014852.GA3659@MiWiFi-R3L-srv>
+ <73322ba9-e436-68db-7863-afd31607d969@ce.jp.nec.com>
+ <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190402102529.GA21698@jeru.linux.bs1.fc.nec.co.jp>
+ <20190404073233.GC5708@dhcp-128-65.nay.redhat.com>
+ <20190404122425.GC22539@zn.tnic>
 MIME-Version: 1.0
-References: <20190308203801.57920-1-ncrews@chromium.org> <20190308210843.GA16125@amd>
- <CAHX4x85=_76=Kyepf3Nw++4yVKOZujhLsonzaicZOnY5fi-Pfw@mail.gmail.com> <20190404112415.GB18653@amd>
-In-Reply-To: <20190404112415.GB18653@amd>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Thu, 4 Apr 2019 08:11:15 -0600
-X-Gmail-Original-Message-ID: <CAHX4x87zDrFMc1z0vbSE5+frPy+Ri9YD=9LtKXtsaGwhtXOrJQ@mail.gmail.com>
-Message-ID: <CAHX4x87zDrFMc1z0vbSE5+frPy+Ri9YD=9LtKXtsaGwhtXOrJQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs support
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404122425.GC22539@zn.tnic>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 04 Apr 2019 14:12:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 5:24 AM Pavel Machek <pavel@ucw.cz> wrote:
->
-> On Mon 2019-03-11 09:29:06, Nick Crews wrote:
-> > Thanks for looking this over. I will fix most of your concerns, but
-> > have one question.
-> >
-> > On Fri, Mar 8, 2019 at 2:08 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > >
-> > > On Fri 2019-03-08 13:38:02, Nick Crews wrote:
-> > > > This patch is meant to be applied on top of the for-next
-> > > > branch of the platform/chrome repository, as it uses some of
-> > > > the code staged there.
-> > > >
-> > > > The EC is in charge of controlling the keyboard backlight on
-> > > > the Wilco platform. We expose a standard LED class device at
-> > > > /sys/class/leds/wilco::kbd_backlight. This driver is modeled
-> > > > after the standard Chrome OS keyboard backlight driver at
-> > > > drivers/platform/chrome/cros_kbd_led_backlight.c
-> > >
-> > > Can you make it "platform::kbd_backlight"? We want some consistency
-> > > there.
-> >
-> > The analogous name in the standard driver
-> > drivers/platform/chrome/cros_kbd_led_backlight.c is
-> > "chromeos::kbd_backlight", and I thought "wilco" was a better
-> > substitute for "chromeos" than "platform" would be. What other thing
-> > are you saying "platform" would be consistent with?
->
-> Yeah, well, we not let the cros_kbd_led_backlight.c use chromeos:: in
-> the first place. But it happened. We want all backlights for the
-> system keyboard to use common name, and "chromeos" is not really
-> suitable for that. "platform" is.
->
->                                                                         Pavel
+On 04/04/19 at 02:24pm, Borislav Petkov wrote:
+> On Thu, Apr 04, 2019 at 03:32:33PM +0800, Dave Young wrote:
+> > BTW, it would be good to start a new thread when you send V4 :)
+> 
+> Yes please.
+> 
+> > > +	/* Get systab from boot params. */
+> > > +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
+> > > +	if (!systab)
+> > > +		error("EFI system table not found in kexec boot_params.");
+> > 
+> > Instead of hang the system, return 0 should be better
+> 
+> Can the kexec kernel even function if we fail here?
 
-That reasoning makes sense Pavel. I don't think we care that much
-about what the prefix actually is. The userspace daemon only looks
-for something that matches "*:kbd_backlight". Therefore, I think we
-should change both of these to use "platform::kbd_backlight".
-Enric agrees with me here, any other concerns? If I don't hear anything
-I'll add that change to this patch as well and re-send it.
+It only bootable when people provide acpi_rsdp via cmdline or
+boot_params.  According to current code logic, cmdline/boot_param is
+handled first so kexec boot will not work in this case.
 
-Thanks,
-Nick
+The early code hang can make people confused, it is hard to
+say what happens and not easy to debug.   But if we return 0 then kernel
+just continue to boot, and fail later because of no acpi root pointer, at
+least we can have some kernel boot log.
+
+Thanks
+Dave
