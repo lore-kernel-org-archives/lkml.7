@@ -2,201 +2,98 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E64C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D246C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84B4206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF1E206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmKbeIZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfDDTau (ORCPT
+        id S1730400AbfDDTcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:30:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:43341 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727398AbfDDTau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:30:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 12:30:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,309,1549958400"; 
-   d="scan'208";a="140047806"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga003.jf.intel.com with ESMTP; 04 Apr 2019 12:30:46 -0700
-Date:   Thu, 4 Apr 2019 12:23:07 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v6 13/20] x86/split_lock: Enable split lock detection by
- default
-Message-ID: <20190404192306.GA178488@romley-ivt3.sc.intel.com>
-References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
- <1554326526-172295-14-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1904041932500.1802@nanos.tec.linutronix.de>
+        Thu, 4 Apr 2019 15:32:01 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34451 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDDTcB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 15:32:01 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p10so5262995wrq.1;
+        Thu, 04 Apr 2019 12:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ut9ZIcQEIyOfCvwVYiwns6AsZHwULo05/EUMHjy0wrI=;
+        b=dmKbeIZkzw/Ft9WcPngeUkMFMnpSwyYVjH3F2qQwp5UtMqsSx86QuJfQv9xsPIgRa5
+         48uhOCvvrguaMl3C510eaOgAJQtFu/aRf0BdnR8wwJ3atzFReKtzZGECWtTLFHkTJJ5p
+         CIJIVwGv1GTyiG0og7p5t/i9m8TJ6CHFhoSWz2FptiQhC+StKMdznf4P8IbgtBoLWKjd
+         WxcZnZRUbfys1xV1PEz1NwLOWw8lNJz8rpQp9p5cLg3BiDGwmkVejY44lNWiGVPoGcYx
+         WqEpZQOHZiSCsYYQStuisWhaZJ1bV0VLMbjxzHe7EIlpXAQrWXN8YE53Qb1s8PON0ayV
+         aXpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ut9ZIcQEIyOfCvwVYiwns6AsZHwULo05/EUMHjy0wrI=;
+        b=ZCS+8jlFbh29OFmEySI2hBLr96X5PG8USmv/GP3r8nb6mqWyHjmQUrxFT++CZ/2viL
+         XQPcGxEcAhn/KvUA4wV5P+LbjBXQ860RzZwC6Zi1y5SdhUqvLISX9BBIpVhUSpko/ORG
+         uRfqcKwAdlRTfhZ/txwe0xW9W+0DBqnb3Q1rd04pSPMU3GwDxja+SyE3eAk+7gLvjeI5
+         bNNTHmvCloCGXsZ5gaB8gsretPHTFkQT06BNRLKaToa5A6b6zPLu8czW2+ngENgyX66k
+         smioD2UvOD8pbZCOt6CLq3hUos7Xr5rAUlA2d86rtlNXCM9G6vIod9uI6+CxqBK1BHfa
+         8dnw==
+X-Gm-Message-State: APjAAAXCcnDtuKJ7ILj08b2TWVqcd5+PoaAHWpCzOieQdW6nwzeGJu8g
+        TI6uFdHPMC0DWWg99jeu1MUqw7Do
+X-Google-Smtp-Source: APXvYqyhnaNAdX/151eu9l/GRRK7l50NFS9BjjX1mGAUtf2JCs2L8MqjS4AzFehh6HU5l5PAgK1AHw==
+X-Received: by 2002:a5d:5284:: with SMTP id c4mr5566902wrv.281.1554406319435;
+        Thu, 04 Apr 2019 12:31:59 -0700 (PDT)
+Received: from [192.168.1.19] (dkj99.neoplus.adsl.tpnet.pl. [83.24.13.99])
+        by smtp.gmail.com with ESMTPSA id o130sm32402784wmo.43.2019.04.04.12.31.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 12:31:58 -0700 (PDT)
+Subject: Re: [PATCH 3/5] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+To:     Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+References: <20190325142403.30447-1-dmurphy@ti.com>
+ <20190325142403.30447-4-dmurphy@ti.com>
+ <4e38128a-fa8f-aa94-284f-2c5a4906e17d@gmail.com>
+ <83e31761-714d-db83-8c35-cf45243cb50b@ti.com>
+ <4983e0b6-ae2b-9d15-0408-fdb23869711a@gmail.com>
+ <28007702-cee0-079b-ccda-864f98a7b520@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <2b80bc24-54dd-16d9-a024-d2340aec6547@gmail.com>
+Date:   Thu, 4 Apr 2019 21:31:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904041932500.1802@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <28007702-cee0-079b-ccda-864f98a7b520@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 08:07:57PM +0200, Thomas Gleixner wrote:
-> On Wed, 3 Apr 2019, Fenghua Yu wrote:
+On 4/4/19 9:27 PM, Dan Murphy wrote:
+[...]
+> Maybe I should rename this to ti,brightness-resolution with the same values.
+> or ti,brightness-res for short hand.
 > 
-> > A split locked access locks bus and degrades overall memory access
-> > performance. When split lock detection feature is enumerated, enable
-> > the feature by default to find any split lock issue and then fix
-> > the issue.
-> 
-> Enabling the feature allows to find the issues, but does not automagically
-> fix them. Come on.
+> Or I could try to figure out the max-microamp but it really does not describe the hardware or
+> the configuration.
 
-Ok. I will remove the "and then fix the issue".
+ti,brightness-resolution sounds good to me.
 
-> 
-> > +#define DISABLE_SPLIT_LOCK_DETECT 0
-> > +#define ENABLE_SPLIT_LOCK_DETECT  1
-> 
-> If those defines have a value at all, please start with the facility not
-> with functionality, i.e. AC_SPLIT_LOCK_ENABLE....
+Rob has the last word, though.
 
-OK.
-
-> 
-> > +
-> > +static DEFINE_MUTEX(split_lock_detect_mutex);
-> > +static int split_lock_detect_val;
-> 
-> detect_val? What value is that?
-
-According to previous discussions, I was told to call this split lock feature
-as "split lock detection" instead of "#AC for split lock". So I use
-"split_lock_detect..." in variable names or function names, call feature flag
-as "split_lock_detect", and call the feature as "split lock detection" in
-descriptions.
-
-If you don't agree to name feature as "split lock detection", I can change
-variable names/function names/feature flag/descriptions etc back to previous
-names "ac_split_lock...", "#AC for split lock", etc.
-
-The variable split_lock_detect_val is either 0 or 1. It stores current
-enable/disable status of split lock detection feature. By default it's
-one after the feature is enumerated. Then sysadmin can change it to 0 or 1
-to enable or disable the feature during run time.
-
-> Its supposed to hold those magic defines
-> above. So something like
-> 
-> static unsigned int ac_split_lock_enable;
-
-If you agree to name the split lock feature as "split lock detection" feature,
-can I change this variable to static unsigned int split_lock_detect_enable?
-
-> >  /*
-> >   * Just in case our CPU detection goes bad, or you have a weird system,
-> >   * allow a way to override the automatic disabling of MPX.
-> > @@ -161,10 +167,45 @@ static bool bad_spectre_microcode(struct cpuinfo_x86 *c)
-> >  	return false;
-> >  }
-> >  
-> > +static u32 new_sp_test_ctl_val(u32 test_ctl_val)
-> > +{
-> > +	/* Change the split lock setting. */
-> > +	if (READ_ONCE(split_lock_detect_val) == DISABLE_SPLIT_LOCK_DETECT)
-> 
-> That READ_ONCE() is required because?
-
-Ok. Will remove READ_ONCE().
-
-> 
-> > +		test_ctl_val &= ~TEST_CTL_ENABLE_SPLIT_LOCK_DETECT;
-> > +	else
-> > +		test_ctl_val |= TEST_CTL_ENABLE_SPLIT_LOCK_DETECT;
-> > +
-> > +	return test_ctl_val;
-> > +}
-> 
-> Aside of that do we really need a misnomed function which replaces the
-> simple inline code at the call site:
-> 
-> 	rdmsr(l, h)
-> 	l &= ~TEST_CTL_ENABLE_SPLIT_LOCK_DETECT;
-> 	l |= ac_split_lock_enable << TEST_CTL_ENABLE_SPLIT_LOCK_DETECT_SHIFT;
-> 	wrmrs(...)
-> 
-> or the even more simple
-> 
-> 	if (ac_split_lock_enable)
-> 		msr_set_bit(...)
-> 	else
-> 		msr_clear_nit(...)
-> 
-> Hmm?
-
-The function new_sp_test_ctrl_val() will be called twice: here when
-initializing split lock detection and in split_lock_detect_store()
-when enabling/disabling the feature through the sysfs interface in
-patch 0014.
-
-So can I still keep this function and name it as get_new_test_ctrl_val()?
-
-> 
-> > +
-> > +static inline void show_split_lock_detection_info(void)
-> > +{
-> > +	if (READ_ONCE(split_lock_detect_val))
-> 
-> That READ_ONCE() is required because?
-
-Ok. Will remove READ_ONCE().
-
-> 
-> > +		pr_info_once("x86/split_lock: split lock detection enabled\n");
-> > +	else
-> > +		pr_info_once("x86/split_lock: split lock detection disabled\n");
-> 
-> pr_fmt exists for a reason and having 'split lock' repeated several times
-> in the same line is not making it more readable.
-
-Ok. I will change the string to "x86/split_lock_detection: enabled\n",
-is it ok?
-
-> 
-> 
-> > +
-> >  	/* Unmask CPUID levels if masked: */
-> >  	if (c->x86 > 6 || (c->x86 == 6 && c->x86_model >= 0xd)) {
-> >  		if (msr_clear_bit(MSR_IA32_MISC_ENABLE,
-> > @@ -1032,6 +1073,7 @@ cpu_dev_register(intel_cpu_dev);
-> >  static void __init set_split_lock_detect(void)
-> >  {
-> >  	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
-> > +	split_lock_detect_val = 1;
-> 
-> Oh well. You add defines on top of the file and then you don't use them.
-
-Will fix this.
-
-Thanks.
-
--Fenghua
+-- 
+Best regards,
+Jacek Anaszewski
