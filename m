@@ -7,56 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09D9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D14A2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F38218C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368916;
-	bh=/9+UlcMc5xJs3owtcp3OUu0Qk5OG2b98/mr7PcIXIZo=;
+	s=default; t=1554368919;
+	bh=fzsf8mEBolxOqBBeSI4ftzhD+dkt108qq2I/neccbZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0DhHe5hRyeMsnuh6vlRaXD3+7sqTKHgZY+/Eu6af08yJr/hldJ3Px/bz0oqeYcBD
-	 Baz+QTWXJIDhLeFuSXRmLKajRoLl3Pnd09FWQz5axzB6iE7I0NUrrezTffB7mwkYW2
-	 WHTaxgdROBHqusDEX/Hr2+0keaHaohe4cjfO51yA=
+	b=icv/JjcRp0wfJj+B+A6zqY4mTLuhRiJY7PEfi9kglk3bqSMrY9VPd+hqj558Fz2iK
+	 I1suESg5XLr2d2lk99ACJgmrhpPhxe7APqqcrldabed6z06dlt4Q4Z97a/k0T1aPv/
+	 u/FehLclNvN/dbjDLZVrT+YhU6PvVIQepmwwKnDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732675AbfDDJIf (ORCPT
+        id S1732684AbfDDJIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732667AbfDDJIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:08:32 -0400
+        id S1732673AbfDDJIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:08:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E677214AF;
-        Thu,  4 Apr 2019 09:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDF9521741;
+        Thu,  4 Apr 2019 09:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368911;
-        bh=/9+UlcMc5xJs3owtcp3OUu0Qk5OG2b98/mr7PcIXIZo=;
+        s=default; t=1554368914;
+        bh=fzsf8mEBolxOqBBeSI4ftzhD+dkt108qq2I/neccbZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XUbQhFlgO1C5cnwZfhQDrSC4/XwcngOhzoIsrQvCRShygIycMDbXwMAlq+AnSw/pC
-         qQzWQwha0ty8C+9AsR4adycbC5OgMx8yVHuRqGkJvvTTXB+6jyHU/UPJGhc2AXdvT3
-         mB5qGn/5D7KR4+uWy3e06+4ejU+TIDsBKGy6luYo=
+        b=dlGD0Ie0EVK5zy2o7arCOGy/kvfPL58ybk0+keMwL9ZNKTc7rJ1RJq8nKJ6EEs4uG
+         p0qsps/3DseewR2VMu8WZE/FwNe31xdBiQPM1XTtRuYOsHZ9Y6z8uGeAkO8E3qqau4
+         9kzm5DSzLvVNTCZSNS52jGV9bQbFCtuDLDap41uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Eli Cohen <eli@mellanox.com>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 027/246] mm/cma.c: cma_declare_contiguous: correct err handling
-Date:   Thu,  4 Apr 2019 10:45:27 +0200
-Message-Id: <20190404084620.062397333@linuxfoundation.org>
+Subject: [PATCH 5.0 012/246] net/mlx5: Avoid panic when setting vport mac, getting vport config
+Date:   Thu,  4 Apr 2019 10:45:12 +0200
+Message-Id: <20190404084619.631622903@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -75,57 +68,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
+[ Upstream commit 6e77c413e8e73d0f36b5358b601389d75ec4451c ]
 
-In case cma_init_reserved_mem failed, need to free the memblock
-allocated by memblock_reserve or memblock_alloc_range.
+If we try to set VFs mac address on a VF (not PF) net device,
+the kernel will be crash. The commands are show as below:
 
-Quote Catalin's comments:
-  https://lkml.org/lkml/2019/2/26/482
+$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
+$ ip link set $MLX_VF0 vf 0 mac 00:11:22:33:44:00
 
-Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
-ignores the memblock_reserve() as a memblock_alloc() implementation
-detail. It is, however, tolerant to memblock_free() being called on
-a sub-range or just a different range from a previous memblock_alloc().
-So the original patch looks fine to me. FWIW:
+[exception RIP: mlx5_eswitch_set_vport_mac+41]
+[ffffb8b7079e3688] do_setlink at ffffffff8f67f85b
+[ffffb8b7079e37a8] __rtnl_newlink at ffffffff8f683778
+[ffffb8b7079e3b68] rtnl_newlink at ffffffff8f683a63
+[ffffb8b7079e3b90] rtnetlink_rcv_msg at ffffffff8f67d812
+[ffffb8b7079e3c10] netlink_rcv_skb at ffffffff8f6b88ab
+[ffffb8b7079e3c60] netlink_unicast at ffffffff8f6b808f
+[ffffb8b7079e3ca0] netlink_sendmsg at ffffffff8f6b8412
+[ffffb8b7079e3d18] sock_sendmsg at ffffffff8f6452f6
+[ffffb8b7079e3d30] ___sys_sendmsg at ffffffff8f645860
+[ffffb8b7079e3eb0] __sys_sendmsg at ffffffff8f647a38
+[ffffb8b7079e3f38] do_syscall_64 at ffffffff8f00401b
+[ffffb8b7079e3f50] entry_SYSCALL_64_after_hwframe at ffffffff8f80008c
 
-Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+and
+
+[exception RIP: mlx5_eswitch_get_vport_config+12]
+[ffffa70607e57678] mlx5e_get_vf_config at ffffffffc03c7f8f [mlx5_core]
+[ffffa70607e57688] do_setlink at ffffffffbc67fa59
+[ffffa70607e577a8] __rtnl_newlink at ffffffffbc683778
+[ffffa70607e57b68] rtnl_newlink at ffffffffbc683a63
+[ffffa70607e57b90] rtnetlink_rcv_msg at ffffffffbc67d812
+[ffffa70607e57c10] netlink_rcv_skb at ffffffffbc6b88ab
+[ffffa70607e57c60] netlink_unicast at ffffffffbc6b808f
+[ffffa70607e57ca0] netlink_sendmsg at ffffffffbc6b8412
+[ffffa70607e57d18] sock_sendmsg at ffffffffbc6452f6
+[ffffa70607e57d30] ___sys_sendmsg at ffffffffbc645860
+[ffffa70607e57eb0] __sys_sendmsg at ffffffffbc647a38
+[ffffa70607e57f38] do_syscall_64 at ffffffffbc00401b
+[ffffa70607e57f50] entry_SYSCALL_64_after_hwframe at ffffffffbc80008c
+
+Fixes: a8d70a054a718 ("net/mlx5: E-Switch, Disallow vlan/spoofcheck setup if not being esw manager")
+Cc: Eli Cohen <eli@mellanox.com>
+Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Acked-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index c7b39dd3b4f6..f4f3a8a57d86 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -353,12 +353,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 3e8ed5586821..13c48883ed61 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -1812,7 +1812,7 @@ int mlx5_eswitch_set_vport_mac(struct mlx5_eswitch *esw,
+ 	u64 node_guid;
+ 	int err = 0;
  
- 	ret = cma_init_reserved_mem(base, size, order_per_bit, name, res_cma);
- 	if (ret)
--		goto err;
-+		goto free_mem;
+-	if (!MLX5_CAP_GEN(esw->dev, vport_group_manager))
++	if (!esw || !MLX5_CAP_GEN(esw->dev, vport_group_manager))
+ 		return -EPERM;
+ 	if (!LEGAL_VPORT(esw, vport) || is_multicast_ether_addr(mac))
+ 		return -EINVAL;
+@@ -1886,7 +1886,7 @@ int mlx5_eswitch_get_vport_config(struct mlx5_eswitch *esw,
+ {
+ 	struct mlx5_vport *evport;
  
- 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
- 		&base);
- 	return 0;
- 
-+free_mem:
-+	memblock_free(base, size);
- err:
- 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
- 	return ret;
+-	if (!MLX5_CAP_GEN(esw->dev, vport_group_manager))
++	if (!esw || !MLX5_CAP_GEN(esw->dev, vport_group_manager))
+ 		return -EPERM;
+ 	if (!LEGAL_VPORT(esw, vport))
+ 		return -EINVAL;
 -- 
 2.19.1
 
