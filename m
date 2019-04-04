@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BD9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817B4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5441E20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E5020882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LyHguTLz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R6urs1On"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfDDUYJ (ORCPT
+        id S1730906AbfDDUYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:24:09 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:33916 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730837AbfDDUYH (ORCPT
+        Thu, 4 Apr 2019 16:24:19 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:54965 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730847AbfDDUYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 16:24:07 -0400
-Received: by mail-vk1-f202.google.com with SMTP id y82so1554328vkd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:24:06 -0700 (PDT)
+Received: by mail-qk1-f201.google.com with SMTP id v2so3148310qkf.21
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=0wnnkWPvsjcCmPpDGZZOltQ8m2/AePhqjWl4B6moFQY=;
-        b=LyHguTLzka7Fymtke5wD0vAQz10+1dZFeGH0oVAdNqR7j1DOXQKKK0huAgxhaBkoB7
-         I+mudDEJ3pbCi8PQYuaHvYRDIzdU4cB3pAIlB7eLp9sbX23LmYG652GWRUF+afV7Nbbn
-         Rr4r0uDb23gG/8fG5xHPgzohfNXZs0S5Lm/pEkzeJEBCTJi6706yQTBUx+XWiWL91mGl
-         iYPGcgOhit8eSqpfY/iGpBtuPaUwjZUdi0vD95kr7e/IVNa7jXejH9qipeHA6OkoWbVC
-         D8naX3rQARsWVGJMkgNBWeGIRK1BTA4JJU1PbP/4YD2Sqfz2e7hVkpAG/3mIHbmWln6U
-         5FxA==
+        bh=xCLL7LcnK/EfAdZPNNEYIgclrtC6A/GQfyjKs9KqXfk=;
+        b=R6urs1OnBmpgDtETpgp5lhwN1bbIvjyh0T0PxRNx8AMkjoOKTYS9L6pfHJyaINvgN7
+         6b/xo1AdfuHQtR/rADaYjHn9OD+lUYOKAjswnTZk1i9hmpJZmN85/ye6cFy847HPXBxV
+         KIw+51PUdGPSAn1SfUVM8fOpwqx1xk9zRzuv8ifLhbp4jrRVYgPQrmV9yeDdBehA9UYC
+         UoV5bJn1NAF3i7HknTXqzXSXjATIV+iVOKdzFGZyHbJ1BIXZJJeGa5RBrtpecLdXwSjo
+         17lzlrVHY0ubvY9k6NzTm/HPm5ua31iKV43twrPTLhHdyuBXjn1gycxqgcA6kEMROM63
+         w4fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=0wnnkWPvsjcCmPpDGZZOltQ8m2/AePhqjWl4B6moFQY=;
-        b=EH71k0sANXRuQvyEbc/Riwm2pKeAxQ+ayPxdHFtmlXRq0HPJgtQzKG2gzphTneArCj
-         DFRVRCwBSm9lBnJ4x54IGL/1aXTa/TraW0q8KBg2+RvQlO2aES3BUpPOQJOKq+jaW8Da
-         KIvmWXFXqvqDvgGK2ttgcrGRlGRi3GPrNXyZOMtjRpc8djtsagJWPKI5/eRIJ2crGlO6
-         uO4CbhYR0UnwdllimWTpEiqvrjpUdsVD024d8kzu6FOo9jA/1oJdaxBGNsAZdae0Sy0f
-         iquVwFJnsgMu/Ro0xl1cJJ9TXtgN/tMd+Twmt8NQwjzKLuIz2ka7jvEaBzQq2Ws2OUdz
-         yHUg==
-X-Gm-Message-State: APjAAAVMoUcc/xRywZLPRvGToLUn1F39nUfSwU8v2X/mQd3ArdAeU6sd
-        jWkmhmhHtzu8VD5mwfrWs4yiLorc
-X-Google-Smtp-Source: APXvYqxfiNOMpTCx2nzD7rpIB+lfL/ESLm0Iwf/QdYpMzwDxx4q+nF/QwKtbz5yLo8mBd7eu7h8eVFZQ
-X-Received: by 2002:a1f:9010:: with SMTP id s16mr1018825vkd.12.1554409445741;
- Thu, 04 Apr 2019 13:24:05 -0700 (PDT)
-Date:   Thu,  4 Apr 2019 16:23:44 -0400
+        bh=xCLL7LcnK/EfAdZPNNEYIgclrtC6A/GQfyjKs9KqXfk=;
+        b=OYNRjqt6ZU8qRaEY78K49OfsuJfvAFjVwZjbHL4/8BCtIfW+5uc/Ir1Q9y4lnm0XpP
+         P2tkJDsj+rccRX1tz8+YeeNwngazfBZu5Bmrbkt4+GQZRoQjf/g8MiU1V1y+ZwJ8p4vF
+         QixPQ8YpsuxXFHM/M0Jk8Pl1G6nMMBNA0Apa2Qrd7aHLtYYOS4OzoZvrtnAq4eBT6aES
+         K+koKtKhxAg/OCpUlt7qh37wD4sYrDLYKCg3pBa4FIKrD0U/Cw1zmaGB4Oqwgi7Lw4z/
+         MfAbWjJZL5gyw3bFMTLf/kfXK76vVXZal2CBJqSHSnP4nF+t8umKW6cye61hUrgmdpCu
+         +WNg==
+X-Gm-Message-State: APjAAAWcEuPzZHhTpATHgaIGkqsm4f7UWTc6viuMSfuhVs8RTCYaDTsD
+        BaTdkb4u0/yGbqW+aDMJpaN4NpdW
+X-Google-Smtp-Source: APXvYqznMxtqI38l39KsNnxVYhuotW8fBQzlZRNiusEEq702paDjnOTBVACaULock+UYMm0yj6YtKIA1
+X-Received: by 2002:ac8:24d2:: with SMTP id t18mr1266663qtt.1.1554409446885;
+ Thu, 04 Apr 2019 13:24:06 -0700 (PDT)
+Date:   Thu,  4 Apr 2019 16:23:45 -0400
 In-Reply-To: <20190404202345.133553-1-brho@google.com>
-Message-Id: <20190404202345.133553-3-brho@google.com>
+Message-Id: <20190404202345.133553-4-brho@google.com>
 Mime-Version: 1.0
 References: <20190404202345.133553-1-brho@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH v3 2/3] kvm: Use huge pages for DAX-backed files
+Subject: [PATCH v3 3/3] kvm: remove redundant PageReserved() check
 From:   Barret Rhoden <brho@google.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -74,81 +74,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change allows KVM to map DAX-backed files made of huge pages with
-huge mappings in the EPT/TDP.
-
-DAX pages are not PageTransCompound.  The existing check is trying to
-determine if the mapping for the pfn is a huge mapping or not.  For
-non-DAX maps, e.g. hugetlbfs, that means checking PageTransCompound.
-For DAX, we can check the page table itself.
-
-Note that KVM already faulted in the page (or huge page) in the host's
-page table, and we hold the KVM mmu spinlock.  We grabbed that lock in
-kvm_mmu_notifier_invalidate_range_end, before checking the mmu seq.
+kvm_is_reserved_pfn() already checks PageReserved().
 
 Signed-off-by: Barret Rhoden <brho@google.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 ---
- arch/x86/kvm/mmu.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ virt/kvm/kvm_main.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index eee455a8a612..48cbf5553688 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -3207,6 +3207,35 @@ static int kvm_handle_bad_page(struct kvm_vcpu *vcpu, gfn_t gfn, kvm_pfn_t pfn)
- 	return -EFAULT;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 55fe8e20d8fd..c44985375e7f 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1782,12 +1782,8 @@ EXPORT_SYMBOL_GPL(kvm_release_pfn_dirty);
+ 
+ void kvm_set_pfn_dirty(kvm_pfn_t pfn)
+ {
+-	if (!kvm_is_reserved_pfn(pfn)) {
+-		struct page *page = pfn_to_page(pfn);
+-
+-		if (!PageReserved(page))
+-			SetPageDirty(page);
+-	}
++	if (!kvm_is_reserved_pfn(pfn))
++		SetPageDirty(pfn_to_page(pfn));
  }
+ EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
  
-+static bool pfn_is_huge_mapped(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn)
-+{
-+	struct page *page = pfn_to_page(pfn);
-+	unsigned long hva;
-+
-+	if (!is_zone_device_page(page))
-+		return PageTransCompoundMap(page);
-+
-+	/*
-+	 * DAX pages do not use compound pages.  The page should have already
-+	 * been mapped into the host-side page table during try_async_pf(), so
-+	 * we can check the page tables directly.
-+	 */
-+	hva = gfn_to_hva(kvm, gfn);
-+	if (kvm_is_error_hva(hva))
-+		return false;
-+
-+	/*
-+	 * Our caller grabbed the KVM mmu_lock with a successful
-+	 * mmu_notifier_retry, so we're safe to walk the page table.
-+	 */
-+	switch (dev_pagemap_mapping_shift(hva, current->mm)) {
-+	case PMD_SHIFT:
-+	case PUD_SIZE:
-+		return true;
-+	}
-+	return false;
-+}
-+
- static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
- 					gfn_t *gfnp, kvm_pfn_t *pfnp,
- 					int *levelp)
-@@ -3223,7 +3252,7 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
- 	 */
- 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
- 	    level == PT_PAGE_TABLE_LEVEL &&
--	    PageTransCompoundMap(pfn_to_page(pfn)) &&
-+	    pfn_is_huge_mapped(vcpu->kvm, gfn, pfn) &&
- 	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
- 		unsigned long mask;
- 		/*
-@@ -5774,7 +5803,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
- 		 */
- 		if (sp->role.direct &&
- 			!kvm_is_reserved_pfn(pfn) &&
--			PageTransCompoundMap(pfn_to_page(pfn))) {
-+			pfn_is_huge_mapped(kvm, sp->gfn, pfn)) {
- 			pte_list_remove(rmap_head, sptep);
- 
- 			if (kvm_available_flush_tlb_with_range())
 -- 
 2.21.0.392.gf8f6787159e-goog
 
