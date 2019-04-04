@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA18C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970A6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4769E2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C16B2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbfDDBiL (ORCPT
+        id S1726880AbfDDBiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 21:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
+        Wed, 3 Apr 2019 21:38:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbfDDBhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726559AbfDDBhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 21:37:47 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FACF21871;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9512821855;
         Thu,  4 Apr 2019 01:37:46 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hBrK5-00052G-89; Wed, 03 Apr 2019 21:37:45 -0400
-Message-Id: <20190404013745.139071782@goodmis.org>
+        id 1hBrK5-00053k-NQ; Wed, 03 Apr 2019 21:37:45 -0400
+Message-Id: <20190404013745.616653252@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 03 Apr 2019 21:37:33 -0400
+Date:   Wed, 03 Apr 2019 21:37:36 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>
-Subject: [for-next][PATCH 12/19] selftests/ftrace: Move kprobe/uprobe check_error() to
- test.d/functions
+Subject: [for-next][PATCH 15/19] tracing: Add tracing/error_log Documentation
 References: <20190404013721.023858792@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -48,87 +48,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-The k/uprobe_sytax_errors test case defines a check_error() function
-used to run a command and check the position of the caret in the
-output.
+Move most of the hist trigger extended error documentation to
+ftrace.rst and expand on it to fully document tracing/error_log.
 
-This would be useful for other ftrace facilities too, so move it to
-test.d/functions for use by anyone.  In the process, rename it to
-ftrace_errlog_check() and parametrize it for general use.
-
-Link: http://lkml.kernel.org/r/9f88080a06f1755811f69081926afe7e5cb53178.1554072478.git.tom.zanussi@linux.intel.com
+Link: http://lkml.kernel.org/r/c5d53c8f643ef6844d6ad8d0200c116936730b01.1554072478.git.tom.zanussi@linux.intel.com
 
 Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/testing/selftests/ftrace/test.d/functions      | 12 ++++++++++++
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc     | 10 +---------
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc     | 10 +---------
- 3 files changed, 14 insertions(+), 18 deletions(-)
+ Documentation/trace/ftrace.rst    | 31 +++++++++++++++++++++++++++++++
+ Documentation/trace/histogram.rst | 16 ++--------------
+ 2 files changed, 33 insertions(+), 14 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 7b96e80e6b8a..779ec11f61bd 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -109,3 +109,15 @@ LOCALHOST=127.0.0.1
- yield() {
-     ping $LOCALHOST -c 1 || sleep .001 || usleep 1 || sleep 1
- }
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 7c5e6d6ab5d1..809b39d066ee 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -765,6 +765,37 @@ Here is the list of current tracers that may be configured.
+ 	tracers from tracing simply echo "nop" into
+ 	current_tracer.
+ 
++Error conditions
++----------------
 +
-+ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
-+    pos=$(echo -n "${2%^*}" | wc -c) # error position
-+    command=$(echo "$2" | tr -d ^)
-+    echo "Test command: $command"
-+    echo > error_log
-+    (! echo "$command" > "$3" ) 2> /dev/null
-+    grep "$1: error:" -A 3 error_log
-+    N=$(tail -n 1 error_log | wc -c)
-+    # "  Command: " and "^\n" => 13
-+    test $(expr 13 + $pos) -eq $N
-+}
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index 7eb577b1d222..29faaec942c6 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -7,15 +7,7 @@
- [ -f error_log ] || exit_unsupported
++  For most ftrace commands, failure modes are obvious and communicated
++  using standard return codes.
++
++  For other more involved commands, extended error information may be
++  available via the tracing/error_log file.  For the commands that
++  support it, reading the tracing/error_log file after an error will
++  display more detailed information about what went wrong, if
++  information is available.  The tracing/error_log file is a circular
++  error log displaying a small number (currently, 8) of ftrace errors
++  for the last (8) failed commands.
++
++  The extended error information and usage takes the form shown in
++  this example::
++
++    # echo xxx > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
++    echo: write error: Invalid argument
++
++    # cat /sys/kernel/debug/tracing/error_log
++    [ 5348.887237] location: error: Couldn't yyy: zzz
++      Command: xxx
++               ^
++    [ 7517.023364] location: error: Bad rrr: sss
++      Command: ppp qqq
++                   ^
++
++  To clear the error log, echo the empty string into it::
++
++    # echo > /sys/kernel/debug/tracing/error_log
  
- check_error() { # command-with-error-pos-by-^
--pos=$(echo -n "${1%^*}" | wc -c) # error position
--command=$(echo "$1" | tr -d ^)
--echo "Test command: $command"
--echo > error_log
--(! echo "$command" > kprobe_events ) 2> /dev/null
--grep "trace_kprobe: error:" -A 3 error_log
--N=$(tail -n 1 error_log | wc -c)
--# "  Command: " and "^\n" => 13
--test $(expr 13 + $pos) -eq $N
-+    ftrace_errlog_check 'trace_kprobe' "$1" 'kprobe_events'
- }
+ Examples of using the tracer
+ ----------------------------
+diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
+index 0ea59d45aef1..7612c7ad5715 100644
+--- a/Documentation/trace/histogram.rst
++++ b/Documentation/trace/histogram.rst
+@@ -199,20 +199,8 @@ Extended error information
  
- if grep -q 'r\[maxactive\]' README; then
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-index ec7389b7934b..14229d5778a0 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-@@ -7,15 +7,7 @@
- [ -f error_log ] || exit_unsupported
+   For some error conditions encountered when invoking a hist trigger
+   command, extended error information is available via the
+-  corresponding event's 'hist' file.  Reading the hist file after an
+-  error will display more detailed information about what went wrong,
+-  if information is available.  This extended error information will
+-  be available until the next hist trigger command for that event.
+-
+-  If available for a given error condition, the extended error
+-  information and usage takes the following form::
+-
+-    # echo xxx > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
+-    echo: write error: Invalid argument
+-
+-    # cat /sys/kernel/debug/tracing/events/sched/sched_wakeup/hist
+-    ERROR: Couldn't yyy: zzz
+-      Last command: xxx
++  tracing/error_log file.  See Error Conditions in
++  :file:`Documentation/trace/ftrace.rst` for details.
  
- check_error() { # command-with-error-pos-by-^
--pos=$(echo -n "${1%^*}" | wc -c) # error position
--command=$(echo "$1" | tr -d ^)
--echo "Test command: $command"
--echo > error_log
--(! echo "$command" > uprobe_events ) 2> /dev/null
--grep "trace_uprobe: error:" -A 3 error_log
--N=$(tail -n 1 error_log | wc -c)
--# "  Command: " and "^\n" => 13
--test $(expr 13 + $pos) -eq $N
-+    ftrace_errlog_check 'trace_uprobe' "$1" 'uprobe_events'
- }
- 
- check_error 'p ^/non_exist_file:100'	# FILE_NOT_FOUND
+ 6.2 'hist' trigger examples
+ ---------------------------
 -- 
 2.20.1
 
