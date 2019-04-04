@@ -4,56 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57372C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4485EC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D08205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141D4205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370282;
-	bh=wRgNnsUMuvIVi/FLmXur1Evnh5aMf79zihpS+9xCeT8=;
+	s=default; t=1554370285;
+	bh=94YzjAsryu9wbksOXASL8G0K5780+9jBPgrlsyeAldw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpgHS5JULwT7cjcy2izSrxQKPora2hb4g7rzasTIHkua5h+feFrShX4mOSinuHtKl
-	 C2qfySUDn4kh8zimkEc5uWZEE6XdAzzrr7WU9Tx2ZnJMq33se+/2wfsDrefpaYPsZ1
-	 xtzkgXmeYoJZq7z6VGc0blTLvXRNDnnTNYk3SpHU=
+	b=bZ1KkdM420QkUNROFgk5wIEQR3Re+sFMdp6w/oChgFcwSG/2p9IYYRQGAEoYQoRRG
+	 8WJD2V37JXu8i1BSDetDood9+88tHyrSWOLhZ/lxhmGmdbh3L9tcadg2BGgty4I5OX
+	 0a3QC2Exfs5PLLsT9ss4vdEK1WqlrXil+ePqAVyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732825AbfDDJJ0 (ORCPT
+        id S1733045AbfDDJbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48572 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:31:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbfDDJJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:09:23 -0400
+        id S1732611AbfDDJJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D37C2075E;
-        Thu,  4 Apr 2019 09:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8677320693;
+        Thu,  4 Apr 2019 09:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368962;
-        bh=wRgNnsUMuvIVi/FLmXur1Evnh5aMf79zihpS+9xCeT8=;
+        s=default; t=1554368965;
+        bh=94YzjAsryu9wbksOXASL8G0K5780+9jBPgrlsyeAldw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qbu/+Fvp5ZyHI+pYNalCTjqVDsaUn/i5GVqIxG2jSoyDS76/88+/vZ5yV6039WKq7
-         APqZP1gfKxNAwzZutPxJBFyNW4je7KkRc5LWqK7N8Gny53OayTBFEF6Ee5m+HcvWoF
-         l+r6GcJypvmfecPzGiZnKs4pvSnm0JkRefUf176w=
+        b=F/CxZYqTDJi0K9lbaYnzSDqqp4TfJewR2FBzd38jVfsBfBjjZBvwjW4Hh+OiHj/Oc
+         qqph3HkazQdTAlqbT8/MTIpCj2nDBClZDohgfzOtbxsAmdBnCuxDYyYdr6A4RmtLxI
+         g6v+PBmqvndy9iBXOFQQx7fYbRkiG+zUXqbZ5Gfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
         David Rientjes <rientjes@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yisheng Xie <xieyisheng1@huawei.com>,
+        zhong jiang <zhongjiang@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 032/246] memcg: killed threads should not invoke memcg OOM killer
-Date:   Thu,  4 Apr 2019 10:45:32 +0200
-Message-Id: <20190404084620.204840918@linuxfoundation.org>
+Subject: [PATCH 5.0 033/246] mm, mempolicy: fix uninit memory access
+Date:   Thu,  4 Apr 2019 10:45:33 +0200
+Message-Id: <20190404084620.232932913@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -72,95 +76,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7775face207922ea62a4e96b9cd45abfdc7b9840 ]
+[ Upstream commit 2e25644e8da4ed3a27e7b8315aaae74660be72dc ]
 
-If a memory cgroup contains a single process with many threads
-(including different process group sharing the mm) then it is possible
-to trigger a race when the oom killer complains that there are no oom
-elible tasks and complain into the log which is both annoying and
-confusing because there is no actual problem.  The race looks as
-follows:
+Syzbot with KMSAN reports (excerpt):
 
-P1				oom_reaper		P2
-try_charge						try_charge
-  mem_cgroup_out_of_memory
-    mutex_lock(oom_lock)
-      out_of_memory
-        oom_kill_process(P1,P2)
-         wake_oom_reaper
-    mutex_unlock(oom_lock)
-    				oom_reap_task
-							  mutex_lock(oom_lock)
-							    select_bad_process # no victim
+==================================================================
+BUG: KMSAN: uninit-value in mpol_rebind_policy mm/mempolicy.c:353 [inline]
+BUG: KMSAN: uninit-value in mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
+CPU: 1 PID: 17420 Comm: syz-executor4 Not tainted 4.20.0-rc7+ #15
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+  kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
+  __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:295
+  mpol_rebind_policy mm/mempolicy.c:353 [inline]
+  mpol_rebind_mm+0x249/0x370 mm/mempolicy.c:384
+  update_tasks_nodemask+0x608/0xca0 kernel/cgroup/cpuset.c:1120
+  update_nodemasks_hier kernel/cgroup/cpuset.c:1185 [inline]
+  update_nodemask kernel/cgroup/cpuset.c:1253 [inline]
+  cpuset_write_resmask+0x2a98/0x34b0 kernel/cgroup/cpuset.c:1728
 
-The problem is more visible with many threads.
+...
 
-Fix this by checking for fatal_signal_pending from
-mem_cgroup_out_of_memory when the oom_lock is already held.
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:204 [inline]
+  kmsan_internal_poison_shadow+0x92/0x150 mm/kmsan/kmsan.c:158
+  kmsan_kmalloc+0xa6/0x130 mm/kmsan/kmsan_hooks.c:176
+  kmem_cache_alloc+0x572/0xb90 mm/slub.c:2777
+  mpol_new mm/mempolicy.c:276 [inline]
+  do_mbind mm/mempolicy.c:1180 [inline]
+  kernel_mbind+0x8a7/0x31a0 mm/mempolicy.c:1347
+  __do_sys_mbind mm/mempolicy.c:1354 [inline]
 
-The oom bypass is safe because we do the same early in the try_charge
-path already.  The situation migh have changed in the mean time.  It
-should be safe to check for fatal_signal_pending and tsk_is_oom_victim
-but for a better code readability abstract the current charge bypass
-condition into should_force_charge and reuse it from that path.  "
+As it's difficult to report where exactly the uninit value resides in
+the mempolicy object, we have to guess a bit.  mm/mempolicy.c:353
+contains this part of mpol_rebind_policy():
 
-Link: http://lkml.kernel.org/r/01370f70-e1f6-ebe4-b95e-0df21a0bc15e@i-love.sakura.ne.jp
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+        if (!mpol_store_user_nodemask(pol) &&
+            nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
+
+"mpol_store_user_nodemask(pol)" is testing pol->flags, which I couldn't
+ever see being uninitialized after leaving mpol_new().  So I'll guess
+it's actually about accessing pol->w.cpuset_mems_allowed on line 354,
+but still part of statement starting on line 353.
+
+For w.cpuset_mems_allowed to be not initialized, and the nodes_equal()
+reachable for a mempolicy where mpol_set_nodemask() is called in
+do_mbind(), it seems the only possibility is a MPOL_PREFERRED policy
+with empty set of nodes, i.e.  MPOL_LOCAL equivalent, with MPOL_F_LOCAL
+flag.  Let's exclude such policies from the nodes_equal() check.  Note
+the uninit access should be benign anyway, as rebinding this kind of
+policy is always a no-op.  Therefore no actual need for stable
+inclusion.
+
+Link: http://lkml.kernel.org/r/a71997c3-e8ae-a787-d5ce-3db05768b27c@suse.cz
+Link: http://lkml.kernel.org/r/73da3e9c-cc84-509e-17d9-0c434bb9967d@suse.cz
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reported-by: syzbot+b19c2dc2c990ea657a71@syzkaller.appspotmail.com
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
 Cc: David Rientjes <rientjes@google.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Yisheng Xie <xieyisheng1@huawei.com>
+Cc: zhong jiang <zhongjiang@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ mm/mempolicy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index af7f18b32389..79a7d2a06bba 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -248,6 +248,12 @@ enum res_type {
- 	     iter != NULL;				\
- 	     iter = mem_cgroup_iter(NULL, iter, NULL))
- 
-+static inline bool should_force_charge(void)
-+{
-+	return tsk_is_oom_victim(current) || fatal_signal_pending(current) ||
-+		(current->flags & PF_EXITING);
-+}
-+
- /* Some nice accessors for the vmpressure. */
- struct vmpressure *memcg_to_vmpressure(struct mem_cgroup *memcg)
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 6bc9786aad6e..c2275c1e6d2a 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -350,7 +350,7 @@ static void mpol_rebind_policy(struct mempolicy *pol, const nodemask_t *newmask)
  {
-@@ -1389,8 +1395,13 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	};
- 	bool ret;
+ 	if (!pol)
+ 		return;
+-	if (!mpol_store_user_nodemask(pol) &&
++	if (!mpol_store_user_nodemask(pol) && !(pol->flags & MPOL_F_LOCAL) &&
+ 	    nodes_equal(pol->w.cpuset_mems_allowed, *newmask))
+ 		return;
  
--	mutex_lock(&oom_lock);
--	ret = out_of_memory(&oc);
-+	if (mutex_lock_killable(&oom_lock))
-+		return true;
-+	/*
-+	 * A few threads which were not waiting at mutex_lock_killable() can
-+	 * fail to bail out. Therefore, check again after holding oom_lock.
-+	 */
-+	ret = should_force_charge() || out_of_memory(&oc);
- 	mutex_unlock(&oom_lock);
- 	return ret;
- }
-@@ -2209,9 +2220,7 @@ retry:
- 	 * bypass the last charges so that they can exit quickly and
- 	 * free their memory.
- 	 */
--	if (unlikely(tsk_is_oom_victim(current) ||
--		     fatal_signal_pending(current) ||
--		     current->flags & PF_EXITING))
-+	if (unlikely(should_force_charge()))
- 		goto force;
- 
- 	/*
 -- 
 2.19.1
 
