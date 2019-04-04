@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A59C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204F4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336FE20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62D42075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369103;
-	bh=ofrA8/WjGNggrwk2Ws/G6mDUgwTiuX1bav/sO/TwqCo=;
+	s=default; t=1554369109;
+	bh=bd8uKPHdqgqUbzuemPw5ZvsQVDhpftHuHdL7BklAn7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VlplJEomLfLXdItqGaVuitp30vAvOFqvqrbScyFQlN7exMifmzJKL32uWIjNT0JlM
-	 48PPlXNXCF8QiKRHtKUxPXKHO7zS0Dq87gwxoP8j65K+DzQRD5de7eRiyoAiT6rwtD
-	 DVEw5+2eaSygW+As0AA/Yx7K9fjgq19cgr8IvBqg=
+	b=k0IPRSWsvFDZQiUw4gCzodWJPSFPUX/zsdcuf9H6JenA3tWOCL0wEJoIiDQHb6CZ5
+	 Pr35wCiOjaaoMhHH4S5zqlycletGz9WfxIDDpuvoc13MEIyRLrMBxTc+Q9SCIScJuP
+	 JxjMZqionJVkre6PALVD8s/dMYURezTnII7xEHJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733200AbfDDJLl (ORCPT
+        id S1733216AbfDDJLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:11:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51568 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732770AbfDDJLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:38 -0400
+        id S1733194AbfDDJLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:11:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00DF32075E;
-        Thu,  4 Apr 2019 09:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93AFE2054F;
+        Thu,  4 Apr 2019 09:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369097;
-        bh=ofrA8/WjGNggrwk2Ws/G6mDUgwTiuX1bav/sO/TwqCo=;
+        s=default; t=1554369100;
+        bh=bd8uKPHdqgqUbzuemPw5ZvsQVDhpftHuHdL7BklAn7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7FrY2vjYVmhVkFZWbJbgtJ3fSyp+eStfw6ILZN4GymrN+le0gXFDBlV24LEVPv8U
-         AZ3mkGxFlQu9Eh7NvUsiGgdMWDtCMI31t9Kh5/eNUUWNnYOhdtUPOyqn2bom2YKWB2
-         lPNSSZJKVdholN6Smrz2jXqb/UGOxuxfiKjJoCnw=
+        b=vWuKjwkQEst17Gh97SLnYduVEviAXXmuUh8sKKBe4U+01VKA9tIoXoLgXDZcbuRUF
+         tVbAwAmbGXNURLgkS5U/1T4C0YocSSWRe14Ps7a5GkuU2162K77QuOhCmXy6FrL9X0
+         sRABxmBpWhP/Uci18aWj/7AuYlDA1VGItutcAxJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 083/246] perf script: Handle missing fields with -F +..
-Date:   Thu,  4 Apr 2019 10:46:23 +0200
-Message-Id: <20190404084622.040868337@linuxfoundation.org>
+Subject: [PATCH 5.0 084/246] btrfs: qgroup: Make qgroup async transaction commit more aggressive
+Date:   Thu,  4 Apr 2019 10:46:24 +0200
+Message-Id: <20190404084622.082725562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,80 +66,115 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4b6ac811bce46c83811b83cdf87b41251596b9fc ]
+[ Upstream commit f5fef4593653dfa2a865c485bb81415de51d5c99 ]
 
-When using -F + syntax to add a field the existing defaults are
-currently all marked user_set. This can cause errors when some field is
-missing in the perf.data
+[BUG]
+Btrfs qgroup will still hit EDQUOT under the following case:
 
-This patch tracks the actually user set fields separately, so that we don't
-error out in this case.
+  $ dev=/dev/test/test
+  $ mnt=/mnt/btrfs
+  $ umount $mnt &> /dev/null
+  $ umount $dev &> /dev/null
 
-Before:
+  $ mkfs.btrfs -f $dev
+  $ mount $dev $mnt -o nospace_cache
 
-  % perf record true
-  % perf script -F +metric
-  Samples for 'cycles:ppp' event do not have CPU attribute set. Cannot print 'cpu' field.
-  %
+  $ btrfs subv create $mnt/subv
+  $ btrfs quota enable $mnt
+  $ btrfs quota rescan -w $mnt
+  $ btrfs qgroup limit -e 1G $mnt/subv
 
-After:
+  $ fallocate -l 900M $mnt/subv/padding
+  $ sync
 
-  5 perf record true
-  % perf script -F +metric
-              perf 28936 278636.237688:          1 cycles:ppp:  ffffffff8117da99 perf_event_exec+0x59 (/lib/modules/4.20.0-odilo/build/vmlinux)
-  ...
-  %
+  $ rm $mnt/subv/padding
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190224153722.27020-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  # Hit EDQUOT
+  $ xfs_io -f -c "pwrite 0 512M" $mnt/subv/real_file
+
+[CAUSE]
+Since commit a514d63882c3 ("btrfs: qgroup: Commit transaction in advance
+to reduce early EDQUOT"), btrfs is not forced to commit transaction to
+reclaim more quota space.
+
+Instead, we just check pertrans metadata reservation against some
+threshold and try to do asynchronously transaction commit.
+
+However in above case, the pertrans metadata reservation is pretty small
+thus it will never trigger asynchronous transaction commit.
+
+[FIX]
+Instead of only accounting pertrans metadata reservation, we calculate
+how much free space we have, and if there isn't much free space left,
+commit transaction asynchronously to try to free some space.
+
+This may slow down the fs when we have less than 32M free qgroup space,
+but should reduce a lot of false EDQUOT, so the cost should be
+acceptable.
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/btrfs/qgroup.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index ac221f137ed2..cff4d10daf49 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -148,6 +148,7 @@ static struct {
- 	unsigned int print_ip_opts;
- 	u64 fields;
- 	u64 invalid_fields;
-+	u64 user_set_fields;
- } output[OUTPUT_TYPE_MAX] = {
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index 543dd5e66f31..e28fb43e943b 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -2842,16 +2842,15 @@ out:
+ /*
+  * Two limits to commit transaction in advance.
+  *
+- * For RATIO, it will be 1/RATIO of the remaining limit
+- * (excluding data and prealloc meta) as threshold.
++ * For RATIO, it will be 1/RATIO of the remaining limit as threshold.
+  * For SIZE, it will be in byte unit as threshold.
+  */
+-#define QGROUP_PERTRANS_RATIO		32
+-#define QGROUP_PERTRANS_SIZE		SZ_32M
++#define QGROUP_FREE_RATIO		32
++#define QGROUP_FREE_SIZE		SZ_32M
+ static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
+ 				const struct btrfs_qgroup *qg, u64 num_bytes)
+ {
+-	u64 limit;
++	u64 free;
+ 	u64 threshold;
  
- 	[PERF_TYPE_HARDWARE] = {
-@@ -344,7 +345,7 @@ static int perf_evsel__do_check_stype(struct perf_evsel *evsel,
- 	if (attr->sample_type & sample_type)
- 		return 0;
+ 	if ((qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_RFER) &&
+@@ -2870,20 +2869,21 @@ static bool qgroup_check_limits(struct btrfs_fs_info *fs_info,
+ 	 */
+ 	if ((qg->lim_flags & (BTRFS_QGROUP_LIMIT_MAX_RFER |
+ 			      BTRFS_QGROUP_LIMIT_MAX_EXCL))) {
+-		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL)
+-			limit = qg->max_excl;
+-		else
+-			limit = qg->max_rfer;
+-		threshold = (limit - qg->rsv.values[BTRFS_QGROUP_RSV_DATA] -
+-			    qg->rsv.values[BTRFS_QGROUP_RSV_META_PREALLOC]) /
+-			    QGROUP_PERTRANS_RATIO;
+-		threshold = min_t(u64, threshold, QGROUP_PERTRANS_SIZE);
++		if (qg->lim_flags & BTRFS_QGROUP_LIMIT_MAX_EXCL) {
++			free = qg->max_excl - qgroup_rsv_total(qg) - qg->excl;
++			threshold = min_t(u64, qg->max_excl / QGROUP_FREE_RATIO,
++					  QGROUP_FREE_SIZE);
++		} else {
++			free = qg->max_rfer - qgroup_rsv_total(qg) - qg->rfer;
++			threshold = min_t(u64, qg->max_rfer / QGROUP_FREE_RATIO,
++					  QGROUP_FREE_SIZE);
++		}
  
--	if (output[type].user_set) {
-+	if (output[type].user_set_fields & field) {
- 		if (allow_user_set)
- 			return 0;
- 		evname = perf_evsel__name(evsel);
-@@ -2627,10 +2628,13 @@ parse:
- 					pr_warning("\'%s\' not valid for %s events. Ignoring.\n",
- 						   all_output_options[i].str, event_type(j));
- 				} else {
--					if (change == REMOVE)
-+					if (change == REMOVE) {
- 						output[j].fields &= ~all_output_options[i].field;
--					else
-+						output[j].user_set_fields &= ~all_output_options[i].field;
-+					} else {
- 						output[j].fields |= all_output_options[i].field;
-+						output[j].user_set_fields |= all_output_options[i].field;
-+					}
- 					output[j].user_set = true;
- 					output[j].wildcard_set = true;
- 				}
+ 		/*
+ 		 * Use transaction_kthread to commit transaction, so we no
+ 		 * longer need to bother nested transaction nor lock context.
+ 		 */
+-		if (qg->rsv.values[BTRFS_QGROUP_RSV_META_PERTRANS] > threshold)
++		if (free < threshold)
+ 			btrfs_commit_transaction_locksafe(fs_info);
+ 	}
+ 
 -- 
 2.19.1
 
