@@ -2,54 +2,52 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88198C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C28C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513AA2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BD52183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368403;
-	bh=noFfUhlMIdtVeBNa5bp6KMBaIRSZes/Er45bjVXRVwo=;
+	s=default; t=1554368404;
+	bh=Wqevb1Ad+roFVX+bnBhfx246ng5AuZTwMhkLbmDl6OQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blnbCozbrkMBxqtHraXbR5YEY0mItyoLx+gRPCQYab0yJO084r97LBPIf+PhENrnd
-	 2x2vaOtFSEnn3muzaLDAkeFm9WF1F/p1qwtgy8GkbDcNhLkInMziU8dgZ1L1Qo4spe
-	 INnomPP3BexYMdOcoaAzOMZZsx1F2fnRoSRc4Tqc=
+	b=O8Y7YY/DygxD3x2KNm8a2FTr0tnnTwKaAmP44zQC1zpYUvE5vXWx3VPWtMWdhrgg3
+	 7w50Rn6jilfjlBUK6VY2o17ROS8vn3/OqKT4sIJhX5uRWkoFghMZLE5p243y1DNosy
+	 NjGGvbUibPgn7/siHZU1ALKQdHOB5kyMBZ68lTZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbfDDJAC (ORCPT
+        id S1731194AbfDDJAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731167AbfDDI77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:59 -0400
+        id S1731175AbfDDJAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0285A2147C;
-        Thu,  4 Apr 2019 08:59:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2E892147C;
+        Thu,  4 Apr 2019 09:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368398;
-        bh=noFfUhlMIdtVeBNa5bp6KMBaIRSZes/Er45bjVXRVwo=;
+        s=default; t=1554368401;
+        bh=Wqevb1Ad+roFVX+bnBhfx246ng5AuZTwMhkLbmDl6OQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4fmZc1H0qbF+7l/qfzSpLAJBdG0YJj364eajGZfYZBlDPHPPsxYv4qSO7StO0nHC
-         8DXhPBU+1JwthXVW4YU8Xl5YH20KMNhxL/T5wdCk/LwwNbviLCanRo4I0OSAm9iwKr
-         vmJ64p3+v31C4pO2n3J0NggcryhciWEylA+b8GjY=
+        b=VlV5pcW92A+I4afT0ZShbwn4Ov46zIVAnw/XMzKQR6P+Xk0tuekMKmLWi94wYgwFF
+         GxKbkXTcF0/lUCJGGZAFrmKeqQuoxBjAhbq+lAAVREwFMTSfOX6VW6eoRfgDNeY9pY
+         DuxMWh7HsDMufEEDXM9MNLKI0QEr4ivr3RiY7txU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohamad Haj Yahia <mohamad@mellanox.com>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/187] net/mlx5: Avoid panic when setting vport rate
-Date:   Thu,  4 Apr 2019 10:45:47 +0200
-Message-Id: <20190404084603.599651593@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.19 001/187] arm64: debug: Dont propagate UNKNOWN FAR into si_code for debug signals
+Date:   Thu,  4 Apr 2019 10:45:38 +0200
+Message-Id: <20190404084603.181541247@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,81 +66,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 24319258660a84dd77f4be026a55b10a12524919 ]
+From: Will Deacon <will.deacon@arm.com>
 
-If we try to set VFs rate on a VF (not PF) net device, the kernel
-will be crash. The commands are show as below:
+commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
 
-$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
-$ ip link set $MLX_VF0 vf 0 max_tx_rate 2 min_tx_rate 1
+FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
+taking a hardware watchpoint. Unfortunately, if a debug handler returns
+a non-zero value, then we will propagate the UNKNOWN FAR value to
+userspace via the si_addr field of the SIGTRAP siginfo_t.
 
-If not applied the first patch ("net/mlx5: Avoid panic when setting
-vport mac, getting vport config"), the command:
+Instead, let's set si_addr to take on the PC of the faulting instruction,
+which we have available in the current pt_regs.
 
-$ ip link set $MLX_VF0 vf 0 rate 100
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-can also crash the kernel.
 
-[ 1650.006388] RIP: 0010:mlx5_eswitch_set_vport_rate+0x1f/0x260 [mlx5_core]
-[ 1650.007092]  do_setlink+0x982/0xd20
-[ 1650.007129]  __rtnl_newlink+0x528/0x7d0
-[ 1650.007374]  rtnl_newlink+0x43/0x60
-[ 1650.007407]  rtnetlink_rcv_msg+0x2a2/0x320
-[ 1650.007484]  netlink_rcv_skb+0xcb/0x100
-[ 1650.007519]  netlink_unicast+0x17f/0x230
-[ 1650.007554]  netlink_sendmsg+0x2d2/0x3d0
-[ 1650.007592]  sock_sendmsg+0x36/0x50
-[ 1650.007625]  ___sys_sendmsg+0x280/0x2a0
-[ 1650.007963]  __sys_sendmsg+0x58/0xa0
-[ 1650.007998]  do_syscall_64+0x5b/0x180
-[ 1650.009438]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: c9497c98901c ("net/mlx5: Add support for setting VF min rate")
-Cc: Mohamad Haj Yahia <mohamad@mellanox.com>
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Acked-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/arm64/mm/fault.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index d6706475a3ba..886a4a77c47f 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -2044,19 +2044,24 @@ static int normalize_vports_min_rate(struct mlx5_eswitch *esw, u32 divider)
- int mlx5_eswitch_set_vport_rate(struct mlx5_eswitch *esw, int vport,
- 				u32 max_rate, u32 min_rate)
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -827,11 +827,12 @@ void __init hook_debug_fault_code(int nr
+ 	debug_fault_info[nr].name	= name;
+ }
+ 
+-asmlinkage int __exception do_debug_exception(unsigned long addr,
++asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 					      unsigned int esr,
+ 					      struct pt_regs *regs)
  {
--	u32 fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
--	bool min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
--					fw_max_bw_share >= MLX5_MIN_BW_SHARE;
--	bool max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
- 	struct mlx5_vport *evport;
-+	u32 fw_max_bw_share;
- 	u32 previous_min_rate;
- 	u32 divider;
-+	bool min_rate_supported;
-+	bool max_rate_supported;
- 	int err = 0;
+ 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
++	unsigned long pc = instruction_pointer(regs);
+ 	int rv;
  
- 	if (!ESW_ALLOWED(esw))
- 		return -EPERM;
- 	if (!LEGAL_VPORT(esw, vport))
- 		return -EINVAL;
-+
-+	fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
-+	min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
-+				fw_max_bw_share >= MLX5_MIN_BW_SHARE;
-+	max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
-+
- 	if ((min_rate && !min_rate_supported) || (max_rate && !max_rate_supported))
- 		return -EOPNOTSUPP;
+ 	/*
+@@ -841,10 +842,10 @@ asmlinkage int __exception do_debug_exce
+ 	if (interrupts_enabled(regs))
+ 		trace_hardirqs_off();
  
--- 
-2.19.1
-
+-	if (user_mode(regs) && instruction_pointer(regs) > TASK_SIZE)
++	if (user_mode(regs) && pc > TASK_SIZE)
+ 		arm64_apply_bp_hardening();
+ 
+-	if (!inf->fn(addr, esr, regs)) {
++	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
+ 		rv = 1;
+ 	} else {
+ 		struct siginfo info;
+@@ -853,7 +854,7 @@ asmlinkage int __exception do_debug_exce
+ 		info.si_signo = inf->sig;
+ 		info.si_errno = 0;
+ 		info.si_code  = inf->code;
+-		info.si_addr  = (void __user *)addr;
++		info.si_addr  = (void __user *)pc;
+ 		arm64_notify_die(inf->name, regs, &info, esr);
+ 		rv = 0;
+ 	}
 
 
