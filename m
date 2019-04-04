@@ -2,103 +2,115 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7567BC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CDAC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9FE2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5583A206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wc7dEU7d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vpj5yLvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbfDDMq6 (ORCPT
+        id S1729212AbfDDMyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 08:46:58 -0400
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:44937 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfDDMq6 (ORCPT
+        Thu, 4 Apr 2019 08:54:33 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55944 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728656AbfDDMyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 08:46:58 -0400
-Received: by mail-lj1-f176.google.com with SMTP id h16so1940354ljg.11
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 05:46:56 -0700 (PDT)
+        Thu, 4 Apr 2019 08:54:32 -0400
+Received: by mail-it1-f196.google.com with SMTP id z126so3464185itd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 05:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=reMMzuiqlTmxhfe9tV3h+YbzlqazE2w1XS7XQ13VFNE=;
-        b=Wc7dEU7dk8DngJg9sRwc2qDqBMyww9sE60sp+6LxIsCpaglx/KEIIt7gRIPwLx+ShM
-         dGQGj4TK05RSwKU7WoA0+mluTfQQlnHU235rMaU2w/nLnT/kUnGwFlvmmo1K+nVlwv08
-         zNe2n0hO3DXx7t1xwW6rsehLjdn2mIlru/XVDn53V0geOkNE+hYJJzeqxcBviF4CY0ED
-         GerOhE9OeMFmymOpP9jRaUrlX2IKgo/+st+207+mMuygpZhdqI4/dCWM1xudAGnPjVqm
-         8D/3WSUjLs8xbLjzORsKYXGN8ai93TAvVqYyfqXutRdyfEdnVFZ+RM2CD5iJaXzpqxI2
-         44xA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lHLQN3NUrDGEbudveKvi/CUxy6nUoP3CXW0iO/pZX8c=;
+        b=Vpj5yLvRuz61rZ5Bfb9y8VDOaZfdovi+PSl5lZvhMED1FpamALUmLsdMasyJ9DaXOr
+         pQGb+c5DNP44tXiIUAXnan0tkMLmbKh219QGQSNrqo68Txxj43nN6tM6A4U60lov68hM
+         JC1vp+6U2bEKg9bflE85ihRw3QcPmcyBSgKXqsI6a6NMsMvowrZczAYwnC5AtbPqUXmD
+         zDAJII0WyUxuNkOKc4q6PyQcdCjqB/mSWR0X2dn/iGbJIpCfcMr/INExfd2USG3vaiMS
+         4h3LjDR4rhigdx3ClO3Z8nKxM+VrVPCRmUzz1RIB9PCa8fGUCA+v5uri0pUP9votBzLs
+         DlLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=reMMzuiqlTmxhfe9tV3h+YbzlqazE2w1XS7XQ13VFNE=;
-        b=i/nlc9KLc1ZtM+BuVghRrTVux0h1p88E6GvIQ1BuGK/pUCbCurURVkBL5xAZm/lvgI
-         140p2aeeaOluiWAFuPVOlM35al/uczi4tt4d1sC0kBX34ZCpjaaVmJ1kZUX0n2hHC4qj
-         JRqLYnrhTufZBDp4neYTlHrgpt2oPlTTOuNnQ9UPF8n/JbUPrDs6m+9LISXdNLTHWfwO
-         8UGoOamaDAX7bSO5OBSpYAGC1bnK15xl1wM4qzIEqlLdW9/N64iqDcj6oKdf7tSYAxoE
-         1MO3WIJzmwCNuPEsgAjfHZxgHHiWsggq9a3U6aJffsD5KRUWkk7xg0XVMcZLC6Ejr6dG
-         StjQ==
-X-Gm-Message-State: APjAAAVDUKe+DDgkJTpcAhI/X6lZWVHLQfGAdLKbh0OMab1aWiIE9TOC
-        4TI5OS1Cf5kHE7QE7l+KmjM=
-X-Google-Smtp-Source: APXvYqz3bkD1FcH5743Jq22L8Jhq5/ErTYAufU54foMq4/6cp3gMs/mKNGgCl0R4YHsS/BFg5C2lpg==
-X-Received: by 2002:a2e:9585:: with SMTP id w5mr3316555ljh.132.1554382015975;
-        Thu, 04 Apr 2019 05:46:55 -0700 (PDT)
-Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id v11sm3613643lfb.68.2019.04.04.05.46.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 05:46:55 -0700 (PDT)
-Subject: Re: [Xen-devel][PATCH] ALSA: xen-front: Do not use stream buffer size
- before it is set
-To:     Takashi Iwai <tiwai@suse.de>, Juergen Gross <jgross@suse.com>
-Cc:     alsa-devel@alsa-project.org, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, perex@perex.cz,
-        linux-kernel@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-References: <20190404123838.22162-1-andr2000@gmail.com>
- <4a852738-7dc1-09df-165b-a133486e3bb7@suse.com>
- <s5h4l7ec51l.wl-tiwai@suse.de>
-From:   Oleksandr Andrushchenko <andr2000@gmail.com>
-Message-ID: <605c7689-de3e-06fe-2771-4b47dee1cd8f@gmail.com>
-Date:   Thu, 4 Apr 2019 15:46:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lHLQN3NUrDGEbudveKvi/CUxy6nUoP3CXW0iO/pZX8c=;
+        b=jXExpVxbqkgpl8+fkeXs7SsxwN6reSzF1tJrVf7i/29vxqQWDgZGrKEpZjGU83Tsyb
+         SpVO4pWGAnG6Jq2pGqxMBXWrlWXDRR23+xApDDQpX7zu0AmlD/F1ZZ77lcjjs9HKtltr
+         JihC4Q2dfalcTI8wOHnxhZwyK48OKjWGW/XiPz/1OSUpqBCLTYqhSNnQS21V/bT2+qPZ
+         E0gbBGzcbcjEmQCAFPgjKphhIRWnYVuSUPI2cazR3tM2YKivKh3x8nRf2NPr3dmPIzRK
+         TmDbHcQ4m4CXYmc93fuiDKaiD8LHtq6LTA/0EEN3LhovdwR+N7IYVrUimvXPNbiOAWBv
+         OWuQ==
+X-Gm-Message-State: APjAAAUpUy2ZIQqXw7wpCpbMfxNyFArY5HCHAfA6kYOKtOgfcdbM1D07
+        N14+Kuw4GWPcqM5dQ4PCDLqekEiaInPsYNQ3N+xrew==
+X-Google-Smtp-Source: APXvYqygWNF766C0HYL0fI7hxDNRUDz48C93PO+BOi05G1vCu9uvnHT+k0cl09QQMbyF2245UNUw0wUIq1SPTpTLTqU=
+X-Received: by 2002:a24:12:: with SMTP id 18mr4617085ita.117.1554382471660;
+ Thu, 04 Apr 2019 05:54:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <s5h4l7ec51l.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190402215556.257406-1-matthewgarrett@google.com> <20190402215556.257406-2-matthewgarrett@google.com>
+In-Reply-To: <20190402215556.257406-2-matthewgarrett@google.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 4 Apr 2019 19:54:20 +0700
+Message-ID: <CAKv+Gu_yPKjK64qDEWgyacvKcoXwivoi4tq35T=uNE0syRhm8w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] efi: Fix cast to pointer from integer of different
+ size in TPM log code
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        jgg@ziepe.ca, Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thiebaud Weksteen <tweek@google.com>,
+        Matthew Garrett <mjg59@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/4/19 3:45 PM, Takashi Iwai wrote:
-> On Thu, 04 Apr 2019 14:42:44 +0200,
-> Juergen Gross wrote:
->> On 04/04/2019 14:38, Oleksandr Andrushchenko wrote:
->>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
->>>
->>> This fixes the regression introduced while moving to Xen shared
->>> buffer implementation.
->>>
->>> Fixes: 58f9d806d16a ("ALSA: xen-front: Use Xen common shared buffer implementation")
->>>
->>> Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
->> Reviewed-by: Juergen Gross <jgross@suse.com>
-> Applied now, thanks.
-> I put Cc to stable since the bug was already in 5.0.
+On Wed, 3 Apr 2019 at 04:56, Matthew Garrett <matthewgarrett@google.com> wrote:
 >
+> 8bfcff4a6a1d9d7226bb63a7da758b82d9ab4373
+
+Which tree is this commit in?
+
+> introduced a cast from
+> efi_physical_address_t to (void *), which are different sizes on 32-bit.
+> Fix that. Caught by the 0-day test bot.
 >
-> Takashi
-Thank you,
-Oleksandr
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+
+I'll pick this up as a fix if we can clean up the commit log so it
+doesn't refer to a commit that does not exist in mainline.
+
+> ---
+>  drivers/firmware/efi/libstub/tpm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/tpm.c b/drivers/firmware/efi/libstub/tpm.c
+> index b6e93e14fcf1..6b3b507a54eb 100644
+> --- a/drivers/firmware/efi/libstub/tpm.c
+> +++ b/drivers/firmware/efi/libstub/tpm.c
+> @@ -114,8 +114,8 @@ void efi_retrieve_tpm2_eventlog(efi_system_table_t *sys_table_arg)
+>                          */
+>                         last_entry_size =
+>                                 __calc_tpm2_event_size((void *)last_entry_addr,
+> -                                                      (void *)log_location,
+> -                                                      false);
+> +                                                   (void *)(long)log_location,
+> +                                                   false);
+>                 } else {
+>                         last_entry_size = sizeof(struct tcpa_event) +
+>                            ((struct tcpa_event *) last_entry_addr)->event_size;
+> --
+> 2.21.0.392.gf8f6787159e-goog
+>
