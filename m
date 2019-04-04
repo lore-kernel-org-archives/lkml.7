@@ -2,138 +2,101 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FCBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D98CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1340921738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554374540;
-	bh=IPTfPhu5Qe4Z1M2EE/TqDpjLZTkK3m6gCyCwZA7hiMQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1APPf+gT2X9Za3rV9mPqfdx17PAQyfn4tBHNHKzpSbhv3UsJt2EHlMGXuDDAULXyc
-	 UPDTQBRRpU8ysclSl4WqBez/SA0n48yVtN1Ui3Lo5Zcohk4sKz95MRq79uCYrZiW7g
-	 OB1GJ6EQWLwjAn8st1PjqN0RsY8wbIQJ1x1DG5sk=
+	by mail.kernel.org (Postfix) with ESMTP id 24D2720855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbfDDKmT (ORCPT
+        id S1729536AbfDDKmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbfDDKmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:42:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB6D92171F;
-        Thu,  4 Apr 2019 10:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554374536;
-        bh=IPTfPhu5Qe4Z1M2EE/TqDpjLZTkK3m6gCyCwZA7hiMQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yqfeFbn3VuptIcLDPney2t8nUJc4pMPDjW++cwh5rQ+7+MbzvPocq2LfVh/STd45i
-         +Vlnk+kGXwGHWnXalbA3rD/d30DFrG4cD5iVbmcUfnDyDsU6lDutqpuRzbOUOT6it5
-         YM6gx6Le1LY58hoas6y90DDLYYU2uZ2mpAZ+iOz4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Syuuichirou Ishii <ishii.shuuichir@jp.fujitsu.com>,
-        "Tarumizu, Kohei" <tarumizu.kohei@jp.fujitsu.com>,
-        Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 132/187] sched/debug: Initialize sd_sysctl_cpus if !CONFIG_CPUMASK_OFFSTACK
-Date:   Thu,  4 Apr 2019 10:47:49 +0200
-Message-Id: <20190404084609.425410063@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
-References: <20190404084603.119654039@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 4 Apr 2019 06:42:24 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57796 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729118AbfDDKmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 06:42:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CB52A78;
+        Thu,  4 Apr 2019 03:42:22 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8DB13F557;
+        Thu,  4 Apr 2019 03:42:20 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] perf/arm-cci: Remove broken race mitigation
+To:     robin.murphy@arm.com, will.deacon@arm.com
+Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        bigeasy@linutronix.de, peterz@infradead.org,
+        clabbe.montjoie@gmail.com, Meng.Li@windriver.com
+References: <cover.1554310292.git.robin.murphy@arm.com>
+ <cf67c49058e3913540df1ebbb765c006f5205ec1.1554310292.git.robin.murphy@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <d9c3723c-abc8-2449-23b4-0276ec96d1c8@arm.com>
+Date:   Thu, 4 Apr 2019 11:42:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cf67c49058e3913540df1ebbb765c006f5205ec1.1554310292.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-[ Upstream commit 1ca4fa3ab604734e38e2a3000c9abf788512ffa7 ]
-
-register_sched_domain_sysctl() copies the cpu_possible_mask into
-sd_sysctl_cpus, but only if sd_sysctl_cpus hasn't already been
-allocated (ie, CONFIG_CPUMASK_OFFSTACK is set).  However, when
-CONFIG_CPUMASK_OFFSTACK is not set, sd_sysctl_cpus is left
-uninitialized (all zeroes) and the kernel may fail to initialize
-sched_domain sysctl entries for all possible CPUs.
-
-This is visible to the user if the kernel is booted with maxcpus=n, or
-if ACPI tables have been modified to leave CPUs offline, and then
-checking for missing /proc/sys/kernel/sched_domain/cpu* entries.
-
-Fix this by separating the allocation and initialization, and adding a
-flag to initialize the possible CPU entries while system booting only.
-
-Tested-by: Syuuichirou Ishii <ishii.shuuichir@jp.fujitsu.com>
-Tested-by: Tarumizu, Kohei <tarumizu.kohei@jp.fujitsu.com>
-Signed-off-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masayoshi Mizuma <msys.mizuma@gmail.com>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190129151245.5073-1-msys.mizuma@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/sched/debug.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 6383aa6a60ca..141ea9ff210e 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -315,6 +315,7 @@ void register_sched_domain_sysctl(void)
- {
- 	static struct ctl_table *cpu_entries;
- 	static struct ctl_table **cpu_idx;
-+	static bool init_done = false;
- 	char buf[32];
- 	int i;
- 
-@@ -344,7 +345,10 @@ void register_sched_domain_sysctl(void)
- 	if (!cpumask_available(sd_sysctl_cpus)) {
- 		if (!alloc_cpumask_var(&sd_sysctl_cpus, GFP_KERNEL))
- 			return;
-+	}
- 
-+	if (!init_done) {
-+		init_done = true;
- 		/* init to possible to not have holes in @cpu_entries */
- 		cpumask_copy(sd_sysctl_cpus, cpu_possible_mask);
- 	}
--- 
-2.19.1
 
 
+On 03/04/2019 18:10, Robin Murphy wrote:
+> Uncore PMU drivers face an awkward cyclic dependency wherein:
+> 
+>   - They have to pick a valid online CPU to associate with before
+>     registering the PMU device, since it will get exposed to userspace
+>     immediately.
+>   - The PMU registration has to be be at least partly complete before
+>     hotplug events can be handled, since trying to migrate an
+>     uninitialised context would be bad.
+>   - The hotplug handler has to be ready as soon as a CPU is chosen, lest
+>     it go offline without the user-visible cpumask value getting updated.
+> 
+> The arm-cci driver has tried to solve this by using get_cpu() to pick
+> the current CPU and prevent it from disappearing while both
+> registrations are performed, but that results in taking mutexes with
+> preemption disabled, which makes certain configurations very unhappy:
+> 
+> [ 1.983337] BUG: sleeping function called from invalid context at kernel/locking/rtmutex.c:2004
+> [ 1.983340] in_atomic(): 1, irqs_disabled(): 0, pid: 1, name: swapper/0
+> [ 1.983342] Preemption disabled at:
+> [ 1.983353] [<ffffff80089801f4>] cci_pmu_probe+0x1dc/0x488
+> [ 1.983360] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.20-rt8-yocto-preempt-rt #1
+> [ 1.983362] Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
+> [ 1.983364] Call trace:
+> [ 1.983369] dump_backtrace+0x0/0x158
+> [ 1.983372] show_stack+0x24/0x30
+> [ 1.983378] dump_stack+0x80/0xa4
+> [ 1.983383] ___might_sleep+0x138/0x160
+> [ 1.983386] __might_sleep+0x58/0x90
+> [ 1.983391] __rt_mutex_lock_state+0x30/0xc0
+> [ 1.983395] _mutex_lock+0x24/0x30
+> [ 1.983400] perf_pmu_register+0x2c/0x388
+> [ 1.983404] cci_pmu_probe+0x2bc/0x488
+> [ 1.983409] platform_drv_probe+0x58/0xa8
+> 
+> It is not feasible to resolve all the possible races outside of the perf
+> core itself, so address the immediate bug by following the example of
+> nearly every other PMU driver and not even trying to do so. Registering
+> the hotplug notifier first should minimise the window in which things
+> can go wrong, so that's about as much as we can reasonably do here. This
+> also revealed an additional race in assigning the global pointer too
+> late relative to the hotplug notifier, which gets fixed in the process.
+> 
+> Reported-by: "Li, Meng" <Meng.Li@windriver.com>
+> Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
+Thanks for fixing this.
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
