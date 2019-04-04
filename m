@@ -2,53 +2,52 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FEEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3229C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768942075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B962075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370945;
-	bh=uRQM1qfRhkfP2ZO8dRRQBkHRrlYp2Dj7fn3vU/E2ITM=;
+	s=default; t=1554370956;
+	bh=XcFrHLG3c2mR/DNZwpCrOvZNlQ5NA+MgCR6kU81BqPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/JQP2yBGW93Zlfp0KFsdgA+UZW+blKPDGGXzbGKWkI9L3NGe8lunx6KzBJ683icu
-	 Wayqhjon94fsO3F0LRyAndV8SxQo+tratFBnrRAdiSEbD7QttOBhAn06LJxO9S8a/m
-	 psQ4ZeLDnDcIA1KJ939AxSvfXXL2AEs3D9GpsiTw=
+	b=YCqeLOpvTYPQ3mnMBis4Vyq/PLQCErjWDvP5KH72YLTWjnD3Jpgnrvwoz/2qBDji5
+	 PEu+m9XEN359UWSRKoxckrHUDQkGavMmsoY7nMsuXFp2Y64Ywf9T2Bpo/f5IzJQJ1a
+	 1V4L2n9LLnyV9lwVINAF/wpHkcZW4+Ay0vBNWRUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbfDDJBa (ORCPT
+        id S1731494AbfDDJmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731424AbfDDJB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:26 -0400
+        id S1730482AbfDDJBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C8CA21741;
-        Thu,  4 Apr 2019 09:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB81721741;
+        Thu,  4 Apr 2019 09:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368485;
-        bh=uRQM1qfRhkfP2ZO8dRRQBkHRrlYp2Dj7fn3vU/E2ITM=;
+        s=default; t=1554368480;
+        bh=XcFrHLG3c2mR/DNZwpCrOvZNlQ5NA+MgCR6kU81BqPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DslScXed+xQukV9rQVEexBIGc6WcZoEMDMJNs6GZjbbRHh+JrKMogyar7PA5U8Pn+
-         KVgVeHGcGRGqEfXhqXF8Rz3yNDlWq7+vfWzt20cvrFHSVGnnHX+/J7kjCeUI4b8T+u
-         FaGFBuSOxFihNJh+3l7Uw/jZvNwwGoD7faPH+SJQ=
+        b=UUiE4CaCv3HgJtpH+QKVIlbWxmo1sVmhUl2t2VhjHNflfv9v0uuk7CY27EvBCJ/Gk
+         YgPPVFxoER3yTl47zOe8katsi1rBaa+Mc++sfmyhgAe6n2f2InMgN5hiZD11PRUOv9
+         djLDQnU7EMn3b+C1+iCaUOKok0LGaPXYtleG48sA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Slavomir Kaslev <kaslevs@vmware.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Namjae Jeon <linkinjeon@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/187] fs: Make splice() and tee() take into account O_NONBLOCK flag on pipes
-Date:   Thu,  4 Apr 2019 10:46:18 +0200
-Message-Id: <20190404084605.015765515@linuxfoundation.org>
+Subject: [PATCH 4.19 039/187] cifs: Accept validate negotiate if server return NT_STATUS_NOT_SUPPORTED
+Date:   Thu,  4 Apr 2019 10:46:16 +0200
+Message-Id: <20190404084604.918847946@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,96 +66,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ee5e001196d1345b8fee25925ff5f1d67936081e ]
+[ Upstream commit 969ae8e8d4ee54c99134d3895f2adf96047f5bee ]
 
-The current implementation of splice() and tee() ignores O_NONBLOCK set
-on pipe file descriptors and checks only the SPLICE_F_NONBLOCK flag for
-blocking on pipe arguments.  This is inconsistent since splice()-ing
-from/to non-pipe file descriptors does take O_NONBLOCK into
-consideration.
+Old windows version or Netapp SMB server will return
+NT_STATUS_NOT_SUPPORTED since they do not allow or implement
+FSCTL_VALIDATE_NEGOTIATE_INFO. The client should accept the response
+provided it's properly signed.
 
-Fix this by promoting O_NONBLOCK, when set on a pipe, to
-SPLICE_F_NONBLOCK.
+See
+https://blogs.msdn.microsoft.com/openspecification/2012/06/28/smb3-secure-dialect-negotiation/
 
-Some context for how the current implementation of splice() leads to
-inconsistent behavior.  In the ongoing work[1] to add VM tracing
-capability to trace-cmd we stream tracing data over named FIFOs or
-vsockets from guests back to the host.
+and
 
-When we receive SIGINT from user to stop tracing, we set O_NONBLOCK on
-the input file descriptor and set SPLICE_F_NONBLOCK for the next call to
-splice().  If splice() was blocked waiting on data from the input FIFO,
-after SIGINT splice() restarts with the same arguments (no
-SPLICE_F_NONBLOCK) and blocks again instead of returning -EAGAIN when no
-data is available.
+MS-SMB2 validate negotiate response processing:
+https://msdn.microsoft.com/en-us/library/hh880630.aspx
 
-This differs from the splice() behavior when reading from a vsocket or
-when we're doing a traditional read()/write() loop (trace-cmd's
---nosplice argument).
+Samba client had already handled it.
+https://bugzilla.samba.org/attachment.cgi?id=13285&action=edit
 
-With this patch applied we get the same behavior in all situations after
-setting O_NONBLOCK which also matches the behavior of doing a
-read()/write() loop instead of splice().
-
-This change does have potential of breaking users who don't expect
-EAGAIN from splice() when SPLICE_F_NONBLOCK is not set.  OTOH programs
-that set O_NONBLOCK and don't anticipate EAGAIN are arguably buggy[2].
-
- [1] https://github.com/skaslev/trace-cmd/tree/vsock
- [2] https://github.com/torvalds/linux/blob/d47e3da1759230e394096fd742aad423c291ba48/fs/read_write.c#L1425
-
-Signed-off-by: Slavomir Kaslev <kaslevs@vmware.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Namjae Jeon <linkinjeon@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/splice.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/cifs/smb2pdu.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 29e92b506394..7769181aa1a6 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -1119,6 +1119,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- 		if (ipipe == opipe)
- 			return -EINVAL;
- 
-+		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		return splice_pipe_to_pipe(ipipe, opipe, len, flags);
- 	}
- 
-@@ -1144,6 +1147,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- 		if (unlikely(ret < 0))
- 			return ret;
- 
-+		if (in->f_flags & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		file_start_write(out);
- 		ret = do_splice_from(ipipe, out, &offset, len, flags);
- 		file_end_write(out);
-@@ -1168,6 +1174,9 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- 			offset = in->f_pos;
- 		}
- 
-+		if (out->f_flags & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		pipe_lock(opipe);
- 		ret = wait_for_space(opipe, flags);
- 		if (!ret)
-@@ -1717,6 +1726,9 @@ static long do_tee(struct file *in, struct file *out, size_t len,
- 	 * copying the data.
- 	 */
- 	if (ipipe && opipe && ipipe != opipe) {
-+		if ((in->f_flags | out->f_flags) & O_NONBLOCK)
-+			flags |= SPLICE_F_NONBLOCK;
-+
- 		/*
- 		 * Keep going, unless we encounter an error. The ipipe/opipe
- 		 * ordering doesn't really matter.
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 3d0db37d64ad..71f32d983384 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -881,8 +881,14 @@ int smb3_validate_negotiate(const unsigned int xid, struct cifs_tcon *tcon)
+ 	rc = SMB2_ioctl(xid, tcon, NO_FILE_ID, NO_FILE_ID,
+ 		FSCTL_VALIDATE_NEGOTIATE_INFO, true /* is_fsctl */,
+ 		(char *)pneg_inbuf, inbuflen, (char **)&pneg_rsp, &rsplen);
+-
+-	if (rc != 0) {
++	if (rc == -EOPNOTSUPP) {
++		/*
++		 * Old Windows versions or Netapp SMB server can return
++		 * not supported error. Client should accept it.
++		 */
++		cifs_dbg(VFS, "Server does not support validate negotiate\n");
++		return 0;
++	} else if (rc != 0) {
+ 		cifs_dbg(VFS, "validate protocol negotiate failed: %d\n", rc);
+ 		rc = -EIO;
+ 		goto out_free_inbuf;
 -- 
 2.19.1
 
