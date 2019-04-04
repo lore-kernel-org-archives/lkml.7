@@ -2,179 +2,100 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AB1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF132C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2359B20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370026;
-	bh=8cxvyUW1oH7AEVOve6H9pqx5tNCWe76PYQ9jHcD3YUk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NgThWPSdEyd1CPiAgRSiqhv9jqpu64OmSelSxlpiiGhONO01QivrsmIt9Wj9SGRtO
-	 qteqeXdJSljctAmydLDh3mG5nDDO+/g5a/Rj37NHnT+8dVAPdd3C+CQB9Y0NReDN4k
-	 PHxMUlBTpx0OTYO8+kGnQN51G9gmCNzNcNilUGxw=
+	by mail.kernel.org (Postfix) with ESMTP id A5AFE206B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="B+0KuUMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387593AbfDDJ1E (ORCPT
+        id S2387699AbfDDJ1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387454AbfDDJMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC38120820;
-        Thu,  4 Apr 2019 09:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369167;
-        bh=8cxvyUW1oH7AEVOve6H9pqx5tNCWe76PYQ9jHcD3YUk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bs7Vb++OfRZxMcm0eYDXwdYY2Th4AqRO7siGAwUBY+VzSXC15CPo1DbSYuHCU6w/h
-         Sbwyux6jADgrkd/ZUdwH2FX3krUlhkjHQu4tlt36kIqhQtKURPf/E0OUqTbhKGAaSG
-         g9yqpQmSl70rDn9Twon2Y71umX1/Qy/ztind5q/I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 122/246] xen/gntdev: Do not destroy context while dma-bufs are in use
-Date:   Thu,  4 Apr 2019 10:47:02 +0200
-Message-Id: <20190404084623.427787398@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 4 Apr 2019 05:27:09 -0400
+Received: from smtp121.ord1c.emailsrvr.com ([108.166.43.121]:52386 "EHLO
+        smtp121.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387447AbfDDJMr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:47 -0400
+Received: from smtp8.relay.ord1c.emailsrvr.com (localhost [127.0.0.1])
+        by smtp8.relay.ord1c.emailsrvr.com (SMTP Server) with ESMTP id 70E0FA01C7;
+        Thu,  4 Apr 2019 05:12:46 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1554369166;
+        bh=IXYTopmL0PKdXzlk0/Ce0Vlsk0z2nnFS5rJ2rUQzwso=;
+        h=Subject:To:From:Date:From;
+        b=B+0KuUMsc8g8VMZ9D4w57kG+AAaP3zrZSHhMC0D/A9n2HppqvjFJyNd0kXjtL7wBt
+         AmMBUzPRJPRMRNUU3nIqZVnpBtSkj9IeUTY9nXbHqVU1heRtDNiW0GvE5yMLso6Aab
+         IbR2tc/qNXrTXYt54RA/QG8R1DSPGsjRfjkp39DE=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp8.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 97E1BA00F7;
+        Thu,  4 Apr 2019 05:12:45 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.185] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Thu, 04 Apr 2019 05:12:46 -0400
+Subject: Re: [PATCH] staging: comedi: Fix spelling mistake
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20190404012404.GA2098@hari-Inspiron-1545>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <6d2d428f-e370-17d6-e0fc-e66f81a5ce76@mev.co.uk>
+Date:   Thu, 4 Apr 2019 10:12:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190404012404.GA2098@hari-Inspiron-1545>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+On 04/04/2019 02:24, Hariprasad Kelam wrote:
+> changes interupts --> interrupts to fix warning reported by checkpatch
+> tool
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>   drivers/staging/comedi/drivers/dt2811.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/comedi/drivers/dt2811.c b/drivers/staging/comedi/drivers/dt2811.c
+> index 05207a5..8a1f9ef 100644
+> --- a/drivers/staging/comedi/drivers/dt2811.c
+> +++ b/drivers/staging/comedi/drivers/dt2811.c
+> @@ -52,7 +52,7 @@
+>   #define DT2811_ADCSR_ADBUSY		BIT(5)	/* r      1=A/D busy */
+>   #define DT2811_ADCSR_CLRERROR		BIT(4)
+>   #define DT2811_ADCSR_DMAENB		BIT(3)	/* r/w    1=dma ena */
+> -#define DT2811_ADCSR_INTENB		BIT(2)	/* r/w    1=interupts ena */
+> +#define DT2811_ADCSR_INTENB		BIT(2)	/* r/w    1=interrupts ena */
+>   #define DT2811_ADCSR_ADMODE(x)		(((x) & 0x3) << 0)
+>   
+>   #define DT2811_ADGCR_REG		0x01	/* r/w  A/D Gain/Channel */
+> 
 
-------------------
+Hi Hariprasad, could you mention dt2811 in the patch subject line like this:
 
-[ Upstream commit fa13e665e02874c0a5f4d06d6967ae34a6cb3d6a ]
+staging: comedi: dt2811: Fix spelling mistake
 
-If there are exported DMA buffers which are still in use and
-grant device is closed by either normal user-space close or by
-a signal this leads to the grant device context to be destroyed,
-thus making it not possible to correctly destroy those exported
-buffers when they are returned back to gntdev and makes the module
-crash:
+It helps to narrow down the scope of the patch.
 
-[  339.617540] [<ffff00000854c0d8>] dmabuf_exp_ops_release+0x40/0xa8
-[  339.617560] [<ffff00000867a6e8>] dma_buf_release+0x60/0x190
-[  339.617577] [<ffff0000082211f0>] __fput+0x88/0x1d0
-[  339.617589] [<ffff000008221394>] ____fput+0xc/0x18
-[  339.617607] [<ffff0000080ed4e4>] task_work_run+0x9c/0xc0
-[  339.617622] [<ffff000008089714>] do_notify_resume+0xfc/0x108
+Apart from that, the patch looks fine.  Thanks.
 
-Fix this by referencing gntdev on each DMA buffer export and
-unreferencing on buffer release.
-
-Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Reviewed-by: Boris Ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/xen/gntdev-dmabuf.c | 12 +++++++++++-
- drivers/xen/gntdev-dmabuf.h |  2 +-
- drivers/xen/gntdev.c        |  2 +-
- 3 files changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/xen/gntdev-dmabuf.c b/drivers/xen/gntdev-dmabuf.c
-index cba6b586bfbd..d97fcfc5e558 100644
---- a/drivers/xen/gntdev-dmabuf.c
-+++ b/drivers/xen/gntdev-dmabuf.c
-@@ -80,6 +80,12 @@ struct gntdev_dmabuf_priv {
- 	struct list_head imp_list;
- 	/* This is the lock which protects dma_buf_xxx lists. */
- 	struct mutex lock;
-+	/*
-+	 * We reference this file while exporting dma-bufs, so
-+	 * the grant device context is not destroyed while there are
-+	 * external users alive.
-+	 */
-+	struct file *filp;
- };
- 
- /* DMA buffer export support. */
-@@ -311,6 +317,7 @@ static void dmabuf_exp_release(struct kref *kref)
- 
- 	dmabuf_exp_wait_obj_signal(gntdev_dmabuf->priv, gntdev_dmabuf);
- 	list_del(&gntdev_dmabuf->next);
-+	fput(gntdev_dmabuf->priv->filp);
- 	kfree(gntdev_dmabuf);
- }
- 
-@@ -423,6 +430,7 @@ static int dmabuf_exp_from_pages(struct gntdev_dmabuf_export_args *args)
- 	mutex_lock(&args->dmabuf_priv->lock);
- 	list_add(&gntdev_dmabuf->next, &args->dmabuf_priv->exp_list);
- 	mutex_unlock(&args->dmabuf_priv->lock);
-+	get_file(gntdev_dmabuf->priv->filp);
- 	return 0;
- 
- fail:
-@@ -834,7 +842,7 @@ long gntdev_ioctl_dmabuf_imp_release(struct gntdev_priv *priv,
- 	return dmabuf_imp_release(priv->dmabuf_priv, op.fd);
- }
- 
--struct gntdev_dmabuf_priv *gntdev_dmabuf_init(void)
-+struct gntdev_dmabuf_priv *gntdev_dmabuf_init(struct file *filp)
- {
- 	struct gntdev_dmabuf_priv *priv;
- 
-@@ -847,6 +855,8 @@ struct gntdev_dmabuf_priv *gntdev_dmabuf_init(void)
- 	INIT_LIST_HEAD(&priv->exp_wait_list);
- 	INIT_LIST_HEAD(&priv->imp_list);
- 
-+	priv->filp = filp;
-+
- 	return priv;
- }
- 
-diff --git a/drivers/xen/gntdev-dmabuf.h b/drivers/xen/gntdev-dmabuf.h
-index 7220a53d0fc5..3d9b9cf9d5a1 100644
---- a/drivers/xen/gntdev-dmabuf.h
-+++ b/drivers/xen/gntdev-dmabuf.h
-@@ -14,7 +14,7 @@
- struct gntdev_dmabuf_priv;
- struct gntdev_priv;
- 
--struct gntdev_dmabuf_priv *gntdev_dmabuf_init(void);
-+struct gntdev_dmabuf_priv *gntdev_dmabuf_init(struct file *filp);
- 
- void gntdev_dmabuf_fini(struct gntdev_dmabuf_priv *priv);
- 
-diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-index 5efc5eee9544..7cf9c51318aa 100644
---- a/drivers/xen/gntdev.c
-+++ b/drivers/xen/gntdev.c
-@@ -600,7 +600,7 @@ static int gntdev_open(struct inode *inode, struct file *flip)
- 	mutex_init(&priv->lock);
- 
- #ifdef CONFIG_XEN_GNTDEV_DMABUF
--	priv->dmabuf_priv = gntdev_dmabuf_init();
-+	priv->dmabuf_priv = gntdev_dmabuf_init(flip);
- 	if (IS_ERR(priv->dmabuf_priv)) {
- 		ret = PTR_ERR(priv->dmabuf_priv);
- 		kfree(priv);
 -- 
-2.19.1
-
-
-
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
