@@ -2,53 +2,52 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69937C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A932CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3430C2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7854221741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368454;
-	bh=9FvT18zG5ZSLuuIfxd3sw3/cGx63jsMKhDSI4Fuilvo=;
+	s=default; t=1554368456;
+	bh=D1PGjOf+i9TWhdrmvMFVwl4I9WyIC+/SpoGlRTUZRMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LwaXTR5BQwQRJgPV/8ti6sa0Pv6+0CCT2+aSIZ08kRbbrr2+9Qd6RFFCzkzpNFRL8
-	 rg6tjGDESAA1AazaHBqYCmx0DskXNJG8zKQEntZotL4vRPB24tQ1x3HtLtT/fSnSJm
-	 zi8vI28m6pCs1XfGmDQbc/oiUvePF3Pm/L7+pcgQ=
+	b=mbn/wBNokONEiu3XtyFSSo3fJW+K1+7cXpt4C9jAtPsx95pY+Z5LBUS94JGZXt1+P
+	 OFDBHTOiCpte7CemK9UOBp+9i2/1y4s2riBQCs7YxMMx+W1iqEarsng2JQ2Z9ExJBu
+	 pGWFQqE78DUWDeqcLzFnm0YIkRKxJz4U7bj+Y1ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbfDDJAw (ORCPT
+        id S1731332AbfDDJAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731063AbfDDJAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:00:51 -0400
+        id S1730796AbfDDJAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDCD72184B;
-        Thu,  4 Apr 2019 09:00:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6035121741;
+        Thu,  4 Apr 2019 09:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368450;
-        bh=9FvT18zG5ZSLuuIfxd3sw3/cGx63jsMKhDSI4Fuilvo=;
+        s=default; t=1554368452;
+        bh=D1PGjOf+i9TWhdrmvMFVwl4I9WyIC+/SpoGlRTUZRMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUKCeLg/kXE79jqUBw/1O1IuSv/xAEl2LQ6unohsjwKx9rmTJIkeM6me7edKhuAnR
-         69l1UnDFC5S8jOutqqDQG8iL2kZ//dFmEnfHAVTHLn2dUtZ8/eZebOjgLBRWzA2sZD
-         gTDomXfsr6mJKTCG1jLYIrEagpRoibCJTc67s+ao=
+        b=jAglMzlRWxCmd/9OchUvSyUlCuIcz5mQPeoHAc4ca3Z931ybPbmsGenmaEbzzo5tL
+         pgSCCHVni2nXiza83352qEcOOjwcCdmsG+zgWVIR8SnhQbmffWs7iXJ+bDbmVYOjU5
+         RZLdM36wTd3ygeUUyce/BkZDpul8555E2cHCZDDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
-        Steve French <stfrench@microsoft.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/187] cifs: use correct format characters
-Date:   Thu,  4 Apr 2019 10:46:13 +0200
-Message-Id: <20190404084604.767331398@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 045/187] fs: fix guard_bio_eod to check for real EOD errors
+Date:   Thu,  4 Apr 2019 10:46:22 +0200
+Message-Id: <20190404084605.201569065@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,78 +66,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 259594bea574e515a148171b5cd84ce5cbdc028a ]
+[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
 
-When compiling with -Wformat, clang emits the following warnings:
+guard_bio_eod() can truncate a segment in bio to allow it to do IO on
+odd last sectors of a device.
 
-fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
-short' but the argument has type 'unsigned int' [-Wformat]
-                         tgt_total_cnt, total_in_tgt);
-                                        ^~~~~~~~~~~~
+It already checks if the IO starts past EOD, but it does not consider
+the possibility of an IO request starting within device boundaries can
+contain more than one segment past EOD.
 
-fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->flags, ref->server_type);
-                 ^~~~~~~~~~
+In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
+underflow bvec->bv_len.
 
-fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->flags, ref->server_type);
-                             ^~~~~~~~~~~~~~~~
+Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
 
-fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->ref_flag, ref->path_consumed);
-                 ^~~~~~~~~~~~~
+This situation has been found on filesystems such as isofs and vfat,
+which doesn't check the device size before mount, if the device is
+smaller than the filesystem itself, a readahead on such filesystem,
+which spans EOD, can trigger this situation, leading a call to
+zero_user() with a wrong size possibly corrupting memory.
 
-fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
-but the argument has type 'int' [-Wformat]
-                 ref->ref_flag, ref->path_consumed);
-                                ^~~~~~~~~~~~~~~~~~
-The types of these arguments are unconditionally defined, so this patch
-updates the format character to the correct ones for ints and unsigned
-ints.
+I didn't see any crash, or didn't let the system run long enough to
+check if memory corruption will be hit somewhere, but adding
+instrumentation to guard_bio_end() to check truncated_bytes size, was
+enough to see the error.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
+The following script can trigger the error.
 
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+MNT=/mnt
+IMG=./DISK.img
+DEV=/dev/loop0
+
+mkfs.vfat $IMG
+mount $IMG $MNT
+cp -R /etc $MNT &> /dev/null
+umount $MNT
+
+losetup -D
+
+losetup --find --show --sizelimit 16247280 $IMG
+mount $DEV $MNT
+
+find $MNT -type f -exec cat {} + >/dev/null
+
+Kudos to Eric Sandeen for coming up with the reproducer above
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifs_dfs_ref.c | 4 ++--
- fs/cifs/smb1ops.c      | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ fs/buffer.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
-index 6b61df117fd4..563e2f6268c3 100644
---- a/fs/cifs/cifs_dfs_ref.c
-+++ b/fs/cifs/cifs_dfs_ref.c
-@@ -271,9 +271,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
- {
- 	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
- 	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
--	cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
-+	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
- 		 ref->flags, ref->server_type);
--	cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
-+	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
- 		 ref->ref_flag, ref->path_consumed);
- }
+diff --git a/fs/buffer.c b/fs/buffer.c
+index c083c4b3c1e7..a550e0d8e965 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -3027,6 +3027,13 @@ void guard_bio_eod(int op, struct bio *bio)
+ 	/* Uhhuh. We've got a bio that straddles the device size! */
+ 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
  
-diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
-index 378151e09e91..47db8eb6cbcf 100644
---- a/fs/cifs/smb1ops.c
-+++ b/fs/cifs/smb1ops.c
-@@ -308,7 +308,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
- 	remaining = tgt_total_cnt - total_in_tgt;
- 
- 	if (remaining < 0) {
--		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
-+		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
- 			 tgt_total_cnt, total_in_tgt);
- 		return -EPROTO;
- 	}
++	/*
++	 * The bio contains more than one segment which spans EOD, just return
++	 * and let IO layer turn it into an EIO
++	 */
++	if (truncated_bytes > bvec->bv_len)
++		return;
++
+ 	/* Truncate the bio.. */
+ 	bio->bi_iter.bi_size -= truncated_bytes;
+ 	bvec->bv_len -= truncated_bytes;
 -- 
 2.19.1
 
