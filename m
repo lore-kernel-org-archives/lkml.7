@@ -2,107 +2,156 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74F3C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48684C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8105F20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:55:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p1g34ePl"
+	by mail.kernel.org (Postfix) with ESMTP id 22CD020855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbfDDNzi (ORCPT
+        id S1729104AbfDDN4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:55:38 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43482 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbfDDNzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:55:37 -0400
-Received: by mail-ot1-f67.google.com with SMTP id u15so2367049otq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 06:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SM7br/73jaRvXeycgmb7b5oDcueCBzlpPV8Gowg7u9c=;
-        b=p1g34ePlDqZiwR32PySBrWU4K1IUFYORtvBNbBzJDr2bG1svX3GZxvT0TMs0thSRmW
-         eFjyuek+j2wWIkx1+J4W2FJQwJFc0seICi9v7eouOhX0mF98YT4xJ6ClVIYDWEZh8wvV
-         GljcnT3r3XJSz6gRYIup2fOAgr6vzakbOT+7/EcYSIQH0m1atk8aq2IbMK81Jk6RTyEJ
-         AiuEIe9FbS1Krb7eAL6MZaFIHuO9vsBbLE1R/egaWrM14X57yEg+fo5y9GukVp0RFd7R
-         bSFMz+1LbcJhHZOLviM4+SA2iydJNyTESxA1F8IfNDSSFITBh4MuzJbikNVwJdb+nirS
-         d7qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SM7br/73jaRvXeycgmb7b5oDcueCBzlpPV8Gowg7u9c=;
-        b=l+EjHkEop2BVoIBKXNBg1CWCYYh54SMzc9+sWR4+dp89UVLtl6JgMr4I4cSn5mBSuK
-         BsGITRZqbO15CFdeMhbPmTNitnJGkDKSyx+RYhZkJympWNydLDj1sRjzcJhCE/bCs0pA
-         ADo8e412TOBIhl69tpol4sEkR094LBBULlxdFhONcTIylZlwwImk4nraCKiBzq+oc46+
-         fUCX9IRX6riNhBLOhkY7wfePicc2jpchHqehdTb3AzBPv2cvjem6YmhaQCZWUHTORPiw
-         deUc+6u4vUCKX3HSsOaw70uJMS1L8p/Qqhs5HfCUKBb5O1RfbM01NyAjai3ZFO9nL6Oe
-         oRbg==
-X-Gm-Message-State: APjAAAXAdqwjZcMfWhTcDKLQhFaGUdbE/nA6VQQVQ8qEluta4hpT5kKQ
-        eYfq2oVijJahpXPd0WgklRPq+EHpH9S+MP4D3LoR+Q==
-X-Google-Smtp-Source: APXvYqwnCv+EI6vu/nhv/4nBkoBEHJSpJkjOmG46rmFwfq6sRYOaTRQEgeHZs+nGEhCOZsCpMO8lw+Tv7WiIo8bP+Nw=
-X-Received: by 2002:a9d:dc4:: with SMTP id 62mr4137734ots.211.1554386136503;
- Thu, 04 Apr 2019 06:55:36 -0700 (PDT)
+        Thu, 4 Apr 2019 09:56:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54402 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727333AbfDDN4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 09:56:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 46E5DB12B;
+        Thu,  4 Apr 2019 13:56:05 +0000 (UTC)
+Subject: Re: [PATCH v2 5/8] modpost: Integrate klp-convert
+To:     Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     live-patching@vger.kernel.org, pmladek@suse.cz, jikos@suse.cz,
+        nstange@suse.de, jpoimboe@redhat.com, khlebnikov@yandex-team.ru,
+        jeyu@kernel.org, matz@suse.de, linux-kernel@vger.kernel.org,
+        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
+        michal.lkml@markovi.net
+References: <20190301141313.15057-1-jmoreira@suse.de>
+ <20190301141313.15057-6-jmoreira@suse.de> <20190322145404.GA31248@redhat.com>
+ <alpine.LSU.2.21.1904041329400.32428@pobox.suse.cz>
+From:   Joao Moreira <jmoreira@suse.de>
+Message-ID: <a2428af1-2b58-5e33-adaa-ef4427b5d62f@suse.de>
+Date:   Thu, 4 Apr 2019 10:55:57 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190404121731.13917-1-olivier.tilmans@nokia-bell-labs.com> <CADVnQy=hsPrDwXoym18j7YzCc36669NJ1kVBR76y+FgK6Meytw@mail.gmail.com>
-In-Reply-To: <CADVnQy=hsPrDwXoym18j7YzCc36669NJ1kVBR76y+FgK6Meytw@mail.gmail.com>
-From:   Neal Cardwell <ncardwell@google.com>
-Date:   Thu, 4 Apr 2019 09:55:19 -0400
-Message-ID: <CADVnQyks1T8KZibJF+UWR0zWGvqs+fUBkCYPJFxATx5PU-csSQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] tcp: Ensure DCTCP reacts to losses
-To:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
-        <olivier.tilmans@nokia-bell-labs.com>
-Cc:     "De Schepper, Koen (Nokia - BE/Antwerp)" 
-        <koen.de_schepper@nokia-bell-labs.com>,
-        Bob Briscoe <research@bobbriscoe.net>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        Florian Westphal <fw@strlen.de>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Yuchung Cheng <ycheng@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Andrew Shewmaker <agshew@gmail.com>,
-        Glenn Judd <glenn.judd@morganstanley.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <alpine.LSU.2.21.1904041329400.32428@pobox.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 9:48 AM Neal Cardwell <ncardwell@google.com> wrote:
->
-> On Thu, Apr 4, 2019 at 8:24 AM Tilmans, Olivier (Nokia - BE/Antwerp)
-> <olivier.tilmans@nokia-bell-labs.com> wrote:
-> >
-> > From: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
-> >
-> > RFC8257 =C2=A73.5 explicitly states that "A DCTCP sender MUST react to
-> > loss episodes in the same way as conventional TCP".
-> ...
-> > This patch replace the clamping of alpha by setting ssthresh to
-> > half of cwnd for both fast retransmissions and RTOs, at most once
-> > per RTT. Consequently, the dctcp_clamp_alpha_on_loss module parameter
-> > has been removed.
->
-> Acked-by: Neal Cardwell <ncardwell@google.com>
->
-> Thanks!
 
-FWIW, my vote is that this is an important bug fix that is appropriate
-for the net branch and -stable releases, rather than net-next.
 
-neal
+On 4/4/19 8:31 AM, Miroslav Benes wrote:
+> On Fri, 22 Mar 2019, Joe Lawrence wrote:
+> 
+>> On Fri, Mar 01, 2019 at 11:13:10AM -0300, Joao Moreira wrote:
+>>> From: Josh Poimboeuf <jpoimboe@redhat.com>
+>>>
+>>> Create cmd_klp_convert and hook it into scripts/Makefile.modpost.
+>>> cmd_klp_convert invokes klp-convert with the right arguments for the
+>>> conversion of unresolved symbols inside a livepatch.
+>>>
+>>> [khlebnikov:
+>>> * save cmd_ld_ko_o into .module.cmd, if_changed_rule doesn't do that
+>>> * fix bashisms for debian where /bin/sh is a symlink to /bin/dash
+>>> * rename rule_link_module to rule_ld_ko_o, otherwise arg-check inside
+>>>    if_changed_rule compares cmd_link_module and cmd_ld_ko_o
+>>> * check modinfo -F livepatch only if CONFIG_LIVEPATCH is true
+>>> ]
+>>>
+>>> [mbenes:
+>>> * remove modinfo call. LIVEPATCH_ in Makefiled
+>>> ]
+>>>
+>>> [jmoreira:
+>>> * split up: move the .livepatch file-based scheme for identifying
+>>> livepatches to a previous patch, as it was required for correctly
+>>> building Symbols.list there.
+>>> ]
+>>>
+>>> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+>>> Signed-off-by: Joao Moreira <jmoreira@suse.de>
+>>> ---
+>>>   scripts/Kbuild.include   |  4 +++-
+>>>   scripts/Makefile.modpost | 16 +++++++++++++++-
+>>>   scripts/mod/modpost.c    |  6 +++++-
+>>>   scripts/mod/modpost.h    |  1 +
+>>>   4 files changed, 24 insertions(+), 3 deletions(-)
+>>>
+>>>
+>>> [ ... snip ... ]
+>>>
+>>> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+>>> index 7d4af0d0accb..da779a185218 100644
+>>> --- a/scripts/Makefile.modpost
+>>> +++ b/scripts/Makefile.modpost
+>>> @@ -125,8 +125,22 @@ quiet_cmd_ld_ko_o = LD [M]  $@
+>>>                    -o $@ $(filter-out FORCE,$^) ;                         \
+>>>   	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+>>>   
+>>> +SLIST = $(objtree)/Symbols.list
+>>> +KLP_CONVERT = scripts/livepatch/klp-convert
+>>> +quiet_cmd_klp_convert = KLP $@
+>>> +      cmd_klp_convert = mv $@ $(@:.ko=.klp.o);				\
+>>> +			$(KLP_CONVERT) $(SLIST) $(@:.ko=.klp.o) $@
+>>> +
+>>> +define rule_ld_ko_o
+>>> +	$(call cmd,ld_ko_o) $(cmd_ld_ko_o) ;				\
+>>                             ^
+>> Should there be a ';' semicolon here (and maybe a line-break) between
+>> $(call cmd,ld_ko_o) and $(cmd_ld_ko_o)?
+> 
+> Probably yes.
+> 
+> Originally there was
+> 	$(call echo-cmd,ld_ko_o) $(cmd_ld_ko_o) ;
+> 
+> but "echo-" disappeared somewhere. Joao?
+
+Hi,
+
+I just verified my sources and the echo-cmd got lost in between the v2 
+rebases. I believe it must have happened while I was manually fixing a 
+conflict, or something. Sorry.
+
+Here is a piece of the original snippet, as it was supposed to be:
+
+define rule_ld_ko_o 
+
+        $(call echo-cmd,ld_ko_o) $(cmd_ld_ko_o) ; 
+\
+        $(call save-cmd,ld_ko_o) ; 
+\
+        $(if $(CONFIG_LIVEPATCH),                                       \
+
+Joe, do you mind fixing it for v3?
+
+Thanks for spotting it.
+
+> 
+> So maybe even
+> 	$(call cmd,ld_ko_o)
+> could be enough, because cmd contains echo-cmd, but I'm not good at
+> reading scripts/Kbuild.include.
+>   
+>> I didn't see this in my x86_64 VM, but on a ppc64le box, I kept getting
+>> really strange build errors that I traced to this line.  Without a
+>> semicolon, the build was trying to run a make command with a linker
+>> command smashed onto the end of it:
+>>
+>>    make -f ./arch/powerpc/Makefile.postlink crypto/xts.ko ld -r  -EL -m elf64lppc -T ./scripts/module-common.lds -T ./arch/powerpc/kernel/module.lds --save-restore-funcs  --build-id  -o crypto/xts.ko crypto/xts.o crypto/xts.mod.o
+> 
+> Miroslav
+> 
