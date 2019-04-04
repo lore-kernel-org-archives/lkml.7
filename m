@@ -7,49 +7,57 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2F2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E62C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F085D206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDCA206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371120;
-	bh=oQ2sPov8GP76KurqkMgaBXyAjKNgKiPQ6qLIGJrT5bM=;
+	s=default; t=1554371129;
+	bh=wc5jDqUP9HRhO15AVZUrRe+OLpOpVi+ZE5JssgvUJh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohe5cp2h0OJPoliPuZWZEfaagoHgzqDttYMwjFJ3e1Uy3/k9n1q0LltjHghUpcqtZ
-	 9oOL/y0V1MQybUmiq4+ICyR8xuoElKxfaCjFx4HOGKoI4AmyVV88XDHiteRXBOP5qg
-	 ZNpJrg+2C2ObGGRkag49PCUqxeVI2Z5kbHvGdl6s=
+	b=D0kX2tKZr21Sx214FNEcR6GnsXLK+2ior1qkRPlnZv+TmynT2tM9JtEh+6D4BWYJ8
+	 eBG2eJmX0c/bwWk89a4qb0MC9UgYI5Tl4j2gC8DZvI7qIybnCgWtF9fJ0kUDZqSIpJ
+	 p889EFdD9+fCzdiVDcZ8GMQOAqRz4LyRQq7GZr/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbfDDI7K (ORCPT
+        id S1730000AbfDDI7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731022AbfDDI7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:06 -0400
+        id S1730999AbfDDI67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:58:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 857D62184E;
-        Thu,  4 Apr 2019 08:59:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81952177E;
+        Thu,  4 Apr 2019 08:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368346;
-        bh=oQ2sPov8GP76KurqkMgaBXyAjKNgKiPQ6qLIGJrT5bM=;
+        s=default; t=1554368338;
+        bh=wc5jDqUP9HRhO15AVZUrRe+OLpOpVi+ZE5JssgvUJh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xpJJapNnh9pfBheXB/wEiyFXq3qe2vxiVWgOfU7XXyFeka8ZFgsbf1qE+0gA1rZ7c
-         0BhvRMnKgpogGfw+vsawuP6tiJFO3aRDgvHNRR4tPlE6yjjopo6rX1fP3XoghKpbh1
-         QTptg/f1R5lEhI9h0l2Np8RKDwvfKAvVj/Ji7ct0=
+        b=qN3SJz9O2mHFWFdV7s3A7Kqba9RI6eQj9KKSDkc7LQMNyjuSyRcz6IgjHlw68uInD
+         lQALpsFYRIxaIMPh1XudaEGQ1v59KgN3rdMNE7F8X4DTHE2ITu6kw8fDp9CL6mgLsa
+         p94Yyo4UsXwLrtjKNSPEhTkRIwyYhThZmeG+K9UY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Vincent <brainn@gmail.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 120/121] drm/dp/mst: Configure no_stop_bit correctly for remote i2c xfers
-Date:   Thu,  4 Apr 2019 10:48:28 +0200
-Message-Id: <20190404084551.713376783@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
+        =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
+        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Cao Jin <caoj.fnst@cn.fujitsu.com>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tri Vo <trong@android.com>, morbo@google.com,
+        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 117/121] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
+Date:   Thu,  4 Apr 2019 10:48:25 +0200
+Message-Id: <20190404084551.576559867@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -68,43 +76,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c978ae9bde582e82a04c63a4071701691dd8b35c ]
+[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
 
-We aren't supposed to force a stop+start between every i2c msg
-when performing multi message transfers. This should eg. cause
-the DDC segment address to be reset back to 0 between writing
-the segment address and reading the actual EDID extension block.
+Accessing per-CPU variables is done by finding the offset of the
+variable in the per-CPU block and adding it to the address of the
+respective CPU's block.
 
-To quote the E-DDC spec:
-"... this standard requires that the segment pointer be
- reset to 00h when a NO ACK or a STOP condition is received."
+Section 3.10.8 of ld.bfd's documentation states:
 
-Since we're going to touch this might as well consult the
-I2C_M_STOP flag to determine whether we want to force the stop
-or not.
+  For expressions involving numbers, relative addresses and absolute
+  addresses, ld follows these rules to evaluate terms:
 
-Cc: Brian Vincent <brainn@gmail.com>
-References: https://bugs.freedesktop.org/show_bug.cgi?id=108081
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180928180403.22499-1-ville.syrjala@linux.intel.com
-Reviewed-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
+  Other binary operations, that is, between two relative addresses
+  not in the same section, or between a relative address and an
+  absolute address, first convert any non-absolute term to an
+  absolute address before applying the operator."
+
+Note that LLVM's linker does not adhere to the GNU ld's implementation
+and as such requires implicitly-absolute terms to be explicitly marked
+as absolute in the linker script. If not, it fails currently with:
+
+  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
+  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
+  Makefile:1040: recipe for target 'vmlinux' failed
+
+This is not a functional change for ld.bfd which converts the term to an
+absolute symbol anyways as specified above.
+
+Based on a previous submission by Tri Vo <trong@android.com>.
+
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
+[ Update commit message per Boris' and Michael's suggestions. ]
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+[ Massage commit message more, fix typos. ]
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Dmitry Golovin <dima@golovin.in>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brijesh Singh <brijesh.singh@amd.com>
+Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tri Vo <trong@android.com>
+Cc: dima@golovin.in
+Cc: morbo@google.com
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 2a4cf6837324..bb9a9852ec22 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3199,6 +3199,7 @@ static int drm_dp_mst_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs
- 		msg.u.i2c_read.transactions[i].i2c_dev_id = msgs[i].addr;
- 		msg.u.i2c_read.transactions[i].num_bytes = msgs[i].len;
- 		msg.u.i2c_read.transactions[i].bytes = msgs[i].buf;
-+		msg.u.i2c_read.transactions[i].no_stop_bit = !(msgs[i].flags & I2C_M_STOP);
- 	}
- 	msg.u.i2c_read.read_i2c_device_id = msgs[num - 1].addr;
- 	msg.u.i2c_read.num_bytes_read = msgs[num - 1].len;
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index b854ebf5851b..2384a2ae5ec3 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -390,7 +390,7 @@ SECTIONS
+  * Per-cpu symbols which need to be offset from __per_cpu_load
+  * for the boot processor.
+  */
+-#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
++#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
+ INIT_PER_CPU(gdt_page);
+ INIT_PER_CPU(irq_stack_union);
+ 
 -- 
 2.19.1
 
