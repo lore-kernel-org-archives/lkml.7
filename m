@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A91DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC14C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B2E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8922B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371369;
-	bh=aZFXA++Af5ZrQbtZyIfsv0t/GyLwhZMbIT81+uXoFnQ=;
+	s=default; t=1554371375;
+	bh=EmwQ3bIyqLrAYO4RhuwpFWigYXDQWvA8h86cw7xLsHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fL80g4cvY6QDDCSXz2uX1z74phyTJmcD0Iak4uWHbAuKp8ejE0oW5wTv5qNSm0Eof
-	 KWBc4r+3YTmZmBrwfI3nmICNDULLCwHFQSStqTWRVfqtmGgFwZrgWtoBB83qpudqac
-	 L+lKVJpvjobdFiCAdlJz8hiSsXMJ2NSapergfBOg=
+	b=iBBr4hJDZKs5pEx7XWqyI5uW12LqBe4p7BUPPoxR165lcZD2uRVhdJXuWOKkdRuQd
+	 sy4M+h9mR4uhynXohkL/XjgnZmjrFkgWz5fk3tgRm1/D7MWpOwI2TaH5uz2yWNe+bd
+	 SOTb3Zu0I/Yodf+p6baZArEoal79rFf6wWkJitPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbfDDI4a (ORCPT
+        id S1730681AbfDDJtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59696 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730460AbfDDI4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:24 -0400
+        id S1729240AbfDDI43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9838820693;
-        Thu,  4 Apr 2019 08:56:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D18E20652;
+        Thu,  4 Apr 2019 08:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368183;
-        bh=aZFXA++Af5ZrQbtZyIfsv0t/GyLwhZMbIT81+uXoFnQ=;
+        s=default; t=1554368188;
+        bh=EmwQ3bIyqLrAYO4RhuwpFWigYXDQWvA8h86cw7xLsHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vL30SNGt9ncFCu0oJxz2DrGO75EggWGH6yRVsOJLT9YcCA4r4xpIAtoCcNfL9ywts
-         d3yQdgxlROeEIvm6JLDl0ua125uIJvrAjm7/c33xrSwu0Li5wACfwu+98LuFZg7r5j
-         Sc617Wp1L05olaPSCNS9ft/OF4htx60kGuO4ziBI=
+        b=FkB/KOT2d+swGC1KefkvWpCo1ESFZV3vtf9KELH7q3ii6SFRXvq/hBvdlk0S/t5Iz
+         6YtDyWz4Nk6/QriBkDSatqBlMv4zvQAh1Dq/QVaVza1Xb/nR48moJzcnbIX8T4zE6Y
+         A6eKnBjAjYIzoG3sCjg7EKR4OahoyL1C4+0TYTB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 041/121] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Thu,  4 Apr 2019 10:47:09 +0200
-Message-Id: <20190404084547.516894531@linuxfoundation.org>
+Subject: [PATCH 4.14 069/121] ACPI / video: Refactor and fix dmi_is_desktop()
+Date:   Thu,  4 Apr 2019 10:47:37 +0200
+Message-Id: <20190404084549.028502708@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,112 +66,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+This commit refactors the chassis-type detection introduced by
+commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
+Win8-ready _desktops_") (where desktop means anything without a builtin
+screen).
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+The DMI chassis_type is an unsigned integer, so rather then doing a
+whole bunch of string-compares on it, convert it to an int and feed
+the result to a switch case.
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+Note the switch case uses hex values, this is done because the spec
+uses hex values too. This changes the check for "Main Server Chassis"
+from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
+the original check for 11 decimal was wrong.
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
-
-Here is the contexts for the three functions so far:
-
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+[ rjw: Drop redundant return statements ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/acpi/acpi_video.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 40124648a07b..0b11405bfd7e 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index dbdd460a9958..9f56c066227c 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -2123,21 +2123,28 @@ static int __init intel_opregion_present(void)
+ 	return opregion;
+ }
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
++/* Check if the chassis-type indicates there is no builtin LCD panel */
+ static bool dmi_is_desktop(void)
+ {
+ 	const char *chassis_type;
++	unsigned long type;
  
-@@ -796,7 +796,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
+ 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	if (!chassis_type)
+ 		return false;
  
-@@ -1085,7 +1085,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
+-	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
+-	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
+-	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
+-	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
+-	    !strcmp(chassis_type, "7") || /*  7: Tower */
+-	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
++	if (kstrtoul(chassis_type, 10, &type) != 0)
++		return false;
++
++	switch (type) {
++	case 0x03: /* Desktop */
++	case 0x04: /* Low Profile Desktop */
++	case 0x05: /* Pizza Box */
++	case 0x06: /* Mini Tower */
++	case 0x07: /* Tower */
++	case 0x11: /* Main Server Chassis */
+ 		return true;
++	}
  
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
+ 	return false;
+ }
 -- 
 2.19.1
 
