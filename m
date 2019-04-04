@@ -2,115 +2,162 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E13C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3395C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BDF205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ifE5fLK2"
+	by mail.kernel.org (Postfix) with ESMTP id D27A2205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554370705;
+	bh=qlCaWlHWdO+5IwDamWz+jFzOBdpr7Mmnmvq9loXbQ/I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rgu749a8k5fSl1waoOocncOv2tRT0GBxz/s2O9S+p4M1mRyvPKZ1Gtep/7xgy2DKt
+	 MuBHurMexTiZ+HJaeoLCH1cAaYUytxHY0WfeNNKdxGmczLTdbvrNuYw7IDkzDwSy0Z
+	 +NTetFdhXCt2x3ML4ajNKVNs5Pjz+28K+D7f0LYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732350AbfDDJhz (ORCPT
+        id S1729445AbfDDJEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:37:55 -0400
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:33916 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731781AbfDDJhy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:37:54 -0400
-Received: by mail-pl1-f173.google.com with SMTP id y6so902145plt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 02:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=E9KiAh7iqeqfi5vdSR+7X//2Mmkd/Cv9Z4rVtgtGK4g=;
-        b=ifE5fLK2awt3y5bwVCrSGM1XMlp8Bgs1lcasB1fMtXjklkD0wkWXEbIxARSAlhqwlB
-         ViyVAWVY32GDF+ol+zfFRMAcTVwGVfQ945i0cvtMHcwHfgoy4YBYKilCVxezNSwyYMtn
-         tgHw5vrYUq681TFBZEGnACO7cRkpj0iCk2iF8nR84YhS8bRWTok9BgEQ19ds8T9tYZYs
-         fXGUJZfZ5OLlwBMKA8QMGPA/ZjenlsLUkIOtmkRWv2bnLqycgmWXtBEp52Qr1wuMlNw2
-         9SUTalx1nS2WaEFVoijwyZo3ljIoSMyzm2jdAUqm7RHUkAzZI2jCTrRJpZNU5bl+KUDA
-         tPBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=E9KiAh7iqeqfi5vdSR+7X//2Mmkd/Cv9Z4rVtgtGK4g=;
-        b=UuS1i6bh/P9dJ3LRm5USFK8ODVNc5uTUsg3IOdpY8COrMyCEIuPnqq9Ec7TW3PDugd
-         XksD8OtWCqUgEgV2hB+DNCl2kcXZfifSOj/IGY8UCYL3W58bY4VTnk36wVgKhkLTCxMv
-         jTSuAo5eYC3j9Za2UHFhlFGffQgYnSwnsjUMSBe3TtPrzZFMEXvnL3fHPlEOHCim7KDn
-         73YEat8WYzTQzfqvJIXr19ghDb8cRe92jxjVEOFuKb+4Tgw78iFn0RHzLklzuh5tHQ5g
-         pT7gcH/Wr1fcSr/YeQ8V086FsQLuTU3H3AFk4lJckPkv+yJU9p9f9lG8mKjvTc/xa7dF
-         As8g==
-X-Gm-Message-State: APjAAAU8ijmQb7+qMiMnsBh0jGRlZZzmGl+Pns+P88Q4qsh5PShv2UXV
-        +cKP8yFKzTh3n7JaB5ipRklCBYAnfODH4Q==
-X-Google-Smtp-Source: APXvYqyvTPrsCHVETZNIMjsU01fooOqs29wKtqAm2bOdsxp8nsW4G54ItBlkPVkiLecrJ7j54E7U0g==
-X-Received: by 2002:a17:902:d68d:: with SMTP id v13mr5372787ply.55.1554370673325;
-        Thu, 04 Apr 2019 02:37:53 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id q80sm30985697pfa.66.2019.04.04.02.37.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 02:37:52 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 10:37:47 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] MFD fixes for v5.1
-Message-ID: <20190404093747.GU6830@dell>
+        Thu, 4 Apr 2019 05:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731930AbfDDJER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80F25214AF;
+        Thu,  4 Apr 2019 09:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554368657;
+        bh=qlCaWlHWdO+5IwDamWz+jFzOBdpr7Mmnmvq9loXbQ/I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2fJmJu3kANu04fbwI1iN08qBJUCnInSm7bGmJ8LL7Ebrinde7NERv5GAS+ao2JqVZ
+         d6JjgTrb10iQIiEnEC6vaU2SIxGYQiw8+BKoHYj5RR+OVx7gua+BYZguH0UHrvk0x/
+         YxEV/m8ldXG3zZToaX3e5u266pieHpuV8VdFjGpw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 120/187] cdrom: Fix race condition in cdrom_sysctl_register
+Date:   Thu,  4 Apr 2019 10:47:37 +0200
+Message-Id: <20190404084608.894949775@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
+References: <20190404084603.119654039@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-Enjoy!
+------------------
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+The following traceback is sometimes seen when booting an image in qemu:
 
-are available in the Git repository at:
+[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
+[   54.611085] Fusion MPT base driver 3.04.20
+[   54.611877] Copyright (c) 1999-2008 LSI Corporation
+[   54.616234] Fusion MPT SAS Host driver 3.04.20
+[   54.635139] sysctl duplicate entry: /dev/cdrom//info
+[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
+[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[   54.641273] Workqueue: events_unbound async_run_entry_fn
+[   54.641273] Call Trace:
+[   54.641273]  dump_stack+0x67/0x90
+[   54.641273]  __register_sysctl_table+0x50b/0x570
+[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
+[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
+[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
+[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
+[   54.646814]  register_cdrom.cold.24+0x2a/0x33
+[   54.646814]  sr_probe+0x4bd/0x580
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  really_probe+0xd6/0x260
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  driver_probe_device+0x4a/0xb0
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  bus_for_each_drv+0x73/0xc0
+[   54.646814]  __device_attach+0xd6/0x130
+[   54.646814]  bus_probe_device+0x9a/0xb0
+[   54.646814]  device_add+0x40c/0x670
+[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
+[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
+[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
+[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
+[   54.646814]  __scsi_add_device+0x116/0x130
+[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
+[   54.646814]  async_run_entry_fn+0x34/0x100
+[   54.646814]  process_one_work+0x237/0x5e0
+[   54.646814]  worker_thread+0x37/0x380
+[   54.646814]  ? rescuer_thread+0x360/0x360
+[   54.646814]  kthread+0x118/0x130
+[   54.646814]  ? kthread_create_on_node+0x60/0x60
+[   54.646814]  ret_from_fork+0x3a/0x50
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-5.1
+The only sensible explanation is that cdrom_sysctl_register() is called
+twice, once from the module init function and once from register_cdrom().
+cdrom_sysctl_register() is not mutex protected and may happily execute
+twice if the second call is made before the first call is complete.
 
-for you to fetch changes up to a05a2e7998ab1badcf80aed47b5313934fd131fa:
+Use a static atomic to ensure that the function is executed exactly once.
 
-  mfd: sun6i-prcm: Allow to compile with COMPILE_TEST (2019-04-03 08:38:07 +0100)
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/cdrom/cdrom.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-----------------------------------------------------------------
- - Bug Fixes
-   - Fix failed reads due to enabled IRQs when suspended; twl-core
-   - Fix driver	registration when using	DT; sprd-sc27xx-spi
-   - Fix `make allyesconfig` on	x86_64;	SUN6I_PRCM
-
-----------------------------------------------------------------
-Andreas Kemnade (1):
-      mfd: twl-core: Disable IRQ while suspended
-
-Baolin Wang (1):
-      mfd: sc27xx: Use SoC compatible string for PMIC devices
-
-Maxime Ripard (1):
-      mfd: sun6i-prcm: Allow to compile with COMPILE_TEST
-
- drivers/mfd/Kconfig           |  2 +-
- drivers/mfd/sprd-sc27xx-spi.c | 42 +++++++++++++++++++++---------------------
- drivers/mfd/twl-core.c        | 23 +++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 22 deletions(-)
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 10802d1fc554..27a82a559ab9 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -265,6 +265,7 @@
+ /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
+ /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
  
++#include <linux/atomic.h>
+ #include <linux/module.h>
+ #include <linux/fs.h>
+ #include <linux/major.h>
+@@ -3693,9 +3694,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
+ 
+ static void cdrom_sysctl_register(void)
+ {
+-	static int initialized;
++	static atomic_t initialized = ATOMIC_INIT(0);
+ 
+-	if (initialized == 1)
++	if (!atomic_add_unless(&initialized, 1, 1))
+ 		return;
+ 
+ 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
+@@ -3706,8 +3707,6 @@ static void cdrom_sysctl_register(void)
+ 	cdrom_sysctl_settings.debug = debug;
+ 	cdrom_sysctl_settings.lock = lockdoor;
+ 	cdrom_sysctl_settings.check = check_media_type;
+-
+-	initialized = 1;
+ }
+ 
+ static void cdrom_sysctl_unregister(void)
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.19.1
+
+
+
