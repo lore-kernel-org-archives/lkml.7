@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32BBC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9BDC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C526321901
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38372183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368635;
-	bh=JZ0dd2YjbJpGu6j5NSaPIqCAfkWJAE3jOWY497T0ymg=;
+	s=default; t=1554368645;
+	bh=ZUotyxZFK6YExqSOu1ZLCHyzUfmdXp2U0stcDwhR3og=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BiS+jBN4NhMNUfx7nYEvzUmJzoS1hOZTcDKGmU9kXFK5Vwz/NkRSlLYLMG0xw2ncZ
-	 cNzrTMKvN3CAOHIRS7EoTqNi8R1P7NB4Ul46sc2YwAfFHRPuJC8BlZNx8H2L1EqQc+
-	 K+QI2ccDjLfI/VwsqjP1h+icIfxvz8IVtSFT4ubs=
+	b=NNSTLgc02f9WsssSofWHACJCVMufEyHklGaq/GtDvSfK3sWleYy81BCwh3zK/dX4U
+	 5H6KZPjK32kMtdsfo5PhyWPaB9NiFEJxKGyAVpa2rePYLI+aSs+DTDePGoIrvwmxgp
+	 q6C8M//v07aNEjXCMMPBUoLCfLxvHTqAJmqcmrzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbfDDJDy (ORCPT
+        id S1731891AbfDDJED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731863AbfDDJDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:50 -0400
+        id S1731879AbfDDJD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B3821850;
-        Thu,  4 Apr 2019 09:03:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC51E2147C;
+        Thu,  4 Apr 2019 09:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368629;
-        bh=JZ0dd2YjbJpGu6j5NSaPIqCAfkWJAE3jOWY497T0ymg=;
+        s=default; t=1554368637;
+        bh=ZUotyxZFK6YExqSOu1ZLCHyzUfmdXp2U0stcDwhR3og=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cd6V8eImFmynr3GI5jxtD3Bdrgs1oLDf1hh/lNThzHiOItBkrK9c4ngYqU+H6G+fV
-         tu9575IA2K1raxZISWvAZYreMmM4csz18QWp/i5gfRHPcmYKedF6BBakt8fMh0AQrK
-         D6fyEx3MGYylQmSOQjXLeb8dZqBrwWgJwlC5ptZU=
+        b=JZpsvoFpDzXFAoPdkm+XdA2fK/o8Ew7E2Iivs020hu+lb8yZFw+Vt0GYYjky9QMYg
+         fXQ/gvHrfEj8XzTKfxx8nb3bNJsIBxwXZjPm9wIOaF3Ug6xJSVDe6Ybt437k7BdXCZ
+         myc7JHHRHTJqslS36Z6CRizbmIOw6k68Sib4/W9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hong Liu <hong.liu@intel.com>,
-        Hongyan Song <hongyan.song@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/187] HID: intel-ish-hid: avoid binding wrong ishtp_cl_device
-Date:   Thu,  4 Apr 2019 10:47:11 +0200
-Message-Id: <20190404084607.586218230@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Kazior <michal@plume.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 097/187] leds: lp55xx: fix null deref on firmware load failure
+Date:   Thu,  4 Apr 2019 10:47:14 +0200
+Message-Id: <20190404084607.738768969@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,51 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0d28f49412405d87d3aae83da255070a46e67627 ]
+[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
 
-When performing a warm reset in ishtp bus driver, the ishtp_cl_device
-will not be removed, its fw_client still points to the already freed
-ishtp_device.fw_clients array.
+I've stumbled upon a kernel crash and the logs
+pointed me towards the lp5562 driver:
 
-Later after driver finishing ishtp client enumeration, this dangling
-pointer may cause driver to bind the wrong ishtp_cl_device to the new
-client, causing wrong callback to be called for messages intended for
-the new client.
+> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
+> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
+> ...
+> <3>[306073.924886] lp5562 0-0030: firmware request failed
+> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
+> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
+> ...
 
-This helps in development of firmware where frequent switching of
-firmwares is required without Linux reboot.
+After taking a look I noticed firmware_release()
+could be called with either NULL or a dangling
+pointer.
 
-Signed-off-by: Hong Liu <hong.liu@intel.com>
-Tested-by: Hongyan Song <hongyan.song@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
+Signed-off-by: Michal Kazior <michal@plume.com>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ishtp/bus.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/leds/leds-lp55xx-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
-index 2623a567ffba..f546635e9ac9 100644
---- a/drivers/hid/intel-ish-hid/ishtp/bus.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
-@@ -623,7 +623,8 @@ int ishtp_cl_device_bind(struct ishtp_cl *cl)
- 	spin_lock_irqsave(&cl->dev->device_list_lock, flags);
- 	list_for_each_entry(cl_device, &cl->dev->device_list,
- 			device_link) {
--		if (cl_device->fw_client->client_id == cl->fw_client_id) {
-+		if (cl_device->fw_client &&
-+		    cl_device->fw_client->client_id == cl->fw_client_id) {
- 			cl->device = cl_device;
- 			rv = 0;
- 			break;
-@@ -683,6 +684,7 @@ void ishtp_bus_remove_all_clients(struct ishtp_device *ishtp_dev,
- 	spin_lock_irqsave(&ishtp_dev->device_list_lock, flags);
- 	list_for_each_entry_safe(cl_device, n, &ishtp_dev->device_list,
- 				 device_link) {
-+		cl_device->fw_client = NULL;
- 		if (warm_reset && cl_device->reference_count)
- 			continue;
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 3d79a6380761..723f2f17497a 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -201,7 +201,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
  
+ 	if (!fw) {
+ 		dev_err(dev, "firmware request failed\n");
+-		goto out;
++		return;
+ 	}
+ 
+ 	/* handling firmware data is chip dependent */
+@@ -214,9 +214,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+-out:
+ 	/* firmware should be released for other channel use */
+ 	release_firmware(chip->fw);
++	chip->fw = NULL;
+ }
+ 
+ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
 -- 
 2.19.1
 
