@@ -2,54 +2,63 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70E7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDE7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DD52075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84786206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371656;
-	bh=BR/M9Oh4GUfXc9s5yeoFb2uEBm58dYBPTRR/KFltGFg=;
+	s=default; t=1554371664;
+	bh=Blh6OwNzrmbN+e3se8QamGlDFw1qkE3SZOYiUIhdt8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4fXkUk7DrXamWPHINCZGQTKOyBD/iwcMnUIL/jkYiBiZpxy0l3kFvMufu1/IxMf7
-	 ntLmLGhg1yGvx9KDwrmc7zjJ3+gZsVUc6pkmKYPAh3JrYX0mpFgO62e+DovEDek72h
-	 +SDetJWDI65pn/5KXfGsEh0ehpQIly0tr9xsmdOw=
+	b=JMT+K670x53/2s83m7sJ3d0CSoAaks7BrIS2OAkYirW2PrYqjKa2se4pgMgMFkeHP
+	 merx814qSCkND23vdHgf/sGPOMVmSo5dUvg7Wi+/Fo+RJ41AILJqqi4YXifMDXQ29L
+	 FKnjQ92yPFUMijuo92cPim0GDGO8iirGh9BdbXUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbfDDIwn (ORCPT
+        id S1729629AbfDDIwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54790 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbfDDIwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:38 -0400
+        id S1729144AbfDDIwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5765A20855;
-        Thu,  4 Apr 2019 08:52:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49BA9217D4;
+        Thu,  4 Apr 2019 08:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367957;
-        bh=BR/M9Oh4GUfXc9s5yeoFb2uEBm58dYBPTRR/KFltGFg=;
+        s=default; t=1554367949;
+        bh=Blh6OwNzrmbN+e3se8QamGlDFw1qkE3SZOYiUIhdt8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDZuejzGKXBzgt1LO3WjyCzYksj/iS1X8kO1qlzBfMDFjhokps2/On4feHfxi78mX
-         DSRNlnoevUXV0zwH1tH2XqpBUovP7cDEofSIYWTUJkNCOPq4K8XwX6pHeFfgtJJX/0
-         OuYTa3eO2MvkCKEnoGEKt8gx3RbkBTAkZtejiG4s=
+        b=GMGeJ9xRGU8s6EJZd9pixYnINWK0jYBr22wFY8rNcJdGY7L6JPJXUyXS0hvrS6nLO
+         6/q28HadbP2gkxKmCKWHfTISk9NU0tW1oquMqFRpCKH75Ws33uK/xjcowC1qbrTlyy
+         B+9SRuILG/RLTpyDRX5yrxZ7xbuKzflY6A16LmY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Daney <ddaney@caviumnetworks.com>,
-        Rob Herring <robh@kernel.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <balbi@kernel.org>,
+        Zeng Tao <prime.zeng@hisilicon.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Thinh Nguyen <thinh.nguyen@synopsys.com>,
+        Chen Yu <chenyu56@huawei.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 68/91] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
-Date:   Thu,  4 Apr 2019 10:47:52 +0200
-Message-Id: <20190404084539.393491052@linuxfoundation.org>
+Subject: [PATCH 4.9 57/91] usb: f_fs: Avoid crash due to out-of-scope stack ptr access
+Date:   Thu,  4 Apr 2019 10:47:41 +0200
+Message-Id: <20190404084538.749207681@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -68,130 +77,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
+[ Upstream commit 54f64d5c983f939901dacc8cfc0983727c5c742e ]
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix
-the following dtc warnings:
+Since the 5.0 merge window opened, I've been seeing frequent
+crashes on suspend and reboot with the trace:
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+[   36.911170] Unable to handle kernel paging request at virtual address ffffff801153d660
+[   36.912769] Unable to handle kernel paging request at virtual address ffffff800004b564
+...
+[   36.950666] Call trace:
+[   36.950670]  queued_spin_lock_slowpath+0x1cc/0x2c8
+[   36.950681]  _raw_spin_lock_irqsave+0x64/0x78
+[   36.950692]  complete+0x28/0x70
+[   36.950703]  ffs_epfile_io_complete+0x3c/0x50
+[   36.950713]  usb_gadget_giveback_request+0x34/0x108
+[   36.950721]  dwc3_gadget_giveback+0x50/0x68
+[   36.950723]  dwc3_thread_interrupt+0x358/0x1488
+[   36.950731]  irq_thread_fn+0x30/0x88
+[   36.950734]  irq_thread+0x114/0x1b0
+[   36.950739]  kthread+0x104/0x130
+[   36.950747]  ret_from_fork+0x10/0x1c
 
-and
+I isolated this down to in ffs_epfile_io():
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/f_fs.c#n1065
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+Where the completion done is setup on the stack:
+  DECLARE_COMPLETION_ONSTACK(done);
 
-Converted using the following command:
+Then later we setup a request and queue it, and wait for it:
+  if (unlikely(wait_for_completion_interruptible(&done))) {
+    /*
+    * To avoid race condition with ffs_epfile_io_complete,
+    * dequeue the request first then check
+    * status. usb_ep_dequeue API should guarantee no race
+    * condition with req->complete callback.
+    */
+    usb_ep_dequeue(ep->ep, req);
+    interrupted = ep->status < 0;
+  }
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
+The problem is, that we end up being interrupted, dequeue the
+request, and exit.
 
-For simplicity, two sed expressions were used to solve each warnings
-separately.
+But then the irq triggers and we try calling complete() on the
+context pointer which points to now random stack space, which
+results in the panic.
 
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before
-the opening curly brace:
+Alan Stern pointed out there is a bug here, in that the snippet
+above "assumes that usb_ep_dequeue() waits until the request has
+been completed." And that:
 
-https://elinux.org/Device_Tree_Linux#Linux_conventions
+    wait_for_completion(&done);
 
-This will solve as a side effect warning:
+Is needed right after the usb_ep_dequeue().
 
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+Thus this patch implements that change. With it I no longer see
+the crashes on suspend or reboot.
 
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+This issue seems to have been uncovered by behavioral changes in
+the dwc3 driver in commit fec9095bdef4e ("usb: dwc3: gadget:
+remove wait_end_transfer").
 
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-[vzapolskiy: fixed commit message to pass checkpatch.pl test]
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Zeng Tao <prime.zeng@hisilicon.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Thinh Nguyen <thinh.nguyen@synopsys.com>
+Cc: Chen Yu <chenyu56@huawei.com>
+Cc: Jerry Zhang <zhangjerry@google.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Vincent Pelletier <plr.vincent@gmail.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index b5841fab51c1..0d20aadc78bb 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -230,7 +230,7 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 04eb64381d92..927ac0ee09b7 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1008,6 +1008,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ 			 * condition with req->complete callback.
+ 			 */
+ 			usb_ep_dequeue(ep->ep, req);
++			wait_for_completion(&done);
+ 			interrupted = ep->status < 0;
+ 		}
  
--			i2s1: i2s@2009C000 {
-+			i2s1: i2s@2009c000 {
- 				compatible = "nxp,lpc3220-i2s";
- 				reg = <0x2009C000 0x1000>;
- 			};
-@@ -273,7 +273,7 @@
- 				status = "disabled";
- 			};
- 
--			i2c1: i2c@400A0000 {
-+			i2c1: i2c@400a0000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A0000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -284,7 +284,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C1>;
- 			};
- 
--			i2c2: i2c@400A8000 {
-+			i2c2: i2c@400a8000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A8000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -295,7 +295,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C2>;
- 			};
- 
--			mpwm: mpwm@400E8000 {
-+			mpwm: mpwm@400e8000 {
- 				compatible = "nxp,lpc3220-motor-pwm";
- 				reg = <0x400E8000 0x78>;
- 				status = "disabled";
-@@ -394,7 +394,7 @@
- 				#gpio-cells = <3>; /* bank, pin, flags */
- 			};
- 
--			timer4: timer@4002C000 {
-+			timer4: timer@4002c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4002C000 0x1000>;
- 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-@@ -412,7 +412,7 @@
- 				status = "disabled";
- 			};
- 
--			watchdog: watchdog@4003C000 {
-+			watchdog: watchdog@4003c000 {
- 				compatible = "nxp,pnx4008-wdt";
- 				reg = <0x4003C000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_WDOG>;
-@@ -451,7 +451,7 @@
- 				status = "disabled";
- 			};
- 
--			timer1: timer@4004C000 {
-+			timer1: timer@4004c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4004C000 0x1000>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-@@ -475,14 +475,14 @@
- 				status = "disabled";
- 			};
- 
--			pwm1: pwm@4005C000 {
-+			pwm1: pwm@4005c000 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C000 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM1>;
- 				status = "disabled";
- 			};
- 
--			pwm2: pwm@4005C004 {
-+			pwm2: pwm@4005c004 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C004 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM2>;
 -- 
 2.19.1
 
