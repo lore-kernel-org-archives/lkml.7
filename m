@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05419C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724C3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9198205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37658205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370813;
-	bh=2MZ483cMb+4bEeqB6KcWkEnGxQDFzhDXWOBz0isIen0=;
+	s=default; t=1554370822;
+	bh=ChScyuvnWXeLnLH4sOIckiwlIdlMEPauYwqcXRvqhmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BWwfeqUZJvw9T4Xw76lW8w+GNmX3BBGDTjhooG0/QzpOkwy3n1qs4X7Us46w/u9/6
-	 lrkjOw6JgidAfOpU9oHEOcLQxmVs6Npp3kkQj/+ir7NTyAJ60I2lupN+pn8I9Fmbpv
-	 IYRKoMBFx/vuzU9lc6f9/jxMKBiBugZ0dToyLcK8=
+	b=MIzDqzz+xKu0S9xXH2FwPbjIQDCPbPF+Fx3ZwEYDl26fGR6oCDmHOEaCXTTqMae4i
+	 l/bJdhMd9t9iqGqYp5ESQnVGjgMaiBXcMgR5zysuaR/+qTF4tLqMAga++DLM8XmfxU
+	 94MyfCea8ZTfPKzgz4NiXjVaSZnm8CcCM+8q7ENw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbfDDJkM (ORCPT
+        id S1731699AbfDDJCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40578 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731134AbfDDJC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:02:59 -0400
+        id S1731431AbfDDJCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A32892177E;
-        Thu,  4 Apr 2019 09:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2444A2177E;
+        Thu,  4 Apr 2019 09:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368579;
-        bh=2MZ483cMb+4bEeqB6KcWkEnGxQDFzhDXWOBz0isIen0=;
+        s=default; t=1554368565;
+        bh=ChScyuvnWXeLnLH4sOIckiwlIdlMEPauYwqcXRvqhmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kCX0r85dMwwyScwnO/B+N818d5Shs4Y65SgfCMJ5O1NuTBaxPD2onJMVKhfcb3RIX
-         MHC7DqqHsiwQ4O0RtI6vziCU2QP/aBxKaJrcqvRJixzxisEwlZdMknOuN2ob7bQPrq
-         RjVe3NxNbr1NPC+ajLeKvmWitqPJ87a99N0XrYjQ=
+        b=h1FKYYjfpIJkPN9y9pqdOLRgPcMqNWiej6r9CcWc8QOVMfF0jeFupXhoDNkhuFQ6l
+         TArqgYfpLuK9nWCiTBqvBNg7YDVrSEkKyxrQFnZ7kkdN3ZjexWt9I3vSGUFFvZ57PB
+         D+T+5WT+OQ3pHupf+pJyF79UJ5uKBIJiVO6ZeuIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Borislav Petkov <bp@suse.de>,
-        Tyler Baicar <baicar.tyler@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/187] efi: cper: Fix possible out-of-bounds access
-Date:   Thu,  4 Apr 2019 10:46:52 +0200
-Message-Id: <20190404084606.575600196@linuxfoundation.org>
+Subject: [PATCH 4.19 086/187] media: s5p-jpeg: Correct return type for mem2mem buffer helpers
+Date:   Thu,  4 Apr 2019 10:47:03 +0200
+Message-Id: <20190404084607.094716922@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,63 +67,197 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 45b14a4ffcc1e0b5caa246638f942cbe7eaea7ad ]
+[ Upstream commit 4a88f89885c7cf65c62793f385261a6e3315178a ]
 
-When checking a generic status block, we iterate over all the generic
-data blocks. The loop condition only checks that the start of the
-generic data block is valid (within estatus->data_length) but not the
-whole block. Because the size of data blocks (excluding error data) may
-vary depending on the revision and the revision is contained within the
-data block, ensure that enough of the current data block is valid before
-dereferencing any members otherwise an out-of-bounds access may occur if
-estatus->data_length is invalid.
+Fix the assigned type of mem2mem buffer handling API.
+Namely, these functions:
 
-This relies on the fact that struct acpi_hest_generic_data_v300 is a
-superset of the earlier version.  Also rework the other checks to avoid
-potential underflow.
+ v4l2_m2m_next_buf
+ v4l2_m2m_last_buf
+ v4l2_m2m_buf_remove
+ v4l2_m2m_next_src_buf
+ v4l2_m2m_next_dst_buf
+ v4l2_m2m_last_src_buf
+ v4l2_m2m_last_dst_buf
+ v4l2_m2m_src_buf_remove
+ v4l2_m2m_dst_buf_remove
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Acked-by: Borislav Petkov <bp@suse.de>
-Tested-by: Tyler Baicar <baicar.tyler@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+
+Fixing this is necessary to fix the mem2mem buffer handling API,
+changing the return to the correct struct vb2_v4l2_buffer instead
+of a void pointer.
+
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/cper.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 38 ++++++++++-----------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-index a7902fccdcfa..6090d25dce85 100644
---- a/drivers/firmware/efi/cper.c
-+++ b/drivers/firmware/efi/cper.c
-@@ -546,19 +546,24 @@ EXPORT_SYMBOL_GPL(cper_estatus_check_header);
- int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 04fd2e0493c0..29daecf8de7d 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -793,14 +793,14 @@ static void skip(struct s5p_jpeg_buffer *buf, long len);
+ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
  {
- 	struct acpi_hest_generic_data *gdata;
--	unsigned int data_len, gedata_len;
-+	unsigned int data_len, record_size;
- 	int rc;
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, x, components;
  
- 	rc = cper_estatus_check_header(estatus);
- 	if (rc)
- 		return rc;
-+
- 	data_len = estatus->data_length;
+ 	jpeg_buffer.size = 2; /* Ls */
+ 	jpeg_buffer.data =
+-		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sos + 2;
++		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sos + 2;
+ 	jpeg_buffer.curr = 0;
  
- 	apei_estatus_for_each_section(estatus, gdata) {
--		gedata_len = acpi_hest_get_error_length(gdata);
--		if (gedata_len > data_len - acpi_hest_get_size(gdata))
-+		if (sizeof(struct acpi_hest_generic_data) > data_len)
-+			return -EINVAL;
-+
-+		record_size = acpi_hest_get_record_size(gdata);
-+		if (record_size > data_len)
- 			return -EINVAL;
--		data_len -= acpi_hest_get_record_size(gdata);
-+
-+		data_len -= record_size;
+ 	word = 0;
+@@ -830,14 +830,14 @@ static void exynos4_jpeg_parse_decode_h_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, i, n, j;
+ 
+ 	for (j = 0; j < ctx->out_q.dht.n; ++j) {
+ 		jpeg_buffer.size = ctx->out_q.dht.len[j];
+-		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
++		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
+ 				   ctx->out_q.dht.marker[j];
+ 		jpeg_buffer.curr = 0;
+ 
+@@ -889,13 +889,13 @@ static void exynos4_jpeg_parse_huff_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	int c, x, components;
+ 
+ 	jpeg_buffer.size = ctx->out_q.sof_len;
+ 	jpeg_buffer.data =
+-		(unsigned long)vb2_plane_vaddr(vb, 0) + ctx->out_q.sof;
++		(unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) + ctx->out_q.sof;
+ 	jpeg_buffer.curr = 0;
+ 
+ 	skip(&jpeg_buffer, 5); /* P, Y, X */
+@@ -920,14 +920,14 @@ static void exynos4_jpeg_parse_decode_q_tbl(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_parse_q_tbl(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	struct vb2_v4l2_buffer *vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	struct s5p_jpeg_buffer jpeg_buffer;
+ 	unsigned int word;
+ 	int c, i, j;
+ 
+ 	for (j = 0; j < ctx->out_q.dqt.n; ++j) {
+ 		jpeg_buffer.size = ctx->out_q.dqt.len[j];
+-		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(vb, 0) +
++		jpeg_buffer.data = (unsigned long)vb2_plane_vaddr(&vb->vb2_buf, 0) +
+ 				   ctx->out_q.dqt.marker[j];
+ 		jpeg_buffer.curr = 0;
+ 
+@@ -2072,15 +2072,15 @@ static void s5p_jpeg_device_run(void *priv)
+ {
+ 	struct s5p_jpeg_ctx *ctx = priv;
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *src_buf, *dst_buf;
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	unsigned long src_addr, dst_addr, flags;
+ 
+ 	spin_lock_irqsave(&ctx->jpeg->slock, flags);
+ 
+ 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+-	src_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
+-	dst_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
++	src_addr = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
++	dst_addr = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
+ 
+ 	s5p_jpeg_reset(jpeg->regs);
+ 	s5p_jpeg_poweron(jpeg->regs);
+@@ -2153,7 +2153,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+ 	struct s5p_jpeg_fmt *fmt;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	struct s5p_jpeg_addr jpeg_addr = {};
+ 	u32 pix_size, padding_bytes = 0;
+ 
+@@ -2172,7 +2172,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ 		vb = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
  	}
- 	if (data_len)
- 		return -EINVAL;
+ 
+-	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 
+ 	if (fmt->colplanes == 2) {
+ 		jpeg_addr.cb = jpeg_addr.y + pix_size - padding_bytes;
+@@ -2190,7 +2190,7 @@ static void exynos4_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	unsigned int jpeg_addr = 0;
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+@@ -2198,7 +2198,7 @@ static void exynos4_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ 	else
+ 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 
+-	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 	if (jpeg->variant->version == SJPEG_EXYNOS5433 &&
+ 	    ctx->mode == S5P_JPEG_DECODE)
+ 		jpeg_addr += ctx->out_q.sos;
+@@ -2314,7 +2314,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+ 	struct s5p_jpeg_fmt *fmt;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	struct s5p_jpeg_addr jpeg_addr = {};
+ 	u32 pix_size;
+ 
+@@ -2328,7 +2328,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ 		fmt = ctx->cap_q.fmt;
+ 	}
+ 
+-	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr.y = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 
+ 	if (fmt->colplanes == 2) {
+ 		jpeg_addr.cb = jpeg_addr.y + pix_size;
+@@ -2346,7 +2346,7 @@ static void exynos3250_jpeg_set_img_addr(struct s5p_jpeg_ctx *ctx)
+ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ {
+ 	struct s5p_jpeg *jpeg = ctx->jpeg;
+-	struct vb2_buffer *vb;
++	struct vb2_v4l2_buffer *vb;
+ 	unsigned int jpeg_addr = 0;
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+@@ -2354,7 +2354,7 @@ static void exynos3250_jpeg_set_jpeg_addr(struct s5p_jpeg_ctx *ctx)
+ 	else
+ 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 
+-	jpeg_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
++	jpeg_addr = vb2_dma_contig_plane_dma_addr(&vb->vb2_buf, 0);
+ 	exynos3250_jpeg_jpgadr(jpeg->regs, jpeg_addr);
+ }
+ 
 -- 
 2.19.1
 
