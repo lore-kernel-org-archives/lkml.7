@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7367C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D044C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E0921741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E067C2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368506;
-	bh=Bev0Irtg0XD9cZKOUquJ0GPyvcgvoMqDdptoYGr33RE=;
+	s=default; t=1554368509;
+	bh=3+WnXl05EX9cXr0wqvRXvanIPtJaSAHf0rJcG+m8sNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlL5g2rAIgeTh5tkpdF4pNqEmrat0Z48tkShdd0zGwknxxVGhiRz2T44LxL1vEZQQ
-	 ooCYd5m0KfGsE8dbml+8yJG96V9oy7ou4EXLnxfs9dUrA5siSBCFCLuGDGx3/6dKSH
-	 ZiJaXTaCsxd1FKdoY1PHVvG1G5taWa5wq4etWO70=
+	b=LBo7emZcMV+j7zwh9dRhKIKrD1DBnWjVUmcq+ndAJlFc1vInI7AUZIDGQwJxUYc5u
+	 aovJiRH2vuL91kq4QHJ2uvJmQ1pqEXdSZhPxbg+f33C9C/lgIQ4+nbnZBCpi01AA78
+	 5aliQRB4TB690BFcgcZr50zeXdXJa9J2Ne0W8Qtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbfDDJBp (ORCPT
+        id S1731490AbfDDJBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731006AbfDDJBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:42 -0400
+        id S1731252AbfDDJBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B6012184B;
-        Thu,  4 Apr 2019 09:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E15272147C;
+        Thu,  4 Apr 2019 09:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368501;
-        bh=Bev0Irtg0XD9cZKOUquJ0GPyvcgvoMqDdptoYGr33RE=;
+        s=default; t=1554368504;
+        bh=3+WnXl05EX9cXr0wqvRXvanIPtJaSAHf0rJcG+m8sNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pdzQ8buG8dOAVNPVwiFyG4TT/NtzrpAlh+0gNwiFEcmescyR0kbT+scOCZkGtROYk
-         9DSroXTh/z3D+FVjQcVNNXuRwKz1uKjzp/zoeiiFRMEqBL9P9aZnb5qHjhFcO7v0tX
-         IZCET1qRB8U/cKezNwPU1D6NOtppStQH6+jvRG0Y=
+        b=dmHFMl2yqrtPpDBXB3G2laxuKdLdhDzgP/i9QH1pARCbK1M08XtRhz8Ay7DV/tNe+
+         1zx3n7alpIkIS43wGvZWO2cWiJrCgkgx9BGOKWpfqHwy00OzWj6nlAo54VpgXfFdD5
+         V1ABvYhrwqP74EPUPNkiVWnzqGEXEPePc4cWpSIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/187] mmc: omap: fix the maximum timeout setting
-Date:   Thu,  4 Apr 2019 10:46:40 +0200
-Message-Id: <20190404084606.034359341@linuxfoundation.org>
+Subject: [PATCH 4.19 064/187] net: dsa: mv88e6xxx: Add lockdep classes to fix false positive splat
+Date:   Thu,  4 Apr 2019 10:46:41 +0200
+Message-Id: <20190404084606.077077235@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,49 +67,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
+[ Upstream commit f6d9758b12660484b6639364cc406da92a918c96 ]
 
-When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
+The following false positive lockdep splat has been observed.
 
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	[ad inf.]
+======================================================
+WARNING: possible circular locking dependency detected
+4.20.0+ #302 Not tainted
+------------------------------------------------------
+systemd-udevd/160 is trying to acquire lock:
+edea6080 (&chip->reg_lock){+.+.}, at: __setup_irq+0x640/0x704
 
-Emulator warnings appear to be valid. The TI document SPRU680 [1]
-("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
-(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
-cycles and "0xff and 0xfe cannot be used".
+but task is already holding lock:
+edff0340 (&desc->request_mutex){+.+.}, at: __setup_irq+0xa0/0x704
 
-Fix by using 0xfd as the maximum timeout.
+which lock already depends on the new lock.
 
-Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
-real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
-(OMAP2420) that MMC works as before.
+the existing dependency chain (in reverse order) is:
 
-[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+-> #1 (&desc->request_mutex){+.+.}:
+       mutex_lock_nested+0x1c/0x24
+       __setup_irq+0xa0/0x704
+       request_threaded_irq+0xd0/0x150
+       mv88e6xxx_probe+0x41c/0x694 [mv88e6xxx]
+       mdio_probe+0x2c/0x54
+       really_probe+0x200/0x2c4
+       driver_probe_device+0x5c/0x174
+       __driver_attach+0xd8/0xdc
+       bus_for_each_dev+0x58/0x7c
+       bus_add_driver+0xe4/0x1f0
+       driver_register+0x7c/0x110
+       mdio_driver_register+0x24/0x58
+       do_one_initcall+0x74/0x2e8
+       do_init_module+0x60/0x1d0
+       load_module+0x1968/0x1ff4
+       sys_finit_module+0x8c/0x98
+       ret_fast_syscall+0x0/0x28
+       0xbedf2ae8
 
-Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+-> #0 (&chip->reg_lock){+.+.}:
+       __mutex_lock+0x50/0x8b8
+       mutex_lock_nested+0x1c/0x24
+       __setup_irq+0x640/0x704
+       request_threaded_irq+0xd0/0x150
+       mv88e6xxx_g2_irq_setup+0xcc/0x1b4 [mv88e6xxx]
+       mv88e6xxx_probe+0x44c/0x694 [mv88e6xxx]
+       mdio_probe+0x2c/0x54
+       really_probe+0x200/0x2c4
+       driver_probe_device+0x5c/0x174
+       __driver_attach+0xd8/0xdc
+       bus_for_each_dev+0x58/0x7c
+       bus_add_driver+0xe4/0x1f0
+       driver_register+0x7c/0x110
+       mdio_driver_register+0x24/0x58
+       do_one_initcall+0x74/0x2e8
+       do_init_module+0x60/0x1d0
+       load_module+0x1968/0x1ff4
+       sys_finit_module+0x8c/0x98
+       ret_fast_syscall+0x0/0x28
+       0xbedf2ae8
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&desc->request_mutex);
+                               lock(&chip->reg_lock);
+                               lock(&desc->request_mutex);
+  lock(&chip->reg_lock);
+
+&desc->request_mutex refer to two different mutex. #1 is the GPIO for
+the chip interrupt. #2 is the chained interrupt between global 1 and
+global 2.
+
+Add lockdep classes to the GPIO interrupt to avoid this.
+
+Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/mv88e6xxx/chip.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
-index c60a7625b1fa..b2873a2432b6 100644
---- a/drivers/mmc/host/omap.c
-+++ b/drivers/mmc/host/omap.c
-@@ -920,7 +920,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
- 	reg &= ~(1 << 5);
- 	OMAP_MMC_WRITE(host, SDIO, reg);
- 	/* Set maximum timeout */
--	OMAP_MMC_WRITE(host, CTO, 0xff);
-+	OMAP_MMC_WRITE(host, CTO, 0xfd);
- }
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index c078c791f481..dabe89968a78 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -442,12 +442,20 @@ out_mapping:
  
- static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
+ static int mv88e6xxx_g1_irq_setup(struct mv88e6xxx_chip *chip)
+ {
++	static struct lock_class_key lock_key;
++	static struct lock_class_key request_key;
+ 	int err;
+ 
+ 	err = mv88e6xxx_g1_irq_setup_common(chip);
+ 	if (err)
+ 		return err;
+ 
++	/* These lock classes tells lockdep that global 1 irqs are in
++	 * a different category than their parent GPIO, so it won't
++	 * report false recursion.
++	 */
++	irq_set_lockdep_class(chip->irq, &lock_key, &request_key);
++
+ 	err = request_threaded_irq(chip->irq, NULL,
+ 				   mv88e6xxx_g1_irq_thread_fn,
+ 				   IRQF_ONESHOT,
 -- 
 2.19.1
 
