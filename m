@@ -2,95 +2,143 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE75C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FECCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2DB206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C881206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbfDDUTD (ORCPT
+        id S1730809AbfDDUUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:19:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:29839 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbfDDUTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:19:03 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A26D130EBB5A;
-        Thu,  4 Apr 2019 20:19:02 +0000 (UTC)
-Received: from treble (ovpn-125-158.rdu2.redhat.com [10.10.125.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E03D119C4F;
-        Thu,  4 Apr 2019 20:18:57 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 15:18:55 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        pmladek@suse.com, jikos@kernel.org, joe.lawrence@redhat.com,
-        ggherdovich@suse.cz, linux-kbuild@vger.kernel.org,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: use -flive-patching when CONFIG_LIVEPATCH is
- enabled
-Message-ID: <20190404201855.xtvtgxaaomcmowrt@treble>
-References: <20190404184411.1392-1-mbenes@suse.cz>
+        Thu, 4 Apr 2019 16:20:43 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33886 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729184AbfDDUUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 16:20:42 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 39D79802DD; Thu,  4 Apr 2019 22:20:31 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 22:20:42 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dmitry Torokhov <dtor@google.com>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+Message-ID: <20190404202042.GF29984@amd>
+References: <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
+ <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
+ <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
+ <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
+ <20190404185919.GB27340@amd>
+ <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
+ <20190404191931.GA29984@amd>
+ <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
+ <20190404200658.GD29984@amd>
+ <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="R6sEYoIZpp9JErk7"
 Content-Disposition: inline
-In-Reply-To: <20190404184411.1392-1-mbenes@suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 04 Apr 2019 20:19:02 +0000 (UTC)
+In-Reply-To: <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 08:44:11PM +0200, Miroslav Benes wrote:
-> GCC 9 introduces a new option, -flive-patching. It disables certain
-> optimizations which could make a compilation unsafe for later live
-> patching of the running kernel.
-> 
-> The option is used only if CONFIG_LIVEPATCH is enabled and $(CC)
-> supports it.
-> 
-> Performance impact of the option was measured on three different
-> Intel machines - two bigger NUMA boxes and one smaller UMA box. Kernel
-> intensive (IO, scheduling, networking) benchmarks were selected, plus a
-> set of HPC workloads from NAS Parallel Benchmark. The tests were done on
-> upstream kernel 5.0-rc8 with openSUSE Leap 15.0 userspace.
-> 
-> The majority of the tests is unaffected. The only significant exception
-> is the scheduler section which suffers 1-3% degradation.
-> 
-> Evaluated-by: Giovanni Gherdovich <ggherdovich@suse.cz>
-> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> ---
-> The patch is based on master branch of the livepatching tree on
-> git.kernel.org.
-> 
-> Many thanks to Giovanni who ran the whole testing campaign and analyzed
-> the results. I archived the dashboard and detailed data. If anyone is
-> interested, we could probably set up a public website somewhere.
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+--R6sEYoIZpp9JErk7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-While we're on the subject, I'm glad to see ongoing activity on
-klp-convert (though I haven't had a chance to follow the discussions).
-What's the status of the rest of the needed bits?
+On Thu 2019-04-04 13:13:34, Dmitry Torokhov wrote:
+> On Thu, Apr 4, 2019 at 1:06 PM Pavel Machek <pavel@ucw.cz> wrote:
+> >
+> > Hi!
+> >
+> > > > > It is *function* and maybe color that userspace is interested in,=
+ and
+> > > > > here we have proper standardization in form of "kbd_backlight". D=
+evice
+> > > > > name is, well, device name. It should uniquely identify the devic=
+e led
+> > > > > is attached to, but otherwise is rarely interesting. If userspace=
+ is
+> > > > > really concerned what kind of keyboard backlight it is it should
+> > > > > investigate parent device(s) and see what they end up with.
+> > > >
+> > > > That does not work. Userspace wants to know if it is internal keybo=
+ard
+> > > > or USB keyboard, not what kind of i2c controller the LED is connect=
+ed
+> > > > to.
+> > >
+> > > Why does userspace want to know it?
+> >
+> > For example to turn off backlight on internal keyboard when the lid is =
+closed.
+>=20
+> Would you not want to turn off external as well?
 
-- kgraft-analysis-tool - will this also be submitted for inclusion in
-  the kernel tree?
+Not really. If I'm using machine with lid closed, external monitor and
+USB keyboard attached, I want to control backlight of USB keyboard,
+but backlight of internal keyboard can stay off.
 
-- Documentation about how to create a patch
+> And what to do if internal keyboard is not platform but USB? Like
+> Google "Whiskers"? (I am not sure why you decided to drop my mention
+> of internal USB keyboards completely off your reply).
 
-- The other bits I think Nicolai has been working on to eliminate all
-  the manual steps
+I don't have answers for everything. Even if you have USB keyboard, you'll
+likely still have backlight connected to embedded controller. If not,
+then maybe you have exception userland needs to know about.
 
--- 
-Josh
+Still better than making everything an exception.
+
+> > > > grep for platform::mic_mute .
+> > > >
+> > > > (And platform is even pretty good match for how the LED is connected
+> > > > in your case).
+> > >
+> > > Until we get a secondary interface that is also "platform"...
+> >
+> > How would that happen?
+>=20
+> It won't happen on Wilco, but you can't imagine that several blocks
+> get reused in the same device and they end up clashing?
+
+In the end, there will be just one internal keyboard backlight, right?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--R6sEYoIZpp9JErk7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlymZxoACgkQMOfwapXb+vLn5QCfSbNvjo91bsUzD0yC/OdKMe60
+gKoAnjqsLnPZ538cfiN5/TCl3hIXhsG7
+=Dr/v
+-----END PGP SIGNATURE-----
+
+--R6sEYoIZpp9JErk7--
