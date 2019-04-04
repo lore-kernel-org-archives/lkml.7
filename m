@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15A7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E087C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3207214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4748520820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfDDCDG (ORCPT
+        id S1726571AbfDDCD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:03:06 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51196 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726167AbfDDCDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 22:03:06 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [10.3.19.214])
-        by Forcepoint Email with ESMTP id 2C7E43932CE4BFA18E0B;
-        Thu,  4 Apr 2019 10:03:04 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Thu, 4 Apr 2019
- 10:03:01 +0800
-Subject: Re: [PATCH v2 3/5] locking/qspinlock: Introduce CNA into the slow
- path of qspinlock
-To:     Alex Kogan <alex.kogan@oracle.com>, <linux@armlinux.org.uk>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <will.deacon@arm.com>,
-        <arnd@arndb.de>, <longman@redhat.com>,
-        <linux-arch@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <hpa@zytor.com>, <x86@kernel.org>
-CC:     <dave.dice@oracle.com>, <rahul.x.yadav@oracle.com>,
-        <steven.sistare@oracle.com>, <daniel.m.jordan@oracle.com>
-References: <20190329152006.110370-1-alex.kogan@oracle.com>
- <20190329152006.110370-4-alex.kogan@oracle.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <5ac2fb0e-744b-3bb5-133a-ac684e061d17@huawei.com>
-Date:   Thu, 4 Apr 2019 10:02:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
-MIME-Version: 1.0
-In-Reply-To: <20190329152006.110370-4-alex.kogan@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
+        Wed, 3 Apr 2019 22:03:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57138 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfDDCDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Apr 2019 22:03:25 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 32C52F74B2;
+        Thu,  4 Apr 2019 02:03:25 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-46.pek2.redhat.com [10.72.12.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AC5D48642E;
+        Thu,  4 Apr 2019 02:03:19 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, tglx@linutronix.de, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, kirill@shutemov.name, keescook@chromium.org,
+        yamada.masahiro@socionext.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, thgarnie@google.com,
+        mike.travis@hpe.com, frank.ramsay@hpe.com,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/2] x86/mm/KASLR: Fix two code bugs
+Date:   Thu,  4 Apr 2019 10:03:12 +0800
+Message-Id: <20190404020314.8162-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 04 Apr 2019 02:03:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+The fixes for these two bugs were carried in the earlier patchset, patch
+4/6 and patch 5/6:
 
-On 2019/3/29 23:20, Alex Kogan wrote:
-> +
-> +static __always_inline void cna_init_node(struct mcs_spinlock *node, int cpuid,
-> +					  u32 tail)
-> +{
-> +	if (decode_numa_node(node->node_and_count) == -1)
-> +		store_numa_node(node, numa_cpu_node(cpuid));
+[PATCH v4 0/6] Several patches to fix code bugs, improve documents and clean up
+http://lkml.kernel.org/r/20190314094645.4883-1-bhe@redhat.com
 
-How about using cpu_to_node() here and #include <linux/topology.h> in this
-file, then the code can be reused for other architectures such as ARM64?
+Later, Thomas suggested posting bug fixing patches separately from those
+clean up patches. So send both of them in a separate patchset. 
 
-Thanks
-Hanjun
+For another bug fix patch 6/6, it happened on SGI UV system. We need a
+specific SGI UV machine to reproduce and verify it, still discussing
+with Mike and Frank from HPE SGI about arranging a machine to test. That
+machine is very rare, still waiting. So defer that bug fix reposting
+later.
+
+Baoquan He (2):
+  x86/mm/KASLR: Fix the wrong calculation of memory region initial size
+  x86/mm/KASLR: Calculate the actual size of vmemmap region
+
+ arch/x86/mm/kaslr.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+-- 
+2.17.2
 
