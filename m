@@ -4,59 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08199C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4710C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A2D218C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E53205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370354;
-	bh=/Bm20F7vuP6wZZ0DYuwO9ZH6kint0espPdNPzSvvYIY=;
+	s=default; t=1554370368;
+	bh=4S+k0aX22ojcl54tAH6LapJtuvJOQgv9FRcxey5LG+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFllonM2JzcWZmhnwuOCPteKBHfoy308MNqN5T5xpUPM31+YwWgBPk05dhsjcF5qO
-	 PaqRWQNldD517U569gk2OU9K7nS9OtvtnlVcsfhGJDjDumU05KJ6m4NAbisd8l6NM/
-	 MrA7XGx/RWcp/0Kbxkimju7Wa7jjgK3/5AyOJPsI=
+	b=pLZtLVbgGJaSWluizj7CAv+Rh4SaUglXLP8DzXr+33y2cn/QOGkVSt6Z3+UHmqf4T
+	 dXcq4ph1eYDYxwebD1kt7PE/jcvsDShxXO7E0WvoO5IDJBCpW4pZgaJ3WFoRyrgYG4
+	 cGfuk5ZeyAE1SJSeOzBuIejX70dWp0eAaMU2nE+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbfDDJcd (ORCPT
+        id S1732860AbfDDJcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:32:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732712AbfDDJIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:08:49 -0400
+        id S1732692AbfDDJIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF6132183E;
-        Thu,  4 Apr 2019 09:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB43C214AF;
+        Thu,  4 Apr 2019 09:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368928;
-        bh=/Bm20F7vuP6wZZ0DYuwO9ZH6kint0espPdNPzSvvYIY=;
+        s=default; t=1554368922;
+        bh=4S+k0aX22ojcl54tAH6LapJtuvJOQgv9FRcxey5LG+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLPTEKLDa0pqOzIf45GcS2g3rX9KhI4WUmt2mL4hnCJ2PjUdId5BiUOhTKmV42IC/
-         6OG+4YUdMrgIe+EdPJY5BVy60nQuAXbMgcn1SdFK4SFVUECFN0xamjYY7XZtHszA+f
-         MfE/OVElPrtKoqDCtHiZl0d7sb30+gwO+q/gID8M=
+        b=P/Fx+dqL5h1WjUhMCFO3NKEihZJmFm1BxZ2Eg6DMLe1+1OCKZGL9pozSbVXNiuGkM
+         +gIJwczmcffcHGRi+jYQ12NAsH+CDNk/641a6TPo0P0iAkQOvcfzj2TsceHU+blUKd
+         41/fvvY9Y5cuq34sHOsIJ0oeImTqVFJdh2NJrkHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 017/246] sysctl: handle overflow for file-max
-Date:   Thu,  4 Apr 2019 10:45:17 +0200
-Message-Id: <20190404084619.774490082@linuxfoundation.org>
+Subject: [PATCH 5.0 015/246] gpio: gpio-omap: fix level interrupt idling
+Date:   Thu,  4 Apr 2019 10:45:15 +0200
+Message-Id: <20190404084619.718177210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -75,68 +71,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 32a5ad9c22852e6bd9e74bdec5934ef9d1480bc5 ]
+[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
 
-Currently, when writing
+Tony notes that the GPIO module does not idle when level interrupts are
+in use, as the wakeup appears to get stuck.
 
-  echo 18446744073709551616 > /proc/sys/fs/file-max
+After extensive investigation, it appears that the wakeup will only be
+cleared if the interrupt status register is cleared while the interrupt
+is enabled. However, we are currently clearing it with the interrupt
+disabled for level-based interrupts.
 
-/proc/sys/fs/file-max will overflow and be set to 0.  That quickly
-crashes the system.
+It is acknowledged that this observed behaviour conflicts with a
+statement in the TRM:
 
-This commit sets the max and min value for file-max.  The max value is
-set to long int.  Any higher value cannot currently be used as the
-percpu counters are long ints and not unsigned integers.
+CAUTION
+  After servicing the interrupt, the status bit in the interrupt status
+  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
+  reset and the interrupt line released (by setting the corresponding
+  bit of the interrupt status register to 1) before enabling an
+  interrupt for the GPIO channel in the interrupt-enable register
+  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
+  the occurrence of unexpected interrupts when enabling an interrupt
+  for the GPIO channel.
 
-Note that the file-max value is ultimately parsed via
-__do_proc_doulongvec_minmax().  This function does not report error when
-min or max are exceeded.  Which means if a value largen that long int is
-written userspace will not receive an error instead the old value will be
-kept.  There is an argument to be made that this should be changed and
-__do_proc_doulongvec_minmax() should return an error when a dedicated min
-or max value are exceeded.  However this has the potential to break
-userspace so let's defer this to an RFC patch.
+However, this does not appear to be a practical problem.
 
-Link: http://lkml.kernel.org/r/20190107222700.15954-3-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-[christian@brauner.io: v4]
-  Link: http://lkml.kernel.org/r/20190210203943.8227-3-christian@brauner.io
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
+the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
+Fix the sequence to clear the IRQ status" saying:
+
+ if the status is cleared after disabling the IRQ then sWAKEUP will not
+ be cleared and gates the module transition
+
+When we unmask the level interrupt after the interrupt has been handled,
+enable the interrupt and only then clear the interrupt. If the interrupt
+is still pending, the hardware will re-assert the interrupt status.
+
+Should the caution note in the TRM prove to be a problem, we could
+use a clear-enable-clear sequence instead.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[tony@atomide.com: updated comments based on an earlier TI patch]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpio/gpio-omap.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index d80bee8ff12e..28ec71d914c7 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -127,6 +127,7 @@ static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
- static int __maybe_unused four = 4;
- static unsigned long one_ul = 1;
-+static unsigned long long_max = LONG_MAX;
- static int one_hundred = 100;
- static int one_thousand = 1000;
- #ifdef CONFIG_PRINTK
-@@ -1722,6 +1723,8 @@ static struct ctl_table fs_table[] = {
- 		.maxlen		= sizeof(files_stat.max_files),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
-+		.extra1		= &zero,
-+		.extra2		= &long_max,
- 	},
- 	{
- 		.procname	= "nr_open",
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index f4e9921fa966..7f33024b6d83 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -883,14 +883,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	if (trigger)
+ 		omap_set_gpio_triggering(bank, offset, trigger);
+ 
+-	/* For level-triggered GPIOs, the clearing must be done after
+-	 * the HW source is cleared, thus after the handler has run */
+-	if (bank->level_mask & BIT(offset)) {
+-		omap_set_gpio_irqenable(bank, offset, 0);
++	omap_set_gpio_irqenable(bank, offset, 1);
++
++	/*
++	 * For level-triggered GPIOs, clearing must be done after the source
++	 * is cleared, thus after the handler has run. OMAP4 needs this done
++	 * after enabing the interrupt to clear the wakeup status.
++	 */
++	if (bank->level_mask & BIT(offset))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+-	}
+ 
+-	omap_set_gpio_irqenable(bank, offset, 1);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
 -- 
 2.19.1
 
