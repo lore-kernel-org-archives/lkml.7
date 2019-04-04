@@ -2,143 +2,126 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B2AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B90C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44A220855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CD22082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:03:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="frxcaUEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbfDDQCz (ORCPT
+        id S1728901AbfDDQD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:02:55 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.164]:19453 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729261AbfDDQCy (ORCPT
+        Thu, 4 Apr 2019 12:03:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36150 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbfDDQD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:02:54 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id E9E4E36E90
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2019 11:02:53 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id C4pJhVkLW90onC4pJhjGBO; Thu, 04 Apr 2019 11:02:53 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=39334 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hC4pJ-002CW8-GC; Thu, 04 Apr 2019 11:02:53 -0500
-Subject: Re: [PATCH] gdbstub: mark expected switch fall-throughs
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190226191614.GA21908@embeddedor>
- <d0ae1626-1a41-55c5-cfe9-0dea3edc98f9@windriver.com>
- <533203bb-2f2a-6bee-659b-4385bce90575@embeddedor.com>
- <20190404101236.7bq5xg7evzi7zpns@holly.lan>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <40a922f9-cfca-9a27-f29d-c82ff45289e7@embeddedor.com>
-Date:   Thu, 4 Apr 2019 11:02:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 12:03:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so2596267ljg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HqHuBNqXJz8dExEJM+QbA88JQIeFhoAKhDD+verad6s=;
+        b=frxcaUEYxz2yMLaObMiy3j775o8HVkMqRyT3iSOyvvXWNK9vin1qaAMA54D1E7Oq7w
+         vQuiCITf2BcL4cSkDjuYejJGgrHCv1FduiZELTdk28D3LNORwiDNTFRDqIXLMUFAI1Hm
+         pvlMUvHVkCkdooez0WvjRZy6LszhpuBNkuM9y6fT8vwENNM9kqTdBBZ5H2sc0LxI8zrd
+         gESHlfcjkZwLOPW2YprQrle1g2Hi7r299ziXtPuqaiIuMXNkE+L4AcqmVPgEVUQ5/SQe
+         PrP2fI/baxOdZauQQwfyFpiseG1o3IEq+4Go1eRw5Cy3xAZZgRTDunIoe19DF4k4AyCc
+         PPzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HqHuBNqXJz8dExEJM+QbA88JQIeFhoAKhDD+verad6s=;
+        b=Zi4iW8ZV4usDOnY75sljcbXTq9Iq/uo5TdAgnXhq2PYpEMMCRQsRXp9+BSmjmhmWy7
+         tMYDyxBlgGrGQp9X0sytCu5RqD0PiE4szV51lrq/tNJ9ttf6V1Hbs4dMCfuCcD0JKL3t
+         nOZ2xtLPJrax+EJYZ4z/HPWdZdHIs6jvxuI4FLECBS/Myv5mgnPYGcuS1foSlSBvb2FI
+         i+imhCdx68o4dXabKnm+E6ysj90xa5sGK9jRQ9iWxVcAlvtIn9JFkTbAfTU0bo+trryO
+         z9cpCwir72NFfZSQGhb+5aOa3MO2Cyj+AtS3imQVvWMXdnhc7p+cfwtv34tsUbTN4M5Q
+         fJRA==
+X-Gm-Message-State: APjAAAU1GExmzUqidvjOc9yAZj6d/MmKeAWk5sOYFuKAZj4pyNS8UvcD
+        QRqzZpC0fcj90DweW3U0VrIlqLrLCXKEGKTo2OmmVA==
+X-Google-Smtp-Source: APXvYqxpetcYW617va6pk1+hZtHOmdiiKxoqP1ajrT+cGlvFEdaL/z59mpxLc6GYwHX62OVi23z2IWDbw9X6W44S5zg=
+X-Received: by 2002:a2e:9d12:: with SMTP id t18mr3845515lji.163.1554393834981;
+ Thu, 04 Apr 2019 09:03:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190404101236.7bq5xg7evzi7zpns@holly.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hC4pJ-002CW8-GC
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.114.183]:39334
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <1553135724-38331-1-git-send-email-zhuchangchun@cvte.com>
+ <20190321084420.GG3622@lahna.fi.intel.com> <20190321092330.GK9224@smile.fi.intel.com>
+ <140c6ec0-7c11-6aa9-8434-f14d77be9a8c@metux.net> <CACRpkdZ1xPJ=NS=o=-PYqCO4d-VVZM1=f=xBZa5Dwx78LFPYtA@mail.gmail.com>
+ <cb643914-2c3f-0c63-13e4-8171fa9a37e7@metux.net>
+In-Reply-To: <cb643914-2c3f-0c63-13e4-8171fa9a37e7@metux.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Apr 2019 23:03:42 +0700
+Message-ID: <CACRpkdYNN1Zyhw5+4=R68SQNMe_ZVWPD49afF3xEN-v39aikKw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: intel: Implements gpio free function
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        zhuchangchun <zhuchangchun@cvte.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        hendychu@aliyun.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 4, 2019 at 5:51 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+> On 03.04.19 06:13, Linus Walleij wrote:
+>
+> > But the chardev on the other hand will protect you from all this.
+> > If the program crashes, the lines will be free:ed.
+> > If two scripts try to access the same GPIO, they will be denied.
 
+> Right, when you want this concurrency protection and cleanup stiff
+> the chardev is the better choice. But I've already had several cases
+> where the simplicity of the sysfs interface is a big win - all you need
+> few trivial fs operations.
 
-On 4/4/19 5:12 AM, Daniel Thompson wrote:
-> On Mon, Apr 01, 2019 at 02:57:36PM -0500, Gustavo A. R. Silva wrote:
->>
->>
->> On 2/26/19 2:47 PM, Jason Wessel wrote:
->>> We'll have to fix them at some point.
->>>
->>> Acked-by: Jason Wessel <jason.wessel@windriver.com>
->>>
->>
->> Thank you, Jason.
->>
->> Friendly ping:
->>
->> Who can take this?
-> 
-> I happy to put it in my tree (probably next week).
-> 
+It is admittedly a tradeoff. But if we want something that is hacky
+and dangerous it should be moved over to debugfs not sitting
+around in sysfs. In debugfs we give users enough rope all the
+time.
 
-Awesome. :)
+> Another interesting usecase is permission handling:
+>
+> a) some ioctls need special privileges (oh, how I hate all these "if
+>    (!capable(CAP_SYS_ADMIN)) ..." lines in the drivers), but you wanna
+>    give some unprivileged user access to them
+> b) you wanna give an unprivileged user access to specific gpio's,
+>    but not to all at once.
+>
+> With pure filesystem based approach, you can easly define permissions
+> for each filesystem object.
 
-Thanks, Daniel.
---
-Gustavo
+This was a comment when we designed the chardev as well, but
+noone really could give a good usecase for this. Often GPIOs they
+want to protect should not have been made available to userspace
+or anyone else in the first place and we now have ways inside
+the kernel to take GPIOs aside (valid_mask) we can also use
+hogs (at least in the device tree) to set up GPIOs so that they are
+held perpetually by the kernel (until reboot) so that userspace
+cannot try to use them.
+
+I can't see that any more access control granularity than the
+whole gpiochip chardev is really used, not anymore than
+you want to have access control on every indidual pixel on
+a framebuffer or each individual block on a block device.
+
+Things like requesting and flipping several GPIOs at once
+could become explosively complex to implement with
+individual access permissions on each GPIO line, and this
+is on the other hand a very real and important use case.
+
+Yours,
+Linus Walleij
