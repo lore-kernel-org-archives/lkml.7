@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF2FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B3AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC0C21855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AAF21850
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368624;
-	bh=jknPlMK3zruLuWLgSr2M9pFe0YvwXgN/y0AaoCGFUTA=;
+	s=default; t=1554368627;
+	bh=wT0DNajpIp6+zKv7jykHtcAKHuP6jiI0So7+Yfmz0YM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3ERaOSlh9/+NnZuLgIoh1ApDK94TfKsf8nic9aMsVr48WlU7xVizsCKtSk0iNncs
-	 drSB1AtpVXq1ZODSVOyDG5qqu2mik4APEQTZT5260NRaPmwA+ZrDi30AMGWUCN6TwS
-	 aCdlCM7uDZUCUPLwbd+dAx1pphieqTXyHOOCvS9k=
+	b=Q+X9UPir7ORP75mBCOcV0zCtum/vl+ApuVW991xj5NTGpNpYbKUHJdqtTu5sb+2KR
+	 BSCfyRh6XMRo3F+wddPifOqogKU825o8QS+n8EYnkFuP5lBhpJS3NL+3TQS32qIObc
+	 tCNPoEVl14NeaNp2SG8/4eL5mbwTgwQKxlcaHoNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbfDDJDm (ORCPT
+        id S1731378AbfDDJDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41376 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:03:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731831AbfDDJDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:40 -0400
+        id S1731843AbfDDJDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9918B21872;
-        Thu,  4 Apr 2019 09:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BD5421850;
+        Thu,  4 Apr 2019 09:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368619;
-        bh=jknPlMK3zruLuWLgSr2M9pFe0YvwXgN/y0AaoCGFUTA=;
+        s=default; t=1554368621;
+        bh=wT0DNajpIp6+zKv7jykHtcAKHuP6jiI0So7+Yfmz0YM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qVUs44oWKUJuQ8h9ez3DNbiNFzDwJQYN5AYNo8XHTZ0llBinxZ3XzsHtN8RUOqoLa
-         ui7cFVKH2b3vKC21koG+ApfpIIPCiW3kpBFg0Cf1n0WmgVtAfvg73URVbJJSUQNHwS
-         4LZGn1+ZMWTLttjlD75p3gZ59XdjzDtw4pU4s/Ko=
+        b=eriyg2hAJ9k5jjdySQRHgdySteQT7xklEvEoyUnZQzq55cvjIc8L67hXAtqEtjFAf
+         gpKXWVy3vEe0CDaPO8A/AFZBUTQpqJ2GlGqVAInI6HRH0Kym8h8aHVtO1d+9M40fGo
+         78LUVG3/E1LS3fc9aAy119mIHZyKe/W2mZS7xSUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Emiliano Ingrassia <ingrassia@epigenesys.com>,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/187] ARM: dts: meson8b: fix the Ethernet data line signals in eth_rgmii_pins
-Date:   Thu,  4 Apr 2019 10:47:23 +0200
-Message-Id: <20190404084608.248584879@linuxfoundation.org>
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 091/187] mt76: usb: do not run mt76u_queues_deinit twice
+Date:   Thu,  4 Apr 2019 10:47:08 +0200
+Message-Id: <20190404084607.404259781@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -69,92 +66,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 29f0023d01f063feacfc404f0446905aee4f82ee ]
+[ Upstream commit b3098121c42caaf3aea239b8655cf52d45be116f ]
 
-According to the Odroid-C1+ schematics the Ethernet TXD1 signal is
-routed to GPIOH_5 and the TXD0 signal is routed to GPIOH_6.
-The public S805 datasheet shows that TXD0 can be routed to DIF_2_P and
-TXD1 can be routed to DIF_2_N instead.
+Do not call mt76u_queues_deinit routine in mt76u_alloc_queues error path
+since it will be run in mt76x0u_register_device or
+mt76x2u_register_device error path. Current implementation triggers the
+following kernel warning:
 
-The pin groups eth_txd0_0 (GPIOH_6) and eth_txd0_1 (DIF_2_P) are both
-configured as Ethernet TXD0 and TXD1 data lines in meson8b.dtsi. At the
-same time eth_txd1_0 (GPIOH_5) and eth_txd1_1 (DIF_2_N) are configured
-as TXD0 and TXD1 data lines as well.
-This results in a bad Ethernet receive performance. Presumably this is
-due to the eth_txd0 and eth_txd1 signal being routed to the wrong pins.
-As a result of that data can only be transmitted on eth_txd2 and
-eth_txd3. However, I have no scope to fully confirm this assumption.
+[   67.005516] WARNING: CPU: 2 PID: 761 at lib/refcount.c:187 refcount_sub_and_test_checked+0xa4/0xb8
+[   67.019513] refcount_t: underflow; use-after-free.
+[   67.099872] Hardware name: BCM2835
+[   67.106268] Backtrace:
+[   67.111584] [<8010c91c>] (dump_backtrace) from [<8010cc00>] (show_stack+0x20/0x24)
+[   67.124974]  r6:60000013 r5:ffffffff r4:00000000 r3:a50bade6
+[   67.132226] [<8010cbe0>] (show_stack) from [<807ca5f4>] (dump_stack+0xc8/0x114)
+[   67.141225] [<807ca52c>] (dump_stack) from [<8011e65c>] (__warn+0xf4/0x120)
+[   67.149849]  r9:000000bb r8:804d0138 r7:00000009 r6:8099dc84 r5:00000000 r4:b66c7b58
+[   67.160767] [<8011e568>] (__warn) from [<8011e6d0>] (warn_slowpath_fmt+0x48/0x50)
+[   67.171436]  r9:7f65e128 r8:80d1419c r7:80c0bac4 r6:b97b3044 r5:b7368e00 r4:00000000
+[   67.182433] [<8011e68c>] (warn_slowpath_fmt) from [<804d0138>] (refcount_sub_and_test_checked+0xa4/0xb8)
+[   67.195221]  r3:80c91c25 r2:8099dc94
+[   67.200370]  r4:00000000
+[   67.204397] [<804d0094>] (refcount_sub_and_test_checked) from [<804d0164>] (refcount_dec_and_test_checked+0x18/0x1c)
+[   67.218046]  r4:b7368e00 r3:00000001
+[   67.223125] [<804d014c>] (refcount_dec_and_test_checked) from [<805db49c>] (usb_free_urb+0x20/0x4c)
+[   67.235358] [<805db47c>] (usb_free_urb) from [<7f639804>] (mt76u_buf_free+0x98/0xac [mt76_usb])
+[   67.247302]  r4:00000001 r3:00000001
+[   67.252468] [<7f63976c>] (mt76u_buf_free [mt76_usb]) from [<7f639ef8>] (mt76u_queues_deinit+0x44/0x100 [mt76_usb])
+[   67.266102]  r8:b8fe8600 r7:b5dac480 r6:b5dace20 r5:00000001 r4:00000000 r3:00000080
+[   67.277132] [<7f639eb4>] (mt76u_queues_deinit [mt76_usb]) from [<7f65c040>] (mt76x0u_cleanup+0x40/0x4c [mt76x0u])
+[   67.290737]  r7:b5dac480 r6:b8fe8600 r5:ffffffea r4:b5dace20
+[   67.298069] [<7f65c000>] (mt76x0u_cleanup [mt76x0u]) from [<7f65c564>] (mt76x0u_probe+0x1f0/0x354 [mt76x0u])
+[   67.311174]  r4:b5dace20 r3:00000000
+[   67.316312] [<7f65c374>] (mt76x0u_probe [mt76x0u]) from [<805e0b6c>] (usb_probe_interface+0x104/0x240)
+[   67.328915]  r7:00000000 r6:7f65e034 r5:b6634800 r4:b8fe8620
+[   67.336276] [<805e0a68>] (usb_probe_interface) from [<8056a8bc>] (really_probe+0x224/0x2f8)
+[   67.347965]  r10:b65f0a00 r9:00000019 r8:7f65e034 r7:80d3e124 r6:00000000 r5:80d3e120
+[   67.359175]  r4:b8fe8620 r3:805e0a68
+[   67.364384] [<8056a698>] (really_probe) from [<8056ab60>] (driver_probe_device+0x6c/0x180)
+[   67.375974]  r10:b65f0a00 r9:7f65e2c0 r8:b8fe8620 r7:00000000 r6:7f65e034 r5:7f65e034
+[   67.387170]  r4:b8fe8620 r3:00000000
+[   67.392378] [<8056aaf4>] (driver_probe_device) from [<8056ad54>] (__driver_attach+0xe0/0xe4)
+[   67.404097]  r9:7f65e2c0 r8:7f65d22c r7:00000000 r6:b8fe8654 r5:7f65e034 r4:b8fe8620
+[   67.415122] [<8056ac74>] (__driver_attach) from [<8056880c>] (bus_for_each_dev+0x68/0xa0)
+[   67.426628]  r6:8056ac74 r5:7f65e034 r4:00000000 r3:00000027
+[   67.434017] [<805687a4>] (bus_for_each_dev) from [<8056a1cc>] (driver_attach+0x28/0x30)
+[   67.445394]  r6:80c6ddc8 r5:b7368f80 r4:7f65e034
+[   67.451703] [<8056a1a4>] (driver_attach) from [<80569c24>] (bus_add_driver+0x194/0x21c)
+[   67.463081] [<80569a90>] (bus_add_driver) from [<8056b504>] (driver_register+0x8c/0x124)
+[   67.474560]  r7:80c6ddc8 r6:7f65e034 r5:00000000 r4:7f65e034
+[   67.481964] [<8056b478>] (driver_register) from [<805df510>] (usb_register_driver+0x74/0x140)
+[   67.493901]  r5:00000000 r4:7f65e000
+[   67.499131] [<805df49c>] (usb_register_driver) from [<7f661024>] (mt76x0_driver_init+0x24/0x1000 [mt76x0u])
+[   67.512258]  r9:00000001 r8:7f65e308 r7:00000000 r6:80c08d48 r5:7f661000 r4:7f65e2c0
+[   67.523404] [<7f661000>] (mt76x0_driver_init [mt76x0u]) from [<80102f6c>] (do_one_initcall+0x4c/0x210)
+[   67.536142] [<80102f20>] (do_one_initcall) from [<801ae63c>] (do_init_module+0x6c/0x21c)
+[   67.547639]  r8:7f65e308 r7:80c08d48 r6:b65f0ac0 r5:7f65e2c0 r4:7f65e2c0
+[   67.556129] [<801ae5d0>] (do_init_module) from [<801ad68c>] (load_module+0x1d10/0x2304)
 
-The vendor u-boot sources for Odroid-C1 use the following Ethernet
-pinmux configuration:
-  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_6, 0x3f4f);
-  SET_CBUS_REG_MASK(PERIPHS_PIN_MUX_7, 0xf00000);
-This translates to the following pin groups in the mainline kernel:
-- register 6 bit  0: eth_rxd1 (DIF_0_P)
-- register 6 bit  1: eth_rxd0 (DIF_0_N)
-- register 6 bit  2: eth_rx_dv (DIF_1_P)
-- register 6 bit  3: eth_rx_clk (DIF_1_N)
-- register 6 bit  6: eth_tx_en (DIF_3_P)
-- register 6 bit  8: eth_ref_clk (DIF_3_N)
-- register 6 bit  9: eth_mdc (DIF_4_P)
-- register 6 bit 10: eth_mdio_en (DIF_4_N)
-- register 6 bit 11: eth_tx_clk (GPIOH_9)
-- register 6 bit 12: eth_txd2 (GPIOH_8)
-- register 6 bit 13: eth_txd3 (GPIOH_7)
-- register 7 bit 20: eth_txd0_0 (GPIOH_6)
-- register 7 bit 21: eth_txd1_0 (GPIOH_5)
-- register 7 bit 22: eth_rxd3 (DIF_2_P)
-- register 7 bit 23: eth_rxd2 (DIF_2_N)
-
-Drop the eth_txd0_1 and eth_txd1_1 groups from eth_rgmii_pins to fix the
-Ethernet transmit performance on Odroid-C1. Also add the eth_rxd2 and
-eth_rxd3 groups so we don't rely on the bootloader to set them up.
-
-iperf3 statistics before this change:
-- transmitting from Odroid-C1: 741 Mbits/sec (0 retries)
-- receiving on Odroid-C1: 199 Mbits/sec (1713 retries)
-
-iperf3 statistics after this change:
-- transmitting from Odroid-C1: 667 Mbits/sec (0 retries)
-- receiving on Odroid-C1: 750 Mbits/sec (0 retries)
-
-Fixes: b96446541d8390 ("ARM: dts: meson8b: extend ethernet controller description")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Cc: Linus Lüssing <linus.luessing@c0d3.blue>
-Tested-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Reviewed-by: Emiliano Ingrassia <ingrassia@epigenesys.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Fixes: b40b15e1521f ("mt76: add usb support to mt76 layer")
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/mediatek/mt76/usb.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 08f7f6be7254..5b3e5c50c72f 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -207,9 +207,7 @@
- 				groups = "eth_tx_clk",
- 					 "eth_tx_en",
- 					 "eth_txd1_0",
--					 "eth_txd1_1",
- 					 "eth_txd0_0",
--					 "eth_txd0_1",
- 					 "eth_rx_clk",
- 					 "eth_rx_dv",
- 					 "eth_rxd1",
-@@ -218,7 +216,9 @@
- 					 "eth_mdc",
- 					 "eth_ref_clk",
- 					 "eth_txd2",
--					 "eth_txd3";
-+					 "eth_txd3",
-+					 "eth_rxd3",
-+					 "eth_rxd2";
- 				function = "ethernet";
- 			};
- 		};
+diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
+index 79e59f2379a2..8d40e92fb6f2 100644
+--- a/drivers/net/wireless/mediatek/mt76/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/usb.c
+@@ -796,16 +796,9 @@ int mt76u_alloc_queues(struct mt76_dev *dev)
+ 
+ 	err = mt76u_alloc_rx(dev);
+ 	if (err < 0)
+-		goto err;
+-
+-	err = mt76u_alloc_tx(dev);
+-	if (err < 0)
+-		goto err;
++		return err;
+ 
+-	return 0;
+-err:
+-	mt76u_queues_deinit(dev);
+-	return err;
++	return mt76u_alloc_tx(dev);
+ }
+ EXPORT_SYMBOL_GPL(mt76u_alloc_queues);
+ 
 -- 
 2.19.1
 
