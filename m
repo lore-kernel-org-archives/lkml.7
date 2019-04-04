@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621C6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DD4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F79217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B918321738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368143;
-	bh=b0eRE5tpknAVu3qdxUs/ygHuZEs4Y+7wFw3QR8x+xtA=;
+	s=default; t=1554368148;
+	bh=nBCghCJs2oxezPUJSJLbW9HkdKldw+llrwr2IrmC/Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sfJWVkLVVobFmtC6YaFvUgphoWk9ulhf4fTxSuurlrfHhCTnYfP5LS4jPQAqFEZPb
-	 4J1v9tGamWDbsHW9eGSfSgn/brZ9VZZ9WxQa6gbxeTbS/7D0inkVjdjR/QnoPQ3Y0o
-	 gBMvyx6i6NMiDNt38w8So31TByaliBdbd2cmc/Io=
+	b=Gyp64IPKKcWNiRBYKmTW9k/s2GVoyN6vsQZeHxLELDMZQRflOpQBAs/q5cpmhm+Re
+	 C5kMaPDOvsmB3G0mWyyX10wYjeccgmKnHJ/3vYTZB9d6TnUu/jOCE1J4LpoB5ZAUPX
+	 l84bCqhxaWV3C3MMiuTNcNMRZrmQu7Ab7BPHCBmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfDDIzl (ORCPT
+        id S1729442AbfDDIzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:55:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729581AbfDDIzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:37 -0400
+        id S1729581AbfDDIzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5924217D4;
-        Thu,  4 Apr 2019 08:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E78921738;
+        Thu,  4 Apr 2019 08:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368136;
-        bh=b0eRE5tpknAVu3qdxUs/ygHuZEs4Y+7wFw3QR8x+xtA=;
+        s=default; t=1554368141;
+        bh=nBCghCJs2oxezPUJSJLbW9HkdKldw+llrwr2IrmC/Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BimYBiOtqWSGKNdLGcVvFcoS0QqAQsAlkR6DqhZ+1VJ/jeqFN+THrt1vi3KzF+B1v
-         e+9NSTi9Wa4sUw/eXQA6Fovpk4O/vseWILGz1g6SeGcTSr4GkOTFQ1RM1f4a0H6ZN8
-         aFYVO1VkT/WgqydsDnxAdvcch7NFMTB/+um1nnQg=
+        b=rMOg7IXj033IU6q6xoAncE8zHM8bKPsnCVYR9dqWW52+NqMvVXnwX5+gGw4aDQEM+
+         2qQquNZFzf8IS9A1pnY6H1E/YbIRBUjiMHJcqnXsVgytWQid8eSB8Te7cmK2Dy+siU
+         7+vrdXZvst98NzHoZB+3r903kKU+XNuagzxO039E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 042/121] powerpc/xmon: Fix opcode being uninitialized in print_insn_powerpc
-Date:   Thu,  4 Apr 2019 10:47:10 +0200
-Message-Id: <20190404084547.565458376@linuxfoundation.org>
+Subject: [PATCH 4.14 052/121] clk: fractional-divider: check parent rate only if flag is set
+Date:   Thu,  4 Apr 2019 10:47:20 +0200
+Message-Id: <20190404084548.076099791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -68,57 +67,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e7140639b1de65bba435a6bd772d134901141f86 ]
+[ Upstream commit d13501a2bedfbea0983cc868d3f1dc692627f60d ]
 
-When building with -Wsometimes-uninitialized, Clang warns:
+Custom approximation of fractional-divider may not need parent clock
+rate checking. For example Rockchip SoCs work fine using grand parent
+clock rate even if target rate is greater than parent.
 
-  arch/powerpc/xmon/ppc-dis.c:157:7: warning: variable 'opcode' is used
-  uninitialized whenever 'if' condition is false
-  [-Wsometimes-uninitialized]
-    if (cpu_has_feature(CPU_FTRS_POWER9))
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  arch/powerpc/xmon/ppc-dis.c:167:7: note: uninitialized use occurs here
-    if (opcode == NULL)
-        ^~~~~~
-  arch/powerpc/xmon/ppc-dis.c:157:3: note: remove the 'if' if its
-  condition is always true
-    if (cpu_has_feature(CPU_FTRS_POWER9))
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  arch/powerpc/xmon/ppc-dis.c:132:38: note: initialize the variable
-  'opcode' to silence this warning
-    const struct powerpc_opcode *opcode;
-                                       ^
-                                        = NULL
-  1 warning generated.
+This patch checks parent clock rate only if CLK_SET_RATE_PARENT flag
+is set.
 
-This warning seems to make no sense on the surface because opcode is set
-to NULL right below this statement. However, there is a comma instead of
-semicolon to end the dialect assignment, meaning that the opcode
-assignment only happens in the if statement. Properly terminate that
-line so that Clang no longer warns.
+For detailed example, clock tree of Rockchip I2S audio hardware.
+  - Clock rate of CPLL is 1.2GHz, GPLL is 491.52MHz.
+  - i2s1_div is integer divider can divide N (N is 1~128).
+    Input clock is CPLL or GPLL. Initial divider value is N = 1.
+    Ex) PLL = CPLL, N = 10, i2s1_div output rate is
+      CPLL / 10 = 1.2GHz / 10 = 120MHz
+  - i2s1_frac is fractional divider can divide input to x/y, x and
+    y are 16bit integer.
 
-Fixes: 5b102782c7f4 ("powerpc/xmon: Enable disassembly files (compilation changes)")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+CPLL --> | selector | ---> i2s1_div -+--> | selector | --> I2S1 MCLK
+GPLL --> |          | ,--------------'    |          |
+                      `--> i2s1_frac ---> |          |
+
+Clock mux system try to choose suitable one from i2s1_div and
+i2s1_frac for master clock (MCLK) of I2S1.
+
+Bad scenario as follows:
+  - Try to set MCLK to 8.192MHz (32kHz audio replay)
+    Candidate setting is
+    - i2s1_div: GPLL / 60 = 8.192MHz
+    i2s1_div candidate is exactly same as target clock rate, so mux
+    choose this clock source. i2s1_div output rate is changed
+    491.52MHz -> 8.192MHz
+
+  - After that try to set to 11.2896MHz (44.1kHz audio replay)
+    Candidate settings are
+    - i2s1_div : CPLL / 107 = 11.214945MHz
+    - i2s1_frac: i2s1_div   = 8.192MHz
+      This is because clk_fd_round_rate() thinks target rate
+      (11.2896MHz) is higher than parent rate (i2s1_div = 8.192MHz)
+      and returns parent clock rate.
+
+Above is current upstreamed behavior. Clock mux system choose
+i2s1_div, but this clock rate is not acceptable for I2S driver, so
+users cannot replay audio.
+
+Expected behavior is:
+  - Try to set master clock to 11.2896MHz (44.1kHz audio replay)
+    Candidate settings are
+    - i2s1_div : CPLL / 107          = 11.214945MHz
+    - i2s1_frac: i2s1_div * 147/6400 = 11.2896MHz
+                 Change i2s1_div to GPLL / 1 = 491.52MHz at same
+                 time.
+
+If apply this commit, clk_fd_round_rate() calls custom approximate
+function of Rockchip even if target rate is higher than parent.
+Custom function changes both grand parent (i2s1_div) and parent
+(i2s_frac) settings at same time. Clock mux system can choose
+i2s1_frac and audio works fine.
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+[sboyd@kernel.org: Make function into a macro instead]
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/xmon/ppc-dis.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/clk-fractional-divider.c | 2 +-
+ include/linux/clk-provider.h         | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/xmon/ppc-dis.c b/arch/powerpc/xmon/ppc-dis.c
-index 31db8c072acd..006c7f864f65 100644
---- a/arch/powerpc/xmon/ppc-dis.c
-+++ b/arch/powerpc/xmon/ppc-dis.c
-@@ -162,7 +162,7 @@ int print_insn_powerpc (unsigned long insn, unsigned long memaddr)
-     dialect |= (PPC_OPCODE_POWER5 | PPC_OPCODE_POWER6 | PPC_OPCODE_POWER7
- 		| PPC_OPCODE_POWER8 | PPC_OPCODE_POWER9 | PPC_OPCODE_HTM
- 		| PPC_OPCODE_ALTIVEC | PPC_OPCODE_ALTIVEC2
--		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3),
-+		| PPC_OPCODE_VSX | PPC_OPCODE_VSX3);
+diff --git a/drivers/clk/clk-fractional-divider.c b/drivers/clk/clk-fractional-divider.c
+index fdf625fb10fa..083daa293280 100644
+--- a/drivers/clk/clk-fractional-divider.c
++++ b/drivers/clk/clk-fractional-divider.c
+@@ -77,7 +77,7 @@ static long clk_fd_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	unsigned long m, n;
+ 	u64 ret;
  
-   /* Get the major opcode of the insn.  */
-   opcode = NULL;
+-	if (!rate || rate >= *parent_rate)
++	if (!rate || (!clk_hw_can_set_rate_parent(hw) && rate >= *parent_rate))
+ 		return *parent_rate;
+ 
+ 	if (fd->approximation)
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 2f4e79fe7b86..3eb3376f1cc8 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -743,6 +743,9 @@ unsigned int __clk_get_enable_count(struct clk *clk);
+ unsigned long clk_hw_get_rate(const struct clk_hw *hw);
+ unsigned long __clk_get_flags(struct clk *clk);
+ unsigned long clk_hw_get_flags(const struct clk_hw *hw);
++#define clk_hw_can_set_rate_parent(hw) \
++	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
++
+ bool clk_hw_is_prepared(const struct clk_hw *hw);
+ bool clk_hw_is_enabled(const struct clk_hw *hw);
+ bool __clk_is_enabled(struct clk *clk);
 -- 
 2.19.1
 
