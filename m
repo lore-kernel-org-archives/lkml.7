@@ -2,134 +2,133 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B86C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E05DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D412075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616F42075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:00:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjJAumft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbfDDS7U (ORCPT
+        id S1730098AbfDDTAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:59:20 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59826 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729789AbfDDS7U (ORCPT
+        Thu, 4 Apr 2019 15:00:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52209 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729789AbfDDTAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:59:20 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id A7DD8802D8; Thu,  4 Apr 2019 20:59:08 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 20:59:19 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dmitry Torokhov <dtor@google.com>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Guenter Roeck <groeck@google.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Simon Glass <sjg@google.com>
-Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
- backlight name
-Message-ID: <20190404185919.GB27340@amd>
-References: <20190404171007.160878-1-ncrews@chromium.org>
- <20190404171007.160878-3-ncrews@chromium.org>
- <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
- <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
- <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
- <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="DKU6Jbt7q3WqK7+M"
-Content-Disposition: inline
-In-Reply-To: <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 4 Apr 2019 15:00:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 4so4257358wmf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 12:00:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=w9qSlfOttP+8Rf/TKo+6QSsCY8pdbQMEOp9+VSTfS7I=;
+        b=mjJAumftLYEEgDmm4NxO/nWITLLT87Pjbumz0O/CzD9Luz/6ja88GNYDbiw/5LSZOx
+         VXcV+/O3bOGCLigRT3N5cfaQoxWtu8SOJTMxtsIFupcfwADQEkiXfIin2UDm2+9NAcpo
+         DePQFK+6DOBErUrw6Zq/sazbDDRJ3T2u+nDuJi+naimOr22ZotiaPu7JGxIdabu2E32J
+         EO5vE95tD1SEfOTe10u/FKThmBNt6fiMApim4JmT/2O9bYhCkVSWyk6Ips2ksmAoBeRy
+         xfSfK/NtCOZt1IT2A8ugbpRDMojERJtY/bFB09vLN/59mRp7J9dmm1AloZdy6M2ztmZR
+         dPwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=w9qSlfOttP+8Rf/TKo+6QSsCY8pdbQMEOp9+VSTfS7I=;
+        b=GWjleL6JyYTxMcbpAc8bn3nrznEjaoJmxoh8HpT1tQHNf++AOcMXLU+1emuf/zNgVt
+         9dIf59RF61oXIBdHMighmnNbQYwQ/QACLdCD1xqEkullvf4a9W7VsgiC8pDhpMQXynHN
+         pJLrlcu1GhFggRHcZkasUCJx/U54KqWM/LkFrll0dudvEaGgcZpeCuwOzS9F+hQARTTS
+         8S38KvZ5VSXsqfxBhMARTqcGrzGP54eDdzbcvbLpo+P7SMBxk4s07pxwjBVNnjylWumT
+         G6Ag+t3k8FZtHAlXNrPwbz4TuwKnytMjnlo7ls17Z62pZooNGS3yKfBnBlIAGYqMgcqw
+         jcSQ==
+X-Gm-Message-State: APjAAAU24RrrGKg4zfyiZCfwNF3YaTtpAcAm8PALhsX5F8AVh3xxhd3x
+        othwD+DwaCQ/zxNZtdP0UgetXLhQ
+X-Google-Smtp-Source: APXvYqxyElzVHQybImhuLZ8zibsjOWdttvD0aVZT3pu2GV6gJgGXMJkFB8iUot+XHTNwrqzUEUNC0Q==
+X-Received: by 2002:a7b:cc91:: with SMTP id p17mr5144802wma.38.1554404405352;
+        Thu, 04 Apr 2019 12:00:05 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id o4sm41137280wmo.20.2019.04.04.12.00.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 12:00:04 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 2/3] habanalabs: ASIC_AUTO_DETECT enum value is redundant
+Date:   Thu,  4 Apr 2019 22:00:00 +0300
+Message-Id: <20190404190001.28337-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190404190001.28337-1-oded.gabbay@gmail.com>
+References: <20190404190001.28337-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch removes the enum value of ASIC_AUTO_DETECT because we can use
+the validity of the pdev variable to know whether we have a real device or
+a simulator. For a real device, we detect the asic type from the device ID
+while for a simulator, the simulator code calls create_hdev() with the
+specified ASIC type.
 
---DKU6Jbt7q3WqK7+M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Set ASIC_INVALID as the first option in the enum to make sure that no
+other enum value will receive the value 0 (which indicates a non-existing
+entry in the simulator array).
 
-On Thu 2019-04-04 11:55:27, Dmitry Torokhov wrote:
-> On Thu, Apr 4, 2019 at 11:41 AM Nick Crews <ncrews@chromium.org> wrote:
-> >
-> > On Thu, Apr 4, 2019 at 11:43 AM Dmitry Torokhov <dtor@google.com> wrote:
-> > >
-> > > On Thu, Apr 4, 2019 at 10:36 AM Guenter Roeck <groeck@google.com> wro=
-te:
-> > > >
-> > > > On Thu, Apr 4, 2019 at 10:11 AM Nick Crews <ncrews@chromium.org> wr=
-ote:
-> > > > >
-> > > > > We want all backlights for the system keyboard to
-> > > > > use a common name, so the name "platform::kbd_backlight"
-> > > > > would be better than the current "chromeos::kbd_backlight"
-> > > > > name. Normally this wouldn't be worth changing, but the new
-> > > > > Wilco keyboard backlight driver uses the "platform" name.
-> > > > > We want to make it so all Chrome OS devices are consistent,
-> > > > > so we'll change the name here too.
-> > > > >
-> > > >
-> > > > Wondering - who is the "we" you are talking about ?
-> >
-> > You're right, I should have been more precise.
-> > I was referring to Pavel, Enric, and myself. Pavel had this opinion her=
-e:
-> > https://lkml.org/lkml/2019/4/4/1040. I don't know what Pavel meant by "=
-we"
-> > in that comment, but I would guess that could mean the other LED mainta=
-iners
-> > as well? I talked with Enric 1:1 and he didn't see the problem with cha=
-nging it,
-> > though perhaps he was only considering our use of the LED via powerd,
-> > and not users in general. I'm guessing Pavel's and Enric's meanings tho=
-ugh,
-> > excuse me if I am misinterpreting.
-> >
-> > >
-> > > This also has a potential of breaking existing setups if somebody did
-> > > happen to match on entire name instead of suffix. Such changes have to
-> > > be considered very carefully; at this point I am against of doing
-> > > this.
-> >
-> > Would it make sense to keep the old name as is, and only make the new
-> > Wilco name begin with "platform:"? What would you think is best?
->=20
-> Given that we do not have a single instance of platform::kbd_backlight
-> in kernel at this time I have no idea why Pavel is trying to push this
-> for Wilco driver.
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/habanalabs.h     | 8 +++-----
+ drivers/misc/habanalabs/habanalabs_drv.c | 4 ++--
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
-See the documentation in the email I sent few seconds ago. I hope it
-explains my reasoning, if not, I'll explain it.
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 535d4f9531f6..2f02bb55f66a 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -390,14 +390,12 @@ struct hl_eq {
+ 
+ /**
+  * enum hl_asic_type - supported ASIC types.
+- * @ASIC_AUTO_DETECT: ASIC type will be automatically set.
+- * @ASIC_GOYA: Goya device.
+  * @ASIC_INVALID: Invalid ASIC type.
++ * @ASIC_GOYA: Goya device.
+  */
+ enum hl_asic_type {
+-	ASIC_AUTO_DETECT,
+-	ASIC_GOYA,
+-	ASIC_INVALID
++	ASIC_INVALID,
++	ASIC_GOYA
+ };
+ 
+ struct hl_cs_parser;
+diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
+index b697339d3904..1667df7ca64c 100644
+--- a/drivers/misc/habanalabs/habanalabs_drv.c
++++ b/drivers/misc/habanalabs/habanalabs_drv.c
+@@ -218,7 +218,7 @@ int create_hdev(struct hl_device **dev, struct pci_dev *pdev,
+ 	hdev->disabled = true;
+ 	hdev->pdev = pdev; /* can be NULL in case of simulator device */
+ 
+-	if (asic_type == ASIC_AUTO_DETECT) {
++	if (pdev) {
+ 		hdev->asic_type = get_asic_type(pdev->device);
+ 		if (hdev->asic_type == ASIC_INVALID) {
+ 			dev_err(&pdev->dev, "Unsupported ASIC\n");
+@@ -337,7 +337,7 @@ static int hl_pci_probe(struct pci_dev *pdev,
+ 		 " device found [%04x:%04x] (rev %x)\n",
+ 		 (int)pdev->vendor, (int)pdev->device, (int)pdev->revision);
+ 
+-	rc = create_hdev(&hdev, pdev, ASIC_AUTO_DETECT, -1);
++	rc = create_hdev(&hdev, pdev, ASIC_INVALID, -1);
+ 	if (rc)
+ 		return rc;
+ 
+-- 
+2.17.1
 
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---DKU6Jbt7q3WqK7+M
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlymVAcACgkQMOfwapXb+vKuIgCfQ4vAKLf3CJRwuVbZyvRR1gjE
-/FEAoIV1bUD24tCqtjsj6OhV3dG0cvrF
-=SDUB
------END PGP SIGNATURE-----
-
---DKU6Jbt7q3WqK7+M--
