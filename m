@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254F7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A21EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFB120652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC85E20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369337;
-	bh=wvAfj26DThp8gbdDuZ24OPry/TQfH1+CE/jNIj9uUxo=;
+	s=default; t=1554369340;
+	bh=faWqncdwXJ9NdJmPyWpuyMLENj8IbH3pi9SV7e30S8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jWgvLFJC64ssDu2gfry+wfivLJuRQBU/h43HBWnZrt7alsRa5MspS8ensW0hxmLM1
-	 cSuOdhtqOi5DZCNeo/lmCYAK43/ehvH+6NJ9y8XOWa/IiMQ+hdQ2L8WxyVz6V+ixbm
-	 CRUBHbdAyaMFp7JI4OAh3IlG57owitJ2/yXdpdUc=
+	b=HxSNZV5Z2gAOqVTEleYCDFOVwkjUC/kjrdgJlHhF3uuV8TSFQyy8N9r/tAIVnuLKK
+	 0PH9kToJ1rqYv8z9amsCr53bgYPTJpHout5XeTNASONHLPS4jJ77XZhZwPASBr2TN3
+	 GFeFm/ZY060B5K2fXFbiDUDsh4tDQhM5tS9bxjsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387917AbfDDJPg (ORCPT
+        id S1733028AbfDDJPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56540 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbfDDJPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:32 -0400
+        id S2387905AbfDDJPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629C32054F;
-        Thu,  4 Apr 2019 09:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F116B20652;
+        Thu,  4 Apr 2019 09:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369331;
-        bh=wvAfj26DThp8gbdDuZ24OPry/TQfH1+CE/jNIj9uUxo=;
+        s=default; t=1554369334;
+        bh=faWqncdwXJ9NdJmPyWpuyMLENj8IbH3pi9SV7e30S8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i6nf2oBMTxXh8KgniyzXn5JM/KdwS0ndFf8kFPx9Ox+C2T3L2tO44ePp+3qq9MJyx
-         rpSuTCmS42HEwoTKj5/mp8y7RF5bl0PsZ9d9B3lD9/LJ2DPRRPz8ZUnxQN2rSMJ8uC
-         LYJDHhoLKVvzXEsSFZBjEzhNT03qghRUOTRI/AcM=
+        b=tGOhYin5hVHwy5kiz6KO6xS3NUIgrSx96w8CLJXxnPyNh6hDyBvZsP47CpUfBCmDO
+         54AhUvF3xYAO44TZGqoUL1Lx4fS6TVGXjNO7mXs8/zrkhpw2NUSr8y4t04ffAsDwhk
+         9KRe8pBxC9fG5TWBMpDzJ9kdieZRJ7xXH9fKinKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
-        Jakub Kicinski <kubakici@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, Michael <ZeroBeat@gmx.de>
-Subject: [PATCH 5.0 183/246] mt7601u: bump supported EEPROM version
-Date:   Thu,  4 Apr 2019 10:48:03 +0200
-Message-Id: <20190404084625.589435516@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 172/246] iwlwifi: mvm: fix RFH config command with >=10 CPUs
+Date:   Thu,  4 Apr 2019 10:47:52 +0200
+Message-Id: <20190404084625.198752486@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,59 +66,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 3bd1505fed71d834f45e87b32ff07157fdda47e0 ]
+[ Upstream commit dbf592f3d14fb7d532cb7c820b1065cf33e02aaa ]
 
-As reported by Michael eeprom 0d is supported and work with the driver.
+If we have >=10 (logical) CPUs, our command size exceeds the
+internal buffer size and the command fails; fix that by using
+IWL_HCMD_DFL_NOCOPY for the command that's allocated anyway.
 
-Dump of /sys/kernel/debug/ieee80211/phy1/mt7601u/eeprom_param
-with 0d EEPORM looks like this:
+While at it, also fix the leak of cmd, and use struct_size()
+to calculate its size.
 
-RSSI offset: 0 0
-Reference temp: f9
-LNA gain: 8
-Reg channels: 1-14
-Per rate power:
-	 raw:05 bw20:05 bw40:05
-	 raw:05 bw20:05 bw40:05
-	 raw:03 bw20:03 bw40:03
-	 raw:03 bw20:03 bw40:03
-	 raw:04 bw20:04 bw40:04
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:02 bw20:02 bw40:02
-	 raw:00 bw20:00 bw40:00
-Per channel power:
-	 tx_power  ch1:09 ch2:09
-	 tx_power  ch3:0a ch4:0a
-	 tx_power  ch5:0a ch6:0a
-	 tx_power  ch7:0b ch8:0b
-	 tx_power  ch9:0b ch10:0b
-	 tx_power  ch11:0b ch12:0b
-	 tx_power  ch13:0b ch14:0b
-
-Reported-and-tested-by: Michael <ZeroBeat@gmx.de>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 8edbfaa19835 ("iwlwifi: mvm: configure multi RX queue")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/eeprom.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/eeprom.h b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-index 662d12703b69..57b503ae63f1 100644
---- a/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-+++ b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-@@ -17,7 +17,7 @@
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 0d6c313b6669..19ec55cef802 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -127,13 +127,17 @@ static int iwl_send_rss_cfg_cmd(struct iwl_mvm *mvm)
  
- struct mt7601u_dev;
+ static int iwl_configure_rxq(struct iwl_mvm *mvm)
+ {
+-	int i, num_queues, size;
++	int i, num_queues, size, ret;
+ 	struct iwl_rfh_queue_config *cmd;
++	struct iwl_host_cmd hcmd = {
++		.id = WIDE_ID(DATA_PATH_GROUP, RFH_QUEUE_CONFIG_CMD),
++		.dataflags[0] = IWL_HCMD_DFL_NOCOPY,
++	};
  
--#define MT7601U_EE_MAX_VER			0x0c
-+#define MT7601U_EE_MAX_VER			0x0d
- #define MT7601U_EEPROM_SIZE			256
+ 	/* Do not configure default queue, it is configured via context info */
+ 	num_queues = mvm->trans->num_rx_queues - 1;
  
- #define MT7601U_DEFAULT_TX_POWER		6
+-	size = sizeof(*cmd) + num_queues * sizeof(struct iwl_rfh_queue_data);
++	size = struct_size(cmd, data, num_queues);
+ 
+ 	cmd = kzalloc(size, GFP_KERNEL);
+ 	if (!cmd)
+@@ -154,10 +158,14 @@ static int iwl_configure_rxq(struct iwl_mvm *mvm)
+ 		cmd->data[i].fr_bd_wid = cpu_to_le32(data.fr_bd_wid);
+ 	}
+ 
+-	return iwl_mvm_send_cmd_pdu(mvm,
+-				    WIDE_ID(DATA_PATH_GROUP,
+-					    RFH_QUEUE_CONFIG_CMD),
+-				    0, size, cmd);
++	hcmd.data[0] = cmd;
++	hcmd.len[0] = size;
++
++	ret = iwl_mvm_send_cmd(mvm, &hcmd);
++
++	kfree(cmd);
++
++	return ret;
+ }
+ 
+ static int iwl_mvm_send_dqa_cmd(struct iwl_mvm *mvm)
 -- 
 2.19.1
 
