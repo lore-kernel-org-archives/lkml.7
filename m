@@ -2,72 +2,76 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2924C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA33AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BFF20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E0A206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adLcQ6bG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJF5bI4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfDDQ2P (ORCPT
+        id S1729142AbfDDQ2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:28:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51635 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfDDQ2O (ORCPT
+        Thu, 4 Apr 2019 12:28:36 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39102 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfDDQ2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:28:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 4so3773715wmf.1;
-        Thu, 04 Apr 2019 09:28:12 -0700 (PDT)
+        Thu, 4 Apr 2019 12:28:36 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j9so4577754wrn.6;
+        Thu, 04 Apr 2019 09:28:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lnoGvr9LDopLfg0orPjlNy0lF5A1NRsYydcqGyp7moI=;
-        b=adLcQ6bGWD5qbVk1S7IsoA24xwE2oGU7P68PtCXTQpv9UOhzymTygjZbvCQXgwfIJ3
-         yA+ipo2onmUNz6+jSdSaIxDcnpH9Ioh2paKgvi0Srt7iMp3ejREARWNw41xOLTs7nCzv
-         YXj1+FLAHdIasKarN6Zr4DZD4Q9Unt1Hj01aLyWyd7OTlUjOoQkoW/96mQg8cUywRTjE
-         AEFGG9H4JKpbJPsQ39Q1Wda713a2mmDGzkLKbuhmZe6B8pIvRKGKz2V4wyWW6Lg8lU6H
-         xPx8Qg/hl8BXG9gxnmeFzecIgFJOL0C1hebj3pXNsoxi+Hy7S/VEC3WQUHX/qLUXgMrF
-         9kzQ==
+        bh=0+Sn/00SenX5tfWxGlJ29Qa3/ti7AkFLkngdT52PbAs=;
+        b=nJF5bI4MfJX1EdDOHZlI0sy2dil9WAziLepVgxfq4nSVtY4N2vjwHYxN4ePajoTQPM
+         ElKV4f9v5v2zkm/jIcl4zTov8dpbjPML9moATot9iJZpR08/DxFtsxV0rCZ7jeJcm5yF
+         uY1im4aYPKtcye5w6gcCR9aRI/8J1DidmwQW6PlMW8UcR0FbU8onuZB2vUB14o5C3qdk
+         uopXxOreO18gUP5iRSREj/IQWQrEGHs6DeZqwuXwUpFEUSZGooVwEYvfMeH1aNPJ1vTG
+         fAb2bIQhvjfAZatYpFejHuxC89m5ILsEJ2xPgTIZrg+DUBFHXEPJGgUX9+oEIBiksu3f
+         Jnkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=lnoGvr9LDopLfg0orPjlNy0lF5A1NRsYydcqGyp7moI=;
-        b=UJZWkwWvW2rUwgg+xAGBJVZ5/jcewuToENHigYClVduNmGO7gBbWBn6Tl7lJtj6Zdo
-         qZkTJOSBnGluWWOPKcto1AjDESnre0u6Qin8dYFq+CIsIX5m+/Ik6uQAhwIou7ZrD3J6
-         FWcT6ikhEecUtg8lOqCVSr8gyjwUoNF9Vizo42Zbju6fsHCm8A9D+zkUwvDnPH6ssm3b
-         hEpEwMB2Ug0i05rEAE7QYXe/sET20bVcwCMk3X0sLKLoJ4eMW62qfeAZ6z0wPXF4T8Jt
-         XhWYQN8Xz7coV8E1oW3r3SzukXg6ZdwiEN2ijGJJ5OCcQ7HxDEI0fgUwkwn5XcQWqRJT
-         igYA==
-X-Gm-Message-State: APjAAAUgoMxY7Xv+3g0R5vHrBylSGGQIUiVURoLiVIg53eD+lNrw0fhf
-        hLsranmMKrtwilsUO6ZIqyU=
-X-Google-Smtp-Source: APXvYqyVEZZosLAY/pQ8BY2mX+FTiIcwrocWqR0cYuhZYw8UbFXtuaN5j4Qvnbc1C3alRT1YbZ7H2A==
-X-Received: by 2002:a1c:3104:: with SMTP id x4mr4536497wmx.23.1554395292005;
-        Thu, 04 Apr 2019 09:28:12 -0700 (PDT)
+        bh=0+Sn/00SenX5tfWxGlJ29Qa3/ti7AkFLkngdT52PbAs=;
+        b=fLgSXZ3e3JQ4vQLyKBLf1jJpQZnaqcvIL28GLBj45hnrFM+UiO+tj18J7k1ggqPAoG
+         Z2Fg9d5jziozPa7uISdKhYl8X6Z70EwPosHcT8AQ/SQynuxmn4MTr0dXxAVnXYtqqCVw
+         9fhQopBXH7Zu4Iilb35FUtvQkShRdf7f/FcyxwpvKO6ubzhhSlhND8meCy+Brg0CYYwQ
+         ZjFbwYPkUxoGR9Z+jjP7Qu5enj6fdP237mth9wqMVD470Om4Fcv3sAZNPPiG7/VSNt00
+         YQvq8wNqYnQYBjDGE/YzUIoMySapApf5wd0l1nM0AGGXz2VOEcCJbIWzWfy3e31mHs3g
+         4eEQ==
+X-Gm-Message-State: APjAAAWV0jJs1hXsZ5QLXFp8JEQCMXOHBARIhFeUnWaNAFpY9eILjAy5
+        3wfpNwku6ph+O4Ps84y+PVw=
+X-Google-Smtp-Source: APXvYqwMRuxV+z/Ju56oA6yDTwRrQXeQ1sZseESu4s1jiFpd0IOEY2hzbiJv7JGxhcS7E14sjG7i+g==
+X-Received: by 2002:adf:df0f:: with SMTP id y15mr5039450wrl.175.1554395313383;
+        Thu, 04 Apr 2019 09:28:33 -0700 (PDT)
 Received: from [10.67.49.72] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id a10sm20279298wrs.19.2019.04.04.09.28.09
+        by smtp.googlemail.com with ESMTPSA id u14sm15360164wrr.1.2019.04.04.09.28.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 09:28:11 -0700 (PDT)
-Subject: Re: [PATCH v6 9/9] arm64: dts: Stingray: Add NIC i2c device node
-To:     Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+        Thu, 04 Apr 2019 09:28:32 -0700 (PDT)
+Subject: Re: [PATCH v6 0/9] iProc I2C slave mode and NIC mode
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Ray Jui <ray.jui@broadcom.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 References: <20190403011830.3254-1-ray.jui@broadcom.com>
- <20190403011830.3254-10-ray.jui@broadcom.com>
+ <20190403204423.btgtke3tmt7pkr3j@ninjato>
+ <06dff712-151b-f188-d154-3130d56d01d8@gmail.com>
+ <20190404061601.c7sbti2zyu6tsoyw@katana>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -124,12 +128,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <5a4fa0a6-abb8-8b88-0003-9ddb3da93f91@gmail.com>
-Date:   Thu, 4 Apr 2019 09:28:02 -0700
+Message-ID: <64e40004-61e9-eff4-07a1-d41323f056c7@gmail.com>
+Date:   Thu, 4 Apr 2019 09:28:28 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190403011830.3254-10-ray.jui@broadcom.com>
+In-Reply-To: <20190404061601.c7sbti2zyu6tsoyw@katana>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -138,14 +142,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/2/19 6:18 PM, Ray Jui wrote:
-> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+On 4/3/19 11:16 PM, Wolfram Sang wrote:
+> On Wed, Apr 03, 2019 at 03:20:14PM -0700, Florian Fainelli wrote:
+>> On 4/3/19 1:44 PM, Wolfram Sang wrote:
+>>> On Tue, Apr 02, 2019 at 06:18:21PM -0700, Ray Jui wrote:
+>>>> This patch series adds the following support to the iProc I2C driver:
+>>>> - Increase maximum read transfer size to 255 bytes
+>>>> - I2C slave mode
+>>>> - Polling mode
+>>>> - NIC I2C mode
+>>>>
+>>>> This patch series is based on kernel v5.1-rc3 and available at:
+>>>> https://github.com/Broadcom/arm64-linux.git
+>>>> branch: i2c-slave-v6
+>>>>
+>>>> Changes from v5:
+>>>>  - Address various comments from Wolfram
+>>>
+>>> In the future, please write in detail what you changed. I review so many
+>>> patches that I can't recall all my comments on every patch.
+>>>
+>>> That being said, all patches applied to for-next, thanks!
+>>
+>> OK, I will drop patch #9 from my queue then, thanks.
 > 
-> Add NIC i2c device node.
-> 
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> Sorry, I meant patches 1-8 applied, assuming patch 9 was already taken.
+> I usually don't pick up DTS patches, so I'd be happy if you could keep
+> #9 in your tree.
 
-Applied to devicetree-arm64/next, thanks!
+Now applied and pushed out, not a problem, thanks!
 -- 
 Florian
