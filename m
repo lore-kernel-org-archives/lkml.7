@@ -2,154 +2,112 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9DCC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEECC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8841F20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:06:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pKl+vpN8"
+	by mail.kernel.org (Postfix) with ESMTP id ED18020855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfDDUGL (ORCPT
+        id S1730505AbfDDUG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:06:11 -0400
-Received: from mout.web.de ([212.227.17.11]:59865 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbfDDUGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:06:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1554408344;
-        bh=oRy/nabPVynDMUMyd2AOqb9/dhxdVYfV3yi65jY1LB4=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=pKl+vpN8BZ7sQx0j5RKkPM6GGDSmENAnL6FH6/y4ZtwBcCoiW5ECW5mzQd/D3THDf
-         6qjLQo6drNTnCCtgVm8wNLMltnoupsbzKK2afbcGTSeqrEjrYYdXEwo/E9Fa7KQp8T
-         2RpejHUYscbpDO2VL6Lo/po2RC/oamcbDJ/tvN+A=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.54.132]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LzsKN-1gpudn2WlX-0150m6; Thu, 04
- Apr 2019 22:05:44 +0200
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Yi Wang <wang.yi59@zte.com.cn>
-References: <1554307455-40361-3-git-send-email-wen.yang99@zte.com.cn>
-Subject: Re: [PATCH 2/7] drm/meson: fix possible object reference leak
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Wen Yang <wen.yang99@zte.com.cn>, dri-devel@lists.freedesktop.org,
-        kernel-janitors@vger.kernel.org
-Message-ID: <07090eca-640f-830c-7e55-22a486cd0002@web.de>
-Date:   Thu, 4 Apr 2019 22:05:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 16:06:57 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33542 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfDDUG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 16:06:57 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 4A94F802B2; Thu,  4 Apr 2019 22:06:47 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 22:06:58 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dmitry Torokhov <dtor@google.com>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+Message-ID: <20190404200658.GD29984@amd>
+References: <20190404171007.160878-1-ncrews@chromium.org>
+ <20190404171007.160878-3-ncrews@chromium.org>
+ <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
+ <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
+ <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
+ <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
+ <20190404185919.GB27340@amd>
+ <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
+ <20190404191931.GA29984@amd>
+ <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1554307455-40361-3-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RbrGKhLw60YXT5+o3Ap6cZx1nShLs5Fip/Pu/fBOiRQ9n389Ywf
- PmZHKydAisjHnL9UANt/aIuxhDym5IrmJS605FJOkroiq1HbmYjno12GFW/LJF4VTytz00l
- y4+BqBNvJWKys2n4nzZlqbnQI/Cd6J7m9Y/85r2bFODNso0D/42bYMHFv4s/J62WNb3pxNe
- eaE6WX9USDqpKgaLP/Nmg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4eiiu8QVDpg=:1jnWdUEME0yCWBu3Iz7O/R
- X5YdEwaCYZO/hn0nGbu7gVfk7b1harO+LoOIs03J/Leo3O2nniA/GgCorufmbYCU24T0+6mBE
- D4XH1IcIGOCG8R0cFkTtC58OvyBz4B0qIei8cR1xxLF2Rw0F8BFlQg8JANJy+isq7/8dTJwSy
- yHFLZBLuPjW+pDUcE7jN6ENPsPgXMT5CiN6GbCI9FsjbHFNLP1k5GP44bvbetlVpzX4C6FO/E
- 9c31J8hwJkaUgjMvfS5KHMvBxcwe4PV6pDRnMIQjx/McQImf+Atiyaeg+q6/XOzznLxC9Da0/
- YFoIt3KeMzt8c1ZBLDuIs+WU2pvazAUf+3e0ACwKHIdI2lj1BwV2/8eNyBYnnxeQhejda4oIL
- 46vM699SnZltdWvRIuEG0Z4WDqi1Ul/B64oaFKMkuFdEb2FOqNf9BcjoBv4kaQAkEfz1fbvGJ
- Y4jwTITwBGoD2iLHMYt+fjF8ROoCTdQVsa+sG1rV0aFcy2j2Lz469t67Z1ua5NCPi7EXaqCaS
- DLh6B7Q4lPpHC73QdQwWtLdHYfaIRRgGFwgiv4N3rKZ9H/TswIqOsgseVMQPWspUUgFVwBNry
- oN4gJqw3CP+dFcYqtlqwCyQEZsSL29J6qYUCD3Ka2ykp52py73azlSfPMobTmc9imjvPOw23q
- 1DKeFE6YjIZDLalMfDHKhtct2UP/xua8LOOZXAkEnArkAzep5QkXDkDkganToYtC28Qs3pw01
- MfkzPVG7UAYlOeKCYGJgbIFOeGGlXH1PASsv2LIPsI/Lt6QQFmnD2aJV56OcG9ZDHLDVbxTOl
- swyy6wW3FYTAMhte5b9nHeIfyGF7vmOJjICflenF3JE2oqzde4/ipAg8I6B7eRevktlbFsl6+
- FdJ2Zu6rwzyU5wMY/D8o66DOIOFM9cQYU79q89CiB/cO3wNwX4/56xfOH1/fKIGn+6CzsdFsC
- 5+8XOnUbzPg==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="fXStkuK2IQBfcDe+"
+Content-Disposition: inline
+In-Reply-To: <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -720,13 +720,10 @@ static bool meson_hdmi_connector_is_available(stru=
-ct device *dev)
->
->  	/* If the endpoint node exists, consider it enabled */
->  	remote =3D of_graph_get_remote_port(ep);
-> -	if (remote) {
-> -		of_node_put(ep);
-> -		return true;
-> -	}
-> -
->  	of_node_put(ep);
->  	of_node_put(remote);
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/d=
-rivers/gpu/drm/meson/meson_dw_hdmi.c?id=3D61de49cb596710b918f7a80839f0b6de=
-2017bc32#n712
+--fXStkuK2IQBfcDe+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can the order of these put calls matter (because of processor caches)?
+Hi!
 
+> > > It is *function* and maybe color that userspace is interested in, and
+> > > here we have proper standardization in form of "kbd_backlight". Device
+> > > name is, well, device name. It should uniquely identify the device led
+> > > is attached to, but otherwise is rarely interesting. If userspace is
+> > > really concerned what kind of keyboard backlight it is it should
+> > > investigate parent device(s) and see what they end up with.
+> >
+> > That does not work. Userspace wants to know if it is internal keyboard
+> > or USB keyboard, not what kind of i2c controller the LED is connected
+> > to.
+>=20
+> Why does userspace want to know it?
 
-> +	if (remote)
-> +		return true;
->
->  	return false;
+For example to turn off backlight on internal keyboard when the lid is clos=
+ed.
 
-Would the use of a ternary operator be more succinct here?
+> > grep for platform::mic_mute .
+> >
+> > (And platform is even pretty good match for how the LED is connected
+> > in your case).
+>=20
+> Until we get a secondary interface that is also "platform"...
 
-+	return remote ? true : false;
+How would that happen?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Regards,
-Markus
+--fXStkuK2IQBfcDe+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlymY+IACgkQMOfwapXb+vLAaQCdEN9OwTSjbnjYaUSLCBDvtol3
+tgMAn1h1KMEfrUajLksbICnIxS33cOAJ
+=/3yv
+-----END PGP SIGNATURE-----
+
+--fXStkuK2IQBfcDe+--
