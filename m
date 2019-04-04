@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0BEC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDB3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 643DF2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DB5217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367989;
-	bh=9rl8OOLX0Mg5gJSn29JQJpZ4qIPxznARlbx6cHQg+zU=;
+	s=default; t=1554367993;
+	bh=OiTUFIupJmuJNQuI0QNnOztwupTDiTxEjbRknShYGgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJ642XvciZg/4jPO/ueNfQiNJYFTvBHAkiTSETinRZXZTlDwXKIX78MJSekfItJ+J
-	 HRk3lPXbDwiyPayjVcELB9p+wL42yimcSkk/X6IhpcjDSVnsFAH+UbFI4s34QtStyS
-	 CzxPBTb442rPYfDUSZrzo3VapM+3HumG3aHkbmbs=
+	b=oUTrFYj/0ftk5suHkJ+ugn1gFrq6/BoZYgzkcc6QzWVls55i3cu5F1c80SbndUYNW
+	 lO2OwGvjvA/nR0UfXc+uOvkjxMLW7FDaQiDRB3bWkoqWhve8YKpWRktNbdbCu/FWb0
+	 cuXV+uq8L+Up+vxWp/W70xYTCOWuadFsDB+il6UY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfDDIxI (ORCPT
+        id S1729750AbfDDIxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:53:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55248 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:53:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbfDDIxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:03 -0400
+        id S1729736AbfDDIxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37A4A2147C;
-        Thu,  4 Apr 2019 08:53:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 660B12147C;
+        Thu,  4 Apr 2019 08:53:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367982;
-        bh=9rl8OOLX0Mg5gJSn29JQJpZ4qIPxznARlbx6cHQg+zU=;
+        s=default; t=1554367987;
+        bh=OiTUFIupJmuJNQuI0QNnOztwupTDiTxEjbRknShYGgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gr59EJmIN/054Iz3GyXNZsDqAA89YGbkwNAqriEww83//jl6dRwwHBtQn+cH++XTI
-         TzSsOWhJ+7NWmQm7jeG/lOg6E4hNGfc8i13a+q5AaKUYfm0pjJOlflj94ehwPbG7WP
-         OtyGWRpqvtQTirmdu19r5EULmuqvgZbg6AVeKziI=
+        b=sPa8fO2O8b63GurDpxO4kw+377Ou8S133BW1ZAQWCC/hG88k4SDkdcWq7i5XHG+SV
+         NZ/sMp5lXrkmu4x9Y+GOgM0EEUn6LRg3LsjRtbwZbGWnxkFJCbmT8ojy28Yta1X4kF
+         3h50RK3BGTmTZ8Y33rd4sDwspNr7dmcnj9Y6mySc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
-        Jakub Kicinski <kubakici@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, Michael <ZeroBeat@gmx.de>
-Subject: [PATCH 4.9 70/91] mt7601u: bump supported EEPROM version
-Date:   Thu,  4 Apr 2019 10:47:54 +0200
-Message-Id: <20190404084539.503443709@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 72/91] tty: increase the default flip buffer limit to 2*640K
+Date:   Thu,  4 Apr 2019 10:47:56 +0200
+Message-Id: <20190404084539.616532511@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -67,59 +67,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 3bd1505fed71d834f45e87b32ff07157fdda47e0 ]
+[ Upstream commit 7ab57b76ebf632bf2231ccabe26bea33868118c6 ]
 
-As reported by Michael eeprom 0d is supported and work with the driver.
+We increase the default limit for buffer memory allocation by a factor of
+10 to 640K to prevent data loss when using fast serial interfaces.
 
-Dump of /sys/kernel/debug/ieee80211/phy1/mt7601u/eeprom_param
-with 0d EEPORM looks like this:
+For example when using RS485 without flow-control at speeds of 1Mbit/s
+an upwards we've run into problems such as applications being too slow
+to read out this buffer (on embedded devices based on imx53 or imx6).
 
-RSSI offset: 0 0
-Reference temp: f9
-LNA gain: 8
-Reg channels: 1-14
-Per rate power:
-	 raw:05 bw20:05 bw40:05
-	 raw:05 bw20:05 bw40:05
-	 raw:03 bw20:03 bw40:03
-	 raw:03 bw20:03 bw40:03
-	 raw:04 bw20:04 bw40:04
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:02 bw20:02 bw40:02
-	 raw:00 bw20:00 bw40:00
-Per channel power:
-	 tx_power  ch1:09 ch2:09
-	 tx_power  ch3:0a ch4:0a
-	 tx_power  ch5:0a ch6:0a
-	 tx_power  ch7:0b ch8:0b
-	 tx_power  ch9:0b ch10:0b
-	 tx_power  ch11:0b ch12:0b
-	 tx_power  ch13:0b ch14:0b
+If you want to write transmitted data to a slow SD card and thus have
+realtime requirements, this limit can become a problem.
 
-Reported-and-tested-by: Michael <ZeroBeat@gmx.de>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+That shouldn't be the case and 640K buffers fix such problems for us.
+
+This value is a maximum limit for allocation only. It has no effect
+on systems that currently run fine. When transmission is slow enough
+applications and hardware can keep up and increasing this limit
+doesn't change anything.
+
+It only _allows_ to allocate more than 2*64K in cases we currently fail to
+allocate memory despite having some.
+
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/eeprom.h | 2 +-
+ drivers/tty/tty_buffer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/eeprom.h b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-index 662d12703b69..57b503ae63f1 100644
---- a/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-+++ b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-@@ -17,7 +17,7 @@
+diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
+index 41b9a7ccce08..ca9c82ee6c35 100644
+--- a/drivers/tty/tty_buffer.c
++++ b/drivers/tty/tty_buffer.c
+@@ -25,7 +25,7 @@
+  * Byte threshold to limit memory consumption for flip buffers.
+  * The actual memory limit is > 2x this amount.
+  */
+-#define TTYB_DEFAULT_MEM_LIMIT	65536
++#define TTYB_DEFAULT_MEM_LIMIT	(640 * 1024UL)
  
- struct mt7601u_dev;
- 
--#define MT7601U_EE_MAX_VER			0x0c
-+#define MT7601U_EE_MAX_VER			0x0d
- #define MT7601U_EEPROM_SIZE			256
- 
- #define MT7601U_DEFAULT_TX_POWER		6
+ /*
+  * We default to dicing tty buffer allocations to this many characters
 -- 
 2.19.1
 
