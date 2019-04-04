@@ -2,52 +2,53 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C28C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30B0C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5BD52183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B6A2184E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368404;
-	bh=Wqevb1Ad+roFVX+bnBhfx246ng5AuZTwMhkLbmDl6OQ=;
+	s=default; t=1554368408;
+	bh=So8D3m/GzPHLJY4Cf6N/XuYD0lN1CmjdlglUaX4ZTQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O8Y7YY/DygxD3x2KNm8a2FTr0tnnTwKaAmP44zQC1zpYUvE5vXWx3VPWtMWdhrgg3
-	 7w50Rn6jilfjlBUK6VY2o17ROS8vn3/OqKT4sIJhX5uRWkoFghMZLE5p243y1DNosy
-	 NjGGvbUibPgn7/siHZU1ALKQdHOB5kyMBZ68lTZs=
+	b=Pvs5Z1IC+U1Q44j18oUGEFkHnUSW8OxrrFtBKVst1uON1sNIXaP4F9Q9uWLH+z0UB
+	 GkKyLAVWOTRV/o+tTL8ZjuvnuxwoVZ2yCwmyvCaw+BDiUlzJyqqsWIXNZ6nrfGvidY
+	 YQWdIJ+3qkzkSXvT53pZg8MVURdjS8DQ5e3aNDRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731194AbfDDJAD (ORCPT
+        id S1731203AbfDDJAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731175AbfDDJAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:00:01 -0400
+        id S1726790AbfDDJAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:00:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E892147C;
-        Thu,  4 Apr 2019 09:00:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7898D21855;
+        Thu,  4 Apr 2019 09:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368401;
-        bh=Wqevb1Ad+roFVX+bnBhfx246ng5AuZTwMhkLbmDl6OQ=;
+        s=default; t=1554368404;
+        bh=So8D3m/GzPHLJY4Cf6N/XuYD0lN1CmjdlglUaX4ZTQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VlV5pcW92A+I4afT0ZShbwn4Ov46zIVAnw/XMzKQR6P+Xk0tuekMKmLWi94wYgwFF
-         GxKbkXTcF0/lUCJGGZAFrmKeqQuoxBjAhbq+lAAVREwFMTSfOX6VW6eoRfgDNeY9pY
-         DuxMWh7HsDMufEEDXM9MNLKI0QEr4ivr3RiY7txU=
+        b=tzyd2nwxLi4L7ZLPjxm/izRVH7kZUcvNpeevpAREF1hEnSGCjM1Y32PUQFDYvcXH9
+         fRATkbVo3tfJ/aYCrOe6sRikeUCRxb6mfSOvcgI7ac7uUV4RYCNV/TJH3TGf8enDcf
+         jsNWvQucE3SRDT/YnP15cziNa+NJ/0oddbslVe70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.19 001/187] arm64: debug: Dont propagate UNKNOWN FAR into si_code for debug signals
-Date:   Thu,  4 Apr 2019 10:45:38 +0200
-Message-Id: <20190404084603.181541247@linuxfoundation.org>
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 019/187] scsi: hisi_sas: Fix a timeout race of driver internal and SMP IO
+Date:   Thu,  4 Apr 2019 10:45:56 +0200
+Message-Id: <20190404084604.001760444@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,66 +67,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Will Deacon <will.deacon@arm.com>
+[ Upstream commit 4790595723d4b833b18c994973d39f9efb842887 ]
 
-commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
+For internal IO and SMP IO, there is a time-out timer for them. In the
+timer handler, it checks whether IO is done according to the flag
+task->task_state_lock.
 
-FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
-taking a hardware watchpoint. Unfortunately, if a debug handler returns
-a non-zero value, then we will propagate the UNKNOWN FAR value to
-userspace via the si_addr field of the SIGTRAP siginfo_t.
+There is an issue which may cause system suspended: internal IO or SMP IO
+is sent, but at that time because of hardware exception (such as inject
+2Bit ECC error), so IO is not completed and also not timeout. But, at that
+time, the SAS controller reset occurs to recover system. It will release
+the resource and set the status of IO to be SAS_TASK_STATE_DONE, so when IO
+timeout, it will never complete the completion of IO and wait for ever.
 
-Instead, let's set si_addr to take on the PC of the faulting instruction,
-which we have available in the current pt_regs.
+[  729.123632] Call trace:
+[  729.126791] [<ffff00000808655c>] __switch_to+0x94/0xa8
+[  729.133106] [<ffff000008d96e98>] __schedule+0x1e8/0x7fc
+[  729.138975] [<ffff000008d974e0>] schedule+0x34/0x8c
+[  729.144401] [<ffff000008d9b000>] schedule_timeout+0x1d8/0x3cc
+[  729.150690] [<ffff000008d98218>] wait_for_common+0xdc/0x1a0
+[  729.157101] [<ffff000008d98304>] wait_for_completion+0x28/0x34
+[  729.165973] [<ffff000000dcefb4>] hisi_sas_internal_task_abort+0x2a0/0x424 [hisi_sas_test_main]
+[  729.176447] [<ffff000000dd18f4>] hisi_sas_abort_task+0x244/0x2d8 [hisi_sas_test_main]
+[  729.185258] [<ffff000008971714>] sas_eh_handle_sas_errors+0x1c8/0x7b8
+[  729.192391] [<ffff000008972774>] sas_scsi_recover_host+0x130/0x398
+[  729.199237] [<ffff00000894d8a8>] scsi_error_handler+0x148/0x5c0
+[  729.206009] [<ffff0000080f4118>] kthread+0x10c/0x138
+[  729.211563] [<ffff0000080855dc>] ret_from_fork+0x10/0x18
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To solve the issue, callback function task_done of those IOs need to be
+called when on SAS controller reset.
 
-
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/fault.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -827,11 +827,12 @@ void __init hook_debug_fault_code(int nr
- 	debug_fault_info[nr].name	= name;
- }
- 
--asmlinkage int __exception do_debug_exception(unsigned long addr,
-+asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 					      unsigned int esr,
- 					      struct pt_regs *regs)
- {
- 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
-+	unsigned long pc = instruction_pointer(regs);
- 	int rv;
- 
- 	/*
-@@ -841,10 +842,10 @@ asmlinkage int __exception do_debug_exce
- 	if (interrupts_enabled(regs))
- 		trace_hardirqs_off();
- 
--	if (user_mode(regs) && instruction_pointer(regs) > TASK_SIZE)
-+	if (user_mode(regs) && pc > TASK_SIZE)
- 		arm64_apply_bp_hardening();
- 
--	if (!inf->fn(addr, esr, regs)) {
-+	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
- 		rv = 1;
- 	} else {
- 		struct siginfo info;
-@@ -853,7 +854,7 @@ asmlinkage int __exception do_debug_exce
- 		info.si_signo = inf->sig;
- 		info.si_errno = 0;
- 		info.si_code  = inf->code;
--		info.si_addr  = (void __user *)addr;
-+		info.si_addr  = (void __user *)pc;
- 		arm64_notify_die(inf->name, regs, &info, esr);
- 		rv = 0;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index c25f3a9b0b9f..fd9d82c9033d 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -810,7 +810,8 @@ static void hisi_sas_do_release_task(struct hisi_hba *hisi_hba, struct sas_task
+ 		spin_lock_irqsave(&task->task_state_lock, flags);
+ 		task->task_state_flags &=
+ 			~(SAS_TASK_STATE_PENDING | SAS_TASK_AT_INITIATOR);
+-		task->task_state_flags |= SAS_TASK_STATE_DONE;
++		if (!slot->is_internal && task->task_proto != SAS_PROTOCOL_SMP)
++			task->task_state_flags |= SAS_TASK_STATE_DONE;
+ 		spin_unlock_irqrestore(&task->task_state_lock, flags);
  	}
+ 
+-- 
+2.19.1
+
 
 
