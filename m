@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509F6C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079FFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA992184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBEB32184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368760;
-	bh=L49o3hclFvv50xNi3jYjteg1AKeKQkUKXwsknJ+OoX4=;
+	s=default; t=1554368763;
+	bh=iPEhfL/WfMkx7co8c/fi+HxHTlALBqf2zg2VQ+DWeyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vDdUhLkw/Qfog5vVPmSqGmxFW9tuNWqRYPO9QAeWWWwf3P4v/C9yUzWMmaVoFDPx6
-	 NFt5vCpNOr0eeE+hxilkYuPBevR5Pk6MVs/p8N0jdLotqudMgXjA4a0NGjm2zYCcV5
-	 IVOBwl03OdsKyVIG+wx1gu1SY4P9epr30Q9LrTGA=
+	b=OxjBP2DfAB8+gYqdWwmLXIArGJTaPNaQ4Oed5HfeHmpiqxeJPd31N8PONmWFpiD0z
+	 aHk52BpXXdDZtsn7f37yuScAfS6Ht06T2b+Y31HcNgRQSRfCmRL7ZO/zDKNxjDHhsK
+	 0Rp+mgBSQVZIdH06MD66CxxIFZe1Mth0cutkKBKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732229AbfDDJF6 (ORCPT
+        id S1732239AbfDDJGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44212 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732214AbfDDJFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:54 -0400
+        id S1732214AbfDDJF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1536B218FE;
-        Thu,  4 Apr 2019 09:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59C762183E;
+        Thu,  4 Apr 2019 09:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368753;
-        bh=L49o3hclFvv50xNi3jYjteg1AKeKQkUKXwsknJ+OoX4=;
+        s=default; t=1554368758;
+        bh=iPEhfL/WfMkx7co8c/fi+HxHTlALBqf2zg2VQ+DWeyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wZnL7gqsCHzEuClaIBdpMGxM8qXLiuqiq25UrqXpmLqdf9ijGdjG8fZy9/3iCCZL6
-         cgRQWyT04mGEtQ97pfcz4tAEq6Us6AcLN7YB5AFgKN4cjHIj3mEtJsaEuaOMdxV11x
-         svSm+lRyFVZu6459QCG0ZQwuhFfePS0JIdHRHRvQ=
+        b=LoTwzovIYmuRYCDkmG7kaokHwcJYdHPbqZduMoerVF9kcnWT0O015o4QQpwutfHdp
+         0oyzihk8yXABuhLVppZN3Czg6Xpz+73HeKcK7TTymAe9o7qyXyFU9ZD215qMgcpc33
+         3oFXHPGz5FtmPQluFsctV1RW7Tc03JfXptvEAwq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Tolnay <dtolnay@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 157/187] hwrng: virtio - Avoid repeated init of completion
-Date:   Thu,  4 Apr 2019 10:48:14 +0200
-Message-Id: <20190404084610.511209889@linuxfoundation.org>
+        stable@vger.kernel.org, Song Hongyan <hongyan.song@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 159/187] HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
+Date:   Thu,  4 Apr 2019 10:48:16 +0200
+Message-Id: <20190404084610.606163235@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,55 +66,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
+[ Upstream commit 2edefc056e4f0e6ec9508dd1aca2c18fa320efef ]
 
-The virtio-rng driver uses a completion called have_data to wait for a
-virtio read to be fulfilled by the hypervisor. The completion is reset
-before placing a buffer on the virtio queue and completed by the virtio
-callback once data has been written into the buffer.
+Host driver should handle interrupt mask register earlier than wake up ish FW
+else there will be conditions when FW interrupt comes, host PIMR register still
+not set ready, so move the interrupt mask setting before ish_wakeup.
 
-Prior to this commit, the driver called init_completion on this
-completion both during probe as well as when registering virtio buffers
-as part of a hwrng read operation. The second of these init_completion
-calls should instead be reinit_completion because the have_data
-completion has already been inited by probe. As described in
-Documentation/scheduler/completion.txt, "Calling init_completion() twice
-on the same completion object is most likely a bug".
+Clear PISR busy_clear bit in ish_irq_handler. If not clear, there will be
+conditions host driver received a busy_clear interrupt (before the busy_clear
+mask bit is ready), it will return IRQ_NONE after check_generated_interrupt,
+the interrupt will never be cleared, causing the DEVICE not sending following
+IRQ.
 
-This bug was present in the initial implementation of virtio-rng in
-f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
-then the have_data completion was a single static completion rather than
-a member of one of potentially multiple virtrng_info structs as
-implemented later by 08e53fbdb85c ("virtio-rng: support multiple
-virtio-rng devices"). The original driver incorrectly used
-init_completion rather than INIT_COMPLETION to reset have_data during
-read.
+Since PISR clear should not be called for the CHV device we do this change.
+After the change, both ISH2HOST interrupt and busy_clear interrupt will be
+considered as interrupt from ISH, busy_clear interrupt will return IRQ_HANDLED
+from IPC_IS_BUSY check.
 
-Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
-Chrome OS virtual machine monitor, and confirming that the virtio-rng
-driver successfully produces random bytes from the host.
-
-Signed-off-by: David Tolnay <dtolnay@gmail.com>
-Tested-by: David Tolnay <dtolnay@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Song Hongyan <hongyan.song@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hw_random/virtio-rng.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/intel-ish-hid/ipc/ipc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index b89df66ea1ae..7abd604e938c 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
- 
- 	if (!vi->busy) {
- 		vi->busy = true;
--		init_completion(&vi->have_data);
-+		reinit_completion(&vi->have_data);
- 		register_buffer(vi, buf, size);
+diff --git a/drivers/hid/intel-ish-hid/ipc/ipc.c b/drivers/hid/intel-ish-hid/ipc/ipc.c
+index bfbca7ec54ce..e00b9dbe220f 100644
+--- a/drivers/hid/intel-ish-hid/ipc/ipc.c
++++ b/drivers/hid/intel-ish-hid/ipc/ipc.c
+@@ -91,7 +91,10 @@ static bool check_generated_interrupt(struct ishtp_device *dev)
+ 			IPC_INT_FROM_ISH_TO_HOST_CHV_AB(pisr_val);
+ 	} else {
+ 		pisr_val = ish_reg_read(dev, IPC_REG_PISR_BXT);
+-		interrupt_generated = IPC_INT_FROM_ISH_TO_HOST_BXT(pisr_val);
++		interrupt_generated = !!pisr_val;
++		/* only busy-clear bit is RW, others are RO */
++		if (pisr_val)
++			ish_reg_write(dev, IPC_REG_PISR_BXT, pisr_val);
  	}
  
+ 	return interrupt_generated;
+@@ -843,11 +846,11 @@ int ish_hw_start(struct ishtp_device *dev)
+ {
+ 	ish_set_host_rdy(dev);
+ 
++	set_host_ready(dev);
++
+ 	/* After that we can enable ISH DMA operation and wakeup ISHFW */
+ 	ish_wakeup(dev);
+ 
+-	set_host_ready(dev);
+-
+ 	/* wait for FW-initiated reset flow */
+ 	if (!dev->recvd_hw_ready)
+ 		wait_event_interruptible_timeout(dev->wait_hw_ready,
 -- 
 2.19.1
 
