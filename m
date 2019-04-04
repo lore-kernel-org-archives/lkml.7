@@ -2,124 +2,133 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44A7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBB5C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00612075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4139F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554369358;
+	bh=7oG/zkV8JLr5pnAutFtVseolLo+zN8u4D3ZJJcnVSOc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rt/plX9Pe9O84lTUYoj7I0haTdQVKnne/c6TxRoGBrEo/kORX0RVcBsrH8KQIn4DN
+	 96IVZOedCnw6OQs/KjgAYanYeods70CvJIyO/sZ7Ka7eHi/rzR60e2TgR8xEPBIDAo
+	 yxHEoyk9MzJyq131bde5iqi71CvPwxiZriGI0+MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387731AbfDDJPw (ORCPT
+        id S1733280AbfDDJP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35652 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387931AbfDDJPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4A327AD0A;
-        Thu,  4 Apr 2019 09:15:43 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     linux-mm@kvack.org
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: [RFC 1/2] mm, slub: introduce static key for slub_debug
-Date:   Thu,  4 Apr 2019 11:15:30 +0200
-Message-Id: <20190404091531.9815-2-vbabka@suse.cz>
+        Thu, 4 Apr 2019 05:15:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387728AbfDDJPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 996D2214AF;
+        Thu,  4 Apr 2019 09:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554369350;
+        bh=7oG/zkV8JLr5pnAutFtVseolLo+zN8u4D3ZJJcnVSOc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WWV7ejDSjh7YJfp2i5espNGACAyRjngRoyu5jpaG/Q4LiYDpFkOyK/osADKKry27g
+         l5BKKsr7M+fLwT5R9q+FGoOd2oj/M3pyDbfkFxFbGWFwNeSvSMZ0C2uV5QtqxVWnMW
+         d4WGYOx8S2gV57s8ppPIjVI0cSnKKjsWO6kC4dpE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 178/246] drm/vkms: Bugfix extra vblank frame
+Date:   Thu,  4 Apr 2019 10:47:58 +0200
+Message-Id: <20190404084625.411787184@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404091531.9815-1-vbabka@suse.cz>
-References: <20190404091531.9815-1-vbabka@suse.cz>
+In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
+References: <20190404084619.236418459@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One advantage of CONFIG_SLUB_DEBUG is that a generic distro kernel can be built
-with it, but it's inactive until enabled on boot or at runtime, without
-rebuilding the kernel. With a static key, we can minimize the overhead of
-checking whether slub_debug is enabled, as we do for e.g. page_owner.
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-For now and for simplicity, the static key stays enabled for the whole uptime
-once activated for any cache, although some per-cache debugging options can be
-also disabled at runtime. This can be improved if there's interest.
+------------------
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+[ Upstream commit def35e7c592616bc09be328de8795e5e624a3cf8 ]
+
+kms_flip tests are breaking on vkms when simulate vblank because vblank
+event sequence count returns one extra frame after arm vblank event to
+make a page flip.
+
+When vblank interrupt happens, userspace processes the vblank event and
+issues the next page flip command. Kernel calls queue_work to call
+commit_planes and arm the new page flip. The next vblank picks up the
+newly armed vblank event and vblank interrupt happens again.
+
+The arm and vblank event are asynchronous, then, on the next vblank, we
+receive x+2 from `get_vblank_timestamp`, instead x+1, although timestamp
+and vblank seqno matches.
+
+Function `get_vblank_timestamp` is reached by 2 ways:
+
+  - from `drm_mode_page_flip_ioctl`: driver is doing one atomic
+    operation to synchronize planes in the same output. There is no
+    vblank simulation, the `drm_crtc_arm_vblank_event` function adds 1
+    on vblank count, and the variable in_vblank_irq is false
+  - from `vkms_vblank_simulate`: since the driver is doing a vblank
+    simulation, the variable in_vblank_irq is true.
+
+Fix this problem subtracting one vblank period from vblank_time when
+`get_vblank_timestamp` is called from trace `drm_mode_page_flip_ioctl`,
+i.e., is not a real vblank interrupt, and getting the timestamp and
+vblank seqno when it is a real vblank interrupt.
+
+The reason for all this is that get_vblank_timestamp always supplies the
+timestamp for the next vblank event. The hrtimer is the vblank
+simulator, and it needs the correct previous value to present the next
+vblank. Since this is how hw timestamp registers work and what the
+vblank core expects.
+
+Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/171e6e1c239cbca0c3df7183ed8acdfeeace9cf4.1548856186.git.shayenneluzmoura@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_crtc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index d30ede89f4a6..398e53e16e2e 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -115,10 +115,21 @@
-  * 			the fast path and disables lockless freelists.
-  */
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index 00d961862d77..1054f535178a 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -75,6 +75,9 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
  
-+#ifdef CONFIG_SLUB_DEBUG
-+#ifdef CONFIG_SLUB_DEBUG_ON
-+DEFINE_STATIC_KEY_TRUE(slub_debug_enabled);
-+#else
-+DEFINE_STATIC_KEY_FALSE(slub_debug_enabled);
-+#endif
-+#endif
+ 	*vblank_time = output->vblank_hrtimer.node.expires;
+ 
++	if (!in_vblank_irq)
++		*vblank_time -= output->period_ns;
 +
- static inline int kmem_cache_debug(struct kmem_cache *s)
- {
- #ifdef CONFIG_SLUB_DEBUG
--	return unlikely(s->flags & SLAB_DEBUG_FLAGS);
-+	if (static_branch_unlikely(&slub_debug_enabled))
-+		return s->flags & SLAB_DEBUG_FLAGS;
-+	else
-+		return 0;
- #else
- 	return 0;
- #endif
-@@ -1287,6 +1298,9 @@ static int __init setup_slub_debug(char *str)
- 	if (*str == ',')
- 		slub_debug_slabs = str + 1;
- out:
-+	if (slub_debug)
-+		static_branch_enable(&slub_debug_enabled);
-+
- 	return 1;
+ 	return true;
  }
  
-@@ -5193,6 +5207,7 @@ static ssize_t red_zone_store(struct kmem_cache *s,
- 	s->flags &= ~SLAB_RED_ZONE;
- 	if (buf[0] == '1') {
- 		s->flags |= SLAB_RED_ZONE;
-+		static_branch_enable(&slub_debug_enabled);
- 	}
- 	calculate_sizes(s, -1);
- 	return length;
-@@ -5213,6 +5228,7 @@ static ssize_t poison_store(struct kmem_cache *s,
- 	s->flags &= ~SLAB_POISON;
- 	if (buf[0] == '1') {
- 		s->flags |= SLAB_POISON;
-+		static_branch_enable(&slub_debug_enabled);
- 	}
- 	calculate_sizes(s, -1);
- 	return length;
-@@ -5234,6 +5250,7 @@ static ssize_t store_user_store(struct kmem_cache *s,
- 	if (buf[0] == '1') {
- 		s->flags &= ~__CMPXCHG_DOUBLE;
- 		s->flags |= SLAB_STORE_USER;
-+		static_branch_enable(&slub_debug_enabled);
- 	}
- 	calculate_sizes(s, -1);
- 	return length;
 -- 
-2.21.0
+2.19.1
+
+
 
