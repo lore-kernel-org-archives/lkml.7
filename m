@@ -2,104 +2,229 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10478C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EBCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36892082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QNvrF6HQ"
+	by mail.kernel.org (Postfix) with ESMTP id 356C9206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfDDOns (ORCPT
+        id S1729309AbfDDOoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:43:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53083 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbfDDOnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:43:47 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a184so3368479wma.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+5EPK1jLpp1DksFX6bDHdB7cQlJWLKrS9nTZJnBqEYc=;
-        b=QNvrF6HQaCAuJc0hO6t/mmraaYs2X3kCub+Sy87sKJCIWIgsJZxOdejgqtEAMmGAfq
-         9BBjUQbsnuvfPMiBrqZiRlSEexTz5bpxz9jhv1FwqNAFuRceZee6a4+GofKw3gh8pHzG
-         jRajnK/Si04AuLxvJGjtizm/oLL/VHqQPmMY7iZ0Ua7jio4NhstOH5GAuUaPpNRgJ8Tz
-         frX9Z64X8aZZ9bONK/oS0lJXXLF4qWBmRUECfvIjrZAz9VeQo15q7a53kS0cWiv9IJbW
-         lRHL5l7NOhNXx1zMbZVifFHruSTKIJfCMy7maLUyIy+rMVUjiF4op2pP/TiSVF7w02/r
-         aVpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+5EPK1jLpp1DksFX6bDHdB7cQlJWLKrS9nTZJnBqEYc=;
-        b=sB9FCHKKf69VNIuWv2RQLfiD2zmYAMlaxhmKLS35Mr40gPDYqZar6lRzvACEJryBTY
-         iPlh3GBbYKekOvxUI5xXHLnQo23Wk0w0PRMSVDYo+hhQk4E55EghdEJDtGIHi3SIckQz
-         II8eD+NFN9nnFIm1jeA+S+Jb4qx6vzE9eFLoA1oAcsA/XGSRFijO1axAzu/anEKHpdVj
-         uGmmLb3CIYmsO0s94gBh1FJAgK56fIxKyHdvVHRGdCvPY09RB+FiEEtsBBFnXTWxTFqq
-         M5oG+FdQoc7TA+qU5DVnQvRULAd5vYEP5H3A9tn+wWzt0DkaMs6HsLcXzfleuB1Nm770
-         RHDA==
-X-Gm-Message-State: APjAAAXAgzdIv7zl0XKt5cxnODRkzzF2e1J91OqD0zOxGtU2XLgecw1v
-        Y+ftnjPo+MIoFS93Zrga+otCbA==
-X-Google-Smtp-Source: APXvYqw0RJ8pMlQrVgU8wXu8DYAVveOzRKB24ciGiiHemHod/LoGVdeX5yWbja/mtWVROS4xOeWn4A==
-X-Received: by 2002:a1c:9d8f:: with SMTP id g137mr4631387wme.26.1554389025446;
-        Thu, 04 Apr 2019 07:43:45 -0700 (PDT)
-Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id g12sm17848575wrw.40.2019.04.04.07.43.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 04 Apr 2019 07:43:44 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     sean@poorly.run, dri-devel@lists.freedesktop.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, maxime.ripard@bootlin.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "Documentation/gpu/meson: Remove link to meson_canvas.c"
-Date:   Thu,  4 Apr 2019 16:43:42 +0200
-Message-Id: <20190404144342.15238-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 4 Apr 2019 10:44:05 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29915 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727339AbfDDOoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 10:44:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 07:44:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,308,1549958400"; 
+   d="scan'208";a="132961251"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga006.jf.intel.com with ESMTP; 04 Apr 2019 07:44:02 -0700
+Date:   Thu, 4 Apr 2019 07:44:02 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org,
+        Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Subject: Re: [PATCH v6 12/20] kvm/vmx: Emulate MSR TEST_CTL
+Message-ID: <20190404144402.GA9911@linux.intel.com>
+References: <1554326526-172295-1-git-send-email-fenghua.yu@intel.com>
+ <1554326526-172295-13-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554326526-172295-13-git-send-email-fenghua.yu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit a3f98bb22cbfaaf67717e156f79e2bfeb42d4cac.
+On Wed, Apr 03, 2019 at 02:21:58PM -0700, Fenghua Yu wrote:
+> From: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> 
+> A control bit (bit 29) in TEST_CTL MSR 0x33 will be introduced in
+> future x86 processors. When bit 29 is set, the processor causes #AC
+> exception for split locked accesses at all CPL.
+> 
+> Please check the latest Intel 64 and IA-32 Architectures Software
+> Developer's Manual for more detailed information on the MSR and
+> the split lock bit.
+> 
+> This patch emulate MSR TEST_CTL with vmx->msr_test_ctl and does the
+> following:
+> 1. As MSR TEST_CTL of guest is emulated, enable the related bits
+> in CORE_CAPABILITY to corretly report this feature to guest.
 
-Patch "Documentation/gpu/meson: Remove link to meson_canvas.c" was
-incorrectly applied on the wrong branch not containing the fixed
-commit 2bf6b5b0e374 ("drm/meson: exclusively use the canvas provider module")
+s/corretly/correctly
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/gpu/meson.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+> 
+> 2. Differentiate MSR TEST_CTL between host and guest.
+> 
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 35 +++++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/vmx/vmx.h |  1 +
+>  arch/x86/kvm/x86.c     | 17 ++++++++++++++++-
+>  3 files changed, 52 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index ab432a930ae8..309ccf593f0d 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1663,6 +1663,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	u32 index;
+>  
+>  	switch (msr_info->index) {
+> +	case MSR_TEST_CTL:
+> +		if (!msr_info->host_initiated &&
+> +		    !(vcpu->arch.core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
+> +			return 1;
+> +		msr_info->data = vmx->msr_test_ctl;
+> +		break;
+>  #ifdef CONFIG_X86_64
+>  	case MSR_FS_BASE:
+>  		msr_info->data = vmcs_readl(GUEST_FS_BASE);
+> @@ -1797,6 +1803,14 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	u32 index;
+>  
+>  	switch (msr_index) {
+> +	case MSR_TEST_CTL:
+> +		if (!(vcpu->arch.core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
+> +			return 1;
+> +
+> +		if (data & ~TEST_CTL_ENABLE_SPLIT_LOCK_DETECT)
+> +			return 1;
+> +		vmx->msr_test_ctl = data;
+> +		break;
+>  	case MSR_EFER:
+>  		ret = kvm_set_msr_common(vcpu, msr_info);
+>  		break;
+> @@ -4077,6 +4091,9 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>  		++vmx->nmsrs;
+>  	}
+>  
+> +	/* disable AC split lock by default */
+> +	vmx->msr_test_ctl = 0;
+> +
+>  	vm_exit_controls_init(vmx, vmx_vmexit_ctrl());
+>  
+>  	/* 22.2.1, 20.8.1 */
+> @@ -4114,6 +4131,7 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  
+>  	vmx->rmode.vm86_active = 0;
+>  	vmx->spec_ctrl = 0;
+> +	vmx->msr_test_ctl = 0;
+>  
+>  	vcpu->arch.microcode_version = 0x100000000ULL;
+>  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
+> @@ -6313,6 +6331,21 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+>  					msrs[i].host, false);
+>  }
+>  
+> +static void atomic_switch_msr_test_ctl(struct vcpu_vmx *vmx)
+> +{
+> +	u64 host_msr_test_ctl;
+> +
+> +	/* if TEST_CTL MSR doesn't exist on the hardware, do nothing */
+> +	if (rdmsrl_safe(MSR_TEST_CTL, &host_msr_test_ctl))
+> +		return;
 
-diff --git a/Documentation/gpu/meson.rst b/Documentation/gpu/meson.rst
-index b9e2f9aa3bd8..479f6f51a13b 100644
---- a/Documentation/gpu/meson.rst
-+++ b/Documentation/gpu/meson.rst
-@@ -42,6 +42,12 @@ Video Encoder
- .. kernel-doc:: drivers/gpu/drm/meson/meson_venc.c
-    :doc: Video Encoder
- 
-+Video Canvas Management
-+=======================
-+
-+.. kernel-doc:: drivers/gpu/drm/meson/meson_canvas.c
-+   :doc: Canvas
-+
- Video Clocks
- ============
- 
--- 
-2.21.0
+This adds a RDMSR on every VM-Enter, and a fault on CPUs that don't
+support MSR_TEST_CTL.  Ideally the kernel would cache MSR_TEST_CTL and
+expose a helper that returns a boolean to indicate the existence of the
+MSRs along with the current value.  Racing with split_lock_detect_store()
+is ok since this code runs with interrupts disabled, i.e. will block
+split_lock_detect_store() until after VM-Exit.
 
+Paolo, can you weigh in with your thoughts?  I'm surprised you acked
+this patch given your earlier comment:
+
+https://patchwork.kernel.org/patch/10413779/#21892723
+
+> +
+> +	if (host_msr_test_ctl == vmx->msr_test_ctl)
+> +		clear_atomic_switch_msr(vmx, MSR_TEST_CTL);
+> +	else
+> +		add_atomic_switch_msr(vmx, MSR_TEST_CTL, vmx->msr_test_ctl,
+> +				      host_msr_test_ctl, false);
+> +}
+> +
+>  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
+>  {
+>  	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
+> @@ -6419,6 +6452,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  
+>  	atomic_switch_perf_msrs(vmx);
+>  
+> +	atomic_switch_msr_test_ctl(vmx);
+> +
+>  	vmx_update_hv_timer(vcpu);
+>  
+>  	/*
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index a1e00d0a2482..6091a8b9de74 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -190,6 +190,7 @@ struct vcpu_vmx {
+>  	u64		      msr_guest_kernel_gs_base;
+>  #endif
+>  
+> +	u64		      msr_test_ctl;
+>  	u64		      spec_ctrl;
+>  
+>  	u32 vm_entry_controls_shadow;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 4459115eb0ec..e93c2f620cdb 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1229,7 +1229,22 @@ EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
+>  
+>  u64 kvm_get_core_capability(void)
+>  {
+> -	return 0;
+> +	u64 data;
+> +
+> +	rdmsrl_safe(MSR_IA32_CORE_CAPABILITY, &data);
+> +
+> +	/* mask non-virtualizable functions */
+> +	data &= CORE_CAP_SPLIT_LOCK_DETECT;
+> +
+> +	/*
+> +	 * There will be a list of FMS values that have split lock detection
+> +	 * but lack the CORE CAPABILITY MSR. In this case, set
+> +	 * CORE_CAP_SPLIT_LOCK_DETECT since we emulate MSR CORE_CAPABILITY.
+> +	 */
+> +	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
+> +		data |= CORE_CAP_SPLIT_LOCK_DETECT;
+> +
+> +	return data;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_get_core_capability);
+>  
+> -- 
+> 2.19.1
+> 
