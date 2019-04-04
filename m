@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349ABC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2A3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02064206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A604F206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371244;
-	bh=i+0FkSWqQHVx7ygu2rpNIW4/bQ5OeJDn+tK9Xb1cy48=;
+	s=default; t=1554371253;
+	bh=LyrtjZ7kj549ppC/o4FxuQaLVKrA8ru4As5gsu2mYW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNFJcORF5URMdaSB/Fi8TwdUot9IesdXO51RXjsoe+LjEHkaugs+eaR4K7lO7zgo7
-	 cDtS+GTEiRxOYMzGmnSyMSpxXzqIeoUjdcKYkTnpFD9eu8F0vr+ldV85kIgbt26T8o
-	 2PR98e0o5kJ/Qmuam6YKqKJ25Jo0nTSK4jNLUjI0=
+	b=hrEd5xk4hxMyI5aMjJp7zzOv8x4TWYAybAC50sx0WnCuppGZkalb2WuBiP7yDVSNG
+	 TvMvGyHe+SXl896Io9Kt0hanoimOqvQ3V4TBXgmHMqoCvXv/iAAYlZv4cK4zewcX4z
+	 niu4IysFxaKnXE2gRgFp+W89n/26ipPtBSOZrHhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730761AbfDDI54 (ORCPT
+        id S1730819AbfDDJrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:57:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:47:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730067AbfDDI5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:52 -0400
+        id S1730738AbfDDI5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:57:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1888A20652;
-        Thu,  4 Apr 2019 08:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BC2E21738;
+        Thu,  4 Apr 2019 08:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368271;
-        bh=i+0FkSWqQHVx7ygu2rpNIW4/bQ5OeJDn+tK9Xb1cy48=;
+        s=default; t=1554368269;
+        bh=LyrtjZ7kj549ppC/o4FxuQaLVKrA8ru4As5gsu2mYW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GjOzzcHLX6gVpopENx5sT3hFCjWlSTtVdbdJ01cvrh7b4gzRQPK2PQhbpmDRxcLWy
-         H2ILt/2m2VRd5AONAAvGBLgaJ0SiV1Kn66fQHXAuTzIRnqhHtOIytJXHn7vr0TrWM5
-         7bdg7UvDbL7PLWNWgUBRJIB4uhcdqoqoD8Rftf98=
+        b=YIMSF0GjYwRqrOyqymuF7nPsQtAEnSE73cNbFP1I3FBgBG3cBj5Rl6B5R67vZcg3M
+         jHWjIPKwtlfxYq59VeFW4RDyro6O2QnKcQzpugaBY4t84vofIzLX1c6GfFWlq1ct1K
+         PCbgWvDwT9WTB6vf3WqDykB8oPp8StyPcKQ9yFPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David E. Box" <david.e.box@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/121] platform/x86: intel_pmc_core: Fix PCH IP sts reading
-Date:   Thu,  4 Apr 2019 10:47:52 +0200
-Message-Id: <20190404084549.789957833@linuxfoundation.org>
+Subject: [PATCH 4.14 083/121] e1000e: fix cyclic resets at link up with active tx
+Date:   Thu,  4 Apr 2019 10:47:51 +0200
+Message-Id: <20190404084549.748617390@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -68,61 +68,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0e68eeea9894feeba2edf7ec63e4551b87f39621 ]
+[ Upstream commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61 ]
 
-A previous commit "platform/x86: intel_pmc_core: Make the driver PCH
-family agnostic <c977b98bbef5898ed3d30b08ea67622e9e82082a>" provided
-better abstraction to this driver but has some fundamental issues.
+I'm seeing series of e1000e resets (sometimes endless) at system boot
+if something generates tx traffic at this time. In my case this is
+netconsole who sends message "e1000e 0000:02:00.0: Some CPU C-states
+have been disabled in order to enable jumbo frames" from e1000e itself.
+As result e1000_watchdog_task sees used tx buffer while carrier is off
+and start this reset cycle again.
 
-e.g. the following condition
+[   17.794359] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   17.794714] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
+[   22.936455] e1000e 0000:02:00.0 eth1: changing MTU from 1500 to 9000
+[   23.033336] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   26.102364] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+[   27.174495] 8021q: 802.1Q VLAN Support v1.8
+[   27.174513] 8021q: adding VLAN 0 to HW filter on device eth1
+[   30.671724] cgroup: cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation
+[   30.898564] netpoll: netconsole: local port 6666
+[   30.898566] netpoll: netconsole: local IPv6 address 2a02:6b8:0:80b:beae:c5ff:fe28:23f8
+[   30.898567] netpoll: netconsole: interface 'eth1'
+[   30.898568] netpoll: netconsole: remote port 6666
+[   30.898568] netpoll: netconsole: remote IPv6 address 2a02:6b8:b000:605c:e61d:2dff:fe03:3790
+[   30.898569] netpoll: netconsole: remote ethernet address b0:a8:6e:f4:ff:c0
+[   30.917747] console [netcon0] enabled
+[   30.917749] netconsole: network logging started
+[   31.453353] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.185730] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.321840] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.465822] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.597423] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.745417] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   34.877356] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.005441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.157376] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.289362] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   35.417441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
+[   37.790342] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
 
-for (index = 0; index < pmcdev->map->ppfear_buckets &&
-	index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
+This patch flushes tx buffers only once when carrier is off
+rather than at each watchdog iteration.
 
-is wrong because for CNL, PPFEAR_MAX_NUM_ENTRIES is hardcoded as 5 which
-is _wrong_ and even though ppfear_buckets is 8, the loop fails to read
-all eight registers needed for CNL PCH i.e. PPFEAR0 and PPFEAR1. This
-patch refactors the pfear show logic to correctly read PCH IP power
-gating status for Cannonlake and beyond.
-
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: c977b98bbef5 ("platform/x86: intel_pmc_core: Make the driver PCH family agnostic")
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 3 ++-
- drivers/platform/x86/intel_pmc_core.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 17e08b42b0a9..aaeb0242a99d 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -222,7 +222,8 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
- 	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
- 		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 5c364321d3c6..3c214a47c1c4 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -5306,8 +5306,13 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 			/* 8000ES2LAN requires a Rx packet buffer work-around
+ 			 * on link down event; reset the controller to flush
+ 			 * the Rx packet buffer.
++			 *
++			 * If the link is lost the controller stops DMA, but
++			 * if there is queued Tx work it cannot be done.  So
++			 * reset the controller to flush the Tx packet buffers.
+ 			 */
+-			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
++			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
++			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
+ 				adapter->flags |= FLAG_RESTART_NOW;
+ 			else
+ 				pm_schedule_suspend(netdev->dev.parent,
+@@ -5330,14 +5335,6 @@ link_up:
+ 	adapter->gotc_old = adapter->stats.gotc;
+ 	spin_unlock(&adapter->stats64_lock);
  
--	for (index = 0; map[index].name; index++)
-+	for (index = 0; map[index].name &&
-+	     index < pmcdev->map->ppfear_buckets * 8; index++)
- 		pmc_core_display_map(s, index, pf_regs[index / 8], map);
- 
- 	return 0;
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 3d225a9cc09f..1f13426eb61a 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -38,7 +38,7 @@
- #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
- #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
- #define MTPMC_MASK				0xffff0000
--#define PPFEAR_MAX_NUM_ENTRIES			5
-+#define PPFEAR_MAX_NUM_ENTRIES			12
- #define SPT_PPFEAR_NUM_ENTRIES			5
- #define SPT_PMC_READ_DISABLE_BIT		0x16
- #define SPT_PMC_MSG_FULL_STS_BIT		0x18
+-	/* If the link is lost the controller stops DMA, but
+-	 * if there is queued Tx work it cannot be done.  So
+-	 * reset the controller to flush the Tx packet buffers.
+-	 */
+-	if (!netif_carrier_ok(netdev) &&
+-	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
+-		adapter->flags |= FLAG_RESTART_NOW;
+-
+ 	/* If reset is necessary, do it outside of interrupt context. */
+ 	if (adapter->flags & FLAG_RESTART_NOW) {
+ 		schedule_work(&adapter->reset_task);
 -- 
 2.19.1
 
