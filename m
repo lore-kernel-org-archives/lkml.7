@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7041C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFD4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95CA20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DDB20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iWAdzXR5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NDCdyVGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfDDSjI (ORCPT
+        id S1729883AbfDDSja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:39:08 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45359 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfDDSjI (ORCPT
+        Thu, 4 Apr 2019 14:39:30 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37640 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbfDDSj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:39:08 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 5so2509994lft.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 11:39:06 -0700 (PDT)
+        Thu, 4 Apr 2019 14:39:29 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v13so3006236ljk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 11:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vHYvpsESJHESOW0Op1N1a8DNWBLxQ+6ptTfC/LRS+RY=;
-        b=iWAdzXR5mbkZQmazMpU1pxC3r86khjU/AKTlt4lbdTBbfpfD+CKXNDozFi16rzi1Qf
-         9ZkxhDVk44DqyFpVJ2DcmSP0jtG0ykqiCEEGYboyZaZR4UaoXlHdaxpAI86FA5LhVvTd
-         tjTR9jM+ExMRAI1YHGFOVlH77zFVpXETLMd2GpLSrLTsqUBy8U9JWhJdFgVgDloPVnA+
-         wKqDqvDXmQEawts/9w03P7TKviK9l+m0sl/8u5TY0ZEa9J76Nv/98F77ssPf0FPwZniP
-         aUblWU4AvKNSAM0cef55IGc58Dro1z3dKQlBUeGLYC9NIvmccOlLF9pIA6Pg7j3h4R0M
-         zFjA==
+        bh=PNrm5ZvqyIO3flw+yxvvQFZ3RopGnN4GuMnZWR2rV0s=;
+        b=NDCdyVGUuwAxZjc8gSl3az2JsLdZZsIyynbtjdeXuTJ/uqAT+dRbNUPw05TPHfUiTH
+         c+V2Tighxy2lY3djJfjzdMPlrOkKkhiQxkKv2p2pzx6cmH0HbKbqqLQm9znPNqf54AXd
+         Btsbd6dkUjclOl0X3HjwEuSHmi8Cs9fWmvkWtuw04dNkVvoYPt2/GPROJa2NuzynCzNX
+         D064hpAID8kk+WgodY/BZ9Y8Gkuobro/AB6sPI5l+FRekx0HXzgH0MPDtUaHr7jGS/Qe
+         MOF/QBwqWGSJxLAm4QJYK69ut0kqwwmm3J8ow5RbO54HaWhaLdoN/ztgT0C3WQSD0uZP
+         I8rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vHYvpsESJHESOW0Op1N1a8DNWBLxQ+6ptTfC/LRS+RY=;
-        b=Pmh5o/BE175BamKlrZYjMP6JdSlcEaKcSqBbBHI/mPo1y/TTXzvZjui81vOSia0Fj+
-         gMS6hftKNreQB5jOJTu7s2apWlVSXwaAsYDTwAZamvZD1axKgiTfX46wV3zEC2kpIxp1
-         34sKdsO9tLbJ2ngt0CdjLJVJzq3uDfIlzbhZ/ZqSiucjIpR2AcLvymuvPiyWjCxEcBn4
-         fhpzOGYO8fIJC3EBHaZxYM2rpQ+4EoICJ2Y3YfjJd6HSkRYYCuTbBgtXLfM5Dn6g/zw+
-         DX2aB0iY7mJOvDnogEinmOSbbvfWExri3eix+Q+vsGR6ezIV9HEi9HC+3yiuPne7HIj9
-         xIew==
-X-Gm-Message-State: APjAAAXeU6nbUP0NkM12PsTlj4EPj58SqjaUlX49aR245hdoWNbayFvE
-        q1SRT1IHE5+o2ETEtfTrDrVfts44HroqUUeDctW8Ng==
-X-Google-Smtp-Source: APXvYqxSORX+ODqnopi0u7RGPJ5zViLanpQIZ6PCVGP8uZXqJnIgDEeJ04zOhfI9kY2Uu9NLwIZsYiFK8JdH0jd5AlQ=
-X-Received: by 2002:ac2:5a0e:: with SMTP id q14mr4028946lfn.47.1554403143130;
- Thu, 04 Apr 2019 11:39:03 -0700 (PDT)
+        bh=PNrm5ZvqyIO3flw+yxvvQFZ3RopGnN4GuMnZWR2rV0s=;
+        b=KoFoVvF6as3RFG7/mZ7zuI6wM3GRBT4M/ohdbRNV3tOFNf3SzclXLy6pafl+EOz/5x
+         jfjbQeFVKhZM5d52HPCJa+FVCk+QqFegAmCpMZq+bsUcD/OjAJDIxo6Vrn65QtWcHF4j
+         vTHTlWu9RiE+ANmyegGTBKUCiKnTAfHUAu5qC6xZbT0FMAngM038OvmH2GrTZWjykSOi
+         XeQ9B5smmDwPHZecffTsUBxZVrFIstXq+s6F8Ix3eXTX/ukiIaRzPfx+nwAg/eJJn6ke
+         UEbd9ndLyX/7yIkyN5nko7zJ/OsNJxAPgfvNuu67/qiW7tFGoIWCZlorSKxAGdgV7TBT
+         OemQ==
+X-Gm-Message-State: APjAAAVbtTZcUZYk3LRdUDKTrjAgzOKs2VWT9u6pb/Ppt5Qp91NKi9k5
+        n7pV/4ie3Nma6A7EAbUz0tkGDv8DS0eZ3bsUS/rhaQ==
+X-Google-Smtp-Source: APXvYqyap3Ba5QJ5kA6tGfEjLpV51fuMvj+4aILeFuWYTS9ka0MBX0GT/ROnwMteEfyj6FkAp9wNv8D60pB6YEvcC6A=
+X-Received: by 2002:a2e:6a14:: with SMTP id f20mr4543410ljc.65.1554403166808;
+ Thu, 04 Apr 2019 11:39:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190403213428.89920-1-evgreen@chromium.org> <20190403213428.89920-3-evgreen@chromium.org>
-In-Reply-To: <20190403213428.89920-3-evgreen@chromium.org>
+References: <20190403213428.89920-1-evgreen@chromium.org> <20190403213428.89920-2-evgreen@chromium.org>
+In-Reply-To: <20190403213428.89920-2-evgreen@chromium.org>
 From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 4 Apr 2019 11:38:26 -0700
-Message-ID: <CACK8Z6Ev-7Yikmdhy89hWuCr-Lj3=ZGaK_eCyrdUzL17dVaCHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] platform/chrome: Add support for v1 of host sleep event
+Date:   Thu, 4 Apr 2019 11:38:50 -0700
+Message-ID: <CACK8Z6FMA+9+t4bs4AxwAHi02fSO8Q-1rmxuiXdeh491X-1erg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] mfd: cros_ec: Add host_sleep_event_v1 command
 To:     Evan Green <evgreen@chromium.org>
 Cc:     Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
@@ -75,13 +75,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Apr 3, 2019 at 2:34 PM Evan Green <evgreen@chromium.org> wrote:
 >
-> Add support in code for the new forms of the host sleep event.
-> Detects the presence of this version of the command at runtime,
-> and use whichever form the EC supports. At this time, always
-> request the default timeout, and only report the failing response
-> via a WARN_ONCE(). Future versions could accept the sleep parameter
-> from outside the driver, and return the response information to
-> usermode or elsewhere.
+> Introduce the command and response structures for the second revision
+> of the host sleep event. These structures are part of a new EC change
+> that enables detection of failure to enter S0ix. The EC waits a
+> kernel-specified timeout (or a default amount of time) for the S0_SLP
+> pin to change, and wakes the system if that change does not occur in
+> time.
 >
 > Signed-off-by: Evan Green <evgreen@chromium.org>
 Reviewed-by: Rajat Jain <rajatja@chromium.org>
@@ -89,116 +88,82 @@ Reviewed-by: Rajat Jain <rajatja@chromium.org>
 >
 > ---
 >
-> Changes in v3:
-> - Consolidated boolean logic for host_sleep_v1 (Guenter)
->
+> Changes in v3: None
 > Changes in v2:
-> - Removed unnecessary version assignment (Guenter)
-> - Changed WARN to WARN_ONCE (Guenter)
-> - Fixed C code to use anonymous unions
-> - insize is only bigger for resume events.
+> - Made unions anonymous
+> - Replaced reserved union members with a comment
 >
->  drivers/mfd/cros_ec.c                   | 39 +++++++++++++++++++++----
->  drivers/platform/chrome/cros_ec_proto.c |  6 ++++
->  include/linux/mfd/cros_ec.h             |  2 ++
->  3 files changed, 42 insertions(+), 5 deletions(-)
+>  include/linux/mfd/cros_ec_commands.h | 57 ++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 >
-> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-> index 6acfe036d522..bd2bcdd4718b 100644
-> --- a/drivers/mfd/cros_ec.c
-> +++ b/drivers/mfd/cros_ec.c
-> @@ -75,20 +75,49 @@ static irqreturn_t ec_irq_thread(int irq, void *data)
+> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+> index fc91082d4c35..1cdb07c0ece1 100644
+> --- a/include/linux/mfd/cros_ec_commands.h
+> +++ b/include/linux/mfd/cros_ec_commands.h
+> @@ -2729,6 +2729,63 @@ struct ec_params_host_sleep_event {
+>         uint8_t sleep_event;
+>  } __packed;
 >
->  static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
->  {
-> +       int ret;
->         struct {
->                 struct cros_ec_command msg;
-> -               struct ec_params_host_sleep_event req;
-> +               union {
-> +                       struct ec_params_host_sleep_event req0;
-> +                       struct ec_params_host_sleep_event_v1 req1;
-> +                       struct ec_response_host_sleep_event_v1 resp1;
-> +               } u;
->         } __packed buf;
->
->         memset(&buf, 0, sizeof(buf));
->
-> -       buf.req.sleep_event = sleep_event;
-> +       if (ec_dev->host_sleep_v1) {
-> +               buf.u.req1.sleep_event = sleep_event;
-> +               buf.u.req1.suspend_params.sleep_timeout_ms =
-> +                               EC_HOST_SLEEP_TIMEOUT_DEFAULT;
+> +/*
+> + * Use a default timeout value (CONFIG_SLEEP_TIMEOUT_MS) for detecting sleep
+> + * transition failures
+> + */
+> +#define EC_HOST_SLEEP_TIMEOUT_DEFAULT 0
 > +
-> +               buf.msg.outsize = sizeof(buf.u.req1);
-> +               if ((sleep_event == HOST_SLEEP_EVENT_S3_RESUME) ||
-> +                   (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
-> +                       buf.msg.insize = sizeof(buf.u.resp1);
+> +/* Disable timeout detection for this sleep transition */
+> +#define EC_HOST_SLEEP_TIMEOUT_INFINITE 0xFFFF
 > +
-> +               buf.msg.version = 1;
+> +struct ec_params_host_sleep_event_v1 {
+> +       /* The type of sleep being entered or exited. */
+> +       uint8_t sleep_event;
 > +
-> +       } else {
-> +               buf.u.req0.sleep_event = sleep_event;
-> +               buf.msg.outsize = sizeof(buf.u.req0);
-> +       }
->
->         buf.msg.command = EC_CMD_HOST_SLEEP_EVENT;
-> -       buf.msg.version = 0;
-> -       buf.msg.outsize = sizeof(buf.req);
->
-> -       return cros_ec_cmd_xfer(ec_dev, &buf.msg);
-> +       ret = cros_ec_cmd_xfer(ec_dev, &buf.msg);
+> +       /* Padding */
+> +       uint8_t reserved;
+> +       union {
+> +               /* Parameters that apply for suspend messages. */
+> +               struct {
+> +                       /*
+> +                        * The timeout in milliseconds between when this message
+> +                        * is received and when the EC will declare sleep
+> +                        * transition failure if the sleep signal is not
+> +                        * asserted.
+> +                        */
+> +                       uint16_t sleep_timeout_ms;
+> +               } suspend_params;
 > +
-> +       /* For now, report failure to transition to S0ix with a warning. */
-> +       if (ret >= 0 && ec_dev->host_sleep_v1 &&
-> +           (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
-> +               WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
-> +                         EC_HOST_RESUME_SLEEP_TIMEOUT,
-> +                         "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
-> +                         buf.u.resp1.resume_response.sleep_transitions &
-> +                         EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
+> +               /* No parameters for non-suspend messages. */
+> +       };
+> +} __packed;
 > +
-> +       return ret;
->  }
->
->  int cros_ec_register(struct cros_ec_device *ec_dev)
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 97a068dff192..52ca564a64e7 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -414,6 +414,12 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
->         else
->                 ec_dev->mkbp_event_supported = 1;
->
-> +       /* Probe if host sleep v1 is supported for S0ix failure detection. */
-> +       ret = cros_ec_get_host_command_version_mask(ec_dev,
-> +                                                   EC_CMD_HOST_SLEEP_EVENT,
-> +                                                   &ver_mask);
-> +       ec_dev->host_sleep_v1 = (ret >= 0 && (ver_mask & EC_VER_MASK(1)));
+> +/* A timeout occurred when this bit is set */
+> +#define EC_HOST_RESUME_SLEEP_TIMEOUT 0x80000000
 > +
->         /*
->          * Get host event wake mask, assume all events are wake events
->          * if unavailable.
-> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-> index 8f2a8918bfa3..b6442201f77f 100644
-> --- a/include/linux/mfd/cros_ec.h
-> +++ b/include/linux/mfd/cros_ec.h
-> @@ -120,6 +120,7 @@ struct cros_ec_command {
->   * @pkt_xfer: Send packet to EC and get response.
->   * @lock: One transaction at a time.
->   * @mkbp_event_supported: True if this EC supports the MKBP event protocol.
-> + * @host_sleep_v1: True if this EC supports the sleep v1 command.
->   * @event_notifier: Interrupt event notifier for transport devices.
->   * @event_data: Raw payload transferred with the MKBP event.
->   * @event_size: Size in bytes of the event data.
-> @@ -153,6 +154,7 @@ struct cros_ec_device {
->                         struct cros_ec_command *msg);
->         struct mutex lock;
->         bool mkbp_event_supported;
-> +       bool host_sleep_v1;
->         struct blocking_notifier_head event_notifier;
+> +/*
+> + * The mask defining which bits correspond to the number of sleep transitions,
+> + * as well as the maximum number of suspend line transitions that will be
+> + * reported back to the host.
+> + */
+> +#define EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK 0x7FFFFFFF
+> +
+> +struct ec_response_host_sleep_event_v1 {
+> +       union {
+> +               /* Response fields that apply for resume messages. */
+> +               struct {
+> +                       /*
+> +                        * The number of sleep power signal transitions that
+> +                        * occurred since the suspend message. The high bit
+> +                        * indicates a timeout occurred.
+> +                        */
+> +                       uint32_t sleep_transitions;
+> +               } resume_response;
+> +
+> +               /* No response fields for non-resume messages. */
+> +       };
+> +} __packed;
+> +
+>  /*****************************************************************************/
+>  /* Smart battery pass-through */
 >
->         struct ec_response_get_next_event_v1 event_data;
 > --
 > 2.20.1
 >
