@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4FAC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90538C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530BA2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB062054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369373;
-	bh=4y+3rfoCBxaqoST4IYSWbTx3D7pmQMcumL5vyvQPBJ8=;
+	s=default; t=1554369377;
+	bh=hJ0SDZ/zHaHg7aB+g8TtLcNvxoAehqDbukiquxV+h24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q7+lXWxZpKc5I8r7R5zoIMAU4s3EuyWuhI8HNF2yMsh4B3ktcjjEQ2o7T9lwQ0GDE
-	 TeuFg4zig6BJf+lBtRZTITSAP/RnhEne+eMVinlf3m+J3RaRCqIohf89FzvwgX9sQ3
-	 WFSTHQ3bjnC7XMjFHe202dufDzq8SAg48F5Z/evM=
+	b=REIV5ScXEvjeAPc/ZRLYjXxa2Hua1xaGsreQJHRjcwydt/OrXWadFA/jBySITG567
+	 Q2h0Bd4qXPQCWjlGAX3C6Z9Yzu0SN/Zf7/tP7ot/wQBuLWD0Kw6tqdImMOOHvfY34q
+	 7QJatYRnN72ba70R2ORVkc+vvwvT+vj4mIy+NGL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388014AbfDDJQM (ORCPT
+        id S2388024AbfDDJQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57328 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388002AbfDDJQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:09 -0400
+        id S2388010AbfDDJQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED2E520693;
-        Thu,  4 Apr 2019 09:16:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CA520693;
+        Thu,  4 Apr 2019 09:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369368;
-        bh=4y+3rfoCBxaqoST4IYSWbTx3D7pmQMcumL5vyvQPBJ8=;
+        s=default; t=1554369371;
+        bh=hJ0SDZ/zHaHg7aB+g8TtLcNvxoAehqDbukiquxV+h24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wiPEc7Jz0J1qW3nNlJ7+qN2QuOoF8/7MZ+qoN9H2eUFG8YHynghCLjXMA6ClwkV/L
-         dUKMeJasOadJpU1w4ggS2ZDtFLi0JRSCACoFqko6UqS0RL7B3+8Ag0tpfFoW25am1a
-         UIAqNXqhg+DZz1rb2Xf/HwUd86UVEig51TCoBptE=
+        b=mL1d6FeOnopQIoTgdDNhNv+3iu072zGthQD5lxz6DfRHV0UJ3sLgKtzH3NmQI+h9R
+         ilNlTaNiMuRmDbXroeQDpglEPehVMbKdsFFj1Eucbs6Dc2zCfTKND6uSJOn5L5Mn2v
+         t4tvO3AOzjvPfPl8rU3TEr4vOTWtVTf7NYpIx1QI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 197/246] regulator: mcp16502: Include linux/gpio/consumer.h to fix build error
-Date:   Thu,  4 Apr 2019 10:48:17 +0200
-Message-Id: <20190404084626.084801344@linuxfoundation.org>
+Subject: [PATCH 5.0 198/246] usb: dwc3: gadget: Fix OTG events when gadget driver isnt loaded
+Date:   Thu,  4 Apr 2019 10:48:18 +0200
+Message-Id: <20190404084626.120136698@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,44 +67,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f3c6a1a194317f3a31ee2b2067bb0a41de64bc8b ]
+[ Upstream commit 169e3b68cadb5775daca009ced4faf01ffd97dcf ]
 
-Fix below build error:
-drivers/regulator/mcp16502.c: In function ‘mcp16502_gpio_set_mode’:
-drivers/regulator/mcp16502.c:135:3: error: implicit declaration of function ‘gpiod_set_value’; did you mean ‘gpio_set_value’? [-Werror=implicit-function-declaration]
-   gpiod_set_value(mcp->lpm, 0);
-   ^~~~~~~~~~~~~~~
-   gpio_set_value
-drivers/regulator/mcp16502.c: In function ‘mcp16502_probe’:
-drivers/regulator/mcp16502.c:486:13: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_gpio_free’? [-Werror=implicit-function-declaration]
-  mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
-             ^~~~~~~~~~~~~~
-             devm_gpio_free
-drivers/regulator/mcp16502.c:486:40: error: ‘GPIOD_OUT_LOW’ undeclared (first use in this function); did you mean ‘GPIOF_INIT_LOW’?
-  mcp->lpm = devm_gpiod_get(dev, "lpm", GPIOD_OUT_LOW);
-                                        ^~~~~~~~~~~~~
-                                        GPIOF_INIT_LOW
+On v3.10a in dual-role mode, if port is in device mode
+and gadget driver isn't loaded, the OTG event interrupts don't
+come through.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+It seems that if the core is configured to be OTG2.0 only,
+then we can't leave the DCFG.DEVSPD at Super-speed (default)
+if we expect OTG to work properly. It must be set to High-speed.
+
+Fix this issue by configuring DCFG.DEVSPD to the supported
+maximum speed at gadget init. Device tree still needs to provide
+correct supported maximum speed for this to work.
+
+This issue wasn't present on v2.40a but is seen on v3.10a.
+It doesn't cause any side effects on v2.40a.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/mcp16502.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/dwc3/gadget.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/mcp16502.c b/drivers/regulator/mcp16502.c
-index 3479ae009b0b..0fc4963bd5b0 100644
---- a/drivers/regulator/mcp16502.c
-+++ b/drivers/regulator/mcp16502.c
-@@ -17,6 +17,7 @@
- #include <linux/regmap.h>
- #include <linux/regulator/driver.h>
- #include <linux/suspend.h>
-+#include <linux/gpio/consumer.h>
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 6c9b76bcc2e1..8d1dbe36db92 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3339,6 +3339,8 @@ int dwc3_gadget_init(struct dwc3 *dwc)
+ 		goto err4;
+ 	}
  
- #define VDD_LOW_SEL 0x0D
- #define VDD_HIGH_SEL 0x3F
++	dwc3_gadget_set_speed(&dwc->gadget, dwc->maximum_speed);
++
+ 	return 0;
+ 
+ err4:
 -- 
 2.19.1
 
