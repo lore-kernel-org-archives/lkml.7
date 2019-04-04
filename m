@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDE2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74F5C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 485D5205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FA1205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370637;
-	bh=fperMca8X9y+RuhVlWfPNVHQgXhrUvnYR+6dxBKry8s=;
+	s=default; t=1554370642;
+	bh=3M1ZxUBmjChO5+M9NWeyB3lIUPeaLvnu9F9QipwwDpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4h+LPGFflFdKLlXhECCdG024qfvTV9k845Bn9GdZnrBJlEbn4Pmt+0uM32efk4YQ
-	 BcG9yGUsGIMwZMAVxY0FNUYKiTHHTeInzlxL+LqFyZ+NQsPhK3l8Bg5K9rauTqXjKR
-	 LqpaLfphFhYF3hRiMH4a4f3w5yMD1rzaCo8IC1mk=
+	b=1AhLSDUq06Y+24uJa4l/x/4h4tmyCFBf7GwFo44xwHfwSFstrOj1miVOKjOKjzwQk
+	 4dFtxX40O7gwoLmfVg7LypKMNvioh1r1qDmd0MmXBeVjR3cdPwiauBdhHT8b6WdYtd
+	 IxI/cFedtPE4rM1hz0ZAC+P4CAIWM4nhzIoMDNYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732086AbfDDJFH (ORCPT
+        id S1732360AbfDDJhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfDDJFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:04 -0400
+        id S1732084AbfDDJFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D8D32177E;
-        Thu,  4 Apr 2019 09:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0E482183E;
+        Thu,  4 Apr 2019 09:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368703;
-        bh=fperMca8X9y+RuhVlWfPNVHQgXhrUvnYR+6dxBKry8s=;
+        s=default; t=1554368706;
+        bh=3M1ZxUBmjChO5+M9NWeyB3lIUPeaLvnu9F9QipwwDpQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y21JHzCvX+UmvT1vQprRbYXrx7ulj6l+YFa2s3hPNB/Sxp/iNs7kWZ6v3AQK2/w0w
-         aPfyJiZ9vUEHMw+A4G2aUmYhod0tHGVMylAEjTSS2Y70lLenqwGRY/XQt4MdiEPUXz
-         zvbTVBvj+KiE418pk1/rLiP7bysAzbNRhQs+5yrQ=
+        b=MCno4OZhSj6FcBqfiqxvzWhOtOjDEHxUyaUnEHelSY+GeFccfLJ3JW3fX5BlPiE68
+         kmBB7XXuoikiEo/uA4/1YeNSQQap9ilE/hwzHCmskvWuUw3htlcQBcR4L33hYgAaPZ
+         OrXPjdvQ/xSLftAEo/rsaGLnXRTvEXZCOtiz4u94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 138/187] soc: qcom: gsbi: Fix error handling in gsbi_probe()
-Date:   Thu,  4 Apr 2019 10:47:55 +0200
-Message-Id: <20190404084609.695941782@linuxfoundation.org>
+        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
+        Jakub Kicinski <kubakici@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, Michael <ZeroBeat@gmx.de>
+Subject: [PATCH 4.19 139/187] mt7601u: bump supported EEPROM version
+Date:   Thu,  4 Apr 2019 10:47:56 +0200
+Message-Id: <20190404084609.738941817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,46 +67,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8cd09a3dd3e176c62da67efcd477a44a8d87185e ]
+[ Upstream commit 3bd1505fed71d834f45e87b32ff07157fdda47e0 ]
 
-If of_platform_populate() fails in gsbi_probe(),
-gsbi->hclk is left undisabled.
+As reported by Michael eeprom 0d is supported and work with the driver.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Dump of /sys/kernel/debug/ieee80211/phy1/mt7601u/eeprom_param
+with 0d EEPORM looks like this:
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+RSSI offset: 0 0
+Reference temp: f9
+LNA gain: 8
+Reg channels: 1-14
+Per rate power:
+	 raw:05 bw20:05 bw40:05
+	 raw:05 bw20:05 bw40:05
+	 raw:03 bw20:03 bw40:03
+	 raw:03 bw20:03 bw40:03
+	 raw:04 bw20:04 bw40:04
+	 raw:00 bw20:00 bw40:00
+	 raw:00 bw20:00 bw40:00
+	 raw:00 bw20:00 bw40:00
+	 raw:02 bw20:02 bw40:02
+	 raw:00 bw20:00 bw40:00
+Per channel power:
+	 tx_power  ch1:09 ch2:09
+	 tx_power  ch3:0a ch4:0a
+	 tx_power  ch5:0a ch6:0a
+	 tx_power  ch7:0b ch8:0b
+	 tx_power  ch9:0b ch10:0b
+	 tx_power  ch11:0b ch12:0b
+	 tx_power  ch13:0b ch14:0b
+
+Reported-and-tested-by: Michael <ZeroBeat@gmx.de>
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/qcom_gsbi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt7601u/eeprom.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
-index 09c669e70d63..038abc377fdb 100644
---- a/drivers/soc/qcom/qcom_gsbi.c
-+++ b/drivers/soc/qcom/qcom_gsbi.c
-@@ -138,7 +138,7 @@ static int gsbi_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *base;
- 	struct gsbi_info *gsbi;
--	int i;
-+	int i, ret;
- 	u32 mask, gsbi_num;
- 	const struct crci_config *config = NULL;
+diff --git a/drivers/net/wireless/mediatek/mt7601u/eeprom.h b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
+index 662d12703b69..57b503ae63f1 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/eeprom.h
++++ b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
+@@ -17,7 +17,7 @@
  
-@@ -221,7 +221,10 @@ static int gsbi_probe(struct platform_device *pdev)
+ struct mt7601u_dev;
  
- 	platform_set_drvdata(pdev, gsbi);
+-#define MT7601U_EE_MAX_VER			0x0c
++#define MT7601U_EE_MAX_VER			0x0d
+ #define MT7601U_EEPROM_SIZE			256
  
--	return of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	if (ret)
-+		clk_disable_unprepare(gsbi->hclk);
-+	return ret;
- }
- 
- static int gsbi_remove(struct platform_device *pdev)
+ #define MT7601U_DEFAULT_TX_POWER		6
 -- 
 2.19.1
 
