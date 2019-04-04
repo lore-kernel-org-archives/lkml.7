@@ -2,366 +2,285 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE57EC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1833DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69780206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFpOz+9I"
+	by mail.kernel.org (Postfix) with ESMTP id DD42A206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 06:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfDDGzF (ORCPT
+        id S1727310AbfDDGze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 02:55:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42886 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDDGzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 02:55:04 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cv12so668533plb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 23:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Vx0O0iEpOiOKhCclt6sNW+D4t+d7kp/aGeMgIwxZxc0=;
-        b=zFpOz+9Irr7tiVhuBeeTHeKjjtdiCtjF4t1yamLGMj5KmcENd8yOgYwdEBUnZpSIFH
-         M28PJwbVxk+ft/CUq2QMgRJomMhPMOZ4aH1JfE5EANTYJlPu6TeRL/LqngFN+OVfMGL1
-         +Cka+/E7MUiZcurRUbIl9qWy72/ihMnzYJ+z7uFRfSSEiZ3g17+FEwQHcy/LKxT9dOnT
-         MrHzyiVx3Lf2m5kqX8knYIk3Y8b+Z8Ybs+7/CsotrRhb7dfAu1565DXKot8LaqbEGJbM
-         hgzQ2ezYaRRAvdjLEgZaS2tFWl+y3phONYKLZgTmWgUwJ5pOPL9OLm2/WQAH4qPpjoui
-         x3hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Vx0O0iEpOiOKhCclt6sNW+D4t+d7kp/aGeMgIwxZxc0=;
-        b=EXLexYVXnkIe3inNtiOnaf8Kq+Oa4OjJY+LMKzAripe9o9w3vFPacJOk2JjmVyyWCx
-         75cL/qlYcDl0oxJm4sqJsZDZ2swCFnbRbcDtFYODhxrPMXDv8HJCS5X8fQ+PpTIsRZqf
-         36gpuedDqEcT0JRGuRlbBIw9HDbwYfbJkIOLMiLjBNgvGT15ZB6jCkLe4yKDLI8f703P
-         F81ZQZ4yhxYq80REjkQRTT79Xw+fJXNBWkYk+Uo72xdiQa7J6r8Rzt2fzpcWA/PbB0nO
-         oxmpG6d1Z/AMUhocMEkhLO1efieobgYviUBd3TSdHfehk+4MDzvoAokM7+oSm2i2KadP
-         SgQg==
-X-Gm-Message-State: APjAAAXV5WJqtxCr0vT48w1Ok7F6XvFhE0aUm/bPCtJWcBCquKZN12Sl
-        tEeapXcdI7p+2f5GUU2SFmhgiA==
-X-Google-Smtp-Source: APXvYqxCSPY1sgR0Kq1ehi9dm4MAV09W+rU4HhE+3s2ywK7ymmAC1ZD+rK24CRHVdri8s0e9oNH+ig==
-X-Received: by 2002:a17:902:7481:: with SMTP id h1mr4666272pll.206.1554360903157;
-        Wed, 03 Apr 2019 23:55:03 -0700 (PDT)
-Received: from dell ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id r11sm39031809pga.87.2019.04.03.23.54.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Apr 2019 23:55:01 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 07:54:52 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 2/8] mfd: bd70528: Support ROHM bd70528 PMIC - core
-Message-ID: <20190404065452.GD6830@dell>
-References: <cover.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <39efebe0396dd42de30d37c6f3c1ef2926c90210.1553515333.git.matti.vaittinen@fi.rohmeurope.com>
- <20190403073152.GM4187@dell>
- <20190403084732.GA3493@localhost.localdomain>
- <20190403093015.GJ11301@dell>
- <20190403101003.GC3493@localhost.localdomain>
- <20190403112559.GP11301@dell>
- <85b20828bb4fb51e6df1d5d9d1c1f667db3a7c48.camel@fi.rohmeurope.com>
- <20190404025234.GB6830@dell>
- <6775a75d1ee3ab96123d84b077881beedc358d12.camel@fi.rohmeurope.com>
+        Thu, 4 Apr 2019 02:55:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41950 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbfDDGze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 02:55:34 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 39ED030AA7B8;
+        Thu,  4 Apr 2019 06:55:33 +0000 (UTC)
+Received: from [10.36.117.163] (ovpn-117-163.ams2.redhat.com [10.36.117.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ADFEA1001E6B;
+        Thu,  4 Apr 2019 06:55:26 +0000 (UTC)
+Subject: Re: [PATCH v6 09/22] vfio: VFIO_IOMMU_BIND/UNBIND_MSI
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        jacob.jun.pan@linux.intel.com, yi.l.liu@linux.intel.com,
+        jean-philippe.brucker@arm.com, will.deacon@arm.com,
+        robin.murphy@arm.com, kevin.tian@intel.com, ashok.raj@intel.com,
+        marc.zyngier@arm.com, christoffer.dall@arm.com,
+        peter.maydell@linaro.org, vincent.stehle@arm.com
+References: <20190317172232.1068-1-eric.auger@redhat.com>
+ <20190317172232.1068-10-eric.auger@redhat.com>
+ <20190321170159.38358f38@x1.home>
+ <16931d58-9c88-8cfb-a392-408ea7afdf16@redhat.com>
+ <20190322160947.3f8dacdb@x1.home>
+ <b47128de-88d0-1971-1fbc-86e43439c7ee@redhat.com>
+ <20190403113800.51503693@x1.home>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <4b27b707-4917-2c3e-a13c-3b978e850d09@redhat.com>
+Date:   Thu, 4 Apr 2019 08:55:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <20190403113800.51503693@x1.home>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6775a75d1ee3ab96123d84b077881beedc358d12.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 04 Apr 2019 06:55:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Apr 2019, Vaittinen, Matti wrote:
+Hi Marc, Robin, Alex,
 
-> On Thu, 2019-04-04 at 03:52 +0100, Lee Jones wrote:
-> > On Wed, 03 Apr 2019, Vaittinen, Matti wrote:
-> > 
-> > > On Wed, 2019-04-03 at 12:25 +0100, Lee Jones wrote:
-> > > > On Wed, 03 Apr 2019, Matti Vaittinen wrote:
-> > > > 
-> > > > > On Wed, Apr 03, 2019 at 10:30:15AM +0100, Lee Jones wrote:
-> > > > > > On Wed, 03 Apr 2019, Matti Vaittinen wrote:
-> > > > > > 
-> > > > > > > Hello Lee,
-> > > > > > > 
-> > > > > > > Thanks for taking a look on this again =) I agree with most
-> > > > > > > of
-> > > > > > > the
-> > > > > > > comments and correct them at next version.
-> > > > > > > 
-> > > > > > > On Wed, Apr 03, 2019 at 08:31:52AM +0100, Lee Jones wrote:
-> > > > > > > > On Mon, 25 Mar 2019, Matti Vaittinen wrote:
-> > > > > > > > 
-> > > > > > > > > ROHM BD70528MWV is an ultra-low quiescent current
-> > > > > > > > > general
-> > > > > > > > > purpose single-chip power management IC for battery-
-> > > > > > > > > powered
-> > > > > > > > > portable devices.
-> > > > > > > > > 
-> > > > > > > > > Add MFD core which enables chip access for following
-> > > > > > > > > subdevices:
-> > > > > > > > > 	- regulators/LED drivers
-> > > > > > > > > 	- battery-charger
-> > > > > > > > > 	- gpios
-> > > > > > > > > 	- 32.768kHz clk
-> > > > > > > > > 	- RTC
-> > > > > > > > > 	- watchdog
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: Matti Vaittinen <
-> > > > > > > > > matti.vaittinen@fi.rohmeurope.com>
-> > > > > > > > > + * Mapping of main IRQ register bits to sub irq
-> > > > > > > > > register
-> > > > > > > > > offsets so
-> > > > > > > > 
-> > > > > > > > "sub-IRQ"
-> > > > > > > > 
-> > > > > > > > > + * that we can access corect sub IRQ registers based
-> > > > > > > > > on
-> > > > > > > > > bits that
-> > > > > > > > 
-> > > > > > > > "sub IRQ" is also fine, but please standardise.
-> > > > > > > > 
-> > > > > > > > I do prefer "sub-IRQ" though.
-> > > > > > > 
-> > > > > > > I'll go with "sub-IRQ" then
-> > > > > > > 
-> > > > > > > > > +
-> > > > > > > > > +#define WD_CTRL_MAGIC1 0x55
-> > > > > > > > > +#define WD_CTRL_MAGIC2 0xAA
-> > > > > > > > > +/**
-> > > > > > > > > + * bd70528_wdt_set - arm or disarm watchdog timer
-> > > > > > > > > + *
-> > > > > > > > > + * @data:	device data for the PMIC instance we
-> > > > > > > > > want to
-> > > > > > > > > operate on
-> > > > > > > > > + * @enable:	new state of WDT. zero to disable, non
-> > > > > > > > > zero to enable
-> > > > > > > > > + * @old_state:	previous state of WDT will be filled
-> > > > > > > > > here
-> > > > > > > > > + *
-> > > > > > > > > + * Arm or disarm WDT on BD70528 PMIC. Expected to be
-> > > > > > > > > called only by
-> > > > > > > > > + * BD70528 RTC and BD70528 WDT drivers. The
-> > > > > > > > > rtc_timer_lock
-> > > > > > > > > must be taken
-> > > > > > > > > + * by calling bd70528_wdt_lock before calling
-> > > > > > > > > bd70528_wdt_set.
-> > > > > > > > > + */
-> > > > > > > > > +int bd70528_wdt_set(struct rohm_regmap_dev *data, int
-> > > > > > > > > enable, int *old_state)
-> > > > > > > > 
-> > > > > > > > Why doesn't this reside in the watchdog driver?
-> > > > > > > 
-> > > > > > > If my memory serves me right we shortly discussed this
-> > > > > > > already
-> > > > > > > during v8
-> > > > > > > review ;) Cant blame you though as I have seen some of the
-> > > > > > > mail
-> > > > > > > traffic
-> > > > > > > going through your inbox :D
-> > > > > > > 
-> > > > > > > The motivation to have the functions exported from MFD is
-> > > > > > > to
-> > > > > > > not create
-> > > > > > > sirect dependency between RTC and WDT. There may be cases
-> > > > > > > where
-> > > > > > > we want
-> > > > > > > to leave either RTC or WDT out of compilation. MFD is
-> > > > > > > always
-> > > > > > > needed so
-> > > > > > > the dependency from MFD to RTC/WDT does not harm.
-> > > > > > > 
-> > > > > > > (Here's some discussion necromancy if you are interested in
-> > > > > > > re-
-> > > > > > > reading
-> > > > > > > how we did end up with this implementation:
-> > > > > > > https://lore.kernel.org/lkml/20190212091723.GZ20638@dell/)
-> > > > > > > 
-> > > > > > > I hope you are still Ok with having the WDT control
-> > > > > > > functions
-> > > > > > > in MFD.
-> > > > > > 
-> > > > > > OOI, why does the RTC need to control the WDT?
-> > > > > 
-> > > > > I thought I had a comment about this somewhere in code... O_o
-> > > > > Must
-> > > > > have
-> > > > > been in some development branch I had :/
-> > > > > 
-> > > > > Anyways, setting the RTC counter may cause watchdog to trigger.
-> > > > > It
-> > > > > is not
-> > > > > further explained why but I would guess watchdog uses RTC
-> > > > > counter
-> > > > > to check
-> > > > > if it should've been pinged already. So RTC needs to disable
-> > > > > watch
-> > > > > dog for
-> > > > > the duration of hwclock setting and enable it again after the
-> > > > > new
-> > > > > time is
-> > > > > set. I can add a comment about this to MFD driver if it helps
-> > > > > :)
-> > > > 
-> > > > How does the user select between using the RTC and the WDT?
-> > > > 
-> > > > Or are the generally both enabled at the same time?
-> > > > 
-> > > 
-> > > Both RTC and WDT can be enabled at the same time. But they are not
-> > > required to be used. When WDT is enabled, it uses current RTC time
-> > > as
-> > > 'base' (and RTC time is running no matter if we have the RTC driver
-> > > here or not) - and time-out gets scheduled to specified amount of
-> > > time
-> > > into future. (Same setting timeout into the future happens when WDT
-> > > is
-> > > pinged).
-> > > 
-> > > When we set RTC, we disable WDT (if it was enabled), set clock and
-> > > re-
-> > > enable WDT. This causes the previously used time-out value to be
-> > > set to
-> > > WDT again. This works Ok because BD70528 does not support 'short
-> > > ping
-> > > detection'. Only side-effect will be one 'prolonged' WDT feeding
-> > > period
-> > > when RTC is set. (absolute time when RTC was set minus absolute
-> > > time
-> > > when previous WD ping or enable was done) longer than reqular
-> > > period.
-> > > 
-> > > So user should not need to care about this 'dependency'. Basically
-> > > the
-> > > only possible problem I see is that someone could accidentally hang
-> > > the
-> > > system with something that keeps setting the RTC time - this would
-> > > then
-> > > prevent watch dog from doing the reset. This, I believe, is a
-> > > corner
-> > > case which I don't consider now - and if this is considered to be
-> > > an
-> > > issue then such a system may disable the RTC driver and do RTC
-> > > setting
-> > > in a what-ever-manner sees practical.
-> > > 
-> > > I'm not sure if I answered to question you asked though =)
-> > 
-> > I think you answered it just fine.
-> > 
-> > So my suggestion is to have the RTC depend on the WRT via Kconfig,
-> > and
-> > place this WRT code in the WRT driver where it belongs.  These
-> > functions can be exported from the WRT driver and the RTC can call
-> > into them in the same way it calls into the MFD driver currently.
+On 4/3/19 7:38 PM, Alex Williamson wrote:
+> On Wed, 3 Apr 2019 16:30:15 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
 > 
-> Yes, we could. But then we need to always compile the watch dog driver
-> when we want to use RTC. It is not a huge driver though so it probably
-> won't matter. So, I don't like this but I can do it so if you insist :]
+>> Hi Alex,
+>>
+>> On 3/22/19 11:09 PM, Alex Williamson wrote:
+>>> On Fri, 22 Mar 2019 10:30:02 +0100
+>>> Auger Eric <eric.auger@redhat.com> wrote:
+>>>   
+>>>> Hi Alex,
+>>>> On 3/22/19 12:01 AM, Alex Williamson wrote:  
+>>>>> On Sun, 17 Mar 2019 18:22:19 +0100
+>>>>> Eric Auger <eric.auger@redhat.com> wrote:
+>>>>>     
+>>>>>> This patch adds the VFIO_IOMMU_BIND/UNBIND_MSI ioctl which aim
+>>>>>> to pass/withdraw the guest MSI binding to/from the host.
+>>>>>>
+>>>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>>>>
+>>>>>> ---
+>>>>>> v3 -> v4:
+>>>>>> - add UNBIND
+>>>>>> - unwind on BIND error
+>>>>>>
+>>>>>> v2 -> v3:
+>>>>>> - adapt to new proto of bind_guest_msi
+>>>>>> - directly use vfio_iommu_for_each_dev
+>>>>>>
+>>>>>> v1 -> v2:
+>>>>>> - s/vfio_iommu_type1_guest_msi_binding/vfio_iommu_type1_bind_guest_msi
+>>>>>> ---
+>>>>>>  drivers/vfio/vfio_iommu_type1.c | 58 +++++++++++++++++++++++++++++++++
+>>>>>>  include/uapi/linux/vfio.h       | 29 +++++++++++++++++
+>>>>>>  2 files changed, 87 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+>>>>>> index 12a40b9db6aa..66513679081b 100644
+>>>>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>>>>> @@ -1710,6 +1710,25 @@ static int vfio_cache_inv_fn(struct device *dev, void *data)
+>>>>>>  	return iommu_cache_invalidate(d, dev, &ustruct->info);
+>>>>>>  }
+>>>>>>  
+>>>>>> +static int vfio_bind_msi_fn(struct device *dev, void *data)
+>>>>>> +{
+>>>>>> +	struct vfio_iommu_type1_bind_msi *ustruct =
+>>>>>> +		(struct vfio_iommu_type1_bind_msi *)data;
+>>>>>> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);
+>>>>>> +
+>>>>>> +	return iommu_bind_guest_msi(d, dev, ustruct->iova,
+>>>>>> +				    ustruct->gpa, ustruct->size);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static int vfio_unbind_msi_fn(struct device *dev, void *data)
+>>>>>> +{
+>>>>>> +	dma_addr_t *iova = (dma_addr_t *)data;
+>>>>>> +	struct iommu_domain *d = iommu_get_domain_for_dev(dev);    
+>>>>>
+>>>>> Same as previous, we can encapsulate domain in our own struct to avoid
+>>>>> a lookup.
+>>>>>     
+>>>>>> +
+>>>>>> +	iommu_unbind_guest_msi(d, dev, *iova);    
+>>>>>
+>>>>> Is it strange that iommu-core is exposing these interfaces at a device
+>>>>> level if every one of them requires us to walk all the devices?  Thanks,    
+>>>>
+>>>> Hum this per device API was devised in response of Robin's comments on
+>>>>
+>>>> [RFC v2 12/20] dma-iommu: Implement NESTED_MSI cookie.
+>>>>
+>>>> "
+>>>> But that then seems to reveal a somewhat bigger problem - if the callers
+>>>> are simply registering IPAs, and relying on the ITS driver to grab an
+>>>> entry and fill in a PA later, then how does either one know *which* PA
+>>>> is supposed to belong to a given IPA in the case where you have multiple
+>>>> devices with different ITS targets assigned to the same guest? (and if
+>>>> it's possible to assume a guest will use per-device stage 1 mappings and
+>>>> present it with a single vITS backed by multiple pITSes, I think things
+>>>> start breaking even harder.)
+>>>> "
+>>>>
+>>>> However looking back into the problem I wonder if there was an issue
+>>>> with the iommu_domain based API.
+>>>>
+>>>> If my understanding is correct, when assigned devices are protected by a
+>>>> vIOMMU then they necessarily end up in separate host iommu domains even
+>>>> if they belong to the same iommu_domain on the guest. And there can only
+>>>> be a single device in this iommu_domain.  
+>>>
+>>> Don't forget that a container represents the IOMMU context in a vfio
+>>> environment, groups are associated with containers and a group may
+>>> contain one or more devices.  When a vIOMMU comes into play, we still
+>>> only have an IOMMU context per container.  If we have multiple devices
+>>> in a group, we run into problems with vIOMMU.  We can resolve this by
+>>> requiring that the user ignore all but one device in the group,
+>>> or making sure that the devices in the group have the same IOMMU
+>>> context.  The latter we could do in QEMU if PCIe-to-PCI bridges there
+>>> masked the per-device address space as it does on real hardware (ie.
+>>> there is no requester ID on conventional PCI, all transactions appear to
+>>> the IOMMU with the bridge requester ID).  So I raise this question
+>>> because vfio's minimum domain granularity is a group.
+>>>   
+>>>> If this is confirmed, there is a non ambiguous association between 1
+>>>> physical iommu_domain, 1 device, 1 S1 mapping and 1 physical MSI
+>>>> controller.
+>>>>
+>>>> I added the device handle handle to disambiguate those associations. The
+>>>> gIOVA ->gDB mapping is associated with a device handle. Then when the
+>>>> host needs a stage 1 mapping for this device, to build the nested
+>>>> mapping towards the physical DB it can easily grab the gIOVA->gDB stage
+>>>> 1 mapping registered for this device.
+>>>>
+>>>> The correctness looks more obvious to me, at least.  
+>>>
+>>> Except all devices within all groups within the same container
+>>> necessarily share the same IOMMU context, so from that perspective, it
+>>> appears to impose non-trivial redundancy on the caller.  Thanks,  
+>>
+>> Taking into consideration the case where we could have several devices
+>> attached to the same host iommu group, each of them possibly using
+>> different host MSI doorbells, I think I am in trouble.
+>>
+>> Let's assume that using the pcie-to-pci bridge trick on guest side they
+>> end up in the same container and in the same guest iommu group.
+>>
+>> At the moment there is a single MSI controller on guest, so the same
+>> gIOVA/gDB S1 mapping is going to be created by the guest iommu dommain
+>> and both devices are programmed with gIOVA. If dev0 and dev1 are
+>> attached to different host MSI controllers, I would need to build the 2
+>> nested bindings:
+>> dev0: MSI nested binding: gIOVA -> gDB -> hDB0
+>> dev1: MSI nested binding: gIOVA -> gDB -> hDB1
+>> (on guest there is a single MSI controller at the moment)
+>>
+>> which is not possible as the devices belong to the same host iommu group
+>> and share the same mapping.
+>>
+>> The solution would be to instantiate 2 MSI controllers on guest side, in
+>> which case we would end up with
+>> dev0: gIOVA0 -> gDB0 -> hDB0
+>> dev1: gIOVA1 -> gDB1 -> hDB1
+>>
+>> Isn't it somehow what we do with the IOMMU RID topology. We need to take
+>> into account the host topology (2 devices belonging to the same group)
+>> to force the same on guest by introducing a PCIe-to-PCI bridge. Here we
+>> would need to say, those assigned devices are attached to different MSI
+>> domains on host, so we need the same on guest.
+>>
+>> Anyway, the current container based IOCTL would fail to implement that
+>> because I would register gIOVA0 -> gDB0 and gIOVA1 -> gDB1 for each
+>> device within the container which would definitively fail to build the
+>> correct association. So I think I would need anyway a device based IOTCL
+>> that would aim to tell: this assigned device uses this S1 MSI binding.
+>> All the notification mechanism we have in qemu is based on container, so
+>> this would obliged to have device based notification mechanism.
+>>
+>> So I wonder whether it wouldn't be sensible to restrict this use case
+>> and say we support nested mode only if we have a single assigned device
+>> within the container?
+>>
+>> Thoughts?
 > 
-> > Avoiding a dependency on the WRT would seem strange, because there is
-> > one.
+> We've essentially done that with vIOMMU up to this point already, it's
+> not been possible to assign multiple devices from the same group to a
+> VM with intel-iommu, amd-iommu, or smmu due to the requirement of
+> separate address spaces per device.  It's only when we introduce
+> address space aliasing with bridges that we can even consider this
+> possibility, and it's a configuration which smmu doesn't properly
+> support even on bare metal.  I hope we can consider that to be simply a
+> gap in the implementation that will get fixed and not an architectural
+> problem.
 > 
-> The dependency is artificial. It's caused by the current driver design.
-> If watchdog is not used, then RTC has no reason to touch the watchdog
-> block. RTC works just fine without watchdog. So from HW point there is
-> no dependency.
+> As we discussed offline though, I wonder if we're attempting to support
+> more than necessary with your scenarios above.  If devices within the
+> same group can be verified to share a host MSI controller, do we still
+> have an issue mapping them to a single guest MSI controller?  When we
+> talked we were headed down a path that if a group is necessarily
+> associated to a single IOMMU, perhaps that necessarily means that a
+> group is also associated to a single MSI controller.  I've since
+> thought of a configuration where a group could span physical IOMMU
+> devices, NVLink.  As essentially a secondary bus interface for a
+> device, NVLink can cause devices with arbitrary PCI hierarchy
+> connections to be non-isolated, and ideally our grouping would
+> understand to account for that.  However, if it could be determined
+> that a group associates to a single MSI controller, do we still have an
+> issue with multiple devices within the group?
 
-Great.
+Marc, Robin,
 
-> Actually, now that I thik of it the right way to do this would have
-> been the function pointer in parent data as was done in original patch
-> set. HW-colleagues tend to re-use HW blocks, and we like to re-use our
-> drivers. If the next PMIC from ROHM uses same RTC block but does not
-> provide watchdog - then it is cleanest solution to fall back to
-> function pointer and leave it to NULL when there is no WDT or when WDT
-> is unused. Another option is to export dummy function - which is not so
-> nice.
+Do you think this is a reasonable assumption to consider devices within
+the same host iommu group share the same MSI doorbell?
+> 
+> My issue with the per device interface for what is fundamentally an
+> IOVA mapping is that vfio does not support per device mappings.  We
+> support mappings at the container level, where the minimum set of
+> devices we can attach to a container is a group.  Therefore to create
+> an interface that purports to support device level mappings is not
+> accurate.  Maybe MSI controllers will restrict our configuration but
+> I'd rather not design the interface around the wrong level of mapping
+> granularity.  Thanks,
 
-I think the converse is true.
+Alex,
 
-Pointers to functions outside of a subsystem API context are generally
-horrible.  It's much nicer to call a function which can be easily
-stubbed out in a header file based on a Kconfig option.  It's how most
-kernel APIs work.
+In case of nested, the vfio container is used to setup the stage2 only
+whereas the stage1 is owned by the guest. Here the mapping we pass to
+the host is a stage1 mapping; this information is used to build the
+correct S2 mapping. Then the mapping remains the same for the whole
+container. If dev1 decides to use gIOVA0 it will reach hDB0. Anyway the
+granularity of the mapping cannot change.
 
-Have a look for yourself how many there are:
+So this rather tells this assigned dev uses this given giova for
+reaching a guest MSI doorbell.
 
- git grep -A5 inline -- include/linux/
+Thanks
 
-> Additional benefit from function pointer would have been that the
-> function pointer can be only used by drivers which have acces to it.
-> This exported function is globally visible. The WDT disable/enable is
-> very specific procedure and it actually would be nicer design to not
-> have it visible globally. It is not intended to be used by anything
-> else besides the WDT and RTC here.
-
-Why would anything else try to use it?
-
-There are 1000's of exported functions in the kernel.  If it's
-properly namespaced a consumer would have to purposely call it, which
-if they really wanted to, they could do anyway.  I don't really see
-your point.
-
-> But I can't say there will be PMIC with same RTC and no WDT coming from
-> ROHM. Also, I am not terribly excited about the option of changing this
-> back to function-pointer as I already removed the pointer from parent
-> data and this changed parent data is already adapted to all sub drivers
-> - so this is all just babbling. Maybe it is just my huge ego shouting
-> there - 'I was right, I must have the final say'.
-
-No, a call-back function would be a back-step.
-
-Ego or no ego, you're wrong. =:-D
-
-> As a side note, I already did submit v12 with other styling fixes but
-> which left the WDT function in MFD. If you still see the WDT functions
-> should be exported from WDT - then please ignore the v12. I'll do v13
-> at the afternoon (my time, which is only a bit after noon your time I
-> guess) which will export these functions from WDT. (Well, I had to try
-> once more :D)
-
-Please keep the WDT code in the WDT driver.  Create a little stub for
-the cases where the WDT driver is not enabled - job done.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Eric
+> 
+> Alex
+> 
