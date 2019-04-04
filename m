@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A90C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05027C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A752133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B338A20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 02:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="kHdvF9pN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="muwx5J5m"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="J5GTuTLS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ebgaOEje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfDDCK3 (ORCPT
+        id S1727160AbfDDCKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 22:10:29 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38637 "EHLO
+        Wed, 3 Apr 2019 22:10:34 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:52281 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726524AbfDDCJr (ORCPT
+        by vger.kernel.org with ESMTP id S1726534AbfDDCJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 3 Apr 2019 22:09:47 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id A7A9D228BA;
-        Wed,  3 Apr 2019 22:01:45 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id 5244B21D72;
+        Wed,  3 Apr 2019 22:01:42 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:45 -0400
+  by compute3.internal (MEProxy); Wed, 03 Apr 2019 22:01:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=from
         :to:cc:subject:date:message-id:in-reply-to:references:reply-to
-        :mime-version:content-transfer-encoding; s=fm3; bh=bogrl8ykXE3AE
-        9N3lxqf7+kaVmqboUoXMwOaBKi4kwI=; b=kHdvF9pNWcw8D8b8/t/kv8mKy+ArM
-        dg62fTqmQKSItiP6KA8Vwk35fnN/5YjdeJl3B6KUd7eTC/44vtAzvWx6+U+A6P4X
-        Piy2T6tLbpFFwvQ2a+hjWkv7JxOSb3ASu/brFlmlG25yt/ggco4UjZ0r0ZyOI67S
-        ElbA4KNk3VnvoJiER8XoetoJ1c8TnScHn8u4vfIovZovy+2iI437NaUZRPfhB5eR
-        uyHiLxigKLp4sKsJEHX9L2eZYqI0HSZ4xleKLKbRdexU3Yjb8nlHav1EKRYvV1H8
-        el5AC2pwrLUpjoi2D0HLOyaMF/whe2L9GoIA9+WHf8Jlz6WMIEXvp2e1w==
+        :mime-version:content-transfer-encoding; s=fm3; bh=6c2RdtcLhR3zr
+        /QIZTKdBARjyyIAyxC57tVZiXAXuu4=; b=J5GTuTLSH8I1aHJyQfQrBoaGcvamV
+        Iy8yv5kFP32GM5ir8TPfMhhCPPk3V+sNQppl24SNqLUbOygmeyWSCzyQjonRsOnl
+        tcSWm+2A7L458T+/mandh3ct2dyEGuYUpIs62fpBvTKjtENPvFlIDu6f2HJDu1UK
+        4KH8zOxES+AX896LvQ4WVZfyxejccMtQawEM2rt7hN5IaH7VWtDv5+05bQv7tFIr
+        IQnA+iGpPB7BxJ982qBwgvksaGAYmjUPS8HRqb3/P3hhHWkL3iIp/FXyRx97ZkLQ
+        friDO8GWmqJ/1M5tITTcmJSiauq4zI9FzbN2iAS3FZcPBeJB++vs+buHw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:reply-to:subject
         :to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=bogrl8ykXE3AE9N3lxqf7+kaVmqboUoXMwOaBKi4kwI=; b=muwx5J5m
-        gMAQYmtcbAweMtV01l1pPYxfGsXWSAAJLKYJxEBbotutU98jcz+0Tg/k8yGEgEYA
-        8LClxo10euoBJ8Y0ZNiglPT9zpe0Ey4c3ztZJ91rFOzgjR88n6xGNFMjyNuKgmlq
-        qNSkfJPXkAZtYav7jjUYgyhgBx9SU4WeK+VY+bB+DhCzq574mFK3E29FJJ+HB3Dd
-        /a73q69lHQO66YxPnncSr7j/XIAvs602pTfDQNiQK35gcPc18+qIhkLsZkdYLm9S
-        vYLVnDBAqbX4eM6pQ5ZFHxvCUImu4cajiwkt5yFije7ipZXkBXsYB4xvnXKkcHA4
-        IrTV2gn+rhDmxg==
-X-ME-Sender: <xms:iWWlXD-YuOXTjzAJ1ccCNATl3kvH47tsdIovXsrPgw3wtouIJTtb1w>
+        fm2; bh=6c2RdtcLhR3zr/QIZTKdBARjyyIAyxC57tVZiXAXuu4=; b=ebgaOEje
+        XfLeeFoFbbWGsCIilHerM8zpmpJy9VuAqUO8SPANbdWIprBpImwjQmdZrH9GhpvA
+        8y22W/Wbc/CMgPkQ7+k0faTquoLFuevD9AjwlQ63EfXd+Y1wrTLE0ZfKH0VUhShI
+        dJ5kANFw0ck1R3xaJJZeupCViLpQn2+MH8mAN6VLz/6fQocCYM0g/qo1lRfhFAjO
+        F0z1lvMra0Cnmab/qAoltLHx75BjisDU2yXcVz4N9+Vz44Et5eOoxHY0Cfo7dgLe
+        /SRmB7VMc6yETKQshlBMU15sjPcoO2PI0zneCamMhkQzLJ4Yn7PoWOobQJEEFgTh
+        QlriM+MpCcwWfA==
+X-ME-Sender: <xms:hmWlXM9FYH_7Ot7DjZaYgh-NQjV7GXv91JpomDjv6lFU8NVUSGKK2A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrtdeggdehudculddtuddrgedutddrtddtmd
     cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
     hnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgjfhhrggfgsedtkeertdertddt
     necuhfhrohhmpegkihcujggrnhcuoeiiihdrhigrnhesshgvnhhtrdgtohhmqeenucfkph
     epvdduiedrvddvkedrudduvddrvddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpeiiihdr
-    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepudej
-X-ME-Proxy: <xmx:iWWlXCARb0FZvIxhcRN1bQQAff_ydbcPvtQHs_yo9HjWSlnaSpjU2g>
-    <xmx:iWWlXPtnAEyQ2x2UQyBFCqD3jwjNbRf6ZzqiiJFMm6_hHf9svqx0xw>
-    <xmx:iWWlXMbdKLicKAyVSHbL6l33Tchuh8AhAmV1_NJfs9q5CUTVt6oTUQ>
-    <xmx:iWWlXFWNznFnfHdMmp5vwO9J09zND2pNp8DD5ujIc1JzW8SCVoJs6w>
+    higrnhesshgvnhhtrdgtohhmnecuvehluhhsthgvrhfuihiivgepudeg
+X-ME-Proxy: <xmx:hmWlXCr7wu0uJB3DkKEAaD9fevhaMZQ-K40RlWpNK9bwuWu2SJFj0A>
+    <xmx:hmWlXEXu1Vfr5Zqvnw9L5wf4lxn4Nvcyn0vZlOCUh3dOQcF4VEpqjA>
+    <xmx:hmWlXBDMh2B-J5XnjjjZHXFfAPegU3l_3Yq-d_9l8Jd14dc92p8fzw>
+    <xmx:hmWlXDQD-RvQadjRdtSkwgg6SMy5WewPJa-MpyAxgbg1B8_lkPF1Ig>
 Received: from nvrsysarch5.nvidia.com (thunderhill.nvidia.com [216.228.112.22])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B84C610319;
-        Wed,  3 Apr 2019 22:01:43 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5D7D01030F;
+        Wed,  3 Apr 2019 22:01:40 -0400 (EDT)
 From:   Zi Yan <zi.yan@sent.com>
 To:     Dave Hansen <dave.hansen@linux.intel.com>,
         Yang Shi <yang.shi@linux.alibaba.com>,
@@ -82,9 +82,9 @@ Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
         Nitin Gupta <nigupta@nvidia.com>,
         Javier Cabezas <jcabezas@nvidia.com>,
         David Nellans <dnellans@nvidia.com>, Zi Yan <ziy@nvidia.com>
-Subject: [RFC PATCH 18/25] memcg: Add per node memory usage&max stats in memcg.
-Date:   Wed,  3 Apr 2019 19:00:39 -0700
-Message-Id: <20190404020046.32741-19-zi.yan@sent.com>
+Subject: [RFC PATCH 16/25] exchange page: Add THP exchange support.
+Date:   Wed,  3 Apr 2019 19:00:37 -0700
+Message-Id: <20190404020046.32741-17-zi.yan@sent.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404020046.32741-1-zi.yan@sent.com>
 References: <20190404020046.32741-1-zi.yan@sent.com>
@@ -98,217 +98,252 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zi Yan <ziy@nvidia.com>
 
-It prepares for the following patches to enable memcg-based NUMA
-node page migration. We are going to limit memory usage in each node
-on a per-memcg basis.
+Enable exchange THPs in the process. It also need to take care of
+exchanging PTE-mapped THPs.
 
 Signed-off-by: Zi Yan <ziy@nvidia.com>
 ---
- include/linux/cgroup-defs.h |  1 +
- include/linux/memcontrol.h  | 67 +++++++++++++++++++++++++++++++++++++
- mm/memcontrol.c             | 80 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 148 insertions(+)
+ include/linux/exchange.h |  2 ++
+ mm/exchange.c            | 73 +++++++++++++++++++++++++++++++++++++-----------
+ mm/migrate.c             |  2 +-
+ 3 files changed, 60 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 1c70803..7e87f5e 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -531,6 +531,7 @@ struct cftype {
- 	struct cgroup_subsys *ss;	/* NULL for cgroup core files */
- 	struct list_head node;		/* anchored at ss->cfts */
- 	struct kernfs_ops *kf_ops;
-+	int numa_node_id;
+diff --git a/include/linux/exchange.h b/include/linux/exchange.h
+index 20d2184..8785d08 100644
+--- a/include/linux/exchange.h
++++ b/include/linux/exchange.h
+@@ -14,6 +14,8 @@ struct exchange_page_info {
+ 	int from_page_was_mapped;
+ 	int to_page_was_mapped;
  
- 	int (*open)(struct kernfs_open_file *of);
- 	void (*release)(struct kernfs_open_file *of);
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 1f3d880..3e40321 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -130,6 +130,7 @@ struct mem_cgroup_per_node {
- 	atomic_long_t		lruvec_stat[NR_VM_NODE_STAT_ITEMS];
++	pgoff_t from_index, to_index;
++
+ 	struct list_head list;
+ };
  
- 	unsigned long		lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS];
-+	unsigned long		max_nr_base_pages;
+diff --git a/mm/exchange.c b/mm/exchange.c
+index 555a72c..45c7013 100644
+--- a/mm/exchange.c
++++ b/mm/exchange.c
+@@ -51,7 +51,8 @@ struct page_flags {
+ 	unsigned int page_swapcache:1;
+ 	unsigned int page_writeback:1;
+ 	unsigned int page_private:1;
+-	unsigned int __pad:3;
++	unsigned int page_doublemap:1;
++	unsigned int __pad:2;
+ };
  
- 	struct mem_cgroup_reclaim_iter	iter[DEF_PRIORITY + 1];
  
-@@ -797,6 +798,51 @@ static inline void memcg_memory_event_mm(struct mm_struct *mm,
- void mem_cgroup_split_huge_fixup(struct page *head);
- #endif
- 
-+static inline unsigned long lruvec_size_memcg_node(enum lru_list lru,
-+	struct mem_cgroup *memcg, int nid)
-+{
-+	if (nid == MAX_NUMNODES)
-+		return 0;
-+
-+	VM_BUG_ON(lru < 0 || lru >= NR_LRU_LISTS);
-+	return mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(lru));
-+}
-+
-+static inline unsigned long active_inactive_size_memcg_node(struct mem_cgroup *memcg, int nid, bool active)
-+{
-+	unsigned long val = 0;
-+	enum lru_list lru;
-+
-+	for_each_evictable_lru(lru) {
-+		if ((active  && is_active_lru(lru)) ||
-+			(!active && !is_active_lru(lru)))
-+			val += mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(lru));
-+	}
-+
-+	return val;
-+}
-+
-+static inline unsigned long memcg_size_node(struct mem_cgroup *memcg, int nid)
-+{
-+	unsigned long val = 0;
-+	int i;
-+
-+	if (nid == MAX_NUMNODES)
-+		return val;
-+
-+	for (i = 0; i < NR_LRU_LISTS; i++)
-+		val += mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(i));
-+
-+	return val;
-+}
-+
-+static inline unsigned long memcg_max_size_node(struct mem_cgroup *memcg, int nid)
-+{
-+	if (nid == MAX_NUMNODES)
-+		return 0;
-+	return memcg->nodeinfo[nid]->max_nr_base_pages;
-+}
-+
- #else /* CONFIG_MEMCG */
- 
- #define MEM_CGROUP_ID_SHIFT	0
-@@ -1123,6 +1169,27 @@ static inline
- void count_memcg_event_mm(struct mm_struct *mm, enum vm_event_item idx)
+@@ -127,20 +128,23 @@ static void exchange_huge_page(struct page *dst, struct page *src)
+ static void exchange_page_flags(struct page *to_page, struct page *from_page)
  {
+ 	int from_cpupid, to_cpupid;
+-	struct page_flags from_page_flags, to_page_flags;
++	struct page_flags from_page_flags = {0}, to_page_flags = {0};
+ 	struct mem_cgroup *to_memcg = page_memcg(to_page),
+ 					  *from_memcg = page_memcg(from_page);
+ 
+ 	from_cpupid = page_cpupid_xchg_last(from_page, -1);
+ 
+-	from_page_flags.page_error = TestClearPageError(from_page);
++	from_page_flags.page_error = PageError(from_page);
++	if (from_page_flags.page_error)
++		ClearPageError(from_page);
+ 	from_page_flags.page_referenced = TestClearPageReferenced(from_page);
+ 	from_page_flags.page_uptodate = PageUptodate(from_page);
+ 	ClearPageUptodate(from_page);
+ 	from_page_flags.page_active = TestClearPageActive(from_page);
+ 	from_page_flags.page_unevictable = TestClearPageUnevictable(from_page);
+ 	from_page_flags.page_checked = PageChecked(from_page);
+-	ClearPageChecked(from_page);
++	if (from_page_flags.page_checked)
++		ClearPageChecked(from_page);
+ 	from_page_flags.page_mappedtodisk = PageMappedToDisk(from_page);
+ 	ClearPageMappedToDisk(from_page);
+ 	from_page_flags.page_dirty = PageDirty(from_page);
+@@ -150,18 +154,22 @@ static void exchange_page_flags(struct page *to_page, struct page *from_page)
+ 	clear_page_idle(from_page);
+ 	from_page_flags.page_swapcache = PageSwapCache(from_page);
+ 	from_page_flags.page_writeback = test_clear_page_writeback(from_page);
++	from_page_flags.page_doublemap = PageDoubleMap(from_page);
+ 
+ 
+ 	to_cpupid = page_cpupid_xchg_last(to_page, -1);
+ 
+-	to_page_flags.page_error = TestClearPageError(to_page);
++	to_page_flags.page_error = PageError(to_page);
++	if (to_page_flags.page_error)
++		ClearPageError(to_page);
+ 	to_page_flags.page_referenced = TestClearPageReferenced(to_page);
+ 	to_page_flags.page_uptodate = PageUptodate(to_page);
+ 	ClearPageUptodate(to_page);
+ 	to_page_flags.page_active = TestClearPageActive(to_page);
+ 	to_page_flags.page_unevictable = TestClearPageUnevictable(to_page);
+ 	to_page_flags.page_checked = PageChecked(to_page);
+-	ClearPageChecked(to_page);
++	if (to_page_flags.page_checked)
++		ClearPageChecked(to_page);
+ 	to_page_flags.page_mappedtodisk = PageMappedToDisk(to_page);
+ 	ClearPageMappedToDisk(to_page);
+ 	to_page_flags.page_dirty = PageDirty(to_page);
+@@ -171,6 +179,7 @@ static void exchange_page_flags(struct page *to_page, struct page *from_page)
+ 	clear_page_idle(to_page);
+ 	to_page_flags.page_swapcache = PageSwapCache(to_page);
+ 	to_page_flags.page_writeback = test_clear_page_writeback(to_page);
++	to_page_flags.page_doublemap = PageDoubleMap(to_page);
+ 
+ 	/* set to_page */
+ 	if (from_page_flags.page_error)
+@@ -197,6 +206,8 @@ static void exchange_page_flags(struct page *to_page, struct page *from_page)
+ 		set_page_young(to_page);
+ 	if (from_page_flags.page_is_idle)
+ 		set_page_idle(to_page);
++	if (from_page_flags.page_doublemap)
++		SetPageDoubleMap(to_page);
+ 
+ 	/* set from_page */
+ 	if (to_page_flags.page_error)
+@@ -223,6 +234,8 @@ static void exchange_page_flags(struct page *to_page, struct page *from_page)
+ 		set_page_young(from_page);
+ 	if (to_page_flags.page_is_idle)
+ 		set_page_idle(from_page);
++	if (to_page_flags.page_doublemap)
++		SetPageDoubleMap(from_page);
+ 
+ 	/*
+ 	 * Copy NUMA information to the new page, to prevent over-eager
+@@ -599,7 +612,6 @@ static int unmap_and_exchange(struct page *from_page, struct page *to_page,
+ 
+ 	from_index = from_page->index;
+ 	to_index = to_page->index;
+-
+ 	/*
+ 	 * Corner case handling:
+ 	 * 1. When a new swap-cache page is read into, it is added to the LRU
+@@ -673,8 +685,6 @@ static int unmap_and_exchange(struct page *from_page, struct page *to_page,
+ 			swap(from_page->index, from_index);
+ 	}
+ 
+-
+-
+ out_unlock_both:
+ 	if (to_anon_vma)
+ 		put_anon_vma(to_anon_vma);
+@@ -689,6 +699,23 @@ static int unmap_and_exchange(struct page *from_page, struct page *to_page,
+ 	return rc;
  }
-+
-+static inline unsigned long lruvec_size_memcg_node(enum lru_list lru,
-+	struct mem_cgroup *memcg, int nid)
-+{
-+	return 0;
-+}
-+
-+static inline unsigned long active_inactive_size_memcg_node(struct mem_cgroup *memcg, int nid, bool active)
-+{
-+	return 0;
-+}
-+
-+static inline unsigned long memcg_size_node(struct mem_cgroup *memcg, int nid)
-+{
-+	return 0;
-+}
-+static inline unsigned long memcg_max_size_node(struct mem_cgroup *memcg, int nid)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_MEMCG */
  
- /* idx can be of type enum memcg_stat_item or node_stat_item */
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 532e0e2..478d216 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4394,6 +4394,7 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- 	pn->usage_in_excess = 0;
- 	pn->on_tree = false;
- 	pn->memcg = memcg;
-+	pn->max_nr_base_pages = PAGE_COUNTER_MAX;
++static bool can_be_exchanged(struct page *from, struct page *to)
++{
++	if (PageCompound(from) != PageCompound(to))
++		return false;
++
++	if (PageHuge(from) != PageHuge(to))
++		return false;
++
++	if (PageHuge(from) || PageHuge(to))
++		return false;
++
++	if (compound_order(from) != compound_order(to))
++		return false;
++
++	return true;
++}
++
+ /*
+  * Exchange pages in the exchange_list
+  *
+@@ -745,7 +772,8 @@ int exchange_pages(struct list_head *exchange_list,
+ 		}
  
- 	memcg->nodeinfo[node] = pn;
- 	return 0;
-@@ -6700,4 +6701,83 @@ static int __init mem_cgroup_swap_init(void)
- }
- subsys_initcall(mem_cgroup_swap_init);
+ 		/* TODO: compound page not supported */
+-		if (PageCompound(from_page) || page_mapping(from_page)) {
++		if (!can_be_exchanged(from_page, to_page) ||
++		    page_mapping(from_page)) {
+ 			++failed;
+ 			goto putback;
+ 		}
+@@ -784,6 +812,8 @@ static int unmap_pair_pages_concur(struct exchange_page_info *one_pair,
+ 	struct page *from_page = one_pair->from_page;
+ 	struct page *to_page = one_pair->to_page;
  
-+static int memory_per_node_stat_show(struct seq_file *m, void *v)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(seq_css(m));
-+	struct cftype *cur_file = seq_cft(m);
-+	int nid = cur_file->numa_node_id;
-+	unsigned long val = 0;
-+	int i;
++	one_pair->from_index = from_page->index;
++	one_pair->to_index = to_page->index;
+ 	/* from_page lock down  */
+ 	if (!trylock_page(from_page)) {
+ 		if (!force || ((mode & MIGRATE_MODE_MASK) == MIGRATE_ASYNC))
+@@ -903,7 +933,6 @@ static int exchange_page_mapping_concur(struct list_head *unmapped_list_ptr,
+ 					   struct list_head *exchange_list_ptr,
+ 						enum migrate_mode mode)
+ {
+-	int rc = -EBUSY;
+ 	int nr_failed = 0;
+ 	struct address_space *to_page_mapping, *from_page_mapping;
+ 	struct exchange_page_info *one_pair, *one_pair2;
+@@ -911,6 +940,7 @@ static int exchange_page_mapping_concur(struct list_head *unmapped_list_ptr,
+ 	list_for_each_entry_safe(one_pair, one_pair2, unmapped_list_ptr, list) {
+ 		struct page *from_page = one_pair->from_page;
+ 		struct page *to_page = one_pair->to_page;
++		int rc = -EBUSY;
+ 
+ 		VM_BUG_ON_PAGE(!PageLocked(from_page), from_page);
+ 		VM_BUG_ON_PAGE(!PageLocked(to_page), to_page);
+@@ -926,8 +956,9 @@ static int exchange_page_mapping_concur(struct list_head *unmapped_list_ptr,
+ 		BUG_ON(PageWriteback(to_page));
+ 
+ 		/* actual page mapping exchange */
+-		rc = exchange_page_move_mapping(to_page_mapping, from_page_mapping,
+-							to_page, from_page, NULL, NULL, mode, 0, 0);
++		if (!page_mapped(from_page) && !page_mapped(to_page))
++			rc = exchange_page_move_mapping(to_page_mapping, from_page_mapping,
++								to_page, from_page, NULL, NULL, mode, 0, 0);
+ 
+ 		if (rc) {
+ 			if (one_pair->from_page_was_mapped)
+@@ -954,7 +985,7 @@ static int exchange_page_mapping_concur(struct list_head *unmapped_list_ptr,
+ 			one_pair->from_page = NULL;
+ 			one_pair->to_page = NULL;
+ 
+-			list_move(&one_pair->list, exchange_list_ptr);
++			list_del(&one_pair->list);
+ 			++nr_failed;
+ 		}
+ 	}
+@@ -1026,8 +1057,18 @@ static int remove_migration_ptes_concur(struct list_head *unmapped_list_ptr)
+ 	struct exchange_page_info *iterator;
+ 
+ 	list_for_each_entry(iterator, unmapped_list_ptr, list) {
+-		remove_migration_ptes(iterator->from_page, iterator->to_page, false);
+-		remove_migration_ptes(iterator->to_page, iterator->from_page, false);
++		struct page *from_page = iterator->from_page;
++		struct page *to_page = iterator->to_page;
 +
-+	for (i = 0; i < NR_LRU_LISTS; i++)
-+		val += mem_cgroup_node_nr_lru_pages(memcg, nid, BIT(i));
++		swap(from_page->index, iterator->from_index);
++		if (iterator->from_page_was_mapped)
++			remove_migration_ptes(iterator->from_page, iterator->to_page, false);
++		swap(from_page->index, iterator->from_index);
 +
-+	seq_printf(m, "%llu\n", (u64)val * PAGE_SIZE);
-+
-+	return 0;
-+}
-+
-+static int memory_per_node_max_show(struct seq_file *m, void *v)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(seq_css(m));
-+	struct cftype *cur_file = seq_cft(m);
-+	int nid = cur_file->numa_node_id;
-+	unsigned long max = READ_ONCE(memcg->nodeinfo[nid]->max_nr_base_pages);
-+
-+	if (max == PAGE_COUNTER_MAX)
-+		seq_puts(m, "max\n");
-+	else
-+		seq_printf(m, "%llu\n", (u64)max * PAGE_SIZE);
-+
-+	return 0;
-+}
-+
-+static ssize_t memory_per_node_max_write(struct kernfs_open_file *of,
-+				char *buf, size_t nbytes, loff_t off)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+	struct cftype *cur_file = of_cft(of);
-+	int nid = cur_file->numa_node_id;
-+	unsigned long max;
-+	int err;
-+
-+	buf = strstrip(buf);
-+	err = page_counter_memparse(buf, "max", &max);
-+	if (err)
-+		return err;
-+
-+	xchg(&memcg->nodeinfo[nid]->max_nr_base_pages, max);
-+
-+	return nbytes;
-+}
-+
-+static struct cftype memcg_per_node_stats_files[N_MEMORY];
-+static struct cftype memcg_per_node_max_files[N_MEMORY];
-+
-+static int __init mem_cgroup_per_node_init(void)
-+{
-+	int nid;
-+
-+	for_each_node_state(nid, N_MEMORY) {
-+		snprintf(memcg_per_node_stats_files[nid].name, MAX_CFTYPE_NAME,
-+				"size_at_node:%d", nid);
-+		memcg_per_node_stats_files[nid].flags = CFTYPE_NOT_ON_ROOT;
-+		memcg_per_node_stats_files[nid].seq_show = memory_per_node_stat_show;
-+		memcg_per_node_stats_files[nid].numa_node_id = nid;
-+
-+		snprintf(memcg_per_node_max_files[nid].name, MAX_CFTYPE_NAME,
-+				"max_at_node:%d", nid);
-+		memcg_per_node_max_files[nid].flags = CFTYPE_NOT_ON_ROOT;
-+		memcg_per_node_max_files[nid].seq_show = memory_per_node_max_show;
-+		memcg_per_node_max_files[nid].write = memory_per_node_max_write;
-+		memcg_per_node_max_files[nid].numa_node_id = nid;
-+	}
-+	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys,
-+				memcg_per_node_stats_files));
-+	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys,
-+				memcg_per_node_max_files));
-+	return 0;
-+}
-+subsys_initcall(mem_cgroup_per_node_init);
-+
- #endif /* CONFIG_MEMCG_SWAP */
++		swap(to_page->index, iterator->to_index);
++		if (iterator->to_page_was_mapped)
++			remove_migration_ptes(iterator->to_page, iterator->from_page, false);
++		swap(to_page->index, iterator->to_index);
+ 
+ 
+ 		if (iterator->from_anon_vma)
+diff --git a/mm/migrate.c b/mm/migrate.c
+index a0ca817..da7af68 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -229,7 +229,7 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
+ 		if (PageKsm(page))
+ 			new = page;
+ 		else
+-			new = page - pvmw.page->index +
++			new = page - page->index +
+ 				linear_page_index(vma, pvmw.address);
+ 
+ #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
 -- 
 2.7.4
 
