@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABACC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41632C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BAC214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1315C21872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368748;
-	bh=ihjSHTqdLvC9fBc7wFroTxIx2XqecVcGxgP1WDWeMak=;
+	s=default; t=1554368753;
+	bh=VKKP3klsGyIXHOKXSBG+UyT4TGosyarabfCi4ih8aj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ol/usHK2OliKX2nMIE1vRy4BVi76hjTAFnX3LQt9l+izL2CMhvUrnsj5IfiwAzK3Z
-	 L5EUcwUiVS2lo4uoIejgTmbNm/CYstcC2tR0rqN+xXgPySHLpC/3gEzhQXub1RlUs+
-	 6wmxnJl8zmSf8RHOTxPCmSOYsEKmTZT1kuYW5hLU=
+	b=ldEPod6y7Bf7vi1tCe0Yt8Ww3/EN31LK6dVfslyejKDNsSXtDN1LAeJO9fR/UXZhc
+	 a7WqLpDjhFG3dEFl1iBcuE4XCRKURvtDfZllGIs9bU1w7urVe2561s1WygK6CEP6+p
+	 XG+dlt4MZo/Ve+KhfM9vX1Zj/j9ZqKokJOV20KqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732204AbfDDJFq (ORCPT
+        id S1732208AbfDDJFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:05:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43916 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:05:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732187AbfDDJFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:42 -0400
+        id S1731373AbfDDJFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DF4321855;
-        Thu,  4 Apr 2019 09:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B6A21850;
+        Thu,  4 Apr 2019 09:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368742;
-        bh=ihjSHTqdLvC9fBc7wFroTxIx2XqecVcGxgP1WDWeMak=;
+        s=default; t=1554368744;
+        bh=VKKP3klsGyIXHOKXSBG+UyT4TGosyarabfCi4ih8aj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiLGHjRU9vv844dxlH/DBDnHlnMwmoilFJ3VFHbL9Jx03mnEm4d8Rr8i5Uk/vJyqA
-         y5i9t+xi+rG1atAf7PKYEGsHU0oy//fFvTKyBqlkv5z2UIEmum9LCUl7X9OVsfLsv1
-         55mbTL/zS9vmwpGXwvR+5IHxboIjDNLueIX3kKzU=
+        b=b4uHAc69hRpV9EK0hsaYdEXz1a1f0DBNiKgBX9RqJV9lBVBc3mNZlirQiufqby8kI
+         H/+jF8obRkQ5lEOHRH/ywSa/aP5X2XERq8suZX3JrI3+TIjKpdrtp4kFjzObbGEpln
+         q9MYvGPgzSCzA9Fdh7b5dDeKBAh4x95ATZY+K5o4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tristian Celestin <tristian.celestin@outlook.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?= 
-        <jerome.debretagne@gmail.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        =?UTF-8?q?Jaroslav=20=C5=A0karvada?= <jskarvad@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 153/187] platform/x86: intel-hid: Missing power button release on some Dell models
-Date:   Thu,  4 Apr 2019 10:48:10 +0200
-Message-Id: <20190404084610.328165511@linuxfoundation.org>
+Subject: [PATCH 4.19 154/187] perf script python: Use PyBytes for attr in trace-event-python
+Date:   Thu,  4 Apr 2019 10:48:11 +0200
+Message-Id: <20190404084610.371259451@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -70,61 +71,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e97a34563d18606ee5db93e495382a967f999cd4 ]
+[ Upstream commit 72e0b15cb24a497d7d0d4707cf51ff40c185ae8c ]
 
-Power button suspend for some Dell models was added in:
+With Python3.  PyUnicode_FromStringAndSize is unsafe to call on attr and will
+return NULL.  Use _PyBytes_FromStringAndSize (as with raw_buf).
 
-commit 821b85366284 ("platform/x86: intel-hid: Power button suspend on Dell Latitude 7275")
+Below is the observed behavior without the fix.  Note it is first necessary
+to apply the prior fix (Add trace_context extension module to sys,modules):
 
-by checking against the power button press notification (0xCE) to report
-the power button press event. The corresponding power button release
-notification (0xCF) was caught and ignored to stop it from being reported
-as an "unknown event" in the logs.
+  # ldd /usr/bin/perf | grep -i python
+          libpython3.6m.so.1.0 => /usr/lib64/libpython3.6m.so.1.0 (0x00007f8e1dfb2000)
 
-The missing button release event is creating issues on Android-x86, as
-reported on the project mailing list for a Dell Latitude 5175 model, since
-the events are expected in down/up pairs.
+  # perf record -e raw_syscalls:sys_enter /bin/false
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.018 MB perf.data (21 samples) ]
 
-Report the power button release event to fix this issue.
+  # perf script -g python | cat
+  generated Python script: perf-script.py
 
-Link: https://groups.google.com/forum/#!topic/android-x86/aSwZK9Nf9Ro
-Tested-by: Tristian Celestin <tristian.celestin@outlook.com>
-Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-[dvhart: corrected commit reference format per checkpatch]
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+  # perf script -s ./perf-script.py
+  in trace_begin
+  Segmentation fault (core dumped)
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jaroslav Škarvada <jskarvad@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Fixes: 66dfdff03d19 ("perf tools: Add Python 3 support")
+Link: http://lkml.kernel.org/r/20190124005229.16146-3-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/scripting-engines/trace-event-python.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 6cf9b7fa5bf0..3201a83073b5 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -373,7 +373,7 @@ wakeup:
- 	 * the 5-button array, but still send notifies with power button
- 	 * event code to this device object on power button actions.
- 	 *
--	 * Report the power button press; catch and ignore the button release.
-+	 * Report the power button press and release.
- 	 */
- 	if (!priv->array) {
- 		if (event == 0xce) {
-@@ -382,8 +382,11 @@ wakeup:
- 			return;
- 		}
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 05d95de14e20..fb11396ec861 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -733,8 +733,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 		Py_FatalError("couldn't create Python dictionary");
  
--		if (event == 0xcf)
-+		if (event == 0xcf) {
-+			input_report_key(priv->input_dev, KEY_POWER, 0);
-+			input_sync(priv->input_dev);
- 			return;
-+		}
- 	}
+ 	pydict_set_item_string_decref(dict, "ev_name", _PyUnicode_FromString(perf_evsel__name(evsel)));
+-	pydict_set_item_string_decref(dict, "attr", _PyUnicode_FromStringAndSize(
+-			(const char *)&evsel->attr, sizeof(evsel->attr)));
++	pydict_set_item_string_decref(dict, "attr", _PyBytes_FromStringAndSize((const char *)&evsel->attr, sizeof(evsel->attr)));
  
- 	/* 0xC0 is for HID events, other values are for 5 button array */
+ 	pydict_set_item_string_decref(dict_sample, "pid",
+ 			_PyLong_FromLong(sample->pid));
 -- 
 2.19.1
 
