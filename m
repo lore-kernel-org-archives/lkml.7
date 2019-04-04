@@ -2,129 +2,121 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B928AC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443B8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDA120657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369832;
-	bh=gYvYK6UqTc0aP9TRdXOZXHI4t8jWtfIAWj3141aULMg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZCoIvqgvdGd2ybL4CDi16VBVrHBt1Da9BwE6dAXKowjQ+WXwQmETJNMfA4pDIY2nx
-	 0Qjonj5/GFi4A0xSxzgbOuS0xep60iL1zKVx7wxXjUvhcV9Yx/FZ6EWQesopcGiRXn
-	 oTFecS9kK2OBowW9P4mjKjMg5QKcJWXBmowElnyQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1F76A20657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387769AbfDDJO5 (ORCPT
+        id S1733074AbfDDJXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 4 Apr 2019 05:23:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35374 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387593AbfDDJO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 05:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387784AbfDDJOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8451B2075E;
-        Thu,  4 Apr 2019 09:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369293;
-        bh=gYvYK6UqTc0aP9TRdXOZXHI4t8jWtfIAWj3141aULMg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c//55zZX7OIJrJtD4qwhw94q8Pj+KnlmX59TkW3cYrFtXMcXJo92uOKb1QtvS44D8
-         ROYNtFQYS8W4XF3Yva2z04Tlq3TK8zqG8diahqel4GCyZaz0bThbaf56BUjpRha8vP
-         7zrkLAQZn10kaP1lwP956jKUoHdf6Ad9i2C/axiI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David E. Box" <david.e.box@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 169/246] platform/x86: intel_pmc_core: Fix PCH IP sts reading
-Date:   Thu,  4 Apr 2019 10:47:49 +0200
-Message-Id: <20190404084625.092931046@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
-References: <20190404084619.236418459@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 88A78ACA8;
+        Thu,  4 Apr 2019 09:14:53 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 11:14:51 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     Joao Moreira <jmoreira@suse.de>, live-patching@vger.kernel.org,
+        pmladek@suse.cz, jikos@suse.cz, nstange@suse.de,
+        jpoimboe@redhat.com, khlebnikov@yandex-team.ru, jeyu@kernel.org,
+        matz@suse.de, linux-kernel@vger.kernel.org,
+        yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
+        michal.lkml@markovi.net
+Subject: Re: [PATCH v2 2/8] kbuild: Support for Symbols.list creation
+In-Reply-To: <651eb328-b13a-9f31-d4da-9d2e965914e3@redhat.com>
+Message-ID: <alpine.LSU.2.21.1904041113160.32428@pobox.suse.cz>
+References: <20190301141313.15057-1-jmoreira@suse.de> <20190301141313.15057-3-jmoreira@suse.de> <20190318191926.GA23138@redhat.com> <alpine.LSU.2.21.1903202000470.29796@pobox.suse.cz> <5f615af5-ced7-2361-5b71-71fece8b43c5@suse.de> <ae018181-fd8a-03b2-69bf-e9302172bfeb@redhat.com>
+ <699e78da-36ba-8217-c509-2e9b443bd380@suse.de> <1b6ee81b-5699-a1cc-9a85-02df0eeaed12@redhat.com> <20190328201703.GA8658@redhat.com> <20190401193529.GA26375@redhat.com> <alpine.LSU.2.21.1904031444020.18182@pobox.suse.cz>
+ <651eb328-b13a-9f31-d4da-9d2e965914e3@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+On Wed, 3 Apr 2019, Joe Lawrence wrote:
 
-------------------
+> On 4/3/19 8:48 AM, Miroslav Benes wrote:
+> > 
+> >> and it looks like the combined KLP_MODULE_RELOC still contains the two
+> >> unique symbol position values (2 and 3):
+> >>
+> >>    % objcopy -O binary --only-section=.klp.module_relocs.vmlinux lib/livepatch/test_klp_convert.klp.o >(hexdump -C)
+> >>    00000000  00 00 00 00 00 00 00 00  02 00 00 00 00 00 00 00  |................|
+> >>    00000010  00 00 00 00 00 00 00 00  03 00 00 00              |............|
+> >>    0000001c
+> > 
+> > Nice :/
+> >   
+> >> Maybe we can work around this by modifying the annotation macros and/or
+> >> klp-convert, or live with this for now.
+> > 
+> > The question is (and I'll check later. I cannot wrap my head around it
+> > now) if it at least works if there are two references of the same symbol
+> > in two different .o. It would be same state_show in this case and not two
+> > different ones. If it works then I think we can live with it for a while,
+> > because after all duplicate symbols are quite rare in the kernel.
+> 
+> Possibly, but in testing that scenario I found another issue.  Check out what
+> happens to the combined .klp.module_relocs.vmlinux section for:
+> 
+>   test_klp_convert_a.c
+>   KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_a[] = {
+>           KLP_SYMPOS(state_show, 2)
+>           KLP_SYMPOS(joe, 10)
+>           KLP_SYMPOS(joe2, 11)
+>   };
+> 
+>   test_klp_convert_b.c
+>   KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_b[] = {
+>           KLP_SYMPOS(state_show, 2)
+>   };
+> 
+> The second file's klp_module_reloc are not aligned with the first,
+> so I think there is additional padding to push the second set to a
+> word boundary:
+> 
+>   % objcopy -O binary --only-section=.klp.module_relocs.vmlinux lib/livepatch/test_klp_convert.klp.o >(hexdump -C)
+>   00000000  00 00 00 00 00 00 00 00  02 00 00 00 00 00 00 00
+>             |-*sym----------------|  |--sympos-| |-*sym-----
+> 
+>   00000010  00 00 00 00 0a 00 00 00  00 00 00 00 00 00 00 00
+>             ----------| |--sympos-|  |-*sym----------------|
+> 
+>   00000020  0b 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+>             |-sympos--|              |-*sym----------------|
+> 
+>                         ^^^^^^^^^^^
+>                         padding
+>   00000030  02 00 00 00
+>             |-sympos--|
+>
+> 
+> in this case, klp-convert thought the last symbol's sympos was
+> incorrectly 0 and not 2.
 
-[ Upstream commit 0e68eeea9894feeba2edf7ec63e4551b87f39621 ]
-
-A previous commit "platform/x86: intel_pmc_core: Make the driver PCH
-family agnostic <c977b98bbef5898ed3d30b08ea67622e9e82082a>" provided
-better abstraction to this driver but has some fundamental issues.
-
-e.g. the following condition
-
-for (index = 0; index < pmcdev->map->ppfear_buckets &&
-	index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
-
-is wrong because for CNL, PPFEAR_MAX_NUM_ENTRIES is hardcoded as 5 which
-is _wrong_ and even though ppfear_buckets is 8, the loop fails to read
-all eight registers needed for CNL PCH i.e. PPFEAR0 and PPFEAR1. This
-patch refactors the pfear show logic to correctly read PCH IP power
-gating status for Cannonlake and beyond.
-
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: c977b98bbef5 ("platform/x86: intel_pmc_core: Make the driver PCH family agnostic")
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel_pmc_core.c | 3 ++-
- drivers/platform/x86/intel_pmc_core.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 22dbf115782e..c37e74ee609d 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -380,7 +380,8 @@ static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
- 	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
- 		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
+Ugh. It's getting better and better.
  
--	for (index = 0; map[index].name; index++)
-+	for (index = 0; map[index].name &&
-+	     index < pmcdev->map->ppfear_buckets * 8; index++)
- 		pmc_core_display_map(s, index, pf_regs[index / 8], map);
- 
- 	return 0;
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 89554cba5758..1a0104d2cbf0 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -32,7 +32,7 @@
- #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
- #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
- #define MTPMC_MASK				0xffff0000
--#define PPFEAR_MAX_NUM_ENTRIES			5
-+#define PPFEAR_MAX_NUM_ENTRIES			12
- #define SPT_PPFEAR_NUM_ENTRIES			5
- #define SPT_PMC_READ_DISABLE_BIT		0x16
- #define SPT_PMC_MSG_FULL_STS_BIT		0x18
--- 
-2.19.1
+> If the packed attribute is merely a space optimization, can we
+> simply pull that (or can we specify slightly looser alignment to
+> account for the padding)?
 
+I think so.
 
+> I'll continue working on putting together v3 and add this new item
+> to the TODO list.
 
+Great job btw. Thanks.
+
+Miroslav
