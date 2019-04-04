@@ -2,99 +2,87 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBD7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2081C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D8D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4262082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BdbwwGs2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbfDDPkK (ORCPT
+        id S1729116AbfDDPkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 11:40:10 -0400
-Received: from nat.nue.novell.com ([195.135.221.2]:36978 "EHLO suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726269AbfDDPkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 11:40:10 -0400
-Received: by suse.de (Postfix, from userid 1000)
-        id 3CFB14824; Thu,  4 Apr 2019 17:40:09 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 17:40:09 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 1/2] mm, memory_hotplug: cleanup memory offline path
-Message-ID: <20190404154006.ywtpwb3c3frkajzk@d104.suse.de>
-References: <20190404125916.10215-1-osalvador@suse.de>
- <20190404125916.10215-2-osalvador@suse.de>
- <f2360f11-4360-b678-f095-c4ebbf7cd0ec@redhat.com>
- <20190404132506.kaqzop4qs6m56plu@d104.suse.de>
- <7874ef85-adc7-95a8-87f4-1f15eb21c677@redhat.com>
+        Thu, 4 Apr 2019 11:40:37 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36201 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfDDPkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 11:40:37 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r24so2527917ljg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 08:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mzDsyCKY2RD/9qjrPF3MnhPNshlbTDrH+BI8td71Mr0=;
+        b=BdbwwGs2BPhKe35ErWrdRsP7/ba/pgpgPfKnhRn46YGiQvfTVmx4vN1cHNdDDcD37e
+         BpVbYyzSsL9x7B5fRsom3Y/tbZt6ssIIXdHgw/7+lOZe/d5K0PqblMEvnyvjSSt1SAth
+         6TNDz1c5Lqg5+wENRd1nCCFmaN0MonoJ7P7xN34SkWbXbD2gGQwJp6h8w2KlVkkI/R/S
+         G/IETxXDyk1vSbJaO7ZgfMHzkvFYMi0dQknNmABDINJDvrozbUhXsAkJMw3zt08nUkQO
+         SzX5iicJqDD9GKQ2Wh3COeVdBcRlhv+iv+PIiXaoe+NoLPlRAVjtq335OGDJTpsX87s/
+         4Gfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mzDsyCKY2RD/9qjrPF3MnhPNshlbTDrH+BI8td71Mr0=;
+        b=moDqCCgKDdlwPcAw37ch4B7t+0uNom9uh/ez3vbFF1fmgwD+wG/hO1kArWsAhJ2kRo
+         UpZwue52vw8JI2JR1fKnYTWntlsB0AoZc1FcMqdVX5u9R38WHFxHFvU9AGoOqUewb7rG
+         QQGCNev4Qu9T6aUzf+FYLTDpmSZPJa5scXDrLyo/Ftvx1ezktOkfisGLliWncBVbuhEB
+         qE7+Wqt9jWVTuBQKpkrXJO4cQoex+1HQbcOvJi9ustULwslbU37Ti69xPekC65DH9NMv
+         UCPEzDwhmM66wVUtolWyw9dY4Ffq9+HEjLXYZRml49Qa83Y51v8dVRRpVJx0A1IIz32D
+         oX5w==
+X-Gm-Message-State: APjAAAX3P93VAvy5GXa05Yp9F93yqjyiGOJgL68xpH5NO+V2MtEZDy34
+        orc/F/2eKf30Nc3/1+9e1uH8EBOcr0oirKOR9jcM+A==
+X-Google-Smtp-Source: APXvYqzAN/CqGdm+sZJyQVKD+YrmhBLFQxYTG9XBH5OD4qAB17B9+uBD9j0N1gwy4LjpM2gdZb7JGWFklIzexWL8xbE=
+X-Received: by 2002:a2e:9a46:: with SMTP id k6mr3821041ljj.119.1554392435189;
+ Thu, 04 Apr 2019 08:40:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7874ef85-adc7-95a8-87f4-1f15eb21c677@redhat.com>
-User-Agent: NeoMutt/20170421 (1.8.2)
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com> <20190403124019.8947-13-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190403124019.8947-13-wsa+renesas@sang-engineering.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Apr 2019 22:40:23 +0700
+Message-ID: <CACRpkdZFg_F95zm68vUtU51j0MzYPfFB2YFhCAnvHJqUEO8_GQ@mail.gmail.com>
+Subject: Re: [PATCH 12/12] i2c: gpio: flag atomic capability if possible
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Peter Rosin <peda@axentia.se>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 04:47:43PM +0200, David Hildenbrand wrote:
-> On 04.04.19 15:25, Oscar Salvador wrote:
-> > On Thu, Apr 04, 2019 at 03:18:00PM +0200, David Hildenbrand wrote:
-> >>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >>> index f206b8b66af1..d8a3e9554aec 100644
-> >>> --- a/mm/memory_hotplug.c
-> >>> +++ b/mm/memory_hotplug.c
-> >>> @@ -1451,15 +1451,11 @@ static int
-> >>>  offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
-> >>>  			void *data)
-> >>>  {
-> >>> -	__offline_isolated_pages(start, start + nr_pages);
-> >>> -	return 0;
-> >>> -}
-> >>> +	unsigned long offlined_pages;
-> >>>  
-> >>> -static void
-> >>> -offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
-> >>> -{
-> >>> -	walk_system_ram_range(start_pfn, end_pfn - start_pfn, NULL,
-> >>> -				offline_isolated_pages_cb);
-> >>> +	offlined_pages = __offline_isolated_pages(start, start + nr_pages);
-> >>> +	*(unsigned long *)data += offlined_pages;
-> >>
-> >> unsigned long *offlined_pages = data;
-> >>
-> >> *offlined_pages += __offline_isolated_pages(start, start + nr_pages);
-> > 
-> > Yeah, more readable.
-> > 
-> >> Only nits
-> > 
-> > About the identation, I double checked the code and it looks fine to me.
-> > In [1] looks fine too, might be your mail client?
-> > 
-> > [1] https://patchwork.kernel.org/patch/10885571/
-> 
-> Double checked, alignment on the parameter on the new line is very weird.
+On Wed, Apr 3, 2019 at 7:40 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 
-Uhm, are not you confused because we removed the "while (off...)", and
-"ret =" gets idented right below "/*check again*".
+> If switching GPIOs does not sleep, then we can support atomic transfers.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Try to apply the patch and check whether you still see the issue.
-I just checked out the branch and it looks fine to me.
+Neat and intuitive.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> And both lines cross 80 lines per line ... nit :)
-
-Yeah, 81 characters, but I decided to go with that rather than start doing
-tricky things to accomplish 80 characters.
-Maybe Andrew agrees, or he might slap me.
-
--- 
-Oscar Salvador
-SUSE L3
+Yours,
+Linus Walleij
