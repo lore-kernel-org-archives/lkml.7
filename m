@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B50C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B27FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B9C217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D149920693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369326;
-	bh=bJeSUAmAfqUFVULoecThs62W5RENmoqSzHCULfskGqM=;
+	s=default; t=1554369331;
+	bh=vJKVFPivyvnBqRazTrfufH0tIHKvzYAF8q2S/2hlv0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OiNIOXIg6o/PswkXkMIfj5u9vJabWEPFlpJRMcWZ5SIs/2O2gHortnD3OeQFzqWvi
-	 uFkAiM25iEaoY08FrcwhzQKY8Kb0uDOGx9tT1Dm7LFucO4O2Vqe1HUd8f2H1cvrc1I
-	 1TMACpXQ+G4CGYRjizp3m/vHO6S8BuMh3L+XBH+I=
+	b=uZvJHt+Dv11gyvYUxUwNAhQG8g0WSQ2mNs9Hc++x0l0moQGFCzLLslSQRy1BPmjVy
+	 JT9nhdtGNem72OnOeM2y6vMbHdraqClCC7b0CEKB6EymbOUE3MbHKlfiEMBla4IqQJ
+	 ldMdTNZsbQcEUWho1OUklqbsQIujB8gK65eniqCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387881AbfDDJPY (ORCPT
+        id S2387889AbfDDJPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56306 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387467AbfDDJPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:15:22 -0400
+        id S2387663AbfDDJP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:15:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1016F2075E;
-        Thu,  4 Apr 2019 09:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E34A2184B;
+        Thu,  4 Apr 2019 09:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369321;
-        bh=bJeSUAmAfqUFVULoecThs62W5RENmoqSzHCULfskGqM=;
+        s=default; t=1554369326;
+        bh=vJKVFPivyvnBqRazTrfufH0tIHKvzYAF8q2S/2hlv0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qbhfu2kCEOl5Lw0gOB2AvDU2ZCwSyBBk8ZhfFjUL4W9DGeYOuOURp6tcsJWqRa+wP
-         Win0qGWcSCIgp47oxIyrfqbxXW7AMVeYjTN0xmmbaRLfRcIjf0isdpnjaSumvVemNO
-         mlsoKWRFm3e/lsQcRmmyJY2H17mO4bm5NcaT3KG8=
+        b=ggzM+GlTd5fJFj9CWc6xE5zaZvBlGdErRcthk15jWEjtoxvQGf6KnqRJ13XNKJgYT
+         zBNnI+syQED82Mr3fhAttTLcuT6+Rz+O2azn8kjwh3nDgxtXEB/4zOhUO2p6nj8RXI
+         ouF2vJ+1Y4Ncvj9msSjwXybpBahhYVRp5nBHx2jM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sankalp Negi <sankalpnegi2310@gmail.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        John Crispin <john@phrozen.org>, NeilBrown <neil@brown.name>,
+        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 171/246] staging: spi: mt7621: Add return code check on device_reset()
-Date:   Thu,  4 Apr 2019 10:47:51 +0200
-Message-Id: <20190404084625.163463927@linuxfoundation.org>
+Subject: [PATCH 5.0 181/246] soc: qcom: gsbi: Fix error handling in gsbi_probe()
+Date:   Thu,  4 Apr 2019 10:48:01 +0200
+Message-Id: <20190404084625.519134249@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -69,48 +67,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 46c337872f34bc6387b0c29a4964f562c70139e3 ]
+[ Upstream commit 8cd09a3dd3e176c62da67efcd477a44a8d87185e ]
 
-This patch adds a return code check on device_reset() and removes the
-compile warning.
+If of_platform_populate() fails in gsbi_probe(),
+gsbi->hclk is left undisabled.
 
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Sankalp Negi <sankalpnegi2310@gmail.com>
-Cc: Chuanhong Guo <gch981213@gmail.com>
-Cc: John Crispin <john@phrozen.org>
-Reviewed-by: NeilBrown <neil@brown.name>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/mt7621-spi/spi-mt7621.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/soc/qcom/qcom_gsbi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
-index 513b6e79b985..e1f50efd0922 100644
---- a/drivers/staging/mt7621-spi/spi-mt7621.c
-+++ b/drivers/staging/mt7621-spi/spi-mt7621.c
-@@ -330,6 +330,7 @@ static int mt7621_spi_probe(struct platform_device *pdev)
- 	int status = 0;
- 	struct clk *clk;
- 	struct mt7621_spi_ops *ops;
-+	int ret;
+diff --git a/drivers/soc/qcom/qcom_gsbi.c b/drivers/soc/qcom/qcom_gsbi.c
+index 09c669e70d63..038abc377fdb 100644
+--- a/drivers/soc/qcom/qcom_gsbi.c
++++ b/drivers/soc/qcom/qcom_gsbi.c
+@@ -138,7 +138,7 @@ static int gsbi_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	struct gsbi_info *gsbi;
+-	int i;
++	int i, ret;
+ 	u32 mask, gsbi_num;
+ 	const struct crci_config *config = NULL;
  
- 	match = of_match_device(mt7621_spi_match, &pdev->dev);
- 	if (!match)
-@@ -377,7 +378,11 @@ static int mt7621_spi_probe(struct platform_device *pdev)
- 	rs->pending_write = 0;
- 	dev_info(&pdev->dev, "sys_freq: %u\n", rs->sys_freq);
+@@ -221,7 +221,10 @@ static int gsbi_probe(struct platform_device *pdev)
  
--	device_reset(&pdev->dev);
-+	ret = device_reset(&pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "SPI reset failed!\n");
-+		return ret;
-+	}
+ 	platform_set_drvdata(pdev, gsbi);
  
- 	mt7621_spi_reset(rs);
+-	return of_platform_populate(node, NULL, NULL, &pdev->dev);
++	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
++	if (ret)
++		clk_disable_unprepare(gsbi->hclk);
++	return ret;
+ }
  
+ static int gsbi_remove(struct platform_device *pdev)
 -- 
 2.19.1
 
