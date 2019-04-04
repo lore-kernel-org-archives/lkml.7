@@ -2,124 +2,165 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7883C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65BCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE91C20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A4F20449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1554369991;
+	bh=vkdvi2fMDm0vIzJWEIrxL0C3hSmVsFQBynfHR/Y1rvg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0OLLHPJO67Q1uOwIj0+nAfVPeGmJkoRH/UMxERcCkCBW/tDp2QYl+89RdpnwnFib0
+	 yeskpFEzsTZ6cRBcNvL+eVKf2JS/r7d7QXdNKFVFiV/zfLpQcWNLPZs8W0quVtijim
+	 bUb59wyBXMy+2TGaPTwfRpm8C3DUjdAETpJyeBIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387822AbfDDJ0W (ORCPT
+        id S2387677AbfDDJ0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:26:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:4013 "EHLO mga12.intel.com"
+        Thu, 4 Apr 2019 05:26:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733145AbfDDJ0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:26:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 02:26:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,306,1549958400"; 
-   d="scan'208";a="147967903"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga002.jf.intel.com with ESMTP; 04 Apr 2019 02:26:18 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hBydV-0003lj-Ou; Thu, 04 Apr 2019 12:26:17 +0300
-Date:   Thu, 4 Apr 2019 12:26:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: Add support for Merrifield Basin Cove PMIC
-Message-ID: <20190404092617.GO9224@smile.fi.intel.com>
-References: <20190318095316.69278-1-andriy.shevchenko@linux.intel.com>
- <20190402051211.GR4187@dell>
- <20190402122001.GM9224@smile.fi.intel.com>
- <20190404070004.GE6830@dell>
- <20190404070357.GF6830@dell>
- <20190404082138.GF9224@smile.fi.intel.com>
- <20190404090314.GT6830@dell>
+        id S1733045AbfDDJNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:13:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11E6D2075E;
+        Thu,  4 Apr 2019 09:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1554369194;
+        bh=vkdvi2fMDm0vIzJWEIrxL0C3hSmVsFQBynfHR/Y1rvg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xfYHSxACmln5axSysPlnPhK7l3h1wglVeYU0RyLplLr+SR5THdAipaN0dtpsoCIS0
+         oM/+pwx4UhZkr4NUMsU/WDIEFk+7cKkGArMXgBFHQa8fjqZGBDmIQv2dI4F5R4FcvT
+         CxPw2smypFI8ZMZNaRuFmcl5DINl3E50UIAwApE4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 119/246] media: rockchip/vpu: Correct return type for mem2mem buffer helpers
+Date:   Thu,  4 Apr 2019 10:46:59 +0200
+Message-Id: <20190404084623.321623739@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
+References: <20190404084619.236418459@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404090314.GT6830@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 10:03:14AM +0100, Lee Jones wrote:
-> On Thu, 04 Apr 2019, Andy Shevchenko wrote:
-> > On Thu, Apr 04, 2019 at 08:03:57AM +0100, Lee Jones wrote:
-> > > On Thu, 04 Apr 2019, Lee Jones wrote:
-> > > > On Tue, 02 Apr 2019, Andy Shevchenko wrote:
-> > > > > On Tue, Apr 02, 2019 at 06:12:11AM +0100, Lee Jones wrote:
-> > > > > > On Mon, 18 Mar 2019, Andy Shevchenko wrote:
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-> > > > > > Although succinct, dragging values from one platform device into
-> > > > > > another doesn't sound that neat.
-> > > > > 
-> > > > > So, how to split resources given in one _physical_ multi-functional device to
-> > > > > several of them?  Isn't it what MFD framework for?
-> > > > > 
-> > > > > Any other approach here? I'm all ears!
-> > > > 
-> > > > From the child:
-> > > > 
-> > > >   platform_get_irq(dev->parent, CLIENT_ID);
-> > 
-> > So, instead of keeping a fragile approach in one driver, we will spread this
-> > to all of them.
-> 
-> No, the fragileness goes away with implicit definitions of IDs.
+------------------
 
-Did you mean "explicit"?
-Something like we need to have a shared map of those indices?
+[ Upstream commit 29701c3612fa025d5e8dc64c7a4ae8dc4763912e ]
 
-> > > > > > Also, since the ordering of the
-> > > > > > devices is critical in this implementation, it also comes across as
-> > > > > > fragile.
-> > > > > 
-> > > > > How fragile? In ACPI we don't have IRQ labeling scheme. Index is used for that.
-> > > > > 
-> > > > > > Any reason why ACPI can't register all of the child devices, or for
-> > > > > > the child devices to obtain their IRQ directly from the tables?
-> > > > > 
-> > > > > And how are we supposed to enumerated them taking into consideration single
-> > > > > ACPI ID given?
-> > > > 
-> > > > This question was a little whimsical, since I have no idea how the
-> > > > ACPI tables you're working with are laid out.
-> > 
-> > There is one device node with several IRQ and other resources.
-> > In pseudo code:
-> > 
-> > 	device node {
-> > 		device ID,
-> > 		IRQ 0,
-> > 		IRQ 1,
-> > 		...
-> > 		MMIO 0,
-> > 		...
-> > 	}
-> 
-> Sure.  Thanks for the explanation.
-> 
-> Very well.  I guess it's not too bad as it is.
+Fix the assigned type of mem2mem buffer handling API.
+Namely, these functions:
 
-It represent real hardware 1:1.
-Just out of curiosity how this case can be described in DT?
+ v4l2_m2m_next_buf
+ v4l2_m2m_last_buf
+ v4l2_m2m_buf_remove
+ v4l2_m2m_next_src_buf
+ v4l2_m2m_next_dst_buf
+ v4l2_m2m_last_src_buf
+ v4l2_m2m_last_dst_buf
+ v4l2_m2m_src_buf_remove
+ v4l2_m2m_dst_buf_remove
 
+return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+
+Fixing this is necessary to fix the mem2mem buffer handling API,
+changing the return to the correct struct vb2_v4l2_buffer instead
+of a void pointer.
+
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c | 6 +++---
+ drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c b/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
+index 5282236d1bb1..06daea66fb49 100644
+--- a/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
++++ b/drivers/staging/media/rockchip/vpu/rk3288_vpu_hw_jpeg_enc.c
+@@ -80,7 +80,7 @@ rk3288_vpu_jpeg_enc_set_qtable(struct rockchip_vpu_dev *vpu,
+ void rk3288_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
+ {
+ 	struct rockchip_vpu_dev *vpu = ctx->dev;
+-	struct vb2_buffer *src_buf, *dst_buf;
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	struct rockchip_vpu_jpeg_ctx jpeg_ctx;
+ 	u32 reg;
+ 
+@@ -88,7 +88,7 @@ void rk3288_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
+ 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+ 
+ 	memset(&jpeg_ctx, 0, sizeof(jpeg_ctx));
+-	jpeg_ctx.buffer = vb2_plane_vaddr(dst_buf, 0);
++	jpeg_ctx.buffer = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
+ 	jpeg_ctx.width = ctx->dst_fmt.width;
+ 	jpeg_ctx.height = ctx->dst_fmt.height;
+ 	jpeg_ctx.quality = ctx->jpeg_quality;
+@@ -99,7 +99,7 @@ void rk3288_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
+ 			   VEPU_REG_ENC_CTRL);
+ 
+ 	rk3288_vpu_set_src_img_ctrl(vpu, ctx);
+-	rk3288_vpu_jpeg_enc_set_buffers(vpu, ctx, src_buf);
++	rk3288_vpu_jpeg_enc_set_buffers(vpu, ctx, &src_buf->vb2_buf);
+ 	rk3288_vpu_jpeg_enc_set_qtable(vpu,
+ 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 0),
+ 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 1));
+diff --git a/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c b/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
+index dbc86d95fe3b..3d438797692e 100644
+--- a/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
++++ b/drivers/staging/media/rockchip/vpu/rk3399_vpu_hw_jpeg_enc.c
+@@ -111,7 +111,7 @@ rk3399_vpu_jpeg_enc_set_qtable(struct rockchip_vpu_dev *vpu,
+ void rk3399_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
+ {
+ 	struct rockchip_vpu_dev *vpu = ctx->dev;
+-	struct vb2_buffer *src_buf, *dst_buf;
++	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+ 	struct rockchip_vpu_jpeg_ctx jpeg_ctx;
+ 	u32 reg;
+ 
+@@ -119,7 +119,7 @@ void rk3399_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
+ 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+ 
+ 	memset(&jpeg_ctx, 0, sizeof(jpeg_ctx));
+-	jpeg_ctx.buffer = vb2_plane_vaddr(dst_buf, 0);
++	jpeg_ctx.buffer = vb2_plane_vaddr(&dst_buf->vb2_buf, 0);
+ 	jpeg_ctx.width = ctx->dst_fmt.width;
+ 	jpeg_ctx.height = ctx->dst_fmt.height;
+ 	jpeg_ctx.quality = ctx->jpeg_quality;
+@@ -130,7 +130,7 @@ void rk3399_vpu_jpeg_enc_run(struct rockchip_vpu_ctx *ctx)
+ 			   VEPU_REG_ENCODE_START);
+ 
+ 	rk3399_vpu_set_src_img_ctrl(vpu, ctx);
+-	rk3399_vpu_jpeg_enc_set_buffers(vpu, ctx, src_buf);
++	rk3399_vpu_jpeg_enc_set_buffers(vpu, ctx, &src_buf->vb2_buf);
+ 	rk3399_vpu_jpeg_enc_set_qtable(vpu,
+ 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 0),
+ 				       rockchip_vpu_jpeg_get_qtable(&jpeg_ctx, 1));
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.1
+
 
 
