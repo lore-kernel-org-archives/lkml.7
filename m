@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDB9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C70C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0B8220855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D67F20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370729;
-	bh=9JryHmtGTA/Ig+O7TjYWCSMn7omrbVpBAFJ0w2Nc1K4=;
+	s=default; t=1554370735;
+	bh=aN2qvTfBxzBXAMrTLUcLlfNCWAmU6bJVjF4wJOtL99s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZpbsM19Hc/QSJptTsRVEXQe44shPC90aowJ7TBnGsYa7rqJLQU+B4ajvPowBFB2F
-	 xLwMthXvv/EaWiGnNydim4n/iHApnXyz7NAdL3gYSrQg1BZ0txtuYr+9CKIfkYGzBg
-	 Epsu/PF+4XVsW7I9tC+wXiuQQJI+Lr+2AqzTtwgU=
+	b=XaajsWKEef3KfyMnYvmrayjO487QzfT1Z3TeskaxrwLci6DPT63APY3QH5KQefqHZ
+	 jshSBSkLsYFwUJGNmbEZtOUrgo5WlhTh2lLf3YlJjRjltVNcjltIStUQwZDFLl3hhh
+	 WlpOpRAl2K6uenSb6f7t7aElHjuNLvZFCmZ3gpBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbfDDJir (ORCPT
+        id S1731622AbfDDJEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:04:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731888AbfDDJED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:03 -0400
+        id S1731871AbfDDJDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F8332147C;
-        Thu,  4 Apr 2019 09:04:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC5A21855;
+        Thu,  4 Apr 2019 09:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368642;
-        bh=9JryHmtGTA/Ig+O7TjYWCSMn7omrbVpBAFJ0w2Nc1K4=;
+        s=default; t=1554368632;
+        bh=aN2qvTfBxzBXAMrTLUcLlfNCWAmU6bJVjF4wJOtL99s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TISwC0JXyD/+mk1m7keOauPxUw/984N8HR6ejef2IEsdyZ7sP6XhX/xNNO0EQVLfp
-         4JcixDlbTnmNoTfH16PQfwnsQ8Oi8xUODC2GJCzBOphulkkooZiXXEh7RpdM41Lvyb
-         AIdphK87xkoFqM2PC0gsJitExjyEUJeNs4hyBf7w=
+        b=jhlf5TcBcmKz1kDu1/qO3AYvlN2CG3DvYPB1H9A7L+FW1tQ6vtc/cQxNzLvF+uRA+
+         vDZ4Tc1uCL6CZheBqlA8nrZ6PBk/GeEoTousUseOrNQDqGCqtTxpI8RZ9j6LbLXxbd
+         SL4UaNvKgwhP8N7I2nAgIh3otdw96Q2E9Dh8xg7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/187] media: mx2_emmaprp: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:47:06 +0200
-Message-Id: <20190404084607.274137097@linuxfoundation.org>
+Subject: [PATCH 4.19 095/187] cgroup, rstat: Dont flush subtree root unless necessary
+Date:   Thu,  4 Apr 2019 10:47:12 +0200
+Message-Id: <20190404084607.635838141@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,59 +65,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8d20dcefe471763f23ad538369ec65b51993ffff ]
+[ Upstream commit b4ff1b44bcd384d22fcbac6ebaf9cc0d33debe50 ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+cgroup_rstat_cpu_pop_updated() is used to traverse the updated cgroups
+on flush.  While it was only visiting updated ones in the subtree, it
+was visiting @root unconditionally.  We can easily check whether @root
+is updated or not by looking at its ->updated_next just as with the
+cgroups in the subtree.
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+* Remove the unnecessary cgroup_parent() test.  The system root cgroup
+  is never updated and thus its ->updated_next is always NULL.  No
+  need to test whether cgroup_parent() exists in addition to
+  ->updated_next.
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+* Terminate traverse if ->updated_next is NULL.  This can only happen
+  for subtree @root and there's no reason to visit it if it's not
+  marked updated.
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
+This reduces cpu consumption when reading a lot of rstat backed files.
+In a micro benchmark reading stat from ~1600 cgroups, the sys time was
+lowered by >40%.
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mx2_emmaprp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/cgroup/rstat.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
-index 64195c4ddeaf..419e1cb10dc6 100644
---- a/drivers/media/platform/mx2_emmaprp.c
-+++ b/drivers/media/platform/mx2_emmaprp.c
-@@ -274,7 +274,7 @@ static void emmaprp_device_run(void *priv)
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index d503d1a9007c..bb95a35e8c2d 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -87,7 +87,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
+ 						   struct cgroup *root, int cpu)
  {
- 	struct emmaprp_ctx *ctx = priv;
- 	struct emmaprp_q_data *s_q_data, *d_q_data;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct emmaprp_dev *pcdev = ctx->dev;
- 	unsigned int s_width, s_height;
- 	unsigned int d_width, d_height;
-@@ -294,8 +294,8 @@ static void emmaprp_device_run(void *priv)
- 	d_height = d_q_data->height;
- 	d_size = d_width * d_height;
+ 	struct cgroup_rstat_cpu *rstatc;
+-	struct cgroup *parent;
  
--	p_in = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	p_out = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-+	p_in = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
-+	p_out = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
- 	if (!p_in || !p_out) {
- 		v4l2_err(&pcdev->v4l2_dev,
- 			 "Acquiring kernel pointers to buffers failed\n");
+ 	if (pos == root)
+ 		return NULL;
+@@ -115,8 +114,8 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
+ 	 * However, due to the way we traverse, @pos will be the first
+ 	 * child in most cases. The only exception is @root.
+ 	 */
+-	parent = cgroup_parent(pos);
+-	if (parent && rstatc->updated_next) {
++	if (rstatc->updated_next) {
++		struct cgroup *parent = cgroup_parent(pos);
+ 		struct cgroup_rstat_cpu *prstatc = cgroup_rstat_cpu(parent, cpu);
+ 		struct cgroup_rstat_cpu *nrstatc;
+ 		struct cgroup **nextp;
+@@ -140,9 +139,12 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
+ 		 * updated stat.
+ 		 */
+ 		smp_mb();
++
++		return pos;
+ 	}
+ 
+-	return pos;
++	/* only happens for @root */
++	return NULL;
+ }
+ 
+ /* see cgroup_rstat_flush() */
 -- 
 2.19.1
 
