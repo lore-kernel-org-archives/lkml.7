@@ -2,112 +2,113 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1729C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E88C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB46620855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C796206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:53:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXaXfid+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbfDDLwN (ORCPT
+        id S1729638AbfDDLxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 07:52:13 -0400
-Received: from mga09.intel.com ([134.134.136.24]:21597 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfDDLwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 07:52:13 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Apr 2019 04:52:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,308,1549958400"; 
-   d="scan'208";a="334928114"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Apr 2019 04:52:10 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hC0ue-0004xz-Qn; Thu, 04 Apr 2019 14:52:08 +0300
-Date:   Thu, 4 Apr 2019 14:52:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        zhuchangchun <zhuchangchun@cvte.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        hendychu@aliyun.coma,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] pinctrl: intel: Implements gpio free function
-Message-ID: <20190404115208.GR9224@smile.fi.intel.com>
-References: <1553135724-38331-1-git-send-email-zhuchangchun@cvte.com>
- <20190321084420.GG3622@lahna.fi.intel.com>
- <20190321092330.GK9224@smile.fi.intel.com>
- <140c6ec0-7c11-6aa9-8434-f14d77be9a8c@metux.net>
- <CACRpkdZ1xPJ=NS=o=-PYqCO4d-VVZM1=f=xBZa5Dwx78LFPYtA@mail.gmail.com>
- <cb643914-2c3f-0c63-13e4-8171fa9a37e7@metux.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cb643914-2c3f-0c63-13e4-8171fa9a37e7@metux.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 4 Apr 2019 07:53:13 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55119 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfDDLxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 07:53:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c1so2689117wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 04:53:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vc8JhnKR4Bcfb3mi4PgaRMI/IBnv1Y7aronixVijIxU=;
+        b=jXaXfid+eOF4AjlaE9LiXCJE31BRlyI7H9ydNwUXVh5/i//nAA3oofBRJCBGYTGafL
+         uyX2IMpYXuwni6tvqjaejowU+KGbX+U1ceeEHJANRyDz+LnhE4HTfvabiVtT11AZ5viG
+         8EDq335r6XVi3WHni1ZLPW0hNWFd1PwGp+zJlGA/pxRYdsIi2+xpNaLbm0XAtktycYqG
+         uTNm/qNQzaKwPYouyxebaPKqAb0v+canAUuZoevgWUCrd0+0oXi7u4S5eJG87DDd6l2E
+         +XOlRZrD+s1MI5DyP+mwbl9+D9dHmuv4gJfsUUx8YKNBaDvXyOdeInGZr9AAi2nFz9In
+         7frA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vc8JhnKR4Bcfb3mi4PgaRMI/IBnv1Y7aronixVijIxU=;
+        b=tLEgVhVKDXeV/YWWOoLQOIG+XNwRdv3GfL6r5DMNnJKwmymFL57TH/hKDzY9yNsaOp
+         EVmJUZrpXs0Uc2gP0DxRMzGbsXXUZ6a2jdHFNIP7tDeoHt2Tha3iSqI/ivZx6l/0htik
+         7ej9t0ItIGY0UN0m1duFl0YdPdnHmXCsAQsyAO16XqwpVKq6BcHai/QYLdem80d4LqeN
+         UNT9dq2Zg2+DX9PyCMFVrCnbZx1Fd8aq0vIqPaqjaM/Msg5r/VGzvU4LY+PggwYCT6qP
+         IKDj7FrKbUV6gfAmtyj18YayArD9vbvzsRuh1aV060fGLv9MBVvT8kTC2R/FIdmokRXr
+         zq6Q==
+X-Gm-Message-State: APjAAAWssymv1Khec0yJGsmQ23tJkXqPGoZlNHiA3CLmth0lYkMQjl8s
+        qmMxrRY5asttjLfa4zhakl8=
+X-Google-Smtp-Source: APXvYqxHXNCxc/Bz8SuAoxRpukx5J2vcHCvfzJUi2tin4bPMy6/e3ffPERh3+HK9RWk5mSxhxelnrA==
+X-Received: by 2002:a1c:f115:: with SMTP id p21mr3745219wmh.93.1554378790075;
+        Thu, 04 Apr 2019 04:53:10 -0700 (PDT)
+Received: from localhost.localdomain ([178.138.32.90])
+        by smtp.gmail.com with ESMTPSA id e9sm30366457wrp.35.2019.04.04.04.53.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 04:53:09 -0700 (PDT)
+From:   Andra Danciu <andradanciu1997@gmail.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Andra Danciu <andradanciu1997@gmail.com>
+Subject: [PATCH] ASoC: imx-pcm-dma: Switch to SPDX identifier
+Date:   Thu,  4 Apr 2019 14:52:52 +0300
+Message-Id: <20190404115252.29230-1-andradanciu1997@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 12:51:35PM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 03.04.19 06:13, Linus Walleij wrote:
-> 
-> > But the chardev on the other hand will protect you from all this.> > If the program crashes, the lines will be free:ed.> > If two scripts
-> try to access the same GPIO, they will be denied.
-> Right, when you want this concurrency protection and cleanup stiff
-> the chardev is the better choice. But I've already had several cases
-> where the simplicity of the sysfs interface is a big win - all you need
-> few trivial fs operations.
-> 
-> That's also nice for exporting in a grid, eg. via 9P (eg. nice for
-> quickly building up HIL environments)
-> 
-> ioctls have the bad side effect that they can't be exported via
-> network in a generic way - your remote fs protocol must support all of
-> them - even worse: it needs to cope with overlapping ioctl-nr's that
-> can have entirely different data structures depending on the actual
-> device. And now try to do that w/ reasonable effort and w/o creating
-> a shared memory between server and client :p
-> 
-> Another interesting usecase is permission handling:
-> 
-> a) some ioctls need special privileges (oh, how I hate all these "if
->    (!capable(CAP_SYS_ADMIN)) ..." lines in the drivers), but you wanna
->    give some unprivileged user access to them
-> b) you wanna give an unprivileged user access to specific gpio's,
->    but not to all at once.
-> 
-> With pure filesystem based approach, you can easly define permissions
-> for each filesystem object.
+Adopt the SPDX license identifier headers to ease license compliance
+management.
 
-Also you may consider gpiod daemon and it's socket interface, for example.
-Yes, complicated, but solves above problems AFAICT.
+Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
+---
+ sound/soc/fsl/imx-pcm-dma.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-I guess the best person, missed in Cc, Bartosz, can tell more about user space
-interaction.
-
-And btw gpiod still a good to have for other even local cases:
-https://github.com/brgl/libgpiod/issues/29
-https://github.com/brgl/libgpiod/issues/40
-...
-
-> Yes, these usecases aren't so common for average Jon Doe, but the gpio
-> subsystem is used that way, out there in the field, and it would be bad
-> if that functionality would go away someday.
-
+diff --git a/sound/soc/fsl/imx-pcm-dma.c b/sound/soc/fsl/imx-pcm-dma.c
+index 314814ddd2b0..6c495761f33c 100644
+--- a/sound/soc/fsl/imx-pcm-dma.c
++++ b/sound/soc/fsl/imx-pcm-dma.c
+@@ -1,16 +1,12 @@
+-/*
+- * imx-pcm-dma-mx2.c  --  ALSA Soc Audio Layer
+- *
+- * Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
+- *
+- * This code is based on code copyrighted by Freescale,
+- * Liam Girdwood, Javier Martin and probably others.
+- *
+- *  This program is free software; you can redistribute  it and/or modify it
+- *  under  the terms of  the GNU General  Public License as published by the
+- *  Free Software Foundation;  either version 2 of the  License, or (at your
+- *  option) any later version.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// imx-pcm-dma-mx2.c  --  ALSA Soc Audio Layer
++//
++// Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
++//
++// This code is based on code copyrighted by Freescale,
++// Liam Girdwood, Javier Martin and probably others.
++
+ #include <linux/platform_device.h>
+ #include <linux/dmaengine.h>
+ #include <linux/types.h>
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.11.0
 
