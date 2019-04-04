@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BFAC4360F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABDDC10F0C
 	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C688021741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B908A21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368601;
-	bh=qWGYE+IEPHnHtIK1Ema7MAdNSDNhyVppnCK5aWWZfaY=;
+	s=default; t=1554368602;
+	bh=Yst1YEk3S/oJRuO96pk0GkF09G+FHRL5RzJR672dydg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AzlEOSP4XfJDOKbuH+9IO5tKv3ZY9sfdVPhb6qHW82wBXD7/x3qb14CGfqnSTPj+P
-	 ry51WlkKMP+BHtp7JDLZdghLr29MGyZjYLZbKZNjaIcqqv015HasrPJoOzZcuBb2k1
-	 hwLpZ4fng8/4mbkT3kKW6nsRvT+yRMSgXqi7Au+w=
+	b=LUmjwyen16Ai3FZ1ZAI94Y/s0ucF91qk3MU9WEZCT0ZS6k/UAoNCmtL1rPceGQ7IX
+	 kWmmQTztbuq4zqxI4TTygmQUzmBPi5FdgTz6Ljs8QXGHdvHHo9BrMB+bgi6lhDHdTl
+	 TKQ1mpp8alka+WBMORttd0ddsw8zerUXpL/NqJ0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbfDDJDU (ORCPT
+        id S1731484AbfDDJDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:03:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40918 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:03:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730762AbfDDJDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:18 -0400
+        id S1730465AbfDDJDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E478D2147C;
-        Thu,  4 Apr 2019 09:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B6CA2177E;
+        Thu,  4 Apr 2019 09:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368597;
-        bh=qWGYE+IEPHnHtIK1Ema7MAdNSDNhyVppnCK5aWWZfaY=;
+        s=default; t=1554368594;
+        bh=Yst1YEk3S/oJRuO96pk0GkF09G+FHRL5RzJR672dydg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uweh6Ipzss4ndaSCbh3cWyzyfCDOC2+DoOkM+S0YPzfGJNz+ewSzJC7w2odgeUOS6
-         9heNBBAS5S+afF7ovKR5/uedDqgUe+iQME0ENgbUyIJT7XXitQQHLmuNGABgmZKK4P
-         fXXbjV79Qob5wrdPZG9Bz+sKTep+9M+WYC4DDX2A=
+        b=h4nKHeij5vLiAsOakMw2x4xpcZtfqy2mi5tFA3PXnH+b8+Uo1Dx7PVU0lfF7UWzm6
+         Z5By5bPrD5VcMTEIv14mxbuM3GsgyMveb0cTkxeGHC1FYCzBjsIM5LmWacAobUmM8b
+         eAVYv48Zyx/TZCb0DXErqaK4ojtJFfAaVLt8sZ1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/187] media: mtk-jpeg: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:47:07 +0200
-Message-Id: <20190404084607.341767931@linuxfoundation.org>
+Subject: [PATCH 4.19 071/187] clk: fractional-divider: check parent rate only if flag is set
+Date:   Thu,  4 Apr 2019 10:46:48 +0200
+Message-Id: <20190404084606.397697791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,176 +67,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1b275e4e8b70dbff9850874b30831c1bd8d3c504 ]
+[ Upstream commit d13501a2bedfbea0983cc868d3f1dc692627f60d ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+Custom approximation of fractional-divider may not need parent clock
+rate checking. For example Rockchip SoCs work fine using grand parent
+clock rate even if target rate is greater than parent.
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+This patch checks parent clock rate only if CLK_SET_RATE_PARENT flag
+is set.
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+For detailed example, clock tree of Rockchip I2S audio hardware.
+  - Clock rate of CPLL is 1.2GHz, GPLL is 491.52MHz.
+  - i2s1_div is integer divider can divide N (N is 1~128).
+    Input clock is CPLL or GPLL. Initial divider value is N = 1.
+    Ex) PLL = CPLL, N = 10, i2s1_div output rate is
+      CPLL / 10 = 1.2GHz / 10 = 120MHz
+  - i2s1_frac is fractional divider can divide input to x/y, x and
+    y are 16bit integer.
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
+CPLL --> | selector | ---> i2s1_div -+--> | selector | --> I2S1 MCLK
+GPLL --> |          | ,--------------'    |          |
+                      `--> i2s1_frac ---> |          |
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Clock mux system try to choose suitable one from i2s1_div and
+i2s1_frac for master clock (MCLK) of I2S1.
+
+Bad scenario as follows:
+  - Try to set MCLK to 8.192MHz (32kHz audio replay)
+    Candidate setting is
+    - i2s1_div: GPLL / 60 = 8.192MHz
+    i2s1_div candidate is exactly same as target clock rate, so mux
+    choose this clock source. i2s1_div output rate is changed
+    491.52MHz -> 8.192MHz
+
+  - After that try to set to 11.2896MHz (44.1kHz audio replay)
+    Candidate settings are
+    - i2s1_div : CPLL / 107 = 11.214945MHz
+    - i2s1_frac: i2s1_div   = 8.192MHz
+      This is because clk_fd_round_rate() thinks target rate
+      (11.2896MHz) is higher than parent rate (i2s1_div = 8.192MHz)
+      and returns parent clock rate.
+
+Above is current upstreamed behavior. Clock mux system choose
+i2s1_div, but this clock rate is not acceptable for I2S driver, so
+users cannot replay audio.
+
+Expected behavior is:
+  - Try to set master clock to 11.2896MHz (44.1kHz audio replay)
+    Candidate settings are
+    - i2s1_div : CPLL / 107          = 11.214945MHz
+    - i2s1_frac: i2s1_div * 147/6400 = 11.2896MHz
+                 Change i2s1_div to GPLL / 1 = 491.52MHz at same
+                 time.
+
+If apply this commit, clk_fd_round_rate() calls custom approximate
+function of Rockchip even if target rate is higher than parent.
+Custom function changes both grand parent (i2s1_div) and parent
+(i2s_frac) settings at same time. Clock mux system can choose
+i2s1_frac and audio works fine.
+
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+[sboyd@kernel.org: Make function into a macro instead]
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../media/platform/mtk-jpeg/mtk_jpeg_core.c   | 40 +++++++++----------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ drivers/clk/clk-fractional-divider.c | 2 +-
+ include/linux/clk-provider.h         | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-index 4f24da8afecc..11429633b2fb 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-@@ -702,7 +702,7 @@ end:
- 	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, to_vb2_v4l2_buffer(vb));
- }
+diff --git a/drivers/clk/clk-fractional-divider.c b/drivers/clk/clk-fractional-divider.c
+index fdf625fb10fa..083daa293280 100644
+--- a/drivers/clk/clk-fractional-divider.c
++++ b/drivers/clk/clk-fractional-divider.c
+@@ -77,7 +77,7 @@ static long clk_fd_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	unsigned long m, n;
+ 	u64 ret;
  
--static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
-+static struct vb2_v4l2_buffer *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
- 				 enum v4l2_buf_type type)
- {
- 	if (V4L2_TYPE_IS_OUTPUT(type))
-@@ -714,7 +714,7 @@ static void *mtk_jpeg_buf_remove(struct mtk_jpeg_ctx *ctx,
- static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
- {
- 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 	int ret = 0;
+-	if (!rate || rate >= *parent_rate)
++	if (!rate || (!clk_hw_can_set_rate_parent(hw) && rate >= *parent_rate))
+ 		return *parent_rate;
  
- 	ret = pm_runtime_get_sync(ctx->jpeg->dev);
-@@ -724,14 +724,14 @@ static int mtk_jpeg_start_streaming(struct vb2_queue *q, unsigned int count)
- 	return 0;
- err:
- 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
--		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_QUEUED);
-+		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_QUEUED);
- 	return ret;
- }
- 
- static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- {
- 	struct mtk_jpeg_ctx *ctx = vb2_get_drv_priv(q);
--	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vb;
- 
- 	/*
- 	 * STREAMOFF is an acknowledgment for source change event.
-@@ -743,7 +743,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- 		struct mtk_jpeg_src_buf *src_buf;
- 
- 		vb = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
--		src_buf = mtk_jpeg_vb2_to_srcbuf(vb);
-+		src_buf = mtk_jpeg_vb2_to_srcbuf(&vb->vb2_buf);
- 		mtk_jpeg_set_queue_data(ctx, &src_buf->dec_param);
- 		ctx->state = MTK_JPEG_RUNNING;
- 	} else if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-@@ -751,7 +751,7 @@ static void mtk_jpeg_stop_streaming(struct vb2_queue *q)
- 	}
- 
- 	while ((vb = mtk_jpeg_buf_remove(ctx, q->type)))
--		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(vb), VB2_BUF_STATE_ERROR);
-+		v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
- 
- 	pm_runtime_put_sync(ctx->jpeg->dev);
- }
-@@ -807,7 +807,7 @@ static void mtk_jpeg_device_run(void *priv)
- {
- 	struct mtk_jpeg_ctx *ctx = priv;
- 	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
- 	unsigned long flags;
- 	struct mtk_jpeg_src_buf *jpeg_src_buf;
-@@ -817,11 +817,11 @@ static void mtk_jpeg_device_run(void *priv)
- 
- 	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
--	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
-+	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
- 
- 	if (jpeg_src_buf->flags & MTK_JPEG_BUF_FLAGS_LAST_FRAME) {
--		for (i = 0; i < dst_buf->num_planes; i++)
--			vb2_set_plane_payload(dst_buf, i, 0);
-+		for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
-+			vb2_set_plane_payload(&dst_buf->vb2_buf, i, 0);
- 		buf_state = VB2_BUF_STATE_DONE;
- 		goto dec_end;
- 	}
-@@ -833,8 +833,8 @@ static void mtk_jpeg_device_run(void *priv)
- 		return;
- 	}
- 
--	mtk_jpeg_set_dec_src(ctx, src_buf, &bs);
--	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, dst_buf, &fb))
-+	mtk_jpeg_set_dec_src(ctx, &src_buf->vb2_buf, &bs);
-+	if (mtk_jpeg_set_dec_dst(ctx, &jpeg_src_buf->dec_param, &dst_buf->vb2_buf, &fb))
- 		goto dec_end;
- 
- 	spin_lock_irqsave(&jpeg->hw_lock, flags);
-@@ -849,8 +849,8 @@ static void mtk_jpeg_device_run(void *priv)
- dec_end:
- 	v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
- 	v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
-+	v4l2_m2m_buf_done(src_buf, buf_state);
-+	v4l2_m2m_buf_done(dst_buf, buf_state);
- 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
- }
- 
-@@ -921,7 +921,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- {
- 	struct mtk_jpeg_dev *jpeg = priv;
- 	struct mtk_jpeg_ctx *ctx;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct mtk_jpeg_src_buf *jpeg_src_buf;
- 	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
- 	u32	dec_irq_ret;
-@@ -938,7 +938,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- 
- 	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
--	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
-+	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
- 
- 	if (dec_irq_ret >= MTK_JPEG_DEC_RESULT_UNDERFLOW)
- 		mtk_jpeg_dec_reset(jpeg->dec_reg_base);
-@@ -948,15 +948,15 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- 		goto dec_end;
- 	}
- 
--	for (i = 0; i < dst_buf->num_planes; i++)
--		vb2_set_plane_payload(dst_buf, i,
-+	for (i = 0; i < dst_buf->vb2_buf.num_planes; i++)
-+		vb2_set_plane_payload(&dst_buf->vb2_buf, i,
- 				      jpeg_src_buf->dec_param.comp_size[i]);
- 
- 	buf_state = VB2_BUF_STATE_DONE;
- 
- dec_end:
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), buf_state);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), buf_state);
-+	v4l2_m2m_buf_done(src_buf, buf_state);
-+	v4l2_m2m_buf_done(dst_buf, buf_state);
- 	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
- 	return IRQ_HANDLED;
- }
+ 	if (fd->approximation)
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 08b1aa70a38d..d1b6d2c3ada6 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -782,6 +782,9 @@ unsigned int __clk_get_enable_count(struct clk *clk);
+ unsigned long clk_hw_get_rate(const struct clk_hw *hw);
+ unsigned long __clk_get_flags(struct clk *clk);
+ unsigned long clk_hw_get_flags(const struct clk_hw *hw);
++#define clk_hw_can_set_rate_parent(hw) \
++	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
++
+ bool clk_hw_is_prepared(const struct clk_hw *hw);
+ bool clk_hw_rate_is_protected(const struct clk_hw *hw);
+ bool clk_hw_is_enabled(const struct clk_hw *hw);
 -- 
 2.19.1
 
