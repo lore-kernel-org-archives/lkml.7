@@ -2,146 +2,216 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4214C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F536C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F2E206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36632217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:04:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KuTTEVlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfDDSEP (ORCPT
+        id S1726418AbfDDSEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:04:15 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46960 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfDDSEP (ORCPT
+        Thu, 4 Apr 2019 14:04:22 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:37826 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbfDDSEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 14:04:15 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z17so4271464qts.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 11:04:14 -0700 (PDT)
+        Thu, 4 Apr 2019 14:04:21 -0400
+Received: by mail-yw1-f65.google.com with SMTP id w66so1323641ywd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 11:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r+awzsklRaN8f3VMg5myT4W3vKGVqS7FvEt6SUL9b1g=;
+        b=KuTTEVlu+qenNrlW6DvIcq3r+boUNs2z4LWlg/MFiHmO5w09dEEeEeSUU2Y5F1MaYR
+         xiNJBjoyEzT8zKxGwdPlti3+yYbLVcsr4UMRDSTXcfGWspULAVDhyimjXxWi3tMSsOw/
+         sulddG1X0VWN28FXmw2CUoLEkiOY85teLW3pg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zAvVyVMCARwzfM/G9djwPa5imgG7WteKsaLURotdmA8=;
-        b=qQ71TVhYfWhDGmDNdAtMDuZvhvsB+AqzRpqqjGN7betW6sNB+NiRgvLccyAPVOou7O
-         Pl0lBheeckk/Ojafx1/kTz6Ux/hBjkVGcGoesMxN6YA8h4uufUIa1sVzKjq5+8vTZ6jA
-         rkfhGqBK/lLIqWmq+meERR1tC2FNpDb+wdeqBZ1wfEdC4tOKT0PQjsdFDPQrP+AoASuc
-         PnlZseux3xfIoS9ovP3Fix6jzpweqIXY8Z/3gKL322LQGfjdUFuXLuKiRxmaZgz4NSE6
-         Lu5WSimx9/WndOjs3SFVEkTnhQNls4ujATKSkoDnkDnUhdMn19dnA09fru6WIUPmgr4g
-         LzfA==
-X-Gm-Message-State: APjAAAWGvNnn2gzv7bfWcjQV6pVBnWGtqrwfMx4ci2Kzgn7BzH08i6zH
-        mDaLhQhCebsBAy4SxOG7sgQwSQ==
-X-Google-Smtp-Source: APXvYqy6Q7mnroz0n4KIXtlptTEPTmRJn3iWMx9R2GOOkKg60CaWGqU9k9CZnFsws4eTuSjTRKo+mQ==
-X-Received: by 2002:ac8:18e6:: with SMTP id o35mr6705251qtk.80.1554401054056;
-        Thu, 04 Apr 2019 11:04:14 -0700 (PDT)
-Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
-        by smtp.gmail.com with ESMTPSA id w8sm10699052qki.54.2019.04.04.11.04.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 11:04:12 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 14:04:10 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC 0/4] vsock/virtio: optimizations to increase the
- throughput
-Message-ID: <20190404140345-mutt-send-email-mst@kernel.org>
-References: <20190404105838.101559-1-sgarzare@redhat.com>
- <20190404114643-mutt-send-email-mst@kernel.org>
- <20190404164715.sycigtccwq2rziuz@steredhat>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=r+awzsklRaN8f3VMg5myT4W3vKGVqS7FvEt6SUL9b1g=;
+        b=HeBjTvF236ANJHHmb2GlfnGTs4gmjRXxtMt2pB1xf1S/KBYDA9wSPXOgL/63C+se7c
+         ZXMZpLsn5BkLTU5xfKdWHFw9//uMj4M33BoTa9IIm/vPbd1pnNeoficHvCYdERToezRi
+         hmMudz+gRix044dQiNqz8R00lBk9zlyOGojSCugnPndcAydQvnb3VY0zpvOFFUQqGQw0
+         OV/JrqudAQr9BDoJawuvQVOWmozHVXTcIBBKjUBPZBOGlPRqsqyC6gYKTml72WUTqriu
+         Llt6AAZ4gdQ7jc+AcVQI7q5nkX52zRs8mIx9xrzeBGYOEkjaqYnOFWay+U0JT7OfLZL6
+         XZJQ==
+X-Gm-Message-State: APjAAAUY1rU4SdYeIPDTHqvGI+J/cAgcoO0+ycAG2o1xwDFD3jSLvcsP
+        RFwzHLw3bFdlttN+9/T/uHrzExmGyO+NyBZoI2pfC8an6WGNQHr8mCYZu4lqWF2b+IoAn3/PfLf
+        YZnhqe3KhGQZXsz0kfcD1GD2NU88q8ZH/Diws3ah8GIXLMsq0wRj6u/736vGAcdq+PiVd+jIEZu
+        vA
+X-Google-Smtp-Source: APXvYqzARoDvyNzBFZe/Xx8uoBDrrrYsOMxM6+l/+AFJrJ3GPhsQcmXf7nmefet/r0ZruRHsyPWLsw==
+X-Received: by 2002:a81:3111:: with SMTP id x17mr5955229ywx.260.1554401060164;
+        Thu, 04 Apr 2019 11:04:20 -0700 (PDT)
+Received: from [10.136.8.252] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id g133sm11041196ywg.84.2019.04.04.11.04.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 11:04:19 -0700 (PDT)
+Subject: Re: [PATCH v2] Add i2c recovery handling for bcm-iproc based devices.
+To:     Richard Laing <richard.laing@alliedtelesis.co.nz>,
+        rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-kernel@vger.kernel.org
+References: <20190325205933.2726-1-richard.laing@alliedtelesis.co.nz>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <c62ca931-950e-7979-99f8-97b45b2ba220@broadcom.com>
+Date:   Thu, 4 Apr 2019 11:04:17 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404164715.sycigtccwq2rziuz@steredhat>
+In-Reply-To: <20190325205933.2726-1-richard.laing@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 06:47:15PM +0200, Stefano Garzarella wrote:
-> On Thu, Apr 04, 2019 at 11:52:46AM -0400, Michael S. Tsirkin wrote:
-> > I simply love it that you have analysed the individual impact of
-> > each patch! Great job!
-> 
-> Thanks! I followed Stefan's suggestions!
-> 
-> > 
-> > For comparison's sake, it could be IMHO benefitial to add a column
-> > with virtio-net+vhost-net performance.
-> > 
-> > This will both give us an idea about whether the vsock layer introduces
-> > inefficiencies, and whether the virtio-net idea has merit.
-> > 
-> 
-> Sure, I already did TCP tests on virtio-net + vhost, starting qemu in
-> this way:
->   $ qemu-system-x86_64 ... \
->       -netdev tap,id=net0,vhost=on,ifname=tap0,script=no,downscript=no \
->       -device virtio-net-pci,netdev=net0
-> 
-> I did also a test using TCP_NODELAY, just to be fair, because VSOCK
-> doesn't implement something like this.
 
-Why not?
 
-> In both cases I set the MTU to the maximum allowed (65520).
+On 3/25/2019 1:59 PM, Richard Laing wrote:
+> It is possible for the i2c bus to become locked up preventing
+> communication with devices on the bus. This can occur when
+> another i2c device fails to be reset correctly. In this case
+> the SDA line will be held low preventing further communication
+> on the bus.
 > 
->                         VSOCK                        TCP + virtio-net + vhost
->                   host -> guest [Gbps]                 host -> guest [Gbps]
-> pkt_size  before opt. patch 1 patches 2+3 patch 4     TCP_NODELAY
->   64          0.060     0.102     0.102     0.096         0.16        0.15
->   256         0.22      0.40      0.40      0.36          0.32        0.57
->   512         0.42      0.82      0.85      0.74          1.2         1.2
->   1K          0.7       1.6       1.6       1.5           2.1         2.1
->   2K          1.5       3.0       3.1       2.9           3.5         3.4
->   4K          2.5       5.2       5.3       5.3           5.5         5.3
->   8K          3.9       8.4       8.6       8.8           8.0         7.9
->   16K         6.6      11.1      11.3      12.8           9.8        10.2
->   32K         9.9      15.8      15.8      18.1          11.8        10.7
->   64K        13.5      17.4      17.7      21.4          11.4        11.3
->   128K       17.9      19.0      19.0      23.6          11.2        11.0
->   256K       18.0      19.4      19.8      24.4          11.1        11.0
->   512K       18.4      19.6      20.1      25.3          10.1        10.7
+> This situation can be corrected by sending a series of clock
+> pulses to allow the blocking device to complete the transaction
+> and release the bus.
 > 
-> For small packet size (< 4K) I think we should implement some kind of
-> batching/merging, that could be for free if we use virtio-net as a transport.
+> Add the hooks required to allow the existing i2c recovery code
+> to be used to clear the lock up.
 > 
-> Note: Maybe I have something miss configured because TCP on virtio-net
-> for host -> guest case doesn't exceed 11 Gbps.
+> Before the recovery can be performed the device needs to be configured in
+> the bit-bang mode allow the clock line to be controlled directly by the
+> i2c_generic_recovery() in i2c-core.c. Access routines are provided to get
+> and set the clock line state and on completion the device is returned to
+> normal operations and initialized.
 > 
->                         VSOCK                        TCP + virtio-net + vhost
->                   guest -> host [Gbps]                 guest -> host [Gbps]
-> pkt_size  before opt. patch 1 patches 2+3             TCP_NODELAY
->   64          0.088     0.100     0.101                   0.24        0.24
->   256         0.35      0.36      0.41                    0.36        1.03
->   512         0.70      0.74      0.73                    0.69        1.6
->   1K          1.1       1.3       1.3                     1.1         3.0
->   2K          2.4       2.4       2.6                     2.1         5.5
->   4K          4.3       4.3       4.5                     3.8         8.8
->   8K          7.3       7.4       7.6                     6.6        20.0
->   16K         9.2       9.6      11.1                    12.3        29.4
->   32K         8.3       8.9      18.1                    19.3        28.2
->   64K         8.3       8.9      25.4                    20.6        28.7
->   128K        7.2       8.7      26.7                    23.1        27.9
->   256K        7.7       8.4      24.9                    28.5        29.4
->   512K        7.7       8.5      25.0                    28.3        29.3
+> Signed-off-by: Richard Laing <richard.laing@alliedtelesis.co.nz>
+> ---
+> changes in v2:
+> - fix typos/spelling
+> - change M_BB_CTRL_DATA_SHIFT to M_BB_CTRL_DATA_IN_SHIFT
+> - change from int to bool for bcm_iproc_i2c_set_scl was NOT done, the type for
+>   the function pointer does not match and compilation therefore fails.
+> - updated calls to i2c_recover_bus
 > 
-> For guest -> host I think is important the TCP_NODELAY test, because TCP
-> buffering increases a lot the throughput.
+>  drivers/i2c/busses/i2c-bcm-iproc.c | 111 +++++++++++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
 > 
-> > One other comment: it makes sense to test with disabling smap
-> > mitigations (boot host and guest with nosmap).  No problem with also
-> > testing the default smap path, but I think you will discover that the
-> > performance impact of smap hardening being enabled is often severe for
-> > such benchmarks.
-> 
-> Thanks for this valuable suggestion, I'll redo all the tests with nosmap!
-> 
-> Cheers,
-> Stefano
+> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+> index 4c8c3bc4669c..78393c3b5e83 100644
+> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+
+[...]
+
+> @@ -78,6 +79,11 @@
+>  #define M_RX_DATA_SHIFT              0
+>  #define M_RX_DATA_MASK               0xff
+>  
+> +#define M_BB_CTRL_OFFSET             0x14
+> +#define M_BB_CTRL_CLK_IN_SHIFT       31
+> +#define M_BB_CTRL_CLK_SHIFT          30
+
+I think it missed this from my previous review: M_BB_CTRL_CLK_OUT_SHIFT
+
+> +#define M_BB_CTRL_DATA_IN_SHIFT      29
+> +
+>  #define I2C_TIMEOUT_MSEC             50000
+>  #define M_TX_RX_FIFO_SIZE            64
+>  
+> @@ -208,6 +214,108 @@ static void bcm_iproc_i2c_enable_disable(struct bcm_iproc_i2c_dev *iproc_i2c,
+>  	writel(val, iproc_i2c->base + CFG_OFFSET);
+>  }
+>  
+> +/*
+> + * Switch to bit bang mode to prepare for i2c generic recovery.
+> + */
+> +static void bcm_iproc_i2c_prepare_recovery(struct i2c_adapter *adap)
+> +{
+> +	struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adap);
+> +	u32 tmp;
+> +
+> +	dev_dbg(iproc_i2c->device, "Prepare recovery\n");
+> +
+> +	/* Disable interrupts */
+> +	writel(0, iproc_i2c->base + IE_OFFSET);
+> +	readl(iproc_i2c->base + IE_OFFSET);
+> +	synchronize_irq(iproc_i2c->irq);
+> +
+> +	/* Put the i2c controller into reset. */
+> +	tmp = readl(iproc_i2c->base + CFG_OFFSET);
+> +	tmp |= BIT(CFG_RESET_SHIFT);
+> +	writel(tmp, iproc_i2c->base + CFG_OFFSET);
+> +	udelay(100);
+> +
+> +	/* Switch to bit-bang mode */
+> +	tmp = readl(iproc_i2c->base + CFG_OFFSET);
+> +	tmp |= BIT(CFG_BIT_BANG_SHIFT);
+> +	writel(tmp, iproc_i2c->base + CFG_OFFSET);
+> +}
+> +
+> +/*
+> + * Return to normal i2c operation following recovery.
+> + */
+> +static void bcm_iproc_i2c_unprepare_recovery(struct i2c_adapter *adap)
+> +{
+> +	struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adap);
+> +	u32 tmp;
+> +
+> +	/* Switch to normal mode */
+> +	tmp = readl(iproc_i2c->base + CFG_OFFSET);
+> +	tmp &= ~BIT(CFG_BIT_BANG_SHIFT);
+> +	writel(tmp, iproc_i2c->base + CFG_OFFSET);
+> +	udelay(100);
+> +
+> +	bcm_iproc_i2c_init(iproc_i2c);
+> +	bcm_iproc_i2c_enable_disable(iproc_i2c, true);
+> +
+> +	dev_dbg(iproc_i2c->device, "Recovery complete\n");
+> +}
+> +
+> +/*
+> + * Return the SCL state, we must be configured in bit bang mode for this
+> + * to work.
+> + */
+> +static int bcm_iproc_i2c_get_scl(struct i2c_adapter *adap)
+> +{
+> +	struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adap);
+> +	u32 tmp;
+> +
+> +	tmp = readl(iproc_i2c->base + M_BB_CTRL_OFFSET);
+> +
+> +	return tmp & BIT(M_BB_CTRL_CLK_IN_SHIFT);
+> +}
+> +
+> +/*
+> + * Set the SCL state, we must be configured in bit bang mode for this
+> + * to work.
+> + */
+> +static void bcm_iproc_i2c_set_scl(struct i2c_adapter *adap, int val)
+
+You are missing to address or reply to another comment from me here.
+
+I'll stop my review here. Please ensure you go through my previous
+review thoroughly, and reply/address all of the comments.
+
+In addition, note Wolfram just merged a series of iProc I2C patches into
+his tree in branch 'i2c/for-next'. You may want to rebase your patch to
+that for the next iteration.
+
+Thanks,
+
+Ray
