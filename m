@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BF2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A73C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412CD2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73542183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368515;
-	bh=I2QDmcozZkWN7ngFiPiJpwPdvxcXMk91BkmYyiUw6HU=;
+	s=default; t=1554368517;
+	bh=U/ISEtmAbFDSWDBOws/rt17KURHFkUzg6AxUwn+wHWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NbtlqntMwzLzPafT9fyisRJ3B+WJ8u3NJp6BClI8zIB7lue9mCE717slFRDx6AIhM
-	 4KbmeEmvYT64VMF6hrzht4wi9pzXnFqEWRHbVGABENDksNM41IpJBDcCadKdA+wCwt
-	 tOnL9uV2qf3bHuSHxlH5vNOEMyYLJ3bLS+9NNgfQ=
+	b=O/jObikVSOY+teH8tidZaXRKxDbQsltIw7MvX5fPMvruz56Qpo0RrLzxV/L3PNEx8
+	 x9sTBhIRwbIIBTjB1wPgWGc5zl74mMraL4wm+BMatzlkL9XHJ6RmVmMvz590SYdT42
+	 FoVZ10ejGMPjBwbFDdUnU/S8gUTCpQwDkKhKbR+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbfDDJBy (ORCPT
+        id S1731517AbfDDJB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39082 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731493AbfDDJBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:51 -0400
+        id S1730264AbfDDJBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2344A2147C;
-        Thu,  4 Apr 2019 09:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A3A21741;
+        Thu,  4 Apr 2019 09:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368510;
-        bh=I2QDmcozZkWN7ngFiPiJpwPdvxcXMk91BkmYyiUw6HU=;
+        s=default; t=1554368513;
+        bh=U/ISEtmAbFDSWDBOws/rt17KURHFkUzg6AxUwn+wHWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tk0gcQBMi3Ju5q4IrWy+EKI81vOBoA3gPKS/nFi2rrA5IlogEe2k74v/wX9e6sO8f
-         pb3IPz5xGlvBR5eavxz3tvs1vwczIPrbVV4f1L2pWFzsCorxi9R5tJKqDeM73pC7Hk
-         2vyMIo5FXqTJuOMcVSJPjLCYlcnsabPk/sl88oew=
+        b=UuBTu8IeLDoJpv74emDbF3332G95ccewUokiXLtwSdzCNS6K4TGpv7cLhZRORSria
+         MOIQKNYZ8Mv1kJynsjW2+qpRWDvF3nSCn+bQmaRF/KKHmxrsmOHPW4BfrLJiV5vzBD
+         SZBaTu7gZk+leMfjNnXh77M87LcoiBHxMiRt1+XI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Yang Fan <nullptr.cpp@gmail.com>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/187] mlxsw: spectrum: Avoid -Wformat-truncation warnings
-Date:   Thu,  4 Apr 2019 10:46:43 +0200
-Message-Id: <20190404084606.160318303@linuxfoundation.org>
+Subject: [PATCH 4.19 067/187] platform/x86: ideapad-laptop: Fix no_hw_rfkill_list for Lenovo RESCUER R720-15IKBN
+Date:   Thu,  4 Apr 2019 10:46:44 +0200
+Message-Id: <20190404084606.209141037@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,68 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ab2c4e2581ad32c28627235ff0ae8c5a5ea6899f ]
+[ Upstream commit 4d9b2864a415fec39150bc13efc730c7eb88711e ]
 
-Give precision identifiers to the two snprintf() formatting the priority
-and TC strings to avoid producing these two warnings:
+Commit ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER
+R720-15IKBN to no_hw_rfkill_list") added
+    DMI_MATCH(DMI_BOARD_NAME, "80WW")
+for Lenovo RESCUER R720-15IKBN.
 
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
-'mlxsw_sp_port_get_prio_strings':
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:37: warning: '%d'
-directive output may be truncated writing between 1 and 3 bytes into a
-region of size between 0 and 31 [-Wformat-truncation=]
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-                                     ^~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2132:3: note: 'snprintf'
-output between 3 and 36 bytes into a destination of size 32
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     mlxsw_sp_port_hw_prio_stats[i].str, prio);
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c: In function
-'mlxsw_sp_port_get_tc_strings':
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:37: warning: '%d'
-directive output may be truncated writing between 1 and 11 bytes into a
-region of size between 0 and 31 [-Wformat-truncation=]
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-                                     ^~
-drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2143:3: note: 'snprintf'
-output between 3 and 44 bytes into a destination of size 32
-   snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     mlxsw_sp_port_hw_tc_stats[i].str, tc);
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+But DMI_BOARD_NAME does not match 80WW on Lenovo RESCUER R720-15IKBN,
+thus cause Wireless LAN still be hard blocked.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+On Lenovo RESCUER R720-15IKBN:
+    ~$ cat /sys/class/dmi/id/sys_vendor
+    LENOVO
+    ~$ cat /sys/class/dmi/id/board_name
+    Provence-5R3
+    ~$ cat /sys/class/dmi/id/product_name
+    80WW
+    ~$ cat /sys/class/dmi/id/product_version
+    Lenovo R720-15IKBN
+
+So on Lenovo RESCUER R720-15IKBN:
+    DMI_SYS_VENDOR should match "LENOVO",
+    DMI_BOARD_NAME should match "Provence-5R3",
+    DMI_PRODUCT_NAME should match "80WW",
+    DMI_PRODUCT_VERSION should match "Lenovo R720-15IKBN".
+
+Fix it, and in according with other entries in no_hw_rfkill_list,
+use DMI_PRODUCT_VERSION instead of DMI_BOARD_NAME.
+
+Fixes: ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER R720-15IKBN to no_hw_rfkill_list")
+Signed-off-by: Yang Fan <nullptr.cpp@gmail.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index a12b5710891e..f9bef030ee05 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -1988,7 +1988,7 @@ static void mlxsw_sp_port_get_prio_strings(u8 **p, int prio)
- 	int i;
- 
- 	for (i = 0; i < MLXSW_SP_PORT_HW_PRIO_STATS_LEN; i++) {
--		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-+		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
- 			 mlxsw_sp_port_hw_prio_stats[i].str, prio);
- 		*p += ETH_GSTRING_LEN;
- 	}
-@@ -1999,7 +1999,7 @@ static void mlxsw_sp_port_get_tc_strings(u8 **p, int tc)
- 	int i;
- 
- 	for (i = 0; i < MLXSW_SP_PORT_HW_TC_STATS_LEN; i++) {
--		snprintf(*p, ETH_GSTRING_LEN, "%s_%d",
-+		snprintf(*p, ETH_GSTRING_LEN, "%.29s_%.1d",
- 			 mlxsw_sp_port_hw_tc_stats[i].str, tc);
- 		*p += ETH_GSTRING_LEN;
- 	}
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index d4f1259ff5a2..62d4b94e2531 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -989,7 +989,7 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		.ident = "Lenovo RESCUER R720-15IKBN",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_BOARD_NAME, "80WW"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
+ 		},
+ 	},
+ 	{
 -- 
 2.19.1
 
