@@ -2,169 +2,336 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94233C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB3FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C18921738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF062171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="iW2OaNWi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kwHznNze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730997AbfDDV0Y (ORCPT
+        id S1730280AbfDDV14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 17:26:24 -0400
-Received: from mail-eopbgr760073.outbound.protection.outlook.com ([40.107.76.73]:65094
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730206AbfDDV0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 17:26:22 -0400
+        Thu, 4 Apr 2019 17:27:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33359 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDDV1z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 17:27:55 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j10so3782105otq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 14:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ky/BSv/j6ICMo+UtYOQOIwZ91Y+pcvJ9i0cuA9noUsw=;
- b=iW2OaNWiMRqVLKQWwGYd8B0aCx1jw4lKYF42pNTy+dNbXmp9jVKxSQdl7oIk99CVQj/L5PyN/aqwrCxiuXRNSG2tp1Fe4ducG7xH2nrctLkUTqlbJQyR9/qh487TslQMdlAwau9KDSqaXJT8DgqpfLWkfex7TeaPVnlIHHhwdAk=
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
- SN6PR12MB2784.namprd12.prod.outlook.com (52.135.107.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1750.22; Thu, 4 Apr 2019 21:25:57 +0000
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::65cb:af55:6bd4:55a]) by SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::65cb:af55:6bd4:55a%4]) with mapi id 15.20.1750.017; Thu, 4 Apr 2019
- 21:25:57 +0000
-From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-To:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Subject: [PATCH v2 7/7] acpi/cppc: Add support for CPPC Enable register
-Thread-Topic: [PATCH v2 7/7] acpi/cppc: Add support for CPPC Enable register
-Thread-Index: AQHU6yz+DxZ5qtCYS0KW8MgU0wIz4g==
-Date:   Thu, 4 Apr 2019 21:25:57 +0000
-Message-ID: <22e1dec2fc26026647dc0f367b2e79599e062399.1554410643.git.Janakarajan.Natarajan@amd.com>
-References: <cover.1554410643.git.Janakarajan.Natarajan@amd.com>
-In-Reply-To: <cover.1554410643.git.Janakarajan.Natarajan@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0201CA0052.namprd02.prod.outlook.com
- (2603:10b6:803:20::14) To SN6PR12MB2736.namprd12.prod.outlook.com
- (2603:10b6:805:77::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.78.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1e6e04ae-13db-469b-6782-08d6b9442046
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR12MB2784;
-x-ms-traffictypediagnostic: SN6PR12MB2784:
-x-microsoft-antispam-prvs: <SN6PR12MB2784B4F93638529DA3843C3EE7500@SN6PR12MB2784.namprd12.prod.outlook.com>
-x-forefront-prvs: 0997523C40
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(396003)(136003)(376002)(199004)(189003)(97736004)(6436002)(478600001)(71200400001)(118296001)(7736002)(71190400001)(36756003)(14444005)(256004)(72206003)(4326008)(2201001)(86362001)(486006)(68736007)(14454004)(6486002)(66066001)(316002)(8676002)(2501003)(102836004)(52116002)(2906002)(110136005)(26005)(99286004)(6506007)(54906003)(76176011)(2616005)(186003)(81156014)(5660300002)(81166006)(305945005)(50226002)(8936002)(6512007)(25786009)(53936002)(6116002)(446003)(106356001)(105586002)(3846002)(476003)(11346002)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2784;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MFgc768k2mNtPBzZBFer4IvDzTO7lb7yOwjTeoqAF9Q2D+julURrtTCJ2/bsdhwdz5FunUgyM6U2kMV7WBUYzGI4Zg2+4KW5IL02wS1oXQiecUi8YhU3uJnSvIYWFIV3HQRgIoQFYj/5vZ8BUf9zZD63Yhsw69zgoETfhDh/n5FaOdUOTO8or/OH2+l/j9Fqq95uOvOyGO7VMOGz7HxvzG8Kgy9FATch7bMwQ5si47jmZ6EVF8FzLBqvZ5Tcj9/FzJ9+dVLM7BHWrIpCiSsnhMtf5dBTIl9S1ZMP83bMnvDm7jPriY/s6tNaRspw1lK3XCjd+InxE+AYeLEBZMLE5rhbf+jRPFKX/HDN9cTfTE/G4Cl77Nn6xDl9XrLumJGlITfL16Z0vUq2sIDnpsidKmdetxHR1vr3CWV2MRYkPHc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e6e04ae-13db-469b-6782-08d6b9442046
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 21:25:57.6618
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2784
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9SV3FH2+wkz9gqGz5Ak/J5kqbrGksI18bILx8Q2+12Y=;
+        b=kwHznNzeAllYt2pATcIGVvGmTWnuu0nTU2d5cIxNF1XCCgbAHFq0T3qRUxDcw62uZB
+         u/irQQHSASMCON2UHh+IXP8VcolkAru6vsin8axOb65fUZ2TnCmknIrVCFMaWxO7ES0R
+         CQxiMgcelr+JeVGe3m8fs4e4exFrPwfrRbjasRitR3SG7QIvRsShzs0RbjjoU9DBCimm
+         no3KEpsFG+ASUrjKmou9WnSUjOJ8PnhMlkFgraZ9ZDWqeXteB3H3g3Q9Ph+atYG5sqxX
+         fC8R/m8+iSF1mwnwMU7mthbiBYQsuKuqHaEufaXDiYU2B9YP663Sb0IdC8nHU9We0cN+
+         U81g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9SV3FH2+wkz9gqGz5Ak/J5kqbrGksI18bILx8Q2+12Y=;
+        b=h1F/4toSXXDCRrJ+GLEYhiqyDU8E1CQ6xCSuwl03vHrsDJNBM0fijBCQR9R8uTjyUp
+         msMrywFo4ajIpFr1wUEjF4GDZ3RhL3ro9TNfeqmHUgYzmREHdTu4wKW6t1mmmMfK2guq
+         vi68tfdt9agJtKFhjvyxiExunrWKpA+zFCMtqHN6stQGqPW+xVFIyAK4JGLgk8u47W2W
+         9+otiQ+Ox9qUeoeJk7uDkoKETClcM8rTyqC1R7Tn35mMFw/JdTW1FqdBRLTYsOgkr1gn
+         Bh/L7H1rKY6nFSugM0tGat1sIOb0b5wnC/D4t7/tF12ttzKbY1s4C9kY5uTGszbVst1X
+         GfBw==
+X-Gm-Message-State: APjAAAX3NfEs1TksI89s3PbcMxBP6WKJ9ymeOxCb5V6LFpceRYWXq8RD
+        3VWyK268DiskXDSgw5sWhdI=
+X-Google-Smtp-Source: APXvYqxCRcKCHCq5OBfBt1nA5omeuTqSUEcIx3hEtSM2NftOwujLwxzKYWyWPg9+SF3lNv0jbVqkIA==
+X-Received: by 2002:a9d:77da:: with SMTP id w26mr5660958otl.17.1554413274644;
+        Thu, 04 Apr 2019 14:27:54 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:7549:4e85:9095:b601])
+        by smtp.gmail.com with ESMTPSA id n77sm10317623ota.77.2019.04.04.14.27.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 14:27:53 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     eric@anholt.net, stefan.wahren@i2se.com,
+        gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH] Staging: vc04_services: bcm2835-camera: Remove an exceptional &
+Date:   Thu,  4 Apr 2019 16:27:37 -0500
+Message-Id: <20190404212737.3497-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWWF6ZW4gR2hhbm5hbSA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPg0KDQpUbyBlbmFibGUg
-Q1BQQyBvbiBhIHByb2Nlc3NvciwgdGhlIE9TIHNob3VsZCB3cml0ZSBhIHZhbHVlICIxIiB0byB0
-aGUNCkNQUEMgRW5hYmxlIHJlZ2lzdGVyLiBBZGQgc3VwcG9ydCBmb3IgdGhpcyByZWdpc3Rlci4N
-Cg0KU2lnbmVkLW9mZi1ieTogWWF6ZW4gR2hhbm5hbSA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPg0K
-WyBjYXJ2ZWQgb3V0IGludG8gYSBwYXRjaCwgY2xlYW5lZCB1cCwgcHJvZHVjdGl6ZWQgXQ0KU2ln
-bmVkLW9mZi1ieTogSmFuYWthcmFqYW4gTmF0YXJhamFuIDxKYW5ha2FyYWphbi5OYXRhcmFqYW5A
-YW1kLmNvbT4NCi0tLQ0KIGRyaXZlcnMvYWNwaS9jcHBjX2FjcGkuYyB8IDk2ICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiBpbmNsdWRlL2FjcGkvY3BwY19hY3BpLmgg
-fCAgMSArDQogMiBmaWxlcyBjaGFuZ2VkLCA5NyBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2FjcGkvY3BwY19hY3BpLmMgYi9kcml2ZXJzL2FjcGkvY3BwY19hY3BpLmMNCmlu
-ZGV4IGJiNTdkNTI2ZTU0ZS4uYjc0YzQ4OWEzZThkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9hY3Bp
-L2NwcGNfYWNwaS5jDQorKysgYi9kcml2ZXJzL2FjcGkvY3BwY19hY3BpLmMNCkBAIC0yMzIsNiAr
-MjMyLDQzIEBAIHN0YXRpYyBzc2l6ZV90IHNob3dfZmVlZGJhY2tfY3RycyhzdHJ1Y3Qga29iamVj
-dCAqa29iaiwNCiB9DQogZGVmaW5lX29uZV9jcHBjX3JvKGZlZWRiYWNrX2N0cnMpOw0KIA0KKy8q
-IFVzZWQgdG8gbW92ZSBFTkFCTEUgcmVnaXN0ZXIgdmFsdWUgYmV0d2VlbiB1c2Vyc3BhY2UgYW5k
-IHBsYXRmb3JtICovDQorc3RhdGljIGJvb2wgY3BwY19jcHVfZW5hYmxlOw0KKw0KK3N0YXRpYyBz
-c2l6ZV90IHNob3dfZW5hYmxlKHN0cnVjdCBrb2JqZWN0ICprb2JqLA0KKwkJCSAgIHN0cnVjdCBh
-dHRyaWJ1dGUgKmF0dHIsDQorCQkJICAgY2hhciAqYnVmKQ0KK3sNCisJc3RydWN0IGNwY19kZXNj
-ICpjcGNfcHRyID0gdG9fY3BjX2Rlc2Moa29iaik7DQorCWludCByZXQ7DQorDQorCXJldCA9IGNw
-cGNfZ2V0X2VuYWJsZShjcGNfcHRyLT5jcHVfaWQpOw0KKwlpZiAocmV0KQ0KKwkJcmV0dXJuIHJl
-dDsNCisNCisJcmV0dXJuIHNjbnByaW50ZihidWYsIFBBR0VfU0laRSwgIiVkXG4iLCBjcHBjX2Nw
-dV9lbmFibGUpOw0KK30NCisNCitzdGF0aWMgc3NpemVfdCBzdG9yZV9lbmFibGUoc3RydWN0IGtv
-YmplY3QgKmtvYmosDQorCQkJICAgIHN0cnVjdCBhdHRyaWJ1dGUgKmF0dHIsDQorCQkJICAgIGNv
-bnN0IGNoYXIgKmMsIHNzaXplX3QgY291bnQpDQorew0KKwlzdHJ1Y3QgY3BjX2Rlc2MgKmNwY19w
-dHIgPSB0b19jcGNfZGVzYyhrb2JqKTsNCisJaW50IHJldDsNCisNCisJcmV0ID0ga3N0cnRvYm9v
-bChjLCAmY3BwY19jcHVfZW5hYmxlKTsNCisJaWYgKHJldCkNCisJCXJldHVybiByZXQ7DQorDQor
-CXJldCA9IGNwcGNfc2V0X3JlZyhjcGNfcHRyLT5jcHVfaWQsIE5VTEwsIEVOQUJMRSk7DQorCWlm
-IChyZXQpDQorCQlyZXR1cm4gcmV0Ow0KKw0KKwlyZXR1cm4gY291bnQ7DQorfQ0KKw0KK2RlZmlu
-ZV9vbmVfY3BwY19ydyhlbmFibGUpOw0KKw0KIHN0YXRpYyBzdHJ1Y3Qga29ial90eXBlIGNwcGNf
-a3R5cGUgPSB7DQogCS5zeXNmc19vcHMgPSAma29ial9zeXNmc19vcHMsDQogfTsNCkBAIC04MjYs
-NiArODYzLDkgQEAgc3RhdGljIGludCBzZXRfY3BwY19hdHRycyhzdHJ1Y3QgY3BjX2Rlc2MgKmNw
-YywgaW50IGVudHJpZXMpDQogCQljYXNlIERFU0lSRURfUEVSRjoNCiAJCQljcHBjX2F0dHJzW2F0
-dHJfaSsrXSA9ICZkZXNpcmVkX3BlcmYuYXR0cjsNCiAJCQlicmVhazsNCisJCWNhc2UgRU5BQkxF
-Og0KKwkJCWNwcGNfYXR0cnNbYXR0cl9pKytdID0gJmVuYWJsZS5hdHRyOw0KKwkJCWJyZWFrOw0K
-IAkJfQ0KIAl9DQogDQpAQCAtMTQyNiw2ICsxNDY2LDkgQEAgaW50IGNwcGNfc2V0X3JlZyhpbnQg
-Y3B1LCBzdHJ1Y3QgY3BwY19wZXJmX2N0cmxzICpwZXJmX2N0cmxzLA0KIAl9DQogDQogCXN3aXRj
-aCAocmVnX2lkeCkgew0KKwljYXNlIEVOQUJMRToNCisJCXZhbHVlID0gY3BwY19jcHVfZW5hYmxl
-Ow0KKwkJYnJlYWs7DQogCWNhc2UgREVTSVJFRF9QRVJGOg0KIAkJdmFsdWUgPSBwZXJmX2N0cmxz
-LT5kZXNpcmVkX3BlcmY7DQogCQlicmVhazsNCkBAIC0xNjE2LDYgKzE2NTksNTkgQEAgaW50IGNw
-cGNfZ2V0X3BlcmYoaW50IGNwdSwgc3RydWN0IGNwcGNfcGVyZl9jdHJscyAqcGVyZl9jdHJscykN
-CiB9DQogRVhQT1JUX1NZTUJPTF9HUEwoY3BwY19nZXRfcGVyZik7DQogDQorLyoqDQorICogY3Bw
-Y19nZXRfZW5hYmxlIC0gUmVhZCBhIENQVXMgZW5hYmxlIHJlZ2lzdGVyLg0KKyAqIEBjcHU6IENQ
-VSBmcm9tIHdoaWNoIHRvIHJlYWQgY29udHJvbCB2YWx1ZXMuDQorICoNCisgKiBSZXR1cm46IDAg
-Zm9yIHN1Y2Nlc3MuDQorICovDQoraW50IGNwcGNfZ2V0X2VuYWJsZShpbnQgY3B1KQ0KK3sNCisJ
-c3RydWN0IGNwY19kZXNjICpjcGNfZGVzYyA9IHBlcl9jcHUoY3BjX2Rlc2NfcHRyLCBjcHUpOw0K
-KwlpbnQgcGNjX3NzX2lkID0gcGVyX2NwdShjcHVfcGNjX3N1YnNwYWNlX2lkeCwgY3B1KTsNCisJ
-c3RydWN0IGNwY19yZWdpc3Rlcl9yZXNvdXJjZSAqZW5hYmxlX3JlZzsNCisJc3RydWN0IGNwcGNf
-cGNjX2RhdGEgKnBjY19zc19kYXRhID0gTlVMTDsNCisJaW50IHJldCA9IDAsIHJlZ3NfaW5fcGNj
-ID0gMDsNCisJdTY0IGVuYWJsZTsNCisNCisJaWYgKCFjcGNfZGVzYykgew0KKwkJcHJfZGVidWco
-Ik5vIENQQyBkZXNjcmlwdG9yIGZvciBDUFU6ICVkXG4iLCBjcHUpOw0KKwkJcmV0dXJuIC1FTk9E
-RVY7DQorCX0NCisNCisJZW5hYmxlX3JlZyA9ICZjcGNfZGVzYy0+Y3BjX3JlZ3NbRU5BQkxFXTsN
-CisNCisJaWYgKCFDUENfU1VQX0JVRkZFUl9PTkxZKGVuYWJsZV9yZWcpKSB7DQorCQlwcl93YXJu
-KCJDUEMgRU5BQkxFIHJlZ2lzdGVyIG5vdCBzdXBwb3J0ZWQuXG4iKTsNCisJCXJldHVybiAtRU5P
-VFNVUFA7DQorCX0NCisNCisJaWYgKENQQ19JTl9QQ0MoZW5hYmxlX3JlZykpIHsNCisJCXBjY19z
-c19kYXRhID0gcGNjX2RhdGFbcGNjX3NzX2lkXTsNCisJCWRvd25fd3JpdGUoJnBjY19zc19kYXRh
-LT5wY2NfbG9jayk7DQorCQlyZWdzX2luX3BjYyA9IDE7DQorCQkvKiBSaW5nIGRvb3JiZWxsIG9u
-Y2UgdG8gdXBkYXRlIFBDQyBzdWJzcGFjZSAqLw0KKwkJaWYgKHNlbmRfcGNjX2NtZChwY2Nfc3Nf
-aWQsIENNRF9SRUFEKSA8IDApIHsNCisJCQlyZXQgPSAtRUlPOw0KKwkJCWdvdG8gb3V0X2VycjsN
-CisJCX0NCisJfQ0KKw0KKwlpZiAoY3BjX3JlYWQoY3B1LCBlbmFibGVfcmVnLCAmZW5hYmxlKSkg
-ew0KKwkJcmV0ID0gLUVGQVVMVDsNCisJCWdvdG8gb3V0X2VycjsNCisJfQ0KKw0KKwljcHBjX2Nw
-dV9lbmFibGUgPSBlbmFibGU7DQorDQorb3V0X2VycjoNCisJaWYgKHJlZ3NfaW5fcGNjKQ0KKwkJ
-dXBfd3JpdGUoJnBjY19zc19kYXRhLT5wY2NfbG9jayk7DQorDQorCXJldHVybiByZXQ7DQorfQ0K
-K0VYUE9SVF9TWU1CT0xfR1BMKGNwcGNfZ2V0X2VuYWJsZSk7DQorDQogLyoqDQogICogY3BwY19n
-ZXRfdHJhbnNpdGlvbl9sYXRlbmN5IC0gcmV0dXJucyBmcmVxdWVuY3kgdHJhbnNpdGlvbiBsYXRl
-bmN5IGluIG5zDQogICoNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2FjcGkvY3BwY19hY3BpLmggYi9p
-bmNsdWRlL2FjcGkvY3BwY19hY3BpLmgNCmluZGV4IDZmNjUxMjM1OTMzYy4uZmNkZWRmZjhlNmJk
-IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9hY3BpL2NwcGNfYWNwaS5oDQorKysgYi9pbmNsdWRlL2Fj
-cGkvY3BwY19hY3BpLmgNCkBAIC0xMzksNiArMTM5LDcgQEAgc3RydWN0IGNwcGNfY3B1ZGF0YSB7
-DQogCWNwdW1hc2tfdmFyX3Qgc2hhcmVkX2NwdV9tYXA7DQogfTsNCiANCitleHRlcm4gaW50IGNw
-cGNfZ2V0X2VuYWJsZShpbnQgY3B1KTsNCiBleHRlcm4gaW50IGNwcGNfZ2V0X2Rlc2lyZWRfcGVy
-ZihpbnQgY3B1bnVtLCB1NjQgKmRlc2lyZWRfcGVyZik7DQogZXh0ZXJuIGludCBjcHBjX2dldF9w
-ZXJmX2N0cnMoaW50IGNwdSwgc3RydWN0IGNwcGNfcGVyZl9mYl9jdHJzICpwZXJmX2ZiX2N0cnMp
-Ow0KIGV4dGVybiBpbnQgY3BwY19zZXRfcmVnKGludCBjcHUsIHN0cnVjdCBjcHBjX3BlcmZfY3Ry
-bHMgKnBlcmZfY3RybHMsIGVudW0gY3BwY19yZWdzIHJlZ19pZHgpOw0KLS0gDQoyLjE3LjENCg0K
+Remove an exceptional & on function names, otherwise they are used as
+pointers without &.
+
+Issue suggested using Coccinelle.
+
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+---
+ .../vc04_services/bcm2835-camera/controls.c   | 58 +++++++++----------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+index a2c55cb2192a..e39ab5fae724 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+@@ -930,49 +930,49 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		V4L2_CID_SATURATION, MMAL_CONTROL_TYPE_STD,
+ 		-100, 100, 0, 1, NULL,
+ 		MMAL_PARAMETER_SATURATION,
+-		&ctrl_set_rational,
++		ctrl_set_rational,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_SHARPNESS, MMAL_CONTROL_TYPE_STD,
+ 		-100, 100, 0, 1, NULL,
+ 		MMAL_PARAMETER_SHARPNESS,
+-		&ctrl_set_rational,
++		ctrl_set_rational,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_CONTRAST, MMAL_CONTROL_TYPE_STD,
+ 		-100, 100, 0, 1, NULL,
+ 		MMAL_PARAMETER_CONTRAST,
+-		&ctrl_set_rational,
++		ctrl_set_rational,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_BRIGHTNESS, MMAL_CONTROL_TYPE_STD,
+ 		0, 100, 50, 1, NULL,
+ 		MMAL_PARAMETER_BRIGHTNESS,
+-		&ctrl_set_rational,
++		ctrl_set_rational,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_ISO_SENSITIVITY, MMAL_CONTROL_TYPE_INT_MENU,
+ 		0, ARRAY_SIZE(iso_qmenu) - 1, 0, 1, iso_qmenu,
+ 		MMAL_PARAMETER_ISO,
+-		&ctrl_set_iso,
++		ctrl_set_iso,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_ISO_SENSITIVITY_AUTO, MMAL_CONTROL_TYPE_STD_MENU,
+ 		0, 1, V4L2_ISO_SENSITIVITY_AUTO, 1, NULL,
+ 		MMAL_PARAMETER_ISO,
+-		&ctrl_set_iso,
++		ctrl_set_iso,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_IMAGE_STABILIZATION, MMAL_CONTROL_TYPE_STD,
+ 		0, 1, 0, 1, NULL,
+ 		MMAL_PARAMETER_VIDEO_STABILISATION,
+-		&ctrl_set_value,
++		ctrl_set_value,
+ 		false
+ 	},
+ /*	{
+@@ -983,7 +983,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		V4L2_CID_EXPOSURE_AUTO, MMAL_CONTROL_TYPE_STD_MENU,
+ 		~0x03, 3, V4L2_EXPOSURE_AUTO, 0, NULL,
+ 		MMAL_PARAMETER_EXPOSURE_MODE,
+-		&ctrl_set_exposure,
++		ctrl_set_exposure,
+ 		false
+ 	},
+ /* todo this needs mixing in with set exposure
+@@ -996,7 +996,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		/* Units of 100usecs */
+ 		1, 1 * 1000 * 10, 100 * 10, 1, NULL,
+ 		MMAL_PARAMETER_SHUTTER_SPEED,
+-		&ctrl_set_exposure,
++		ctrl_set_exposure,
+ 		false
+ 	},
+ 	{
+@@ -1004,7 +1004,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		0, ARRAY_SIZE(ev_bias_qmenu) - 1,
+ 		(ARRAY_SIZE(ev_bias_qmenu) + 1) / 2 - 1, 0, ev_bias_qmenu,
+ 		MMAL_PARAMETER_EXPOSURE_COMP,
+-		&ctrl_set_value_ev,
++		ctrl_set_value_ev,
+ 		false
+ 	},
+ 	{
+@@ -1012,7 +1012,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		0, 1,
+ 		0, 1, NULL,
+ 		0,	/* Dummy MMAL ID as it gets mapped into FPS range*/
+-		&ctrl_set_exposure,
++		ctrl_set_exposure,
+ 		false
+ 	},
+ 	{
+@@ -1020,7 +1020,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		MMAL_CONTROL_TYPE_STD_MENU,
+ 		~0x7, 2, V4L2_EXPOSURE_METERING_AVERAGE, 0, NULL,
+ 		MMAL_PARAMETER_EXP_METERING_MODE,
+-		&ctrl_set_metering_mode,
++		ctrl_set_metering_mode,
+ 		false
+ 	},
+ 	{
+@@ -1028,56 +1028,56 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		MMAL_CONTROL_TYPE_STD_MENU,
+ 		~0x3ff, 9, V4L2_WHITE_BALANCE_AUTO, 0, NULL,
+ 		MMAL_PARAMETER_AWB_MODE,
+-		&ctrl_set_awb_mode,
++		ctrl_set_awb_mode,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_RED_BALANCE, MMAL_CONTROL_TYPE_STD,
+ 		1, 7999, 1000, 1, NULL,
+ 		MMAL_PARAMETER_CUSTOM_AWB_GAINS,
+-		&ctrl_set_awb_gains,
++		ctrl_set_awb_gains,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_BLUE_BALANCE, MMAL_CONTROL_TYPE_STD,
+ 		1, 7999, 1000, 1, NULL,
+ 		MMAL_PARAMETER_CUSTOM_AWB_GAINS,
+-		&ctrl_set_awb_gains,
++		ctrl_set_awb_gains,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_COLORFX, MMAL_CONTROL_TYPE_STD_MENU,
+ 		0, 15, V4L2_COLORFX_NONE, 0, NULL,
+ 		MMAL_PARAMETER_IMAGE_EFFECT,
+-		&ctrl_set_image_effect,
++		ctrl_set_image_effect,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_COLORFX_CBCR, MMAL_CONTROL_TYPE_STD,
+ 		0, 0xffff, 0x8080, 1, NULL,
+ 		MMAL_PARAMETER_COLOUR_EFFECT,
+-		&ctrl_set_colfx,
++		ctrl_set_colfx,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_ROTATE, MMAL_CONTROL_TYPE_STD,
+ 		0, 360, 0, 90, NULL,
+ 		MMAL_PARAMETER_ROTATION,
+-		&ctrl_set_rotate,
++		ctrl_set_rotate,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_HFLIP, MMAL_CONTROL_TYPE_STD,
+ 		0, 1, 0, 1, NULL,
+ 		MMAL_PARAMETER_MIRROR,
+-		&ctrl_set_flip,
++		ctrl_set_flip,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_VFLIP, MMAL_CONTROL_TYPE_STD,
+ 		0, 1, 0, 1, NULL,
+ 		MMAL_PARAMETER_MIRROR,
+-		&ctrl_set_flip,
++		ctrl_set_flip,
+ 		false
+ 	},
+ 	{
+@@ -1085,14 +1085,14 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		0, ARRAY_SIZE(bitrate_mode_qmenu) - 1,
+ 		0, 0, bitrate_mode_qmenu,
+ 		MMAL_PARAMETER_RATECONTROL,
+-		&ctrl_set_bitrate_mode,
++		ctrl_set_bitrate_mode,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_MPEG_VIDEO_BITRATE, MMAL_CONTROL_TYPE_STD,
+ 		25 * 1000, 25 * 1000 * 1000, 10 * 1000 * 1000, 25 * 1000, NULL,
+ 		MMAL_PARAMETER_VIDEO_BIT_RATE,
+-		&ctrl_set_bitrate,
++		ctrl_set_bitrate,
+ 		false
+ 	},
+ 	{
+@@ -1100,7 +1100,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		1, 100,
+ 		30, 1, NULL,
+ 		MMAL_PARAMETER_JPEG_Q_FACTOR,
+-		&ctrl_set_image_encode_output,
++		ctrl_set_image_encode_output,
+ 		false
+ 	},
+ 	{
+@@ -1108,7 +1108,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		0, ARRAY_SIZE(mains_freq_qmenu) - 1,
+ 		1, 1, mains_freq_qmenu,
+ 		MMAL_PARAMETER_FLICKER_AVOID,
+-		&ctrl_set_flicker_avoidance,
++		ctrl_set_flicker_avoidance,
+ 		false
+ 	},
+ 	{
+@@ -1116,7 +1116,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		0, 1,
+ 		0, 1, NULL,
+ 		MMAL_PARAMETER_VIDEO_ENCODE_INLINE_HEADER,
+-		&ctrl_set_video_encode_param_output,
++		ctrl_set_video_encode_param_output,
+ 		true	/* Errors ignored as requires latest firmware to work */
+ 	},
+ 	{
+@@ -1129,7 +1129,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+ 		V4L2_MPEG_VIDEO_H264_PROFILE_HIGH, 1, NULL,
+ 		MMAL_PARAMETER_PROFILE,
+-		&ctrl_set_video_encode_profile_level,
++		ctrl_set_video_encode_profile_level,
+ 		false
+ 	},
+ 	{
+@@ -1149,7 +1149,7 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		V4L2_MPEG_VIDEO_H264_LEVEL_4_0,
+ 		V4L2_MPEG_VIDEO_H264_LEVEL_4_0, 1, NULL,
+ 		MMAL_PARAMETER_PROFILE,
+-		&ctrl_set_video_encode_profile_level,
++		ctrl_set_video_encode_profile_level,
+ 		false
+ 	},
+ 	{
+@@ -1158,14 +1158,14 @@ static const struct bm2835_mmal_v4l2_ctrl v4l2_ctrls[V4L2_CTRL_COUNT] = {
+ 		V4L2_SCENE_MODE_TEXT,
+ 		V4L2_SCENE_MODE_NONE, 1, NULL,
+ 		MMAL_PARAMETER_PROFILE,
+-		&ctrl_set_scene_mode,
++		ctrl_set_scene_mode,
+ 		false
+ 	},
+ 	{
+ 		V4L2_CID_MPEG_VIDEO_H264_I_PERIOD, MMAL_CONTROL_TYPE_STD,
+ 		0, 0x7FFFFFFF, 60, 1, NULL,
+ 		MMAL_PARAMETER_INTRAPERIOD,
+-		&ctrl_set_video_encode_param_output,
++		ctrl_set_video_encode_param_output,
+ 		false
+ 	},
+ };
+-- 
+2.17.1
+
