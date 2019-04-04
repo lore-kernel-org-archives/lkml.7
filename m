@@ -7,57 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74CFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA388C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788162184E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B304921734
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369464;
-	bh=LipfPn8M3CP1O4R5WxJx78RaAzx+y+vdsiCSWtQOv64=;
+	s=default; t=1554369471;
+	bh=/W/BJ1FRw1RBiBKdLMEJ+AWZtR455YD30xWV+T+3sHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0VImL/ACdK4BWU6zH3GM5sSgHK6M7cZln0FMecgsV5VeZz2CeU1sfvChuPfda7Tqq
-	 kklSBPWRLkD596mfJbvXtBGkBKaHCybzUgApmo8GDyPxuazKlqyxbgxzWtNlqn/org
-	 ZRWXhp6yFqJEN1ddi0hAXltCXdLwYvt+8xBqMaws=
+	b=VsZbCiJuz/sfM9sEAVp+RM0xfhfPHG25lSVIyBjPvTrsIxRsMmH8l1OzeYvHP+hkD
+	 YvdnhpCTXJgMw31l0b1bktBNO8rSY64Nn42s+VOVaJyoB2vl1FQiTmNOMWG3r6dZdk
+	 cAgIj/87cIZ3iXqm/bE8KEnv9B5MPjvHr08Fwsh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388264AbfDDJRm (ORCPT
+        id S2388299AbfDDJRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59390 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:17:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388033AbfDDJRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:17:37 -0400
+        id S2387460AbfDDJRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:17:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F242054F;
-        Thu,  4 Apr 2019 09:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B1421734;
+        Thu,  4 Apr 2019 09:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369457;
-        bh=LipfPn8M3CP1O4R5WxJx78RaAzx+y+vdsiCSWtQOv64=;
+        s=default; t=1554369464;
+        bh=/W/BJ1FRw1RBiBKdLMEJ+AWZtR455YD30xWV+T+3sHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qSvZmnm0IkXwLc8GGd+rdBa2nU2AmQyitv+tj9hrgOA628ONxI/gHIMDyGke2XJ63
-         lnMat7nPj82rY9PsIDmixO0hMDb7AUIpq0LZPT2QyS0oQHV/PuJxcIDWmYlLmx8xcL
-         sNUdHpoHmQ8tJI+mimlKGTiV37YOJW8V3cJg4Tmg=
+        b=sEG2kE2mWzuN4zrUen4kONCKeqbnvt2IXtPDe9z5NUhWigh9n3IArzmwdzQ70WgDL
+         7TlzL0y1Ika/PlgN366d29ec8Wvpliug5DfRSZfCYoHtY675VSXTAjYoNFanprjLq8
+         vROUBfTRpzys7aJqidgBqogxHOBEePqMond4X4ac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
-        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Cao Jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tri Vo <trong@android.com>, morbo@google.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 231/246] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
-Date:   Thu,  4 Apr 2019 10:48:51 +0200
-Message-Id: <20190404084627.352115367@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Nguyen Viet Dung <dung.nguyen.aj@renesas.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 234/246] ARM: shmobile: Fix R-Car Gen2 regulator quirk
+Date:   Thu,  4 Apr 2019 10:48:54 +0200
+Message-Id: <20190404084627.476051398@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -76,74 +68,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
+[ Upstream commit 5347a0203709d5039a74d7c94e23519eee478094 ]
 
-Accessing per-CPU variables is done by finding the offset of the
-variable in the per-CPU block and adding it to the address of the
-respective CPU's block.
+The quirk code currently detects all compatible I2C chips with a shared
+IRQ line on all I2C busses, adds them into a list, and registers a bus
+notifier. For every chip for which the bus notifier triggers, the quirk
+code performs I2C transfer on that I2C bus for all addresses in the list.
+The problem is that this may generate transfers to non-existing chips on
+systems with multiple I2C busses.
 
-Section 3.10.8 of ld.bfd's documentation states:
+This patch adds a check to verify that the I2C bus to which the chip with
+shared IRQ is attached to matches the I2C bus of the chip which triggered
+the bus notifier and only starts the I2C transfer if they match.
 
-  For expressions involving numbers, relative addresses and absolute
-  addresses, ld follows these rules to evaluate terms:
-
-  Other binary operations, that is, between two relative addresses
-  not in the same section, or between a relative address and an
-  absolute address, first convert any non-absolute term to an
-  absolute address before applying the operator."
-
-Note that LLVM's linker does not adhere to the GNU ld's implementation
-and as such requires implicitly-absolute terms to be explicitly marked
-as absolute in the linker script. If not, it fails currently with:
-
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
-  Makefile:1040: recipe for target 'vmlinux' failed
-
-This is not a functional change for ld.bfd which converts the term to an
-absolute symbol anyways as specified above.
-
-Based on a previous submission by Tri Vo <trong@android.com>.
-
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
-[ Update commit message per Boris' and Michael's suggestions. ]
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-[ Massage commit message more, fix typos. ]
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dmitry Golovin <dima@golovin.in>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tri Vo <trong@android.com>
-Cc: dima@golovin.in
-Cc: morbo@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Tested-by: Nguyen Viet Dung <dung.nguyen.aj@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 0d618ee634ac..ee3b5c7d662e 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -401,7 +401,7 @@ SECTIONS
-  * Per-cpu symbols which need to be offset from __per_cpu_load
-  * for the boot processor.
-  */
--#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
-+#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
- INIT_PER_CPU(gdt_page);
- INIT_PER_CPU(irq_stack_union);
+diff --git a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
+index 8e50daa99151..dc526ef2e9b3 100644
+--- a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
+@@ -40,6 +40,7 @@
+ struct regulator_quirk {
+ 	struct list_head		list;
+ 	const struct of_device_id	*id;
++	struct device_node		*np;
+ 	struct of_phandle_args		irq_args;
+ 	struct i2c_msg			i2c_msg;
+ 	bool				shared;	/* IRQ line is shared */
+@@ -101,6 +102,9 @@ static int regulator_quirk_notify(struct notifier_block *nb,
+ 		if (!pos->shared)
+ 			continue;
  
++		if (pos->np->parent != client->dev.parent->of_node)
++			continue;
++
+ 		dev_info(&client->dev, "clearing %s@0x%02x interrupts\n",
+ 			 pos->id->compatible, pos->i2c_msg.addr);
+ 
+@@ -165,6 +169,7 @@ static int __init rcar_gen2_regulator_quirk(void)
+ 		memcpy(&quirk->i2c_msg, id->data, sizeof(quirk->i2c_msg));
+ 
+ 		quirk->id = id;
++		quirk->np = np;
+ 		quirk->i2c_msg.addr = addr;
+ 
+ 		ret = of_irq_parse_one(np, 0, argsa);
 -- 
 2.19.1
 
