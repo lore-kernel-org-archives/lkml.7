@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BE9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165E1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2659621741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D325A2147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368666;
-	bh=1lfBzk8SrmoxwSDnma05OF4zxIGJE/MaHosHdZmKu8k=;
+	s=default; t=1554368668;
+	bh=BVcqPrLL44npZx+5H8LlHov+wp51HvVv+pcHGACAg7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=08nQydoOn9a3/Nfn9tmgjpXBEPaEHSmt4tJcJWxgx2+kCzbV1EaaEaVrzA6/KOQzq
-	 8zhjI22s4xvyU7EnoFwJFN9D66AvrUBM6loK26glPlRvUXR5yjwzTdblWPmZEVxkrQ
-	 XjAu+XE4JDu1EH+5U0lMr6GXte+2id9vmRvQE+F4=
+	b=Qq0+bjeekY2oBT0xRSnrp+ygfgVxyExobT2L/UyFBDyAoLKndPLS02aYPJk2P2yfx
+	 k7OStNlJ7XViImbWiDP9FJEGj6PHYPuhTA+rfIoOmuvLy9JdLsjDUBu/d/rbBTJKIu
+	 mX4GynixPYv32sviMINBCgt+jWSKKRs7sw3La11U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731964AbfDDJEZ (ORCPT
+        id S1731975AbfDDJE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42150 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729879AbfDDJEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:22 -0400
+        id S1729879AbfDDJEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3EE221741;
-        Thu,  4 Apr 2019 09:04:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FBAF2147C;
+        Thu,  4 Apr 2019 09:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368662;
-        bh=1lfBzk8SrmoxwSDnma05OF4zxIGJE/MaHosHdZmKu8k=;
+        s=default; t=1554368664;
+        bh=BVcqPrLL44npZx+5H8LlHov+wp51HvVv+pcHGACAg7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWflh9ubTynXgc0lFt8Nt2922JjKODoslYV0YdWJQR0XYcmJV1oAKtUa4uHY0gAEB
-         uMdlFKEgDVYDrucElcGt16oSguKl1adSGPqTTSAilbC8jajVgKKNGWMxG45+PXtLK6
-         r5KwS+TNBlQBs9mtu45pors3NCyE7sHvELFTt0pA=
+        b=e3AnE/wEFdGbD42qyhb76xrv+uijwmLbIKksCHso1w5JIkZT2yCeJDaEALVaN9YJh
+         dzMlrJ2In8E8NsZarRKCQ34LhimmlX0i7BYZk+rI26rKtupVD43o5Ono9Kxb7eTKqC
+         s989UQ/hPdhpplu71hXPx9axe1ztkghPBIrKwfU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Sun peng Li <Sunpeng.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
         Tony Cheng <Tony.Cheng@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 122/187] drm/amd/display: Dont re-program planes for DPMS changes
-Date:   Thu,  4 Apr 2019 10:47:39 +0200
-Message-Id: <20190404084608.987667855@linuxfoundation.org>
+Subject: [PATCH 4.19 123/187] drm/amd/display: Disconnect mpcc when changing tg
+Date:   Thu,  4 Apr 2019 10:47:40 +0200
+Message-Id: <20190404084609.031490097@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -70,62 +70,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5062b797db4103218fa00ee254417b8ecaab7401 ]
+[ Upstream commit 77476360f173c127c191bfe8ca8113130ef283b8 ]
 
 [Why]
-There are opt1c lock warnings and CRTC read timeouts when running the
-"igt@kms_plane@plane-position-hole-dpms-pipe-*" tests. These are
-caused by trying to reprogram planes that are not in the current
-context.
+This fixes an mpc programming error for the following sequence of
+atomic commits when pipe split is enabled:
 
-DPMS off removes the stream from the context. In this case:
+Commit 1: CRTC0 (plane 4, plane 3)
 
-new_crtc_state->active_changed = true
-new_crtc_state->mode_changed = false
+Pipe 0: old_plane_state = A0, new_plane_state = A1,   new_tg = T0
+Pipe 1: old_plane_state = B0, new_plane_state = B1,   new_tg = T0
+Pipe 2: old_plane_state = A0, new_plane_state = A1,   new_tg = T0
+Pipe 3: old_plane_state = B0, new_plane_state = B1,   new_tg = T0
 
-The planes are reprogrammed before the stream is removed from the
-context because stream_state->mode_changed = false.
+Commit 2: CRTC0 (plane 3), CRTC1 (plane 2)
 
-For DPMS adds the stream and planes back to the context:
+Pipe 0: old_plane_state = A1, new_plane_state = A2,   new_tg = T0
+Pipe 1: old_plane_state = B1, new_plane_state = B2,   new_tg = T1
+Pipe 2: old_plane_state = A1, new_plane_state = NULL, new_tg = NULL
+Pipe 3: old_plane_state = B1, new_plane_state = NULL, new_tg = NULL
 
-new_crtc_state->active_changed = true
-new_crtc_state->mode_changed = false
+In the second commit the assertion for mpcc in use is hit because
+mpcc disconnect never occurs for pipe 1. This is because the stream
+changes for pipe 1 and the opp_list is empty.
 
-The planes are also reprogrammed here before the stream is added to the
-context because stream_state->mode_changed = true. They were not
-previously in the current context so warnings occur here.
+This sequence occurs when running the
+"igt@kms_plane_multiple@atomic-pipe-A-tiling-none" test with two
+displays connected.
 
 [How]
-Set stream_state->mode_changed = true when
-new_crtc_state->active_changed = true too.
+Expand the reset condition to include:
 
-This prevents reprogramming before the context is applied in DC. The
-programming will be done after the context is applied.
+"old_pipe_ctx->stream_res.tg != new_pipe_ctx->stream_res.tg"
+
+...but only when the plane state is non-NULL for both old and new.
 
 Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Sun peng Li <Sunpeng.Li@amd.com>
+Reviewed-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
 Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Acked-by: Tony Cheng <Tony.Cheng@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index c5ba9128b736..c57e85f08e23 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -4368,7 +4368,8 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
- static void amdgpu_dm_crtc_copy_transient_flags(struct drm_crtc_state *crtc_state,
- 						struct dc_stream_state *stream_state)
- {
--	stream_state->mode_changed = crtc_state->mode_changed;
-+	stream_state->mode_changed =
-+		crtc_state->mode_changed || crtc_state->active_changed;
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 4058b59d9bea..a0355709abd1 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -2336,9 +2336,10 @@ static void dcn10_apply_ctx_for_surface(
+ 			}
+ 		}
  
- static int amdgpu_dm_atomic_commit(struct drm_device *dev,
+-		if (!pipe_ctx->plane_state &&
+-			old_pipe_ctx->plane_state &&
+-			old_pipe_ctx->stream_res.tg == tg) {
++		if ((!pipe_ctx->plane_state ||
++		     pipe_ctx->stream_res.tg != old_pipe_ctx->stream_res.tg) &&
++		    old_pipe_ctx->plane_state &&
++		    old_pipe_ctx->stream_res.tg == tg) {
+ 
+ 			dc->hwss.plane_atomic_disconnect(dc, old_pipe_ctx);
+ 			removed_pipe[i] = true;
 -- 
 2.19.1
 
