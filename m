@@ -2,164 +2,145 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB31C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC126C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA70206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5F1206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 13:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=quantenna.com header.i=@quantenna.com header.b="O8+zmoN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfDDNa2 (ORCPT
+        id S1729204AbfDDNdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 09:30:28 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32917 "EHLO huawei.com"
+        Thu, 4 Apr 2019 09:33:04 -0400
+Received: from mail-eopbgr740078.outbound.protection.outlook.com ([40.107.74.78]:23794
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727398AbfDDNa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 09:30:28 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 1B6CF9FF3180C0DCAA6E;
-        Thu,  4 Apr 2019 14:29:57 +0100 (IST)
-Received: from [10.204.65.150] (10.204.65.150) by smtpsuk.huawei.com
- (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 4 Apr
- 2019 14:29:52 +0100
-Subject: Re: Unable to suspend lenovo t61
-To:     Zdenek Kabelac <zkabelac@redhat.com>
-References: <6972b2f2-7538-e51a-c5e0-e1ed08d95e04@redhat.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <1e3e499e-63e8-dbf5-3a0e-7dd78807c369@huawei.com>
-Date:   Thu, 4 Apr 2019 15:29:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
-MIME-Version: 1.0
-In-Reply-To: <6972b2f2-7538-e51a-c5e0-e1ed08d95e04@redhat.com>
-Content-Type: text/plain; charset="iso-8859-2"; format=flowed
+        id S1726269AbfDDNdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 09:33:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quantenna.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=krEZKDAnezyPjEgf3rWaGq6ir146IFxLTl46GJh79+k=;
+ b=O8+zmoN6C3URrZms6wykcsRuQH7tN3kJpbUR6wXyNRVClu0mds4X5N/9hy3fWk0XnO5OydzTja/khhUtGhPcVEKlrNoNYM58ck6+6AtGs2+B7gH32Iptx/YVSb/zTIUWAUFqqC10aYfJB7CLhF2E2Ufl2/99Qy2YqlDzEyCSGvk=
+Received: from DM6PR05MB6348.namprd05.prod.outlook.com (20.178.224.143) by
+ DM6PR05MB4812.namprd05.prod.outlook.com (20.176.111.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.7; Thu, 4 Apr 2019 13:33:00 +0000
+Received: from DM6PR05MB6348.namprd05.prod.outlook.com
+ ([fe80::f485:e463:a00:e884]) by DM6PR05MB6348.namprd05.prod.outlook.com
+ ([fe80::f485:e463:a00:e884%3]) with mapi id 15.20.1771.007; Thu, 4 Apr 2019
+ 13:33:00 +0000
+Received: from SN6PR05MB4928.namprd05.prod.outlook.com (52.135.117.74) by
+ SN6PR05MB4814.namprd05.prod.outlook.com (52.135.116.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.6; Thu, 4 Apr 2019 13:32:42 +0000
+Received: from SN6PR05MB4928.namprd05.prod.outlook.com
+ ([fe80::ecfd:3a22:dcb3:3b9e]) by SN6PR05MB4928.namprd05.prod.outlook.com
+ ([fe80::ecfd:3a22:dcb3:3b9e%4]) with mapi id 15.20.1771.007; Thu, 4 Apr 2019
+ 13:32:42 +0000
+From:   Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC:     Igor Mitsyanko <imitsyanko@quantenna.com>,
+        Avinash Patil <avinashp@quantenna.com>,
+        Sergey Matyukevich <smatyukevich@quantenna.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] qtnfmac: replace qtnf_cmd_acl_data_size() with
+ struct_size()
+Thread-Topic: [PATCH][next] qtnfmac: replace qtnf_cmd_acl_data_size() with
+ struct_size()
+Thread-Index: AQHU6kVbVDZ121t/CEKyy1UYmGUKFqYsAS+A
+Date:   Thu, 4 Apr 2019 13:32:42 +0000
+Message-ID: <20190404133234.2uatru2vlw3ntrmv@bars>
+References: <20190403170236.GA31637@embeddedor>
+In-Reply-To: <20190403170236.GA31637@embeddedor>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.204.65.150]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR03CA0029.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::42) To SN6PR05MB4928.namprd05.prod.outlook.com
+ (2603:10b6:805:9d::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sergey.matyukevich.os@quantenna.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [195.182.157.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 311b6b1d-26d7-46ff-9b79-08d6b902036d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:SN6PR05MB4814;
+x-ms-traffictypediagnostic: SN6PR05MB4814:|DM6PR05MB4812:
+x-moderation-data: 4/4/2019 1:32:58 PM
+x-microsoft-antispam-prvs: <DM6PR05MB4812748889CD56BFFE63B856A3500@DM6PR05MB4812.namprd05.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(366004)(396003)(39850400004)(346002)(376002)(136003)(51914003)(189003)(199004)(66066001)(436003)(52116002)(2906002)(53936002)(54906003)(76176011)(11346002)(68736007)(446003)(6916009)(486006)(256004)(386003)(186003)(476003)(6506007)(102836004)(6246003)(316002)(6116002)(3846002)(26005)(33716001)(6512007)(99286004)(9686003)(6486002)(8936002)(305945005)(5660300002)(81166006)(71190400001)(229853002)(97736004)(71200400001)(7736002)(14454004)(105586002)(25786009)(81156014)(8676002)(86362001)(1076003)(4326008)(6436002)(478600001)(106356001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR05MB4812;H:DM6PR05MB6348.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: quantenna.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2TMw65H55pyoLAu/8AT3RbjTfxtalgm++u2x4eOBn1HBvMG+6YY2iU64SrfGXUqGicMiXtmgKgsRHQD+n49ZoVrwEyiH6vigzdh7C6V9jC4jeGyKEYoSWm2pqnap8nyFM5SidE+CiOgY7AMDdNcftp9lNg2biYxReOpenJ7XcfoHrO3ZhO4+QDi++Vf/w9DsV8W5gtndBlDZf+Q4ggUXSSKGxPxIK9zHnV1pnj4mtB5/5pTtNhrP+oHIFroSn2uQaB+YwRjQAPOmmYFtixANV44NC9xKo4omZKGyuY+7VKPLGG+9xAH2Ysu35PDVEGeE4xY0mIvH1cPXe2OlBQB+NKf+z3OgvNYYODw6rkRgLzDJNwYZlyetKMhA6OMVdroSOskUQRWir03cmfL4xLnVF1CAVhTVIXkj/U0SPeCr2Fo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <69A65985265894408D7C1D2371109492@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: quantenna.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 311b6b1d-26d7-46ff-9b79-08d6b902036d
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a355dbce-62b4-4789-9446-c1d5582180ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 13:33:00.2196
+ (UTC)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR05MB4812
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zdenek
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+>=20
+> struct foo {
+>     int stuff;
+>     struct boo entry[];
+> };
+>=20
+> size =3D sizeof(struct foo) + count * sizeof(struct boo);
+> instance =3D kzalloc(size, GFP_KERNEL)
+>=20
+> Instead of leaving these open-coded and prone to type mistakes, we can
+> now use the new struct_size() helper:
+>=20
+> size =3D struct_size(instance, entry, count);
+>=20
+> or
+>=20
+> instance =3D kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
+>=20
+> Based on the above, replace qtnf_cmd_acl_data_size() with the
+> new struct_size() helper.
+>=20
+> This code was detected with the help of Coccinelle.
+>=20
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/net/wireless/quantenna/qtnfmac/commands.c | 15 ++++-----------
+>  1 file changed, 4 insertions(+), 11 deletions(-)
 
-I add in CC linux-integrity@vger.kernel.org.
+Hi Gustavo,
 
-Please have a look at:
+Thanks for the patch! By the way, it does not apply cleanly, so it needs
+to be rebased on top of the up-to-date wireless-drivers-next tree. Let
+me know if you would prefer me to care about rebase. Then I will
+add this patch to the upcoming series of qtnfmac fixes.
 
-https://lore.kernel.org/linux-integrity/20190329094212.GC21379@linux.intel.com/T/#t
+Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-The patch suggested in the discussion should help.
-
-Regards
-
-Roberto
-
-
-On 4/4/2019 3:04 PM, Zdenek Kabelac wrote:
-> Hello
-> 
-> 
-> Recently after trying kernels above 5.1.0-0.rc0.git4.2.fc31.x86_64 on my 
-> Fedora Rawhide - I cannot suspend Lenovo T61 laptop (2.2 C2D CPU,  4G RAM)
-> 
-> I can only guess it can be related to this TPM reported error:
-> 
-> ----
-> PM: suspend exit
-> PM: suspend entry (s2idle)
-> PM: Syncing filesystems ... done.
-> Freezing user space processes ... (elapsed 0.001 seconds) done.
-> OOM killer disabled.
-> Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-> printk: Suspending console(s) (use no_console_suspend to debug)
-> sd 0:0:0:0: [sda] Synchronizing SCSI cache
-> sd 0:0:0:0: [sda] Stopping disk
-> tpm tpm0: tpm_try_transmit: send(): error -5
-> tpm tpm0: Error (-5) sending savestate before suspend
-> PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns -5
-> PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns -5
-> PM: Device 00:05 failed to suspend: error -5
-> PM: Some devices failed to suspend, or early wake event detected
-> sd 0:0:0:0: [sda] Starting disk
-> thinkpad_acpi: ACPI backlight control delay disabled
-> usb 3-2: reset full-speed USB device number 2 using uhci_hcd
-> ata4.00: ACPI cmd ef/03:42:00:00:00:a0 (SET FEATURES) filtered out
-> ata4.00: ACPI cmd ef/03:0c:00:00:00:a0 (SET FEATURES) filtered out
-> ata3: SATA link down (SStatus 0 SControl 300)
-> PM: resume devices took 1.009 seconds
-> OOM killer enabled.
-> Restarting tasks ... done.
-> PM: suspend exit
-> sleep[3690]: Failed to suspend system. System resumed again: 
-> Input/output error
-> ----
-> 
-> Here are some other tpm message visible on 5.1.0-0.rc3.git1.2.fc31.x86_64
-> (but they are shown in similar way on usable & suspendable -rc0)
-> 
-> Non-volatile memory driver v1.3
-> Linux agpgart interface v0.103
-> battery: ACPI: Battery Slot [BAT0] (battery present)
-> tpm_tis 00:05: 1.2 TPM (device-id 0xFFFF, rev-id 255)
-> tpm tpm0: [Hardware Error]: Adjusting reported timeouts: A 
-> 10000->10000us B 10000->10000us C 0->750000us D 0->750000us
-> tpm tpm0: TPM is disabled/deactivated (0x6)
-> ahci 0000:00:1f.2: AHCI 0001.0100 32 slots 3 ports 3 Gbps 0x5 impl SATA 
-> mode
-> ahci 0000:00:1f.2: flags: 64bit ncq sntf pm led clo pio slum part ccc
-> scsi host0: ahci
-> scsi host1: ahci
-> scsi host2: ahci
-> ata1: SATA max UDMA/133 abar m2048@0xfe226000 port 0xfe226100 irq 27
-> ata2: DUMMY
-> ....
-> mip6: Mobile IPv6
-> NET: Registered protocol family 17
-> RAS: Correctable Errors collector initialized.
-> microcode: sig=0x6fa, pf=0x80, revision=0x95
-> microcode: Microcode Update Driver: v2.2.
-> registered taskstats version 1
-> Loading compiled-in X.509 certificates
-> Loaded X.509 cert 'Fedora kernel signing key: 
-> 1662e00568f2df66b8eaccc8f8971f03bb9d8329'
-> zswap: loaded using pool lzo/zbud
-> Key type big_key registered
-> Key type encrypted registered
-> ima: Allocated hash algorithm: sha1
-> ima: Error Communicating to TPM chip
-> ima: Error Communicating to TPM chip
-> ima: Error Communicating to TPM chip
-> ima: Error Communicating to TPM chip
-> ima: Error Communicating to TPM chip
-> ima: Error Communicating to TPM chip
-> ima: Error Communicating to TPM chip
-> ima: Error Communicating to TPM chip
-> No architecture policies found
-> PM:   Magic number: 15:928:528
-> rtc_cmos 00:02: setting system clock to 2019-04-04T11:31:05 UTC 
-> (1554377465)
-> ata4.00: ATAPI: MATSHITADVD-RAM UJ-842 z, RC01, max UDMA/33
-> Unstable clock detected, switching default tracing clock to 
-> "global"#012If you want to keep using the local clock, then add:#012  
-> "trace_clock=local"#012on the kernel command line
-> ata3: SATA link down (SStatus 0 SControl 300)
-> ata1: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
-> 
-> 
-> If there is more info needed let me know.
-> 
-> Regards
-> 
-> Zdenek
-> 
-
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+Regards,
+Sergey
