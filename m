@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C78C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92626C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D0F2183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BF22075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368265;
-	bh=BVykPxi92+rozj/jGCbVg+Budb7fEO6Vj8Ki72MTWLg=;
+	s=default; t=1554368271;
+	bh=kY6S0By0dIs5rA3I2IMn/V1b43vSh/I5F60Iu0ZZjcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHTQsqoj/1ln3GC+TpBTbMoAgfUkehHchovlJoJ2SMddNQuGe/pFgQH2tq/GuhZIA
-	 TSgAGE9mRO698B121Gdh7Mgt3iR3wepL+pAnGTAf1bHESvYS9x7uf1mH8iJ8MZ1L5h
-	 +tAgtJRfr65WUYiXFbWNVPKU21aSgka0P+aW8qoo=
+	b=Tn4eQfwchot0X41gbK6Pl6hVhmCQPQAzrlyiopuOwMFkQ1EfnFy2XOfnLh5/tB3O8
+	 gfkLsK3njlmT+YRELAbviFe1eHkewZVEPj2xPVBI5u9uV6mMe1WbpOv2Cvhjz1gjuC
+	 KW0HOEpGUyNOrQfmmzzkWXaRDC2BdbyfZRHEVLXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbfDDI5o (ORCPT
+        id S1728876AbfDDI5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:57:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33306 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730039AbfDDI5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:41 -0400
+        id S1730730AbfDDI5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:57:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C8552075E;
-        Thu,  4 Apr 2019 08:57:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21E7F2183E;
+        Thu,  4 Apr 2019 08:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368261;
-        bh=BVykPxi92+rozj/jGCbVg+Budb7fEO6Vj8Ki72MTWLg=;
+        s=default; t=1554368263;
+        bh=kY6S0By0dIs5rA3I2IMn/V1b43vSh/I5F60Iu0ZZjcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jvnuWmpZ2cioJFQhCm8xjTfS/3QNOowhWMqW+0jkqkQ0MlLEyJJCElimR1sq174U7
-         CvEg5sy3gdb3NPH+ao9ppZGjX9RQ2fZ5zoHtNkO8SXzIcM3bNdm1CKH0L/WJ+GphfZ
-         JmRDbJxl3znFgSOdmBxoLtASCtTSatgR+xd4PF3U=
+        b=0anRGnqPbyz83MrA3hp7To8lVMEFcqPlnA6iaSjZkm/NE83VRqzLKTZXqE4nbLY7K
+         3b7+IOyI8kLDnM8SRuczN1ieTJbkIRCyURJO2Y4xouw2RMrVaUHjgdpf7LMysZREHF
+         HpMH5gL/9NG0MHEhYkN5NIIqcSXv4K7iKPS/8AvM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raju Rangoju <rajur@chelsio.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/121] iw_cxgb4: fix srqidx leak during connection abort
-Date:   Thu,  4 Apr 2019 10:47:48 +0200
-Message-Id: <20190404084549.595166765@linuxfoundation.org>
+Subject: [PATCH 4.14 081/121] fbdev: fbmem: fix memory access if logo is bigger than the screen
+Date:   Thu,  4 Apr 2019 10:47:49 +0200
+Message-Id: <20190404084549.644252102@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,58 +69,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f368ff188ae4b3ef6f740a15999ea0373261b619 ]
+[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
 
-When an application aborts the connection by moving QP from RTS to ERROR,
-then iw_cxgb4's modify_rc_qp() RTS->ERROR logic sets the
-*srqidxp to 0 via t4_set_wq_in_error(&qhp->wq, 0), and aborts the
-connection by calling c4iw_ep_disconnect().
+There is no clipping on the x or y axis for logos larger that the framebuffer
+size. Therefore: a logo bigger than screen size leads to invalid memory access:
 
-c4iw_ep_disconnect() does the following:
- 1. sends up a close_complete_upcall(ep, -ECONNRESET) to libcxgb4.
- 2. sends abort request CPL to hw.
+[    1.254664] Backtrace:
+[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
+[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
+[    1.254774]  r4:c6a3e800
+[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
+[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
+[    1.254852]  r4:c6808c00
+[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
+[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
+[    1.254928]  r4:c6808c00
+[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
+[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
 
-But, since the close_complete_upcall() is sent before sending the
-ABORT_REQ to hw, libcxgb4 would fail to release the srqidx if the
-connection holds one. Because, the srqidx is passed up to libcxgb4 only
-after corresponding ABORT_RPL is processed by kernel in abort_rpl().
+So prevent displaying a logo bigger than screen size and avoid invalid
+memory access.
 
-This patch handle the corner-case by moving the call to
-close_complete_upcall() from c4iw_ep_disconnect() to abort_rpl().  So that
-libcxgb4 is notified about the -ECONNRESET only after abort_rpl(), and
-libcxgb4 can relinquish the srqidx properly.
-
-Signed-off-by: Raju Rangoju <rajur@chelsio.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/core/fbmem.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index daf7a56e5d7e..e17f11782821 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -1884,8 +1884,10 @@ static int abort_rpl(struct c4iw_dev *dev, struct sk_buff *skb)
- 	}
- 	mutex_unlock(&ep->com.mutex);
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index 302cce7185e3..83961a22bef1 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -427,6 +427,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
+ {
+ 	unsigned int x;
  
--	if (release)
-+	if (release) {
-+		close_complete_upcall(ep, -ECONNRESET);
- 		release_ep_resources(ep);
-+	}
- 	c4iw_put_ep(&ep->com);
- 	return 0;
- }
-@@ -3584,7 +3586,6 @@ int c4iw_ep_disconnect(struct c4iw_ep *ep, int abrupt, gfp_t gfp)
- 	if (close) {
- 		if (abrupt) {
- 			set_bit(EP_DISC_ABORT, &ep->com.history);
--			close_complete_upcall(ep, -ECONNRESET);
- 			ret = send_abort(ep);
- 		} else {
- 			set_bit(EP_DISC_CLOSE, &ep->com.history);
++	if (image->width > info->var.xres || image->height > info->var.yres)
++		return;
++
+ 	if (rotate == FB_ROTATE_UR) {
+ 		for (x = 0;
+ 		     x < num && image->dx + image->width <= info->var.xres;
 -- 
 2.19.1
 
