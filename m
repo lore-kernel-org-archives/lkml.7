@@ -2,66 +2,188 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D62C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3D0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934CB206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601F12082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 17:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m92GlC4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfDDRRm (ORCPT
+        id S1729224AbfDDRSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 13:17:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47170 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727310AbfDDRRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 13:17:41 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BFE4D30821A5;
-        Thu,  4 Apr 2019 17:17:41 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-125-158.rdu2.redhat.com [10.10.125.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EC4EF5C22B;
-        Thu,  4 Apr 2019 17:17:39 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] objtool: Add rewind_stack_do_exit() to the noreturn list
-Date:   Thu,  4 Apr 2019 12:17:35 -0500
-Message-Id: <3418ebf5a5a9f6ed7e80954c741c0b904b67b5dc.1554398240.git.jpoimboe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 04 Apr 2019 17:17:41 +0000 (UTC)
+        Thu, 4 Apr 2019 13:18:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41012 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbfDDRSN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 13:18:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34H8ujE143134;
+        Thu, 4 Apr 2019 17:18:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=2gnZpfLx2SGsquTBuuZIgEnDFdOAOjSRDoTrCcLLYUE=;
+ b=m92GlC4Ue96N9rSiECgyxTlPHgeb0airlJZPymt+NEs9mUUqQHm0J3jDEvYunKVdwXTy
+ /edNPuXiFl5zsGf+w1/OP+AYK2YGXCGmHNBaZEc8Nwnqs1a5rw2budWjcdyCxvaSy632
+ 6zRWDM4KwwacHFV2Efgu0sqM8IA5B9rfGd0r3RUwf8UFiQVU0qFLSECyzD/Wv6g1+B7g
+ xxHLLcUn9CR4gN+QAjUopwlvCgO3BU+NySoNHryaH51kSd93BqG4AZ0XmaAK3LEacbjn
+ TJ0eh1CMWmBBKJkv7Z1PrQPFVRnFU3qaFJlKoj+nIYkdgvRbd6adXK1vhaQFpPYGSpQL 9w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2rhyvtgjxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 17:18:04 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x34HHP6F128583;
+        Thu, 4 Apr 2019 17:18:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2rm9mjrpsx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 17:18:04 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x34HI2rS027763;
+        Thu, 4 Apr 2019 17:18:02 GMT
+Received: from [192.168.1.16] (/24.9.64.241)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 10:18:02 -0700
+Subject: Re: [RFC PATCH v9 00/13] Add support for eXclusive Page Frame
+ Ownership
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, linux-arm-kernel@lists.infradead.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LSM List <linux-security-module@vger.kernel.org>
+References: <cover.1554248001.git.khalid.aziz@oracle.com>
+ <3F95B70B-7910-4150-A9D3-05C4D0195B67@gmail.com>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <e8081e89-3fe2-a6b8-119d-8981cd62c6e0@oracle.com>
+Date:   Thu, 4 Apr 2019 11:18:02 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <3F95B70B-7910-4150-A9D3-05C4D0195B67@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040110
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9217 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904040110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the following warning seen on GCC 7.3:
+On 4/4/19 10:44 AM, Nadav Amit wrote:
+>> On Apr 3, 2019, at 10:34 AM, Khalid Aziz <khalid.aziz@oracle.com> wrot=
+e:
+>>
+>> This is another update to the work Juerg, Tycho and Julian have
+>> done on XPFO.
+>=20
+> Interesting work, but note that it triggers a warning on my system due =
+to
+> possible deadlock. It seems that the patch-set disables IRQs in
+> xpfo_kunmap() and then might flush remote TLBs when a large page is spl=
+it.
+> This is wrong, since it might lead to deadlocks.
+>=20
+>=20
+> [  947.262208] WARNING: CPU: 6 PID: 9892 at kernel/smp.c:416 smp_call_f=
+unction_many+0x92/0x250
+> [  947.263767] Modules linked in: sb_edac vmw_balloon crct10dif_pclmul =
+crc32_pclmul joydev ghash_clmulni_intel input_leds intel_rapl_perf serio_=
+raw mac_hid sch_fq_codel ib_iser rdma_cm iw_cm ib_cm ib_core vmw_vsock_vm=
+ci_transport vsock vmw_vmci iscsi_tcp libiscsi_tcp libiscsi scsi_transpor=
+t_iscsi ip_tables x_tables autofs4 btrfs zstd_compress raid10 raid456 asy=
+nc_raid6_recov async_memcpy async_pq async_xor async_tx libcrc32c xor rai=
+d6_pq raid1 raid0 multipath linear hid_generic usbhid hid vmwgfx drm_kms_=
+helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm drm aesni_intel =
+psmouse aes_x86_64 crypto_simd cryptd glue_helper mptspi vmxnet3 scsi_tra=
+nsport_spi mptscsih ahci mptbase libahci i2c_piix4 pata_acpi
+> [  947.274649] CPU: 6 PID: 9892 Comm: cc1 Not tainted 5.0.0+ #7
+> [  947.275804] Hardware name: VMware, Inc. VMware Virtual Platform/440B=
+X Desktop Reference Platform, BIOS 6.00 07/28/2017
+> [  947.277704] RIP: 0010:smp_call_function_many+0x92/0x250
+> [  947.278640] Code: 3b 05 66 fc 4e 01 72 26 48 83 c4 10 5b 41 5c 41 5d=
+ 41 5e 41 5f 5d c3 8b 05 2b cc 7e 01 85 c0 75 bf 80 3d a8 99 4e 01 00 75 =
+b6 <0f> 0b eb b2 44 89 c7 48 c7 c2 a0 9a 61 aa 4c 89 fe 44 89 45 d0 e8
+> [  947.281895] RSP: 0000:ffffafe04538f970 EFLAGS: 00010046
+> [  947.282821] RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000=
+000000001
+> [  947.284084] RDX: 0000000000000000 RSI: ffffffffa9078d70 RDI: fffffff=
+faa619aa0
+> [  947.285343] RBP: ffffafe04538f9a8 R08: ffff9d7040000ff0 R09: 0000000=
+000000000
+> [  947.286596] R10: 0000000000000000 R11: 0000000000000000 R12: fffffff=
+fa9078d70
+> [  947.287855] R13: 0000000000000000 R14: 0000000000000001 R15: fffffff=
+faa619aa0
+> [  947.289118] FS:  00007f668b122ac0(0000) GS:ffff9d727fd80000(0000) kn=
+lGS:0000000000000000
+> [  947.290550] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  947.291569] CR2: 00007f6688389004 CR3: 0000000224496006 CR4: 0000000=
+0003606e0
+> [  947.292861] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000=
+000000000
+> [  947.294125] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000=
+000000400
+> [  947.295394] Call Trace:
+> [  947.295854]  ? load_new_mm_cr3+0xe0/0xe0
+> [  947.296568]  on_each_cpu+0x2d/0x60
+> [  947.297191]  flush_tlb_all+0x1c/0x20
+> [  947.297846]  __split_large_page+0x5d9/0x640
+> [  947.298604]  set_kpte+0xfe/0x260
+> [  947.299824]  get_page_from_freelist+0x1633/0x1680
+> [  947.301260]  ? lookup_address+0x2d/0x30
+> [  947.302550]  ? set_kpte+0x1e1/0x260
+> [  947.303760]  __alloc_pages_nodemask+0x13f/0x2e0
+> [  947.305137]  alloc_pages_vma+0x7a/0x1c0
+> [  947.306378]  wp_page_copy+0x201/0xa30
+> [  947.307582]  ? generic_file_read_iter+0x96a/0xcf0
+> [  947.308946]  do_wp_page+0x1cc/0x420
+> [  947.310086]  __handle_mm_fault+0xc0d/0x1600
+> [  947.311331]  handle_mm_fault+0xe1/0x210
+> [  947.312502]  __do_page_fault+0x23a/0x4c0
+> [  947.313672]  ? _cond_resched+0x19/0x30
+> [  947.314795]  do_page_fault+0x2e/0xe0
+> [  947.315878]  ? page_fault+0x8/0x30
+> [  947.316916]  page_fault+0x1e/0x30
+> [  947.317930] RIP: 0033:0x76581e
+> [  947.318893] Code: eb 05 89 d8 48 8d 04 80 48 8d 34 c5 08 00 00 00 48=
+ 85 ff 74 04 44 8b 67 04 e8 de 80 08 00 81 e3 ff ff ff 7f 48 89 45 00 8b =
+10 <44> 89 60 04 81 e2 00 00 00 80 09 da 89 10 c1 ea 18 83 e2 7f 88 50
+> [  947.323337] RSP: 002b:00007ffde06c0e40 EFLAGS: 00010202
+> [  947.324663] RAX: 00007f6688389000 RBX: 0000000000000004 RCX: 0000000=
+000000001
+> [  947.326317] RDX: 0000000000000000 RSI: 0000000001000001 RDI: 0000000=
+000000017
+> [  947.327973] RBP: 00007f66883882d8 R08: 00000000032e05f0 R09: 00007f6=
+68b30e6f0
+> [  947.329619] R10: 0000000000000002 R11: 00000000032e05f0 R12: 0000000=
+000000000
+> [  947.331260] R13: 00007f6688388230 R14: 00007f6688388288 R15: 00007f6=
+68ac3b0a8
+> [  947.332911] ---[ end trace 7d605a38c67d83ae ]---
+>=20
 
-  arch/x86/kernel/dumpstack.o: warning: objtool: oops_end() falls through to next function show_regs()
+Thanks for letting me know. xpfo_kunmap() is not quite right. It will
+end up being rewritten for the next version.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/check.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 38b0517dc49e..ac743a1d53ab 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -143,6 +143,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"fortify_panic",
- 		"usercopy_abort",
- 		"machine_real_restart",
-+		"rewind_stack_do_exit",
- 	};
- 
- 	if (func->bind == STB_WEAK)
--- 
-2.17.2
+--
+Khalid
 
