@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B121C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7367C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AED021741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E0921741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368502;
-	bh=VG6+nVD+xW5CxoFq429VEowshVGnrzPArN3789qZBSA=;
+	s=default; t=1554368506;
+	bh=Bev0Irtg0XD9cZKOUquJ0GPyvcgvoMqDdptoYGr33RE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U9j+9ahASDiXZqk20ELit8oLfVGOA/h+5eDx0jcV1mR6QBozOcUcLo1hK72YaSOLU
-	 MfNg+vXJAtO2bmcremm2cN8S74ilDdOrkHjYKiDXwEh3OWug3IbP85VIM2H+L4/n3i
-	 xRAqviEhp3j8pT/M3Kekg6KRzflT6D+/4QixLVBE=
+	b=YlL5g2rAIgeTh5tkpdF4pNqEmrat0Z48tkShdd0zGwknxxVGhiRz2T44LxL1vEZQQ
+	 ooCYd5m0KfGsE8dbml+8yJG96V9oy7ou4EXLnxfs9dUrA5siSBCFCLuGDGx3/6dKSH
+	 ZiJaXTaCsxd1FKdoY1PHVvG1G5taWa5wq4etWO70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731472AbfDDJBl (ORCPT
+        id S1731481AbfDDJBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:01:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38798 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731006AbfDDJBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:37 -0400
+        id S1731006AbfDDJBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9D772184B;
-        Thu,  4 Apr 2019 09:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B6012184B;
+        Thu,  4 Apr 2019 09:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368496;
-        bh=VG6+nVD+xW5CxoFq429VEowshVGnrzPArN3789qZBSA=;
+        s=default; t=1554368501;
+        bh=Bev0Irtg0XD9cZKOUquJ0GPyvcgvoMqDdptoYGr33RE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fF3e0RUw8lzHYFB7QOCVqimeY70CZfiU8t5jOtl89735KNdG80gtTuAcjT64ytRfF
-         m0zildk2E5JElXaK8xo6IKtLx1gBEbGsAJ7doIl2pI3mU+Ab4tLQYePVdOoC25O2rI
-         A7sSyaOsAFqTxHCt9zSCrs3+bjQojlnMgkMpBfw4=
+        b=pdzQ8buG8dOAVNPVwiFyG4TT/NtzrpAlh+0gNwiFEcmescyR0kbT+scOCZkGtROYk
+         9DSroXTh/z3D+FVjQcVNNXuRwKz1uKjzp/zoeiiFRMEqBL9P9aZnb5qHjhFcO7v0tX
+         IZCET1qRB8U/cKezNwPU1D6NOtppStQH6+jvRG0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/187] page_poison: play nicely with KASAN
-Date:   Thu,  4 Apr 2019 10:46:12 +0200
-Message-Id: <20190404084604.723902158@linuxfoundation.org>
+Subject: [PATCH 4.19 063/187] mmc: omap: fix the maximum timeout setting
+Date:   Thu,  4 Apr 2019 10:46:40 +0200
+Message-Id: <20190404084606.034359341@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,91 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4117992df66a26fa33908b4969e04801534baab1 ]
+[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
 
-KASAN does not play well with the page poisoning (CONFIG_PAGE_POISONING).
-It triggers false positives in the allocation path:
+When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
 
-  BUG: KASAN: use-after-free in memchr_inv+0x2ea/0x330
-  Read of size 8 at addr ffff88881f800000 by task swapper/0
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc1+ #54
-  Call Trace:
-   dump_stack+0xe0/0x19a
-   print_address_description.cold.2+0x9/0x28b
-   kasan_report.cold.3+0x7a/0xb5
-   __asan_report_load8_noabort+0x19/0x20
-   memchr_inv+0x2ea/0x330
-   kernel_poison_pages+0x103/0x3d5
-   get_page_from_freelist+0x15e7/0x4d90
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	[ad inf.]
 
-because KASAN has not yet unpoisoned the shadow page for allocation
-before it checks memchr_inv() but only found a stale poison pattern.
+Emulator warnings appear to be valid. The TI document SPRU680 [1]
+("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
+(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
+cycles and "0xff and 0xfe cannot be used".
 
-Also, false positives in free path,
+Fix by using 0xfd as the maximum timeout.
 
-  BUG: KASAN: slab-out-of-bounds in kernel_poison_pages+0x29e/0x3d5
-  Write of size 4096 at addr ffff8888112cc000 by task swapper/0/1
-  CPU: 5 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc1+ #55
-  Call Trace:
-   dump_stack+0xe0/0x19a
-   print_address_description.cold.2+0x9/0x28b
-   kasan_report.cold.3+0x7a/0xb5
-   check_memory_region+0x22d/0x250
-   memset+0x28/0x40
-   kernel_poison_pages+0x29e/0x3d5
-   __free_pages_ok+0x75f/0x13e0
+Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
+real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
+(OMAP2420) that MMC works as before.
 
-due to KASAN adds poisoned redzones around slab objects, but the page
-poisoning needs to poison the whole page.
+[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
 
-Link: http://lkml.kernel.org/r/20190114233405.67843-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c  | 2 +-
- mm/page_poison.c | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/mmc/host/omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ef99971c13dd..8e6932a140b8 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1922,8 +1922,8 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
- 
- 	arch_alloc_page(page, order);
- 	kernel_map_pages(page, 1 << order, 1);
--	kernel_poison_pages(page, 1 << order, 1);
- 	kasan_alloc_pages(page, order);
-+	kernel_poison_pages(page, 1 << order, 1);
- 	set_page_owner(page, order, gfp_flags);
+diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
+index c60a7625b1fa..b2873a2432b6 100644
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -920,7 +920,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
+ 	reg &= ~(1 << 5);
+ 	OMAP_MMC_WRITE(host, SDIO, reg);
+ 	/* Set maximum timeout */
+-	OMAP_MMC_WRITE(host, CTO, 0xff);
++	OMAP_MMC_WRITE(host, CTO, 0xfd);
  }
  
-diff --git a/mm/page_poison.c b/mm/page_poison.c
-index aa2b3d34e8ea..6cfa8e7d7213 100644
---- a/mm/page_poison.c
-+++ b/mm/page_poison.c
-@@ -6,6 +6,7 @@
- #include <linux/page_ext.h>
- #include <linux/poison.h>
- #include <linux/ratelimit.h>
-+#include <linux/kasan.h>
- 
- static bool want_page_poisoning __read_mostly;
- 
-@@ -34,7 +35,10 @@ static void poison_page(struct page *page)
- {
- 	void *addr = kmap_atomic(page);
- 
-+	/* KASAN still think the page is in-use, so skip it. */
-+	kasan_disable_current();
- 	memset(addr, PAGE_POISON, PAGE_SIZE);
-+	kasan_enable_current();
- 	kunmap_atomic(addr);
- }
- 
+ static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
 -- 
 2.19.1
 
