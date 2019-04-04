@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7C3C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2804BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B7D20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E874220449
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369971;
-	bh=ReyITiF0yYBsidp7+YxQ4WT/NeAtQpMoh7R3bEEe9O0=;
+	s=default; t=1554369979;
+	bh=pr7wRFi4rYvVi4I5EGh+MuGTOyqXG5mlnUalXXuwVlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Drf81MZ2jTFHL2oSRGxxjLcEVQsZfX1AchK1i8+OgFC8b4bMjExE0SGXRqdAd1/35
-	 XnAsWAnoYl8W15RAkxKOc4vSW/kP7l22SzgC5CdI35F+myFnt4+E9E1nO0LsKHwC4d
-	 DZkyoobaisn7Nr0i4IYOMAsAuIY5EiBPG90hHxOU=
+	b=z+VfFdrDOcrgcc3emXCwgEUgkkIQELcYgHmYu7NVapLfcf59Rtw9D6Sh48KAfEuDS
+	 CYq7XgftGhfC4kqjQLtWufBGQD44BeDPlT7lycpeBIbw+xDlkZcIt7HannqvYLflPI
+	 bahdTw3TdDoB19lmlgyW2lF1P+s1lcP6//Gaglhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733091AbfDDJNZ (ORCPT
+        id S2387793AbfDDJ0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53600 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387537AbfDDJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:13:21 -0400
+        id S1733014AbfDDJNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:13:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7429D2075E;
-        Thu,  4 Apr 2019 09:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C373520693;
+        Thu,  4 Apr 2019 09:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369199;
-        bh=ReyITiF0yYBsidp7+YxQ4WT/NeAtQpMoh7R3bEEe9O0=;
+        s=default; t=1554369197;
+        bh=pr7wRFi4rYvVi4I5EGh+MuGTOyqXG5mlnUalXXuwVlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HnI2x1y+JIR/fCavkRAo19vykBSb60glDNsK/NPfxWq4tf9fybclT5JFiCb3NlNJz
-         bKy4KXEVmRtuxJkW4cj1ch2F1dehfCxHTh38eIUvrl13Yc+DiPcv8ey5NEVZVSBqOt
-         xxCMVTP6iCB986NOFRmKAk98HG6Bj53RszDgjhFI=
+        b=LOmPfNKRlqVEPdBTy/gOreGqpijBfkfhxgpdWOgInUJF6kO3Kfhcv1cv+FV/5jX37
+         OnX/mMCVJIonyUkec+cB37r499AKdhYYO5k0G9F13vqP3Kf+vHD3CpDbcjJokuR2rQ
+         2S+p7pGtM3gXFcAp08CAU84S5+sxn5GW+MAOR1ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, He Kuang <hekuang@huawei.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Milian Wolff <milian.wolff@kdab.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 126/246] efi: Fix build error due to enum collision between efi.h and ima.h
-Date:   Thu,  4 Apr 2019 10:47:06 +0200
-Message-Id: <20190404084623.569776787@linuxfoundation.org>
+Subject: [PATCH 5.0 110/246] perf report: Dont shadow inlined symbol with different addr range
+Date:   Thu,  4 Apr 2019 10:46:50 +0200
+Message-Id: <20190404084623.000473746@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -70,281 +71,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5c418dc789a3898717ebf2caa5716ba91a7150b2 ]
+[ Upstream commit 7346195e8643482968f547483e0d823ec1982fab ]
 
-The following commit:
+We can't assume inlined symbols with the same name are equal, because
+their address range may be different. This will cause the symbols with
+different addresses be shadowed when adding to the hist entry, and lead
+to ERANGE error when checking the symbol address during sample parse,
+the addr should be within the range of [sym.start, sym.end].
 
-  a893ea15d764 ("tpm: move tpm_chip definition to include/linux/tpm.h")
+The error message is like: "0x36aea60 [0x8]: failed to process type: 68".
 
-introduced a build error when both IMA and EFI are enabled:
+The second parameter of symbol__new() is the length of the fake symbol
+for the inline frame, which is the subtraction of the end and start
+address of base_sym.
 
-    In file included from ../security/integrity/ima/ima_fs.c:30:
-    ../security/integrity/ima/ima.h:176:7: error: redeclaration of enumerator "NONE"
-
-What happens is that both headers (ima.h and efi.h) defines the same
-'NONE' constant, and it broke when they started getting included from
-the same file:
-
-Rework to prefix the EFI enum with 'EFI_*'.
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: He Kuang <hekuang@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190215165551.12220-2-ard.biesheuvel@linaro.org
-[ Cleaned up the changelog a bit. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: aa441895f7b4 ("perf report: Compare symbol name for inlined frames when sorting")
+Link: http://lkml.kernel.org/r/20190219130531.15692-1-hekuang@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/quirks.c          |  4 +--
- drivers/firmware/efi/runtime-wrappers.c | 48 ++++++++++++-------------
- include/linux/efi.h                     | 26 +++++++-------
- 3 files changed, 39 insertions(+), 39 deletions(-)
+ tools/perf/util/sort.c    | 10 ++++++++--
+ tools/perf/util/srcline.c |  2 +-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 17456a1d3f04..6c571ae86947 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -717,7 +717,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * "efi_mm" cannot be used to check if the page fault had occurred
- 	 * in the firmware context because efi=old_map doesn't use efi_pgd.
- 	 */
--	if (efi_rts_work.efi_rts_id == NONE)
-+	if (efi_rts_work.efi_rts_id == EFI_NONE)
- 		return;
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 6c1a83768eb0..d0334c33da54 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -230,8 +230,14 @@ static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
+ 	if (sym_l == sym_r)
+ 		return 0;
  
- 	/*
-@@ -742,7 +742,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * because this case occurs *very* rarely and hence could be improved
- 	 * on a need by basis.
- 	 */
--	if (efi_rts_work.efi_rts_id == RESET_SYSTEM) {
-+	if (efi_rts_work.efi_rts_id == EFI_RESET_SYSTEM) {
- 		pr_info("efi_reset_system() buggy! Reboot through BIOS\n");
- 		machine_real_restart(MRR_BIOS);
- 		return;
-diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
-index e2abfdb5cee6..698745c249e8 100644
---- a/drivers/firmware/efi/runtime-wrappers.c
-+++ b/drivers/firmware/efi/runtime-wrappers.c
-@@ -85,7 +85,7 @@ struct efi_runtime_work efi_rts_work;
- 		pr_err("Failed to queue work to efi_rts_wq.\n");	\
- 									\
- exit:									\
--	efi_rts_work.efi_rts_id = NONE;					\
-+	efi_rts_work.efi_rts_id = EFI_NONE;				\
- 	efi_rts_work.status;						\
- })
+-	if (sym_l->inlined || sym_r->inlined)
+-		return strcmp(sym_l->name, sym_r->name);
++	if (sym_l->inlined || sym_r->inlined) {
++		int ret = strcmp(sym_l->name, sym_r->name);
++
++		if (ret)
++			return ret;
++		if ((sym_l->start <= sym_r->end) && (sym_l->end >= sym_r->start))
++			return 0;
++	}
  
-@@ -175,50 +175,50 @@ static void efi_call_rts(struct work_struct *work)
- 	arg5 = efi_rts_work.arg5;
- 
- 	switch (efi_rts_work.efi_rts_id) {
--	case GET_TIME:
-+	case EFI_GET_TIME:
- 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
- 				       (efi_time_cap_t *)arg2);
- 		break;
--	case SET_TIME:
-+	case EFI_SET_TIME:
- 		status = efi_call_virt(set_time, (efi_time_t *)arg1);
- 		break;
--	case GET_WAKEUP_TIME:
-+	case EFI_GET_WAKEUP_TIME:
- 		status = efi_call_virt(get_wakeup_time, (efi_bool_t *)arg1,
- 				       (efi_bool_t *)arg2, (efi_time_t *)arg3);
- 		break;
--	case SET_WAKEUP_TIME:
-+	case EFI_SET_WAKEUP_TIME:
- 		status = efi_call_virt(set_wakeup_time, *(efi_bool_t *)arg1,
- 				       (efi_time_t *)arg2);
- 		break;
--	case GET_VARIABLE:
-+	case EFI_GET_VARIABLE:
- 		status = efi_call_virt(get_variable, (efi_char16_t *)arg1,
- 				       (efi_guid_t *)arg2, (u32 *)arg3,
- 				       (unsigned long *)arg4, (void *)arg5);
- 		break;
--	case GET_NEXT_VARIABLE:
-+	case EFI_GET_NEXT_VARIABLE:
- 		status = efi_call_virt(get_next_variable, (unsigned long *)arg1,
- 				       (efi_char16_t *)arg2,
- 				       (efi_guid_t *)arg3);
- 		break;
--	case SET_VARIABLE:
-+	case EFI_SET_VARIABLE:
- 		status = efi_call_virt(set_variable, (efi_char16_t *)arg1,
- 				       (efi_guid_t *)arg2, *(u32 *)arg3,
- 				       *(unsigned long *)arg4, (void *)arg5);
- 		break;
--	case QUERY_VARIABLE_INFO:
-+	case EFI_QUERY_VARIABLE_INFO:
- 		status = efi_call_virt(query_variable_info, *(u32 *)arg1,
- 				       (u64 *)arg2, (u64 *)arg3, (u64 *)arg4);
- 		break;
--	case GET_NEXT_HIGH_MONO_COUNT:
-+	case EFI_GET_NEXT_HIGH_MONO_COUNT:
- 		status = efi_call_virt(get_next_high_mono_count, (u32 *)arg1);
- 		break;
--	case UPDATE_CAPSULE:
-+	case EFI_UPDATE_CAPSULE:
- 		status = efi_call_virt(update_capsule,
- 				       (efi_capsule_header_t **)arg1,
- 				       *(unsigned long *)arg2,
- 				       *(unsigned long *)arg3);
- 		break;
--	case QUERY_CAPSULE_CAPS:
-+	case EFI_QUERY_CAPSULE_CAPS:
- 		status = efi_call_virt(query_capsule_caps,
- 				       (efi_capsule_header_t **)arg1,
- 				       *(unsigned long *)arg2, (u64 *)arg3,
-@@ -242,7 +242,7 @@ static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_TIME, tm, tc, NULL, NULL, NULL);
-+	status = efi_queue_work(EFI_GET_TIME, tm, tc, NULL, NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
- }
-@@ -253,7 +253,7 @@ static efi_status_t virt_efi_set_time(efi_time_t *tm)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_TIME, tm, NULL, NULL, NULL, NULL);
-+	status = efi_queue_work(EFI_SET_TIME, tm, NULL, NULL, NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
- }
-@@ -266,7 +266,7 @@ static efi_status_t virt_efi_get_wakeup_time(efi_bool_t *enabled,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_WAKEUP_TIME, enabled, pending, tm, NULL,
-+	status = efi_queue_work(EFI_GET_WAKEUP_TIME, enabled, pending, tm, NULL,
- 				NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -278,7 +278,7 @@ static efi_status_t virt_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
-+	status = efi_queue_work(EFI_SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
- 				NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -294,7 +294,7 @@ static efi_status_t virt_efi_get_variable(efi_char16_t *name,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_VARIABLE, name, vendor, attr, data_size,
-+	status = efi_queue_work(EFI_GET_VARIABLE, name, vendor, attr, data_size,
- 				data);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -308,7 +308,7 @@ static efi_status_t virt_efi_get_next_variable(unsigned long *name_size,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_NEXT_VARIABLE, name_size, name, vendor,
-+	status = efi_queue_work(EFI_GET_NEXT_VARIABLE, name_size, name, vendor,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -324,7 +324,7 @@ static efi_status_t virt_efi_set_variable(efi_char16_t *name,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_VARIABLE, name, vendor, &attr, &data_size,
-+	status = efi_queue_work(EFI_SET_VARIABLE, name, vendor, &attr, &data_size,
- 				data);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -359,7 +359,7 @@ static efi_status_t virt_efi_query_variable_info(u32 attr,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(QUERY_VARIABLE_INFO, &attr, storage_space,
-+	status = efi_queue_work(EFI_QUERY_VARIABLE_INFO, &attr, storage_space,
- 				remaining_space, max_variable_size, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -391,7 +391,7 @@ static efi_status_t virt_efi_get_next_high_mono_count(u32 *count)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
-+	status = efi_queue_work(EFI_GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -407,7 +407,7 @@ static void virt_efi_reset_system(int reset_type,
- 			"could not get exclusive access to the firmware\n");
- 		return;
- 	}
--	efi_rts_work.efi_rts_id = RESET_SYSTEM;
-+	efi_rts_work.efi_rts_id = EFI_RESET_SYSTEM;
- 	__efi_call_virt(reset_system, reset_type, status, data_size, data);
- 	up(&efi_runtime_lock);
- }
-@@ -423,7 +423,7 @@ static efi_status_t virt_efi_update_capsule(efi_capsule_header_t **capsules,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(UPDATE_CAPSULE, capsules, &count, &sg_list,
-+	status = efi_queue_work(EFI_UPDATE_CAPSULE, capsules, &count, &sg_list,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -441,7 +441,7 @@ static efi_status_t virt_efi_query_capsule_caps(efi_capsule_header_t **capsules,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(QUERY_CAPSULE_CAPS, capsules, &count,
-+	status = efi_queue_work(EFI_QUERY_CAPSULE_CAPS, capsules, &count,
- 				max_size, reset_type, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 28604a8d0aa9..a86485ac7c87 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1699,19 +1699,19 @@ extern int efi_tpm_eventlog_init(void);
-  * fault happened while executing an efi runtime service.
-  */
- enum efi_rts_ids {
--	NONE,
--	GET_TIME,
--	SET_TIME,
--	GET_WAKEUP_TIME,
--	SET_WAKEUP_TIME,
--	GET_VARIABLE,
--	GET_NEXT_VARIABLE,
--	SET_VARIABLE,
--	QUERY_VARIABLE_INFO,
--	GET_NEXT_HIGH_MONO_COUNT,
--	RESET_SYSTEM,
--	UPDATE_CAPSULE,
--	QUERY_CAPSULE_CAPS,
-+	EFI_NONE,
-+	EFI_GET_TIME,
-+	EFI_SET_TIME,
-+	EFI_GET_WAKEUP_TIME,
-+	EFI_SET_WAKEUP_TIME,
-+	EFI_GET_VARIABLE,
-+	EFI_GET_NEXT_VARIABLE,
-+	EFI_SET_VARIABLE,
-+	EFI_QUERY_VARIABLE_INFO,
-+	EFI_GET_NEXT_HIGH_MONO_COUNT,
-+	EFI_RESET_SYSTEM,
-+	EFI_UPDATE_CAPSULE,
-+	EFI_QUERY_CAPSULE_CAPS,
- };
- 
- /*
+ 	if (sym_l->start != sym_r->start)
+ 		return (int64_t)(sym_r->start - sym_l->start);
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index dc86597d0cc4..ccf42c4e83f0 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -104,7 +104,7 @@ static struct symbol *new_inline_sym(struct dso *dso,
+ 	} else {
+ 		/* create a fake symbol for the inline frame */
+ 		inline_sym = symbol__new(base_sym ? base_sym->start : 0,
+-					 base_sym ? base_sym->end : 0,
++					 base_sym ? (base_sym->end - base_sym->start) : 0,
+ 					 base_sym ? base_sym->binding : 0,
+ 					 base_sym ? base_sym->type : 0,
+ 					 funcname);
 -- 
 2.19.1
 
