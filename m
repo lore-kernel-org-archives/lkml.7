@@ -4,68 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF30C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE93FC10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E732064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDF62064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jTJto0ZX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="neSqcjcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfDDPFq (ORCPT
+        id S1729474AbfDDPFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 11:05:46 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40170 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729425AbfDDPFq (ORCPT
+        Thu, 4 Apr 2019 11:05:51 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37025 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbfDDPFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 11:05:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so4234456wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 08:05:44 -0700 (PDT)
+        Thu, 4 Apr 2019 11:05:50 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so3815110wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 08:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MzS9le92cojNiBwsEcpVtVjv6C+c3kU/euAgZOl/ICU=;
-        b=jTJto0ZXpcizm1AebWMBhu3/fxNqSf460QjW0538A70L95HJpM+9AnJafbMr6ON/1l
-         A8dJ5Qz+x9hc9VetY3PqxNJoE/DfVyWPOej/Dmx/NAVmtp7NerkGZJuCSQxdjoy49fq1
-         5cIR4goC1kvjh4JuprqmzkcvZBrMafLSqpqmhfz4t7GPApUmymkrx3LonXZok9smVkJC
-         KpsVYIHSoJS9CfB5ZT9CgegAph0WBhUTBB0BDVPDi2CxRJkSs2avpsUDYsBkD1hQg/7O
-         1M+H0+iVBAIkdScCpUGMUpcWFlM0UmsloYFJM1PXJyhDz5SY7YS0AyenqmoDXxge64mh
-         4rvw==
+        bh=EC6v0kUAyj/2brMf9x5R3hSBJyp+HfoUAkCNqMMNaGo=;
+        b=neSqcjcWcOTg4CxJjx0bPJ+Z0UrOrGMM8WWcp7SMFfogJ2HZ9h+k5PzEH+Gd96Lspe
+         qoey72dClXI7dDEVrMCopSgyexgFvwhBhNdJSxEPrIZwy1R18yzsizrd22MNiWkYaCUi
+         Y73zwPgsx0X5qxN1YsoJO672Nj3IY9e/rOWACP9BMFnKNV5nVMZo9plt2He4WkQYU6aa
+         9Rc8w9JybwViBKGGLTxZdHV0W/0BizVg5zXDDKITJyyXHu8nlC3Jasv2VWmUvE6gRE9z
+         rC9HKFQSzrJQWLrQB+6QQDzqfvzpaVIBOjC7EpBWWB87EjNOvejUQbDMup3xPrB3JsPc
+         NR8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MzS9le92cojNiBwsEcpVtVjv6C+c3kU/euAgZOl/ICU=;
-        b=o6qUSum+IBbhg25GSaX01vMdeNuYUZMit1phBkZPueHKlrTADKsAPhJcvDqSwuMy0W
-         UqDLTQtqFJzoBKUJdxbKHtne+b2NPD0Yrk2+s9ALGmOBKBT9e8F6DZNq89c+f3HgZfD8
-         yigjKL3iwBjZYpgk4J4zK8qCMF3fFrz2n6956/h/L9NcO+gItcktXS5s+UQYFvIVRGn7
-         FIvdZmmo9aYIzZtdVypvzyPvgIqrGeMSDTrIX4CcVX4p9hBtc2+cStrLJ5S+TAFWhOEl
-         HsIuiSUaJ7N6SExT15Yl/1F+PqC/d32sUwZzXbNOWr0AaZUe8Mp3M9G8HUgXvCupg2Q5
-         ub5A==
-X-Gm-Message-State: APjAAAXXvcM4xN0Rje/mAxo/IW7zRcw3d4jq2wpvDHOWl/zhnXJdu/qp
-        TcKtUGRh5PPYzG7mowy0OyEKDQ==
-X-Google-Smtp-Source: APXvYqyZfZQ4gNDAxpQZSyJGinCu8vxmTWP6jr51aQb+A4G7jVIbw9tgWcnqtl1MXVr3JQlytlUT4A==
-X-Received: by 2002:a5d:4646:: with SMTP id j6mr4838442wrs.56.1554390343904;
-        Thu, 04 Apr 2019 08:05:43 -0700 (PDT)
+        bh=EC6v0kUAyj/2brMf9x5R3hSBJyp+HfoUAkCNqMMNaGo=;
+        b=nGUygmwr8yh9SyUW4lG/pi+Cok26Ngvvtf0LjYf7o9QjH6MO3ju72/n92bmTz2Nydp
+         XxEDp5RpUfKnMc1+Urs6d8bk4UNra5BHMh6n4CWWOONbaALbxGGuZ/xGWQvgbwiennFK
+         dvJ/ytezOKZHSrmTiTxFNhUUu/o5ZuV1wsHaVGnLZLjKrPAfwP/0CSxLhY8n3nUZjomj
+         5fDPag9KSjhJ+3g9PhuKwlqWidpP6gWsbTrMEj76t36+GLFlqcm+/iSJbF76a5xeYq6T
+         qBUsZnfcIP6nRQI7rT9Tev0K8zdijikm7aHFFnZU43DOG7uhpP5/HzxqwO4bOPouogUx
+         gicA==
+X-Gm-Message-State: APjAAAXF7qvtv0cR15icirfllebjbbfSLpaauXF48zKtGJJoDMQ4xKyU
+        lr68pzPH+8sNeTwjv9XBwVfzWg==
+X-Google-Smtp-Source: APXvYqwNrtT4Iy+KiT7gIRwgMQEWnjGx8a4S9AWXpbrQ/tSPSTGTpO4w8Mmvm92gOzMt28npD0aIyQ==
+X-Received: by 2002:a05:600c:2309:: with SMTP id 9mr4636858wmo.52.1554390348857;
+        Thu, 04 Apr 2019 08:05:48 -0700 (PDT)
 Received: from localhost.localdomain (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id z23sm9880981wma.0.2019.04.04.08.05.38
+        by smtp.gmail.com with ESMTPSA id z23sm9880981wma.0.2019.04.04.08.05.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 04 Apr 2019 08:05:41 -0700 (PDT)
+        Thu, 04 Apr 2019 08:05:47 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com, jbrunet@baylibre.com
+To:     khilman@baylibre.com, devicetree@vger.kernel.org,
+        jbrunet@baylibre.com
 Cc:     baylibre-upstreaming@groups.io,
         Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH 3/6] clk: meson: g12a: mark fclk_div3 as critical
-Date:   Thu,  4 Apr 2019 17:05:15 +0200
-Message-Id: <20190404150518.30337-4-narmstrong@baylibre.com>
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 4/6] dt-bindings: arm: amlogic: add G12B bindings
+Date:   Thu,  4 Apr 2019 17:05:16 +0200
+Message-Id: <20190404150518.30337-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404150518.30337-1-narmstrong@baylibre.com>
 References: <20190404150518.30337-1-narmstrong@baylibre.com>
@@ -76,39 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Amlogic Meson G12b platform, the fclk_div3 seems to be necessary for
-the system to operate correctly.
-
-Disabling it cause the entire system to freeze, including peripherals.
-
-This patch patch marks this clock as critical, fixing boot on G12b platforms.
+Add compatible for the Amlogic G12B SoC, sharing most of the
+features and architecture with the G12A SoC.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/meson/g12a.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index 14aaa02bb621..3554d1172169 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -1060,6 +1060,16 @@ static struct clk_regmap g12a_fclk_div3 = {
- 		.ops = &clk_regmap_gate_ops,
- 		.parent_names = (const char *[]){ "fclk_div3_div" },
- 		.num_parents = 1,
-+		/*
-+		 * This clock is used by the resident firmware and is required
-+		 * by the platform to operate correctly.
-+		 * Until the following condition are met, we need this clock to
-+		 * be marked as critical:
-+		 * a) Mark the clock used by a firmware resource, if possible
-+		 * b) CCF has a clock hand-off mechanism to make the sure the
-+		 *    clock stays on until the proper driver comes along
-+		 */
-+		.flags = CLK_IS_CRITICAL,
- 	},
- };
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 061f7b98a07f..94bbcc646e10 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -61,6 +61,10 @@ Boards with the Amlogic Meson G12A S905D2 SoC shall have the following propertie
+   Required root node property:
+     compatible: "amlogic,g12a";
  
++Boards with the Amlogic Meson G12B S922X SoC shall have the following properties:
++  Required root node property:
++    compatible: "amlogic,g12b";
++
+ Board compatible values (alphabetically, grouped by SoC):
+ 
+   - "geniatech,atv1200" (Meson6)
 -- 
 2.21.0
 
