@@ -2,101 +2,82 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469E0C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93797C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176BE20855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:57:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EGHD0LzR"
+	by mail.kernel.org (Postfix) with ESMTP id 6B98E20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbfDDT5P (ORCPT
+        id S1730539AbfDDT7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:57:15 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16899 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfDDT5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:57:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca661960000>; Thu, 04 Apr 2019 12:57:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 04 Apr 2019 12:57:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 04 Apr 2019 12:57:12 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Apr
- 2019 19:57:11 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 4 Apr 2019 19:57:11 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ca661920000>; Thu, 04 Apr 2019 12:57:11 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <lorenzo.pieralisi@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <mperttunen@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V2 16/16] arm64: Add Tegra194 PCIe driver to defconfig
-Date:   Fri, 5 Apr 2019 01:24:43 +0530
-Message-ID: <1554407683-31580-17-git-send-email-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 4 Apr 2019 15:59:18 -0400
+Received: from anholt.net ([50.246.234.109]:42550 "EHLO anholt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729456AbfDDT7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 15:59:17 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 3A6CB10A068A;
+        Thu,  4 Apr 2019 12:59:17 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at anholt.net
+Received: from anholt.net ([127.0.0.1])
+        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id Kgli07kZfmr6; Thu,  4 Apr 2019 12:59:16 -0700 (PDT)
+Received: from eliezer.anholt.net (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 2111910A06DA;
+        Thu,  4 Apr 2019 12:59:16 -0700 (PDT)
+Received: by eliezer.anholt.net (Postfix, from userid 1000)
+        id 944012FE3601; Thu,  4 Apr 2019 12:59:15 -0700 (PDT)
+From:   Eric Anholt <eric@anholt.net>
+To:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list\:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH 5/7] drm/pl111: fix possible object reference leak
+In-Reply-To: <1554307455-40361-6-git-send-email-wen.yang99@zte.com.cn>
+References: <1554307455-40361-1-git-send-email-wen.yang99@zte.com.cn> <1554307455-40361-6-git-send-email-wen.yang99@zte.com.cn>
+User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
+Date:   Thu, 04 Apr 2019 12:59:15 -0700
+Message-ID: <874l7dwnho.fsf@anholt.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554407830; bh=xGS5pjhP8W5P/j0fAzs4Coux+y7ukQm3f4HxFD0fm/E=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=EGHD0LzRox7lQcKTY8xOMrsQVBN0bXHOEQNX7Fwe8C1ouo4mKz8dhPaJA3YRHzLnW
-         +JyEsBomTXXInShoQwnDMHUOlsq7JaQZQy+auiX/nUFncPmdGJ4a/h8pvYgM/uhd3H
-         RDLNgDoTTfdqUGuHukLJdbUNBfrSKHSKPzWavdeRBXgdWUvqrkjm/omv7NIlmHCCK2
-         MtqtHNTgycB5xLXls2ahY8H3FqBhR76dnv+Ce+Rp3NlKLGbbyKjH8/dVv/IzKjLqYh
-         1GVJKvCl2uoAQQPJqwMvLgGnFG1RZwSDdRV2AM72/gDaRkGXVom65DlBbbd0IUmPNA
-         3xOkgl+WaWuZA==
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe host controller driver for DesignWare core based
-PCIe controller IP present in Tegra194.
+--=-=-=
+Content-Type: text/plain
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes since [v1]:
-* Changed CONFIG_PCIE_TEGRA194 from 'y' to 'm'
+Wen Yang <wen.yang99@zte.com.cn> writes:
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> The call to of_find_matching_node_and_match returns a node pointer with
+> refcount incremented thus it must be explicitly decremented after the
+> last usage.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c39033c1a..2ddea5c4e87d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -87,6 +87,7 @@ CONFIG_PCIE_QCOM=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
-+CONFIG_PCIE_TEGRA194=m
- CONFIG_ARM64_VA_BITS_48=y
- CONFIG_SCHED_MC=y
- CONFIG_NUMA=y
--- 
-2.7.4
+Pushed to drm-misc-next.  Thanks!
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlymYhMACgkQtdYpNtH8
+nuhRZA//e/FQ6tvCC2FweOKNM2u64209NG15vDYGNdMdn6fXo+DLHMK2JcifVBrW
+7UyfHm/Q3BG+TygjqTJEcRmNgZFtwdtU5/J1r5RJKRssWof9c8sQzQeH+zT+xUqJ
+fLr7id4tF8W4s72lX9WRcpmEY6kkJhrcjUlbkaQ3rMZdVUu424jDFkwyXX3CDpVm
+egvXMwKcXFPm/xgdNmawM9ubCchwRwBtT1l/lmGj2V7Mtk+NdHwvreWP5567CoCz
++asX8FMXva77isGzyyLcIDW2g3YKPFv1bj/XFACfVZnV0djVjpjbfiJD0+DLMgTM
+F8x6EQJlYQFGsxn8XIFDkBtxttlipsb06tFCCLpboZlffawKzIiwi94vr7yYtbt1
+yHRQj9PyIVUHBr78WkaJV65nIcvJOLiMiZVJeK1Me2ByiGrLVSiBB4allUDVDhmd
+hfLRqnCrHsWOq8D+hPMJerEdw2b4HT3wn+13aJnui2h+huHxCy6uJQNmlwmZXUkR
++/pUsTj/wlD7CCQkEPUHF+Ei/z/R3/lGVbvzbhXwjqir+rMCI3FoSIMJUV7CG4Yh
+IVNFr/Kv6pDO4OS1QHqXP+Jui0zj4n8DS1QH1sW00Oo+VD1pNOAxG75QzizQjBG6
+RcwbibZvrU0DyY7bHGl2eSDTuPCke9PaJwfThuPxJDgCx1ozFq8=
+=kmDn
+-----END PGP SIGNATURE-----
+--=-=-=--
