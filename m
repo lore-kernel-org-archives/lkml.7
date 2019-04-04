@@ -2,145 +2,193 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0293DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD6DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57542133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378C02147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:30:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eD0tjBoW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bs+UaaYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfDDD24 (ORCPT
+        id S1726725AbfDDDao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:28:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43384 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfDDD24 (ORCPT
+        Wed, 3 Apr 2019 23:30:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33465 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfDDDao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:28:56 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c8so604156pfd.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:28:55 -0700 (PDT)
+        Wed, 3 Apr 2019 23:30:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i19so630897pfd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VFJ2wER6EQKUZL0dXpjVrQRv+8SzbIa0hZCCKCls6uc=;
-        b=eD0tjBoW6hsIYZKLAivX5T3fC3B0NgKd2iL88VLK8cCKdamgx22yzfhnqcEuHjNLTJ
-         9f993jHHYeDbEDptrVdHO/08yJQOXyrNzSIsFJ+N74XTsmToXEx2CMpaFcQuFyseFVLY
-         nl7JJLPqV4Gs62oqOyK9A53iropLTc54pkrb3LhCIWK7Aq0hmVe4Xx2KcyhF84i2wqu0
-         cVZSLRgVzmab13ZchZvYWRIDhVrej4yL+ur1mNSIREA2ItLO2FepbeHNXHDIeV013yh0
-         jvXuibSNSPQqQGv+VyOYY66DjGhGIoNs2zYVPyRFfjcSgDX+z/MNh7X8jJM1p9yAZ+8m
-         j9Ww==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=lv8NVbJO6cxJt5xlEdH0XCLVCT+ImQmsAWGyClGMj7s=;
+        b=Bs+UaaYK7meC5Cxn0BfLUhKq2cxLzN/IxzdWFfI5ouoUAsAeWY/0ic8yvAyF4Z3FP5
+         i43xuSQd3ClJH05R4RJxnYS0ER2iOFW6gWgjtzGILMCcuO3Jl0mEYYBMMZbd9crz0Fkk
+         j38WPKQwMtWfl1wqCKRJjmrvUdCRueIi6qFRze4qBGMFlO/Bom4h49eUFkFp0fr0qPqb
+         jkiZEFj9FfdqmzlC/1Mqaie5zpbQSC9zoKpOZVuffBuR3bElTFJTcbViqaiGqH/ph6Vw
+         Zm5F6E0AFOF/fSie8TBulqSyiCP1ObxhGBEjD1cZ1DtdNAvnsrKPFQpL5gW4FV3Ir+wW
+         v4dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VFJ2wER6EQKUZL0dXpjVrQRv+8SzbIa0hZCCKCls6uc=;
-        b=GvQmvEjiKABPUIBne4PTu8Ee3OWpRqMhIn35UqWsZoSLlmVNP2Axs+Ux4Eaz3NaJwQ
-         xh06+d5spnLy5lbkF3aOuiRKzdWeMhr8FnAYSR+ojCCZrp4yIpzlkvF6iXx9gpIe0mzi
-         XhRUx0B3UMb0vUEx9Io/K8y5o7kMEoxdKwmfuaOY4X8Y1rNVkdj3Xo6088jg0/3CeR6l
-         xm0h+FbblrKLy1jAmM6iiZuX4eW5+4NYIp02Fx/foxQim1dZaOkLlsiidHtd1A77ORWo
-         W4e2NPn50BUleGDGDGvKG5KtjmJLy3Dk2eXUHMdO8wldPQ+yus+/14mqVkshSuMQ8/YQ
-         3ajQ==
-X-Gm-Message-State: APjAAAV5AclZPF6lDHM3svmfTKMq5Bq+GNNpUSeZtXP0cRCFcVkPKQ3Y
-        IusfHEXkLZc31HR0JAd0GmfJcyq3lj5xQQ==
-X-Google-Smtp-Source: APXvYqw50DXFCo1nIyIMANDfA4+Fr5ECKHZkbhypwyZ50F37Ko62glZybeveqUZBCDOc/zwmmaXgHQ==
-X-Received: by 2002:a63:e20b:: with SMTP id q11mr3441149pgh.263.1554348535036;
-        Wed, 03 Apr 2019 20:28:55 -0700 (PDT)
-Received: from [10.71.14.66] ([147.50.13.10])
-        by smtp.googlemail.com with ESMTPSA id r87sm18201915pfa.71.2019.04.03.20.28.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 20:28:54 -0700 (PDT)
-Subject: Re: [PATCH v3 04/13] thermal: qoriq: Add local struct qoriq_sensor
- pointer
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=lv8NVbJO6cxJt5xlEdH0XCLVCT+ImQmsAWGyClGMj7s=;
+        b=X1Gmt5D2XM34K2TghGzoOe99qT7GQbpomp71ob9y1w+ARCvCAjFRxoLJkvapFl9T0d
+         seC4U6w4VVY8W40uNtXPJWMhS6vrAPbfoxlFQtl+dkvmLJ6URY4RSQwe4xW7zqwyGaEu
+         jPQoHbF6CBa3Wfa8q/EaYm2UgT3OqZH3bY/D1v3ayOHMJcwKYTHDBOIDrtQZrdHaMrzW
+         4tmzq1cNzDquon/16j4r4Oplo9SK9nBxbviVCtYNtC6PdMonhXpN5z6m9dKDRIwasjng
+         PkxLxct1hM+PK29mL9kL7U0Zbzg7gDAAdpdW6tov5LjloVFSn6i3P/IlCf2Bfp7D+hHE
+         j3qA==
+X-Gm-Message-State: APjAAAXZeW6ju4N2b1b1LsgGsPBV9sn95hH2s3nAfTGMywzPU7+C5kEA
+        YJfFWaTgiQIfhOp8mIMPXgY=
+X-Google-Smtp-Source: APXvYqwUv0dDc5yX7JjWTWOotQnOt3ARoTj1FoGAfJdEyBh+T0nU/S8/a+Kf7sdDsKqbttMjLkaaEQ==
+X-Received: by 2002:a63:6a42:: with SMTP id f63mr3345989pgc.207.1554348643029;
+        Wed, 03 Apr 2019 20:30:43 -0700 (PDT)
+Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id j4sm27324017pfn.132.2019.04.03.20.30.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 03 Apr 2019 20:30:42 -0700 (PDT)
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-References: <20190401041418.5999-1-andrew.smirnov@gmail.com>
- <20190401041418.5999-5-andrew.smirnov@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <02822a7c-ae86-8c00-093e-665b603b1430@linaro.org>
-Date:   Thu, 4 Apr 2019 05:28:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190401041418.5999-5-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH] mm:workingset use real time to judge activity of the file page
+Date:   Thu,  4 Apr 2019 11:30:17 +0800
+Message-Id: <1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/04/2019 06:14, Andrey Smirnov wrote:
-> Add local struct qoriq_sensor pointer in qoriq_tmu_register_tmu_zone()
-> for brevity.
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> Cc: linux-imx@nxp.com
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/thermal/qoriq_thermal.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> index 6d40b9788266..e281bdcfa11f 100644
-> --- a/drivers/thermal/qoriq_thermal.c
-> +++ b/drivers/thermal/qoriq_thermal.c
-> @@ -114,18 +114,18 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
->  
->  	for (id = 0; id < SITES_MAX; id++) {
->  		struct thermal_zone_device *tzd;
-> +		struct qoriq_sensor *s;
->  
-> -		qdata->sensor[id] = devm_kzalloc(&pdev->dev,
-> +		s = qdata->sensor[id] = devm_kzalloc(&pdev->dev,
->  				sizeof(struct qoriq_sensor), GFP_KERNEL);
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-I would not recommend this, especially if you use a variable helper for
-clarity. Keep using the 's' variable and then assign qdata->sensor[id] =
-s at the end when everything is ok. May be rename it 'sensor'?
+In previous implementation, the number of refault pages is used
+for judging the refault period of each page, which is not precised as
+eviction of other files will be affect a lot on current cache.
+We introduce the timestamp into the workingset's entry and refault ratio
+to measure the file page's activity. It helps to decrease the affection
+of other files(average refault ratio can reflect the view of whole system
+'s memory).
+The patch is tested on an Android system, which can be described as
+comparing the launch time of an application between a huge memory
+consumption. The result is launch time decrease 50% and the page fault
+during the test decrease 80%.
 
->  		if (!qdata->sensor[id])
->  			return -ENOMEM;
->  
-> -		qdata->sensor[id]->id = id;
-> -		qdata->sensor[id]->qdata = qdata;
-> +		s->id = id;
-> +		s->qdata = qdata;
->  
->  		tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, id,
-> -							   qdata->sensor[id],
-> -							   &tmu_tz_ops);
-> +							   s, &tmu_tz_ops);
->  		if (IS_ERR(tzd)) {
->  			if (PTR_ERR(tzd) == -ENODEV)
->  				continue;
-> 
+Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
+---
+ include/linux/mmzone.h |  2 ++
+ mm/workingset.c        | 24 +++++++++++++++++-------
+ 2 files changed, 19 insertions(+), 7 deletions(-)
 
-
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 32699b2..c38ba0a 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -240,6 +240,8 @@ struct lruvec {
+ 	atomic_long_t			inactive_age;
+ 	/* Refaults at the time of last reclaim cycle */
+ 	unsigned long			refaults;
++	atomic_long_t			refaults_ratio;
++	atomic_long_t			prev_fault;
+ #ifdef CONFIG_MEMCG
+ 	struct pglist_data *pgdat;
+ #endif
+diff --git a/mm/workingset.c b/mm/workingset.c
+index 40ee02c..6361853 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -159,7 +159,7 @@
+ 			 NODES_SHIFT +	\
+ 			 MEM_CGROUP_ID_SHIFT)
+ #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
+-
++#define EVICTION_JIFFIES (BITS_PER_LONG >> 3)
+ /*
+  * Eviction timestamps need to be able to cover the full range of
+  * actionable refaults. However, bits are tight in the radix tree
+@@ -175,18 +175,22 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+ 	eviction >>= bucket_order;
+ 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
+ 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
++	eviction = (eviction << EVICTION_JIFFIES) | (jiffies >> EVICTION_JIFFIES);
+ 	eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
+ 
+ 	return (void *)(eviction | RADIX_TREE_EXCEPTIONAL_ENTRY);
+ }
+ 
+ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+-			  unsigned long *evictionp)
++			  unsigned long *evictionp, unsigned long *prev_jiffp)
+ {
+ 	unsigned long entry = (unsigned long)shadow;
+ 	int memcgid, nid;
++	unsigned long prev_jiff;
+ 
+ 	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
++	entry >>= EVICTION_JIFFIES;
++	prev_jiff = (entry & ((1UL << EVICTION_JIFFIES) - 1)) << EVICTION_JIFFIES;
+ 	nid = entry & ((1UL << NODES_SHIFT) - 1);
+ 	entry >>= NODES_SHIFT;
+ 	memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
+@@ -195,6 +199,7 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+ 	*memcgidp = memcgid;
+ 	*pgdat = NODE_DATA(nid);
+ 	*evictionp = entry << bucket_order;
++	*prev_jiffp = prev_jiff;
+ }
+ 
+ /**
+@@ -242,8 +247,12 @@ bool workingset_refault(void *shadow)
+ 	unsigned long refault;
+ 	struct pglist_data *pgdat;
+ 	int memcgid;
++	unsigned long refault_ratio;
++	unsigned long prev_jiff;
++	unsigned long avg_refault_time;
++	unsigned long refault_time;
+ 
+-	unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
++	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_jiff);
+ 
+ 	rcu_read_lock();
+ 	/*
+@@ -288,10 +297,11 @@ bool workingset_refault(void *shadow)
+ 	 * list is not a problem.
+ 	 */
+ 	refault_distance = (refault - eviction) & EVICTION_MASK;
+-
+ 	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
+-
+-	if (refault_distance <= active_file) {
++	lruvec->refaults_ratio = atomic_long_read(&lruvec->inactive_age) / jiffies;
++	refault_time = jiffies - prev_jiff;
++	avg_refault_time = refault_distance / lruvec->refaults_ratio;
++	if (refault_time <= avg_refault_time) {
+ 		inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
+ 		rcu_read_unlock();
+ 		return true;
+@@ -521,7 +531,7 @@ static int __init workingset_init(void)
+ 	 * some more pages at runtime, so keep working with up to
+ 	 * double the initial memory by using totalram_pages as-is.
+ 	 */
+-	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
++	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT - EVICTION_JIFFIES;
+ 	max_order = fls_long(totalram_pages - 1);
+ 	if (max_order > timestamp_bits)
+ 		bucket_order = max_order - timestamp_bits;
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+1.9.1
 
