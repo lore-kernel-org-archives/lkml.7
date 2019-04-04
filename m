@@ -2,109 +2,100 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354B1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A1BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0601A20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10AB20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 10:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oKVHexL8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pMpHnOn6"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tNZ4iHzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfDDKQX (ORCPT
+        id S1729202AbfDDKRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 06:16:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39738 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbfDDKQW (ORCPT
+        Thu, 4 Apr 2019 06:17:22 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:6768 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfDDKRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 06:16:22 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3635E61B5D; Thu,  4 Apr 2019 10:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554372981;
-        bh=RFTudF1rRaNt3OPm2mm6NoDnBvgqm0+bKsN0rR8r01o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=oKVHexL8quzjjaPFs7tpyGgBXtcFCxQ6cayijiJhEy+dxLzcTdDByuQ3gRviSaosg
-         tqe8g5M/R7+1K7UHhHnhpV74hrAnWS6Kc81PPJKXaRpp4cGRBFODHvng9AYyOHX4kS
-         dsQGoyz0wDr0Rj2kld9FKbyF0AVmETzPoT9Stt30=
-Received: from [10.204.79.83] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7AC461C97;
-        Thu,  4 Apr 2019 10:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1554372979;
-        bh=RFTudF1rRaNt3OPm2mm6NoDnBvgqm0+bKsN0rR8r01o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pMpHnOn6KXYkmKjSPmlNGpySR2wGvtZBtq8agWKyc5rWlDRtnidfg2124dEKRxf/8
-         jz1QdgLVKo7kEmTfnzKti7/BaEbsUNBZUiTBEz2WAz8s4AAc0uWcIUacwIxMY4zBCr
-         8JhpPerEz53YWWKLzh1U61cXrUfE4mR0bFLZiIU4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A7AC461C97
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] staging: rtl8192u: remove redundant null check on array
- 'data'
-To:     Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Whitmore <johnfwhitmore@gmail.com>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190404093257.18757-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <ced06fcb-153b-1e3c-4d6b-718dd3a91db7@codeaurora.org>
-Date:   Thu, 4 Apr 2019 15:46:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 06:17:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1554373040; x=1585909040;
+  h=from:to:subject:date:message-id:mime-version;
+  bh=I4CCV6KLI97RKKOs9+G0QaWvIxWlVqRP7fbiAEF/Xhw=;
+  b=tNZ4iHzrGRAkfjaCBtSObMYrZTB9c7uBFuhfhnqaLbPPrSgr9ECHFjPK
+   BsUDDPRG3I80sUNMolgDQsSysWrCOz1t179HMfkdUwVdvKedhXgLn6hvZ
+   09r+ajhfqNZZDRh3zCQJdx1HdrVUAA6Co0+S+3fxzMScHmoy/+UUKItzr
+   E=;
+X-IronPort-AV: E=Sophos;i="5.60,308,1549929600"; 
+   d="scan'208";a="725984684"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 04 Apr 2019 10:17:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x34AHEgp057459
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 4 Apr 2019 10:17:15 GMT
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 4 Apr 2019 10:17:14 +0000
+Received: from udc4a3e82dbc15a031435.hfa14.amazon.com (10.43.160.69) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 4 Apr 2019 10:17:08 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <talel@amazon.com>, <robh@kernel.org>, <edubezval@gmail.com>,
+        <dwmw@amazon.co.uk>, <jonnyc@amazon.com>, <rui.zhang@intel.com>,
+        <hhhawa@amazon.com>, <ronenk@amazon.com>, <hanochu@amazon.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 0/2] Amazon's Annapurna Labs Thermal Sensor Driver
+Date:   Thu, 4 Apr 2019 13:16:54 +0300
+Message-ID: <1554373016-1442-1-git-send-email-talel@amazon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190404093257.18757-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.69]
+X-ClientProxiedBy: EX13D25UWC003.ant.amazon.com (10.43.162.129) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series introduces support for Amazon's Annapurna Labs Thermal Sensor
+based on a new simple MMIO thermal driver. This driver is intended to be
+used by other devices as well, which require just a simple MMIO access to
+read temperature. 
 
-On 4/4/2019 3:02 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The NULL check on ram->u.wpa_ie.data is redudant as data is
-s/redudant/redundant
-> zero-length array and is not a pointer, so it can't be null.
-> Remove the check.
->
-> Addresses-Coverity: ("Array compared against 0")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Changes since v1:
+==================
+- removed the "thermal_mmio" compatible string. With v2 version, only
+  specific hardware can bound
+- add initialization function that is mapped based on the specific binding
+  string
+- removed thermal_mmio_readl and thermal_readw, but kept mmio reads in
+  callback function. Left only thermal_mmio_reab which is used by
+  al-thermal
+- removed divider, bias, width which are not needed for al-thermal.
 
-fix the commit text minor err
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Cheers,
--Mukesh
+Talel Shenhar (2):
+  dt-bindings: thermal: al-thermal: Add binding documentation
+  thermal: Introduce Amazon's Annapurna Labs Thermal Driver
 
-> ---
->   drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
-> index 944c8894f9ff..c4a4f118f547 100644
-> --- a/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
-> +++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c
-> @@ -2659,8 +2659,7 @@ static int ieee80211_wpa_set_wpa_ie(struct ieee80211_device *ieee,
->   {
->   	u8 *buf;
->   
-> -	if (param->u.wpa_ie.len > MAX_WPA_IE_LEN ||
-> -	    (param->u.wpa_ie.len && param->u.wpa_ie.data == NULL))
-> +	if (param->u.wpa_ie.len > MAX_WPA_IE_LEN || param->u.wpa_ie.len)
->   		return -EINVAL;
->   
->   	if (param->u.wpa_ie.len) {
+ .../bindings/thermal/amazon,al-thermal.txt         |  33 ++++++
+ MAINTAINERS                                        |   6 +
+ drivers/thermal/Kconfig                            |  10 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/thermal_mmio.c                     | 129 +++++++++++++++++++++
+ 5 files changed, 179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+ create mode 100644 drivers/thermal/thermal_mmio.c
+
+-- 
+2.7.4
+
