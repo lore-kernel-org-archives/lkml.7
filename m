@@ -2,123 +2,114 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123EBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9B3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D901620855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0ED620855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ar3/lMoI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dn6g/exY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbfDDT4g (ORCPT
+        id S1730715AbfDDT4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:56:36 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13895 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfDDT4f (ORCPT
+        Thu, 4 Apr 2019 15:56:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42846 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbfDDT4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:56:35 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ca661760000>; Thu, 04 Apr 2019 12:56:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 04 Apr 2019 12:56:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 04 Apr 2019 12:56:34 -0700
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Apr
- 2019 19:56:34 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 4 Apr 2019 19:56:34 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ca6616c0005>; Thu, 04 Apr 2019 12:56:34 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <lorenzo.pieralisi@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <mperttunen@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V2 11/16] dt-bindings: PHY: P2U: Add Tegra 194 P2U block
-Date:   Fri, 5 Apr 2019 01:24:38 +0530
-Message-ID: <1554407683-31580-12-git-send-email-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 4 Apr 2019 15:56:38 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 103so3497399otd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 12:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=c/A5eqw6yK50rkMqQZj0f5rzX42DjVihBEh/+r4Pt9U=;
+        b=dn6g/exYvuaO7XVehkz3CI55p8Ns9EU3gRKt2uJut1kv1GtrEEm+8uf2XtTlVnaJkO
+         2sDziMX/xi3i6IeYAGtpvHJwydXjENZK3J3z7FT5NtA/4NGxnLRm0PNRNOccVwUKCyWG
+         A9sd2GJknATAt1SA0XY0MVaiRgEPoyzM/qfz045wvRldzE+EV5wU088GmThk5OMfNcMy
+         rcG6q7IIH49u9R7FTz2pSlBamWJ4dac1oX1TF6znIW0oKc+cYuC3OdqqYPE/piambtWg
+         LLg214TYih7q4a7/gZDLjl1PRaZ+I5VhgwAQ88DRSh1ihMZ2diKPvW4+0dvqeMlYEutV
+         4GaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c/A5eqw6yK50rkMqQZj0f5rzX42DjVihBEh/+r4Pt9U=;
+        b=Ad5X9yCZ3CnDnnGzgS7rowvfXSiczfXeJ5ffztNgs6squKsLVCDXRqhODT9XG9qtSl
+         3BBxL49Da/gUW35WNPI50lD+9fijSjqWmqmdP1kui+g2vYpuw3TnuP3XNbYvour2fsQ5
+         ZqFCMZsyLUW5ngW0BAk+Ka/zdxlyzBZFBBF9Tpz1JTg/BaHXTaxd3RdViDdCWrQpMTwD
+         Um8y5+Tu1f2KLk2TJqU1Pf7E+mjDIqzqnM8C2rNWKJaJ4J8Qa3sIu6EuoctwQeY/FSIh
+         D88aKyGzujRdUrNNpd6HoeED8I1FuBzM6Y6TUozgMZaFgxaBO6MWZ6c/ScEKjwcpm8lW
+         KZAw==
+X-Gm-Message-State: APjAAAXF5Ggr8Rbhj9Uy1q8EgYMpV0MSOfffT22Nr7F69wqtvHEe/Xjf
+        Kcr9J1TTYYIbmts4mGczvlyhVGhJbnA=
+X-Google-Smtp-Source: APXvYqzYDJUUwZdmaQNeWwJ3oWnxqmpj5z8zSCNG5x4eHn0CQ6Dj4ddtnaB/49a3p2PXnJ5Rb9VnZw==
+X-Received: by 2002:a05:6830:2094:: with SMTP id y20mr5418720otq.316.1554407797709;
+        Thu, 04 Apr 2019 12:56:37 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:7549:4e85:9095:b601])
+        by smtp.gmail.com with ESMTPSA id y9sm7648653otk.20.2019.04.04.12.56.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 12:56:37 -0700 (PDT)
+Date:   Thu, 4 Apr 2019 14:56:35 -0500
+From:   Madhumthia Prabakaran <madhumithabiw@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Staging: rtlwifi: Remove unwanted parentheses
+Message-ID: <20190404195633.GA7215@madhuleo>
+References: <20190403223851.22524-1-madhumithabiw@gmail.com>
+ <20190404090900.GH32590@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1554407798; bh=SIp9XNiwggGxDOjLlfcaTWwFa8FUQzKSg2JvjGV8Aw0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=ar3/lMoIWSeGal4wPKWCIKmAeQtsbRdnyCpfabl2PVDOKLA+IC5GMaoiSUmNqM9UO
-         T84RcXKMkJI0cd/ws/l1sjkCJQP6vKqICSW4ZRqiybQ2l5Yk/FIqqWg3O2jfbbSGx5
-         bNRFV8+47VirlY1dSQX342mH4uX1cQVplsTlJX2igz60zZ40L0MO9cMxEmccQCRDrJ
-         Zj31CSMZmA+5W/c4Pa3kTBMnT15JRjsOmrYQoHmXLqXKFxOqv7B7EDe2R8eO8J0iAd
-         5eurNLzGgZ59vMUmcSNcWH6UAhNDUCiBCRgBzfNIQfRImD1TQvSxY1kLDDzCuE3+01
-         csWDMBxsblDaw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404090900.GH32590@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
-module instantiated one for each PCIe lane between Synopsys Designware core
-based PCIe IP and Universal PHY block.
----
-Changes since [v1]:
-* This is a new patch in v2 series
+On Thu, Apr 04, 2019 at 12:09:00PM +0300, Dan Carpenter wrote:
+> You should probably update the subject line because now it's not just
+> about parentheses any more.
+> 
+> [PATCH v2] Staging: rtlwifi: clean up crc16_ccitt()
+> 
+> So the one thing per patch rule is a little bit about selling your
+> patch.  We never allow "Clean up whole_file.c" but we do sometimes allow
+> "Clean up a function()" so long as the patch description sells it in
+> the right way.
+> 
+> Blah blah function does "BIT(0) << i" instead of "BIT(i)".  Using !!
+> is slightly shorter than "foo ? 1 : 0".  Blah blah, etc.
 
- .../devicetree/bindings/phy/phy-tegra194-p2u.txt   | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-new file mode 100644
-index 000000000000..baf037dfdf4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-@@ -0,0 +1,28 @@
-+NVIDIA Tegra194 P2U binding
-+
-+Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
-+Speed) each interfacing with 12 and 8 P2U instances respectively.
-+A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
-+interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
-+lane.
-+
-+Required properties:
-+- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
-+- reg: Should be the physical address space and length of respective each P2U
-+       instance.
-+- reg-names: Must include the entry "ctl".
-+
-+Required properties for PHY port node:
-+- #phy-cells: Defined by generic PHY bindings.  Must be 0.
-+
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-+
-+Example:
-+
-+p2u_0: p2u@03e10000 {
-+	compatible = "nvidia,tegra194-p2u";
-+	reg = <0x03e10000 0x10000>;
-+	reg-names = "ctl";
-+
-+	#phy-cells = <0>;
-+};
--- 
-2.7.4
+Thanks for feedback!
 
+> 
+> On Wed, Apr 03, 2019 at 05:38:51PM -0500, Madhumitha Prabakaran wrote:
+> > @@ -351,13 +351,13 @@ static u16 crc16_ccitt(u8 data, u16 crc)
+> >  		else
+> >  			result |= BIT(0);
+> >  
+> > -		crc_bit11 = ((crc & BIT(11)) ? 1 : 0) ^ shift_in;
+> > +		crc_bit11 = !!(crc & BIT(11)) ^ shift_in;
+> >  		if (crc_bit11 == 0)
+> >  			result &= (~BIT(12));
+>                                   ^        ^
+> I thought your Coccinelle script was going to complain about these
+> parentheses.  Probably the &= confuses it?  There are a couple others
+> in the same function.
+
+I didn't included assignment operators in the earlier Coccinelle script. However, I
+edited it now.
+
+> 
+> regards,
+> dan carpenter
