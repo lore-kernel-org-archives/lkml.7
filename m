@@ -2,117 +2,137 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEAFC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60948C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20E0206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2D2206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFAZy3XY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yhZ/F32D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbfDDMJa (ORCPT
+        id S1728718AbfDDMNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 08:09:30 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36189 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfDDMJ3 (ORCPT
+        Thu, 4 Apr 2019 08:13:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54874 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfDDMNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 08:09:29 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r24so1869603ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 05:09:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GYO7EPqOGrMp9edmk6y6YZ57MeWm04v2p4X6gCHxcfI=;
-        b=jFAZy3XYIUaD5PMKk6OmWwxnhtAn4LbS8jnDhZ5+4zi1EYVcWHR+dkQ3gVAyXlwKAo
-         XKlGLibgCQzUzUrmN+QU+Q/l7mS0219mkVhyB4w4LBTNYz3pTKWQsKKfu/psM4FQdXoq
-         qtYgq/yLfB4Idag0Cq5tk3OEZBSkcnmtToqyfttpLRpb1R1IjDLXnQeF8TQc1TvmhFvB
-         DreUA9de5fNze0FaqP8ZgNIj9XZhTy/BRkIhlpqDw4bNROrdDK2kXIdR2Ws7lOtqpZen
-         vXKw0Y3aXxz0zZbxDQkWHTu2BXaTLSlQAyJ7euBknM0QaLc6AEMlXN3gEbzfGeNWeQVY
-         VIEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GYO7EPqOGrMp9edmk6y6YZ57MeWm04v2p4X6gCHxcfI=;
-        b=YOCEKk3iLITZUDgD0Jsxm3uQUWVTFM0aQY44qQ9NG+QlRf+WOdo8ETxLKapVM/YAos
-         pydGwCn4P2MyJMCa4+tN5VSJPdki36yIK8il3Ky8qsqR8MgmfxtYo9FbvgY3UEyarVHA
-         j3jsn6YLjmO7uS0yd2DiCJN5TNueITDZqXDiqYdFOGR86AbS7AqqCwTHzrcf1ZSGGdh4
-         RiOpbKQmvF4GvZdBBpRF0wn0cbxwzrXFtIu9jsR5SgXCeTW13xnjBEQ7PfD3IVWzNvbC
-         1UuawdU5TpavoF+o3uY5zl5binUx0Ar3qW8mQLCUgXQeN+Af5cYiIaAdXL9d5VcXtOeP
-         hzzQ==
-X-Gm-Message-State: APjAAAWT4eKO4KuRmBwQMLCtbIKeJ/s5gtccTFgm4BqzLt/7C3jfAGTE
-        Zb12yHec9pSVgErvFqbYzOAzLMzlvZnyEF7ciiM=
-X-Google-Smtp-Source: APXvYqzfpOqi0nj6BABzdoP8u97h7uqVwbsYo1cPe05sB0MMfAEQFpyBjwI5zGiG6n47VBZDG7Ve7E6/LeBh0XN4olI=
-X-Received: by 2002:a2e:7215:: with SMTP id n21mr3398436ljc.105.1554379767063;
- Thu, 04 Apr 2019 05:09:27 -0700 (PDT)
+        Thu, 4 Apr 2019 08:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HUwFP7TkC1YnjyowwteQRvNxlrkSBhJ8vJzEY4NX+W0=; b=yhZ/F32DVphy0uwCNAh5i/vH2
+        Z9bZSOBK+RM9U1axD+QUv8/xlQbV4XOv9p4LEzyRdZNhMSLZB4TGDBgbeTQjO7fcFlcAk0eRVTN63
+        byv+NPLoRNhlWRhYSFRCXtNr/SM8DBUCMobZiLvwZd3WXY+eOIsy3nX0n/ya8FjY1dB/r9yrsvBno
+        9moWnRl/Umusc97FUVwzctUrgpOh+19yXzycYcAlRU+kgNqixHX9KTwMg0a33jkmP3nunXBzwxiwO
+        FYfTIc0wrmYv5iNoTL0xi0ko3MsSqIgwLaFsGYS9Bc0Iz1kMG2pFqr0i8KsmJJy2WwBfRup1RNjMf
+        7eSsmXD2Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hC1FS-0003I8-GF; Thu, 04 Apr 2019 12:13:38 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E143F2038C247; Thu,  4 Apr 2019 14:13:36 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 14:13:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc:     Kees Cook <keescook@chromium.org>, acme@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
+Message-ID: <20190404121336.GE14281@hirez.programming.kicks-ass.net>
+References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
+ <20190403104103.GE4038@hirez.programming.kicks-ass.net>
+ <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
+ <20190404110909.GY4038@hirez.programming.kicks-ass.net>
+ <20190404120214.GD14281@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190404120703.30054-1-andradanciu1997@gmail.com>
-In-Reply-To: <20190404120703.30054-1-andradanciu1997@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 4 Apr 2019 09:09:17 -0300
-Message-ID: <CAOMZO5Co=+0wwXzfkc8aGAC7d6Dm7PsHBQcLyx2VVZjkcKrsVQ@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: imx-pcm: Switch to SPDX identifier
-To:     Andra Danciu <andradanciu1997@gmail.com>
-Cc:     timur@kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190404120214.GD14281@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 9:07 AM Andra Danciu <andradanciu1997@gmail.com> wrote:
->
-> Adopt the SPDX license identifier headers to ease license compliance
-> management.
->
-> Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> ---
->  sound/soc/fsl/imx-pcm.h | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
->
-> diff --git a/sound/soc/fsl/imx-pcm.h b/sound/soc/fsl/imx-pcm.h
-> index 133c4470acad..3ce2f437e645 100644
-> --- a/sound/soc/fsl/imx-pcm.h
-> +++ b/sound/soc/fsl/imx-pcm.h
-> @@ -1,13 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+On Thu, Apr 04, 2019 at 02:02:14PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 04, 2019 at 01:09:09PM +0200, Peter Zijlstra wrote:
+> > That is not entirely the scenario I talked about, but *groan*.
+> > 
+> > So what I meant was:
+> > 
+> > 	CPU-0							CPU-n
+> > 
+> > 	__schedule()
+> > 	  local_irq_disable()
+> > 
+> > 	  ...
+> > 	    deactivate_task(prev);
+> > 
+> > 								try_to_wake_up(@p)
+> > 								  ...
+> > 								  smp_cond_load_acquire(&p->on_cpu, !VAL);
+> > 
+> > 	  <PMI>
+> > 	    ..
+> > 	    perf_event_disable_inatomic()
+> > 	      event->pending_disable = 1;
+> > 	      irq_work_queue() /* self-IPI */
+> > 	  </PMI>
+> > 
+> > 	  context_switch()
+> > 	    prepare_task_switch()
+> > 	      perf_event_task_sched_out()
+> > 	        // the above chain that clears pending_disable
+> > 
+> > 	    finish_task_switch()
+> > 	      finish_task()
+> > 	        smp_store_release(prev->on_cpu, 0);
+> > 								  /* finally.... */
+> > 								// take woken
+> > 								// context_switch to @p
+> > 	      finish_lock_switch()
+> > 	        raw_spin_unlock_irq()
+> > 		/* w00t, IRQs enabled, self-IPI time */
+> > 	        <self-IPI>
+> > 		  perf_pending_event()
+> > 		    // event->pending_disable == 0
+> > 		</self-IPI>
+> > 
+> > 
+> > What you're suggesting, is that the time between:
+> > 
+> >   smp_store_release(prev->on_cpu, 0);
+> > 
+> > and
+> > 
+> >   <self-IPI>
+> > 
+> > on CPU-0 is sufficient for CPU-n to context switch to the task, enable
+> > the event there, trigger a PMI that calls perf_event_disable_inatomic()
+> > _again_ (this would mean irq_work_queue() failing, which we don't check)
+> > (and schedule out again, although that's not required).
+> > 
+> > This being virt that might actually be possible if (v)CPU-0 takes a nap
+> > I suppose.
+> > 
+> > Let me think about this a little more...
+> 
+> Arghh... s390 doesn't implement arch_irq_work_raise(), which makes it
+> far far worse.
+> 
+> I have a hack that might've cured it, were it not for that. Let me think
+> more still..
 
-This is not correct...
-
->  /*
->   * Copyright 2009 Sascha Hauer <s.hauer@pengutronix.de>
->   *
->   * This code is based on code copyrighted by Freescale,
->   * Liam Girdwood, Javier Martin and probably others.
-> - *
-> - * This program is free software; you can redistribute  it and/or modify it
-> - * under  the terms of  the GNU General  Public License as published by the
-> - * Free Software Foundation;  either version 2 of the  License, or (at your
-> - * option) any later version.
-
-as it does not match with the original license text.
-
-You should use:
-
-/* SPDX-License-Identifier: GPL-2.0+ */
+Could you educate me on the s390 PMU, afaict only the SF one has a
+sampling interrupt (cpumf_measurement_alert), is that NMI-like or a
+regular IRQ ?
