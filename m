@@ -7,47 +7,58 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14A7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DF7C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F59B206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003D5206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371858;
-	bh=orIsEuPyTU9mJ0Pkc+x3IwhpkiEh3sF96UUwFFtKiXQ=;
+	s=default; t=1554371866;
+	bh=nruYE71tMKdBSwTmSMpR5FkoGU0hAg+y1YyI6b2VNlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CraVg+bTUH3ODIKDpk6RPifksuATvsgf4KqxfRuQ9GxZAt34o2Ys0+o0ho7YIXE/u
-	 GJa2DLZfub05gzZiSksJnYRrrQhujKKDol20xlBMSyFokLMGRDYVip8carPeEMk8JX
-	 e/Ygx0pZHRqVFDYI9s0X2SV07Glhh/+C5S5zKUQY=
+	b=sE7bnsEnrJwI25lzmWX3qzOSdfTPSC4DVEUSiHF14JSJGUhdgR/1BP1f66EPXMnrC
+	 vePeP09g6kjxvREuiYWtJows1qTwiwZZs1IeHD9xH61ZdwW9L4mkb1cdOpC9zSLsNX
+	 XcuGL1AhhirJozh3Bn28VkSairqzIrFILzcDnJcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbfDDIuB (ORCPT
+        id S1728985AbfDDJ5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:50:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:57:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728884AbfDDIt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:49:57 -0400
+        id S1728777AbfDDIty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:49:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1973C2171F;
-        Thu,  4 Apr 2019 08:49:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 649E221734;
+        Thu,  4 Apr 2019 08:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367796;
-        bh=orIsEuPyTU9mJ0Pkc+x3IwhpkiEh3sF96UUwFFtKiXQ=;
+        s=default; t=1554367793;
+        bh=nruYE71tMKdBSwTmSMpR5FkoGU0hAg+y1YyI6b2VNlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vWcBgCuueAcIhIUQ8bYTPMZoDFDDA/iUlpAB6FoX7GN2Rqi6gB0SAlsub34ZHxPUx
-         fM2wqPBM3cHFb1LcItS29W+Jwg2BWjmpwcMQ05oV2Wt1dSFmNMjGq/7pw/P032V7xx
-         gRbT//ydxV7hEaqe+l92lyFHq22OeXwKS35tun3o=
+        b=HtF8GTrQ0nblvwsCyQNCYOUCyp4pO2knAj563SnbbzQNGHeSwrol/HObJ26gHhW0J
+         0pwaWXU/Ee2pVGeNmtKZQg5Wigwa3ICU6Y6MfFX7imbHcXzcnkBzOMc4KM88rNz6Ta
+         Ql0NnMBXYcFZeF4B9XHM8WQfyqJdwDtpYjPAF5fI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH 4.9 05/91] tty/serial: atmel: Add is_half_duplex helper
-Date:   Thu,  4 Apr 2019 10:46:49 +0200
-Message-Id: <20190404084535.730559869@linuxfoundation.org>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Anshul Garg <aksgarg1989@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Miller <davem@davemloft.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Michael Davidson <md@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 4.9 04/91] lib/int_sqrt: optimize initial value compute
+Date:   Thu,  4 Apr 2019 10:46:48 +0200
+Message-Id: <20190404084535.672303864@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -66,80 +77,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit f3040983132bf3477acd45d2452a906e67c2fec9 upstream.
+commit f8ae107eef209bff29a5816bc1aad40d5cd69a80 upstream.
 
-Use a helper function to check that a port needs to use half duplex
-communication, replacing several occurrences of multi-line bit checking.
+The initial value (@m) compute is:
 
-Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable RX after TX is done")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Acked-by: Richard Genoud <richard.genoud@gmail.com>
+	m = 1UL << (BITS_PER_LONG - 2);
+	while (m > x)
+		m >>= 2;
+
+Which is a linear search for the highest even bit smaller or equal to @x
+We can implement this using a binary search using __fls() (or better when
+its hardware implemented).
+
+	m = 1UL << (__fls(x) & ~1UL);
+
+Especially for small values of @x; which are the more common arguments
+when doing a CDF on idle times; the linear search is near to worst case,
+while the binary search of __fls() is a constant 6 (or 5 on 32bit)
+branches.
+
+      cycles:                 branches:              branch-misses:
+
+PRE:
+
+hot:   43.633557 +- 0.034373  45.333132 +- 0.002277  0.023529 +- 0.000681
+cold: 207.438411 +- 0.125840  45.333132 +- 0.002277  6.976486 +- 0.004219
+
+SOFTWARE FLS:
+
+hot:   29.576176 +- 0.028850  26.666730 +- 0.004511  0.019463 +- 0.000663
+cold: 165.947136 +- 0.188406  26.666746 +- 0.004511  6.133897 +- 0.004386
+
+HARDWARE FLS:
+
+hot:   24.720922 +- 0.025161  20.666784 +- 0.004509  0.020836 +- 0.000677
+cold: 132.777197 +- 0.127471  20.666776 +- 0.004509  5.080285 +- 0.003874
+
+Averages computed over all values <128k using a LFSR to generate order.
+Cold numbers have a LFSR based branch trace buffer 'confuser' ran between
+each int_sqrt() invocation.
+
+Link: http://lkml.kernel.org/r/20171020164644.936577234@infradead.org
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Suggested-by: Joe Perches <joe@perches.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Anshul Garg <aksgarg1989@gmail.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: David Miller <davem@davemloft.net>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <mawilcox@microsoft.com>
+Cc: Michael Davidson <md@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Joe Perches <joe@perches.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/tty/serial/atmel_serial.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ lib/int_sqrt.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -241,6 +241,12 @@ static inline void atmel_uart_write_char
+--- a/lib/int_sqrt.c
++++ b/lib/int_sqrt.c
+@@ -7,6 +7,7 @@
  
- #endif
+ #include <linux/kernel.h>
+ #include <linux/export.h>
++#include <linux/bitops.h>
  
-+static inline int atmel_uart_is_half_duplex(struct uart_port *port)
-+{
-+	return (port->rs485.flags & SER_RS485_ENABLED) &&
-+		!(port->rs485.flags & SER_RS485_RX_DURING_TX);
-+}
-+
- #ifdef CONFIG_SERIAL_ATMEL_PDC
- static bool atmel_use_pdc_rx(struct uart_port *port)
- {
-@@ -492,9 +498,9 @@ static void atmel_stop_tx(struct uart_po
- 	/* Disable interrupts */
- 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
+ /**
+  * int_sqrt - rough approximation to sqrt
+@@ -21,10 +22,7 @@ unsigned long int_sqrt(unsigned long x)
+ 	if (x <= 1)
+ 		return x;
  
--	if ((port->rs485.flags & SER_RS485_ENABLED) &&
--	    !(port->rs485.flags & SER_RS485_RX_DURING_TX))
-+	if (atmel_uart_is_half_duplex(port))
- 		atmel_start_rx(port);
-+
- }
- 
- /*
-@@ -511,8 +517,7 @@ static void atmel_start_tx(struct uart_p
- 		return;
- 
- 	if (atmel_use_pdc_tx(port) || atmel_use_dma_tx(port))
--		if ((port->rs485.flags & SER_RS485_ENABLED) &&
--		    !(port->rs485.flags & SER_RS485_RX_DURING_TX))
-+		if (atmel_uart_is_half_duplex(port))
- 			atmel_stop_rx(port);
- 
- 	if (atmel_use_pdc_tx(port))
-@@ -809,8 +814,7 @@ static void atmel_complete_tx_dma(void *
- 	 */
- 	if (!uart_circ_empty(xmit))
- 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
--	else if ((port->rs485.flags & SER_RS485_ENABLED) &&
--		 !(port->rs485.flags & SER_RS485_RX_DURING_TX)) {
-+	else if (atmel_uart_is_half_duplex(port)) {
- 		/* DMA done, stop TX, start RX for RS485 */
- 		atmel_start_rx(port);
- 	}
-@@ -1386,8 +1390,7 @@ static void atmel_tx_pdc(struct uart_por
- 		atmel_uart_writel(port, ATMEL_US_IER,
- 				  atmel_port->tx_done_mask);
- 	} else {
--		if ((port->rs485.flags & SER_RS485_ENABLED) &&
--		    !(port->rs485.flags & SER_RS485_RX_DURING_TX)) {
-+		if (atmel_uart_is_half_duplex(port)) {
- 			/* DMA done, stop TX, start RX for RS485 */
- 			atmel_start_rx(port);
- 		}
+-	m = 1UL << (BITS_PER_LONG - 2);
+-	while (m > x)
+-		m >>= 2;
+-
++	m = 1UL << (__fls(x) & ~1UL);
+ 	while (m != 0) {
+ 		b = y + m;
+ 		y >>= 1;
 
 
