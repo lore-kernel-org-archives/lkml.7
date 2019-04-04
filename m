@@ -2,160 +2,184 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCC0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF384C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6F22064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F3E2064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="Q23cD+5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfDDPGT (ORCPT
+        id S1729110AbfDDPH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 11:06:19 -0400
-Received: from smtprelay0205.hostedemail.com ([216.40.44.205]:33949 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727212AbfDDPGT (ORCPT
+        Thu, 4 Apr 2019 11:07:26 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33754 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726888AbfDDPHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 11:06:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 6D6B4182CED34;
-        Thu,  4 Apr 2019 15:06:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: angle99_3602eec8fc958
-X-Filterd-Recvd-Size: 5086
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Apr 2019 15:06:11 +0000 (UTC)
-Message-ID: <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
-Subject: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating newlines
- to logging
-From:   Joe Perches <joe@perches.com>
-To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Date:   Thu, 04 Apr 2019 08:06:09 -0700
-In-Reply-To: <20190404105359.GA8255@bogon.m.sigxcpu.org>
-References: <cover.1554114302.git.agx@sigxcpu.org>
-         <20190403161735.GN5238@ulmo>
-         <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
-         <20190404105359.GA8255@bogon.m.sigxcpu.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 4 Apr 2019 11:07:25 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t16so1329736plo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 08:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=vEU0hElGSBKXNWQnOdtg/qnRUbGnqUX/uD6zGVKc+8c=;
+        b=Q23cD+5z/nK7ng4E9mLGTCqiKGyMvO2c1JYhoIsUFa7ud4nXZYslWaal66XmHPLWeF
+         pUeEDJDCG0fOvWZpa1q7wFyBzdJ1khzGiJixN1adQgon8iLyAGGZ9Ug6k/zj4es8Xdyd
+         xyI2XzKkryPcm8b5LHFHRV3JhOwLaD71GVb/t2Z+hNESMi27nd35Zkw8ddXPT7qAzxI7
+         0HYfBIdS6Ep/hZBBcsyWHb13QAvJYOF2qA9xLrT3vID/3SDyBv5mSSJAy29/fP1jOihl
+         2BiNh8oExWK+kDvTgZrlN+0IraBMQ48WRoGtD25k447F3KIxauMXRtAasXHTL9amPtsB
+         8dlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vEU0hElGSBKXNWQnOdtg/qnRUbGnqUX/uD6zGVKc+8c=;
+        b=mj53GTKXoOPWXO6NAdQxLFOkwEMcJPy9JoRVmDGcBC312V/khs2sNPH55MGZNixFa3
+         U6l8fboxC3tBnli+h4i35NkSVXCNWiapMT1fFJTEep6mvkjFyy+ZWY4BMTIkEpNnnYZ3
+         SACrILmT+sN5dr9QLqGikh/z8nF0VpxF9Y/JE0aaEIqqGeC+eXl3hjS8HEn1Gu5bPNbp
+         BJVsEZ1kh2vtQFU5oPezdpQjPnvC9ixrTiyOGvHTbJ0xx3J/Bp54d7WHAWMpuAP6ISxr
+         0XRK6NyLqCrCOQ4mHh7xgDbU/Qxw9shYH8cRI1k/OholyVhZHRtTeHusJNhoOcL317oB
+         yB3Q==
+X-Gm-Message-State: APjAAAX+cXkTG6JTFbxUHCAW9CgFmw8FyXnhzyzWOCK+rZ4JhMKQecDP
+        64QyzaDliG9EITLcA0RmUXJ0yA==
+X-Google-Smtp-Source: APXvYqzlgVjdc6ybq4L5YDNvMQS71JuQshOf9DaaF3eHu1lmtHf1LEjhIKYsRvf/JNbV93t1IJTLrQ==
+X-Received: by 2002:a17:902:d24:: with SMTP id 33mr7112394plu.246.1554390444748;
+        Thu, 04 Apr 2019 08:07:24 -0700 (PDT)
+Received: from localhost.localdomain (36-239-229-248.dynamic-ip.hinet.net. [36.239.229.248])
+        by smtp.gmail.com with ESMTPSA id u13sm42460126pfa.169.2019.04.04.08.07.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 08:07:23 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Sachin Kamat <sachin.kamat@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Stuart Menefy <stuart.menefy@mathembedded.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: s2mpa01: Convert to use simplified DT parsing
+Date:   Thu,  4 Apr 2019 23:07:09 +0800
+Message-Id: <20190404150709.11940-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These were missing '\n' terminations, add them.
+Use regulator core's simplified DT parsing code to simply the driver
+implementation.
 
-Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/regulator/s2mpa01.c | 39 ++++++++++---------------------------
+ 1 file changed, 10 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-index 158a6d548068..d88ea8da2ec2 100644
---- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-+++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-@@ -123,7 +123,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
+diff --git a/drivers/regulator/s2mpa01.c b/drivers/regulator/s2mpa01.c
+index 58a1fe583a6c..da11ac5c09f2 100644
+--- a/drivers/regulator/s2mpa01.c
++++ b/drivers/regulator/s2mpa01.c
+@@ -20,7 +20,6 @@
+ #define S2MPA01_REGULATOR_CNT ARRAY_SIZE(regulators)
  
- 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(dev, "Failed to exit sleep mode");
-+		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
- 		return ret;
- 	}
- 	/* Panel is operational 120 msec after reset */
-@@ -132,7 +132,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
- 	if (ret)
- 		return ret;
+ struct s2mpa01_info {
+-	struct of_regulator_match rdata[S2MPA01_REGULATOR_MAX];
+ 	int ramp_delay24;
+ 	int ramp_delay3;
+ 	int ramp_delay5;
+@@ -232,6 +231,8 @@ static const struct regulator_ops s2mpa01_buck_ops = {
  
--	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done");
-+	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
- 	return 0;
- }
+ #define regulator_desc_ldo(num, step) {			\
+ 	.name		= "LDO"#num,			\
++	.of_match	= of_match_ptr("LDO"#num),	\
++	.regulators_node = of_match_ptr("regulators"),	\
+ 	.id		= S2MPA01_LDO##num,		\
+ 	.ops		= &s2mpa01_ldo_ops,		\
+ 	.type		= REGULATOR_VOLTAGE,		\
+@@ -247,6 +248,8 @@ static const struct regulator_ops s2mpa01_buck_ops = {
  
-@@ -172,7 +172,7 @@ static int jh057n_prepare(struct drm_panel *panel)
- 	if (ctx->prepared)
- 		return 0;
+ #define regulator_desc_buck1_4(num)	{			\
+ 	.name		= "BUCK"#num,				\
++	.of_match	= of_match_ptr("BUCK"#num),		\
++	.regulators_node = of_match_ptr("regulators"),		\
+ 	.id		= S2MPA01_BUCK##num,			\
+ 	.ops		= &s2mpa01_buck_ops,			\
+ 	.type		= REGULATOR_VOLTAGE,			\
+@@ -263,6 +266,8 @@ static const struct regulator_ops s2mpa01_buck_ops = {
  
--	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel.");
-+	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
- 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
- 	usleep_range(20, 40);
- 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-@@ -180,7 +180,8 @@ static int jh057n_prepare(struct drm_panel *panel)
+ #define regulator_desc_buck5	{				\
+ 	.name		= "BUCK5",				\
++	.of_match	= of_match_ptr("BUCK5"),		\
++	.regulators_node = of_match_ptr("regulators"),		\
+ 	.id		= S2MPA01_BUCK5,			\
+ 	.ops		= &s2mpa01_buck_ops,			\
+ 	.type		= REGULATOR_VOLTAGE,			\
+@@ -279,6 +284,8 @@ static const struct regulator_ops s2mpa01_buck_ops = {
  
- 	ret = jh057n_init_sequence(ctx);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d", ret);
-+		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
-+			      ret);
- 		return ret;
- 	}
+ #define regulator_desc_buck6_10(num, min, step) {			\
+ 	.name		= "BUCK"#num,				\
++	.of_match	= of_match_ptr("BUCK"#num),		\
++	.regulators_node = of_match_ptr("regulators"),		\
+ 	.id		= S2MPA01_BUCK##num,			\
+ 	.ops		= &s2mpa01_buck_ops,			\
+ 	.type		= REGULATOR_VOLTAGE,			\
+@@ -336,9 +343,7 @@ static int s2mpa01_pmic_probe(struct platform_device *pdev)
+ {
+ 	struct sec_pmic_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+ 	struct sec_platform_data *pdata = dev_get_platdata(iodev->dev);
+-	struct device_node *reg_np = NULL;
+ 	struct regulator_config config = { };
+-	struct of_regulator_match *rdata;
+ 	struct s2mpa01_info *s2mpa01;
+ 	int i;
  
-@@ -212,7 +213,7 @@ static int jh057n_get_modes(struct drm_panel *panel)
- 
- 	mode = drm_mode_duplicate(panel->drm, &default_mode);
- 	if (!mode) {
--		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u",
-+		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u\n",
- 			      default_mode.hdisplay, default_mode.vdisplay,
- 			      default_mode.vrefresh);
+@@ -346,39 +351,15 @@ static int s2mpa01_pmic_probe(struct platform_device *pdev)
+ 	if (!s2mpa01)
  		return -ENOMEM;
-@@ -241,7 +242,7 @@ static int allpixelson_set(void *data, u64 val)
- 	struct jh057n *ctx = data;
- 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
  
--	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on");
-+	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on\n");
- 	dsi_generic_write_seq(dsi, ST7703_CMD_ALL_PIXEL_ON);
- 	msleep(val * 1000);
- 	/* Reset the panel to get video back */
-@@ -290,7 +291,7 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+-	rdata = s2mpa01->rdata;
+-	for (i = 0; i < S2MPA01_REGULATOR_CNT; i++)
+-		rdata[i].name = regulators[i].name;
+-
+-	if (iodev->dev->of_node) {
+-		reg_np = of_get_child_by_name(iodev->dev->of_node,
+-							"regulators");
+-		if (!reg_np) {
+-			dev_err(&pdev->dev,
+-				"could not find regulators sub-node\n");
+-			return -EINVAL;
+-		}
+-
+-		of_regulator_match(&pdev->dev, reg_np, rdata,
+-						S2MPA01_REGULATOR_MAX);
+-		of_node_put(reg_np);
+-	}
+-
+-	platform_set_drvdata(pdev, s2mpa01);
+-
+-	config.dev = &pdev->dev;
++	config.dev = iodev->dev;
+ 	config.regmap = iodev->regmap_pmic;
+ 	config.driver_data = s2mpa01;
  
- 	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(ctx->reset_gpio)) {
--		DRM_DEV_ERROR(dev, "cannot get reset gpio");
-+		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
- 		return PTR_ERR(ctx->reset_gpio);
- 	}
+ 	for (i = 0; i < S2MPA01_REGULATOR_MAX; i++) {
+ 		struct regulator_dev *rdev;
++
+ 		if (pdata)
+ 			config.init_data = pdata->regulators[i].initdata;
+-		else
+-			config.init_data = rdata[i].init_data;
+-
+-		if (reg_np)
+-			config.of_node = rdata[i].of_node;
  
-@@ -315,12 +316,12 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
- 
- 	ret = mipi_dsi_attach(dsi);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?");
-+		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?\n");
- 		drm_panel_remove(&ctx->panel);
- 		return ret;
- 	}
- 
--	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready",
-+	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
- 		     default_mode.hdisplay, default_mode.vdisplay,
- 		     default_mode.vrefresh,
- 		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
-
+ 		rdev = devm_regulator_register(&pdev->dev,
+ 						&regulators[i], &config);
+-- 
+2.17.1
 
