@@ -2,201 +2,139 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D83C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D46C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5AC217D4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 21:59:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eON2GINW"
+	by mail.kernel.org (Postfix) with ESMTP id 611C4217D4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 22:00:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbfDDV7j (ORCPT
+        id S1730302AbfDDWAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 17:59:39 -0400
-Received: from mail-ot1-f74.google.com ([209.85.210.74]:49241 "EHLO
-        mail-ot1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbfDDV7i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 17:59:38 -0400
-Received: by mail-ot1-f74.google.com with SMTP id s22so1960861otk.16
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 14:59:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cBolVqzParWVJebBO2LdYlFNh26KYuHSNaIvvdeXOcE=;
-        b=eON2GINWQSZgtLy1IAKrvbYubf6AerkWuh0P1Ege2Ox6h/d4iSEXoNjDWa3F6wUW4u
-         5Esch1vDe6X+kyA8ZNIJuf41EAcejGe3leFkFM9mGOj/fh3WmITOyhFxG9nH4xVBBVey
-         CqseBQoYqfURUU+T4oNr1vuSwrMblEau/mzjgDzhXwlg7qowbhuWqWd8XYOZs9nwzaMc
-         IggqCu3x0qDxnJhhDQjb0jBtTZpfpfZ2w3tqYxz0Tc5zqUmYHXpMtSj75TPq1qmyxUD9
-         9qkCQaurSbbKzT9OWinRGDlj92yMBjtLeURczSxP5ZSivs7coWiQKpEPqMtmBftKalAT
-         ZNmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cBolVqzParWVJebBO2LdYlFNh26KYuHSNaIvvdeXOcE=;
-        b=GSuJH3vD4/HzbLlif41qVsUv1TXU7xnOVzcwuhpxLPYJISOLveQ7u0QMYlV0kZNuvZ
-         RTFX/A7Tmx06IfbMGc0V4KwKRcADI6vocCueFV91dqaVC7Gur8YNrfh9B61hHMAeNoZc
-         uqIoe6YpE1luGdKMC6xzkgYhG6ob1RjknWoddBJYdVj9MCNod1DX/G8Du/XZrUkQn0Z+
-         S3a/3vPiCBXPCEh75MB1gyqXTk5FrcNRytz8kkrQwEzja6El8zWS+w7ltwjD241v2Ab/
-         HPGj2zcHDrr/lZaB7xhG0JVJDju8Rf0N2aD/aDMuQFjXOSERZN9QayV4a/7G9T69Zv9W
-         DFew==
-X-Gm-Message-State: APjAAAU3/gyg5Dk8WpBQOu4jByvB6qgBOuqQWwl8HLaORk0p3zZspw5m
-        4JIhBrggup0G4ez1FzCs0I8+PgGTfg==
-X-Google-Smtp-Source: APXvYqxJh59jbWUxRlkYEwNWLYmfFN2Hr6sOjYwwG4h8b+ms6CmiWxe9IoMarGb8KiI/HXheN2mCdQqoaA==
-X-Received: by 2002:a9d:4f03:: with SMTP id d3mr819731otl.1.1554415177491;
- Thu, 04 Apr 2019 14:59:37 -0700 (PDT)
-Date:   Thu,  4 Apr 2019 23:59:25 +0200
-Message-Id: <20190404215925.253531-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH] tracing: Fix buffer_ref pipe ops
-From:   Jann Horn <jannh@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, jannh@google.com
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 4 Apr 2019 18:00:18 -0400
+Received: from muru.com ([72.249.23.125]:44418 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727263AbfDDWAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 18:00:18 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C593180D4;
+        Thu,  4 Apr 2019 22:00:31 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 15:00:13 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz,
+        lee.jones@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
+ properties
+Message-ID: <20190404220013.GG49658@atomide.com>
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-2-dmurphy@ti.com>
+ <f9d80ad1-d80c-bf77-5e0b-1e02a1b74200@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f9d80ad1-d80c-bf77-5e0b-1e02a1b74200@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes multiple issues in buffer_pipe_buf_ops:
+* Jacek Anaszewski <jacek.anaszewski@gmail.com> [190404 20:12]:
+> Tony,
+> 
+> On 3/21/19 3:28 PM, Dan Murphy wrote:
+> > Update the properties for the lm3532 device node for droid4.
+> > With this change the backlight LED string and the keypad
+> > LED strings will be controlled separately.
+> > 
+> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > ---
+> > 
+> > v5 - No change - https://lore.kernel.org/patchwork/patch/1050409/
+> > 
+> > v4 - No change - https://lore.kernel.org/patchwork/patch/1050125/
+> > v3 - updated keypad label on v1 comment - https://lore.kernel.org/patchwork/patch/1049023/
+> > v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
+> > I did not change the label as it is undecided what it could be - https://lore.kernel.org/patchwork/patch/1048806/
+> > 
+> >   arch/arm/boot/dts/omap4-droid4-xt894.dts | 26 ++++++++++++++++--------
+> >   1 file changed, 18 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> > index e21ec929f096..aea206f04f76 100644
+> > --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> > +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> > @@ -383,20 +383,30 @@
+> >   };
+> >   &i2c1 {
+> > -	lm3532@38 {
+> > +	led-controller@38 {
+> >   		compatible = "ti,lm3532";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> >   		reg = <0x38>;
+> >   		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> > -		lcd_backlight: backlight {
+> > -			compatible = "ti,lm3532-backlight";
+> > +		ramp-up-us = <1024>;
+> > +		ramp-down-us = <8193>;
+> > -			lcd {
+> > -				led-sources = <0 1 2>;
+> > -				ramp-up-msec = <1>;
+> > -				ramp-down-msec = <0>;
+> > -			};
+> 
+> Since I'll be creating integration branch for this series,
+> and it would be good to have this patch in it too, then
+> I can do the amendments by myself:
+> 
+> > +		lcd_backlight: led@0 {
+> > +			reg = <0>;
+> > +			led-sources = <2>;
+> > +			ti,led-mode = <0>;
+> > +			label = "backlight";
+> 
+> s/backlight/:backlight/
+> 
+> > +			linux,default-trigger = "backlight";
+> > +		};
+> > +
+> > +		led@1 {
+> > +			reg = <1>;
+> > +			led-sources = <1>;
+> > +			ti,led-mode = <0>;
+> > +			label = "platform::kbd_backlight";
+> 
+> s/platform::kbd_backlight/:kbd_backlight/
 
- - The ->steal() handler must not return zero unless the pipe buffer has
-   the only reference to the page. But generic_pipe_buf_steal() assumes
-   that every reference to the pipe is tracked by the page's refcount,
-   which isn't true for these buffers - buffer_pipe_buf_get(), which
-   duplicates a buffer, doesn't touch the page's refcount.
-   Fix it by using generic_pipe_buf_nosteal(), which refuses every
-   attempted theft. It should be easy to actually support ->steal, but the
-   only current users of pipe_buf_steal() are the virtio console and FUSE,
-   and they also only use it as an optimization. So it's probably not worth
-   the effort.
- - The ->get() and ->release() handlers can be invoked concurrently on pipe
-   buffers backed by the same struct buffer_ref. Make them safe against
-   concurrency by using refcount_t.
- - The pointers stored in ->private were only zeroed out when the last
-   reference to the buffer_ref was dropped. As far as I know, this
-   shouldn't be necessary anyway, but if we do it, let's always do it.
+Yes makes sense to me.
 
-Cc: stable@vger.kernel.org # v4.11
-Signed-off-by: Jann Horn <jannh@google.com>
----
-Completely untested (apart from compiling it). I don't really know
-anything about how the tracing subsystem works.
+> and then send you a pull request.
+> 
+> Would you be OK with that?
 
- fs/splice.c               |  4 ++--
- include/linux/pipe_fs_i.h |  1 +
- kernel/trace/trace.c      | 28 ++++++++++++++--------------
- 3 files changed, 17 insertions(+), 16 deletions(-)
+Sure go for it. Here's my ack for the changes:
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 3ee7e82df48f..e75807380caa 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -330,8 +330,8 @@ const struct pipe_buf_operations default_pipe_buf_ops = {
- 	.get = generic_pipe_buf_get,
- };
- 
--static int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
--				    struct pipe_buffer *buf)
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *pipe,
-+			     struct pipe_buffer *buf)
- {
- 	return 1;
- }
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 787d224ff43e..a830e9a00eb9 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -174,6 +174,7 @@ void free_pipe_info(struct pipe_inode_info *);
- void generic_pipe_buf_get(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_confirm(struct pipe_inode_info *, struct pipe_buffer *);
- int generic_pipe_buf_steal(struct pipe_inode_info *, struct pipe_buffer *);
-+int generic_pipe_buf_nosteal(struct pipe_inode_info *, struct pipe_buffer *);
- void generic_pipe_buf_release(struct pipe_inode_info *, struct pipe_buffer *);
- void pipe_buf_mark_unmergeable(struct pipe_buffer *buf);
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 21153e64bf1c..0cfa13a60086 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7025,19 +7025,23 @@ struct buffer_ref {
- 	struct ring_buffer	*buffer;
- 	void			*page;
- 	int			cpu;
--	int			ref;
-+	refcount_t		refcount;
- };
- 
-+static void buffer_ref_release(struct buffer_ref *ref)
-+{
-+	if (!refcount_dec_and_test(&ref->refcount))
-+		return;
-+	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
-+	kfree(ref);
-+}
-+
- static void buffer_pipe_buf_release(struct pipe_inode_info *pipe,
- 				    struct pipe_buffer *buf)
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	buf->private = 0;
- }
- 
-@@ -7046,14 +7050,14 @@ static void buffer_pipe_buf_get(struct pipe_inode_info *pipe,
- {
- 	struct buffer_ref *ref = (struct buffer_ref *)buf->private;
- 
--	ref->ref++;
-+	refcount_inc(&ref->refcount);
- }
- 
- /* Pipe buffer operations for a buffer. */
- static const struct pipe_buf_operations buffer_pipe_buf_ops = {
- 	.confirm		= generic_pipe_buf_confirm,
- 	.release		= buffer_pipe_buf_release,
--	.steal			= generic_pipe_buf_steal,
-+	.steal			= generic_pipe_buf_nosteal,
- 	.get			= buffer_pipe_buf_get,
- };
- 
-@@ -7066,11 +7070,7 @@ static void buffer_spd_release(struct splice_pipe_desc *spd, unsigned int i)
- 	struct buffer_ref *ref =
- 		(struct buffer_ref *)spd->partial[i].private;
- 
--	if (--ref->ref)
--		return;
--
--	ring_buffer_free_read_page(ref->buffer, ref->cpu, ref->page);
--	kfree(ref);
-+	buffer_ref_release(ref);
- 	spd->partial[i].private = 0;
- }
- 
-@@ -7125,7 +7125,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 			break;
- 		}
- 
--		ref->ref = 1;
-+		refcount_set(&ref->refcount, 1);
- 		ref->buffer = iter->trace_buffer->buffer;
- 		ref->page = ring_buffer_alloc_read_page(ref->buffer, iter->cpu_file);
- 		if (IS_ERR(ref->page)) {
--- 
-2.21.0.392.gf8f6787159e-goog
+Acked-by: Tony Lindgren <tony@atomide.com>
 
+And then for the one liner to fold in below:
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+8< -------------
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -214,7 +214,6 @@
+ 
+ 		width-mm = <50>;
+ 		height-mm = <89>;
+-		backlight = <&lcd_backlight>;
+ 
+ 		panel-timing {
+ 			clock-frequency = <0>;		/* Calculated by dsi */
