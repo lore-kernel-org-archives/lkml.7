@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF242C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8769BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D08B206B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5450C2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370061;
-	bh=1I7WW/YvMfMY2byMNRWMlTgQ1VC2AmGnCK005k6LstY=;
+	s=default; t=1554370068;
+	bh=eJ9hcwsKKqzxXzhN05bg+ZFn4JbpmF+cql3cjslNwlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UcvpVijPspzJyX+zEySaUKnEeLqyResDuft4m7mu7gIyaG/vIU9anTN/XguqiTDc/
-	 Nct/7/6LOLJu/jnlxEJ8hJpfFa/GhXy65ans+J67bXviCA5aj5w/TveigmXdWFD4fk
-	 h/rZyMU0QOQm1sBnIintcEWXN339xT/d6SfxBdOA=
+	b=pDadaaE5PqMNGOmtc7h4V8Tw6r+OcFHdclhzhjepmLbEZ78WTXo0OSbNCo0/m6TCl
+	 bfmfHOF/12DVlOtGSD9UJ47/kHifZ/gZhwLyT78rVeeDrRKOsuRmxlgiZJ51DjsG59
+	 5vHsZrJDl/GRtmH7ORdpAz6Lr83MdeiAUQRw/MU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733306AbfDDJMX (ORCPT
+        id S2387427AbfDDJ1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52292 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:27:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733293AbfDDJMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:16 -0400
+        id S1733093AbfDDJMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9451E2054F;
-        Thu,  4 Apr 2019 09:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4686C21734;
+        Thu,  4 Apr 2019 09:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369136;
-        bh=1I7WW/YvMfMY2byMNRWMlTgQ1VC2AmGnCK005k6LstY=;
+        s=default; t=1554369138;
+        bh=eJ9hcwsKKqzxXzhN05bg+ZFn4JbpmF+cql3cjslNwlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BcKLCvyAyTZfKJOxwgYgY98QrC+TVWkewuOgI1vNkJHvLABamJAizlyHq1N7zLTZI
-         iOxxGcrTeDAZClkf+2oZyQVD8TiCsi/WLT3OUhe4bgNrkwse0NYGxuzyQuDZV2JHDO
-         2dVVTYiIhssMLWlZqlIXMV+BOM8GjyvR/8DaSsl4=
+        b=ex0pchUwjJ0rxaitnk9szIPLcKagki3M4ieiv0AMrJ9vey/7C0XiqcupdDfheWr4p
+         LF8G2CWjU96GQt6sbNVrL8LvjiGEi5odiYZg0GDf7fZ7oIXLgv4WHYhC/dEblmQwfB
+         YYQhR+YqYtpap1WFftlXWfNjIJ3W9xsWTZfAJIEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 097/246] IB/mlx4: Increase the timeout for CM cache
-Date:   Thu,  4 Apr 2019 10:46:37 +0200
-Message-Id: <20190404084622.540202206@linuxfoundation.org>
+Subject: [PATCH 5.0 098/246] clk: fractional-divider: check parent rate only if flag is set
+Date:   Thu,  4 Apr 2019 10:46:38 +0200
+Message-Id: <20190404084622.574904309@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -68,101 +67,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
+[ Upstream commit d13501a2bedfbea0983cc868d3f1dc692627f60d ]
 
-Using CX-3 virtual functions, either from a bare-metal machine or
-pass-through from a VM, MAD packets are proxied through the PF driver.
+Custom approximation of fractional-divider may not need parent clock
+rate checking. For example Rockchip SoCs work fine using grand parent
+clock rate even if target rate is greater than parent.
 
-Since the VF drivers have separate name spaces for MAD Transaction Ids
-(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
-in a cache.
+This patch checks parent clock rate only if CLK_SET_RATE_PARENT flag
+is set.
 
-Following the RDMA Connection Manager (CM) protocol, it is clear when
-an entry has to evicted form the cache. But life is not perfect,
-remote peers may die or be rebooted. Hence, it's a timeout to wipe out
-a cache entry, when the PF driver assumes the remote peer has gone.
+For detailed example, clock tree of Rockchip I2S audio hardware.
+  - Clock rate of CPLL is 1.2GHz, GPLL is 491.52MHz.
+  - i2s1_div is integer divider can divide N (N is 1~128).
+    Input clock is CPLL or GPLL. Initial divider value is N = 1.
+    Ex) PLL = CPLL, N = 10, i2s1_div output rate is
+      CPLL / 10 = 1.2GHz / 10 = 120MHz
+  - i2s1_frac is fractional divider can divide input to x/y, x and
+    y are 16bit integer.
 
-During workloads where a high number of QPs are destroyed concurrently,
-excessive amount of CM DREQ retries has been observed
+CPLL --> | selector | ---> i2s1_div -+--> | selector | --> I2S1 MCLK
+GPLL --> |          | ,--------------'    |          |
+                      `--> i2s1_frac ---> |          |
 
-The problem can be demonstrated in a bare-metal environment, where two
-nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
-have 16 vPorts per physical server.
+Clock mux system try to choose suitable one from i2s1_div and
+i2s1_frac for master clock (MCLK) of I2S1.
 
-64 processes are associated with each vPort and creates and destroys
-one QP for each of the remote 64 processes. That is, 1024 QPs per
-vPort, all in all 16K QPs. The QPs are created/destroyed using the
-CM.
+Bad scenario as follows:
+  - Try to set MCLK to 8.192MHz (32kHz audio replay)
+    Candidate setting is
+    - i2s1_div: GPLL / 60 = 8.192MHz
+    i2s1_div candidate is exactly same as target clock rate, so mux
+    choose this clock source. i2s1_div output rate is changed
+    491.52MHz -> 8.192MHz
 
-When tearing down these 16K QPs, excessive CM DREQ retries (and
-duplicates) are observed. With some cat/paste/awk wizardry on the
-infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
-nodes:
+  - After that try to set to 11.2896MHz (44.1kHz audio replay)
+    Candidate settings are
+    - i2s1_div : CPLL / 107 = 11.214945MHz
+    - i2s1_frac: i2s1_div   = 8.192MHz
+      This is because clk_fd_round_rate() thinks target rate
+      (11.2896MHz) is higher than parent rate (i2s1_div = 8.192MHz)
+      and returns parent clock rate.
 
-cm_rx_duplicates:
-      dreq  2102
-cm_rx_msgs:
-      drep  1989
-      dreq  6195
-       rep  3968
-       req  4224
-       rtu  4224
-cm_tx_msgs:
-      drep  4093
-      dreq 27568
-       rep  4224
-       req  3968
-       rtu  3968
-cm_tx_retries:
-      dreq 23469
+Above is current upstreamed behavior. Clock mux system choose
+i2s1_div, but this clock rate is not acceptable for I2S driver, so
+users cannot replay audio.
 
-Note that the active/passive side is equally distributed between the
-two nodes.
+Expected behavior is:
+  - Try to set master clock to 11.2896MHz (44.1kHz audio replay)
+    Candidate settings are
+    - i2s1_div : CPLL / 107          = 11.214945MHz
+    - i2s1_frac: i2s1_div * 147/6400 = 11.2896MHz
+                 Change i2s1_div to GPLL / 1 = 491.52MHz at same
+                 time.
 
-Enabling pr_debug in cm.c gives tons of:
+If apply this commit, clk_fd_round_rate() calls custom approximate
+function of Rockchip even if target rate is higher than parent.
+Custom function changes both grand parent (i2s1_div) and parent
+(i2s_frac) settings at same time. Clock mux system can choose
+i2s1_frac and audio works fine.
 
-[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
-1,sl_cm_id: 0xd393089f} is NULL!
-
-By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
-tear-down phase of the application is reduced from approximately 90 to
-50 seconds. Retries/duplicates are also significantly reduced:
-
-cm_rx_duplicates:
-      dreq  2460
-[]
-cm_tx_retries:
-      dreq  3010
-       req    47
-
-Increasing the timeout further didn't help, as these duplicates and
-retries stems from a too short CMA timeout, which was 20 (~4 seconds)
-on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
-numbers fell down to about 10 for both of them.
-
-Adjustment of the CMA timeout is not part of this commit.
-
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+[sboyd@kernel.org: Make function into a macro instead]
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/cm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/clk-fractional-divider.c | 2 +-
+ include/linux/clk-provider.h         | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
-index fedaf8260105..8c79a480f2b7 100644
---- a/drivers/infiniband/hw/mlx4/cm.c
-+++ b/drivers/infiniband/hw/mlx4/cm.c
-@@ -39,7 +39,7 @@
+diff --git a/drivers/clk/clk-fractional-divider.c b/drivers/clk/clk-fractional-divider.c
+index 545dceec0bbf..fdfe2e423d15 100644
+--- a/drivers/clk/clk-fractional-divider.c
++++ b/drivers/clk/clk-fractional-divider.c
+@@ -79,7 +79,7 @@ static long clk_fd_round_rate(struct clk_hw *hw, unsigned long rate,
+ 	unsigned long m, n;
+ 	u64 ret;
  
- #include "mlx4_ib.h"
+-	if (!rate || rate >= *parent_rate)
++	if (!rate || (!clk_hw_can_set_rate_parent(hw) && rate >= *parent_rate))
+ 		return *parent_rate;
  
--#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
-+#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
- 
- struct id_map_entry {
- 	struct rb_node node;
+ 	if (fd->approximation)
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index e443fa9fa859..b7cf80a71293 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -792,6 +792,9 @@ unsigned int __clk_get_enable_count(struct clk *clk);
+ unsigned long clk_hw_get_rate(const struct clk_hw *hw);
+ unsigned long __clk_get_flags(struct clk *clk);
+ unsigned long clk_hw_get_flags(const struct clk_hw *hw);
++#define clk_hw_can_set_rate_parent(hw) \
++	(clk_hw_get_flags((hw)) & CLK_SET_RATE_PARENT)
++
+ bool clk_hw_is_prepared(const struct clk_hw *hw);
+ bool clk_hw_rate_is_protected(const struct clk_hw *hw);
+ bool clk_hw_is_enabled(const struct clk_hw *hw);
 -- 
 2.19.1
 
