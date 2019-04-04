@@ -2,53 +2,52 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F840C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B448EC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F099620652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C84B20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368378;
-	bh=7tCIUaCOVMNKGmg5rZqYdWrKf769vBqfoAsF8w53tO0=;
+	s=default; t=1554368384;
+	bh=jSfbDRBJTcVDcYUM5/94gF+Vsl1cRMW8o6nevomE220=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0zTT9ydRJfZaQcqcCAGHfkzVI6eConm/EMzAM7/sNL8ydGB/ovN4HUvWbsohDCp5Y
-	 Bx4zKce8TA4XygiDQcfsbLnKEGjgjFV2Q2LQRODbCSONcogyBOnZm0bZd20ZNxvxM5
-	 OYjyYI6EKrU/MW5QoyK29P2T4aY8bvMSpx5/6kXU=
+	b=Afe8I1zR3OQQijONPxjzs05yp8sagqe2kVCxZ1j6oQetanezw9xrLmjMJO+kQh0+H
+	 sqxjP1wnpddXqeRLKIr6kLU9shft7mygLzVkfyeF7Y7c8QgmIM8ezZd9YTTuRLTEjE
+	 B+YvtmxDE4HqAjSpFN9EH4oc7OSmZBhQJ04hmuLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbfDDI7g (ORCPT
+        id S1731123AbfDDI7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35878 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:59:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731092AbfDDI7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:59:32 -0400
+        id S1731108AbfDDI7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:59:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46B832183E;
-        Thu,  4 Apr 2019 08:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 749D920652;
+        Thu,  4 Apr 2019 08:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368370;
-        bh=7tCIUaCOVMNKGmg5rZqYdWrKf769vBqfoAsF8w53tO0=;
+        s=default; t=1554368380;
+        bh=jSfbDRBJTcVDcYUM5/94gF+Vsl1cRMW8o6nevomE220=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/hvnhm3O4yEVCdlgHGzpgGH5G6wrn/Tu5uZ1foEmPME/0QzWMueP1IyvTJyWzVnS
-         X/yPB6GV/zK59cvZlSre9fqpfX0tHazPJm+tgkGfAn0M7iRS35hrEnRAhBYjRixyIv
-         zDdzEi/ljxUKsstId2rhIGz7uZKLIcrfW2nDbpJU=
+        b=rLaym5OK2v0hQtFJZOxzoZt/+Rd7apthueyBVxgVEiCZ7VfDCP/l6l1+rk1zbB9Qs
+         T+JIK6/E55GaL3A3g6PKsqixK+LmlThA1ynI04ylN6UCLimRjNIeBTgu0bE0vH5Ate
+         KcMvtBbd+cNBKfIItBHys+FOtEV4hmLPofgi3Ce0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 015/187] net: stmmac: Avoid sometimes uninitialized Clang warnings
-Date:   Thu,  4 Apr 2019 10:45:52 +0200
-Message-Id: <20190404084603.808468469@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
+        Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH 4.19 003/187] tty/serial: atmel: Add is_half_duplex helper
+Date:   Thu,  4 Apr 2019 10:45:40 +0200
+Message-Id: <20190404084603.265124773@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,70 +66,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit df103170854e87124ee7bdd2bca64b178e653f97 ]
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-When building with -Wsometimes-uninitialized, Clang warns:
+commit f3040983132bf3477acd45d2452a906e67c2fec9 upstream.
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:495:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:532:3: warning: variable 'ns' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:741:3: warning: variable 'sec_inc' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+Use a helper function to check that a port needs to use half duplex
+communication, replacing several occurrences of multi-line bit checking.
 
-Clang is concerned with the use of stmmac_do_void_callback (which
-stmmac_get_timestamp and stmmac_config_sub_second_increment wrap),
-as it may fail to initialize these values if the if condition was ever
-false (meaning the callbacks don't exist). It's not wrong because the
-callbacks (get_timestamp and config_sub_second_increment respectively)
-are the ones that initialize the variables. While it's unlikely that the
-callbacks are ever going to disappear and make that condition false, we
-can easily avoid this warning by zero initialize the variables.
+Fixes: b389f173aaa1 ("tty/serial: atmel: RS485 half duplex w/DMA: enable RX after TX is done")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/384
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/atmel_serial.c |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 43ab9e905bed..886176be818e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -474,7 +474,7 @@ static void stmmac_get_tx_hwtstamp(struct stmmac_priv *priv,
- 				   struct dma_desc *p, struct sk_buff *skb)
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -225,6 +225,12 @@ static inline void atmel_uart_write_char
+ 	__raw_writeb(value, port->membase + ATMEL_US_THR);
+ }
+ 
++static inline int atmel_uart_is_half_duplex(struct uart_port *port)
++{
++	return (port->rs485.flags & SER_RS485_ENABLED) &&
++		!(port->rs485.flags & SER_RS485_RX_DURING_TX);
++}
++
+ #ifdef CONFIG_SERIAL_ATMEL_PDC
+ static bool atmel_use_pdc_rx(struct uart_port *port)
  {
- 	struct skb_shared_hwtstamps shhwtstamp;
--	u64 ns;
-+	u64 ns = 0;
+@@ -481,9 +487,9 @@ static void atmel_stop_tx(struct uart_po
+ 	/* Disable interrupts */
+ 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
  
- 	if (!priv->hwts_tx_en)
+-	if ((port->rs485.flags & SER_RS485_ENABLED) &&
+-	    !(port->rs485.flags & SER_RS485_RX_DURING_TX))
++	if (atmel_uart_is_half_duplex(port))
+ 		atmel_start_rx(port);
++
+ }
+ 
+ /*
+@@ -500,8 +506,7 @@ static void atmel_start_tx(struct uart_p
  		return;
-@@ -513,7 +513,7 @@ static void stmmac_get_rx_hwtstamp(struct stmmac_priv *priv, struct dma_desc *p,
- {
- 	struct skb_shared_hwtstamps *shhwtstamp = NULL;
- 	struct dma_desc *desc = p;
--	u64 ns;
-+	u64 ns = 0;
  
- 	if (!priv->hwts_rx_en)
- 		return;
-@@ -558,8 +558,8 @@ static int stmmac_hwtstamp_ioctl(struct net_device *dev, struct ifreq *ifr)
- 	u32 snap_type_sel = 0;
- 	u32 ts_master_en = 0;
- 	u32 ts_event_en = 0;
-+	u32 sec_inc = 0;
- 	u32 value = 0;
--	u32 sec_inc;
- 	bool xmac;
+ 	if (atmel_use_pdc_tx(port) || atmel_use_dma_tx(port))
+-		if ((port->rs485.flags & SER_RS485_ENABLED) &&
+-		    !(port->rs485.flags & SER_RS485_RX_DURING_TX))
++		if (atmel_uart_is_half_duplex(port))
+ 			atmel_stop_rx(port);
  
- 	xmac = priv->plat->has_gmac4 || priv->plat->has_xgmac;
--- 
-2.19.1
-
+ 	if (atmel_use_pdc_tx(port))
+@@ -799,8 +804,7 @@ static void atmel_complete_tx_dma(void *
+ 	 */
+ 	if (!uart_circ_empty(xmit))
+ 		atmel_tasklet_schedule(atmel_port, &atmel_port->tasklet_tx);
+-	else if ((port->rs485.flags & SER_RS485_ENABLED) &&
+-		 !(port->rs485.flags & SER_RS485_RX_DURING_TX)) {
++	else if (atmel_uart_is_half_duplex(port)) {
+ 		/* DMA done, stop TX, start RX for RS485 */
+ 		atmel_start_rx(port);
+ 	}
+@@ -1377,8 +1381,7 @@ static void atmel_tx_pdc(struct uart_por
+ 		atmel_uart_writel(port, ATMEL_US_IER,
+ 				  atmel_port->tx_done_mask);
+ 	} else {
+-		if ((port->rs485.flags & SER_RS485_ENABLED) &&
+-		    !(port->rs485.flags & SER_RS485_RX_DURING_TX)) {
++		if (atmel_uart_is_half_duplex(port)) {
+ 			/* DMA done, stop TX, start RX for RS485 */
+ 			atmel_start_rx(port);
+ 		}
 
 
