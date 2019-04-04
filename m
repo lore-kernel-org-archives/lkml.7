@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11847C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41521C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83B420855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C51B20855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0S+5YM/0"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IlCQxrhQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfDDLSK (ORCPT
+        id S1729588AbfDDLRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 07:18:10 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36192 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729638AbfDDLRy (ORCPT
+        Thu, 4 Apr 2019 07:17:51 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34277 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729292AbfDDLRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 07:17:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y13so3290164wrd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 04:17:53 -0700 (PDT)
+        Thu, 4 Apr 2019 07:17:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p10so3308923wrq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 04:17:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=njYuZs0QQDpdwULWDM30jmxjNG8Fc5VRgpPkmqI8/tg=;
-        b=0S+5YM/0pFsWqe0GLi2cBiX4o0bic1u2T7zVWJIgG1n5M6BB03QtaDEjJWEm7Vx2pR
-         EcgDxDSrSSVf01WXzWAKTcGRAXamlJM4gIyRYY5INah/m9lF9zXv+NRVlQTfvev/5SEq
-         Uu1zh2W9FXWMMAw2PDw1+qqkvMYxa14qEaj9oBtz23mNSCvOTRlbj1EtA879jt/isfwu
-         TGpStKvevelZrysBcRYnvKBrcnw5B0w2PBv4xU0EmVsNGFBB+PmH2hGgXZl5X47PmZ8Z
-         FT5fEpEXpu5GBk9s8d27wX1e6D0oFDsjKmUB85i36ZxkMRGpcPMuHBcqS/Wz1bBP9qH9
-         G/CA==
+        bh=THvGG4Utk/yOwuQrm+R95dAZZj74janifYZa4/M9XJQ=;
+        b=IlCQxrhQiFzp0pFJ/mN+j38HrpoPXfY9hI+kbZNIqGDS2UyzPLqUWKXh5o7IkWcFrH
+         M/oHchaABXJb/6sak+Bes+NL1fXHsI8dDFNnkg6sjI/jU2zAPqYMY83d1/CsFeGql1V8
+         lvEr9Pq8gvjhtcoJ8rtBMs5ANcsGrOfK59jmEDUPIS9QNtoqaJAMLN+bu44DVISE3qfp
+         fKspSnM4K/JN9cbRlfP9S+hD3ARAgNA7aiHgcSRcy8zlA8KpOm6pxVximGe5kAdjL5NG
+         ZOULw+rKsRbcJXtq2t6jdczacGpAZEHCYMhUf3kZnzCw59UeL+xZ9OWaZNDZdPzPW6e5
+         dy0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=njYuZs0QQDpdwULWDM30jmxjNG8Fc5VRgpPkmqI8/tg=;
-        b=RjZ9iG/G+Dj0csWlTNUIYYqf1RVCpBKGHM5F8fzxVUn8vlQG9q0MMM++1CgyVPVxAa
-         0pwdooDYu/4ArFT0BUeBQ+BHF8a0ILWv1PoeWYr27/+xhpe/JvLzEtnrwJ7wnmf3K+bI
-         7yiQBv75TujzhInPQ03A/RiKJHDIm9kfz0ZXB/NKJul7YVBXJtfl6jeox9/6E7VHiY+8
-         VM7IYZ4H4iXCBpDuM4YZ2+RUVaz1PUapXqEcuP2T9zYx3nIT3HRRr63kcXLKiGpgRYtI
-         PVEuB/XmjaU6Z5JYQbnfAd+mlPMoRG2UXZmMJgcaF8pnfhv7n9IbS1//oHN0NV0MJVkK
-         ih3w==
-X-Gm-Message-State: APjAAAUkI/5MCeZagYE+vNRrxhAibp5JY34sBmuU7xtm2a0YRUj90xvg
-        R44jorpJPx+34eHp9BMiYWEhdQ==
-X-Google-Smtp-Source: APXvYqzkiOI57ShWfPqvIEVkCyjm17C0ol6GaeDdt2KXAeDHcBYfsedCbIv2iTgknoTePhi47ecm2w==
-X-Received: by 2002:adf:f7c2:: with SMTP id a2mr1681722wrq.242.1554376672697;
-        Thu, 04 Apr 2019 04:17:52 -0700 (PDT)
+        bh=THvGG4Utk/yOwuQrm+R95dAZZj74janifYZa4/M9XJQ=;
+        b=E7ZigIkGDtgYvsIuHJ/5bwsSbnKPTNwTvFJpXuDb4k93ncI19CMEwUlRN88PAyvhMq
+         cTg+vqRiAQbN1xvvTCSSAlIu26WnOM66yak1cV+eW/wboo6Zy4CrL/BjKe7wME271N6G
+         +OEemyIw/5oUt9kPscwXcK4EOw0cY6yjS6T4qFRtOKIaE/YyTqjIZpHezsXlS6RLi+ev
+         rpxKLu3LLN2OmkSkr87IxxHKbA3fJ8QwUzyQinu80mqlcVhuxE0JWT3UyrIIYWIkfWir
+         NsQfWyvfeupP4A+gmNZkunTXlnxbiJ+kHwPPTA9btF8zE6kj0jlez9rW/kOEUTezks6F
+         MOVg==
+X-Gm-Message-State: APjAAAWY/ygLdW/SWlt6H7O46ZYQC4iepYwEVXDJ12rJ9zvS0assVRwd
+        U2FTuNITvwu8HcJwiqzI0qsD1g==
+X-Google-Smtp-Source: APXvYqyZVrHLXXlnXSB+vYPXcp7Q9YJaa352Ul3dd0qE/uG0Kg30TmP1XfxKVrCszoObVeuWJwwOKw==
+X-Received: by 2002:adf:e602:: with SMTP id p2mr3474242wrm.105.1554376666071;
+        Thu, 04 Apr 2019 04:17:46 -0700 (PDT)
 Received: from boomer.local ([2a01:e34:eeb6:4690:106b:bae3:31ed:7561])
-        by smtp.googlemail.com with ESMTPSA id z23sm9024771wma.0.2019.04.04.04.17.50
+        by smtp.googlemail.com with ESMTPSA id z23sm9024771wma.0.2019.04.04.04.17.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 04:17:51 -0700 (PDT)
+        Thu, 04 Apr 2019 04:17:45 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>
@@ -64,9 +64,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Maxime Jourdan <mjourdan@baylibre.com>,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
-Subject: [PATCH 5/6] ASoC: meson: axg-tdm-formatter: rework quirks settings
-Date:   Thu,  4 Apr 2019 13:17:32 +0200
-Message-Id: <20190404111733.28705-6-jbrunet@baylibre.com>
+Subject: [PATCH 1/6] ASoC: meson: add g12a compatibles
+Date:   Thu,  4 Apr 2019 13:17:28 +0200
+Message-Id: <20190404111733.28705-2-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190404111733.28705-1-jbrunet@baylibre.com>
 References: <20190404111733.28705-1-jbrunet@baylibre.com>
@@ -77,178 +77,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The g12a tdmout requires a different signal skew offset than the axg.
-With this change, the skew offset is added as a parameter of the tdm
-formatters to prepare the addition of the g12a support.
+Add new compatible strings for the g12a devices.
+Audio wise, the g12a is fairly to close to the axg, yet some differences
+need to be handled.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/meson/axg-tdm-formatter.c |  6 ++++--
- sound/soc/meson/axg-tdm-formatter.h | 11 +++++++++--
- sound/soc/meson/axg-tdmin.c         | 16 +++++++++++-----
- sound/soc/meson/axg-tdmout.c        | 16 +++++++++++-----
- 4 files changed, 35 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt  | 4 +++-
+ Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt   | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-spdifin.txt         | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-spdifout.txt        | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt  | 4 +++-
+ 5 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
-index 43e390f9358a..0c6cce5c5773 100644
---- a/sound/soc/meson/axg-tdm-formatter.c
-+++ b/sound/soc/meson/axg-tdm-formatter.c
-@@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(axg_tdm_formatter_set_channel_masks);
- static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
- {
- 	struct axg_tdm_stream *ts = formatter->stream;
--	bool invert = formatter->drv->invert_sclk;
-+	bool invert = formatter->drv->quirks->invert_sclk;
- 	int ret;
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+index 3dfc2515e5c6..4330fc9dca6d 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+@@ -2,7 +2,9 @@
  
- 	/* Do nothing if the formatter is already enabled */
-@@ -85,7 +85,9 @@ static int axg_tdm_formatter_enable(struct axg_tdm_formatter *formatter)
- 		return ret;
+ Required properties:
+ - compatible: 'amlogic,axg-toddr' or
+-	      'amlogic,axg-frddr'
++	      'amlogic,axg-toddr' or
++	      'amlogic,g12a-frddr' or
++	      'amlogic,g12a-toddr'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - interrupts: interrupt specifier for the fifo.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
+index 5672d0bc5b16..73f473a9365f 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
+@@ -1,7 +1,8 @@
+ * Amlogic Audio PDM input
  
- 	/* Setup the stream parameter in the formatter */
--	ret = formatter->drv->ops->prepare(formatter->map, formatter->stream);
-+	ret = formatter->drv->ops->prepare(formatter->map,
-+					   formatter->drv->quirks,
-+					   formatter->stream);
- 	if (ret)
- 		return ret;
+ Required properties:
+-- compatible: 'amlogic,axg-pdm'
++- compatible: 'amlogic,axg-pdm' or
++	      'amlogic,g12a-pdm'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - clocks: list of clock phandle, one for each entry clock-names.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+index 2e6cb7d9b202..0b82504fa419 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+@@ -1,7 +1,8 @@
+ * Amlogic Audio SPDIF Input
  
-diff --git a/sound/soc/meson/axg-tdm-formatter.h b/sound/soc/meson/axg-tdm-formatter.h
-index cf947caf3cb1..9ef98e955cb2 100644
---- a/sound/soc/meson/axg-tdm-formatter.h
-+++ b/sound/soc/meson/axg-tdm-formatter.h
-@@ -14,18 +14,25 @@ struct regmap;
- struct snd_soc_dapm_widget;
- struct snd_kcontrol;
+ Required properties:
+-- compatible: 'amlogic,axg-spdifin'
++- compatible: 'amlogic,axg-spdifin' or
++	      'amlogic,g12a-spdifin'
+ - interrupts: interrupt specifier for the spdif input.
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
+index 521c38ad89e7..826152730508 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
+@@ -1,7 +1,8 @@
+ * Amlogic Audio SPDIF Output
  
-+struct axg_tdm_formatter_hw {
-+	unsigned int skew_offset;
-+	bool invert_sclk;
-+};
-+
- struct axg_tdm_formatter_ops {
- 	struct axg_tdm_stream *(*get_stream)(struct snd_soc_dapm_widget *w);
- 	void (*enable)(struct regmap *map);
- 	void (*disable)(struct regmap *map);
--	int (*prepare)(struct regmap *map, struct axg_tdm_stream *ts);
-+	int (*prepare)(struct regmap *map,
-+		       const struct axg_tdm_formatter_hw *quirks,
-+		       struct axg_tdm_stream *ts);
- };
+ Required properties:
+-- compatible: 'amlogic,axg-spdifout'
++- compatible: 'amlogic,axg-spdifout' or
++	      'amlogic,g12a-spdifout'
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
+   * "pclk" : peripheral clock.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+index 1c1b7490554e..3b94a715a0b9 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+@@ -2,7 +2,9 @@
  
- struct axg_tdm_formatter_driver {
- 	const struct snd_soc_component_driver *component_drv;
- 	const struct regmap_config *regmap_cfg;
- 	const struct axg_tdm_formatter_ops *ops;
--	bool invert_sclk;
-+	const struct axg_tdm_formatter_hw *quirks;
- };
- 
- int axg_tdm_formatter_set_channel_masks(struct regmap *map,
-diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
-index bbac44c81688..a790f925a4ef 100644
---- a/sound/soc/meson/axg-tdmin.c
-+++ b/sound/soc/meson/axg-tdmin.c
-@@ -107,21 +107,22 @@ static void axg_tdmin_disable(struct regmap *map)
- 	regmap_update_bits(map, TDMIN_CTRL, TDMIN_CTRL_ENABLE, 0);
- }
- 
--static int axg_tdmin_prepare(struct regmap *map, struct axg_tdm_stream *ts)
-+static int axg_tdmin_prepare(struct regmap *map,
-+			     const struct axg_tdm_formatter_hw *quirks,
-+			     struct axg_tdm_stream *ts)
- {
--	unsigned int val = 0;
-+	unsigned int val, skew = quirks->skew_offset;
- 
- 	/* Set stream skew */
- 	switch (ts->iface->fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
- 	case SND_SOC_DAIFMT_DSP_A:
--		val |= TDMIN_CTRL_IN_BIT_SKEW(3);
-+		skew += 1;
- 		break;
- 
- 	case SND_SOC_DAIFMT_LEFT_J:
- 	case SND_SOC_DAIFMT_RIGHT_J:
- 	case SND_SOC_DAIFMT_DSP_B:
--		val = TDMIN_CTRL_IN_BIT_SKEW(2);
- 		break;
- 
- 	default:
-@@ -130,6 +131,8 @@ static int axg_tdmin_prepare(struct regmap *map, struct axg_tdm_stream *ts)
- 		return -EINVAL;
- 	}
- 
-+	val = TDMIN_CTRL_IN_BIT_SKEW(skew);
-+
- 	/* Set stream format mode */
- 	switch (ts->iface->fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
-@@ -204,7 +207,10 @@ static const struct axg_tdm_formatter_driver axg_tdmin_drv = {
- 	.component_drv	= &axg_tdmin_component_drv,
- 	.regmap_cfg	= &axg_tdmin_regmap_cfg,
- 	.ops		= &axg_tdmin_ops,
--	.invert_sclk	= false,
-+	.quirks		= &(const struct axg_tdm_formatter_hw) {
-+		.invert_sclk	= false,
-+		.skew_offset	= 2,
-+	},
- };
- 
- static const struct of_device_id axg_tdmin_of_match[] = {
-diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
-index f73368ee1088..3984818e2a7c 100644
---- a/sound/soc/meson/axg-tdmout.c
-+++ b/sound/soc/meson/axg-tdmout.c
-@@ -124,21 +124,22 @@ static void axg_tdmout_disable(struct regmap *map)
- 	regmap_update_bits(map, TDMOUT_CTRL0, TDMOUT_CTRL0_ENABLE, 0);
- }
- 
--static int axg_tdmout_prepare(struct regmap *map, struct axg_tdm_stream *ts)
-+static int axg_tdmout_prepare(struct regmap *map,
-+			      const struct axg_tdm_formatter_hw *quirks,
-+			      struct axg_tdm_stream *ts)
- {
--	unsigned int val = 0;
-+	unsigned int val, skew = quirks->skew_offset;
- 
- 	/* Set the stream skew */
- 	switch (ts->iface->fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	case SND_SOC_DAIFMT_I2S:
- 	case SND_SOC_DAIFMT_DSP_A:
--		val |= TDMOUT_CTRL0_INIT_BITNUM(1);
- 		break;
- 
- 	case SND_SOC_DAIFMT_LEFT_J:
- 	case SND_SOC_DAIFMT_RIGHT_J:
- 	case SND_SOC_DAIFMT_DSP_B:
--		val |= TDMOUT_CTRL0_INIT_BITNUM(2);
-+		skew += 1;
- 		break;
- 
- 	default:
-@@ -147,6 +148,8 @@ static int axg_tdmout_prepare(struct regmap *map, struct axg_tdm_stream *ts)
- 		return -EINVAL;
- 	}
- 
-+	val = TDMOUT_CTRL0_INIT_BITNUM(skew);
-+
- 	/* Set the slot width */
- 	val |= TDMOUT_CTRL0_BITNUM(ts->iface->slot_width - 1);
- 
-@@ -234,7 +237,10 @@ static const struct axg_tdm_formatter_driver axg_tdmout_drv = {
- 	.component_drv	= &axg_tdmout_component_drv,
- 	.regmap_cfg	= &axg_tdmout_regmap_cfg,
- 	.ops		= &axg_tdmout_ops,
--	.invert_sclk	= true,
-+	.quirks		= &(const struct axg_tdm_formatter_hw) {
-+		.invert_sclk = true,
-+		.skew_offset = 1,
-+	},
- };
- 
- static const struct of_device_id axg_tdmout_of_match[] = {
+ Required properties:
+ - compatible: 'amlogic,axg-tdmin' or
+-	      'amlogic,axg-tdmout'
++	      'amlogic,axg-tdmout' or
++	      'amlogic,g12a-tdmin' or
++	      'amlogic,g12a-tdmout'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - clocks: list of clock phandle, one for each entry clock-names.
 -- 
 2.20.1
 
