@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3E7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BE0C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A33F2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083A62147C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:36:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uWXgpbR5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gdec1QIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbfDDDgW (ORCPT
+        id S1728409AbfDDDgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:36:22 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33114 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfDDDgS (ORCPT
+        Wed, 3 Apr 2019 23:36:23 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39268 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfDDDgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:36:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t16so451273plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:36:18 -0700 (PDT)
+        Wed, 3 Apr 2019 23:36:22 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b65so438476plb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 20:36:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Rp82OG+X/1qzhxgu7Opyhu1qYPCsjQeQJx+i+wMOyCE=;
-        b=uWXgpbR5YVsdh1tkDK3c5M04exY7enShlsPHkKIwIqAg0jQLEPod7MxEbk+H/2YFcz
-         ewWG019xQA/Lf3qtj7FErkvgro8gloYUwKTnLt3zJBa0YkZg3/yTQKVP43a5ex9/trTj
-         JBzE92biGwlCxAdYA4Hhd7E085uqcUxOGhHqXVKLUEl4vxT4Z8zQnRPzaTaP2iyonlxt
-         YDL9xYwgQat52IAFAuTHfzAHEVwNW5QgWQSFHN5IkO1BrKu5PwOwmDA5YIz/O6wOhF8V
-         BMusCcGqe0BdXZ24kQU/tmzfO11fxxnV68luRiypOvVdge7qwRy0Q64yE0uTA+KjOMcO
-         L8Hw==
+        bh=Rs0Mz9KrYOZgcBXADVGIV6b2w07we0qLU/jBgiUTV9k=;
+        b=gdec1QIXZeSLFtCBGpLGPuiGmrxIPSimppb5U9XDlVghC5LgWVcBP9Mfa1xbFdUOOa
+         l1phJ6Y5zBrTHa1fsbSTWLx0aEUcvu+5wuDUvJsKjAQpPDubxp7PS5AckgUnZoy8ZdFr
+         b9akJJhz8tIkZZYpFAKr/D1chofAiyvy2oQrMZzAJ/LLLPYi/6Q229+vkpgY55rW/qbg
+         hFRkQ38/Y9VIQHBOanauk/GszRrMZEkZqKroxY37IkekTpk/BuKy2/ypZ5RjlVgtT74e
+         XW2uePefexh0xccalxM9sn8/l2Qyjwidmxlq1V6meE53dP6Y5ghM3LNtY/7HVREco18R
+         g0Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Rp82OG+X/1qzhxgu7Opyhu1qYPCsjQeQJx+i+wMOyCE=;
-        b=pwNCXr7FGGDNp+3k7pm1ESOZp0TnVgeahB0TBx4YN1ykFrHh17bJoV8B/LFSeG/9k/
-         1t/HD0+McQGJv6Y7CWA4gbau2JmZNQCr2VsBCQsUlXGXBktPYZ/AireMHSIaKlhxHZus
-         E+rmHLkTWcYzmbj7rRIBuqjNmc7V5DN+lwBqh8XGYokOtT1NyaTn1IL2yr7+42RHHHPV
-         hR03bFJfujczGD8TXeqg6MxyB3XRx6WW9Wz3c2rRIdq4glR9cVIvLgg0tf3kiwfjLiHd
-         YjP3LiQy3S/o+6PWj/P6nxjwMviQwqL1oUsHnrezoKXqE8ESuOUYv3mU+oEaSboOqmjE
-         ZDLg==
-X-Gm-Message-State: APjAAAX1zTwX6vMbxMQOLlezdOowl3E9N5ZH4dr+i6JYc0uLGhvOn9J4
-        DB7W/agnuR0naZVKypep/ldd4A==
-X-Google-Smtp-Source: APXvYqxnprVmjjSF2tnUy4v7IbtEfubrPIrN37Y9gmUqDHLVytF4Jl14psXToYqcyqwcjS/j3syzww==
-X-Received: by 2002:a17:902:5a2:: with SMTP id f31mr3721169plf.119.1554348977964;
-        Wed, 03 Apr 2019 20:36:17 -0700 (PDT)
+        bh=Rs0Mz9KrYOZgcBXADVGIV6b2w07we0qLU/jBgiUTV9k=;
+        b=LTggfbc/6a8si8Iml1JtRDdPp7uoZ/8v1kcp+NJbOtT9+bHLRCJGLGw7myaZtpaK4F
+         szqemr1LkL535vlyTAD2RL1XQ0BnWryUKF1EU0bGr/RpONND4ISDPb9mNAD5vt40KvLx
+         SS5LJQNtw8v+0LgFylN0z9uug/odK7rLcV0TaGdsJUIVJBHa2VNwzff5U75mNtwuLwEF
+         GQ38kYIEaZPMjO0ZBATYSRvy2EzMpKZ0tCg6lNhFCcofdnS8JmKjPjXFPGzpUFtSKNqE
+         jThc22MfF/K6+UUb5phC0qH6V/Ll8mPSsOFVNI1XUmc9DxjOF2E/qMxlPbRkFBXTQH0N
+         nbVw==
+X-Gm-Message-State: APjAAAWpByQ1eWG0yBgHQ2Z9zW4tHv6dsYpceazxlHTgVEjemZo0rt5e
+        n4cJJCNhaEP9tqbE7q6Sp+q7aQ==
+X-Google-Smtp-Source: APXvYqxO8ppGN6tZd2HsirjKkIj0LBnPgYXjxD+xI+d/d1vo7t+3KzwBxUeYsaMXrG6VS3UeDb09Qg==
+X-Received: by 2002:a17:902:f01:: with SMTP id 1mr3828458ply.41.1554348981813;
+        Wed, 03 Apr 2019 20:36:21 -0700 (PDT)
 Received: from xps15.imgcgcw.net ([147.50.13.10])
-        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.36.14
+        by smtp.gmail.com with ESMTPSA id u5sm12212780pfm.121.2019.04.03.20.36.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 20:36:17 -0700 (PDT)
+        Wed, 03 Apr 2019 20:36:21 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
         suzuki.poulose@arm.com, mike.leach@arm.com, leo.yan@linaro.org,
         coresight@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/20] coresight: Properly address concurrency in sink::update() functions
-Date:   Wed,  3 Apr 2019 21:35:29 -0600
-Message-Id: <20190404033541.14072-9-mathieu.poirier@linaro.org>
+Subject: [PATCH v3 09/20] coresight: perf: Clean up function etm_setup_aux()
+Date:   Wed,  3 Apr 2019 21:35:30 -0600
+Message-Id: <20190404033541.14072-10-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190404033541.14072-1-mathieu.poirier@linaro.org>
 References: <20190404033541.14072-1-mathieu.poirier@linaro.org>
@@ -71,75 +71,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When operating in CPU-wide trace scenarios and working with an N:1
-source/sink HW topology, update() functions need to be made atomic
-in order to avoid racing with start and stop operations.
+There is no point in allocating sink memory for a trace session if
+there is not a way to free it once it is no longer needed.  As such make
+sure the sink API function to allocate and free memory have been
+implemented before moving ahead with the establishment of a trace
+session.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-etb10.c   | 4 +++-
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-index 52b7d95ab498..6b50e781dc57 100644
---- a/drivers/hwtracing/coresight/coresight-etb10.c
-+++ b/drivers/hwtracing/coresight/coresight-etb10.c
-@@ -413,7 +413,7 @@ static unsigned long etb_update_buffer(struct coresight_device *csdev,
- 	const u32 *barrier;
- 	u32 read_ptr, write_ptr, capacity;
- 	u32 status, read_data;
--	unsigned long offset, to_read;
-+	unsigned long offset, to_read, flags;
- 	struct cs_buffers *buf = sink_config;
- 	struct etb_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 
-@@ -422,6 +422,7 @@ static unsigned long etb_update_buffer(struct coresight_device *csdev,
- 
- 	capacity = drvdata->buffer_depth * ETB_FRAME_SIZE_WORDS;
- 
-+	spin_lock_irqsave(&drvdata->spinlock, flags);
- 	__etb_disable_hw(drvdata);
- 	CS_UNLOCK(drvdata->base);
- 
-@@ -532,6 +533,7 @@ static unsigned long etb_update_buffer(struct coresight_device *csdev,
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index bbfed70b3402..b8ca3800b56b 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -134,8 +134,7 @@ static void free_event_data(struct work_struct *work)
+ 	if (event_data->snk_config && !WARN_ON(cpumask_empty(mask))) {
+ 		cpu = cpumask_first(mask);
+ 		sink = coresight_get_sink(etm_event_cpu_path(event_data, cpu));
+-		if (sink_ops(sink)->free_buffer)
+-			sink_ops(sink)->free_buffer(event_data->snk_config);
++		sink_ops(sink)->free_buffer(event_data->snk_config);
  	}
- 	__etb_enable_hw(drvdata);
- 	CS_LOCK(drvdata->base);
-+	spin_unlock_irqrestore(&drvdata->spinlock, flags);
  
- 	return to_read;
- }
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index 30f868676540..a38ad2b0d95a 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -413,7 +413,7 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
- 	u32 *buf_ptr;
- 	u64 read_ptr, write_ptr;
- 	u32 status;
--	unsigned long offset, to_read;
-+	unsigned long offset, to_read, flags;
- 	struct cs_buffers *buf = sink_config;
- 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
- 
-@@ -424,6 +424,7 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
- 	if (WARN_ON_ONCE(drvdata->mode != CS_MODE_PERF))
- 		return 0;
- 
-+	spin_lock_irqsave(&drvdata->spinlock, flags);
- 	CS_UNLOCK(drvdata->base);
- 
- 	tmc_flush_and_stop(drvdata);
-@@ -517,6 +518,7 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
- 		to_read = buf->nr_pages << PAGE_SHIFT;
+ 	for_each_cpu(cpu, mask) {
+@@ -215,7 +214,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 		sink = coresight_get_enabled_sink(true);
  	}
- 	CS_LOCK(drvdata->base);
-+	spin_unlock_irqrestore(&drvdata->spinlock, flags);
  
- 	return to_read;
- }
+-	if (!sink || !sink_ops(sink)->alloc_buffer)
++	if (!sink)
+ 		goto err;
+ 
+ 	mask = &event_data->mask;
+@@ -261,6 +260,9 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 	if (cpu >= nr_cpu_ids)
+ 		goto err;
+ 
++	if (!sink_ops(sink)->alloc_buffer || !sink_ops(sink)->free_buffer)
++		goto err;
++
+ 	/* Allocate the sink buffer for this session */
+ 	event_data->snk_config =
+ 			sink_ops(sink)->alloc_buffer(sink, cpu, pages,
 -- 
 2.17.1
 
