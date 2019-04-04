@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45DDC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15F3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3CC2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E46E21872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554365840;
-	bh=8vaCCJftAlvWXo1BrHwMU61KzZ/eaKCzHoIfhkosh+I=;
+	s=default; t=1554365843;
+	bh=ZZ+R/IdidXtLCO6b4UP06OEx8Mq+s2tBAQ5mAfMGzmQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=AHWjtlYAGAaK/3EfSlLbUe+iyc8d42QR8tSHkWQQ3hED73RDtkznwChAYecxVzrC2
-	 4a8kRwPEJfv1PCi1eiwWgULBHM2Eg1BTfWGnV52ikYj7Hc7N5zNTQxtGBI32dfUbu0
-	 geGfXJ07Ss0CTg5KY8imlh0ysopXDlTxWRtAcMCM=
+	b=vYn5OImLDnrAPzUob678vW+vjP0a1y1+OHsiSXsdMMppjPPLYHDsPLTRGUfmua+NP
+	 R7+JdyY+lcg2juC0qD0/N2ys5ySHcJ2HGvUOwlysr0/SJDq9TTXzjulwLtRrYfPwZc
+	 uvg6u6Sp/GxW59uA8ihc+oFiifC/+OZaLj+hL9eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfDDIRT (ORCPT
+        id S1728822AbfDDIRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:17:19 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51276 "EHLO
+        Thu, 4 Apr 2019 04:17:22 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51120 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbfDDIRP (ORCPT
+        with ESMTP id S1728758AbfDDIRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:17:15 -0400
+        Thu, 4 Apr 2019 04:17:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=4IjJUDwwQm4taL0qsOOF+oE9ce3AozsivfzJGbmmA7k=; b=BaVal56jnNSx
-        4VRU1SWLkCkPbXHxQffLzBRGHb/6IzzoE/+9OzO46X5PunhyaYnwi4kKbOQ8Y6uEEIp3qcjTLGb49
-        6VSe21pYVFirijXuDcQH1ZgxWGegUd1L3vyvgFrHGqu/HccIclOFp96tLu7ow8sQDd5LC9gJw7CwF
-        RA8WM=;
+        List-Archive; bh=RO826z7CyLwHLF+l+ODfeJpT3/lgg6wKE+zUFM2nmR0=; b=ZtLt7OP+JDqg
+        j5TGltHzgmNyAmQ327eqY5Y94laPm4DHaQ3c1adUW7n0YhOj+eumWoQ+BJZUhHszdvkfczvgvY8h1
+        oSDsuvYzR3SCJkd4xewlNQ+d78BPzANShDQZ1XLn8lrzrjvo5ZiQk5WGWEd9RwTb3ZwIlB7qzkDs9
+        GwxZE=;
 Received: from [147.50.13.10] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hBxYY-000536-Ef; Thu, 04 Apr 2019 08:17:06 +0000
+        id 1hBxYV-00052t-7P; Thu, 04 Apr 2019 08:17:03 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 5AB33441D3D; Thu,  4 Apr 2019 15:17:03 +0700 (+07)
+        id 07830441D3C; Thu,  4 Apr 2019 15:17:00 +0700 (+07)
 From:   Mark Brown <broonie@kernel.org>
 To:     Sugar Zhang <sugar.zhang@rock-chips.com>
 Cc:     Mark Brown <broonie@kernel.org>, heiko@sntech.de,
@@ -53,11 +53,11 @@ Cc:     Mark Brown <broonie@kernel.org>, heiko@sntech.de,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: rockchip: pdm: fix regmap_ops hang issue" to the asoc tree
-In-Reply-To:  <1554298856-59028-2-git-send-email-sugar.zhang@rock-chips.com>
+Subject: Applied "ASoC: rockchip: pdm: change dma burst to 8" to the asoc tree
+In-Reply-To:  <1554349691-23450-1-git-send-email-sugar.zhang@rock-chips.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190404081703.5AB33441D3D@finisterre.ee.mobilebroadband>
-Date:   Thu,  4 Apr 2019 15:17:03 +0700 (+07)
+Message-Id: <20190404081700.07830441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu,  4 Apr 2019 15:16:59 +0700 (+07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rockchip: pdm: fix regmap_ops hang issue
+   ASoC: rockchip: pdm: change dma burst to 8
 
 has been applied to the asoc tree at
 
@@ -90,35 +90,32 @@ to this mail.
 Thanks,
 Mark
 
-From c85064435fe7a216ec0f0238ef2b8f7cd850a450 Mon Sep 17 00:00:00 2001
+From 86a7b6ffd90095d81d9fa0d8b48955b7c83b2e2f Mon Sep 17 00:00:00 2001
 From: Sugar Zhang <sugar.zhang@rock-chips.com>
-Date: Wed, 3 Apr 2019 21:40:45 +0800
-Subject: [PATCH] ASoC: rockchip: pdm: fix regmap_ops hang issue
+Date: Thu, 4 Apr 2019 11:48:11 +0800
+Subject: [PATCH] ASoC: rockchip: pdm: change dma burst to 8
 
-This is because set_fmt ops maybe called when PD is off,
-and in such case, regmap_ops will lead system hang.
-enale PD before doing regmap_ops.
+This patch decreases the transfer bursts to avoid the fifo overrun.
 
 Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/rockchip/rockchip_pdm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/rockchip/rockchip_pdm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
-index 400e29edb1c9..8a2e3bbce3a1 100644
+index 8a2e3bbce3a1..d0b403a0e27b 100644
 --- a/sound/soc/rockchip/rockchip_pdm.c
 +++ b/sound/soc/rockchip/rockchip_pdm.c
-@@ -208,7 +208,9 @@ static int rockchip_pdm_set_fmt(struct snd_soc_dai *cpu_dai,
- 		return -EINVAL;
- 	}
+@@ -24,7 +24,7 @@
  
-+	pm_runtime_get_sync(cpu_dai->dev);
- 	regmap_update_bits(pdm->regmap, PDM_CLK_CTRL, mask, val);
-+	pm_runtime_put(cpu_dai->dev);
+ #include "rockchip_pdm.h"
  
- 	return 0;
- }
+-#define PDM_DMA_BURST_SIZE	(16) /* size * width: 16*4 = 64 bytes */
++#define PDM_DMA_BURST_SIZE	(8) /* size * width: 8*4 = 32 bytes */
+ 
+ struct rk_pdm_dev {
+ 	struct device *dev;
 -- 
 2.20.1
 
