@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E94DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17AFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3213A2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F2321738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368274;
-	bh=yovSHWpWspMGGAfQXq1x88ZJC4Y+9dw3WjoofKpml6U=;
+	s=default; t=1554368278;
+	bh=jywrBpSf+I5VUZ6NP9cEfmVhW/9hON1rle3N1AE9fRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Is2fIRcBMmvFop/wGZ4w/wcyrJLlKK0ApuKdMJ3jzsckKLRnDtzlLFrkkDVEfkfYy
-	 VM7rBOfe7+6KvqbhVyPHY50fZn3Y+ZlK5uYg/4UuOi1aA8+fAIR6HRIUrqod6tehmQ
-	 gjzqLhH3qC0bvWaT8dGUqHvp4ZGU3An1JAGMw12s=
+	b=rVxvt/4WrZ6fYgUCCfgtdjEIHEUv28X+r+kssG8aeiYrDqq/oHr11MkeZwuZba1Wy
+	 cyuafOwONv/DpyGKpwfgmqPz2dPbLpupghHntNDHQenVHO7MFQ7R5oGBGxfeeXCAwL
+	 wSxcW+SGVRwW35iGnqE559bu/sbwnvMbKU/wB01s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfDDI5x (ORCPT
+        id S1730774AbfDDI55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729937AbfDDI5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:57:47 -0400
+        id S1730409AbfDDI5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:57:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D142B2184E;
-        Thu,  4 Apr 2019 08:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA3A220693;
+        Thu,  4 Apr 2019 08:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368266;
-        bh=yovSHWpWspMGGAfQXq1x88ZJC4Y+9dw3WjoofKpml6U=;
+        s=default; t=1554368274;
+        bh=jywrBpSf+I5VUZ6NP9cEfmVhW/9hON1rle3N1AE9fRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C10pg3Wn9Tqj/cx5j8HPOFTvX1vY5Ur9faWML7OOUPd49EUigYThM4vWgT3VS6x5r
-         sSeY6+7E8wqzJKttIaadEJEyAdln2TnfDHAFVQfrR0VrjbWw5c6+/mNvCktmlrk2jr
-         5z93nf7oUCMLmWhl4kvKjzAitGp5IjycGus/enNg=
+        b=x9gBFHblwIDiGxLWqtwh5RqwSjJAfDRVzblH38LxwfpRQLjjzSBM33DzBH1aNP1Q2
+         kU8t4MSOAksSXmWxQQ5BxknCr8xm7FNpCTTgODoNEKH/gEbRNrGJHpBtGhu94bt2Mb
+         Mm5wSyjqCMtH8LPQ/Q/HG4ANSo6HQ2EZP7niij5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 082/121] cdrom: Fix race condition in cdrom_sysctl_register
-Date:   Thu,  4 Apr 2019 10:47:50 +0200
-Message-Id: <20190404084549.690456909@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmil.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 085/121] ASoC: fsl-asoc-card: fix object reference leaks in fsl_asoc_card_probe
+Date:   Thu,  4 Apr 2019 10:47:53 +0200
+Message-Id: <20190404084549.841800501@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -65,97 +73,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
+[ Upstream commit 11907e9d3533648615db08140e3045b829d2c141 ]
 
-The following traceback is sometimes seen when booting an image in qemu:
+The of_find_device_by_node() takes a reference to the underlying device
+structure, we should release that reference.
 
-[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
-[   54.611085] Fusion MPT base driver 3.04.20
-[   54.611877] Copyright (c) 1999-2008 LSI Corporation
-[   54.616234] Fusion MPT SAS Host driver 3.04.20
-[   54.635139] sysctl duplicate entry: /dev/cdrom//info
-[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
-[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[   54.641273] Workqueue: events_unbound async_run_entry_fn
-[   54.641273] Call Trace:
-[   54.641273]  dump_stack+0x67/0x90
-[   54.641273]  __register_sysctl_table+0x50b/0x570
-[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
-[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
-[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
-[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
-[   54.646814]  register_cdrom.cold.24+0x2a/0x33
-[   54.646814]  sr_probe+0x4bd/0x580
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  really_probe+0xd6/0x260
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  driver_probe_device+0x4a/0xb0
-[   54.646814]  ? __driver_attach+0xd0/0xd0
-[   54.646814]  bus_for_each_drv+0x73/0xc0
-[   54.646814]  __device_attach+0xd6/0x130
-[   54.646814]  bus_probe_device+0x9a/0xb0
-[   54.646814]  device_add+0x40c/0x670
-[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
-[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
-[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
-[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
-[   54.646814]  __scsi_add_device+0x116/0x130
-[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
-[   54.646814]  async_run_entry_fn+0x34/0x100
-[   54.646814]  process_one_work+0x237/0x5e0
-[   54.646814]  worker_thread+0x37/0x380
-[   54.646814]  ? rescuer_thread+0x360/0x360
-[   54.646814]  kthread+0x118/0x130
-[   54.646814]  ? kthread_create_on_node+0x60/0x60
-[   54.646814]  ret_from_fork+0x3a/0x50
-
-The only sensible explanation is that cdrom_sysctl_register() is called
-twice, once from the module init function and once from register_cdrom().
-cdrom_sysctl_register() is not mutex protected and may happily execute
-twice if the second call is made before the first call is complete.
-
-Use a static atomic to ensure that the function is executed exactly once.
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Wen Yang <yellowriver2010@hotmil.com>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ sound/soc/fsl/fsl-asoc-card.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 930b49606a8c..ea6558d4864c 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -265,6 +265,7 @@
- /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
- /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index 2db4d0c80d33..393100edd5fd 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -689,6 +689,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ asrc_fail:
+ 	of_node_put(asrc_np);
+ 	of_node_put(codec_np);
++	put_device(&cpu_pdev->dev);
+ fail:
+ 	of_node_put(cpu_np);
  
-+#include <linux/atomic.h>
- #include <linux/module.h>
- #include <linux/fs.h>
- #include <linux/major.h>
-@@ -3689,9 +3690,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
- 
- static void cdrom_sysctl_register(void)
- {
--	static int initialized;
-+	static atomic_t initialized = ATOMIC_INIT(0);
- 
--	if (initialized == 1)
-+	if (!atomic_add_unless(&initialized, 1, 1))
- 		return;
- 
- 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
-@@ -3702,8 +3703,6 @@ static void cdrom_sysctl_register(void)
- 	cdrom_sysctl_settings.debug = debug;
- 	cdrom_sysctl_settings.lock = lockdoor;
- 	cdrom_sysctl_settings.check = check_media_type;
--
--	initialized = 1;
- }
- 
- static void cdrom_sysctl_unregister(void)
 -- 
 2.19.1
 
