@@ -2,129 +2,114 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C477EC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0660FC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCB3205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370622;
-	bh=26CJLkFUWaQHEhOCX4hhbPn19xu/Hjo/OikKmOyssm4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2kxxFK4EgvM5FrgVsUDYVBLmmO1YOtI3T2dYwTdepx37QK+A1ucCuucVFx0dXlNMJ
-	 WuWwc3ohtG23EkhHQipIQpnrge+tBCx/JJFQcm0luMv7pia2ou2hZkBrnLWDG595ap
-	 nRdcuqA18qQVFoC0PFM30kNMLZH+kk7V/3hiiZ98=
+	by mail.kernel.org (Postfix) with ESMTP id C6A47205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oXI61zRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732409AbfDDJhB (ORCPT
+        id S1728876AbfDDJhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 4 Apr 2019 05:37:04 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:52894 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730308AbfDDJhB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 05:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732109AbfDDJFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB69214AF;
-        Thu,  4 Apr 2019 09:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368717;
-        bh=26CJLkFUWaQHEhOCX4hhbPn19xu/Hjo/OikKmOyssm4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXKMH2SKhuy1TUmIWKYiMNA6raI03fsfohty8S2XwQn01JJmyzA0B8qfrpMhJZ6nK
-         SLu3Y1bkRTZffEfnQkYt8BZWwNmUNeoC0AFMHTIf0gX2hbgnZoxwvzB0Xt9b3H1oQ6
-         /jh5l0QPjS3TPPInNCcu+WnlOeKZ4C3r+aBjlHNw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David E. Box" <david.e.box@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 127/187] platform/x86: intel_pmc_core: Fix PCH IP sts reading
-Date:   Thu,  4 Apr 2019 10:47:44 +0200
-Message-Id: <20190404084609.204267332@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
-References: <20190404084603.119654039@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x349TI8W129850;
+        Thu, 4 Apr 2019 09:36:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=IXlz+Q3u/scfUGUwG3oVp51Em8wLiz4akJ/lg2lxtis=;
+ b=oXI61zReLX4AmFB5nUW+MmsHw6NlmYdE/dRjv0vMNjyNOj9tk7HWtvKNkyyVG6wrFq/z
+ rHnnq+uWiG4j13HO71aUZD/VCWUTNwVu2hGOxDx78Nxk/D6wbl1ceRExJlO92l6PmuGN
+ EDG/X1twWyhfYEvI64761Zo3kaiistzP2mWxuT8BjoJtkqalq60U42Q/Z9F2cZFl1F5o
+ YfSwX/PImYmpv6lEwmCecsoSlpugz7zweUU6JyyDG30bWOW+vp2Zl3uaNf37s00M3bph
+ 1Zu8r+ny99xji8YdJytqcB9xLu0bTzhwTpTMvy8NVwUc6JkJYXdyQLN5IWsplEkGmJtD jQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 2rhwyde60w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:36:56 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x349ZLEa012745;
+        Thu, 4 Apr 2019 09:36:56 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2rm8f5ta0k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Apr 2019 09:36:56 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x349atLS022772;
+        Thu, 4 Apr 2019 09:36:55 GMT
+Received: from kadam (/41.202.241.37)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Apr 2019 02:36:34 -0700
+Date:   Thu, 4 Apr 2019 12:36:22 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Mukesh Ojha <mojha@codeaurora.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: silence an uninitialized variable warning
+Message-ID: <20190404093622.GM32613@kadam>
+References: <20190404084204.GA20193@kadam>
+ <a08db945-44d3-ff99-7a89-75367f314855@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a08db945-44d3-ff99-7a89-75367f314855@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904040067
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904040067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Apr 04, 2019 at 02:47:39PM +0530, Mukesh Ojha wrote:
+> 
+> On 4/4/2019 2:12 PM, Dan Carpenter wrote:
+> > Smatch complains that "ret" might be uninitialized.  I can see why it
+> > generates the warning, but I don't know if it's actually possible.
+> > Anyway initializing "ret" here is harmless.
+> > 
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> >   drivers/soc/qcom/mdt_loader.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+> > index 1c488024c698..fc58d660692f 100644
+> > --- a/drivers/soc/qcom/mdt_loader.c
+> > +++ b/drivers/soc/qcom/mdt_loader.c
+> > @@ -188,7 +188,7 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
+> >   	if (reloc_base)
+> >   		*reloc_base = mem_reloc;
+> > -
+> > +	ret = 0;
+> 
+> 
+> You are overriding the value here, better keep it at the start.
 
-------------------
+I like how I wrote it.  It makes it clear that this is the success path.
 
-[ Upstream commit 0e68eeea9894feeba2edf7ec63e4551b87f39621 ]
-
-A previous commit "platform/x86: intel_pmc_core: Make the driver PCH
-family agnostic <c977b98bbef5898ed3d30b08ea67622e9e82082a>" provided
-better abstraction to this driver but has some fundamental issues.
-
-e.g. the following condition
-
-for (index = 0; index < pmcdev->map->ppfear_buckets &&
-	index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
-
-is wrong because for CNL, PPFEAR_MAX_NUM_ENTRIES is hardcoded as 5 which
-is _wrong_ and even though ppfear_buckets is 8, the loop fails to read
-all eight registers needed for CNL PCH i.e. PPFEAR0 and PPFEAR1. This
-patch refactors the pfear show logic to correctly read PCH IP power
-gating status for Cannonlake and beyond.
-
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: c977b98bbef5 ("platform/x86: intel_pmc_core: Make the driver PCH family agnostic")
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel_pmc_core.c | 3 ++-
- drivers/platform/x86/intel_pmc_core.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 2d272a3e0176..e0dcdb3cc070 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -333,7 +333,8 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
- 	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
- 		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
- 
--	for (index = 0; map[index].name; index++)
-+	for (index = 0; map[index].name &&
-+	     index < pmcdev->map->ppfear_buckets * 8; index++)
- 		pmc_core_display_map(s, index, pf_regs[index / 8], map);
- 
- 	return 0;
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 93a7e99e1f8b..3f9711b03cb4 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -39,7 +39,7 @@
- #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
- #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
- #define MTPMC_MASK				0xffff0000
--#define PPFEAR_MAX_NUM_ENTRIES			5
-+#define PPFEAR_MAX_NUM_ENTRIES			12
- #define SPT_PPFEAR_NUM_ENTRIES			5
- #define SPT_PMC_READ_DISABLE_BIT		0x16
- #define SPT_PMC_MSG_FULL_STS_BIT		0x18
--- 
-2.19.1
-
-
+regards,
+dan carpenter
 
