@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909AEC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A19C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636EB20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D39206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371573;
-	bh=vWf+sgysqOollBpOKclXoLFtG4/rmQuAGk/I/bkllNE=;
+	s=default; t=1554371582;
+	bh=ePEQiDtnmMnNgkaakzmsLqIC7m6BOfhOF7za9kbqbmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HmdBBtXFlr60AwM336LvmDbKz+UlzGyMbt1OKy2PC7hhDqpG9BHsSjPX+vKVOwwbH
-	 3zvh79StcpvDjKNQvBFtruHgLXEQnEe4rTuvwIr5dEa8ihVs4oDSMDyrWglV4w82Ml
-	 79fSOacKI11FQTSQNlWuZRuqSBLhhkXekylcdKsk=
+	b=aCQDzOB60DA34yWJRiRSAo06F2Pnl/m7WxI00OvR4Pv2nRvvQze6/qtudLDyuxjVO
+	 lQ4lvuuFs0Bp77rRXjUHAXHt4b4+9sRw1rE2AmowdYwYS3ii7z2v1kwMxNuAG1cQdu
+	 p7Iui4bwBQCHF0Q+pnf1v+/tvud7YRrnaII672dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbfDDIxw (ORCPT
+        id S1730146AbfDDJxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56228 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:53:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729887AbfDDIxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:47 -0400
+        id S1729409AbfDDIxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AC2F2171F;
-        Thu,  4 Apr 2019 08:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B5B62171F;
+        Thu,  4 Apr 2019 08:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368026;
-        bh=vWf+sgysqOollBpOKclXoLFtG4/rmQuAGk/I/bkllNE=;
+        s=default; t=1554368024;
+        bh=ePEQiDtnmMnNgkaakzmsLqIC7m6BOfhOF7za9kbqbmg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZJmMnDG6RRFWZOsrvT32VYK5l0GCMKY/AvbrTvmHroiasMLa/rHEviSVdm99UHOH
-         KxakuVouBYyQkIJyEZBjy95ZhW8FLq6wkn4ZxPFvG3BXl0lcFYY6UwFOUtNuwkAgMn
-         wCRsQnNM/zKMh8RR+Xkgdw/Es8kV4AdK+8xlUZtw=
+        b=srZLFgEzeIN6iccWgd9TMj5MRjvb6R7mdw5sVhNyGvL+NnpUbdMry3WR1d7RPNodA
+         mplDZstfNan2l9AJnomT+2AaDtgoiu7JYXxqsIjoFSNy0wqFpNrok4tWqoPnJYHwfb
+         zDkqpMfnydr2uGGKwyDnLQ6k1PTcOMZM0zaW6ZQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jari Ruusu <jari.ruusu@gmail.com>
-Subject: [PATCH 4.14 002/121] ext4: cleanup bh release code in ext4_ind_remove_space()
-Date:   Thu,  4 Apr 2019 10:46:30 +0200
-Message-Id: <20190404084545.394798164@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.14 001/121] arm64: debug: Dont propagate UNKNOWN FAR into si_code for debug signals
+Date:   Thu,  4 Apr 2019 10:46:29 +0200
+Message-Id: <20190404084545.339361826@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,163 +65,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 5e86bdda41534e17621d5a071b294943cae4376e upstream.
+commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
 
-Currently, we are releasing the indirect buffer where we are done with
-it in ext4_ind_remove_space(), so we can see the brelse() and
-BUFFER_TRACE() everywhere.  It seems fragile and hard to read, and we
-may probably forget to release the buffer some day.  This patch cleans
-up the code by putting of the code which releases the buffers to the
-end of the function.
+FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
+taking a hardware watchpoint. Unfortunately, if a debug handler returns
+a non-zero value, then we will propagate the UNKNOWN FAR value to
+userspace via the si_addr field of the SIGTRAP siginfo_t.
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Jari Ruusu <jari.ruusu@gmail.com>
+Instead, let's set si_addr to take on the PC of the faulting instruction,
+which we have available in the current pt_regs.
+
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- fs/ext4/indirect.c |   47 ++++++++++++++++++++++-------------------------
- 1 file changed, 22 insertions(+), 25 deletions(-)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1219,6 +1219,7 @@ int ext4_ind_remove_space(handle_t *hand
- 	ext4_lblk_t offsets[4], offsets2[4];
- 	Indirect chain[4], chain2[4];
- 	Indirect *partial, *partial2;
-+	Indirect *p = NULL, *p2 = NULL;
- 	ext4_lblk_t max_block;
- 	__le32 nr = 0, nr2 = 0;
- 	int n = 0, n2 = 0;
-@@ -1260,7 +1261,7 @@ int ext4_ind_remove_space(handle_t *hand
- 		}
- 
- 
--		partial = ext4_find_shared(inode, n, offsets, chain, &nr);
-+		partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
- 		if (nr) {
- 			if (partial == chain) {
- 				/* Shared branch grows from the inode */
-@@ -1285,13 +1286,11 @@ int ext4_ind_remove_space(handle_t *hand
- 				partial->p + 1,
- 				(__le32 *)partial->bh->b_data+addr_per_block,
- 				(chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 
- end_range:
--		partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+		partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 		if (nr2) {
- 			if (partial2 == chain2) {
- 				/*
-@@ -1321,16 +1320,14 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 		goto do_indirects;
- 	}
- 
- 	/* Punch happened within the same level (n == n2) */
--	partial = ext4_find_shared(inode, n, offsets, chain, &nr);
--	partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+	partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
-+	partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 
- 	/* Free top, but only if partial2 isn't its subtree. */
- 	if (nr) {
-@@ -1387,15 +1384,7 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			while (partial > chain) {
--				BUFFER_TRACE(partial->bh, "call brelse");
--				brelse(partial->bh);
--			}
--			while (partial2 > chain2) {
--				BUFFER_TRACE(partial2->bh, "call brelse");
--				brelse(partial2->bh);
--			}
--			return 0;
-+			goto cleanup;
- 		}
- 
- 		/*
-@@ -1410,8 +1399,6 @@ end_range:
- 					   partial->p + 1,
- 					   (__le32 *)partial->bh->b_data+addr_per_block,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 		if (partial2 > chain2 && depth2 <= depth) {
-@@ -1419,11 +1406,21 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 	}
-+
-+cleanup:
-+	while (p && p > chain) {
-+		BUFFER_TRACE(p->bh, "call brelse");
-+		brelse(p->bh);
-+		p--;
-+	}
-+	while (p2 && p2 > chain2) {
-+		BUFFER_TRACE(p2->bh, "call brelse");
-+		brelse(p2->bh);
-+		p2--;
-+	}
- 	return 0;
- 
- do_indirects:
-@@ -1431,7 +1428,7 @@ do_indirects:
- 	switch (offsets[0]) {
- 	default:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_IND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
-@@ -1439,7 +1436,7 @@ do_indirects:
- 		}
- 	case EXT4_IND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_DIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
-@@ -1447,7 +1444,7 @@ do_indirects:
- 		}
- 	case EXT4_DIND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_TIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
-@@ -1456,5 +1453,5 @@ do_indirects:
- 	case EXT4_TIND_BLOCK:
- 		;
- 	}
--	return 0;
-+	goto cleanup;
+---
+ arch/arm64/mm/fault.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -834,11 +834,12 @@ void __init hook_debug_fault_code(int nr
+ 	debug_fault_info[nr].name	= name;
  }
+ 
+-asmlinkage int __exception do_debug_exception(unsigned long addr,
++asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
+ 					      unsigned int esr,
+ 					      struct pt_regs *regs)
+ {
+ 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
++	unsigned long pc = instruction_pointer(regs);
+ 	struct siginfo info;
+ 	int rv;
+ 
+@@ -849,19 +850,19 @@ asmlinkage int __exception do_debug_exce
+ 	if (interrupts_enabled(regs))
+ 		trace_hardirqs_off();
+ 
+-	if (user_mode(regs) && instruction_pointer(regs) > TASK_SIZE)
++	if (user_mode(regs) && pc > TASK_SIZE)
+ 		arm64_apply_bp_hardening();
+ 
+-	if (!inf->fn(addr, esr, regs)) {
++	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
+ 		rv = 1;
+ 	} else {
+ 		pr_alert("Unhandled debug exception: %s (0x%08x) at 0x%016lx\n",
+-			 inf->name, esr, addr);
++			 inf->name, esr, pc);
+ 
+ 		info.si_signo = inf->sig;
+ 		info.si_errno = 0;
+ 		info.si_code  = inf->code;
+-		info.si_addr  = (void __user *)addr;
++		info.si_addr  = (void __user *)pc;
+ 		arm64_notify_die("", regs, &info, 0);
+ 		rv = 0;
+ 	}
 
 
