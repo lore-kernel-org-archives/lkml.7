@@ -3,93 +3,227 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8C1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FF3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67047206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB5C2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:30:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbfDDT3D (ORCPT
+        id S1730361AbfDDTaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:29:03 -0400
-Received: from smtprelay0251.hostedemail.com ([216.40.44.251]:59963 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727398AbfDDT3C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:29:02 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id E1EDCC1DC92;
-        Thu,  4 Apr 2019 19:29:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: event20_142cee4eede3d
-X-Filterd-Recvd-Size: 2309
-Received: from XPS-9350 (unknown [172.58.19.18])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Apr 2019 19:28:58 +0000 (UTC)
-Message-ID: <98050a8abfdd9ec015d4de846b276cf046115e3f.camel@perches.com>
-Subject: Re: [PATCH 1/3] soundwire: fix style issues
-From:   Joe Perches <joe@perches.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org,
-        liam.r.girdwood@linux.intel.com, jank@cadence.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Date:   Thu, 04 Apr 2019 12:28:28 -0700
-In-Reply-To: <20190404182204.31262-2-pierre-louis.bossart@linux.intel.com>
-References: <20190404182204.31262-1-pierre-louis.bossart@linux.intel.com>
-         <20190404182204.31262-2-pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Thu, 4 Apr 2019 15:30:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:37586 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727398AbfDDTaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 15:30:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69D1D168F;
+        Thu,  4 Apr 2019 12:30:03 -0700 (PDT)
+Received: from [10.1.197.21] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FBA33F721;
+        Thu,  4 Apr 2019 12:30:01 -0700 (PDT)
+Subject: Re: [PATCH v8 7/9] KVM: arm/arm64: context-switch ptrauth registers
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>
+References: <1554172037-4516-1-git-send-email-amit.kachhap@arm.com>
+ <1554172037-4516-8-git-send-email-amit.kachhap@arm.com>
+From:   Kristina Martsenko <kristina.martsenko@arm.com>
+Message-ID: <efe4fd6b-7f1f-c8b7-0667-e2bf636dcf4f@arm.com>
+Date:   Thu, 4 Apr 2019 20:29:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1554172037-4516-8-git-send-email-amit.kachhap@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-04-04 at 13:22 -0500, Pierre-Louis Bossart wrote:
-> Visual inspections confirmed by checkpatch.pl --strict expose a number
-> of style issues, specifically parameter alignment is inconsistent as
-> if different contributors used different styles. Before we restart
-> support for SoundWire with Sound Open Firmware on Intel platforms,
-> let's clean all this.
+On 02/04/2019 03:27, Amit Daniel Kachhap wrote:
+> From: Mark Rutland <mark.rutland@arm.com>
 > 
-> Fix Kconfig help, spelling, SPDX format, alignment, spurious
-> parentheses, bool comparisons to true/false, macro argument
-> protection.
-> 
-> No new functionality added.
+> When pointer authentication is supported, a guest may wish to use it.
+> This patch adds the necessary KVM infrastructure for this to work, with
+> a semi-lazy context switch of the pointer auth state.
 
-[]
+[...]
 
-> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-[]
-> @@ -458,13 +458,13 @@ static int sdw_assign_device_num(struct sdw_slave *slave)
->  		mutex_unlock(&slave->bus->bus_lock);
->  		if (dev_num < 0) {
->  			dev_err(slave->bus->dev, "Get dev_num failed: %d",
-> -								dev_num);
-> +				dev_num);
+> diff --git a/arch/arm64/include/asm/kvm_ptrauth_asm.h b/arch/arm64/include/asm/kvm_ptrauth_asm.h
+> new file mode 100644
+> index 0000000..65f99e9
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/kvm_ptrauth_asm.h
+> @@ -0,0 +1,106 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* arch/arm64/include/asm/kvm_ptrauth_asm.h: Guest/host ptrauth save/restore
+> + * Copyright 2019 Arm Limited
+> + * Author: Mark Rutland <mark.rutland@arm.com>
+> + *         Amit Daniel Kachhap <amit.kachhap@arm.com>
+> + */
+> +
+> +#ifndef __ASM_KVM_PTRAUTH_ASM_H
+> +#define __ASM_KVM_PTRAUTH_ASM_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#define __ptrauth_save_key(regs, key)						\
+> +({										\
+> +	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
+> +	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
+> +})
+> +
+> +#define __ptrauth_save_state(ctxt)						\
+> +({										\
+> +	__ptrauth_save_key(ctxt->sys_regs, APIA);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APIB);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APDA);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APDB);				\
+> +	__ptrauth_save_key(ctxt->sys_regs, APGA);				\
+> +})
+> +
+> +#else /* __ASSEMBLY__ */
+> +
+> +#include <asm/sysreg.h>
+> +
+> +#ifdef	CONFIG_ARM64_PTR_AUTH
+> +
+> +#define PTRAUTH_REG_OFFSET(x)	(x - CPU_APIAKEYLO_EL1)
+> +
+> +/*
+> + * CPU_AP*_EL1 values exceed immediate offset range (512) for stp instruction
+> + * so below macros takes CPU_APIAKEYLO_EL1 as base and calculates the offset of
+> + * the keys from this base to avoid an extra add instruction. These macros
+> + * assumes the keys offsets are aligned in a specific increasing order.
+> + */
+> +.macro	ptrauth_save_state base, reg1, reg2
+> +	mrs_s	\reg1, SYS_APIAKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APIAKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APIBKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APIBKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APDAKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APDAKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APDBKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APDBKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+> +	mrs_s	\reg1, SYS_APGAKEYLO_EL1
+> +	mrs_s	\reg2, SYS_APGAKEYHI_EL1
+> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+> +.endm
+> +
+> +.macro	ptrauth_restore_state base, reg1, reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
+> +	msr_s	SYS_APIAKEYLO_EL1, \reg1
+> +	msr_s	SYS_APIAKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
+> +	msr_s	SYS_APIBKEYLO_EL1, \reg1
+> +	msr_s	SYS_APIBKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
+> +	msr_s	SYS_APDAKEYLO_EL1, \reg1
+> +	msr_s	SYS_APDAKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
+> +	msr_s	SYS_APDBKEYLO_EL1, \reg1
+> +	msr_s	SYS_APDBKEYHI_EL1, \reg2
+> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
+> +	msr_s	SYS_APGAKEYLO_EL1, \reg1
+> +	msr_s	SYS_APGAKEYHI_EL1, \reg2
+> +.endm
+> +
+> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+> +	cbz	\reg1, 1f
+> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+> +1:
 
-You could also add the missing terminating '\n' to these formats like:
+Nit: the label in assembly macros is usually a larger number (see
+assembler.h or alternative.h for example). I think this is to avoid
+future accidents like
 
- 			dev_err(slave->bus->dev, "Get dev_num failed: %d\n",
+	cbz	x0, 1f
+	ptrauth_switch_to_guest	x1, x2, x3, x4
+	add	x5, x5, x6
+1:
+	...
 
->  			return dev_num;
->  		}
->  	} else {
->  		dev_info(slave->bus->dev,
-> -				"Slave already registered dev_num:%d",
-> -				slave->dev_num);
-> +			 "Slave already registered dev_num:%d",
-> +			 slave->dev_num);
+where the code would incorrectly branch to the label inside
+ptrauth_switch_to_guest, instead of the one after it.
 
-etc...
+Thanks,
+Kristina
 
+> +.endm
+> +
+> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+> +	ldr	\reg1, [\g_ctxt, #CPU_HCR_EL2]
+> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
+> +	cbz	\reg1, 2f
+> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
+> +	ptrauth_save_state	\reg1, \reg2, \reg3
+> +	add	\reg1, \h_ctxt, #CPU_APIAKEYLO_EL1
+> +	ptrauth_restore_state	\reg1, \reg2, \reg3
+> +	isb
+> +2:
+> +.endm
+> +
+> +#else /* !CONFIG_ARM64_PTR_AUTH */
+> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
+> +.endm
+> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
+> +.endm
+> +#endif /* CONFIG_ARM64_PTR_AUTH */
+> +#endif /* __ASSEMBLY__ */
+> +#endif /* __ASM_KVM_PTRAUTH_ASM_H */
 
-
+> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+> index 675fdc1..3a70213 100644
+> --- a/arch/arm64/kvm/hyp/entry.S
+> +++ b/arch/arm64/kvm/hyp/entry.S
+> @@ -24,6 +24,7 @@
+>  #include <asm/kvm_arm.h>
+>  #include <asm/kvm_asm.h>
+>  #include <asm/kvm_mmu.h>
+> +#include <asm/kvm_ptrauth_asm.h>
+>  
+>  #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
+>  #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
+> @@ -64,6 +65,9 @@ ENTRY(__guest_enter)
+>  
+>  	add	x18, x0, #VCPU_CONTEXT
+>  
+> +	// Macro ptrauth_switch_to_guest(guest cxt, tmp1, tmp2, tmp3).
+> +	ptrauth_switch_to_guest x18, x0, x1, x2
+> +
+>  	// Restore guest regs x0-x17
+>  	ldp	x0, x1,   [x18, #CPU_XREG_OFFSET(0)]
+>  	ldp	x2, x3,   [x18, #CPU_XREG_OFFSET(2)]
+> @@ -118,6 +122,9 @@ ENTRY(__guest_exit)
+>  
+>  	get_host_ctxt	x2, x3
+>  
+> +	// Macro ptrauth_switch_to_host(guest cxt, host cxt, tmp1, tmp2, tmp3).
+> +	ptrauth_switch_to_host x1, x2, x3, x4, x5
+> +
+>  	// Now restore the host regs
+>  	restore_callee_saved_regs x2
+>  
