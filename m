@@ -2,51 +2,52 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7738DC10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C47C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB7820882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149222171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367781;
-	bh=THpLgn3gtCTH/Ms8Fl//I0t/rWLocjWpGTGyRMJ7Z80=;
+	s=default; t=1554367785;
+	bh=r+oXK3DrdsA0AxWeDD+Giplla8tOU5H9OzAFwFkWakQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tawRzhBwgwtu+tBLeZGwHKnhjkUBvDrXSfdU4sLxS+yAJMSCiftdPffsGKNyjUDp0
-	 fESypM77UIOHEXx8/UO6Vrl5ueEdMvPSmpdTF1cg1wKPAF2Ub/ehuYX80BhcFZe/XL
-	 /xJIIyoMT7SSwrFiKCphNlVOwCAvYrP4H0M64aAU=
+	b=kGx7YPuGe4QFry95t4IGfqEoFZPd/uCCvCuFpu1OkfBXQK6ZbuGYUGBBcBzSuljiZ
+	 qptHRhH/JaR4OEzaWqdNYkYTBw+COrRzNVgVUS7dVbZHIWONpPJZoNtP+2Ai9hZJH1
+	 k8I9PcPUrcO1JOXSrqjtd7CWz42jbCncpCjV7egM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfDDItk (ORCPT
+        id S1728743AbfDDIto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:49:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbfDDItj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:49:39 -0400
+        id S1727096AbfDDItl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:49:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949CD20882;
-        Thu,  4 Apr 2019 08:49:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30C1C20855;
+        Thu,  4 Apr 2019 08:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367778;
-        bh=THpLgn3gtCTH/Ms8Fl//I0t/rWLocjWpGTGyRMJ7Z80=;
+        s=default; t=1554367780;
+        bh=r+oXK3DrdsA0AxWeDD+Giplla8tOU5H9OzAFwFkWakQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EM2ns1NM01oSePngKvPkfAqEg0jx34C1VknIu7TFG0+uD7/2v7MuZJ/4D3pHW/EwV
-         wpdv0TSJao0GmC23oa4hpHBtjRhQbPpNXuMazanRWvaQXQ7kxomT7+PJ/vAUQeVVIR
-         VaoQqhph3MDxiWT1TWBIecYbe4nMYBso86CUxlxs=
+        b=L5vOAGYyaehwHljPi4kX7yUGEOuL3/DS/Aufm8Gf/hAIYT9fyWMVsVmhT2mGXop8p
+         Q0h2JannWZLovLwo1a9jyfrcMFKWXI1kOoG7woab2pzuC8ZU0SDEeiLB+2N+piycGm
+         rR4F2aDIWP/8CEe2Uuw+oQbnw7lXvCp8SuB5lVkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.9 01/91] arm64: debug: Dont propagate UNKNOWN FAR into si_code for debug signals
-Date:   Thu,  4 Apr 2019 10:46:45 +0200
-Message-Id: <20190404084535.523848262@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 10/91] h8300: use cc-cross-prefix instead of hardcoding h8300-unknown-linux-
+Date:   Thu,  4 Apr 2019 10:46:54 +0200
+Message-Id: <20190404084535.996528957@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -65,68 +66,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Will Deacon <will.deacon@arm.com>
+[ Upstream commit fc2b47b55f17fd996f7a01975ce1c33c2f2513f6 ]
 
-commit b9a4b9d084d978f80eb9210727c81804588b42ff upstream.
+It believe it is a bad idea to hardcode a specific compiler prefix
+that may or may not be installed on a user's system. It is annoying
+when testing features that should not require compilers at all.
 
-FAR_EL1 is UNKNOWN for all debug exceptions other than those caused by
-taking a hardware watchpoint. Unfortunately, if a debug handler returns
-a non-zero value, then we will propagate the UNKNOWN FAR value to
-userspace via the si_addr field of the SIGTRAP siginfo_t.
+For example, mrproper, headers_install, etc. should work without
+any compiler.
 
-Instead, let's set si_addr to take on the PC of the faulting instruction,
-which we have available in the current pt_regs.
+They look like follows on my machine.
 
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+$ make ARCH=h8300 mrproper
+./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
+./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
+make: h8300-unknown-linux-gcc: Command not found
+make: h8300-unknown-linux-gcc: Command not found
+  [ a bunch of the same error messages continue ]
 
+$ make ARCH=h8300 headers_install
+./scripts/gcc-version.sh: line 26: h8300-unknown-linux-gcc: command not found
+./scripts/gcc-version.sh: line 27: h8300-unknown-linux-gcc: command not found
+make: h8300-unknown-linux-gcc: Command not found
+  HOSTCC  scripts/basic/fixdep
+make: h8300-unknown-linux-gcc: Command not found
+  WRAP    arch/h8300/include/generated/uapi/asm/kvm_para.h
+  [ snip ]
 
+The solution is to delete this line, or to use cc-cross-prefix like
+some architectures do. I chose the latter as a moderate fixup.
+
+I added an alternative 'h8300-linux-' because it is available at:
+
+https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/fault.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/h8300/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -673,11 +673,12 @@ void __init hook_debug_fault_code(int nr
- 	debug_fault_info[nr].name	= name;
- }
+diff --git a/arch/h8300/Makefile b/arch/h8300/Makefile
+index e1c02ca230cb..073bba6f9f60 100644
+--- a/arch/h8300/Makefile
++++ b/arch/h8300/Makefile
+@@ -23,7 +23,7 @@ KBUILD_AFLAGS += $(aflags-y)
+ LDFLAGS += $(ldflags-y)
  
--asmlinkage int __exception do_debug_exception(unsigned long addr,
-+asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
- 					      unsigned int esr,
- 					      struct pt_regs *regs)
- {
- 	const struct fault_info *inf = debug_fault_info + DBG_ESR_EVT(esr);
-+	unsigned long pc = instruction_pointer(regs);
- 	struct siginfo info;
- 	int rv;
+ ifeq ($(CROSS_COMPILE),)
+-CROSS_COMPILE := h8300-unknown-linux-
++CROSS_COMPILE := $(call cc-cross-prefix, h8300-unknown-linux- h8300-linux-)
+ endif
  
-@@ -688,19 +689,19 @@ asmlinkage int __exception do_debug_exce
- 	if (interrupts_enabled(regs))
- 		trace_hardirqs_off();
- 
--	if (user_mode(regs) && instruction_pointer(regs) > TASK_SIZE)
-+	if (user_mode(regs) && pc > TASK_SIZE)
- 		arm64_apply_bp_hardening();
- 
--	if (!inf->fn(addr, esr, regs)) {
-+	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
- 		rv = 1;
- 	} else {
- 		pr_alert("Unhandled debug exception: %s (0x%08x) at 0x%016lx\n",
--			 inf->name, esr, addr);
-+			 inf->name, esr, pc);
- 
- 		info.si_signo = inf->sig;
- 		info.si_errno = 0;
- 		info.si_code  = inf->code;
--		info.si_addr  = (void __user *)addr;
-+		info.si_addr  = (void __user *)pc;
- 		arm64_notify_die("", regs, &info, 0);
- 		rv = 0;
- 	}
+ core-y	+= arch/$(ARCH)/kernel/ arch/$(ARCH)/mm/
+-- 
+2.19.1
+
 
 
