@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BEBC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475C9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8AB9206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1689E206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371497;
-	bh=h00KFOl+8el4uZizwr/hNAiMLN9BtLVsIm/xzONlchI=;
+	s=default; t=1554371504;
+	bh=s5VVglbny1kb5bbMuMVerXh7U9jbjrBvb2f4kwYgiI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhIqOzDWY+QjoONMrO5DJj0o7w+CKVAyj/bUBFixJU90V0FcUcwbFmz55ELsMdFpe
-	 WzV0NLh6+XJk8vftRTeJNivfBYrYXuFsdMriPa/oxh0CRGRnx4aMH/L72qRHLsSwGl
-	 upghhkobzUGKkEA8pSMKV6Ji8VibJJr0KJ9hGEY8=
+	b=i5j9KUnz3olaoz5b3ZxeBzFvUjbbouddrrVGMHPA+ISnG01nvMe/4XV4ygJK8LAlR
+	 5URU3vjcgedpf52Jk0U/MInswKp3DUmLKq4A3W4JEFofBT/cKrUlJdsv/rF22j/H+A
+	 uFB0awsCKKheEGLpKz+QvCg/bO9sB53EHL3Rd+sQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbfDDJvf (ORCPT
+        id S1730512AbfDDJvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57548 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729121AbfDDIys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:48 -0400
+        id S1729368AbfDDIyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8493F217D9;
-        Thu,  4 Apr 2019 08:54:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8DD72183E;
+        Thu,  4 Apr 2019 08:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368088;
-        bh=h00KFOl+8el4uZizwr/hNAiMLN9BtLVsIm/xzONlchI=;
+        s=default; t=1554368079;
+        bh=s5VVglbny1kb5bbMuMVerXh7U9jbjrBvb2f4kwYgiI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HujMAXYgJzlaTyeJh3OvQX5VzaD+jjvgPoj9EIrFf6BuBdjCqMO7FqpDlD1iA3+MT
-         mW4lVv8Yy1KGL4+1GS+w+HFWxTkbfAzAv0Via5sSxQk1XIMghd7F9ec4/rvKqy0A5N
-         XBPnHfILt5Cwzyn8vhVtgVWPxtR3nchBPftn8i8I=
+        b=fsjYI9CQCLNZrAaF5e32jX42zbZusE5yS8Cy/peglgWExOGZiYfNFbrbz04jPkQLS
+         2Ps66jSWNrUTNyaR7XiryHrHR00NBSsh7jCqRB6dCJJ4633fv5z4mghEE+VVVLhFTu
+         kk50D5Id5xL45G+Kue/j+onede3tHr9uQWgm138Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, luojiajun <luojiajun3@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Keerthy <j-keerthy@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 033/121] jbd2: fix invalid descriptor block checksum
-Date:   Thu,  4 Apr 2019 10:47:01 +0200
-Message-Id: <20190404084547.132838127@linuxfoundation.org>
+Subject: [PATCH 4.14 013/121] gpio: gpio-omap: fix level interrupt idling
+Date:   Thu,  4 Apr 2019 10:46:41 +0200
+Message-Id: <20190404084546.036701156@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,50 +71,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
+[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
 
-In jbd2_journal_commit_transaction(), if we are in abort mode,
-we may flush the buffer without setting descriptor block checksum
-by goto start_journal_io. Then fs is mounted,
-jbd2_descriptor_block_csum_verify() failed.
+Tony notes that the GPIO module does not idle when level interrupts are
+in use, as the wakeup appears to get stuck.
 
-[  271.379811] EXT4-fs (vdd): shut down requested (2)
-[  271.381827] Aborting journal on device vdd-8.
-[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
-[  271.598023] JBD2: recovery failed
-[  271.598484] EXT4-fs (vdd): error loading journal
+After extensive investigation, it appears that the wakeup will only be
+cleared if the interrupt status register is cleared while the interrupt
+is enabled. However, we are currently clearing it with the interrupt
+disabled for level-based interrupts.
 
-Fix this problem by keep setting descriptor block checksum if the
-descriptor buffer is not NULL.
+It is acknowledged that this observed behaviour conflicts with a
+statement in the TRM:
 
-This checksum problem can be reproduced by xfstests generic/388.
+CAUTION
+  After servicing the interrupt, the status bit in the interrupt status
+  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
+  reset and the interrupt line released (by setting the corresponding
+  bit of the interrupt status register to 1) before enabling an
+  interrupt for the GPIO channel in the interrupt-enable register
+  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
+  the occurrence of unexpected interrupts when enabling an interrupt
+  for the GPIO channel.
 
-Signed-off-by: luojiajun <luojiajun3@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
+However, this does not appear to be a practical problem.
+
+Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
+the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
+Fix the sequence to clear the IRQ status" saying:
+
+ if the status is cleared after disabling the IRQ then sWAKEUP will not
+ be cleared and gates the module transition
+
+When we unmask the level interrupt after the interrupt has been handled,
+enable the interrupt and only then clear the interrupt. If the interrupt
+is still pending, the hardware will re-assert the interrupt status.
+
+Should the caution note in the TRM prove to be a problem, we could
+use a clear-enable-clear sequence instead.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[tony@atomide.com: updated comments based on an earlier TI patch]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-omap.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 3c1c31321d9b..d11401afd52f 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -693,9 +693,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
-                            the last tag we set up. */
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 3233b72b6828..148e81eea35a 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -841,14 +841,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	if (trigger)
+ 		omap_set_gpio_triggering(bank, offset, trigger);
  
- 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
--
--			jbd2_descriptor_block_csum_set(journal, descriptor);
- start_journal_io:
-+			if (descriptor)
-+				jbd2_descriptor_block_csum_set(journal,
-+							descriptor);
+-	/* For level-triggered GPIOs, the clearing must be done after
+-	 * the HW source is cleared, thus after the handler has run */
+-	if (bank->level_mask & BIT(offset)) {
+-		omap_set_gpio_irqenable(bank, offset, 0);
++	omap_set_gpio_irqenable(bank, offset, 1);
 +
- 			for (i = 0; i < bufs; i++) {
- 				struct buffer_head *bh = wbuf[i];
- 				/*
++	/*
++	 * For level-triggered GPIOs, clearing must be done after the source
++	 * is cleared, thus after the handler has run. OMAP4 needs this done
++	 * after enabing the interrupt to clear the wakeup status.
++	 */
++	if (bank->level_mask & BIT(offset))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+-	}
+ 
+-	omap_set_gpio_irqenable(bank, offset, 1);
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
 -- 
 2.19.1
 
