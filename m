@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48135C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6773C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1866120820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4529214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369519;
-	bh=LH9KQATYIcfvbALTVvNg2xwxOYgCX8D/+++btrLgnXY=;
+	s=default; t=1554369522;
+	bh=T1nDkZaSpBroe4htsLqSy+PEbAe1j+Xx6PgOAZZnKaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5sdwehuIxyEdrAzex6sjnlMLjpmwG8ztdPWxApj8BBiKe+8ze7diFN2vdhd5d+V4
-	 tV6Us+MWY0F8HBqCLJG8Wou468Or3CruvOVtNZ8exaJ5RaW0WzCHakrKzdCEDxCTwX
-	 t6ea+VW7WBW169Y0NXzI6UEV2bOs5En2wc/RlLDI=
+	b=q10H4ow/XNr1zU7XdrAw0s98YlAdfetujfvKlAMe0HAmp5NESGb+BppJADeo+3U1i
+	 1yqP3gV9dQa32JOgQiIFto3B7jeI0SiVY0iqC2Wg8JX002+fiiTKQy246LX/9+Rz4l
+	 vU9AA6tR6Ae5S8+/XD+6EfoxoI/iOSzGHzAL5RRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387753AbfDDJSh (ORCPT
+        id S2387611AbfDDJSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60742 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:18:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388394AbfDDJSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:18:34 -0400
+        id S2388405AbfDDJSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:18:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1EA42147C;
-        Thu,  4 Apr 2019 09:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B7120652;
+        Thu,  4 Apr 2019 09:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369513;
-        bh=LH9KQATYIcfvbALTVvNg2xwxOYgCX8D/+++btrLgnXY=;
+        s=default; t=1554369515;
+        bh=T1nDkZaSpBroe4htsLqSy+PEbAe1j+Xx6PgOAZZnKaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FckXAn4DX3jDFLRXtR15EZh8afx+SY1zrYTYm9hkbAnZDJypKeJa9ILyb/ygeIZSn
-         l/DkV1yXgzuLON7HKHe7GyumJrYuzhNYH9+oduq8Aqw4V3+r3xDI7sX7GqiiYPyTzV
-         p+eRpMiklK0Wrq/MvjNgO8AFMmDJePex4DpADTwc=
+        b=WNyNf+auDb6ahOH/id8Kvx509TEdReX7NrIHZYdtPLzTVxyH+1raqAWlSR/OBeGxo
+         T5Vd41Hg+hC2XydAb/Y3AQFcqs4uDvL9zhNeCGq8zxTOACCLW6rSsOcyQOHkOYb9sx
+         F8/SqmCMoHA3Ha978UBWpraLhuwXMWaRgoC5HFiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 244/246] gpio: of: Restrict enable-gpio quirk to regulator-gpio
-Date:   Thu,  4 Apr 2019 10:49:04 +0200
-Message-Id: <20190404084627.847159451@linuxfoundation.org>
+Subject: [PATCH 5.0 245/246] ACPI / video: Extend chassis-type detection with a "Lunch Box" check
+Date:   Thu,  4 Apr 2019 10:49:05 +0200
+Message-Id: <20190404084627.883273334@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,54 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 692ef26e72fcce0c1e73c41683fd3512f3719d55 ]
+[ Upstream commit d693c008e3ca04db5916ff72e68ce661888a913b ]
 
-Commit 0e7d6f940164 ("gpio: of: Apply regulator-gpio quirk only to
-enable-gpios") breaks the device tree ABI specified in the device tree
-bindings for fixed regulators (compatible "regulator-fixed"). According
-to these bindings the polarity of the GPIO is exclusively controlled by
-the presence or absence of the enable-active-high property. As such the
-polarity quirk implemented in of_gpio_flags_quirks() must be applied to
-the GPIO specified for fixed regulators.
+Commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
+Win8-ready _desktops_") introduced chassis type detection, limiting the
+lcd_only check for the backlight to devices where the chassis-type
+indicates their is no builtin LCD panel.
 
-However, commit 0e7d6f940164 ("gpio: of: Apply regulator-gpio quirk only
-to enable-gpios") restricted the quirk to the enable-gpios property for
-fixed regulators as well, whereas according to the commit message itself
-it should only apply to "regulator-gpio" compatible device tree nodes.
+The purpose of the lcd_only check is to avoid advertising a backlight
+interface on desktops, since skylake and newer machines seem to always
+have a backlight interface even if there is no LCD panel. The limiting
+of this check to desktops only was done to avoid breaking backlight
+support on some laptops which do not have the lcd flag set.
 
-Fix this by actually implementing what the offending commit intended,
-which is to ensure that the quirk is applied to the GPIO specified by
-the "enable-gpio" property for the "regulator-gpio" bindings only.
+The Fujitsu ESPRIMO Q910 which is a compact (NUC like) desktop machine
+has a chassis type of 0x10 aka "Lunch Box". Without the lcd_only check
+we end up falsely advertising backlight/brightness control on this
+device. This commit extend the dmi_is_desktop check to return true
+for type 0x10 to fix this.
 
-This fixes a regression on Jetson TX1 where the fixed regulator for the
-HDMI +5V pin relies on the flags quirk for the proper polarity.
-
-Fixes: 0e7d6f940164 ("gpio: of: Apply regulator-gpio quirk only to enable-gpios")
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Marek Vasut <marek.vasut@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/acpi/acpi_video.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 30542a10014f..a1dd2f1c0d02 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -84,10 +84,10 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 	 * Note that active low is the default.
- 	 */
- 	if (IS_ENABLED(CONFIG_REGULATOR) &&
--	    !strcmp(propname, "enable-gpio") &&
- 	    (of_device_is_compatible(np, "regulator-fixed") ||
- 	     of_device_is_compatible(np, "reg-fixed-voltage") ||
--	     of_device_is_compatible(np, "regulator-gpio"))) {
-+	     (of_device_is_compatible(np, "regulator-gpio") &&
-+	      strcmp(propname, "enable-gpio") == 0))) {
- 		/*
- 		 * The regulator GPIO handles are specified such that the
- 		 * presence or absence of "enable-active-high" solely controls
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index 1ab1460c4a4e..d73afb562ad9 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -2143,6 +2143,7 @@ static bool dmi_is_desktop(void)
+ 	case 0x05: /* Pizza Box */
+ 	case 0x06: /* Mini Tower */
+ 	case 0x07: /* Tower */
++	case 0x10: /* Lunch Box */
+ 	case 0x11: /* Main Server Chassis */
+ 		return true;
+ 	}
 -- 
 2.19.1
 
