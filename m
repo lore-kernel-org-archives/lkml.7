@@ -2,56 +2,51 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5F7C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD87DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9885A2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8F7217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554367951;
-	bh=ItJ6EDzeEVDQcOWs4q/GsHt2ZayfiTM1w9rjBefrvuA=;
+	s=default; t=1554367957;
+	bh=hwM4/DBT/s0MwM714VrkbFtT8U3R/679Bfp7AHa/bZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pNXizGsULkh9SAU6a0QEyBR3ZZMkkLwLvRl/6LJCcxz/C5HPtnBK4i2A/B2ax1ZpV
-	 QCT1TlNBktOKnqGwTtXAihAJoPyHyKQEG36Cbb5dqVmktel/5O57m0AxSIft858d+m
-	 Ealq+tYU66Nx/tNyaPqYYfmU8YYCW3M/yEcNwJaY=
+	b=O46wyrf0Rt7IwIVp8VSexftZoA9GrFC6nwLTwxpJ9X8dZ8H58pJmuRHXLXF7CyExu
+	 Q344HPuLJL0NmTEF9W3qtxDRXSGGkBogs+C+N4WaFrezad4Y2PKyCopcL9DKDSI5/o
+	 8YvK4ALO3bW8eSmg57+DDgeT45T1DR0iLivYzssY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbfDDIwa (ORCPT
+        id S1729644AbfDDIwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54506 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:52:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729598AbfDDIwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:52:24 -0400
+        id S1729614AbfDDIwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:52:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 188CB217D4;
-        Thu,  4 Apr 2019 08:52:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA932147C;
+        Thu,  4 Apr 2019 08:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554367942;
-        bh=ItJ6EDzeEVDQcOWs4q/GsHt2ZayfiTM1w9rjBefrvuA=;
+        s=default; t=1554367952;
+        bh=hwM4/DBT/s0MwM714VrkbFtT8U3R/679Bfp7AHa/bZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2IVs63eT2XF9d9dIzll4ktgVxVuL674EhdsZzpuIvA8WknIHm3lA7o/uiXhOqqdaR
-         KHJYfDPeetXgp8BMorkOWxx39rbfaWDoEIaDa8wjbQvlvKZ1/4+2bbEp1lAwO9OhF9
-         Lh6XK2VMacjhwNJFS8wHMAu/bowpQSVViJHtTwn0=
+        b=FEMvygHi/wygvgFw/VCEfnGHmycfiMIYLMP62ZKxD0cEDtt8oO18uvnYpK10KXxA5
+         IqZhZ3k4+EckTUzhobUiTShRi5wipiiQZ6iHevB8XyWpRq4KpdULhqq81FAbc439h0
+         wjNdt7s3cVhwx4hsMv09Dy2jd5j5LyKwhKRKFKo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 55/91] ARM: 8833/1: Ensure that NEON code always compiles with Clang
-Date:   Thu,  4 Apr 2019 10:47:39 +0200
-Message-Id: <20190404084538.647886289@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 58/91] bcache: fix input overflow to cache set sysfs file io_error_halflife
+Date:   Thu,  4 Apr 2019 10:47:42 +0200
+Message-Id: <20190404084538.798863229@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -70,120 +65,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
+[ Upstream commit a91fbda49f746119828f7e8ad0f0aa2ab0578f65 ]
 
-While building arm32 allyesconfig, I ran into the following errors:
+Cache set sysfs entry io_error_halflife is used to set c->error_decay.
+c->error_decay is in type unsigned int, and it is converted by
+strtoul_or_return(), therefore overflow to c->error_decay is possible
+for a large input value.
 
-  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
-  '-mfloat-abi=softfp -mfpu=neon'
+This patch fixes the overflow by using strtoul_safe_clamp() to convert
+input string to an unsigned long value in range [0, UINT_MAX], then
+divides by 88 and set it to c->error_decay.
 
-  In file included from lib/raid6/neon1.c:27:
-  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
-  error: "NEON support not enabled"
-
-Building V=1 showed NEON_FLAGS getting passed along to Clang but
-__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
-only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
-which is the '-march' value for allyesconfig.
-
->From lib/Basic/Targets/ARM.cpp in the Clang source:
-
-  // This only gets set when Neon instructions are actually available, unlike
-  // the VFP define, hence the soft float and arch check. This is subtly
-  // different from gcc, we follow the intent which was that it should be set
-  // when Neon instructions are actually available.
-  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
-    Builder.defineMacro("__ARM_NEON", "1");
-    Builder.defineMacro("__ARM_NEON__");
-    // current AArch32 NEON implementations do not support double-precision
-    // floating-point even when it is present in VFP.
-    Builder.defineMacro("__ARM_NEON_FP",
-                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
-  }
-
-Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
-beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
-definined by Clang. This doesn't functionally change anything because
-that code will only run where NEON is supported, which is implicitly
-armv7.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/287
-
-Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm/kernel_mode_neon.txt | 4 ++--
- arch/arm/lib/Makefile                  | 2 +-
- arch/arm/lib/xor-neon.c                | 2 +-
- lib/raid6/Makefile                     | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/md/bcache/sysfs.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
-index 525452726d31..b9e060c5b61e 100644
---- a/Documentation/arm/kernel_mode_neon.txt
-+++ b/Documentation/arm/kernel_mode_neon.txt
-@@ -6,7 +6,7 @@ TL;DR summary
- * Use only NEON instructions, or VFP instructions that don't rely on support
-   code
- * Isolate your NEON code in a separate compilation unit, and compile it with
--  '-mfpu=neon -mfloat-abi=softfp'
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
- * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
-   NEON code
- * Don't sleep in your NEON code, and be aware that it will be executed with
-@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
- Therefore, the recommended and only supported way of using NEON/VFP in the
- kernel is by adhering to the following rules:
- * isolate the NEON code in a separate compilation unit and compile it with
--  '-mfpu=neon -mfloat-abi=softfp';
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
- * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
-   into the unit containing the NEON code from a compilation unit which is *not*
-   built with the GCC flag '-mfpu=neon' set.
-diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-index 27f4d96258a2..b3ecffb76c3f 100644
---- a/arch/arm/lib/Makefile
-+++ b/arch/arm/lib/Makefile
-@@ -38,7 +38,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
- $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index 5a5c1f1bd8a5..87daccbbc61b 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -645,8 +645,17 @@ STORE(__bch_cache_set)
+ 		c->error_limit = strtoul_or_return(buf) << IO_ERROR_SHIFT;
  
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
--  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
-+  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
-   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
-   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
- endif
-diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
-index 2c40aeab3eaa..c691b901092f 100644
---- a/arch/arm/lib/xor-neon.c
-+++ b/arch/arm/lib/xor-neon.c
-@@ -14,7 +14,7 @@
- MODULE_LICENSE("GPL");
+ 	/* See count_io_errors() for why 88 */
+-	if (attr == &sysfs_io_error_halflife)
+-		c->error_decay = strtoul_or_return(buf) / 88;
++	if (attr == &sysfs_io_error_halflife) {
++		unsigned long v = 0;
++		ssize_t ret;
++
++		ret = strtoul_safe_clamp(buf, v, 0, UINT_MAX);
++		if (!ret) {
++			c->error_decay = v / 88;
++			return size;
++		}
++		return ret;
++	}
  
- #ifndef __ARM_NEON__
--#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
-+#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
- #endif
- 
- /*
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index 3057011f5599..10ca69475611 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -24,7 +24,7 @@ endif
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
- NEON_FLAGS := -ffreestanding
- ifeq ($(ARCH),arm)
--NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
-+NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
- endif
- ifeq ($(ARCH),arm64)
- CFLAGS_REMOVE_neon1.o += -mgeneral-regs-only
+ 	sysfs_strtoul(journal_delay_ms,		c->journal_delay_ms);
+ 	sysfs_strtoul(verify,			c->verify);
 -- 
 2.19.1
 
