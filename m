@@ -2,133 +2,91 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E944DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CC6C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DA42082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55E82082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 12:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gjeas8Zd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s9iIeE7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfDDMH0 (ORCPT
+        id S1729685AbfDDMHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 08:07:26 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33318 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbfDDMHY (ORCPT
+        Thu, 4 Apr 2019 08:07:43 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:33750 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfDDMHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 08:07:24 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t16so1096106plo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 05:07:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wuNi3fqQOIOEnEta16uX3p0vIkpp0Kua2RmpVYh4mmQ=;
-        b=Gjeas8Zdgmn5QvIOcTGFgqrfK/qDxur5nhzr4bLEBNY85SY17ve2wxxjTsMMGfmfIW
-         XKZHX0Q+wv/T/v/FhPx5Ib7/xzRhMYIXeBaK+pSd9F76aGEPmKiRciJZkHigBO2CnUYH
-         6k13FQ54x4uuEr6Z3cmAlXbZsWUFUBLjnwI+KV6VRp29o3eQvS3d59cNKVus8nCIaZq8
-         hC2YpNEwEycXYOk9ZgHnJtLjRbcEX9RIAIvEIJBGSBDx5g3Zw9My54P3AFgw/dUfnqi9
-         sPPPuGaauyW0ZDT19go3atxGZzhd07vtdlqcM8+qETgY04vTYo5r9IBnLj2CzBy3R4c2
-         7KJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wuNi3fqQOIOEnEta16uX3p0vIkpp0Kua2RmpVYh4mmQ=;
-        b=Z668JIjlFUHw/KimRV7dctMoLtxemUQTrNw+B/h5xH/rE5QqqcxRRal/IF3YPKz9RU
-         98shSyL3+I2nwN670LcFuzI8yhBXDQTQ+e27cKyb9jthK2/BbwNFWjIdNBqXQVdZ2uYI
-         diAzfqS9kDVfokBnLJHkzPTbIiFyjVINCKEEBjIFzshiMVZ1w5VmQ6qv8ONWCuTgkRVl
-         Hq5CIWImYiCQujCFDhYhQtv1mOTPm9ZrXnmnbOfGT9WsOyeq517zofE3zq1AzFog8T0c
-         YywTMRq73+GHdXgo52aABtsJ6LqYVJ9F+khbcKf9nMse66pKWk6x7zbuSiS+cBSOsIhx
-         1sog==
-X-Gm-Message-State: APjAAAXiN6UM/tbmV1HuHcNyV03/xgcQ389PSpwJtS0BBuXAqDfLbZmF
-        75jJN5ouYWAronpt+8ciGDR78nU6kk8=
-X-Google-Smtp-Source: APXvYqz/hU0sj7JJPBywoViPaCl+IySB8tG+VuvYz3AK0U51pdB2jZxxBJqgRLkpMlTr8rO9A1h8lg==
-X-Received: by 2002:a17:902:2b87:: with SMTP id l7mr6101212plb.38.1554379642984;
-        Thu, 04 Apr 2019 05:07:22 -0700 (PDT)
-Received: from bobo.local0.net (193-116-89-42.tpgi.com.au. [193.116.89.42])
-        by smtp.gmail.com with ESMTPSA id j22sm24720668pfn.129.2019.04.04.05.07.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 05:07:22 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] kernel/cpu: Allow non-zero CPU to be primary for suspend / kexec freeze
-Date:   Thu,  4 Apr 2019 22:07:02 +1000
-Message-Id: <20190404120704.18479-3-npiggin@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190404120704.18479-1-npiggin@gmail.com>
-References: <20190404120704.18479-1-npiggin@gmail.com>
+        Thu, 4 Apr 2019 08:07:43 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x34C7bYG085753;
+        Thu, 4 Apr 2019 07:07:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554379657;
+        bh=dB9FxF1Fr0tWpbEoSN87mfEh6nE2fOb+DiJX9WarJKg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=s9iIeE7VacLT8N2YtQE9aekmhGdDdqDHCWhzyVeFVuPUYAMCNJH6raX3jz2vMyxkm
+         Q8mfWFv1cxmWV5NHGb57y1EMMDEAnlLT6UaqaZK4LsC1ncfIghU62tr4PbtZ3u1vGX
+         Xaf67zzwa2al2fS63UVdnGxvwqJjY5SkUqv5AjrI=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x34C7beb010772
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Apr 2019 07:07:37 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
+ 2019 07:07:37 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 4 Apr 2019 07:07:37 -0500
+Received: from [172.22.74.48] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x34C7amt066219;
+        Thu, 4 Apr 2019 07:07:36 -0500
+Subject: Re: [PATCH 1/5] dt-bindings: mfd: Update the ramp up/down property
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>
+References: <20190325142403.30447-1-dmurphy@ti.com>
+ <20190325142403.30447-2-dmurphy@ti.com> <20190404081907.GO6830@dell>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <d25c9893-c90c-7020-91c9-f1b1372afe21@ti.com>
+Date:   Thu, 4 Apr 2019 07:07:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190404081907.GO6830@dell>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch chooses a housekeeping CPU to be the primary when disabling
-CPUs for suspend / kexec freeze. This should not have any effect until
-a later change because CPU0 is always a housekeeping CPU.
+Lee
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- include/linux/cpu.h |  2 +-
- kernel/cpu.c        | 10 +++++++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+Thanks for the review
 
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 5041357d0297..b11c94d88953 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -134,7 +134,7 @@ static inline void put_online_cpus(void) { cpus_read_unlock(); }
- extern int freeze_secondary_cpus(int primary);
- static inline int disable_nonboot_cpus(void)
- {
--	return freeze_secondary_cpus(0);
-+	return freeze_secondary_cpus(-1);
- }
- extern void enable_nonboot_cpus(void);
- #else /* !CONFIG_PM_SLEEP_SMP */
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 6754f3ecfd94..d1bf6e2b4752 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -9,6 +9,7 @@
- #include <linux/notifier.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/hotplug.h>
-+#include <linux/sched/isolation.h>
- #include <linux/sched/task.h>
- #include <linux/sched/smt.h>
- #include <linux/unistd.h>
-@@ -1199,8 +1200,15 @@ int freeze_secondary_cpus(int primary)
- 	int cpu, error = 0;
- 
- 	cpu_maps_update_begin();
--	if (!cpu_online(primary))
-+	if (primary == -1) {
- 		primary = cpumask_first(cpu_online_mask);
-+		if (!housekeeping_cpu(primary, HK_FLAG_TIMER))
-+			primary = housekeeping_any_cpu(HK_FLAG_TIMER);
-+	} else {
-+		if (!cpu_online(primary))
-+			primary = cpumask_first(cpu_online_mask);
-+	}
-+
- 	/*
- 	 * We take down all of the non-boot CPUs in one shot to avoid races
- 	 * with the userspace trying to use the CPU hotplug at the same time
+On 4/4/19 3:19 AM, Lee Jones wrote:
+> On Mon, 25 Mar 2019, Dan Murphy wrote:
+> 
+>> Modify the ramp-up/down property and add the property description
+>> to the binding.
+> 
+> This is the 'what', but where is the 'why'?
+> 
+
+I will add the why in v2.
+
+Dan
+<snip>
+
 -- 
-2.20.1
-
+------------------
+Dan Murphy
