@@ -2,128 +2,136 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98234C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791DAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6738B2171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KdeOJ7Zk"
+	by mail.kernel.org (Postfix) with ESMTP id 4AC2C20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730698AbfDDUNt (ORCPT
+        id S1730736AbfDDUP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:13:49 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35953 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728934AbfDDUNs (ORCPT
+        Thu, 4 Apr 2019 16:15:59 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39027 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730709AbfDDUP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:13:48 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r24so3251584ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:13:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eYqmvWtL2dBFReY5T53bjMy7K/Ka+ZEzCOL2OVrFB08=;
-        b=KdeOJ7ZkPcCwS03a2RdwMO7t9na8oge+X+usfZw/BjBMiDttJD8QrM4s0/ECeaVImc
-         PQ2OmyLrAkfTbsL8Yjt9+3WVwJJkCjxeAsVgUUPJ7B6WD8700Z3pqtXZi2RvnrxvVPjF
-         XKKvvAlgstqpk1tEd67bNKdposPNR6lci8CmtKJesl49XjpcZgMfJ9ULIj7AnOGCINqM
-         MjJ0Dg15NYUF/NCksUnWgtxWwvsPqWCREsyFXr8x3/cFXZ8N39bNNXaqrjWNV7zJ+nQf
-         rZxaxR6kc6LY/YzVnESvoJkFzlh1R6F8N1AM0uLO/JpO8hqlXc1e/kKALfeGIKEJwX69
-         l+Vw==
+        Thu, 4 Apr 2019 16:15:59 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c189so2492358qke.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:15:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eYqmvWtL2dBFReY5T53bjMy7K/Ka+ZEzCOL2OVrFB08=;
-        b=JxyvpcpJOgB7TgVmxdrfcRI4ZAw0u1k5wxOdF/yTilLcHCFCAz+sdOham0b6+gaw09
-         4iMtjvngyJlssNlRLHhZyJJDwajvV0xIUXSm4rSK9iitiNq8eRP6KDmcFcyhfADHXxUD
-         oYQ89ZmE5iR4dVjdips82xiRS4pkJ+p+ezsMPeJ1Yh2Kj6yM99+GHqV48orfCV6pcq3z
-         cQ1bCN5W1yW22egInIE/v6lWG+jFKsKQU7KrqG+H/5SJexOoUFF/8UP51iAyIekxwyEM
-         ysWDYC492VqWnlW7g1/xMcF44P73sf4TeCjV0xhGWz+ALSuDHLHtkpWxzum88h9WQkR2
-         Bd4g==
-X-Gm-Message-State: APjAAAWFiugKaKDRiaRdkno/K60C9KBw1DTFBcCNRLXtByprPRRcGxgr
-        AzcMbZIlB1UiYf7OtFjqBBN97bXy4Y5w6iPq3d+CcQ==
-X-Google-Smtp-Source: APXvYqzR2SreJaBZ7ZLOKCZogo6k5iWjHqEIJkSWqqFwGCoeaLUwmLFVqMLnf5TxiW4mkVTFXU3corQUyQspb497SGI=
-X-Received: by 2002:a2e:219:: with SMTP id 25mr4544058ljc.34.1554408825519;
- Thu, 04 Apr 2019 13:13:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190404171007.160878-1-ncrews@chromium.org> <20190404171007.160878-3-ncrews@chromium.org>
- <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
- <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
- <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
- <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
- <20190404185919.GB27340@amd> <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
- <20190404191931.GA29984@amd> <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
- <20190404200658.GD29984@amd>
-In-Reply-To: <20190404200658.GD29984@amd>
-From:   Dmitry Torokhov <dtor@google.com>
-Date:   Thu, 4 Apr 2019 13:13:34 -0700
-Message-ID: <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
- backlight name
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Nick Crews <ncrews@chromium.org>,
-        Guenter Roeck <groeck@google.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o1wJwNYRnXpup2bxqQH9bKI+mZDLraoSrDs4UAHrt/E=;
+        b=Hq7lJXf4tjECrbu0mOQWq7p2eTz1WBr9DL1BZdfoQSnI1co/34EXWk7IDba0f2I4cr
+         Q8DkRbTlLjLcgJB4tPQpaYl3FcLvq2z7ShNOcoXZZEn8viYYU5fxG0SZgKRgwWZsmmSA
+         QppIV0fhCQ1Tesv1tYtQ9b/OTu5+3fCss5lkujwbLrBM6aS7uQcpZP1/4L7yVeGkcUyO
+         fTZY6vq7aEP521u26pLSh/tsuyfO9CmtqO+2BkeGI14I5FmZhRf1iNq/Bd3tX1NglsTm
+         tWqON6+vAjdj9diNhEzFqw92tCVwkHFg6C85GgcP+ZajvcPfpMRSt5DQK6DsrzPdBf+A
+         ExqA==
+X-Gm-Message-State: APjAAAVV+VYiYVq2nKNf+/9/4bFrTnuhgSoBJ81Jbd8ARwMk5FT7ci8v
+        YjRa9UpZAXRDNMti61feCmcJLA==
+X-Google-Smtp-Source: APXvYqx1G+bM0abZwXvYPx9BcRif8CbdcSRmcGL9T520xre12OxHTgD5GgimHiuQGI2/POXtNMiTUw==
+X-Received: by 2002:ae9:c310:: with SMTP id n16mr7060466qkg.8.1554408958536;
+        Thu, 04 Apr 2019 13:15:58 -0700 (PDT)
+Received: from [10.150.73.190] (214.sub-174-240-132.myvzw.com. [174.240.132.214])
+        by smtp.gmail.com with ESMTPSA id r31sm12388496qtj.17.2019.04.04.13.15.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 13:15:57 -0700 (PDT)
+Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup and
+ thread creation (v7)
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Simon Glass <sjg@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-api <linux-api@vger.kernel.org>
+References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com>
+ <20190212194253.1951-2-mathieu.desnoyers@efficios.com>
+ <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com>
+ <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com>
+ <87lg0tosfz.fsf@concordia.ellerman.id.au>
+From:   Carlos O'Donell <codonell@redhat.com>
+Message-ID: <7412087f-5ef4-0670-503e-f8de6ca3b0bb@redhat.com>
+Date:   Thu, 4 Apr 2019 16:15:53 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <87lg0tosfz.fsf@concordia.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 4, 2019 at 1:06 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> Hi!
->
-> > > > It is *function* and maybe color that userspace is interested in, and
-> > > > here we have proper standardization in form of "kbd_backlight". Device
-> > > > name is, well, device name. It should uniquely identify the device led
-> > > > is attached to, but otherwise is rarely interesting. If userspace is
-> > > > really concerned what kind of keyboard backlight it is it should
-> > > > investigate parent device(s) and see what they end up with.
-> > >
-> > > That does not work. Userspace wants to know if it is internal keyboard
-> > > or USB keyboard, not what kind of i2c controller the LED is connected
-> > > to.
-> >
-> > Why does userspace want to know it?
->
-> For example to turn off backlight on internal keyboard when the lid is closed.
+On 4/2/19 2:02 AM, Michael Ellerman wrote:
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
+>> Hi Carlos,
+>>
+>> ----- On Mar 22, 2019, at 4:09 PM, Carlos O'Donell codonell@redhat.com wrote:
+> ...
+>>
+>> [...]
+>>>> +++ b/sysdeps/unix/sysv/linux/powerpc/bits/rseq.h
+>> [...]
+>>>> +/* Signature required before each abort handler code.  */
+>>>> +#define RSEQ_SIG 0x53053053
+>>>
+>>> Why isn't this an opcode specific to power?
+>>
+>> On powerpc 32/64, the abort is placed in a __rseq_failure executable section:
+>>
+>> #define RSEQ_ASM_DEFINE_ABORT(label, abort_label)                               \
+>>                  ".pushsection __rseq_failure, \"ax\"\n\t"                       \
+>>                  ".long " __rseq_str(RSEQ_SIG) "\n\t"                            \
+>>                  __rseq_str(label) ":\n\t"                                       \
+>>                  "b %l[" __rseq_str(abort_label) "]\n\t"                         \
+>>                  ".popsection\n\t"
+>>
+>> That section only contains snippets of those trampolines. Arguably, it would be
+>> good if disassemblers could find valid instructions there. Boqun Feng could perhaps
+>> shed some light on this signature choice ? Now would be a good time to decide
+>> once and for all whether a valid instruction would be a better choice.
+> 
+> I'm a bit vague on what we're trying to do here.
+> 
+> But it seems like you want some sort of "eye catcher" prior to the branch?
+> 
+> That value is a valid instruction on current CPUs (rlwimi.
+> r5,r24,6,1,9), and even if it wasn't it could become one in future.
+> 
+> If you change it to 0x8053530 that is both a valid instruction and is a
+> nop (conditional trap immediate but with no conditions set).
 
-Would you not want to turn off external as well?
+The s390 IBM team needs to respond to this and I want to make sure they ACK
+the NOP being used here because it impacts them directly.
 
-And what to do if internal keyboard is not platform but USB? Like
-Google "Whiskers"? (I am not sure why you decided to drop my mention
-of internal USB keyboards completely off your reply).
-
->
-> > > grep for platform::mic_mute .
-> > >
-> > > (And platform is even pretty good match for how the LED is connected
-> > > in your case).
-> >
-> > Until we get a secondary interface that is also "platform"...
->
-> How would that happen?
-
-It won't happen on Wilco, but you can't imagine that several blocks
-get reused in the same device and they end up clashing?
-
-Thanks.
+I'd like to see Martin's opinion on this.
 
 -- 
-Dmitry
+Cheers,
+Carlos.
