@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A797C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBA2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE738206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CEC206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371477;
-	bh=7UIGWK/ikQhxl9u+y9inxHa0UQ1FPyHqUPmg5iriSzk=;
+	s=default; t=1554371488;
+	bh=v7I6ciQfvTlvvf5jL4azmw9jcynwdPjFOVEzmLvj1fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VdFSVv159AO6ZMfCZ16THAisi6VWSaNtPOy3rC8B97S3T4Y+meTCGxKQ8pgAZbJhG
-	 Mv5PkPLyTS8CzIENj5r/73jqdccTkAEXgQ5Wk4dYSvyUbrOu5kdYNS7Xlve2qjlH5l
-	 qLBYXKFDLeL99pUfA4AE8a7hWpUEPdHpwnw+Y+eQ=
+	b=xaACPJlzqcvbBqSQbU/CYAuh2VT8P+IFtfmxY/vmynFFxroCWPKou7CvKMr4uT2pM
+	 lOMlplY70r3KzDzeVJ/QByphPimZU8R9l6Y4/fX4IruZK6K4So/hXQ1kAgjlc0DfZw
+	 vs+JRJS8aKOy2CsHvUx8GqDBVl8yBYe4r25WRxN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbfDDJvQ (ORCPT
+        id S1730401AbfDDJv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:51:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:51:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbfDDIzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:55:11 -0400
+        id S1730155AbfDDIzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:55:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949DD2171F;
-        Thu,  4 Apr 2019 08:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E81020693;
+        Thu,  4 Apr 2019 08:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368111;
-        bh=7UIGWK/ikQhxl9u+y9inxHa0UQ1FPyHqUPmg5iriSzk=;
+        s=default; t=1554368099;
+        bh=v7I6ciQfvTlvvf5jL4azmw9jcynwdPjFOVEzmLvj1fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LE+xjjqrnmUMgom13gAx/bnGnIaaMK3xj2Gz9/D+CnpfZB9EcAHpzyz1olw28qr43
-         OrPOS1Ji44KG0DfAyt7VHDVScXwPZs0/sPVjh7ONC61PrGAAYrqHb6y52Fv/+akYrB
-         z1B/WjmL06Q9E5GkXg04+lRRliVhjBOTnC9LhJK8=
+        b=ltp3pFVrHCiY+YuiP9oG4JGstg0QoHSeA40b9Y7GqGJ0fuAgfp8Yo2AL9pOHBFQg6
+         M9ftKdCJtuDxvVB7g6N0jXIdG8y9Wecy+hSGwx/85mEbcCYmyw5CQMHephpkSPQ6Fv
+         v8kSJgR9ghDxxyiqx+Zw7+1W7v+NMKJvcXUdfV7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia Guo <guojia12@huawei.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 025/121] ocfs2: fix a panic problem caused by o2cb_ctl
-Date:   Thu,  4 Apr 2019 10:46:53 +0200
-Message-Id: <20190404084546.725921687@linuxfoundation.org>
+Subject: [PATCH 4.14 037/121] wil6210: check null pointer in _wil_cfg80211_merge_extra_ies
+Date:   Thu,  4 Apr 2019 10:47:05 +0200
+Message-Id: <20190404084547.323916592@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -72,68 +68,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
+[ Upstream commit de77a53c2d1e8fb3621e63e8e1f0f0c9a1a99ff7 ]
 
-In the process of creating a node, it will cause NULL pointer
-dereference in kernel if o2cb_ctl failed in the interval (mkdir,
-o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
+ies1 or ies2 might be null when code inside
+_wil_cfg80211_merge_extra_ies access them.
+Add explicit check for null and make sure ies1/ies2 are not
+accessed in such a case.
 
-The node num is initialized to 0 in function o2nm_node_group_make_item,
-o2nm_node_group_drop_item will mistake the node number 0 for a valid
-node number when we delete the node before the node number is set
-correctly.  If the local node number of the current host happens to be
-0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
-o2hb_thread still running.  The panic stack is generated as follows:
+spos might be null and be accessed inside
+_wil_cfg80211_merge_extra_ies.
+Add explicit check for null in the while condition statement
+and make sure spos is not accessed in such a case.
 
-  o2hb_thread
-      \-o2hb_do_disk_heartbeat
-          \-o2hb_check_own_slot
-              |-slot = &reg->hr_slots[o2nm_this_node()];
-              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
-
-We need to check whether the node number is set when we delete the node.
-
-Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
-Signed-off-by: Jia Guo <guojia12@huawei.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Acked-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Alexei Avshalom Lazar <ailizaro@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/wireless/ath/wil6210/cfg80211.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
-index c204ac9b49e5..81a0d5d82757 100644
---- a/fs/ocfs2/cluster/nodemanager.c
-+++ b/fs/ocfs2/cluster/nodemanager.c
-@@ -621,13 +621,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
- 	struct o2nm_node *node = to_o2nm_node(item);
- 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
+diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+index 85d5c04618eb..c374ed311520 100644
+--- a/drivers/net/wireless/ath/wil6210/cfg80211.c
++++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+@@ -1224,6 +1224,12 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
+ 	u8 *buf, *dpos;
+ 	const u8 *spos;
  
--	o2net_disconnect_node(node);
-+	if (cluster->cl_nodes[node->nd_num] == node) {
-+		o2net_disconnect_node(node);
++	if (!ies1)
++		ies1_len = 0;
++
++	if (!ies2)
++		ies2_len = 0;
++
+ 	if (ies1_len == 0 && ies2_len == 0) {
+ 		*merged_ies = NULL;
+ 		*merged_len = 0;
+@@ -1233,17 +1239,19 @@ static int _wil_cfg80211_merge_extra_ies(const u8 *ies1, u16 ies1_len,
+ 	buf = kmalloc(ies1_len + ies2_len, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+-	memcpy(buf, ies1, ies1_len);
++	if (ies1)
++		memcpy(buf, ies1, ies1_len);
+ 	dpos = buf + ies1_len;
+ 	spos = ies2;
+-	while (spos + 1 < ies2 + ies2_len) {
++	while (spos && (spos + 1 < ies2 + ies2_len)) {
+ 		/* IE tag at offset 0, length at offset 1 */
+ 		u16 ielen = 2 + spos[1];
  
--	if (cluster->cl_has_local &&
--	    (cluster->cl_local_node == node->nd_num)) {
--		cluster->cl_has_local = 0;
--		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
--		o2net_stop_listening(node);
-+		if (cluster->cl_has_local &&
-+		    (cluster->cl_local_node == node->nd_num)) {
-+			cluster->cl_has_local = 0;
-+			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
-+			o2net_stop_listening(node);
-+		}
- 	}
- 
- 	/* XXX call into net to stop this node from trading messages */
+ 		if (spos + ielen > ies2 + ies2_len)
+ 			break;
+ 		if (spos[0] == WLAN_EID_VENDOR_SPECIFIC &&
+-		    !_wil_cfg80211_find_ie(ies1, ies1_len, spos, ielen)) {
++		    (!ies1 || !_wil_cfg80211_find_ie(ies1, ies1_len,
++						     spos, ielen))) {
+ 			memcpy(dpos, spos, ielen);
+ 			dpos += ielen;
+ 		}
 -- 
 2.19.1
 
