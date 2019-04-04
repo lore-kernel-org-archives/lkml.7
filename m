@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A467C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD11C10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A3F20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0B220693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369716;
-	bh=s6eXzHXf1Gb/WWIJ21y16FBgIVn0UoVG9Mj8WD0eQII=;
+	s=default; t=1554369721;
+	bh=uyVnT9mQx9rPvxxJQv5y3Ab30S5ol39ZuxLClLG8J6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CO2DuaQYJ0C9fOOr6i3JZxZnTDP/0C91GTMQtXRegpxP8j/leP25Tzo3fKRqrdjWZ
-	 UKDCwWA+7nm1jqlcQFn95SWpNB6b45I+kH03FCQD5/ZFpdp9BxZAD6qdGa+5uKjo/2
-	 UWnA36159cAM4NYgt1FbomYdlSoj/lIFN6+daV8U=
+	b=FlfS3wsQucehAhmiZtKz7yl6xgC1RUvHCgs+ucxx5f8nlT58BHTK/NJBnrRdSrxV+
+	 EvoFQMy4RWDnrCG0DO2tO/naHz2TTfePMtjXnfog0bMD/UP+IRRTFa78LLzYVFqsLp
+	 +9fnhvCA4A178d7jpCBx9TXzLOl0FlgI3oq6IP0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbfDDJVz (ORCPT
+        id S2387844AbfDDJQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57720 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387837AbfDDJQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:31 -0400
+        id S2387814AbfDDJQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E4F02075E;
-        Thu,  4 Apr 2019 09:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E67520652;
+        Thu,  4 Apr 2019 09:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369390;
-        bh=s6eXzHXf1Gb/WWIJ21y16FBgIVn0UoVG9Mj8WD0eQII=;
+        s=default; t=1554369381;
+        bh=uyVnT9mQx9rPvxxJQv5y3Ab30S5ol39ZuxLClLG8J6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z19kwOAvzrgpa1SnRwr7DdGXiJwOOnFYWBSzkBuYZFWNYT0DQHTesHiVY0fPFJvyB
-         FmbnIPw/1MvKbN2ItWLL+wkfqDDvANNlfmmkoV8QSTH9t6+FHUPdTIZrAWiq+IMek7
-         1Ishygm5QJjCeNSt8fsCeVGTwOPN9pQu7ZbvQQiU=
+        b=KIb5yPX8lcWTQtX/Z7Ce1kxbYDzNM35W0f9JFlyxiyA/2zsGgytQOMGv4pesIN3Ov
+         WUCrV1xP2cx8b9bhOZ+ODswYdtJNR6S1hXHJe/eQg+daUVsS/I+eRNU2jYZcHqa7hT
+         CfXEevETxZtUn4dAXVnJ7l7WcVw9AyLxGJyEcfrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Lawrence <joe.lawrence@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 190/246] powerpc/64s: Clear on-stack exception marker upon exception return
-Date:   Thu,  4 Apr 2019 10:48:10 +0200
-Message-Id: <20190404084625.838266088@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 187/246] block, bfq: fix queue removal from weights tree
+Date:   Thu,  4 Apr 2019 10:48:07 +0200
+Message-Id: <20190404084625.730501230@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,78 +65,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit eddd0b332304d554ad6243942f87c2fcea98c56b ]
+[ Upstream commit 9dee8b3b057e1da26f85f1842f2aaf3bb200fb94 ]
 
-The ppc64 specific implementation of the reliable stacktracer,
-save_stack_trace_tsk_reliable(), bails out and reports an "unreliable
-trace" whenever it finds an exception frame on the stack. Stack frames
-are classified as exception frames if the STACK_FRAME_REGS_MARKER
-magic, as written by exception prologues, is found at a particular
-location.
+bfq maintains an ordered list, through a red-black tree, of unique
+weights of active bfq_queues. This list is used to detect whether there
+are active queues with differentiated weights. The weight of a queue is
+removed from the list when both the following two conditions become
+true:
 
-However, as observed by Joe Lawrence, it is possible in practice that
-non-exception stack frames can alias with prior exception frames and
-thus, that the reliable stacktracer can find a stale
-STACK_FRAME_REGS_MARKER on the stack. It in turn falsely reports an
-unreliable stacktrace and blocks any live patching transition to
-finish. Said condition lasts until the stack frame is
-overwritten/initialized by function call or other means.
+(1) the bfq_queue is flagged as inactive
+(2) the has no in-flight request any longer;
 
-In principle, we could mitigate this by making the exception frame
-classification condition in save_stack_trace_tsk_reliable() stronger:
-in addition to testing for STACK_FRAME_REGS_MARKER, we could also take
-into account that for all exceptions executing on the kernel stack
-  - their stack frames's backlink pointers always match what is saved
-    in their pt_regs instance's ->gpr[1] slot and that
-  - their exception frame size equals STACK_INT_FRAME_SIZE, a value
-    uncommonly large for non-exception frames.
+Unfortunately, in the rare cases where condition (2) becomes true before
+condition (1), the removal fails, because the function to remove the
+weight of the queue (bfq_weights_tree_remove) is rightly invoked in the
+path that deactivates the bfq_queue, but mistakenly invoked *before* the
+function that actually performs the deactivation (bfq_deactivate_bfqq).
 
-However, while these are currently true, relying on them would make
-the reliable stacktrace implementation more sensitive towards future
-changes in the exception entry code. Note that false negatives, i.e.
-not detecting exception frames, would silently break the live patching
-consistency model.
+This commits moves the invocation of bfq_weights_tree_remove for
+condition (1) to after bfq_deactivate_bfqq. As a consequence of this
+move, it is necessary to add a further reference to the queue when the
+weight of a queue is added, because the queue might otherwise be freed
+before bfq_weights_tree_remove is invoked. This commit adds this
+reference and makes all related modifications.
 
-Furthermore, certain other places (diagnostic stacktraces, perf, xmon)
-rely on STACK_FRAME_REGS_MARKER as well.
-
-Make the exception exit code clear the on-stack
-STACK_FRAME_REGS_MARKER for those exceptions running on the "normal"
-kernel stack and returning to kernelspace: because the topmost frame
-is ignored by the reliable stack tracer anyway, returns to userspace
-don't need to take care of clearing the marker.
-
-Furthermore, as I don't have the ability to test this on Book 3E or 32
-bits, limit the change to Book 3S and 64 bits.
-
-Fixes: df78d3f61480 ("powerpc/livepatch: Implement reliable stack tracing for the consistency model")
-Reported-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/entry_64.S | 7 +++++++
- 1 file changed, 7 insertions(+)
+ block/bfq-iosched.c | 17 +++++++++++++----
+ block/bfq-wf2q.c    |  6 +++---
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index 435927f549c4..a2c168b395d2 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -1002,6 +1002,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_HAS_PPR)
- 	ld	r2,_NIP(r1)
- 	mtspr	SPRN_SRR0,r2
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index f010810c095f..e5ed28629271 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -747,6 +747,7 @@ void bfq_weights_tree_add(struct bfq_data *bfqd, struct bfq_queue *bfqq,
  
-+	/*
-+	 * Leaving a stale exception_marker on the stack can confuse
-+	 * the reliable stack unwinder later on. Clear it.
-+	 */
-+	li	r2,0
-+	std	r2,STACK_FRAME_OVERHEAD-16(r1)
+ inc_counter:
+ 	bfqq->weight_counter->num_active++;
++	bfqq->ref++;
+ }
+ 
+ /*
+@@ -771,6 +772,7 @@ void __bfq_weights_tree_remove(struct bfq_data *bfqd,
+ 
+ reset_entity_pointer:
+ 	bfqq->weight_counter = NULL;
++	bfq_put_queue(bfqq);
+ }
+ 
+ /*
+@@ -782,9 +784,6 @@ void bfq_weights_tree_remove(struct bfq_data *bfqd,
+ {
+ 	struct bfq_entity *entity = bfqq->entity.parent;
+ 
+-	__bfq_weights_tree_remove(bfqd, bfqq,
+-				  &bfqd->queue_weights_tree);
+-
+ 	for_each_entity(entity) {
+ 		struct bfq_sched_data *sd = entity->my_sched_data;
+ 
+@@ -818,6 +817,15 @@ void bfq_weights_tree_remove(struct bfq_data *bfqd,
+ 			bfqd->num_groups_with_pending_reqs--;
+ 		}
+ 	}
 +
- 	ld	r0,GPR0(r1)
- 	ld	r2,GPR2(r1)
- 	ld	r3,GPR3(r1)
++	/*
++	 * Next function is invoked last, because it causes bfqq to be
++	 * freed if the following holds: bfqq is not in service and
++	 * has no dispatched request. DO NOT use bfqq after the next
++	 * function invocation.
++	 */
++	__bfq_weights_tree_remove(bfqd, bfqq,
++				  &bfqd->queue_weights_tree);
+ }
+ 
+ /*
+@@ -1011,7 +1019,8 @@ bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
+ 
+ static int bfqq_process_refs(struct bfq_queue *bfqq)
+ {
+-	return bfqq->ref - bfqq->allocated - bfqq->entity.on_st;
++	return bfqq->ref - bfqq->allocated - bfqq->entity.on_st -
++		(bfqq->weight_counter != NULL);
+ }
+ 
+ /* Empty burst list and add just bfqq (see comments on bfq_handle_burst) */
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 72adbbe975d5..4aab1a8191f0 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -1667,15 +1667,15 @@ void bfq_del_bfqq_busy(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ 
+ 	bfqd->busy_queues--;
+ 
+-	if (!bfqq->dispatched)
+-		bfq_weights_tree_remove(bfqd, bfqq);
+-
+ 	if (bfqq->wr_coeff > 1)
+ 		bfqd->wr_busy_queues--;
+ 
+ 	bfqg_stats_update_dequeue(bfqq_group(bfqq));
+ 
+ 	bfq_deactivate_bfqq(bfqd, bfqq, true, expiration);
++
++	if (!bfqq->dispatched)
++		bfq_weights_tree_remove(bfqd, bfqq);
+ }
+ 
+ /*
 -- 
 2.19.1
 
