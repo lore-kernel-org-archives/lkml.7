@@ -2,172 +2,107 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCC0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0898DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15420206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0BA206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 15:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfDDPs4 (ORCPT
+        id S1728966AbfDDPuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 11:48:56 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:57598 "EHLO honk.sigxcpu.org"
+        Thu, 4 Apr 2019 11:50:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37066 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfDDPsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 11:48:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id E0028FB03;
-        Thu,  4 Apr 2019 17:48:52 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fNdyGWJaw293; Thu,  4 Apr 2019 17:48:50 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 4ACD942BBE; Thu,  4 Apr 2019 17:48:50 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 17:48:50 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH] drm/panel: Rocktech jh057n00900: Add terminating
- newlines to logging
-Message-ID: <20190404154850.GA19334@bogon.m.sigxcpu.org>
-References: <cover.1554114302.git.agx@sigxcpu.org>
- <20190403161735.GN5238@ulmo>
- <1ed5eb3af4df6b2dd1544c7b696e034ed5c94f06.camel@perches.com>
- <20190404105359.GA8255@bogon.m.sigxcpu.org>
- <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
+        id S1726269AbfDDPuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 11:50:05 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AAFD0F74A7;
+        Thu,  4 Apr 2019 15:50:04 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AC8D84DBB;
+        Thu,  4 Apr 2019 15:50:04 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2172941F3C;
+        Thu,  4 Apr 2019 15:50:03 +0000 (UTC)
+Date:   Thu, 4 Apr 2019 11:50:02 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Jan Kara <jack@suse.cz>, kvm@vger.kernel.org, mst@redhat.com,
+        jasowang@redhat.com, Dave Chinner <david@fromorbit.com>,
+        qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        riel@surriel.com, stefanha@redhat.com,
+        dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        cohuck@redhat.com, rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        imammedo@redhat.com
+Message-ID: <846216210.17971239.1554393002566.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190404150025.GN5147@magnolia>
+References: <20190403104018.23947-1-pagupta@redhat.com> <20190403220912.GB26298@dastard> <20190403223921.GM5147@magnolia> <1508883801.17367965.1554358418550.JavaMail.zimbra@redhat.com> <651986267.17402634.1554368950178.JavaMail.zimbra@redhat.com> <20190404094029.GD16131@quack2.suse.cz> <527416483.17415178.1554372524196.JavaMail.zimbra@redhat.com> <20190404150025.GN5147@magnolia>
+Subject: Re: [Qemu-devel] [PATCH v4 5/5] xfs: disable map_sync for async
+ flush
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <da6f2344396555034cf2476c8338b0ce1c56e0a7.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.116.57, 10.4.195.2]
+Thread-Topic: disable map_sync for async flush
+Thread-Index: 45nNyk/dhs+S+Tyhd4Ieg+M6TOhpwQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 04 Apr 2019 15:50:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
-On Thu, Apr 04, 2019 at 08:06:09AM -0700, Joe Perches wrote:
-> These were missing '\n' terminations, add them.
+
+> > > 
+> > > So I would put the helper in include/linux/dax.h and have it like:
+> > > 
+> > > bool daxdev_mapping_supported(struct vm_area_struct *vma,
 > 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
+> Should this be static inline if you're putting it in the header file?
+
+yes. Thanks.
+
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> index 158a6d548068..d88ea8da2ec2 100644
-> --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
-> @@ -123,7 +123,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
->  
->  	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
->  	if (ret < 0) {
-> -		DRM_DEV_ERROR(dev, "Failed to exit sleep mode");
-> +		DRM_DEV_ERROR(dev, "Failed to exit sleep mode\n");
->  		return ret;
->  	}
->  	/* Panel is operational 120 msec after reset */
-> @@ -132,7 +132,7 @@ static int jh057n_init_sequence(struct jh057n *ctx)
->  	if (ret)
->  		return ret;
->  
-> -	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done");
-> +	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
->  	return 0;
->  }
->  
-> @@ -172,7 +172,7 @@ static int jh057n_prepare(struct drm_panel *panel)
->  	if (ctx->prepared)
->  		return 0;
->  
-> -	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel.");
-> +	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
->  	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
->  	usleep_range(20, 40);
->  	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-> @@ -180,7 +180,8 @@ static int jh057n_prepare(struct drm_panel *panel)
->  
->  	ret = jh057n_init_sequence(ctx);
->  	if (ret < 0) {
-> -		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d", ret);
-> +		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
-> +			      ret);
->  		return ret;
->  	}
->  
-> @@ -212,7 +213,7 @@ static int jh057n_get_modes(struct drm_panel *panel)
->  
->  	mode = drm_mode_duplicate(panel->drm, &default_mode);
->  	if (!mode) {
-> -		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u",
-> +		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u\n",
->  			      default_mode.hdisplay, default_mode.vdisplay,
->  			      default_mode.vrefresh);
->  		return -ENOMEM;
-> @@ -241,7 +242,7 @@ static int allpixelson_set(void *data, u64 val)
->  	struct jh057n *ctx = data;
->  	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
->  
-> -	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on");
-> +	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Setting all pixels on\n");
->  	dsi_generic_write_seq(dsi, ST7703_CMD_ALL_PIXEL_ON);
->  	msleep(val * 1000);
->  	/* Reset the panel to get video back */
-> @@ -290,7 +291,7 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
->  
->  	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
->  	if (IS_ERR(ctx->reset_gpio)) {
-> -		DRM_DEV_ERROR(dev, "cannot get reset gpio");
-> +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
->  		return PTR_ERR(ctx->reset_gpio);
->  	}
->  
-> @@ -315,12 +316,12 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
->  
->  	ret = mipi_dsi_attach(dsi);
->  	if (ret < 0) {
-> -		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?");
-> +		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?\n");
->  		drm_panel_remove(&ctx->panel);
->  		return ret;
->  	}
->  
-> -	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready",
-> +	DRM_DEV_INFO(dev, "%ux%u@%u %ubpp dsi %udl - ready\n",
->  		     default_mode.hdisplay, default_mode.vdisplay,
->  		     default_mode.vrefresh,
->  		     mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
+> A comment ought to be added to describe what this predicate function
+> does.
+
+Sure, will add a comment describing the function.
+
 > 
+> > > 			      struct dax_device *dax_dev)
+> > > {
+> > > 	if (!(vma->vm_flags & VM_SYNC))
+> > > 		return true;
+> > > 	if (!IS_DAX(file_inode(vma->vm_file)))
+> > > 		return false;
+> > > 	return dax_synchronous(dax_dev);
+> > > }
+> > 
+> > Sure. This is much better. I was also not sure what to name the helper
+> > function.
+> > I will go ahead with this unless 'Dave' & 'Darrick' have anything to add.
+> 
+> Jan's approach (modulo that one comment) looks good to me.
 
-Reviewed-By: Guido Günther <agx@sigxcpu.org>
+Sure. Thank you.
 
-Thanks,
- -- Guido
+Best regards,
+Pankaj
 
-P.S.: The cc: list is huge, is there a reason for going way past what
-get_maintainers puts out for this patch?
-
-
-
+> 
+> --D
+> 
