@@ -6,99 +6,91 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB20DC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEABDC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96ED62133D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FC920700
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 03:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wrX2x83D"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VbefsEsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfDDDbu (ORCPT
+        id S1726694AbfDDDeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 23:31:50 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:50954 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDDDbu (ORCPT
+        Wed, 3 Apr 2019 23:34:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39748 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDDDeY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 23:31:50 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343OV03039749;
-        Thu, 4 Apr 2019 03:31:43 GMT
+        Wed, 3 Apr 2019 23:34:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343Xkwx051251;
+        Thu, 4 Apr 2019 03:34:14 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
  from : references : date : in-reply-to : message-id : mime-version :
  content-type; s=corp-2018-07-02;
- bh=rvMyld07lEQ9CIWLvUMFMwd4DjXMrssZ6GIzVHFyWlg=;
- b=wrX2x83DK8g+8HYvPFRHdUm9abehTdipqRdqnY/cmhQCZCU6Slg6/5BsOvtFH3EmXv02
- QjNNWIdfCxMhFc94IRjt//93mdl9De1LmHndtgjgHlKNLaWEyBBqz6LPTdsQ4LWWZ3Ie
- 4li3QvH7oyY8Aq0bTOtwvfm/NULBAczGvWmbxQmOhv02UmpRxkpdGeY3fx4CsIch3d5x
- OsxA5Uw9uh5fe5tnGarxeTqLwaKg7/SSAR2Q+ZtB5Rx2ThkB952XoUv3ZZq1z3V1NPCB
- WjQC5uCYWzYIjRL4OvWptQtOK1iOjOtwSag7JXgAPZRoIB9e9jZfi40nq1RMKMiIkzT8 ZQ== 
+ bh=07oT3sqTD/ewTKWuDekpbwpkvCvkisgub3c0s8nNcag=;
+ b=VbefsEsp0pzOToP4wxz13C1OTd0YCB70T+I0rF7r1yClb0HDouD3gk8E5POU/6ynuV5y
+ j4xF2nyV/VZpf9l1iiCpQixcGoJ3O9EKyUcz33M0f9NIEfopCHUtY8iPa9edem9X6MJ2
+ 5iSucFK8lzhiXhYi3TryoU+o8AHbAy5LndxAjQEpnUt89SIGD3GWHoCqfLR9SHNUL3Mc
+ bJPefr7g3SvAMj+oCo4RvHRd+ojqoqMUZMPXIxOnuLTVzGQYS83eNgeEtnx4aVU34Muw
+ QdZNqk8C7ka79+KaG8Ww7Ox1p0zaPxnH9prsi+UOx42W77mdswJoCY+oNDh6vdIqzTwH xA== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2rhwydcq95-1
+        by userp2120.oracle.com with ESMTP id 2rj13qcfmb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:31:43 +0000
+        Thu, 04 Apr 2019 03:34:14 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343VJWp114018;
-        Thu, 4 Apr 2019 03:31:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2rm8f5pjpj-1
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x343XWdr117236;
+        Thu, 4 Apr 2019 03:34:14 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2rm8f5pk69-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Apr 2019 03:31:43 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x343VgG8009595;
-        Thu, 4 Apr 2019 03:31:42 GMT
+        Thu, 04 Apr 2019 03:34:13 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x343YCYc017949;
+        Thu, 4 Apr 2019 03:34:12 GMT
 Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Apr 2019 20:31:42 -0700
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        "martin.petersen\@oracle.com" <martin.petersen@oracle.com>,
-        Long Li <longli@microsoft.com>,
-        "James.Bottomley\@hansenpartnership.com" 
-        <James.Bottomley@hansenpartnership.com>,
-        "emilne\@redhat.com" <emilne@redhat.com>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 1/1] scsi: storvsc: Reduce default ring buffer size to 128 Kbytes
+        with ESMTP ; Wed, 03 Apr 2019 20:34:11 -0700
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Martin Petersen <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        SCSI <linux-scsi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: correcting incorrect peripheral device type 0x0
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
 Organization: Oracle Corporation
-References: <1554154871-10305-1-git-send-email-mikelley@microsoft.com>
-Date:   Wed, 03 Apr 2019 23:31:39 -0400
-In-Reply-To: <1554154871-10305-1-git-send-email-mikelley@microsoft.com>
-        (Michael Kelley's message of "Mon, 1 Apr 2019 21:42:06 +0000")
-Message-ID: <yq14l7etpic.fsf@oracle.com>
+References: <ab8d589f-db76-9a95-1b55-3e906ad89487@free.fr>
+Date:   Wed, 03 Apr 2019 23:34:09 -0400
+In-Reply-To: <ab8d589f-db76-9a95-1b55-3e906ad89487@free.fr> (Marc Gonzalez's
+        message of "Tue, 2 Apr 2019 17:05:05 +0200")
+Message-ID: <yq1zhp6satq.fsf@oracle.com>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=686
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=647
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904040022
+ engine=8.0.1-1810050000 definitions=main-1904040023
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9216 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=728 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=706 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040022
+ definitions=main-1904040023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Michael,
+Marc,
 
-> Reduce the default VMbus channel ring buffer size for storvsc SCSI
-> devices from 1 Mbyte to 128 Kbytes. Measurements show that ring buffer
-> sizes above 128 Kbytes do not increase performance even at very high
-> IOPS rates, so don't waste the memory. Also remove the dependence on
-> PAGE_SIZE, since the ring buffer size should not change on
-> architectures where PAGE_SIZE is not 4 Kbytes.
+> scsi 0:0:0:49488: scsi_add_lun: correcting incorrect peripheral device type 0x0 for W-LUN 0x            c150hN
 
-Applied to 5.1/scsi-fixes, thanks.
+             ^^^^^ Where do these crazy LUN numbers come from? That
+             looks like something which needs fixing...
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
