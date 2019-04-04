@@ -2,63 +2,55 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413F1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3915C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CF3218C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0413218C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368207;
-	bh=PjxweA9eS/9vfhw2TpTsd+xnw/Ho7Qr9hQawUN42iJM=;
+	s=default; t=1554368210;
+	bh=/tCmCysmJi+p1l9eCzbFxPQDPgIRckyhiAZbfMRf6V0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCvzZXxFtavcIeY4sIghHp09NWjEqyHDtNDV9YprqCsiFz0TOEFQwwYD2u+B94Ntr
-	 j6+wtuse4k1+/oTgsjsZPpvjuuJozUKeIUJaVsuvzuoMvhn4A1BUAyLDdClOuJY3yu
-	 7VLQmJxTHvIzMXuHPh/UUeKqU91myqOKuytqxFXY=
+	b=KFcLNJ7RtD1vaPOl5YOp+7DSCLGcAYog5889/J8w5bvAqBDlHXkXpEF2QW2ruw0eI
+	 VNVZA48mt4GP3iLBxgC8Cdh6CktiJ7d75RBIB63aDUheH0FvcJS4j77ZIT3/88R5r5
+	 SYrgQzTEkJrHBdCBJ+Z1Ha8pBjc56I+gfz+0C9/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbfDDI4p (ORCPT
+        id S1730557AbfDDI4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:56:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60156 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:56:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730103AbfDDI4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:43 -0400
+        id S1730537AbfDDI4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA92620693;
-        Thu,  4 Apr 2019 08:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9474C2177E;
+        Thu,  4 Apr 2019 08:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368201;
-        bh=PjxweA9eS/9vfhw2TpTsd+xnw/Ho7Qr9hQawUN42iJM=;
+        s=default; t=1554368204;
+        bh=/tCmCysmJi+p1l9eCzbFxPQDPgIRckyhiAZbfMRf6V0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1CfJgTMoMX3FmrM57puNR+0ZeCqkDS4Au5v/9x+HtFIAiNpPHkJ56qy8Njt1BtQH
-         +oLh8yaSw5HrBNwj1dZXOayRx5hpnNiKo5Ez9o/jxdgOKi8TCMoMrAlahlDLedVXm+
-         lTgtW6GL30ILc8MRgCYVMWvGl3YC7DsbnjV6vcKM=
+        b=Ds/q8VUAfsZiIkWND5Jb/1XImw/hTt+lr6Cz8YS61lEyMliQSRXqfcXYI3nUq3/zf
+         Gxbic65m5I8CvcHu84T26FAFuy8aEa9ixjT1nGdRCOFjZfLzMiy8E9nrZ3LP6mIS/0
+         ENi26xePRt09fI5inpTP0rr+MnnEAp4C4bXyydlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        Zeng Tao <prime.zeng@hisilicon.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Thinh Nguyen <thinh.nguyen@synopsys.com>,
-        Chen Yu <chenyu56@huawei.com>,
-        Jerry Zhang <zhangjerry@google.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/121] usb: f_fs: Avoid crash due to out-of-scope stack ptr access
-Date:   Thu,  4 Apr 2019 10:47:42 +0200
-Message-Id: <20190404084549.284303498@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 075/121] sched/topology: Fix percpu data types in struct sd_data & struct s_data
+Date:   Thu,  4 Apr 2019 10:47:43 +0200
+Message-Id: <20190404084549.334573305@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -77,98 +69,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 54f64d5c983f939901dacc8cfc0983727c5c742e ]
+[ Upstream commit 99687cdbb3f6c8e32bcc7f37496e811f30460e48 ]
 
-Since the 5.0 merge window opened, I've been seeing frequent
-crashes on suspend and reboot with the trace:
+The percpu members of struct sd_data and s_data are declared as:
 
-[   36.911170] Unable to handle kernel paging request at virtual address ffffff801153d660
-[   36.912769] Unable to handle kernel paging request at virtual address ffffff800004b564
-...
-[   36.950666] Call trace:
-[   36.950670]  queued_spin_lock_slowpath+0x1cc/0x2c8
-[   36.950681]  _raw_spin_lock_irqsave+0x64/0x78
-[   36.950692]  complete+0x28/0x70
-[   36.950703]  ffs_epfile_io_complete+0x3c/0x50
-[   36.950713]  usb_gadget_giveback_request+0x34/0x108
-[   36.950721]  dwc3_gadget_giveback+0x50/0x68
-[   36.950723]  dwc3_thread_interrupt+0x358/0x1488
-[   36.950731]  irq_thread_fn+0x30/0x88
-[   36.950734]  irq_thread+0x114/0x1b0
-[   36.950739]  kthread+0x104/0x130
-[   36.950747]  ret_from_fork+0x10/0x1c
+	struct ... ** __percpu member;
 
-I isolated this down to in ffs_epfile_io():
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/f_fs.c#n1065
+So their type is:
 
-Where the completion done is setup on the stack:
-  DECLARE_COMPLETION_ONSTACK(done);
+	__percpu pointer to pointer to struct ...
 
-Then later we setup a request and queue it, and wait for it:
-  if (unlikely(wait_for_completion_interruptible(&done))) {
-    /*
-    * To avoid race condition with ffs_epfile_io_complete,
-    * dequeue the request first then check
-    * status. usb_ep_dequeue API should guarantee no race
-    * condition with req->complete callback.
-    */
-    usb_ep_dequeue(ep->ep, req);
-    interrupted = ep->status < 0;
-  }
+But looking at how they're used, their type should be:
 
-The problem is, that we end up being interrupted, dequeue the
-request, and exit.
+	pointer to __percpu pointer to struct ...
 
-But then the irq triggers and we try calling complete() on the
-context pointer which points to now random stack space, which
-results in the panic.
+and they should thus be declared as:
 
-Alan Stern pointed out there is a bug here, in that the snippet
-above "assumes that usb_ep_dequeue() waits until the request has
-been completed." And that:
+	struct ... * __percpu *member;
 
-    wait_for_completion(&done);
+So fix the placement of '__percpu' in the definition of these
+structures.
 
-Is needed right after the usb_ep_dequeue().
+This addresses a bunch of Sparse's warnings like:
 
-Thus this patch implements that change. With it I no longer see
-the crashes on suspend or reboot.
+	warning: incorrect type in initializer (different address spaces)
+	  expected void const [noderef] <asn:3> *__vpp_verify
+	  got struct sched_domain **
 
-This issue seems to have been uncovered by behavioral changes in
-the dwc3 driver in commit fec9095bdef4e ("usb: dwc3: gadget:
-remove wait_end_transfer").
-
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Zeng Tao <prime.zeng@hisilicon.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Thinh Nguyen <thinh.nguyen@synopsys.com>
-Cc: Chen Yu <chenyu56@huawei.com>
-Cc: Jerry Zhang <zhangjerry@google.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Vincent Pelletier <plr.vincent@gmail.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux USB List <linux-usb@vger.kernel.org>
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190118144936.79158-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_fs.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/sched/topology.h | 8 ++++----
+ kernel/sched/topology.c        | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 52e6897fa35a..79900c0b4f3a 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1009,6 +1009,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
- 			 * condition with req->complete callback.
- 			 */
- 			usb_ep_dequeue(ep->ep, req);
-+			wait_for_completion(&done);
- 			interrupted = ep->status < 0;
- 		}
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index cf257c2e728d..5a92baa91e0c 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -177,10 +177,10 @@ typedef int (*sched_domain_flags_f)(void);
+ #define SDTL_OVERLAP	0x01
+ 
+ struct sd_data {
+-	struct sched_domain **__percpu sd;
+-	struct sched_domain_shared **__percpu sds;
+-	struct sched_group **__percpu sg;
+-	struct sched_group_capacity **__percpu sgc;
++	struct sched_domain *__percpu *sd;
++	struct sched_domain_shared *__percpu *sds;
++	struct sched_group *__percpu *sg;
++	struct sched_group_capacity *__percpu *sgc;
+ };
+ 
+ struct sched_domain_topology_level {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 659e075ef70b..9dcd80ed9d4c 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -499,7 +499,7 @@ static int __init isolated_cpu_setup(char *str)
+ __setup("isolcpus=", isolated_cpu_setup);
+ 
+ struct s_data {
+-	struct sched_domain ** __percpu sd;
++	struct sched_domain * __percpu *sd;
+ 	struct root_domain	*rd;
+ };
  
 -- 
 2.19.1
