@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8CAC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6357DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8137A218C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC45217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368289;
-	bh=YIqn0khCvKFA2UV9MyopVX8ckf/h6e9+xCsgeSGJt4I=;
+	s=default; t=1554368294;
+	bh=1Zdzj7yHMLdb8C4QdFNJ1JWPzk4+wt+kiQ3hdb7sR5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1YQvzrObRGR+y/4vQOkA7bxOjAtmFoVL8dUZghzV+Ids/F2M54uU4i1WmWYqKVITE
-	 5rif7IQeSuug9q3cSoK3aXhyBtustLK+xau7gon2cCSqkXHJuAruHsfNX+zZPogLUC
-	 sexA2EPk5DHqpvlvr3eut5Cjlty6ajpD0YSSNeXs=
+	b=OyIQohH3mZCYP/UhQFeHC7ppiS0SJLmb418RTXLweEdb7CcXp30O24DlWvXz2NQom
+	 bl3Iij+EdecFCMCgUszn7GWvq+p4IqBzxLtVBuEp8bltXhk8ZrIYbzYsuKvGB0VDK4
+	 oGSMZC65eqgtblQaRO5tXD98JNHkDHgerEV5939Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbfDDI6I (ORCPT
+        id S1730824AbfDDI6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33746 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:58:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730777AbfDDI6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:58:03 -0400
+        id S1730806AbfDDI6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:58:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56EA6217D9;
-        Thu,  4 Apr 2019 08:58:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9229421738;
+        Thu,  4 Apr 2019 08:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368281;
-        bh=YIqn0khCvKFA2UV9MyopVX8ckf/h6e9+xCsgeSGJt4I=;
+        s=default; t=1554368288;
+        bh=1Zdzj7yHMLdb8C4QdFNJ1JWPzk4+wt+kiQ3hdb7sR5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJtDwpqVfxvJYyInmxKNfW3Z6Tf0gd/ZVU4PeWeiR0K+yvRIhjKCKHRxQnxGDErs9
-         zxhAI6qVbldnvTq74HtPgw0vvchlyZOJ+sPvxQQLc93V1U8xosv3KZKLncwO0Wop+X
-         9gVhRp7K2KWOvD242dsOnK/uFwwldjyo19AkjaFs=
+        b=WQiffxqO93sMhV5NVwymsMyY700rymdd1LxJaaFFCZLcibf58ewEBM3U3qViXxW88
+         PS89blfmeThZEiCmbkG76AugVIaHDtA4vFl/oOf0HPS+2SktAdzvW5g9G9786Z/gZN
+         S2zm/DefDbamFFDzLu2/njnd1s2e0NdvQ+qtGW9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, cai@gmx.us,
-        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
-        linux-arm-kernel@lists.infradead.org, longman@redhat.com,
-        marc.zyngier@arm.com, mark.rutland@arm.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 105/121] cpu/hotplug: Mute hotplug lockdep during init
-Date:   Thu,  4 Apr 2019 10:48:13 +0200
-Message-Id: <20190404084550.981621646@linuxfoundation.org>
+        stable@vger.kernel.org, Joey Zheng <yu.zheng@hxt-semitech.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Shunyong Yang <shunyong.yang@hxt-semitech.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 107/121] dmaengine: qcom_hidma: assign channel cookie correctly
+Date:   Thu,  4 Apr 2019 10:48:15 +0200
+Message-Id: <20190404084551.077962676@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -74,99 +67,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ce48c457b95316b9a01b5aa9d4456ce820df94b4 ]
+[ Upstream commit 546c0547555efca8ba8c120716c325435e29df1b ]
 
-Since we've had:
+When dma_cookie_complete() is called in hidma_process_completed(),
+dma_cookie_status() will return DMA_COMPLETE in hidma_tx_status(). Then,
+hidma_txn_is_success() will be called to use channel cookie
+mchan->last_success to do additional DMA status check. Current code
+assigns mchan->last_success after dma_cookie_complete(). This causes
+a race condition of dma_cookie_status() returns DMA_COMPLETE before
+mchan->last_success is assigned correctly. The race will cause
+hidma_tx_status() return DMA_ERROR but the transaction is actually a
+success. Moreover, in async_tx case, it will cause a timeout panic
+in async_tx_quiesce().
 
-  commit cb538267ea1e ("jump_label/lockdep: Assert we hold the hotplug lock for _cpuslocked() operations")
+ Kernel panic - not syncing: async_tx_quiesce: DMA error waiting for
+ transaction
+ ...
+ Call trace:
+ [<ffff000008089994>] dump_backtrace+0x0/0x1f4
+ [<ffff000008089bac>] show_stack+0x24/0x2c
+ [<ffff00000891e198>] dump_stack+0x84/0xa8
+ [<ffff0000080da544>] panic+0x12c/0x29c
+ [<ffff0000045d0334>] async_tx_quiesce+0xa4/0xc8 [async_tx]
+ [<ffff0000045d03c8>] async_trigger_callback+0x70/0x1c0 [async_tx]
+ [<ffff0000048b7d74>] raid_run_ops+0x86c/0x1540 [raid456]
+ [<ffff0000048bd084>] handle_stripe+0x5e8/0x1c7c [raid456]
+ [<ffff0000048be9ec>] handle_active_stripes.isra.45+0x2d4/0x550 [raid456]
+ [<ffff0000048beff4>] raid5d+0x38c/0x5d0 [raid456]
+ [<ffff000008736538>] md_thread+0x108/0x168
+ [<ffff0000080fb1cc>] kthread+0x10c/0x138
+ [<ffff000008084d34>] ret_from_fork+0x10/0x18
 
-we've been getting some lockdep warnings during init, such as on HiKey960:
-
-[    0.820495] WARNING: CPU: 4 PID: 0 at kernel/cpu.c:316 lockdep_assert_cpus_held+0x3c/0x48
-[    0.820498] Modules linked in:
-[    0.820509] CPU: 4 PID: 0 Comm: swapper/4 Tainted: G S                4.20.0-rc5-00051-g4cae42a #34
-[    0.820511] Hardware name: HiKey960 (DT)
-[    0.820516] pstate: 600001c5 (nZCv dAIF -PAN -UAO)
-[    0.820520] pc : lockdep_assert_cpus_held+0x3c/0x48
-[    0.820523] lr : lockdep_assert_cpus_held+0x38/0x48
-[    0.820526] sp : ffff00000a9cbe50
-[    0.820528] x29: ffff00000a9cbe50 x28: 0000000000000000
-[    0.820533] x27: 00008000b69e5000 x26: ffff8000bff4cfe0
-[    0.820537] x25: ffff000008ba69e0 x24: 0000000000000001
-[    0.820541] x23: ffff000008fce000 x22: ffff000008ba70c8
-[    0.820545] x21: 0000000000000001 x20: 0000000000000003
-[    0.820548] x19: ffff00000a35d628 x18: ffffffffffffffff
-[    0.820552] x17: 0000000000000000 x16: 0000000000000000
-[    0.820556] x15: ffff00000958f848 x14: 455f3052464d4d34
-[    0.820559] x13: 00000000769dde98 x12: ffff8000bf3f65a8
-[    0.820564] x11: 0000000000000000 x10: ffff00000958f848
-[    0.820567] x9 : ffff000009592000 x8 : ffff00000958f848
-[    0.820571] x7 : ffff00000818ffa0 x6 : 0000000000000000
-[    0.820574] x5 : 0000000000000000 x4 : 0000000000000001
-[    0.820578] x3 : 0000000000000000 x2 : 0000000000000001
-[    0.820582] x1 : 00000000ffffffff x0 : 0000000000000000
-[    0.820587] Call trace:
-[    0.820591]  lockdep_assert_cpus_held+0x3c/0x48
-[    0.820598]  static_key_enable_cpuslocked+0x28/0xd0
-[    0.820606]  arch_timer_check_ool_workaround+0xe8/0x228
-[    0.820610]  arch_timer_starting_cpu+0xe4/0x2d8
-[    0.820615]  cpuhp_invoke_callback+0xe8/0xd08
-[    0.820619]  notify_cpu_starting+0x80/0xb8
-[    0.820625]  secondary_start_kernel+0x118/0x1d0
-
-We've also had a similar warning in sched_init_smp() for every
-asymmetric system that would enable the sched_asym_cpucapacity static
-key, although that was singled out in:
-
-  commit 40fa3780bac2 ("sched/core: Take the hotplug lock in sched_init_smp()")
-
-Those warnings are actually harmless, since we cannot have hotplug
-operations at the time they appear. Instead of starting to sprinkle
-useless hotplug lock operations in the init codepaths, mute the
-warnings until they start warning about real problems.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: cai@gmx.us
-Cc: daniel.lezcano@linaro.org
-Cc: dietmar.eggemann@arm.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: longman@redhat.com
-Cc: marc.zyngier@arm.com
-Cc: mark.rutland@arm.com
-Link: https://lkml.kernel.org/r/1545243796-23224-2-git-send-email-valentin.schneider@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Joey Zheng <yu.zheng@hxt-semitech.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Shunyong Yang <shunyong.yang@hxt-semitech.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cpu.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/dma/qcom/hidma.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 32f0432f0c26..8c350dd81581 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -314,6 +314,15 @@ void cpus_write_unlock(void)
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index e3669850aef4..177d7a24dd39 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -133,24 +133,25 @@ static void hidma_process_completed(struct hidma_chan *mchan)
+ 		desc = &mdesc->desc;
+ 		last_cookie = desc->cookie;
  
- void lockdep_assert_cpus_held(void)
- {
-+	/*
-+	 * We can't have hotplug operations before userspace starts running,
-+	 * and some init codepaths will knowingly not take the hotplug lock.
-+	 * This is all valid, so mute lockdep until it makes sense to report
-+	 * unheld locks.
-+	 */
-+	if (system_state < SYSTEM_RUNNING)
-+		return;
++		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
 +
- 	percpu_rwsem_assert_held(&cpu_hotplug_lock);
- }
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
++		if (llstat == DMA_COMPLETE) {
++			mchan->last_success = last_cookie;
++			result.result = DMA_TRANS_NOERROR;
++		} else {
++			result.result = DMA_TRANS_ABORTED;
++		}
++
+ 		dma_cookie_complete(desc);
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
  
+-		llstat = hidma_ll_status(mdma->lldev, mdesc->tre_ch);
+ 		dmaengine_desc_get_callback(desc, &cb);
+ 
+ 		dma_run_dependencies(desc);
+ 
+ 		spin_lock_irqsave(&mchan->lock, irqflags);
+ 		list_move(&mdesc->node, &mchan->free);
+-
+-		if (llstat == DMA_COMPLETE) {
+-			mchan->last_success = last_cookie;
+-			result.result = DMA_TRANS_NOERROR;
+-		} else
+-			result.result = DMA_TRANS_ABORTED;
+-
+ 		spin_unlock_irqrestore(&mchan->lock, irqflags);
+ 
+ 		dmaengine_desc_callback_invoke(&cb, &result);
 -- 
 2.19.1
 
