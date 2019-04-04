@@ -2,96 +2,108 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B22C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B489C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66308206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D730D206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fugdT4e3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfDDQeD (ORCPT
+        id S1729208AbfDDQfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:34:03 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:50856 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727339AbfDDQeC (ORCPT
+        Thu, 4 Apr 2019 12:35:41 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34973 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfDDQfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:34:02 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34GTFQA001940;
-        Thu, 4 Apr 2019 11:33:58 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2rm59s5btu-1;
-        Thu, 04 Apr 2019 11:33:57 -0500
-Received: from EX17.ad.cirrus.com (unknown [172.20.9.81])
-        by mail4.cirrus.com (Postfix) with ESMTP id 77FD0611C8BD;
-        Thu,  4 Apr 2019 11:35:15 -0500 (CDT)
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EX17.ad.cirrus.com
- (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Thu, 4 Apr 2019
- 17:33:56 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id A1F5C2DB;    Thu,  4 Apr 2019
- 17:33:56 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <cw00.choi@samsung.com>, <myungjoo.ham@samsung.com>
-CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH] extcon: arizona: Disable mic detect if running when driver is removed
-Date:   Thu, 4 Apr 2019 17:33:56 +0100
-Message-ID: <20190404163356.17773-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 4 Apr 2019 12:35:41 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u21so2300586lfu.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZahOLCtnRUM/rJE2XZcCtlHO18auI/np1DEkNkySzNU=;
+        b=fugdT4e3CvBSOxu5/YfZUkYaeDjNh9+FQc1Q6Emh9LLiieXHPklC1J1w3zpi67Q+W2
+         QG3LPu21hYJ7hftP6NfKLvip4gsOuzK5c4/9Y+2d7lb16INUzYlHbV/KV+6EXu5yitAb
+         rXwlC5HUkqpRYd6irP+j9fNOsfks+1RGCmy3JzUKaL8la7XKFbhPTqKGTdbQ1ic64HFP
+         IXM3C5M+h+JeSF0bdUmzIFqqiLhvIXwu9SpjRz3jyXIIymtDHnFTArF48drS4JqhRVHu
+         HeSxR5Vjwy+msvNoytQBJuMN1yjIJHvSlHAR0c9tNuBo9eboPEgvv0AzIQDJwNOz8WrV
+         m5tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZahOLCtnRUM/rJE2XZcCtlHO18auI/np1DEkNkySzNU=;
+        b=EroNaXK6cfyavePuucMBXTM1RURzY/Ww6fveFK9CeRng13bDGUp3/7AkelEMnlqYEe
+         oTI1PQcIU4ew7FJO4qIzwR8Gbu4D8uieGLf+J+pYW1ITiPXyUgYVH1iDkCbiXOPivUlT
+         7MJNqWBEDTrzbOFymGWM68/AulXRnKR/dUmKkwIKqyhgG65cWTx4MWb1fKpHyL5Ou95D
+         66bgWZo1WCZ1ulwocQAjE+hA9DhkJiCzSP6jk03EsZx/PN+J4aUrY8Ei8Uz3tal/xYnn
+         Br/tV/ZgBeufezJB4SLjXvdfD6QPcmupCgAQc+Dk3nHWlcPm038H30kw8uWuR8Vg++6C
+         SsTw==
+X-Gm-Message-State: APjAAAVKfjiUxGlAfP9AmRoQez6JtMEUCCC6ftWXf+ttkfTBgbjU7fSP
+        GJW9yqEAPNdOgiSK5MCLgnJ/11fCHrC5x3C4yzNsFw==
+X-Google-Smtp-Source: APXvYqyjKtOvNcmGc7HR5b9ygo6gcFyLXV4tWsC+Lf0el1ky2PNSnWI4AI3xWUzK1JYp4UTAyaoHv/1xFyYvE2grRHI=
+X-Received: by 2002:ac2:54b0:: with SMTP id w16mr3970632lfk.138.1554395739090;
+ Thu, 04 Apr 2019 09:35:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=949 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904040105
+References: <1554257354-7440-1-git-send-email-chunfeng.yun@mediatek.com> <1554257354-7440-6-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1554257354-7440-6-git-send-email-chunfeng.yun@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 4 Apr 2019 23:35:27 +0700
+Message-ID: <CACRpkdatNdzZ+97pZNBudyPNVtQDLKU_o31MSe=T7kJzWtaWUg@mail.gmail.com>
+Subject: Re: [v3 PATCH 5/6] usb: roles: add USB Type-B GPIO connector driver
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Microphone detection provides the button detection features on the
-Arizona CODECs as such it will be running if the jack is currently
-inserted. If the driver is unbound whilst the jack is still inserted
-this will cause warnings from the regulator framework as the MICVDD
-regulator is put but was never disabled.
+On Wed, Apr 3, 2019 at 9:09 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
 
-Correct this by disabling microphone detection on driver removal and if
-the microphone detection was running disable the regulator and put the
-runtime reference that was currently held.
+> Due to the requirement of usb-connector.txt binding, the old way
+> using extcon to support USB Dual-Role switch is now deprecated
+> when use Type-B connector.
+> This patch introduces a driver of Type-B connector which typically
+> uses an input GPIO to detect USB ID pin, and try to replace the
+> function provided by extcon-usb-gpio driver
+>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+(...)
+> +#include <linux/gpio.h>
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/extcon/extcon-arizona.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+If you need this include in a consumer, something is wrong. Just delete it,
 
-diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-index da0e9bc4262fa..9327479c719c2 100644
---- a/drivers/extcon/extcon-arizona.c
-+++ b/drivers/extcon/extcon-arizona.c
-@@ -1726,6 +1726,16 @@ static int arizona_extcon_remove(struct platform_device *pdev)
- 	struct arizona_extcon_info *info = platform_get_drvdata(pdev);
- 	struct arizona *arizona = info->arizona;
- 	int jack_irq_rise, jack_irq_fall;
-+	bool change;
-+
-+	regmap_update_bits_check(arizona->regmap, ARIZONA_MIC_DETECT_1,
-+				 ARIZONA_MICD_ENA, 0,
-+				 &change);
-+
-+	if (change) {
-+		regulator_disable(info->micvdd);
-+		pm_runtime_put(info->dev);
-+	}
- 
- 	gpiod_put(info->micd_pol_gpio);
- 
--- 
-2.11.0
+> +       info->id_gpiod = devm_gpiod_get_from_of_node(
+> +                               dev, child, "id-gpios", 0, GPIOD_IN, "idpin");
 
+This is OK if the child does not have any Linux device (struct platform_device
+etc) created from it. Is this the case?
+
+Yours,
+Linus Walleij
