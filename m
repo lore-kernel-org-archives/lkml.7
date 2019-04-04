@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A375EC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22025C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7053121741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F672184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368701;
-	bh=fbS6ods7WwJ5DFFvN7MEXqb8fSwWF2sFE6gswlY7pAs=;
+	s=default; t=1554368704;
+	bh=4XyAck2zneJF8RCG0NmHBYD3OvHrStLyOvjsZANhG0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mtCYSESl6Wa7ZeGtmDRSpBfUus7sE0uqjiQxgbMvIDMBttW12V7y0f79+2gKHNGhA
-	 qI6xzCT4xhqcsF2baqrYi57t4bn1LEPb8JC7VbKOemtIalbqThEy5G0bLMSbBhPE9t
-	 Dj6UDR/raoV7zIu3ptqokyyEUQgaQcPpM6Te02d0=
+	b=1tPz8F50USpGb4XF1lffdR+m4dxawwgusnpJqMuFFD1BKbetBXQAGley6nUxEitBK
+	 D+lhWuSrnqxDnESMK3ke/Q8WfLUwSzowPgNBs3LDugsJvmiSTwqwwXot4BDepma+7B
+	 /zJcjUcaohtyEhaXm5I3AXmPLZMaVJ1PKVq65+Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbfDDJE7 (ORCPT
+        id S1732076AbfDDJFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42880 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:05:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbfDDJE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:56 -0400
+        id S1732060AbfDDJE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C6842177E;
-        Thu,  4 Apr 2019 09:04:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A1152177E;
+        Thu,  4 Apr 2019 09:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368696;
-        bh=fbS6ods7WwJ5DFFvN7MEXqb8fSwWF2sFE6gswlY7pAs=;
+        s=default; t=1554368698;
+        bh=4XyAck2zneJF8RCG0NmHBYD3OvHrStLyOvjsZANhG0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mnKEOqK0TO9JJ/1w0ykCwcTNeuVIcpdnqf80JYJAHDeRKEw4glMvwB6YKgomxmFEt
-         pQ0Lfxu6RuvuKWmHTjB7HAQ0mAEGCj4FgS6rOMeArnWSIV1f0Bfhua+ll5WzfIqxIq
-         MXqPMHRrMPaHS2iZxDf2ng+ktsELUQF33iMfZoc8=
+        b=g7ALsHro58dx3DyBAJjaVBPNFcDbHLtxbJWyKmDDpqDmqPnUlNn8B6nbEnqy1ZbuV
+         Dqx9exZz4QAd74rMcztWODsnfJ9Us/3Fwt8jQddaBXkEiJbGZZZ/8pFyZKFlw+vVCt
+         U017Fktbqi0Wk90/Cm2BevDLD48iYZhAbp0/ZjT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shayenne Moura <shayenneluzmoura@gmail.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        stable@vger.kernel.org, David Daney <ddaney@caviumnetworks.com>,
+        Rob Herring <robh@kernel.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/187] drm/vkms: Bugfix extra vblank frame
-Date:   Thu,  4 Apr 2019 10:47:52 +0200
-Message-Id: <20190404084609.565715367@linuxfoundation.org>
+Subject: [PATCH 4.19 136/187] ARM: dts: lpc32xx: Remove leading 0x and 0s from bindings notation
+Date:   Thu,  4 Apr 2019 10:47:53 +0200
+Message-Id: <20190404084609.606583382@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,65 +68,131 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit def35e7c592616bc09be328de8795e5e624a3cf8 ]
+[ Upstream commit 3e3380d0675d5e20b0af067d60cb947a4348bf9b ]
 
-kms_flip tests are breaking on vkms when simulate vblank because vblank
-event sequence count returns one extra frame after arm vblank event to
-make a page flip.
+Improve the DTS files by removing all the leading "0x" and zeros to fix
+the following dtc warnings:
 
-When vblank interrupt happens, userspace processes the vblank event and
-issues the next page flip command. Kernel calls queue_work to call
-commit_planes and arm the new page flip. The next vblank picks up the
-newly armed vblank event and vblank interrupt happens again.
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 
-The arm and vblank event are asynchronous, then, on the next vblank, we
-receive x+2 from `get_vblank_timestamp`, instead x+1, although timestamp
-and vblank seqno matches.
+and
 
-Function `get_vblank_timestamp` is reached by 2 ways:
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 
-  - from `drm_mode_page_flip_ioctl`: driver is doing one atomic
-    operation to synchronize planes in the same output. There is no
-    vblank simulation, the `drm_crtc_arm_vblank_event` function adds 1
-    on vblank count, and the variable in_vblank_irq is false
-  - from `vkms_vblank_simulate`: since the driver is doing a vblank
-    simulation, the variable in_vblank_irq is true.
+Converted using the following command:
 
-Fix this problem subtracting one vblank period from vblank_time when
-`get_vblank_timestamp` is called from trace `drm_mode_page_flip_ioctl`,
-i.e., is not a real vblank interrupt, and getting the timestamp and
-vblank seqno when it is a real vblank interrupt.
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +
 
-The reason for all this is that get_vblank_timestamp always supplies the
-timestamp for the next vblank event. The hrtimer is the vblank
-simulator, and it needs the correct previous value to present the next
-vblank. Since this is how hw timestamp registers work and what the
-vblank core expects.
+For simplicity, two sed expressions were used to solve each warnings
+separately.
 
-Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/171e6e1c239cbca0c3df7183ed8acdfeeace9cf4.1548856186.git.shayenneluzmoura@gmail.com
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before
+the opening curly brace:
+
+https://elinux.org/Device_Tree_Linux#Linux_conventions
+
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+[vzapolskiy: fixed commit message to pass checkpatch.pl test]
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vkms/vkms_crtc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index 1ea2dd35bca9..0a271f762a0a 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -55,6 +55,9 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index abff7ef7c9cd..4981741377f3 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -230,7 +230,7 @@
+ 				status = "disabled";
+ 			};
  
- 	*vblank_time = output->vblank_hrtimer.node.expires;
+-			i2s1: i2s@2009C000 {
++			i2s1: i2s@2009c000 {
+ 				compatible = "nxp,lpc3220-i2s";
+ 				reg = <0x2009C000 0x1000>;
+ 			};
+@@ -273,7 +273,7 @@
+ 				status = "disabled";
+ 			};
  
-+	if (!in_vblank_irq)
-+		*vblank_time -= output->period_ns;
-+
- 	return true;
- }
+-			i2c1: i2c@400A0000 {
++			i2c1: i2c@400a0000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A0000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -284,7 +284,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C1>;
+ 			};
  
+-			i2c2: i2c@400A8000 {
++			i2c2: i2c@400a8000 {
+ 				compatible = "nxp,pnx-i2c";
+ 				reg = <0x400A8000 0x100>;
+ 				interrupt-parent = <&sic1>;
+@@ -295,7 +295,7 @@
+ 				clocks = <&clk LPC32XX_CLK_I2C2>;
+ 			};
+ 
+-			mpwm: mpwm@400E8000 {
++			mpwm: mpwm@400e8000 {
+ 				compatible = "nxp,lpc3220-motor-pwm";
+ 				reg = <0x400E8000 0x78>;
+ 				status = "disabled";
+@@ -394,7 +394,7 @@
+ 				#gpio-cells = <3>; /* bank, pin, flags */
+ 			};
+ 
+-			timer4: timer@4002C000 {
++			timer4: timer@4002c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4002C000 0x1000>;
+ 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+@@ -412,7 +412,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			watchdog: watchdog@4003C000 {
++			watchdog: watchdog@4003c000 {
+ 				compatible = "nxp,pnx4008-wdt";
+ 				reg = <0x4003C000 0x1000>;
+ 				clocks = <&clk LPC32XX_CLK_WDOG>;
+@@ -451,7 +451,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			timer1: timer@4004C000 {
++			timer1: timer@4004c000 {
+ 				compatible = "nxp,lpc3220-timer";
+ 				reg = <0x4004C000 0x1000>;
+ 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+@@ -475,7 +475,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm1: pwm@4005C000 {
++			pwm1: pwm@4005c000 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
+@@ -484,7 +484,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pwm2: pwm@4005C004 {
++			pwm2: pwm@4005c004 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
 -- 
 2.19.1
 
