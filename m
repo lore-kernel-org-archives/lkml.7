@@ -2,356 +2,215 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEE1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF86C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162C42082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38B72082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/eUApgI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jx4EHWjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbfDDQle (ORCPT
+        id S1729219AbfDDQnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:41:34 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44839 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfDDQle (ORCPT
+        Thu, 4 Apr 2019 12:43:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33159 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfDDQnp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:41:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g12so1428873pll.11;
-        Thu, 04 Apr 2019 09:41:33 -0700 (PDT)
+        Thu, 4 Apr 2019 12:43:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q1so4679017wrp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:43:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uenWNpIoJ4m0YsZyBYyNcvf/yqPcCp16FMlFmc3fw54=;
-        b=e/eUApgIjYMbx+cHGGPuN6SrAhe9M+WvztlXyVWNu+spUsEBe08JkuqvdzAsu/eIsH
-         arULfOS7tfpAm4zzioI8ZFPW6iy9Owi7qQfEy/XNMIX5JCu/GAYHj2gz8bHBBfVp1OZl
-         N+xqucdLzCzy2MPIrNJwRTMd6BC7G1Y029MLOBa3P2x70/uinDTJ+QUul9IbmtzT7MyH
-         tKFO9Ma6qeNQe44EtgcXN+mzlmwBhMae/kQkIjsjhO9jB8J8+Dk8cDBW39pR11mq31zF
-         j0g2YIGcN47NLfZv//fTY0rvbEo2g1b8K+X1wn1pQUCYCNqb6zbk3NbGaLdE6Swnxl1G
-         kTVw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2Puk8ygpZTkh3N5Vz1gIqs6zEfLw0KYa6DIW9HT9+MA=;
+        b=Jx4EHWjIYBlIOL3wtLtHPu+uajjKfS1ahh0DV5VvdXiOBwflTxWI2P/KzN4KSGxMCC
+         JC4+1oEJv8p6FbZ2CUjOffkWVUH+f6yk8PVCpiY8GWfNvppyONvxe4fMqFCXLbNSSOa8
+         CGR7TFux9Lv4zG5TULVYLlFBi5Bt0EzgN0YEn91qw7PdhCNk7mnwG1LiN/IyGi7cGIFu
+         Ov2Kx42T0OSdHBhuNyXDcD7tXs2M6Sg//vPByQ3r5nwEhucCtWNxioc0CaZF5sWGUHfQ
+         U+oQivxBd8TQJEobmeGhzYCVy8ZUTqh6dDnIss6s6y9gyngLKE6ECPE1Ov2x/ulBKzHg
+         RAEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uenWNpIoJ4m0YsZyBYyNcvf/yqPcCp16FMlFmc3fw54=;
-        b=hhrerC+dv/3zvDVPg+nDCMrb7JXU1+Fa6qEhH7ZwhsctHDPbc1ryK3JuYOm1ywp6Vr
-         w9gtjxDSSwlLKRkHJIM1SaUeG69Nxg1L8N7yv6SPYPwQScspBj4Yue40dN/giOpBiFeD
-         sqXi/gfEcShoLktw4MXjJ21TJlHt7CVrrNwxqvFco17bzdRicAOYlPi30Y9XkDjQDVRW
-         v5cbeWQPWIxSE5YmiVj6fRg1bogAqO2c60RQyZ1nzlxrkrOFhys9XMPcdd+AQFXFyq5n
-         9GAr7gb9ct+ICdzf0BI99QT/FucVSo71ELq1bx/CfyFb5KDqjjsOLbCL4jXcYQj3BBLp
-         jwrA==
-X-Gm-Message-State: APjAAAVbfg96vXf2oYvCe5MKD3JZXf+4opVPwykLvUFREeAWp7wwkSVl
-        gF1elemxl/x8QMsEkTvgJcw7YLYE
-X-Google-Smtp-Source: APXvYqyCE86GOkSayF6AwsvdAiWgMPja5B1GtS2tUgEbKpHW+z+LYGzl2gXFRPn7cUrfpD32g8HTrQ==
-X-Received: by 2002:a17:902:e084:: with SMTP id cb4mr7603441plb.77.1554396093398;
-        Thu, 04 Apr 2019 09:41:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p81sm33367209pfi.186.2019.04.04.09.41.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 09:41:32 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 09:41:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     John Garry <john.garry@huawei.com>
-Cc:     bhelgaas@google.com, rafael@kernel.org, arnd@arndb.de,
-        lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, bp@suse.de, wangkefeng.wang@huawei.com,
-        linuxarm@huawei.com, andy.shevchenko@gmail.com,
-        linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com
-Subject: Re: [PATCH v3 3/4] lib: logic_pio: Reject accesses to unregistered
- CPU MMIO regions
-Message-ID: <20190404164130.GA12203@roeck-us.net>
-References: <1554393602-152448-1-git-send-email-john.garry@huawei.com>
- <1554393602-152448-4-git-send-email-john.garry@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Puk8ygpZTkh3N5Vz1gIqs6zEfLw0KYa6DIW9HT9+MA=;
+        b=cQ1nNwnS4xlT5rhqv6WZfEU2Ah+7aELuI6/o8iHFhCQCXzl/ws1pSB+emKFd5/FNNL
+         s27cNY6zAqngZyYwi2YRiVoaKNNKbeLw3DGpLSSE60tCVk29xeB8dpHrfVAk8nmx2IQX
+         MvS7aPt1e9gKpucSzeo4CQYzp0IAgaxclIJJCn98jy3DVOFF4755HRPiEvFEAJeg76Cc
+         Uq+jtbOBntTGh8sp7fS4guyBcj5dxWUIOcS8dudm34H3zb9tl5ZoaJCGYq4f3u8SzXWa
+         x0WXj/axDQxNhR+x90zxMSH4Jhs3frvUpNl3HEfsgqMAmtRMIfIxzJbCDLsRLG6rybU7
+         jWRg==
+X-Gm-Message-State: APjAAAXcxwSxlwoYsaiPXdDpdk9v6J1KF6e93PUkoq3vqtZVErFLX+rW
+        k0eBGVCeymo3yeuElK6utMckHOGr6F7H5tU7w7k=
+X-Google-Smtp-Source: APXvYqxOfmVXsO63LR9l3vlR4bZ7riDqpR9bOAdsbnqPy/021jlE8u08dQy7i3FaFl4cwDUE3NBZqNEt+RUT5C2/Jfw=
+X-Received: by 2002:a5d:6a8a:: with SMTP id s10mr5114136wru.66.1554396222832;
+ Thu, 04 Apr 2019 09:43:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554393602-152448-4-git-send-email-john.garry@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1554381015-13056-1-git-send-email-yuzenghui@huawei.com> <20190404141642.385daf5b@donnerap.cambridge.arm.com>
+In-Reply-To: <20190404141642.385daf5b@donnerap.cambridge.arm.com>
+From:   Zenghui Yu <zenghuiyu96@gmail.com>
+Date:   Fri, 5 Apr 2019 00:43:29 +0800
+Message-ID: <CAKcZhuVz4jXiAAJGg3DJqYCshEcoA_54Ai9=XBtu-k9cZSj2eQ@mail.gmail.com>
+Subject: Re: [PATCH] KVM: arm/arm64: vgic: Restrict setting irq->targets only
+ in GICv2
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Zenghui Yu <yuzenghui@huawei.com>, suzuki.poulose@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>, julien.thierry@arm.com,
+        christoffer.dall@arm.com, LKML <linux-kernel@vger.kernel.org>,
+        eric.auger@redhat.com, james.morse@arm.com,
+        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 12:00:01AM +0800, John Garry wrote:
-> Currently when accessing logical indirect PIO addresses in
-> logic_{in, out}{,s}, we first ensure that the region is registered.
-> 
-> However, no such check exists for CPU MMIO regions. The CPU MMIO regions
-> would be registered by the PCI host - when PCI_IOBASE is defined - in
-> pci_register_io_range().
-> 
-> We have seen scenarios when systems which don't have a PCI host or, they
-> do, and the PCI host probe fails, that certain devices attempts to still
-> attempt to access PCI IO ports; examples are in [1] and [2].
-> 
-> And even though we should protect against this by ensuring the driver
-> calls request_{muxed_}region(), some don't do this:
-> 
-> root@(none)$ insmod hwmon/f71805f.ko
->  Unable to handle kernel paging request at virtual address ffff7dfffee0002e
->  Mem abort info:
->    ESR = 0x96000046
->    Exception class = DABT (current EL), IL = 32 bits
->    SET = 0, FnV = 0
->    EA = 0, S1PTW = 0
->  Data abort info:
->    ISV = 0, ISS = 0x00000046
->    CM = 0, WnR = 1
->  swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
->  [ffff7dfffee0002e] pgd=000000000141c003, pud=000000000141d003, pmd=0000000000000000
->  Internal error: Oops: 96000046 [#1] PREEMPT SMP
->  Modules linked in: f71805f(+)
->  CPU: 20 PID: 2736 Comm: insmod Not tainted 5.1.0-rc1-00003-g6f1bfec2a620-dirty #99
->  Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
->  pstate: 80000005 (Nzcv daif -PAN -UAO)
->  pc : logic_outb+0x54/0xb8
->  lr : f71805f_find+0x2c/0x1b8 [f71805f]
->  sp : ffff000025fbba90
->  x29: ffff000025fbba90 x28: ffff000008b944d0
->  x27: ffff000025fbbdf0 x26: 0000000000000100
->  x25: ffff801f8c270580 x24: ffff000011420000
->  x23: ffff000025fbbb3e x22: ffff000025fbbb40
->  x21: ffff000008b991b8 x20: 0000000000000087
->  x19: 000000000000002e x18: ffffffffffffffff
->  x17: 0000000000000000 x16: 0000000000000000
->  x15: ffff00001127d6c8 x14: 0000000000000000
->  x13: 0000000000000000 x12: 0000000000000000
->  x11: 0000000000010820 x10: 0000841fdac40000
->  x9 : 0000000000000001 x8 : 0000000040000000
->  x7 : 0000000000210d00 x6 : 0000000000000000
->  x5 : ffff801fb6a46040 x4 : ffff841febeaeda0
->  x3 : 0000000000ffbffe x2 : ffff000025fbbb40
->  x1 : ffff7dfffee0002e x0 : ffff7dfffee00000
->  Process insmod (pid: 2736, stack limit = 0x(____ptrval____))
->  Call trace:
->   logic_outb+0x54/0xb8
->   f71805f_find+0x2c/0x1b8 [f71805f]
->   f71805f_init+0x38/0xe48 [f71805f]
->   do_one_initcall+0x5c/0x198
->   do_init_module+0x54/0x1b0
->   load_module+0x1dc4/0x2158
->   __se_sys_init_module+0x14c/0x1e8
->   __arm64_sys_init_module+0x18/0x20
->   el0_svc_common+0x5c/0x100
->   el0_svc_handler+0x2c/0x80
->   el0_svc+0x8/0xc
->  Code: d2bfdc00 f2cfbfe0 f2ffffe0 8b000021 (39000034)
->  ---[ end trace 10ea80bde051bbfc ]---
-> root@(none)$
-> 
-> Note that the f71805f driver does not call request_{muxed_}region(), as it
-> should.
-> 
-... which is the real problem, one that is not solved by this patch. This may
-result in parallel and descructive accesses if there is another device on the
-LPC bus, and another driver accessing that device. Personally I'd rather have
-request_muxed_region() added to the f71805f driver.
+Hi Andre,
 
-Guenter
+Thanks for looking into this.
 
-> This patch adds a check to ensure that the CPU MMIO region is registered
-> prior to accessing the PCI IO ports.
-> 
-> [1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
-> [2] https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/
-> 
-> This patch includes some other tidy-up.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  lib/logic_pio.c | 103 +++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 75 insertions(+), 28 deletions(-)
-> 
-> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-> index 431cd8d99236..3d8d986e9dcb 100644
-> --- a/lib/logic_pio.c
-> +++ b/lib/logic_pio.c
-> @@ -193,95 +193,135 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
->  
->  #if defined(PCI_IOBASE)
->  #if defined(CONFIG_INDIRECT_PIO)
-> +#define INVALID_RANGE(range)						\
-> +	(!(range) || ((range)->flags == LOGIC_PIO_INDIRECT && !(range)->ops))
-> +
->  #define BUILD_LOGIC_IO(bw, type)					\
->  type logic_in##bw(unsigned long addr)					\
->  {									\
->  	type ret = (type)~0;						\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return ret;						\
-> +	}								\
->  									\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
->  		ret = read##bw(PCI_IOBASE + addr);			\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->  		size_t sz = sizeof(type);				\
-> +		void *hostdata = range->hostdata;			\
->  									\
-> -		if (entry && entry->ops)				\
-> -			ret = entry->ops->in(entry->hostdata, addr, sz);\
-> -		else							\
-> -			WARN_ON_ONCE(1);				\
-> +		if (range->ops->in)					\
-> +			ret = range->ops->in(hostdata, addr, sz);	\
->  	}								\
->  	return ret;							\
->  }									\
->  									\
-> -void logic_out##bw(type value, unsigned long addr)			\
-> +void logic_out##bw(type val, unsigned long addr)			\
->  {									\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return;							\
-> +	}								\
-> +									\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
-> -		write##bw(value, PCI_IOBASE + addr);			\
-> +		write##bw(val, PCI_IOBASE + addr);			\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->  		size_t sz = sizeof(type);				\
-> +		void *hostdata = range->hostdata;			\
->  									\
-> -		if (entry && entry->ops)				\
-> -			entry->ops->out(entry->hostdata,		\
-> -					addr, value, sz);		\
-> -		else							\
-> -			WARN_ON_ONCE(1);				\
-> +		if (range->ops->out)					\
-> +			range->ops->out(hostdata, addr, val, sz);	\
->  	}								\
->  }									\
->  									\
->  void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
->  {									\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return;							\
-> +	}								\
-> +									\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
->  		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->  		size_t sz = sizeof(type);				\
-> +		void *hostdata = range->hostdata;			\
->  									\
-> -		if (entry && entry->ops)				\
-> -			entry->ops->ins(entry->hostdata,		\
-> -				addr, buf, sz, cnt);			\
-> -		else							\
-> -			WARN_ON_ONCE(1);				\
-> +		if (range->ops->ins)					\
-> +			range->ops->ins(hostdata, addr, buf, sz, cnt);	\
->  	}								\
-> -									\
->  }									\
->  									\
->  void logic_outs##bw(unsigned long addr, const void *buf,		\
->  		    unsigned int cnt)					\
->  {									\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return;							\
-> +	}								\
-> +									\
->  	if (addr < MMIO_UPPER_LIMIT) {					\
->  		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
->  	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
-> -		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
->  		size_t sz = sizeof(type);				\
-> +		void *hostdata = range->hostdata;			\
->  									\
-> -		if (entry && entry->ops)				\
-> -			entry->ops->outs(entry->hostdata,		\
-> -				addr, buf, sz, cnt);			\
-> -		else							\
-> -			WARN_ON_ONCE(1);				\
-> +		if (range->ops->outs)					\
-> +			range->ops->outs(hostdata, addr, buf, sz, cnt);	\
->  	}								\
->  }
->  
->  #else /* CONFIG_INDIRECT_PIO */
->  
-> +#define INVALID_RANGE(range) (!(range))
-> +
->  #define BUILD_LOGIC_IO(bw, type)					\
->  type logic_in##bw(unsigned long addr)					\
->  {									\
->  	type ret = (type)~0;						\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return ret;						\
-> +	}								\
->  									\
->  	if (addr < MMIO_UPPER_LIMIT)					\
->  		ret = read##bw(PCI_IOBASE + addr);			\
->  	return ret;							\
->  }									\
->  									\
-> -void logic_out##bw(type value, unsigned long addr)			\
-> +void logic_out##bw(type val, unsigned long addr)			\
->  {									\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return;							\
-> +	}								\
-> +									\
->  	if (addr < MMIO_UPPER_LIMIT)					\
-> -		write##bw(value, PCI_IOBASE + addr);			\
-> +		write##bw(val, PCI_IOBASE + addr);			\
->  }									\
->  									\
->  void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
->  {									\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return;							\
-> +	}								\
-> +									\
->  	if (addr < MMIO_UPPER_LIMIT)					\
->  		reads##bw(PCI_IOBASE + addr, buf, cnt);			\
->  }									\
-> @@ -289,6 +329,13 @@ void logic_ins##bw(unsigned long addr, void *buf, unsigned int cnt)	\
->  void logic_outs##bw(unsigned long addr, const void *buf,		\
->  		    unsigned int cnt)					\
->  {									\
-> +	struct logic_pio_hwaddr *range = find_io_range(addr);		\
-> +									\
-> +	if (INVALID_RANGE(range)) {					\
-> +		WARN_ON_ONCE(1);					\
-> +		return;							\
-> +	}								\
-> +									\
->  	if (addr < MMIO_UPPER_LIMIT)					\
->  		writes##bw(PCI_IOBASE + addr, buf, cnt);		\
->  }
-> -- 
-> 2.17.1
-> 
+On Thu, Apr 4, 2019 at 9:17 PM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> On Thu, 4 Apr 2019 12:30:15 +0000
+> Zenghui Yu <yuzenghui@huawei.com> wrote:
+>
+> Hi,
+>
+> > Commit ad275b8bb1e6 ("KVM: arm/arm64: vgic-new: vgic_init: implement
+> > vgic_init") had set irq->targets in kvm_vgic_vcpu_init(), regardless of
+> > the GIC architecture (v2 or v3). When the number of vcpu reaches 32
+> > (in v3), UBSAN will complain about it.
+>
+> The first part looks similar to this one:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-March/637209.html
+
+Yes. I have not noticed this, sorry.
+
+>
+> >  ================================================================================
+> >  UBSAN: Undefined behaviour in arch/arm64/kvm/../../../virt/kvm/arm/vgic/vgic-init.c:223:21
+> >  shift exponent 32 is too large for 32-bit type 'unsigned int'
+> >  CPU: 13 PID: 833 Comm: CPU 32/KVM Kdump: loaded Not tainted 5.1.0-rc1+ #16
+> >  Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.58 10/24/2018
+> >  Call trace:
+> >   dump_backtrace+0x0/0x190
+> >   show_stack+0x24/0x30
+> >   dump_stack+0xc8/0x114
+> >   ubsan_epilogue+0x14/0x50
+> >   __ubsan_handle_shift_out_of_bounds+0x118/0x188
+> >   kvm_vgic_vcpu_init+0x1d4/0x200
+> >   kvm_arch_vcpu_init+0x3c/0x48
+> >   kvm_vcpu_init+0xa8/0x100
+> >   kvm_arch_vcpu_create+0x94/0x120
+> >   kvm_vm_ioctl+0x57c/0xe58
+> >   do_vfs_ioctl+0xc4/0x7f0
+> >   ksys_ioctl+0x8c/0xa0
+> >   __arm64_sys_ioctl+0x28/0x38
+> >   el0_svc_common+0xa0/0x190
+> >   el0_svc_handler+0x38/0x78
+> >   el0_svc+0x8/0xc
+> >  ================================================================================
+> >
+> > This patch Restricts setting irq->targets in GICv2, which only supports
+> > a maximum of eight PEs, to keep UBSAN quiet. And since irq->mpidr will
+> > only be used by SPI in GICv3, we decided to set mpidr to 0 for SGI and
+> > PPI.
+> >
+> > Like commit ab2d5eb03dbb ("KVM: arm/arm64: vgic: Always initialize the
+> > group of private IRQs"), we should also take the creating order of the
+> > VGIC and VCPUs into consideration.
+> >
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > Cc: Andre Przywara <andre.przywara@arm.com>
+> > Cc: Christoffer Dall <christoffer.dall@arm.com>
+> > Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> > ---
+> >  virt/kvm/arm/vgic/vgic-init.c | 16 +++++++++++-----
+> >  1 file changed, 11 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+> > index 3bdb31e..0cba92e 100644
+> > --- a/virt/kvm/arm/vgic/vgic-init.c
+> > +++ b/virt/kvm/arm/vgic/vgic-init.c
+> > @@ -220,7 +220,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+> >               irq->intid = i;
+> >               irq->vcpu = NULL;
+> >               irq->target_vcpu = vcpu;
+> > -             irq->targets = 1U << vcpu->vcpu_id;
+> >               kref_init(&irq->refcount);
+> >               if (vgic_irq_is_sgi(i)) {
+> >                       /* SGIs */
+> > @@ -231,10 +230,14 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+> >                       irq->config = VGIC_CONFIG_LEVEL;
+> >               }
+> >
+> > -             if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
+> > +             if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3) {
+> >                       irq->group = 1;
+> > -             else
+> > +                     irq->mpidr = 0;
+> > +             } else {
+> >                       irq->group = 0;
+> > +                     if (vcpu->vcpu_id < VGIC_V2_MAX_CPUS)
+> > +                             irq->targets = 1U << vcpu->vcpu_id;
+> > +             }
+> >       }
+> >
+> >       if (!irqchip_in_kernel(vcpu->kvm))
+> > @@ -297,10 +300,13 @@ int vgic_init(struct kvm *kvm)
+> >
+> >               for (i = 0; i < VGIC_NR_PRIVATE_IRQS; i++) {
+> >                       struct vgic_irq *irq = &vgic_cpu->private_irqs[i];
+> > -                     if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
+> > +                     if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3) {
+> >                               irq->group = 1;
+> > -                     else
+> > +                             irq->mpidr = 0;
+> > +                     } else {
+> >                               irq->group = 0;
+> > +                             irq->targets = 1U << vcpu->vcpu_id;
+> > +                     }
+>
+> So why would you need this part? That does the same as above, doesn't it?
+
+This idea comes from commit ab2d5eb03dbb. As Christoffer said, "we have no
+enforced ordering of creating the VGIC and creating VCPUs". Without this
+part, the VCPUs created before VGIC might still end up with the wrong
+"mpidr (target)" set, since they don't know the actual vGIC model.
+
+If we're using QEMU to boot a vGIC-v3 guest, we'll still find the incorrect
+TARGET value from debugfs. That's QEMU will create and intialize all of the
+VCPUs before VGIC.
+
+A detailed explanation can be found at:
+
+https://marc.info/?l=android-virt&m=154713085226516&w=2
+
+
+thanks,
+
+zenghui
+
+>
+> Cheers,
+> Andre.
+>
+>
+> >               }
+> >       }
+> >
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
