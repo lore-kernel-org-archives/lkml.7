@@ -2,164 +2,128 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749C2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98234C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4020320651
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6738B2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTzj9X/y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KdeOJ7Zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730683AbfDDUMJ (ORCPT
+        id S1730698AbfDDUNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:12:09 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39123 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729712AbfDDUMJ (ORCPT
+        Thu, 4 Apr 2019 16:13:49 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35953 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728934AbfDDUNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:12:09 -0400
-Received: by mail-lj1-f193.google.com with SMTP id l7so3228995ljg.6;
-        Thu, 04 Apr 2019 13:12:07 -0700 (PDT)
+        Thu, 4 Apr 2019 16:13:48 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r24so3251584ljg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:13:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iStgFTZUzsIN3Bkb5Af22Ii7OkATb3tLdzI2Uoy5wPY=;
-        b=hTzj9X/yUJLb2j0qyflc5WioiaN0SMoYjUwBv2nLbNlRVW79yU7GRqjZ1IdVLJheAE
-         gVN5Z8rGc2KllFrCVRXD5XOzLikShhr6yXBrS9uIqdTrruD9GcpHmC8IIaz3GHH5acKO
-         vkmwrarLegiEIphWV7pRPwdnPCKP+dsn8zBsSv7/xHRpsXEbhs+mU6idaHlLpDC6zzVl
-         3dgNRijYnkxcB9tIeSDMkTq+z3e1TACHYVusrzls7P6/0ji8CoSANWwpNeWrhtBliyJl
-         cWlHd0FmJC9zfPBIoZ80JP0lNCNDPfW7dNpf5FJ0Y3UmVNx2fh9tcEWzZARD6FKWOq92
-         MWZw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eYqmvWtL2dBFReY5T53bjMy7K/Ka+ZEzCOL2OVrFB08=;
+        b=KdeOJ7ZkPcCwS03a2RdwMO7t9na8oge+X+usfZw/BjBMiDttJD8QrM4s0/ECeaVImc
+         PQ2OmyLrAkfTbsL8Yjt9+3WVwJJkCjxeAsVgUUPJ7B6WD8700Z3pqtXZi2RvnrxvVPjF
+         XKKvvAlgstqpk1tEd67bNKdposPNR6lci8CmtKJesl49XjpcZgMfJ9ULIj7AnOGCINqM
+         MjJ0Dg15NYUF/NCksUnWgtxWwvsPqWCREsyFXr8x3/cFXZ8N39bNNXaqrjWNV7zJ+nQf
+         rZxaxR6kc6LY/YzVnESvoJkFzlh1R6F8N1AM0uLO/JpO8hqlXc1e/kKALfeGIKEJwX69
+         l+Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iStgFTZUzsIN3Bkb5Af22Ii7OkATb3tLdzI2Uoy5wPY=;
-        b=VLCvCLIxlYJ1hH6b9RkvhqERPn9ZOxzVws4/SapZ4eURZoHLxSTzAvrHgJuNGbcXb6
-         P3xMty56XYprmtPkYOyjfiY3bWZ61P5WWOyzHnV3V7swi0FzEWyIKcCNPTLkiNHBf6Tn
-         w7mKzhNSdczMcDC7Bo0RoAE7JMMMsvKdeve5qg5xk3Tno02fNKXCXErw3GxkW65xp0zJ
-         r4HHXw6W9laFeX5iZoXg+taMa5AgJtLtnRDr05WnwX5ZtD+WvtxR2YDYQfc8SZs/fa4w
-         eXZmiGC5brS0VDP3qvE/PB22nUvu3Dutvji/OiAfhpu+TAOXr9YejhO4+szL7tLhpijG
-         I5Ew==
-X-Gm-Message-State: APjAAAWzPhfRTEAilKWCUKdQ/DDf36A5R8gY51GzLV7hdIL/hcXYieyV
-        fCs7H0nGZ5sWA1nKAF3lzUR6yAds
-X-Google-Smtp-Source: APXvYqzfWkdhFMTUuB81TFdQt++DXmrxWvs1G71AjCRseM5dgMD+FER5bfiXHipFEcALm1tJHnBDmg==
-X-Received: by 2002:a2e:5d94:: with SMTP id v20mr4531737lje.138.1554408726352;
-        Thu, 04 Apr 2019 13:12:06 -0700 (PDT)
-Received: from [192.168.1.19] (dkj99.neoplus.adsl.tpnet.pl. [83.24.13.99])
-        by smtp.gmail.com with ESMTPSA id z13sm4125644ljk.41.2019.04.04.13.12.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 13:12:05 -0700 (PDT)
-Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
- properties
-To:     Dan Murphy <dmurphy@ti.com>, tony@atomide.com
-Cc:     robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-References: <20190321142838.22985-1-dmurphy@ti.com>
- <20190321142838.22985-2-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <f9d80ad1-d80c-bf77-5e0b-1e02a1b74200@gmail.com>
-Date:   Thu, 4 Apr 2019 22:12:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eYqmvWtL2dBFReY5T53bjMy7K/Ka+ZEzCOL2OVrFB08=;
+        b=JxyvpcpJOgB7TgVmxdrfcRI4ZAw0u1k5wxOdF/yTilLcHCFCAz+sdOham0b6+gaw09
+         4iMtjvngyJlssNlRLHhZyJJDwajvV0xIUXSm4rSK9iitiNq8eRP6KDmcFcyhfADHXxUD
+         oYQ89ZmE5iR4dVjdips82xiRS4pkJ+p+ezsMPeJ1Yh2Kj6yM99+GHqV48orfCV6pcq3z
+         cQ1bCN5W1yW22egInIE/v6lWG+jFKsKQU7KrqG+H/5SJexOoUFF/8UP51iAyIekxwyEM
+         ysWDYC492VqWnlW7g1/xMcF44P73sf4TeCjV0xhGWz+ALSuDHLHtkpWxzum88h9WQkR2
+         Bd4g==
+X-Gm-Message-State: APjAAAWFiugKaKDRiaRdkno/K60C9KBw1DTFBcCNRLXtByprPRRcGxgr
+        AzcMbZIlB1UiYf7OtFjqBBN97bXy4Y5w6iPq3d+CcQ==
+X-Google-Smtp-Source: APXvYqzR2SreJaBZ7ZLOKCZogo6k5iWjHqEIJkSWqqFwGCoeaLUwmLFVqMLnf5TxiW4mkVTFXU3corQUyQspb497SGI=
+X-Received: by 2002:a2e:219:: with SMTP id 25mr4544058ljc.34.1554408825519;
+ Thu, 04 Apr 2019 13:13:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190321142838.22985-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190404171007.160878-1-ncrews@chromium.org> <20190404171007.160878-3-ncrews@chromium.org>
+ <CABXOdTeFnohENJrZ+=_W-EgsrKWttSFYKoR=LaCwzbhEbaOxzw@mail.gmail.com>
+ <CAE_wzQ8xS+zvSKNVs1v4B_y3NDu2qB65p_hD+j=qGHFxQWOmSg@mail.gmail.com>
+ <CAHX4x87cQLhZOEDxwBJs=UkDxwGxZOELGjHtp6aFLBWmjyQAFQ@mail.gmail.com>
+ <CAE_wzQ8k4vO4yLsr2WNxYQ=-6JDmTsj6OxD0f3P=k8kJYFOD9Q@mail.gmail.com>
+ <20190404185919.GB27340@amd> <CAE_wzQ-XuK7WOyPm6yXsmjp7z0=T92mMrfn1TVaavaLejcYVGA@mail.gmail.com>
+ <20190404191931.GA29984@amd> <CAE_wzQ8y8i7C+_tv0CdnbUw0r21g1ggv2YUuzCog1xABivEvWA@mail.gmail.com>
+ <20190404200658.GD29984@amd>
+In-Reply-To: <20190404200658.GD29984@amd>
+From:   Dmitry Torokhov <dtor@google.com>
+Date:   Thu, 4 Apr 2019 13:13:34 -0700
+Message-ID: <CAE_wzQ8WcMCzYqvxA_JBZKNza7ca3QE-VShmMxv5++_4F8RR=g@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] platform/chrome: Standardize Chrome OS keyboard
+ backlight name
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Nick Crews <ncrews@chromium.org>,
+        Guenter Roeck <groeck@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Simon Glass <sjg@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony,
+On Thu, Apr 4, 2019 at 1:06 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> Hi!
+>
+> > > > It is *function* and maybe color that userspace is interested in, and
+> > > > here we have proper standardization in form of "kbd_backlight". Device
+> > > > name is, well, device name. It should uniquely identify the device led
+> > > > is attached to, but otherwise is rarely interesting. If userspace is
+> > > > really concerned what kind of keyboard backlight it is it should
+> > > > investigate parent device(s) and see what they end up with.
+> > >
+> > > That does not work. Userspace wants to know if it is internal keyboard
+> > > or USB keyboard, not what kind of i2c controller the LED is connected
+> > > to.
+> >
+> > Why does userspace want to know it?
+>
+> For example to turn off backlight on internal keyboard when the lid is closed.
 
-On 3/21/19 3:28 PM, Dan Murphy wrote:
-> Update the properties for the lm3532 device node for droid4.
-> With this change the backlight LED string and the keypad
-> LED strings will be controlled separately.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v5 - No change - https://lore.kernel.org/patchwork/patch/1050409/
-> 
-> v4 - No change - https://lore.kernel.org/patchwork/patch/1050125/
-> v3 - updated keypad label on v1 comment - https://lore.kernel.org/patchwork/patch/1049023/
-> v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
-> I did not change the label as it is undecided what it could be - https://lore.kernel.org/patchwork/patch/1048806/
-> 
->   arch/arm/boot/dts/omap4-droid4-xt894.dts | 26 ++++++++++++++++--------
->   1 file changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> index e21ec929f096..aea206f04f76 100644
-> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> @@ -383,20 +383,30 @@
->   };
->   
->   &i2c1 {
-> -	lm3532@38 {
-> +	led-controller@38 {
->   		compatible = "ti,lm3532";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->   		reg = <0x38>;
->   
->   		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
->   
-> -		lcd_backlight: backlight {
-> -			compatible = "ti,lm3532-backlight";
-> +		ramp-up-us = <1024>;
-> +		ramp-down-us = <8193>;
->   
-> -			lcd {
-> -				led-sources = <0 1 2>;
-> -				ramp-up-msec = <1>;
-> -				ramp-down-msec = <0>;
-> -			};
+Would you not want to turn off external as well?
 
-Since I'll be creating integration branch for this series,
-and it would be good to have this patch in it too, then
-I can do the amendments by myself:
+And what to do if internal keyboard is not platform but USB? Like
+Google "Whiskers"? (I am not sure why you decided to drop my mention
+of internal USB keyboards completely off your reply).
 
-> +		lcd_backlight: led@0 {
-> +			reg = <0>;
-> +			led-sources = <2>;
-> +			ti,led-mode = <0>;
-> +			label = "backlight";
+>
+> > > grep for platform::mic_mute .
+> > >
+> > > (And platform is even pretty good match for how the LED is connected
+> > > in your case).
+> >
+> > Until we get a secondary interface that is also "platform"...
+>
+> How would that happen?
 
-s/backlight/:backlight/
+It won't happen on Wilco, but you can't imagine that several blocks
+get reused in the same device and they end up clashing?
 
-> +			linux,default-trigger = "backlight";
-> +		};
-> +
-> +		led@1 {
-> +			reg = <1>;
-> +			led-sources = <1>;
-> +			ti,led-mode = <0>;
-> +			label = "platform::kbd_backlight";
-
-s/platform::kbd_backlight/:kbd_backlight/
-
-and then send you a pull request.
-
-Would you be OK with that?
-
->   		};
->   	};
->   };
-> 
+Thanks.
 
 -- 
-Best regards,
-Jacek Anaszewski
+Dmitry
