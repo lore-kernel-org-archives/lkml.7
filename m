@@ -2,61 +2,52 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78711C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B97C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2B120820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217742075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369213;
-	bh=WUQkPzCiaauQMpUYxZ6Gd2zf44Zm+RvB+nhmNpPiSU0=;
+	s=default; t=1554369218;
+	bh=ZkzlwT1k3wumyTyD2ebr+3dl94WGUbBC70k03IVrQvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0TfqslMWjoFYGpvjzXLHYALn17Mvmy05wCVGaxuYB7TAZLMf9AzgDtx+WxwLtu/Vx
-	 Ga7rDhvZj4bhxS8gllq8CoWZqdwIMddR5uySTO/PRDODp/lcPIfa40vo2WM8jOwDhK
-	 aknb/4/iQtvNCVA2hCzkx8AB3One3u205F77TCiY=
+	b=TCG8Sbts6nENNnzyMw1sm55NU1sIa74eAarHUTXJgjZ4yV++6xjlD3h63AQCFie9c
+	 d3MTnj3zuCpVsk0XDy89VwJ587kEKRTh11AyHfarPwVGH83tXB1rhujPcUlQR9ktMs
+	 2D9hNBs96qxPd/FadTqjgzlCqrEzG6esqKigo97s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387570AbfDDJNc (ORCPT
+        id S2387590AbfDDJNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53692 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733083AbfDDJN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:13:26 -0400
+        id S1733080AbfDDJNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:13:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9866D20820;
-        Thu,  4 Apr 2019 09:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E670820693;
+        Thu,  4 Apr 2019 09:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369205;
-        bh=WUQkPzCiaauQMpUYxZ6Gd2zf44Zm+RvB+nhmNpPiSU0=;
+        s=default; t=1554369210;
+        bh=ZkzlwT1k3wumyTyD2ebr+3dl94WGUbBC70k03IVrQvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mpVYLcS3ujqnyAQ74tdW3aQ5BO2FCgz90donj6ZLqamXotdDCoSHWSNNM6MyVWB/G
-         51eevq+STcuIdpu32//JggeY9XM5jg0O3iOZfWXRd1BRVmZKCMpk6Q+wyup+7k5GMT
-         9zAg6ozaGBC8xjk0NxqYdqJxtAqKLMtvYBA/Be5A=
+        b=fKi+sh4wijZ9gVSAGnuFnOoTdfcw8cKb84LLAnxtcMjNVt5w5vV3G0AILxD9mKZVP
+         nf80PAETc2vVhlWzi/OnJs5ETxIUotm1QRwP9H/QjhzBlheUc2n6kuSplyk5V49MWQ
+         4h7WTZ7o/HEAGdkdl1Dr+s6CCE2PZPLeHr2dcxJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kim Phillips <kim.phillips@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 136/246] perf coresight: Do not test for libopencsd by default
-Date:   Thu,  4 Apr 2019 10:47:16 +0200
-Message-Id: <20190404084623.927141465@linuxfoundation.org>
+Subject: [PATCH 5.0 138/246] ACPI / video: Refactor and fix dmi_is_desktop()
+Date:   Thu,  4 Apr 2019 10:47:18 +0200
+Message-Id: <20190404084623.998137725@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -75,170 +66,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1c3b28fd7ae80c8f6bf1a09e1848e20a953c9ce4 ]
+[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
 
-Since it is not yet that generally available, avoid testing for the
-presence of libcoresight in the fast path test-all.bin feature test.
+This commit refactors the chassis-type detection introduced by
+commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
+Win8-ready _desktops_") (where desktop means anything without a builtin
+screen).
 
-  # dnf search opencsd
-  No matches found.
-  # dnf search OpenCSD
-  No matches found.
-  # cat /etc/fedora-release
-  Fedora release 29 (Twenty Nine)
-  #
+The DMI chassis_type is an unsigned integer, so rather then doing a
+whole bunch of string-compares on it, convert it to an int and feed
+the result to a switch case.
 
-I.e. right now, in my system test-all.bin is failing all the time since
-Fedora29 doesn't have libopencsd available:
+Note the switch case uses hex values, this is done because the spec
+uses hex values too. This changes the check for "Main Server Chassis"
+from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
+the original check for 11 decimal was wrong.
 
-  $ cat /tmp/build/perf/feature/test-all.make.output
-  In file included from test-all.c:174:
-  test-libopencsd.c:2:10: fatal error: opencsd/c_api/opencsd_c_api.h: No such file or directory
-   #include <opencsd/c_api/opencsd_c_api.h>
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  compilation terminated.
-
-See:
-
-  6ab2b762befd ("perf build: Disable libbabeltrace check by default")
-
-For the rationale, as soon as libopencsd becomes more generally packaged
-and available, we do the same thing we did with babeltrace, enabling it
-by default, as done in:
-
-  24787afbcd01 ("perf tools: Enable LIBBABELTRACE by default")
-
-For now, to explicitely ask for opencsd, make sure you have it installed
-and use:
-
-   make -C tools/perf CORESIGHT=1
-
-The feature test output will be there as an empty file:
-
-  $ ls -la /tmp/build/perf/feature/test-libopencsd.make.output
-
-Because the binary used for the feature check was successfully built:
-
-  $ ls -la /tmp/build/perf/feature/test-libopencsd.bin
-  -rwxrwxr-x. 1 acme acme 18336 Feb 12 14:49 /tmp/build/perf/feature/test-libopencsd.bin
-  $ ldd /tmp/build/perf/feature/test-libopencsd.bin
-	linux-vdso.so.1 (0x00007fffe18cc000)
-	libopencsd_c_api.so.0 => /lib64/libopencsd_c_api.so.0 (0x00007fb8e67f6000)
-	libopencsd.so.0 => /lib64/libopencsd.so.0 (0x00007fb8e676f000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007fb8e65a9000)
-	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fb8e6411000)
-	libm.so.6 => /lib64/libm.so.6 (0x00007fb8e628d000)
-	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fb8e6272000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007fb8e6828000)
-  $
-
-And the resulting perf binary will be linked with it:
-
-  -rw-rw-r--. 1 acme acme 0 Feb 12 14:49 /tmp/build/perf/feature/test-libopencsd.make.output
-  $ ldd ~/bin/perf | grep opencsd
-	libopencsd_c_api.so.0 => /lib64/libopencsd_c_api.so.0 (0x00007fd43097f000)
-	libopencsd.so.0 => /lib64/libopencsd.so.0 (0x00007fd4308f8000)
-  $
-
-To make sure this gets built before pushing things upstream I have a
-ubuntu:19.04-x-arm64 container that has:
-
-  [root@quaco x-arm64]# grep CORESIGHT Dockerfile
-  ENV EXTRA_MAKE_ARGS=CORESIGHT=1
-  [root@quaco x-arm64]#
-
-So that I always build with libopencsd before pushing things upstream.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Link: https://lkml.kernel.org/n/tip-20vyy39jw9jgrijesi30fgox@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+[ rjw: Drop redundant return statements ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/Makefile.feature   | 2 +-
- tools/build/feature/test-all.c | 5 -----
- tools/perf/Makefile.config     | 3 ++-
- tools/perf/Makefile.perf       | 2 +-
- 4 files changed, 4 insertions(+), 8 deletions(-)
+ drivers/acpi/acpi_video.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 5467c6bf9ceb..bb9dca65eb5f 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -70,7 +70,6 @@ FEATURE_TESTS_BASIC :=                  \
-         sched_getcpu			\
-         sdt				\
-         setns				\
--        libopencsd			\
-         libaio
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index f0b52266b3ac..1ab1460c4a4e 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -2124,21 +2124,28 @@ static int __init intel_opregion_present(void)
+ 	return opregion;
+ }
  
- # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
-@@ -84,6 +83,7 @@ FEATURE_TESTS_EXTRA :=                  \
-          libbabeltrace                  \
-          libbfd-liberty                 \
-          libbfd-liberty-z               \
-+         libopencsd                     \
-          libunwind-debug-frame          \
-          libunwind-debug-frame-arm      \
-          libunwind-debug-frame-aarch64  \
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 93f485098161..e903b86b742f 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -170,10 +170,6 @@
- # include "test-setns.c"
- #undef main
++/* Check if the chassis-type indicates there is no builtin LCD panel */
+ static bool dmi_is_desktop(void)
+ {
+ 	const char *chassis_type;
++	unsigned long type;
  
--#define main main_test_libopencsd
--# include "test-libopencsd.c"
--#undef main
--
- #define main main_test_libaio
- # include "test-libaio.c"
- #undef main
-@@ -221,7 +217,6 @@ int main(int argc, char *argv[])
- 	main_test_sched_getcpu();
- 	main_test_sdt();
- 	main_test_setns();
--	main_test_libopencsd();
- 	main_test_libaio();
- 	main_test_reallocarray();
+ 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	if (!chassis_type)
+ 		return false;
  
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index e6360d47e73a..cf4a8329c4c0 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -388,7 +388,8 @@ ifeq ($(feature-setns), 1)
-   $(call detected,CONFIG_SETNS)
- endif
+-	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
+-	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
+-	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
+-	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
+-	    !strcmp(chassis_type, "7") || /*  7: Tower */
+-	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
++	if (kstrtoul(chassis_type, 10, &type) != 0)
++		return false;
++
++	switch (type) {
++	case 0x03: /* Desktop */
++	case 0x04: /* Low Profile Desktop */
++	case 0x05: /* Pizza Box */
++	case 0x06: /* Mini Tower */
++	case 0x07: /* Tower */
++	case 0x11: /* Main Server Chassis */
+ 		return true;
++	}
  
--ifndef NO_CORESIGHT
-+ifdef CORESIGHT
-+  $(call feature_check,libopencsd)
-   ifeq ($(feature-libopencsd), 1)
-     CFLAGS += -DHAVE_CSTRACE_SUPPORT $(LIBOPENCSD_CFLAGS)
-     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 0ee6795d82cc..77f8f069f1e7 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -102,7 +102,7 @@ include ../scripts/utilities.mak
- # When selected, pass LLVM_CONFIG=/path/to/llvm-config to `make' if
- # llvm-config is not in $PATH.
- #
--# Define NO_CORESIGHT if you do not want support for CoreSight trace decoding.
-+# Define CORESIGHT if you DO WANT support for CoreSight trace decoding.
- #
- # Define NO_AIO if you do not want support of Posix AIO based trace
- # streaming for record mode. Currently Posix AIO trace streaming is
+ 	return false;
+ }
 -- 
 2.19.1
 
