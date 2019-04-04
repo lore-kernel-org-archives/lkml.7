@@ -2,124 +2,208 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30569C10F0C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C8C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0915420882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AB120882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbfDDIrs (ORCPT
+        id S1728891AbfDDIr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:47:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6244 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728643AbfDDIrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:47:06 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A540D6AE4AE9E3F32888;
-        Thu,  4 Apr 2019 16:47:03 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 4 Apr 2019 16:46:54 +0800
-From:   Yonglong Liu <liuyonglong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH net 4/6] net: hns: fix ICMP6 neighbor solicitation messages discard problem
-Date:   Thu, 4 Apr 2019 16:46:45 +0800
-Message-ID: <1554367607-130891-5-git-send-email-liuyonglong@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1554367607-130891-1-git-send-email-liuyonglong@huawei.com>
-References: <1554367607-130891-1-git-send-email-liuyonglong@huawei.com>
+        Thu, 4 Apr 2019 04:47:58 -0400
+Received: from www62.your-server.de ([213.133.104.62]:41590 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727489AbfDDIr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:47:57 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hBy1V-00074w-MM; Thu, 04 Apr 2019 10:47:01 +0200
+Received: from [2a02:120b:c3fc:feb0:dda7:bd28:a848:50e2] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hBy1V-0005wb-CG; Thu, 04 Apr 2019 10:47:01 +0200
+Subject: Re: [PATCH net-next] tcp: Ensure DCTCP reacts to losses
+To:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>
+Cc:     "De Schepper, Koen (Nokia - BE/Antwerp)" 
+        <koen.de_schepper@nokia-bell-labs.com>,
+        Bob Briscoe <research@bobbriscoe.net>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Florian Westphal <fw@strlen.de>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Andrew Shewmaker <agshew@gmail.com>,
+        Glenn Judd <glenn.judd@morganstanley.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190404082055.8981-1-olivier.tilmans@nokia-bell-labs.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <efdc9c07-1feb-d594-7954-e4e6a379a53d@iogearbox.net>
+Date:   Thu, 4 Apr 2019 10:46:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190404082055.8981-1-olivier.tilmans@nokia-bell-labs.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25408/Wed Apr  3 09:53:31 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ICMP6 neighbor solicitation messages will be discard by the Hip06
-chips, because of not setting forwarding pool. Enable promisc mode
-has the same problem.
+On 04/04/2019 10:26 AM, Tilmans, Olivier (Nokia - BE/Antwerp) wrote:
+> RFC8257 §3.5 explicitly states that DCTCP should "react to loss
+> episode in the same way that a conventional TCP".
+> This is also the behavior on MS Windows.
+> 
+> Currently, Linux DCTCP performs no ssthresh reduction when losses
+> are encountered. Optionally, the dctcp_clamp_alpha_on_loss resets
+> alpha to its maximal value if a RTO happens. This behavior
+> is sub-optimal for at least two reasons: i) it ignores losses
+> triggering fast retransmissions; and ii) it causes unnecessary large
+> cwnd reduction in the future if the loss was isolated as it resets
+> the historical term of DCTCP's alpha EWMA to its maximal value (i.e.,
+> denoting a total congestion). The second reason has an especially
+> noticeable effect when using DCTCP in high BDP environments, where
+> alpha normally stays at low values.
+> 
+> This patch replace the clamping of alpha by setting ssthresh to
+> half of cwnd for both fast retransmissions and RTOs, at most once
+> per RTT. To reflect the change, the dctcp_clamp_alpha_on_loss option
+> has been renamed to dctcp_halve_cwnd_on_loss.
+> 
+> The table below shows experimental results where we measured the
+> drop probability of a PIE AQM (not applying ECN marks) at a
+> bottleneck in the presence of a single TCP flow with either the
+> alpha-clamping option enabled or the cwnd halving proposed by this
+> patch. Results using reno or cubic are given for comparison.
+> 
+>                           |  Link   |   RTT    |    Drop
+>                  TCP CC   |  speed  | base+AQM | probability
+>         ==================|=========|==========|============
+>                     CUBIC |  40Mbps |  7+20ms  |    0.21%
+>                      RENO |         |          |    0.19%
+>         DCTCP-CLAMP-ALPHA |         |          |   25.80%
+>          DCTCP-HALVE-CWND |         |          |    0.22%
+>         ------------------|---------|----------|------------
+>                     CUBIC | 100Mbps |  7+20ms  |    0.03%
+>                      RENO |         |          |    0.02%
+>         DCTCP-CLAMP-ALPHA |         |          |   23.30%
+>          DCTCP-HALVE-CWND |         |          |    0.04%
+>         ------------------|---------|----------|------------
+>                     CUBIC | 800Mbps |   1+1ms  |    0.04%
+>                      RENO |         |          |    0.05%
+>         DCTCP-CLAMP-ALPHA |         |          |   18.70%
+>          DCTCP-HALVE-CWND |         |          |    0.06%
+> 
+> We see that, without halving its cwnd for all source of losses,
+> DCTCP drives the AQM to large drop probabilities in order to keep
+> the queue length under control (i.e., it repeatedly faces RTOs).
+> Instead, if DCTCP reacts to all source of losses, it can then be
+> controlled by the AQM using similar drop levels than cubic or reno.
+> 
+> Signed-off-by: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+> Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
+> Cc: Bob Briscoe <research@bobbriscoe.net>
+> Cc: Lawrence Brakmo <brakmo@fb.com>
+> Cc: Florian Westphal <fw@strlen.de>
+> Cc: Daniel Borkmann <borkmann@iogearbox.net>
+> Cc: Yuchung Cheng <ycheng@google.com>
+> Cc: Neal Cardwell <ncardwell@google.com>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Andrew Shewmaker <agshew@gmail.com>
+> Cc: Glenn Judd <glenn.judd@morganstanley.com>
+> ---
+>  net/ipv4/tcp_dctcp.c | 39 ++++++++++++++++++++++-----------------
+>  1 file changed, 22 insertions(+), 17 deletions(-)
+> 
+> diff --git a/net/ipv4/tcp_dctcp.c b/net/ipv4/tcp_dctcp.c
+> index cd4814f7e962..60417243e7d7 100644
+> --- a/net/ipv4/tcp_dctcp.c
+> +++ b/net/ipv4/tcp_dctcp.c
+> @@ -67,10 +67,9 @@ static unsigned int dctcp_alpha_on_init __read_mostly = DCTCP_MAX_ALPHA;
+>  module_param(dctcp_alpha_on_init, uint, 0644);
+>  MODULE_PARM_DESC(dctcp_alpha_on_init, "parameter for initial alpha value");
+>  
+> -static unsigned int dctcp_clamp_alpha_on_loss __read_mostly;
+> -module_param(dctcp_clamp_alpha_on_loss, uint, 0644);
+> -MODULE_PARM_DESC(dctcp_clamp_alpha_on_loss,
+> -		 "parameter for clamping alpha on loss");
+> +static unsigned int dctcp_halve_cwnd_on_loss __read_mostly;
+> +module_param(dctcp_halve_cwnd_on_loss, uint, 0644);
+> +MODULE_PARM_DESC(dctcp_halve_cwnd_on_loss, "halve cwnd in case of losses");
 
-This patch fix the wrong forwarding table configs for the multicast
-vague matching when enable promisc mode, and add forwarding pool
-for the forwarding table.
+Is there a reason we still need to keep this module parameter around?
+The final RFC even says "A DCTCP sender MUST react to loss episodes in
+the same way as conventional TCP". So it's a MUST requirement in which
+case it should be enabled by default. The dctcp_clamp_alpha_on_loss was
+a bit of a hack from very early days..
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 33 ++++++++++++++++++----
- 1 file changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-index ac55db0..f5ff07c 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -2750,6 +2750,17 @@ int hns_dsaf_get_regs_count(void)
- 	return DSAF_DUMP_REGS_NUM;
- }
- 
-+static int hns_dsaf_get_port_id(u8 port)
-+{
-+	if (port < DSAF_SERVICE_NW_NUM)
-+		return port;
-+
-+	if (port >= DSAF_BASE_INNER_PORT_NUM)
-+		return port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
-+
-+	return -EINVAL;
-+}
-+
- static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
- {
- 	struct dsaf_tbl_tcam_ucast_cfg tbl_tcam_ucast = {0, 1, 0, 0, 0x80};
-@@ -2815,23 +2826,33 @@ static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
- 	memset(&temp_key, 0x0, sizeof(temp_key));
- 	mask_entry.addr[0] = 0x01;
- 	hns_dsaf_set_mac_key(dsaf_dev, &mask_key, mask_entry.in_vlan_id,
--			     port, mask_entry.addr);
-+			     0xf, mask_entry.addr);
- 	tbl_tcam_mcast.tbl_mcast_item_vld = 1;
- 	tbl_tcam_mcast.tbl_mcast_old_en = 0;
- 
--	if (port < DSAF_SERVICE_NW_NUM) {
--		mskid = port;
--	} else if (port >= DSAF_BASE_INNER_PORT_NUM) {
--		mskid = port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
--	} else {
-+	/* set MAC port to handle multicast */
-+	mskid = hns_dsaf_get_port_id(port);
-+	if (mskid == -EINVAL) {
- 		dev_err(dsaf_dev->dev, "%s,pnum(%d)error,key(%#x:%#x)\n",
- 			dsaf_dev->ae_dev.name, port,
- 			mask_key.high.val, mask_key.low.val);
- 		return;
- 	}
-+	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
-+		     mskid % 32, 1);
- 
-+	/* set pool bit map to handle multicast */
-+	mskid = hns_dsaf_get_port_id(port_num);
-+	if (mskid == -EINVAL) {
-+		dev_err(dsaf_dev->dev,
-+			"%s, pool bit map pnum(%d)error,key(%#x:%#x)\n",
-+			dsaf_dev->ae_dev.name, port_num,
-+			mask_key.high.val, mask_key.low.val);
-+		return;
-+	}
- 	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
- 		     mskid % 32, 1);
-+
- 	memcpy(&temp_key, &mask_key, sizeof(mask_key));
- 	hns_dsaf_tcam_mc_cfg_vague(dsaf_dev, entry_index, &tbl_tcam_data_mc,
- 				   (struct dsaf_tbl_tcam_data *)(&mask_key),
--- 
-2.8.1
+>  static struct tcp_congestion_ops dctcp_reno;
+>  
+> @@ -164,21 +163,23 @@ static void dctcp_update_alpha(struct sock *sk, u32 flags)
+>  	}
+>  }
+>  
+> -static void dctcp_state(struct sock *sk, u8 new_state)
+> +static void dctcp_react_to_loss(struct sock *sk)
+>  {
+> -	if (dctcp_clamp_alpha_on_loss && new_state == TCP_CA_Loss) {
+> -		struct dctcp *ca = inet_csk_ca(sk);
+> +	struct dctcp *ca = inet_csk_ca(sk);
+> +	struct tcp_sock *tp = tcp_sk(sk);
+>  
+> -		/* If this extension is enabled, we clamp dctcp_alpha to
+> -		 * max on packet loss; the motivation is that dctcp_alpha
+> -		 * is an indicator to the extend of congestion and packet
+> -		 * loss is an indicator of extreme congestion; setting
+> -		 * this in practice turned out to be beneficial, and
+> -		 * effectively assumes total congestion which reduces the
+> -		 * window by half.
+> -		 */
+> -		ca->dctcp_alpha = DCTCP_MAX_ALPHA;
+> -	}
+> +	ca->loss_cwnd = tp->snd_cwnd;
+> +	tp->snd_ssthresh = max(tp->snd_cwnd >> 1U, 2U);
+> +}
+> +
+> +static void dctcp_state(struct sock *sk, u8 new_state)
+> +{
+> +	if (dctcp_halve_cwnd_on_loss && new_state == TCP_CA_Recovery &&
+> +	    new_state != inet_csk(sk)->icsk_ca_state)
+> +		dctcp_react_to_loss(sk);
+> +	/* We handle RTO in dctcp_cwnd_event to ensure that we perform only
+> +	 * one loss-adjustment per RTT.
+> +	 */
+>  }
+>  
+>  static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
+> @@ -190,6 +191,10 @@ static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
+>  	case CA_EVENT_ECN_NO_CE:
+>  		dctcp_ece_ack_update(sk, ev, &ca->prior_rcv_nxt, &ca->ce_state);
+>  		break;
+> +	case CA_EVENT_LOSS:
+> +		if (dctcp_halve_cwnd_on_loss)
+> +			dctcp_react_to_loss(sk);
+> +		break;
+>  	default:
+>  		/* Don't care for the rest. */
+>  		break;
+> 
 
