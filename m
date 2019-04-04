@@ -2,95 +2,488 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8028BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B32C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C818205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Amb59a4w"
+	by mail.kernel.org (Postfix) with ESMTP id 6FD56205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfDDO4w (ORCPT
+        id S1729158AbfDDO5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:56:52 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:56057 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfDDO4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:56:52 -0400
-Received: by mail-yw1-f73.google.com with SMTP id y9so2096828ywc.22
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Pr94i6yTF3Wq8OIE6rzOEsnknSKW6XtOUOJJcL/bBes=;
-        b=Amb59a4wSxvwz/dj3jUYSFVdXLHyILy+IOD7sBWKebOkN3vj/G+Hlcp2QUfz9D7+VG
-         bxnRGNPLva9icDs7W3NBYtdShwNAVrd50/42KKI7rNzPAt1x1fx95Fqu0dd+6DaL4h5Z
-         +m7IRXIUsusvZ0CpdpT0/yKoiPCQ7jow5KptTQ2NVPNMkE6/Q+rK6WH0EuSmaKHpX0Rf
-         q8cXDsPzQghC1lMT16Jb/lwHGSoElK0vX63wTCHVDRjaw+Etnlp96WJEV7QW6J63GyT2
-         CJ7Lk9HGPeWv9QZdPjQ8WYXlKTwQ+lbQLqFQKXarVdSdZLe25TWklMiri3P7wb4By+Dk
-         fHow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Pr94i6yTF3Wq8OIE6rzOEsnknSKW6XtOUOJJcL/bBes=;
-        b=VDPuOzJ1Q0OVKHjoCLdHaazht97UqYq2dKv7a8XJ8wl7IRpFNkZ1RSzutRBGaHFcVX
-         MZLzd//iq5wq3zvawW5VhGOvqY3BomQh5Dgj8CsCbaD6zo9QKWwMuINQWHcMty/2J/FG
-         Jt9UOq3xrTb7eqQn9UlwnFCmRej3VSArJaH/z9+1tlFndkbbaQHfL0kQOB68AJNk6WVm
-         Nwgaj/Sf0uC3bCEuz6NqDcVs9Fr/n16I5EFnMFFw87jCUNjb8dkX75fem1o/ZlcVPl5B
-         3N8o45oXppx0k0hV4zfjCWIeG62LRNd1qLdrXVzitMzKe1gsUFJZw/U/LBRkpOycvagk
-         +Ygg==
-X-Gm-Message-State: APjAAAXnfEZdTiPUsOoZrYoyRcEzdJtilh6iNk8aOBlhg5LWTp5NjllY
-        g8E3fDvQBPlIh7pX+jGNtvwezFRyBNE=
-X-Google-Smtp-Source: APXvYqwEArvZu+NjxLMZdNlGgzvVG2/uv+aUsYDtZ89PrgRIiiJ2aaQo2xFab8oEZKsGlo4ouPQxjmCZQdQ=
-X-Received: by 2002:a81:574a:: with SMTP id l71mr1359637ywb.23.1554389811321;
- Thu, 04 Apr 2019 07:56:51 -0700 (PDT)
-Date:   Thu,  4 Apr 2019 16:56:46 +0200
-Message-Id: <20190404145646.107022-1-glider@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH] media: vivid: use vfree() instead of kfree() for dev->bitmap_cap
-From:   Alexander Potapenko <glider@google.com>
-To:     hverkuil@xs4all.nl, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 4 Apr 2019 10:57:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49928 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728647AbfDDO5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 10:57:06 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F0D1536961;
+        Thu,  4 Apr 2019 14:57:05 +0000 (UTC)
+Received: from [10.36.117.116] (ovpn-117-116.ams2.redhat.com [10.36.117.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62E7A4F075;
+        Thu,  4 Apr 2019 14:57:04 +0000 (UTC)
+Subject: Re: [PATCH 2/2] mm, memory_hotplug: provide a more generic
+ restrictions for memory hotplug
+To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
+Cc:     mhocko@suse.com, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190404125916.10215-1-osalvador@suse.de>
+ <20190404125916.10215-3-osalvador@suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <880c5d09-7d4e-2a97-e826-a8a6572216b2@redhat.com>
+Date:   Thu, 4 Apr 2019 16:57:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190404125916.10215-3-osalvador@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 04 Apr 2019 14:57:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzkaller reported crashes on kfree() called from
-vivid_vid_cap_s_selection(). This looks like a simple typo, as
-dev->bitmap_cap is allocated with vzalloc() throughout the file.
+On 04.04.19 14:59, Oscar Salvador wrote:
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> arch_add_memory, __add_pages take a want_memblock which controls whether
+> the newly added memory should get the sysfs memblock user API (e.g.
+> ZONE_DEVICE users do not want/need this interface). Some callers even
+> want to control where do we allocate the memmap from by configuring
+> altmap.
+> 
+> Add a more generic hotplug context for arch_add_memory and __add_pages.
+> struct mhp_restrictions contains flags which contains additional
+> features to be enabled by the memory hotplug (MHP_MEMBLOCK_API
+> currently) and altmap for alternative memmap allocator.
+> 
+> This patch shouldn't introduce any functional change.
+> 
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>  arch/arm64/mm/mmu.c            |  6 +++---
+>  arch/ia64/mm/init.c            |  6 +++---
+>  arch/powerpc/mm/mem.c          |  6 +++---
+>  arch/s390/mm/init.c            |  6 +++---
+>  arch/sh/mm/init.c              |  6 +++---
+>  arch/x86/mm/init_32.c          |  6 +++---
+>  arch/x86/mm/init_64.c          | 10 +++++-----
+>  include/linux/memory_hotplug.h | 29 +++++++++++++++++++++++------
+>  kernel/memremap.c              | 10 +++++++---
+>  mm/memory_hotplug.c            | 10 ++++++----
+>  10 files changed, 59 insertions(+), 36 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index e6acfa7be4c7..db509550329d 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1046,8 +1046,8 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+> -		    bool want_memblock)
+> +int arch_add_memory(int nid, u64 start, u64 size,
+> +			struct mhp_restrictions *restrictions)
 
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Tested-by: Alexander Potapenko <glider@google.com>
-Reported-by: syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com
-Fixes: ef834f7836ec0 ("[media] vivid: add the video capture and output
-parts")
----
- drivers/media/platform/vivid/vivid-vid-cap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Should the restrictions be marked const?
 
-diff --git a/drivers/media/platform/vivid/vivid-vid-cap.c b/drivers/media/platform/vivid/vivid-vid-cap.c
-index 52eeda624d7e..530ac8decb25 100644
---- a/drivers/media/platform/vivid/vivid-vid-cap.c
-+++ b/drivers/media/platform/vivid/vivid-vid-cap.c
-@@ -1007,7 +1007,7 @@ int vivid_vid_cap_s_selection(struct file *file, void *fh, struct v4l2_selection
- 		v4l2_rect_map_inside(&s->r, &dev->fmt_cap_rect);
- 		if (dev->bitmap_cap && (compose->width != s->r.width ||
- 					compose->height != s->r.height)) {
--			kfree(dev->bitmap_cap);
-+			vfree(dev->bitmap_cap);
- 			dev->bitmap_cap = NULL;
- 		}
- 		*compose = s->r;
+>  {
+>  	int flags = 0;
+>  
+> @@ -1058,6 +1058,6 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+>  			     size, PAGE_KERNEL, pgd_pgtable_alloc, flags);
+>  
+>  	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+> -			   altmap, want_memblock);
+> +							restrictions);
+
+Again, some strange alignment thingies going on here :)
+
+>  }
+>  #endif
+> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+> index e49200e31750..379eb1f9adc9 100644
+> --- a/arch/ia64/mm/init.c
+> +++ b/arch/ia64/mm/init.c
+> @@ -666,14 +666,14 @@ mem_init (void)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +int arch_add_memory(int nid, u64 start, u64 size,
+> +			struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  	int ret;
+>  
+> -	ret = __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+> +	ret = __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  	if (ret)
+>  		printk("%s: Problem encountered in __add_pages() as ret=%d\n",
+>  		       __func__,  ret);
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 1aa27aac73c5..76deaa8525db 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -109,8 +109,8 @@ int __weak remove_section_mapping(unsigned long start, unsigned long end)
+>  	return -ENODEV;
+>  }
+>  
+> -int __meminit arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +int __meminit arch_add_memory(int nid, u64 start, u64 size,
+> +			struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+> @@ -127,7 +127,7 @@ int __meminit arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *
+>  	}
+>  	flush_inval_dcache_range(start, start + size);
+>  
+> -	return __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+> +	return __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 25e3113091ea..f5db961ad792 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -216,8 +216,8 @@ device_initcall(s390_cma_mem_init);
+>  
+>  #endif /* CONFIG_CMA */
+>  
+> -int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +int arch_add_memory(int nid, u64 start, u64 size,
+> +		struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long start_pfn = PFN_DOWN(start);
+>  	unsigned long size_pages = PFN_DOWN(size);
+> @@ -227,7 +227,7 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = __add_pages(nid, start_pfn, size_pages, altmap, want_memblock);
+> +	rc = __add_pages(nid, start_pfn, size_pages, restrictions);
+>  	if (rc)
+>  		vmem_remove_mapping(start, size);
+>  	return rc;
+> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+> index 8e004b2f1a6a..168d3a6b9358 100644
+> --- a/arch/sh/mm/init.c
+> +++ b/arch/sh/mm/init.c
+> @@ -404,15 +404,15 @@ void __init mem_init(void)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +int arch_add_memory(int nid, u64 start, u64 size,
+> +			struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long start_pfn = PFN_DOWN(start);
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  	int ret;
+>  
+>  	/* We only have ZONE_NORMAL, so this is easy.. */
+> -	ret = __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+> +	ret = __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  	if (unlikely(ret))
+>  		printk("%s: Failed, __add_pages() == %d\n", __func__, ret);
+>  
+> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+> index 85c94f9a87f8..755dbed85531 100644
+> --- a/arch/x86/mm/init_32.c
+> +++ b/arch/x86/mm/init_32.c
+> @@ -850,13 +850,13 @@ void __init mem_init(void)
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +int arch_add_memory(int nid, u64 start, u64 size,
+> +			struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  
+> -	return __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+> +	return __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  }
+>  
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index bccff68e3267..db42c11b48fb 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -777,11 +777,11 @@ static void update_end_of_memory_vars(u64 start, u64 size)
+>  }
+>  
+>  int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+> -		struct vmem_altmap *altmap, bool want_memblock)
+> +				struct mhp_restrictions *restrictions)
+>  {
+>  	int ret;
+>  
+> -	ret = __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+> +	ret = __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  	WARN_ON_ONCE(ret);
+>  
+>  	/* update max_pfn, max_low_pfn and high_memory */
+> @@ -791,15 +791,15 @@ int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+>  	return ret;
+>  }
+>  
+> -int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +int arch_add_memory(int nid, u64 start, u64 size,
+> +			struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long start_pfn = start >> PAGE_SHIFT;
+>  	unsigned long nr_pages = size >> PAGE_SHIFT;
+>  
+>  	init_memory_mapping(start, start + size);
+>  
+> -	return add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+> +	return add_pages(nid, start_pfn, nr_pages, restrictions);
+>  }
+>  
+>  #define PAGE_INUSE 0xFD
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 3c8cf347804c..5bd4b56f639c 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -118,20 +118,37 @@ extern int __remove_pages(struct zone *zone, unsigned long start_pfn,
+>  	unsigned long nr_pages, struct vmem_altmap *altmap);
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+>  
+> +/*
+> + * Do we want sysfs memblock files created. This will allow userspace to online
+> + * and offline memory explicitly. Lack of this bit means that the caller has to
+> + * call move_pfn_range_to_zone to finish the initialization.
+> + */
+
+I think you can be more precise here.
+
+"Create memory block devices for added pages. This is usually the case
+for all system ram (and only system ram), as only this way memory can be
+onlined/offlined by user space and kdump to correctly detect the new
+memory using udev events."
+
+Maybe we should even go a step further and call this
+
+MHP_SYSTEM_RAM
+
+Because that is what it is right now.
+
+> +
+> +#define MHP_MEMBLOCK_API               (1<<0)
+> +
+> +/*
+> + * Restrictions for the memory hotplug:
+> + * flags:  MHP_ flags
+> + * altmap: alternative allocator for memmap array
+> + */
+> +struct mhp_restrictions {
+> +	unsigned long flags;
+> +	struct vmem_altmap *altmap;
+> +};
+> +
+>  /* reasonably generic interface to expand the physical pages */
+>  extern int __add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+> -		struct vmem_altmap *altmap, bool want_memblock);
+> +					struct mhp_restrictions *restrictions);
+>  
+>  #ifndef CONFIG_ARCH_HAS_ADD_PAGES
+>  static inline int add_pages(int nid, unsigned long start_pfn,
+> -		unsigned long nr_pages, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +		unsigned long nr_pages, struct mhp_restrictions *restrictions)
+>  {
+> -	return __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+> +	return __add_pages(nid, start_pfn, nr_pages, restrictions);
+>  }
+>  #else /* ARCH_HAS_ADD_PAGES */
+>  int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+> -		struct vmem_altmap *altmap, bool want_memblock);
+> +				struct mhp_restrictions *restrictions);
+
+dito alignment. You have tabs configured to 8 characters, right?
+
+>  #endif /* ARCH_HAS_ADD_PAGES */
+>  
+>  #ifdef CONFIG_NUMA
+> @@ -333,7 +350,7 @@ extern int __add_memory(int nid, u64 start, u64 size);
+>  extern int add_memory(int nid, u64 start, u64 size);
+>  extern int add_memory_resource(int nid, struct resource *resource);
+>  extern int arch_add_memory(int nid, u64 start, u64 size,
+> -		struct vmem_altmap *altmap, bool want_memblock);
+> +			struct mhp_restrictions *restrictions);
+>  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
+>  		unsigned long nr_pages, struct vmem_altmap *altmap);
+>  extern bool is_memblock_offlined(struct memory_block *mem);
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index a856cb5ff192..cc5e3e34417d 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -149,6 +149,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  	struct resource *res = &pgmap->res;
+>  	struct dev_pagemap *conflict_pgmap;
+>  	pgprot_t pgprot = PAGE_KERNEL;
+> +	struct mhp_restrictions restrictions = {};
+>  	int error, nid, is_ram;
+>  
+>  	if (!pgmap->ref || !pgmap->kill)
+> @@ -199,6 +200,9 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  	if (error)
+>  		goto err_pfn_remap;
+>  
+> +	/* We do not want any optional features only our own memmap */
+> +	restrictions.altmap = altmap;
+> +>  	mem_hotplug_begin();
+>  
+>  	/*
+> @@ -214,7 +218,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  	 */
+>  	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+>  		error = add_pages(nid, align_start >> PAGE_SHIFT,
+> -				align_size >> PAGE_SHIFT, NULL, false);
+> +				align_size >> PAGE_SHIFT, &restrictions);
+>  	} else {
+>  		error = kasan_add_zero_shadow(__va(align_start), align_size);
+>  		if (error) {
+> @@ -222,8 +226,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  			goto err_kasan;
+>  		}
+>  
+> -		error = arch_add_memory(nid, align_start, align_size, altmap,
+> -				false);
+> +		error = arch_add_memory(nid, align_start, align_size,
+> +							&restrictions);
+
+dito alignment
+
+>  	}
+>  
+>  	if (!error) {
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index d8a3e9554aec..50f77e059457 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -274,12 +274,12 @@ static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
+>   * add the new pages.
+>   */
+>  int __ref __add_pages(int nid, unsigned long phys_start_pfn,
+> -		unsigned long nr_pages, struct vmem_altmap *altmap,
+> -		bool want_memblock)
+> +		unsigned long nr_pages, struct mhp_restrictions *restrictions)
+>  {
+>  	unsigned long i;
+>  	int err = 0;
+>  	int start_sec, end_sec;
+> +	struct vmem_altmap *altmap = restrictions->altmap;
+>  
+>  	/* during initialize mem_map, align hot-added range to section */
+>  	start_sec = pfn_to_section_nr(phys_start_pfn);
+> @@ -300,7 +300,7 @@ int __ref __add_pages(int nid, unsigned long phys_start_pfn,
+>  
+>  	for (i = start_sec; i <= end_sec; i++) {
+>  		err = __add_section(nid, section_nr_to_pfn(i), altmap,
+> -				want_memblock);
+> +				restrictions->flags & MHP_MEMBLOCK_API);
+>  
+>  		/*
+>  		 * EEXIST is finally dealt with by ioresource collision
+> @@ -1102,6 +1102,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
+>  	u64 start, size;
+>  	bool new_node = false;
+>  	int ret;
+> +	struct mhp_restrictions restrictions = {};
+
+I'd make this the very first variable.
+
+Also eventually
+
+struct mhp_restrictions restrictions = {
+	.restrictions = MHP_MEMBLOCK_API
+};
+
+>  
+>  	start = res->start;
+>  	size = resource_size(res);
+> @@ -1126,7 +1127,8 @@ int __ref add_memory_resource(int nid, struct resource *res)
+>  	new_node = ret;
+>  
+>  	/* call arch's memory hotadd */
+> -	ret = arch_add_memory(nid, start, size, NULL, true);
+> +	restrictions.flags = MHP_MEMBLOCK_API;
+> +	ret = arch_add_memory(nid, start, size, &restrictions);
+>  	if (ret < 0)
+>  		goto error;
+>  
+> 
+
+
 -- 
-2.21.0.392.gf8f6787159e-goog
 
+Thanks,
+
+David / dhildenb
