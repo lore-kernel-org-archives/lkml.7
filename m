@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D6AC10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1FFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6109E20652
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6223D20882
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368078;
-	bh=Y387+yMMcxa4O++XVayTazcL2ePhULRcXulW57xsLnY=;
+	s=default; t=1554368082;
+	bh=u72A8cBaNpYyedVBgFYuD2kxUKN/xp1FQq6Aryct6sQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Di6nIn7xN8PZ9x+gDURj1f8i+TZoeXMRZdFGhI8jTE2TOyry1ZZqGwnHgJomib+md
-	 xkaOPX1uz4fAHUdRZr3KsYaOaPtxMIefXrIPRufJgDhngjFA8rcZ7pu3krVEgIqGuE
-	 aVFLQBw+E8SCgkpCy4fgsoEBB6umVdNCpLXXwHJE=
+	b=GOM/H319kkzlpZloAi6a75gFLf7wjYqGzFufQqlroVBkCOohwFm7C6VvxKwEDZ63P
+	 9HK5mgTuOQ/uPsCjkDCV2o1NxPnFIhLrN2Q2WHEVYtIKFoQAVJnoibt/jTffu112aj
+	 ZiB263ePu8l4E2YdgKPCgLFQ4386aCGXQhR2WBh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbfDDIyh (ORCPT
+        id S1730110AbfDDIyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57250 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729546AbfDDIyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:54:35 -0400
+        id S1730053AbfDDIyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:54:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38A1020652;
-        Thu,  4 Apr 2019 08:54:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9478F217D4;
+        Thu,  4 Apr 2019 08:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368073;
-        bh=Y387+yMMcxa4O++XVayTazcL2ePhULRcXulW57xsLnY=;
+        s=default; t=1554368071;
+        bh=u72A8cBaNpYyedVBgFYuD2kxUKN/xp1FQq6Aryct6sQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WuJ8lQATnTi2XAuvAxV/XZAOmP/73CraEhXBUxXv4L9iZCn4j1ECONZetm58tpKPE
-         MZqChPDxS+ooGgN0HEJNo7bU+gwYhH1cWZMXNch1AsDXhYOQbg4iTLYH2ueXBZCdz7
-         8oP8bRTlGFXTIre4u3IVg1nU+IrGnwsjplmmLyMM=
+        b=0ko5QDf6NlrSKeAgEXeNUmH2QTJ2PWnBAYK70Vt5uoWxrTV7/OxPz/5KRo4z38pP2
+         xtUv5HuHR2QcMv35QETakMHHyvZ3y9TiDhdEjK+M7CNp+RTRLGaebrO8gsMTkoC6RR
+         HhWcePKDQ5rNWLjuTiy30vVq1U6VJfLxalm4mGOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mohamad Haj Yahia <mohamad@mellanox.com>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 011/121] net/mlx5: Avoid panic when setting vport rate
-Date:   Thu,  4 Apr 2019 10:46:39 +0200
-Message-Id: <20190404084545.913418661@linuxfoundation.org>
+Subject: [PATCH 4.14 010/121] tracing: kdb: Fix ftdump to not sleep
+Date:   Thu,  4 Apr 2019 10:46:38 +0200
+Message-Id: <20190404084545.856754972@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -68,79 +67,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 24319258660a84dd77f4be026a55b10a12524919 ]
+[ Upstream commit 31b265b3baaf55f209229888b7ffea523ddab366 ]
 
-If we try to set VFs rate on a VF (not PF) net device, the kernel
-will be crash. The commands are show as below:
+As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
+BUG for "sleeping function called from invalid context".
 
-$ echo 2 > /sys/class/net/$MLX_PF0/device/sriov_numvfs
-$ ip link set $MLX_VF0 vf 0 max_tx_rate 2 min_tx_rate 1
+kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
+atomic context.  A very simple solution for this is to add allocation
+flags to ring_buffer_read_prepare() so kdb can call it without
+triggering the allocation error.  This patch does that.
 
-If not applied the first patch ("net/mlx5: Avoid panic when setting
-vport mac, getting vport config"), the command:
+Note that in the original email thread about this, it was suggested
+that perhaps the solution for kdb was to either preallocate the buffer
+ahead of time or create our own iterator.  I'm hoping that this
+alternative of adding allocation flags to ring_buffer_read_prepare()
+can be considered since it means I don't need to duplicate more of the
+core trace code into "trace_kdb.c" (for either creating my own
+iterator or re-preparing a ring allocator whose memory was already
+allocated).
 
-$ ip link set $MLX_VF0 vf 0 rate 100
+NOTE: another option for kdb is to actually figure out how to make it
+reuse the existing ftrace_dump() function and totally eliminate the
+duplication.  This sounds very appealing and actually works (the "sr
+z" command can be seen to properly dump the ftrace buffer).  The
+downside here is that ftrace_dump() fully consumes the trace buffer.
+Unless that is changed I'd rather not use it because it means "ftdump
+| grep xyz" won't be very useful to search the ftrace buffer since it
+will throw away the whole trace on the first grep.  A future patch to
+dump only the last few lines of the buffer will also be hard to
+implement.
 
-can also crash the kernel.
+[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
 
-[ 1650.006388] RIP: 0010:mlx5_eswitch_set_vport_rate+0x1f/0x260 [mlx5_core]
-[ 1650.007092]  do_setlink+0x982/0xd20
-[ 1650.007129]  __rtnl_newlink+0x528/0x7d0
-[ 1650.007374]  rtnl_newlink+0x43/0x60
-[ 1650.007407]  rtnetlink_rcv_msg+0x2a2/0x320
-[ 1650.007484]  netlink_rcv_skb+0xcb/0x100
-[ 1650.007519]  netlink_unicast+0x17f/0x230
-[ 1650.007554]  netlink_sendmsg+0x2d2/0x3d0
-[ 1650.007592]  sock_sendmsg+0x36/0x50
-[ 1650.007625]  ___sys_sendmsg+0x280/0x2a0
-[ 1650.007963]  __sys_sendmsg+0x58/0xa0
-[ 1650.007998]  do_syscall_64+0x5b/0x180
-[ 1650.009438]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Link: http://lkml.kernel.org/r/20190308193205.213659-1-dianders@chromium.org
 
-Fixes: c9497c98901c ("net/mlx5: Add support for setting VF min rate")
-Cc: Mohamad Haj Yahia <mohamad@mellanox.com>
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Acked-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ include/linux/ring_buffer.h | 2 +-
+ kernel/trace/ring_buffer.c  | 5 +++--
+ kernel/trace/trace.c        | 6 ++++--
+ kernel/trace/trace_kdb.c    | 6 ++++--
+ 4 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index 2f93e6e9dc9e..2aec0c021b6c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -1966,19 +1966,24 @@ static int normalize_vports_min_rate(struct mlx5_eswitch *esw, u32 divider)
- int mlx5_eswitch_set_vport_rate(struct mlx5_eswitch *esw, int vport,
- 				u32 max_rate, u32 min_rate)
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 5caa062a02b2..ca52b82128df 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -123,7 +123,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
+ 		    unsigned long *lost_events);
+ 
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
+ void ring_buffer_read_prepare_sync(void);
+ void ring_buffer_read_start(struct ring_buffer_iter *iter);
+ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index a1d5e0949dcf..5f7f4f07499f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4010,6 +4010,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
+  * @buffer: The ring buffer to read from
+  * @cpu: The cpu buffer to iterate over
++ * @flags: gfp flags to use for memory allocation
+  *
+  * This performs the initial preparations necessary to iterate
+  * through the buffer.  Memory is allocated, buffer recording
+@@ -4027,7 +4028,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+  * This overall must be paired with ring_buffer_read_finish.
+  */
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
++ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
  {
--	u32 fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
--	bool min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
--					fw_max_bw_share >= MLX5_MIN_BW_SHARE;
--	bool max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
- 	struct mlx5_vport *evport;
-+	u32 fw_max_bw_share;
- 	u32 previous_min_rate;
- 	u32 divider;
-+	bool min_rate_supported;
-+	bool max_rate_supported;
- 	int err = 0;
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_iter *iter;
+@@ -4035,7 +4036,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return NULL;
  
- 	if (!ESW_ALLOWED(esw))
- 		return -EPERM;
- 	if (!LEGAL_VPORT(esw, vport))
- 		return -EINVAL;
-+
-+	fw_max_bw_share = MLX5_CAP_QOS(esw->dev, max_tsar_bw_share);
-+	min_rate_supported = MLX5_CAP_QOS(esw->dev, esw_bw_share) &&
-+				fw_max_bw_share >= MLX5_MIN_BW_SHARE;
-+	max_rate_supported = MLX5_CAP_QOS(esw->dev, esw_rate_limit);
-+
- 	if ((min_rate && !min_rate_supported) || (max_rate && !max_rate_supported))
- 		return -EOPNOTSUPP;
+-	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
++	iter = kmalloc(sizeof(*iter), flags);
+ 	if (!iter)
+ 		return NULL;
  
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 287e61aba57c..ffddb5ac255c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3901,7 +3901,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+-				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++				ring_buffer_read_prepare(iter->trace_buffer->buffer,
++							 cpu, GFP_KERNEL);
+ 		}
+ 		ring_buffer_read_prepare_sync();
+ 		for_each_tracing_cpu(cpu) {
+@@ -3911,7 +3912,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	} else {
+ 		cpu = iter->cpu_file;
+ 		iter->buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter->trace_buffer->buffer,
++						 cpu, GFP_KERNEL);
+ 		ring_buffer_read_prepare_sync();
+ 		ring_buffer_read_start(iter->buffer_iter[cpu]);
+ 		tracing_iter_reset(iter, cpu);
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index d953c163a079..810d78a8d14c 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -51,14 +51,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter.buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu, GFP_ATOMIC);
+ 			ring_buffer_read_start(iter.buffer_iter[cpu]);
+ 			tracing_iter_reset(&iter, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+ 		iter.buffer_iter[cpu_file] =
+-			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
++			ring_buffer_read_prepare(iter.trace_buffer->buffer,
++						 cpu_file, GFP_ATOMIC);
+ 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
+ 	}
 -- 
 2.19.1
 
