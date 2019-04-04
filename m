@@ -2,242 +2,120 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A67C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4919C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121892183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D272217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1wO4i7P"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NlCUU5PO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbfDDXZz (ORCPT
+        id S1730311AbfDDX3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 19:25:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36413 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbfDDXZy (ORCPT
+        Thu, 4 Apr 2019 19:29:45 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40798 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729999AbfDDX3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 19:25:54 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 85so2003708pgc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:25:53 -0700 (PDT)
+        Thu, 4 Apr 2019 19:29:44 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so1942643plr.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CCdrf7jqoTvyTGvaGfuBCcpBw0EjRGKPGe2OH2TTLn0=;
-        b=h1wO4i7PN3LELMMX5rjV+GmDZpzR9tJy5sbngb2hxjz4tu0vnwbT8kfy4/0it+Wt4E
-         6vU1IbrFkTKjp5EgR5TzqOv57ZPE2vLwwUn/UFlP2dENoEwQxOt8IJtqLV/WNxTqnjYa
-         B7XsYEZSsVUz2zV78MpLbcWGrKjZe5sDrbAyoxCPZTknPoKmRUseyyiOeB8NukUPYjFX
-         z8TpZ5gJ8HbtgS9TJB7qURgzifOB0Zdbf60VgNyHEpPG6bTmweitu9SL32KCfYinKORA
-         DYYJ+cvq8870QymHhsZkp8xxSw7rI5QuhuNlCPpoDu19DcMCK+fSKOoyoFUNbRRavd/T
-         R5vg==
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nNTAkkSsesyNF1L4wisBciP/ffK/Ou780QIlgqZ7C+I=;
+        b=NlCUU5POvdSDVM2ZUfmhXzSe8nwyHxfj3wmUbZuFZrmik1KALP438cig7tYr2imNuj
+         fkbo39GuuYQkJFk0maPEgW0F9Xrud2GIKuqRTq+fUn53DN+B1MusFx7iPyGmCFteSvcU
+         4+/hyrmaz7hAQbfMRAlLJqrzcDb31K/nbB0qnFMKY+/1F2k4nWNqJJIuLP/Wm3D1NaC0
+         8dplYsRrrPkU3uKURX3cbb0ygf2N55l5ZZ4xMhH2ksaIib7IrS26RM3UGVBmvWmcEgB4
+         CdUq6dTx93i+yVnoVQrJljIUjEwR63Fk6wmMBrrBqKkIJl2QJDtc1i6P8M3/TBADuV2g
+         +aNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CCdrf7jqoTvyTGvaGfuBCcpBw0EjRGKPGe2OH2TTLn0=;
-        b=DYA0pRltNk19Y6SmqlqEXVFUXWn/C5o3VFtnqQutelrBwQHWjubzXxpq3f0v2u3xcH
-         JmKZG4o0VYmOkBeLdU7nDwzx6DhCZ+WxaatUEs85Ps8aDQR0CiXS5+rnI9B2BRPcx4Zq
-         3fSg/aENh08RQPodoc3cxkb0mbdAfO1FjfHRadYnWFX45rcMptf4PPxCATVamNPXemZq
-         yoyg+WBJ46aUytXj4epeF1ShMsdRjRVtcRdqYwZoaa/5c4k69PsfYu9wDtUfwRVyQGwx
-         ho/laSVyoh03J4wS5/8ktIRYsRoi80O1Gcgdswh0kS16tHal/ZhYs7m6lYu49DdcvMh6
-         yc0w==
-X-Gm-Message-State: APjAAAUxqOI1x92tsvUipMoqpNC5S8IvyvOBW7XETIn9BVPIKiicIFTH
-        ngQY3HFQoHjpouDfQ3OdKOA=
-X-Google-Smtp-Source: APXvYqx9GAVFVMVGcqf8d5iEofm3FXVFigHJk3zlOgJ974RmJajEDqs00fe1U7FAUiVTe472tqYauQ==
-X-Received: by 2002:aa7:8284:: with SMTP id s4mr8960338pfm.235.1554420352526;
-        Thu, 04 Apr 2019 16:25:52 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id e23sm28750036pfd.11.2019.04.04.16.25.50
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=nNTAkkSsesyNF1L4wisBciP/ffK/Ou780QIlgqZ7C+I=;
+        b=D5QgsqqxhSkDuP0pZjf0wvQelxHDA7hEhaK2n3sTkiZPWsuFX22VzC4IL/NJRU69dD
+         W3pSiDTQZbh+5AFOj16e2O0S9qChNlNwm76VBXrrcrSi9em53o0I53fTfaUoVDpQzca4
+         PAAfW8a0tkRazmjRzk/xUQLD501MV6YdhEA9POX/oybKjaxYkNNdtgPC56v46ryazE+h
+         VoEwAX0ZoylIBtXSmSIJTu5dh9ynK+RPOo5ZHNPppbg4mU3YzE0oIPaldzLOSHXuvIST
+         MZOgHiMwbb+yQbEXbzEFSbmOgX3EKRVYIjhe46qXY+3DctoO8jF5JOWetXSuB1HQl3RL
+         bq7w==
+X-Gm-Message-State: APjAAAUnzLOUWtM1qxkniN54TW/NaUCI2uNrWU1yzmydd5ie986Svw9t
+        X+0fZwXJKSwdLN7Jni5+laTo8A==
+X-Google-Smtp-Source: APXvYqyT886hiDdS9f9N1ElR0YHL1O+XWROWt1J/VpvcSZn88aex51BUH6YO4f9IFbNnWC2h08TDZg==
+X-Received: by 2002:a17:902:47c2:: with SMTP id d2mr9263608plh.277.1554420583757;
+        Thu, 04 Apr 2019 16:29:43 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id f6sm16304527pgq.11.2019.04.04.16.29.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 16:25:51 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH 2/2] arm64: perf: Expose Cortex-A53 micro architectural events
-Date:   Thu,  4 Apr 2019 16:25:45 -0700
-Message-Id: <20190404232545.2627-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190404232545.2627-1-f.fainelli@gmail.com>
-References: <20190404232545.2627-1-f.fainelli@gmail.com>
+        Thu, 04 Apr 2019 16:29:42 -0700 (PDT)
+Date:   Thu, 04 Apr 2019 16:29:42 -0700 (PDT)
+X-Google-Original-Date: Thu, 04 Apr 2019 16:23:28 PDT (-0700)
+Subject:     Re: [PATCH 3/6 v3] riscv: Fix syscall_get_arguments() and syscall_set_arguments()
+In-Reply-To: <20190404102653.705456df@gandalf.local.home>
+CC:     ldv@altlinux.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        mingo@kernel.org, akpm@linux-foundation.org, luto@amacapital.net,
+        roland@hack.frob.com, oleg@redhat.com, linux-arch@vger.kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, gustavo@embeddedor.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        linux@dominikbrodowski.net, luto@kernel.org, keescook@chromium.org,
+        ebiederm@xmission.com, wad@chromium.org, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     rostedt@goodmis.org
+Message-ID: <mhng-a348d416-3a9d-458e-be83-d7a584f590aa@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a variety of useful Cortex-A53 PMU specific events which were
-recently found useful during a debug session.
+On Thu, 04 Apr 2019 07:26:53 PDT (-0700), rostedt@goodmis.org wrote:
+> On Thu, 4 Apr 2019 17:02:10 +0300
+> "Dmitry V. Levin" <ldv@altlinux.org> wrote:
+>
+>> On Mon, Apr 01, 2019 at 09:41:07AM -0400, Steven Rostedt wrote:
+>> > From: "Dmitry V. Levin" <ldv@altlinux.org>
+>> >
+>> > RISC-V syscall arguments are located in orig_a0,a1..a5 fields
+>> > of struct pt_regs.
+>> >
+>> > Due to an off-by-one bug and a bug in pointer arithmetic
+>> > syscall_get_arguments() was reading s3..s7 fields instead of a1..a5.
+>> > Likewise, syscall_set_arguments() was writing s3..s7 fields
+>> > instead of a1..a5.
+>> >
+>> > Link: http://lkml.kernel.org/r/20190329171221.GA32456@altlinux.org
+>> >
+>> > Fixes: e2c0cdfba7f69 ("RISC-V: User-facing API")
+>> > Cc: Ingo Molnar <mingo@redhat.com>
+>> > Cc: Kees Cook <keescook@chromium.org>
+>> > Cc: Andy Lutomirski <luto@amacapital.net>
+>> > Cc: Will Drewry <wad@chromium.org>
+>> > Cc: Palmer Dabbelt <palmer@sifive.com>
+>> > Cc: Albert Ou <aou@eecs.berkeley.edu>
+>> > Cc: linux-riscv@lists.infradead.org
+>> > Cc: stable@vger.kernel.org # v4.15+
+>> > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+>> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>>
+>> According to
+>> https://lore.kernel.org/lkml/mhng-8e9b547b-7fe3-43d2-9dea-b217de923605@palmer-si-x1c4/
+>> the following tag could be added to this patch:
+>>
+>> Acked-by: Palmer Dabbelt <palmer@sifive.com>
+>
+> That link isn't actually an ack. Palmer, you OK if I add it?
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm64/kernel/perf_event.c | 118 ++++++++++++++++++++++++++++++++-
- 1 file changed, 116 insertions(+), 2 deletions(-)
+Acked-by: Palmer Dabbelt <palmer@sifive.com> (for the RISC-V parts)
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 2d30922692b1..ef4105908830 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -31,7 +31,23 @@
- #include <linux/platform_device.h>
- 
- /* ARMv8 Cortex-A53 specific event types. */
-+#define ARMV8_A53_PERFCTR_EXT_MEM_REQ				0xC0
-+#define ARMV8_A53_PERFCTR_NC_EXT_MEM_REQ			0xC1
- #define ARMV8_A53_PERFCTR_PREF_LINEFILL				0xC2
-+#define ARMV8_A53_PERFCTR_I_CACHE_THROTTLE			0xC3
-+#define ARMV8_A53_PERFCTR_ENT_READ_ALLOC			0xC4
-+#define ARMV8_A53_PERFCTR_READ_ALLOC_MODE			0xC5
-+#define ARMV8_A53_PERFCTR_PRE_DECODE_ERROR			0xC6
-+#define ARMV8_A53_PERFCTR_DATA_WR_STALL				0xC7
-+#define ARMV8_A53_PERFCTR_SCU_SNOOP_OTHER_CPU			0xC8
-+#define ARMV8_A53_PERFCTR_COND_BRANCH_EXEC			0xC9
-+#define ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED			0xCA
-+#define ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED_COMP		0xCB
-+#define ARMV8_A53_PERFCTR_COND_BRANCH_MISPRED			0xCC
-+#define ARMV8_A53_PERFCTR_L1I_CACHE_MEM_ERR			0xD0
-+#define ARMV8_A53_PERFCTR_L1D_CACHE_MEM_ERR			0xD1
-+#define ARMV8_A53_PERFCTR_TLB_MEM_ERR				0xD2
-+#define ARMV8_A53_PERFCTR_MAX_EVENTS				0xD3
- 
- /* ARMv8 Cavium ThunderX specific event types. */
- #define ARMV8_THUNDER_PERFCTR_L1D_CACHE_MISS_ST			0xE9
-@@ -349,6 +365,82 @@ static struct attribute_group armv8_pmuv3_format_attr_group = {
- 	.attrs = armv8_pmuv3_format_attrs,
- };
- 
-+#define ARMV8_CORTEXA53_EVENT_ATTR_RESOLVE(m) #m
-+#define ARMV8_CORTEXA53_EVENT_ATTR(name, config) \
-+	PMU_EVENT_ATTR(name, armv8_cortex_a53_event_attr_##name, \
-+		       config, armv8pmu_events_sysfs_show)
-+
-+ARMV8_CORTEXA53_EVENT_ATTR(ext_mem_req, ARMV8_A53_PERFCTR_EXT_MEM_REQ);
-+ARMV8_CORTEXA53_EVENT_ATTR(nc_ext_mem_req, ARMV8_A53_PERFCTR_NC_EXT_MEM_REQ);
-+ARMV8_CORTEXA53_EVENT_ATTR(pref_linefill, ARMV8_A53_PERFCTR_PREF_LINEFILL);
-+ARMV8_CORTEXA53_EVENT_ATTR(i_cache_throttle, ARMV8_A53_PERFCTR_I_CACHE_THROTTLE);
-+ARMV8_CORTEXA53_EVENT_ATTR(enter_read_allocate, ARMV8_A53_PERFCTR_ENT_READ_ALLOC);
-+ARMV8_CORTEXA53_EVENT_ATTR(read_allocate_mode, ARMV8_A53_PERFCTR_READ_ALLOC_MODE);
-+ARMV8_CORTEXA53_EVENT_ATTR(pre_decode_error, ARMV8_A53_PERFCTR_PRE_DECODE_ERROR);
-+ARMV8_CORTEXA53_EVENT_ATTR(data_write_stall, ARMV8_A53_PERFCTR_DATA_WR_STALL);
-+ARMV8_CORTEXA53_EVENT_ATTR(scu_snoop_other_cpu, ARMV8_A53_PERFCTR_SCU_SNOOP_OTHER_CPU);
-+ARMV8_CORTEXA53_EVENT_ATTR(cond_branch_exec, ARMV8_A53_PERFCTR_COND_BRANCH_EXEC);
-+ARMV8_CORTEXA53_EVENT_ATTR(indir_br_pred, ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED);
-+ARMV8_CORTEXA53_EVENT_ATTR(indir_br_pred_comp, ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED_COMP);
-+ARMV8_CORTEXA53_EVENT_ATTR(cond_br_mis_pred, ARMV8_A53_PERFCTR_COND_BRANCH_MISPRED);
-+ARMV8_CORTEXA53_EVENT_ATTR(l1i_cache_mem_err, ARMV8_A53_PERFCTR_L1I_CACHE_MEM_ERR);
-+ARMV8_CORTEXA53_EVENT_ATTR(l1d_cache_mem_err, ARMV8_A53_PERFCTR_L1D_CACHE_MEM_ERR);
-+ARMV8_CORTEXA53_EVENT_ATTR(tlb_mem_err, ARMV8_A53_PERFCTR_TLB_MEM_ERR);
-+
-+static struct attribute *armv8_cortex_a53_event_attrs[] = {
-+	ARMV8_PMUV3_EVENT_ATTRS
-+	&armv8_cortex_a53_event_attr_ext_mem_req.attr.attr,
-+	&armv8_cortex_a53_event_attr_nc_ext_mem_req.attr.attr,
-+	&armv8_cortex_a53_event_attr_pref_linefill.attr.attr,
-+	&armv8_cortex_a53_event_attr_i_cache_throttle.attr.attr,
-+	&armv8_cortex_a53_event_attr_enter_read_allocate.attr.attr,
-+	&armv8_cortex_a53_event_attr_read_allocate_mode.attr.attr,
-+	&armv8_cortex_a53_event_attr_pre_decode_error.attr.attr,
-+	&armv8_cortex_a53_event_attr_data_write_stall.attr.attr,
-+	&armv8_cortex_a53_event_attr_scu_snoop_other_cpu.attr.attr,
-+	&armv8_cortex_a53_event_attr_cond_branch_exec.attr.attr,
-+	&armv8_cortex_a53_event_attr_indir_br_pred.attr.attr,
-+	&armv8_cortex_a53_event_attr_indir_br_pred_comp.attr.attr,
-+	&armv8_cortex_a53_event_attr_cond_br_mis_pred.attr.attr,
-+	&armv8_cortex_a53_event_attr_l1i_cache_mem_err.attr.attr,
-+	&armv8_cortex_a53_event_attr_l1d_cache_mem_err.attr.attr,
-+	&armv8_cortex_a53_event_attr_tlb_mem_err.attr.attr,
-+	NULL
-+};
-+
-+static umode_t
-+armv8_cortex_a53_pmu_event_attr_is_visible(struct kobject *kobj,
-+					   struct attribute *attr, int unused)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pmu *pmu = dev_get_drvdata(dev);
-+	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
-+	struct perf_pmu_events_attr *pmu_attr;
-+
-+	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
-+
-+	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
-+	    test_bit(pmu_attr->id, cpu_pmu->pmceid_bitmap))
-+		return attr->mode;
-+
-+	if (pmu_attr->id >= ARMV8_A53_PERFCTR_EXT_MEM_REQ &&
-+	    pmu_attr->id < ARMV8_A53_PERFCTR_MAX_EVENTS)
-+		return attr->mode;
-+
-+	pmu_attr->id -= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
-+	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
-+	    test_bit(pmu_attr->id, cpu_pmu->pmceid_ext_bitmap))
-+		return attr->mode;
-+
-+	return 0;
-+}
-+
-+static struct attribute_group armv8_cortex_a53_events_attr_group = {
-+	.name = "events",
-+	.attrs = armv8_cortex_a53_event_attrs,
-+	.is_visible = armv8_cortex_a53_pmu_event_attr_is_visible,
-+};
-+
- /*
-  * Perf Events' indices
-  */
-@@ -910,7 +1002,29 @@ static int armv8_pmuv3_map_event(struct perf_event *event)
- 
- static int armv8_a53_map_event(struct perf_event *event)
- {
--	return __armv8_pmuv3_map_event(event, NULL, &armv8_a53_perf_cache_map);
-+	int hw_event_id;
-+	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
-+
-+	hw_event_id = armpmu_map_event(event, &armv8_pmuv3_perf_map,
-+				       &armv8_pmuv3_perf_cache_map,
-+				       ARMV8_PMU_EVTYPE_EVENT);
-+
-+	if (armv8pmu_event_is_64bit(event))
-+		event->hw.flags |= ARMPMU_EVT_64BIT;
-+
-+	/* Only expose micro/arch events supported by this PMU */
-+	if ((hw_event_id > 0) && (hw_event_id < ARMV8_PMUV3_MAX_COMMON_EVENTS)
-+	    && test_bit(hw_event_id, armpmu->pmceid_bitmap)) {
-+		return hw_event_id;
-+	}
-+
-+	/* Expose Cortex-A53 specific events */
-+	if (hw_event_id >= ARMV8_A53_PERFCTR_EXT_MEM_REQ &&
-+	    hw_event_id <= ARMV8_A53_PERFCTR_MAX_EVENTS)
-+		return hw_event_id;
-+
-+	return armpmu_map_event(event, NULL, &armv8_a53_perf_cache_map,
-+				ARMV8_PMU_EVTYPE_EVENT);
- }
- 
- static int armv8_a57_map_event(struct perf_event *event)
-@@ -1057,7 +1171,7 @@ static int armv8_a53_pmu_init(struct arm_pmu *cpu_pmu)
- 	cpu_pmu->name			= "armv8_cortex_a53";
- 	cpu_pmu->map_event		= armv8_a53_map_event;
- 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_EVENTS] =
--		&armv8_pmuv3_events_attr_group;
-+		&armv8_cortex_a53_events_attr_group;
- 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
- 		&armv8_pmuv3_format_attr_group;
- 
--- 
-2.17.1
-
+Thanks!
