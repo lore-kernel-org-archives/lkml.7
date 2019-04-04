@@ -2,186 +2,100 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E5AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FD4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7928206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AD3206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 16:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="iqYJBAQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbfDDQgq (ORCPT
+        id S1729417AbfDDQhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 12:36:46 -0400
-Received: from gateway30.websitewelcome.com ([192.185.148.2]:11408 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729135AbfDDQgq (ORCPT
+        Thu, 4 Apr 2019 12:37:24 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37735 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728629AbfDDQhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 12:36:46 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id D98C3AA27
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2019 11:34:00 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id C5JQh3JyH2PzOC5JQhed3r; Thu, 04 Apr 2019 11:34:00 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.114.183] (port=40686 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hC5JP-002Wec-8g; Thu, 04 Apr 2019 11:34:00 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Cc:     Igor Mitsyanko <imitsyanko@quantenna.com>,
-        Avinash Patil <avinashp@quantenna.com>,
-        Sergey Matyukevich <smatyukevich@quantenna.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190403170236.GA31637@embeddedor>
- <20190404133234.2uatru2vlw3ntrmv@bars>
- <e56579c6-da6e-4cb2-90b1-89e7774debf9@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH][next] qtnfmac: replace qtnf_cmd_acl_data_size() with
- struct_size()
-Message-ID: <3baa19c1-a213-3dcf-2f03-23b058ec419a@embeddedor.com>
-Date:   Thu, 4 Apr 2019 11:33:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 4 Apr 2019 12:37:23 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z16so4011811qtn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 09:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=2GPhs65IN3rKza1N9gqevUI9+mfx9z2j/qZ98tDTGR4=;
+        b=iqYJBAQwL6e7qZi6pCEuST7cn0xAIslcwT+FQKf+CGHomxQCFjeQlnIc3ffhzSYcqj
+         LgOb+Ul5z3BBmWgW4ClZXqohxRHljKA+smF/bPMWIrjkUDveVyo6tQBfW4bgpd/6j2b4
+         FV03DnuUHY/Vu7wQykUfl+AEmrGrvt2qeKCSc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=2GPhs65IN3rKza1N9gqevUI9+mfx9z2j/qZ98tDTGR4=;
+        b=UfQNTvkf/v1G94iRrl8uK2z2Dvuj5EQKe6EP+JBdKvnrj04FJMu2gWfqjxV9BRK0hs
+         /QZ8O8VXtYJlke+aPGLUX9bxcwQ+//qcPp51gCJ1mH8b1CAnb5eUn3qLvabD7R9D2jZz
+         39lGC+kz+pPvfW5XLoJXtYDPoZgWdapV2FsWiYPFTXuFAJZo6tYTfSpXrPwXVsA8JLMp
+         Akr4r79Ez2gjqTV1mgJ89KVA1e1i3Vk09Z78M9hi2Q0NO7mkpGW+MW6NW31meSoZ7iv7
+         DUzEWgM/zVyeq4GFHvwtFNY+Gyo+Pe69xCII+7eQksFQ1s3vWEcYpNl48QSwYyX79ua1
+         AaWQ==
+X-Gm-Message-State: APjAAAU446Mv4e4mDbXBZa7owV902bbFDjOLiDKpzfywJqXN4vLJxMR2
+        1cklDnoItOjkpprhHDeZ9mPYSA==
+X-Google-Smtp-Source: APXvYqxsHU0bdIOxr9A03Au/YIPYDhJW634Y4WEKvfpErqW42IwlqvIF0k1aooOWXJLM7rsyYyFGqg==
+X-Received: by 2002:ac8:380f:: with SMTP id q15mr6402524qtb.163.1554395842996;
+        Thu, 04 Apr 2019 09:37:22 -0700 (PDT)
+Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id 56sm12359599qto.57.2019.04.04.09.37.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Apr 2019 09:37:22 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Thu, 4 Apr 2019 12:37:18 -0400 (EDT)
+X-X-Sender: vince@macbook-air
+To:     Cyrill Gorcunov <gorcunov@gmail.com>
+cc:     Vince Weaver <vincent.weaver@maine.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: perf: perf_fuzzer crashes on Pentium 4 systems
+In-Reply-To: <20190404133327.GP1421@uranus.lan>
+Message-ID: <alpine.DEB.2.21.1904041234340.5098@macbook-air>
+References: <alpine.DEB.2.21.1904031043170.29188@macbook-air> <20190403191944.GH1421@uranus.lan> <20190403203144.GI1421@uranus.lan> <alpine.DEB.2.21.1904040922350.3758@macbook-air> <20190404133327.GP1421@uranus.lan>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <e56579c6-da6e-4cb2-90b1-89e7774debf9@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.114.183
-X-Source-L: No
-X-Exim-ID: 1hC5JP-002Wec-8g
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.114.183]:40686
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 23
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 4 Apr 2019, Cyrill Gorcunov wrote:
+
+> On Thu, Apr 04, 2019 at 09:25:47AM -0400, Vince Weaver wrote:
+> > 
+> > It looks like there are at least two bugs here, one that's a full 
+> > hardlockup with nothing on serial console.  The other is the NULL 
+> > dereference.
+
+OK, it turns out the hard-lock and the null pointer dereference might be 
+the same, I have a random seed for the fuzzer from a hard-lock crash that 
+reproduces and it generated the null pointer crash.  (This is with your 
+patch applied).
+
+I can try to see if I can bisect down to a specific event sequence that 
+triggers this, but that can be tricky sometimes if things lock up so fast 
+that the event log doesn't get written out before the crash.
+
+Vince
 
 
-On 4/4/19 11:01 AM, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 4/4/19 8:32 AM, Sergey Matyukevich wrote:
->>> One of the more common cases of allocation size calculations is finding
->>> the size of a structure that has a zero-sized array at the end, along
->>> with memory for some number of elements for that array. For example:
->>>
->>> struct foo {
->>>     int stuff;
->>>     struct boo entry[];
->>> };
->>>
->>> size = sizeof(struct foo) + count * sizeof(struct boo);
->>> instance = kzalloc(size, GFP_KERNEL)
->>>
->>> Instead of leaving these open-coded and prone to type mistakes, we can
->>> now use the new struct_size() helper:
->>>
->>> size = struct_size(instance, entry, count);
->>>
->>> or
->>>
->>> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL)
->>>
->>> Based on the above, replace qtnf_cmd_acl_data_size() with the
->>> new struct_size() helper.
->>>
->>> This code was detected with the help of Coccinelle.
->>>
->>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>> ---
->>>  drivers/net/wireless/quantenna/qtnfmac/commands.c | 15 ++++-----------
->>>  1 file changed, 4 insertions(+), 11 deletions(-)
->>
->> Hi Gustavo,
->>
-> 
-> Hey Sergey,
-> 
->> Thanks for the patch! By the way, it does not apply cleanly, so it needs
->> to be rebased on top of the up-to-date wireless-drivers-next tree. Let
->> me know if you would prefer me to care about rebase. Then I will
->> add this patch to the upcoming series of qtnfmac fixes.
->>
-> 
-> Don't worry. I'll do it and send this again.
-> 
-
-Hmm... I just applied it cleanly on top of wireless-drivers-next/master:
-
-973a99be7943 (HEAD) qtnfmac: replace qtnf_cmd_acl_data_size() with struct_size()
-38bb0baea310 (wireless-drivers-next/master) rtlwifi: move spin_lock_bh to spin_lock in tasklet
-60209d482b97 rtlwifi: fix potential NULL pointer dereference
-765976285a8c rtlwifi: fix a potential NULL pointer dereference
-
-Do you see any issues with this?
-
-Thanks
---
-Gustavo
