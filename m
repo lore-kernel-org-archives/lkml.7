@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C598C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A375EC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F085021850
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7053121741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368697;
-	bh=hshdS0V29yy41QA+0O0UPWYGFYONKJDqaQeR0WfM1XU=;
+	s=default; t=1554368701;
+	bh=fbS6ods7WwJ5DFFvN7MEXqb8fSwWF2sFE6gswlY7pAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVHc/xQtrmFms/DdVYVM9ousUnTwIEkQqvNippbgGs9m+g3TOdsUpN8gvMpa8RS1r
-	 aZ+HxvftFAz+iDa+J1wB/LAxdqiMUj5NmW8WZ+I9Tv3L6V8lwGoHpIQd0cvSkfPdlv
-	 rkOGL6lFJkwFjw2YG9lRFqxqQSyBYiA7gqW/rc2E=
+	b=mtCYSESl6Wa7ZeGtmDRSpBfUus7sE0uqjiQxgbMvIDMBttW12V7y0f79+2gKHNGhA
+	 qI6xzCT4xhqcsF2baqrYi57t4bn1LEPb8JC7VbKOemtIalbqThEy5G0bLMSbBhPE9t
+	 Dj6UDR/raoV7zIu3ptqokyyEUQgaQcPpM6Te02d0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731810AbfDDJEz (ORCPT
+        id S1732066AbfDDJE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:04:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42778 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:04:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732044AbfDDJEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:04:52 -0400
+        id S1730311AbfDDJE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:04:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D93F2177E;
-        Thu,  4 Apr 2019 09:04:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C6842177E;
+        Thu,  4 Apr 2019 09:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368690;
-        bh=hshdS0V29yy41QA+0O0UPWYGFYONKJDqaQeR0WfM1XU=;
+        s=default; t=1554368696;
+        bh=fbS6ods7WwJ5DFFvN7MEXqb8fSwWF2sFE6gswlY7pAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OghZDOETPhKD8Sx+6UF2bdg+RaruowQh/L5k5zMfrrbU0CVxymWtBwbyGsjHTngi4
-         gQm3hV8jLwWB2xkJQHMo8Wagtv9YZQnEdoWXXeA3dRYNt6PMUaJmSLqFsqeHKP1EH8
-         0KX2e5cDXwGYZwbVatTIg0CgrxwpjuesOeKN0H+4=
+        b=mnKEOqK0TO9JJ/1w0ykCwcTNeuVIcpdnqf80JYJAHDeRKEw4glMvwB6YKgomxmFEt
+         pQ0Lfxu6RuvuKWmHTjB7HAQ0mAEGCj4FgS6rOMeArnWSIV1f0Bfhua+ll5WzfIqxIq
+         MXqPMHRrMPaHS2iZxDf2ng+ktsELUQF33iMfZoc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/187] e1000e: fix cyclic resets at link up with active tx
-Date:   Thu,  4 Apr 2019 10:47:42 +0200
-Message-Id: <20190404084609.119621882@linuxfoundation.org>
+Subject: [PATCH 4.19 135/187] drm/vkms: Bugfix extra vblank frame
+Date:   Thu,  4 Apr 2019 10:47:52 +0200
+Message-Id: <20190404084609.565715367@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -68,89 +68,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61 ]
+[ Upstream commit def35e7c592616bc09be328de8795e5e624a3cf8 ]
 
-I'm seeing series of e1000e resets (sometimes endless) at system boot
-if something generates tx traffic at this time. In my case this is
-netconsole who sends message "e1000e 0000:02:00.0: Some CPU C-states
-have been disabled in order to enable jumbo frames" from e1000e itself.
-As result e1000_watchdog_task sees used tx buffer while carrier is off
-and start this reset cycle again.
+kms_flip tests are breaking on vkms when simulate vblank because vblank
+event sequence count returns one extra frame after arm vblank event to
+make a page flip.
 
-[   17.794359] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
-[   17.794714] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
-[   22.936455] e1000e 0000:02:00.0 eth1: changing MTU from 1500 to 9000
-[   23.033336] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   26.102364] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
-[   27.174495] 8021q: 802.1Q VLAN Support v1.8
-[   27.174513] 8021q: adding VLAN 0 to HW filter on device eth1
-[   30.671724] cgroup: cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation
-[   30.898564] netpoll: netconsole: local port 6666
-[   30.898566] netpoll: netconsole: local IPv6 address 2a02:6b8:0:80b:beae:c5ff:fe28:23f8
-[   30.898567] netpoll: netconsole: interface 'eth1'
-[   30.898568] netpoll: netconsole: remote port 6666
-[   30.898568] netpoll: netconsole: remote IPv6 address 2a02:6b8:b000:605c:e61d:2dff:fe03:3790
-[   30.898569] netpoll: netconsole: remote ethernet address b0:a8:6e:f4:ff:c0
-[   30.917747] console [netcon0] enabled
-[   30.917749] netconsole: network logging started
-[   31.453353] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.185730] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.321840] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.465822] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.597423] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.745417] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.877356] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.005441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.157376] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.289362] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.417441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   37.790342] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+When vblank interrupt happens, userspace processes the vblank event and
+issues the next page flip command. Kernel calls queue_work to call
+commit_planes and arm the new page flip. The next vblank picks up the
+newly armed vblank event and vblank interrupt happens again.
 
-This patch flushes tx buffers only once when carrier is off
-rather than at each watchdog iteration.
+The arm and vblank event are asynchronous, then, on the next vblank, we
+receive x+2 from `get_vblank_timestamp`, instead x+1, although timestamp
+and vblank seqno matches.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Function `get_vblank_timestamp` is reached by 2 ways:
+
+  - from `drm_mode_page_flip_ioctl`: driver is doing one atomic
+    operation to synchronize planes in the same output. There is no
+    vblank simulation, the `drm_crtc_arm_vblank_event` function adds 1
+    on vblank count, and the variable in_vblank_irq is false
+  - from `vkms_vblank_simulate`: since the driver is doing a vblank
+    simulation, the variable in_vblank_irq is true.
+
+Fix this problem subtracting one vblank period from vblank_time when
+`get_vblank_timestamp` is called from trace `drm_mode_page_flip_ioctl`,
+i.e., is not a real vblank interrupt, and getting the timestamp and
+vblank seqno when it is a real vblank interrupt.
+
+The reason for all this is that get_vblank_timestamp always supplies the
+timestamp for the next vblank event. The hrtimer is the vblank
+simulator, and it needs the correct previous value to present the next
+vblank. Since this is how hw timestamp registers work and what the
+vblank core expects.
+
+Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/171e6e1c239cbca0c3df7183ed8acdfeeace9cf4.1548856186.git.shayenneluzmoura@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/vkms/vkms_crtc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index e3945469b5c8..23edc1364487 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -5286,8 +5286,13 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			/* 8000ES2LAN requires a Rx packet buffer work-around
- 			 * on link down event; reset the controller to flush
- 			 * the Rx packet buffer.
-+			 *
-+			 * If the link is lost the controller stops DMA, but
-+			 * if there is queued Tx work it cannot be done.  So
-+			 * reset the controller to flush the Tx packet buffers.
- 			 */
--			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
-+			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
-+			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
- 				adapter->flags |= FLAG_RESTART_NOW;
- 			else
- 				pm_schedule_suspend(netdev->dev.parent,
-@@ -5310,14 +5315,6 @@ link_up:
- 	adapter->gotc_old = adapter->stats.gotc;
- 	spin_unlock(&adapter->stats64_lock);
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index 1ea2dd35bca9..0a271f762a0a 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -55,6 +55,9 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
  
--	/* If the link is lost the controller stops DMA, but
--	 * if there is queued Tx work it cannot be done.  So
--	 * reset the controller to flush the Tx packet buffers.
--	 */
--	if (!netif_carrier_ok(netdev) &&
--	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
--		adapter->flags |= FLAG_RESTART_NOW;
--
- 	/* If reset is necessary, do it outside of interrupt context. */
- 	if (adapter->flags & FLAG_RESTART_NOW) {
- 		schedule_work(&adapter->reset_task);
+ 	*vblank_time = output->vblank_hrtimer.node.expires;
+ 
++	if (!in_vblank_irq)
++		*vblank_time -= output->period_ns;
++
+ 	return true;
+ }
+ 
 -- 
 2.19.1
 
