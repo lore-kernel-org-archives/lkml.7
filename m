@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A8AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A67C10F0E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA5B20882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121892183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 23:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cvfoo7sH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1wO4i7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbfDDXZy (ORCPT
+        id S1730251AbfDDXZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 19:25:54 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40532 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbfDDXZw (ORCPT
+        Thu, 4 Apr 2019 19:25:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36413 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730086AbfDDXZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 19:25:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so1937681plr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:25:51 -0700 (PDT)
+        Thu, 4 Apr 2019 19:25:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 85so2003708pgc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pCFplwOQ1V6syt22TVMFsi+FnnScCeTibsJISzGk2dA=;
-        b=Cvfoo7sHaJhH/VYUIV20JualJXCcNJn+l/NnoArIyNqahMemKh7mA4XjmlJ7AAfVX/
-         51t0VtZ+K8iWVNX2ewUtE6Cku83GQJRG6fowpe+nW0gFB6Lepjx03KDAEHNcm6doORFS
-         4G7+wfw3pkZiDGT3YqYoGCGwPrH3PoOM2g+Dnk2FmOiSpvu/U0Z6T745mM1XEsKUt8vO
-         NXFY7NnCXTiZwmcdA8Ytwamgmk5N3/qSLltDBtaeo4wgAoe8VYcHmD46XjA7M8xPttcl
-         s8cN07OulOJDBQDTlY/JjRqKutmh+IklN9gxMC7PHFy2pCJlcXGwN5r4DXm8DCST/W81
-         jmpw==
+        bh=CCdrf7jqoTvyTGvaGfuBCcpBw0EjRGKPGe2OH2TTLn0=;
+        b=h1wO4i7PN3LELMMX5rjV+GmDZpzR9tJy5sbngb2hxjz4tu0vnwbT8kfy4/0it+Wt4E
+         6vU1IbrFkTKjp5EgR5TzqOv57ZPE2vLwwUn/UFlP2dENoEwQxOt8IJtqLV/WNxTqnjYa
+         B7XsYEZSsVUz2zV78MpLbcWGrKjZe5sDrbAyoxCPZTknPoKmRUseyyiOeB8NukUPYjFX
+         z8TpZ5gJ8HbtgS9TJB7qURgzifOB0Zdbf60VgNyHEpPG6bTmweitu9SL32KCfYinKORA
+         DYYJ+cvq8870QymHhsZkp8xxSw7rI5QuhuNlCPpoDu19DcMCK+fSKOoyoFUNbRRavd/T
+         R5vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pCFplwOQ1V6syt22TVMFsi+FnnScCeTibsJISzGk2dA=;
-        b=tUcmE4kTm96VTgm2RWNA6APOEZcHnSPJZ+Wr71KODYxnH7gqNWxC2r0LFE64nAmOBX
-         I0uUZrFFZaGK7ObXNYw8ARxeD/IAZJBvJFSa6UcjSysMSQuqOZ7RFxBCDIFDSIUJXYkU
-         EwghSgD/AoYi7FS+Sn5wxEG0qWjU1FaMwwxVCLTJ763SmRshiIhZ+7svKzrDW6ivtAfX
-         wxmf8UXz5ZfMPawEcd1LGesWPUOz8iAsS70dfszDtSqvYrPkfUlV2pd4VBWkekqsoHvK
-         /wVtcS0wfWKOtqt2qeXnHGnulnwF3a30pqhr9o6HATUxt1r98bDMwb2dyQ+Q8VBrQJcG
-         gNag==
-X-Gm-Message-State: APjAAAUyZuWMs16Pd4pfELfjeQaFvpPm313A9+NwWnVrqu/lIqJzKqUP
-        /AJAkC+4OPMDSF87ySudHnE=
-X-Google-Smtp-Source: APXvYqw9XN565FHAlKSSX9Le67yexrv1sMt2Q2LohH1ZbLbz368n8fLg9PjlxXgtC2+jSNxNG7ibzw==
-X-Received: by 2002:a17:902:e110:: with SMTP id cc16mr9406903plb.147.1554420350860;
-        Thu, 04 Apr 2019 16:25:50 -0700 (PDT)
+        bh=CCdrf7jqoTvyTGvaGfuBCcpBw0EjRGKPGe2OH2TTLn0=;
+        b=DYA0pRltNk19Y6SmqlqEXVFUXWn/C5o3VFtnqQutelrBwQHWjubzXxpq3f0v2u3xcH
+         JmKZG4o0VYmOkBeLdU7nDwzx6DhCZ+WxaatUEs85Ps8aDQR0CiXS5+rnI9B2BRPcx4Zq
+         3fSg/aENh08RQPodoc3cxkb0mbdAfO1FjfHRadYnWFX45rcMptf4PPxCATVamNPXemZq
+         yoyg+WBJ46aUytXj4epeF1ShMsdRjRVtcRdqYwZoaa/5c4k69PsfYu9wDtUfwRVyQGwx
+         ho/laSVyoh03J4wS5/8ktIRYsRoi80O1Gcgdswh0kS16tHal/ZhYs7m6lYu49DdcvMh6
+         yc0w==
+X-Gm-Message-State: APjAAAUxqOI1x92tsvUipMoqpNC5S8IvyvOBW7XETIn9BVPIKiicIFTH
+        ngQY3HFQoHjpouDfQ3OdKOA=
+X-Google-Smtp-Source: APXvYqx9GAVFVMVGcqf8d5iEofm3FXVFigHJk3zlOgJ974RmJajEDqs00fe1U7FAUiVTe472tqYauQ==
+X-Received: by 2002:aa7:8284:: with SMTP id s4mr8960338pfm.235.1554420352526;
+        Thu, 04 Apr 2019 16:25:52 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id e23sm28750036pfd.11.2019.04.04.16.25.49
+        by smtp.gmail.com with ESMTPSA id e23sm28750036pfd.11.2019.04.04.16.25.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Apr 2019 16:25:50 -0700 (PDT)
+        Thu, 04 Apr 2019 16:25:51 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH 1/2] arm64: perf: Group common ARMv8 v3 PMU events in a macro
-Date:   Thu,  4 Apr 2019 16:25:44 -0700
-Message-Id: <20190404232545.2627-2-f.fainelli@gmail.com>
+Subject: [PATCH 2/2] arm64: perf: Expose Cortex-A53 micro architectural events
+Date:   Thu,  4 Apr 2019 16:25:45 -0700
+Message-Id: <20190404232545.2627-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190404232545.2627-1-f.fainelli@gmail.com>
 References: <20190404232545.2627-1-f.fainelli@gmail.com>
@@ -79,149 +79,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for adding processor specific attributes, group the ARMv8
-PMU v3 common events into a macro that can be re-used to fill up an
-array of attributes.
+Add a variety of useful Cortex-A53 PMU specific events which were
+recently found useful during a debug session.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm64/kernel/perf_event.c | 123 +++++++++++++++++----------------
- 1 file changed, 63 insertions(+), 60 deletions(-)
+ arch/arm64/kernel/perf_event.c | 118 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 116 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 4addb38bc250..2d30922692b1 100644
+index 2d30922692b1..ef4105908830 100644
 --- a/arch/arm64/kernel/perf_event.c
 +++ b/arch/arm64/kernel/perf_event.c
-@@ -234,67 +234,70 @@ ARMV8_EVENT_ATTR(sample_feed, ARMV8_SPE_PERFCTR_SAMPLE_FEED);
- ARMV8_EVENT_ATTR(sample_filtrate, ARMV8_SPE_PERFCTR_SAMPLE_FILTRATE);
- ARMV8_EVENT_ATTR(sample_collision, ARMV8_SPE_PERFCTR_SAMPLE_COLLISION);
+@@ -31,7 +31,23 @@
+ #include <linux/platform_device.h>
  
-+#define ARMV8_PMUV3_EVENT_ATTRS					\
-+	&armv8_event_attr_sw_incr.attr.attr,			\
-+	&armv8_event_attr_l1i_cache_refill.attr.attr,		\
-+	&armv8_event_attr_l1i_tlb_refill.attr.attr,		\
-+	&armv8_event_attr_l1d_cache_refill.attr.attr,		\
-+	&armv8_event_attr_l1d_cache.attr.attr,			\
-+	&armv8_event_attr_l1d_tlb_refill.attr.attr,		\
-+	&armv8_event_attr_ld_retired.attr.attr,			\
-+	&armv8_event_attr_st_retired.attr.attr,			\
-+	&armv8_event_attr_inst_retired.attr.attr,		\
-+	&armv8_event_attr_exc_taken.attr.attr,			\
-+	&armv8_event_attr_exc_return.attr.attr,			\
-+	&armv8_event_attr_cid_write_retired.attr.attr,		\
-+	&armv8_event_attr_pc_write_retired.attr.attr,		\
-+	&armv8_event_attr_br_immed_retired.attr.attr,		\
-+	&armv8_event_attr_br_return_retired.attr.attr,		\
-+	&armv8_event_attr_unaligned_ldst_retired.attr.attr,	\
-+	&armv8_event_attr_br_mis_pred.attr.attr,		\
-+	&armv8_event_attr_cpu_cycles.attr.attr,			\
-+	&armv8_event_attr_br_pred.attr.attr,			\
-+	&armv8_event_attr_mem_access.attr.attr,			\
-+	&armv8_event_attr_l1i_cache.attr.attr,			\
-+	&armv8_event_attr_l1d_cache_wb.attr.attr,		\
-+	&armv8_event_attr_l2d_cache.attr.attr,			\
-+	&armv8_event_attr_l2d_cache_refill.attr.attr,		\
-+	&armv8_event_attr_l2d_cache_wb.attr.attr,		\
-+	&armv8_event_attr_bus_access.attr.attr,			\
-+	&armv8_event_attr_memory_error.attr.attr,		\
-+	&armv8_event_attr_inst_spec.attr.attr,			\
-+	&armv8_event_attr_ttbr_write_retired.attr.attr,		\
-+	&armv8_event_attr_bus_cycles.attr.attr,			\
-+	&armv8_event_attr_l1d_cache_allocate.attr.attr,		\
-+	&armv8_event_attr_l2d_cache_allocate.attr.attr,		\
-+	&armv8_event_attr_br_retired.attr.attr,			\
-+	&armv8_event_attr_br_mis_pred_retired.attr.attr,	\
-+	&armv8_event_attr_stall_frontend.attr.attr,		\
-+	&armv8_event_attr_stall_backend.attr.attr,		\
-+	&armv8_event_attr_l1d_tlb.attr.attr,			\
-+	&armv8_event_attr_l1i_tlb.attr.attr,			\
-+	&armv8_event_attr_l2i_cache.attr.attr,			\
-+	&armv8_event_attr_l2i_cache_refill.attr.attr,		\
-+	&armv8_event_attr_l3d_cache_allocate.attr.attr,		\
-+	&armv8_event_attr_l3d_cache_refill.attr.attr,		\
-+	&armv8_event_attr_l3d_cache.attr.attr,			\
-+	&armv8_event_attr_l3d_cache_wb.attr.attr,		\
-+	&armv8_event_attr_l2d_tlb_refill.attr.attr,		\
-+	&armv8_event_attr_l2i_tlb_refill.attr.attr,		\
-+	&armv8_event_attr_l2d_tlb.attr.attr,			\
-+	&armv8_event_attr_l2i_tlb.attr.attr,			\
-+	&armv8_event_attr_remote_access.attr.attr,		\
-+	&armv8_event_attr_ll_cache.attr.attr,			\
-+	&armv8_event_attr_ll_cache_miss.attr.attr,		\
-+	&armv8_event_attr_dtlb_walk.attr.attr,			\
-+	&armv8_event_attr_itlb_walk.attr.attr,			\
-+	&armv8_event_attr_ll_cache_rd.attr.attr,		\
-+	&armv8_event_attr_ll_cache_miss_rd.attr.attr,		\
-+	&armv8_event_attr_remote_access_rd.attr.attr,		\
-+	&armv8_event_attr_sample_pop.attr.attr,			\
-+	&armv8_event_attr_sample_feed.attr.attr,		\
-+	&armv8_event_attr_sample_filtrate.attr.attr,		\
-+	&armv8_event_attr_sample_collision.attr.attr,		\
-+
- static struct attribute *armv8_pmuv3_event_attrs[] = {
--	&armv8_event_attr_sw_incr.attr.attr,
--	&armv8_event_attr_l1i_cache_refill.attr.attr,
--	&armv8_event_attr_l1i_tlb_refill.attr.attr,
--	&armv8_event_attr_l1d_cache_refill.attr.attr,
--	&armv8_event_attr_l1d_cache.attr.attr,
--	&armv8_event_attr_l1d_tlb_refill.attr.attr,
--	&armv8_event_attr_ld_retired.attr.attr,
--	&armv8_event_attr_st_retired.attr.attr,
--	&armv8_event_attr_inst_retired.attr.attr,
--	&armv8_event_attr_exc_taken.attr.attr,
--	&armv8_event_attr_exc_return.attr.attr,
--	&armv8_event_attr_cid_write_retired.attr.attr,
--	&armv8_event_attr_pc_write_retired.attr.attr,
--	&armv8_event_attr_br_immed_retired.attr.attr,
--	&armv8_event_attr_br_return_retired.attr.attr,
--	&armv8_event_attr_unaligned_ldst_retired.attr.attr,
--	&armv8_event_attr_br_mis_pred.attr.attr,
--	&armv8_event_attr_cpu_cycles.attr.attr,
--	&armv8_event_attr_br_pred.attr.attr,
--	&armv8_event_attr_mem_access.attr.attr,
--	&armv8_event_attr_l1i_cache.attr.attr,
--	&armv8_event_attr_l1d_cache_wb.attr.attr,
--	&armv8_event_attr_l2d_cache.attr.attr,
--	&armv8_event_attr_l2d_cache_refill.attr.attr,
--	&armv8_event_attr_l2d_cache_wb.attr.attr,
--	&armv8_event_attr_bus_access.attr.attr,
--	&armv8_event_attr_memory_error.attr.attr,
--	&armv8_event_attr_inst_spec.attr.attr,
--	&armv8_event_attr_ttbr_write_retired.attr.attr,
--	&armv8_event_attr_bus_cycles.attr.attr,
--	&armv8_event_attr_l1d_cache_allocate.attr.attr,
--	&armv8_event_attr_l2d_cache_allocate.attr.attr,
--	&armv8_event_attr_br_retired.attr.attr,
--	&armv8_event_attr_br_mis_pred_retired.attr.attr,
--	&armv8_event_attr_stall_frontend.attr.attr,
--	&armv8_event_attr_stall_backend.attr.attr,
--	&armv8_event_attr_l1d_tlb.attr.attr,
--	&armv8_event_attr_l1i_tlb.attr.attr,
--	&armv8_event_attr_l2i_cache.attr.attr,
--	&armv8_event_attr_l2i_cache_refill.attr.attr,
--	&armv8_event_attr_l3d_cache_allocate.attr.attr,
--	&armv8_event_attr_l3d_cache_refill.attr.attr,
--	&armv8_event_attr_l3d_cache.attr.attr,
--	&armv8_event_attr_l3d_cache_wb.attr.attr,
--	&armv8_event_attr_l2d_tlb_refill.attr.attr,
--	&armv8_event_attr_l2i_tlb_refill.attr.attr,
--	&armv8_event_attr_l2d_tlb.attr.attr,
--	&armv8_event_attr_l2i_tlb.attr.attr,
--	&armv8_event_attr_remote_access.attr.attr,
--	&armv8_event_attr_ll_cache.attr.attr,
--	&armv8_event_attr_ll_cache_miss.attr.attr,
--	&armv8_event_attr_dtlb_walk.attr.attr,
--	&armv8_event_attr_itlb_walk.attr.attr,
--	&armv8_event_attr_ll_cache_rd.attr.attr,
--	&armv8_event_attr_ll_cache_miss_rd.attr.attr,
--	&armv8_event_attr_remote_access_rd.attr.attr,
--	&armv8_event_attr_sample_pop.attr.attr,
--	&armv8_event_attr_sample_feed.attr.attr,
--	&armv8_event_attr_sample_filtrate.attr.attr,
--	&armv8_event_attr_sample_collision.attr.attr,
-+	ARMV8_PMUV3_EVENT_ATTRS
- 	NULL,
+ /* ARMv8 Cortex-A53 specific event types. */
++#define ARMV8_A53_PERFCTR_EXT_MEM_REQ				0xC0
++#define ARMV8_A53_PERFCTR_NC_EXT_MEM_REQ			0xC1
+ #define ARMV8_A53_PERFCTR_PREF_LINEFILL				0xC2
++#define ARMV8_A53_PERFCTR_I_CACHE_THROTTLE			0xC3
++#define ARMV8_A53_PERFCTR_ENT_READ_ALLOC			0xC4
++#define ARMV8_A53_PERFCTR_READ_ALLOC_MODE			0xC5
++#define ARMV8_A53_PERFCTR_PRE_DECODE_ERROR			0xC6
++#define ARMV8_A53_PERFCTR_DATA_WR_STALL				0xC7
++#define ARMV8_A53_PERFCTR_SCU_SNOOP_OTHER_CPU			0xC8
++#define ARMV8_A53_PERFCTR_COND_BRANCH_EXEC			0xC9
++#define ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED			0xCA
++#define ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED_COMP		0xCB
++#define ARMV8_A53_PERFCTR_COND_BRANCH_MISPRED			0xCC
++#define ARMV8_A53_PERFCTR_L1I_CACHE_MEM_ERR			0xD0
++#define ARMV8_A53_PERFCTR_L1D_CACHE_MEM_ERR			0xD1
++#define ARMV8_A53_PERFCTR_TLB_MEM_ERR				0xD2
++#define ARMV8_A53_PERFCTR_MAX_EVENTS				0xD3
+ 
+ /* ARMv8 Cavium ThunderX specific event types. */
+ #define ARMV8_THUNDER_PERFCTR_L1D_CACHE_MISS_ST			0xE9
+@@ -349,6 +365,82 @@ static struct attribute_group armv8_pmuv3_format_attr_group = {
+ 	.attrs = armv8_pmuv3_format_attrs,
  };
+ 
++#define ARMV8_CORTEXA53_EVENT_ATTR_RESOLVE(m) #m
++#define ARMV8_CORTEXA53_EVENT_ATTR(name, config) \
++	PMU_EVENT_ATTR(name, armv8_cortex_a53_event_attr_##name, \
++		       config, armv8pmu_events_sysfs_show)
++
++ARMV8_CORTEXA53_EVENT_ATTR(ext_mem_req, ARMV8_A53_PERFCTR_EXT_MEM_REQ);
++ARMV8_CORTEXA53_EVENT_ATTR(nc_ext_mem_req, ARMV8_A53_PERFCTR_NC_EXT_MEM_REQ);
++ARMV8_CORTEXA53_EVENT_ATTR(pref_linefill, ARMV8_A53_PERFCTR_PREF_LINEFILL);
++ARMV8_CORTEXA53_EVENT_ATTR(i_cache_throttle, ARMV8_A53_PERFCTR_I_CACHE_THROTTLE);
++ARMV8_CORTEXA53_EVENT_ATTR(enter_read_allocate, ARMV8_A53_PERFCTR_ENT_READ_ALLOC);
++ARMV8_CORTEXA53_EVENT_ATTR(read_allocate_mode, ARMV8_A53_PERFCTR_READ_ALLOC_MODE);
++ARMV8_CORTEXA53_EVENT_ATTR(pre_decode_error, ARMV8_A53_PERFCTR_PRE_DECODE_ERROR);
++ARMV8_CORTEXA53_EVENT_ATTR(data_write_stall, ARMV8_A53_PERFCTR_DATA_WR_STALL);
++ARMV8_CORTEXA53_EVENT_ATTR(scu_snoop_other_cpu, ARMV8_A53_PERFCTR_SCU_SNOOP_OTHER_CPU);
++ARMV8_CORTEXA53_EVENT_ATTR(cond_branch_exec, ARMV8_A53_PERFCTR_COND_BRANCH_EXEC);
++ARMV8_CORTEXA53_EVENT_ATTR(indir_br_pred, ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED);
++ARMV8_CORTEXA53_EVENT_ATTR(indir_br_pred_comp, ARMV8_A53_PERFCTR_INDIR_BRANCH_MISPRED_COMP);
++ARMV8_CORTEXA53_EVENT_ATTR(cond_br_mis_pred, ARMV8_A53_PERFCTR_COND_BRANCH_MISPRED);
++ARMV8_CORTEXA53_EVENT_ATTR(l1i_cache_mem_err, ARMV8_A53_PERFCTR_L1I_CACHE_MEM_ERR);
++ARMV8_CORTEXA53_EVENT_ATTR(l1d_cache_mem_err, ARMV8_A53_PERFCTR_L1D_CACHE_MEM_ERR);
++ARMV8_CORTEXA53_EVENT_ATTR(tlb_mem_err, ARMV8_A53_PERFCTR_TLB_MEM_ERR);
++
++static struct attribute *armv8_cortex_a53_event_attrs[] = {
++	ARMV8_PMUV3_EVENT_ATTRS
++	&armv8_cortex_a53_event_attr_ext_mem_req.attr.attr,
++	&armv8_cortex_a53_event_attr_nc_ext_mem_req.attr.attr,
++	&armv8_cortex_a53_event_attr_pref_linefill.attr.attr,
++	&armv8_cortex_a53_event_attr_i_cache_throttle.attr.attr,
++	&armv8_cortex_a53_event_attr_enter_read_allocate.attr.attr,
++	&armv8_cortex_a53_event_attr_read_allocate_mode.attr.attr,
++	&armv8_cortex_a53_event_attr_pre_decode_error.attr.attr,
++	&armv8_cortex_a53_event_attr_data_write_stall.attr.attr,
++	&armv8_cortex_a53_event_attr_scu_snoop_other_cpu.attr.attr,
++	&armv8_cortex_a53_event_attr_cond_branch_exec.attr.attr,
++	&armv8_cortex_a53_event_attr_indir_br_pred.attr.attr,
++	&armv8_cortex_a53_event_attr_indir_br_pred_comp.attr.attr,
++	&armv8_cortex_a53_event_attr_cond_br_mis_pred.attr.attr,
++	&armv8_cortex_a53_event_attr_l1i_cache_mem_err.attr.attr,
++	&armv8_cortex_a53_event_attr_l1d_cache_mem_err.attr.attr,
++	&armv8_cortex_a53_event_attr_tlb_mem_err.attr.attr,
++	NULL
++};
++
++static umode_t
++armv8_cortex_a53_pmu_event_attr_is_visible(struct kobject *kobj,
++					   struct attribute *attr, int unused)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct pmu *pmu = dev_get_drvdata(dev);
++	struct arm_pmu *cpu_pmu = container_of(pmu, struct arm_pmu, pmu);
++	struct perf_pmu_events_attr *pmu_attr;
++
++	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
++
++	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
++	    test_bit(pmu_attr->id, cpu_pmu->pmceid_bitmap))
++		return attr->mode;
++
++	if (pmu_attr->id >= ARMV8_A53_PERFCTR_EXT_MEM_REQ &&
++	    pmu_attr->id < ARMV8_A53_PERFCTR_MAX_EVENTS)
++		return attr->mode;
++
++	pmu_attr->id -= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
++	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
++	    test_bit(pmu_attr->id, cpu_pmu->pmceid_ext_bitmap))
++		return attr->mode;
++
++	return 0;
++}
++
++static struct attribute_group armv8_cortex_a53_events_attr_group = {
++	.name = "events",
++	.attrs = armv8_cortex_a53_event_attrs,
++	.is_visible = armv8_cortex_a53_pmu_event_attr_is_visible,
++};
++
+ /*
+  * Perf Events' indices
+  */
+@@ -910,7 +1002,29 @@ static int armv8_pmuv3_map_event(struct perf_event *event)
+ 
+ static int armv8_a53_map_event(struct perf_event *event)
+ {
+-	return __armv8_pmuv3_map_event(event, NULL, &armv8_a53_perf_cache_map);
++	int hw_event_id;
++	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
++
++	hw_event_id = armpmu_map_event(event, &armv8_pmuv3_perf_map,
++				       &armv8_pmuv3_perf_cache_map,
++				       ARMV8_PMU_EVTYPE_EVENT);
++
++	if (armv8pmu_event_is_64bit(event))
++		event->hw.flags |= ARMPMU_EVT_64BIT;
++
++	/* Only expose micro/arch events supported by this PMU */
++	if ((hw_event_id > 0) && (hw_event_id < ARMV8_PMUV3_MAX_COMMON_EVENTS)
++	    && test_bit(hw_event_id, armpmu->pmceid_bitmap)) {
++		return hw_event_id;
++	}
++
++	/* Expose Cortex-A53 specific events */
++	if (hw_event_id >= ARMV8_A53_PERFCTR_EXT_MEM_REQ &&
++	    hw_event_id <= ARMV8_A53_PERFCTR_MAX_EVENTS)
++		return hw_event_id;
++
++	return armpmu_map_event(event, NULL, &armv8_a53_perf_cache_map,
++				ARMV8_PMU_EVTYPE_EVENT);
+ }
+ 
+ static int armv8_a57_map_event(struct perf_event *event)
+@@ -1057,7 +1171,7 @@ static int armv8_a53_pmu_init(struct arm_pmu *cpu_pmu)
+ 	cpu_pmu->name			= "armv8_cortex_a53";
+ 	cpu_pmu->map_event		= armv8_a53_map_event;
+ 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_EVENTS] =
+-		&armv8_pmuv3_events_attr_group;
++		&armv8_cortex_a53_events_attr_group;
+ 	cpu_pmu->attr_groups[ARMPMU_ATTR_GROUP_FORMATS] =
+ 		&armv8_pmuv3_format_attr_group;
  
 -- 
 2.17.1
