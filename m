@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B97C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DBAC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217742075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5947B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369218;
-	bh=ZkzlwT1k3wumyTyD2ebr+3dl94WGUbBC70k03IVrQvI=;
+	s=default; t=1554369221;
+	bh=ytLtpcReY4S64uU+tYvNBdmffJ6O+5DUoiQd4IAE3ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TCG8Sbts6nENNnzyMw1sm55NU1sIa74eAarHUTXJgjZ4yV++6xjlD3h63AQCFie9c
-	 d3MTnj3zuCpVsk0XDy89VwJ587kEKRTh11AyHfarPwVGH83tXB1rhujPcUlQR9ktMs
-	 2D9hNBs96qxPd/FadTqjgzlCqrEzG6esqKigo97s=
+	b=zL/AHOPZm9kKUZ6f+cJsng6iY7vQ08E1jOPOzQQeKdoTp/h6YaP6/aTtiehnMlHVf
+	 DWPZGVEki0T6/ngAU06M6UQ2tXbqmV+5su15rfWs2umx8BLOCrPdURwLn+OzghKkmK
+	 3EoJhnmDXsieNYHptWutnhgyWTfuMfecWYo5hOLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387590AbfDDJNg (ORCPT
+        id S2387599AbfDDJNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53812 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:13:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733080AbfDDJNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:13:31 -0400
+        id S2387580AbfDDJNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:13:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E670820693;
-        Thu,  4 Apr 2019 09:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C9A92075E;
+        Thu,  4 Apr 2019 09:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369210;
-        bh=ZkzlwT1k3wumyTyD2ebr+3dl94WGUbBC70k03IVrQvI=;
+        s=default; t=1554369213;
+        bh=ytLtpcReY4S64uU+tYvNBdmffJ6O+5DUoiQd4IAE3ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fKi+sh4wijZ9gVSAGnuFnOoTdfcw8cKb84LLAnxtcMjNVt5w5vV3G0AILxD9mKZVP
-         nf80PAETc2vVhlWzi/OnJs5ETxIUotm1QRwP9H/QjhzBlheUc2n6kuSplyk5V49MWQ
-         4h7WTZ7o/HEAGdkdl1Dr+s6CCE2PZPLeHr2dcxJw=
+        b=XmAMYldvmarQpviNLP/ofeMXj5Z9XK3B/LKUMhZOHE4xICHGwyVUtgUXOxJrZyO5T
+         lYqKNKA+cFX++XtPAy4pABxDqC/e7uPf5s9WiOh4bZVaFck8QQQFV46TgeeaofPUw8
+         xMIIwgmqjAKqmUc2P5SB74bgyQeuuFRFybWq7vyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 138/246] ACPI / video: Refactor and fix dmi_is_desktop()
-Date:   Thu,  4 Apr 2019 10:47:18 +0200
-Message-Id: <20190404084623.998137725@linuxfoundation.org>
+        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+        Sean Young <sean@mess.org>, Sasha Levin <sashal@kernel.org>
+Subject: =?UTF-8?q?=5BPATCH=205=2E0=20139/246=5D=20=3D=3FUTF-8=3Fq=3Fselftests=3A=3D20ir=3A=3D20fix=3D20warning=3A=3D20=22=25s=22=3D20directive=3D20=3F=3D=20=3D=3FUTF-8=3Fq=3Foutput=3D20may=3D20be=3D20truncated=3D20=3DE2=3D80=3D99=3D20directive=3D20output=3F=3D=20=3D=3FUTF-8=3Fq=3F=3D20may=3D20be=3D20truncated=3F=3D?=
+Date:   Thu,  4 Apr 2019 10:47:19 +0200
+Message-Id: <20190404084624.033038495@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,70 +65,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cecf3e3e0803462335e25d083345682518097334 ]
+[ Upstream commit ed675ed9da6d951322efd72d739d6b5ce1c18f02 ]
 
-This commit refactors the chassis-type detection introduced by
-commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
-Win8-ready _desktops_") (where desktop means anything without a builtin
-screen).
+Fix the following warning by sizing the buffer to max. of sysfs
+path max. size + d_name max. size.
 
-The DMI chassis_type is an unsigned integer, so rather then doing a
-whole bunch of string-compares on it, convert it to an int and feed
-the result to a switch case.
+gcc -Wall -O2 -I../../../include/uapi ir_loopback.c  -o ../tools/testing/selftests/ir/ir_loopback
+ir_loopback.c: In function ‘lirc_open’:
+ir_loopback.c:71:37: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 95 [-Wformat-truncation=]
+    snprintf(buf, sizeof(buf), "/dev/%s", dent->d_name);
+                                     ^~
+In file included from /usr/include/stdio.h:862:0,
+                 from ir_loopback.c:14:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:64:10: note: ‘__builtin___snprintf_chk’ output between 6 and 261 bytes into a destination of size 100
+   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        __bos (__s), __fmt, __va_arg_pack ());
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note the switch case uses hex values, this is done because the spec
-uses hex values too. This changes the check for "Main Server Chassis"
-from checking for 11 decimal to 11 hexadecimal, this is a bug fix,
-the original check for 11 decimal was wrong.
-
-Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-[ rjw: Drop redundant return statements ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+Acked-by: Sean Young <sean@mess.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ tools/testing/selftests/ir/ir_loopback.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index f0b52266b3ac..1ab1460c4a4e 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -2124,21 +2124,28 @@ static int __init intel_opregion_present(void)
- 	return opregion;
- }
+diff --git a/tools/testing/selftests/ir/ir_loopback.c b/tools/testing/selftests/ir/ir_loopback.c
+index 858c19caf224..8cdf1b89ac9c 100644
+--- a/tools/testing/selftests/ir/ir_loopback.c
++++ b/tools/testing/selftests/ir/ir_loopback.c
+@@ -27,6 +27,8 @@
  
-+/* Check if the chassis-type indicates there is no builtin LCD panel */
- static bool dmi_is_desktop(void)
+ #define TEST_SCANCODES	10
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
++#define SYSFS_PATH_MAX 256
++#define DNAME_PATH_MAX 256
+ 
+ static const struct {
+ 	enum rc_proto proto;
+@@ -56,7 +58,7 @@ static const struct {
+ int lirc_open(const char *rc)
  {
- 	const char *chassis_type;
-+	unsigned long type;
+ 	struct dirent *dent;
+-	char buf[100];
++	char buf[SYSFS_PATH_MAX + DNAME_PATH_MAX];
+ 	DIR *d;
+ 	int fd;
  
- 	chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	if (!chassis_type)
- 		return false;
- 
--	if (!strcmp(chassis_type, "3") || /*  3: Desktop */
--	    !strcmp(chassis_type, "4") || /*  4: Low Profile Desktop */
--	    !strcmp(chassis_type, "5") || /*  5: Pizza Box */
--	    !strcmp(chassis_type, "6") || /*  6: Mini Tower */
--	    !strcmp(chassis_type, "7") || /*  7: Tower */
--	    !strcmp(chassis_type, "11"))  /* 11: Main Server Chassis */
-+	if (kstrtoul(chassis_type, 10, &type) != 0)
-+		return false;
-+
-+	switch (type) {
-+	case 0x03: /* Desktop */
-+	case 0x04: /* Low Profile Desktop */
-+	case 0x05: /* Pizza Box */
-+	case 0x06: /* Mini Tower */
-+	case 0x07: /* Tower */
-+	case 0x11: /* Main Server Chassis */
- 		return true;
-+	}
- 
- 	return false;
- }
 -- 
 2.19.1
 
