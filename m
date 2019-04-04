@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428ECC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905CCC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1297320693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B2E2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370935;
-	bh=hXrA8yftS/eVEcPPJEpdPvvuR8j+ShkP6G0SDEm7Uuw=;
+	s=default; t=1554370941;
+	bh=2AUYNOR6M6y5fgXj7UzFkNiN/LlzH9BWPxMNBOWiswU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFbs43NljSQUK+H7V2xtylOBNqENN3MLzhyn0Jh/4qqf3nmmXbHy5SkMhIM+XBx1j
-	 IHX2Y0vRQY8qr0cuRLE6iEDtaeCZAjjQhWdOrO/b21AR+A6ERYsGEmssz/wlunVn1z
-	 Z654M5kMwTwfWGAaXZZVZ7ou53xHakEtzMJH9e3g=
+	b=kfLIkl8lPOJ06k/H5coTwVgiNKVYsFBDIWeVcelip3MmQP7MwAuW+LthGCS0J/yBg
+	 vBYF96p1LdI/xMBPaYUUvTIQbWAuhlQTYDpqmXJ6XyPo/VKy05mkQC/l+oukwUxdr1
+	 skq0NAKcYd/tdVxoSkuMV/VCwvcv0JoSez5McY38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbfDDJmN (ORCPT
+        id S1730403AbfDDJBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:42:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38854 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731004AbfDDJBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:01:40 -0400
+        id S1729984AbfDDJBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:01:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E18C2147C;
-        Thu,  4 Apr 2019 09:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E2392147C;
+        Thu,  4 Apr 2019 09:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368498;
-        bh=hXrA8yftS/eVEcPPJEpdPvvuR8j+ShkP6G0SDEm7Uuw=;
+        s=default; t=1554368493;
+        bh=2AUYNOR6M6y5fgXj7UzFkNiN/LlzH9BWPxMNBOWiswU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fzn30nKIXhKrP0kYqSTAn3CcZxyTvGPLPEGrXvxQs3vQuJzS2Dq+mvMC56ihcvHRn
-         t+354jSDXkh7exXZs4TGMzIUbsReoFK/pazi0+QxeoGTU7FjUD2XwwVgyJf0fsUaVK
-         tchzdiWQXwT6z1MAqh9vbpdyfR+HTHwNEYyJSAMQ=
+        b=T+zBJpzpqhivjuThlH0ToiMQcqOQrEeZ+xFTTbPgLHjE3MH38D7qI/r4SmMen2yIy
+         QSaC7yBskjVwS6iLdnMRZq4QvdnTCm/AGVNhqc3JAKupdYgRaub7YaAGiM2mZ9CqoV
+         ALJPoD28S8eyWFZjRiG0bUs1P6+3spxFJDr2NwBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, luojiajun <luojiajun3@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/187] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Thu,  4 Apr 2019 10:46:31 +0200
-Message-Id: <20190404084605.633236057@linuxfoundation.org>
+Subject: [PATCH 4.19 044/187] jbd2: fix invalid descriptor block checksum
+Date:   Thu,  4 Apr 2019 10:46:21 +0200
+Message-Id: <20190404084605.156532712@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,112 +66,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit 6e876c3dd205d30b0db6850e97a03d75457df007 ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+In jbd2_journal_commit_transaction(), if we are in abort mode,
+we may flush the buffer without setting descriptor block checksum
+by goto start_journal_io. Then fs is mounted,
+jbd2_descriptor_block_csum_verify() failed.
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[  271.379811] EXT4-fs (vdd): shut down requested (2)
+[  271.381827] Aborting journal on device vdd-8.
+[  271.597136] JBD2: Invalid checksum recovering block 22199 in log
+[  271.598023] JBD2: recovery failed
+[  271.598484] EXT4-fs (vdd): error loading journal
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+Fix this problem by keep setting descriptor block checksum if the
+descriptor buffer is not NULL.
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
+This checksum problem can be reproduced by xfstests generic/388.
 
-Here is the contexts for the three functions so far:
-
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: luojiajun <luojiajun3@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/jbd2/commit.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 78ca63dfba4a..9a7e3a3bd5ce 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 150cc030b4d7..65ea0355a4f6 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -691,9 +691,11 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+                            the last tag we set up. */
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
- 
-@@ -796,7 +796,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
- 
-@@ -1087,7 +1087,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
- 
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
+ 			tag->t_flags |= cpu_to_be16(JBD2_FLAG_LAST_TAG);
+-
+-			jbd2_descriptor_block_csum_set(journal, descriptor);
+ start_journal_io:
++			if (descriptor)
++				jbd2_descriptor_block_csum_set(journal,
++							descriptor);
++
+ 			for (i = 0; i < bufs; i++) {
+ 				struct buffer_head *bh = wbuf[i];
+ 				/*
 -- 
 2.19.1
 
