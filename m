@@ -2,51 +2,56 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86DAC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C36C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B2720657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A98620657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369726;
-	bh=pKNb7uard65pXCYf0qv+hJ2OEIG/OAhQ+qMJfUDW0G0=;
+	s=default; t=1554369730;
+	bh=PACsLkzXKyzgUvGJctOd20qjyd9vNAIIJYbvV6ZTcGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XQ8AD+KGyztN+cjIJ10RjFdjFoHf6d2p/7NZsKp/VJjvchy+bm2rs1iE3vV9xbUjl
-	 YLcy3KAOl0zF/w+tlKxZxaN0TsMNQTs2HESC2FxHUnmji5a8QlVLwOXjcFgCK8waDl
-	 rCPFXV7SltePBptobk4Rp66MIDzYYZZmImzWcsZU=
+	b=xpwo/uKhZiEeywAnH9/zs57LPUc8HOMcEjG7zvUstlivpCmiG9c2xBgwYse/94NYH
+	 nEy4XS0LcdzsK/vnLwxZeSv2onjw/9hD2K0aZxuzq1D3ABUUWPzc8d0Q0GBYTgIP6P
+	 JXfchGi2bKFO04LPamsLomFTc53sWakQKH1+QIAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388047AbfDDJQ1 (ORCPT
+        id S2388037AbfDDJQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57544 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387808AbfDDJQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:16:19 -0400
+        id S2388025AbfDDJQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:16:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2992054F;
-        Thu,  4 Apr 2019 09:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBC462075E;
+        Thu,  4 Apr 2019 09:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369379;
-        bh=pKNb7uard65pXCYf0qv+hJ2OEIG/OAhQ+qMJfUDW0G0=;
+        s=default; t=1554369376;
+        bh=PACsLkzXKyzgUvGJctOd20qjyd9vNAIIJYbvV6ZTcGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XszFQLGfTfU/f+i8ETr1wI/Y17ARrHvStn9I9UKJrb6TIw8DoL1dmDRlobYS6dR/R
-         d5nLBOUHnb5iPB/xAWQ6pxE7bbHV+CEd9p/jZTwvgsIqvbZNHrSnb4NInN2j+Ox14F
-         NHcPnZjaFzS+vJ6iPrHLnxNlvVct/mP6oT28CiOA=
+        b=QJEgyA2l6+BtfOCJvmQFbYllyBOW5YhVdAxoW5IabPYuAwO8WFGUugaJdN9E9Y202
+         1SgF/1DGPEd8/rGgVu2KKCVb8JM/a9kWtZPev8a3YY8ajJHcBJKgKmI+iDHvGNTEtG
+         TCTQSfj4mUhR3G3IWVBW1HlKfzdk8hPwFUJZnyGc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 186/246] block, bfq: fix in-service-queue check for queue merging
-Date:   Thu,  4 Apr 2019 10:48:06 +0200
-Message-Id: <20190404084625.695115719@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 200/246] perf trace: Fixup etcsnoop example
+Date:   Thu,  4 Apr 2019 10:48:20 +0200
+Message-Id: <20190404084626.190590206@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -65,77 +70,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 058fdecc6de7cdecbf4c59b851e80eb2d6c5295f ]
+[ Upstream commit 1d59cb1bbd4cbe5a8f8032242cdacea5658129cf ]
 
-When a new I/O request arrives for a bfq_queue, say Q, bfq checks
-whether that request is close to
-(a) the head request of some other queue waiting to be served, or
-(b) the last request dispatched for the in-service queue (in case Q
-itself is not the in-service queue)
+Where we don't have "raw_syscalls:sys_enter", so we need to look for a
+"*syscalls:sys_enter*" to initialize the offsets for the
+__augmented_syscalls__ evsel, which is the case with etcsnoop, that was
+segfaulting, fixed:
 
-If a queue, say Q2, is found for which the above condition holds, then
-bfq merges Q and Q2, to hopefully get a more sequential I/O in the
-resulting merged queue, and thus a possibly higher throughput.
+  # trace -e /home/acme/git/perf/tools/perf/examples/bpf/etcsnoop.c
+     0.000 (         ): gnome-shell/2105 openat(dfd: CWD, filename: "/etc/localtime")                       ...
+   631.834 (         ): cat/6521 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) ...
+   632.637 (         ): bash/6521 openat(dfd: CWD, filename: "/etc/passwd")                          ...
+  ^C#
 
-Case (b) is checked by comparing the new request for Q with the last
-request dispatched, assuming that the latter necessarily belonged to the
-in-service queue. Unfortunately, this assumption is no longer always
-correct, since commit d0edc2473be9 ("block, bfq: inject other-queue I/O
-into seeky idle queues on NCQ flash").
-
-When the assumption does not hold, queues that must not be merged may be
-merged, causing unexpected loss of control on per-queue service
-guarantees.
-
-This commit solves this problem by adding an extra field, which stores
-the actual last request dispatched for the in-service queue, and by
-using this new field to correctly check case (b).
-
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+Fixes: b9b6a2ea2baf ("perf trace: Do not hardcode the size of the tracepoint common_ fields")
+Link: https://lkml.kernel.org/n/tip-0tjwcit8qitsmh4nyvf2b0jo@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 5 ++++-
- block/bfq-iosched.h | 3 +++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index cd307767a134..f010810c095f 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2224,7 +2224,8 @@ bfq_setup_cooperator(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 2776ff8c3e81..91cdbf504535 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3868,7 +3868,8 @@ int cmd_trace(int argc, const char **argv)
+ 				goto init_augmented_syscall_tp;
+ 			}
  
- 	if (in_service_bfqq && in_service_bfqq != bfqq &&
- 	    likely(in_service_bfqq != &bfqd->oom_bfqq) &&
--	    bfq_rq_close_to_sector(io_struct, request, bfqd->last_position) &&
-+	    bfq_rq_close_to_sector(io_struct, request,
-+				   bfqd->in_serv_last_pos) &&
- 	    bfqq->entity.parent == in_service_bfqq->entity.parent &&
- 	    bfq_may_be_close_cooperator(bfqq, in_service_bfqq)) {
- 		new_bfqq = bfq_setup_merge(bfqq, in_service_bfqq);
-@@ -2764,6 +2765,8 @@ update_rate_and_reset:
- 	bfq_update_rate_reset(bfqd, rq);
- update_last_values:
- 	bfqd->last_position = blk_rq_pos(rq) + blk_rq_sectors(rq);
-+	if (RQ_BFQQ(rq) == bfqd->in_service_queue)
-+		bfqd->in_serv_last_pos = bfqd->last_position;
- 	bfqd->last_dispatch = now_ns;
- }
- 
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 0b02bf302de0..746bd570b85a 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -537,6 +537,9 @@ struct bfq_data {
- 	/* on-disk position of the last served request */
- 	sector_t last_position;
- 
-+	/* position of the last served request for the in-service queue */
-+	sector_t in_serv_last_pos;
-+
- 	/* time of last request completion (ns) */
- 	u64 last_completion;
- 
+-			if (strcmp(perf_evsel__name(evsel), "raw_syscalls:sys_enter") == 0) {
++			if (trace.syscalls.events.augmented->priv == NULL &&
++			    strstr(perf_evsel__name(evsel), "syscalls:sys_enter")) {
+ 				struct perf_evsel *augmented = trace.syscalls.events.augmented;
+ 				if (perf_evsel__init_augmented_syscall_tp(augmented, evsel) ||
+ 				    perf_evsel__init_augmented_syscall_tp_args(augmented))
 -- 
 2.19.1
 
