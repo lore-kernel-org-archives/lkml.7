@@ -2,75 +2,65 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DACC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A18C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8DE2147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB45420855
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfDDO2J (ORCPT
+        id S1728766AbfDDObI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:28:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfDDO2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:28:09 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0941420855;
-        Thu,  4 Apr 2019 14:28:06 +0000 (UTC)
-Date:   Thu, 4 Apr 2019 10:28:05 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Roland McGrath <roland@hack.frob.com>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Drewry <wad@chromium.org>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH 4/6 v3] csky: Fix syscall_get_arguments() and
- syscall_set_arguments()
-Message-ID: <20190404102805.56f5f168@gandalf.local.home>
-In-Reply-To: <20190404140200.GB4962@altlinux.org>
-References: <20190401134104.676620247@goodmis.org>
-        <20190401134421.121919570@goodmis.org>
-        <20190404140200.GB4962@altlinux.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 4 Apr 2019 10:31:08 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45258 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbfDDObI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 10:31:08 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hC3OR-0003iS-M3; Thu, 04 Apr 2019 16:31:03 +0200
+Date:   Thu, 4 Apr 2019 16:31:03 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v9 00/27] x86: load FPU registers on return to userland
+Message-ID: <20190404143103.k7ycnblyefxswf67@linutronix.de>
+References: <20190403164156.19645-1-bigeasy@linutronix.de>
+ <c4af28470a4347f5aa222a99471c939a@AcuMS.aculab.com>
+ <20190404141409.upfk5z4re3pyvxzn@linutronix.de>
+ <CALCETrU4hSC20sExsgPnhkUOfS+kd-hMHK7_amq_C5duNw33cg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CALCETrU4hSC20sExsgPnhkUOfS+kd-hMHK7_amq_C5duNw33cg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 17:02:01 +0300
-"Dmitry V. Levin" <ldv@altlinux.org> wrote:
-> According to
-> https://lore.kernel.org/lkml/20190330004949.GA15705@guoren-Inspiron-7460/
-> the following tags could be added to this patch:
-> 
-> Tested-by: Guo Ren <ren_guo@c-sky.com>
-> Acked-by: Guo Ren <ren_guo@c-sky.com>
+On 2019-04-04 07:26:37 [-0700], Andy Lutomirski wrote:
+> I think that David was asking whether we could make kernel_fpu_begin()
+> regions sometimes be preemptible.  The answer is presumably yes, but I
+> think that should be a separate effort, and it should be justified
+> with improved performance above and beyond what we get with Jason's
+> simd_get() stuff.
 
-Thanks! Added.
+Last time I checked we had no very SIMD loops unless you count $ALG over
+1 MiB data or so. And in that case you could use the
+kernel_fpu_begin()/end combo after a complete SIMD loop. I would like
+see that at least while going from one page to the next.
 
--- Steve
-
+Sebastian
