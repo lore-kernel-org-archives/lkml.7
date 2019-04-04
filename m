@@ -2,188 +2,164 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C94C10F0E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749C2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F122183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4020320651
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTzj9X/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbfDDULo (ORCPT
+        id S1730683AbfDDUMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:11:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35166 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729712AbfDDUKp (ORCPT
+        Thu, 4 Apr 2019 16:12:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39123 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729712AbfDDUMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:10:45 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34K3Shc028312
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 16:10:43 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rnqkkk4e6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 16:10:43 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 4 Apr 2019 21:10:42 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Apr 2019 21:10:38 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34KAbms25231442
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Apr 2019 20:10:37 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB885B2064;
-        Thu,  4 Apr 2019 20:10:37 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CE4CB205F;
-        Thu,  4 Apr 2019 20:10:37 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Apr 2019 20:10:37 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6EDAE16C2A41; Thu,  4 Apr 2019 13:10:39 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 13:10:39 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, oleg@redhat.com, jannh@google.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-doc@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] doc/rcuref: Document real world examples in kernel
-Reply-To: paulmck@linux.ibm.com
-References: <20190329140555.118463-1-joel@joelfernandes.org>
+        Thu, 4 Apr 2019 16:12:09 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l7so3228995ljg.6;
+        Thu, 04 Apr 2019 13:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iStgFTZUzsIN3Bkb5Af22Ii7OkATb3tLdzI2Uoy5wPY=;
+        b=hTzj9X/yUJLb2j0qyflc5WioiaN0SMoYjUwBv2nLbNlRVW79yU7GRqjZ1IdVLJheAE
+         gVN5Z8rGc2KllFrCVRXD5XOzLikShhr6yXBrS9uIqdTrruD9GcpHmC8IIaz3GHH5acKO
+         vkmwrarLegiEIphWV7pRPwdnPCKP+dsn8zBsSv7/xHRpsXEbhs+mU6idaHlLpDC6zzVl
+         3dgNRijYnkxcB9tIeSDMkTq+z3e1TACHYVusrzls7P6/0ji8CoSANWwpNeWrhtBliyJl
+         cWlHd0FmJC9zfPBIoZ80JP0lNCNDPfW7dNpf5FJ0Y3UmVNx2fh9tcEWzZARD6FKWOq92
+         MWZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iStgFTZUzsIN3Bkb5Af22Ii7OkATb3tLdzI2Uoy5wPY=;
+        b=VLCvCLIxlYJ1hH6b9RkvhqERPn9ZOxzVws4/SapZ4eURZoHLxSTzAvrHgJuNGbcXb6
+         P3xMty56XYprmtPkYOyjfiY3bWZ61P5WWOyzHnV3V7swi0FzEWyIKcCNPTLkiNHBf6Tn
+         w7mKzhNSdczMcDC7Bo0RoAE7JMMMsvKdeve5qg5xk3Tno02fNKXCXErw3GxkW65xp0zJ
+         r4HHXw6W9laFeX5iZoXg+taMa5AgJtLtnRDr05WnwX5ZtD+WvtxR2YDYQfc8SZs/fa4w
+         eXZmiGC5brS0VDP3qvE/PB22nUvu3Dutvji/OiAfhpu+TAOXr9YejhO4+szL7tLhpijG
+         I5Ew==
+X-Gm-Message-State: APjAAAWzPhfRTEAilKWCUKdQ/DDf36A5R8gY51GzLV7hdIL/hcXYieyV
+        fCs7H0nGZ5sWA1nKAF3lzUR6yAds
+X-Google-Smtp-Source: APXvYqzfWkdhFMTUuB81TFdQt++DXmrxWvs1G71AjCRseM5dgMD+FER5bfiXHipFEcALm1tJHnBDmg==
+X-Received: by 2002:a2e:5d94:: with SMTP id v20mr4531737lje.138.1554408726352;
+        Thu, 04 Apr 2019 13:12:06 -0700 (PDT)
+Received: from [192.168.1.19] (dkj99.neoplus.adsl.tpnet.pl. [83.24.13.99])
+        by smtp.gmail.com with ESMTPSA id z13sm4125644ljk.41.2019.04.04.13.12.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 13:12:05 -0700 (PDT)
+Subject: Re: [PATCH 2/4] ARM: dts: omap4-droid4: Update backlight dt
+ properties
+To:     Dan Murphy <dmurphy@ti.com>, tony@atomide.com
+Cc:     robh+dt@kernel.org, pavel@ucw.cz, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+References: <20190321142838.22985-1-dmurphy@ti.com>
+ <20190321142838.22985-2-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <f9d80ad1-d80c-bf77-5e0b-1e02a1b74200@gmail.com>
+Date:   Thu, 4 Apr 2019 22:12:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190329140555.118463-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19040420-2213-0000-0000-000003718407
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010873; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01184350; UDB=6.00620121; IPR=6.00965103;
- MB=3.00026298; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-04 20:10:41
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040420-2214-0000-0000-00005DE7A305
-Message-Id: <20190404201039.GL14111@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904040127
+In-Reply-To: <20190321142838.22985-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 10:05:55AM -0400, Joel Fernandes (Google) wrote:
-> Document similar real world examples in the kernel corresponding to the
-> second and third code snippets. Also correct an issue in
-> release_referenced() in the code snippet example.
+Tony,
+
+On 3/21/19 3:28 PM, Dan Murphy wrote:
+> Update the properties for the lm3532 device node for droid4.
+> With this change the backlight LED string and the keypad
+> LED strings will be controlled separately.
 > 
-> Cc: oleg@redhat.com
-> Cc: jannh@google.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v5 - No change - https://lore.kernel.org/patchwork/patch/1050409/
+> 
+> v4 - No change - https://lore.kernel.org/patchwork/patch/1050125/
+> v3 - updated keypad label on v1 comment - https://lore.kernel.org/patchwork/patch/1049023/
+> v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
+> I did not change the label as it is undecided what it could be - https://lore.kernel.org/patchwork/patch/1048806/
+> 
+>   arch/arm/boot/dts/omap4-droid4-xt894.dts | 26 ++++++++++++++++--------
+>   1 file changed, 18 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> index e21ec929f096..aea206f04f76 100644
+> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+> @@ -383,20 +383,30 @@
+>   };
+>   
+>   &i2c1 {
+> -	lm3532@38 {
+> +	led-controller@38 {
+>   		compatible = "ti,lm3532";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>   		reg = <0x38>;
+>   
+>   		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+>   
+> -		lcd_backlight: backlight {
+> -			compatible = "ti,lm3532-backlight";
+> +		ramp-up-us = <1024>;
+> +		ramp-down-us = <8193>;
+>   
+> -			lcd {
+> -				led-sources = <0 1 2>;
+> -				ramp-up-msec = <1>;
+> -				ramp-down-msec = <0>;
+> -			};
 
-Good catch, thank you!
+Since I'll be creating integration branch for this series,
+and it would be good to have this patch in it too, then
+I can do the amendments by myself:
 
-As usual, I could not resist doing a bit of wordsmithing.  Please let me
-know if I messed anything up in the version shown below.
+> +		lcd_backlight: led@0 {
+> +			reg = <0>;
+> +			led-sources = <2>;
+> +			ti,led-mode = <0>;
+> +			label = "backlight";
 
-								Thanx, Paul
+s/backlight/:backlight/
 
-------------------------------------------------------------------------
+> +			linux,default-trigger = "backlight";
+> +		};
+> +
+> +		led@1 {
+> +			reg = <1>;
+> +			led-sources = <1>;
+> +			ti,led-mode = <0>;
+> +			label = "platform::kbd_backlight";
 
-commit adcd92c0ab303b57b28a3cd097bd9ece824c14f6
-Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-Date:   Fri Mar 29 10:05:55 2019 -0400
+s/platform::kbd_backlight/:kbd_backlight/
 
-    doc/rcuref: Document real world examples in kernel
-    
-    Document similar real world examples in the kernel corresponding to the
-    second and third code snippets. Also correct an issue in
-    release_referenced() in the code snippet example.
-    
-    Cc: oleg@redhat.com
-    Cc: jannh@google.com
-    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-    [ paulmck: Do a bit of wordsmithing. ]
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+and then send you a pull request.
 
-diff --git a/Documentation/RCU/rcuref.txt b/Documentation/RCU/rcuref.txt
-index 613033ff2b9b..c0bab7fb57e7 100644
---- a/Documentation/RCU/rcuref.txt
-+++ b/Documentation/RCU/rcuref.txt
-@@ -12,6 +12,7 @@ please read on.
- Reference counting on elements of lists which are protected by traditional
- reader/writer spinlocks or semaphores are straightforward:
- 
-+CODE LISTING A:
- 1.				2.
- add()				search_and_reference()
- {				{
-@@ -28,7 +29,8 @@ add()				search_and_reference()
- release_referenced()			delete()
- {					{
-     ...					    write_lock(&list_lock);
--    atomic_dec(&el->rc, relfunc)	    ...
-+    if(atomic_dec_and_test(&el->rc))	    ...
-+	kfree(el);
-     ...					    remove_element
- }					    write_unlock(&list_lock);
-  					    ...
-@@ -44,6 +46,7 @@ search_and_reference() could potentially hold reference to an element which
- has already been deleted from the list/array.  Use atomic_inc_not_zero()
- in this scenario as follows:
- 
-+CODE LISTING B:
- 1.					2.
- add()					search_and_reference()
- {					{
-@@ -79,6 +82,7 @@ search_and_reference() code path.  In such cases, the
- atomic_dec_and_test() may be moved from delete() to el_free()
- as follows:
- 
-+CODE LISTING C:
- 1.					2.
- add()					search_and_reference()
- {					{
-@@ -114,6 +118,16 @@ element can therefore safely be freed.  This in turn guarantees that if
- any reader finds the element, that reader may safely acquire a reference
- without checking the value of the reference counter.
- 
-+A clear advantage of the RCU-based pattern in listing C over the one
-+in listing B is that any call to search_and_reference() that locates
-+a given object will succeed in obtaining a reference to that object,
-+even given a concurrent invocation of delete() for that same object.
-+Similarly, a call to delete() is not delayed even if there are an
-+arbitrarily large number of calls to search_and_reference() searching
-+for the same object that delete() was invoked on.  Instead, all that is
-+delayed is the eventual invocation of kfree(), which is usually not a
-+problem on modern computer systems, even the small ones.
-+
- In cases where delete() can sleep, synchronize_rcu() can be called from
- delete(), so that el_free() can be subsumed into delete as follows:
- 
-@@ -130,3 +144,7 @@ delete()
-     	kfree(el);
-     ...
- }
-+
-+As additional examples in the kernel, the pattern in listing C is used by
-+reference counting of struct pid, while the pattern in listing B is used by
-+struct posix_acl.
+Would you be OK with that?
 
+>   		};
+>   	};
+>   };
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
