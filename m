@@ -2,152 +2,189 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75236C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EF5C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454A0206B7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:46:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hJKKYtgk"
+	by mail.kernel.org (Postfix) with ESMTP id BFDEE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbfDDJqv (ORCPT
+        id S1731030AbfDDJrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:46:51 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48460 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730439AbfDDJqs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:46:48 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 42C5654B;
-        Thu,  4 Apr 2019 11:46:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1554371205;
-        bh=tQm3Pm2enJpmrKHwh038Jug61ni/to8BeKEEq91bHis=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hJKKYtgkzZuQ2mvkdpTfLHYBZeq4OPB6TR6Qc1hM/rcFm+LXDh00J7CRWy0+ra8xp
-         VOAKuseHavmDTkaLYFBQoYiBZtRxnWc0yR6KWubtdXXvG+D35spbeW/tNr6kYBGzR0
-         rJLO1WIr9aNRN4IqvyQHsgDx6qyimeoCn8RyXWI0=
-Date:   Thu, 4 Apr 2019 12:46:34 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     VenkataRajesh.Kalakodima@in.bosch.com
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 0/8] v4.19.0 Added Color Management Module
-Message-ID: <20190404094634.GC5800@pendragon.ideasonboard.com>
-References: <1554297284-14009-1-git-send-email-VenkataRajesh.Kalakodima@in.bosch.com>
- <20190404094531.GB5800@pendragon.ideasonboard.com>
+        Thu, 4 Apr 2019 05:47:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56654 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730361AbfDDJq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:46:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ECFD168F;
+        Thu,  4 Apr 2019 02:46:59 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4D1A3F819;
+        Thu,  4 Apr 2019 02:46:55 -0700 (PDT)
+Subject: Re: [PATCH 6/6] arm64/mm: Enable ZONE_DEVICE
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>, james.morse@arm.com,
+        Mark Rutland <mark.rutland@arm.com>, cpandya@codeaurora.org,
+        arunks@codeaurora.org, osalvador@suse.de,
+        Logan Gunthorpe <logang@deltatee.com>,
+        David Hildenbrand <david@redhat.com>, cai@lca.pw,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <1554265806-11501-1-git-send-email-anshuman.khandual@arm.com>
+ <1554265806-11501-7-git-send-email-anshuman.khandual@arm.com>
+ <ea5567c7-caad-8a4e-7c6f-cec4b772a526@arm.com>
+ <0d72db39-e20d-1cbd-368e-74dda9b6c936@arm.com>
+ <CAPcyv4h5YskvjR306FsHnVHpPjnT4s2JPJXgk6CxiMz8bjhqkg@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a16a9867-7019-10ab-1901-c114bcd8712b@arm.com>
+Date:   Thu, 4 Apr 2019 10:46:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190404094531.GB5800@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPcyv4h5YskvjR306FsHnVHpPjnT4s2JPJXgk6CxiMz8bjhqkg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 12:45:31PM +0300, Laurent Pinchart wrote:
-> Hi Kalakodima,
+On 04/04/2019 06:04, Dan Williams wrote:
+> On Wed, Apr 3, 2019 at 9:42 PM Anshuman Khandual
+> <anshuman.khandual@arm.com> wrote:
+>>
+>>
+>>
+>> On 04/03/2019 07:28 PM, Robin Murphy wrote:
+>>> [ +Dan, Jerome ]
+>>>
+>>> On 03/04/2019 05:30, Anshuman Khandual wrote:
+>>>> Arch implementation for functions which create or destroy vmemmap mapping
+>>>> (vmemmap_populate, vmemmap_free) can comprehend and allocate from inside
+>>>> device memory range through driver provided vmem_altmap structure which
+>>>> fulfils all requirements to enable ZONE_DEVICE on the platform. Hence just
+>>>
+>>> ZONE_DEVICE is about more than just altmap support, no?
+>>
+>> Hot plugging the memory into a dev->numa_node's ZONE_DEVICE and initializing the
+>> struct pages for it has stand alone and self contained use case. The driver could
+>> just want to manage the memory itself but with struct pages either in the RAM or
+>> in the device memory range through struct vmem_altmap. The driver may not choose
+>> to opt for HMM, FS DAX, P2PDMA (use cases of ZONE_DEVICE) where it may have to
+>> map these pages into any user pagetable which would necessitate support for
+>> pte|pmd|pud_devmap.
 > 
-> Thank you for the patch.
+> What's left for ZONE_DEVICE if none of the above cases are used?
+> 
+>> Though I am still working towards getting HMM, FS DAX, P2PDMA enabled on arm64,
+>> IMHO ZONE_DEVICE is self contained and can be evaluated in itself.
+> 
+> I'm not convinced. What's the specific use case.
 
-And I forgot to mention, please CC me on all patches to the DU driver.
-The script/get_maintainer.pl script should have told you about that.
-> 
-> On Wed, Apr 03, 2019 at 06:44:36PM +0530, VenkataRajesh.Kalakodima@in.bosch.com wrote:
-> > From: kalakodima venkata rajesh <venkatarajesh.kalakodima@in.bosch.com>
-> > 
-> > This patchset adds rcar- display unit color management module (CMM)
-> > function feature, Which allows correction and adjustment of the
-> > display data, through updating Look up table (gamma) and  Cubic look
-> > up table (CTM)  property values 
-> > 
-> > Base color management module reference code taken from below link,
-> > https://github.com/renesas-rcar/du_cmm .
-> > - In above code, modified variable namingâ€™s and removed un used
-> >   functionalities.
-> > - Introduce new functions for queueing cubic look up table and look up
-> >   table events.
-> > 
-> > - Implemented interfaces in color management module to set CLU /LUT
-> >   table using standard DRM data structures as input.
-> >   Look up table is a 1D-LUT that converts each of three-color
-> >   components by using a lookup table. LUT is used for gamma
-> >   correction.							
-> >   Cubic look up table is a three-dimensional LUT (3D-LUT) that
-> >   converts the input three-color-component data into desired three
-> >   color Components by using a lookup table
-> > 
-> > - Implemented atomic check helper functions for enable/disable LUT and
-> >   CLU (Gamma and Color Transformation Matrix properties).
-> > - Allocated memory necessary for cubic look up table and look up table
-> >   and added mode fix up callback function
-> > - Added update gamma and color transformation matrix properties in
-> >   commit tail function, If any change in property values.
-> > 
-> > kalakodima venkata rajesh (8):
-> >   drm: Add DU CMM support functions
-> >   drm: Add DU CMM support boot and clk changes
-> >   drm: rcar-du: Give a name to clu table samples
-> >   drm: rcar-du: Refactor the code with new functions
-> >   drm: rcar-du: Implement interfaces to set clu and lut using drm data
-> >     structures
-> >   drm: rcar-du: Implement atomic_check to check for gamma and ctm
-> >     properties
-> >   drm: rcar-du: update gamma and ctm properties in commit tail
-> >   drm: rcar-du: Add shutdown callback function in platform_driver
-> > 
-> >  .../boot/dts/renesas/r8a7795-es1-salvator-x.dts    |    5 +
-> >  arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |    5 +
-> >  .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts |    5 +
-> >  arch/arm64/boot/dts/renesas/r8a7795.dtsi           |   29 +-
-> >  arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |    6 +-
-> >  .../arm64/boot/dts/renesas/r8a7796-salvator-xs.dts |    4 +
-> >  arch/arm64/boot/dts/renesas/r8a7796.dtsi           |   25 +-
-> >  .../arm64/boot/dts/renesas/r8a77965-salvator-x.dts |    7 +-
-> >  .../boot/dts/renesas/r8a77965-salvator-xs.dts      |    7 +-
-> >  arch/arm64/boot/dts/renesas/r8a77965.dtsi          |   27 +-
-> >  drivers/clk/renesas/r8a7795-cpg-mssr.c             |    4 +
-> >  drivers/clk/renesas/r8a7796-cpg-mssr.c             |    3 +
-> >  drivers/clk/renesas/r8a77965-cpg-mssr.c            |  106 +-
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |   35 +
-> >  drivers/gpu/drm/rcar-du/Makefile                   |    2 +
-> >  drivers/gpu/drm/rcar-du/rcar_du_cmm.c              | 1470 ++++++++++++++++++++
-> >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c             |   82 ++
-> >  drivers/gpu/drm/rcar-du/rcar_du_crtc.h             |   28 +
-> >  drivers/gpu/drm/rcar-du/rcar_du_drv.c              |   85 +-
-> >  drivers/gpu/drm/rcar-du/rcar_du_drv.h              |   16 +-
-> >  drivers/gpu/drm/rcar-du/rcar_du_encoder.c          |    2 +-
-> >  drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |    1 +
-> >  drivers/gpu/drm/rcar-du/rcar_du_group.c            |    5 +
-> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c              |   25 +
-> >  drivers/gpu/drm/rcar-du/rcar_du_regs.h             |   92 ++
-> >  include/drm/bridge/dw_hdmi.h                       |    1 +
-> >  include/drm/drm_atomic.h                           |   25 +
-> >  include/drm/drm_ioctl.h                            |    7 +
-> >  28 files changed, 2082 insertions(+), 27 deletions(-)
-> >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_cmm.c
-> 
-> First of all, please split changes to DT, to the clock drivers, to the
-> dw-hdmi driver, to the DRM core and to the R-Car DU driver in separate
-> patches, with appropriate subject lines prefixes for each of them. As
-> you're modifying DT bindngs, you also need to update the bindings
-> documentation, which should go to a patch of its own.
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
+The fundamental "roadmap" reason we've been doing this is to enable 
+further NVDIMM/pmem development (libpmem/Qemu/etc.) on arm64. The fact 
+that ZONE_DEVICE immediately opens the door to the various other stuff 
+that the CCIX folks have interest in is a definite bonus, so it would 
+certainly be preferable to get arm64 on par with the current state of 
+things rather than try to subdivide the scope further.
 
--- 
-Regards,
+I started working on this from the ZONE_DEVICE end, but got bogged down 
+in trying to replace my copied-from-s390 dummy hot-remove implementation 
+with something proper. Anshuman has stepped in to help with hot-remove 
+(since we also have cloud folks wanting that for its own sake), so is 
+effectively coming at the problem from the opposite direction, and I'll 
+be the first to admit that we've not managed the greatest job of meeting 
+in the middle and coordinating our upstream story; sorry about that :)
 
-Laurent Pinchart
+Let me freshen up my devmap patches and post them properly, since that 
+discussion doesn't have to happen in the context of hot-remove; they're 
+effectively just parallel dependencies for ZONE_DEVICE.
+
+Robin.
+
+>>
+>>>
+>>>> enable ZONE_DEVICE by subscribing to ARCH_HAS_ZONE_DEVICE. But this is only
+>>>> applicable for ARM64_4K_PAGES (ARM64_SWAPPER_USES_SECTION_MAPS) only which
+>>>> creates vmemmap section mappings and utilize vmem_altmap structure.
+>>>
+>>> What prevents it from working with other page sizes? One of the foremost use-cases for our 52-bit VA/PA support is to enable mapping large quantities of persistent memory, so we really do need this for 64K pages too. FWIW, it appears not to be an issue for PowerPC.
+>>
+>>
+>> On !AR64_4K_PAGES vmemmap_populate() calls vmemmap_populate_basepages() which
+>> does not support struct vmem_altmap right now. Originally was planning to send
+>> the vmemmap_populate_basepages() enablement patches separately but will post it
+>> here for review.
+>>
+>>>
+>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>> ---
+>>>>    arch/arm64/Kconfig | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>>> index db3e625..b5d8cf5 100644
+>>>> --- a/arch/arm64/Kconfig
+>>>> +++ b/arch/arm64/Kconfig
+>>>> @@ -31,6 +31,7 @@ config ARM64
+>>>>        select ARCH_HAS_SYSCALL_WRAPPER
+>>>>        select ARCH_HAS_TEARDOWN_DMA_OPS if IOMMU_SUPPORT
+>>>>        select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>>>> +    select ARCH_HAS_ZONE_DEVICE if ARM64_4K_PAGES
+>>>
+>>> IIRC certain configurations (HMM?) don't even build if you just turn this on alone (although of course things may have changed elsewhere in the meantime) - crucially, though, from previous discussions[1] it seems fundamentally unsafe, since I don't think we can guarantee that nobody will touch the corners of ZONE_DEVICE that also require pte_devmap in order not to go subtly wrong. I did get as far as cooking up some patches to sort that out [2][3] which I never got round to posting for their own sake, so please consider picking those up as part of this series.
+>>
+>> In the previous discussion mentioned here [1] it sort of indicates that we
+>> cannot have a viable (ARCH_HAS_ZONE_DEVICE=y but !__HAVE_ARCH_PTE_DEVMAP). I
+>> dont understand why !
+> 
+> Because ZONE_DEVICE was specifically invented to solve get_user_pages() for DAX.
+> 
+>> The driver can just hotplug the range into ZONE_DEVICE,
+>> manage the memory itself without mapping them to user page table ever.
+> 
+> Then why do you even need 'struct page' objects?
+> 
+>> IIUC
+>> ZONE_DEVICE must not need user mapped device PFN support.
+> 
+> No, you don't understand correctly, or I don't understand how you plan
+> to use ZONE_DEVICE outside it's intended use case.
+> 
+>> All the corner case
+>> problems discussed previously come in once these new 'device PFN' memory which
+>> is now in ZONE_DEVICE get mapped into user page table.
+>>
+>>>
+>>> Robin.
+>>>
+>>>>        select ARCH_HAVE_NMI_SAFE_CMPXCHG
+>>>>        select ARCH_INLINE_READ_LOCK if !PREEMPT
+>>>>        select ARCH_INLINE_READ_LOCK_BH if !PREEMPT
+>>>>
+>>>
+>>>
+>>> [1] https://lore.kernel.org/linux-mm/CAA9_cmfA9GS+1M1aSyv1ty5jKY3iho3CERhnRAruWJW3PfmpgA@mail.gmail.com/#t
+>>> [2] http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=61816b833afdb56b49c2e58f5289ae18809e5d67
+>>> [3] http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a5a16560eb1becf9a1d4cc0d03d6b5e76da4f4e1
+>>> (apologies to anyone if the linux-arm.org server is being flaky as usual and requires a few tries to respond properly)
+>>
+>> I have not evaluated pte_devmap(). Will consider [3] when enabling it. But
+>> I still dont understand why ZONE_DEVICE can not be enabled and used from a
+>> driver which never requires user mapping or pte|pmd|pud_devmap() support.
+> 
+> Because there are mm paths that make assumptions about ZONE_DEVICE
+> that your use case might violate.
+> 
