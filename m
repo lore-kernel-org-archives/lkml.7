@@ -2,160 +2,173 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E0FC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1E4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEA0206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71934206C0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 20:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LVSp3FDO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQeJje85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbfDDUmv (ORCPT
+        id S1730338AbfDDUo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 16:42:51 -0400
-Received: from mout.web.de ([212.227.17.12]:55093 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729924AbfDDUmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 16:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1554410555;
-        bh=6HIwiYbANMV6jQjWrx5bJc0orI/6ermAa1nqrngjzu8=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=LVSp3FDO7YidRv7nKROd5H8JEJGQg8SCYxo/1pOXQIj3wN3UlwPPZTubPAXfh6TuU
-         jLaGDjXt1ihGg+SrJiIPJ7M0XT8Zyjv6iX8sCM4IH+cqbcrSVx+xuRNiIpjk4NT2rK
-         INYtpgFycyZ9nuPJpj6TdvhWbFbEalAqd4Av44uw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.54.132]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MAvGa-1h2D1j2t9g-009yHM; Thu, 04
- Apr 2019 22:42:35 +0200
-Cc:     linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Yi Wang <wang.yi59@zte.com.cn>
-References: <1554307455-40361-5-git-send-email-wen.yang99@zte.com.cn>
-Subject: Re: [PATCH 4/7] drm/omap: fix possible object reference leak
-To:     Wen Yang <wen.yang99@zte.com.cn>, dri-devel@lists.freedesktop.org,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
+        Thu, 4 Apr 2019 16:44:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37012 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbfDDUo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 16:44:26 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v14so4932213wmf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 13:44:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gdUvK+kr5fGH4KrHsnY6KMtlmI5F7w38coTO7hfcBV0=;
+        b=vQeJje85goqZSElGVAvLOso7o21hEI0NokhxzbIuyP4/MTUjRpWMpRWrAW5jNIzPeD
+         eltHNH7Y0YLJPbgee078M3R0aFed+2UZ6yVbWHbLWMHlbQOuS3uC/7F+OBu33zjvCBHy
+         oNwfirwj8Y4DrUAf/eoUYa+EG4zZBeyxpd4VuPpu3UN+5wAbDVKRbrSHgmYxRA+NRFRC
+         pqaLqbawfdzY5L2N1TJVRAte39qCnmmWJaZv4Rb+Kqz/qLNCu5EjD6meQiguxAQ3Qwez
+         8TLrYlBWFoU5oOtFLReEkHkmZHLVXJI1FjNJ80R+ldEprVbrqPT8KJt8WH4XxZ0zgFH2
+         mwbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gdUvK+kr5fGH4KrHsnY6KMtlmI5F7w38coTO7hfcBV0=;
+        b=WK9Yp0blStFyQ4DUSgR6y5qEytPcyL7Do7ZZP3vCOQfAQWR7FbE5vo4ujqYZVumDmW
+         el4ie5Myfcn02nPCVHsrouda9i9if//oseR4mormoxe7a5zuW90qfK3AczY+2ymcLZQx
+         q4FpGn/OkdkAQgl5ooDL20aCdQ9HSR8BGSOmv/jjQ41/tWWnK25H+6PZCJd7jn3XRuEv
+         8y9rqif2LacoNy7+zrbJ7TL7KahtvcuyrzdLaxj0NYqWrJ1MjO3VXfn+SdmBv9OCvpiE
+         O7Ovpfeh2pDwMsa45n+omU/aKt1GVwU8YtUeCRdguRSlh6osgdwqvN9pHa4vEYka2/gt
+         hOnQ==
+X-Gm-Message-State: APjAAAXL9ovDH2CPz3fl9v73dFvmxHnqV78gDi7AoVgCV0HIH/kTvBgs
+        YNPlvUk5DkbJfDb3Wo+BQT0=
+X-Google-Smtp-Source: APXvYqxfysW6STNPV5cQbBlGseDo1jGhrJJ6XTFdcNH00Xi4o4so8tShvsvcSE2mFtMB31ceiU9/pA==
+X-Received: by 2002:a1c:7611:: with SMTP id r17mr5273616wmc.98.1554410664898;
+        Thu, 04 Apr 2019 13:44:24 -0700 (PDT)
+Received: from [192.168.1.82] (host86-171-79-21.range86-171.btcentralplus.com. [86.171.79.21])
+        by smtp.gmail.com with ESMTPSA id 61sm69077774wre.50.2019.04.04.13.44.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Apr 2019 13:44:24 -0700 (PDT)
+Subject: Re: fs/adfs - keep or kill it?
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Ben Dooks <ben-linux-arm@fluff.org>
+References: <20190404103521.pklwk4efp2zccjzc@shell.armlinux.org.uk>
+From:   Stuart Swales <stuart.swales.croftnuisk@gmail.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b34cb17c-aa74-3b15-5469-f7a1ba417d36@web.de>
-Date:   Thu, 4 Apr 2019 22:42:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Autocrypt: addr=stuart.swales.croftnuisk@gmail.com; prefer-encrypt=mutual;
+ keydata=
+ mQENBE+b/Z8BCAC4wh3pWD4s6t+9GYpQd7RAFfH4M26UiIA5tmkOgH5GE0+YLobNGoMKry08
+ mswa5uwdVkZkBJYwWKLiuFQvE7qY3dEn3ToRTkWkkETBHVdwQ6TK8Q/Ws6kuViPR/IxDNQXR
+ bJQnrFhrrTDaSxa1YYTXyXsVXXEuvWyBEFkbSFJ6jsNKNZ8IFm4h/aqh9PNo7t/TKM0KliXI
+ +QaroosuqPsvfKeDAA7G4crkLJ51mya0Qf7phvltyt3QK2uZwmuJil0ISBlu6uto04Rx6Nps
+ iNIjeluDEluQiN3EqFFIDI84TJvMiKhk2iDVZvfmAsaGGOiZGtLBifBZR0TEmvYDhzwnABEB
+ AAG0MlN0dWFydCBTd2FsZXMgPHN0dWFydC5zd2FsZXMuY3JvZnRudWlza0BnbWFpbC5jb20+
+ iQE4BBMBAgAiBQJPm/2fAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCKDdl+nvt1
+ 6QPjB/90xUHMEjQfkJaelexlRGPOV10llvfWm9NrxCajWuYGoOAh9Ba+TtzNAAOCCc3fzIov
+ vSRvmWmOSaE+6BcSy2i3YlbUPEPf/Cv+uqRPlO4pnYg+Em7vnaXSfdgdcY4cfAhRUF2kn4Gp
+ ogis9zJHqWudSh32bBlhR0a4ILNf6rcSt0wUzl5E5qKf0iKghShg567S8ffHgrfIccRht/pn
+ N9yXqsiiwPPlYeubDbBkJumdFYHMZZkMMWFeI3ItenQkxnr5LrW2g/+AUnkk/1BZ9iyYGI80
+ cPp2OhCXO4PDqduqJxARAIXvAYRdyR/txlwx9wq9X/A2+PKNLr6PLSNdEoVRuQENBE+b/Z8B
+ CACt2sbqqG/cK16BMrC0dm5thV6h8xapxO4mqPflurVQGhfDXYvl50Td5DreZ4y+8YExPlji
+ hUPnfV4qxyHy/Kflqi9kTjbPpkzLqvzV7hNLNzqAXioEOqInUyspfYfLUh21X5RX30aIcOwS
+ X9pcPpave4u2rxAgPGKxWZtk18sSYYiFxGl3U53ecVbuIsQWKpnD8F5eSjNaGLFCuJGMYHtU
+ uRTvah8kFKhR3cxLSyaFA2jn8ELpJy9n4me8Nhio4W1fIa9JNwGZvdFR4Ghb8XK7A4G1XDy1
+ hL/c/Ean8cb81U2OVQ5Ws8HHVNkXS+tqLU6DxZypExP2hOH4ArBD7guzABEBAAGJAR8EGAEC
+ AAkFAk+b/Z8CGwwACgkQig3Zfp77demfcQf7B4KuaGFxHFupqRu70RDT7ruc5E2BaXMxVvcY
+ feCJ02mcm/mZsBLAyeijMz+MGylGsNcMqLEW4QabKt4Gp/waKZMyeMBZnm+zINWUJ/HwBKIU
+ JRNCNjMN51W0z7dq6LhCCCMcg1lINGf08He0x3IgiPF0lvVK121jpObLqfqFZOEw590RI0yT
+ ZmTVNVDA2PPRL5E5qCQvoSrVA92wbtfvqNi1B0aLvjeVvF3m62gmetV1BGKZ64AFR+bmQmEu
+ qp3Q0acb60f8o1BdSOi5QCvG+Nu5HbPis2uTXTUInb2O2LEKp5q00WMlEChn0+Bju9vAm7np
+ 3543unQvLtxv3kwgjg==
+Message-ID: <0b7bcf91-500b-e25a-4a71-f41f3ca8c292@gmail.com>
+Date:   Thu, 4 Apr 2019 21:44:24 +0100
 MIME-Version: 1.0
-In-Reply-To: <1554307455-40361-5-git-send-email-wen.yang99@zte.com.cn>
+In-Reply-To: <20190404103521.pklwk4efp2zccjzc@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:auQSF9DF0zLXJ3FokmdszWz8yKEXutUAQX4VCAxRxWzVILMYlqN
- ffZqHOjH6KvFa3lPWRlftNoaYBrYSm2bZIqsrLQhJiEZcgkEdP8NQw9m+ZDmJ1UULGNDADo
- M18ZY7J4rAvNBEniQt1HKjLl9DwTUcQhMqH1+LUvT87HcnAmwxqlZ2c5USqPQXAzM10G6Ol
- hKf3vtfIRBn8LhnT9Aguw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:unFx00kRW/k=:PwaRw0i2A/yMMgTJgMeENd
- 8D2gKtv/vI3x9Nq0AqTc+mfZcBBgHEpiAJcVvD7jj632Rj82hkfQO6oomRmPrT3rjxaiEFCl/
- 7C0sI6j6x9/duelijt9lFfVotBc3YbJnzDVrPPMaDEcK6D4YbHRvykrrsx13/ahiZ6w9pajOf
- Q8N5/sAks+veCrW02M3gvhK4EkPZvjSHXs6HRpIAmuwVnxkldld64k348ju1SuWNq792kHv7c
- geGL5F+e+SyGI0PVzEh1i155JBYFW6dIHJTHXWC7yP3FmEQ+aFMibk4t1jXaVi63VQ2IiKgxF
- 4/atgsC+237y8vv67Z6INP+F8T6dKYsVeTMIJXz1G6oHuqshBE0t4GLZfL+6OMBj9h8o30Clv
- Wl7yORdiJlU6XHExr8pKoMAudcu+GfbHVdL47j2iBxhPm6rhpF1DgQZ9xBV4NCbnfC9w1fb9a
- CJX7r8+hc4C6Fpg0H5m9TSTlRhW8gsnsIxLCggGhbbXqxREZZJIRzmB91yhsOM/S4zc/9pib8
- RKcJCCDUPgBddcC+3tHjXAbehnHmg18GzCqGPP6wKa/eNYI377O64LJG+z9iO/U4z0nmsM0Q1
- 73eHhx3Jxb/3hoDeFFpJZhQvR1mIwzMvS/F7PxsbfolPpAsIAauVOPapfbh6BrtMO9fJbCH2R
- qLGhO+LVFJNo9MGc/gLcRWSO7COkyCLzykH2WCHwp3NewU1kkur9zjX+GBOCbL6g9KeBDkTzt
- 4O4AL/yHH4VsGF53TumkIwG70GXXqUW8kda7U31vUz408KYtmPNfbyXXAhkxncDmc5M8BJ9Jm
- AQpGyX1Cw3uftlhoTblzJX5GGM5cjGAlBVvHEpoaMsCzulIzeLiGud5I8CT3R9Z/RMLXGM0Qb
- G6hsWVxzFZ/4hCY8qV/8v+MyQbFN3C+Vo5rLsJ9igHomf0YJ4qKiVwf+XN8nJHLQ+CD2gialX
- 9viOE/perGQ==
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Antivirus: Avast (VPS 190404-10, 04/04/2019), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -208,8 +208,10 @@  static int __init omapdss_boot_init(void)
->
->  	dss =3D of_find_matching_node(NULL, omapdss_of_match);
->
-> -	if (dss =3D=3D NULL || !of_device_is_available(dss))
-> +	if (dss =3D=3D NULL || !of_device_is_available(dss)) {
-> +		of_node_put(dss);
->  		return 0;
-> +	}
+On 04/04/2019 11:35, Russell King - ARM Linux admin wrote:
+> Hi,
+> 
+> Recently, a couple of issues have been identified in fs/adfs:
+> 
+> 1. Filename truncation may not work as it should, and Linus has
+>    apparently expressed a desire to kill this off.
+> 
+> 2. Scanning the ADFS map for disc object fragments may mistakenly
+>    find free space fragments in addition to real disc object fragments,
+>    leading to chunks of free space appearing in files or directories.
+> 
+> No one has reported any issues with the filesystem module, so the
+> question has to be asked whether there are any users of this code?
+> 
+> I'm aware that there were some users about ten or more years ago.  I've
+> only touched it when problems have been reported to me that needed me
+> to investigate something, otherwise I haven't used it myself - so the
+> code largely just sits there, mostly untouched except for the odd
+> cross-filesystem patch.
+> 
+> The last "feature" patch was in 2011 by Stuart Swales (copied) adding
+> the filetype suffix to filenames.
+> 
+> That leads on to the question about whether this should be fixed in
+> mainline or whether we should put the code out of its misery and remove
+> it from the kernel.
+> 
+> Fixing both issues is fairly trivial, and I already have some fixes
+> available, along with some improvements to the rest of the code.
+> However, I see little point in pushing that upstream if the code is
+> not being used.
+> 
+> Searching the web, there does seem to be some interest on some forums,
+> but that dates from about three years ago, but it also seems that more
+> functional solutions (using fuse, with different format support) are
+> available.
+> 
+> Posting to Linux lists probably isn't the best way to find out whether
+> there are users of this, so if there are people involved in the Acorn
+> communities, please pass this on to more appropriate forums, thanks.
+> Please ensure that replies reach me as I don't monitor random web
+> forums for example (a reply on a web forum that I don't see is not
+> helpful.)
+> 
+> If I hear nothing positive towards keeping it, then I'll schedule
+> fs/adfs for deletion, probably for 5.3.
+> 
+> Thanks.
+> 
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/d=
-rivers/gpu/drm/omapdrm/dss/omapdss-boot-init.c?id=3D61de49cb596710b918f7a8=
-0839f0b6de2017bc32#n203
+Thanks Russell
 
-Can it be nicer to add a jump target here?
-
-+	if (!dss || !of_device_is_available(dss))
--		return 0;
-+		goto put_node;
-
-
->
->  	omapdss_walk_device(dss, true);
->
-> @@ -234,6 +236,7 @@  static int __init omapdss_boot_init(void)
->  		kfree(n);
->  	}
->
-
-+put_node:
-
-> +	of_node_put(dss);
->  	return 0;
->  }
-
+Have posted on the RISC OS Open site. I imagine some people will
+complain just because they can. Can't see a need for it in new kernels
+myself; people can always use old systems if they need to get data off
+old ADFS IDE drives like I had to.
 
 Regards,
-Markus
+
+Stuart
+-- 
+Stuart Swales
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
