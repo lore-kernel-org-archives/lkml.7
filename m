@@ -2,128 +2,210 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F6AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431A2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2052075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370825;
-	bh=OHQzKWDR2FCBa+vbVcnWwWDzx2z4Cb1id9fughz/uMQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B8xwVQcjFbtCyaIfYowLpVOCxuIiW8Jnc75WeLaDjVR9qzxEK4ECTKkiQaWbbEJc2
-	 nv22ajh5ov4hIJf2l1j0qMD8du4QhwC6wmtlA5rhgMB7t8vYsNUPDoRXkb/YyZsQJF
-	 ICps/EamyCJ6NVBOYQlPPCjAKxmugdfFxA0/wo80=
+	by mail.kernel.org (Postfix) with ESMTP id 1F2F8205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731855AbfDDJkY (ORCPT
+        id S1731919AbfDDJkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731697AbfDDJCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:02:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B1D521741;
-        Thu,  4 Apr 2019 09:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368571;
-        bh=OHQzKWDR2FCBa+vbVcnWwWDzx2z4Cb1id9fughz/uMQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LeLxHtQgwnNxTN3+Mq5Fod4JXbazelZo9Ii9K+bouk0r5f7b4PWNYGnPVbn3Fj6Pv
-         TpTJ1RxwAXyLcHgC/Mcfj79z0U552sJ0tU1DFnjPmAgrp0Wfhor0Res6Q8UE0D/bAb
-         5DsPsVWdG9Nos1seP6MSfofVfPhAm+3vJH6vy7iQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/187] media: s5p-g2d: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:47:05 +0200
-Message-Id: <20190404084607.206585581@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
-References: <20190404084603.119654039@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 4 Apr 2019 05:40:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45822 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728676AbfDDJkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:40:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4E461AC24;
+        Thu,  4 Apr 2019 09:40:30 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 7D4DD1E11C8; Thu,  4 Apr 2019 11:40:29 +0200 (CEST)
+Date:   Thu, 4 Apr 2019 11:40:29 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        dan j williams <dan.j.williams@intel.com>,
+        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
+        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger kernel <adilger.kernel@dilger.ca>,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        cohuck@redhat.com,
+        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>
+Subject: Re: [PATCH v4 5/5] xfs: disable map_sync for async flush
+Message-ID: <20190404094029.GD16131@quack2.suse.cz>
+References: <20190403104018.23947-1-pagupta@redhat.com>
+ <20190403104018.23947-6-pagupta@redhat.com>
+ <20190403220912.GB26298@dastard>
+ <20190403223921.GM5147@magnolia>
+ <1508883801.17367965.1554358418550.JavaMail.zimbra@redhat.com>
+ <651986267.17402634.1554368950178.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <651986267.17402634.1554368950178.JavaMail.zimbra@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Thu 04-04-19 05:09:10, Pankaj Gupta wrote:
+> 
+> > > On Thu, Apr 04, 2019 at 09:09:12AM +1100, Dave Chinner wrote:
+> > > > On Wed, Apr 03, 2019 at 04:10:18PM +0530, Pankaj Gupta wrote:
+> > > > > Virtio pmem provides asynchronous host page cache flush
+> > > > > mechanism. we don't support 'MAP_SYNC' with virtio pmem
+> > > > > and xfs.
+> > > > > 
+> > > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > > > > ---
+> > > > >  fs/xfs/xfs_file.c | 8 ++++++++
+> > > > >  1 file changed, 8 insertions(+)
+> > > > > 
+> > > > > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > > > > index 1f2e2845eb76..dced2eb8c91a 100644
+> > > > > --- a/fs/xfs/xfs_file.c
+> > > > > +++ b/fs/xfs/xfs_file.c
+> > > > > @@ -1203,6 +1203,14 @@ xfs_file_mmap(
+> > > > >  	if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
+> > > > >  		return -EOPNOTSUPP;
+> > > > >  
+> > > > > +	/* We don't support synchronous mappings with DAX files if
+> > > > > +	 * dax_device is not synchronous.
+> > > > > +	 */
+> > > > > +	if (IS_DAX(file_inode(filp)) && !dax_synchronous(
+> > > > > +		xfs_find_daxdev_for_inode(file_inode(filp))) &&
+> > > > > +					(vma->vm_flags & VM_SYNC))
+> > > > > +		return -EOPNOTSUPP;
+> > > > > +
+> > > > >  	file_accessed(filp);
+> > > > >  	vma->vm_ops = &xfs_file_vm_ops;
+> > > > >  	if (IS_DAX(file_inode(filp)))
+> > > > 
+> > > > All this ad hoc IS_DAX conditional logic is getting pretty nasty.
+> > > > 
+> > > > xfs_file_mmap(
+> > > > ....
+> > > > {
+> > > > 	struct inode	*inode = file_inode(filp);
+> > > > 
+> > > > 	if (vma->vm_flags & VM_SYNC) {
+> > > > 		if (!IS_DAX(inode))
+> > > > 			return -EOPNOTSUPP;
+> > > > 		if (!dax_synchronous(xfs_find_daxdev_for_inode(inode))
+> > > > 			return -EOPNOTSUPP;
+> > > > 	}
+> > > > 
+> > > > 	file_accessed(filp);
+> > > > 	vma->vm_ops = &xfs_file_vm_ops;
+> > > > 	if (IS_DAX(inode))
+> > > > 		vma->vm_flags |= VM_HUGEPAGE;
+> > > > 	return 0;
+> > > > }
+> > > > 
+> > > > 
+> > > > Even better, factor out all the "MAP_SYNC supported" checks into a
+> > > > helper so that the filesystem code just doesn't have to care about
+> > > > the details of checking for DAX+MAP_SYNC support....
+> > > 
+> > > Seconded, since ext4 has nearly the same flag validation logic.
+> > 
+> 
+> Only issue with this I see is we need the helper function only for supported
+> filesystems ext4 & xfs (right now). If I create the function in "fs.h" it 
+> will be compiled for every filesystem, even for those don't need it.  
+> 
+> Sample patch below, does below patch is near to what you have in mind?
 
-------------------
+So I would put the helper in include/linux/dax.h and have it like:
 
-[ Upstream commit 30fa627b32230737bc3f678067e2adfecf956987 ]
+bool daxdev_mapping_supported(struct vm_area_struct *vma,
+			      struct dax_device *dax_dev)
+{
+	if (!(vma->vm_flags & VM_SYNC))
+		return true;
+	if (!IS_DAX(file_inode(vma->vm_file)))
+		return false;
+	return dax_synchronous(dax_dev);
+}
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
-
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
-
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
-
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/platform/s5p-g2d/g2d.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
-index e901201b6fcc..1f58574d0b96 100644
---- a/drivers/media/platform/s5p-g2d/g2d.c
-+++ b/drivers/media/platform/s5p-g2d/g2d.c
-@@ -487,7 +487,7 @@ static void device_run(void *prv)
- {
- 	struct g2d_ctx *ctx = prv;
- 	struct g2d_dev *dev = ctx->dev;
--	struct vb2_buffer *src, *dst;
-+	struct vb2_v4l2_buffer *src, *dst;
- 	unsigned long flags;
- 	u32 cmd = 0;
- 
-@@ -502,10 +502,10 @@ static void device_run(void *prv)
- 	spin_lock_irqsave(&dev->ctrl_lock, flags);
- 
- 	g2d_set_src_size(dev, &ctx->in);
--	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(src, 0));
-+	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(&src->vb2_buf, 0));
- 
- 	g2d_set_dst_size(dev, &ctx->out);
--	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(dst, 0));
-+	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(&dst->vb2_buf, 0));
- 
- 	g2d_set_rop4(dev, ctx->rop);
- 	g2d_set_flip(dev, ctx->flip);
+								Honza
+> 
+> =================
+> 
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index 1f2e2845eb76..614995170cac 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -1196,12 +1196,17 @@ xfs_file_mmap(
+>         struct file     *filp,
+>         struct vm_area_struct *vma)
+>  {
+> +       struct dax_device *dax_dev = xfs_find_daxdev_for_inode(file_inode(filp));
+> +
+>         /*
+> -        * We don't support synchronous mappings for non-DAX files. At least
+> -        * until someone comes with a sensible use case.
+> +        * We don't support synchronous mappings for non-DAX files and
+> +        * for DAX files if underneath dax_device is not synchronous.
+>          */
+> -       if (!IS_DAX(file_inode(filp)) && (vma->vm_flags & VM_SYNC))
+> -               return -EOPNOTSUPP;
+> +       if (vma->vm_flags & VM_SYNC) {
+> +               int err = is_synchronous(filp, dax_dev);
+> +               if (err)
+> +                       return err;
+> +       }
+>  
+>         file_accessed(filp);
+>         vma->vm_ops = &xfs_file_vm_ops;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 8b42df09b04c..add017de3dd7 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2162,6 +2162,20 @@ static inline void file_accessed(struct file *file)
+>                 touch_atime(&file->f_path);
+>  }
+>  
+> +struct dax_device;
+> +extern bool dax_synchronous(struct dax_device *dax_dev);
+> +static inline int is_synchronous(struct file *filp, struct dax_device *dax_dev)
+> +{
+> +       struct inode *inode = file_inode(filp);
+> +
+> +       if (!IS_DAX(inode))
+> +               return -EOPNOTSUPP;
+> +       if (!dax_synchronous(dax_dev))
+> +               return -EOPNOTSUPP;
+> +
+> +       return 0;
+> +}
+> +
+>  int sync_inode(struct inode *inode, struct writeback_control *wbc);
+>  int sync_inode_metadata(struct inode *inode, int wait);
+>  
+> ---------
+> 
+> Thanks,
+> Pankaj
+> 
+> 
+> 
 -- 
-2.19.1
-
-
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
