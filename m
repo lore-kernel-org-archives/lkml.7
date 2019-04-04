@@ -3,51 +3,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9566C10F05
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662A5C10F0C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B913C2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3402075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370252;
-	bh=F3/fTFECdWSUpLHBhH99MC/R4nGnko2CDEIVbz5aLPU=;
+	s=default; t=1554370255;
+	bh=NZHwJHAtqPSQbuHknju41mfXyfSWeczpwIwzIQwcNvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqYiHAHAxlMp9LrwiwBhZy8bVZJbblyljlHrLf0mlHSWNY3KSCsOp7Ld6JS6eDEBq
-	 sV3Fwe+4ctiGLsvQVLnbDOtuzyKZUyNloYzz14axspOGM9Axc9n4brh7Zm9a94J7GQ
-	 PEQa/kA6Pc3wUX1LeVetD0DXeYS92aap1SeRh5k8=
+	b=BSAmXZRweGXrNdQZnNC/qpeoforAYJ41Frp7qijyIg/i3ICWK0WXDYZo7imnfptym
+	 zoibCK9eNgMQfRPKnc4gHPd4L4EoQZFAp8gLlZXgXiVIAJcZpknlU+STT/tJE8uZYb
+	 nTId91cRGLGOe18vzcApF4dgo8eOBAEwxEIJLTeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732894AbfDDJJt (ORCPT
+        id S1732882AbfDDJJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732877AbfDDJJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 05:09:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731719AbfDDJJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:09:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37FE020652;
-        Thu,  4 Apr 2019 09:09:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9292A214AF;
+        Thu,  4 Apr 2019 09:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368985;
-        bh=F3/fTFECdWSUpLHBhH99MC/R4nGnko2CDEIVbz5aLPU=;
+        s=default; t=1554368983;
+        bh=NZHwJHAtqPSQbuHknju41mfXyfSWeczpwIwzIQwcNvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ba74eqmwWQzLN1d9PR0nb0db2q+QGgsooQkpr8ttCZoa1QOh8sHm1NHtPymKLD4az
-         AtPrhDGjonexHQiYdISKvUKEkDGCojkFyHGipXTvcaPVyNvvY3M7dA6Yq0g1ULnFDd
-         uqid8BrYZgOUwnt5DrXLBFf8wTMdifiziV6pLJ5I=
+        b=Zetvo7DVmPJAwDAFMNdLrXdQboI5fETU6uHeDjGU55TRLKJ37umLbV3oiHAoyNwL+
+         rHs0dHx+ASVlMIO4hQ/7ozN0e1aMf/qTx4qElbTXMQwmmhl7NJth2azRCU204J540O
+         NzBj9G3sJhzeVjmYLmHLj9X0yra72jQAdtsHetJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 055/246] fs: fix guard_bio_eod to check for real EOD errors
-Date:   Thu,  4 Apr 2019 10:45:55 +0200
-Message-Id: <20190404084620.942520655@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Whitney <enwlinux@gmail.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 054/246] ext4: fix bigalloc cluster freeing when hole punching under load
+Date:   Thu,  4 Apr 2019 10:45:54 +0200
+Message-Id: <20190404084620.908464492@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -66,77 +65,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
+[ Upstream commit 7bd75230b43727b258a4f7a59d62114cffe1b6c8 ]
 
-guard_bio_eod() can truncate a segment in bio to allow it to do IO on
-odd last sectors of a device.
+Ext4 may not free clusters correctly when punching holes in bigalloc
+file systems under high load conditions.  If it's not possible to
+extend and restart the journal in ext4_ext_rm_leaf() when preparing to
+remove blocks from a punched region, a retry of the entire punch
+operation is triggered in ext4_ext_remove_space().  This causes a
+partial cluster to be set to the first cluster in the extent found to
+the right of the punched region.  However, if the punch operation
+prior to the retry had made enough progress to delete one or more
+extents and a partial cluster candidate for freeing had already been
+recorded, the retry would overwrite the partial cluster.  The loss of
+this information makes it impossible to correctly free the original
+partial cluster in all cases.
 
-It already checks if the IO starts past EOD, but it does not consider
-the possibility of an IO request starting within device boundaries can
-contain more than one segment past EOD.
+This bug can cause generic/476 to fail when run as part of
+xfstests-bld's bigalloc and bigalloc_1k test cases.  The failure is
+reported when e2fsck detects bad iblocks counts greater than expected
+in units of whole clusters and also detects a number of negative block
+bitmap differences equal to the iblocks discrepancy in cluster units.
 
-In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
-underflow bvec->bv_len.
-
-Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
-
-This situation has been found on filesystems such as isofs and vfat,
-which doesn't check the device size before mount, if the device is
-smaller than the filesystem itself, a readahead on such filesystem,
-which spans EOD, can trigger this situation, leading a call to
-zero_user() with a wrong size possibly corrupting memory.
-
-I didn't see any crash, or didn't let the system run long enough to
-check if memory corruption will be hit somewhere, but adding
-instrumentation to guard_bio_end() to check truncated_bytes size, was
-enough to see the error.
-
-The following script can trigger the error.
-
-MNT=/mnt
-IMG=./DISK.img
-DEV=/dev/loop0
-
-mkfs.vfat $IMG
-mount $IMG $MNT
-cp -R /etc $MNT &> /dev/null
-umount $MNT
-
-losetup -D
-
-losetup --find --show --sizelimit 16247280 $IMG
-mount $DEV $MNT
-
-find $MNT -type f -exec cat {} + >/dev/null
-
-Kudos to Eric Sandeen for coming up with the reproducer above
-
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Eric Whitney <enwlinux@gmail.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/ext4/extents.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 48318fb74938..cab7a026876b 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3027,6 +3027,13 @@ void guard_bio_eod(int op, struct bio *bio)
- 	/* Uhhuh. We've got a bio that straddles the device size! */
- 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index 240b6dea5441..252bbbb5a2f4 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -2956,14 +2956,17 @@ again:
+ 			if (err < 0)
+ 				goto out;
  
-+	/*
-+	 * The bio contains more than one segment which spans EOD, just return
-+	 * and let IO layer turn it into an EIO
-+	 */
-+	if (truncated_bytes > bvec->bv_len)
-+		return;
-+
- 	/* Truncate the bio.. */
- 	bio->bi_iter.bi_size -= truncated_bytes;
- 	bvec->bv_len -= truncated_bytes;
+-		} else if (sbi->s_cluster_ratio > 1 && end >= ex_end) {
++		} else if (sbi->s_cluster_ratio > 1 && end >= ex_end &&
++			   partial.state == initial) {
+ 			/*
+-			 * If there's an extent to the right its first cluster
+-			 * contains the immediate right boundary of the
+-			 * truncated/punched region.  Set partial_cluster to
+-			 * its negative value so it won't be freed if shared
+-			 * with the current extent.  The end < ee_block case
+-			 * is handled in ext4_ext_rm_leaf().
++			 * If we're punching, there's an extent to the right.
++			 * If the partial cluster hasn't been set, set it to
++			 * that extent's first cluster and its state to nofree
++			 * so it won't be freed should it contain blocks to be
++			 * removed. If it's already set (tofree/nofree), we're
++			 * retrying and keep the original partial cluster info
++			 * so a cluster marked tofree as a result of earlier
++			 * extent removal is not lost.
+ 			 */
+ 			lblk = ex_end + 1;
+ 			err = ext4_ext_search_right(inode, path, &lblk, &pblk,
 -- 
 2.19.1
 
