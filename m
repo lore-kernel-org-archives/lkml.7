@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37486C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BE9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A1420882
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F012177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368175;
-	bh=bVwOoHt4SqR+uBklbkmzRuz0athJ9ajaiBhrwS+1sRM=;
+	s=default; t=1554368179;
+	bh=sl7L8ILsqxlHfyGIFJaE9lnYYFD9MTdIxzPZvBJ9amo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OSPn8sOfgpZJ/RzbE598I/h0Nx1se186QK13Cabw+kromUIMyIV8YvcNdm/J4RXPT
-	 7nXZQWC31oXS57t2XhNC8qdu1gmPZKYt6tK0kVEF+vxnNb+Xq1ygGivOBQuAhaAiqf
-	 ivxKGIpDdi9HcreuysT7Ll46lAzsVyoP5I15mXow=
+	b=SlUluxV9UbzyiBIHSm/PD/xwDR4nFxXuNMxzVdjYeQaICKqWZ+5/Pt74ncY/Epl38
+	 KQNIqE4XI8S9wXxr5FkGao+qe3tc4udGzFjrQKh8S093biU/PxFqOxuKId7COmc1Le
+	 dmc00c8DCL1ucBULCANmyUxBmSRMJOBMOlhGstiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbfDDI4N (ORCPT
+        id S1730454AbfDDI4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59410 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbfDDI4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:09 -0400
+        id S1730436AbfDDI4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E37320652;
-        Thu,  4 Apr 2019 08:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FCB220693;
+        Thu,  4 Apr 2019 08:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368169;
-        bh=bVwOoHt4SqR+uBklbkmzRuz0athJ9ajaiBhrwS+1sRM=;
+        s=default; t=1554368171;
+        bh=sl7L8ILsqxlHfyGIFJaE9lnYYFD9MTdIxzPZvBJ9amo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZ4bGq1sXCHY+enQY5qQ0nRUPYI+eCsvOZW7G22Dg8FIMG6PdBpkQT1B0UuDCbM+/
-         zSVt7MXB4ciUKsJa6kwj545oFs19mIiYGpVl/V2k7R5bM4FC78PtD8VzHjgAmQQQ6M
-         d3688pM8tjXZKaGwjwdFrdVJ0nyWfw8vMb4COIWY=
+        b=VU12lp3uh/kkt4awiEiy581TLq/Mr1bYpsq/cyMlPYxOwotk4YMMcSqfL31TLWeXx
+         0WBeqW5pOs8oU1tZQTjDIQAuI+o+nafxi0ACMomiBBt5W6Z7hdtA2KWWHNEHZRaLvH
+         YzB24wc03iNd46g8P+iG+kpPTiNPoycgvYIyeS6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 046/121] iommu/io-pgtable-arm-v7s: Only kmemleak_ignore L2 tables
-Date:   Thu,  4 Apr 2019 10:47:14 +0200
-Message-Id: <20190404084547.766289498@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Laurent Dufour <ldufour@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 047/121] powerpc/hugetlb: Handle mmap_min_addr correctly in get_unmapped_area callback
+Date:   Thu,  4 Apr 2019 10:47:15 +0200
+Message-Id: <20190404084547.818350022@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -66,49 +68,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 032ebd8548c9d05e8d2bdc7a7ec2fe29454b0ad0 ]
+[ Upstream commit 5330367fa300742a97e20e953b1f77f48392faae ]
 
-L1 tables are allocated with __get_dma_pages, and therefore already
-ignored by kmemleak.
+After we ALIGN up the address we need to make sure we didn't overflow
+and resulted in zero address. In that case, we need to make sure that
+the returned address is greater than mmap_min_addr.
 
-Without this, the kernel would print this error message on boot,
-when the first L1 table is allocated:
+This fixes selftest va_128TBswitch --run-hugetlb reporting failures when
+run as non root user for
 
-[    2.810533] kmemleak: Trying to color unknown object at 0xffffffd652388000 as Black
-[    2.818190] CPU: 5 PID: 39 Comm: kworker/5:0 Tainted: G S                4.19.16 #8
-[    2.831227] Workqueue: events deferred_probe_work_func
-[    2.836353] Call trace:
-...
-[    2.852532]  paint_ptr+0xa0/0xa8
-[    2.855750]  kmemleak_ignore+0x38/0x6c
-[    2.859490]  __arm_v7s_alloc_table+0x168/0x1f4
-[    2.863922]  arm_v7s_alloc_pgtable+0x114/0x17c
-[    2.868354]  alloc_io_pgtable_ops+0x3c/0x78
-...
+mmap(-1, MAP_HUGETLB)
 
-Fixes: e5fc9753b1a8314 ("iommu/io-pgtable: Add ARMv7 short descriptor support")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+The bug is that a non-root user requesting address -1 will be given address 0
+which will then fail, whereas they should have been given something else that
+would have succeeded.
+
+We also avoid the first mmap(-1, MAP_HUGETLB) returning NULL address as mmap address
+with this change. So we think this is not a security issue, because it only affects
+whether we choose an address below mmap_min_addr, not whether we
+actually allow that address to be mapped. ie. there are existing capability
+checks to prevent a user mapping below mmap_min_addr and those will still be
+honoured even without this fix.
+
+Fixes: 484837601d4d ("powerpc/mm: Add radix support for hugetlb")
+Reviewed-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/io-pgtable-arm-v7s.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/hugetlbpage-radix.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index 29b7a6755fcd..56368c8bd791 100644
---- a/drivers/iommu/io-pgtable-arm-v7s.c
-+++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -217,7 +217,8 @@ static void *__arm_v7s_alloc_table(int lvl, gfp_t gfp,
- 		if (dma != phys)
- 			goto out_unmap;
+diff --git a/arch/powerpc/mm/hugetlbpage-radix.c b/arch/powerpc/mm/hugetlbpage-radix.c
+index bd022d16745c..a31bad29b55d 100644
+--- a/arch/powerpc/mm/hugetlbpage-radix.c
++++ b/arch/powerpc/mm/hugetlbpage-radix.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/mm.h>
+ #include <linux/hugetlb.h>
++#include <linux/security.h>
+ #include <asm/pgtable.h>
+ #include <asm/pgalloc.h>
+ #include <asm/cacheflush.h>
+@@ -79,7 +80,7 @@ radix__hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 	if (addr) {
+ 		addr = ALIGN(addr, huge_page_size(h));
+ 		vma = find_vma(mm, addr);
+-		if (high_limit - len >= addr &&
++		if (high_limit - len >= addr && addr >= mmap_min_addr &&
+ 		    (!vma || addr + len <= vm_start_gap(vma)))
+ 			return addr;
  	}
--	kmemleak_ignore(table);
-+	if (lvl == 2)
-+		kmemleak_ignore(table);
- 	return table;
- 
- out_unmap:
+@@ -89,7 +90,7 @@ radix__hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 	 */
+ 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
+ 	info.length = len;
+-	info.low_limit = PAGE_SIZE;
++	info.low_limit = max(PAGE_SIZE, mmap_min_addr);
+ 	info.high_limit = mm->mmap_base + (high_limit - DEFAULT_MAP_WINDOW);
+ 	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
+ 	info.align_offset = 0;
 -- 
 2.19.1
 
