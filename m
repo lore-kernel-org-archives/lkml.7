@@ -2,119 +2,764 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E29C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AEFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F902082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC4B2171F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="DJsGveXc"
+	dkim=pass (1024-bit key) header.d=eInfochipsIndia.onmicrosoft.com header.i=@eInfochipsIndia.onmicrosoft.com header.b="tuQr8izZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfDDOwF (ORCPT
+        id S1729324AbfDDOwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:52:05 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36095 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbfDDOwF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:52:05 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s15so3565251qtn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:52:04 -0700 (PDT)
+        Thu, 4 Apr 2019 10:52:14 -0400
+Received: from mail-eopbgr1310058.outbound.protection.outlook.com ([40.107.131.58]:4096
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728647AbfDDOwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 10:52:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=InJAUPygOFNLNyjqZpNbr6k2+i+f1+qkGPj3xxbuH/A=;
-        b=DJsGveXcFTItFzq0MNrZW4ey1d9eZrf4VMtIeiyAjiCx6zdCeJia1xuAo061ITmWtw
-         aZhmVdnA35B3sDXkJ2HKLQzj+hUIWTCQLxtH8bNbudpaShwW0k9YPLzL/Fbi4Dx4+ShM
-         edGkcC3+qqHGiNdsMaun4kBz5y3YVDuiF1qj8YGcoVAnWDVhFP4GNTGbKfPWS676r+vD
-         mH8/3YwJceiZJ0GWHn8IjijhWr86HXdaIj6IQC4ZdZpmJY4EVy2Igz2IrS3iv1yxU/SU
-         jkZPS6r/CAXiGHIJXqbXE3Jzpi2adPLtdJXsKdC9HMwEyCEfL+7ZOnaoJmsOWZMMoRdA
-         50og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=InJAUPygOFNLNyjqZpNbr6k2+i+f1+qkGPj3xxbuH/A=;
-        b=LdiA1BsLCRuJkGfy9TdVLx1oYTIPfAWMO24Gy6tFfreTPz4VB0qg4qtql1EjHrCiCb
-         DmZk3k/EKPJgwg5An9j5Q0+0qcN3ni5ZGhgZGsKinKgK+jH6gXgDsMVBl9Z9/0dFGod2
-         fOyAKboIIYtprOy5wmpjoEYISWhnOnVN1z17kz7I0kF2e2W/QVymlaOpRxtaHrLTKZho
-         cMtqsoB4O3THBORmUy5+wwqDHS9SkKADMI42Jcd7In+RxXdtOiEAKm3wdZ4856A2wmjW
-         526vV/1LqUP6Hzz1AlnXDkVphUXtwEEwy3Wbf1ZR8k7TYeYLc3nAPDImZpTpTJpZDvx5
-         rzag==
-X-Gm-Message-State: APjAAAVtJXNiqFKFHS7HMcMvq3BJmgoV/LmIkPjJSMdHzr0Kn3GUNITZ
-        g+4zO06zNtOkQajLgsCTRJejpw==
-X-Google-Smtp-Source: APXvYqwZWADrTY6mLinp1iK2YGu8XUTPwO5g23NmxioeEbg2y3Nbf2d8RH2DJJc46h2298RNi8WThA==
-X-Received: by 2002:a0c:81d4:: with SMTP id 20mr5305524qve.2.1554389524156;
-        Thu, 04 Apr 2019 07:52:04 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id s64sm9779158qkc.39.2019.04.04.07.52.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Apr 2019 07:52:03 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 10:52:02 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     sean@poorly.run, dri-devel@lists.freedesktop.org,
-        linux-amlogic@lists.infradead.org, maxime.ripard@bootlin.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "Documentation/gpu/meson: Remove link to
- meson_canvas.c"
-Message-ID: <20190404145202.GC17077@art_vandelay>
-References: <20190404144342.15238-1-narmstrong@baylibre.com>
+ d=eInfochipsIndia.onmicrosoft.com; s=selector1-einfochips-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=25UoWh8LNvZETUZDmQPWQ1Da1WJhmi1uUnfgywPwuHA=;
+ b=tuQr8izZ27KK4JQLZyPmjsH9ADAw8ktIR3bI4lmIFzPZ93z23Nw0QMB1guFE5P+oqo4a2Q1wsuVJiP/887rkmuoJZCNIDf16m3axtJuhQ05lYArCCdcOqpxsB9Hm2/+txCVOJmFGl5j952wmTDqdbget2ZWyLuMjtSYJRnwtQwc=
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com (20.177.88.78) by
+ SG2PR02MB2560.apcprd02.prod.outlook.com (52.133.137.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.13; Thu, 4 Apr 2019 14:36:49 +0000
+Received: from SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b]) by SG2PR02MB3098.apcprd02.prod.outlook.com
+ ([fe80::f432:20e4:2d22:e60b%4]) with mapi id 15.20.1750.017; Thu, 4 Apr 2019
+ 14:36:49 +0000
+From:   Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
+To:     Shyam Saini <mayhs11saini@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [External] Re: CMA area pages information
+Thread-Topic: [External] Re: CMA area pages information
+Thread-Index: AQHU6GA9RylraT4uwk+04/PdjD+qFqYnI6yAgATuyUCAAAIwgIAAAVdI
+Date:   Thu, 4 Apr 2019 14:36:48 +0000
+Message-ID: <SG2PR02MB3098D0A55CA3C7486667C46BE8500@SG2PR02MB3098.apcprd02.prod.outlook.com>
+References: <SG2PR02MB30986806577CDA3F568553B6E8550@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB3098940FD9DFE5662D8CC3C4E8550@SG2PR02MB3098.apcprd02.prod.outlook.com>
+ <SG2PR02MB3098C85455119FC48383A332E8500@SG2PR02MB3098.apcprd02.prod.outlook.com>,<CAOfkYf6U3wcs-Z02bHQt5tGXPMbd9cwRwB0GE4i=E93DGs_FZw@mail.gmail.com>
+In-Reply-To: <CAOfkYf6U3wcs-Z02bHQt5tGXPMbd9cwRwB0GE4i=E93DGs_FZw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pankaj.suryawanshi@einfochips.com; 
+x-originating-ip: [14.98.130.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fb752a23-6ea5-41a5-7feb-08d6b90af8ad
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600139)(711020)(4605104)(2017052603328)(7193020);SRVR:SG2PR02MB2560;
+x-ms-traffictypediagnostic: SG2PR02MB2560:
+x-microsoft-antispam-prvs: <SG2PR02MB256044712295889D5D3F83D5E8500@SG2PR02MB2560.apcprd02.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(396003)(136003)(376002)(366004)(346002)(199004)(189003)(106356001)(305945005)(7736002)(74316002)(93886005)(99286004)(54906003)(7696005)(6506007)(76176011)(9686003)(55016002)(316002)(5660300002)(2906002)(6436002)(105586002)(14454004)(53946003)(53936002)(478600001)(30864003)(78486014)(33656002)(66574012)(4326008)(86362001)(8676002)(81156014)(68736007)(53546011)(44832011)(11346002)(25786009)(446003)(486006)(66066001)(6116002)(476003)(52536014)(256004)(1411001)(5024004)(71200400001)(8936002)(14444005)(186003)(26005)(3846002)(6916009)(102836004)(71190400001)(97736004)(229853002)(81166006)(55236004)(6246003)(586874002)(559001)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:SG2PR02MB2560;H:SG2PR02MB3098.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: einfochips.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: dJZx0W8oeXA0lGbdhfclOLIzGOkAD5MVoLpp/3o3I8pas/qN34aMa7y/ERFO8PFHMmFL+Smeho/GKs+Xf/PPO8dNrvEiZrPhxHLRA6Y4jPlpJlslb6TbM0l6NVV+sdPKag9M4/fdkJrdCrKgQB4ej6VfppTZ4I/bXTMOZrl8+ctQkZfqWVf453XMWyg0oR2e/rSilaEcVzx0WJFS2MObTHKCYnDEIL1h3TB3hN5E0NWGbnbbSnyZ3ZlycxrzTjb8rOQ11Z9w1Drn6hsmYR4gSu8Mf18dvhvdyU3vNzO/KTP6KB3td9Y4wJLhit7CF+GUMVSEk9C6TwJ45pbTpN9KACVJdapDaBYcL6lSpzbQZIgE2v6Qgz8YrVRzC4r9UYNt3c2HCsbNHLxQyVApf5eM491calfIet7+0Sh8NWfiBjI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404144342.15238-1-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: einfochips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb752a23-6ea5-41a5-7feb-08d6b90af8ad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 14:36:48.9823
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0adb040b-ca22-4ca6-9447-ab7b049a22ff
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR02MB2560
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 04:43:42PM +0200, Neil Armstrong wrote:
-> This reverts commit a3f98bb22cbfaaf67717e156f79e2bfeb42d4cac.
-> 
-> Patch "Documentation/gpu/meson: Remove link to meson_canvas.c" was
-> incorrectly applied on the wrong branch not containing the fixed
-> commit 2bf6b5b0e374 ("drm/meson: exclusively use the canvas provider module")
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Acked-by: Sean Paul <sean@poorly.run>
+________________________________________
+From: Shyam Saini <mayhs11saini@gmail.com>
+Sent: 04 April 2019 19:58
+To: Pankaj Suryawanshi
+Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
+Subject: [External] Re: CMA area pages information
 
-and I'll leave this for Maxime to apply if he so chooses.
+CAUTION: This email originated from outside of the organization. Do not cli=
+ck links or open attachments unless you recognize the sender and know the c=
+ontent is safe.
 
-Sean
 
-> ---
->  Documentation/gpu/meson.rst | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/gpu/meson.rst b/Documentation/gpu/meson.rst
-> index b9e2f9aa3bd8..479f6f51a13b 100644
-> --- a/Documentation/gpu/meson.rst
-> +++ b/Documentation/gpu/meson.rst
-> @@ -42,6 +42,12 @@ Video Encoder
->  .. kernel-doc:: drivers/gpu/drm/meson/meson_venc.c
->     :doc: Video Encoder
->  
-> +Video Canvas Management
-> +=======================
-> +
-> +.. kernel-doc:: drivers/gpu/drm/meson/meson_canvas.c
-> +   :doc: Canvas
-> +
->  Video Clocks
->  ============
->  
-> -- 
-> 2.21.0
-> 
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+On Thu, Apr 4, 2019 at 7:52 PM Pankaj Suryawanshi <pankaj.suryawanshi@einfo=
+chips.com<mailto:pankaj.suryawanshi@einfochips.com>> wrote:
+
+________________________________________
+From: Pankaj Suryawanshi
+Sent: 01 April 2019 16:34
+To: linux-kernel@vger.kernel.org<mailto:linux-kernel@vger.kernel.org>; linu=
+x-mm@kvack.org<mailto:linux-mm@kvack.org>
+Subject: Re: CMA area pages information
+
+
+________________________________________
+From: Pankaj Suryawanshi
+Sent: 01 April 2019 13:26
+To: linux-kernel@vger.kernel.org<mailto:linux-kernel@vger.kernel.org>; linu=
+x-mm@kvack.org<mailto:linux-mm@kvack.org>
+Subject: CMA area pages information
+
+Hello,
+
+Is there any way to get CMA area pages information (tool/application) ?
+
+Trying to get CMA-pages info using /tools/vm/page-types.c
+
+1. Allocate 100 mb using sample app.
+2. Try to get page info using page-types.c.
+
+Note: cma base-pfn: 0x60000
+          cma reserved 1026 Mib
+
+Pages info i got is
+
+./test -p 3401 -L
+voffset offset  flags
+5c1a3   70e92   ___U_lA____M______________________________
+5c1a4   73104   ___U_l_____M______________________________
+5c1a6   70ad1   ___U_lA____Ma_b___________________________
+71ea1   9f470   __RU_l_____M______u_______________________
+71ea2   9f471   __RU_l_____M______u_______________________
+71ea3   9f472   __RU_l_____M______u_______________________
+71ea4   9f473   __RU_l_____M______u_______________________
+71ea5   9f485   __RU_l_____M______u_______________________
+71ea6   9f486   __RU_l_____M______u_______________________
+71ea7   9f487   __RU_l_____M______u_______________________
+71ea8   9f488   __RU_l_____M______u_______________________
+71ea9   9f489   __RU_l_____M______u_______________________
+71eaa   9f48a   __RU_l_____M______u_______________________
+71eab   9f48b   __RU_l_____M______u_______________________
+71eac   9f48c   __RU_l_____M______u_______________________
+71ead   9f48d   __RU_l_____M______u_______________________
+71eae   9f48e   __RU_l_____M______u_______________________
+71eaf   9f48f   __RU_l_____M______u_______________________
+71eb0   9f490   __RU_l_____M______u_______________________
+71eb1   9f491   __RU_l_____M______u_______________________
+71eb2   9f492   __RU_l_____M______u_______________________
+71eb3   9f493   __RU_l_____M______u_______________________
+71eb4   9f494   __RU_l_____M______u_______________________
+71eb5   9f495   __RU_l_____M______u_______________________
+71eb6   9f496   __RU_l_____M______u_______________________
+71eb7   9f497   __RU_l_____M______u_______________________
+71eb8   9f498   __RU_l_____M______u_______________________
+71eb9   9f499   __RU_l_____M______u_______________________
+71eba   9f49a   __RU_l_____M______u_______________________
+71ebb   9f49b   __RU_l_____M______u_______________________
+71ebc   9f49c   __RU_l_____M______u_______________________
+71ebd   9f49d   __RU_l_____M______u_______________________
+71ebe   9f49e   __RU_l_____M______u_______________________
+71ebf   9f49f   __RU_l_____M______u_______________________
+71ec0   9f4a0   __RU_l_____M______u_______________________
+71ec1   9f56b   __RU_l_____M______u_______________________
+71ec2   9f56c   __RU_l_____M______u_______________________
+71ec3   9f56d   __RU_l_____M______u_______________________
+71ec4   9f56e   __RU_l_____M______u_______________________
+71ec5   9f56f   __RU_l_____M______u_______________________
+71ec6   9f570   __RU_l_____M______u_______________________
+71ec7   9f571   __RU_l_____M______u_______________________
+71ec8   9f572   __RU_l_____M______u_______________________
+71ec9   9f573   __RU_l_____M______u_______________________
+71eca   9f574   __RU_l_____M______u_______________________
+71ecb   9f575   __RU_l_____M______u_______________________
+71ecc   9f576   __RU_l_____M______u_______________________
+71ecd   9f577   __RU_l_____M______u_______________________
+71ece   9f578   __RU_l_____M______u_______________________
+71ecf   9f579   __RU_l_____M______u_______________________
+71ed0   9f57a   __RU_l_____M______u_______________________
+71ed1   9f57b   __RU_l_____M______u_______________________
+71ed2   9f57c   __RU_l_____M______u_______________________
+71ed3   9f5ea   __RU_l_____M______u_______________________
+71ed4   9f5eb   __RU_l_____M______u_______________________
+71ed5   9f5ec   __RU_l_____M______u_______________________
+71ed6   9f5ed   __RU_l_____M______u_______________________
+71ed7   9f5ee   __RU_l_____M______u_______________________
+71ed8   9f5ef   __RU_l_____M______u_______________________
+71ed9   9f5f0   __RU_l_____M______u_______________________
+71eda   9f5f1   __RU_l_____M______u_______________________
+71edb   9f5f2   __RU_l_____M______u_______________________
+71edc   9f5f3   __RU_l_____M______u_______________________
+71edd   9f5f4   __RU_l_____M______u_______________________
+71ede   9f5f5   __RU_l_____M______u_______________________
+71edf   9f5f6   __RU_l_____M______u_______________________
+71ee0   9f5f7   __RU_l_____M______u_______________________
+71ee1   9f5f8   __RU_l_____M______u_______________________
+71ee2   9f5f9   __RU_l_____M______u_______________________
+71ee3   9f5fa   __RU_l_____M______u_______________________
+71ee4   9f5fb   __RU_l_____M______u_______________________
+71ee5   9f5fc   __RU_l_____M______u_______________________
+71ee6   9f5fd   __RU_l_____M______u_______________________
+71ee7   9f5fe   __RU_l_____M______u_______________________
+71ee8   9f5ff   __RU_l_____M______u_______________________
+71ee9   9f600   __RU_l_____M______u_______________________
+71eea   9f601   __RU_l_____M______u_______________________
+71eeb   9f602   __RU_l_____M______u_______________________
+71eec   9f603   __RU_l_____M______u_______________________
+71eed   9f604   __RU_l_____M______u_______________________
+71eee   9f605   __RU_l_____M______u_______________________
+71eef   9f606   __RU_l_____M______u_______________________
+71ef0   9f607   __RU_l_____M______u_______________________
+71ef1   9f608   __RU_l_____M______u_______________________
+71ef2   9f609   __RU_l_____M______u_______________________
+71ef3   9f6b2   __RU_lA____M______________________________
+71ef4   9f6b3   __RU_l_____M______u_______________________
+71ef5   9f6b4   __RU_l_____M______u_______________________
+71ef6   9f6b5   __RU_l_____M______u_______________________
+71ef7   9f6b6   __RU_l_____M______u_______________________
+71ef8   9f6b7   __RU_l_____M______u_______________________
+71ef9   9f6b8   __RU_l_____M______u_______________________
+71efa   9f6b9   __RU_l_____M______u_______________________
+71efb   9f6ba   __RU_l_____M______u_______________________
+71efc   9f67e   __RU_l_____M______u_______________________
+71efd   9f67f   __RU_l_____M______u_______________________
+71efe   9f680   __RU_l_____M______u_______________________
+71eff   9f681   __RU_l_____M______u_______________________
+71f00   9f682   __RU_l_____M______u_______________________
+71f01   9f683   __RU_l_____M______u_______________________
+71f02   9f684   __RU_l_____M______u_______________________
+71f03   9f685   __RU_l_____M______u_______________________
+71f04   9f686   __RU_l_____M______u_______________________
+71f05   9f687   __RU_l_____M______u_______________________
+71f06   9f688   __RU_l_____M______u_______________________
+71f07   9f689   __RU_l_____M______u_______________________
+71f08   9f68a   __RU_l_____M______u_______________________
+71f09   9f68b   __RU_l_____M______u_______________________
+71f0a   9f68c   __RU_l_____M______u_______________________
+71f0b   9f68d   __RU_l_____M______u_______________________
+71f0c   9f68e   __RU_l_____M______u_______________________
+71f0d   9f68f   __RU_l_____M______u_______________________
+71f0e   9f690   __RU_l_____M______u_______________________
+71f0f   9f691   __RU_l_____M______u_______________________
+71f10   9f692   __RU_l_____M______u_______________________
+71f11   9f693   __RU_l_____M______u_______________________
+71f12   9f694   __RU_l_____M______u_______________________
+71f13   9f695   __RU_l_____M______u_______________________
+71f15   9f697   __RU_l_____M______u_______________________
+71f16   9f698   __RU_l_____M______u_______________________
+71f17   9f699   __RU_l_____M______u_______________________
+71f18   9f69a   __RU_l_____M______u_______________________
+71f19   9f69b   __RU_l_____M______u_______________________
+71f1a   9f69c   __RU_l_____M______u_______________________
+71f1b   9f69d   __RU_l_____M______u_______________________
+71f1c   9f69f   __RU_l_____M______u_______________________
+71f1d   9f6a0   __RU_l_____M______u_______________________
+71f1e   9f6a1   __RU_l_____M______u_______________________
+71f1f   9f6a2   __RU_l_____M______u_______________________
+71f20   9f6a3   __RU_l_____M______u_______________________
+71f21   9f6a4   __RU_l_____M______u_______________________
+71f22   9f6a5   __RU_l_____M______u_______________________
+71f23   9f6a6   __RU_l_____M______u_______________________
+71f24   9f6a7   __RU_l_____M______u_______________________
+71f25   9f6a8   __RU_l_____M______u_______________________
+71f26   9f6a9   __RU_lA____M______________________________
+71f27   9f6aa   __RU_lA____M______________________________
+71f28   9f6ab   __RU_lA____M______________________________
+71f29   9f6ac   __RU_lA____M______________________________
+71f2b   9f6ae   __RU_lA____M______________________________
+71f2c   9f474   __RU_lA____M______________________________
+71f2d   9f475   __RU_lA____M______________________________
+71f2e   9f476   __RU_lA____M______________________________
+71f2f   9f477   __RU_lA____M______________________________
+71f34   819bb   ___U_lA____Ma_b___________________________
+71f35   81a0b   ___U_lA____Ma_b___________________________
+71f36   7e16f   ___UDlA____Ma_b___________________________
+71f37   7e403   ___UDlA____Ma_b___________________________
+71f38   8444e   ___U_lA____Ma_b___________________________
+71f39   72081   ___U_lA____Ma_b___________________________
+71f3a   7e713   ___UDlA____Ma_b___________________________
+71f5e   9f677   __RU_l_____M______u_______________________
+71f5f   9f678   __RU_l_____M______u_______________________
+71f60   9f679   __RU_l_____M______u_______________________
+71f61   9f67a   __RU_l_____M______u_______________________
+71f62   79818   ___UDlA____Ma_b___________________________
+71f63   7045d   ___U_lA____Ma_b___________________________
+71f80   815d8   ___U_lA____Ma_b___________________________
+71f83   70a66   ___U_lA____Ma_b___________________________
+71f84   852c5   ___U_lA____Ma_b___________________________
+71f89   86d18   ___U_lA____Ma_b___________________________
+71f93   795cb   ___U_lA____Ma_b___________________________
+71f94   85b2b   ___U_lA____Ma_b___________________________
+71f97   74499   ___U_lA____Ma_b___________________________
+71f98   86a2e   ___U_lA____Ma_b___________________________
+72000   7ddb1   ___U_lA____Ma_b___________________________
+72001   859f1   ___U_lA____Ma_b___________________________
+72005   70f79   ___U_lA____Ma_b___________________________
+72009   799d9   ___UDlA____Ma_b___________________________
+7208c   9f548   __RU_l_____M______u_______________________
+7208d   9f549   __RU_l_____M______u_______________________
+7208e   9f54a   __RU_l_____M______u_______________________
+7208f   9f54b   __RU_l_____M______u_______________________
+72090   9f55d   __RU_l_____M______u_______________________
+72091   9f55e   __RU_l_____M______u_______________________
+72092   9f55f   __RU_l_____M______u_______________________
+72093   9f560   __RU_l_____M______u_______________________
+72094   9f561   __RU_l_____M______u_______________________
+72095   9f562   __RU_l_____M______u_______________________
+72096   9f563   __RU_l_____M______u_______________________
+72097   9f564   __RU_l_____M______u_______________________
+72098   9f565   __RU_l_____M______u_______________________
+72099   9f566   __RU_l_____M______u_______________________
+7209a   9f567   __RU_l_____M______u_______________________
+7209b   9f568   __RU_l_____M______u_______________________
+720ad   7354b   ___U_lA____Ma_b___________________________
+720ae   79029   ___UDlA____Ma_b___________________________
+720cb   9f4ba   __RU_l_____M______u_______________________
+720cc   9f4bb   __RU_l_____M______u_______________________
+720cd   9f4bc   __RU_l_____M______u_______________________
+720ce   9f4bd   __RU_l_____M______u_______________________
+720cf   9f4ef   __RU_l_____M______u_______________________
+720d0   9f4f0   __RU_l_____M______u_______________________
+720d1   9f4f1   __RU_l_____M______u_______________________
+720d2   9f4f2   __RU_l_____M______u_______________________
+720d3   9f4f3   __RU_l_____M______u_______________________
+720d4   9f4f4   __RU_l_____M______u_______________________
+720d5   9f4f5   __RU_l_____M______u_______________________
+720d6   9f4f6   __RU_l_____M______u_______________________
+720d7   9f4f7   __RU_l_____M______u_______________________
+720d8   9f4f8   __RU_l_____M______u_______________________
+720d9   9f4f9   __RU_l_____M______u_______________________
+720da   9f4fa   __RU_l_____M______u_______________________
+720db   9f4fb   __RU_l_____M______u_______________________
+720dc   9f4fc   __RU_l_____M______u_______________________
+720dd   9f4fd   __RU_l_____M______u_______________________
+720de   9f4fe   __RU_l_____M______u_______________________
+720df   9f4ff   __RU_l_____M______u_______________________
+720e0   9f500   __RU_l_____M______u_______________________
+720e1   9f501   __RU_l_____M______u_______________________
+720e2   9f502   __RU_l_____M______u_______________________
+720e3   9f503   __RU_l_____M______u_______________________
+720e4   9f504   __RU_l_____M______u_______________________
+720e5   9f505   __RU_l_____M______u_______________________
+720e6   9f506   __RU_l_____M______u_______________________
+720e7   9f507   __RU_l_____M______u_______________________
+720e8   9f508   __RU_l_____M______u_______________________
+720e9   9f509   __RU_l_____M______u_______________________
+720ea   9f50a   __RU_l_____M______u_______________________
+720eb   9f5b8   __RU_l_____M______u_______________________
+720ec   9f5b9   __RU_l_____M______u_______________________
+720ed   9f5ba   __RU_l_____M______u_______________________
+720ee   9f5bb   __RU_l_____M______u_______________________
+720ef   9f5bc   __RU_l_____M______u_______________________
+720f0   9f5bd   __RU_l_____M______u_______________________
+720f1   9f5be   __RU_l_____M______u_______________________
+720f2   9f5bf   __RU_l_____M______u_______________________
+720f3   9f5c0   __RU_l_____M______u_______________________
+720f4   9f5c1   __RU_l_____M______u_______________________
+720f5   9f5c2   __RU_l_____M______u_______________________
+720f6   9f5c3   __RU_l_____M______u_______________________
+720f7   9f5c4   __RU_l_____M______u_______________________
+720f8   9f5c5   __RU_l_____M______u_______________________
+720f9   9f5c6   __RU_l_____M______u_______________________
+720fa   9f5c7   __RU_l_____M______u_______________________
+720fb   9f5c8   __RU_l_____M______u_______________________
+720fc   9f5c9   __RU_l_____M______u_______________________
+720fd   9f5ca   __RU_l_____M______u_______________________
+720fe   9f5cb   __RU_l_____M______u_______________________
+720ff   9f5cc   __RU_l_____M______u_______________________
+72100   9f5cd   __RU_l_____M______u_______________________
+72101   9f5ce   __RU_l_____M______u_______________________
+72102   9f5cf   __RU_l_____M______u_______________________
+72103   9f5d0   __RU_l_____M______u_______________________
+72104   9f5d1   __RU_l_____M______u_______________________
+72105   9f5d2   __RU_l_____M______u_______________________
+72106   9f5d3   __RU_l_____M______u_______________________
+72107   9f5d4   __RU_l_____M______u_______________________
+72108   9f5d5   __RU_l_____M______u_______________________
+72109   9f5d6   __RU_l_____M______u_______________________
+7210a   9f5d7   __RU_l_____M______u_______________________
+7210b   9f6bc   __RU_lA____M______________________________
+7210c   9f6bd   __RU_l_____M______u_______________________
+7210d   9f6be   __RU_l_____M______u_______________________
+7210e   9f6bf   __RU_l_____M______u_______________________
+7210f   9f62e   __RU_l_____M______u_______________________
+72110   9f62f   __RU_l_____M______u_______________________
+72111   9f630   __RU_l_____M______u_______________________
+72112   9f631   __RU_l_____M______u_______________________
+72113   9f632   __RU_l_____M______u_______________________
+72114   9f633   __RU_l_____M______u_______________________
+72115   9f634   __RU_l_____M______u_______________________
+72116   9f635   __RU_l_____M______u_______________________
+72117   9f636   __RU_l_____M______u_______________________
+72118   9f637   __RU_l_____M______u_______________________
+72119   9f638   __RU_l_____M______u_______________________
+7211a   9f639   __RU_l_____M______u_______________________
+7211b   9f63a   __RU_l_____M______u_______________________
+7211c   9f63b   __RU_l_____M______u_______________________
+7211d   9f63c   __RU_l_____M______u_______________________
+7211e   9f63d   __RU_l_____M______u_______________________
+7211f   9f63e   __RU_l_____M______u_______________________
+72120   9f63f   __RU_l_____M______u_______________________
+72121   9f640   __RU_l_____M______u_______________________
+72122   9f641   __RU_l_____M______u_______________________
+72123   9f642   __RU_l_____M______u_______________________
+72124   9f643   __RU_l_____M______u_______________________
+72125   9f644   __RU_l_____M______u_______________________
+72126   9f645   __RU_l_____M______u_______________________
+72127   9f646   __RU_l_____M______u_______________________
+72128   9f647   __RU_l_____M______u_______________________
+72129   9f648   __RU_l_____M______u_______________________
+7212a   9f649   __RU_l_____M______u_______________________
+7212b   9f64a   __RU_l_____M______u_______________________
+7212c   9f64b   __RU_l_____M______u_______________________
+7212d   9f64c   __RU_l_____M______u_______________________
+7212e   9f64d   __RU_l_____M______u_______________________
+7212f   9f64e   __RU_l_____M______u_______________________
+72130   9f64f   __RU_l_____M______u_______________________
+72131   9f650   __RU_l_____M______u_______________________
+72132   9f651   __RU_l_____M______u_______________________
+72133   9f652   __RU_l_____M______u_______________________
+72134   9f653   __RU_l_____M______u_______________________
+72135   9f654   __RU_l_____M______u_______________________
+72136   9f655   __RU_l_____M______u_______________________
+72137   9f656   __RU_l_____M______u_______________________
+72138   9f657   __RU_l_____M______u_______________________
+72139   9f658   __RU_l_____M______u_______________________
+7213a   9f659   __RU_l_____M______u_______________________
+7213b   9f65a   __RU_l_____M______u_______________________
+7213c   9f65b   __RU_l_____M______u_______________________
+7213d   9f65c   __RU_l_____M______u_______________________
+7213e   9f65d   __RU_l_____M______u_______________________
+7213f   9f663   __RU_l_____M______u_______________________
+72140   9f664   __RU_l_____M______u_______________________
+72141   9f665   __RU_l_____M______u_______________________
+72142   9f666   __RU_l_____M______u_______________________
+72143   9f667   __RU_l_____M______u_______________________
+72144   9f668   __RU_l_____M______u_______________________
+72145   9f669   __RU_l_____M______u_______________________
+72146   9f532   __RU_l_____M______u_______________________
+72147   9f615   __RU_l_____M______u_______________________
+72148   9f616   __RU_l_____M______u_______________________
+72149   9f617   __RU_l_____M______u_______________________
+7214a   9f618   __RU_l_____M______u_______________________
+7214b   9f619   __RU_l_____M______u_______________________
+7214c   9f61a   __RU_l_____M______u_______________________
+7214d   9f61b   __RU_l_____M______u_______________________
+7214e   9f61c   __RU_l_____M______u_______________________
+7214f   9f61d   __RU_l_____M______u_______________________
+72150   9f61e   __RU_l_____M______u_______________________
+72151   9f61f   __RU_l_____M______u_______________________
+72152   9f620   __RU_l_____M______u_______________________
+72153   9f621   __RU_l_____M______u_______________________
+72154   9f622   __RU_l_____M______u_______________________
+72155   9f623   __RU_l_____M______u_______________________
+72156   9f624   __RU_l_____M______u_______________________
+72157   9f625   __RU_l_____M______u_______________________
+72158   9f626   __RU_l_____M______u_______________________
+72159   9f627   __RU_l_____M______u_______________________
+7215a   9f628   __RU_l_____M______u_______________________
+7215b   9f629   __RU_l_____M______u_______________________
+7215c   9f62a   __RU_l_____M______u_______________________
+7215d   9f4cf   __RU_l_____M______u_______________________
+7215e   9f4d0   __RU_l_____M______u_______________________
+7215f   9f4d1   __RU_l_____M______u_______________________
+72160   9f4d2   __RU_l_____M______u_______________________
+72161   9f4d3   __RU_l_____M______u_______________________
+72162   9f4d4   __RU_l_____M______u_______________________
+72163   9f4d5   __RU_l_____M______u_______________________
+72164   9f4d6   __RU_l_____M______u_______________________
+72165   9f4d7   __RU_l_____M______u_______________________
+72166   9f4d8   __RU_l_____M______u_______________________
+72167   9f4d9   __RU_l_____M______u_______________________
+72168   9f4da   __RU_l_____M______u_______________________
+72169   9f4db   __RU_l_____M______u_______________________
+7216a   9f4dc   __RU_l_____M______u_______________________
+7216b   7e111   ___U_lA____Ma_b___________________________
+7216c   81afb   ___UDlA____Ma_b___________________________
+7216d   85c4e   ___UDlA____Ma_b___________________________
+7216e   72289   ___U_lA____Ma_b___________________________
+7216f   7e776   ___UDlA____Ma_b___________________________
+72170   7e7a3   ___UDlA____Ma_b___________________________
+72171   7323b   ___U_lA____Ma_b___________________________
+72172   73258   ___UDlA____Ma_b___________________________
+72173   798b6   ___UDlA____Ma_b___________________________
+72174   730b5   ___UDlA____Ma_b___________________________
+72175   7de2f   ___U_lA____Ma_b___________________________
+72176   74623   ___UDlA____Ma_b___________________________
+72178   794fd   ___UDlA____Ma_b___________________________
+72179   7ab43   ___U_lA____Ma_b___________________________
+721b2   9c571   __RU_lA____M______________________________
+721b4   9c573   __RU_lA____M______________________________
+721b5   9c574   __RU_lA____M______________________________
+721b6   72364   ___U_lA____Ma_b___________________________
+721b7   8554a   ___U_lA____Ma_b___________________________
+721c3   9f50b   __RU_l_____M______u_______________________
+721c4   78337   ___UDlA____Ma_b___________________________
+721ef   9f02b   __RUDl_____M__b___u_______________________
+721f0   9f29b   __RUDl_____M__b___u_______________________
+7220f   9f068   __RUDl_____M__b___u_______________________
+7222f   71d8a   ___UDlA____Ma_b___________________________
+72240   86654   ___U_lA____Ma_b___________________________
+72243   790f4   ___UDlA____Ma_b___________________________
+72244   811c7   ___U_lA____Ma_b___________________________
+72245   8872e   __RUDl_____M__b___u_______________________
+72246   8875d   __RUDl_____M__b___u_______________________
+72247   8875c   __RUDl_____M__b___u_______________________
+72248   8877d   __RUDl_____M__b___u_______________________
+72249   8877c   __RUDl_____M__b___u_______________________
+7224a   8877e   __RUDl_____M__b___u_______________________
+7224b   8877b   __RUDl_____M__b___u_______________________
+7224c   82234   ___U_lA____Ma_b___________________________
+7224d   73559   ___UDlA____Ma_b___________________________
+7224e   91c51   ___U_lA____Ma_b___________________________
+7224f   9f036   __RUDl_____M__b___u_______________________
+7226f   8d1d8   ___U_lA____Ma_b___________________________
+72270   819f7   ___U_lA____Ma_b___________________________
+72271   720dc   ___U_lA____Ma_b___________________________
+72272   9f023   __RUDl_____M__b___u_______________________
+72295   9f068   __RUDl_____M__b___u_______________________
+722b5   8bd9d   ___U_lA____Ma_b___________________________
+722b6   8872e   __RUDl_____M__b___u_______________________
+722b7   8875d   __RUDl_____M__b___u_______________________
+722b8   8875c   __RUDl_____M__b___u_______________________
+722b9   8877d   __RUDl_____M__b___u_______________________
+722ba   8877c   __RUDl_____M__b___u_______________________
+722bb   8877e   __RUDl_____M__b___u_______________________
+722bc   8877b   __RUDl_____M__b___u_______________________
+722bd   81651   ___U_lA____Ma_b___________________________
+722be   7e251   ___UDlA____Ma_b___________________________
+722bf   720e8   ___U_lA____Ma_b___________________________
+722c0   8183b   ___UDlA____Ma_b___________________________
+722c1   84b5b   ___U_lA____Ma_b___________________________
+722c2   8346a   ___UDlA____Ma_b___________________________
+722c8   87a04   ___U_lA____Ma_b___________________________
+722ca   79811   ___UDlA____Ma_b___________________________
+722ce   9f006   __RU_l_____M______u_______________________
+722cf   9f007   __RU_l_____M______u_______________________
+722d0   9f290   __RU_l_____M______u_______________________
+722d1   9f291   __RU_l_____M______u_______________________
+722d2   9f3ca   __RU_l_____M______u_______________________
+722d3   9f3cb   __RU_l_____M______u_______________________
+722d4   9f3cc   __RU_l_____M______u_______________________
+722d5   9f3cd   __RU_l_____M______u_______________________
+722d6   9f3ce   __RU_l_____M______u_______________________
+722d7   9f3cf   __RU_l_____M______u_______________________
+722d8   9f3ac   __RU_l_____M______u_______________________
+722d9   9f3ad   __RU_l_____M______u_______________________
+722da   9f3ae   __RU_l_____M______u_______________________
+722db   9f3af   __RU_l_____M______u_______________________
+722dc   9f3b0   __RU_l_____M______u_______________________
+722dd   9f3b1   __RU_l_____M______u_______________________
+722de   9f3b2   __RU_l_____M______u_______________________
+722df   9f3b3   __RU_l_____M______u_______________________
+722e0   9f3b4   __RU_l_____M______u_______________________
+722e1   9f3b5   __RU_l_____M______u_______________________
+722e2   9f3b6   __RU_l_____M______u_______________________
+722e3   9f3b7   __RU_l_____M______u_______________________
+722e4   9f3b8   __RU_l_____M______u_______________________
+722e5   9f3b9   __RU_l_____M______u_______________________
+722e6   9f3ba   __RU_l_____M______u_______________________
+722e7   9f3bb   __RU_l_____M______u_______________________
+722e8   9f3bc   __RU_l_____M______u_______________________
+722e9   9f3bd   __RU_l_____M______u_______________________
+722ea   9f3be   __RU_l_____M______u_______________________
+722eb   9f3bf   __RU_l_____M______u_______________________
+722ec   9f340   __RU_l_____M______u_______________________
+722ed   9f341   __RU_l_____M______u_______________________
+722ee   9f342   __RU_l_____M______u_______________________
+722ef   9f343   __RU_l_____M______u_______________________
+7231a   9f3d8   __RU_l_____M______u_______________________
+7231b   9f3d9   __RU_l_____M______u_______________________
+7231c   9f3da   __RU_l_____M______u_______________________
+7231d   9f3db   __RU_l_____M______u_______________________
+7231e   9f3dc   __RU_l_____M______u_______________________
+7231f   9f3dd   __RU_l_____M______u_______________________
+72320   9f3de   __RU_l_____M______u_______________________
+72321   9f3df   __RU_l_____M______u_______________________
+72322   9f3e0   __RU_l_____M______u_______________________
+72323   9f3e1   __RU_l_____M______u_______________________
+72324   9f3e2   __RU_l_____M______u_______________________
+72325   9f3e3   __RU_l_____M______u_______________________
+72326   9f3e4   __RU_l_____M______u_______________________
+72327   9f3e5   __RU_l_____M______u_______________________
+72328   9f3e6   __RU_l_____M______u_______________________
+72329   9f3e7   __RU_l_____M______u_______________________
+7232a   9f3e8   __RU_l_____M______u_______________________
+7232b   9f3e9   __RU_l_____M______u_______________________
+7232c   9f3ea   __RU_l_____M______u_______________________
+7232d   9f3eb   __RU_l_____M______u_______________________
+7232e   9f3ec   __RU_l_____M______u_______________________
+7232f   9f3ed   __RU_l_____M______u_______________________
+72340   9f407   __RU_l_____M______u_______________________
+72341   9f408   __RU_l_____M______u_______________________
+72342   9f34d   __RU_l_____M______u_______________________
+72343   9f34e   __RU_l_____M______u_______________________
+72344   9f34f   __RU_l_____M______u_______________________
+72345   9f350   __RU_l_____M______u_______________________
+72346   9f351   __RU_l_____M______u_______________________
+72347   9f352   __RU_l_____M______u_______________________
+72348   9f353   __RU_l_____M______u_______________________
+72349   9f354   __RU_l_____M______u_______________________
+7234a   9f355   __RU_l_____M______u_______________________
+7234b   9f356   __RU_l_____M______u_______________________
+7234c   9f357   __RU_l_____M______u_______________________
+7234d   9f358   __RU_l_____M______u_______________________
+7234e   9f359   __RU_l_____M______u_______________________
+7234f   9f35a   __RU_l_____M______u_______________________
+72350   9f35b   __RU_l_____M______u_______________________
+72351   9f35c   __RU_l_____M______u_______________________
+72352   9f35d   __RU_l_____M______u_______________________
+72353   9f35e   __RU_l_____M______u_______________________
+72354   9f35f   __RU_l_____M______u_______________________
+72355   9f360   __RU_l_____M______u_______________________
+72356   9f361   __RU_l_____M______u_______________________
+72357   9f362   __RU_l_____M______u_______________________
+72358   9f363   __RU_l_____M______u_______________________
+72359   9f364   __RU_l_____M______u_______________________
+7235a   9f365   __RU_l_____M______u_______________________
+7235b   9f366   __RU_l_____M______u_______________________
+7235c   9f367   __RU_l_____M______u_______________________
+7235d   9f368   __RU_l_____M______u_______________________
+7235e   9f369   __RU_l_____M______u_______________________
+7235f   9f36a   __RU_l_____M______u_______________________
+72360   9f36b   __RU_l_____M______u_______________________
+72361   9f36c   __RU_l_____M______u_______________________
+72362   9f36d   __RU_l_____M______u_______________________
+72363   9f36e   __RU_l_____M______u_______________________
+72364   9f36f   __RU_l_____M______u_______________________
+72365   9f370   __RU_l_____M______u_______________________
+72366   9f371   __RU_l_____M______u_______________________
+72367   9f372   __RU_l_____M______u_______________________
+72368   9f373   __RU_l_____M______u_______________________
+72369   9f374   __RU_l_____M______u_______________________
+7236a   9f375   __RU_l_____M______u_______________________
+7236b   9f376   __RU_l_____M______u_______________________
+7236c   9f377   __RU_l_____M______u_______________________
+7236d   9f378   __RU_l_____M______u_______________________
+7236e   9f379   __RU_l_____M______u_______________________
+7236f   9f37a   __RU_l_____M______u_______________________
+72370   9f37b   __RU_l_____M______u_______________________
+72371   9f37c   __RU_l_____M______u_______________________
+72372   9f37d   __RU_l_____M______u_______________________
+72373   9f37e   __RU_l_____M______u_______________________
+72374   9f37f   __RU_l_____M______u_______________________
+72375   9f3c0   __RU_l_____M______u_______________________
+72376   9f3c1   __RU_l_____M______u_______________________
+72377   9f3c2   __RU_l_____M______u_______________________
+72378   9f3c3   __RU_l_____M______u_______________________
+72379   9f3c4   __RU_l_____M______u_______________________
+7237a   9f3c5   __RU_l_____M______u_______________________
+7237b   9f3c6   __RU_l_____M______u_______________________
+7237c   9f3c7   __RU_l_____M______u_______________________
+7237d   9f3c8   __RU_l_____M______u_______________________
+7237e   9f3c9   __RU_l_____M______u_______________________
+7237f   9f3fa   __RU_l_____M______u_______________________
+72380   9f3fb   __RU_l_____M______u_______________________
+72381   9f3fc   __RU_l_____M______u_______________________
+72382   9f29c   __RU_l_____M______u_______________________
+72383   9f29d   __RU_l_____M______u_______________________
+72384   9f29e   __RU_l_____M______u_______________________
+72385   9f29f   __RU_l_____M______u_______________________
+72386   9f2a0   __RU_l_____M______u_______________________
+72387   9f2a1   __RU_l_____M______u_______________________
+72388   9f2a2   __RU_l_____M______u_______________________
+72389   9f2a3   __RU_l_____M______u_______________________
+7238a   9f2a4   __RU_l_____M______u_______________________
+7238b   9f2a5   __RU_l_____M______u_______________________
+7238c   9f2a6   __RU_l_____M______u_______________________
+7238d   7e48e   ___UDlA____Ma_b___________________________
+7238e   8144e   ___U_lA____Ma_b___________________________
+7238f   81958   ___U_lA____Ma_b___________________________
+72390   926c6   ___U_lA____Ma_b___________________________
+72391   79614   ___UDlA____Ma_b___________________________
+72392   78355   ___U_lA____Ma_b___________________________
+72393   79992   ___UDlA____Ma_b___________________________
+72394   79dd1   ___UDlA____Ma_b___________________________
+72395   70d42   ___U_lA____Ma_b___________________________
+72396   7049e   ___U_lA____Ma_b___________________________
+72397   7983a   ___UDlA____Ma_b___________________________
+72398   7964e   ___UDlA____Ma_b___________________________
+7239c   74670   ___UDlA____Ma_b___________________________
+7e954   7468c   ___UDlA____Ma_b___________________________
+7e955   84f40   ___U_lA____Ma_b___________________________
+7e956   7dcf3   ___U_lA____Ma_b___________________________
+7e957   735d5   ___U_lA____Ma_b___________________________
+7e958   732ea   ___U_lA____Ma_b___________________________
+7e959   737cb   __RU_lA____Ma_b___________________________
+7ec00   20ed8   ___________M______________________________
+
+
+             flags      page-count       MB  symbolic-flags                =
+     long-symbolic-flags
+0x0000000000000800               1        0  ___________M__________________=
+____________ mmap
+0x0000000000000828               1        0  ___U_l_____M__________________=
+____________ uptodate,lru,mmap
+0x000000000004082c             444        1  __RU_l_____M______u___________=
+____________ referenced,uptodate,lru,mmap,unevictable
+0x000000000004483c              20        0  __RUDl_____M__b___u___________=
+____________ referenced,uptodate,dirty,lru,mmap,swapbacked,unevictable
+0x0000000000000868               1        0  ___U_lA____M__________________=
+____________ uptodate,lru,active,mmap
+0x000000000000086c              14        0  __RU_lA____M__________________=
+____________ referenced,uptodate,lru,active,mmap
+0x0000000000005868              47        0  ___U_lA____Ma_b_______________=
+____________ uptodate,lru,active,mmap,anonymous,swapbacked
+0x000000000000586c               1        0  __RU_lA____Ma_b_______________=
+____________ referenced,uptodate,lru,active,mmap,anonymous,swapbacked
+0x0000000000005878              31        0  ___UDlA____Ma_b_______________=
+____________ uptodate,dirty,lru,active,mmap,anonymous,swapbacked
+
+What is voffset and Offset ?
+Because cma-reserved range start from 0x60000 and i didnt found single page=
+ in that range after allocation cma memory ?
+
+I found locked pages with stack trace using page_owner.c
+
+Page allocated via order 0, mask 0x14213ca(GFP_HIGHUSER_MOVABLE|__GFP_COLD|=
+__GFP_NOWARN|__GFP_NORETRY)
+PFN 555075 type Movable Block 135 type CMA Flags 0x8019042c(referenced|upto=
+date|lru|arch_1|mappedtodisk|unevictable|mlocked)
+ get_page_from_freelist+0xa98/0xbf8
+ __alloc_pages_nodemask+0xe8/0x124c
+ __do_page_cache_readahead+0x120/0x2c4
+ ondemand_readahead+0x180/0x2b4
+ page_cache_sync_readahead+0x4c/0x6c
+ generic_file_read_iter+0x7e8/0xae4
+ ext4_file_read_iter+0x3c/0x54
+ new_sync_read+0xd4/0x118
+ vfs_read+0x15c/0x1ac
+ SyS_pread64+0xa0/0xbc
+ ret_fast_syscall+0x0/0x4c
+Page has been migrated, last migrate reason: cma
+
+
+but how to know the process name ? who acquire this page ?
+
+Did you look at "current" which is pointer to current process.
+
+print is using debugfs & it prints all pages with above details, so current=
+ pointer will not give you what we need.
+
+
+Thanks.
+***************************************************************************=
+***************************************************************************=
+******* eInfochips Business Disclaimer: This e-mail message and all attachm=
+ents transmitted with it are intended solely for the use of the addressee a=
+nd may contain legally privileged and confidential information. If the read=
+er of this message is not the intended recipient, or an employee or agent r=
+esponsible for delivering this message to the intended recipient, you are h=
+ereby notified that any dissemination, distribution, copying, or other use =
+of this message or its attachments is strictly prohibited. If you have rece=
+ived this message in error, please notify the sender immediately by replyin=
+g to this message and please delete it from your computer. Any views expres=
+sed in this message are those of the individual sender unless otherwise sta=
+ted. Company has taken enough precautions to prevent the spread of viruses.=
+ However the company accepts no liability for any damage caused by any viru=
+s transmitted by this email. **********************************************=
+***************************************************************************=
+************************************
