@@ -2,98 +2,107 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30341C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E8BC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A7E20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:24:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HM6+ciqQ"
+	by mail.kernel.org (Postfix) with ESMTP id 91B3B20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 01:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfDDBYM (ORCPT
+        id S1726605AbfDDBYa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Apr 2019 21:24:12 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37799 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDDBYL (ORCPT
+        Wed, 3 Apr 2019 21:24:30 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:46633 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDDBY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Apr 2019 21:24:11 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e6so360629pgc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2019 18:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=wvCZGps9tWughgsWHdoQZdrsOwDItuOv3jE/bnb1ns4=;
-        b=HM6+ciqQ8oPF/KKREc+Xb6ND1FU+Q0GvkaKU6eW2A9AUJnKl8I8eaGTLzfSGF3vQlb
-         qZA0oCcLRm2gSGfPMBlMdQFq6TmFfb8KpBRTXS5dgBFutoK1Nt/mDrFRRca/VcuHN6Bd
-         GY4W/ylAdv67p+fPrSaiY0rbEd7C56Ou1X2cRGoJ2qQVZkWmCF6mUuUQld6d5/lukO96
-         Z43elAMVKuEEHu1mKDDinR+e7Atr5STc58g0jcMv8+TwqUp3PdmdM6TDGN5Nlx2E0vUH
-         qsvJmpJA47/LP7w6zFgFoLz2dVJ1AoQ4zzfBaS+rabsqnXmFq8E9gvwBpTQG9D2WbyOm
-         dqFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wvCZGps9tWughgsWHdoQZdrsOwDItuOv3jE/bnb1ns4=;
-        b=qv14w/jctw8H3OPQsAP4f30lgatqjHSp6asr6isinJ9KjXT8xUZHJyTsPo8SnYmNre
-         PJ3kA+VbFZfSy1uiuEoqaPv5l2w9pYjKvfg4zZZh8jtXCUy7HZynQhXFXR0tPm9lMd+M
-         GKJ7n3DcDOhy+g7SrzC3AAkafdbJcMdHR32o6pfzqF1Ris4ql5bEgVIt2wFIlVYcz3kr
-         UKnxoF5O8gFW680YbmeYb7EE9rSFq6ud//4mqu+HhhGIgHkzpXICHJKLP2dud+HdX2PN
-         G5mLzXyRXFG5ZLIZ27t6OyDALqq1e6PwKyFaFOFogih/MT5EFu7FyuUdvaa//mf5gZu5
-         UFVg==
-X-Gm-Message-State: APjAAAVYYxd2p15wKz1wTuX6wxvT00hcVbW2+rCqLdYtkGZp7keOxxqi
-        +Vi+eKE/FA/OVIhaNDE17F+DM076
-X-Google-Smtp-Source: APXvYqz1BB8SU3Wi8w60n9JbAtV/k70eRrPWj4YndUs10rV2v4Oj7D9/ic+d3erGFfQHAl60MWZtmg==
-X-Received: by 2002:a63:4620:: with SMTP id t32mr2860223pga.363.1554341050756;
-        Wed, 03 Apr 2019 18:24:10 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.91.90])
-        by smtp.gmail.com with ESMTPSA id 14sm36741295pft.137.2019.04.03.18.24.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Apr 2019 18:24:10 -0700 (PDT)
-Date:   Thu, 4 Apr 2019 06:54:05 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: comedi: Fix spelling mistake
-Message-ID: <20190404012404.GA2098@hari-Inspiron-1545>
+        Wed, 3 Apr 2019 21:24:29 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x341O6c9028330
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 4 Apr 2019 10:24:06 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x341O6pD008918;
+        Thu, 4 Apr 2019 10:24:06 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x341LHho003344;
+        Thu, 4 Apr 2019 10:24:06 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.138] [10.38.151.138]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-3961909; Thu, 4 Apr 2019 10:23:27 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC10GP.gisp.nec.co.jp ([10.38.151.138]) with mapi id 14.03.0319.002; Thu, 4
+ Apr 2019 10:23:26 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Chao Fan <fanc.fnst@cn.fujitsu.com>, Dave Young <dyoung@redhat.com>
+CC:     Borislav Petkov <bp@alien8.de>, "bhe@redhat.com" <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Topic: [PATCH v2] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Thread-Index: AQHU6UwPBuKir5aKdUeGLetpGKkWo6YpVH0AgAAFNwCAABiYgIAADUsAgAAD3gCAAArrgIABEieA
+Date:   Thu, 4 Apr 2019 01:23:26 +0000
+Message-ID: <c8613886-7014-cbd2-788f-a4f29bb5b4a5@ce.jp.nec.com>
+References: <20190328064343.GA1877@MiWiFi-R3L-srv>
+ <20190328074337.GA9470@jeru.linux.bs1.fc.nec.co.jp>
+ <20190328155256.GP22720@zn.tnic>
+ <20190401000837.GA5170@jeru.linux.bs1.fc.nec.co.jp>
+ <20190402120319.GA7605@dhcp-128-65.nay.redhat.com>
+ <20190403053459.GD1555@localhost.localdomain>
+ <20190403055340.GA11976@dhcp-128-65.nay.redhat.com>
+ <20190403072141.GE1555@localhost.localdomain>
+ <20190403080846.GB2579@dhcp-128-65.nay.redhat.com>
+ <20190403082305.GG1555@localhost.localdomain>
+ <20190403090210.GH1555@localhost.localdomain>
+In-Reply-To: <20190403090210.GH1555@localhost.localdomain>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <D8F13C0C845E5C4F8800DDBABD57EC59@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes interupts --> interrupts to fix warning reported by checkpatch
-tool
+Hi Dave and Chao,
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/comedi/drivers/dt2811.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 4/3/19 6:02 PM, Chao Fan wrote:
+> On Wed, Apr 03, 2019 at 04:23:06PM +0800, Chao Fan wrote:
+>> On Wed, Apr 03, 2019 at 04:09:16PM +0800, Dave Young wrote:
+>>> Fix 3.  need more debugging, have you or Junichi run tests on more real
+>>> hardware, maybe it is easier to reproduce on real hardware, I'm glad to
+>>> help to try test patch or provide any help. 
+>>
+>> I am still testing in real hardware.
+> 
+> Hi Dave,
+> 
+> I find a Fujitsu Desktop PC to test it.
+> Without this PATCH, it failed to kexec and kdump.
+> With this PATCH, it succeed to kexec.
+> But failed to kdump. From the log, I think it didn't jump to the second
+> kernel, just reboot after panic. I have not figured out what's the
+> problem, but it seems not caused by this PATCH.
+> So I still think this PATCH works for the Fujitsu Desktop PC.
+> 
+> As for your issue, I think there may be some problems related to specified
+> hardware. Are you using a Lenovo laptop?
+> 
+> And I am not sure how Nomura tested it.
 
-diff --git a/drivers/staging/comedi/drivers/dt2811.c b/drivers/staging/comedi/drivers/dt2811.c
-index 05207a5..8a1f9ef 100644
---- a/drivers/staging/comedi/drivers/dt2811.c
-+++ b/drivers/staging/comedi/drivers/dt2811.c
-@@ -52,7 +52,7 @@
- #define DT2811_ADCSR_ADBUSY		BIT(5)	/* r      1=A/D busy */
- #define DT2811_ADCSR_CLRERROR		BIT(4)
- #define DT2811_ADCSR_DMAENB		BIT(3)	/* r/w    1=dma ena */
--#define DT2811_ADCSR_INTENB		BIT(2)	/* r/w    1=interupts ena */
-+#define DT2811_ADCSR_INTENB		BIT(2)	/* r/w    1=interrupts ena */
- #define DT2811_ADCSR_ADMODE(x)		(((x) & 0x3) << 0)
- 
- #define DT2811_ADGCR_REG		0x01	/* r/w  A/D Gain/Channel */
+I've tested 3 different models of EFI-booted baremetal servers with both
+normal kexec and panic kexec.  So far as I've tried Linus's v5.1-rc3,
+the problem always reproduced without the patch and disappears with the patch.
+
 -- 
-2.7.4
-
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
