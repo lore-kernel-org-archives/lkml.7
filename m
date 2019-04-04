@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9109C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159E3C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAAF2177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D433521741
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368721;
-	bh=sCPJwXsmGdqoOCKdRXcy7d/mbSXgYOL4K4sAvv2JVoQ=;
+	s=default; t=1554368724;
+	bh=sYiXaetmFzKT4ZVuK2gso+n3K12dYqioNeoNFKYIuhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ijlvMOznlAYgumthh0XoyH7xS4G0L0Rj2XJppYCtDxxVgbo2oCjKa/ZXMYBfbF3B6
-	 DcXGZKV0RYBz3HZL+96IuLtTYUhuODXgj8ZheTeapLPn/FkoyQc6nzaYVSOcMYhELI
-	 Ffy9Z1rNv+gT0GLUyCVHeCiyLgjTQ0+CuXrDh5Pk=
+	b=QF9wtXOjK1OIHx0J1sRXhvsFlB+/Bxzwh6RbAjZYJRrAALgxSLtL6U5ATQT4PgBw9
+	 1Qwv8JVFlsMLeIbosbJIfx+XteSZD0OFJHYjjwOrQ3Y2FFoVrtMv/eEvSEVaoObH7T
+	 z82Px9O5hNIrFyC4moKEOLA/367Z/FSHABx/8RIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbfDDJFT (ORCPT
+        id S1731895AbfDDJFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43202 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:05:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732099AbfDDJFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:05:13 -0400
+        id S1732126AbfDDJFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:05:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F8B62183E;
-        Thu,  4 Apr 2019 09:05:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B8A121741;
+        Thu,  4 Apr 2019 09:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368711;
-        bh=sCPJwXsmGdqoOCKdRXcy7d/mbSXgYOL4K4sAvv2JVoQ=;
+        s=default; t=1554368719;
+        bh=sYiXaetmFzKT4ZVuK2gso+n3K12dYqioNeoNFKYIuhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=STwEI4Bpy8ftnLj2LwXJ/MQV1n+//L5aT1AKTFoE3MUfnl3L0N13iQnuAxCQ9xWuq
-         1L7ih5b8qFRk5vSPasOLnm7l7SnZqDuqtmZsh1XrgmCpxy/3DkXHtTKe1UO96YkUnP
-         udA510r6cQFWBRPViVV5U/R+OFCPeAgRpECUiqa0=
+        b=KgiietFjrPiB3RO2F8yyyevoYWdCPWLHtYpQLs7jgyvtA08E4amHs7eh2yW+3OWGC
+         LmmRw2yk/VdxwGWpwwEAR9O65quTzCwtK8mthNl5jHTYpw0pQylQ4gFTooXIbQH68x
+         ubx/YnMPQwYoW+3nYdagthPig5IzrTYsPZfKLuqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Tristan Bastian <tristan-c.bastian@gmx.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 141/187] ARM: avoid Cortex-A9 livelock on tight dmb loops
-Date:   Thu,  4 Apr 2019 10:47:58 +0200
-Message-Id: <20190404084609.821225561@linuxfoundation.org>
+Subject: [PATCH 4.19 128/187] i2c: of: Try to find an I2C adapter matching the parent
+Date:   Thu,  4 Apr 2019 10:47:45 +0200
+Message-Id: <20190404084609.246668450@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -66,207 +67,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5388a5b82199facacd3d7ac0d05aca6e8f902fed ]
+[ Upstream commit e814e688413aabd7b0d75e2a8ed1caa472951dec ]
 
-machine_crash_nonpanic_core() does this:
+If an I2C adapter doesn't match the provided device tree node, also try
+matching the parent's device tree node. This allows finding an adapter
+based on the device node of the parent device that was used to register
+it.
 
-	while (1)
-		cpu_relax();
+This fixes a regression on Tegra124-based Chromebooks (Nyan) where the
+eDP controller registers an I2C adapter that is used to read to EDID.
+After commit 993a815dcbb2 ("dt-bindings: panel: Add missing .txt
+suffix") this stopped working because the I2C adapter could no longer
+be found. The approach in this patch fixes the regression without
+introducing the issues that the above commit solved.
 
-because the kernel has crashed, and we have no known safe way to deal
-with the CPU.  So, we place the CPU into an infinite loop which we
-expect it to never exit - at least not until the system as a whole is
-reset by some method.
-
-In the absence of erratum 754327, this code assembles to:
-
-	b	.
-
-In other words, an infinite loop.  When erratum 754327 is enabled,
-this becomes:
-
-1:	dmb
-	b	1b
-
-It has been observed that on some systems (eg, OMAP4) where, if a
-crash is triggered, the system tries to kexec into the panic kernel,
-but fails after taking the secondary CPU down - placing it into one
-of these loops.  This causes the system to livelock, and the most
-noticable effect is the system stops after issuing:
-
-	Loading crashdump kernel...
-
-to the system console.
-
-The tested as working solution I came up with was to add wfe() to
-these infinite loops thusly:
-
-	while (1) {
-		cpu_relax();
-		wfe();
-	}
-
-which, without 754327 builds to:
-
-1:	wfe
-	b	1b
-
-or with 754327 is enabled:
-
-1:	dmb
-	wfe
-	b	1b
-
-Adding "wfe" does two things depending on the environment we're running
-under:
-- where we're running on bare metal, and the processor implements
-  "wfe", it stops us spinning endlessly in a loop where we're never
-  going to do any useful work.
-- if we're running in a VM, it allows the CPU to be given back to the
-  hypervisor and rescheduled for other purposes (maybe a different VM)
-  rather than wasting CPU cycles inside a crashed VM.
-
-However, in light of erratum 794072, Will Deacon wanted to see 10 nops
-as well - which is reasonable to cover the case where we have erratum
-754327 enabled _and_ we have a processor that doesn't implement the
-wfe hint.
-
-So, we now end up with:
-
-1:      wfe
-        b       1b
-
-when erratum 754327 is disabled, or:
-
-1:      dmb
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        wfe
-        b       1b
-
-when erratum 754327 is enabled.  We also get the dmb + 10 nop
-sequence elsewhere in the kernel, in terminating loops.
-
-This is reasonable - it means we get the workaround for erratum
-794072 when erratum 754327 is enabled, but still relinquish the dead
-processor - either by placing it in a lower power mode when wfe is
-implemented as such or by returning it to the hypervisior, or in the
-case where wfe is a no-op, we use the workaround specified in erratum
-794072 to avoid the problem.
-
-These as two entirely orthogonal problems - the 10 nops addresses
-erratum 794072, and the wfe is an optimisation that makes the system
-more efficient when crashed either in terms of power consumption or
-by allowing the host/other VMs to make use of the CPU.
-
-I don't see any reason not to use kexec() inside a VM - it has the
-potential to provide automated recovery from a failure of the VMs
-kernel with the opportunity for saving a crashdump of the failure.
-A panic() with a reboot timeout won't do that, and reading the
-libvirt documentation, setting on_reboot to "preserve" won't either
-(the documentation states "The preserve action for an on_reboot event
-is treated as a destroy".)  Surely it has to be a good thing to
-avoiding having CPUs spinning inside a VM that is doing no useful
-work.
-
-Acked-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 17ab7806de0c ("drm: don't link DP aux i2c adapter to the hardware device node")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Tristan Bastian <tristan-c.bastian@gmx.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/barrier.h   | 2 ++
- arch/arm/include/asm/processor.h | 6 +++++-
- arch/arm/kernel/machine_kexec.c  | 5 ++++-
- arch/arm/kernel/smp.c            | 4 +++-
- arch/arm/mach-omap2/prm_common.c | 4 +++-
- 5 files changed, 17 insertions(+), 4 deletions(-)
+ drivers/i2c/i2c-core-of.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/asm/barrier.h b/arch/arm/include/asm/barrier.h
-index 69772e742a0a..83ae97c049d9 100644
---- a/arch/arm/include/asm/barrier.h
-+++ b/arch/arm/include/asm/barrier.h
-@@ -11,6 +11,8 @@
- #define sev()	__asm__ __volatile__ ("sev" : : : "memory")
- #define wfe()	__asm__ __volatile__ ("wfe" : : : "memory")
- #define wfi()	__asm__ __volatile__ ("wfi" : : : "memory")
-+#else
-+#define wfe()	do { } while (0)
- #endif
+diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+index 6cb7ad608bcd..0f01cdba9d2c 100644
+--- a/drivers/i2c/i2c-core-of.c
++++ b/drivers/i2c/i2c-core-of.c
+@@ -121,6 +121,17 @@ static int of_dev_node_match(struct device *dev, void *data)
+ 	return dev->of_node == data;
+ }
  
- #if __LINUX_ARM_ARCH__ >= 7
-diff --git a/arch/arm/include/asm/processor.h b/arch/arm/include/asm/processor.h
-index 1bf65b47808a..cb2a3423b714 100644
---- a/arch/arm/include/asm/processor.h
-+++ b/arch/arm/include/asm/processor.h
-@@ -95,7 +95,11 @@ extern void release_thread(struct task_struct *);
- unsigned long get_wchan(struct task_struct *p);
- 
- #if __LINUX_ARM_ARCH__ == 6 || defined(CONFIG_ARM_ERRATA_754327)
--#define cpu_relax()			smp_mb()
-+#define cpu_relax()						\
-+	do {							\
-+		smp_mb();					\
-+		__asm__ __volatile__("nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;");	\
-+	} while (0)
- #else
- #define cpu_relax()			barrier()
- #endif
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index dd2eb5f76b9f..76300f3813e8 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -91,8 +91,11 @@ void machine_crash_nonpanic_core(void *unused)
- 
- 	set_cpu_online(smp_processor_id(), false);
- 	atomic_dec(&waiting_for_crash_ipi);
--	while (1)
++static int of_dev_or_parent_node_match(struct device *dev, void *data)
++{
++	if (dev->of_node == data)
++		return 1;
 +
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
++	if (dev->parent)
++		return dev->parent->of_node == data;
++
++	return 0;
++}
++
+ /* must call put_device() when done with returned i2c_client device */
+ struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
+ {
+@@ -145,7 +156,8 @@ struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node)
+ 	struct device *dev;
+ 	struct i2c_adapter *adapter;
  
- void crash_smp_send_stop(void)
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 1d6f5ea522f4..a3ce7c5365fa 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -604,8 +604,10 @@ static void ipi_cpu_stop(unsigned int cpu)
- 	local_fiq_disable();
- 	local_irq_disable();
+-	dev = bus_find_device(&i2c_bus_type, NULL, node, of_dev_node_match);
++	dev = bus_find_device(&i2c_bus_type, NULL, node,
++			      of_dev_or_parent_node_match);
+ 	if (!dev)
+ 		return NULL;
  
--	while (1)
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
- 
- static DEFINE_PER_CPU(struct completion *, cpu_completion);
-diff --git a/arch/arm/mach-omap2/prm_common.c b/arch/arm/mach-omap2/prm_common.c
-index 058a37e6d11c..fd6e0671f957 100644
---- a/arch/arm/mach-omap2/prm_common.c
-+++ b/arch/arm/mach-omap2/prm_common.c
-@@ -523,8 +523,10 @@ void omap_prm_reset_system(void)
- 
- 	prm_ll_data->reset_system();
- 
--	while (1)
-+	while (1) {
- 		cpu_relax();
-+		wfe();
-+	}
- }
- 
- /**
 -- 
 2.19.1
 
