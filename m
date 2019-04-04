@@ -2,117 +2,124 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB267C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D48C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7064320855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B426206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 18:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nMxrWD8Y"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="ZnDljIUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfDDSjh (ORCPT
+        id S1729931AbfDDSjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 14:39:37 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44094 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729785AbfDDSjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Apr 2019 14:39:36 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x34Id6jZ022168;
-        Thu, 4 Apr 2019 13:39:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1554403146;
-        bh=k2FUpvDVR8Bx/qAVbyK8j7vj7T8VgY6V4ucAFGtit7s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nMxrWD8YRkHrw1C8B6KpRcdd53MgOYCoB6czCU75+XP1fEuMezsESWz0VgCAKRfjQ
-         On/J6AZhoP2bN1jHSDPbfYtvQe4yF2dmilIl77f9ptB0UJzQve+UGxVa/NPuBvvect
-         c8qgGTOeE7VlJfoLFEfgTDSYU/8gomTebO0ti50o=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x34Id61V037201
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Apr 2019 13:39:06 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
- 2019 13:39:06 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 4 Apr 2019 13:39:06 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x34Id3d2069458;
-        Thu, 4 Apr 2019 13:39:04 -0500
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Remove
- omap_dm_timer_set_load_start
-To:     Tony Lindgren <tony@atomide.com>,
-        Ladislav Michl <ladis@linux-mips.org>
-CC:     Nathan Chancellor <natechancellor@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-References: <20190327050126.12064-1-natechancellor@gmail.com>
- <20190327081142.GA11034@lenoch> <20190404141730.GE49658@atomide.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <0cb5a5e3-6801-9888-6b17-c1f54f597a16@ti.com>
-Date:   Fri, 5 Apr 2019 00:09:31 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190404141730.GE49658@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Received: from mail-eopbgr20100.outbound.protection.outlook.com ([40.107.2.100]:58382
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728699AbfDDSjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 14:39:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector2-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g/0r/2YnuIdfJp4acCzon8M/JMEWrkP7ah/RAUwO1aM=;
+ b=ZnDljIUu8ZWZsj5iLsDeDBAdmTxjlKxITkqnbdapa1JTjrYeK7YJO6jS9/WG76XAV4bfVWfflVa8f6QAGg93LXOnsWSuxrayn//7KGyJfZkVqMr7ub0b2LmtCBax3/1UzMFsSxQVDezcDdm1+8baio8EoQLH6nQ5eLrlK4pPW/4=
+Received: from AM6PR07MB4821.eurprd07.prod.outlook.com (20.177.190.218) by
+ AM6PR07MB6072.eurprd07.prod.outlook.com (20.178.95.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1771.6; Thu, 4 Apr 2019 18:39:31 +0000
+Received: from AM6PR07MB4821.eurprd07.prod.outlook.com
+ ([fe80::4849:4337:439d:6825]) by AM6PR07MB4821.eurprd07.prod.outlook.com
+ ([fe80::4849:4337:439d:6825%4]) with mapi id 15.20.1771.011; Thu, 4 Apr 2019
+ 18:39:31 +0000
+From:   "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>
+To:     Lawrence Brakmo <brakmo@fb.com>, David Miller <davem@davemloft.net>
+CC:     "De Schepper, Koen (Nokia - BE/Antwerp)" 
+        <koen.de_schepper@nokia-bell-labs.com>,
+        "research@bobbriscoe.net" <research@bobbriscoe.net>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "borkmann@iogearbox.net" <borkmann@iogearbox.net>,
+        "ycheng@google.com" <ycheng@google.com>,
+        "ncardwell@google.com" <ncardwell@google.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "agshew@gmail.com" <agshew@gmail.com>,
+        "glenn.judd@morganstanley.com" <glenn.judd@morganstanley.com>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next v2] tcp: Ensure DCTCP reacts to losses
+Thread-Topic: [PATCH net-next v2] tcp: Ensure DCTCP reacts to losses
+Thread-Index: AQHU6uFJ5qKL9TJ2LUy0DTa6bmxAT6YsSKWAgAAmjID//+KCMA==
+Date:   Thu, 4 Apr 2019 18:39:31 +0000
+Message-ID: <AM6PR07MB4821BB64AF86A1A650C95000E0500@AM6PR07MB4821.eurprd07.prod.outlook.com>
+References: <20190404121731.13917-1-olivier.tilmans@nokia-bell-labs.com>
+ <20190404.105243.1039649838417325989.davem@davemloft.net>
+ <532BB0D8-95C8-4A4D-A73D-3B563909780F@fb.com>
+In-Reply-To: <532BB0D8-95C8-4A4D-A73D-3B563909780F@fb.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=olivier.tilmans@nokia-bell-labs.com; 
+x-originating-ip: [195.16.14.134]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0244d55-b33e-43ca-5b32-08d6b92ce08f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600139)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR07MB6072;
+x-ms-traffictypediagnostic: AM6PR07MB6072:
+x-microsoft-antispam-prvs: <AM6PR07MB6072A2B11185FABDCFE4632AE0500@AM6PR07MB6072.eurprd07.prod.outlook.com>
+x-forefront-prvs: 0997523C40
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(396003)(39860400002)(346002)(376002)(366004)(136003)(199004)(189003)(76176011)(478600001)(8676002)(9686003)(106356001)(2906002)(105586002)(97736004)(102836004)(14454004)(99286004)(305945005)(74316002)(6506007)(81166006)(71200400001)(81156014)(256004)(71190400001)(8936002)(7736002)(14444005)(7696005)(86362001)(6246003)(446003)(52536014)(5660300002)(55016002)(33656002)(486006)(68736007)(26005)(25786009)(53936002)(4326008)(6436002)(11346002)(476003)(229853002)(6116002)(316002)(7416002)(3846002)(110136005)(54906003)(186003)(66066001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR07MB6072;H:AM6PR07MB4821.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: nokia-bell-labs.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TLrRlRQXTQh/xAxo2Nr8uF4RMJPh657b3NhpedqxDAFbGvvu6ZkN5TmbvwW9xTzgs8kl5VelugWK8GyEyXSL7XkmBxIFb7FgEJ5BWo72DzrRGvjVXKhcc8oiWgdXsLO9Bs8CDObpHzMTPqpCPRVufm+em7e3HcVwx5errJ/S9xghH95AK4+bcmDDk7NcCy6qw3b94glOVlasu0XzGQvOVPXsBlovpfRAii7yc9GlSIIq2wwolHpMgXEAt0TC081282hUziAUgHKVVim5DnOYYFM77IS01D8rfsV4Ma7qZDAhQBUXy55jftKDlbDHZUbN2jAJWWmz3tWaCXSRcYO75uYks7ngdyEGxeVY/7jwBkFHxy+IXpQ2AOdwDIeVQ76OAlaKKma9Po84BuxDvEe/WOAHfr1d2baxfdOCtmGYci4=
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nokia-bell-labs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0244d55-b33e-43ca-5b32-08d6b92ce08f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2019 18:39:31.6174
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR07MB6072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++AD4- DCTCP is meant to be used in environments where the switches/routers =
+do
++AD4- ECN marking, so it is not surprising that it performs badly when used=
+ in
++AD4- environments where it was not meant to be used. Has anyone measured t=
+he
++AD4- effect of this changed when DCTCP is used in environments where all t=
+he
++AD4- switches/routers do ECN marking? My concern is that we could end up
++AD4- hurting performance when DCTCP is used how it was meant to be used in
++AD4- order to protect incorrect uses of DCTCP.
+
+The results reported are indeed from a non-optimal setting, and mostly to
+show that it was ignoring losses. In practice, we only use DCTCP on=20
+ECN-enabled AQMs, and rarely see the loss reaction (e.g., a burst of new fl=
+ows
+IW that congest the ToR switch, in which case I'd argue the behavior is
+beneficial). I cannot estimate the impact on FB's workloads though.
+
+I had originally put a module parameter to make this loss reaction behavior
+optional, mostly to enable people to check first whether it was safe to use=
+=20
+with their configuration. In hindsight, I should have waited a bit more
+before submitting the v2 with its removal as requested.
 
 
-On 04/04/19 7:47 PM, Tony Lindgren wrote:
-> * Ladislav Michl <ladis@linux-mips.org> [190327 08:12]:
->> Hello Nathan,
->>
->> On Tue, Mar 26, 2019 at 10:01:27PM -0700, Nathan Chancellor wrote:
->>> Commit 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make
->>> omap_dm_timer_set_load_start() static") made omap_dm_time_set_load_start
->>> static because its prototype was not defined in a header. Unfortunately,
->>> this causes a build warning on multi_v7_defconfig because this function
->>> is not used anywhere in this translation unit:
->>>
->>> drivers/clocksource/timer-ti-dm.c:589:12: error: unused function
->>> 'omap_dm_timer_set_load_start' [-Werror,-Wunused-function]
->>>
->>> In fact, omap_dm_timer_set_load_start hasn't been used anywhere since
->>> commit f190be7f39a5 ("staging: tidspbridge: remove driver") and the
->>> prototype was removed in commit 592ea6bd1fad ("clocksource: timer-ti-dm:
->>> Make unexported functions static"), which is probably where this should
->>> have happened.
->>
->> Alternatively you might want to look at "clocksource: timer-ti-dm: Add event
->> capture": https://patchwork.kernel.org/patch/10237217/ (it makes use of
->> function being removed here). It is a part of an attempt to add event capture
->> for OMAP. Of course I would like this functionality to be implemented, but
->> as I do not have a time to continue, I cannot really object removing this
->> function.
->>
->> Just in case you'd be interested in finishing this task ;-)
-> 
-> Well seems like no other takers :) We can always find the missing
-> function in git history when needed, so I suggest we apply this.
-> 
-> Adding Keerthy to Cc as he just posted a similar patch.
-
-I posted the duplicate. Thanks for looping in.
-
-> 
-> Regards,
-> 
-> Tony
-> 
+Olivier
