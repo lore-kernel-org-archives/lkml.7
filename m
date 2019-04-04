@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03161C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB11C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58202171F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED90217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 08:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368020;
-	bh=35ydRYtSyy6RoLFwQGtpm/1Qqws3MjAZlgTRMdnEgs4=;
+	s=default; t=1554368023;
+	bh=FC8LjdehmnCy2mky8TfgDcKCfQRWXY0UBdDTVd6MDGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+eo83RApHCEVDi755Fce8VjTD9QNaB+o90y5Se5GVScz3XAIcH0y0/XvtSd9KknP
-	 RHnz9kQp8RcAFhy+qEEJuxncTUIYx14wVak6+rF8ssfiXEp3qOKKSTEEfcPnYjMqwP
-	 BF3cxnZUnjp4CEQvthoO+rtTiMm7/1URGWGe+s7U=
+	b=SOJFPOcCdJjQm2VqPQYtAKp0ddyxLLRqQhcAR3dMOBfjwTWBvG04hdQIBuWEdOVNU
+	 zrnLnzu/GW3JT4TXJ8uOWDMfnfjiLj3Iyyh+pK7+ZoPONGS6TlzIB1h0H5tDGYYNYv
+	 KZGdwz0CIpA0n/gVcom8zeFCPhgkDnJyJiktqnv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfDDIxj (ORCPT
+        id S1729875AbfDDIxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 04:53:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:53:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbfDDIxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:53:36 -0400
+        id S1728912AbfDDIxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:53:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D2A821855;
-        Thu,  4 Apr 2019 08:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30CF02171F;
+        Thu,  4 Apr 2019 08:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368016;
-        bh=35ydRYtSyy6RoLFwQGtpm/1Qqws3MjAZlgTRMdnEgs4=;
+        s=default; t=1554368018;
+        bh=FC8LjdehmnCy2mky8TfgDcKCfQRWXY0UBdDTVd6MDGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6O5+G07RS2//Fx1l0NoBL4naJUol3hZcTOP5T6hh8sl70M0tpyqFN7CI37J/PfRe
-         rENjHv3dVc/L8Rqrfn0LHMZIPpJzCQjj5q/j/RBl0p7iX9OoV3lO1xogU31TpQ6ZGB
-         X8C0h25iKqUCm+YIbq4DtC66LQ86Guru2EjA+Upo=
+        b=1P9pd3QY3Hr05Y4ouWW36vbzGZ+Eg5FIzSythnMLu5HZaZcoivpkx76bu8uNtACnA
+         6sgLD1LpdKvdI6Wxk5vDrX+4KI+5vsJMUGNo1GtW26w+lptTf8vD2dwBM7pLCBa9lj
+         Y7Oid9oo+WQGHA8TDinITopjvLW1Dt2cACB1dfQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Vincent <brainn@gmail.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 90/91] drm/dp/mst: Configure no_stop_bit correctly for remote i2c xfers
-Date:   Thu,  4 Apr 2019 10:48:14 +0200
-Message-Id: <20190404084540.687756003@linuxfoundation.org>
+Subject: [PATCH 4.9 91/91] ACPI / video: Extend chassis-type detection with a "Lunch Box" check
+Date:   Thu,  4 Apr 2019 10:48:15 +0200
+Message-Id: <20190404084540.743896990@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084535.450029272@linuxfoundation.org>
 References: <20190404084535.450029272@linuxfoundation.org>
@@ -68,43 +66,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c978ae9bde582e82a04c63a4071701691dd8b35c ]
+[ Upstream commit d693c008e3ca04db5916ff72e68ce661888a913b ]
 
-We aren't supposed to force a stop+start between every i2c msg
-when performing multi message transfers. This should eg. cause
-the DDC segment address to be reset back to 0 between writing
-the segment address and reading the actual EDID extension block.
+Commit 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true on
+Win8-ready _desktops_") introduced chassis type detection, limiting the
+lcd_only check for the backlight to devices where the chassis-type
+indicates their is no builtin LCD panel.
 
-To quote the E-DDC spec:
-"... this standard requires that the segment pointer be
- reset to 00h when a NO ACK or a STOP condition is received."
+The purpose of the lcd_only check is to avoid advertising a backlight
+interface on desktops, since skylake and newer machines seem to always
+have a backlight interface even if there is no LCD panel. The limiting
+of this check to desktops only was done to avoid breaking backlight
+support on some laptops which do not have the lcd flag set.
 
-Since we're going to touch this might as well consult the
-I2C_M_STOP flag to determine whether we want to force the stop
-or not.
+The Fujitsu ESPRIMO Q910 which is a compact (NUC like) desktop machine
+has a chassis type of 0x10 aka "Lunch Box". Without the lcd_only check
+we end up falsely advertising backlight/brightness control on this
+device. This commit extend the dmi_is_desktop check to return true
+for type 0x10 to fix this.
 
-Cc: Brian Vincent <brainn@gmail.com>
-References: https://bugs.freedesktop.org/show_bug.cgi?id=108081
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180928180403.22499-1-ville.syrjala@linux.intel.com
-Reviewed-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
+Fixes: 53fa1f6e8a59 ("ACPI / video: Only default only_lcd to true ...")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 1 +
+ drivers/acpi/acpi_video.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index b59441d109a5..4a959740058e 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3069,6 +3069,7 @@ static int drm_dp_mst_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs
- 		msg.u.i2c_read.transactions[i].i2c_dev_id = msgs[i].addr;
- 		msg.u.i2c_read.transactions[i].num_bytes = msgs[i].len;
- 		msg.u.i2c_read.transactions[i].bytes = msgs[i].buf;
-+		msg.u.i2c_read.transactions[i].no_stop_bit = !(msgs[i].flags & I2C_M_STOP);
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index d79e38abd6d9..ea0573176894 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -2088,6 +2088,7 @@ static bool dmi_is_desktop(void)
+ 	case 0x05: /* Pizza Box */
+ 	case 0x06: /* Mini Tower */
+ 	case 0x07: /* Tower */
++	case 0x10: /* Lunch Box */
+ 	case 0x11: /* Main Server Chassis */
+ 		return true;
  	}
- 	msg.u.i2c_read.read_i2c_device_id = msgs[num - 1].addr;
- 	msg.u.i2c_read.num_bytes_read = msgs[num - 1].len;
 -- 
 2.19.1
 
