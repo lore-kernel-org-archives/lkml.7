@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC25C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA112C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A482075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787B12075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554370163;
-	bh=JR4+tyxpKyD/mTB0HUBZPGfNa1mphDzubkquWGgPgVc=;
+	s=default; t=1554370176;
+	bh=xEFKpPn8bHMEXj7bVbtkrCgxQJM6q8M+7oxgv+7zqas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sIaFTB7Zsq8LtJToQ7ZsS8tPqg05VlhDSIQ/d9bN+mFgyo44eTdfkPVr6VJikXMpu
-	 1trYL0h80el8YIaXqMrT5s6Y85o14WpC+Ff4RhDBcw1sApR62ofe+I5m1bLTOD1tV8
-	 LwwNOLsvcgljnZC+kOcj3VK+1yW2Di+jNr1i95Gg=
+	b=ts+fq6lF5Bz6uNqup9k/9Yswn2xL65DHDO4diGkI7BhRh9HHJg6Y6Fg+Uw/KeymLf
+	 IkTbRlj+kuumcq2zj3NUHzWbsn7EkB9e+2Wa8w9RrH9fFG7a/hioSROS2kx9Ql4KXe
+	 djHgg2iYJXAB38pDOT+lmuMIeNMKcK2dTp3kZVJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733312AbfDDJ3W (ORCPT
+        id S1733266AbfDDJ3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:29:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:29:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732449AbfDDJLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:11:01 -0400
+        id S1733064AbfDDJKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1425621741;
-        Thu,  4 Apr 2019 09:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1802C20693;
+        Thu,  4 Apr 2019 09:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369060;
-        bh=JR4+tyxpKyD/mTB0HUBZPGfNa1mphDzubkquWGgPgVc=;
+        s=default; t=1554369047;
+        bh=xEFKpPn8bHMEXj7bVbtkrCgxQJM6q8M+7oxgv+7zqas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P3Re1FGN8HdWAco5M/muDrCdPto7ATmESI6Qk+u2yMtU6szt41o0pzJJktoD1Vl9A
-         QkHIposI/W/P2LHergpAr5Vf15ALUYx9Z8LH4GICUDrkZLrg1Jz8q0nSQpVVIGGWtK
-         YW6tVMqHTiuvcEb5p7qOpeltVcL1RoPvttQSGD5U=
+        b=hxEAjx1e4XkO6TNsc1TqDrSWtfwiyCSWvzqYIPdCUElDTGukpGiZMa412nMmUkpSK
+         wex+8A7J3Kz31klq+4hTCQJ/iRVJVIw4kDsgVwpRk/EHqUV6ouZBtWE+PsS5PuK6t6
+         MO43BnPFNegsepoS2ebLHmmNOm7dkglszNnK3ubM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Nicolas Pitre <nico@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 068/246] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Thu,  4 Apr 2019 10:46:08 +0200
-Message-Id: <20190404084621.527712817@linuxfoundation.org>
+Subject: [PATCH 5.0 078/246] ARM: 8845/1: use unified assembler in c files
+Date:   Thu,  4 Apr 2019 10:46:18 +0200
+Message-Id: <20190404084621.866345019@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,112 +67,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+[ Upstream commit b7e8c9397cd4efe6567d2728f091f1b728025533 ]
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+Use unified assembler syntax (UAL) in inline assembler. Divided
+syntax is considered deprecated. This will also allow to build
+the kernel using LLVM's integrated assembler.
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+When compiling non-Thumb2 GCC always emits a ".syntax divided"
+at the beginning of the inline assembly which makes the
+assembler fail. Since GCC 5 there is the -masm-syntax-unified
+GCC option which make GCC assume unified syntax asm and hence
+emits ".syntax unified" even in ARM mode. However, the option
+is broken since GCC version 6 (see GCC PR88648 [1]). Work
+around by adding ".syntax unified" as part of the inline
+assembly.
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+[0] https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html#index-masm-syntax-unified
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88648
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
-
-Here is the contexts for the three functions so far:
-
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/mm/copypage-v4mc.c | 3 ++-
+ arch/arm/mm/copypage-v4wb.c | 3 ++-
+ arch/arm/mm/copypage-v4wt.c | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index dd0d516f65e2..53380e07b40e 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -220,7 +220,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	struct Scsi_Host *shost = dev_to_shost(starget->dev.parent);
+diff --git a/arch/arm/mm/copypage-v4mc.c b/arch/arm/mm/copypage-v4mc.c
+index b03202cddddb..f74cdce6d4da 100644
+--- a/arch/arm/mm/copypage-v4mc.c
++++ b/arch/arm/mm/copypage-v4mc.c
+@@ -45,6 +45,7 @@ static void mc_copy_user_page(void *from, void *to)
+ 	int tmp;
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
+ 	asm volatile ("\
++	.syntax unified\n\
+ 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
+ 1:	mcr	p15, 0, %1, c7, c6, 1		@ 1   invalidate D line\n\
+ 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
+@@ -56,7 +57,7 @@ static void mc_copy_user_page(void *from, void *to)
+ 	ldmia	%0!, {r2, r3, ip, lr}		@ 4\n\
+ 	subs	%2, %2, #1			@ 1\n\
+ 	stmia	%1!, {r2, r3, ip, lr}		@ 4\n\
+-	ldmneia	%0!, {r2, r3, ip, lr}		@ 4\n\
++	ldmiane	%0!, {r2, r3, ip, lr}		@ 4\n\
+ 	bne	1b				@ "
+ 	: "+&r" (from), "+&r" (to), "=&r" (tmp)
+ 	: "2" (PAGE_SIZE / 64)
+diff --git a/arch/arm/mm/copypage-v4wb.c b/arch/arm/mm/copypage-v4wb.c
+index cd3e165afeed..6d336740aae4 100644
+--- a/arch/arm/mm/copypage-v4wb.c
++++ b/arch/arm/mm/copypage-v4wb.c
+@@ -27,6 +27,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
+ 	int tmp;
  
-@@ -788,7 +788,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
+ 	asm volatile ("\
++	.syntax unified\n\
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 1:	mcr	p15, 0, %0, c7, c6, 1		@ 1   invalidate D line\n\
+ 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+@@ -38,7 +39,7 @@ static void v4wb_copy_user_page(void *kto, const void *kfrom)
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	subs	%2, %2, #1			@ 1\n\
+ 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+-	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
++	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	bne	1b				@ 1\n\
+ 	mcr	p15, 0, %1, c7, c10, 4		@ 1   drain WB"
+ 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
+diff --git a/arch/arm/mm/copypage-v4wt.c b/arch/arm/mm/copypage-v4wt.c
+index 8614572e1296..3851bb396442 100644
+--- a/arch/arm/mm/copypage-v4wt.c
++++ b/arch/arm/mm/copypage-v4wt.c
+@@ -25,6 +25,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
+ 	int tmp;
  
-@@ -1079,7 +1079,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
- 
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
+ 	asm volatile ("\
++	.syntax unified\n\
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 1:	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4+1\n\
+@@ -34,7 +35,7 @@ static void v4wt_copy_user_page(void *kto, const void *kfrom)
+ 	ldmia	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	subs	%2, %2, #1			@ 1\n\
+ 	stmia	%0!, {r3, r4, ip, lr}		@ 4\n\
+-	ldmneia	%1!, {r3, r4, ip, lr}		@ 4\n\
++	ldmiane	%1!, {r3, r4, ip, lr}		@ 4\n\
+ 	bne	1b				@ 1\n\
+ 	mcr	p15, 0, %2, c7, c7, 0		@ flush ID cache"
+ 	: "+&r" (kto), "+&r" (kfrom), "=&r" (tmp)
 -- 
 2.19.1
 
