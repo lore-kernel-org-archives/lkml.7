@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA3C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0699DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AA62147C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBCFC2054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369150;
-	bh=5CVdNzNVIl8Z4xpNUdyZ11p2qDuMYmRx7E56Bo7WVSM=;
+	s=default; t=1554369153;
+	bh=VPKkW92j3z42TOOHvCDELx8rtS8U1WRHogC5wMAW7q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S/7AMxPWb7Y7Be4iYh7MsszdwSQRDSu7Cwmx4PjuHhD/XTZl2+lI1gWwC0zyu3dOm
-	 o+XhyekyD9bVMrocHr9tzjbh1XCpt1ocxGuCUkvfnIjyd/6hhVrG9K5I9Nuw0JBytg
-	 yqi9QSNqhFs1LilR+jsxtzXCJXyz7w1D0dXeaxY4=
+	b=WhA1ZUvf+QZ/b2afgQBSBn/N9BVdUsJj6EFZXBEVeOvuNf4eKdnAP3yzCGCVMn7eB
+	 oO9k5GO9Wn2+1I+UoaXi0m60eKtaSfgf9ns0HtgwdvNdjUVepDiWgTjB0bWL3oj/ym
+	 Lv2ls8oB1Y4zNVaj85aXm51Na5aKh38JzWKTvQ6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387406AbfDDJM3 (ORCPT
+        id S2387418AbfDDJMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52452 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:12:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733311AbfDDJMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:12:25 -0400
+        id S1732919AbfDDJMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:12:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B02442147C;
-        Thu,  4 Apr 2019 09:12:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D48520820;
+        Thu,  4 Apr 2019 09:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369144;
-        bh=5CVdNzNVIl8Z4xpNUdyZ11p2qDuMYmRx7E56Bo7WVSM=;
+        s=default; t=1554369149;
+        bh=VPKkW92j3z42TOOHvCDELx8rtS8U1WRHogC5wMAW7q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgC1TDaPq7HLNifG8meLlHDQP6Hg+KULMmPJPyY5pEAAPq1Iv5DbamxhSPKT1Dmm7
-         vxHQCczW/AKjBuA08Hubcgjl4XcVdjGwgFWZuhSZgVPvDVt29/uE6/FCSd8Ag7J+Q7
-         jZZcksg0nesSpYhfel+yKpEaWUk9OkYh7Sd4n/j4=
+        b=tAylGd6BHeyAKm6rbzrM95YOrkLUUYD2NBMTu5dUgGj7465r35dsXyro3w+Tmnfhs
+         BGHdxO+h92xLNncTcmIrblhnhEGn88fRbfGDOODQMdJO6/AOcPUDI4XvO1oRBoGAAj
+         VqfiVXhOkrWDXLSw+CTlLSPp4ELjJrqkKHNDENKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Erwan Velu <e.velu@criteo.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 100/246] powerpc/44x: Force PCI on for CURRITUCK
-Date:   Thu,  4 Apr 2019 10:46:40 +0200
-Message-Id: <20190404084622.646031355@linuxfoundation.org>
+Subject: [PATCH 5.0 102/246] cpufreq: acpi-cpufreq: Report if CPU doesnt support boost technologies
+Date:   Thu,  4 Apr 2019 10:46:42 +0200
+Message-Id: <20190404084622.716656230@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -67,48 +66,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit aa7150ba378650d0e9d84b8e4d805946965a5926 ]
+[ Upstream commit 1222d527f314c86a3b59a522115d62facc5a7965 ]
 
-The recent rework of PCI kconfig symbols exposed an existing bug in
-the CURRITUCK kconfig logic.
+There is some rare cases where CPB (and possibly IDA) are missing on
+processors.
 
-It selects PPC4xx_PCI_EXPRESS which depends on PCI, but PCI is user
-selectable and might be disabled, leading to a warning:
+This is the case fixed by commit f7f3dc00f612 ("x86/cpu/AMD: Fix
+erratum 1076 (CPB bit)") and following.
 
-  WARNING: unmet direct dependencies detected for PPC4xx_PCI_EXPRESS
-    Depends on [n]: PCI [=n] && 4xx [=y]
-    Selected by [y]:
-    - CURRITUCK [=y] && PPC_47x [=y]
+In such context, the boost status isn't reported by
+/sys/devices/system/cpu/cpufreq/boost.
 
-Prior to commit eb01d42a7778 ("PCI: consolidate PCI config entry in
-drivers/pci") PCI was enabled by default for currituck_defconfig so we
-didn't see the warning. The bad logic was still there, it just
-required someone disabling PCI in their .config to hit it.
+This commit is about printing a message to report that the CPU
+doesn't expose the boost capabilities.
 
-Fix it by forcing PCI on for CURRITUCK, which seems was always the
-expectation anyway.
+This message could help debugging platforms hit by this phenomena.
 
-Fixes: eb01d42a7778 ("PCI: consolidate PCI config entry in drivers/pci")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+[ rjw: Change the message text somewhat ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/44x/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpufreq/acpi-cpufreq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
-index 4a9a72d01c3c..35be81fd2dc2 100644
---- a/arch/powerpc/platforms/44x/Kconfig
-+++ b/arch/powerpc/platforms/44x/Kconfig
-@@ -180,6 +180,7 @@ config CURRITUCK
- 	depends on PPC_47x
- 	select SWIOTLB
- 	select 476FPE
-+	select FORCE_PCI
- 	select PPC4xx_PCI_EXPRESS
- 	help
- 	  This option enables support for the IBM Currituck (476fpe) evaluation board
+diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+index d62fd374d5c7..c72258a44ba4 100644
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -916,8 +916,10 @@ static void __init acpi_cpufreq_boost_init(void)
+ {
+ 	int ret;
+ 
+-	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA)))
++	if (!(boot_cpu_has(X86_FEATURE_CPB) || boot_cpu_has(X86_FEATURE_IDA))) {
++		pr_debug("Boost capabilities not present in the processor\n");
+ 		return;
++	}
+ 
+ 	acpi_cpufreq_driver.set_boost = set_boost;
+ 	acpi_cpufreq_driver.boost_enabled = boost_state(0);
 -- 
 2.19.1
 
