@@ -7,58 +7,51 @@ X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F27C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07164C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160D1206B6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7607206B6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369873;
-	bh=wSLscqyIpxDEppzg7gb6Hs3JLxQ5ozT2QA+ZbgHDM8s=;
+	s=default; t=1554369879;
+	bh=21ulPBKgGcQy4HCHiKpXdlcPxgN7R/39pzKTN30nt1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QBYx1C4WXz+HiJDL+EnzgKivKLVW6T2U8+X9e9hg8MFpt5Gowgf23DyCnGTAFGsaI
-	 YyWy9Ok1iQ1GAnbNf7cOIhFRPXrwjYSE4sLGAcrNo79UMaMmdqiV3AP4OFiU+XM4Fj
-	 lB77/BuBKM5+et691ayNSwcjDU+49gxv4JlRT6kQ=
+	b=fy055t+xiMUul0jhvF+xr1JJho3xapCSMiBpZdJAhpSxALlkEJ4OMh+8yVRCjjPCQ
+	 AWLkXA2NqyQA3zGI7hCz6A5kH00l8gCEp7Ldb9mpECOhp+2yFn6ai5vc9t2vkMheKd
+	 75RZ2zyc+SO4oKAwItEvGvAc18TR5mpOUWk6YbHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfDDJYb (ORCPT
+        id S1733223AbfDDJOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55182 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387521AbfDDJOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:14:33 -0400
+        id S1733012AbfDDJOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:14:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC6602054F;
-        Thu,  4 Apr 2019 09:14:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5881120693;
+        Thu,  4 Apr 2019 09:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554369272;
-        bh=wSLscqyIpxDEppzg7gb6Hs3JLxQ5ozT2QA+ZbgHDM8s=;
+        s=default; t=1554369261;
+        bh=21ulPBKgGcQy4HCHiKpXdlcPxgN7R/39pzKTN30nt1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ehf5MSPmQqT5cQAYp2OWP9QGGaw5j5Ot5qowJrgavx4gcVYLSGMA1O1aD9TVM0SvA
-         mGOBa+VQ8rv8uOlhYRsn6enZmf6HKH7cpWfbUZr7Un2jSYA5rQfzJ4k716VB1uhGvR
-         TivnJnG1Lih5/XPIgXEreQxNmuF4Fnae0eAVX53s=
+        b=14cEmsgmtK4EZmb+dNtXC29uSc//mAvurW/r8Ujh8jftTv3nW39hTAcT7DfKykEiF
+         CUV8+uAXOPgCJDUHEqSqUwhOXEqIbyHze+romPcb+8s8N3kXrkJRYxUaBZ2KP1iaVh
+         gBECwQSTHeiUWALm+ILWZl4yERoUZrh8WOBNYr38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        Zeng Tao <prime.zeng@hisilicon.com>,
-        Jack Pham <jackp@codeaurora.org>,
-        Thinh Nguyen <thinh.nguyen@synopsys.com>,
-        Chen Yu <chenyu56@huawei.com>,
-        Jerry Zhang <zhangjerry@google.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 148/246] usb: f_fs: Avoid crash due to out-of-scope stack ptr access
-Date:   Thu,  4 Apr 2019 10:47:28 +0200
-Message-Id: <20190404084624.350930563@linuxfoundation.org>
+Subject: [PATCH 5.0 144/246] ARM: 8833/1: Ensure that NEON code always compiles with Clang
+Date:   Thu,  4 Apr 2019 10:47:24 +0200
+Message-Id: <20190404084624.209472681@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -77,99 +70,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 54f64d5c983f939901dacc8cfc0983727c5c742e ]
+[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
 
-Since the 5.0 merge window opened, I've been seeing frequent
-crashes on suspend and reboot with the trace:
+While building arm32 allyesconfig, I ran into the following errors:
 
-[   36.911170] Unable to handle kernel paging request at virtual address ffffff801153d660
-[   36.912769] Unable to handle kernel paging request at virtual address ffffff800004b564
-...
-[   36.950666] Call trace:
-[   36.950670]  queued_spin_lock_slowpath+0x1cc/0x2c8
-[   36.950681]  _raw_spin_lock_irqsave+0x64/0x78
-[   36.950692]  complete+0x28/0x70
-[   36.950703]  ffs_epfile_io_complete+0x3c/0x50
-[   36.950713]  usb_gadget_giveback_request+0x34/0x108
-[   36.950721]  dwc3_gadget_giveback+0x50/0x68
-[   36.950723]  dwc3_thread_interrupt+0x358/0x1488
-[   36.950731]  irq_thread_fn+0x30/0x88
-[   36.950734]  irq_thread+0x114/0x1b0
-[   36.950739]  kthread+0x104/0x130
-[   36.950747]  ret_from_fork+0x10/0x1c
+  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
+  '-mfloat-abi=softfp -mfpu=neon'
 
-I isolated this down to in ffs_epfile_io():
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/f_fs.c#n1065
+  In file included from lib/raid6/neon1.c:27:
+  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
+  error: "NEON support not enabled"
 
-Where the completion done is setup on the stack:
-  DECLARE_COMPLETION_ONSTACK(done);
+Building V=1 showed NEON_FLAGS getting passed along to Clang but
+__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
+only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
+which is the '-march' value for allyesconfig.
 
-Then later we setup a request and queue it, and wait for it:
-  if (unlikely(wait_for_completion_interruptible(&done))) {
-    /*
-    * To avoid race condition with ffs_epfile_io_complete,
-    * dequeue the request first then check
-    * status. usb_ep_dequeue API should guarantee no race
-    * condition with req->complete callback.
-    */
-    usb_ep_dequeue(ep->ep, req);
-    interrupted = ep->status < 0;
+>From lib/Basic/Targets/ARM.cpp in the Clang source:
+
+  // This only gets set when Neon instructions are actually available, unlike
+  // the VFP define, hence the soft float and arch check. This is subtly
+  // different from gcc, we follow the intent which was that it should be set
+  // when Neon instructions are actually available.
+  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
+    Builder.defineMacro("__ARM_NEON", "1");
+    Builder.defineMacro("__ARM_NEON__");
+    // current AArch32 NEON implementations do not support double-precision
+    // floating-point even when it is present in VFP.
+    Builder.defineMacro("__ARM_NEON_FP",
+                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
   }
 
-The problem is, that we end up being interrupted, dequeue the
-request, and exit.
+Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
+beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
+definined by Clang. This doesn't functionally change anything because
+that code will only run where NEON is supported, which is implicitly
+armv7.
 
-But then the irq triggers and we try calling complete() on the
-context pointer which points to now random stack space, which
-results in the panic.
+Link: https://github.com/ClangBuiltLinux/linux/issues/287
 
-Alan Stern pointed out there is a bug here, in that the snippet
-above "assumes that usb_ep_dequeue() waits until the request has
-been completed." And that:
-
-    wait_for_completion(&done);
-
-Is needed right after the usb_ep_dequeue().
-
-Thus this patch implements that change. With it I no longer see
-the crashes on suspend or reboot.
-
-This issue seems to have been uncovered by behavioral changes in
-the dwc3 driver in commit fec9095bdef4e ("usb: dwc3: gadget:
-remove wait_end_transfer").
-
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Zeng Tao <prime.zeng@hisilicon.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: Thinh Nguyen <thinh.nguyen@synopsys.com>
-Cc: Chen Yu <chenyu56@huawei.com>
-Cc: Jerry Zhang <zhangjerry@google.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Vincent Pelletier <plr.vincent@gmail.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux USB List <linux-usb@vger.kernel.org>
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_fs.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/arm/kernel_mode_neon.txt | 4 ++--
+ arch/arm/lib/Makefile                  | 2 +-
+ arch/arm/lib/xor-neon.c                | 2 +-
+ lib/raid6/Makefile                     | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 1e5430438703..0f8d16de7a37 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1082,6 +1082,7 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
- 			 * condition with req->complete callback.
- 			 */
- 			usb_ep_dequeue(ep->ep, req);
-+			wait_for_completion(&done);
- 			interrupted = ep->status < 0;
- 		}
+diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
+index 525452726d31..b9e060c5b61e 100644
+--- a/Documentation/arm/kernel_mode_neon.txt
++++ b/Documentation/arm/kernel_mode_neon.txt
+@@ -6,7 +6,7 @@ TL;DR summary
+ * Use only NEON instructions, or VFP instructions that don't rely on support
+   code
+ * Isolate your NEON code in a separate compilation unit, and compile it with
+-  '-mfpu=neon -mfloat-abi=softfp'
++  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
+ * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
+   NEON code
+ * Don't sleep in your NEON code, and be aware that it will be executed with
+@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
+ Therefore, the recommended and only supported way of using NEON/VFP in the
+ kernel is by adhering to the following rules:
+ * isolate the NEON code in a separate compilation unit and compile it with
+-  '-mfpu=neon -mfloat-abi=softfp';
++  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
+ * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
+   into the unit containing the NEON code from a compilation unit which is *not*
+   built with the GCC flag '-mfpu=neon' set.
+diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
+index ad25fd1872c7..0bff0176db2c 100644
+--- a/arch/arm/lib/Makefile
++++ b/arch/arm/lib/Makefile
+@@ -39,7 +39,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
+ $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
  
+ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+-  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
++  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
+   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
+   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
+ endif
+diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
+index 2c40aeab3eaa..c691b901092f 100644
+--- a/arch/arm/lib/xor-neon.c
++++ b/arch/arm/lib/xor-neon.c
+@@ -14,7 +14,7 @@
+ MODULE_LICENSE("GPL");
+ 
+ #ifndef __ARM_NEON__
+-#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
++#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
+ #endif
+ 
+ /*
+diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
+index 4e90d443d1b0..e723eacf7868 100644
+--- a/lib/raid6/Makefile
++++ b/lib/raid6/Makefile
+@@ -39,7 +39,7 @@ endif
+ ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
+ NEON_FLAGS := -ffreestanding
+ ifeq ($(ARCH),arm)
+-NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
++NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
+ endif
+ CFLAGS_recov_neon_inner.o += $(NEON_FLAGS)
+ ifeq ($(ARCH),arm64)
 -- 
 2.19.1
 
