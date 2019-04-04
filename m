@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0B1C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85ADC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C83206DD
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E2F206DD
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554371347;
-	bh=1VXvp8Gj6dvkXvR39y0opJhpBalEIArKIVYFugt5RRI=;
+	s=default; t=1554371363;
+	bh=15aeuFy1DYjSfTCmecKv5HNyn/2vZ5i62khlJ8lgZgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JROnEDcSU/Y3Kqrb2obZhOm1Thn88/eAqQFY/XoAsVGf6UI8VmDx09iQjkH0uXjFl
-	 DuKG1dVgyygrWpWVAYc6DFFLqeQDRDgwOLJsQOGw3TpND3ctEhLoLzzxBD9vX0wist
-	 nM8VKe2OW1Aztvi0KvWYyuJE/DsWDoVH+jKlfJPw=
+	b=gMm86VWP2mWRcMOx3m3V/ZLPzhE59TYm/ljCdIp0j4neI0VpGt2s1CXDL9SJg71UV
+	 6313WHfNsnBfx5EZU1pFUMR07osfVmmW6XZsH3/iyJGkXrSVTPU2oFssnALTaWYW9n
+	 X4k0TP6q82Cd/wBFzwpsAlK0hAI4XWMEfazxT/dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730721AbfDDJtF (ORCPT
+        id S1730497AbfDDI4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60302 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 04:56:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728632AbfDDI4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 04:56:47 -0400
+        id S1730482AbfDDI4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 04:56:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BD9E217D4;
-        Thu,  4 Apr 2019 08:56:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AEE420652;
+        Thu,  4 Apr 2019 08:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368206;
-        bh=1VXvp8Gj6dvkXvR39y0opJhpBalEIArKIVYFugt5RRI=;
+        s=default; t=1554368191;
+        bh=15aeuFy1DYjSfTCmecKv5HNyn/2vZ5i62khlJ8lgZgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mdgAOK2fN3D+wc3ZYb2BmX4SFSgGAvff5Fe+VvFxDAMYTjQv6F+Jp1VcWhEJD8Pcs
-         CSVObRgOY35fdDONwa/nF0pq6RJukvT47MIPQbN7dAmA9RcMFkMQx0QKKQAsTG5BpJ
-         sq5Ts23Vo2uaKpHU/AEHEcgeAoRzJfpNiBeuYwGc=
+        b=VvvBzMnn5nfVrCJCjFX2ZylOjXSeFlnYNqPmhBnL3Sp7feoUanaHr78AFNSFB52XC
+         pcIEqTdLMNvS89maoYSiPt6rx9LqvheueRzbgLJNtoEhnYeGximNqlEjFXbd0vLe5S
+         +YAb3vbDhm+lAZjDZXgwSG/XS04GWHq3aAXuFwm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 061/121] media: s5p-g2d: Correct return type for mem2mem buffer helpers
-Date:   Thu,  4 Apr 2019 10:47:29 +0200
-Message-Id: <20190404084548.550133966@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 070/121] kprobes: Prohibit probing on bsearch()
+Date:   Thu,  4 Apr 2019 10:47:38 +0200
+Message-Id: <20190404084549.084513979@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084545.245659903@linuxfoundation.org>
 References: <20190404084545.245659903@linuxfoundation.org>
@@ -67,61 +74,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 30fa627b32230737bc3f678067e2adfecf956987 ]
+[ Upstream commit 02106f883cd745523f7766d90a739f983f19e650 ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+Since kprobe breakpoing handler is using bsearch(), probing on this
+routine can cause recursive breakpoint problem.
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+int3
+ ->do_int3()
+   ->ftrace_int3_handler()
+     ->ftrace_location()
+       ->ftrace_location_range()
+         ->bsearch() -> int3
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+Prohibit probing on bsearch().
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/154998813406.31052.8791425358974650922.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-g2d/g2d.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/bsearch.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
-index 66aa8cf1d048..770100d40372 100644
---- a/drivers/media/platform/s5p-g2d/g2d.c
-+++ b/drivers/media/platform/s5p-g2d/g2d.c
-@@ -498,7 +498,7 @@ static void device_run(void *prv)
- {
- 	struct g2d_ctx *ctx = prv;
- 	struct g2d_dev *dev = ctx->dev;
--	struct vb2_buffer *src, *dst;
-+	struct vb2_v4l2_buffer *src, *dst;
- 	unsigned long flags;
- 	u32 cmd = 0;
+diff --git a/lib/bsearch.c b/lib/bsearch.c
+index 18b445b010c3..82512fe7b33c 100644
+--- a/lib/bsearch.c
++++ b/lib/bsearch.c
+@@ -11,6 +11,7 @@
  
-@@ -513,10 +513,10 @@ static void device_run(void *prv)
- 	spin_lock_irqsave(&dev->ctrl_lock, flags);
+ #include <linux/export.h>
+ #include <linux/bsearch.h>
++#include <linux/kprobes.h>
  
- 	g2d_set_src_size(dev, &ctx->in);
--	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(src, 0));
-+	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(&src->vb2_buf, 0));
- 
- 	g2d_set_dst_size(dev, &ctx->out);
--	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(dst, 0));
-+	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(&dst->vb2_buf, 0));
- 
- 	g2d_set_rop4(dev, ctx->rop);
- 	g2d_set_flip(dev, ctx->flip);
+ /*
+  * bsearch - binary search an array of elements
+@@ -53,3 +54,4 @@ void *bsearch(const void *key, const void *base, size_t num, size_t size,
+ 	return NULL;
+ }
+ EXPORT_SYMBOL(bsearch);
++NOKPROBE_SYMBOL(bsearch);
 -- 
 2.19.1
 
