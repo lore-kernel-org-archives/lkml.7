@@ -7,53 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D04C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A0E20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C3720693
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554369005;
-	bh=GHiXkZAloJXwcrj4Qa7/SdV9pTNyQRq0Vl8arTgRe60=;
+	s=default; t=1554369008;
+	bh=7HhHeJ0/gGt+iD5i54Rqd8/+NPOjcJWaq2fpC9oCORE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uX99TfEKmlTgg2wapEfC7yzQl7xZY20X9myn37BJOQDRV2HY2YKENp7Qib2na9dNI
-	 GmTz7FJx5tswoIjrUyjfRmRp/Vvq2GNfIGo2YyK8/bfUsVuW9IqieRsgmVKeTuLpT3
-	 s/FspyegUnxwkeKDP6vQdTEST3ohFk7MJzTo7mw0=
+	b=S7TUolHOuzCPodxLVWqzIO1rqJ8rLjiTZQvvFJ7wOsxsB5GfjaAfWUnE2907wZ+uo
+	 CepXSOOuhc/Ju5tqW2KIDGHELeCLznbvG9U2scRhTgXBzPf/zLSLhAyTXb1BmIJztl
+	 3qZi7BH3mNzQxAqgBFkNK8cpYd5Ka6ZW7iPkU2B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732942AbfDDJKE (ORCPT
+        id S1732952AbfDDJKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49376 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:10:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732920AbfDDJKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:10:00 -0400
+        id S1732097AbfDDJKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:10:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCE6020693;
-        Thu,  4 Apr 2019 09:09:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 064992054F;
+        Thu,  4 Apr 2019 09:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368999;
-        bh=GHiXkZAloJXwcrj4Qa7/SdV9pTNyQRq0Vl8arTgRe60=;
+        s=default; t=1554369004;
+        bh=7HhHeJ0/gGt+iD5i54Rqd8/+NPOjcJWaq2fpC9oCORE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCByu3M7ppH8A+fL9L3iUEnJ3lCdWZU6dGZM2O9QAX+uLJCSytrps0CClpRYVhtPh
-         HL+52iRQvVba554vm9lO64YL0mZv6KFlZ9L93xW+SDI2leo9W4sHXinaw77dCSM+1r
-         HBuXek2/FBhuogCaF3NHrjSSjX2vOufPCW6wFPgM=
+        b=z65CypQGvXuCMqwSvDSwIkynLGe66EPA/meJY5PJRiycAiz5HeiAaz2pdbo9jqVQv
+         DLMIarDMn9EVvFByFBHAqho/R6c8g7mUDloiUtJtvzczIAvgKlSLu4sYpWndyHAjys
+         CnFkNWu+X4OBQOMgfqM+swSpuCAd3mXKg46c6TOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 060/246] mt76: fix a leaked reference by adding a missing of_node_put
-Date:   Thu,  4 Apr 2019 10:46:00 +0200
-Message-Id: <20190404084621.274424274@linuxfoundation.org>
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>, johannes.berg@intel.com,
+        tj@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 062/246] lockdep/lib/tests: Fix run_tests.sh
+Date:   Thu,  4 Apr 2019 10:46:02 +0200
+Message-Id: <20190404084621.336239355@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084619.236418459@linuxfoundation.org>
 References: <20190404084619.236418459@linuxfoundation.org>
@@ -72,79 +74,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 34e022d8b780a03902d82fb3997ba7c7b1f40c81 ]
+[ Upstream commit d93ac78bf7b37db36fa00225f8e9a14c7ed1b2ba ]
 
-The call to of_find_node_by_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Apparently the execute bits were set for the tests/*.sh scripts on my
+test setup but these are not set in the kernel tree. Fix this by adding
+the interpreter path in front of the script paths.
 
-Detected by coccinelle with the following warnings:
-./drivers/net/wireless/mediatek/mt76/eeprom.c:58:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
-./drivers/net/wireless/mediatek/mt76/eeprom.c:61:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
-./drivers/net/wireless/mediatek/mt76/eeprom.c:67:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
-./drivers/net/wireless/mediatek/mt76/eeprom.c:70:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
-./drivers/net/wireless/mediatek/mt76/eeprom.c:72:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Felix Fietkau <nbd@nbd.name>
-Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: johannes.berg@intel.com
+Cc: tj@kernel.org
+Fixes: 5ecb8e94b494 ("tools/lib/lockdep/tests: Improve testing accuracy") # v5.0-rc1
+Link: https://lkml.kernel.org/r/20190214230058.196511-23-bvanassche@acm.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/eeprom.c | 24 ++++++++++++++-------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ tools/lib/lockdep/run_tests.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
-index 530e5593765c..a1529920d877 100644
---- a/drivers/net/wireless/mediatek/mt76/eeprom.c
-+++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
-@@ -54,22 +54,30 @@ mt76_get_of_eeprom(struct mt76_dev *dev, int len)
- 		part = np->name;
- 
- 	mtd = get_mtd_device_nm(part);
--	if (IS_ERR(mtd))
--		return PTR_ERR(mtd);
-+	if (IS_ERR(mtd)) {
-+		ret =  PTR_ERR(mtd);
-+		goto out_put_node;
-+	}
- 
--	if (size <= sizeof(*list))
--		return -EINVAL;
-+	if (size <= sizeof(*list)) {
-+		ret = -EINVAL;
-+		goto out_put_node;
-+	}
- 
- 	offset = be32_to_cpup(list);
- 	ret = mtd_read(mtd, offset, len, &retlen, dev->eeprom.data);
- 	put_mtd_device(mtd);
- 	if (ret)
--		return ret;
-+		goto out_put_node;
- 
--	if (retlen < len)
--		return -EINVAL;
-+	if (retlen < len) {
-+		ret = -EINVAL;
-+		goto out_put_node;
-+	}
- 
--	return 0;
-+out_put_node:
-+	of_node_put(np);
-+	return ret;
- #else
- 	return -ENOENT;
- #endif
+diff --git a/tools/lib/lockdep/run_tests.sh b/tools/lib/lockdep/run_tests.sh
+index c8fbd0306960..11f425662b43 100755
+--- a/tools/lib/lockdep/run_tests.sh
++++ b/tools/lib/lockdep/run_tests.sh
+@@ -11,7 +11,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	testname=$(basename "$i" .c)
+ 	echo -ne "$testname... "
+ 	if gcc -o "tests/$testname" -pthread "$i" liblockdep.a -Iinclude -D__USE_LIBLOCKDEP &&
+-		timeout 1 "tests/$testname" 2>&1 | "tests/${testname}.sh"; then
++		timeout 1 "tests/$testname" 2>&1 | /bin/bash "tests/${testname}.sh"; then
+ 		echo "PASSED!"
+ 	else
+ 		echo "FAILED!"
+@@ -24,7 +24,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	echo -ne "(PRELOAD) $testname... "
+ 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
+ 		timeout 1 ./lockdep "tests/$testname" 2>&1 |
+-		"tests/${testname}.sh"; then
++		/bin/bash "tests/${testname}.sh"; then
+ 		echo "PASSED!"
+ 	else
+ 		echo "FAILED!"
+@@ -37,7 +37,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	echo -ne "(PRELOAD + Valgrind) $testname... "
+ 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
+ 		{ timeout 10 valgrind --read-var-info=yes ./lockdep "./tests/$testname" >& "tests/${testname}.vg.out"; true; } &&
+-		"tests/${testname}.sh" < "tests/${testname}.vg.out" &&
++		/bin/bash "tests/${testname}.sh" < "tests/${testname}.vg.out" &&
+ 		! grep -Eq '(^==[0-9]*== (Invalid |Uninitialised ))|Mismatched free|Source and destination overlap| UME ' "tests/${testname}.vg.out"; then
+ 		echo "PASSED!"
+ 	else
 -- 
 2.19.1
 
