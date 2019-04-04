@@ -2,210 +2,200 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3D2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629BEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C8D20700
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:09:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ghU0cAfr"
+	by mail.kernel.org (Postfix) with ESMTP id 26A26206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 11:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfDDLJO (ORCPT
+        id S1728760AbfDDLKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 07:09:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50764 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfDDLJN (ORCPT
+        Thu, 4 Apr 2019 07:10:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37282 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726563AbfDDLKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 07:09:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=P9Uo0gsGIOVJBxcdSlv4TzSLV9TNxGiuBHFi22Ev8qQ=; b=ghU0cAfrcdxutybQJx/MZ6Ufb
-        d8/uvy6/Mxqn9FIJZo0nQYhFIw/BzrmrLGkKcsPbdQ2hVMEyNPWcDEwM49B7cz15VSPL1YGA917/s
-        tcY066G1547MwNv3SEEAqxkNXTeW3/ULA0FbQ7oERwq006PnBT7LFrhqARhiDbTtT1s6jFjWgBCRE
-        Z0beoafM4F4Y38TG5yGQpWqASOeTJDe0HPq59/nWuAfM8+52COFd4mPz1sWXxXuaghGmZnSU0XeEG
-        BDUvnWBaz2R0T3fo60U8UGyqXbNYWuKghNC+7/6pX94EAMmbrurGb3QW1D/KOlLZVFca5gUj2MSXw
-        996V3gL2g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hC0F5-0000MT-Eh; Thu, 04 Apr 2019 11:09:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E7C8E201AF566; Thu,  4 Apr 2019 13:09:09 +0200 (CEST)
-Date:   Thu, 4 Apr 2019 13:09:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas-Mich Richter <tmricht@linux.ibm.com>
-Cc:     Kees Cook <keescook@chromium.org>, acme@redhat.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: WARN_ON_ONCE() hit at kernel/events/core.c:330
-Message-ID: <20190404110909.GY4038@hirez.programming.kicks-ass.net>
-References: <ccef663c-8df9-4088-cc9b-804d6c751f18@linux.ibm.com>
- <20190403104103.GE4038@hirez.programming.kicks-ass.net>
- <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
+        Thu, 4 Apr 2019 07:10:55 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34At5Kt101752
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 07:10:54 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rneg1g0c2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:10:53 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Thu, 4 Apr 2019 12:10:49 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 4 Apr 2019 12:10:46 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34BAjOB46792794
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Apr 2019 11:10:45 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A629AE045;
+        Thu,  4 Apr 2019 11:10:45 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC380AE051;
+        Thu,  4 Apr 2019 11:10:43 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.124.35.71])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Apr 2019 11:10:43 +0000 (GMT)
+Subject: Re: [PATCH 1/2] cpuidle : auto-promotion for cpuidle states
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Michael Ellerman <mpe@ellerman.id.au>, ego@linux.vnet.ibm.com
+References: <20190322072942.8038-1-huntbag@linux.vnet.ibm.com>
+ <20190322072942.8038-2-huntbag@linux.vnet.ibm.com>
+ <CAJZ5v0gY-theHng=bQQpw-33jHGe++iEigEM5j6Ls7vEuewuSQ@mail.gmail.com>
+ <cfb0076f-0b56-f12c-a736-469a3d11ab83@linaro.org>
+ <50f62972-dfce-52bf-d26b-32e6d2a367e2@linux.vnet.ibm.com>
+ <9e542011-df6d-9b84-823b-2af6a6ef9e94@linaro.org>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Thu, 4 Apr 2019 16:40:43 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb3cbf9b-6851-72c6-2648-3e6eaa78fb7d@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9e542011-df6d-9b84-823b-2af6a6ef9e94@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19040411-0012-0000-0000-0000030B32F1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19040411-0013-0000-0000-000021434178
+Message-Id: <f535b21a-2441-70c3-e51d-28ec8843de66@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904040076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 04, 2019 at 11:15:39AM +0200, Thomas-Mich Richter wrote:
-> On 4/3/19 12:41 PM, Peter Zijlstra wrote:
-> > On Wed, Apr 03, 2019 at 11:47:00AM +0200, Thomas-Mich Richter wrote:
-> >> I use linux 5.1.0-rc3 on s390 and got this WARN_ON_ONCE message:
-> >>
-> >> WARNING: CPU: 15 PID: 0 at kernel/events/core.c:330
-> >>                 event_function_local.constprop.79+0xe2/0xe8
-> >>
-> >> which was introduced with
-> >>    commit cca2094605ef ("perf/core: Fix event_function_local()").
-> >> ..snip.... 
-> >>
-> >> Any ideas or hints who to avoid/fix this warning?
-> > 
-> > Some thoughts here:
-> > 
-> >   https://lkml.kernel.org/r/20190213101644.GN32534@hirez.programming.kicks-ass.net
-> > 
-> > tl;dr, I've no frigging clue.
-> > 
-> 
-> I have read this thread and at the end you mentioned:
-> 
->     Humm, but in that case:
-> 
->    context_switch()
->     prepare_task_switch()
->       perf_event_task_sched_out()
->         __perf_event_task_sched_out()
-> 	  perf_event_context_sched_out()
-> 	    task_ctx_sched_out()
-> 	      ctx_sched_out()
-> 	        group_sched_out()
-> 		  event_sched_out()
-> 		    if (event->pending_disable)
-> 
->    Would have already cleared the pending_disable state, so the IPI would
->    not have ran perf_event_disable_local() in the first place.
-> 
-> Our test system is configured to panic in WARN_ON_ONCE(). I looked
-> at the dump. The event triggering WARN_ON_ONCE:
-> 
-> crash> struct perf_event.oncpu 0x1f9b24800
->   oncpu = 0
-> crash> struct perf_event.state 0x1f9b24800
->   state = PERF_EVENT_STATE_ACTIVE
-> crash> 
-> 
-> This means the code in 
-> static void event_sched_out(....)
-> {
->         ....
->         event->pmu->del(event, 0);
->         event->oncpu = -1;
-> 
->         if (event->pending_disable) {
->                 event->pending_disable = 0;
->                 state = PERF_EVENT_STATE_OFF;
->         }
->         perf_event_set_state(event, state);
->         ...
-> }
-> 
-> has not finished and returned from this function. So the task was not completely context-switched
-> out from CPU 0 while the interrupt handler was executing on CPU 15:
-> 
-> static void perf_pending_event(...)
-> {
->         ....
->         if (event->pending_disable) {
->                 event->pending_disable = 0;
->                 perf_event_disable_local(event);  <--- Causes the WARN_ON_ONCE()
->         }
->         .....
-> }
-> 
-> I think there is a race, especially when the interrupt handler on CPU 15
-> was invoked via timer interrupt an runs on a different CPU.
-
-That is not entirely the scenario I talked about, but *groan*.
-
-So what I meant was:
-
-	CPU-0							CPU-n
-
-	__schedule()
-	  local_irq_disable()
-
-	  ...
-	    deactivate_task(prev);
-
-								try_to_wake_up(@p)
-								  ...
-								  smp_cond_load_acquire(&p->on_cpu, !VAL);
-
-	  <PMI>
-	    ..
-	    perf_event_disable_inatomic()
-	      event->pending_disable = 1;
-	      irq_work_queue() /* self-IPI */
-	  </PMI>
-
-	  context_switch()
-	    prepare_task_switch()
-	      perf_event_task_sched_out()
-	        // the above chain that clears pending_disable
-
-	    finish_task_switch()
-	      finish_task()
-	        smp_store_release(prev->on_cpu, 0);
-								  /* finally.... */
-								// take woken
-								// context_switch to @p
-	      finish_lock_switch()
-	        raw_spin_unlock_irq()
-		/* w00t, IRQs enabled, self-IPI time */
-	        <self-IPI>
-		  perf_pending_event()
-		    // event->pending_disable == 0
-		</self-IPI>
 
 
-What you're suggesting, is that the time between:
+On 04/04/2019 03:51 PM, Daniel Lezcano wrote:
+> Hi Abhishek,
+>
+> thanks for taking the time to test the different scenario and give us
+> the numbers.
+>
+> On 01/04/2019 07:11, Abhishek wrote:
+>>
+>> On 03/22/2019 06:56 PM, Daniel Lezcano wrote:
+>>> On 22/03/2019 10:45, Rafael J. Wysocki wrote:
+>>>> On Fri, Mar 22, 2019 at 8:31 AM Abhishek Goel
+>>>> <huntbag@linux.vnet.ibm.com> wrote:
+>>>>> Currently, the cpuidle governors (menu /ladder) determine what idle
+>>>>> state
+>>>>> an idling CPU should enter into based on heuristics that depend on the
+>>>>> idle history on that CPU. Given that no predictive heuristic is
+>>>>> perfect,
+>>>>> there are cases where the governor predicts a shallow idle state,
+>>>>> hoping
+>>>>> that the CPU will be busy soon. However, if no new workload is
+>>>>> scheduled
+>>>>> on that CPU in the near future, the CPU will end up in the shallow
+>>>>> state.
+>>>>>
+>>>>> In case of POWER, this is problematic, when the predicted state in the
+>>>>> aforementioned scenario is a lite stop state, as such lite states will
+>>>>> inhibit SMT folding, thereby depriving the other threads in the core
+>>>>> from
+>>>>> using the core resources.
+> I can understand an idle state can prevent other threads to use the core
+> resources. But why a deeper idle state does not prevent this also?
+>
+>
+>>>>> To address this, such lite states need to be autopromoted. The cpuidle-
+>>>>> core can queue timer to correspond with the residency value of the next
+>>>>> available state. Thus leading to auto-promotion to a deeper idle
+>>>>> state as
+>>>>> soon as possible.
+>>>> Isn't the tick stopping avoidance sufficient for that?
+>>> I was about to ask the same :)
+>>>
+>>>
+>>>
+>>>
+>> Thanks for the review.
+>> I performed experiments for three scenarios to collect some data.
+>>
+>> case 1 :
+>> Without this patch and without tick retained, i.e. in a upstream kernel,
+>> It would spend more than even a second to get out of stop0_lite.
+>>
+>> case 2 : With tick retained(as suggested) -
+>>
+>> Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+>> it to take 8 sched tick to get out of stop0_lite. Experimentally,
+>> observation was
+>>
+>> ===================================
+>> min            max            99percentile
+>> 4ms            12ms          4ms
+>> ===================================
+>> *ms = milliseconds
+>>
+>> It would take atleast one sched tick to get out of stop0_lite.
+>>
+>> case 2 :  With this patch (not stopping tick, but explicitly queuing a
+>> timer)
+>>
+>> min            max              99.5percentile
+>> ===============================
+>> 144us       192us              144us
+>> ===============================
+>> *us = microseconds
+>>
+>> In this patch, we queue a timer just before entering into a stop0_lite
+>> state. The timer fires at (residency of next available state + exit
+>> latency of next available state * 2).
+> So for the context, we have a similar issue but from the power
+> management point of view where a CPU can stay in a shallow state for a
+> long period, thus consuming a lot of energy.
+>
+> The window was reduced by preventing stopping the tick when a shallow
+> state is selected. Unfortunately, if the tick is stopped and we
+> exit/enter again and we select a shallow state, the situation is the same.
+>
+> A solution was previously proposed with a timer some years ago, like
+> this patch does, and merged but there were complains about bad
+> performance impact, so it has been reverted.
+>
+>> Let's say if next state(stop0) is available which has residency of 20us, it
+>> should get out in as low as (20+2*2)*8 [Based on the forumla (residency +
+>> 2xlatency)*history length] microseconds = 192us. Ideally we would expect 8
+>> iterations, it was observed to get out in 6-7 iterations.
+> Can you explain the formula? I don't get the rational. Why using the
+> exit latency and why multiply it by 2?
+>
+> Why the timer is not set to the next state's target residency value ?
+>
+The idea behind multiplying by 2 is, entry latency + exit latency = 2* 
+exit latency, i.e.,
+using exit latency = entry latency
+So in effect, we are using target residency + 2 * exit latency for 
+timeout of timer.
+Latency is generally <=10% of residency. I have tried to be conservative 
+by including latency
+factor in computation for timeout. Thus, this formula will give slightly 
+greater value compared
+to directly using residency of target state.
 
-  smp_store_release(prev->on_cpu, 0);
+--Abhishek
 
-and
-
-  <self-IPI>
-
-on CPU-0 is sufficient for CPU-n to context switch to the task, enable
-the event there, trigger a PMI that calls perf_event_disable_inatomic()
-_again_ (this would mean irq_work_queue() failing, which we don't check)
-(and schedule out again, although that's not required).
-
-This being virt that might actually be possible if (v)CPU-0 takes a nap
-I suppose.
-
-Let me think about this a little more...
-
-> > Does it reproduce on x86 without virt on? I don't have a PPC LPAR to
-> > test things on.
-> > 
-> 
-> s390 LPARs run under hipervisor control, no chance to run any OS without it.
-
-Yah, I know.. Same difference though; I also don't have an s390.
