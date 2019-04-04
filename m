@@ -2,230 +2,129 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEF8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AE4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EE421741
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAAC206B7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 14:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h8qEun+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbfDDOqw (ORCPT
+        id S1729420AbfDDOrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 10:46:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35392 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726888AbfDDOqw (ORCPT
+        Thu, 4 Apr 2019 10:47:14 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:37303 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbfDDOrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 10:46:52 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x34EjH7a106967
-        for <linux-kernel@vger.kernel.org>; Thu, 4 Apr 2019 10:46:50 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rnjrevk9m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 10:46:36 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 4 Apr 2019 15:46:28 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 4 Apr 2019 15:46:24 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x34EkNON60031206
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Apr 2019 14:46:23 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2BDEAA405B;
-        Thu,  4 Apr 2019 14:46:23 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B260BA4060;
-        Thu,  4 Apr 2019 14:46:21 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.215])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  4 Apr 2019 14:46:21 +0000 (GMT)
-Date:   Thu, 4 Apr 2019 17:46:19 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
-        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
-        takahiro.akashi@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-mm@kvack.org, wangkefeng.wang@huawei.com
-Subject: Re: [PATCH 1/3] arm64: kdump: support reserving crashkernel above 4G
-References: <20190403030546.23718-1-chenzhou10@huawei.com>
- <20190403030546.23718-2-chenzhou10@huawei.com>
+        Thu, 4 Apr 2019 10:47:13 -0400
+Received: by mail-vk1-f194.google.com with SMTP id o187so684269vkg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2019 07:47:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ta2RvN4wePGlNokewK6TDhJiHr5vI+uy2KtuMR77OUA=;
+        b=h8qEun+7IXgcs5rxuFQKR0vf6mXbu2eWiFZx1783Ow/nbqm7FglwnZxOehBfoUCOHb
+         SCUdy0Ac3nZl4jJbTHTZ1IpkOcXwHZnatFINHbRktOhCZb6SSZ6rbaoTKoqxvdqG7m+C
+         yVb+dNdd63khbqLcJOUs7OW+UgZQrQ0nIoxp9GOlrSMwkPk6tHu8tmblS6RZo7UL1TEi
+         tlzi6izkVc6fJMs7YHQ5FO2MjwPPToAPxnalnAyVTT9e+MpRrgYIQz6pHXWUh8C6TQiC
+         x2/IbeOXFyv4Xv/kOQxVIBPwqhJC0v/tw2ggEXnDdHknMA+3T/2c8RtiKK+jJLCk1cTc
+         QmEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ta2RvN4wePGlNokewK6TDhJiHr5vI+uy2KtuMR77OUA=;
+        b=aaaawNiY1v/PUWuL69csN30nQeSy97O1JJ1aXsUqhDJI0rABktq/6p69ZKmZJAA2I/
+         mNqY9BW3uM8UnGzfvytMwR8bg63TGRRcm+bfVKfAedHjKXMpp+jZ7Nb1MqaUYvSD605V
+         Me7i7BGhnQwIp31S3J42mrubPqA4Nu4IvRFJ12V0jWJZea0xhWokjhw4m/oyOkHmzvkC
+         EkN42rz+gZ9UFA9icTEZXJd81JWplD9BZY2czoTyth7odIEYLq4Na/BtL0C69VkU9wDn
+         mbUD6yM7LoDpLjfQZO5A0PWtRnlgrcR0kfsWKjtJGbAezvVEpo6LFVo1JqdvUboyeJVC
+         uZVA==
+X-Gm-Message-State: APjAAAXFHTCbX4Oi1Y7jrFuaUgnNoiPv9AsbLjMvRE38VF/srLrOSLe/
+        yRmvar1weH4RrKCs+25kPJ7hjMC2WOcAKWv4uzfN6A==
+X-Google-Smtp-Source: APXvYqzdQgpoGiCnUbBQbr90bn/HC3BmR5wZgpRhzvE7Tqy2dqPBoKpglAu8RWyDqaBnCusRh85NHJg21dNsAUL9mNk=
+X-Received: by 2002:a1f:4c3:: with SMTP id 186mr4234902vke.26.1554389232463;
+ Thu, 04 Apr 2019 07:47:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403030546.23718-2-chenzhou10@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19040414-0012-0000-0000-0000030B47C8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19040414-0013-0000-0000-000021435741
-Message-Id: <20190404144618.GB6433@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-04_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904040095
+References: <0000000000001c2b95057ad0935b@google.com> <000000000000462a4105848c8e12@google.com>
+In-Reply-To: <000000000000462a4105848c8e12@google.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Thu, 4 Apr 2019 16:47:00 +0200
+Message-ID: <CAG_fn=VnXmDSc_QNqyEv7f7iwHXC6taBq1t55fHWZpLZ0EdiNw@mail.gmail.com>
+Subject: Re: kernel BUG at arch/x86/mm/physaddr.c:LINE! (2)
+To:     syzbot <syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>, hverkuil@xs4all.nl,
+        linux-can@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, mchehab@kernel.org,
+        mchehab@s-opensource.com, mkl@pengutronix.de,
+        Networking <netdev@vger.kernel.org>, socketcan@hartkopp.net,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Mar 20, 2019 at 9:35 PM syzbot
+<syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this bug to:
+>
+> commit 6d469a202ee73196d0df76025af80bd6a379e658
+> Author: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> Date:   Sun May 14 17:07:21 2017 +0000
+>
+>      Merge tag 'v4.12-rc1' into patchwork
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D12639fd720=
+0000
+> start commit:   6d469a20 Merge tag 'v4.12-rc1' into patchwork
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D15639fd720=
+0000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11639fd720000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd86f24333880b=
+605
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D6c0effb5877f6b0=
+344e2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1312062b400=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D131bd09340000=
+0
+>
+> Reported-by: syzbot+6c0effb5877f6b0344e2@syzkaller.appspotmail.com
+> Fixes: 6d469a20 ("Merge tag 'v4.12-rc1' into patchwork")
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/syzkaller-bugs/000000000000462a4105848c8e12%40google.com.
+> For more options, visit https://groups.google.com/d/optout.
 
-On Wed, Apr 03, 2019 at 11:05:44AM +0800, Chen Zhou wrote:
-> When crashkernel is reserved above 4G in memory, kernel should
-> reserve some amount of low memory for swiotlb and some DMA buffers.
-> 
-> Kernel would try to allocate at least 256M below 4G automatically
-> as x86_64 if crashkernel is above 4G. Meanwhile, support
-> crashkernel=X,[high,low] in arm64.
-> 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  arch/arm64/kernel/setup.c |  3 ++
->  arch/arm64/mm/init.c      | 71 +++++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 71 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 413d566..82cd9a0 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -243,6 +243,9 @@ static void __init request_standard_resources(void)
->  			request_resource(res, &kernel_data);
->  #ifdef CONFIG_KEXEC_CORE
->  		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
-> +		    crashk_low_res.end <= res->end)
-> +			request_resource(res, &crashk_low_res);
->  		if (crashk_res.end && crashk_res.start >= res->start &&
->  		    crashk_res.end <= res->end)
->  			request_resource(res, &crashk_res);
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 6bc1350..ceb2a25 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -64,6 +64,57 @@ EXPORT_SYMBOL(memstart_addr);
->  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->  
->  #ifdef CONFIG_KEXEC_CORE
-> +static int __init reserve_crashkernel_low(void)
-> +{
-> +	unsigned long long base, low_base = 0, low_size = 0;
-> +	unsigned long total_low_mem;
-> +	int ret;
-> +
-> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
-> +
-> +	/* crashkernel=Y,low */
-> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
-> +	if (ret) {
-> +		/*
-> +		 * two parts from lib/swiotlb.c:
-> +		 * -swiotlb size: user-specified with swiotlb= or default.
-> +		 *
-> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
-> +		 * to 8M for other buffers that may need to stay low too. Also
-> +		 * make sure we allocate enough extra low memory so that we
-> +		 * don't run out of DMA buffers for 32-bit devices.
-> +		 */
-> +		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
-> +	} else {
-> +		/* passed with crashkernel=0,low ? */
-> +		if (!low_size)
-> +			return 0;
-> +	}
-> +
-> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, SZ_2M);
-> +	if (!low_base) {
-> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
-> +				(unsigned long)(low_size >> 20));
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = memblock_reserve(low_base, low_size);
-> +	if (ret) {
-> +		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
-> +		return ret;
-> +	}
-> +
-> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
-> +			(unsigned long)(low_size >> 20),
-> +			(unsigned long)(low_base >> 20),
-> +			(unsigned long)(total_low_mem >> 20));
-> +
-> +	crashk_low_res.start = low_base;
-> +	crashk_low_res.end   = low_base + low_size - 1;
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * reserve_crashkernel() - reserves memory for crash kernel
->   *
-> @@ -74,19 +125,28 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
->  static void __init reserve_crashkernel(void)
->  {
->  	unsigned long long crash_base, crash_size;
-> +	bool high = false;
->  	int ret;
->  
->  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->  				&crash_size, &crash_base);
->  	/* no crashkernel= or invalid value specified */
-> -	if (ret || !crash_size)
-> -		return;
-> +	if (ret || !crash_size) {
-> +		/* crashkernel=X,high */
-> +		ret = parse_crashkernel_high(boot_command_line, memblock_phys_mem_size(),
-> +				&crash_size, &crash_base);
-> +		if (ret || !crash_size)
-> +			return;
-> +		high = true;
-> +	}
->  
->  	crash_size = PAGE_ALIGN(crash_size);
->  
->  	if (crash_base == 0) {
->  		/* Current arm64 boot protocol requires 2MB alignment */
-> -		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
-> +		crash_base = memblock_find_in_range(0,
-> +				high ? memblock_end_of_DRAM()
-> +				: ARCH_LOW_ADDRESS_LIMIT,
->  				crash_size, SZ_2M);
->  		if (crash_base == 0) {
->  			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-> @@ -112,6 +172,11 @@ static void __init reserve_crashkernel(void)
->  	}
->  	memblock_reserve(crash_base, crash_size);
->  
-> +	if (crash_base >= SZ_4G && reserve_crashkernel_low()) {
-> +		memblock_free(crash_base, crash_size);
-> +		return;
-> +	}
-> +
+I believe this bug is caused by vivid_vid_cap_s_selection() calling
+kfree(dev->bitmap_cap).
+This makes little sense, as dev->bitmap_cap seems to be allocated
+using vzalloc().
 
-This very reminds what x86 does. Any chance some of the code can be reused
-rather than duplicated?
+--=20
+Alexander Potapenko
+Software Engineer
 
->  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
->  		crash_base, crash_base + crash_size, crash_size >> 20);
->  
-> -- 
-> 2.7.4
-> 
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
--- 
-Sincerely yours,
-Mike.
-
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
