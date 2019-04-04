@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D05C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32BBC10F05
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647CF21855
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C526321901
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 09:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1554368631;
-	bh=dpdyESBbhPeqfPGG4buXc17mFskxugdils7vT/kw+j8=;
+	s=default; t=1554368635;
+	bh=JZ0dd2YjbJpGu6j5NSaPIqCAfkWJAE3jOWY497T0ymg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J7+/UYC7B1J2CG/xcTBHEKWj5rpj3VYgJIZzgizb7IbSLPhF8v7UQxVPEdW2T9n9A
-	 Js5fvUBiXDBjYPUZZ0sz1vjFxlMjHcp5Bvb7k2lCJZ8Fz+lrjgd3llhGB3Sq1s6WT5
-	 OvYB/bH6qiicG9MGS0+D03YY8GiU84aQI2C7ZOto=
+	b=BiS+jBN4NhMNUfx7nYEvzUmJzoS1hOZTcDKGmU9kXFK5Vwz/NkRSlLYLMG0xw2ncZ
+	 cNzrTMKvN3CAOHIRS7EoTqNi8R1P7NB4Ul46sc2YwAfFHRPuJC8BlZNx8H2L1EqQc+
+	 K+QI2ccDjLfI/VwsqjP1h+icIfxvz8IVtSFT4ubs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731864AbfDDJDu (ORCPT
+        id S1731621AbfDDJDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 05:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41464 "EHLO mail.kernel.org"
+        Thu, 4 Apr 2019 05:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731851AbfDDJDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 05:03:45 -0400
+        id S1731863AbfDDJDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Apr 2019 05:03:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCA4721850;
-        Thu,  4 Apr 2019 09:03:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B3821850;
+        Thu,  4 Apr 2019 09:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1554368624;
-        bh=dpdyESBbhPeqfPGG4buXc17mFskxugdils7vT/kw+j8=;
+        s=default; t=1554368629;
+        bh=JZ0dd2YjbJpGu6j5NSaPIqCAfkWJAE3jOWY497T0ymg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CnDQ55CQxug1VA2UPN9Bi4PR8yD81xhE9OnmUIeFjegCNS607FK7m8agqAwzOxml9
-         t4cw/0jOEQTBTafoI6C3tM0+PIl+/ENU5jOmlFu9xd6bJ78PiKgPb+o93NkgEUZ8zJ
-         gcgidlkzPSh51lZKSt48Riv4ssKAuojrCmsYmFTY=
+        b=cd6V8eImFmynr3GI5jxtD3Bdrgs1oLDf1hh/lNThzHiOItBkrK9c4ngYqU+H6G+fV
+         tu9575IA2K1raxZISWvAZYreMmM4csz18QWp/i5gfRHPcmYKedF6BBakt8fMh0AQrK
+         D6fyEx3MGYylQmSOQjXLeb8dZqBrwWgJwlC5ptZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/187] xen/gntdev: Do not destroy context while dma-bufs are in use
-Date:   Thu,  4 Apr 2019 10:47:09 +0200
-Message-Id: <20190404084607.463631596@linuxfoundation.org>
+        stable@vger.kernel.org, Hong Liu <hong.liu@intel.com>,
+        Hongyan Song <hongyan.song@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 094/187] HID: intel-ish-hid: avoid binding wrong ishtp_cl_device
+Date:   Thu,  4 Apr 2019 10:47:11 +0200
+Message-Id: <20190404084607.586218230@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190404084603.119654039@linuxfoundation.org>
 References: <20190404084603.119654039@linuxfoundation.org>
@@ -67,112 +67,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit fa13e665e02874c0a5f4d06d6967ae34a6cb3d6a ]
+[ Upstream commit 0d28f49412405d87d3aae83da255070a46e67627 ]
 
-If there are exported DMA buffers which are still in use and
-grant device is closed by either normal user-space close or by
-a signal this leads to the grant device context to be destroyed,
-thus making it not possible to correctly destroy those exported
-buffers when they are returned back to gntdev and makes the module
-crash:
+When performing a warm reset in ishtp bus driver, the ishtp_cl_device
+will not be removed, its fw_client still points to the already freed
+ishtp_device.fw_clients array.
 
-[  339.617540] [<ffff00000854c0d8>] dmabuf_exp_ops_release+0x40/0xa8
-[  339.617560] [<ffff00000867a6e8>] dma_buf_release+0x60/0x190
-[  339.617577] [<ffff0000082211f0>] __fput+0x88/0x1d0
-[  339.617589] [<ffff000008221394>] ____fput+0xc/0x18
-[  339.617607] [<ffff0000080ed4e4>] task_work_run+0x9c/0xc0
-[  339.617622] [<ffff000008089714>] do_notify_resume+0xfc/0x108
+Later after driver finishing ishtp client enumeration, this dangling
+pointer may cause driver to bind the wrong ishtp_cl_device to the new
+client, causing wrong callback to be called for messages intended for
+the new client.
 
-Fix this by referencing gntdev on each DMA buffer export and
-unreferencing on buffer release.
+This helps in development of firmware where frequent switching of
+firmwares is required without Linux reboot.
 
-Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Reviewed-by: Boris Ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Hong Liu <hong.liu@intel.com>
+Tested-by: Hongyan Song <hongyan.song@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/gntdev-dmabuf.c | 12 +++++++++++-
- drivers/xen/gntdev-dmabuf.h |  2 +-
- drivers/xen/gntdev.c        |  2 +-
- 3 files changed, 13 insertions(+), 3 deletions(-)
+ drivers/hid/intel-ish-hid/ishtp/bus.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/xen/gntdev-dmabuf.c b/drivers/xen/gntdev-dmabuf.c
-index cba6b586bfbd..d97fcfc5e558 100644
---- a/drivers/xen/gntdev-dmabuf.c
-+++ b/drivers/xen/gntdev-dmabuf.c
-@@ -80,6 +80,12 @@ struct gntdev_dmabuf_priv {
- 	struct list_head imp_list;
- 	/* This is the lock which protects dma_buf_xxx lists. */
- 	struct mutex lock;
-+	/*
-+	 * We reference this file while exporting dma-bufs, so
-+	 * the grant device context is not destroyed while there are
-+	 * external users alive.
-+	 */
-+	struct file *filp;
- };
+diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
+index 2623a567ffba..f546635e9ac9 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/bus.c
++++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
+@@ -623,7 +623,8 @@ int ishtp_cl_device_bind(struct ishtp_cl *cl)
+ 	spin_lock_irqsave(&cl->dev->device_list_lock, flags);
+ 	list_for_each_entry(cl_device, &cl->dev->device_list,
+ 			device_link) {
+-		if (cl_device->fw_client->client_id == cl->fw_client_id) {
++		if (cl_device->fw_client &&
++		    cl_device->fw_client->client_id == cl->fw_client_id) {
+ 			cl->device = cl_device;
+ 			rv = 0;
+ 			break;
+@@ -683,6 +684,7 @@ void ishtp_bus_remove_all_clients(struct ishtp_device *ishtp_dev,
+ 	spin_lock_irqsave(&ishtp_dev->device_list_lock, flags);
+ 	list_for_each_entry_safe(cl_device, n, &ishtp_dev->device_list,
+ 				 device_link) {
++		cl_device->fw_client = NULL;
+ 		if (warm_reset && cl_device->reference_count)
+ 			continue;
  
- /* DMA buffer export support. */
-@@ -311,6 +317,7 @@ static void dmabuf_exp_release(struct kref *kref)
- 
- 	dmabuf_exp_wait_obj_signal(gntdev_dmabuf->priv, gntdev_dmabuf);
- 	list_del(&gntdev_dmabuf->next);
-+	fput(gntdev_dmabuf->priv->filp);
- 	kfree(gntdev_dmabuf);
- }
- 
-@@ -423,6 +430,7 @@ static int dmabuf_exp_from_pages(struct gntdev_dmabuf_export_args *args)
- 	mutex_lock(&args->dmabuf_priv->lock);
- 	list_add(&gntdev_dmabuf->next, &args->dmabuf_priv->exp_list);
- 	mutex_unlock(&args->dmabuf_priv->lock);
-+	get_file(gntdev_dmabuf->priv->filp);
- 	return 0;
- 
- fail:
-@@ -834,7 +842,7 @@ long gntdev_ioctl_dmabuf_imp_release(struct gntdev_priv *priv,
- 	return dmabuf_imp_release(priv->dmabuf_priv, op.fd);
- }
- 
--struct gntdev_dmabuf_priv *gntdev_dmabuf_init(void)
-+struct gntdev_dmabuf_priv *gntdev_dmabuf_init(struct file *filp)
- {
- 	struct gntdev_dmabuf_priv *priv;
- 
-@@ -847,6 +855,8 @@ struct gntdev_dmabuf_priv *gntdev_dmabuf_init(void)
- 	INIT_LIST_HEAD(&priv->exp_wait_list);
- 	INIT_LIST_HEAD(&priv->imp_list);
- 
-+	priv->filp = filp;
-+
- 	return priv;
- }
- 
-diff --git a/drivers/xen/gntdev-dmabuf.h b/drivers/xen/gntdev-dmabuf.h
-index 7220a53d0fc5..3d9b9cf9d5a1 100644
---- a/drivers/xen/gntdev-dmabuf.h
-+++ b/drivers/xen/gntdev-dmabuf.h
-@@ -14,7 +14,7 @@
- struct gntdev_dmabuf_priv;
- struct gntdev_priv;
- 
--struct gntdev_dmabuf_priv *gntdev_dmabuf_init(void);
-+struct gntdev_dmabuf_priv *gntdev_dmabuf_init(struct file *filp);
- 
- void gntdev_dmabuf_fini(struct gntdev_dmabuf_priv *priv);
- 
-diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-index b0b02a501167..9d8e02cfd480 100644
---- a/drivers/xen/gntdev.c
-+++ b/drivers/xen/gntdev.c
-@@ -600,7 +600,7 @@ static int gntdev_open(struct inode *inode, struct file *flip)
- 	mutex_init(&priv->lock);
- 
- #ifdef CONFIG_XEN_GNTDEV_DMABUF
--	priv->dmabuf_priv = gntdev_dmabuf_init();
-+	priv->dmabuf_priv = gntdev_dmabuf_init(flip);
- 	if (IS_ERR(priv->dmabuf_priv)) {
- 		ret = PTR_ERR(priv->dmabuf_priv);
- 		kfree(priv);
 -- 
 2.19.1
 
