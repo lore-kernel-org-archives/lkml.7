@@ -2,100 +2,122 @@ Return-Path: <SRS0=oHH8=SG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BA0C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CBFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096A2206C0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35422075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Apr 2019 19:34:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pS7lccu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfDDTdk (ORCPT
+        id S1730409AbfDDTe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Apr 2019 15:33:40 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:41632 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730344AbfDDTdj (ORCPT
+        Thu, 4 Apr 2019 15:34:57 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49222 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730307AbfDDTe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Apr 2019 15:33:39 -0400
-Received: (qmail 27456 invoked by uid 2102); 4 Apr 2019 15:33:38 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 4 Apr 2019 15:33:38 -0400
-Date:   Thu, 4 Apr 2019 15:33:38 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Kento.A.Kobayashi@sony.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-cc:     Oliver Neukum <oneukum@suse.com>, <gregkh@linuxfoundation.org>,
-        USB Storage list <usb-storage@lists.one-eyed-alien.net>,
-        <Jacky.Cao@sony.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH] usb: uas: fix usb subsystem hang after power off hub
- port
-In-Reply-To: <AE5419EAB4965843B3C0C1FE29F1FFE5891C86@JPYOKXMS103.jp.sony.com>
-Message-ID: <Pine.LNX.4.44L0.1904041522150.1288-100000@iolanthe.rowland.org>
+        Thu, 4 Apr 2019 15:34:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x34JYql2102847;
+        Thu, 4 Apr 2019 14:34:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1554406492;
+        bh=OIIEK2+Bu82/IGMgAohkVDvSW8coc0iap3R7mDpvoco=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=pS7lccu7tvGdB3zRpSFtqtnfpxPY60y/XVQ7lTD69QBHOsS300M3HkvIGEES1AXr5
+         yVS8E4MPpJuE/OcXbJjCvynFRdXdS+Sx2FAlU+ySE5etVglVoCtjAj/D9C0FIK1s7H
+         VBF7oFM2isXm+sBMSUpL/S1rxI9v9LGMCVolFIig=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x34JYqxf124135
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Apr 2019 14:34:52 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 4 Apr
+ 2019 14:34:52 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 4 Apr 2019 14:34:52 -0500
+Received: from [172.22.84.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x34JYphX033779;
+        Thu, 4 Apr 2019 14:34:52 -0500
+Subject: Re: [PATCH 3/5] dt-bindings: ti-lmu: Modify dt bindings for the
+ LM3697
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        <robh+dt@kernel.org>, <pavel@ucw.cz>
+CC:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>
+References: <20190325142403.30447-1-dmurphy@ti.com>
+ <20190325142403.30447-4-dmurphy@ti.com>
+ <4e38128a-fa8f-aa94-284f-2c5a4906e17d@gmail.com>
+ <83e31761-714d-db83-8c35-cf45243cb50b@ti.com>
+ <4983e0b6-ae2b-9d15-0408-fdb23869711a@gmail.com>
+ <28007702-cee0-079b-ccda-864f98a7b520@ti.com>
+Message-ID: <cdd8693f-8293-6336-6f0a-38a5d4fa7151@ti.com>
+Date:   Thu, 4 Apr 2019 14:34:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <28007702-cee0-079b-ccda-864f98a7b520@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Apr 2019 Kento.A.Kobayashi@sony.com wrote:
+Jacek
 
-> Hi,
-> 
-> >> Root Cause
-> >> - Block layer timeout happens after power off UAS USB device which is accessed as reproduce step. During timeout error handler process, scsi host state becomes SHOST_CANCEL_RECOVERY that causes IO hangs up and lock cannot be released. And in final, usb subsystem hangs up.
-> >> Follow is function call:
-> >> blk_mq_timeout_work 
-> >>   …->scsi_times_out  (… means some functions are not listed before this function.)
-> >>     …-> scsi_eh_scmd_add(scsi_host_set_state to SHOST_RECOVERY) 
-> >>       … -> scsi_error_handler
-> >>         …-> uas_eh_device_reset_handler
-> >>             -> usb_lock_device_for_reset  <- take lock
-> >>               -> usb_reset_device
-> >>                 …-> rebind = uas_post_reset (return 1 since ENODEV) 
-> >>                 …-> usb_unbind_and_rebind_marked_interfaces (rebind=1)
-> >>                    …-> uas_disconnect  (scsi_host_set_state to SHOST_CANCEL_RECOVERY)
-> >>                         … -> scsi_queue_rq
-  >>                              -> scsi_host_queue_ready(return 0 causes IO hangs up.)
-> >
-> >How does scsi_queue_rq get called here?  As far as I can see, this shouldn't happen.
-> 
-> We confirmed the function call path on linux 4.9 when this problem occured since we are working on it. In linux 4.9, the last function is scsi_request_fn instead of scsi_queue_rq. In staging.git, we think the scsi_queue_rq is called by follow path.
-> uas_disconnect
-> |- scsi_remove_host
->  |- scsi_forget_host
->   |- __scsi_remove_device
->    |- device_del
->     |- bus_remove_device
->      |- device_release_driver
->       |- device_release_driver_internal
->        |- __device_release_driver
->         |- drv->remove(dev) (sd_remove)  
->          |- sd_shutdown
->           |- sd_sync_cache
->            |- scsi_execute
-... (unnecessary internal details elided)
->                     |- blk_mq_dispatch_rq_list
->                      |- q->mq_ops->queue_rq (scsi_queue_rq)
+On 4/4/19 2:27 PM, Dan Murphy wrote:
+<snip>
 
-So it looks as though the SCSI subsystem doesn't like to have a reset 
-handler call scsi_remove_host.  Commands dispatched by the removal 
-routines are forced to wait for the reset recovery to finish, which 
-won't happen until those commands have been completed.
+>>>>
+>>>
+>>> Actually I was thinking this property could move to common.txt
+>>> LM3697 would use it and it is also defined in leds-pwm.txt leds-netxbig.txt
+>>
+>> It was considered back in 2014 when I was working on LED flash
+>> class framework. It was then assessed inappropriate for describing
+>> physical property of a device. It needs to be kept in mind that
+>> it was in the context of flash LEDs, where currents are much
+>> higher than for common LEDs. Since then we have been always using
+>> led-max-microamp.
+>>
+>> With max-brightness in Device Tree there is also another problem -
+>> we don't know what it really means - greater allowed current or
+>> greater resolution.
+>>
+>> Why not allow for maximum available brightness resolution for ti-lmu
+>> always when the amperage is not an issue?
+>>
 
-Is this a bug in the SCSI core?  If not, we need to know what is the
-right way to do things when a reset handler detects that the SCSI host
-has been hot-unplugged.
+Missed answering this question.  Full scale ramping only works in 8-bit mode as the
+LSB is used for the ramp.  This is why, if the customer does not want ramping and wants full 11 bit control
+they can set this parameter for 11 bit brightness control.  Otherwise I default this to the 8 bit control as the preferred
+method.
 
-James, Martin, any suggestions?
+7.3.4.1 8-Bit Control (Preferred)
+The preferred operating mode is to control the high-voltage LED brightness by setting the Control Bank LSB
+register (3 LSB's) to zero and using only the Control Bank MSB register (8 MSB's). In this mode the LM3697
+controls the 3 LSB's to ramp the high-voltage LED current using all 11-bits.
 
-Alan Stern
+Ramping does work in 11 bit mode but the ramp time may be shorter based on the brightness value set.
 
+Of course the code can be made smarter that if the optional ramp properties are available then set 8 bit automatically
+but it cannot assume 11 bit if they are not.
+
+Dan
+
+<snip>
+
+-- 
+------------------
+Dan Murphy
